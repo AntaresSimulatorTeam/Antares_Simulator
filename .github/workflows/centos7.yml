@@ -104,7 +104,6 @@ jobs:
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=ON \
-        -DBUILD_not_system=OFF \
         -DBUILD_TOOLS=ON \
         -DBUILD_UI=OFF \
         -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \

@@ -135,7 +135,6 @@ jobs:
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=ON \
-        -DBUILD_not_system=OFF \
         -DBUILD_TOOLS=ON \
         -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
         -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"

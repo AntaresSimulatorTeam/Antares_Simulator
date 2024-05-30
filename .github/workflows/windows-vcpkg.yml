@@ -40,7 +40,7 @@ jobs:
       os: windows-latest
       test-platform: windows-2022
       vcpkgPackages: wxwidgets boost-test
-      triplet: x64-windows
+      triplet: x64-windows-release
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
@@ -129,7 +129,6 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON  \
           -DBUILD_TOOLS=ON \
-          -DBUILD_not_system=OFF \
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
