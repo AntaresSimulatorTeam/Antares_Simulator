@@ -57,7 +57,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
                     // E' = ln(e) - 0.5 * ln(1 + (s*s) / (e*e))
                     // S' = sqrt(ln(1 + (s*s) / (e*e)))
                     nE = log(e[i]) - 0.5 * log(1. + (s[i] * s[i]) / (e[i] * e[i]));
-                    nS = sqrt(log(1. + (s[i] * s[i]) / (e[i] * e[i])));
+                    nS = sqrt(logp1((s[i] * s[i]) / (e[i] * e[i])));
 
                     // asserts
                     assert(!std::isnan(nE)

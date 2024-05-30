@@ -1,0 +1,26 @@
+name: cppcheck-annotations
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: cppcheck-annotations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run cppcheck-annotation-action
+        uses: Konstantin343/cppcheck-annotation-action@v1.0
+        with:
+          std: 'c++20'
+          sources: 'src'
+          platform: 'unix64'
+          log-level: 'verbose'
+
+      - name: Annotate lines with errors
+        uses: yuzutech/annotations-action@v0.4.0
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          title: 'Results of CppCheck'
+          input: 'annotations.json'
