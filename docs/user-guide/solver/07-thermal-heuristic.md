@@ -71,7 +71,7 @@ As a final step of the resolution of a Monte-Carlo year, an annual smoothing heu
 
 The general principle of this heuristic is that while respecting the production plan determined at the end of the second resolution and the minimum power output of each unit, we calculate a minimum duration below which it is more economically interesting to leave a group on rather than shutting it down and restarting it at a later stage. This duration is defined as follows:
 
-$$𝑑=\frac{\sigma_\theta^+}{\tau_\theta}$$
+$$d=\frac{\sigma_\theta^+}{\tau_\theta}$$
 with \\(\sigma_\theta^+\\) the startup cost of a unit of cluster \\(\theta\\), and \\({\tau_\theta}\\) the fixed cost of a unit of cluster \\(\theta\\) when it is on. 
 
 
