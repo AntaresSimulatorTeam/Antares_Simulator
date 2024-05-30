@@ -320,11 +320,11 @@ toc_depth: 2
 * Array, logs jit and correlation in makefile (#1410)
 
 ## Branch 8.6.x (end of support 06/2025)
-### v8.6.7 (05/2024)
+### 8.6.7 (05/2024)
 #### Bugfixes
 * Fix formula use in output var Profit by plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
 
-### v8.6.6 (03/2024)
+### 8.6.6 (03/2024)
 #### Bugfixes
 * Adequacy patch CSR - fix DTG MRG (#1982)
 * Fix ts numbers for no gen clusters (#1969)
@@ -334,16 +334,16 @@ toc_depth: 2
 #### Bugfix
 * Use OR-Tools v9.8-rte1.0 (performance improvements with OR-Tools + XPRESS)
 
-### v8.6.4 (11/2023)
+### 8.6.4 (11/2023)
 #### Bugfixes
 * Fix Oracle Linux minizip build + actually run zip unit tests (#1744)
 * Fix output variable PROFIT for thermal clusters (#1767)
 
-### v8.6.3 (10/2023)
+### 8.6.3 (10/2023)
 #### Bugfixes
 * Increase file size limit from 80Mo to 80Go when reading file. Fix issue on Windows
 
-### v8.6.2 (08/2023)
+### 8.6.2 (08/2023)
 #### Bugfixes
 * Backport [v8.4.3](#v843-082023) changes
 
@@ -389,12 +389,12 @@ toc_depth: 2
 * Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
 ## Branch 8.5.x
 
-### v8.5.1 (08/2023)
+### 8.5.1 (08/2023)
 --------------------
 #### Changes
 * Backport [v8.4.3](#v843-082023) changes
 
-### v8.5.0 (02/2022)
+### 8.5.0 (02/2022)
 --------------------
 #### New features
 * Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
@@ -412,7 +412,7 @@ toc_depth: 2
 * Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
 ## Branch 8.4.x
 
-### v8.4.3 (08/2023)
+### 8.4.3 (08/2023)
 --------------------
 
 #### Features
@@ -422,7 +422,7 @@ toc_depth: 2
 * Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
 
 
-### v8.4.2 (01/2022)
+### 8.4.2 (01/2022)
 --------------------
 
 #### Improvements
@@ -466,13 +466,13 @@ toc_depth: 2
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.4.1...v8.4.2
 
-### v8.4.1 (12/2022)
+### 8.4.1 (12/2022)
 --------------------
 
 #### Bugfix
 * Fix formula for profit calculation #1022
 
-### v8.4.0 (12/2022)
+### 8.4.0 (12/2022)
 --------------------
 
 #### Features
@@ -523,12 +523,12 @@ toc_depth: 2
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
 
 ## Older branches
-### v8.3.3 (12/2022)
+### 8.3.3 (12/2022)
 --------------------
 #### Bugfix
 - Round renewable production (#985)
 
-### v8.3.2 (09/2022)
+### 8.3.2 (09/2022)
 --------------------
 #### Output aggregation change
 - Daily, weekly, monthtly & annual values for link variable "MARG. COST" (EUR/MWh) was previously obtained by a sum. It now computed by average (#881).
@@ -564,7 +564,7 @@ toc_depth: 2
 - Input and output format due to addition of BC marginal prices (#836)
 - Fix e-mail address and website (#834)
 
-### v8.3.1 (08/2022)
+### 8.3.1 (08/2022)
 --------------------
 #### New features
 - Add execution-info.ini output file, containing execution durations and study info #740 #803 #816
@@ -579,7 +579,7 @@ toc_depth: 2
 #### For developers
 - Bump C++11 to C++17
 
-### v8.3.0 (07/2022)
+### 8.3.0 (07/2022)
 --------------------
 #### New features
 - Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
@@ -611,19 +611,19 @@ toc_depth: 2
 - Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
 - Upgrade examples 8.1 -> 8.3 (#733)
 
-### v8.2.3 (11/2022)
+### 8.2.3 (11/2022)
 --------------------
 #### Bug fixes
 - Round renewable production (#985)
 
-### v8.2.2 (04/2022)
+### 8.2.2 (04/2022)
 --------------------
 #### Bug fixes
 - Fix solver crash on parsing command-line parameters #624
 #### GUI
 - Fix crash occuring when switching to the links panel #658
 
-### v8.2.1 (03/2022)
+### 8.2.1 (03/2022)
 --------------------
 #### Bug fixes
 - Fix scenario builder data loss when renaming area #610
@@ -639,7 +639,7 @@ toc_depth: 2
 - Linux only : fix impossibility to save a study #600
 - Developer version only : fix assertion errors in the GUI #584
 
-### v8.2.0 (03/2022)
+### 8.2.0 (03/2022)
 --------------------
 #### New features
 - Multiple timeseries for link capacities (NTC). It is now possible to establish different scenarios for the capacity of a link. Users can now take partial or total outages for links into account #520
@@ -664,7 +664,7 @@ toc_depth: 2
 - Use std::shared_ptr instead of Yuni::SmartPtr in most cases #529
 - Simplify and clean some parts of the code #537, #538, #540
 
-### v8.1.1 (01/2022)
+### 8.1.1 (01/2022)
 --------------------
 
 #### Bug fixes
@@ -683,7 +683,7 @@ Include antares-analyzer into .zip and .tar.gz archives (#470). This is especial
 In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in particular gcc 9. This allows for C++17 features to be used without hassle.
 
 
-### v8.1.0 (09/2021)
+### 8.1.0 (09/2021)
 --------------------
 
 #### New features
@@ -702,7 +702,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Fix vcpkg on Github Actions
 - Add build cache for Github Actions to speed up the build (Linux only)
 
-### v8.0.3 (05/2021)
+### 8.0.3 (05/2021)
 --------------------
 
 #### Bug fixes
@@ -718,7 +718,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Remove openssl and libcurl dependencies
 - Remove dead code
 
-### v8.0.2 (04/2021)
+### 8.0.2 (04/2021)
 -------------------- 
 
 #### Bug fixes
@@ -726,7 +726,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Fix GUI freeze when area color is changed but user don't validate new color
 - Correction of MC year weight use for PSP and MISC NDG
 
-### v8.0.1 (03/2021)
+### 8.0.1 (03/2021)
 -------------------- 
 #### Features
 
@@ -744,7 +744,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Add a GitHub action to check if branch name will launch CI
 - Add shared dll in windows .zip archive
 
-### v8.0.0 (03/2021)
+### 8.0.0 (03/2021)
 -------------------- 
 
 #### Features
@@ -819,7 +819,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
     - Adding pytest scripts to check reference output values
     - Add pytest scripts related to unfeasible problems
 
-### v7.2.0 (06/2020)
+### 7.2.0 (06/2020)
 -------------------- 
 
 #### Features
@@ -875,7 +875,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   command line syntax have been introduced and now make it possible
   to launch a sequence of simulations to run in parallel
 
-### v7.1.0 (12/2019)
+### 7.1.0 (12/2019)
 -------------------- 
 
 #### Features
@@ -934,7 +934,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   any data for given Areas or Links, avoid creation of empty folders
   named after said Areas or Links
 
-### v7.0.1 (04/2019)
+### 7.0.1 (04/2019)
 -------------------- 
 
 #### Features
@@ -945,7 +945,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Hydro-storage modelling: added ability to optimize pumping along
   with generation in mode "use heuristic target without leeway"
 
-### v7.0.0 (12/2018)
+### 7.0.0 (12/2018)
 -------------------- 
 
 #### Features
@@ -962,7 +962,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Documentation: updated optimization problem formulation
 - Documentation: updated examples library
 
-### v7.0.0-rc (12/2018)
+### 7.0.0-rc (12/2018)
 -------------------- 
 
 #### Features
@@ -976,7 +976,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   min and max values of PST settings are strictly equal
   and constraints are generated for the whole year
 
-### v6.5.1 (11/2018)
+### 6.5.1 (11/2018)
 ---------------- 
 
 #### Bugs
@@ -987,7 +987,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Kirchhoff's constraint generator: fixed several GUI issues
 - Districts GUI: improved syntax control
 
-### v6.5.0 (11/2018)
+### 6.5.0 (11/2018)
 ---------------- 
 
 #### Features
@@ -1085,7 +1085,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   value (changed to 2 decimal accuracy)
 
 
-### v6.1.3 (06/2018)
+### 6.1.3 (06/2018)
 ---------------- 
 
 #### Features
@@ -1116,7 +1116,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Example library : upgraded to 6.1 and extended
 
 
-### v6.1.2 (11/2017)
+### 6.1.2 (11/2017)
 ---------------- 
 
 #### Features
@@ -1125,7 +1125,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   (Matrix, right hand side, costs)
 
 
-### v6.1.1 (11/2017)
+### 6.1.1 (11/2017)
 ---------------- 
 
 #### Features
@@ -1133,7 +1133,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Solver: Light changes in Presolve stage
 
 
-### v6.1.0 (09/2017)
+### 6.1.0 (09/2017)
 ---------------- 
 
 #### Features
@@ -1145,7 +1145,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   associated with arbitrary offsets (time-lags expressed in hours).
 
 
-### v6.0.6 (07/2017)
+### 6.0.6 (07/2017)
 ---------------- 
 
 #### Features
@@ -1158,7 +1158,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v6.0.5 (07/2017)
+### 6.0.5 (07/2017)
 ---------------- 
 
 #### Bug fixes
@@ -1173,7 +1173,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   cleaning datasets  (detected as of 6.0.0)
 
 
-### v6.0.4 (06/2017)
+### 6.0.4 (06/2017)
 ---------------- 
 
 #### Bug fixes
@@ -1185,7 +1185,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   unsupplied energy allowances
 
 
-### v6.0.3 (06/2017)
+### 6.0.3 (06/2017)
 ---------------- 
 
 #### Features
@@ -1206,7 +1206,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
    circumstances
 
 
-### v6.0.2 (06/2017)
+### 6.0.2 (06/2017)
 ---------------- 
 
 #### Features
@@ -1223,7 +1223,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   two years ore more.
 
 
-### v6.0.1 (05/2017)
+### 6.0.1 (05/2017)
 ---------------- 
 
 #### Features
@@ -1251,7 +1251,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   listed above
 
 
-### v6.0.0 (04/2017)
+### 6.0.0 (04/2017)
 ---------------- 
 
 #### Features
@@ -1288,7 +1288,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   copy to backup folders, registering of studies and archives in catalogues.
 
 
-### v5.0.9-SE (04/2017)
+### 5.0.9-SE (04/2017)
 ---------------- 
 
 #### Bug fixes
@@ -1301,7 +1301,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   minimum number of committed thermal units (+1 or -1 deviation,
   "accurate" mode only)
 
-### v5.0.7-SE (04/2017)
+### 5.0.7-SE (04/2017)
 ---------------- 
 
 #### Features
@@ -1309,7 +1309,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - License control : management of SSL certificates encrypted through SHA-256 algorithm
 
 
-### v5.0.7 (12/2016)
+### 5.0.7 (12/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1317,7 +1317,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Fixing a packaging error
 
 
-### v5.0.6 (12/2016)
+### 5.0.6 (12/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1348,7 +1348,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v5.0.5 (08/2016)
+### 5.0.5 (08/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1373,7 +1373,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   is locally expressed as a constraint of the optimization problem  (LOLE=0)
 
 
-### v5.0.4 (05/2016)
+### 5.0.4 (05/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1389,7 +1389,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   negative values can be used for all classes of constraints (hourly, daily, weekly)
 
 
-### v5.0.3 (05/2016)
+### 5.0.3 (05/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1398,7 +1398,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   "true" for thermal clusters
 
 
-### v5.0.2 (04/2016)
+### 5.0.2 (04/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1412,7 +1412,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   theoretical monthly targets (formerly, only the largest deviation was penalized).
 
 
-### v5.0.1 (04/2016)
+### 5.0.1 (04/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1424,7 +1424,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   performances in some cases. This problem is now solved.
 
 
-### v5.0.0 (03/2016)
+### 5.0.0 (03/2016)
 ---------------- 
 
 #### Bug fixes
@@ -1491,7 +1491,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v4.5.4 (03/2015)
+### 4.5.4 (03/2015)
 ----------------
 
 #### Bug fixes
@@ -1502,7 +1502,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Upgrade to 4.5 format of datasets edited in 4.4 format or lower, in which the "scenario builder"
   feature was activated: the conversion to 4.5 format could fail sometimes.
 
-### v4.5.3 (02/2015)
+### 4.5.3 (02/2015)
 ----------------
 
 #### Features
@@ -1528,7 +1528,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Spillage management, when numerous binding constraints are active: an excessive leeway
   could be observed regarding the level of hydro power allowed to be curtailed
 
-### v4.5.2 (06/2014)
+### 4.5.2 (06/2014)
 ----------------
 
 #### Bug fixes
@@ -1536,7 +1536,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - In the previous version, the average values of interconnection-related variables were multiplied by two
   and this error was propagated to the standard deviation of the same variables
 
-### v4.5.1 (06/2014)
+### 4.5.1 (06/2014)
 ----------------
 
 #### Features
@@ -1558,7 +1558,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Copy/paste of nodes : the field "spread on unsupplied energy cost" was not pasted
 
 
-### v4.5.0 (04/2014)
+### 4.5.0 (04/2014)
 ----------------
 
 #### Features
@@ -1582,7 +1582,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   within a week was not fully optimized
 
 
-### v4.4.1 (05/2013)
+### 4.4.1 (05/2013)
 ----------------
 
 #### Bug fixes
@@ -1598,7 +1598,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v4.4.0 (04/2013)
+### 4.4.0 (04/2013)
 ----------------
 
 #### Features
@@ -1639,7 +1639,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v4.3.7 (02/2013)
+### 4.3.7 (02/2013)
 ----------------
 
 #### Features
@@ -1654,7 +1654,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### V4.3.6 (12/2012)
+### 4.3.6 (12/2012)
 ----------------
 
 #### Bug fixes
@@ -1666,7 +1666,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   consideration user- and folder-related quotas
 
 
-### V4.3.5 (10/2012)
+### 4.3.5 (10/2012)
 ----------------
 
 #### Features
@@ -1705,7 +1705,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### V4.2.6 (07/2012)
+### 4.2.6 (07/2012)
 ----------------
 
 #### Features
@@ -1737,7 +1737,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v4.1.0 (06/2012)
+### 4.1.0 (06/2012)
 ----------------
 
 #### Features
@@ -1758,7 +1758,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v3.8.0 (12/2011)
+### 3.8.0 (12/2011)
 ----------------
 
 #### Features
@@ -1780,7 +1780,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### V3.7.4 (08/2011)
+### 3.7.4 (08/2011)
 ----------------
 
 #### Features
@@ -1808,7 +1808,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### V3.6.4 (04/2011)
+### 3.6.4 (04/2011)
 ----------------
 
 #### Features
@@ -1822,7 +1822,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### V3.5.3 (03/2011)
+### 3.5.3 (03/2011)
 ----------------
 
 #### Features
@@ -1841,7 +1841,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### V3.4.4 (02/2011)
+### 3.4.4 (02/2011)
 ----------------
 
 #### Features
@@ -1852,7 +1852,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v3.4.3 (10/2010)
+### 3.4.3 (10/2010)
 ----------------
 
 #### Features
@@ -1884,7 +1884,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v3.3.2 (07/2010)
+### 3.3.2 (07/2010)
 ----------------
 
 #### Features
@@ -1911,7 +1911,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 
-### v3.1.0 (01/2010)
+### 3.1.0 (01/2010)
 ----------------
 
 #### Features
