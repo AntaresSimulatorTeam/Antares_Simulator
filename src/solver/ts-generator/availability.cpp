@@ -121,7 +121,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
                 B[d] = sqrt(B[d]) - 1.;
                 B[d] /= 2. * xtemp;
                 A[d] = D - 1. / B[d];
-                B[d] = logp1(-B[d]);
+                B[d] = log1p(-B[d]);
                 B[d] = 1. / B[d];
             }
             else
