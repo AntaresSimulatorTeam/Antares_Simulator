@@ -465,12 +465,6 @@ public:
 
     struct
     {
-        //! Initial reservoir levels
-        InitialReservoirLevels iniLevels;
-    } initialReservoirLevels;
-
-    struct
-    {
         //! Hydro heuristic policy
         HydroHeuristicPolicy hhPolicy;
     } hydroHeuristicPolicy;

@@ -311,9 +311,6 @@ void Parameters::reset()
     readonly = false;
     synthesis = true;
 
-    // Initial reservoir levels
-    initialReservoirLevels.iniLevels = irlColdStart;
-
     // Hydro heuristic policy
     hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
 
@@ -810,19 +807,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
-    if (key == "initial-reservoir-levels")
-    {
-        auto iniLevels = StringToInitialReservoirLevels(value);
-        if (iniLevels != irlUnknown)
-        {
-            d.initialReservoirLevels.iniLevels = iniLevels;
-            return true;
-        }
-        logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
-                       << "'. reset to cold start mode.";
-        d.initialReservoirLevels.iniLevels = irlColdStart;
-        return false;
-    }
 
     if (key == "number-of-cores-mode")
     {
@@ -1154,6 +1138,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     {
         return true;
     }
+
+    if (key == "initial-reservoir-levels") // ignored since 9.2
+        return true;
 
     return false;
 }
@@ -1874,8 +1861,6 @@ void Parameters::saveToINI(IniFile& ini) const
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
-        section->add("initial-reservoir-levels",
-                     InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
         section->add("hydro-heuristic-policy",
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));

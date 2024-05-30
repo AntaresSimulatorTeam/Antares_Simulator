@@ -390,16 +390,6 @@ enum InitialReservoirLevels
     irlUnknown,
 };
 
-/*!
-** \brief Convert an Initial Reservoir Levels strategy into a text
-*/
-const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels);
-
-/*!
-** \brief Convert a text into an Initial Reservoir Levels strategy
-*/
-InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text);
-
 // ... Hydro heuristic policy ...
 enum HydroHeuristicPolicy
 {
