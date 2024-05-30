@@ -334,13 +334,13 @@ toc_depth: 2
 #### Bugfix
 * Use OR-Tools v9.8-rte1.0 (performance improvements with OR-Tools + XPRESS)
 
-## v8.6.4 (11/2023)
-### Bugfixes
+### v8.6.4 (11/2023)
+#### Bugfixes
 * Fix Oracle Linux minizip build + actually run zip unit tests (#1744)
 * Fix output variable PROFIT for thermal clusters (#1767)
 
-## v8.6.3 (10/2023)
-### Bugfixes
+### v8.6.3 (10/2023)
+#### Bugfixes
 * Increase file size limit from 80Mo to 80Go when reading file. Fix issue on Windows
 
 ### v8.6.2 (08/2023)
