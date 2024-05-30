@@ -157,7 +157,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
   - The "local data" tab is used to set the parameters of the stochastic generator.
     These parameters are presented in four sub-tabs whose content is presented in
-    [Time-series analysis and generation](../ts-generator/01-overview.md).
+    [Time-series analysis and generation](../ts-generator/01-overview-tsgenerator.md).
 
   - The "digest" tab displays for all areas a short account of the local data
 
