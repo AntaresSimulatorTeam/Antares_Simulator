@@ -588,20 +588,6 @@ _**This section is under construction**_
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
 
 ---
-#### initial-reservoir-levels
-[//]: # (TODO: complete the usage paragraph)
-- **Expected value:** one of the following (case-insensitive):
-    - `cold start`
-    - `hot start`
-- **Required:** no
-- **Default value:** `cold start`
-- **Usage:** initial reservoir levels:
-    - `cold start`
-    - `hot start`
-
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-initial-reservoir-levels-parameter).
-
----
 #### hydro-heuristic-policy
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** one of the following (case-insensitive):

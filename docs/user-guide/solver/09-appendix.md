@@ -63,62 +63,6 @@ With `..._DRY` options, no specific data is printed regarding the faulty problem
 With `..._MPS` options, the full expression of the faulty problem(s) is printed in the standard "MPS" format, 
 thus allowing further analysis of the infeasibility issue.
 
-
-## Details on the "initial-reservoir-levels" parameter
-[//]: # (TODO: update this paragraph)
-_**This section is under construction**_
-
-This parameter can take the two values "cold start" or "hot start". [default: cold start]. Simulations results may in some circumstances be heavily impacted by this setting, hence proper attention should be paid to its meaning before considering changing the default value.
-
-**General:**
-
-This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing 
-data related to the hydropower storage resources to consider in each specific Monte-Carlo year.
-
-As a consequence, Areas which fall in either of the two following categories are not impacted by the value of the parameter:
-- No hydro-storage capability installed
-- Hydro-storage capability installed, but the "reservoir management" option is set to "False"
-
-Areas that have some hydro-storage capability installed and for which explicit reservoir management is required are concerned by the parameter. The developments that follow concern only this category of Areas.
-
-**Cold Start:**
-
-On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of 
-the initialization month is randomly drawn between the extreme levels defined for the Area on that day.
-
-More precisely:
-
-- The value is drawn according to the probability distribution function of a "Beta" random variable, whose four internal parameters are set so as to adopt the following behavior:  
-  Lower bound: Minimum reservoir level.  
-  Upper bound: Maximum reservoir level  
-  Expectation: Average reservoir level  
-  Standard Deviation: (1/3) (Upper bound-Lower bound)
-
-- The random number generator used for that purpose works with a dedicated seed that ensures that results can be reproduced
-  [^17] from one run to another, regardless of the simulation runtime mode (sequential or parallel)
-  and regardless of the number of Monte-Carlo years to be simulated [^18].
-
-**Hot Start:**
-
-On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of the initialization month is set to the value reached at the end of the previous simulated year, if three conditions are met:
-
-- The simulation calendar is defined throughout the whole year, and the simulation starts on the day chosen for initializing the reservoir levels of all Areas.
-
-- The Monte-Carlo year considered is not the first to simulate, or does not belong to the first batch of years to be simulated in parallel. In sequential runtime mode, that means that year #N may start with the level reached at the end of year #(N-1). In parallel runtime mode, if the simulation is carried out with batches of B years over as many CPU cores, years of the k-th batch
-  [^19] may start with the ending levels of the years processed in the (k-1)-th batch.
-
-- The parallelization context (see [Multi-threading](optional-features/multi-threading.md)) must be set to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B).
-
-The first year of the simulation, and more generally years belonging to the first simulation batch in parallel mode, are initialized as they would be in the cold start option.
-
-**Note that:**
-
-- _Depending on the hydro management options used, the amount of hydro-storage energy generated throughout the year may either match closely the overall amount of natural inflows of the same year, or differ to a lesser or greater extent. In the case of a close match, the ending reservoir level will be similar to the starting level. If the energy generated exceeds the inflows (either natural or pumped), the ending level will be lower than the starting level (and conversely, be higher if generation does not reach the inflow credit). Using the "hot start" option allows to take this phenomenon into account in a very realistic fashion, since the consequences of hydro decisions taken at any time have a decisive influence on the system's long term future._
-
-- _When using the reservoir level "hot start" option, comparisons between different simulations make sense only if they rely on the exact same options, i.e. either sequential mode or parallel mode over the same number of CPU cores._
-
-- _More generally, it has to be pointed out that the "hydro-storage" model implemented in Antares can be used to model "storable" resources quite different from actual hydro reserves: batteries, gas subterraneous stocks, etc._
-
 ## Details on the "hydro-heuristic-policy" parameter
 [//]: # (TODO: update this paragraph)
 _**This section is under construction**_
