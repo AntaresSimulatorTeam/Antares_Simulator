@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - fix/circular-deps
 
   schedule:
     - cron: '21 2 * * *'
