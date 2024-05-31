@@ -39,12 +39,13 @@
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/adequacy_mode.h"
+#include "antares/solver/simulation/apply-scenario.h"
 #include "antares/solver/simulation/economy_mode.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
+#include "antares/solver/ts-generator/generator.h"
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/study/simulation.h"
-#include "antares/solver/simulation/apply-scenario.h"
 
 using namespace Antares::Check;
 
@@ -233,6 +234,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
+
+    TSGenerator::ResizeGeneratedTimeSeries(study.areas, study.parameters);
 
     // Sampled time-series Numbers
     // We will resize all matrix related to the time-series numbers

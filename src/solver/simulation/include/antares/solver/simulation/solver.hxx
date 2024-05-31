@@ -36,6 +36,7 @@
 #include "antares/solver/hydro/management/management.h" // Added for use of randomReservoirLevel(...)
 #include "antares/solver/simulation/apply-scenario.h"
 #include "antares/solver/simulation/opt_time_writer.h"
+// TODO delete below includes
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 
@@ -316,7 +317,7 @@ void ISimulation<ImplementationType>::run()
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
-    TSGenerator::ResizeGeneratedTimeSeries(study.areas, study.parameters);
+    // TSGenerator::ResizeGeneratedTimeSeries(study.areas, study.parameters);
 
     if (settings.tsGeneratorsOnly)
     {
