@@ -23,12 +23,13 @@
 #pragma once
 #include "SimulationResults.h"
 
-namespace Antares::API {
+namespace Antares::API
+{
 /**
  * @brief The PerformSimulation function is used to perform a simulation.
  * @param study_path The path to the study to be simulated.
  * @return SimulationResults object which contains the results of the simulation.
  * @exception noexcept This function does not throw exceptions.
  */
-SimulationResults PerformSimulation(std::filesystem::path study_path) noexcept;
-}
+SimulationResults PerformSimulation(const std::filesystem::path& study_path) noexcept;
+} // namespace Antares::API

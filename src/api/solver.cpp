@@ -20,25 +20,27 @@
  */
 
 #include <antares/api/solver.h>
-#include "private/API.h"
-#include "antares/study-loader/IStudyLoader.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
+#include "antares/study-loader/IStudyLoader.h"
 
-namespace Antares::API {
+#include "private/API.h"
 
-SimulationResults PerformSimulation(std::filesystem::path study_path) noexcept
+namespace Antares::API
 {
-    try {
+
+SimulationResults PerformSimulation(const std::filesystem::path& study_path) noexcept
+{
+    try
+    {
         APIInternal api;
         FileTreeStudyLoader study_loader(study_path);
         return api.run(study_loader);
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e)
+    {
         Antares::API::Error err{.reason = e.what()};
-        return
-        SimulationResults{
-            .simulationPath = study_path, .antares_problems{}, .error = err
-        };
+        return SimulationResults{.simulationPath = study_path, .antares_problems{}, .error = err};
     }
 }
 
-}
+} // namespace Antares::API
