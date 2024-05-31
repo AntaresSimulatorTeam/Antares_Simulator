@@ -35,7 +35,6 @@ target_link_libraries(utils
         Antares::result_writer #ortools_utils.h
         Antares::optimization-options
         antares-core #enum.h
-        model_antares 
 )
 
 target_include_directories(utils
