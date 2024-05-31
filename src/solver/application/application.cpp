@@ -79,21 +79,22 @@ void Application::parseCommandLine(Data::StudyLoadOptions& options)
     }
 }
 
-void Application::handleOptions(const Data::StudyLoadOptions& options)
+bool Application::handleOptions(const Data::StudyLoadOptions& options)
 {
     if (options.displayVersion)
     {
         PrintVersionToStdCout();
         pStudy = nullptr;
-        return;
+        return false;
     }
 
     if (options.listSolvers)
     {
         printSolvers();
         pStudy = nullptr;
-        return;
+        return false;
     }
+    return true;
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
@@ -337,7 +338,8 @@ void Application::prepare(int argc, char* argv[])
 
     parseCommandLine(options);
 
-    handleOptions(options);
+    if (!handleOptions(options)) // -h, --list-solvers, etc.
+       return;
 
     // Perform some checks
     checkAndCorrectSettingsAndOptions(pSettings, options);
