@@ -22,8 +22,6 @@
 
 #include <sstream>
 
-#include "include/antares/solver/utils/opt_period_string_generator.h"
-
 // ------------------------------------
 // Optimization period factory
 // ------------------------------------
