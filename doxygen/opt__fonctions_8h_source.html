@@ -163,13 +163,13 @@ $(document).ready(function(){initNavTree('opt__fonctions_8h_source.html',''); in
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __SOLVER_OPTIMISATION_FUNCTIONS_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;antares/optimization-options/options.h&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;antares/writer/i_writer.h&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;antares/config/config.h&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/solver/optimisation/opt_structure_probleme_a_resoudre.h&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;antares/study/parameters/adq-patch-params.h&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;adequacy_patch_csr/hourly_csr_problem.h&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;opt_period_string_generator_base.h&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;antares/solver/utils/opt_period_string_generator.h&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;antares/writer/i_writer.h&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/config/config.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;antares/solver/optimisation/opt_structure_probleme_a_resoudre.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/study/parameters/adq-patch-params.h&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;adequacy_patch_csr/hourly_csr_problem.h&quot;</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">using </span><a class="code hl_struct" href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">AdqPatchParams</a> = <a class="code hl_struct" href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">Antares::Data::AdequacyPatch::AdqPatchParams</a>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">using </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">OptimizationOptions</a> = <a class="code hl_struct" href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">Antares::Solver::Optimization::OptimizationOptions</a>;</div>
@@ -261,7 +261,7 @@ $(document).ready(function(){initNavTree('opt__fonctions_8h_source.html',''); in
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#endif </span><span class="comment">/* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition</b> i_writer.h:34</div></div>
 <div class="ttc" id="aclassHourlyCSRProblem_html"><div class="ttname"><a href="classHourlyCSRProblem.html">HourlyCSRProblem</a></div><div class="ttdef"><b>Definition</b> hourly_csr_problem.h:37</div></div>
-<div class="ttc" id="aclassOptPeriodStringGenerator_html"><div class="ttname"><a href="classOptPeriodStringGenerator.html">OptPeriodStringGenerator</a></div><div class="ttdef"><b>Definition</b> opt_period_string_generator_base.h:30</div></div>
+<div class="ttc" id="aclassOptPeriodStringGenerator_html"><div class="ttname"><a href="classOptPeriodStringGenerator.html">OptPeriodStringGenerator</a></div><div class="ttdef"><b>Definition</b> opt_period_string_generator.h:40</div></div>
 <div class="ttc" id="astructAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams_html"><div class="ttname"><a href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">Antares::Data::AdequacyPatch::AdqPatchParams</a></div><div class="ttdef"><b>Definition</b> adq-patch-params.h:128</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">Antares::Solver::Optimization::OptimizationOptions</a></div><div class="ttdef"><b>Definition</b> options.h:29</div></div>
 <div class="ttc" id="astructPROBLEME__ANTARES__A__RESOUDRE_html"><div class="ttname"><a href="structPROBLEME__ANTARES__A__RESOUDRE.html">PROBLEME_ANTARES_A_RESOUDRE</a></div><div class="ttdef"><b>Definition</b> opt_structure_probleme_a_resoudre.h:36</div></div>

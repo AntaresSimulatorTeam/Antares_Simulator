@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structVARIABLES__DUALES__INTERCONNEXIONS.html":[7,0,243],
 "structVec3.html":[7,0,244],
 "structYAML_1_1convert_3_01Monster_01_4.html":[7,0,28,0],
 "structYAML_1_1convert_3_01Power_01_4.html":[7,0,28,1],
@@ -126,7 +125,7 @@ var NAVTREEINDEX25 =
 "watervalues_8h_source.html":[8,0,0,5,2,1,1,1,1,1,15],
 "week_8h_source.html":[8,0,0,5,2,1,1,1,0,0,7],
 "weekday_8h_source.html":[8,0,0,5,2,1,1,1,0,0,8],
-"weekly__optimization_8h_source.html":[8,0,0,2,5,0,0,0,0,16],
+"weekly__optimization_8h_source.html":[8,0,0,2,5,0,0,0,0,15],
 "wind_2prepro_8hxx_source.html":[8,0,0,1,0,25,0,0,0,5,7,2],
 "wind_8h_source.html":[8,0,0,2,10,0,0,0,0,1,9],
 "windows_2bindingconstraint_2bindingconstraint_8h_source.html":[8,0,0,5,2,2,2,0],

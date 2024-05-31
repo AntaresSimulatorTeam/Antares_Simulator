@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[7,0,0,12,4,4,108,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[7,0,0,12,4,4,109,0],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[7,0,0,12,4,9],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[7,0,0,12,4,9,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "structThermalClusterStudy.html":[7,0,229],
 "structThermalIniFile.html":[7,0,230],
 "structTimeSeriesFile.html":[7,0,234],
-"structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,240]
+"structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,240],
+"structVARIABLES__DUALES__INTERCONNEXIONS.html":[7,0,243]
 };

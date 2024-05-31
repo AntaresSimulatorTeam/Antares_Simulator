@@ -101,9 +101,9 @@ var NAVTREEINDEX =
 "dir_a6c8838202afb2f4d967027b3636f365.html",
 "functions_vars_n.html",
 "opt__fonctions_8h_source.html",
-"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0",
-"structVARIABLES__DUALES__INTERCONNEXIONS.html"
+"structAntares_1_1Map_1_1Item_1_1SetCompare.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html",
+"structVec3.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
