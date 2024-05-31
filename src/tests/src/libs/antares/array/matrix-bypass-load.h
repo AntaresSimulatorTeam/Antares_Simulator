@@ -41,16 +41,6 @@ struct PredicateIdentity
 } // namespace UnitTests
 } // namespace Antares
 
-namespace Antares
-{
-namespace Statistics
-{
-void HasReadFromDisk(uint64_t /* size */)
-{
-}
-} // namespace Statistics
-} // namespace Antares
-
 template<class T = double, class ReadWriteT = T>
 class Matrix_load_bypass: public Matrix_easy_to_fill<T, ReadWriteT>
 {
