@@ -11,6 +11,7 @@ else ()
 	endif ()
 endif ()
 find_dependency(ortools REQUIRED)
+find_dependency(sirius_solver REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/AntaresTargets.cmake")
 
