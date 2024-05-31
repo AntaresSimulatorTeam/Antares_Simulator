@@ -63,7 +63,7 @@ Application::Application()
     resetProcessPriority();
 }
 
-void Application::parseCommandLine(Data::StudyLoadOptions& options)
+bool Application::parseCommandLine(Data::StudyLoadOptions& options)
 {
     auto parser = CreateParser(pSettings, options);
     auto ret = parser->operator()(pArgc, pArgv);
@@ -73,9 +73,9 @@ void Application::parseCommandLine(Data::StudyLoadOptions& options)
         throw Error::CommandLineArguments(parser->errors());
     case Yuni::GetOpt::ReturnCode::help:
         pStudy = nullptr;
-        return;
+        return false;
     default:
-        break;
+        return true;
     }
 }
 
@@ -336,9 +336,10 @@ void Application::prepare(int argc, char* argv[])
     // The parser contains references to members of pSettings and options,
     // don't de-allocate these.
 
-    parseCommandLine(options);
+    if (!parseCommandLine(options)) // --help
+        return;
 
-    if (!handleOptions(options)) // -h, --list-solvers, etc.
+    if (!handleOptions(options)) // --version, --list-solvers
        return;
 
     // Perform some checks

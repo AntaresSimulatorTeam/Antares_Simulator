@@ -124,9 +124,10 @@ private:
 
     void writeComment(Data::Study& study);
     void startSimulation(Data::StudyLoadOptions& options);
-    // Return false if the user requested help, available solvers, etc, true otherwise
+    // Return false if the user requested the version ,available solvers, etc, true otherwise
     bool handleOptions(const Data::StudyLoadOptions& options);
-    void parseCommandLine(Data::StudyLoadOptions& options);
+    // Return false if the user requested help, true otherwise
+    bool parseCommandLine(Data::StudyLoadOptions& options);
     void handleParserReturn(Yuni::GetOpt::Parser* parser);
     void postParametersChecks() const;
 }; // class Application
