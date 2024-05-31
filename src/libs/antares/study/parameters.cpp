@@ -316,7 +316,6 @@ void Parameters::reset()
 
     // Hydro pricing
     hydroPricing.hpMode = hpHeuristic;
-    allSetsHaveSameSize = true;
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
