@@ -27,7 +27,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/optimisation/HebdoProblemToLpsTranslator.h>
-#include "antares/solver/optimisation/opt_period_string_generator_base.h"
+#include "antares/solver/utils/opt_period_string_generator.h"
 
 using namespace Antares::Solver;
 
