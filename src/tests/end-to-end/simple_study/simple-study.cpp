@@ -25,7 +25,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include "utils.h"
-#include "antares/application/ScenarioBuilderOwner.h"
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
@@ -159,7 +158,6 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_for_load, StudyFixture)
     scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
 
     simulation->create();
-    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());

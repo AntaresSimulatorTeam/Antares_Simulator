@@ -18,7 +18,6 @@ target_link_libraries(tests-binding_constraints
         antares-solver-simulation
         antares-solver-hydro
         antares-solver-ts-generator
-        Antares::application
     )
 
 target_include_directories(tests-binding_constraints

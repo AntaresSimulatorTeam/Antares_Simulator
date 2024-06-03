@@ -20,6 +20,8 @@
 */
 #define WIN32_LEAN_AND_MEAN
 #include "utils.h"
+#include "antares/application/ScenarioBuilderOwner.h"
+
 
 void initializeStudy(Study::Ptr study)
 {
@@ -192,6 +194,8 @@ void SimulationHandler::create()
                                                          settings_,
                                                          durationCollector_,
                                                          resultWriter_);
+    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
+
     SIM_AllocationTableaux(study_);
 }
 

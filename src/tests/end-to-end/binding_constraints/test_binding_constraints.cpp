@@ -26,7 +26,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include "utils.h"
-#include "antares/application/ScenarioBuilderOwner.h"
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
@@ -116,7 +115,6 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90, StudyWit
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
 
     simulation->create();
-    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
