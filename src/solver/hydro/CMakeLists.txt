@@ -50,8 +50,12 @@ set(SRC_EXT_SOLVER_H2O2_DAILY
 set(SRC_MANAGEMENT
         include/antares/solver/hydro/management/management.h
         management/management.cpp
+        include/antares/solver/hydro/management/PrepareInflows.h
+        management/PrepareInflows.cpp
         management/monthly.cpp
         management/daily.cpp
+        include/antares/solver/hydro/management/MinGenerationScaling.h
+        management/MinGenerationScaling.cpp
 )
 
 

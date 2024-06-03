@@ -47,6 +47,7 @@ double GammaVariable(double a, MersenneTwister& random);
 
 } // namespace Solver
 
+// TODO remove enum::dayYearCount and TmpDataByArea
 enum
 {
     //! The maximum number of days in a year
