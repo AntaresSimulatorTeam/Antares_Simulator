@@ -1,16 +1,6 @@
 # Build
+
 Before building, make sure that dependencies are [installed](2-Dependencies-install.md).
-
-## Environment settings
-
-On CentOS, install developer tools, and enable `devtoolset-10` and `rh-git227`:
-```
-sudo yum install git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build
-sudo yum install cmake3 devtoolset-10-gcc*
-
-scl enable devtoolset-9 bash
-source /opt/rh/rh-git227/enable
-```
 
 ## Install VCPKG
 
