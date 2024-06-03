@@ -12,7 +12,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study mode
 
----
+
 #### mode
 [//]: # (TODO: verify if required, remove default value)
 [//]: # (TODO: add details 'expansion' behavior)
@@ -36,7 +36,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study horizon
 
----
+
 #### horizon
 [//]: # (TODO: verify if required, remove default value)
 - **Expected value:** year (string)
@@ -48,7 +48,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ### Calendar parameters
 
----
+
 #### nbyears
 [//]: # (TODO: verify if required, verify default value)
 - **Expected value:** unsigned integer
@@ -122,7 +122,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Additional parameters
 
----
+
 #### year-by-year
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -219,7 +219,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Pre-processor parameters
 
----
+
 #### readonly
 [//]: # (TODO: add usage details)
 - **Expected value:** `true` or `false`

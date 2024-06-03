@@ -68,7 +68,6 @@ jobs:
       with:
           key: ${{ env.os }}
 
-
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
@@ -121,8 +120,6 @@ jobs:
     - name: Init submodule
       run: |
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-    
-
     
     - name: Configure
       run: |
