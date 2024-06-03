@@ -156,14 +156,12 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
     // Initial reservoir levels
     {
         label = Component::CreateLabel(this, wxT("Initial reservoir levels"));
-        button = new Component::Button(this, wxT("cold start"), "images/16x16/tag.png");
+        button = new Component::Button(this, wxT(""), "images/16x16/tag.png");
         button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        onPopup.bind(this, &AdvancedParameters::onInitialReservoirLevels);
         button->onPopupMenu(onPopup);
+        button->caption("hydro hot start deprecated");
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnInitialReservoirLevels = button;
     }
     // Hydro heuristic policy
     {
@@ -374,8 +372,6 @@ void AdvancedParameters::refresh()
 
     wxString text;
 
-    pBtnInitialReservoirLevels->caption("deprecated");
-
     text = wxStringFromUTF8(
       HydroHeuristicPolicyToCString(study.parameters.hydroHeuristicPolicy.hhPolicy));
     pBtnHydroHeuristicPolicy->caption(text);
@@ -503,10 +499,6 @@ void AdvancedParameters::onSelectNumericQualityHigh(wxCommandEvent&)
         MarkTheStudyAsModified();
         refresh();
     }
-}
-
-void AdvancedParameters::onInitialReservoirLevels(Component::Button&, wxMenu& menu, void*)
-{
 }
 
 // ... Hydro heuristic policy
