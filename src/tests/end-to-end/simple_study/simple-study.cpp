@@ -25,6 +25,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "utils.h"
+#include "antares/application/ScenarioBuilderOwner.h"
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
@@ -108,7 +109,6 @@ BOOST_AUTO_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER)
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_fullfills_area_demand, StudyFixture)
 {
     setNumberMCyears(1);
-
     simulation->create();
     simulation->run();
 
@@ -157,6 +157,7 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_for_load, StudyFixture)
     ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
     scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
+    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
 
     simulation->create();
     simulation->run();

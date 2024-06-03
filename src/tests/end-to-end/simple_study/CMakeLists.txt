@@ -18,6 +18,7 @@ target_link_libraries(tests-simple-study
         antares-solver-simulation
         antares-solver-ts-generator
         model_antares
+        Antares::application
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 )
 
