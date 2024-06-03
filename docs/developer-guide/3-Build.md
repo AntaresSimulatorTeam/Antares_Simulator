@@ -100,15 +100,23 @@ Here is a list of mandatory or optional CMake configuration options:
 
 The final GUI file can be executed at `_build/ui/simulator/antares-X.Y-ui-simulator`
 
-## Developer experience tips
+## Developer tips
 
-> 💡 **Ignore submodules to make git operations faster**  
-> Antares_Simulator is quite a large project, with a few large submodules. In file .git/config, you can add this line to all [submodule] sections
-> ```
-> ignore = all
-> ```
-> This way git won't waste time computing diff on these when checking out, diffing commits, etc. git operations should be a lot faster.
-> Keep in mind that your submodules won't be updated.
+### Use a compiler cache  
+In order to avoid unnecessary rebuilds, for example when you switch branches, you may use a compiler cache
+such as ccache. Using it under Linux systems is pretty easy with CMake, you only need to specify it 
+as the compiler launcher at configure time:
+```
+cmake ... -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache ...
+```
+
+### Ignore submodules to make git operations faster
+Antares_Simulator is quite a large project, with a few large submodules. In file .git/config, you can add this line to all [submodule] sections
+```
+ignore = all
+```
+This way git won't waste time computing diff on these when checking out, diffing commits, etc. git operations should be a lot faster.
+Keep in mind that your submodules won't be updated.
 
 
 
