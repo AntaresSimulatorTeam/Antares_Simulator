@@ -105,12 +105,8 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
           RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-          std::vector<double>& waterVal = weeklyResults.valeurH2oHoraire;
-
-          for (uint h = 0; h < nbHoursInAWeek; h++)
-          {
-              waterVal[h] = 0.;
-          }
+          auto& waterVal = weeklyResults.valeurH2oHoraire;
+          std::fill(waterVal.begin(), waterVal.end(), 0.);
 
           if (!area.hydro.reservoirManagement || !area.hydro.useWaterValue)
           {
@@ -126,17 +122,16 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
           std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-          Antares::Data::getWaterValue(problem.previousSimulationFinalLevel[index] * 100
-                                         / reservoirCapacity,
-                                       area.hydro.waterValues,
-                                       weekFirstDay,
-                                       waterVal[0]);
+          waterVal[0] = Data::getWaterValue(problem.previousSimulationFinalLevel[index] * 100
+                                            / reservoirCapacity,
+                                            area.hydro.waterValues,
+                                            weekFirstDay);
+
           for (uint h = 1; h < nbHoursInAWeek; h++)
           {
-              Antares::Data::getWaterValue(niv[h - 1],
-                                           area.hydro.waterValues,
-                                           daysOfWeek[h / 24],
-                                           waterVal[h]);
+              waterVal[h] = Data::getWaterValue(niv[h - 1],
+                                                area.hydro.waterValues,
+                                                daysOfWeek[h / 24]);
           }
       });
 }

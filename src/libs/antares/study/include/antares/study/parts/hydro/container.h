@@ -167,10 +167,9 @@ public:
 // As this function can be called a lot of times, we pass working variables and returned variables
 // as arguments, so that we don't have to create them locally (as in a classical function) each
 // time.
-void getWaterValue(const double& level,
+double getWaterValue(const double& level,
                    const Matrix<double>& waterValues,
-                   const uint day,
-                   double& waterValueToReturn);
+                   const uint day);
 
 // Interpolates a rate from the credit modulation table according to a level
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
