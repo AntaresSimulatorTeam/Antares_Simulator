@@ -33,9 +33,11 @@
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
+#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/config/config.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/signal-handling/public.h"
+#include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/adequacy_mode.h"
@@ -43,7 +45,6 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/study/simulation.h"
-#include "antares/application/ScenarioBuilderOwner.h"
 
 using namespace Antares::Check;
 
@@ -234,12 +235,17 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.performTransformationsBeforeLaunchingSimulation();
 
     ScenarioBuilderOwner(study).callScenarioBuilder();
+    HydroInputsChecker hydroInputsChecker(study.areas,
+                                          study.calendar,
+                                          0,
+                                          1 + study.runtime->rangeLimits.year[Data::rangeEnd])
+      .Execute();
 
     // alloc global vectors
     SIM_AllocationTableaux(study);
 }
 
-    void Application::startSimulation(Data::StudyLoadOptions& options)
+void Application::startSimulation(Data::StudyLoadOptions& options)
 {
 // Starting !
 #ifdef GIT_SHA1_SHORT_STRING

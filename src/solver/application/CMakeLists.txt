@@ -28,6 +28,7 @@ target_link_libraries(application
         Antares::signal-handling
         Antares::resources
         Antares::file-tree-study-loader
+        Antares::hydro
 )
 
 target_include_directories(application

@@ -19,22 +19,30 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
 #include <antares/study/area/area.h>
 #include "antares/date/date.h"
+#include "antares/solver/hydro/management/MinGenerationScaling.h"
+#include "antares/solver/hydro/management/PrepareInflows.h"
 
 namespace Antares
 {
 
-class MinGenerationScaling
+class HydroInputsChecker
 {
 public:
-    MinGenerationScaling(Data::AreaList& areas, const Date::Calendar& calendar);
-    void Run(uint year);
+    HydroInputsChecker(Data::AreaList& areas,
+                       const Date::Calendar& calendar,
+                       uint firstYear,
+                       uint endYear);
+    void Execute();
 
 private:
     Data::AreaList& areas_;
     const Date::Calendar& calendar_;
+    const uint firstYear_;
+    const uint endYear_;
+    PrepareInflows prepareInflows_;
+    MinGenerationScaling minGenerationScaling_;
 };
 
 } // namespace Antares

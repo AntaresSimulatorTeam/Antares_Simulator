@@ -56,6 +56,8 @@ set(SRC_MANAGEMENT
         management/daily.cpp
         include/antares/solver/hydro/management/MinGenerationScaling.h
         management/MinGenerationScaling.cpp
+        include/antares/solver/hydro/management/HydroInputsChecker.h
+        management/HydroInputsChecker.cpp
 )
 
 

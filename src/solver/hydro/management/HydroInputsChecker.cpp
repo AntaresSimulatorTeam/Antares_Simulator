@@ -18,23 +18,29 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
-
-#include <antares/study/area/area.h>
-#include "antares/date/date.h"
+#include "antares/solver/hydro/management/HydroInputsChecker.h"
 
 namespace Antares
 {
-
-class MinGenerationScaling
+HydroInputsChecker::HydroInputsChecker(Data::AreaList& areas,
+                                       const Date::Calendar& calendar,
+                                       uint firstYear,
+                                       uint endYear):
+    areas_(areas),
+    calendar_(calendar),
+    firstYear_(firstYear),
+    endYear_(endYear),
+    prepareInflows_(areas, calendar),
+    minGenerationScaling_(areas, calendar)
 {
-public:
-    MinGenerationScaling(Data::AreaList& areas, const Date::Calendar& calendar);
-    void Run(uint year);
+}
 
-private:
-    Data::AreaList& areas_;
-    const Date::Calendar& calendar_;
-};
-
+void HydroInputsChecker::Execute()
+{
+    for (auto year = firstYear_; year < endYear_; ++year)
+    {
+        prepareInflows_.Run(year);
+        minGenerationScaling_.Run(year);
+    }
+}
 } // namespace Antares
