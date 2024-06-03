@@ -69,10 +69,7 @@ private:
     void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeriesType ts);
     void onSelectNumericQualityStandard(wxCommandEvent& evt);
     void onSelectNumericQualityHigh(wxCommandEvent& evt);
-
-    void onSelectHotStart(wxCommandEvent& evt);
-    void onSelectColdStart(wxCommandEvent& evt);
-
+    
     void onHydroHeuristicPolicy(Component::Button&, wxMenu& menu, void*);
     void onSelectAccomodateRuleCurves(wxCommandEvent& evt);
     void onSelectMaximizeGeneration(wxCommandEvent& evt);
