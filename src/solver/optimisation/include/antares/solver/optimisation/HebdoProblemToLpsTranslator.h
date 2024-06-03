@@ -22,9 +22,8 @@
 
 #pragma once
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/lps/LpsFromAntares.h"
-#include "opt_period_string_generator_base.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::Solver
 {
@@ -36,7 +35,7 @@ namespace Antares::Solver
  * This class is a custom exception class that is thrown when an error occurs during the translation
  * of a weekly problem.
  */
-class WeeklyProblemTranslationException : public std::runtime_error
+class WeeklyProblemTranslationException: public std::runtime_error
 {
 public:
     explicit WeeklyProblemTranslationException(const std::string& string) noexcept;
@@ -64,7 +63,7 @@ public:
      * @return WeeklyDataFromAntaresPtr A WeeklyDataFromAntaresPtr to the translated problem.
      */
     [[nodiscard]] WeeklyDataFromAntares translate(const PROBLEME_ANTARES_A_RESOUDRE* problem,
-                                                    std::string_view name) const;
+                                                  std::string_view name) const;
 
     /**
      * @brief Retrieves common problem data, the part common to every weekly problems
