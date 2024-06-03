@@ -43,6 +43,13 @@ private:
     const uint endYear_;
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
+
+    bool checksOnGenerationPowerBounds(uint year) const;
+    bool checkMinGeneration(uint year) const;
+    bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
+    bool checkYearlyMinGeneration(uint year, const Data::Area& area) const;
+    bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
+    bool checkGenerationPowerConsistency(uint year) const;
 };
 
 } // namespace Antares
