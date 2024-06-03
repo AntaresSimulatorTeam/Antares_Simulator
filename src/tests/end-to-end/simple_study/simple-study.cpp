@@ -157,9 +157,9 @@ BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_for_load, StudyFixture)
     ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.load().setTSnumber(area->index, 0, 1);
     scenarioBuilderRule.load().setTSnumber(area->index, 1, 2);
-    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
 
     simulation->create();
+    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());

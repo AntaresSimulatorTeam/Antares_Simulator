@@ -114,9 +114,9 @@ BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90, StudyWit
 
     double rhsValue = 90.;
     TimeSeriesConfigurer(BC->RHSTimeSeries()).setColumnCount(1).fillColumnWith(0, rhsValue);
-    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
 
     simulation->create();
+    Antares::Solver::ScenarioBuilderOwner(*study).callScenarioBuilder();
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
