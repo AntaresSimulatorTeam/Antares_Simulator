@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Antares Simulator User Guide'
-release = 'v8.8'
-copyright = '2023, RTE'
+release = 'v9.1'
+copyright = '2024, RTE'
 author = 'RTE'
 
 
