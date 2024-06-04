@@ -72,7 +72,7 @@ namespace
 class GeneratorTempData final
 {
 public:
-    explicit GeneratorTempData(Data::Study&, unsigned);
+    explicit GeneratorTempData(Data::Study&, unsigned, MersenneTwister);
 
     void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster) const;
 
@@ -99,10 +99,10 @@ private:
                                const T& duration) const;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen):
+GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen, MersenneTwister rndGenerator):
     derated(study.parameters.derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
-    rndgenerator(study.runtime->random[Data::seedTsGenThermal])
+    rndgenerator(rndGenerator)
 {
 }
 
@@ -650,7 +650,9 @@ bool generateThermalTimeSeries(Data::Study& study,
 
     bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
 
-    auto generator = GeneratorTempData(study, study.parameters.nbTimeSeriesThermal);
+    auto generator = GeneratorTempData(study,
+                                       study.parameters.nbTimeSeriesThermal,
+                                       study.runtime->random[Data::seedTsGenThermal]);
 
     // TODO VP: parallel
     for (auto* cluster: clusters)
@@ -677,7 +679,9 @@ bool generateLinkTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the links time-series";
 
-    auto generator = GeneratorTempData(study, study.parameters.nbLinkTStoGenerate);
+    auto generator = GeneratorTempData(study,
+                                       study.parameters.nbLinkTStoGenerate,
+                                       study.runtime->random[Data::seedTsGenLinks]);
 
     for (const auto& link: links)
     {
