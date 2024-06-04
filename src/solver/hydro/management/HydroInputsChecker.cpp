@@ -60,10 +60,11 @@ void HydroInputsChecker::Execute()
         // performCalculations
         if (parameters_.yearsFilter[year])
         {
-            ++nbPerformedYears;
-            // Index of the MC year's space (useful if this year is actually run)
-            numSpace = nbPerformedYears - 1;
-            scratchmap = areas_.buildScratchMap(numSpace);
+            // // not good missing info about buildnewSet which re-init nbPerformedYears = 0
+            // nbPerformedYears++;
+            // // Index of the MC year's space (useful if this year is actually run)
+            // numSpace = nbPerformedYears - 1;
+            // scratchmap = areas_.buildScratchMap(numSpace);
 
             PrepareDataFromClustersInMustrunMode(scratchmap, year);
 
@@ -73,8 +74,8 @@ void HydroInputsChecker::Execute()
             {
                 throw FatalError("hydro management: invalid minimum generation");
             }
-            prepareNetDemand(year, parameters_.mode, scratchmap);
-            prepareEffectiveDemand();
+            //            prepareNetDemand(year, parameters_.mode, scratchmap);
+            //            prepareEffectiveDemand();
             //            prepareMonthlyOptimalGenerations(randomReservoirLevel, year);
         }
     }
@@ -353,9 +354,9 @@ void HydroInputsChecker::prepareEffectiveDemand()
               area.hydro.allocation.eachNonNull(
                 [&](unsigned areaIndex, double value)
                 {
-                    //  const auto* area = areas_.byIndex[areaIndex];
+                    const auto* area = areas_.byIndex[areaIndex];
                     // effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
-                    effectiveDemand += data.DLN[day] * value;
+                    effectiveDemand += area->hydro.data.DLN[day] * value;
                 });
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");

@@ -395,129 +395,130 @@ void HydroManagement::prepareNetDemand(uint year,
                                        Data::SimulationMode mode,
                                        const Antares::Data::Area::ScratchMap& scratchmap)
 {
-    //    areas_.each(
-    //      [this, &year, &scratchmap, &mode](const Data::Area& area)
-    //      {
-    //          const auto& scratchpad = scratchmap.at(&area);
-    //
-    //          const auto& rormatrix = area.hydro.series->ror;
-    //          const auto* ror = rormatrix.getColumn(year);
-    //
-    //          auto& data = tmpDataByArea_[&area];
-    //          const double* loadSeries = area.load.series.getColumn(year);
-    //          const double* windSeries = area.wind.series.getColumn(year);
-    //          const double* solarSeries = area.solar.series.getColumn(year);
-    //
-    //          for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
-    //          {
-    //              auto dayYear = calendar_.hours[hour].dayYear;
-    //
-    //              double netdemand = 0;
-    //
-    //              // Aggregated renewable production: wind & solar
-    //              if (parameters_.renewableGeneration.isAggregated())
-    //              {
-    //                  netdemand = +loadSeries[hour] - windSeries[hour] -
-    //                  scratchpad.miscGenSum[hour]
-    //                              - solarSeries[hour] - ror[hour]
-    //                              - ((mode != Data::SimulationMode::Adequacy)
-    //                                   ? scratchpad.mustrunSum[hour]
-    //                                   : scratchpad.originalMustrunSum[hour]);
-    //              }
-    //
-    //              // Renewable clusters, if enabled
-    //              else if (parameters_.renewableGeneration.isClusters())
-    //              {
-    //                  netdemand = loadSeries[hour] - scratchpad.miscGenSum[hour] - ror[hour]
-    //                              - ((mode != Data::SimulationMode::Adequacy)
-    //                                   ? scratchpad.mustrunSum[hour]
-    //                                   : scratchpad.originalMustrunSum[hour]);
-    //
-    //                  for (auto& c: area.renewable.list.each_enabled())
-    //                  {
-    //                      netdemand -= c->valueAtTimeStep(year, hour);
-    //                  }
-    //              }
-    //
-    //              assert(!std::isnan(netdemand)
-    //                     && "hydro management: NaN detected when calculating the net demande");
-    //              data.DLN[dayYear] += netdemand;
-    //          }
-    //      });
+    areas_.each(
+      [this, &year, &scratchmap, &mode](const Data::Area& area)
+      {
+          const auto& scratchpad = scratchmap.at(&area);
+
+          const auto& rormatrix = area.hydro.series->ror;
+          const auto* ror = rormatrix.getColumn(year);
+
+          auto& data = tmpDataByArea_[&area];
+          const double* loadSeries = area.load.series.getColumn(year);
+          const double* windSeries = area.wind.series.getColumn(year);
+          const double* solarSeries = area.solar.series.getColumn(year);
+
+          for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
+          {
+              auto dayYear = calendar_.hours[hour].dayYear;
+
+              double netdemand = 0;
+
+              // Aggregated renewable production: wind & solar
+              if (parameters_.renewableGeneration.isAggregated())
+              {
+                  netdemand = +loadSeries[hour] - windSeries[hour] - scratchpad.miscGenSum[hour]
+                              - solarSeries[hour] - ror[hour]
+                              - ((mode != Data::SimulationMode::Adequacy)
+                                   ? scratchpad.mustrunSum[hour]
+                                   : scratchpad.originalMustrunSum[hour]);
+              }
+
+              // Renewable clusters, if enabled
+              else if (parameters_.renewableGeneration.isClusters())
+              {
+                  netdemand = loadSeries[hour] - scratchpad.miscGenSum[hour] - ror[hour]
+                              - ((mode != Data::SimulationMode::Adequacy)
+                                   ? scratchpad.mustrunSum[hour]
+                                   : scratchpad.originalMustrunSum[hour]);
+
+                  for (auto& c: area.renewable.list.each_enabled())
+                  {
+                      netdemand -= c->valueAtTimeStep(year, hour);
+                  }
+              }
+
+              assert(!std::isnan(netdemand)
+                     && "hydro management: NaN detected when calculating the net demande");
+              data.DLN[dayYear] += netdemand;
+          }
+      });
 }
 
 void HydroManagement::prepareEffectiveDemand()
 {
-    //    areas_.each(
-    //      [&](Data::Area& area)
-    //      {
-    //          auto& data = tmpDataByArea_[&area];
-    //
-    //          for (uint day = 0; day != 365; ++day)
-    //          {
-    //              auto month = calendar_.days[day].month;
-    //              assert(month < 12 && "Invalid month index");
-    //              auto realmonth = calendar_.months[month].realmonth;
-    //
-    //              double effectiveDemand = 0;
-    //              // area.hydro.allocation is indexed by area index
-    //              area.hydro.allocation.eachNonNull(
-    //                [&](unsigned areaIndex, double value)
-    //                {
-    //                    const auto* area = areas_.byIndex[areaIndex];
-    //                    effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
-    //                });
-    //
-    //              assert(!std::isnan(effectiveDemand) && "nan value detected for
-    //              effectiveDemand"); data.DLE[day] += effectiveDemand; data.MLE[realmonth] +=
-    //              effectiveDemand;
-    //
-    //              assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
-    //              assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
-    //          }
-    //
-    //          auto minimumYear = std::numeric_limits<double>::infinity();
-    //          auto dayYear = 0u;
-    //
-    //          for (uint month = 0; month != 12; ++month)
-    //          {
-    //              auto minimumMonth = +std::numeric_limits<double>::infinity();
-    //              auto daysPerMonth = calendar_.months[month].days;
-    //              auto realmonth = calendar_.months[month].realmonth;
-    //
-    //              for (uint d = 0; d != daysPerMonth; ++d)
-    //              {
-    //                  auto dYear = d + dayYear;
-    //                  if (data.DLE[dYear] < minimumMonth)
-    //                  {
-    //                      minimumMonth = data.DLE[dYear];
-    //                  }
-    //              }
-    //
-    //              if (minimumMonth < 0.)
-    //              {
-    //                  for (uint d = 0; d != daysPerMonth; ++d)
-    //                  {
-    //                      data.DLE[dayYear + d] -= minimumMonth - 1e-4;
-    //                  }
-    //              }
-    //
-    //              if (data.MLE[realmonth] < minimumYear)
-    //              {
-    //                  minimumYear = data.MLE[realmonth];
-    //              }
-    //
-    //              dayYear += daysPerMonth;
-    //          }
-    //
-    //          if (minimumYear < 0.)
-    //          {
-    //              for (uint realmonth = 0; realmonth != 12; ++realmonth)
-    //              {
-    //                  data.MLE[realmonth] -= minimumYear - 1e-4;
-    //              }
-    //          }
-    //      });
+    areas_.each(
+      [&](Data::Area& area)
+      {
+          //   auto& data = tmpDataByArea_[&area];
+          auto& data = area.hydro.data;
+
+          for (uint day = 0; day != 365; ++day)
+          {
+              auto month = calendar_.days[day].month;
+              assert(month < 12 && "Invalid month index");
+              auto realmonth = calendar_.months[month].realmonth;
+
+              double effectiveDemand = 0;
+              // area.hydro.allocation is indexed by area index
+              area.hydro.allocation.eachNonNull(
+                [&](unsigned areaIndex, double value)
+                {
+                    const auto* area = areas_.byIndex[areaIndex];
+                    // effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
+                    effectiveDemand += area->hydro.data.DLN[day] * value;
+                });
+
+              assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
+              data.DLE[day] += effectiveDemand;
+              data.MLE[realmonth] += effectiveDemand;
+
+              assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
+              assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
+          }
+
+          auto minimumYear = std::numeric_limits<double>::infinity();
+          auto dayYear = 0u;
+
+          for (uint month = 0; month != 12; ++month)
+          {
+              auto minimumMonth = +std::numeric_limits<double>::infinity();
+              auto daysPerMonth = calendar_.months[month].days;
+              auto realmonth = calendar_.months[month].realmonth;
+
+              for (uint d = 0; d != daysPerMonth; ++d)
+              {
+                  auto dYear = d + dayYear;
+                  if (data.DLE[dYear] < minimumMonth)
+                  {
+                      minimumMonth = data.DLE[dYear];
+                  }
+              }
+
+              if (minimumMonth < 0.)
+              {
+                  for (uint d = 0; d != daysPerMonth; ++d)
+                  {
+                      data.DLE[dayYear + d] -= minimumMonth - 1e-4;
+                  }
+              }
+
+              if (data.MLE[realmonth] < minimumYear)
+              {
+                  minimumYear = data.MLE[realmonth];
+              }
+
+              dayYear += daysPerMonth;
+          }
+
+          if (minimumYear < 0.)
+          {
+              for (uint realmonth = 0; realmonth != 12; ++realmonth)
+              {
+                  data.MLE[realmonth] -= minimumYear - 1e-4;
+              }
+          }
+      });
 }
 
 bool HydroManagement::checksOnGenerationPowerBounds(uint year) const
@@ -537,8 +538,8 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     //        throw FatalError("hydro management: invalid minimum generation");
     //    }
 
-    //    prepareNetDemand(y, parameters_.mode, scratchmap);
-    //    prepareEffectiveDemand();
+    prepareNetDemand(y, parameters_.mode, scratchmap);
+    prepareEffectiveDemand();
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y);
     prepareDailyOptimalGenerations(state, y, scratchmap);
