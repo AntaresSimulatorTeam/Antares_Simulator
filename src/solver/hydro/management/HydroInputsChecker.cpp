@@ -58,8 +58,8 @@ void HydroInputsChecker::Execute()
     for (auto year = firstYear_; year < endYear_; ++year)
     {
         // performCalculations
-        if (parameters_.yearsFilter[year])
-        {
+       // if (parameters_.yearsFilter[year])
+      //  {
             // // not good missing info about buildnewSet which re-init nbPerformedYears = 0
             // nbPerformedYears++;
             // // Index of the MC year's space (useful if this year is actually run)
@@ -77,7 +77,7 @@ void HydroInputsChecker::Execute()
             //            prepareNetDemand(year, parameters_.mode, scratchmap);
             //            prepareEffectiveDemand();
             //            prepareMonthlyOptimalGenerations(randomReservoirLevel, year);
-        }
+     //   }
     }
 }
 
