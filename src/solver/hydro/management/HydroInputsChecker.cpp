@@ -66,7 +66,7 @@ void HydroInputsChecker::Execute()
             // numSpace = nbPerformedYears - 1;
             // scratchmap = areas_.buildScratchMap(numSpace);
 
-            PrepareDataFromClustersInMustrunMode(scratchmap, year);
+            // PrepareDataFromClustersInMustrunMode(scratchmap, year);
 
             prepareInflows_.Run(year);
             minGenerationScaling_.Run(year);
