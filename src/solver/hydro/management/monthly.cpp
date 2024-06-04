@@ -153,7 +153,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
     areas_.each(
       [&](Data::Area& area)
       {
-          auto& data = tmpDataByArea_[&area];
+          // auto& data = tmpDataByArea_[&area];
+          auto& data = area.hydro.data;
 
           auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
           auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
@@ -280,8 +281,9 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
               writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
               buffer << "\n\n";
 
-              buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen." << "\tTurbined" << "\tLevels"
-                     << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
+              buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
+                     << "\tTurbined"
+                     << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
               for (uint month = 0; month != 12; ++month)
               {
                   uint realmonth = (initReservoirLvlMonth + month) % 12;
