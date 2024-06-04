@@ -241,7 +241,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
                        study.calendar,
                        study.runtime->mode,
                        0,
-                       endYear)
+                       endYear/*,
+                       resultWriter*/)
       .Execute();
 
     // alloc global vectors

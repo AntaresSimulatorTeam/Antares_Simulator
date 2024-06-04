@@ -45,52 +45,6 @@ namespace Data
 {
 struct CompareAreaName;
 
-// TODO remove _
-
-enum dayYearCount_
-{
-    //! The maximum number of days in a year
-    dayYearCount = 366
-};
-
-// TODO remove _
-//! Temporary data
-struct TmpDataByArea_
-{
-    //! Monthly local effective demand
-    double MLE[12];
-    //! Monthly optimal generation
-    double MOG[12];
-    //! Monthly optimal level
-    double MOL[12];
-    //! Monthly target generations
-    double MTG[12];
-    //! inflows
-    double inflows[12];
-    //! monthly minimal generation
-    std::array<double, 12> mingens;
-
-    //! Net demand, for each day of the year, for each area
-    double DLN[dayYearCount];
-    //! Daily local effective load
-    double DLE[dayYearCount];
-    //! Daily optimized Generation
-    double DOG[dayYearCount];
-    //! daily minimal generation
-    std::array<double, dayYearCount> dailyMinGen;
-
-    // Data for minGen<->inflows preChecks
-    //! monthly total mingen
-    std::array<double, 12> totalMonthMingen;
-    //! monthly total inflows
-    std::array<double, 12> totalMonthInflows;
-    //! yearly total mingen
-    double totalYearMingen;
-    //! yearly total inflows
-    double totalYearInflows;
-
-}; // struct TmpDataByArea
-
 /*!
 ** \brief Definition for a single area
 */
@@ -379,8 +333,6 @@ public:
     */
     mutable bool invalidateJIT = false;
     //@}
-
-    TmpDataByArea_ data;
 
 private:
     void internalInitialize();

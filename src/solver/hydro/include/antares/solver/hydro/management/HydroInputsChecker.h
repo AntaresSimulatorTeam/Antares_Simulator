@@ -52,7 +52,8 @@ public:
                        const Date::Calendar& calendar,
                        Data::SimulationMode simulationMode,
                        uint firstYear,
-                       uint endYear);
+                       uint endYear/*,
+                       Solver::IResultWriter& resultWriter*/);
     void Execute();
 
 private:
@@ -64,6 +65,8 @@ private:
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
     Data::SimulationMode simulationMode_;
+    // TODO
+    // Solver::IResultWriter& resultWriter_;
 
     bool checksOnGenerationPowerBounds(uint year) const;
     bool checkMinGeneration(uint year) const;
@@ -75,6 +78,8 @@ private:
                           Data::SimulationMode mode,
                           const Antares::Data::Area::ScratchMap& scratchmap);
     void prepareEffectiveDemand();
+    /*void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
+    double prepareMonthlyTargetGenerations(Data::Area& area, Antares::Data::TmpDataByArea& data);*/
     void PrepareDataFromClustersInMustrunMode(Data::Area::ScratchMap& scratchmap, uint year);
 };
 
