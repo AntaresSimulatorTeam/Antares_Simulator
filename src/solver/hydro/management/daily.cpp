@@ -104,7 +104,7 @@ struct DebugData
     const double reservoirCapacity;
 
     DebugData(Solver::IResultWriter& writer,
-              const TmpDataByArea& data,
+              const Antares::Data::TmpDataByArea& data,
               const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
               const double* srcinflows,
               const MaxPowerType& maxP,
