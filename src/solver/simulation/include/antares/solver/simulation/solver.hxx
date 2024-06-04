@@ -946,7 +946,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
         }
 
     } // End loop over years
-} // End function
+}     // End function
 
 template<class ImplementationType>
 void ISimulation<ImplementationType>::computeAnnualCostsStatistics(

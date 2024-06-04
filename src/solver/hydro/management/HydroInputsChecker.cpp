@@ -21,15 +21,21 @@
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 
 #include "antares/antares/fatal-error.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 
 namespace Antares
 {
+
 HydroInputsChecker::HydroInputsChecker(Data::AreaList& areas,
+                                       const Data::Parameters& params,
                                        const Date::Calendar& calendar,
+                                       Data::SimulationMode simulationMode,
                                        uint firstYear,
                                        uint endYear):
     areas_(areas),
+    parameters_(params),
     calendar_(calendar),
+    simulationMode_(simulationMode),
     firstYear_(firstYear),
     endYear_(endYear),
     prepareInflows_(areas, calendar),
@@ -39,13 +45,27 @@ HydroInputsChecker::HydroInputsChecker(Data::AreaList& areas,
 
 void HydroInputsChecker::Execute()
 {
+    Antares::Data::Area::ScratchMap scratchmap;
+    unsigned int numSpace = 999999;
+    uint nbPerformedYears = 0;
     for (auto year = firstYear_; year < endYear_; ++year)
     {
-        prepareInflows_.Run(year);
-        minGenerationScaling_.Run(year);
-        if (!checksOnGenerationPowerBounds(year))
+        // performCalculations
+        if (parameters_.yearsFilter[year])
         {
-            throw FatalError("hydro management: invalid minimum generation");
+            ++nbPerformedYears;
+            // Index of the MC year's space (useful if this year is actually run)
+            numSpace = nbPerformedYears - 1;
+            scratchmap = areas_.buildScratchMap(numSpace);
+
+            PrepareDataFromClustersInMustrunMode(scratchmap, year);
+
+            prepareInflows_.Run(year);
+            minGenerationScaling_.Run(year);
+            if (!checksOnGenerationPowerBounds(year))
+            {
+                throw FatalError("hydro management: invalid minimum generation");
+            }
         }
     }
 }
@@ -193,4 +213,123 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year) const
     return ret;
 }
 
+void HydroInputsChecker::prepareNetDemand(uint year,
+                                          Data::SimulationMode mode,
+                                          const Antares::Data::Area::ScratchMap& scratchmap)
+{
+    areas_.each(
+      [this, &year, &scratchmap, &mode](Data::Area& area)
+      {
+          const auto& scratchpad = scratchmap.at(&area);
+
+          const auto& rormatrix = area.hydro.series->ror;
+          const auto* ror = rormatrix.getColumn(year);
+
+          auto& data = area.data;
+          const double* loadSeries = area.load.series.getColumn(year);
+          const double* windSeries = area.wind.series.getColumn(year);
+          const double* solarSeries = area.solar.series.getColumn(year);
+
+          for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
+          {
+              auto dayYear = calendar_.hours[hour].dayYear;
+
+              double netdemand = 0;
+
+              // Aggregated renewable production: wind & solar
+              if (parameters_.renewableGeneration.isAggregated())
+              {
+                  netdemand = +loadSeries[hour] - windSeries[hour] - scratchpad.miscGenSum[hour]
+                              - solarSeries[hour] - ror[hour]
+                              - ((mode != Data::SimulationMode::Adequacy)
+                                   ? scratchpad.mustrunSum[hour]
+                                   : scratchpad.originalMustrunSum[hour]);
+              }
+
+              // Renewable clusters, if enabled
+              else if (parameters_.renewableGeneration.isClusters())
+              {
+                  netdemand = loadSeries[hour] - scratchpad.miscGenSum[hour] - ror[hour]
+                              - ((mode != Data::SimulationMode::Adequacy)
+                                   ? scratchpad.mustrunSum[hour]
+                                   : scratchpad.originalMustrunSum[hour]);
+
+                  for (auto& c: area.renewable.list.each_enabled())
+                  {
+                      netdemand -= c->valueAtTimeStep(year, hour);
+                  }
+              }
+
+              assert(!std::isnan(netdemand)
+                     && "hydro management: NaN detected when calculating the net demande");
+              data.DLN[dayYear] += netdemand;
+          }
+      });
+}
+
+void HydroInputsChecker::PrepareDataFromClustersInMustrunMode(Data::Area::ScratchMap& scratchmap,
+                                                              uint year)
+{
+    bool inAdequacy = (simulationMode_ == Data::SimulationMode::Adequacy);
+
+    for (uint i = 0; i < areas_.size(); ++i)
+    {
+        auto& area = *(areas_[i]);
+        auto& scratchpad = scratchmap.at(&area);
+
+        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+        if (inAdequacy)
+        {
+            memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+        }
+
+        double* mrs = scratchpad.mustrunSum;
+        double* adq = scratchpad.originalMustrunSum;
+
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            if (inAdequacy && cluster->mustrunOrigin)
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                {
+                    mrs[h] += availableProduction[h];
+                    adq[h] += availableProduction[h];
+                }
+            }
+            else
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                {
+                    mrs[h] += availableProduction[h];
+                }
+            }
+        }
+
+        if (inAdequacy)
+        {
+            for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+            {
+                if (!cluster->mustrunOrigin)
+                {
+                    continue;
+                }
+
+                const auto& availableProduction = cluster->series.getColumn(year);
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                {
+                    adq[h] += availableProduction[h];
+                }
+            }
+        }
+    }
+}
+
+void HydroChecks::Run()
+{
+    for (auto check: checks)
+    {
+        check->Run();
+    }
+}
 } // namespace Antares

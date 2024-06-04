@@ -235,10 +235,13 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.performTransformationsBeforeLaunchingSimulation();
 
     ScenarioBuilderOwner(study).callScenarioBuilder();
+    const auto endYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
     HydroInputsChecker(study.areas,
+                       study.parameters,
                        study.calendar,
+                       study.runtime->mode,
                        0,
-                       1 + study.runtime->rangeLimits.year[Data::rangeEnd])
+                       endYear)
       .Execute();
 
     // alloc global vectors
