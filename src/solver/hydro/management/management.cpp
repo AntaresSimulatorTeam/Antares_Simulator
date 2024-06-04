@@ -396,7 +396,7 @@ void HydroManagement::prepareNetDemand(uint year,
                                        const Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each(
-      [this, &year, &scratchmap, &mode](const Data::Area& area)
+      [this, &year, &scratchmap, &mode](Data::Area& area)
       {
           const auto& scratchpad = scratchmap.at(&area);
 
