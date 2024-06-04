@@ -74,6 +74,7 @@ private:
     void prepareNetDemand(uint year,
                           Data::SimulationMode mode,
                           const Antares::Data::Area::ScratchMap& scratchmap);
+    void prepareEffectiveDemand();
     void PrepareDataFromClustersInMustrunMode(Data::Area::ScratchMap& scratchmap, uint year);
 };
 

@@ -67,6 +67,7 @@ void HydroInputsChecker::Execute()
                 throw FatalError("hydro management: invalid minimum generation");
             }
             prepareNetDemand(year, parameters_.mode, scratchmap);
+            prepareEffectiveDemand();
         }
     }
 }
@@ -324,6 +325,81 @@ void HydroInputsChecker::PrepareDataFromClustersInMustrunMode(Data::Area::Scratc
             }
         }
     }
+}
+
+void HydroInputsChecker::prepareEffectiveDemand()
+{
+    areas_.each(
+      [&](Data::Area& area)
+      {
+          auto& data = area.data;
+
+          for (uint day = 0; day != 365; ++day)
+          {
+              auto month = calendar_.days[day].month;
+              assert(month < 12 && "Invalid month index");
+              auto realmonth = calendar_.months[month].realmonth;
+
+              double effectiveDemand = 0;
+              // area.hydro.allocation is indexed by area index
+              area.hydro.allocation.eachNonNull(
+                [&](unsigned areaIndex, double value)
+                {
+                    //  const auto* area = areas_.byIndex[areaIndex];
+                    // effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
+                    effectiveDemand += data.DLN[day] * value;
+                });
+
+              assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
+              data.DLE[day] += effectiveDemand;
+              data.MLE[realmonth] += effectiveDemand;
+
+              assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
+              assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
+          }
+
+          auto minimumYear = std::numeric_limits<double>::infinity();
+          auto dayYear = 0u;
+
+          for (uint month = 0; month != 12; ++month)
+          {
+              auto minimumMonth = +std::numeric_limits<double>::infinity();
+              auto daysPerMonth = calendar_.months[month].days;
+              auto realmonth = calendar_.months[month].realmonth;
+
+              for (uint d = 0; d != daysPerMonth; ++d)
+              {
+                  auto dYear = d + dayYear;
+                  if (data.DLE[dYear] < minimumMonth)
+                  {
+                      minimumMonth = data.DLE[dYear];
+                  }
+              }
+
+              if (minimumMonth < 0.)
+              {
+                  for (uint d = 0; d != daysPerMonth; ++d)
+                  {
+                      data.DLE[dayYear + d] -= minimumMonth - 1e-4;
+                  }
+              }
+
+              if (data.MLE[realmonth] < minimumYear)
+              {
+                  minimumYear = data.MLE[realmonth];
+              }
+
+              dayYear += daysPerMonth;
+          }
+
+          if (minimumYear < 0.)
+          {
+              for (uint realmonth = 0; realmonth != 12; ++realmonth)
+              {
+                  data.MLE[realmonth] -= minimumYear - 1e-4;
+              }
+          }
+      });
 }
 
 void HydroChecks::Run()
