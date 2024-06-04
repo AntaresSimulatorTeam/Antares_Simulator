@@ -39,7 +39,7 @@ void MinGenerationScaling::Run(uint year)
       {
           const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
 
-          auto& data = area.data;
+          auto& data = area.hydro.data;
           double totalYearMingen = 0.0;
 
           for (uint month = 0; month != 12; ++month)
