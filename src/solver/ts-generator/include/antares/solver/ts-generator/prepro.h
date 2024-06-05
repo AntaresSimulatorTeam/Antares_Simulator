@@ -132,6 +132,8 @@ struct LinkTsGeneration
     Matrix<> modulationCapacityIndirect;
 
     bool valid = false;
+
+    bool forceNoGeneration = false;
 };
 
 } // namespace Antares::Data

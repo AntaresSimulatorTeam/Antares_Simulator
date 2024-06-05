@@ -541,6 +541,11 @@ bool handleTSGenKey(Data::LinkTsGeneration& out,
         return value.to(out.forcedVolatility);
     }
 
+    if (key == "force-no-generation")
+    {
+        return value.to<bool>(out.forceNoGeneration);
+    }
+
     return false;
 }
 

@@ -618,7 +618,8 @@ listOfLinks getAllLinksToGen(Data::AreaList& areas)
       {
           std::ranges::for_each(area.links, [&links](auto& l)
                                 {
-                                    links.push_back(l.second);
+                                    if (!l.second->tsGeneration.forceNoGeneration)
+                                        links.push_back(l.second);
                                 });
       });
 
