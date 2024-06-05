@@ -207,7 +207,7 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
-    TmpDataByArea data;
+    std::unordered_map<uint, TmpDataByArea> hydro_management_data;
 
 }; // class PartHydro
 

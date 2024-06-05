@@ -68,19 +68,25 @@ private:
     // TODO
     // Solver::IResultWriter& resultWriter_;
 
-    bool checksOnGenerationPowerBounds(uint year) const;
-    bool checkMinGeneration(uint year) const;
-    bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
-    bool checkYearlyMinGeneration(uint year, const Data::Area& area) const;
+    //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
+    //! check Yearly minimum generation is lower than available inflows
+    bool checkYearlyMinGeneration(uint year, const Data::Area& area) const;
+    //! check Weekly minimum generation is lower than available inflows
+    bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
+    //! check Hourly minimum generation is lower than available inflows
     bool checkGenerationPowerConsistency(uint year) const;
-    void prepareNetDemand(uint year,
-                          Data::SimulationMode mode,
-                          const Antares::Data::Area::ScratchMap& scratchmap);
-    void prepareEffectiveDemand();
+    //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
+    bool checksOnGenerationPowerBounds(uint year) const;
+    //! check minimum generation is lower than available inflows
+    bool checkMinGeneration(uint year) const;
+    // void prepareNetDemand(uint year,
+    //                       Data::SimulationMode mode,
+    //                       const Antares::Data::Area::ScratchMap& scratchmap);
+    // void prepareEffectiveDemand();
     /*void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
     double prepareMonthlyTargetGenerations(Data::Area& area, Antares::Data::TmpDataByArea& data);*/
-    void PrepareDataFromClustersInMustrunMode(Data::Area::ScratchMap& scratchmap, uint year);
+    // void PrepareDataFromClustersInMustrunMode(Data::Area::ScratchMap& scratchmap, uint year);
 };
 
 } // namespace Antares
