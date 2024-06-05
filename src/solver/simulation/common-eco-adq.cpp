@@ -402,8 +402,11 @@ void SetInitialHydroLevel(Data::Study& study,
 {
     study.areas.each([&](Data::Area& area)
     {
-        problem.previousSimulationFinalLevel[area.index] =
-                randomForYear.pReservoirLevels[area.index] * area.hydro.reservoirCapacity;
+        if (area.hydro.reservoirManagement)
+        {
+            problem.previousSimulationFinalLevel[area.index] =
+                    randomForYear.pReservoirLevels[area.index] * area.hydro.reservoirCapacity;
+        }
     });
 }
 
