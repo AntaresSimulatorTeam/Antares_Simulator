@@ -51,6 +51,7 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     unitCountLastHour.resize(count, 0);
     productionLastHour.resize(count, 0);
     pminOfAGroup.resize(count, 0);
+    nbThermalGroupsForReserves.resize(count, 0);
 }
 
 State::State(Data::Study& s) :
@@ -206,11 +207,20 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
             for (auto res : clusterReserves)
             {
                 thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-                  += thermalCluster->isParticipatingInReserve(res) >= 0
-                       ? hourlyResults->ProductionThermique[hourInTheWeek]
-                             .ParticipationReservesDuPalier[thermalCluster->index]
-                           * thermalCluster->reserveCost(res)
-                       : 0;
+                  += hourlyResults->ProductionThermique[hourInTheWeek]
+                       .ParticipationReservesDuPalier[thermalCluster->index]
+                     * thermalCluster->reserveCost(res);
+                double participation = hourlyResults->ProductionThermique[hourInTheWeek]
+                    .ParticipationReservesDuPalier[thermalCluster->index];
+                if (participation)
+                {
+                    thermalClusterReserveParticipationCostForYear[hourInTheYear]
+                        += participation * thermalCluster->reserveCost(res);
+
+                    thermalReserveParticipationPerGroupForYear[hourInTheYear][res][thermalCluster->groupID]
+                        += participation;
+                    thermal[area->index].nbThermalGroupsForReserves[thermalCluster->index]++;
+                }
             }
         }
 
@@ -367,20 +377,8 @@ void State::yearEndBuildCalculateReserveParticipationCosts(
         uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear
           = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
-
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
-            std::vector<std::string> clusterReserves
-              = thermalCluster->listOfParticipatingReserves();
-            for (auto res : clusterReserves)
-            {
-                thermalClusterReserveParticipationCostForYear[h]
-                  += thermalCluster->isParticipatingInReserve(res)
-                      ? hourlyResults->ProductionThermique[hourInTheWeek]
-                            .ParticipationReservesDuPalier[thermalCluster->index]
-                          * thermalCluster->reserveCost(res)
-                      : 0;
-            }
             thermalClusterOperatingCostForYear[h]
               += thermalClusterReserveParticipationCostForYear[h];
         }

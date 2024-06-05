@@ -64,9 +64,7 @@ inline void State::yearEndResetThermal()
     memset(thermalClusterDispatchedUnitsCountForYear,
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
-    memset(thermalClusterReserveParticipationCostForYear,
-           0,
-           sizeof(thermalClusterReserveParticipationCostForYear));
+    memset(thermalClusterReserveParticipationCostForYear,0,sizeof(thermalClusterReserveParticipationCostForYear));
 }
 
 inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)

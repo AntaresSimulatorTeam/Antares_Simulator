@@ -59,6 +59,9 @@ public:
         std::vector<unsigned int> unitCountLastHour;
         std::vector<double> productionLastHour;
         std::vector<double> pminOfAGroup;
+
+        //! Track the number of thermalGroup different types participating to the reserves
+        std::vector<uint> nbThermalGroupsForReserves;
     };
 
     StateForAnArea& operator[](size_t areaIndex);
@@ -182,6 +185,11 @@ public:
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
+    //! Reserve Participation for all thermal group types (nuclear / coal / ...) for the whole year
+    //! per reserve
+    std::map<std::string, std::map<Data::ThermalDispatchableGroup, double>>
+      thermalReserveParticipationPerGroupForYear[Variable::maxHoursInAYear];
+
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)
     uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];

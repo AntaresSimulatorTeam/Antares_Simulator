@@ -196,7 +196,6 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
         for(auto cluster : area.thermal.list.each_enabled())
         {
             state.thermalCluster = cluster.get();
-            state.yearEndResetThermal();
 
             // Variables
             variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
@@ -206,6 +205,7 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
 
             // Variables
             variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
+            state.yearEndResetThermal();
         } // for each thermal cluster
     });   // for each area
 }
