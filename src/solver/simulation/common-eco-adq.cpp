@@ -395,6 +395,18 @@ void PrepareRandomNumbers(Data::Study& study,
       });
 }
 
+
+void SetInitialHydroLevel(Data::Study& study,
+                          PROBLEME_HEBDO& problem,
+                          yearRandomNumbers& randomForYear)
+{
+    study.areas.each([&](Data::Area& area)
+    {
+        problem.previousSimulationFinalLevel[area.index] =
+                randomForYear.pReservoirLevels[area.index] * area.hydro.reservoirCapacity;
+    });
+}
+
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,

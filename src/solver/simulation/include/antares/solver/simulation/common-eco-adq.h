@@ -56,6 +56,10 @@ void PrepareRandomNumbers(Data::Study& study,
                           PROBLEME_HEBDO& problem,
                           yearRandomNumbers& randomForYear);
 
+void SetInitialHydroLevel(Data::Study& study,
+                          PROBLEME_HEBDO& problem,
+                          yearRandomNumbers& randomForYear);
+
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,

@@ -126,6 +126,7 @@ bool Economy::year(Progression::Task& progression,
     currentProblem.year = state.year;
 
     PrepareRandomNumbers(study, currentProblem, randomForYear);
+    SetInitialHydroLevel(study, currentProblem, randomForYear);
 
     state.startANewYear();
 
