@@ -29,15 +29,12 @@
 namespace Antares::Data
 {
 
-// TODO remove _
-
-enum dayYearCount_
+enum dayYearCount
 {
     //! The maximum number of days in a year
     dayYearCount = 366
 };
 
-// TODO remove _
 //! Temporary data
 struct TmpDataByArea
 {

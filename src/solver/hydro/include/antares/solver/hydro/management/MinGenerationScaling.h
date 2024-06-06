@@ -26,6 +26,7 @@
 namespace Antares
 {
 
+//! Prepare minimum generation scaling for each area
 class MinGenerationScaling
 {
 public:

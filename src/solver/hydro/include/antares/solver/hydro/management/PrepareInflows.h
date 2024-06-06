@@ -25,6 +25,7 @@
 namespace Antares
 {
 
+//! Prepare inflows scaling for each area
 class PrepareInflows
 {
 public:

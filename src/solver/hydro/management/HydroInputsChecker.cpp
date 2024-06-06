@@ -27,7 +27,6 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
-#include "antares/solver/ts-generator/generator.h"
 
 namespace Antares
 {
@@ -49,25 +48,8 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study,
 
 void HydroInputsChecker::Execute()
 {
-    Antares::Data::Area::ScratchMap scratchmap;
-    unsigned int numSpace = 999999;
-    uint nbPerformedYears = 0;
     for (auto year = firstYear_; year < endYear_; ++year)
     {
-        // Antares::TSGenerator::GenerateTimeSeries<Data::timeSeriesHydro>(study_,
-        //                                                                year,
-        //                                                                resultWriter_);
-        // performCalculations
-        // if (parameters_.yearsFilter[year])
-        //  {
-        // // not good missing info about buildnewSet which re-init nbPerformedYears = 0
-        // nbPerformedYears++;
-        // // Index of the MC year's space (useful if this year is actually run)
-        // numSpace = nbPerformedYears - 1;
-        // scratchmap = areas_.buildScratchMap(numSpace);
-
-        // PrepareDataFromClustersInMustrunMode(scratchmap, year);
-
         prepareInflows_.Run(year);
         minGenerationScaling_.Run(year);
         if (!checksOnGenerationPowerBounds(year))
@@ -82,7 +64,7 @@ void HydroInputsChecker::Execute()
         //            prepareEffectiveDemand();
         //            prepareMonthlyOptimalGenerations(randomReservoirLevel,
         //            year);
-        //   }
+        //-----------------------------
     }
 }
 
