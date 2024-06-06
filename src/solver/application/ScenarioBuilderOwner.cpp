@@ -32,31 +32,23 @@ void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()  {
     TSGenerator::ResizeGeneratedTimeSeries(study_.areas, study_.parameters);
 
     // Sampled time-series Numbers
-// We will resize all matrix related to the time-series numbers
-// This operation can be done once since the number of years is constant
-// for a single simulation
+    // We will resize all matrix related to the time-series numbers
+    // This operation can be done once since the number of years is constant
+    // for a single simulation
     study_.resizeAllTimeseriesNumbers(1 + study_.runtime->rangeLimits.year[Data::rangeEnd]);
-    // study_.resizeAllTimeseriesNumbers(study_.parameters.nbYears);
-// Now, we will prepare the time-series numbers
     if (not TimeSeriesNumbers::CheckNumberOfColumns(study_.areas))
     {
         throw FatalError(
           "Inconsistent number of time-series detected. Please check your input data.");
     }
 
-    // extraire ce code vers après le load des données
-///!\ important, generer pour ttes les zones, années et filiaires de prod (numero de TS)
-///(ttes les TS)
     if (not TimeSeriesNumbers::Generate(study_))
     {
         throw FatalError("An unrecoverable error has occurred. Can not continue.");
     }
-    // ///!\ important
     if (study_.parameters.useCustomScenario)
     {
         ApplyCustomScenario(study_);
     }
-    /// faire le check de l'hydro ici
-//**fin*/
 }
 

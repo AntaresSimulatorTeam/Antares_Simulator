@@ -144,7 +144,6 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
 
 bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
 {
-    //    const auto& data = tmpDataByArea_.at(&area);
     const auto& data = area.hydro.hydro_management_data.at(year);
     for (uint month = 0; month != 12; ++month)
     {
@@ -165,7 +164,6 @@ bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& are
 
 bool HydroManagement::checkYearlyMinGeneration(uint year, const Data::Area& area) const
 {
-    //    const auto& data = tmpDataByArea_.at(&area);
     const auto& data = area.hydro.hydro_management_data.at(year);
     if (data.totalYearMingen > data.totalYearInflows)
     {
@@ -292,7 +290,6 @@ void HydroManagement::prepareNetDemand(uint year,
           const auto& rormatrix = area.hydro.series->ror;
           const auto* ror = rormatrix.getColumn(year);
 
-          // auto& data = tmpDataByArea_[&area];
           auto& data = area.hydro.hydro_management_data[year];
           const double* loadSeries = area.load.series.getColumn(year);
           const double* windSeries = area.wind.series.getColumn(year);
@@ -340,7 +337,6 @@ void HydroManagement::prepareEffectiveDemand(uint year)
     areas_.each(
       [&](Data::Area& area)
       {
-          //   auto& data = tmpDataByArea_[&area];
           auto& data = area.hydro.hydro_management_data[year];
 
           for (uint day = 0; day != 365; ++day)
@@ -355,7 +351,6 @@ void HydroManagement::prepareEffectiveDemand(uint year)
                 [&](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
-                    // effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
                     effectiveDemand += area->hydro.hydro_management_data.at(year).DLN[day] * value;
                 });
 

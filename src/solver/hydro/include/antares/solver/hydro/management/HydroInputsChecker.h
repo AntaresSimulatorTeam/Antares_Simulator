@@ -26,23 +26,6 @@
 
 namespace Antares
 {
-class HydroSingleCheck
-{
-public:
-    HydroSingleCheck() = default;
-    virtual void Run() = 0;
-};
-
-class HydroChecks: public HydroSingleCheck
-{
-public:
-    HydroChecks() = default;
-    void Run() override;
-
-private:
-    // can we do better than shared_ptr ?
-    std::vector<std::shared_ptr<HydroSingleCheck>> checks;
-};
 
 class HydroInputsChecker
 {
@@ -74,13 +57,6 @@ private:
     bool checksOnGenerationPowerBounds(uint year) const;
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year) const;
-    // void prepareNetDemand(uint year,
-    //                       Data::SimulationMode mode,
-    //                       const Antares::Data::Area::ScratchMap& scratchmap);
-    // void prepareEffectiveDemand();
-    /*void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
-    double prepareMonthlyTargetGenerations(Data::Area& area, Antares::Data::TmpDataByArea& data);*/
-    // void PrepareDataFromClustersInMustrunMode(Data::Area::ScratchMap& scratchmap, uint year);
 };
 
 } // namespace Antares
