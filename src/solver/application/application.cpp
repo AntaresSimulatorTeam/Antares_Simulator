@@ -236,14 +236,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     ScenarioBuilderOwner(study).callScenarioBuilder();
     const auto endYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
-    HydroInputsChecker(study.areas,
-                       study.parameters,
-                       study.calendar,
-                       study.runtime->mode,
-                       0,
-                       endYear/*,
-                       resultWriter*/)
-      .Execute();
+    HydroInputsChecker(study, resultWriter).Execute();
 
     // alloc global vectors
     SIM_AllocationTableaux(study);
