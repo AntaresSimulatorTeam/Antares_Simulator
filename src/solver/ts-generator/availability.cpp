@@ -72,7 +72,7 @@ namespace
 class GeneratorTempData final
 {
 public:
-    explicit GeneratorTempData(Data::Study&, unsigned, MersenneTwister);
+    explicit GeneratorTempData(Data::Study&, unsigned, MersenneTwister&);
 
     void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster) const;
 
@@ -99,7 +99,7 @@ private:
                                const T& duration) const;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen, MersenneTwister rndGenerator):
+GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen, MersenneTwister& rndGenerator):
     derated(study.parameters.derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
     rndgenerator(rndGenerator)
