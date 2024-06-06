@@ -398,14 +398,16 @@ void PrepareRandomNumbers(Data::Study& study,
 
 void SetInitialHydroLevel(Data::Study& study,
                           PROBLEME_HEBDO& problem,
-                          yearRandomNumbers& randomForYear)
+                          const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
 {
+    uint firstDaySimu = study.parameters.simulationDays.first;
     study.areas.each([&](Data::Area& area)
     {
         if (area.hydro.reservoirManagement)
         {
+            double capacity = area.hydro.reservoirCapacity;
             problem.previousSimulationFinalLevel[area.index] =
-                    randomForYear.pReservoirLevels[area.index] * area.hydro.reservoirCapacity;
+                hydroVentilationResults[area.index].NiveauxReservoirsDebutJours[firstDaySimu] * capacity;
         }
     });
 }

@@ -58,7 +58,7 @@ void PrepareRandomNumbers(Data::Study& study,
 
 void SetInitialHydroLevel(Data::Study& study,
                           PROBLEME_HEBDO& problem,
-                          yearRandomNumbers& randomForYear);
+                          const HYDRO_VENTILATION_RESULTS& hydroVentilationResults);
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
