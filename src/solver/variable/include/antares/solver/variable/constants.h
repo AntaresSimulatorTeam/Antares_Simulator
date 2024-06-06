@@ -27,16 +27,13 @@ namespace Solver
 {
 namespace Variable
 {
-enum Constant
-{
-    maxHoursInAYear = 8785,
-    maxDaysInAYear = 7 * 53 + 1, // 366,
-    maxWeeksInAYear = 53,
-    maxHoursInADay = 24,
-    maxMonths = 12,
-    maxDaysInAWeek = 7,
-    maxHoursInAWeek = 24 * 7, // 168,
-};
+constexpr unsigned int maxHoursInAYear = 8785;
+constexpr unsigned int maxDaysInAYear = 7 * 53 + 1; // 366,
+constexpr unsigned int maxWeeksInAYear = 53;
+constexpr unsigned int maxHoursInADay = 24;
+constexpr unsigned int maxMonths = 12;
+constexpr unsigned int maxDaysInAWeek = 7;
+constexpr unsigned int maxHoursInAWeek = 24 * 7; // 168
 
 template<int I>
 struct PrecisionToPrintfFormat
