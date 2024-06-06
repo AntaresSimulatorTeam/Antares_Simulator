@@ -47,16 +47,11 @@ private:
 class HydroInputsChecker
 {
 public:
-    HydroInputsChecker(Data::AreaList& areas,
-                       const Data::Parameters& params,
-                       const Date::Calendar& calendar,
-                       Data::SimulationMode simulationMode,
-                       uint firstYear,
-                       uint endYear/*,
-                       Solver::IResultWriter& resultWriter*/);
+    HydroInputsChecker(Antares::Data::Study& study, Solver::IResultWriter& resultWriter);
     void Execute();
 
 private:
+    Antares::Data::Study& study_;
     Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const uint firstYear_;
@@ -65,8 +60,7 @@ private:
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
     Data::SimulationMode simulationMode_;
-    // TODO
-    // Solver::IResultWriter& resultWriter_;
+    Solver::IResultWriter& resultWriter_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;

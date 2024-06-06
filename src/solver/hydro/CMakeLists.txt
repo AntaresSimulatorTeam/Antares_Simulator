@@ -79,6 +79,8 @@ target_link_libraries(antares-solver-hydro
         sirius_solver
         Antares::date
         Antares::result_writer
+        antares-solver-ts-generator
+
 )
 
 target_include_directories(antares-solver-hydro

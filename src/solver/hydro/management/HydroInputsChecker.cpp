@@ -27,26 +27,23 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/ts-generator/generator.h"
 
 namespace Antares
 {
 
-HydroInputsChecker::HydroInputsChecker(Data::AreaList& areas,
-                                       const Data::Parameters& params,
-                                       const Date::Calendar& calendar,
-                                       Data::SimulationMode simulationMode,
-                                       uint firstYear,
-                                       uint endYear/*,
-                                       Solver::IResultWriter& resultWriter*/):
-    areas_(areas),
-    parameters_(params),
-    calendar_(calendar),
-    simulationMode_(simulationMode),
-    firstYear_(firstYear),
-    endYear_(endYear),
-    prepareInflows_(areas, calendar),
-    minGenerationScaling_(areas, calendar)/*,
-    resultWriter_(resultWriter)*/
+HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study,
+                                       Solver::IResultWriter& resultWriter):
+    study_(study),
+    areas_(study.areas),
+    parameters_(study.parameters),
+    calendar_(study.calendar),
+    simulationMode_(study.runtime->mode),
+    firstYear_(0),
+    endYear_(1 + study.runtime->rangeLimits.year[Data::rangeEnd]),
+    prepareInflows_(study.areas, study.calendar),
+    minGenerationScaling_(study.areas, study.calendar),
+    resultWriter_(resultWriter)
 {
 }
 
@@ -57,6 +54,9 @@ void HydroInputsChecker::Execute()
     uint nbPerformedYears = 0;
     for (auto year = firstYear_; year < endYear_; ++year)
     {
+        Antares::TSGenerator::GenerateTimeSeries<Data::timeSeriesHydro>(study_,
+                                                                        year,
+                                                                        resultWriter_);
         // performCalculations
        // if (parameters_.yearsFilter[year])
       //  {
@@ -68,18 +68,18 @@ void HydroInputsChecker::Execute()
 
             // PrepareDataFromClustersInMustrunMode(scratchmap, year);
 
-            prepareInflows_.Run(year);
-            minGenerationScaling_.Run(year);
-            if (!checksOnGenerationPowerBounds(year))
-            {
-                throw FatalError("hydro management: invalid minimum generation");
-            }
+        prepareInflows_.Run(year);
+        // minGenerationScaling_.Run(year);
+        // if (!checksOnGenerationPowerBounds(year))
+        // {
+        //     throw FatalError("hydro management: invalid minimum generation");
+        // }
 
-            //---------------------//
-            //            prepareNetDemand(year, parameters_.mode, scratchmap);
-            //            prepareEffectiveDemand();
-            //            prepareMonthlyOptimalGenerations(randomReservoirLevel, year);
-            //   }
+        //---------------------//
+        //            prepareNetDemand(year, parameters_.mode, scratchmap);
+        //            prepareEffectiveDemand();
+        //            prepareMonthlyOptimalGenerations(randomReservoirLevel, year);
+        //   }
     }
 }
 
