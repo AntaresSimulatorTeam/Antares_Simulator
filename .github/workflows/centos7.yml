@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -71,15 +70,7 @@ jobs:
 
     - name: Init submodule
       run: |
-          git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
-
-    - name: Download & extract precompiled deps at root
-      run: |
-           ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
-           cd /
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release.tar.gz
-           tar -xvf rte-antares-deps-centos7-Release.tar.gz
-           rm -rf rte-antares-deps-centos7-Release.tar.gz
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
     - name: Config OR-Tools URL
       run: |
@@ -110,13 +101,12 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-        -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=ON \
-        -DBUILD_not_system=OFF \
         -DBUILD_TOOLS=ON \
         -DBUILD_UI=OFF \
         -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
+
 
     - name: Build
       run: |

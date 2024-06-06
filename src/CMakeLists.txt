@@ -196,69 +196,15 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif()
 
-#Define install directory
-if (NOT DEPS_INSTALL_DIR)
-    SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
-
-else()
-    if(NOT IS_ABSOLUTE ${DEPS_INSTALL_DIR})
-        SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../${DEPS_INSTALL_DIR})
-    endif()    
-endif()
-
-
-# Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-
-	string(REPLACE ${CMAKE_BUILD_TYPE} Release
-			DEPS_INSTALL_DIR_XPANSION
-			${DEPS_INSTALL_DIR})
-
-	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
-	
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL  "debug")
-
-	string(REPLACE ${CMAKE_BUILD_TYPE} Debug
-			DEPS_INSTALL_DIR_XPANSION
-			${DEPS_INSTALL_DIR})
-	
-	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
-
-endif()
-
-list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
-message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
-
-# Build Needed dependencies
-add_subdirectory(antares-deps)
-
-#Add needed definition in case of external dependencies compilation
-include (antares-deps/cmake/additionnal-definitions.cmake)
-
 #Boost header libraries
 find_package(Boost REQUIRED)
-
-#TODO : Add ZLIB if  VCPKG used why is this needed
-if (VCPKG_TOOLCHAIN) 
-    #zlib
-    find_package(ZLIB REQUIRED)
-endif()
 
 #Sirius solver
 if(POLICY CMP0074)
 	cmake_policy(SET CMP0074 NEW)
 endif()
 
-if (VCPKG_TOOLCHAIN)
-	list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
-	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
-endif()
-
-find_package(sirius_solver)
-
-if (NOT sirius_solver_FOUND)
-	message (FATAL_ERROR "Sirius solver not found. Sirius solver can be compiled with -DBUILD_sirius=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
-endif()
+find_package(sirius_solver REQUIRED)
 
 find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
@@ -297,7 +243,6 @@ else ()
 		message (FATAL_ERROR "Minizip not found.")
 	endif ()
 endif ()
-
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
