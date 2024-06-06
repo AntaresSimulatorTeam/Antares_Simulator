@@ -25,8 +25,10 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 
-
-Solver::ScenarioBuilderOwner::ScenarioBuilderOwner(Data::Study &study):study_(study) {}
+Antares::Solver::ScenarioBuilderOwner::ScenarioBuilderOwner(Data::Study& study):
+    study_(study)
+{
+}
 
 void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()  {
     TSGenerator::ResizeGeneratedTimeSeries(study_.areas, study_.parameters);

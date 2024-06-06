@@ -22,21 +22,20 @@
 
 #include "antares/study/study.h"
 
-namespace Antares {
-    namespace Solver {
+namespace Antares::Solver
+{
 
-        class ScenarioBuilderOwner  {
+class ScenarioBuilderOwner
+{
+public:
+    explicit ScenarioBuilderOwner(Data::Study& study);
 
-        public:
-            explicit ScenarioBuilderOwner(Data::Study &study);
+    void callScenarioBuilder();
 
-            void callScenarioBuilder() ;
+    ScenarioBuilderOwner();
 
-            ScenarioBuilderOwner();
-        private:
-            Data::Study &study_;
-        };
+private:
+    Data::Study& study_;
+};
 
-    } // Solver
-} // Antares
-
+} // namespace Antares::Solver
