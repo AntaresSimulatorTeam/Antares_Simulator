@@ -534,10 +534,10 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
 {
     // prepareInflowsScaling(y);
     // minGenerationScaling(y);
-    if (!checksOnGenerationPowerBounds(y))
-    {
-        throw FatalError("hydro management: invalid minimum generation");
-    }
+    // if (!checksOnGenerationPowerBounds(y))
+    // {
+    //     throw FatalError("hydro management: invalid minimum generation");
+    // }
 
     prepareNetDemand(y, parameters_.mode, scratchmap);
     prepareEffectiveDemand(y);
