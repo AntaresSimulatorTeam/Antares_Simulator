@@ -98,7 +98,7 @@ toc_depth: 2
 
 ### 8.8.3 (02/2024)
 #### Bugfix
-* Fix an issue where depending on the platform the output archive could contain several entries of the same area and inrco files
+* Fix an issue where depending on the platform the output archive could contain several entries of the same area and interco files
 
 ### 8.8.2
 #### Bugfix
