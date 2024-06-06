@@ -67,14 +67,14 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings& settings
                     ' ',
                     "thermal",
                     "Generate TS for a list of area IDs and thermal clusters IDs, "
-                    "usage:\n\t--thermal=\"areaID.clusterID;area2ID.clusterID\"");
+                    "\nusage: --thermal=\"areaID.clusterID;area2ID.clusterID\"");
 
     parser->addFlag(settings.allLinks, ' ', "all-links", "Generate TS capacities for all links");
     parser->addFlag(settings.linksListToGen,
                     ' ',
                     "links",
                     "Generate TS capacities for a list of 2 area IDs, "
-                    "usage:\n\t--links=\"areaID.area2ID;area3ID.area1ID\"");
+                    "usage: --links=\"areaID.area2ID;area3ID.area1ID\"");
 
     parser->remainingArguments(settings.studyFolder);
 
