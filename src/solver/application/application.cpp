@@ -37,7 +37,6 @@
 #include "antares/config/config.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/signal-handling/public.h"
-#include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/adequacy_mode.h"
@@ -260,7 +259,6 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
     pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
     pParameters = &(pStudy->parameters);
-    //
     readDataForTheStudy(options);
 
     postParametersChecks();

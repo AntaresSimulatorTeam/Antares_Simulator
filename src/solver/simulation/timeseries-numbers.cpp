@@ -755,7 +755,6 @@ bool TimeSeriesNumbers::Generate(Study& study)
     }
 
     const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
-    // const uint years = study.parameters.nbYears;
 
     const array<bool, timeSeriesCount> isTSintramodal = {
       (bool)(timeSeriesLoad & parameters.intraModal),
