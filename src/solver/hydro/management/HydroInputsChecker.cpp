@@ -70,7 +70,7 @@ void HydroInputsChecker::Execute()
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year) const
 {
-    return (checkMinGeneration(year) && checkGenerationPowerConsistency(year)) ? true : false;
+    return checkMinGeneration(year) && checkGenerationPowerConsistency(year);
 }
 
 bool HydroInputsChecker::checkMinGeneration(uint year) const
