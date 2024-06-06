@@ -33,7 +33,8 @@
 #include "antares/concurrency/concurrency.h"
 #include "antares/solver//variable/constants.h"
 #include "antares/solver//variable/print.h"
-#include "antares/solver/hydro/management/management.h" // Added for use of randomReservoirLevel(...)
+#include "antares/solver/hydro/management/HydroInputsChecker.h"
+#include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/apply-scenario.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 // TODO delete below includes
@@ -491,11 +492,11 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
           << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
     }
     // Hydro
-    // if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
-    // {
-    //     pDurationCollector("tsgen_hydro") << [year, this]
-    //     { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
-    // }
+    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
+    {
+        pDurationCollector("tsgen_hydro") << [year, this]
+        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+    }
 
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
@@ -1042,6 +1043,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                              set_it->yearsIndices,
                              set_it->isYearPerformed,
                              randomHydroGenerator);
+        HydroInputsChecker(study, pResultWriter).Execute();
 
         std::vector<unsigned int>::iterator year_it;
 

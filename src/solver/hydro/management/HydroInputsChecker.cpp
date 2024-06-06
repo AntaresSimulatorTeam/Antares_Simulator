@@ -54,31 +54,39 @@ void HydroInputsChecker::Execute()
     uint nbPerformedYears = 0;
     for (auto year = firstYear_; year < endYear_; ++year)
     {
-        Antares::TSGenerator::GenerateTimeSeries<Data::timeSeriesHydro>(study_,
-                                                                        year,
-                                                                        resultWriter_);
+        // Antares::TSGenerator::GenerateTimeSeries<Data::timeSeriesHydro>(study_,
+        //                                                                year,
+        //                                                                resultWriter_);
         // performCalculations
-       // if (parameters_.yearsFilter[year])
-      //  {
-            // // not good missing info about buildnewSet which re-init nbPerformedYears = 0
-            // nbPerformedYears++;
-            // // Index of the MC year's space (useful if this year is actually run)
-            // numSpace = nbPerformedYears - 1;
-            // scratchmap = areas_.buildScratchMap(numSpace);
+        // if (parameters_.yearsFilter[year])
+        //  {
+        // // not good missing info about buildnewSet which re-init nbPerformedYears = 0
+        // nbPerformedYears++;
+        // // Index of the MC year's space (useful if this year is actually run)
+        // numSpace = nbPerformedYears - 1;
+        // scratchmap = areas_.buildScratchMap(numSpace);
 
-            // PrepareDataFromClustersInMustrunMode(scratchmap, year);
+        // PrepareDataFromClustersInMustrunMode(scratchmap, year);
 
         prepareInflows_.Run(year);
         // minGenerationScaling_.Run(year);
-        // if (!checksOnGenerationPowerBounds(year))
-        // {
-        //     throw FatalError("hydro management: invalid minimum generation");
-        // }
+        //  if
+        //  (!checksOnGenerationPowerBounds(year))
+        //  {
+        //      throw
+        //      FatalError("hydro
+        //      management: invalid
+        //      minimum
+        //      generation");
+        //  }
 
         //---------------------//
-        //            prepareNetDemand(year, parameters_.mode, scratchmap);
+        //            prepareNetDemand(year,
+        //            parameters_.mode,
+        //            scratchmap);
         //            prepareEffectiveDemand();
-        //            prepareMonthlyOptimalGenerations(randomReservoirLevel, year);
+        //            prepareMonthlyOptimalGenerations(randomReservoirLevel,
+        //            year);
         //   }
     }
 }

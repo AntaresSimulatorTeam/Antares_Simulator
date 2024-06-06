@@ -532,7 +532,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       uint y,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
-    //    prepareInflowsScaling(y);
+    // prepareInflowsScaling(y);
     minGenerationScaling(y);
     if (!checksOnGenerationPowerBounds(y))
     {
