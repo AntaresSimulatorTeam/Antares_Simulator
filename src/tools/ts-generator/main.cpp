@@ -159,6 +159,12 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    if (settings.allLinks && !settings.linksToGen.empty()
+    {
+        logs.error() << "Conflicting options, either choose all links or a list";
+        return 1;
+    }
+
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
     studyOptions.prepareOutput = true;
