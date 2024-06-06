@@ -24,7 +24,7 @@ Add bool argument to optionally load time-series. This bool is false (default va
 ## v9.1.0
 ### Input 
 #### Hydro Maximum Generation/Pumping Power
-* For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
+* For time series ![Migration diagram](img/migration.png "Migration diagram"), for more details, see [this Python script](img/migration.py)
 
 Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
 - inflows, ROR and minimum generation, max pumping & generation (prefix "h")
