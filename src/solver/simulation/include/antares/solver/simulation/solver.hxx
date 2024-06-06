@@ -491,11 +491,11 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
           << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
     }
     // Hydro
-    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
-    {
-        pDurationCollector("tsgen_hydro") << [year, this]
-        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
-    }
+    // if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
+    // {
+    //     pDurationCollector("tsgen_hydro") << [year, this]
+    //     { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+    // }
 
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
