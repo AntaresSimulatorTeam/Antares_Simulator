@@ -533,7 +533,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
     // prepareInflowsScaling(y);
-    minGenerationScaling(y);
+    // minGenerationScaling(y);
     if (!checksOnGenerationPowerBounds(y))
     {
         throw FatalError("hydro management: invalid minimum generation");

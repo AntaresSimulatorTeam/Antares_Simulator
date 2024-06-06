@@ -69,7 +69,7 @@ void HydroInputsChecker::Execute()
         // PrepareDataFromClustersInMustrunMode(scratchmap, year);
 
         prepareInflows_.Run(year);
-        // minGenerationScaling_.Run(year);
+        minGenerationScaling_.Run(year);
         //  if
         //  (!checksOnGenerationPowerBounds(year))
         //  {
