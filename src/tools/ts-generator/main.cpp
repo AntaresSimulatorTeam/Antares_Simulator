@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    if (settings.allLinks && !settings.linksToGen.empty()
+    if (settings.allLinks && !settings.linksListToGen.empty()
     {
         logs.error() << "Conflicting options, either choose all links or a list";
         return 1;
