@@ -164,8 +164,17 @@ public:
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
+
         // Get the area
-        pSize = area->thermal.list.allClustersCount();
+        pSize = 0;
+        for (int areaIndex = 0; areaIndex < study->areas.size(); areaIndex++)
+        {
+            if (study->areas[areaIndex]->allCapacityReservations.size() > 0)
+            {
+                pSize = area->thermal.list.allClustersCount();
+                break;
+            }
+        }
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);
@@ -230,12 +239,14 @@ public:
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Get end year calculations
-        for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
-             i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
-             ++i)
-        {
-            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
-              = state.thermalClusterReserveParticipationCostForYear[i];
+        if (pSize) {
+            for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
+                i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
+                ++i)
+            {
+                pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
+                    = state.thermalClusterReserveParticipationCostForYear[i];
+            }
         }
 
         // Next variable
