@@ -12,7 +12,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study mode
 
----
+
 #### mode
 [//]: # (TODO: verify if required, remove default value)
 [//]: # (TODO: add details 'expansion' behavior)
@@ -36,7 +36,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study horizon
 
----
+
 #### horizon
 [//]: # (TODO: verify if required, remove default value)
 - **Expected value:** year (string)
@@ -48,7 +48,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ### Calendar parameters
 
----
+
 #### nbyears
 [//]: # (TODO: verify if required, verify default value)
 - **Expected value:** unsigned integer
@@ -122,7 +122,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Additional parameters
 
----
+
 #### year-by-year
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -219,7 +219,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Pre-processor parameters
 
----
+
 #### readonly
 [//]: # (TODO: add usage details)
 - **Expected value:** `true` or `false`
@@ -586,6 +586,20 @@ _**This section is under construction**_
 ---
 ## Other parameters
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
+
+---
+#### initial-reservoir-levels
+[//]: # (TODO: complete the usage paragraph)
+- **Expected value:** one of the following (case-insensitive):
+    - `cold start`
+    - `hot start`
+- **Required:** no
+- **Default value:** `cold start`
+- **Usage:** initial reservoir levels:
+    - `cold start`
+    - `hot start`
+
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-initial-reservoir-levels-parameter).
 
 ---
 #### hydro-heuristic-policy
