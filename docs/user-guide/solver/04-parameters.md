@@ -588,8 +588,7 @@ _**This section is under construction**_
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
 
 ---
-#### initial-reservoir-levels
-[//]: # (TODO: complete the usage paragraph)
+#### initial-reservoir-levels (DEPRECATED since 9.2: cold start is default behavior)
 - **Expected value:** one of the following (case-insensitive):
     - `cold start`
     - `hot start`
