@@ -122,7 +122,7 @@ jobs:
         shell: bash
         run: |
           cmake -B _build -S src \
-          -DCMAKE_CXX_FLAGS="/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR" \
+          -DCMAKE_CXX_FLAGS=" /D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR" \
           -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
