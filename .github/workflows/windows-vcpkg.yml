@@ -127,7 +127,7 @@ jobs:
           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
           -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=Debug \ # FIXME
           -DBUILD_TESTING=ON  \
           -DBUILD_TOOLS=ON \
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
