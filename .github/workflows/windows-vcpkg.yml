@@ -130,7 +130,8 @@ jobs:
           -DBUILD_TESTING=ON  \
           -DBUILD_TOOLS=ON \
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
-          -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
+          -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle" \
+          -DCMAKE_CXX_FLAGS="/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR"
 
       - name: Build
         shell: bash
