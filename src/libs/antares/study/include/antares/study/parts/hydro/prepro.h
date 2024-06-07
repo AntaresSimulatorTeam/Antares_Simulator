@@ -97,6 +97,7 @@ public:
     */
     bool loadFromFolder(Study& s, const AreaName& areaID, const char folder[]);
 
+    bool validate(const std::string& areaID) const;
     /*!
     ** \brief Save hydro settings for the prepro into a folder
     **

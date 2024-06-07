@@ -944,6 +944,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             // if changes are required, please update reloadXCastData()
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
+            ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
         auto* hydroSeries = area.hydro.series;
