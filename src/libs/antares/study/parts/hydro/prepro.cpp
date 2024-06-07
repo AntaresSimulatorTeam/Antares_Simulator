@@ -145,11 +145,10 @@ bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
     return false;
 }
 
-bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* folder)
+bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::string& folder)
 {
     /* Asserts */
-    assert(folder);
-    assert('\0' != *folder);
+    assert(!folder.empty());
 
     enum
     {
@@ -161,6 +160,17 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
 
     buffer.clear() << folder << SEP << areaID << SEP << "prepro.ini";
     bool ret = PreproHydroLoadSettings(this, buffer);
+
+    buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
+    ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
+
+    return ret;
+}
+
+bool PreproHydro::validate(const std::string& areaID)
+{
+    bool ret = true;
+
     if (intermonthlyCorrelation < 0. || intermonthlyCorrelation > 1.)
     {
         logs.error() << "Hydro: Prepro: `" << areaID
@@ -174,16 +184,6 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
             intermonthlyCorrelation = 1.;
         }
     }
-
-    buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-    ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
-
-    return ret;
-}
-
-bool PreproHydro::validate(const std::string& areaID) const
-{
-    bool ret = true;
 
     const auto& col = data[powerOverWater];
     for (unsigned i = 0; i != data.height; ++i)
