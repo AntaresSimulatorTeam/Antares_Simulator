@@ -42,7 +42,7 @@ public:
 public:
     // Constructor
 
-    hydroLevelsData(std::string& iniFilePrefix,
+    hydroLevelsData(const std::string& iniFilePrefix,
                     std::function<void(Study&, MatrixType&)> applyToTarget);
 
     //! \name Data manupulation
@@ -81,7 +81,7 @@ private:
     //! Hydro levels overlay (0 if auto)
     MatrixType pHydroLevelsRules;
     // prefix to be added when calling saveToINIFileHydroLevel
-    std::string& addToPrefix;
+    const std::string addToPrefix_;
 
     std::function<void(Study&, MatrixType&)> applyToTarget_;
 

@@ -26,9 +26,10 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-hydroLevelsData::hydroLevelsData(std::string& iniFilePrefix,
+hydroLevelsData::hydroLevelsData(const std::string& iniFilePrefix,
                                  std::function<void(Study&, MatrixType&)> applyToTarget) :
- addToPrefix(iniFilePrefix), applyToTarget_(applyToTarget)
+        addToPrefix_(iniFilePrefix),
+        applyToTarget_(applyToTarget)
 {
 }
 
@@ -44,10 +45,6 @@ bool hydroLevelsData::reset(const Study& study)
 
 void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
-    // Prefix
-    CString<512, false> prefix;
-    prefix += addToPrefix;
-
     // Turning values into strings (precision 4)
     std::ostringstream value_into_string;
     value_into_string << std::setprecision(4);
@@ -67,7 +64,7 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
                 continue;
             assert(index < study.areas.size());
             value_into_string << value;
-            file << prefix << study.areas.byIndex[index]->id << ',' << y << " = "
+            file << addToPrefix_ << study.areas.byIndex[index]->id << ',' << y << " = "
                  << value_into_string.str() << '\n';
             value_into_string.str(std::string()); // Clearing converter
         }

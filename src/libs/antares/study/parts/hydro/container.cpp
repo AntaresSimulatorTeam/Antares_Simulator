@@ -49,8 +49,7 @@ PartHydro::PartHydro(const Data::Area& area) :
  pumpingEfficiency(1.),
  hydroModulable(false),
  prepro(nullptr),
- series(nullptr),
- finalLevelInflowsModifier(*this, area.index, area.name)
+ series(nullptr)
 {
 }
 
@@ -127,6 +126,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
           area.hydro.initializeReservoirLevelDate = 0;
           area.hydro.reservoirCapacity = 0.;
           area.hydro.pumpingEfficiency = 1.;
+          area.hydro.deltaBetweenFinalAndInitialLevels.resize(study.parameters.nbYears);
 
           if (study.header.version >= StudyVersion(9, 1))
           {

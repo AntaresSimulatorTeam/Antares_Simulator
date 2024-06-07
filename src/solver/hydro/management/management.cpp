@@ -368,15 +368,15 @@ void HydroManagement::changeInflowsToAccommodateFinalLevels(uint year)
     {
         auto& data = tmpDataByArea_[&area];
 
-        if (!area.hydro.finalLevelInflowsModifier.isApplicable(year))
+        if (!area.hydro.deltaBetweenFinalAndInitialLevels[year].has_value())
             return;
 
         // Must be done before prepareMonthlyTargetGenerations
-        double delta = area.hydro.finalLevelInflowsModifier.deltaLevel[year];
-        if (delta > 0)
-            data.inflows[0] += delta;
-        else if (delta < 0)
-            data.inflows[11] += delta;
+        double delta = area.hydro.deltaBetweenFinalAndInitialLevels[year].value();
+        if (delta < 0)
+            data.inflows[0] -= delta;
+        else if (delta > 0)
+            data.inflows[11] -= delta;
     });
 }
 

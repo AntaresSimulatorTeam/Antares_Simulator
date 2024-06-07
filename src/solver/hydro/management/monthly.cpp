@@ -152,8 +152,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
         if (area.hydro.reservoirManagement)
             lvi = random_reservoir_level[indexArea];
 
-        indexArea++;
-
         double solutionCost = 0.;
         double solutionCostNoised = 0.;
 
@@ -285,6 +283,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             auto content = buffer.str();
             resultWriter_.addEntryFromBuffer(path.str(), content);
         }
+
+        indexArea++;
     });
 }
 
