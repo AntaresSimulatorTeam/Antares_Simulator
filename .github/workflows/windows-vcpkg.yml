@@ -133,7 +133,6 @@ jobs:
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
-
       - name: Build
         shell: bash
         run: |
