@@ -106,9 +106,9 @@ void PartHydro::reset()
     }
 }
 
-using setProp = std::function<void (IniFile::Property*, PartHydro&)>;
+using setProperty = std::function<void (IniFile::Property*, Area*)>;
 
-static bool loadProperties(Study& study, IniFile::Property* property, const std::string& filename, setProp f)
+static bool loadProperties(Study& study, IniFile::Property* property, const std::string& filename, setProperty funcToSetProperty)
 {
     if (!property)
         return false;
@@ -124,7 +124,7 @@ static bool loadProperties(Study& study, IniFile::Property* property, const std:
         Area* area = study.areas.find(id);
         if (area)
         {
-            f(property, area->hydro);
+            funcToSetProperty(property, area);
         }
         else
         {
@@ -276,33 +276,16 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         return false;
     }
 
-    const char* const sectionName = "inter-daily-breakdown";
-
     IniFile::Section* section;
     IniFile::Property* property;
 
-    if ((section = ini.find(sectionName)))
+    if ((section = ini.find("inter-daily-breakdown")))
     {
-        if ((property = section->firstProperty))
-        {
-            // Browse all properties
-            for (; property; property = property->next)
-            {
-                AreaName id = property->key;
-                id.toLower();
-
-                Area* area = study.areas.find(id);
-                if (area)
-                {
-                    ret = property->value.to<double>(area->hydro.interDailyBreakdown) && ret;
-                }
-                else
-                {
-                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
-                }
-            }
-        }
+        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
+            ret = p->value.to<double>(area->hydro.intermonthlyBreakdown) && ret;
+        });
     }
+
 
     if ((section = ini.find("intra-daily-modulation")))
     {
@@ -338,53 +321,21 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
     if ((section = ini.find("reservoir")))
     {
-        if ((property = section->firstProperty))
-        {
-            // Browse all properties
-            for (; property; property = property->next)
-            {
-                AreaName id = property->key;
-                id.toLower();
-
-                auto* area = study.areas.find(id);
-                if (area)
-                {
-                    ret = property->value.to<bool>(area->hydro.reservoirManagement) && ret;
-                }
-                else
-                {
-                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
-                }
-            }
-        }
+        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
+            ret = p->value.to<bool>(area->hydro.reservoirManagement) && ret;
+        });
     }
 
     if ((section = ini.find("reservoir capacity")))
     {
-        if ((property = section->firstProperty))
-        {
-            // Browse all properties
-            for (; property; property = property->next)
+        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
+            ret = p->value.to<double>(area->hydro.reservoirCapacity) && ret;
+            if (area->hydro.reservoirCapacity < 1e-6)
             {
-                AreaName id = property->key;
-                id.toLower();
-
-                auto* area = study.areas.find(id);
-                if (area)
-                {
-                    ret = property->value.to<double>(area->hydro.reservoirCapacity) && ret;
-                    if (area->hydro.reservoirCapacity < 1e-6)
-                    {
-                        logs.error() << area->id << ": Invalid reservoir capacity.";
-                        area->hydro.reservoirCapacity = 0.;
-                    }
-                }
-                else
-                {
-                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
-                }
+                logs.error() << area->id << ": Invalid reservoir capacity.";
+                area->hydro.reservoirCapacity = 0.;
             }
-        }
+        });
     }
 
     // Check on reservoir capacity (has to be done after reservoir management and capacity reading,
@@ -431,11 +382,12 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         }
     }
 
-    auto setIntermonthlyBreakdown = [&ret](IniFile::Property* p, PartHydro& h){
-        ret = p->value.to<double>(h.intermonthlyBreakdown) && ret;
-    };
+    /* auto setIntermonthlyBreakdown = [&ret](IniFile::Property* p, PartHydro& h){ */
+    /*     ret = p->value.to<double>(h.intermonthlyBreakdown) && ret; */
+    /* }; */
 
-    loadProperties(study, section->firstProperty, buffer, setIntermonthlyBreakdown);
+    /* loadProperties(study, section->firstProperty, buffer, setIntermonthlyBreakdown); */
+
 
     if ((section = ini.find("follow load")))
     {
