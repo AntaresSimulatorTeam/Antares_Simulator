@@ -174,7 +174,6 @@ public:
             // 4 - Hydraulic ventilation
             pDurationCollector("hydro_ventilation") << [&] {
                 hydroManagement.makeVentilation(randomReservoirLevel,
-                                                state[numSpace],
                                                 y,
                                                 scratchmap);
             };

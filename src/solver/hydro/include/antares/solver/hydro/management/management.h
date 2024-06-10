@@ -69,7 +69,6 @@ public:
 
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
-                         Solver::Variable::State& state,
                          uint y,
                          Antares::Data::Area::ScratchMap& scratchmap);
 
@@ -106,12 +105,10 @@ private:
     double prepareMonthlyTargetGenerations(Data::Area& area,
                                            Antares::Data::HydroManagementData& data);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        uint y,
+    void prepareDailyOptimalGenerations(uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        Data::Area& area,
+    void prepareDailyOptimalGenerations(Data::Area& area,
                                         uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap);
 
