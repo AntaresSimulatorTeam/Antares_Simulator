@@ -106,6 +106,34 @@ void PartHydro::reset()
     }
 }
 
+using setProp = std::function<void (IniFile::Property*, PartHydro&)>;
+
+static bool loadProperties(Study& study, IniFile::Property* property, const std::string& filename, setProp f)
+{
+    if (!property)
+        return false;
+
+    bool ret = true;
+
+    // Browse all properties
+    for (; property; property = property->next)
+    {
+        AreaName id = property->key;
+        id.toLower();
+
+        Area* area = study.areas.find(id);
+        if (area)
+        {
+            f(property, area->hydro);
+        }
+        else
+        {
+            logs.warning() << filename << ": `" << id << "`: Unknown area";
+        }
+    }
+    return ret;
+}
+
 bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 {
     auto& buffer = study.bufferLoadingTS;
@@ -402,6 +430,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
             }
         }
     }
+
+    auto setIntermonthlyBreakdown = [&ret](IniFile::Property* p, PartHydro& h){
+        ret = p->value.to<double>(h.intermonthlyBreakdown) && ret;
+    };
+
+    loadProperties(study, section->firstProperty, buffer, setIntermonthlyBreakdown);
+
     if ((section = ini.find("follow load")))
     {
         if ((property = section->firstProperty))
