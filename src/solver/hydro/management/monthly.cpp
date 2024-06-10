@@ -83,7 +83,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 }
 
 double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area,
-                                                        Antares::Data::TmpDataByArea& data)
+                                                        Antares::Data::HydroManagementData& data)
 {
     double total = 0;
 

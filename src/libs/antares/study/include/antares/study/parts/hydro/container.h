@@ -36,7 +36,7 @@ enum dayYearCount
 };
 
 //! Temporary data
-struct TmpDataByArea
+struct HydroManagementData
 {
     //! Monthly local effective demand
     double MLE[12];
@@ -70,7 +70,7 @@ struct TmpDataByArea
     //! yearly total inflows
     double totalYearInflows;
 
-}; // struct TmpDataByArea
+}; // struct HydroManagementData
 
 /*!
 ** \brief Hydro for a single area
@@ -204,7 +204,7 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
-    std::unordered_map<uint, TmpDataByArea> hydro_management_data;
+    std::unordered_map<uint, HydroManagementData> hydro_management_data;
 
 }; // class PartHydro
 

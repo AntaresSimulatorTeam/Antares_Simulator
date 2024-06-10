@@ -94,7 +94,7 @@ struct DebugData
     std::array<double, 12> previousMonthWaste{0};
 
     Solver::IResultWriter& pWriter;
-    const Antares::Data::TmpDataByArea& data;
+    const Antares::Data::HydroManagementData& data;
     const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
     const double* srcinflows;
     const MaxPowerType& maxP;
@@ -104,7 +104,7 @@ struct DebugData
     const double reservoirCapacity;
 
     DebugData(Solver::IResultWriter& writer,
-              const Antares::Data::TmpDataByArea& data,
+              const Antares::Data::HydroManagementData& data,
               const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
               const double* srcinflows,
               const MaxPowerType& maxP,
