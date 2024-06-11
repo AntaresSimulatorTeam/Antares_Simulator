@@ -20,18 +20,25 @@
 */
 #pragma once
 
-namespace Antares::Solver
+namespace Antares
 {
-class Data::Study;
+namespace Data
+{
+class Study;
+}
+
+namespace Solver
+{
+
 class ScenarioBuilderOwner
 {
 public:
-    explicit ScenarioBuilderOwner(Data::Study& study);
+    explicit ScenarioBuilderOwner(Antares::Data::Study& study);
 
     void callScenarioBuilder();
 
 private:
-    Data::Study& study_;
+    Antares::Data::Study& study_;
 };
-
-} // namespace Antares::Solver
+} // namespace Solver
+} // namespace Antares
