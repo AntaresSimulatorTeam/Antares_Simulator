@@ -799,6 +799,8 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
     - for every Monte-Carlo year that you want the Antares Simulator to **skip**, add the parameter entry
       `playlist_year - = i`, where `i` is the index of the year.
 
+_Please note that by convention, the first year has index 0._
+
 ---
 #### playlist_year_weight
 [//]: # (TODO: document this parameter)
