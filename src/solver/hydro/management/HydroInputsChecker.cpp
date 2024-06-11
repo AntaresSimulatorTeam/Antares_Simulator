@@ -50,21 +50,24 @@ void HydroInputsChecker::Execute()
 {
     for (auto year = firstYear_; year < endYear_; ++year)
     {
-        prepareInflows_.Run(year);
-        minGenerationScaling_.Run(year);
-        if (!checksOnGenerationPowerBounds(year))
+        if (parameters_.yearsFilter[year])
         {
-            throw FatalError("hydro management: invalid minimum generation");
-        }
+            prepareInflows_.Run(year);
+            minGenerationScaling_.Run(year);
+            if (!checksOnGenerationPowerBounds(year))
+            {
+                throw FatalError("hydro management: invalid minimum generation");
+            }
 
-        //---------------------  May be later ? //
-        //            prepareNetDemand(year,
-        //            parameters_.mode,
-        //            scratchmap);
-        //            prepareEffectiveDemand();
-        //            prepareMonthlyOptimalGenerations(randomReservoirLevel,
-        //            year);
-        //-----------------------------
+            //---------------------  May be later ? //
+            //            prepareNetDemand(year,
+            //            parameters_.mode,
+            //            scratchmap);
+            //            prepareEffectiveDemand();
+            //            prepareMonthlyOptimalGenerations(randomReservoirLevel,
+            //            year);
+            //-----------------------------
+        }
     }
 }
 
