@@ -58,15 +58,6 @@ void HydroInputsChecker::Execute()
             {
                 throw FatalError("hydro management: invalid minimum generation");
             }
-
-            //---------------------  May be later ? //
-            //            prepareNetDemand(year,
-            //            parameters_.mode,
-            //            scratchmap);
-            //            prepareEffectiveDemand();
-            //            prepareMonthlyOptimalGenerations(randomReservoirLevel,
-            //            year);
-            //-----------------------------
         }
     }
 }
