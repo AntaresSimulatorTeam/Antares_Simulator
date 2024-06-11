@@ -145,7 +145,7 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
 void HydroManagement::prepareNetDemand(uint year,
                                        Data::SimulationMode mode,
                                        const Antares::Data::Area::ScratchMap& scratchmap,
-                                       HydroSpecific& hydro_specific)
+                                       Antares::Data::HydroSpecific& hydro_specific)
 {
     areas_.each(
       [this, &year, &scratchmap, &mode](Data::Area& area)
