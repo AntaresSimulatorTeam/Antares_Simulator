@@ -82,8 +82,10 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     }
 }
 
-double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area,
-                                                        Antares::Data::HydroManagementData& data)
+double HydroManagement::prepareMonthlyTargetGenerations(
+  Data::Area& area,
+  Antares::Data::HydroManagementData& data,
+  Antares::Data::HydroSpecific& hydro_specific)
 {
     double total = 0;
 
@@ -106,9 +108,9 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area,
 
     for (uint realmonth = 0; realmonth != 12; ++realmonth)
     {
-        if (data.MLE[realmonth] > monthlyMaxDemand)
+        if (hydro_specific.MLE[realmonth] > monthlyMaxDemand)
         {
-            monthlyMaxDemand = data.MLE[realmonth];
+            monthlyMaxDemand = hydro_specific.MLE[realmonth];
         }
     }
 
@@ -117,8 +119,8 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area,
         double coeff = 0.;
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
-            assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
-            coeff += std::pow(data.MLE[realmonth] / monthlyMaxDemand,
+            assert(hydro_specific.MLE[realmonth] / monthlyMaxDemand >= 0.);
+            coeff += std::pow(hydro_specific.MLE[realmonth] / monthlyMaxDemand,
                               area.hydro.intermonthlyBreakdown);
         }
 
@@ -129,9 +131,9 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area,
 
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
-            assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
+            assert(hydro_specific.MLE[realmonth] / monthlyMaxDemand >= 0.);
             data.MTG[realmonth] = coeff
-                                  * std::pow(data.MLE[realmonth] / monthlyMaxDemand,
+                                  * std::pow(hydro_specific.MLE[realmonth] / monthlyMaxDemand,
                                              area.hydro.intermonthlyBreakdown);
         }
     }

@@ -43,12 +43,12 @@ struct HydroSpecific
 
     //! Daily local effective load
     std::array<double, dayYearCount> DLE;
+    //! Monthly local effective demand
+    std::array<double, 12> MLE;
 };
 //! Temporary data
 struct HydroManagementData
 {
-    //! Monthly local effective demand
-    std::array<double, 12> MLE;
     //! Monthly optimal generation
     std::array<double, 12> MOG;
     //! Monthly optimal level
