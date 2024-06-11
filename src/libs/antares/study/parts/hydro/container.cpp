@@ -286,6 +286,66 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::intraDailyModulation) && ret;
     }
 
+    if (IniFile::Section* section = ini.find("reservoir"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::reservoirManagement) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("reservoir capacity"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::reservoirCapacity) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("follow load"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::followLoadModulations) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("use water"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::useWaterValue) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("hard bounds"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::hardBoundsOnRuleCurves) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("use heuristic"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::useHeuristicTarget) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("power to level"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::powerToLevel) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("initialize reservoir date"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::initializeReservoirLevelDate) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("use leeway"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::useLeeway) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("leeway low"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::leewayLowerBound) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("leeway up"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::leewayUpperBound) && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("pumping efficiency"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::pumpingEfficiency) && ret;
+    }
+
     // Check on reservoir capacity (has to be done after reservoir management and capacity reading,
     // not before). Some areas reservoir capacities may not be printed in hydro ini file when saving
     // the study, because they are too small (< 1e-6). We cannot have reservoir management = yes and
