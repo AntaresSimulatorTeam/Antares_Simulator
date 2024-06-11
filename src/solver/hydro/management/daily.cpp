@@ -102,6 +102,8 @@ struct DebugData
     const ReservoirLevelType& lowLevel;
     const double reservoirCapacity;
 
+    const Antares::Data::HydroSpecific& hydro_specific
+
     DebugData(Solver::IResultWriter& writer,
               const Antares::Data::HydroManagementData& data,
               const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
@@ -110,7 +112,8 @@ struct DebugData
               const MaxPowerType& maxE,
               const double* dailyTargetGen,
               const ReservoirLevelType& lowLevel,
-              double reservoirCapacity):
+              double reservoirCapacity,
+              const Antares::Data::HydroSpecific& hydro_specific):
         pWriter(writer),
         data(data),
         ventilationResults(ventilationResults),
@@ -119,7 +122,8 @@ struct DebugData
         maxE(maxE),
         dailyTargetGen(dailyTargetGen),
         lowLevel(lowLevel),
-        reservoirCapacity(reservoirCapacity)
+        reservoirCapacity(reservoirCapacity),
+        hydro_specific(hydro_specific)
     {
         OVF.fill(0);
         DEV.fill(0);
@@ -141,7 +145,7 @@ struct DebugData
         {
             double value = ventilationResults.HydrauliqueModulableQuotidien[day];
             buffer << day << '\t' << value << '\t' << OPP[day] << '\t' << DailyTargetGen[day]
-                   << '\t' << data.DLE[day] << '\t' << data.DLN[day];
+                   << '\t' << hydro_specific.DLE[day] << '\t' << hydro_specific.DLN[day];
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
@@ -219,9 +223,10 @@ struct DebugData
 };
 
 inline void HydroManagement::prepareDailyOptimalGenerations(
-    Data::Area& area,
-    uint y,
-    Antares::Data::Area::ScratchMap& scratchmap)
+  Data::Area& area,
+  uint y,
+  Antares::Data::Area::ScratchMap& scratchmap,
+  Antares::Data::HydroSpecific& hydro_specific)
 {
     const auto srcinflows = area.hydro.series->storage.getColumn(y);
 
@@ -262,7 +267,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                                                 maxE,
                                                 dailyTargetGen,
                                                 lowLevel,
-                                                reservoirCapacity);
+                                                reservoirCapacity,
+                                                hydro_specific);
     }
 
     for (uint month = 0; month != 12; ++month)
@@ -317,9 +323,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 for (uint day = 0; day != daysPerMonth; ++day)
                 {
                     auto dYear = day + dayYear;
-                    if (data.DLE[dYear] > demandMax)
+                    if (hydro_specific.DLE[dYear] > demandMax)
                     {
-                        demandMax = data.DLE[dYear];
+                        demandMax = hydro_specific.DLE[dYear];
                     }
                 }
 
@@ -331,7 +337,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
                         auto dYear = day + dayYear;
-                        coeff += std::pow(data.DLE[dYear] / demandMax,
+                        coeff += std::pow(hydro_specific.DLE[dYear] / demandMax,
                                           area.hydro.interDailyBreakdown);
                     }
                     coeff = data.MOG[realmonth] / coeff;
@@ -340,7 +346,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                     {
                         auto dYear = day + dayYear;
                         dailyTargetGen[dYear] = coeff
-                                                * std::pow(data.DLE[dYear] / demandMax,
+                                                * std::pow(hydro_specific.DLE[dYear] / demandMax,
                                                            area.hydro.interDailyBreakdown);
                     }
                 }
@@ -552,9 +558,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 }
 
 void HydroManagement::prepareDailyOptimalGenerations(uint y,
-                                                     Antares::Data::Area::ScratchMap& scratchmap)
+                                                     Antares::Data::Area::ScratchMap& scratchmap,
+                                                     Antares::Data::HydroSpecific& hydro_specific)
 {
     areas_.each([&](Data::Area& area)
-                { prepareDailyOptimalGenerations(area, y, scratchmap); });
+                { prepareDailyOptimalGenerations(area, y, scratchmap, hydro_specific); });
 }
 } // namespace Antares

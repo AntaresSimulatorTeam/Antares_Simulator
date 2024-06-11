@@ -144,7 +144,8 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
 
 void HydroManagement::prepareNetDemand(uint year,
                                        Data::SimulationMode mode,
-                                       const Antares::Data::Area::ScratchMap& scratchmap)
+                                       const Antares::Data::Area::ScratchMap& scratchmap,
+                                       HydroSpecific& hydro_specific)
 {
     areas_.each(
       [this, &year, &scratchmap, &mode](Data::Area& area)
@@ -191,12 +192,13 @@ void HydroManagement::prepareNetDemand(uint year,
 
               assert(!std::isnan(netdemand)
                      && "hydro management: NaN detected when calculating the net demande");
-              data.DLN[dayYear] += netdemand;
+              hydro_specific.DLN[dayYear] += netdemand;
           }
       });
 }
 
-void HydroManagement::prepareEffectiveDemand(uint year)
+void HydroManagement::prepareEffectiveDemand(uint year,
+                                             Antares::Data::HydroSpecific& hydro_specific)
 {
     areas_.each(
       [&](Data::Area& area)
@@ -215,14 +217,14 @@ void HydroManagement::prepareEffectiveDemand(uint year)
                 [&](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
-                    effectiveDemand += area->hydro.managementData.at(year).DLN[day] * value;
+                    effectiveDemand += hydro_specific.DLN[day] * value;
                 });
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
-              data.DLE[day] += effectiveDemand;
+              hydro_specific.DLE[day] += effectiveDemand;
               data.MLE[realmonth] += effectiveDemand;
 
-              assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
+              assert(not std::isnan(hydro_specific.DLE[day]) && "nan value detected for DLE");
               assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
           }
 
@@ -238,9 +240,9 @@ void HydroManagement::prepareEffectiveDemand(uint year)
               for (uint d = 0; d != daysPerMonth; ++d)
               {
                   auto dYear = d + dayYear;
-                  if (data.DLE[dYear] < minimumMonth)
+                  if (hydro_specific.DLE[dYear] < minimumMonth)
                   {
-                      minimumMonth = data.DLE[dYear];
+                      minimumMonth = hydro_specific.DLE[dYear];
                   }
               }
 
@@ -248,7 +250,7 @@ void HydroManagement::prepareEffectiveDemand(uint year)
               {
                   for (uint d = 0; d != daysPerMonth; ++d)
                   {
-                      data.DLE[dayYear + d] -= minimumMonth - 1e-4;
+                      hydro_specific.DLE[dayYear + d] -= minimumMonth - 1e-4;
                   }
               }
 
@@ -274,11 +276,12 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       uint y,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
-    prepareNetDemand(y, parameters_.mode, scratchmap);
-    prepareEffectiveDemand(y);
+    Antares::Data::HydroSpecific hydro_specific;
+    prepareNetDemand(y, parameters_.mode, scratchmap, hydro_specific);
+    prepareEffectiveDemand(y, hydro_specific);
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y);
-    prepareDailyOptimalGenerations(y, scratchmap);
+    prepareDailyOptimalGenerations(y, scratchmap, hydro_specific);
 }
 
 } // namespace Antares

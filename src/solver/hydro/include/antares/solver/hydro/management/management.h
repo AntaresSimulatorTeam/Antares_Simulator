@@ -81,9 +81,10 @@ private:
     //! Prepare the net demand for each area
     void prepareNetDemand(uint year,
                           Data::SimulationMode mode,
-                          const Antares::Data::Area::ScratchMap& scratchmap);
+                          const Antares::Data::Area::ScratchMap& scratchmap,
+                          Antares::Data::HydroSpecific& hydro_specific);
     //! Prepare the effective demand for each area
-    void prepareEffectiveDemand(uint year);
+    void prepareEffectiveDemand(uint year, Antares::Data::HydroSpecific& hydro_specific);
     //! Monthly Optimal generations
     void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
 
@@ -94,11 +95,13 @@ private:
                                            Antares::Data::HydroManagementData& data);
 
     void prepareDailyOptimalGenerations(uint y,
-                                        Antares::Data::Area::ScratchMap& scratchmap);
+                                        Antares::Data::Area::ScratchMap& scratchmap,
+                                        Antares::Data::HydroSpecific& hydro_specific);
 
     void prepareDailyOptimalGenerations(Data::Area& area,
                                         uint y,
-                                        Antares::Data::Area::ScratchMap& scratchmap);
+                                        Antares::Data::Area::ScratchMap& scratchmap,
+                                        Antares::Data::HydroSpecific& hydro_specific);
 
 private:
     const Data::AreaList& areas_;

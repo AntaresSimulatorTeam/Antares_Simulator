@@ -35,6 +35,15 @@ enum dayYearCount
     dayYearCount = 366
 };
 
+// TODO Rename
+struct HydroSpecific
+{
+    //! Net demand, for each day of the year, for each area
+    std::array<double, dayYearCount> DLN;
+
+    //! Daily local effective load
+    std::array<double, dayYearCount> DLE;
+};
 //! Temporary data
 struct HydroManagementData
 {
@@ -51,12 +60,6 @@ struct HydroManagementData
     //! monthly minimal generation
     std::array<double, 12> mingens;
 
-    //! Net demand, for each day of the year, for each area
-    std::array<double, dayYearCount> DLN;
-    //! Daily local effective load
-    std::array<double, dayYearCount> DLE;
-    //! Daily optimized Generation
-    std::array<double, dayYearCount> DOG;
     //! daily minimal generation
     std::array<double, dayYearCount> dailyMinGen;
 
