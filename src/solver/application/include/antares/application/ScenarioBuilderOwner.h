@@ -32,8 +32,6 @@ public:
 
     void callScenarioBuilder();
 
-    ScenarioBuilderOwner();
-
 private:
     Data::Study& study_;
 };
