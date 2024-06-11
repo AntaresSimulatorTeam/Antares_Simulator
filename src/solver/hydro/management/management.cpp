@@ -222,10 +222,11 @@ void HydroManagement::prepareEffectiveDemand(uint year,
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
               hydro_specific.daily.DLE[day] += effectiveDemand;
-              hydro_specific.MLE[realmonth] += effectiveDemand;
+              hydro_specific.monthly.MLE[realmonth] += effectiveDemand;
 
               assert(not std::isnan(hydro_specific.daily.DLE[day]) && "nan value detected for DLE");
-              assert(not std::isnan(hydro_specific.MLE[realmonth]) && "nan value detected for DLE");
+              assert(not std::isnan(hydro_specific.monthly.MLE[realmonth])
+                     && "nan value detected for DLE");
           }
 
           auto minimumYear = std::numeric_limits<double>::infinity();
@@ -254,9 +255,9 @@ void HydroManagement::prepareEffectiveDemand(uint year,
                   }
               }
 
-              if (hydro_specific.MLE[realmonth] < minimumYear)
+              if (hydro_specific.monthly.MLE[realmonth] < minimumYear)
               {
-                  minimumYear = hydro_specific.MLE[realmonth];
+                  minimumYear = hydro_specific.monthly.MLE[realmonth];
               }
 
               dayYear += daysPerMonth;
@@ -266,7 +267,7 @@ void HydroManagement::prepareEffectiveDemand(uint year,
           {
               for (uint realmonth = 0; realmonth != 12; ++realmonth)
               {
-                  hydro_specific.MLE[realmonth] -= minimumYear - 1e-4;
+                  hydro_specific.monthly.MLE[realmonth] -= minimumYear - 1e-4;
               }
           }
       });

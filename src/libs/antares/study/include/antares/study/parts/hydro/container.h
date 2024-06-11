@@ -43,10 +43,8 @@ struct HydroDaily
     std::array<double, dayYearCount> DLE;
 };
 
-// TODO Rename
-struct HydroSpecific
+struct HydroMontly
 {
-    HydroDaily daily;
     //! Monthly local effective demand
     std::array<double, 12> MLE;
     //! Monthly optimal generation
@@ -55,6 +53,13 @@ struct HydroSpecific
     std::array<double, 12> MOL;
     //! Monthly target generations
     std::array<double, 12> MTG;
+};
+
+// TODO Rename
+struct HydroSpecific
+{
+    HydroDaily daily;
+    HydroMontly monthly;
 };
 
 //! Temporary data

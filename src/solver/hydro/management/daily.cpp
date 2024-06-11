@@ -161,7 +161,7 @@ struct DebugData
         path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "daily." << areaName.c_str()
              << ".txt";
 
-        buffer << "\tNiveau init : " << hydro_specific.MOL[initReservoirLvlMonth] << "\n";
+        buffer << "\tNiveau init : " << hydro_specific.monthly.MOL[initReservoirLvlMonth] << "\n";
         for (uint month = 0; month != 12; ++month)
         {
             uint realmonth = (initReservoirLvlMonth + month) % 12;
@@ -206,9 +206,9 @@ struct DebugData
                     buffer << '\t' << deviationMax[realmonth] * 100 << '\t' << '\t'
                            << violationMax[realmonth] * 100 << '\t' << '\t'
                            << WASTE[realmonth] * 100 << '\t' << CoutTotal[realmonth] << '\t'
-                           << (hydro_specific.MOG[realmonth] / reservoirCapacity) * 100 << '\t'
-                           << '\t' << '\t' << '\t' << '\t'
-                           << (hydro_specific.MOG[realmonth] / reservoirCapacity
+                           << (hydro_specific.monthly.MOG[realmonth] / reservoirCapacity) * 100
+                           << '\t' << '\t' << '\t' << '\t' << '\t'
+                           << (hydro_specific.monthly.MOG[realmonth] / reservoirCapacity
                                + previousMonthWaste[realmonth])
                                 * 100;
                 }
@@ -340,7 +340,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                         coeff += std::pow(hydro_specific.daily.DLE[dYear] / demandMax,
                                           area.hydro.interDailyBreakdown);
                     }
-                    coeff = hydro_specific.MOG[realmonth] / coeff;
+                    coeff = hydro_specific.monthly.MOG[realmonth] / coeff;
 
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
@@ -353,7 +353,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 else
                 {
                     assert(daysPerMonth > 0);
-                    double coeff = hydro_specific.MOG[realmonth] / daysPerMonth;
+                    double coeff = hydro_specific.monthly.MOG[realmonth] / daysPerMonth;
 
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
@@ -395,7 +395,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             DONNEES_MENSUELLES* problem = H2O_J_Instanciation();
             H2O_J_AjouterBruitAuCout(*problem);
             problem->NombreDeJoursDuMois = (int)daysPerMonth;
-            problem->TurbineDuMois = hydro_specific.MOG[realmonth];
+            problem->TurbineDuMois = hydro_specific.monthly.MOG[realmonth];
 
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
@@ -446,7 +446,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
     else
     {
-        double monthInitialLevel = hydro_specific.MOL[initReservoirLvlMonth];
+        double monthInitialLevel = hydro_specific.monthly.MOL[initReservoirLvlMonth];
         double wasteFromPreviousMonth = 0.;
 
         Hydro_problem_costs h2o2_optim_costs(parameters_);
@@ -472,7 +472,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
 
-            problem.TurbineDuMois = (hydro_specific.MOG[realmonth] + wasteFromPreviousMonth)
+            problem.TurbineDuMois = (hydro_specific.monthly.MOG[realmonth] + wasteFromPreviousMonth)
                                     / reservoirCapacity;
             problem.NiveauInitialDuMois = monthInitialLevel;
             problem.reservoirCapacity = reservoirCapacity;
