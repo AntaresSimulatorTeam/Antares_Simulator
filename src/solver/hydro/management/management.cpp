@@ -144,7 +144,7 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
 
 bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
 {
-    const auto& data = area.hydro.hydro_management_data.at(year);
+    const auto& data = area.hydro.managementData.at(year);
     for (uint month = 0; month != 12; ++month)
     {
         uint realmonth = calendar_.months[month].realmonth;
@@ -164,7 +164,7 @@ bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& are
 
 bool HydroManagement::checkYearlyMinGeneration(uint year, const Data::Area& area) const
 {
-    const auto& data = area.hydro.hydro_management_data.at(year);
+    const auto& data = area.hydro.managementData.at(year);
     if (data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
@@ -290,7 +290,7 @@ void HydroManagement::prepareNetDemand(uint year,
           const auto& rormatrix = area.hydro.series->ror;
           const auto* ror = rormatrix.getColumn(year);
 
-          auto& data = area.hydro.hydro_management_data[year];
+          auto& data = area.hydro.managementData[year];
           const double* loadSeries = area.load.series.getColumn(year);
           const double* windSeries = area.wind.series.getColumn(year);
           const double* solarSeries = area.solar.series.getColumn(year);
@@ -337,7 +337,7 @@ void HydroManagement::prepareEffectiveDemand(uint year)
     areas_.each(
       [&](Data::Area& area)
       {
-          auto& data = area.hydro.hydro_management_data[year];
+          auto& data = area.hydro.managementData[year];
 
           for (uint day = 0; day != 365; ++day)
           {
@@ -351,7 +351,7 @@ void HydroManagement::prepareEffectiveDemand(uint year)
                 [&](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
-                    effectiveDemand += area->hydro.hydro_management_data.at(year).DLN[day] * value;
+                    effectiveDemand += area->hydro.managementData.at(year).DLN[day] * value;
                 });
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");

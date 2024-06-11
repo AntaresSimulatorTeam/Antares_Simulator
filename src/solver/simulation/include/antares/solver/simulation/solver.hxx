@@ -317,8 +317,6 @@ void ISimulation<ImplementationType>::run()
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
-    // TSGenerator::ResizeGeneratedTimeSeries(study.areas, study.parameters);
-
     if (settings.tsGeneratorsOnly)
     {
         // Only the preprocessors can be used

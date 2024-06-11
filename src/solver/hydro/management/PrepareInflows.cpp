@@ -18,7 +18,7 @@ void PrepareInflows::Run(uint year)
       {
           const auto& srcinflows = area.hydro.series->storage.getColumn(year);
 
-          auto& data = area.hydro.hydro_management_data[year];
+          auto& data = area.hydro.managementData[year];
           double totalYearInflows = 0.0;
 
           for (uint month = 0; month != 12; ++month)

@@ -154,7 +154,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
     areas_.each(
       [&](Data::Area& area)
       {
-          auto& data = area.hydro.hydro_management_data[y];
+          auto& data = area.hydro.managementData[y];
 
           auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
           auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];

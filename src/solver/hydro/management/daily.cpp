@@ -225,7 +225,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 {
     const auto srcinflows = area.hydro.series->storage.getColumn(y);
 
-    auto& data = area.hydro.hydro_management_data[y];
+    auto& data = area.hydro.managementData[y];
 
     auto& scratchpad = scratchmap.at(&area);
 

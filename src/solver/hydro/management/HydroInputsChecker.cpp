@@ -142,7 +142,7 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
 
 bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& area) const
 {
-    const auto& data = area.hydro.hydro_management_data.at(year);
+    const auto& data = area.hydro.managementData.at(year);
     if (data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
@@ -157,7 +157,7 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
 
 bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
 {
-    const auto& data = area.hydro.hydro_management_data.at(year);
+    const auto& data = area.hydro.managementData.at(year);
     for (uint month = 0; month != 12; ++month)
     {
         uint realmonth = calendar_.months[month].realmonth;

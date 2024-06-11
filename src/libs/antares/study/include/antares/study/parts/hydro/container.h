@@ -204,7 +204,7 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
-    std::unordered_map<uint, HydroManagementData> hydro_management_data;
+    std::unordered_map<uint, HydroManagementData> managementData;
 
 }; // class PartHydro
 
