@@ -1,6 +1,6 @@
 {
   "name": "sirius-solver",
-  "version": "1.4",
+  "version": "1.5",
   "port-version": 0,
   "description": "Sirius solver",
   "dependencies": [

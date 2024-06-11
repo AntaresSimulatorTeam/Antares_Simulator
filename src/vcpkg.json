@@ -12,7 +12,8 @@
   },
   "dependencies": [
     {
-      "name": "sirius-solver"
+	"name": "sirius-solver",
+	"version>=": "1.5"
     },
     {
       "name": "wxwidgets",
