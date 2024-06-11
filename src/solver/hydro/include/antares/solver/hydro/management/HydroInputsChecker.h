@@ -36,13 +36,13 @@ public:
 private:
     Antares::Data::Study& study_;
     Data::AreaList& areas_;
+    const Data::Parameters& parameters_;
     const Date::Calendar& calendar_;
+    Data::SimulationMode simulationMode_;
     const uint firstYear_;
     const uint endYear_;
-    const Data::Parameters& parameters_;
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
-    Data::SimulationMode simulationMode_;
     Solver::IResultWriter& resultWriter_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
