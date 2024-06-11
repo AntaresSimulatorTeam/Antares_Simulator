@@ -136,12 +136,14 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas, const std::string&
     return links;
 }
 
+// =====  New code for TS generation links ====================================
+
 std::vector<std::string> extractTargetAreas(fs::path sourceLinkDir)
 {
     std::vector<std::string> to_return;
     fs::path pathToIni = sourceLinkDir / "properties.ini";
     IniFile ini;
-    ini.open(pathToIni);
+    ini.open(pathToIni); // gp : we should handle reading issues
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         std::string targetAreaName = transformNameIntoID(s->name);
@@ -213,6 +215,58 @@ void logLinks(std::string title, LinkPairs& links)
         std::cout << "+ " << link.first << "." << link.second << std::endl;
     }
 }
+
+struct StudyParamsForLinkTS
+{
+    bool derated = false;
+    unsigned int nbLinkTStoGenerate = 1;
+    unsigned int seed = Data::antaresSeedDefaultValue;
+};
+
+bool readProperty(StudyParamsForLinkTS& params,
+                    const Yuni::String& key,
+                    const Yuni::String& value)
+{
+    if (key == "derated")
+    {
+        return value.to<bool>(params.derated);
+    }
+    if (key == "nbtimeserieslinks")
+    {
+        return value.to<unsigned int>(params.nbLinkTStoGenerate);
+    }
+    if (key == "seed-tsgen-links")
+    {
+        return value.to<unsigned int>(params.seed);
+    }
+    return true; // gp : should we return true here ?
+}
+
+StudyParamsForLinkTS readParamsForLinksTS(fs::path studyDir)
+{
+    StudyParamsForLinkTS to_return;
+    fs::path pathToGeneraldata = studyDir / "settings" / "generaldata.ini";
+    IniFile ini;
+    ini.open(pathToGeneraldata); // gp : we should handle reading issues
+    for (auto* section = ini.firstSection; section; section = section->next)
+    {
+        // Skipping sections useless in the current context
+        Yuni::String sectionName = section->name;
+        if (sectionName != "general" && sectionName != "seeds - Mersenne Twister")
+            continue;
+
+        for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
+        {
+            if (! readProperty(to_return, p->key, p->value))
+            {
+                logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
+            }
+        }
+    }
+    return to_return;
+}
+
+// ============================================================================
 
 int main(int argc, char* argv[])
 {
@@ -303,6 +357,8 @@ int main(int argc, char* argv[])
 
     auto linksFromCmdLine = extractLinksFromCmdLine(allLinksPairs, settings.linksListToGen);
     logLinks("Links from cmd line", linksFromCmdLine);
+
+    StudyParamsForLinkTS params = readParamsForLinksTS(settings.studyFolder);
 
     TSGenerator::listOfLinks links;
     if (settings.allLinks)
