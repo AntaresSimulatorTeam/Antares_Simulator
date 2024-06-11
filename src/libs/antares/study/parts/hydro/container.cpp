@@ -106,7 +106,7 @@ void PartHydro::reset()
     }
 }
 
-using setProperty = std::function<void (IniFile::Property*, Area*)>;
+using setProperty = std::function<bool (IniFile::Property*, Area*)>;
 
 static bool loadProperties(Study& study, IniFile::Property* property, const std::string& filename, setProperty funcToSetProperty)
 {
@@ -124,7 +124,7 @@ static bool loadProperties(Study& study, IniFile::Property* property, const std:
         Area* area = study.areas.find(id);
         if (area)
         {
-            funcToSetProperty(property, area);
+            ret = funcToSetProperty(property, area) && ret;
         }
         else
         {
@@ -277,20 +277,19 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
     }
 
     IniFile::Section* section;
-    IniFile::Property* property;
 
     if ((section = ini.find("inter-daily-breakdown")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<double>(area->hydro.intermonthlyBreakdown) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<double>(area->hydro.intermonthlyBreakdown);
+        }) && ret;
     }
 
 
     if ((section = ini.find("intra-daily-modulation")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<double>(area->hydro.intraDailyModulation) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<double>(area->hydro.intraDailyModulation);
             if (area->hydro.intraDailyModulation < 1.)
             {
                 logs.error()
@@ -298,26 +297,26 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 << area->hydro.intraDailyModulation << " (truncated to 1)";
                 area->hydro.intraDailyModulation = 1.;
             }
-        });
+        }) && ret;
     }
 
     if ((section = ini.find("reservoir")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<bool>(area->hydro.reservoirManagement) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<bool>(area->hydro.reservoirManagement);
+        }) && ret;
     }
 
     if ((section = ini.find("reservoir capacity")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<double>(area->hydro.reservoirCapacity) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<double>(area->hydro.reservoirCapacity);
             if (area->hydro.reservoirCapacity < 1e-6)
             {
                 logs.error() << area->id << ": Invalid reservoir capacity.";
                 area->hydro.reservoirCapacity = 0.;
             }
-        });
+        }) && ret;
     }
 
     // Check on reservoir capacity (has to be done after reservoir management and capacity reading,
@@ -338,75 +337,75 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
     if ((section = ini.find("inter-monthly-breakdown")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<double>(area->hydro.intermonthlyBreakdown) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<double>(area->hydro.intermonthlyBreakdown);
             if (area->hydro.intermonthlyBreakdown < 0)
             {
                 logs.error() << area->id << ": Invalid intermonthly breakdown";
                 area->hydro.intermonthlyBreakdown = 0.;
             }
-        });
+        }) && ret;
     }
 
     if ((section = ini.find("follow load")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<bool>(area->hydro.followLoadModulations) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<bool>(area->hydro.followLoadModulations);
+        }) && ret;
     }
 
     if ((section = ini.find("use water")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<bool>(area->hydro.useWaterValue) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<bool>(area->hydro.useWaterValue);
+        }) && ret;
     }
 
     if ((section = ini.find("hard bounds")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<bool>(area->hydro.hardBoundsOnRuleCurves) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<bool>(area->hydro.hardBoundsOnRuleCurves);
+        }) && ret;
     }
 
     if ((section = ini.find("use heuristic")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<bool>(area->hydro.useHeuristicTarget) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<bool>(area->hydro.useHeuristicTarget);
+        }) && ret;
     }
 
     if ((section = ini.find("power to level")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<bool>(area->hydro.powerToLevel) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<bool>(area->hydro.powerToLevel);
+        }) && ret;
     }
 
     if ((section = ini.find("initialize reservoir date")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<int>(area->hydro.initializeReservoirLevelDate) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<int>(area->hydro.initializeReservoirLevelDate);
             if (area->hydro.initializeReservoirLevelDate < 0)
             {
                 logs.error() << area->id << ": Invalid initialize reservoir date";
                 area->hydro.initializeReservoirLevelDate = 0;
             }
-        });
+        }) && ret;
     }
 
     // Leeways : use leeway bounds (upper and lower)
     if ((section = ini.find("use leeway")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<bool>(area->hydro.useLeeway) && ret;
-        });
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<bool>(area->hydro.useLeeway);
+        }) && ret;
     }
 
     if ((section = ini.find("leeway low")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<double>(area->hydro.leewayLowerBound) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<double>(area->hydro.leewayLowerBound);
             if (area->hydro.leewayLowerBound < 0.)
             {
                 logs.error()
@@ -414,13 +413,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                   << area->hydro.leewayLowerBound;
                 area->hydro.leewayLowerBound = 0.;
             }
-        });
+        }) && ret;
     }
 
     if ((section = ini.find("leeway up")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<double>(area->hydro.leewayUpperBound) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<double>(area->hydro.leewayUpperBound);
             if (area->hydro.leewayUpperBound < 0.)
             {
                 logs.error()
@@ -428,7 +427,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                   << area->hydro.leewayUpperBound;
                 area->hydro.leewayUpperBound = 0.;
             }
-        });
+        }) && ret;
     }
 
     // they are too small (< 1e-6). We cannot allow these areas to have reservoir management =
@@ -444,14 +443,14 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
     if ((section = ini.find("pumping efficiency")))
     {
-        loadProperties(study, section->firstProperty, buffer, [&ret](IniFile::Property* p, Area* area){
-            ret = p->value.to<double>(area->hydro.pumpingEfficiency) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
+            return p->value.to<double>(area->hydro.pumpingEfficiency);
             if (area->hydro.pumpingEfficiency < 0)
             {
                 logs.error() << area->id << ": Invalid pumping efficiency";
                 area->hydro.pumpingEfficiency = 0.;
             }
-        });
+        }) && ret;
     }
 
     study.areas.each(
