@@ -43,7 +43,7 @@ struct HydroDaily
     std::array<double, dayYearCount> DLE;
 };
 
-struct HydroMontly
+struct HydroMonthly
 {
     //! Monthly local effective demand
     std::array<double, 12> MLE;
@@ -59,7 +59,7 @@ struct HydroMontly
 struct HydroSpecific
 {
     HydroDaily daily;
-    HydroMontly monthly;
+    HydroMonthly monthly;
 };
 
 //! Temporary data
