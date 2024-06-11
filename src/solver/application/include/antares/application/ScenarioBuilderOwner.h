@@ -22,7 +22,7 @@
 
 namespace Antares::Solver
 {
-class Study;
+class Data::Study;
 class ScenarioBuilderOwner
 {
 public:
