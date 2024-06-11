@@ -98,7 +98,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(
     {
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
-            data.MTG[realmonth] = data.inflows[realmonth];
+            hydro_specific.MTG[realmonth] = data.inflows[realmonth];
         }
 
         return total;
@@ -132,9 +132,10 @@ double HydroManagement::prepareMonthlyTargetGenerations(
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
             assert(hydro_specific.MLE[realmonth] / monthlyMaxDemand >= 0.);
-            data.MTG[realmonth] = coeff
-                                  * std::pow(hydro_specific.MLE[realmonth] / monthlyMaxDemand,
-                                             area.hydro.intermonthlyBreakdown);
+            hydro_specific.MTG[realmonth] = coeff
+                                            * std::pow(hydro_specific.MLE[realmonth]
+                                                         / monthlyMaxDemand,
+                                                       area.hydro.intermonthlyBreakdown);
         }
     }
     else
@@ -143,7 +144,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(
 
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
-            data.MTG[realmonth] = coeff;
+            hydro_specific.MTG[realmonth] = coeff;
         }
     }
 
@@ -194,7 +195,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
                   problem.TurbineMax[month] = totalInflowsYear;
                   problem.TurbineMin[month] = data.mingens[realmonth];
-                  problem.TurbineCible[month] = data.MTG[realmonth];
+                  problem.TurbineCible[month] = hydro_specific.MTG[realmonth];
                   problem.Apport[month] = data.inflows[realmonth];
                   problem.VolumeMin[month] = minLvl[firstDay];
                   problem.VolumeMax[month] = maxLvl[firstDay];
@@ -214,10 +215,11 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                   {
                       uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                      data.MOG[realmonth] = problem.Turbine[month] * area.hydro.reservoirCapacity;
-                      data.MOL[realmonth] = problem.Volume[month];
+                      hydro_specific.MOG[realmonth] = problem.Turbine[month]
+                                                      * area.hydro.reservoirCapacity;
+                      hydro_specific.MOL[realmonth] = problem.Volume[month];
                   }
-                  data.MOL[initReservoirLvlMonth] = lvi;
+                  hydro_specific.MOL[initReservoirLvlMonth] = lvi;
                   solutionCost = problem.ProblemeHydraulique.CoutDeLaSolution;
                   solutionCostNoised = problem.ProblemeHydraulique.CoutDeLaSolutionBruite;
 
@@ -247,18 +249,20 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
               for (uint realmonth = 0; realmonth != 12; ++realmonth)
               {
-                  data.MOG[realmonth] = data.inflows[realmonth];
-                  data.MOL[realmonth] = reservoirLevel[realmonth];
+                  hydro_specific.MOG[realmonth] = data.inflows[realmonth];
+                  hydro_specific.MOL[realmonth] = reservoirLevel[realmonth];
               }
           }
 
 #ifndef NDEBUG
           for (uint realmonth = 0; realmonth != 12; ++realmonth)
           {
-              assert(!std::isnan(data.MOG[realmonth]) && "nan value detected for MOG");
-              assert(!std::isnan(data.MOL[realmonth]) && "nan value detected for MOL");
-              assert(!std::isinf(data.MOG[realmonth]) && "infinite value detected for MOG");
-              assert(!std::isinf(data.MOL[realmonth]) && "infinite value detected for MOL");
+              assert(!std::isnan(hydro_specific.MOG[realmonth]) && "nan value detected for MOG");
+              assert(!std::isnan(hydro_specific.MOL[realmonth]) && "nan value detected for MOL");
+              assert(!std::isinf(hydro_specific.MOG[realmonth])
+                     && "infinite value detected for MOG");
+              assert(!std::isinf(hydro_specific.MOL[realmonth])
+                     && "infinite value detected for MOL");
           }
 #endif
           if (parameters_.hydroDebug)
@@ -299,9 +303,9 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                   buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
                   buffer << '\t';
                   buffer << data.inflows[realmonth] << '\t';
-                  buffer << data.MTG[realmonth] << '\t';
-                  buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
-                  buffer << data.MOL[realmonth] << '\t';
+                  buffer << hydro_specific.MTG[realmonth] << '\t';
+                  buffer << hydro_specific.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
+                  buffer << hydro_specific.MOL[realmonth] << '\t';
                   buffer << minLvl[firstDay] << '\t';
                   buffer << maxLvl[firstDay] << '\t';
                   buffer << '\n';
