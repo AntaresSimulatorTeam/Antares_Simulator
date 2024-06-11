@@ -192,7 +192,7 @@ void HydroManagement::prepareNetDemand(uint year,
 
               assert(!std::isnan(netdemand)
                      && "hydro management: NaN detected when calculating the net demande");
-              hydro_specific.DLN[dayYear] += netdemand;
+              hydro_specific.daily.DLN[dayYear] += netdemand;
           }
       });
 }
@@ -217,14 +217,14 @@ void HydroManagement::prepareEffectiveDemand(uint year,
                 [&](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
-                    effectiveDemand += hydro_specific.DLN[day] * value;
+                    effectiveDemand += hydro_specific.daily.DLN[day] * value;
                 });
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
-              hydro_specific.DLE[day] += effectiveDemand;
+              hydro_specific.daily.DLE[day] += effectiveDemand;
               hydro_specific.MLE[realmonth] += effectiveDemand;
 
-              assert(not std::isnan(hydro_specific.DLE[day]) && "nan value detected for DLE");
+              assert(not std::isnan(hydro_specific.daily.DLE[day]) && "nan value detected for DLE");
               assert(not std::isnan(hydro_specific.MLE[realmonth]) && "nan value detected for DLE");
           }
 
@@ -240,9 +240,9 @@ void HydroManagement::prepareEffectiveDemand(uint year,
               for (uint d = 0; d != daysPerMonth; ++d)
               {
                   auto dYear = d + dayYear;
-                  if (hydro_specific.DLE[dYear] < minimumMonth)
+                  if (hydro_specific.daily.DLE[dYear] < minimumMonth)
                   {
-                      minimumMonth = hydro_specific.DLE[dYear];
+                      minimumMonth = hydro_specific.daily.DLE[dYear];
                   }
               }
 
@@ -250,7 +250,7 @@ void HydroManagement::prepareEffectiveDemand(uint year,
               {
                   for (uint d = 0; d != daysPerMonth; ++d)
                   {
-                      hydro_specific.DLE[dayYear + d] -= minimumMonth - 1e-4;
+                      hydro_specific.daily.DLE[dayYear + d] -= minimumMonth - 1e-4;
                   }
               }
 

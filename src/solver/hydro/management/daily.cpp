@@ -145,7 +145,7 @@ struct DebugData
         {
             double value = ventilationResults.HydrauliqueModulableQuotidien[day];
             buffer << day << '\t' << value << '\t' << OPP[day] << '\t' << DailyTargetGen[day]
-                   << '\t' << hydro_specific.DLE[day] << '\t' << hydro_specific.DLN[day];
+                   << '\t' << hydro_specific.daily.DLE[day] << '\t' << hydro_specific.daily.DLN[day];
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
@@ -323,9 +323,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 for (uint day = 0; day != daysPerMonth; ++day)
                 {
                     auto dYear = day + dayYear;
-                    if (hydro_specific.DLE[dYear] > demandMax)
+                    if (hydro_specific.daily.DLE[dYear] > demandMax)
                     {
-                        demandMax = hydro_specific.DLE[dYear];
+                        demandMax = hydro_specific.daily.DLE[dYear];
                     }
                 }
 
@@ -337,7 +337,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
                         auto dYear = day + dayYear;
-                        coeff += std::pow(hydro_specific.DLE[dYear] / demandMax,
+                        coeff += std::pow(hydro_specific.daily.DLE[dYear] / demandMax,
                                           area.hydro.interDailyBreakdown);
                     }
                     coeff = hydro_specific.MOG[realmonth] / coeff;
@@ -346,7 +346,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                     {
                         auto dYear = day + dayYear;
                         dailyTargetGen[dYear] = coeff
-                                                * std::pow(hydro_specific.DLE[dYear] / demandMax,
+                                                * std::pow(hydro_specific.daily.DLE[dYear] / demandMax,
                                                            area.hydro.interDailyBreakdown);
                     }
                 }
