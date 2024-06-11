@@ -281,7 +281,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
     if ((section = ini.find("inter-daily-breakdown")))
     {
         ret = loadProperties(study, section->firstProperty, buffer, [](IniFile::Property* p, Area* area){
-            return p->value.to<double>(area->hydro.intermonthlyBreakdown);
+            return p->value.to<double>(area->hydro.interDailyBreakdown);
         }) && ret;
     }
 
