@@ -792,7 +792,7 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
 ---
 #### playlist_year
 - **Expected value:** `+ =` or `- =`, followed by a positive integer (example: `playlist_year + = 5`)
-- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`.
+- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`, ignored otherwise.
 - **Usage:**
     - for every Monte-Carlo year that you want the Antares Simulator to **study**, add the parameter entry
       `playlist_year + = i`, where `i` is the index of the year.
