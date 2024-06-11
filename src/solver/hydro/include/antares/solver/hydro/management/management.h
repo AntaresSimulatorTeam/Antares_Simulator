@@ -86,7 +86,9 @@ private:
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(uint year, Antares::Data::HydroSpecific& hydro_specific);
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
+    void prepareMonthlyOptimalGenerations(double* random_reservoir_level,
+                                          uint y,
+                                          Antares::Data::HydroSpecific& hydro_specific);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not

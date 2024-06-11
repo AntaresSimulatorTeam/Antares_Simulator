@@ -151,7 +151,9 @@ double HydroManagement::prepareMonthlyTargetGenerations(
     return total;
 }
 
-void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y)
+void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level,
+                                                       uint y,
+                                                       Antares::Data::HydroSpecific& hydro_specific)
 {
     uint indexArea = 0;
     areas_.each(
@@ -179,7 +181,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
           {
               auto problem = H2O_M_Instanciation(1);
 
-              double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
+              double totalInflowsYear = prepareMonthlyTargetGenerations(area, data, hydro_specific);
               assert(totalInflowsYear >= 0.);
 
               problem.CoutDepassementVolume = 1e2;

@@ -280,7 +280,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     prepareNetDemand(y, parameters_.mode, scratchmap, hydro_specific);
     prepareEffectiveDemand(y, hydro_specific);
 
-    prepareMonthlyOptimalGenerations(randomReservoirLevel, y);
+    prepareMonthlyOptimalGenerations(randomReservoirLevel, y, hydro_specific);
     prepareDailyOptimalGenerations(y, scratchmap, hydro_specific);
 }
 
