@@ -147,13 +147,11 @@ bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
 
 bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::string& folder)
 {
-    /* Asserts */
-    assert(!folder.empty());
-
     enum
     {
         mtrxOption = Matrix<>::optFixedSize | Matrix<>::optImmediate,
     };
+    constexpr int maxNbOfLineToLoad = 12;
 
     data.resize(hydroPreproMax, 12, true);
     String& buffer = s.bufferLoadingTS;
@@ -162,7 +160,7 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::st
     bool ret = PreproHydroLoadSettings(this, buffer);
 
     buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-    ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
+    ret = data.loadFromCSVFile(buffer, hydroPreproMax, maxNbOfLineToLoad, mtrxOption, &s.dataBuffer) && ret;
 
     return ret;
 }
