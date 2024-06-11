@@ -102,7 +102,7 @@ struct DebugData
     const ReservoirLevelType& lowLevel;
     const double reservoirCapacity;
 
-    const Antares::Data::HydroSpecific& hydro_specific
+    const Antares::Data::HydroSpecific& hydro_specific;
 
     DebugData(Solver::IResultWriter& writer,
               const Antares::Data::HydroManagementData& data,
