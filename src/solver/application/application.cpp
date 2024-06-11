@@ -23,6 +23,7 @@
 #include <yuni/datetime/timestamp.h>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/application/ScenarioBuilderOwner.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
@@ -33,7 +34,6 @@
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
-#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/config/config.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/signal-handling/public.h"

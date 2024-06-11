@@ -20,11 +20,9 @@
 */
 #pragma once
 
-#include "antares/study/study.h"
-
 namespace Antares::Solver
 {
-
+class Study;
 class ScenarioBuilderOwner
 {
 public:

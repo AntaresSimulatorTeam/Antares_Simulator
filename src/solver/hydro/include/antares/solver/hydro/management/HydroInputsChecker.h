@@ -23,7 +23,7 @@
 #include "antares/date/date.h"
 #include "antares/solver/hydro/management/MinGenerationScaling.h"
 #include "antares/solver/hydro/management/PrepareInflows.h"
-
+#include "antares/study/study.h"
 namespace Antares
 {
 

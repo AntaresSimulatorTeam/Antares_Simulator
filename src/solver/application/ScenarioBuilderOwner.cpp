@@ -19,11 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/application/ScenarioBuilderOwner.h"
 #include <antares/antares/fatal-error.h>
+#include <antares/application/ScenarioBuilderOwner.h>
 #include "antares/solver/simulation/apply-scenario.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
+#include "antares/study/study.h"
 
 Antares::Solver::ScenarioBuilderOwner::ScenarioBuilderOwner(Data::Study& study):
     study_(study)
