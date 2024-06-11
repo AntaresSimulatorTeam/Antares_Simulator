@@ -39,6 +39,9 @@ using namespace Antares;
 
 namespace fs = std::filesystem;
 
+using LinkPair = std::pair<std::string, std::string>;
+using LinkPairs = std::vector<LinkPair>;
+
 struct Settings
 {
     std::string studyFolder;
@@ -133,6 +136,84 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas, const std::string&
     return links;
 }
 
+std::vector<std::string> extractTargetAreas(fs::path sourceLinkDir)
+{
+    std::vector<std::string> to_return;
+    fs::path pathToIni = sourceLinkDir / "properties.ini";
+    IniFile ini;
+    ini.open(pathToIni);
+    for (auto* s = ini.firstSection; s; s = s->next)
+    {
+        std::string targetAreaName = transformNameIntoID(s->name);
+        to_return.push_back(targetAreaName);
+    }
+    return to_return;
+}
+
+LinkPairs extractLinksFromStudy(fs::path studyDir)
+{
+    LinkPairs to_return;
+    fs::path linksDir = studyDir / "input" / "links";
+    for (auto const& item : fs::directory_iterator{linksDir})
+    {
+        if (item.is_directory())
+        {
+            std::string sourceAreaName = item.path().filename().generic_string();
+            auto targetAreas = extractTargetAreas(item);
+            for (auto& targetAreaName : targetAreas)
+            {
+                auto linkPair = std::make_pair(sourceAreaName, targetAreaName);
+                to_return.push_back(linkPair);
+            }
+        }
+    }
+    return to_return;
+}
+
+bool pairs_match(const LinkPair& p1, const LinkPair& p2)
+{
+    return (p1.first == p2.first && p1.second == p2.second)
+            || (p1.first == p2.second && p1.second == p2.first);
+}
+
+const LinkPair* getMatchingPairInCollection(const LinkPair& pair, const LinkPairs& collection)
+{
+    for(const auto& p : collection)
+    {
+        if (pairs_match(pair, p))
+            return &p;
+    }
+    return nullptr;
+}
+
+LinkPairs extractLinksFromCmdLine(const LinkPairs& allLinks,
+                                        const std::string linksFromCmdLine)
+{
+    LinkPairs to_return;
+    LinkPairs pairsFromCmdLine = splitStringIntoPairs(linksFromCmdLine, ';', '.');
+    for (auto& p : pairsFromCmdLine)
+    {
+        if (const auto* found_pair = getMatchingPairInCollection(p, allLinks); found_pair)
+        {
+            to_return.push_back(*found_pair);
+        }
+        else
+        {
+            logs.error() << "Link '" << p.first << "." << p.second << "' not found";
+        }
+    }
+    return to_return;
+}
+
+void logLinks(std::string title, LinkPairs& links)
+{
+    std::cout << title << " : " << std::endl;
+    for (auto& link : links)
+    {
+        std::cout << "+ " << link.first << "." << link.second << std::endl;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     logs.applicationName("ts-generator");
@@ -216,6 +297,13 @@ int main(int argc, char* argv[])
     }
 
     // LINKS
+
+    auto allLinksPairs = extractLinksFromStudy(settings.studyFolder);
+    logLinks("All links", allLinksPairs);
+
+    auto linksFromCmdLine = extractLinksFromCmdLine(allLinksPairs, settings.linksListToGen);
+    logLinks("Links from cmd line", linksFromCmdLine);
+
     TSGenerator::listOfLinks links;
     if (settings.allLinks)
     {

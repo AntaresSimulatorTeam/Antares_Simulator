@@ -572,7 +572,7 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder, bool loadTSGen)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const fs::path& folder, bool loadTSGen)
 {
     // Assert
     assert(area);
@@ -594,16 +594,16 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::pa
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        std::string buffer = transformNameIntoID(s->name);
+        std::string targetAreaName = transformNameIntoID(s->name);
 
         // Trying to find it
-        Area* linkedWith = AreaListLFind(l, buffer.c_str());
-        if (!linkedWith)
+        Area* targetArea = AreaListLFind(areaList, targetAreaName.c_str());
+        if (!targetArea)
         {
             logs.error() << '`' << s->name << "`: Impossible to find the area";
             continue;
         }
-        AreaLink* lnk = AreaAddLinkBetweenAreas(area, linkedWith);
+        AreaLink* lnk = AreaAddLinkBetweenAreas(area, targetArea);
         if (!lnk)
         {
             logs.error() << "Impossible to create a link between two areas";
