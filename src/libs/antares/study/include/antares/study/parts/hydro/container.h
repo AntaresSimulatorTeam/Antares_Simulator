@@ -66,18 +66,18 @@ struct HydroSpecific
 struct HydroManagementData
 {
     //! inflows
-    std::array<double, 12> inflows;
+    std::array<double, 12> inflows{};
     //! monthly minimal generation
-    std::array<double, 12> mingens;
+    std::array<double, 12> mingens{};
 
     //! daily minimal generation
-    std::array<double, dayYearCount> dailyMinGen;
+    std::array<double, dayYearCount> dailyMinGen{};
 
     // Data for minGen<->inflows preChecks
     //! monthly total mingen
-    std::array<double, 12> totalMonthMingen;
+    std::array<double, 12> totalMonthMingen{};
     //! monthly total inflows
-    std::array<double, 12> totalMonthInflows;
+    std::array<double, 12> totalMonthInflows{};
     //! yearly total mingen
     double totalYearMingen;
     //! yearly total inflows
