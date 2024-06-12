@@ -82,13 +82,19 @@ private:
     void prepareNetDemand(uint year,
                           Data::SimulationMode mode,
                           const Antares::Data::Area::ScratchMap& scratchmap,
-                          Antares::Data::HydroSpecific& hydro_specific);
+                          std::unordered_map<const Antares::Data::Area*,
+                                             Antares::Data::HydroSpecific>& hydro_specific_map);
     //! Prepare the effective demand for each area
-    void prepareEffectiveDemand(uint year, Antares::Data::HydroSpecific& hydro_specific);
+    void prepareEffectiveDemand(
+      uint year,
+      std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>&
+        hydro_specific_map);
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level,
-                                          uint y,
-                                          Antares::Data::HydroSpecific& hydro_specific);
+    void prepareMonthlyOptimalGenerations(
+      double* random_reservoir_level,
+      uint y,
+      std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>&
+        hydro_specific_map);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
@@ -97,9 +103,11 @@ private:
                                            Antares::Data::HydroManagementData& data,
                                            Antares::Data::HydroSpecific& hydro_specific);
 
-    void prepareDailyOptimalGenerations(uint y,
-                                        Antares::Data::Area::ScratchMap& scratchmap,
-                                        Antares::Data::HydroSpecific& hydro_specific);
+    void prepareDailyOptimalGenerations(
+      uint y,
+      Antares::Data::Area::ScratchMap& scratchmap,
+      std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>&
+        hydro_specific_map);
 
     void prepareDailyOptimalGenerations(Data::Area& area,
                                         uint y,

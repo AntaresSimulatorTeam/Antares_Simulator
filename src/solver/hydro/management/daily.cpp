@@ -559,11 +559,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
     }
 }
 
-void HydroManagement::prepareDailyOptimalGenerations(uint y,
-                                                     Antares::Data::Area::ScratchMap& scratchmap,
-                                                     Antares::Data::HydroSpecific& hydro_specific)
+void HydroManagement::prepareDailyOptimalGenerations(
+  uint y,
+  Antares::Data::Area::ScratchMap& scratchmap,
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
 {
-    areas_.each([&](Data::Area& area)
-                { prepareDailyOptimalGenerations(area, y, scratchmap, hydro_specific); });
+    areas_.each(
+      [&](Data::Area& area)
+      { prepareDailyOptimalGenerations(area, y, scratchmap, hydro_specific_map[&area]); });
 }
 } // namespace Antares

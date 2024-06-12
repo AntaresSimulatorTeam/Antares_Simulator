@@ -142,13 +142,14 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     }
 }
 
-void HydroManagement::prepareNetDemand(uint year,
-                                       Data::SimulationMode mode,
-                                       const Antares::Data::Area::ScratchMap& scratchmap,
-                                       Antares::Data::HydroSpecific& hydro_specific)
+void HydroManagement::prepareNetDemand(
+  uint year,
+  Data::SimulationMode mode,
+  const Antares::Data::Area::ScratchMap& scratchmap,
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
 {
     areas_.each(
-      [this, &year, &scratchmap, &mode, &hydro_specific](Data::Area& area)
+      [this, &year, &scratchmap, &mode, &hydro_specific_map](Data::Area& area)
       {
           const auto& scratchpad = scratchmap.at(&area);
 
@@ -156,6 +157,7 @@ void HydroManagement::prepareNetDemand(uint year,
           const auto* ror = rormatrix.getColumn(year);
 
           auto& data = area.hydro.managementData[year];
+          auto& hydro_specific = hydro_specific_map[&area];
           const double* loadSeries = area.load.series.getColumn(year);
           const double* windSeries = area.wind.series.getColumn(year);
           const double* solarSeries = area.solar.series.getColumn(year);
@@ -197,13 +199,15 @@ void HydroManagement::prepareNetDemand(uint year,
       });
 }
 
-void HydroManagement::prepareEffectiveDemand(uint year,
-                                             Antares::Data::HydroSpecific& hydro_specific)
+void HydroManagement::prepareEffectiveDemand(
+  uint year,
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
 {
     areas_.each(
       [&](Data::Area& area)
       {
           auto& data = area.hydro.managementData[year];
+          auto& hydro_specific = hydro_specific_map[&area];
 
           for (uint day = 0; day != 365; ++day)
           {
@@ -277,12 +281,12 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       uint y,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
-    Antares::Data::HydroSpecific hydro_specific;
-    prepareNetDemand(y, parameters_.mode, scratchmap, hydro_specific);
-    prepareEffectiveDemand(y, hydro_specific);
+    std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific> hydro_specific_map;
+    prepareNetDemand(y, parameters_.mode, scratchmap, hydro_specific_map);
+    prepareEffectiveDemand(y, hydro_specific_map);
 
-    prepareMonthlyOptimalGenerations(randomReservoirLevel, y, hydro_specific);
-    prepareDailyOptimalGenerations(y, scratchmap, hydro_specific);
+    prepareMonthlyOptimalGenerations(randomReservoirLevel, y, hydro_specific_map);
+    prepareDailyOptimalGenerations(y, scratchmap, hydro_specific_map);
 }
 
 } // namespace Antares

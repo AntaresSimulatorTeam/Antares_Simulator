@@ -151,15 +151,17 @@ double HydroManagement::prepareMonthlyTargetGenerations(
     return total;
 }
 
-void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level,
-                                                       uint y,
-                                                       Antares::Data::HydroSpecific& hydro_specific)
+void HydroManagement::prepareMonthlyOptimalGenerations(
+  double* random_reservoir_level,
+  uint y,
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(
       [&](Data::Area& area)
       {
           auto& data = area.hydro.managementData[y];
+          auto& hydro_specific = hydro_specific_map[&area];
 
           auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
           auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
