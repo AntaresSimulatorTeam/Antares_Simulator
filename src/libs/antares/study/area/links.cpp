@@ -510,7 +510,6 @@ bool handleTSGenKey(Data::LinkTsGeneration& out,
                     const std::string& key,
                     const String& value)
 {
-
     if (key == "unitcount")
     {
         return value.to<uint>(out.unitCount);

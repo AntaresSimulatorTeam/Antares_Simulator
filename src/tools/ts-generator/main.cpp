@@ -34,6 +34,7 @@
 #include <antares/utils/utils.h>
 #include <antares/writer/result_format.h>
 #include <antares/writer/writer_factory.h>
+#include <antares/solver/ts-generator/law.h>
 
 using namespace Antares;
 
@@ -189,7 +190,7 @@ const LinkPair* getMatchingPairInCollection(const LinkPair& pair, const LinkPair
 }
 
 LinkPairs extractLinksFromCmdLine(const LinkPairs& allLinks,
-                                        const std::string linksFromCmdLine)
+                                  const std::string linksFromCmdLine)
 {
     LinkPairs to_return;
     LinkPairs pairsFromCmdLine = splitStringIntoPairs(linksFromCmdLine, ';', '.');
@@ -218,19 +219,16 @@ void logLinks(std::string title, LinkPairs& links)
 
 struct StudyParamsForLinkTS
 {
-    bool derated = false;
     unsigned int nbLinkTStoGenerate = 1;
+    // gp : we will have a problem with that if seed-tsgen-links not set in
+    // gp : generaldata.ini. In that case, our default value is wrong.
     unsigned int seed = Data::antaresSeedDefaultValue;
 };
 
-bool readProperty(StudyParamsForLinkTS& params,
-                    const Yuni::String& key,
-                    const Yuni::String& value)
+bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
+                             const Yuni::String& key,
+                             const Yuni::String& value)
 {
-    if (key == "derated")
-    {
-        return value.to<bool>(params.derated);
-    }
     if (key == "nbtimeserieslinks")
     {
         return value.to<unsigned int>(params.nbLinkTStoGenerate);
@@ -242,7 +240,7 @@ bool readProperty(StudyParamsForLinkTS& params,
     return true; // gp : should we return true here ?
 }
 
-StudyParamsForLinkTS readParamsForLinksTS(fs::path studyDir)
+StudyParamsForLinkTS readGeneralParamsForLinksTS(fs::path studyDir)
 {
     StudyParamsForLinkTS to_return;
     fs::path pathToGeneraldata = studyDir / "settings" / "generaldata.ini";
@@ -257,15 +255,164 @@ StudyParamsForLinkTS readParamsForLinksTS(fs::path studyDir)
 
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
-            if (! readProperty(to_return, p->key, p->value))
+            if (! readLinkGeneralProperty(to_return, p->key, p->value))
             {
-                logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
+                logs.warning() << ini.filename() << ": reading value of '" << p->key << "' went wrong";
             }
         }
     }
     return to_return;
 }
 
+struct LinkTSgenerationParams
+{
+    LinkPair namesPair;
+    StudyParamsForLinkTS generalParams;
+
+    unsigned unitCount = 0;
+    double nominalCapacity = 0;
+
+    double forcedVolatility = 0.;
+    double plannedVolatility = 0.;
+
+    Data::StatisticalLaw forcedLaw = Data::LawUniform;
+    Data::StatisticalLaw plannedLaw = Data::LawUniform;
+
+    std::unique_ptr<Data::PreproAvailability> prepro;
+
+    Matrix<> modulationCapacityDirect;
+    Matrix<> modulationCapacityIndirect;
+
+    bool forceNoGeneration = false;
+};
+
+std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine,
+                                                   const StudyParamsForLinkTS& params)
+{
+    std::vector<LinkTSgenerationParams> to_return(linksFromCmdLine.size());
+    unsigned int index = 0;
+    for (const auto& link_pair : linksFromCmdLine)
+    {
+        to_return[index].namesPair = link_pair;
+        to_return[index].generalParams = params;
+        index++;
+    }
+    return to_return;
+}
+
+LinkTSgenerationParams* findLinkInList(const LinkPair& link_to_find,
+                                       std::vector<LinkTSgenerationParams>& linkList)
+{
+    for(auto& link : linkList)
+    {
+        if (link.namesPair == link_to_find)
+            return &link;
+    }
+    return nullptr;
+}
+
+bool readLinkIniProperty(LinkTSgenerationParams* link,
+                         const Yuni::String& key,
+                         const Yuni::String& value)
+{
+    if (key == "unitcount")
+    {
+        return value.to<uint>(link->unitCount);
+    }
+
+    if (key == "nominalcapacity")
+    {
+        return value.to<double>(link->nominalCapacity);
+    }
+
+    if (key == "law.planned")
+    {
+        return value.to(link->plannedLaw);
+    }
+
+    if (key == "law.forced")
+    {
+        return value.to(link->forcedLaw);
+    }
+
+    if (key == "volatility.planned")
+    {
+        return value.to(link->plannedVolatility);
+    }
+
+    if (key == "volatility.forced")
+    {
+        return value.to(link->forcedVolatility);
+    }
+
+    if (key == "force-no-generation")
+    {
+        return value.to<bool>(link->forceNoGeneration);
+    }
+
+    return true;
+}
+
+void readLinkIniProperties(LinkTSgenerationParams* link,
+                           IniFile::Section* section)
+{
+    for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
+    {
+        if (! readLinkIniProperty(link, p->key, p->value))
+        {
+            std::string linkName = link->namesPair.first + "." + link->namesPair.second;
+            logs.warning() << "Link '" << linkName << "' : reading value of '" << p->key << "' went wrong";
+        }
+    }
+}
+
+void readSourceAreaIniFile(fs::path sourceLinkDir,
+                           std::string sourceAreaName,
+                           std::vector<LinkTSgenerationParams>& linkList)
+{
+    fs::path pathToIni = sourceLinkDir / "properties.ini";
+    IniFile ini;
+    ini.open(pathToIni); // gp : we should handle reading issues
+    for (auto* section = ini.firstSection; section; section = section->next)
+    {
+        std::string targetAreaName = transformNameIntoID(section->name);
+        const LinkPair processedLink = std::make_pair(sourceAreaName, targetAreaName);
+        if (auto* foundLink = findLinkInList(processedLink, linkList); foundLink)
+        {
+            readLinkIniProperties(foundLink, section);
+        }
+    }
+}
+
+void readIniProperties(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
+{
+    for (auto const& item : fs::directory_iterator{toLinksDir})
+    {
+        if (item.is_directory())
+        {
+            std::string sourceAreaName = item.path().filename().generic_string();
+            readSourceAreaIniFile(item, sourceAreaName, linkList);
+        }
+    }
+}
+
+bool readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
+{
+    return true;
+}
+
+bool readLinksSpecificTSparameters(std::vector<LinkTSgenerationParams>& linkList,
+                                   fs::path studyFolder)
+{
+    fs::path toLinksDir = studyFolder / "input" / "links";
+    readIniProperties(linkList, toLinksDir);
+    if (! readPreproTimeSeries(linkList, toLinksDir))
+    {
+        // gp : Log a problem here
+        return false;
+    }
+    return true;
+}
 // ============================================================================
 
 int main(int argc, char* argv[])
@@ -351,14 +498,26 @@ int main(int argc, char* argv[])
     }
 
     // LINKS
-
+    // =====  New code for TS generation links ====================================
     auto allLinksPairs = extractLinksFromStudy(settings.studyFolder);
-    logLinks("All links", allLinksPairs);
+    // logLinks("All links", allLinksPairs);
 
     auto linksFromCmdLine = extractLinksFromCmdLine(allLinksPairs, settings.linksListToGen);
-    logLinks("Links from cmd line", linksFromCmdLine);
+    // logLinks("Links from cmd line", linksFromCmdLine);
+    if (settings.allLinks)
+        linksFromCmdLine = allLinksPairs;
 
-    StudyParamsForLinkTS params = readParamsForLinksTS(settings.studyFolder);
+    StudyParamsForLinkTS params = readGeneralParamsForLinksTS(settings.studyFolder);
+
+    std::vector<LinkTSgenerationParams> linkList = CreateLinkList(linksFromCmdLine, params);
+    if (! readLinksSpecificTSparameters(linkList, settings.studyFolder))
+    {
+        // Something wrong while reading particular data associated to
+        // link TS generation
+    }
+
+
+    // ============================================================================
 
     TSGenerator::listOfLinks links;
     if (settings.allLinks)
