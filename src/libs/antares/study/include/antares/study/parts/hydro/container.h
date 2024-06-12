@@ -79,9 +79,9 @@ struct HydroManagementData
     //! monthly total inflows
     std::array<double, 12> totalMonthInflows{};
     //! yearly total mingen
-    double totalYearMingen;
+    double totalYearMingen = 0;
     //! yearly total inflows
-    double totalYearInflows;
+    double totalYearInflows = 0;
 
 }; // struct HydroManagementData
 
