@@ -223,7 +223,7 @@ void HydroManagement::prepareEffectiveDemand(
                 [&](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
-                    effectiveDemand += hydro_specific.daily[day].DLN * value;
+                    effectiveDemand += hydro_specific_map[&area].daily[day].DLN * value;
                 });
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
