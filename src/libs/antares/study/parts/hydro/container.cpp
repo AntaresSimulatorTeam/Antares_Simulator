@@ -385,6 +385,45 @@ bool PartHydro::validate(Study& study)
             area.hydro.intraDailyModulation = 1.;
         }
 
+        if (area.hydro.reservoirCapacity < 1e-6)
+        {
+            logs.error() << area.id << ": Invalid reservoir capacity.";
+            area.hydro.reservoirCapacity = 0.;
+        }
+
+        if (area.hydro.intermonthlyBreakdown < 0)
+        {
+            logs.error() << area.id << ": Invalid intermonthly breakdown";
+            area.hydro.intermonthlyBreakdown = 0.;
+        }
+
+        if (area.hydro.initializeReservoirLevelDate < 0)
+        {
+            logs.error() << area.id << ": Invalid initialize reservoir date";
+            area.hydro.initializeReservoirLevelDate = 0;
+        }
+
+        if (area.hydro.leewayLowerBound < 0.)
+        {
+            logs.error()
+              << area.id << ": Invalid leeway lower bound. It must be >= 0.0, Got "
+              << area.hydro.leewayLowerBound;
+            area.hydro.leewayLowerBound = 0.;
+        }
+
+        if (area.hydro.leewayUpperBound < 0.)
+        {
+            logs.error()
+              << area.id << ": Invalid leeway upper bound. It must be >= 0.0, Got "
+              << area.hydro.leewayUpperBound;
+            area.hydro.leewayUpperBound = 0.;
+        }
+
+        if (area.hydro.pumpingEfficiency < 0)
+        {
+            logs.error() << area.id << ": Invalid pumping efficiency";
+            area.hydro.pumpingEfficiency = 0.;
+        }
     });
 
     return ret;
