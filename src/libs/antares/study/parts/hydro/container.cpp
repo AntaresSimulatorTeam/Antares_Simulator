@@ -114,6 +114,8 @@ static bool loadProperties(Study& study, IniFile::Property* property, const std:
     if (!property)
         return false;
 
+    ret = true;
+
     // Browse all properties
     for (; property; property = property->next)
     {
@@ -123,7 +125,7 @@ static bool loadProperties(Study& study, IniFile::Property* property, const std:
         Area* area = study.areas.find(id);
         if (area)
         {
-            return property->value.to<T>(area->hydro.*ptr);
+            ret = property->value.to<T>(area->hydro.*ptr) && ret;
         }
         else
         {
@@ -131,7 +133,7 @@ static bool loadProperties(Study& study, IniFile::Property* property, const std:
             return false;
         }
     }
-    return true;
+    return ret;
 }
 
 bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
