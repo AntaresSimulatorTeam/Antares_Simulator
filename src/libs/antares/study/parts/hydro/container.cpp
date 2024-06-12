@@ -390,7 +390,7 @@ bool PartHydro::validate(Study& study)
             area.hydro.intraDailyModulation = 1.;
         }
 
-        if (area.hydro.reservoirCapacity < 1e-6)
+        if (area.hydro.reservoirCapacity < 0)
         {
             logs.error() << area.id << ": Invalid reservoir capacity.";
             area.hydro.reservoirCapacity = 0.;
