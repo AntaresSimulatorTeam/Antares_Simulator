@@ -231,46 +231,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                                                          Matrix<>::optFixedSize,
                                                          &study.dataBuffer)
                 && ret;
-
-          if (study.usedByTheSolver)
-          {
-              auto& col = area.hydro.inflowPattern[0];
-              bool errorInflow = false;
-              for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
-              {
-                  if (col[day] < 0 && !errorInflow)
-                  {
-                      logs.error() << area.name << ": invalid inflow value";
-                      errorInflow = true;
-                      ret = false;
-                  }
-              }
-              bool errorLevels = false;
-              auto& colMin = area.hydro.reservoirLevel[minimum];
-              auto& colAvg = area.hydro.reservoirLevel[average];
-              auto& colMax = area.hydro.reservoirLevel[maximum];
-              for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
-              {
-                  if (!errorLevels
-                      && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
-                          || colAvg[day] > 100 || colMax[day] > 100))
-                  {
-                      logs.error() << area.name << ": invalid reservoir level value";
-                      errorLevels = true;
-                      ret = false;
-                  }
-              }
-
-              for (int i = 0; i < 101; i++)
-              {
-                  if ((area.hydro.creditModulation[i][0] < 0)
-                      || (area.hydro.creditModulation[i][1] < 0))
-                  {
-                      logs.error() << area.name << ": invalid credit modulation value";
-                      ret = false;
-                  }
-              }
-          }
       });
 
     IniFile ini;
@@ -355,6 +315,51 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 bool PartHydro::validate(Study& study)
 {
     bool ret = true;
+
+    /* study.areas.each([&ret, &study](Data::Area& area) */
+    for (const auto& [areaName, area] : study.areas)
+    {
+        if (!study.usedByTheSolver)
+            break;
+
+        auto& col = area->hydro.inflowPattern[0];
+        bool errorInflow = false;
+        for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
+        {
+            if (col[day] < 0 && !errorInflow)
+            {
+                logs.error() << areaName << ": invalid inflow value";
+                errorInflow = true;
+                ret = false;
+            }
+        }
+        bool errorLevels = false;
+        auto& colMin = area->hydro.reservoirLevel[minimum];
+        auto& colAvg = area->hydro.reservoirLevel[average];
+        auto& colMax = area->hydro.reservoirLevel[maximum];
+        for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
+        {
+            if (!errorLevels
+                    && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
+                        || colAvg[day] > 100 || colMax[day] > 100))
+            {
+                logs.error() << areaName << ": invalid reservoir level value";
+                errorLevels = true;
+                ret = false;
+            }
+        }
+
+        for (int i = 0; i < 101; i++)
+        {
+            if ((area->hydro.creditModulation[i][0] < 0)
+                    || (area->hydro.creditModulation[i][1] < 0))
+            {
+                logs.error() << areaName << ": invalid credit modulation value";
+                ret = false;
+            }
+        }
+    };
+
 
     // Check on reservoir capacity (has to be done after reservoir management and capacity reading,
     // not before). Some areas reservoir capacities may not be printed in hydro ini file when saving
