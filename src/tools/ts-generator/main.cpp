@@ -153,7 +153,7 @@ std::vector<std::string> extractTargetAreas(fs::path sourceLinkDir)
     return to_return;
 }
 
-LinkPairs extractLinksFromStudy(fs::path studyDir)
+LinkPairs extractLinkNamesFromStudy(fs::path studyDir)
 {
     LinkPairs to_return;
     fs::path linksDir = studyDir / "input" / "links";
@@ -189,7 +189,7 @@ const LinkPair* getMatchingPairInCollection(const LinkPair& pair, const LinkPair
     return nullptr;
 }
 
-LinkPairs extractLinksFromCmdLine(const LinkPairs& allLinks,
+LinkPairs extractLinkNamesFromCmdLine(const LinkPairs& allLinks,
                                   const std::string linksFromCmdLine)
 {
     LinkPairs to_return;
@@ -257,7 +257,8 @@ StudyParamsForLinkTS readGeneralParamsForLinksTS(fs::path studyDir)
         {
             if (! readLinkGeneralProperty(to_return, p->key, p->value))
             {
-                logs.warning() << ini.filename() << ": reading value of '" << p->key << "' went wrong";
+                logs.warning() << ini.filename() << ": reading value of '"
+                               << p->key << "' went wrong";
             }
         }
     }
@@ -284,6 +285,7 @@ struct LinkTSgenerationParams
     Matrix<> modulationCapacityIndirect;
 
     bool forceNoGeneration = false;
+    bool hasValidData = true;
 };
 
 std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine,
@@ -361,16 +363,16 @@ void readLinkIniProperties(LinkTSgenerationParams* link,
         if (! readLinkIniProperty(link, p->key, p->value))
         {
             std::string linkName = link->namesPair.first + "." + link->namesPair.second;
-            logs.warning() << "Link '" << linkName << "' : reading value of '" << p->key << "' went wrong";
+            logs.warning() << "Link '" << linkName << "' : reading value of '"
+                           << p->key << "' went wrong";
         }
     }
 }
 
-void readSourceAreaIniFile(fs::path sourceLinkDir,
+void readSourceAreaIniFile(fs::path pathToIni,
                            std::string sourceAreaName,
                            std::vector<LinkTSgenerationParams>& linkList)
 {
-    fs::path pathToIni = sourceLinkDir / "properties.ini";
     IniFile ini;
     ini.open(pathToIni); // gp : we should handle reading issues
     for (auto* section = ini.firstSection; section; section = section->next)
@@ -386,18 +388,76 @@ void readSourceAreaIniFile(fs::path sourceLinkDir,
 
 void readIniProperties(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
 {
-    for (auto const& item : fs::directory_iterator{toLinksDir})
+    for(auto& link : linkList)
     {
-        if (item.is_directory())
-        {
-            std::string sourceAreaName = item.path().filename().generic_string();
-            readSourceAreaIniFile(item, sourceAreaName, linkList);
-        }
+        std::string sourceAreaName = link.namesPair.first;
+        fs::path pathToIni = toLinksDir / sourceAreaName / "properties.ini";
+        readSourceAreaIniFile(pathToIni, sourceAreaName, linkList);
     }
 }
 
-bool readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
+bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
+                              fs::path sourceAreaDir)
 {
+    bool to_return = true;
+    const auto preproId = link.namesPair.first + "/" + link.namesPair.second;
+    link.prepro = std::make_unique<Data::PreproAvailability>(preproId, link.unitCount);
+
+    auto preproFileRoot = sourceAreaDir / "prepro" / link.namesPair.second;
+
+    auto preproFile = preproFileRoot;
+    preproFile += ".txt";
+    if (fs::exists(preproFile))
+    {
+        to_return = link.prepro->data.loadFromCSVFile(
+                                              preproFile.string(),
+                                              Data::PreproAvailability::preproAvailabilityMax,
+                                              DAYS_PER_YEAR)
+                    && link.prepro->validate()
+                    && to_return;
+    }
+
+    auto modulationFileDirect = preproFileRoot;
+    modulationFileDirect += "_mod_direct.txt";
+    if (fs::exists(modulationFileDirect))
+    {
+        to_return = link.modulationCapacityDirect.loadFromCSVFile(
+                                                modulationFileDirect.string(),
+                                                1,
+                                                HOURS_PER_YEAR)
+                    && to_return;
+    }
+
+    auto modulationFileIndirect = preproFileRoot;
+    modulationFileIndirect += "_mod_indirect.txt";
+    if (fs::exists(modulationFileIndirect))
+    {
+        to_return = link.modulationCapacityIndirect.loadFromCSVFile(
+                                                modulationFileIndirect.string(),
+                                                1,
+                                                HOURS_PER_YEAR)
+                    && to_return;
+    }
+    // Makes possible a skip of TS generation when time comes
+    link.hasValidData = link.hasValidData && to_return;
+
+    return to_return;
+}
+
+bool readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
+                          fs::path toLinksDir)
+{
+    for(auto& link : linkList)
+    {
+        std::string sourceAreaName = link.namesPair.first;
+        fs::path sourceAreaDir = toLinksDir / sourceAreaName;
+        if (! readLinkPreproTimeSeries(link, sourceAreaDir))
+        {
+            logs.error() << "Could not load all prepro data for links '"
+                         << link.namesPair.first << "." << link.namesPair.second << "'";
+            return false;
+        }
+    }
     return true;
 }
 
@@ -499,10 +559,11 @@ int main(int argc, char* argv[])
 
     // LINKS
     // =====  New code for TS generation links ====================================
-    auto allLinksPairs = extractLinksFromStudy(settings.studyFolder);
+    auto allLinksPairs = extractLinkNamesFromStudy(settings.studyFolder);
     // logLinks("All links", allLinksPairs);
 
-    auto linksFromCmdLine = extractLinksFromCmdLine(allLinksPairs, settings.linksListToGen);
+    auto linksFromCmdLine = extractLinkNamesFromCmdLine(allLinksPairs,
+                                                                 settings.linksListToGen);
     // logLinks("Links from cmd line", linksFromCmdLine);
     if (settings.allLinks)
         linksFromCmdLine = allLinksPairs;
@@ -512,10 +573,13 @@ int main(int argc, char* argv[])
     std::vector<LinkTSgenerationParams> linkList = CreateLinkList(linksFromCmdLine, params);
     if (! readLinksSpecificTSparameters(linkList, settings.studyFolder))
     {
-        // Something wrong while reading particular data associated to
-        // link TS generation
+        logs.warning() << "All data could not be loaded for links TS generation";
+        // gp : let's be more careful about how we handle problems when loading data.
+        // gp : - examining to throw / catch exceptions and marking a link as invalid
+        // gp :   when catching the exception at the link level
+        // gp : - if a link does have all of its data loaded, then we don't generate TS
+        // gp !   for this link.
     }
-
 
     // ============================================================================
 
