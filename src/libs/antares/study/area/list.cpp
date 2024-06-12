@@ -1161,6 +1161,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         logs.info() << "Loading global hydro data...";
         buffer.clear() << pStudy.folderInput << SEP << "hydro";
         ret = PartHydro::LoadFromFolder(pStudy, buffer) && ret;
+        ret = PartHydro::validate(pStudy) && ret;
     }
 
     // Thermal data, specific to areas
