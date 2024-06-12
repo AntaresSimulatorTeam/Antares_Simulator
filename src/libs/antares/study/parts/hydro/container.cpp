@@ -107,7 +107,10 @@ void PartHydro::reset()
 }
 
 template<class T>
-static bool loadProperties(Study& study, IniFile::Property* property, const std::string& filename, T PartHydro::*ptr)
+static bool loadProperties(Study& study,
+                           IniFile::Property* property,
+                           const std::string& filename,
+                           T PartHydro::*ptr)
 {
     if (!property)
         return false;
@@ -131,36 +134,6 @@ static bool loadProperties(Study& study, IniFile::Property* property, const std:
             return false;
         }
     }
-    return ret;
-}
-
-bool PartHydro::validate(Study& study)
-{
-    bool ret = true;
-
-    // Check on reservoir capacity (has to be done after reservoir management and capacity reading,
-    // not before). Some areas reservoir capacities may not be printed in hydro ini file when saving
-    // the study, because they are too small (< 1e-6). We cannot have reservoir management = yes and
-    // capacity = 0 because of further division by capacity. reservoir management = no and capacity
-    // = 0 is possible (no use of capacity further)
-    study.areas.each(
-      [&](Data::Area& area)
-      {
-          if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
-          {
-              logs.error() << area.name
-                           << ": reservoir capacity not defined. Impossible to manage.";
-              ret = false && ret;
-          }
-
-          if (not area.hydro.useHeuristicTarget && not area.hydro.useWaterValue)
-          {
-              logs.error() << area.name
-                           << " : use water value = no conflicts with use heuristic target = no";
-              ret = false && ret;
-          }
-      });
-
     return ret;
 }
 
@@ -375,6 +348,36 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
     {
         ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::pumpingEfficiency) && ret;
     }
+
+    return ret;
+}
+
+bool PartHydro::validate(Study& study)
+{
+    bool ret = true;
+
+    // Check on reservoir capacity (has to be done after reservoir management and capacity reading,
+    // not before). Some areas reservoir capacities may not be printed in hydro ini file when saving
+    // the study, because they are too small (< 1e-6). We cannot have reservoir management = yes and
+    // capacity = 0 because of further division by capacity. reservoir management = no and capacity
+    // = 0 is possible (no use of capacity further)
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
+          {
+              logs.error() << area.name
+                           << ": reservoir capacity not defined. Impossible to manage.";
+              ret = false;
+          }
+
+          if (!area.hydro.useHeuristicTarget && !area.hydro.useWaterValue)
+          {
+              logs.error() << area.name
+                           << " : use water value = no conflicts with use heuristic target = no";
+              ret = false;
+          }
+      });
 
     return ret;
 }
