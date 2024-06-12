@@ -221,11 +221,11 @@ void HydroManagement::prepareEffectiveDemand(uint year,
                 });
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
-              hydro_specific.daily.DLE[day] += effectiveDemand;
-              hydro_specific.monthly.MLE[realmonth] += effectiveDemand;
+              hydro_specific.daily[day].DLE += effectiveDemand;
+              hydro_specific.monthly[realmonth].MLE += effectiveDemand;
 
-              assert(not std::isnan(hydro_specific.daily.DLE[day]) && "nan value detected for DLE");
-              assert(not std::isnan(hydro_specific.monthly.MLE[realmonth])
+              assert(not std::isnan(hydro_specific.daily[day].DLE) && "nan value detected for DLE");
+              assert(not std::isnan(hydro_specific.monthly[realmonth].MLE)
                      && "nan value detected for DLE");
           }
 
@@ -241,9 +241,9 @@ void HydroManagement::prepareEffectiveDemand(uint year,
               for (uint d = 0; d != daysPerMonth; ++d)
               {
                   auto dYear = d + dayYear;
-                  if (hydro_specific.daily.DLE[dYear] < minimumMonth)
+                  if (hydro_specific.daily[dYear].DLE < minimumMonth)
                   {
-                      minimumMonth = hydro_specific.daily.DLE[dYear];
+                      minimumMonth = hydro_specific.daily[dYear].DLE;
                   }
               }
 
@@ -251,13 +251,13 @@ void HydroManagement::prepareEffectiveDemand(uint year,
               {
                   for (uint d = 0; d != daysPerMonth; ++d)
                   {
-                      hydro_specific.daily.DLE[dayYear + d] -= minimumMonth - 1e-4;
+                      hydro_specific.daily[dayYear + d].DLE -= minimumMonth - 1e-4;
                   }
               }
 
-              if (hydro_specific.monthly.MLE[realmonth] < minimumYear)
+              if (hydro_specific.monthly[realmonth].MLE < minimumYear)
               {
-                  minimumYear = hydro_specific.monthly.MLE[realmonth];
+                  minimumYear = hydro_specific.monthly[realmonth].MLE;
               }
 
               dayYear += daysPerMonth;
@@ -267,7 +267,7 @@ void HydroManagement::prepareEffectiveDemand(uint year,
           {
               for (uint realmonth = 0; realmonth != 12; ++realmonth)
               {
-                  hydro_specific.monthly.MLE[realmonth] -= minimumYear - 1e-4;
+                  hydro_specific.monthly[realmonth].MLE -= minimumYear - 1e-4;
               }
           }
       });
