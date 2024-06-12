@@ -38,21 +38,21 @@ enum dayYearCount
 struct HydroDaily
 {
     //! Net demand, for each day of the year, for each area
-    std::array<double, dayYearCount> DLN;
+    std::array<double, dayYearCount> DLN{};
     //! Daily local effective load
-    std::array<double, dayYearCount> DLE;
+    std::array<double, dayYearCount> DLE{};
 };
 
 struct HydroMonthly
 {
     //! Monthly local effective demand
-    std::array<double, 12> MLE;
+    std::array<double, 12> MLE{};
     //! Monthly optimal generation
-    std::array<double, 12> MOG;
+    std::array<double, 12> MOG{};
     //! Monthly optimal level
-    std::array<double, 12> MOL;
+    std::array<double, 12> MOL{};
     //! Monthly target generations
-    std::array<double, 12> MTG;
+    std::array<double, 12> MTG{};
 };
 
 // TODO Rename
