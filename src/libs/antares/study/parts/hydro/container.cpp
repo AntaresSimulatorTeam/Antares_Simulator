@@ -114,7 +114,7 @@ static bool loadProperties(Study& study, IniFile::Property* property, const std:
     if (!property)
         return false;
 
-    ret = true;
+    bool ret = true;
 
     // Browse all properties
     for (; property; property = property->next)
