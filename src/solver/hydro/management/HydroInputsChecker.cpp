@@ -56,7 +56,7 @@ void HydroInputsChecker::Execute()
             minGenerationScaling_.Run(year);
             if (!checksOnGenerationPowerBounds(year))
             {
-                throw FatalError("hydro management: invalid minimum generation");
+                throw FatalError("hydro inputs checks: invalid minimum generation");
             }
         }
     }

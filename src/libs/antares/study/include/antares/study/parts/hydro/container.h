@@ -32,7 +32,7 @@ namespace Antares::Data
     //! The maximum number of days in a year
 constexpr size_t dayYearCount = 366;
 
-struct HydroDaily
+struct HydroDailyLoadDemand
 {
     //! Net demand, for each day of the year, for each area
     double DLN = 0.;
@@ -40,7 +40,7 @@ struct HydroDaily
     double DLE = 0.;
 };
 
-struct HydroMonthly
+struct HydroMonthlyDemandGeneration
 {
     //! Monthly local effective demand
     double MLE = 0.;
@@ -52,15 +52,15 @@ struct HydroMonthly
     double MTG = 0.;
 };
 
-// TODO Rename
-struct HydroSpecific
+//!  Hydro Management Data for a given area
+struct TimeDependantHydroManagementData
 {
-    std::array<HydroDaily, dayYearCount> daily{0};
-    std::array<HydroMonthly, 12> monthly{0};
+    std::array<HydroDailyLoadDemand, dayYearCount> daily{0};
+    std::array<HydroMonthlyDemandGeneration, 12> monthly{0};
 };
 
-//! Temporary data
-struct HydroManagementData
+//! Area Hydro Management Data for a given year
+struct AreaDependantHydroManagementData
 {
     //! inflows
     std::array<double, 12> inflows{};
@@ -80,7 +80,7 @@ struct HydroManagementData
     //! yearly total inflows
     double totalYearInflows = 0;
 
-}; // struct HydroManagementData
+}; // struct AreaDependantHydroManagementData
 
 /*!
 ** \brief Hydro for a single area
@@ -214,7 +214,7 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
-    std::unordered_map<uint, HydroManagementData> managementData;
+    std::unordered_map<uint, AreaDependantHydroManagementData> managementData;
 
 }; // class PartHydro
 

@@ -146,7 +146,8 @@ void HydroManagement::prepareNetDemand(
   uint year,
   Data::SimulationMode mode,
   const Antares::Data::Area::ScratchMap& scratchmap,
-  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::TimeDependantHydroManagementData>&
+    hydro_specific_map)
 {
     areas_.each(
       [this, &year, &scratchmap, &mode, &hydro_specific_map](Data::Area& area)
@@ -201,7 +202,8 @@ void HydroManagement::prepareNetDemand(
 
 void HydroManagement::prepareEffectiveDemand(
   uint year,
-  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::TimeDependantHydroManagementData>&
+    hydro_specific_map)
 {
     areas_.each(
       [&](Data::Area& area)
@@ -281,7 +283,8 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       uint y,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
-    std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific> hydro_specific_map;
+    std::unordered_map<const Antares::Data::Area*, Antares::Data::TimeDependantHydroManagementData>
+      hydro_specific_map;
     prepareNetDemand(y, parameters_.mode, scratchmap, hydro_specific_map);
     prepareEffectiveDemand(y, hydro_specific_map);
 

@@ -84,8 +84,8 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 
 double HydroManagement::prepareMonthlyTargetGenerations(
   Data::Area& area,
-  Antares::Data::HydroManagementData& data,
-  Antares::Data::HydroSpecific& hydro_specific)
+  Antares::Data::AreaDependantHydroManagementData& data,
+  Antares::Data::TimeDependantHydroManagementData& hydro_specific)
 {
     double total = 0;
 
@@ -154,7 +154,8 @@ double HydroManagement::prepareMonthlyTargetGenerations(
 void HydroManagement::prepareMonthlyOptimalGenerations(
   double* random_reservoir_level,
   uint y,
-  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::TimeDependantHydroManagementData>&
+    hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(

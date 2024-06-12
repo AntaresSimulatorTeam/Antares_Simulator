@@ -93,7 +93,7 @@ struct DebugData
     std::array<double, 12> previousMonthWaste{0};
 
     Solver::IResultWriter& pWriter;
-    const Antares::Data::HydroManagementData& data;
+    const Antares::Data::AreaDependantHydroManagementData& data;
     const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
     const double* srcinflows;
     const MaxPowerType& maxP;
@@ -102,10 +102,10 @@ struct DebugData
     const ReservoirLevelType& lowLevel;
     const double reservoirCapacity;
 
-    const Antares::Data::HydroSpecific& hydro_specific;
+    const Antares::Data::TimeDependantHydroManagementData& hydro_specific;
 
     DebugData(Solver::IResultWriter& writer,
-              const Antares::Data::HydroManagementData& data,
+              const Antares::Data::AreaDependantHydroManagementData& data,
               const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
               const double* srcinflows,
               const MaxPowerType& maxP,
@@ -113,7 +113,7 @@ struct DebugData
               const double* dailyTargetGen,
               const ReservoirLevelType& lowLevel,
               double reservoirCapacity,
-              const Antares::Data::HydroSpecific& hydro_specific):
+              const Antares::Data::TimeDependantHydroManagementData& hydro_specific):
         pWriter(writer),
         data(data),
         ventilationResults(ventilationResults),
@@ -227,7 +227,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
   Data::Area& area,
   uint y,
   Antares::Data::Area::ScratchMap& scratchmap,
-  Antares::Data::HydroSpecific& hydro_specific)
+  Antares::Data::TimeDependantHydroManagementData& hydro_specific)
 {
     const auto srcinflows = area.hydro.series->storage.getColumn(y);
 
@@ -562,7 +562,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 void HydroManagement::prepareDailyOptimalGenerations(
   uint y,
   Antares::Data::Area::ScratchMap& scratchmap,
-  std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>& hydro_specific_map)
+  std::unordered_map<const Antares::Data::Area*, Antares::Data::TimeDependantHydroManagementData>&
+    hydro_specific_map)
 {
     areas_.each(
       [&](Data::Area& area)

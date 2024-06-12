@@ -79,40 +79,43 @@ public:
 
 private:
     //! Prepare the net demand for each area
-    void prepareNetDemand(uint year,
-                          Data::SimulationMode mode,
-                          const Antares::Data::Area::ScratchMap& scratchmap,
-                          std::unordered_map<const Antares::Data::Area*,
-                                             Antares::Data::HydroSpecific>& hydro_specific_map);
+    void prepareNetDemand(
+      uint year,
+      Data::SimulationMode mode,
+      const Antares::Data::Area::ScratchMap& scratchmap,
+      std::unordered_map<const Antares::Data::Area*,
+                         Antares::Data::TimeDependantHydroManagementData>& hydro_specific_map);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand(
       uint year,
-      std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>&
-        hydro_specific_map);
+      std::unordered_map<const Antares::Data::Area*,
+                         Antares::Data::TimeDependantHydroManagementData>& hydro_specific_map);
     //! Monthly Optimal generations
     void prepareMonthlyOptimalGenerations(
       double* random_reservoir_level,
       uint y,
-      std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>&
-        hydro_specific_map);
+      std::unordered_map<const Antares::Data::Area*,
+                         Antares::Data::TimeDependantHydroManagementData>& hydro_specific_map);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
     // \return The total inflow for the whole year
-    double prepareMonthlyTargetGenerations(Data::Area& area,
-                                           Antares::Data::HydroManagementData& data,
-                                           Antares::Data::HydroSpecific& hydro_specific);
+    double prepareMonthlyTargetGenerations(
+      Data::Area& area,
+      Antares::Data::AreaDependantHydroManagementData& data,
+      Antares::Data::TimeDependantHydroManagementData& hydro_specific);
 
     void prepareDailyOptimalGenerations(
       uint y,
       Antares::Data::Area::ScratchMap& scratchmap,
-      std::unordered_map<const Antares::Data::Area*, Antares::Data::HydroSpecific>&
-        hydro_specific_map);
+      std::unordered_map<const Antares::Data::Area*,
+                         Antares::Data::TimeDependantHydroManagementData>& hydro_specific_map);
 
-    void prepareDailyOptimalGenerations(Data::Area& area,
-                                        uint y,
-                                        Antares::Data::Area::ScratchMap& scratchmap,
-                                        Antares::Data::HydroSpecific& hydro_specific);
+    void prepareDailyOptimalGenerations(
+      Data::Area& area,
+      uint y,
+      Antares::Data::Area::ScratchMap& scratchmap,
+      Antares::Data::TimeDependantHydroManagementData& hydro_specific);
 
 private:
     const Data::AreaList& areas_;
