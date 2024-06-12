@@ -361,23 +361,31 @@ bool PartHydro::validate(Study& study)
     // the study, because they are too small (< 1e-6). We cannot have reservoir management = yes and
     // capacity = 0 because of further division by capacity. reservoir management = no and capacity
     // = 0 is possible (no use of capacity further)
-    study.areas.each(
-      [&](Data::Area& area)
-      {
-          if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
-          {
-              logs.error() << area.name
-                           << ": reservoir capacity not defined. Impossible to manage.";
-              ret = false;
-          }
+    study.areas.each([&ret](Data::Area& area)
+    {
+        if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
+        {
+            logs.error() << area.name
+                         << ": reservoir capacity not defined. Impossible to manage.";
+            ret = false;
+        }
 
-          if (!area.hydro.useHeuristicTarget && !area.hydro.useWaterValue)
-          {
-              logs.error() << area.name
-                           << " : use water value = no conflicts with use heuristic target = no";
-              ret = false;
-          }
-      });
+        if (!area.hydro.useHeuristicTarget && !area.hydro.useWaterValue)
+        {
+            logs.error() << area.name
+                         << " : use water value = no conflicts with use heuristic target = no";
+            ret = false;
+        }
+
+        if (area.hydro.intraDailyModulation < 1.)
+        {
+            logs.error()
+              << area.id << ": Invalid intra-daily modulation. It must be >= 1.0, Got "
+              << area.hydro.intraDailyModulation << " (truncated to 1)";
+            area.hydro.intraDailyModulation = 1.;
+        }
+
+    });
 
     return ret;
 }
