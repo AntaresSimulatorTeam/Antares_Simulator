@@ -29,37 +29,34 @@
 namespace Antares::Data
 {
 
-enum dayYearCount
-{
     //! The maximum number of days in a year
-    dayYearCount = 366
-};
+constexpr size_t dayYearCount = 366;
 
 struct HydroDaily
 {
     //! Net demand, for each day of the year, for each area
-    std::array<double, dayYearCount> DLN{};
+    double DLN = 0.;
     //! Daily local effective load
-    std::array<double, dayYearCount> DLE{};
+    double DLE = 0.;
 };
 
 struct HydroMonthly
 {
     //! Monthly local effective demand
-    std::array<double, 12> MLE{};
+    double MLE = 0.;
     //! Monthly optimal generation
-    std::array<double, 12> MOG{};
+    double MOG = 0.;
     //! Monthly optimal level
-    std::array<double, 12> MOL{};
+    double MOL = 0.;
     //! Monthly target generations
-    std::array<double, 12> MTG{};
+    double MTG = 0.;
 };
 
 // TODO Rename
 struct HydroSpecific
 {
-    HydroDaily daily;
-    HydroMonthly monthly;
+    std::array<HydroDaily, dayYearCount> daily{0};
+    std::array<HydroMonthly, 12> monthly{0};
 };
 
 //! Temporary data

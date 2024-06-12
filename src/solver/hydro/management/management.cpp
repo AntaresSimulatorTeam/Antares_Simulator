@@ -192,7 +192,7 @@ void HydroManagement::prepareNetDemand(uint year,
 
               assert(!std::isnan(netdemand)
                      && "hydro management: NaN detected when calculating the net demande");
-              hydro_specific.daily.DLN[dayYear] += netdemand;
+              hydro_specific.daily[dayYear].DLN += netdemand;
           }
       });
 }
@@ -217,7 +217,7 @@ void HydroManagement::prepareEffectiveDemand(uint year,
                 [&](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
-                    effectiveDemand += hydro_specific.daily.DLN[day] * value;
+                    effectiveDemand += hydro_specific.daily[day].DLN * value;
                 });
 
               assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");

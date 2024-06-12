@@ -145,7 +145,8 @@ struct DebugData
         {
             double value = ventilationResults.HydrauliqueModulableQuotidien[day];
             buffer << day << '\t' << value << '\t' << OPP[day] << '\t' << DailyTargetGen[day]
-                   << '\t' << hydro_specific.daily.DLE[day] << '\t' << hydro_specific.daily.DLN[day];
+                   << '\t' << hydro_specific.daily.DLE[day] << '\t'
+                   << hydro_specific.daily[day].DLN;
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
