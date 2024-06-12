@@ -62,6 +62,7 @@ public:
 
         //! Track the number of thermalGroup different types participating to the reserves
         std::vector<uint> nbThermalGroupsForReserves;
+		
     };
 
     StateForAnArea& operator[](size_t areaIndex);
@@ -156,6 +157,7 @@ public:
     //! Current hour from the begining of the simulation
     unsigned int hourInTheSimulation;
 
+    Yuni::String spilledUnsupplied;
     //! The current area
     Data::Area* area;
 

@@ -23,6 +23,13 @@
 
 #include <antares/study/study.h>
 #include "antares/solver/variable/state.h"
+#include <filesystem>
+#include <yuni/io/file.h>
+#include <iomanip>
+#include <sstream>
+#include <yuni/io/directory.h>
+#include <yuni/string.h>
+#include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable
 {
@@ -370,17 +377,51 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 }
 
 void State::yearEndBuildCalculateReserveParticipationCosts(
-  const Data::ThermalCluster* currentCluster)
+    const Data::ThermalCluster* currentCluster)
 {
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
     {
         uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear
-          = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
-        for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
+            = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+        Yuni::IO::File::Stream file;
+        Yuni::String pathFolder = study.folderOutput;
+        pathFolder << SEP << "reserves";
+        if (Yuni::IO::Directory::Exists(pathFolder) || Yuni::IO::Directory::Create(pathFolder))
         {
-            thermalClusterOperatingCostForYear[h]
-              += thermalClusterReserveParticipationCostForYear[h];
+            pathFolder << SEP << thermalCluster->parentArea->name;
+            if (Yuni::IO::Directory::Exists(pathFolder) || Yuni::IO::Directory::Create(pathFolder))
+            {
+                Yuni::String path;
+                path << pathFolder << SEP << thermalCluster->name() << ".txt";
+                if (file.openRW(path))
+                {
+                    for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
+                    {
+                        thermalClusterOperatingCostForYear[h]
+                            += thermalClusterReserveParticipationCostForYear[h];
+                        std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
+
+                        for (auto res : clusterReserves)
+                        {
+                            file << "Hour " << h + 1 << " : cluster " << thermalCluster->name() << " is participating to reserve " << res << " for " << thermalReserveParticipationPerGroupForYear[h][res][thermalCluster->groupID] << " mw\n";
+                        }
+                    }
+                    file.close();
+                }
+                else
+                {
+                    logs.error() << "Reserves : impossible to write " << path;
+                }
+            }
+            else
+            {
+                logs.error() << "Reserves : impossible to write " << pathFolder;
+            }
+        }
+        else
+        {
+            logs.error() << "Reserves : impossible to write " << pathFolder;
         }
     }
 }

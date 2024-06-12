@@ -22,6 +22,11 @@
 #define __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
 
 #include "antares/solver/variable/variable.h"
+#include <filesystem>
+#include <yuni/io/file.h>
+#include <iomanip>
+#include <sstream>
+#include <yuni/io/directory.h>
 
 namespace Antares
 {
@@ -207,6 +212,7 @@ public:
 
     void yearEndBuild(State& state, unsigned int year)
     {
+
         // Next variable
         NextType::yearEndBuild(state, year);
     }
@@ -253,7 +259,8 @@ public:
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
                 - state.area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
-
+        Yuni::String buffer;
+        buffer << "Hour : " << state.hourInTheYear << "\n";
         for (const auto& thermalReserves : state.problemeHebdo->allReserves.thermalAreaReserves)
         {
             for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
@@ -265,6 +272,9 @@ public:
                      + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
                            .ValeursHorairesInternalExcessReserve[reserveUp.globalReserveIndex]
                          * reserveUp.spillageCost;
+                buffer << " Reserve : " << reserveUp.reserveName << " Unsupplied : " << state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                    .ValeursHorairesInternalUnsatisfied[reserveUp.globalReserveIndex] << " mw, Spilled : " << state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                    .ValeursHorairesInternalExcessReserve[reserveUp.globalReserveIndex] << " mw. \n";
             }
             for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
             {
@@ -275,10 +285,34 @@ public:
                      + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
                            .ValeursHorairesInternalExcessReserve[reserveDown.globalReserveIndex]
                          * reserveDown.spillageCost;
+                buffer << " Reserve : " << reserveDown.reserveName << " Unsupplied : " << state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                    .ValeursHorairesInternalUnsatisfied[reserveDown.globalReserveIndex] << " mw, Spilled : " << state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                    .ValeursHorairesInternalExcessReserve[reserveDown.globalReserveIndex] << " mw. \n";
             }
         }
-
+        state.spilledUnsupplied << buffer;
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;
+
+        if (state.hourInTheYear == state.study.runtime->rangeLimits.hour[Data::rangeEnd])
+        {
+            Yuni::String path;
+            path << state.study.folderOutput << SEP << "reserves" << SEP << state.area->name << ".txt";
+            Yuni::IO::File::Stream file;
+            Yuni::String pathFolder = state.study.folderOutput;
+            pathFolder << SEP << "reserves";
+            if (Yuni::IO::Directory::Exists(pathFolder) || Yuni::IO::Directory::Create(pathFolder))
+            {
+                if (file.openRW(path))
+                {
+                    file << state.spilledUnsupplied;
+                    file.close();
+                }
+            }
+            else
+            {
+                logs.error() << "Reserves : impossible to write " << path;
+            }
+        }
 
         // Incrementing annual system cost (to be printed in output into a separate file)
         state.annualSystemCost += costForSpilledOrUnsuppliedEnergy;
