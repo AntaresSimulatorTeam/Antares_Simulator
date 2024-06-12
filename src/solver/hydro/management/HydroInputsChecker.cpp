@@ -33,7 +33,6 @@ namespace Antares
 
 HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study,
                                        Solver::IResultWriter& resultWriter):
-    study_(study),
     areas_(study.areas),
     parameters_(study.parameters),
     calendar_(study.calendar),

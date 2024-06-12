@@ -34,7 +34,6 @@ public:
     void Execute();
 
 private:
-    Antares::Data::Study& study_;
     Data::AreaList& areas_;
     const Data::Parameters& parameters_;
     const Date::Calendar& calendar_;
