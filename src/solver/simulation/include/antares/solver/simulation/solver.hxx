@@ -436,6 +436,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 template<class ImplementationType>
 void ISimulation<ImplementationType>::regenerateHydroTimeSeries(uint year)
 {
+    using namespace TSGenerator;
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
         pDurationCollector("tsgen_hydro") << [year, this]
