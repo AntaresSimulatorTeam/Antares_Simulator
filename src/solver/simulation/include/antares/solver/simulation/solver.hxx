@@ -1012,7 +1012,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                              set_it->isYearPerformed,
                              randomHydroGenerator);
         HydroInputsChecker hydroInputsChecker(study);
-        for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
+        for (auto year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
              ++year_it)
         {
             hydroInputsChecker.Execute(*year_it);
