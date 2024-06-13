@@ -45,9 +45,6 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 
 void HydroInputsChecker::Execute(uint year)
 {
-    // for (auto year = firstYear_; year < endYear_; ++year)
-    // {
-    // unecessary, done by the caller ?
     if (parameters_.yearsFilter[year])
     {
         prepareInflows_.Run(year);
@@ -57,7 +54,6 @@ void HydroInputsChecker::Execute(uint year)
             throw FatalError("hydro inputs checks: invalid minimum generation");
         }
     }
-    // }
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year) const

@@ -30,7 +30,7 @@ namespace Antares
 class HydroInputsChecker
 {
 public:
-    HydroInputsChecker(Antares::Data::Study& study);
+    explicit HydroInputsChecker(Antares::Data::Study& study);
     void Execute(uint year);
 
 private:
