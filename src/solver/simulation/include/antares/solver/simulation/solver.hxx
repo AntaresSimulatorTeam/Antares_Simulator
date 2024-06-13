@@ -982,20 +982,19 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Related to annual costs statistics (printed in output into separate files)
     pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 
+    // Container for random numbers of parallel years (to be executed or not)
+    randomNumbers randomForParallelYears(maxNbYearsPerformedInAset,
+                                         study.parameters.power.fluctuations);
+
+    // Allocating memory to store random numbers of all parallel years
+    allocateMemoryForRandomNumbers(randomForParallelYears);
+
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
 
-    std::map<const setOfParallelYears*, randomNumbers> randomNumbersMap;
     // Loop over sets of parallel years
     for (auto batch: setsOfParallelYears)
     {
-        // Container for random numbers of parallel years (to be executed or not)
-        randomNumbers randomForParallelYears(maxNbYearsPerformedInAset,
-                                             study.parameters.power.fluctuations);
-
-        // Allocating memory to store random numbers of all parallel years
-        allocateMemoryForRandomNumbers(randomForParallelYears);
-
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
@@ -1004,11 +1003,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             regenerateTimeSeries(batch.yearForTSgeneration);
         }
 
-        computeRandomNumbers(randomForParallelYears,
-                             batch.yearsIndices,
-                             batch.isYearPerformed,
-                             randomHydroGenerator);
-        randomNumbersMap.emplace(&batch, randomForParallelYears);
         HydroInputsChecker hydroInputsChecker(study);
         for (auto year: batch.yearsIndices)
         {
@@ -1018,6 +1012,11 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     for (auto batch: setsOfParallelYears)
     {
+        computeRandomNumbers(randomForParallelYears,
+                             batch.yearsIndices,
+                             batch.isYearPerformed,
+                             randomHydroGenerator);
+
         bool yearPerformed = false;
         Concurrency::FutureSet results;
         for (auto y: batch.yearsIndices)
@@ -1042,7 +1041,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               batch.isFirstPerformedYearOfASet,
               pFirstSetParallelWithAPerformedYearWasRun,
               numSpace,
-              randomNumbersMap.at(&batch),
+              randomForParallelYears,
               performCalculations,
               study,
               state,
@@ -1093,7 +1092,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         computeAnnualCostsStatistics(state, batch);
 
         // Set to zero the random numbers of all parallel years
-        // randomForParallelYears.reset();
+        randomForParallelYears.reset();
 
     } // End loop over sets of parallel years
 
