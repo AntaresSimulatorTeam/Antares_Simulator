@@ -206,9 +206,6 @@ public:
     int linkWidth;
 
     friend struct CompareLinkName;
-
-    LinkTsGeneration tsGeneration;
-
 }; // class AreaLink
 
 struct CompareLinkName final

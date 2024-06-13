@@ -530,7 +530,9 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     }
     if (key == "nbtimeserieslinks")
     {
-        return value.to<uint>(d.nbLinkTStoGenerate);
+        // This data is among solver data, but is useless while running a simulation
+        // Only by TS generator. We skip it here (otherwise, we get a reading error).
+        return true;
     }
     // Interval values
     if (key == "refreshintervalload")
@@ -1026,10 +1028,6 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
             {
                 return value.to<uint>(d.seed[seedTsGenSolar]);
             }
-            if (key == "seed_links")
-            {
-                return value.to<uint>(d.seed[seedTsGenLinks]);
-            }
             if (key == "seed_timeseriesnumbers")
             {
                 return value.to<uint>(d.seed[seedTimeseriesNumbers]);
@@ -1045,6 +1043,10 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                 {
                     return value.to<uint>(d.seed[sd]);
                 }
+            }
+            if (key == "seed-tsgen-links")
+            {
+                return true; // Useless for solver, belongs to TS generator
             }
         }
     }
@@ -1766,7 +1768,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesWind", nbTimeSeriesWind);
         section->add("nbTimeSeriesThermal", nbTimeSeriesThermal);
         section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
-        section->add("nbtimeserieslinks", nbLinkTStoGenerate);
 
         // Refresh
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);

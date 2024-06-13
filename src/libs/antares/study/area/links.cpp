@@ -23,10 +23,7 @@
 
 #include <filesystem>
 #include <limits>
-
-#include <boost/algorithm/string/case_conv.hpp>
-
-#include <yuni/yuni.h>
+#include <array>
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
@@ -309,6 +306,16 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 namespace // anonymous
 {
 
+bool isPropertyUsedForLinkTSgeneration(const std::string key)
+{
+    std::array<std::string, 7> listKeys
+        = {"unitcount", "nominalcapacity", "law.planned", "law.forced",
+           "volatility.planned", "volatility.forced", "force-no-generation"};
+    if (std::find(listKeys.begin(), listKeys.end(), key) != listKeys.end())
+        return true;
+    return false;
+}
+
 bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
@@ -450,6 +457,12 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     if (key == "filter-year-by-year")
     {
         link.filterYearByYear = stringIntoDatePrecision(value);
+        return true;
+    }
+    if (isPropertyUsedForLinkTSgeneration(key.to<std::string>()))
+    {
+        // Properties used by TS generator only.
+        // We just skip them (otherwise : reading error)
         return true;
     }
     return false;

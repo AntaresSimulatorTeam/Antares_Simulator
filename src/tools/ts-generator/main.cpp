@@ -222,11 +222,10 @@ bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
     if (key == "seed-tsgen-links")
     {
         unsigned int seed {0};
-        if (value.to<unsigned int>(seed))
-        {
-            params.random.reset(seed);
-            return true;
-        }
+        if (! value.to<unsigned int>(seed))
+            return false;
+        params.random.reset(seed);
+        return true;
     }
     return true; // gp : should we return true here ?
 }

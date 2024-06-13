@@ -621,23 +621,6 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-listOfLinks getAllLinksToGen(Data::AreaList& areas)
-{
-    listOfLinks links;
-
-    areas.each(
-      [&links](const Data::Area& area)
-      {
-          std::ranges::for_each(area.links, [&links](auto& l)
-                                {
-                                    if (!l.second->tsGeneration.forceNoGeneration)
-                                        links.push_back(l.second);
-                                });
-      });
-
-    return links;
-}
-
 void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
                         const Matrix<>& series,
