@@ -165,6 +165,10 @@ public:
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
 
+private:
+    static bool checkReservoirLevels(const Study& study);
+    static bool checkProperties(Study& study);
+
 }; // class PartHydro
 
 // Interpolates a water value from a table according to a level and a day.

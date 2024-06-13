@@ -312,15 +312,14 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
     return ret;
 }
 
-bool PartHydro::validate(Study& study)
+bool PartHydro::checkReservoirLevels(const Study& study)
 {
     bool ret = true;
 
-    /* study.areas.each([&ret, &study](Data::Area& area) */
     for (const auto& [areaName, area] : study.areas)
     {
         if (!study.usedByTheSolver)
-            break;
+            return true;
 
         auto& col = area->hydro.inflowPattern[0];
         bool errorInflow = false;
@@ -358,8 +357,14 @@ bool PartHydro::validate(Study& study)
                 ret = false;
             }
         }
-    };
+    }
 
+    return ret;
+}
+
+bool PartHydro::checkProperties(Study& study)
+{
+    bool ret = true;
 
     // Check on reservoir capacity (has to be done after reservoir management and capacity reading,
     // not before). Some areas reservoir capacities may not be printed in hydro ini file when saving
@@ -432,6 +437,12 @@ bool PartHydro::validate(Study& study)
     });
 
     return ret;
+}
+
+bool PartHydro::validate(Study& study)
+{
+    bool ret = checkReservoirLevels(study);
+    return checkProperties(study) && ret;
 }
 
 bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
