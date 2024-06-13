@@ -71,8 +71,6 @@ public:
 
     bool loadTimeSeries(const StudyVersion& version, const AnyString& folder);
 
-    bool loadTSGenTimeSeries(const std::filesystem::path& folder);
-
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
     //! \name Area

@@ -207,15 +207,6 @@ LinkPairs extractLinkNamesFromCmdLine(const LinkPairs& allLinks,
     return to_return;
 }
 
-void logLinks(std::string title, LinkPairs& links)
-{
-    std::cout << title << " : " << std::endl;
-    for (auto& link : links)
-    {
-        std::cout << "+ " << link.first << "." << link.second << std::endl;
-    }
-}
-
 bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
                              const Yuni::String& key,
                              const Yuni::String& value)
@@ -502,7 +493,6 @@ int main(int argc, char* argv[])
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
     studyOptions.prepareOutput = true;
-    studyOptions.linksLoadTSGen = true;
 
     if (!study->loadFromFolder(settings.studyFolder, studyOptions))
     {
@@ -531,9 +521,8 @@ int main(int argc, char* argv[])
                                                     durationCollector);
 
     const auto thermalSavePath = fs::path("ts-generator") / "thermal";
-    const auto linksSavePath = fs::path("ts-generator") / "links";
 
-    // THERMAL
+    // ============ THERMAL : Getting data for generating time-series =========
     std::vector<Data::ThermalCluster*> clusters;
     if (settings.allThermal)
     {
@@ -549,14 +538,10 @@ int main(int argc, char* argv[])
         logs.debug() << c->id();
     }
 
-    // LINKS
-    // =====  New code for TS generation links ====================================
+    // ============ LINKS : Getting data for generating LINKS time-series =====
     auto allLinksPairs = extractLinkNamesFromStudy(settings.studyFolder);
-    // logLinks("All links", allLinksPairs);
-
     auto linksFromCmdLine = extractLinkNamesFromCmdLine(allLinksPairs,
                                                                  settings.linksListToGen);
-    // logLinks("Links from cmd line", linksFromCmdLine);
     if (settings.allLinks)
         linksFromCmdLine = allLinksPairs;
 
@@ -573,34 +558,16 @@ int main(int argc, char* argv[])
         // gp :   for this link.
     }
 
-    // Now generate TS for links
     auto saveLinksTSpath = fs::path(settings.studyFolder) / "output" / DateAndTime();
     saveLinksTSpath /= "ts-generator";
     saveLinksTSpath /= "links";
 
-    // ============================================================================
-
-    TSGenerator::listOfLinks links;
-    if (settings.allLinks)
-    {
-        links = TSGenerator::getAllLinksToGen(study->areas);
-    }
-    else if (!settings.linksListToGen.empty())
-    {
-        links = getLinksToGen(study->areas, settings.linksListToGen);
-    }
-
-    for (auto& l: links)
-    {
-        logs.debug() << l->getName();
-    }
+    // ============ TS Generation =============================================
 
     bool ret = TSGenerator::generateThermalTimeSeries(*study,
                                                       clusters,
                                                       *resultWriter,
                                                       thermalSavePath.string());
-    ret = TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath.string())
-          && ret;
 
     ret = TSGenerator::generateLinkTimeSeries(linkList, generalParams, saveLinksTSpath.string())
           && ret;

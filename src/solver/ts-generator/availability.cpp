@@ -51,23 +51,6 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* s
 {
 }
 
-AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration& source,
-                                                         Data::TimeSeries& capacity,
-                                                         Matrix<>& modulation,
-                                                         const std::string& areaDestName):
-        unitCount(source.unitCount),
-        nominalCapacity(source.nominalCapacity),
-        forcedVolatility(source.forcedVolatility),
-        plannedVolatility(source.plannedVolatility),
-        forcedLaw(source.forcedLaw),
-        plannedLaw(source.plannedLaw),
-        prepro(source.prepro.get()),
-        series(capacity.timeSeries),
-        modulationCapacity(modulation[0]),
-        name(areaDestName)
-{
-}
-
 AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(LinkTSgenerationParams& source,
                                                          Data::TimeSeries& capacity,
                                                          Matrix<>& modulation,
@@ -212,8 +195,11 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
 
 void GeneratorTempData::generateTS(std::string sourceAreaName,
                                    AvailabilityTSGeneratorData& cluster) const
+                                   // gp : cluster ?? Used for links as well !
 {
-    if (!cluster.prepro) // gp : loaded data already checked way before this point (see : link.valid for links)
+    // gp : loaded data is supposed to be already checked way before
+    // gp : this point (see : hasValidData for links)
+    if (!cluster.prepro)
     {
         logs.error()
           << "Cluster: " << sourceAreaName << '/' << cluster.name
@@ -712,76 +698,31 @@ bool generateThermalTimeSeries(Data::Study& study,
     return true;
 }
 
-bool generateLinkTimeSeries(Data::Study& study,
-                            const listOfLinks& links,
-                            Solver::IResultWriter& writer,
-                            const std::string& savePath)
-{
-    logs.info();
-    logs.info() << "Generating the links time-series";
-
-    auto generator = GeneratorTempData(study,
-                                       study.parameters.nbLinkTStoGenerate,
-                                       study.runtime->random[Data::seedTsGenLinks]);
-
-    for (const auto& link: links)
-    {
-        Data::TimeSeries ts(link->timeseriesNumbers);
-        ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
-
-        auto& tsGenStruct = link->tsGeneration;
-
-        if (!tsGenStruct.valid)
-        {
-            logs.error() << "Missing data for link " << link->from->id << "/" << link->with->id;
-            return false;
-        }
-
-        // DIRECT
-        AvailabilityTSGeneratorData tsConfigDataDirect(tsGenStruct, ts, tsGenStruct.modulationCapacityDirect, link->with->name);
-
-        generator.generateTS(link->from->id.c_str(), tsConfigDataDirect);
-
-        std::string filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
-                               + "_direct.txt";
-        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
-
-        // INDIRECT
-        AvailabilityTSGeneratorData tsConfigDataIndirect(tsGenStruct, ts, tsGenStruct.modulationCapacityIndirect, link->with->name);
-
-        generator.generateTS(link->from->id.c_str(), tsConfigDataIndirect);
-
-        filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
-                   + "_indirect.txt";
-        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
-    }
-
-    return true;
-}
-
 // gp : we should try to add const identifiers before args here
 bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
                             StudyParamsForLinkTS& generalParams,
                             const std::string& savePath)
 {
     logs.info();
-    logs.info() << "New Generation of links time-series";
+    logs.info() << "Generation of links time-series";
 
     auto generator = GeneratorTempData(generalParams.derated,
                                        generalParams.nbLinkTStoGenerate,
                                        generalParams.random);
     for (auto& link: links)
     {
-
-        Data::TimeSeriesNumbers fakeTSnumbers; // gp : to quickly get rid of
-        Data::TimeSeries ts(fakeTSnumbers);
-        ts.resize(generalParams.nbLinkTStoGenerate, HOURS_PER_YEAR);
-
         if (! link.hasValidData)
         {
             logs.error() << "Missing data for link " << link.namesPair.first << "/" << link.namesPair.second;
             return false;
         }
+
+        if (link.forceNoGeneration)
+            continue; // Skipping the link
+
+        Data::TimeSeriesNumbers fakeTSnumbers; // gp : to quickly get rid of
+        Data::TimeSeries ts(fakeTSnumbers);
+        ts.resize(generalParams.nbLinkTStoGenerate, HOURS_PER_YEAR);
 
         // DIRECT
         AvailabilityTSGeneratorData tsConfigDataDirect(link, ts, link.modulationCapacityDirect, link.namesPair.second);
