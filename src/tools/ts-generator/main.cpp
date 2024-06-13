@@ -425,14 +425,6 @@ std::string DateAndTime()
     Yuni::DateTime::TimestampToString(to_return, "%Y%m%d-%H%M", now);
     return to_return.to<std::string>();
 }
-
-bool GenerateLinkTS(std::vector<LinkTSgenerationParams>& linkList,
-                    fs::path outputPath)
-{
-
-    return true;
-}
-
 // ============================================================================
 
 int main(int argc, char* argv[])
