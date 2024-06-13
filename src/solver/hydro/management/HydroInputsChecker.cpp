@@ -40,25 +40,25 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study,
     firstYear_(0),
     endYear_(1 + study.runtime->rangeLimits.year[Data::rangeEnd]),
     prepareInflows_(study.areas, study.calendar),
-    minGenerationScaling_(study.areas, study.calendar),
-    resultWriter_(resultWriter)
+    minGenerationScaling_(study.areas, study.calendar)
 {
 }
 
-void HydroInputsChecker::Execute()
+void HydroInputsChecker::Execute(uint year)
 {
-    for (auto year = firstYear_; year < endYear_; ++year)
+    // for (auto year = firstYear_; year < endYear_; ++year)
+    // {
+    // unecessary, done by the caller ?
+    if (parameters_.yearsFilter[year])
     {
-        if (parameters_.yearsFilter[year])
+        prepareInflows_.Run(year);
+        minGenerationScaling_.Run(year);
+        if (!checksOnGenerationPowerBounds(year))
         {
-            prepareInflows_.Run(year);
-            minGenerationScaling_.Run(year);
-            if (!checksOnGenerationPowerBounds(year))
-            {
-                throw FatalError("hydro inputs checks: invalid minimum generation");
-            }
+            throw FatalError("hydro inputs checks: invalid minimum generation");
         }
     }
+    // }
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year) const

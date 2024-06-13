@@ -30,8 +30,8 @@ namespace Antares
 class HydroInputsChecker
 {
 public:
-    HydroInputsChecker(Antares::Data::Study& study, Solver::IResultWriter& resultWriter);
-    void Execute();
+    HydroInputsChecker(Antares::Data::Study& study);
+    void Execute(uint year);
 
 private:
     Data::AreaList& areas_;
@@ -42,7 +42,6 @@ private:
     const uint endYear_;
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
-    Solver::IResultWriter& resultWriter_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;

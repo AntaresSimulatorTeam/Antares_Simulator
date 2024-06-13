@@ -1011,8 +1011,16 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                              set_it->yearsIndices,
                              set_it->isYearPerformed,
                              randomHydroGenerator);
-        HydroInputsChecker(study, pResultWriter).Execute();
+        HydroInputsChecker hydroInputsChecker(study);
+        for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
+             ++year_it)
+        {
+            hydroInputsChecker.Execute(*year_it);
+        }
+    }
 
+    for (set_it = setsOfParallelYears.begin(); set_it != setsOfParallelYears.end(); ++set_it)
+    {
         std::vector<unsigned int>::iterator year_it;
 
         bool yearPerformed = false;
