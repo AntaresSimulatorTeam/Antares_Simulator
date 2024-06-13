@@ -1001,6 +1001,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
 
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
+    HydroInputsChecker hydroInputsChecker(study);
 
     // Loop over sets of parallel years to check hydro inputs
     for (auto batch: setsOfParallelYears)
@@ -1013,7 +1014,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             regenerateHydroTimeSeries(batch.yearForTSgeneration);
         }
 
-        HydroInputsChecker hydroInputsChecker(study);
         for (auto year: batch.yearsIndices)
         {
             hydroInputsChecker.Execute(year);
