@@ -434,7 +434,17 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 }
 
 template<class ImplementationType>
-void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
+void ISimulation<ImplementationType>::regenerateHydroTimeSeries(uint year)
+{
+    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
+    {
+        pDurationCollector("tsgen_hydro") << [year, this]
+        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+    }
+}
+
+template<class ImplementationType>
+void ISimulation<ImplementationType>::regenerateTimeSeries(uint year, bool include_hydro)
 {
     // A preprocessor can be launched for several reasons:
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
@@ -460,10 +470,9 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
           << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
     }
     // Hydro
-    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
+    if (include_hydro)
     {
-        pDurationCollector("tsgen_hydro") << [year, this]
-        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+        regenerateHydroTimeSeries(year);
     }
 
     // Thermal
@@ -992,15 +1001,15 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Number of threads to perform the jobs waiting in the queue
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
 
-    // Loop over sets of parallel years
-    for (const auto& batch: setsOfParallelYears)
+    // Loop over sets of parallel years to check hydro inputs
+    for (auto batch: setsOfParallelYears)
     {
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
         if (batch.regenerateTS)
         {
-            regenerateTimeSeries(batch.yearForTSgeneration);
+            regenerateHydroTimeSeries(batch.yearForTSgeneration);
         }
 
         HydroInputsChecker hydroInputsChecker(study);
@@ -1010,8 +1019,16 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         }
     }
 
-    for (auto& batch: setsOfParallelYears)
+    // Loop over sets of parallel years to run the simulation
+    for (auto batch: setsOfParallelYears)
     {
+        // 1 - We may want to regenerate the time-series this year.
+        // This is the case when the preprocessors are enabled from the
+        // interface and/or the refresh is enabled.
+        if (batch.regenerateTS)
+        {
+            regenerateTimeSeries(batch.yearForTSgeneration, false);
+        }
         computeRandomNumbers(randomForParallelYears,
                              batch.yearsIndices,
                              batch.isYearPerformed,
