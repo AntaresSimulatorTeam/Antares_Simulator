@@ -126,7 +126,7 @@ private:
     ** Storing these costs to compute std deviation later.
     */
     void computeAnnualCostsStatistics(std::vector<Variable::State>& state,
-                                      std::vector<setOfParallelYears>::iterator& set_it);
+                                      setOfParallelYears& batch);
 
     /*!
     ** \brief Iterate through all MC years
