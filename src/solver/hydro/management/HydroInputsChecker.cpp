@@ -31,8 +31,7 @@
 namespace Antares
 {
 
-HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study,
-                                       Solver::IResultWriter& resultWriter):
+HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
     areas_(study.areas),
     parameters_(study.parameters),
     calendar_(study.calendar),
