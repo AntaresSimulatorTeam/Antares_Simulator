@@ -52,6 +52,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
+            int pdtGlobal = problemeHebdo->weekInTheYear * problemeHebdo->NombreDePasDeTempsDUneJournee * problemeHebdo->NombreDeJours + pdtJour;
             auto areaReservesUp = areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
             for (const auto& areaReserveUp : areaReservesUp)
             {
@@ -61,7 +62,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                                                                             .globalReserveIndex];
                 if (cnt >= 0)
                 {
-                    SecondMembre[cnt] = areaReserveUp.need.at(pdtJour);
+                    SecondMembre[cnt] = areaReserveUp.need.at(pdtGlobal);
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                 }
             }
@@ -76,7 +77,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                                                                             .globalReserveIndex];
                 if (cnt >= 0)
                 {
-                    SecondMembre[cnt] = areaReserveDown.need.at(pdtJour);
+                    SecondMembre[cnt] = areaReserveDown.need.at(pdtGlobal);
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                 }
             }
