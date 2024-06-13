@@ -1143,7 +1143,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         if (version >= StudyVersion(9,2))
             logs.warning() << "Option initial-reservoir-levels is deprecated, please remove it from the study";
         else if (value == "hot start")
-            logs.warning() << "Hydro hot start not supported with this solver";
+            logs.warning() << "Hydro hot start not supported with this solver, please use a version < 9.2";
         return true;
     }
 
