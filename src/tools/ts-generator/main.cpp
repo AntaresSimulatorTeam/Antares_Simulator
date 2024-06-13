@@ -114,28 +114,6 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas, const std::string& linksToGen)
-{
-    TSGenerator::listOfLinks links;
-    const auto ids = splitStringIntoPairs(linksToGen, ';', '.');
-
-    for (const auto& [areaFromID, areaWithID]: ids)
-    {
-        logs.info() << "Searching for link: " << areaFromID << "/" << areaWithID;
-
-        auto* link = areas.findLink(areaFromID, areaWithID);
-        if (!link)
-        {
-            logs.warning() << "Link not found: " << areaFromID << "/" << areaWithID;
-            continue;
-        }
-
-        links.emplace_back(link);
-    }
-
-    return links;
-}
-
 // =====  New code for TS generation links ====================================
 
 std::vector<std::string> extractTargetAreas(fs::path sourceLinkDir)
