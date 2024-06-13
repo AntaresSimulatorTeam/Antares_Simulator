@@ -86,8 +86,9 @@ private:
     /*!
     ** \brief Regenerate time-series if required for a given year
     */
-    void regenerateTimeSeries(uint year);
+    void regenerateTimeSeries(uint year, bool include_hydro = true);
 
+    void regenerateHydroTimeSeries(uint year);
     /*!
     ** \brief Builds sets of parallel years
     **
@@ -126,7 +127,7 @@ private:
     ** Storing these costs to compute std deviation later.
     */
     void computeAnnualCostsStatistics(std::vector<Variable::State>& state,
-                                      std::vector<setOfParallelYears>::iterator& set_it);
+                                      setOfParallelYears& batch);
 
     /*!
     ** \brief Iterate through all MC years
