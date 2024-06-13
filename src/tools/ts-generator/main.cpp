@@ -23,6 +23,7 @@
 #include <string>
 
 #include <yuni/core/getopt.h>
+#include <yuni/datetime/timestamp.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/checks/checkLoadedInputData.h>
@@ -37,11 +38,9 @@
 #include <antares/solver/ts-generator/law.h>
 
 using namespace Antares;
+using namespace Antares::TSGenerator;
 
 namespace fs = std::filesystem;
-
-using LinkPair = std::pair<std::string, std::string>;
-using LinkPairs = std::vector<LinkPair>;
 
 struct Settings
 {
@@ -217,25 +216,26 @@ void logLinks(std::string title, LinkPairs& links)
     }
 }
 
-struct StudyParamsForLinkTS
-{
-    unsigned int nbLinkTStoGenerate = 1;
-    // gp : we will have a problem with that if seed-tsgen-links not set in
-    // gp : generaldata.ini. In that case, our default value is wrong.
-    unsigned int seed = Data::antaresSeedDefaultValue;
-};
-
 bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
                              const Yuni::String& key,
                              const Yuni::String& value)
 {
+    if (key == "derated")
+    {
+        return value.to<bool>(params.derated);
+    }
     if (key == "nbtimeserieslinks")
     {
         return value.to<unsigned int>(params.nbLinkTStoGenerate);
     }
     if (key == "seed-tsgen-links")
     {
-        return value.to<unsigned int>(params.seed);
+        unsigned int seed {0};
+        if (value.to<unsigned int>(seed))
+        {
+            params.random.reset(seed);
+            return true;
+        }
     }
     return true; // gp : should we return true here ?
 }
@@ -265,38 +265,14 @@ StudyParamsForLinkTS readGeneralParamsForLinksTS(fs::path studyDir)
     return to_return;
 }
 
-struct LinkTSgenerationParams
-{
-    LinkPair namesPair;
-    StudyParamsForLinkTS generalParams;
-
-    unsigned unitCount = 0;
-    double nominalCapacity = 0;
-
-    double forcedVolatility = 0.;
-    double plannedVolatility = 0.;
-
-    Data::StatisticalLaw forcedLaw = Data::LawUniform;
-    Data::StatisticalLaw plannedLaw = Data::LawUniform;
-
-    std::unique_ptr<Data::PreproAvailability> prepro;
-
-    Matrix<> modulationCapacityDirect;
-    Matrix<> modulationCapacityIndirect;
-
-    bool forceNoGeneration = false;
-    bool hasValidData = true;
-};
-
-std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine,
-                                                   const StudyParamsForLinkTS& params)
+std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine)
 {
     std::vector<LinkTSgenerationParams> to_return(linksFromCmdLine.size());
+    // gp : following loop should be improved : we shouldn't need an index
     unsigned int index = 0;
     for (const auto& link_pair : linksFromCmdLine)
     {
         to_return[index].namesPair = link_pair;
-        to_return[index].generalParams = params;
         index++;
     }
     return to_return;
@@ -473,6 +449,22 @@ bool readLinksSpecificTSparameters(std::vector<LinkTSgenerationParams>& linkList
     }
     return true;
 }
+
+std::string DateAndTime()
+{
+    YString to_return;
+    unsigned int now = Yuni::DateTime::Now();
+    Yuni::DateTime::TimestampToString(to_return, "%Y%m%d-%H%M", now);
+    return to_return.to<std::string>();
+}
+
+bool GenerateLinkTS(std::vector<LinkTSgenerationParams>& linkList,
+                    fs::path outputPath)
+{
+
+    return true;
+}
+
 // ============================================================================
 
 int main(int argc, char* argv[])
@@ -568,9 +560,9 @@ int main(int argc, char* argv[])
     if (settings.allLinks)
         linksFromCmdLine = allLinksPairs;
 
-    StudyParamsForLinkTS params = readGeneralParamsForLinksTS(settings.studyFolder);
+    StudyParamsForLinkTS generalParams = readGeneralParamsForLinksTS(settings.studyFolder);
 
-    std::vector<LinkTSgenerationParams> linkList = CreateLinkList(linksFromCmdLine, params);
+    std::vector<LinkTSgenerationParams> linkList = CreateLinkList(linksFromCmdLine);
     if (! readLinksSpecificTSparameters(linkList, settings.studyFolder))
     {
         logs.warning() << "All data could not be loaded for links TS generation";
@@ -578,8 +570,13 @@ int main(int argc, char* argv[])
         // gp : - examining to throw / catch exceptions and marking a link as invalid
         // gp :   when catching the exception at the link level
         // gp : - if a link does have all of its data loaded, then we don't generate TS
-        // gp !   for this link.
+        // gp :   for this link.
     }
+
+    // Now generate TS for links
+    auto saveLinksTSpath = fs::path(settings.studyFolder) / "output" / DateAndTime();
+    saveLinksTSpath /= "ts-generator";
+    saveLinksTSpath /= "links";
 
     // ============================================================================
 
@@ -603,6 +600,9 @@ int main(int argc, char* argv[])
                                                       *resultWriter,
                                                       thermalSavePath.string());
     ret = TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath.string())
+          && ret;
+
+    ret = TSGenerator::generateLinkTimeSeries(linkList, generalParams, saveLinksTSpath.string())
           && ret;
 
     return !ret; // return 0 for success
