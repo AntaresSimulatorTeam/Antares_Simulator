@@ -19,7 +19,7 @@ struct Settings
     /// generate TS for all links if activated
     bool allLinks = false;
     /// generate TS for a list "area.link;area2.link2;"
-    std::string linksListToGen = "";
+    std::string linksListToGen;
 };
 
 bool parseOptions(int, char*[], Settings&);
