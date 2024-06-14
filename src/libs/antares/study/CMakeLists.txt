@@ -225,10 +225,10 @@ set(SRC_STUDY
         study.extra.cpp
         include/antares/study/version.h
         version.cpp
-        include/antares/study/cleaner.h
-        cleaner/cleaner.cpp
+        include/antares/study/cleaner/study-cleaning-info.h
         include/antares/study/cleaner/versions.h
-        cleaner/cleaner-v20.cpp
+        cleaner/study-cleaning-info.cpp
+        cleaner/cleaner.cpp
         output.cpp
         include/antares/study/output.h
         include/antares/study/output.hxx

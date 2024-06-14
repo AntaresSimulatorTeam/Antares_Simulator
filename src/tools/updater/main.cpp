@@ -26,7 +26,7 @@
 #include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
-#include <antares/study/cleaner.h>
+#include <antares/study/cleaner/study-cleaning-info.h>
 #include <antares/study/finder/finder.h>
 #include <antares/sys/policy.h>
 #include <antares/utils/utils.h>

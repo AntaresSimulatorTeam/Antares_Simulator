@@ -27,7 +27,7 @@
 
 #include <antares/paths/list.h>
 
-#include "version.h"
+#include <antares/study/version.h>
 
 namespace Antares::Data
 {
