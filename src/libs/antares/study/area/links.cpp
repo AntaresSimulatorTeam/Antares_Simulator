@@ -306,14 +306,12 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 namespace // anonymous
 {
 
-bool isPropertyUsedForLinkTSgeneration(const std::string key)
+bool isPropertyUsedForLinkTSgeneration(const std::string& key)
 {
     std::array<std::string, 7> listKeys
         = {"unitcount", "nominalcapacity", "law.planned", "law.forced",
            "volatility.planned", "volatility.forced", "force-no-generation"};
-    if (std::find(listKeys.begin(), listKeys.end(), key) != listKeys.end())
-        return true;
-    return false;
+    return std::find(listKeys.begin(), listKeys.end(), key) != listKeys.end();
 }
 
 bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
@@ -459,13 +457,9 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
-    if (isPropertyUsedForLinkTSgeneration(key.to<std::string>()))
-    {
-        // Properties used by TS generator only.
-        // We just skip them (otherwise : reading error)
-        return true;
-    }
-    return false;
+    // Properties used by TS generator only.
+    // We just skip them (otherwise : reading error)
+    return isPropertyUsedForLinkTSgeneration(key.to<std::string>());
 }
 
 [[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
@@ -508,7 +502,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        std::string targetAreaName = transformNameIntoID(s->name);
+        const std::string targetAreaName = transformNameIntoID(s->name);
 
         // Trying to find it
         Area* targetArea = AreaListLFind(areaList, targetAreaName.c_str());
