@@ -16,18 +16,6 @@ if (WIN32 OR WIN64)
 	LIBYUNI_CONFIG_LIB("both" "uuid" "rpcrt4")
 endif()
 
-if (UNIX)
-	#FIXME
-	find_path(UUID_INCLUDE_DIR NAMES uuid/uuid.h PATHS /usr/include /usr/local/include /opt/local/include /sw/include)
-	if(NOT UUID_INCLUDE_DIR)
-		set(YUNI_CMAKE_ERROR 1)
-		YMESSAGE(    "[!!] Impossible to find uuid/uuid.h.")
-		YMESSAGE(    " * Packages needed on Debian: libuuid1, uuid-dev")
-		YMESSAGE(    " * Packages needed on redhat: libuuid-devel")
-	endif()
-endif()
-
-
 add_library(yuni-static-uuid STATIC
 	uuid/uuid.h
 	uuid/uuid.hxx
@@ -35,7 +23,6 @@ add_library(yuni-static-uuid STATIC
 	uuid/fwd.h
 	yuni.h
 )
-target_link_libraries(yuni-static-uuid PUBLIC uuid)
 
 if (WIN32 OR WIN64)
 	# -lrpcrt4
