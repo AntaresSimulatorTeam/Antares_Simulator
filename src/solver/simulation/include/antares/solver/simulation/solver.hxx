@@ -170,7 +170,7 @@ public:
             simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
-            pDurationCollector("hydro_ventilation") << [&] {
+            pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel] {
                 hydroManagement.makeVentilation(randomReservoirLevel,
                                                 y,
                                                 scratchmap);
@@ -216,7 +216,7 @@ public:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                pDurationCollector("yby_export") << [&]
+                pDurationCollector("yby_export") << [this]
                 {
                     // Before writing, some variable may require minor modifications
                     simulation_->variables.beforeYearByYearExport(y, numSpace);
@@ -811,7 +811,8 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
         bool SpilledEnergySeedIsDefault = (currentSpilledEnergySeed == defaultSpilledEnergySeed);
         areaIndex = 0;
         study.areas.each(
-          [&](Data::Area& area)
+          [&isPerformed, &areaIndex, &randomUnsupplied, &randomSpilled, &randomForYears, &indexYear,
+           &SpilledEnergySeedIsDefault](Data::Area& area)
           {
               (void)area; // Avoiding warnings at compilation (unused variable) on linux
               if (isPerformed)
@@ -973,7 +974,7 @@ static inline void logPerformedYearsInAset(setOfParallelYears& set)
 
     std::string performedYearsToLog = "";
     std::ranges::for_each(set.yearsIndices,
-                          [&](const uint& y)
+                          [&set, &performedYearsToLog](const uint& y)
                           {
                               if (set.isYearPerformed[y])
                               {

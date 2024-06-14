@@ -42,7 +42,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     bool derated = study.parameters.derated;
 
     study.areas.each(
-      [&](Data::Area& area)
+      [&derated](Data::Area& area)
       {
           auto& hydroseries = *(area.hydro.series);
 
@@ -284,10 +284,10 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         {
             logs.info() << "Archiving the hydro time-series";
             const int precision = 0;
-            Yuni::String output;
             study.areas.each(
-              [&](const Data::Area& area)
+              [&study, &currentYear, &precision, &writer, &progression](const Data::Area& area)
               {
+                  Yuni::String output;
                   study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
                                        << currentYear << SEP << area.id;
 

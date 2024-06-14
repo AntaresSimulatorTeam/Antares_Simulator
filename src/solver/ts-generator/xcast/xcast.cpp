@@ -86,7 +86,7 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
         filename.reserve(output.size() + 80);
 
         study.areas.each(
-          [&](Data::Area& area)
+          [this, &filename, &progression, &predicate, &output](Data::Area& area)
           {
               filename.clear() << output << SEP << area.id << ".txt";
               std::string buffer;
