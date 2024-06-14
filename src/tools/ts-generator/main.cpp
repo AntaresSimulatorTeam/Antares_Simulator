@@ -35,7 +35,6 @@
 #include <antares/utils/utils.h>
 #include <antares/writer/result_format.h>
 #include <antares/writer/writer_factory.h>
-#include <antares/solver/ts-generator/law.h>
 
 using namespace Antares;
 using namespace Antares::TSGenerator;
@@ -295,7 +294,6 @@ bool readLinkIniProperty(LinkTSgenerationParams* link,
     {
         return value.to<bool>(link->forceNoGeneration);
     }
-
     return true;
 }
 
@@ -309,6 +307,7 @@ void readLinkIniProperties(LinkTSgenerationParams* link,
             std::string linkName = link->namesPair.first + "." + link->namesPair.second;
             logs.warning() << "Link '" << linkName << "' : reading value of '"
                            << p->key << "' went wrong";
+            link->hasValidData = false;
         }
     }
 }
@@ -384,11 +383,10 @@ bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
     }
     // Makes possible a skip of TS generation when time comes
     link.hasValidData = link.hasValidData && to_return;
-
     return to_return;
 }
 
-bool readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
+void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
                           fs::path toLinksDir)
 {
     for(auto& link : linkList)
@@ -397,25 +395,18 @@ bool readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
         fs::path sourceAreaDir = toLinksDir / sourceAreaName;
         if (! readLinkPreproTimeSeries(link, sourceAreaDir))
         {
-            logs.error() << "Could not load all prepro data for links '"
+            logs.warning() << "Could not load all prepro data for link '"
                          << link.namesPair.first << "." << link.namesPair.second << "'";
-            return false;
         }
     }
-    return true;
 }
 
-bool readLinksSpecificTSparameters(std::vector<LinkTSgenerationParams>& linkList,
+void readLinksSpecificTSparameters(std::vector<LinkTSgenerationParams>& linkList,
                                    fs::path studyFolder)
 {
     fs::path toLinksDir = studyFolder / "input" / "links";
     readIniProperties(linkList, toLinksDir);
-    if (! readPreproTimeSeries(linkList, toLinksDir))
-    {
-        // gp : Log a problem here
-        return false;
-    }
-    return true;
+    readPreproTimeSeries(linkList, toLinksDir);
 }
 
 std::string DateAndTime()
@@ -517,15 +508,7 @@ int main(int argc, char* argv[])
     StudyParamsForLinkTS generalParams = readGeneralParamsForLinksTS(settings.studyFolder);
 
     std::vector<LinkTSgenerationParams> linkList = CreateLinkList(linksFromCmdLine);
-    if (! readLinksSpecificTSparameters(linkList, settings.studyFolder))
-    {
-        logs.warning() << "All data could not be loaded for links TS generation";
-        // gp : let's be more careful about how we handle problems when loading data.
-        // gp : - examining to throw / catch exceptions and marking a link as invalid
-        // gp :   when catching the exception at the link level
-        // gp : - if a link does have all of its data loaded, then we don't generate TS
-        // gp :   for this link.
-    }
+    readLinksSpecificTSparameters(linkList, settings.studyFolder);
 
     auto saveLinksTSpath = fs::path(settings.studyFolder) / "output" / DateAndTime();
     saveLinksTSpath /= "ts-generator";
