@@ -1004,7 +1004,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     HydroInputsChecker hydroInputsChecker(study);
 
     // Loop over sets of parallel years to check hydro inputs
-    for (auto batch: setsOfParallelYears)
+    for (const auto& batch: setsOfParallelYears)
     {
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
