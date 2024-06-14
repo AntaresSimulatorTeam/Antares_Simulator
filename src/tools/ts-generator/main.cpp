@@ -234,13 +234,13 @@ StudyParamsForLinkTS readGeneralParamsForLinksTS(fs::path studyDir)
 
 std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine)
 {
-    std::vector<LinkTSgenerationParams> to_return(linksFromCmdLine.size());
-    // gp : following loop should be improved : we shouldn't need an index
-    unsigned int index = 0;
+    std::vector<LinkTSgenerationParams> to_return;
+    to_return.reserve(linksFromCmdLine.size());
     for (const auto& link_pair : linksFromCmdLine)
     {
-        to_return[index].namesPair = link_pair;
-        index++;
+        LinkTSgenerationParams params;
+        params.namesPair = link_pair;
+        to_return.push_back(std::move(params));
     }
     return to_return;
 }
