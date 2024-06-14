@@ -517,7 +517,6 @@ bool HydroManagement::checksOnGenerationPowerBounds(uint year) const
 }
 
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
-                                      Solver::Variable::State& state,
                                       uint y,
                                       Antares::Data::Area::ScratchMap& scratchmap)
 {
@@ -532,7 +531,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
     prepareEffectiveDemand();
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y);
-    prepareDailyOptimalGenerations(state, y, scratchmap);
+    prepareDailyOptimalGenerations(y, scratchmap);
 }
 
 } // namespace Antares

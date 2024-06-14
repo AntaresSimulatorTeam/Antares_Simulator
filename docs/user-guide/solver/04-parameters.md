@@ -12,7 +12,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study mode
 
----
+
 #### mode
 [//]: # (TODO: verify if required, remove default value)
 [//]: # (TODO: add details 'expansion' behavior)
@@ -36,7 +36,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study horizon
 
----
+
 #### horizon
 [//]: # (TODO: verify if required, remove default value)
 - **Expected value:** year (string)
@@ -48,7 +48,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ### Calendar parameters
 
----
+
 #### nbyears
 [//]: # (TODO: verify if required, verify default value)
 - **Expected value:** unsigned integer
@@ -122,7 +122,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Additional parameters
 
----
+
 #### year-by-year
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -219,7 +219,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Pre-processor parameters
 
----
+
 #### readonly
 [//]: # (TODO: add usage details)
 - **Expected value:** `true` or `false`
@@ -792,12 +792,14 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
 ---
 #### playlist_year
 - **Expected value:** `+ =` or `- =`, followed by a positive integer (example: `playlist_year + = 5`)
-- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`.
+- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`, ignored otherwise.
 - **Usage:**
     - for every Monte-Carlo year that you want the Antares Simulator to **study**, add the parameter entry
       `playlist_year + = i`, where `i` is the index of the year.
     - for every Monte-Carlo year that you want the Antares Simulator to **skip**, add the parameter entry
       `playlist_year - = i`, where `i` is the index of the year.
+
+_Please note that by convention, the first year has index 0._
 
 ---
 #### playlist_year_weight
