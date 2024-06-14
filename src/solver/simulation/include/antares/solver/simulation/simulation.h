@@ -45,7 +45,7 @@ void SIM_AllocationProblemeHebdo(const Antares::Data::Study& study,
 */
 void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     int NombreDePasDeTemps,
+                                     unsigned int NombreDePasDeTemps,
                                      uint numspace);
 
 void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
