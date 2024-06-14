@@ -373,26 +373,11 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                                                                  0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
                                                                      0.); // adq patch
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveDown.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveAny.assign(NombreDePasDeTemps, 0.);
+
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
                                                                                  0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeDown.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeAny.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceEnReserve.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].TurbinageHoraireUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].TurbinageHoraireDown.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].niveauxHoraires.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].valeurH2oHoraire.assign(NombreDePasDeTemps, 0.);
@@ -424,25 +409,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.PaliersThermiquesDuPays[k]
               .PuissanceDisponibleEtCout[j]
               .NombreMinDeGroupesEnMarcheDuPalierThermique.assign(NombreDePasDeTemps, 0);
-
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .CoutHoraireDuPalierThermiqueUp.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .CoutHoraireDuPalierThermiqueDown.assign(NombreDePasDeTemps, 0.);
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier.assign(
               nbPaliers,
               0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .ProductionThermiqueDuPalierUp.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .ProductionThermiqueDuPalierDown.assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k]
               .ProductionThermique[j]
               .NombreDeGroupesEnMarcheDuPalier.assign(nbPaliers, 0.);

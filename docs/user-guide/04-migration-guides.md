@@ -3,7 +3,7 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ## v9.1.0
 ### Input 
 #### Hydro Maximum Generation/Pumping Power
-* For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
+* For time series ![Migration diagram](img/migration.png "Migration diagram"), for more details, see [this Python script](img/migration.py)
 
 Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
 - inflows, ROR and minimum generation, max pumping & generation (prefix "h")
@@ -166,6 +166,7 @@ In file **settings/generaldata.ini**, in section `adequacy patch`, add propertie
 * `price-taking-order` [string] can take values `DENS` (default value) and `Load`.
 * `include-hurdle-cost-csr` [bool]. Default value = `false`
 * `check-csr-cost-function` [bool]. Default value = `false`
+* `recompute-dtg-mrg` [bool]. Default value = `false`
 * `threshold-initiate-curtailment-sharing-rule` [double]. Default value = `0.0`
 * `threshold-display-local-matching-rule-violations` [double]. Default value = `0.0`
 * `threshold-csr-variable-bounds-relaxation` [int]. Default value = `3`
