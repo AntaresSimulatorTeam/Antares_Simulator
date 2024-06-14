@@ -113,65 +113,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     }
 }
 
-void PrepareDataFromClustersInMustrunMode(Data::Study& study,
-                                          Data::Area::ScratchMap& scratchmap,
-                                          uint year)
-{
-    bool inAdequacy = (study.parameters.mode == Data::SimulationMode::Adequacy);
-
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-        if (inAdequacy)
-        {
-            memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-        }
-
-        double* mrs = scratchpad.mustrunSum;
-        double* adq = scratchpad.originalMustrunSum;
-
-        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            if (inAdequacy && cluster->mustrunOrigin)
-            {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    mrs[h] += availableProduction[h];
-                    adq[h] += availableProduction[h];
-                }
-            }
-            else
-            {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    mrs[h] += availableProduction[h];
-                }
-            }
-        }
-
-        if (inAdequacy)
-        {
-            for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-            {
-                if (!cluster->mustrunOrigin)
-                {
-                    continue;
-                }
-
-                const auto& availableProduction = cluster->series.getColumn(year);
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    adq[h] += availableProduction[h];
-                }
-            }
-        }
-    }
-}
-
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
     const bool flowQuadEnabled = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");

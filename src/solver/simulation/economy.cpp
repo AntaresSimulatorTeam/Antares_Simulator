@@ -273,7 +273,21 @@ void Economy::simulationEnd()
 
 void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, scratchmap, year);
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto& area = *study.areas[i];
+        auto& scratchpad = scratchmap.at(&area);
+        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+        double* mrs = scratchpad.mustrunSum;
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+        }
+    }
 }
 
 } // namespace Antares::Solver::Simulation
