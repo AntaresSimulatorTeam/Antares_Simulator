@@ -22,7 +22,6 @@
 #include <memory>
 #include <string>
 
-#include <yuni/core/getopt.h>
 #include <yuni/datetime/timestamp.h>
 
 #include <antares/benchmarking/DurationCollector.h>
@@ -36,52 +35,12 @@
 #include <antares/writer/result_format.h>
 #include <antares/writer/writer_factory.h>
 
+#include "tsGenerationOptions.h"
+
 using namespace Antares;
 using namespace Antares::TSGenerator;
 
 namespace fs = std::filesystem;
-
-struct Settings
-{
-    std::string studyFolder;
-
-    /// generate TS for all clusters if activated
-    bool allThermal = false;
-    /// generate TS for a list "area.cluster;area2.cluster2;"
-    std::string thermalListToGen = "";
-
-    /// generate TS for all links if activated
-    bool allLinks = false;
-    /// generate TS for a list "area.link;area2.link2;"
-    std::string linksListToGen = "";
-};
-
-std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings& settings)
-{
-    auto parser = std::make_unique<Yuni::GetOpt::Parser>();
-    parser->addParagraph("Antares Time Series generator\n");
-
-    parser->addFlag(settings.allThermal,
-                    ' ',
-                    "all-thermal",
-                    "Generate TS for all thermal clusters");
-    parser->addFlag(settings.thermalListToGen,
-                    ' ',
-                    "thermal",
-                    "Generate TS for a list of area IDs and thermal clusters IDs, "
-                    "\nusage: --thermal=\"areaID.clusterID;area2ID.clusterID\"");
-
-    parser->addFlag(settings.allLinks, ' ', "all-links", "Generate TS capacities for all links");
-    parser->addFlag(settings.linksListToGen,
-                    ' ',
-                    "links",
-                    "Generate TS capacities for a list of 2 area IDs, "
-                    "usage: --links=\"areaID.area2ID;area3ID.area1ID\"");
-
-    parser->remainingArguments(settings.studyFolder);
-
-    return parser;
-}
 
 std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
                                                     const std::string& clustersToGen)
@@ -317,7 +276,7 @@ void readSourceAreaIniFile(fs::path pathToIni,
                            std::vector<LinkTSgenerationParams>& linkList)
 {
     IniFile ini;
-    ini.open(pathToIni); // gp : we should handle reading issues
+    ini.open(pathToIni); // gp : we should handle reading problems here
     for (auto* section = ini.firstSection; section; section = section->next)
     {
         std::string targetAreaName = transformNameIntoID(section->name);
@@ -381,7 +340,7 @@ bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
                                                 HOURS_PER_YEAR)
                     && to_return;
     }
-    // Makes possible a skip of TS generation when time comes
+    // Makes it possible to skip a link's TS generation when time comes
     link.hasValidData = link.hasValidData && to_return;
     return to_return;
 }
@@ -423,32 +382,11 @@ int main(int argc, char* argv[])
     logs.applicationName("ts-generator");
 
     Settings settings;
-
-    auto parser = createTsGeneratorParser(settings);
-    switch (auto ret = parser->operator()(argc, argv); ret)
-    {
-        using namespace Yuni::GetOpt;
-    case ReturnCode::error:
-        logs.error() << "Unknown arguments, aborting";
-        return parser->errors();
-    case ReturnCode::help:
-        // End the program
-        return 0;
-    default:
-        break;
-    }
-
-    if (settings.allThermal && !settings.thermalListToGen.empty())
-    {
-        logs.error() << "Conflicting options, either choose all thermal clusters or a list";
+    if (! parseOptions(argc, argv, settings))
         return 1;
-    }
 
-    if (settings.allLinks && !settings.linksListToGen.empty())
-    {
-        logs.error() << "Conflicting options, either choose all links or a list";
+    if (! checkOptions(settings))
         return 1;
-    }
 
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
@@ -486,7 +424,7 @@ int main(int argc, char* argv[])
     std::vector<Data::ThermalCluster*> clusters;
     if (settings.allThermal)
     {
-        clusters = TSGenerator::getAllClustersToGen(study->areas, true);
+        clusters = getAllClustersToGen(study->areas, true);
     }
     else if (!settings.thermalListToGen.empty())
     {

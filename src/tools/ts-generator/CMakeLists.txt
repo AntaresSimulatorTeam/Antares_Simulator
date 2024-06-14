@@ -1,5 +1,8 @@
 set(SRCS
         main.cpp
+		linksTSgenerator.h
+		tsGenerationOptions.h
+		tsGenerationOptions.cpp
 )
 
 set(execname "antares-ts-generator")
