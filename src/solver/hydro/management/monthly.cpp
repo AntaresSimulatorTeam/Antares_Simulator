@@ -154,8 +154,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(
 void HydroManagement::prepareMonthlyOptimalGenerations(
   double* random_reservoir_level,
   uint y,
-  std::unordered_map<const Antares::Data::Area*, Antares::Data::TimeDependantHydroManagementData>&
-    hydro_specific_map)
+  HydroSpecificMap& hydro_specific_map)
 {
     uint indexArea = 0;
     areas_.each(
