@@ -1,11 +1,18 @@
 
 #pragma once
 
+#include "tsGenerationOptions.h"
+
+namespace Antares::TSGenerator {
+
 class LinksTSgenerator
 {
-    void loadData();
+public:
+    LinksTSgenerator(Settings&);
+    void extractData();
     void generate();
-
-
+private:
+    Settings settings_;
 };
 
+} // End Antares::TSGenerator

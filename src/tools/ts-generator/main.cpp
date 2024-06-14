@@ -36,6 +36,7 @@
 #include <antares/writer/writer_factory.h>
 
 #include "tsGenerationOptions.h"
+#include "linksTSgenerator.h"
 
 using namespace Antares;
 using namespace Antares::TSGenerator;
@@ -437,6 +438,12 @@ int main(int argc, char* argv[])
     }
 
     // ============ LINKS : Getting data for generating LINKS time-series =====
+
+    LinksTSgenerator linksTSgenerator(settings);
+    linksTSgenerator.extractData();
+    linksTSgenerator.generate();
+
+
     auto allLinksPairs = extractLinkNamesFromStudy(settings.studyFolder);
     auto linksFromCmdLine = extractLinkNamesFromCmdLine(allLinksPairs,
                                                                  settings.linksListToGen);
