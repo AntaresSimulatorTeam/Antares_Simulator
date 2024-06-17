@@ -50,21 +50,6 @@ namespace Antares::Data
 class Parameters final
 {
 public:
-    //! \name Constructor
-    //@{
-    /*!
-    ** \brief Default Constructor
-    **
-    ** \warning None of the variables are initialized. You must explicitly use
-    **   the method `reset()` or the method `loadFromFile()`
-    ** \see reset()
-    ** \see loadFromFile()
-    */
-    Parameters();
-    //! Destructor
-    ~Parameters();
-    //@}
-
     //! \name Simulation mode
     //@{
     //! Get if the simulation is in economy mode
@@ -91,7 +76,7 @@ public:
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
     bool loadFromFile(const AnyString& filename,
-                      StudyVersion& version,
+                      const StudyVersion& version,
                       const StudyLoadOptions& options);
 
     /*!
@@ -493,7 +478,7 @@ public:
     //@{
     //! No output
     // This variable is not stored within the study but only used by the solver
-    bool noOutput;
+    bool noOutput = false;
     //@}
 
     bool hydroDebug;

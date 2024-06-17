@@ -151,7 +151,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 {
     uint indexArea = 0;
     areas_.each(
-      [&](Data::Area& area)
+      [this, &random_reservoir_level, &y, &indexArea](Data::Area& area)
       {
           auto& data = tmpDataByArea_[&area];
 

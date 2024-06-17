@@ -27,7 +27,7 @@ namespace Antares::TSGenerator
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
 {
     areas.each(
-      [&](Data::Area& area)
+      [&params](Data::Area& area)
       {
           // Load
           if (params.timeSeriesToGenerate & Data::timeSeriesLoad)

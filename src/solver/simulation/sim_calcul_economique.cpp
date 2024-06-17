@@ -198,7 +198,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i].TailleReservoir = area.hydro.reservoirCapacity;
 
-        for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
+        for (unsigned pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {
             problem.CaracteristiquesHydrauliques[i].NiveauHoraireInf[pdt] = 0;
             problem.CaracteristiquesHydrauliques[i].NiveauHoraireSup[pdt]
