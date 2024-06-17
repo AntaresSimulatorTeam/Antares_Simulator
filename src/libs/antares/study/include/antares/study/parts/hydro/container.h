@@ -52,7 +52,6 @@ public:
         pumpMod,
     };
 
-public:
     /*!
     ** \brief Load data for hydro container from a folder
     **
@@ -60,6 +59,13 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     static bool LoadFromFolder(Study& study, const AnyString& folder);
+
+    /*!
+    ** \brief Check and validate the loaded datas
+    **
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    static bool validate(Study& study);
 
     /*!
     ** \brief Save data from several containers to a folder (except data for the prepro and
@@ -71,7 +77,6 @@ public:
     */
     static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
 
-public:
     /*!
     ** \brief Default Constructor
     */
@@ -100,7 +105,6 @@ public:
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 
-public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
     //! Intra-daily modulation
@@ -160,6 +164,10 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
+
+private:
+    static bool checkReservoirLevels(const Study& study);
+    static bool checkProperties(Study& study);
 
 }; // class PartHydro
 
