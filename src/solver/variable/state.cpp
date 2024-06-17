@@ -58,7 +58,7 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     unitCountLastHour.resize(count, 0);
     productionLastHour.resize(count, 0);
     pminOfAGroup.resize(count, 0);
-    nbThermalGroupsForReserves.resize(count, 0);
+    nbThermalGroupsForReserves.resize(Antares::Data::groupMax, 0);
 }
 
 State::State(Data::Study& s) :
@@ -153,10 +153,36 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // en mode fast : est pris depuis l'heuristique
 }
 
+int State::getIndexFromClusterAndReserve(std::string reserveName, std::string clusterName)
+{
+    for (auto reserve : problemeHebdo->allReserves.thermalAreaReserves[area->index].areaCapacityReservationsUp)
+    {
+        if (reserve.reserveName == reserveName)
+        {
+            for (auto cluster : reserve.AllReservesParticipation)
+            {
+                if (cluster.clusterName == clusterName)
+                    return cluster.indexClusterParticipation;
+            }
+        }
+    }
+    for (auto reserve : problemeHebdo->allReserves.thermalAreaReserves[area->index].areaCapacityReservationsDown)
+    {
+        if (reserve.reserveName == reserveName)
+        {
+            for (auto cluster : reserve.AllReservesParticipation)
+            {
+                if (cluster.clusterName == clusterName)
+                    return cluster.indexClusterParticipation;
+            }
+        }
+    }
+    return -1;
+}
+
 void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
 {
     uint serieIndex = thermalCluster->series.timeseriesNumbers[0][this->year];
-
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
         // alias to the production of the current thermal cluster
@@ -190,7 +216,6 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
             if (newUnitCount > previousUnitCount)
                 newUnitCount = previousUnitCount;
         }
-
         // calculating the operating cost for the current hour
         // O(h) = MA * P(h) * Modulation
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
@@ -213,21 +238,28 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
             std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
             for (auto res : clusterReserves)
             {
-                thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-                  += hourlyResults->ProductionThermique[hourInTheWeek]
-                       .ParticipationReservesDuPalier[thermalCluster->index]
-                     * thermalCluster->reserveCost(res);
-                double participation = hourlyResults->ProductionThermique[hourInTheWeek]
-                    .ParticipationReservesDuPalier[thermalCluster->index];
-                if (participation)
+                int clusterIndex = getIndexFromClusterAndReserve(res, thermalCluster->name());
+                if (clusterIndex != -1)
                 {
-                    thermalClusterReserveParticipationCostForYear[hourInTheYear]
-                        += participation * thermalCluster->reserveCost(res);
+                    thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+                        += hourlyResults->ProductionThermique[hourInTheWeek]
+                        .ParticipationReservesDuPalier[clusterIndex]
+                        * thermalCluster->reserveCost(res);
+                    double participation = hourlyResults->ProductionThermique[hourInTheWeek]
+                        .ParticipationReservesDuPalier[clusterIndex];
+                    if (participation)
+                    {
+                        thermalClusterReserveParticipationCostForYear[hourInTheYear]
+                            += participation * thermalCluster->reserveCost(res);
 
-                    thermalReserveParticipationPerGroupForYear[hourInTheYear][res][thermalCluster->groupID]
-                        += participation;
-                    thermal[area->index].nbThermalGroupsForReserves[thermalCluster->index]++;
+                        thermalReserveParticipationPerGroupForYear[hourInTheYear][res][thermalCluster->groupID]
+                            += participation;
+                        thermal[area->index].nbThermalGroupsForReserves[thermalCluster->groupID]++;
+                        
+                    }
                 }
+                else
+                    logs.error() << "No index for cluster " << thermalCluster->name() << " in reserve " << res;
             }
         }
 
