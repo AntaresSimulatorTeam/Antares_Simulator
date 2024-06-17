@@ -100,38 +100,33 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-        std::vector<double>& waterVal = weeklyResults.valeurH2oHoraire;
-
-        for (uint h = 0; h < nbHoursInAWeek; h++)
-        {
-            waterVal[h] = 0.;
-        }
+        auto& waterVal = weeklyResults.valeurH2oHoraire;
+        std::fill(waterVal.begin(), waterVal.end(), 0.);
 
         if (!area->hydro.reservoirManagement || !area->hydro.useWaterValue)
         {
-            continue;
+            return;
         }
 
         if (!area->hydro.useWaterValue)
         {
-            continue;
+            return;
         }
 
         double reservoirCapacity = area->hydro.reservoirCapacity;
 
         std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-        Antares::Data::getWaterValue(problem.previousSimulationFinalLevel[index] * 100
+        waterVal[0] = Data::getWaterValue(problem.previousSimulationFinalLevel[index] * 100
                 / reservoirCapacity,
                 area->hydro.waterValues,
-                weekFirstDay,
-                waterVal[0]);
+                weekFirstDay);
+
         for (uint h = 1; h < nbHoursInAWeek; h++)
         {
-            Antares::Data::getWaterValue(niv[h - 1],
+            waterVal[h] = Data::getWaterValue(niv[h - 1],
                     area->hydro.waterValues,
-                    daysOfWeek[h / 24],
-                    waterVal[h]);
+                    daysOfWeek[h / 24]);
         }
     }
 }
@@ -155,29 +150,6 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 
         problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1] * reservoirCapacity
             / 100;
-    }
-}
-
-void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem)
-{
-    if (!problem.hydroHotStart)
-    {
-        return;
-    }
-
-    for (const auto& [_, area] : areas)
-    {
-        if (!area->hydro.reservoirManagement)
-        {
-            continue;
-        }
-
-        uint index = area->index;
-
-        double reservoirCapacity = area->hydro.reservoirCapacity;
-
-        problem.previousYearFinalLevels[index] = problem.previousSimulationFinalLevel[index]
-            / reservoirCapacity;
     }
 }
 

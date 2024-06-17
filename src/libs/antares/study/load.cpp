@@ -166,13 +166,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
                           parameters.firstMonthInYear,
                           parameters.leapYear});
 
-    // In case hydro hot start is enabled, check all conditions are met.
-    // (has to be called after areas load and calendar building)
-    if (usedByTheSolver && !checkHydroHotStart())
-    {
-        logs.error() << "hydro hot start is enabled, conditions are not met. Aborting";
-    }
-
     // Reducing memory footprint
     reduceMemoryUsage();
 }

@@ -224,8 +224,6 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study.areas, currentProblem);
-
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
