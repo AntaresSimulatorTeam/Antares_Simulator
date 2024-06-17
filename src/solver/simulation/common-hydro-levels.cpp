@@ -165,7 +165,7 @@ void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 {
     if (!problem.hydroHotStart)
     {
-        continue;
+        return;
     }
 
     for (const auto& [_, area] : areas)
