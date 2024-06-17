@@ -1,7 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classAntares_1_1Window_1_1PerformerDialog.html#aa5150432e17a25c7d3e70b925011bf4d":[7,0,0,17,45,0],
-"classAntares_1_1Window_1_1RaiseWindowBox.html":[7,0,0,17,47],
 "classAntares_1_1Window_1_1Renewable_1_1CommonProperties.html":[7,0,0,17,4,0],
 "classAntares_1_1Window_1_1Renewable_1_1Panel.html":[7,0,0,17,4,1],
 "classAntares_1_1Window_1_1Renewable_1_1Panel.html#a159555e21981d3e12f05cc02f418bbd1":[7,0,0,17,4,1,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX17 =
 "classIItem.html#ae20ab3549e27c3aab6d0529009fb3ca1":[7,0,124,33],
 "classIItem.html#af7b03e30b6ad384d9b73d286ed8db1e2":[7,0,124,28],
 "classIItem.html#aff762346860ec05fe386566a9352245a":[7,0,124,35],
-"classIItem_1_1IPart.html":[7,0,124,0]
+"classIItem_1_1IPart.html":[7,0,124,0],
+"classIItem_1_1IPart.html#a56e3a54b583e40ed3f6d46289af3fd82":[7,0,124,0,1],
+"classIItem_1_1IPart.html#ad28234ed96ce8ffcbc38ce521cd906f5":[7,0,124,0,0]
 };

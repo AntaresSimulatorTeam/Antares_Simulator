@@ -39,7 +39,6 @@ var classAntares_1_1Data_1_1Parameters =
     [ "horizon", "classAntares_1_1Data_1_1Parameters.html#a5373f36a8187193ba6a6532b4c00ff78", null ],
     [ "hpMode", "classAntares_1_1Data_1_1Parameters.html#a3125b12689425b06576bdc821f4a6bd9", null ],
     [ "improveUnitsStartup", "classAntares_1_1Data_1_1Parameters.html#ac320c4c4c732d7d2b8075dd2a10ed3ac", null ],
-    [ "iniLevels", "classAntares_1_1Data_1_1Parameters.html#ad3df10cec5c10a5151c4f6e493c4671f", null ],
     [ "interModal", "classAntares_1_1Data_1_1Parameters.html#a97da00b0ed23dcfd056e2287b2a6d28d", null ],
     [ "intraModal", "classAntares_1_1Data_1_1Parameters.html#ae74580d04e1dfe5622419a21207c6a86", null ],
     [ "leapYear", "classAntares_1_1Data_1_1Parameters.html#a0d961081d5df614638783cc94da11b35", null ],

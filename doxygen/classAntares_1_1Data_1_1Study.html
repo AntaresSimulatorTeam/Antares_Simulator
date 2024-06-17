@@ -300,9 +300,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyAllThermalTSGe
 <tr class="memitem:aa8ddbddbd409bc9aa2a76b0e92f5dff2" id="r_aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#aa8ddbddbd409bc9aa2a76b0e92f5dff2">getNumberOfCores</a> (const bool forceParallel, const uint nbYearsParallelForced)</td></tr>
 <tr class="memdesc:aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes number of cores.  <br /></td></tr>
 <tr class="separator:aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafcb3aa5522aff3cb5cf308df6c990f4" id="r_aafcb3aa5522aff3cb5cf308df6c990f4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#aafcb3aa5522aff3cb5cf308df6c990f4">checkHydroHotStart</a> ()</td></tr>
-<tr class="memdesc:aafcb3aa5522aff3cb5cf308df6c990f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">In case hydro hot start is enabled, checking all conditions are met.  <br /></td></tr>
-<tr class="separator:aafcb3aa5522aff3cb5cf308df6c990f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3afeb9f20c7d7be0bfeb7f55075f1e38" id="r_a3afeb9f20c7d7be0bfeb7f55075f1e38"><td class="memItemLeft" align="right" valign="top"><a id="a3afeb9f20c7d7be0bfeb7f55075f1e38" name="a3afeb9f20c7d7be0bfeb7f55075f1e38"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>removeTimeseriesIfTSGeneratorEnabled</b> ()</td></tr>
 <tr class="memdesc:a3afeb9f20c7d7be0bfeb7f55075f1e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove timeseries if ts-generator is enabled. <br /></td></tr>
@@ -793,35 +790,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesDestroy<
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="aafcb3aa5522aff3cb5cf308df6c990f4" name="aafcb3aa5522aff3cb5cf308df6c990f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aafcb3aa5522aff3cb5cf308df6c990f4">&#9670;&#160;</a></span>checkHydroHotStart()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Antares::Data::Study::checkHydroHotStart </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>In case hydro hot start is enabled, checking all conditions are met. </p>
-<p>If hydro hot start is enabled, check that :</p><ul>
-<li>For all areas for which reservoir management is enabled :<ul>
-<li>Their starting level is initialized on the same day</li>
-<li>This day is the first day of the simulation calendar</li>
-</ul>
-</li>
-<li>The simulation lasts exactly one year</li>
-<li>All batches (or sets) of simultaneous years have the same size (obvious if a parallel run is not required : answer is yes).</li>
-</ul>
-<p>If these conditions are not met, some error message is raised, when attempting to run the study. </p>
 
 </div>
 </div>
