@@ -37,14 +37,14 @@ void computingHydroLevels(const Data::AreaList& areas,
     {
         if (!area->hydro.reservoirManagement)
         {
-            return;
+            continue;
         }
 
         if (not computeAnyway)
         {
             if (area->hydro.useHeuristicTarget != remixWasRun)
             {
-                return;
+                continue;
             }
         }
 
@@ -112,12 +112,12 @@ void interpolateWaterValue(const Data::AreaList& areas,
 
         if (!area->hydro.reservoirManagement || !area->hydro.useWaterValue)
         {
-            return;
+            continue;
         }
 
         if (!area->hydro.useWaterValue)
         {
-            return;
+            continue;
         }
 
         double reservoirCapacity = area->hydro.reservoirCapacity;
@@ -145,7 +145,7 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
     {
         if (!area->hydro.reservoirManagement)
         {
-            return;
+            continue;
         }
 
         uint index = area->index;
@@ -165,14 +165,14 @@ void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 {
     if (!problem.hydroHotStart)
     {
-        return;
+        continue;
     }
 
     for (const auto& [_, area] : areas)
     {
         if (!area->hydro.reservoirManagement)
         {
-            return;
+            continue;
         }
 
         uint index = area->index;
