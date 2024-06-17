@@ -113,7 +113,7 @@ public:
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     bool loadPreproFromFolder(Study& s, const AnyString& folder);
-    bool validatePrepro();
+    bool validatePrepro(const Study& study);
 
     bool loadEconomicCosts(Study& s, const AnyString& folder);
 

@@ -616,9 +616,15 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& fol
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadPrepro);
 }
 
-bool ThermalClusterList::validatePrepro()
+bool ThermalClusterList::validatePrepro(const Study& study)
 {
-    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), [](auto& c)
+    auto hasPrepro = [](auto c) { return (bool)c->prepro; };
+
+    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
+                                           & timeSeriesThermal;
+
+    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro),
+            [&study, &globalThermalTSgeneration](auto& c)
     {
         bool result = true;
 
