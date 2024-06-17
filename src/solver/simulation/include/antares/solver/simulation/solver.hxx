@@ -55,7 +55,7 @@ public:
             randomNumbers& pRandomForParallelYears,
             bool pPerformCalculations,
             Data::Study& pStudy,
-            std::vector<Variable::State>& pState,
+            Variable::State& pState,
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
             IResultWriter& resultWriter):
@@ -75,7 +75,6 @@ public:
         hydroManagement(study.areas,
                         study.parameters,
                         study.calendar,
-                        study.maxNbYearsInParallel,
                         resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
@@ -96,7 +95,7 @@ private:
     randomNumbers& randomForParallelYears;
     bool performCalculations;
     Data::Study& study;
-    std::vector<Variable::State>& state;
+    Variable::State& state;
     bool yearByYear;
     bool hydroHotStart;
     Benchmarking::DurationCollector& pDurationCollector;
@@ -155,8 +154,7 @@ public:
             // 1 - Applying random levels for current year
             if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
             {
-                randomReservoirLevel = state[numSpace]
-                                         .problemeHebdo->previousYearFinalLevels.data();
+                randomReservoirLevel = state.problemeHebdo->previousYearFinalLevels.data();
             }
             else
             {
@@ -177,7 +175,7 @@ public:
             };
 
             // Updating the state
-            state[numSpace].year = y;
+            state.year = y;
 
             // 5 - Resetting all variables for the output
             simulation_->variables.yearBegin(y, numSpace);
@@ -189,7 +187,7 @@ public:
 
             OptimizationStatisticsWriter optWriter(pResultWriter, y);
             yearFailed[y] = !simulation_->year(progression,
-                                               state[numSpace],
+                                               state,
                                                numSpace,
                                                randomForCurrentYear,
                                                failedWeekList,
@@ -201,7 +199,7 @@ public:
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            simulation_->variables.yearEndBuild(state[numSpace], y, numSpace);
+            simulation_->variables.yearEndBuild(state, y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
@@ -1060,19 +1058,19 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             // continue;
 
             auto task = std::make_shared<yearJob<ImplementationType>>(
-              this,
-              y,
-              set_it->yearFailed,
-              set_it->isFirstPerformedYearOfASet,
-              pFirstSetParallelWithAPerformedYearWasRun,
-              numSpace,
-              randomForParallelYears,
-              performCalculations,
-              study,
-              state,
-              pYearByYear,
-              pDurationCollector,
-              pResultWriter);
+                                                                        this,
+                                                                        y,
+                                                                        set_it->yearFailed,
+                                                                        set_it->isFirstPerformedYearOfASet,
+                                                                        pFirstSetParallelWithAPerformedYearWasRun,
+                                                                        numSpace,
+                                                                        randomForParallelYears,
+                                                                        performCalculations,
+                                                                        study,
+                                                                        state[numSpace],
+                                                                        pYearByYear,
+                                                                        pDurationCollector,
+                                                                        pResultWriter);
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 
