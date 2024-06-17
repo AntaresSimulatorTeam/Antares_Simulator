@@ -224,8 +224,8 @@ void Parameters::resetSeeds()
     // For retro-compatibility, the wind ts-generator should produce the
     // same results than before 3.8.
     // It must have the same seed than before
-    auto increment = (unsigned)antaresSeedIncrement;
-    auto s = (unsigned)antaresSeedDefaultValue;
+    auto increment = antaresSeedIncrement;
+    auto s = antaresSeedDefaultValue;
 
     seed[seedTsGenWind] = s;
     // The same way for all others
@@ -1984,7 +1984,7 @@ void Parameters::saveToINI(IniFile& ini) const
 }
 
 bool Parameters::loadFromFile(const AnyString& filename,
-                              StudyVersion& version,
+                              const StudyVersion& version,
                               const StudyLoadOptions& options)
 {
     // Loading the INI file
