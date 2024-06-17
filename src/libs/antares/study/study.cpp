@@ -1200,7 +1200,7 @@ void Study::destroyAllWindTSGeneratorData()
 
 void Study::destroyAllThermalTSGeneratorData()
 {
-    areas.each([](Data::Area& area)
+    areas.each([](const Data::Area& area)
     {
         for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
         {
