@@ -113,7 +113,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
     // Initialize all alpha values to 0
     study.areas.each(
-      [&](Data::Area& area)
+      [&ret, &buffer, &study, &folder](Data::Area& area)
       {
           area.hydro.interDailyBreakdown = 1.;
           area.hydro.intraDailyModulation = 24.;
