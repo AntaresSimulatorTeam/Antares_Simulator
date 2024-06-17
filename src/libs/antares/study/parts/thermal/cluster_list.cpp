@@ -159,17 +159,10 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
             options = Matrix<>::optFixedSize,
         };
 
-        bool r = cluster->modulation.loadFromCSVFile(modulationFile,
-                                                     thermalModulationMax,
-                                                     HOURS_PER_YEAR,
-                                                     options);
-        if (!r && study.usedByTheSolver)
-        {
-            cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
-            cluster->modulation.fill(1.);
-            cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
-        }
-        ret = ret && r;
+        ret = cluster->modulation.loadFromCSVFile(modulationFile,
+                                                  thermalModulationMax,
+                                                  HOURS_PER_YEAR,
+                                                  options) && ret;
 
         // Special operations when not ran from the interface (aka solver)
         if (study.usedByTheSolver)
