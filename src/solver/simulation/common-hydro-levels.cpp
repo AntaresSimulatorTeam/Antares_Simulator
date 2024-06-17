@@ -40,12 +40,9 @@ void computingHydroLevels(const Data::AreaList& areas,
             continue;
         }
 
-        if (not computeAnyway)
+        if (!computeAnyway && area->hydro.useHeuristicTarget != remixWasRun)
         {
-            if (area->hydro.useHeuristicTarget != remixWasRun)
-            {
-                continue;
-            }
+            continue;
         }
 
         uint index = area->index;

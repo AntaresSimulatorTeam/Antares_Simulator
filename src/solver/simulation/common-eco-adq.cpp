@@ -401,7 +401,7 @@ void SetInitialHydroLevel(Data::Study& study,
                           const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
 {
     uint firstDaySimu = study.parameters.simulationDays.first;
-    study.areas.each([&problem, &firstDaySimu, &hydroVentilationResults](Data::Area& area)
+    study.areas.each([&problem, &firstDaySimu, &hydroVentilationResults](const Data::Area& area)
     {
         if (area.hydro.reservoirManagement)
         {
