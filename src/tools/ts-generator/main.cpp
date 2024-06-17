@@ -22,14 +22,11 @@
 #include <memory>
 #include <string>
 
-#include <yuni/datetime/timestamp.h>
-
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
-#include <antares/study/header.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include <antares/writer/result_format.h>
@@ -38,7 +35,6 @@
 #include "tsGenerationOptions.h"
 #include "linksTSgenerator.h"
 
-using namespace Antares;
 using namespace Antares::TSGenerator;
 
 namespace fs = std::filesystem;
