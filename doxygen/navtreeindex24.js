@@ -1,7 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[7,0,0,12,4,9,0],
-"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[7,0,0,12,4,11,0],
 "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[7,0,0,12,4,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[7,0,0,12,4,13,0],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[7,0,0,12,4,14],
@@ -249,5 +247,7 @@ var NAVTREEINDEX24 =
 "structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,240],
 "structVARIABLES__DUALES__INTERCONNEXIONS.html":[7,0,243],
 "structVec3.html":[7,0,244],
-"structYAML_1_1convert_3_01Monster_01_4.html":[7,0,28,0]
+"structYAML_1_1convert_3_01Monster_01_4.html":[7,0,28,0],
+"structYAML_1_1convert_3_01Power_01_4.html":[7,0,28,1],
+"structYAML_1_1convert_3_01Vec3_01_4.html":[7,0,28,2]
 };

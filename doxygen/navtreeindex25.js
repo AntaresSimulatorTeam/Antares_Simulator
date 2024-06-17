@@ -1,7 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structYAML_1_1convert_3_01Power_01_4.html":[7,0,28,1],
-"structYAML_1_1convert_3_01Vec3_01_4.html":[7,0,28,2],
 "structcommonFixture.html":[7,0,54],
 "structsaveFixture.html":[7,0,204],
 "study_8hxx_source.html":[8,0,0,1,0,25,0,0,0,27],

@@ -1,7 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"functions_vars_p.html":[7,3,2,15],
-"functions_vars_q.html":[7,3,2,16],
 "functions_vars_r.html":[7,3,2,17],
 "functions_vars_s.html":[7,3,2,18],
 "functions_vars_t.html":[7,3,2,19],
@@ -249,5 +247,7 @@ var NAVTREEINDEX21 =
 "opt__constants_8h_source.html":[8,0,0,2,5,0,0,0,0,6],
 "opt__export__structure_8h_source.html":[8,0,0,2,5,0,0,0,0,7],
 "opt__fonctions_8h_source.html":[8,0,0,2,5,0,0,0,0,8],
-"opt__period__string__generator_8h_source.html":[8,0,0,2,9,0,0,0,0,5]
+"opt__period__string__generator_8h_source.html":[8,0,0,2,9,0,0,0,0,5],
+"opt__rename__problem_8h_source.html":[8,0,0,2,5,0,0,0,0,9],
+"opt__structure__probleme__a__resoudre_8h_source.html":[8,0,0,2,5,0,0,0,0,10]
 };
