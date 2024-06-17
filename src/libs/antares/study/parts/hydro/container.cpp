@@ -480,23 +480,23 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
 	IniFile::Section* sLeewayUp;
 	IniFile::Section* spumpingEfficiency;
 
-        AllSections(IniFile& ini)
+      AllSections(IniFile& ini) :
+	s(ini.addSection("inter-daily-breakdown")),
+	smod(ini.addSection("intra-daily-modulation")),
+	sIMB(ini.addSection("inter-monthly-breakdown")),
+	sreservoir(ini.addSection("reservoir")),
+	sreservoirCapacity(ini.addSection("reservoir capacity")),
+	sFollowLoad(ini.addSection("follow load")),
+	sUseWater(ini.addSection("use water")),
+	sHardBounds(ini.addSection("hard bounds")),
+	sInitializeReservoirDate(ini.addSection("initialize reservoir date")),
+	sUseHeuristic(ini.addSection("use heuristic")),
+	sUseLeeway(ini.addSection("use leeway")),
+	sPowerToLevel(ini.addSection("power to level")),
+	sLeewayLow(ini.addSection("leeway low")),
+	sLeewayUp(ini.addSection("leeway up")),
+	spumpingEfficiency(ini.addSection("pumping efficiency"))
         {
-	    IniFile::Section* s = ini.addSection("inter-daily-breakdown");
-	    IniFile::Section* smod = ini.addSection("intra-daily-modulation");
-	    IniFile::Section* sIMB = ini.addSection("inter-monthly-breakdown");
-	    IniFile::Section* sreservoir = ini.addSection("reservoir");
-	    IniFile::Section* sreservoirCapacity = ini.addSection("reservoir capacity");
-	    IniFile::Section* sFollowLoad = ini.addSection("follow load");
-	    IniFile::Section* sUseWater = ini.addSection("use water");
-	    IniFile::Section* sHardBounds = ini.addSection("hard bounds");
-	    IniFile::Section* sInitializeReservoirDate = ini.addSection("initialize reservoir date");
-	    IniFile::Section* sUseHeuristic = ini.addSection("use heuristic");
-	    IniFile::Section* sUseLeeway = ini.addSection("use leeway");
-	    IniFile::Section* sPowerToLevel = ini.addSection("power to level");
-	    IniFile::Section* sLeewayLow = ini.addSection("leeway low");
-	    IniFile::Section* sLeewayUp = ini.addSection("leeway up");
-	    IniFile::Section* spumpingEfficiency = ini.addSection("pumping efficiency");
 	}
     };
 
