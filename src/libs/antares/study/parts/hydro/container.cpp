@@ -462,69 +462,93 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
     String buffer;
     buffer.clear() << folder << SEP << "common" << SEP << "capacity";
 
+    struct AllSections
+    {
+	IniFile::Section* s;
+	IniFile::Section* smod;
+	IniFile::Section* sIMB;
+	IniFile::Section* sreservoir;
+	IniFile::Section* sreservoirCapacity;
+	IniFile::Section* sFollowLoad;
+	IniFile::Section* sUseWater;
+	IniFile::Section* sHardBounds;
+	IniFile::Section* sInitializeReservoirDate;
+	IniFile::Section* sUseHeuristic;
+	IniFile::Section* sUseLeeway;
+	IniFile::Section* sPowerToLevel;
+	IniFile::Section* sLeewayLow;
+	IniFile::Section* sLeewayUp;
+	IniFile::Section* spumpingEfficiency;
+
+      AllSections(IniFile& ini) :
+	s(ini.addSection("inter-daily-breakdown")),
+	smod(ini.addSection("intra-daily-modulation")),
+	sIMB(ini.addSection("inter-monthly-breakdown")),
+	sreservoir(ini.addSection("reservoir")),
+	sreservoirCapacity(ini.addSection("reservoir capacity")),
+	sFollowLoad(ini.addSection("follow load")),
+	sUseWater(ini.addSection("use water")),
+	sHardBounds(ini.addSection("hard bounds")),
+	sInitializeReservoirDate(ini.addSection("initialize reservoir date")),
+	sUseHeuristic(ini.addSection("use heuristic")),
+	sUseLeeway(ini.addSection("use leeway")),
+	sPowerToLevel(ini.addSection("power to level")),
+	sLeewayLow(ini.addSection("leeway low")),
+	sLeewayUp(ini.addSection("leeway up")),
+	spumpingEfficiency(ini.addSection("pumping efficiency"))
+        {
+	}
+    };
+
     // Init
     IniFile ini;
-    auto* s = ini.addSection("inter-daily-breakdown");
-    auto* smod = ini.addSection("intra-daily-modulation");
-    auto* sIMB = ini.addSection("inter-monthly-breakdown");
-    auto* sreservoir = ini.addSection("reservoir");
-    auto* sreservoirCapacity = ini.addSection("reservoir capacity");
-    auto* sFollowLoad = ini.addSection("follow load");
-    auto* sUseWater = ini.addSection("use water");
-    auto* sHardBounds = ini.addSection("hard bounds");
-    auto* sInitializeReservoirDate = ini.addSection("initialize reservoir date");
-    auto* sUseHeuristic = ini.addSection("use heuristic");
-    auto* sUseLeeway = ini.addSection("use leeway");
-    auto* sPowerToLevel = ini.addSection("power to level");
-    auto* sLeewayLow = ini.addSection("leeway low");
-    auto* sLeewayUp = ini.addSection("leeway up");
-    auto* spumpingEfficiency = ini.addSection("pumping efficiency");
+    AllSections allSections(ini);
 
     // return status
     bool ret = true;
 
     // Add all alpha values for each area
     areas.each(
-      [&](const Data::Area& area)
+      [&allSections, &buffer, &folder, &ret](const Data::Area& area)
       {
-          s->add(area.id, area.hydro.interDailyBreakdown);
-          smod->add(area.id, area.hydro.intraDailyModulation);
-          sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
-          sInitializeReservoirDate->add(area.id, area.hydro.initializeReservoirLevelDate);
-          sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
-          sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
-          spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
+          allSections.s->add(area.id, area.hydro.interDailyBreakdown);
+          allSections.smod->add(area.id, area.hydro.intraDailyModulation);
+          allSections.sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
+          allSections.sInitializeReservoirDate->add(area.id, area.hydro.initializeReservoirLevelDate);
+          allSections.sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
+          allSections.sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
+          allSections.spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
           if (area.hydro.reservoirCapacity > 1e-6)
           {
-              sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
+              allSections.sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
           }
           if (area.hydro.reservoirManagement)
           {
-              sreservoir->add(area.id, true);
+              allSections.sreservoir->add(area.id, true);
           }
           if (!area.hydro.followLoadModulations)
           {
-              sFollowLoad->add(area.id, false);
+              allSections.sFollowLoad->add(area.id, false);
           }
           if (area.hydro.useWaterValue)
           {
-              sUseWater->add(area.id, true);
+              allSections.sUseWater->add(area.id, true);
           }
           if (area.hydro.hardBoundsOnRuleCurves)
           {
-              sHardBounds->add(area.id, true);
+              allSections.sHardBounds->add(area.id, true);
           }
           if (!area.hydro.useHeuristicTarget)
           {
-              sUseHeuristic->add(area.id, false);
+              allSections.sUseHeuristic->add(area.id, false);
           }
           if (area.hydro.useLeeway)
           {
-              sUseLeeway->add(area.id, true);
+              allSections.sUseLeeway->add(area.id, true);
           }
           if (area.hydro.powerToLevel)
           {
-              sPowerToLevel->add(area.id, true);
+              allSections.sPowerToLevel->add(area.id, true);
           }
 
           // max hours gen
