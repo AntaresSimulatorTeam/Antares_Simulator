@@ -605,12 +605,22 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& fol
     Clob buffer;
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };
 
-    auto loadAndCheckPrepro = [&buffer, &folder, &study, &globalThermalTSgeneration](auto c)
+    auto loadPrepro = [&buffer, &folder, &study, &globalThermalTSgeneration](auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
-        bool result = c->prepro->loadFromFolder(study, buffer);
+        return c->prepro->loadFromFolder(study, buffer);
+    };
+
+    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadPrepro);
+}
+
+bool ThermalClusterList::validatePrepro()
+{
+    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), [](auto& c)
+    {
+        bool result = true;
 
         if (study.usedByTheSolver && globalThermalTSgeneration)
         {
@@ -621,10 +631,9 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& fol
         {
             result = c->prepro->normalizeAndCheckNPO();
         }
-        return result;
-    };
 
-    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadAndCheckPrepro);
+        return result;
+    });
 }
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)

@@ -994,6 +994,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
         ret = area.thermal.list.loadPreproFromFolder(study, buffer) && ret;
+        ret = area.thermal.list.validatePrepro() && ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
