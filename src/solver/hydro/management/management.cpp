@@ -145,7 +145,7 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
 void HydroManagement::prepareInflowsScaling(uint year)
 {
     areas_.each(
-      [&](const Data::Area& area)
+      [this, &year](const Data::Area& area)
       {
           const auto& srcinflows = area.hydro.series->storage.getColumn(year);
 
@@ -442,7 +442,7 @@ void HydroManagement::prepareNetDemand(uint year,
 void HydroManagement::prepareEffectiveDemand()
 {
     areas_.each(
-      [&](Data::Area& area)
+      [this](Data::Area& area)
       {
           auto& data = tmpDataByArea_[&area];
 
@@ -455,7 +455,7 @@ void HydroManagement::prepareEffectiveDemand()
               double effectiveDemand = 0;
               // area.hydro.allocation is indexed by area index
               area.hydro.allocation.eachNonNull(
-                [&](unsigned areaIndex, double value)
+                [this, &effectiveDemand, &day](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
                     effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
