@@ -107,12 +107,10 @@ public:
     HydroManagement(const Data::AreaList& areas,
                     const Data::Parameters& params,
                     const Date::Calendar& calendar,
-                    unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
-                         Solver::Variable::State& state,
                          uint y,
                          Antares::Data::Area::ScratchMap& scratchmap);
 
@@ -152,12 +150,10 @@ private:
     // \return The total inflow for the whole year
     double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        uint y,
+    void prepareDailyOptimalGenerations(uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        Data::Area& area,
+    void prepareDailyOptimalGenerations(Data::Area& area,
                                         uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap);
 

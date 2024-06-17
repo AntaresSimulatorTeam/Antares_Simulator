@@ -72,7 +72,6 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 
-		include/antares/solver/optimisation/opt_period_string_generator_base.h
 		include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
 

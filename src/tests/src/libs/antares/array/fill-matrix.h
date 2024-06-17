@@ -31,16 +31,6 @@
 using namespace std;
 using namespace Antares;
 
-namespace Antares
-{
-namespace Statistics
-{
-void HasWrittenToDisk(uint64_t /* size */)
-{
-}
-} // namespace Statistics
-} // namespace Antares
-
 template<class T = double, class ReadWriteT = T>
 class Matrix_easy_to_fill: public Matrix<T, ReadWriteT>
 {
