@@ -201,13 +201,13 @@ bool XCast::loadFromFolder(const AnyString& folder)
     IniFile ini;
     if (ini.open(buffer))
     {
-        // For each section
-        const IniFile::Property* p;
-        CString<30, false> key;
-
         ini.each(
-          [&](const IniFile::Section& section)
+          [this, &ret, &buffer](const IniFile::Section& section)
           {
+              // For each section
+              const IniFile::Property* p;
+              CString<30, false> key;
+
               // For each property
               if (section.name == "general")
               {
