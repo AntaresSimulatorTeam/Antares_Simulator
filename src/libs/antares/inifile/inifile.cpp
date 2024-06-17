@@ -170,9 +170,9 @@ static std::string getSectionName(const std::string& line)
     return splitLine[1];
 }
 
-static bool isProperty(const std::string& line)
+static bool isProperty(std::string_view line)
 {
-    return std::ranges::count(line.begin(), line.end(), '=') == 1;
+    return std::ranges::count(line, '=') == 1;
 }
 
 static IniFile::Property getProperty(std::string line)
