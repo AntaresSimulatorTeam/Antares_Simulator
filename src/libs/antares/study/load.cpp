@@ -293,7 +293,7 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 class SetHandlerAreas
 {
 public:
-    SetHandlerAreas(Study& study):
+    explicit SetHandlerAreas(Study& study):
         pStudy(study)
     {
     }

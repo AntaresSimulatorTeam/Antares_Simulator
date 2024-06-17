@@ -54,7 +54,7 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     }
 
     value.words(" ,;\t\r\n",
-                [&v](const AnyString& element) -> bool
+                [&v](const AnyString& element)
                 {
                     ShortString16 word(element);
                     word.toLower();
@@ -207,13 +207,6 @@ const char* SimulationModeToCString(SimulationMode mode)
         return "Unknown";
     }
 }
-
-Parameters::Parameters():
-    noOutput(false)
-{
-}
-
-Parameters::~Parameters() = default;
 
 bool Parameters::economy() const
 {
