@@ -3,11 +3,18 @@
   "version-string": "9.1.0",
   "builtin-baseline": "9484a57dd560b89f0a583be08af6753611c57fd5",
   "vcpkg-configuration": {
+    "overlay-ports": [
+      "./ports"
+    ],
     "overlay-triplets": [
       "./triplets"
     ]
   },
   "dependencies": [
+    {
+	"name": "sirius-solver",
+	"version>=": "1.5"
+    },
     {
       "name": "wxwidgets",
       "platform": "windows"

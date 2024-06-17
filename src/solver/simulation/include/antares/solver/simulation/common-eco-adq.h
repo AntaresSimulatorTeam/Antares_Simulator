@@ -56,6 +56,10 @@ void PrepareRandomNumbers(Data::Study& study,
                           PROBLEME_HEBDO& problem,
                           yearRandomNumbers& randomForYear);
 
+void SetInitialHydroLevel(Data::Study& study,
+                          PROBLEME_HEBDO& problem,
+                          const HYDRO_VENTILATION_RESULTS& hydroVentilationResults);
+
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
@@ -136,14 +140,6 @@ void interpolateWaterValue(const Data::AreaList& areas,
 ** \param problem The weekly problem, from the solver
 */
 void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
-
-/*
-** \brief Updating the year final reservoir level, to be used as a start for the year.
-**
-** \param areas : the areas of study
-** \param problem The weekly problem, living over the whole simuation.
-*/
-void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
 /*
 ** \brief Compute the weighted average NTC for a link

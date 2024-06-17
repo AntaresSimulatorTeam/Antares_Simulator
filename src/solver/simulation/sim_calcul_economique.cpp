@@ -71,7 +71,7 @@ static void importShortTermStorages(
 
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     int NombreDePasDeTemps,
+                                     unsigned int NombreDePasDeTemps,
                                      uint numspace)
 {
     int NombrePaliers;
@@ -80,9 +80,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;
-
-    problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels
-                             == Antares::Data::irlHotStart);
 
     // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
@@ -209,11 +206,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         }
 
         problem.previousSimulationFinalLevel[i] = -1.;
-
-        if (!problem.previousYearFinalLevels.empty())
-        {
-            problem.previousYearFinalLevels[i] = -1.;
-        }
 
         problem.CaracteristiquesHydrauliques[i].WeeklyWaterValueStateRegular = 0.;
 
@@ -521,11 +513,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (area.hydro.useWaterValue)
             {
-                Antares::Data::getWaterValue(
-                  problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
-                  area.hydro.waterValues,
-                  weekFirstDay,
-                  problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular);
+                problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular =
+                    getWaterValue(
+                        problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
+                        area.hydro.waterValues,
+                        weekFirstDay);
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)

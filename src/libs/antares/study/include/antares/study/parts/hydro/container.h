@@ -52,7 +52,6 @@ public:
         pumpMod,
     };
 
-public:
     /*!
     ** \brief Load data for hydro container from a folder
     **
@@ -60,6 +59,13 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     static bool LoadFromFolder(Study& study, const AnyString& folder);
+
+    /*!
+    ** \brief Check and validate the loaded datas
+    **
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    static bool validate(Study& study);
 
     /*!
     ** \brief Save data from several containers to a folder (except data for the prepro and
@@ -71,7 +77,6 @@ public:
     */
     static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
 
-public:
     /*!
     ** \brief Default Constructor
     */
@@ -100,7 +105,6 @@ public:
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 
-public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
     //! Intra-daily modulation
@@ -161,16 +165,19 @@ public:
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
 
+private:
+    static bool checkReservoirLevels(const Study& study);
+    static bool checkProperties(Study& study);
+
 }; // class PartHydro
 
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables
 // as arguments, so that we don't have to create them locally (as in a classical function) each
 // time.
-void getWaterValue(const double& level,
+double getWaterValue(const double& level,
                    const Matrix<double>& waterValues,
-                   const uint day,
-                   double& waterValueToReturn);
+                   const uint day);
 
 // Interpolates a rate from the credit modulation table according to a level
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,

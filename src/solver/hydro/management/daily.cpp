@@ -40,7 +40,6 @@
 #include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/variable/state.h"
 
 using namespace Yuni;
 
@@ -220,10 +219,9 @@ struct DebugData
 };
 
 inline void HydroManagement::prepareDailyOptimalGenerations(
-  Solver::Variable::State& state,
-  Data::Area& area,
-  uint y,
-  Antares::Data::Area::ScratchMap& scratchmap)
+    Data::Area& area,
+    uint y,
+    Antares::Data::Area::ScratchMap& scratchmap)
 {
     const auto srcinflows = area.hydro.series->storage.getColumn(y);
 
@@ -546,10 +544,6 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             H2O2_J_Free(problem);
         }
 
-        uint firstDaySimu = parameters_.simulationDays.first;
-        state.problemeHebdo->previousSimulationFinalLevel[area.index]
-          = ventilationResults.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
-
         if (debugData)
         {
             debugData->writeDailyDebugData(calendar_, initReservoirLvlMonth, y, area.name);
@@ -557,11 +551,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
     }
 }
 
-void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                                     uint y,
+void HydroManagement::prepareDailyOptimalGenerations(uint y,
                                                      Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each([&](Data::Area& area)
-                { prepareDailyOptimalGenerations(state, area, y, scratchmap); });
+                { prepareDailyOptimalGenerations(area, y, scratchmap); });
 }
 } // namespace Antares

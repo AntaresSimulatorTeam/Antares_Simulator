@@ -67,46 +67,11 @@ jobs:
         with:
           key: ${{ env.os }}
 
-
-      - name: Init VCPKG submodule
-        run: |
-          git submodule update --init vcpkg
-
-      # Restore both vcpkg and its artifacts from the GitHub cache service.
-      - name: Restore vcpkg and its artifacts.
-        uses: actions/cache@v4
-        with:
-          # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
-          # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
-          path: |
-            ${{ env.VCPKG_ROOT }}
-            !${{ env.VCPKG_ROOT }}/buildtrees
-            !${{ env.VCPKG_ROOT }}/packages
-            !${{ env.VCPKG_ROOT }}/downloads
-          # The key is composed in a way that it gets properly invalidated: this must happen whenever vcpkg's Git commit id changes, or the list of packages changes. In this case a cache miss must happen and a new entry with a new key with be pushed to GitHub the cache service.
-          # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
-          # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
-          key: |
-            ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ env.triplet }}
-
       - name: Install libraries
         run: |
           sudo apt-get update
           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
           sudo apt-get install g++-10 gcc-10
-
-      - name: export wxWidgets script
-        shell: bash
-        run: |
-          export WX_CONFIG=${{env.WX_CONFIG}}
-
-      - name: Read antares-deps version
-        id: antares-deps-version
-        uses: notiz-dev/github-action-json-property@release
-        with:
-          path: 'antares-deps-version.json'
-          prop_path: 'antares_deps_version'
-
 
       - name: Config OR-Tools URL
         run: |
@@ -115,7 +80,6 @@ jobs:
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
         with:
-          antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{env.os}}
           ortools-url: ${{env.ORTOOLS_URL}}
           ortools-dir: ${{env.ORTOOLS_DIR}}
@@ -131,13 +95,6 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
 
-      - name: Init submodule
-        run: |
-          git submodule update --init src/antares-deps
-          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-
-
-
       - name: Configure
         run: |
           cmake -B _build -S src \
@@ -147,10 +104,8 @@ jobs:
           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-          -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON \
-          -DBUILD_not_system=OFF \
           -DBUILD_TOOLS=ON \
           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
@@ -185,6 +140,9 @@ jobs:
           path: 'simtest.json'
           prop_path: 'version'
 
+      - name: Init submodule
+        run: |
+          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
       - name: Run named mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}

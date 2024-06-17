@@ -471,9 +471,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                                                 .ValeursHorairesDeDefaillanceNegative[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
-
-            problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillanceEnReserve[pdtHebdo]
-              = 0.0;
         }
     }
 

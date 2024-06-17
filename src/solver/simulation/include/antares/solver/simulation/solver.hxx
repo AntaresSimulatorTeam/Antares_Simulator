@@ -55,7 +55,7 @@ public:
             randomNumbers& pRandomForParallelYears,
             bool pPerformCalculations,
             Data::Study& pStudy,
-            std::vector<Variable::State>& pState,
+            Variable::State& pState,
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
             IResultWriter& resultWriter,
@@ -77,10 +77,8 @@ public:
         hydroManagement(study.areas,
                         study.parameters,
                         study.calendar,
-                        study.maxNbYearsInParallel,
                         resultWriter)
     {
-        hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
         scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
@@ -98,9 +96,8 @@ private:
     randomNumbers& randomForParallelYears;
     bool performCalculations;
     Data::Study& study;
-    std::vector<Variable::State>& state;
+    Variable::State& state;
     bool yearByYear;
-    bool hydroHotStart;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
@@ -156,15 +153,7 @@ public:
             double* randomReservoirLevel = nullptr;
 
             // 1 - Applying random levels for current year
-            if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-            {
-                randomReservoirLevel = state[numSpace]
-                                         .problemeHebdo->previousYearFinalLevels.data();
-            }
-            else
-            {
-                randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
-            }
+            randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
             // removed
@@ -175,13 +164,12 @@ public:
             // 4 - Hydraulic ventilation
             pDurationCollector("hydro_ventilation") << [&] {
                 hydroManagement.makeVentilation(randomReservoirLevel,
-                                                state[numSpace],
                                                 y,
                                                 scratchmap);
             };
 
             // Updating the state
-            state[numSpace].year = y;
+            state.year = y;
 
             // 5 - Resetting all variables for the output
             simulation_->variables.yearBegin(y, numSpace);
@@ -193,7 +181,7 @@ public:
 
             OptimizationStatisticsWriter optWriter(pResultWriter, y);
             yearFailed[y] = !simulation_->year(progression,
-                                               state[numSpace],
+                                               state,
                                                numSpace,
                                                randomForCurrentYear,
                                                failedWeekList,
@@ -205,7 +193,7 @@ public:
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            simulation_->variables.yearEndBuild(state[numSpace], y, numSpace);
+            simulation_->variables.yearEndBuild(state, y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
@@ -273,8 +261,6 @@ inline ISimulation<ImplementationType>::ISimulation(
     {
         pYearByYear = false;
     }
-
-    pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
 }
 
 template<class ImplementationType>
@@ -770,34 +756,12 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
                   }
               }
 
-              if (pHydroHotStart)
+              // Current area's hydro starting (or initial) level computation
+              // (no matter if the year is performed or not, we always draw a random initial
+              // reservoir level to ensure the same results)
+              if (isPerformed)
               {
-                  if (!isPerformed || !area.hydro.reservoirManagement)
-                  {
-                      // This initial level should be unused, so -1, as impossible value, is
-                      // suitable.
-                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = -1.;
-                      areaIndex++;
-                      return; // Skipping the current area
-                  }
-
-                  if (!pFirstSetParallelWithAPerformedYearWasRun)
-                  {
-                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
-                  }
-                  // Else : means the start levels (multiple areas are affected) of a year are
-                  // retrieved from a previous year and
-                  //		  these levels are updated inside the year job (see year job).
-              }
-              else
-              {
-                  // Current area's hydro starting (or initial) level computation
-                  // (no matter if the year is performed or not, we always draw a random initial
-                  // reservoir level to ensure the same results)
-                  if (isPerformed)
-                  {
-                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
-                  }
+                  randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
               }
 
               areaIndex++;
@@ -1062,18 +1026,18 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             // continue;
 
             auto task = std::make_shared<yearJob<ImplementationType>>(
-              this,
-              y,
-              set_it->yearFailed,
-              set_it->isFirstPerformedYearOfASet,
-              pFirstSetParallelWithAPerformedYearWasRun,
-              numSpace,
-              randomForParallelYears,
-              performCalculations,
-              study,
-              state,
-              pYearByYear,
-              pDurationCollector,
+                                                                        this,
+                                                                        y,
+                                                                        set_it->yearFailed,
+                                                                        set_it->isFirstPerformedYearOfASet,
+                                                                        pFirstSetParallelWithAPerformedYearWasRun,
+                                                                        numSpace,
+                                                                        randomForParallelYears,
+                                                                        performCalculations,
+                                                                        study,
+                                                                        state[numSpace],
+                                                                        pYearByYear,
+                                                                        pDurationCollector,
               pResultWriter,
               simulationObserver_.get());
             results.add(Concurrency::AddTask(*pQueueService, task));

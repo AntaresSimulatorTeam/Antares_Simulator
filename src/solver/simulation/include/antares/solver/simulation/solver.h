@@ -145,8 +145,6 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     //! Year by year output results
     bool pYearByYear;
-    //! Hydro hot start
-    bool pHydroHotStart;
     //! The first set of parallel year(s) with a performed year was already run ?
     bool pFirstSetParallelWithAPerformedYearWasRun;
 
