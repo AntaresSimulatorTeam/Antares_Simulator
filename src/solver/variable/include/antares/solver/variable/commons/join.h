@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_Join_H__
 #define __SOLVER_VARIABLE_ECONOMY_Join_H__
 
-#include "antares/solver/variable/variable.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {
@@ -37,6 +37,7 @@ struct VCardJoin
     {
         return "";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -57,50 +58,45 @@ struct VCardJoin
             >>>>>
       ResultsType;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 0,
-        //! The Spatial aggregation
-        spatialAggregate = Category::noSpatialAggregate,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 0,
-
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 0;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCard
 
 /*!
 ** \brief Join
 */
-template<class LeftT, class RightT, class BindConstT>
-class Join : public Variable::IVariable<Join<LeftT, RightT, BindConstT>, Yuni::Default, VCardJoin>,
-             public LeftT,
-             public RightT,
-             public BindConstT
+template<class LeftT, class RightT>
+class Join: public Variable::IVariable<Join<LeftT, RightT>, Yuni::Default, VCardJoin>,
+            public LeftT,
+            public RightT
 {
 public:
     typedef LeftT LeftType;
     typedef RightT RightType;
-    typedef BindConstT BindConstType;
 
     //! VCard
     typedef VCardJoin VCardType;
     //! Ancestor
-    typedef Variable::IVariable<Join<LeftT, RightT, BindConstT>, Yuni::Default, VCardType>
-      AncestorType;
+    typedef Variable::IVariable<Join<LeftT, RightT>, Yuni::Default, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -118,9 +114,9 @@ public:
     {
         enum
         {
-            count = LeftType::template Statistics<CDataLevel, CFile>::count
-                    + RightType::template Statistics<CDataLevel, CFile>::count
-                    + BindConstType::template Statistics<CDataLevel, CFile>::count,
+            count = (int)LeftType::template Statistics < CDataLevel,
+            CFile > ::count + (int)RightType::template Statistics < CDataLevel,
+            CFile > ::count,
         };
     };
 
@@ -135,7 +131,6 @@ public:
     {
         LeftType::RetrieveVariableList(predicate);
         RightType::RetrieveVariableList(predicate);
-        BindConstType::RetrieveVariableList(predicate);
     }
 
 public:
@@ -143,7 +138,6 @@ public:
     {
         LeftType::initializeFromStudy(study);
         RightType::initializeFromStudy(study);
-        BindConstType::initializeFromStudy(study);
     }
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
@@ -182,7 +176,6 @@ public:
     {
         LeftType::yearBegin(year, numSpace);
         RightType::yearBegin(year, numSpace);
-        BindConstType::yearBegin(year, numSpace);
     }
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year)
@@ -202,14 +195,13 @@ public:
     void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         LeftType::yearEndBuild(state, year, numSpace);
-        RightType::yearEndBuild(state, year);
+        RightType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         LeftType::yearEnd(year, numSpace);
         RightType::yearEnd(year, numSpace);
-        BindConstType::yearEnd(year, numSpace);
     }
 
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
@@ -217,20 +209,18 @@ public:
     {
         LeftType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
         RightType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-        BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
     void weekBegin(State& state)
     {
         LeftType::weekBegin(state);
         RightType::weekBegin(state);
-        BindConstType::weekBegin(state);
     }
 
     void weekForEachArea(State& state, unsigned int numSpace)
     {
         LeftType::weekForEachArea(state, numSpace);
-        RightType::weekForEachArea(state);
+        RightType::weekForEachArea(state, numSpace);
     }
 
     void weekEnd(State& state)
@@ -243,13 +233,12 @@ public:
     {
         LeftType::hourBegin(hourInTheYear);
         RightType::hourBegin(hourInTheYear);
-        BindConstType::hourBegin(hourInTheYear);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         LeftType::hourForEachArea(state, numSpace);
-        RightType::hourForEachArea(state);
+        RightType::hourForEachArea(state, numSpace);
     }
 
     void hourForEachLink(State& state)
@@ -262,7 +251,6 @@ public:
     {
         LeftType::hourEnd(state, hourInTheYear);
         RightType::hourEnd(state, hourInTheYear);
-        BindConstType::hourEnd(state, hourInTheYear);
     }
 
     void buildSurveyReport(SurveyResults& results,
@@ -272,7 +260,6 @@ public:
     {
         LeftType::buildSurveyReport(results, dataLevel, fileLevel, precision);
         RightType::buildSurveyReport(results, dataLevel, fileLevel, precision);
-        BindConstType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
 
     void buildAnnualSurveyReport(SurveyResults& results,
@@ -283,7 +270,6 @@ public:
     {
         LeftType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
         RightType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
-        BindConstType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
     }
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
@@ -311,7 +297,7 @@ public:
     void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
     {
         LeftType ::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
-        RightType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area);
+        RightType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
     }
 
     template<class V>
@@ -326,10 +312,12 @@ public:
                                          std::map<unsigned int, unsigned int>& numSpaceToYear,
                                          unsigned int nbYearsForCurrentSummary)
     {
-        LeftType ::template computeSpatialAggregatesSummary(
-          allVars, numSpaceToYear, nbYearsForCurrentSummary);
-        RightType::template computeSpatialAggregatesSummary(
-          allVars, numSpaceToYear, nbYearsForCurrentSummary);
+        LeftType ::template computeSpatialAggregatesSummary(allVars,
+                                                            numSpaceToYear,
+                                                            nbYearsForCurrentSummary);
+        RightType::template computeSpatialAggregatesSummary(allVars,
+                                                            numSpaceToYear,
+                                                            nbYearsForCurrentSummary);
     }
 
     template<class V>
@@ -341,7 +329,7 @@ public:
 
     uint64_t memoryUsage() const
     {
-        return LeftType::memoryUsage() + RightType::memoryUsage() + BindConstType::memoryUsage();
+        return LeftType::memoryUsage() + RightType::memoryUsage();
     }
 
     template<class I>
@@ -349,7 +337,6 @@ public:
     {
         LeftType ::provideInformations(infos);
         RightType::provideInformations(infos);
-        BindConstType::provideInformations(infos);
     }
 
     template<class VCardToFindT>
@@ -390,7 +377,6 @@ public:
     {
         LeftType::localBuildAnnualSurveyReport(results, fileLevel, precision);
         RightType::localBuildAnnualSurveyReport(results, fileLevel, precision);
-        BindConstType::localBuildAnnualSurveyReport(results, fileLevel, precision);
     }
 
 }; // class Join

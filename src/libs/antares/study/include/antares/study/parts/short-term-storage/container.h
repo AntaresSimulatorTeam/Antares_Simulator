@@ -20,8 +20,10 @@
 */
 
 #pragma once
-#include <string>
+#include <filesystem>
 #include <map>
+#include <string>
+
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -31,14 +33,13 @@ class STStorageInput
 public:
     bool validate() const;
     /// 1. Read list.ini
-    bool createSTStorageClustersFromIniFile(const std::string& path);
+    bool createSTStorageClustersFromIniFile(const std::filesystem::path& path);
     /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
     /// Number of enabled ST storages, ignoring disabled ST storages
     std::size_t count() const;
     /// erase disabled cluster from the vector
     uint removeDisabledClusters();
-
 
     bool saveToFolder(const std::string& folder) const;
     bool saveDataSeriesToFolder(const std::string& folder) const;

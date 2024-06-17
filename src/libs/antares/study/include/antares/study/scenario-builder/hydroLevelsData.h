@@ -33,7 +33,7 @@ namespace ScenarioBuilder
 /*!
 ** \brief Rules for hydro levels, for all years and areas
 */
-class hydroLevelsData final : public dataInterface
+class hydroLevelsData final: public dataInterface
 {
 public:
     //! Matrix
@@ -93,7 +93,9 @@ inline void hydroLevelsData::setTSnumber(uint areaindex, uint year, double value
 {
     assert(areaindex < pHydroLevelsRules.width);
     if (year < pHydroLevelsRules.height)
+    {
         pHydroLevelsRules[areaindex][year] = value;
+    }
 }
 
 inline uint hydroLevelsData::width() const

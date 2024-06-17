@@ -22,6 +22,7 @@
 #define __ANTARES_LIBS_ARRAY_CORRELATION_H__
 
 #include <yuni/yuni.h>
+
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
 #include "antares/study/fwd.h"
@@ -94,9 +95,7 @@ public:
     ** \param version Format version expected. Use studyVersionUnknown to use the format version
     **   of the given study
     */
-    bool loadFromFile(Study& study,
-                      const AnyString& filename,
-                      bool warnings = true);
+    bool loadFromFile(Study& study, const AnyString& filename, bool warnings = true);
 
     /*!
     ** \brief Save the correlation matrices into an INI file
@@ -187,7 +186,7 @@ void InterAreaCorrelationResetMatrix(Matrix<>* m, AreaList* l);
 ** \param filename The filename to use to load values
 ** \return A non-zero value if the matrix has been loaded, 0 otherwise
 */
-int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const char filename[]);
+int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string& filename);
 
 /*!
 ** \brief Save an inter-area correlation matrix to a file
@@ -234,8 +233,8 @@ IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
 
 } // namespace Antares::Data
 
-
 #include <antares/study/area/area.h>
+
 #include "correlation.hxx"
 
 #endif /* __ANTARES_LIBS_ARRAY_CORRELATION_H__ */

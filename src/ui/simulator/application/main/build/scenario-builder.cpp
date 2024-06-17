@@ -171,21 +171,6 @@ class hydroScBuilderPageMaker final : public simpleScBuilderPageMaker
     }
 };
 
-// Hydro Max Power ...
-class hydroMaxPowerScBuilderPageMaker final : public simpleScBuilderPageMaker
-{
-    using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
-
-    Renderer::ScBuilderRendererBase* getRenderer() override
-    {
-        return new_check_allocation<Renderer::hydroMaxPowerScBuilderRenderer>();
-    }
-    Notebook::Page* addPageToNotebook() override
-    {
-        return notebook()->add(grid(), wxT("hydro-max-power"), wxT("Hydro-Max-Power"));
-    }
-};
-
 // Wind ...
 class windScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
@@ -381,10 +366,6 @@ void ApplWnd::createNBScenarioBuilder()
 
     hydroScBuilderPageMaker hydroSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderHydro = hydroSBpageMaker.createPage();
-
-    hydroMaxPowerScBuilderPageMaker hydroMaxPowerSBpageMaker(scenarioBuilderPanel,
-                                                                       pScenarioBuilderNotebook);
-    pageScBuilderHydroMaxPower = hydroMaxPowerSBpageMaker.createPage();
 
     windScBuilderPageMaker windSBpageMaker(scenarioBuilderPanel, pScenarioBuilderNotebook);
     pageScBuilderWind = windSBpageMaker.createPage();

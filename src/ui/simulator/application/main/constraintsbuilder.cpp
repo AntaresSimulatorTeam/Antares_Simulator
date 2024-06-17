@@ -87,7 +87,7 @@ protected:
         MemoryFlushLocker memoryLocker;
 
         // Constraint Generator
-        CBuilder exec(study);
+        CBuilder exec(*study);
 
         // assert(exec.loadFromINIFile(pFilename));
         exec.completeFromStudy();

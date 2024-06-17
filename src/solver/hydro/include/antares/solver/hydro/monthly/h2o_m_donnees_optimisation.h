@@ -46,9 +46,9 @@ typedef struct
     int NombreDeVariables;
     std::vector<double> CoutLineaire;
     std::vector<double> CoutLineaireBruite; /* Ajout de bruit pour forcer l'unicité des solutions */
-    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
-                           (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
-                           valeurs explicites des constantes): VARIABLE_FIXE                  ,
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
+                           suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
+                           utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
                             VARIABLE_BORNEE_DES_DEUX_COTES ,
                             VARIABLE_BORNEE_INFERIEUREMENT ,
                             VARIABLE_BORNEE_SUPERIEUREMENT ,
@@ -76,7 +76,7 @@ typedef struct
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
-    std::vector<double*>  AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    std::vector<double*> AdresseOuPlacerLaValeurDesVariablesOptimisees;
     /* Resultat */
     std::vector<double> X;
     /* En Entree ou en Sortie */
@@ -90,23 +90,28 @@ typedef struct
                                   pas de solution
                                                  */
 
-    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<double> CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
-                                             marginaux */
+    std::vector<int>
+      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int>
+      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<double>
+      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
+                                             les couts marginaux */
 } PROBLEME_LINEAIRE_PARTIE_VARIABLE;
 
 /* Les correspondances des variables */
 typedef struct
 {
-    std::vector<int> NumeroDeVariableVolume;                      /* Volumes */
-    std::vector<int> NumeroDeVariableTurbine;                     /* Turbines */
-    std::vector<int> NumeroDeVariableDepassementVolumeMax;        /* Depassement du volume max */
-    std::vector<int> NumeroDeVariableDepassementVolumeMin;        /* Depassement du volume min */
-    int NumeroDeLaVariableViolMaxVolumeMin;           // Depassement max du volume min
-    std::vector<int> NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
-    std::vector<int> NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
+    std::vector<int> NumeroDeVariableVolume;               /* Volumes */
+    std::vector<int> NumeroDeVariableTurbine;              /* Turbines */
+    std::vector<int> NumeroDeVariableDepassementVolumeMax; /* Depassement du volume max */
+    std::vector<int> NumeroDeVariableDepassementVolumeMin; /* Depassement du volume min */
+    int NumeroDeLaVariableViolMaxVolumeMin;                // Depassement max du volume min
+    std::vector<int>
+      NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
+    std::vector<int>
+      NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
     int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
 } CORRESPONDANCE_DES_VARIABLES;
 

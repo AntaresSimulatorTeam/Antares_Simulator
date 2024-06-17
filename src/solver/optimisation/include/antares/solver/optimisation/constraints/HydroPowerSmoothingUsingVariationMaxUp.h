@@ -25,7 +25,7 @@
 /*!
  * represent 'Hydraulic Power Smoothing Using Variation Max Up' constraint type
  */
-class HydroPowerSmoothingUsingVariationMaxUp : private ConstraintFactory
+class HydroPowerSmoothingUsingVariationMaxUp: private ConstraintFactory
 {
 public:
     using ConstraintFactory::ConstraintFactory;

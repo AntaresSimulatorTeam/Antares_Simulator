@@ -30,6 +30,7 @@ namespace Data
 namespace Solar
 {
 class Prepro;
+
 class Container
 {
 public:
@@ -66,10 +67,11 @@ public:
 public:
     //! Data for the pre-processor
     Data::Solar::Prepro* prepro;
+
+    TimeSeriesNumbers tsNumbers;
+
     /*! Data for time-series */
     TimeSeries series;
-
-    TimeSeries::numbers tsNumbers;
 
 }; // class Container
 

@@ -61,25 +61,25 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
                                                         int fileLevel,
                                                         int precision) const
 {
-    if (!(fileLevel & Category::id))
+    if (!(fileLevel & Category::FileLevel::id))
     {
         switch (precision)
         {
-            case Category::hourly:
-                internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
-                break;
-            case Category::daily:
-                internalExportAnnualValues<maxDaysInAYear, VCardT>(report, day, false);
-                break;
-            case Category::weekly:
-                internalExportAnnualValues<maxWeeksInAYear, VCardT>(report, week, false);
-                break;
-            case Category::monthly:
-                internalExportAnnualValues<maxMonths, VCardT>(report, month, false);
-                break;
-            case Category::annual:
-                internalExportAnnualValues<1, VCardT>(report, &year, true);
-                break;
+        case Category::hourly:
+            internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
+            break;
+        case Category::daily:
+            internalExportAnnualValues<maxDaysInAYear, VCardT>(report, day, false);
+            break;
+        case Category::weekly:
+            internalExportAnnualValues<maxWeeksInAYear, VCardT>(report, week, false);
+            break;
+        case Category::monthly:
+            internalExportAnnualValues<maxMonths, VCardT>(report, month, false);
+            break;
+        case Category::annual:
+            internalExportAnnualValues<1, VCardT>(report, &year, true);
+            break;
         }
     }
 }

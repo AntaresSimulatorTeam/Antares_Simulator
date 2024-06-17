@@ -32,11 +32,12 @@ struct ExchangeBalanceData
     std::vector<int>& NumeroDeContrainteDeSoldeDEchange;
 };
 
-class ExchangeBalance : private ConstraintFactory
+class ExchangeBalance: private ConstraintFactory
 {
 public:
-    ExchangeBalance(ConstraintBuilder& builder, ExchangeBalanceData& data) :
-     ConstraintFactory(builder), data(data)
+    ExchangeBalance(ConstraintBuilder& builder, ExchangeBalanceData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

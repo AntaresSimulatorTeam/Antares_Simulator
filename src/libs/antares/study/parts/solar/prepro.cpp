@@ -19,8 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/study/parts/solar/prepro.h"
+
+#include <yuni/yuni.h>
+
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -32,7 +34,8 @@ namespace Data
 {
 namespace Solar
 {
-Prepro::Prepro() : xcast(timeSeriesSolar)
+Prepro::Prepro():
+    xcast(timeSeriesSolar)
 {
 }
 

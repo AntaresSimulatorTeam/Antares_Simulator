@@ -20,10 +20,10 @@
 */
 
 #include "antares/utils/utils.h"
-#include <antares/logs/logs.h>
-
 
 #include <sstream>
+
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -33,15 +33,17 @@ void BeautifyName(YString& out, AnyString oldname)
 {
     out.clear();
     if (oldname.empty())
+    {
         return;
+    }
 
     oldname.trim(" \r\n\t");
     if (oldname.empty())
+    {
         return;
+    }
 
     out.reserve(oldname.size());
-
-
 
     auto end = oldname.utf8end();
     for (auto i = oldname.utf8begin(); i != end; ++i)
@@ -57,13 +59,17 @@ void BeautifyName(YString& out, AnyString oldname)
             out += c;
         }
         else
+        {
             out += ' ';
+        }
     }
 
     out.trim(" \t\r\n");
 
     while (std::string(out.c_str()).find("  ") != std::string::npos)
+    {
         out.replace("  ", " ");
+    }
 
     out.trim(" \t\r\n");
 }
@@ -74,6 +80,13 @@ void TransformNameIntoID(const AnyString& name, std::string& out)
     Yuni::String yuniOut;
     TransformNameIntoID(name, yuniOut);
     out = yuniOut;
+}
+
+std::string transformNameIntoID(const std::string& name)
+{
+    std::string out;
+    TransformNameIntoID(name, out);
+    return out;
 }
 
 void BeautifyName(std::string& out, const std::string& oldname)
@@ -101,7 +114,9 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
             pairs.push_back({begin, end});
         }
         else
+        {
             logs.warning() << "Error while parsing: " << token;
+        }
     }
 
     return pairs;

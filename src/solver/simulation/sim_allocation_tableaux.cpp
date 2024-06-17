@@ -20,9 +20,10 @@
 */
 
 #include <yuni/yuni.h>
+
 #include <antares/study/study.h>
-#include "antares/study/simulation.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
 
 using namespace Antares;
 
@@ -31,5 +32,7 @@ void SIM_AllocationTableaux(const Data::Study& study)
     transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
+    {
         transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
+    }
 }

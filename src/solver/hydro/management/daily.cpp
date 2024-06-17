@@ -19,26 +19,27 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <array>
+#include <cassert>
+#include <limits>
+#include <numeric>
+#include <sstream>
+
 #include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include <antares/study/area/scratchpad.h>
-#include <antares/utils/utils.h>
-#include <yuni/io/file.h>
 #include <yuni/io/directory.h>
-#include "antares/solver/hydro/management/management.h"
+#include <yuni/io/file.h>
+
 #include <antares/antares/fatal-error.h>
+#include <antares/study/area/scratchpad.h>
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
+#include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include <sstream>
-#include <cassert>
-#include <limits>
-#include "antares/solver/variable/state.h"
-#include <array>
-#include <numeric>
 
 using namespace Yuni;
 
@@ -49,20 +50,18 @@ namespace
 FatalError fatalError(const std::string& areaName, int year)
 {
     std::ostringstream msg;
-    msg << "Year : " << year + 1 << " - hydro: " << areaName
-        << " [daily] fatal error";
+    msg << "Year : " << year + 1 << " - hydro: " << areaName << " [daily] fatal error";
     return FatalError(msg.str());
 }
 
 FatalError solutionNotFound(const std::string& areaName, int year)
 {
     std::ostringstream msg;
-    msg << "Year : " << year + 1 << " - hydro: " << areaName
-        << " [daily] no solution found";
+    msg << "Year : " << year + 1 << " - hydro: " << areaName << " [daily] no solution found";
     return FatalError(msg.str());
 }
 
-}
+} // namespace
 
 namespace Antares
 {
@@ -70,6 +69,7 @@ enum
 {
     maxOPP = 32
 };
+
 enum
 {
     maxDailyTargetGen = 32
@@ -110,16 +110,16 @@ struct DebugData
               const MaxPowerType& maxE,
               const double* dailyTargetGen,
               const ReservoirLevelType& lowLevel,
-              double reservoirCapacity) :
-     pWriter(writer),
-     data(data),
-     ventilationResults(ventilationResults),
-     srcinflows(srcinflows),
-     maxP(maxP),
-     maxE(maxE),
-     dailyTargetGen(dailyTargetGen),
-     lowLevel(lowLevel),
-     reservoirCapacity(reservoirCapacity)
+              double reservoirCapacity):
+        pWriter(writer),
+        data(data),
+        ventilationResults(ventilationResults),
+        srcinflows(srcinflows),
+        maxP(maxP),
+        maxE(maxE),
+        dailyTargetGen(dailyTargetGen),
+        lowLevel(lowLevel),
+        reservoirCapacity(reservoirCapacity)
     {
         OVF.fill(0);
         DEV.fill(0);
@@ -183,7 +183,8 @@ struct DebugData
             uint dayMonth = 1;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                double turbines = ventilationResults.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
+                double turbines = ventilationResults.HydrauliqueModulableQuotidien[day]
+                                  / reservoirCapacity;
                 double niveauDeb = ventilationResults.NiveauxReservoirsDebutJours[day];
                 double niveauFin = ventilationResults.NiveauxReservoirsFinJours[day];
                 double apports = srcinflows[day] / reservoirCapacity;
@@ -217,12 +218,12 @@ struct DebugData
     }
 };
 
-inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                                            Data::Area& area,
-                                                            uint y,
-                                                            Antares::Data::Area::ScratchMap& scratchmap)
+inline void HydroManagement::prepareDailyOptimalGenerations(
+    Data::Area& area,
+    uint y,
+    Antares::Data::Area::ScratchMap& scratchmap)
 {
-    auto const srcinflows = area.hydro.series->storage.getColumn(y);
+    const auto srcinflows = area.hydro.series->storage.getColumn(y);
 
     auto& data = tmpDataByArea_[&area];
 
@@ -230,7 +231,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& meanMaxDailyGenPower = scratchpad.meanMaxDailyGenPower;
 
-    const uint tsIndex =  meanMaxDailyGenPower.getSeriesIndex(y);
+    const uint tsIndex = meanMaxDailyGenPower.getSeriesIndex(y);
 
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
@@ -242,11 +243,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
+    const auto& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
 
-    
-    auto const& maxP = meanMaxDailyGenPower[tsIndex];
-    auto const& maxE = dailyNbHoursAtGenPmax[0];
+    const auto& maxP = meanMaxDailyGenPower[tsIndex];
+    const auto& maxE = dailyNbHoursAtGenPmax[0];
 
     auto& ventilationResults = ventilationResults_[area.index];
 
@@ -279,7 +279,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             assert(dYear < 366);
 
             if (debugData)
+            {
                 debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
+            }
         }
 
         dayYear += daysPerMonth;
@@ -316,7 +318,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 {
                     auto dYear = day + dayYear;
                     if (data.DLE[dYear] > demandMax)
+                    {
                         demandMax = data.DLE[dYear];
+                    }
                 }
 
                 if (!Utils::isZero(demandMax))
@@ -328,7 +332,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     {
                         auto dYear = day + dayYear;
                         coeff += std::pow(data.DLE[dYear] / demandMax,
-                                area.hydro.interDailyBreakdown);
+                                          area.hydro.interDailyBreakdown);
                     }
                     coeff = data.MOG[realmonth] / coeff;
 
@@ -337,7 +341,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                         auto dYear = day + dayYear;
                         dailyTargetGen[dYear] = coeff
                                                 * std::pow(data.DLE[dYear] / demandMax,
-                                                              area.hydro.interDailyBreakdown);
+                                                           area.hydro.interDailyBreakdown);
                     }
                 }
                 else
@@ -346,7 +350,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     double coeff = data.MOG[realmonth] / daysPerMonth;
 
                     for (uint day = 0; day != daysPerMonth; ++day)
+                    {
                         dailyTargetGen[day + dayYear] = coeff;
+                    }
                 }
             }
 
@@ -401,7 +407,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 dayMonth = 0;
                 for (uint day = firstDay; day != endDay; ++day)
                 {
-                    ventilationResults.HydrauliqueModulableQuotidien[day] = problem->Turbine[dayMonth];
+                    ventilationResults.HydrauliqueModulableQuotidien[day] = problem
+                                                                              ->Turbine[dayMonth];
                     dayMonth++;
                 }
                 break;
@@ -452,13 +459,15 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             H2O2_J_apply_costs(h2o2_optim_costs, problem);
 
             if (debugData)
-                debugData->previousMonthWaste[realmonth]
-                  = wasteFromPreviousMonth / reservoirCapacity;
+            {
+                debugData->previousMonthWaste[realmonth] = wasteFromPreviousMonth
+                                                           / reservoirCapacity;
+            }
 
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
 
-            problem.TurbineDuMois
-              = (data.MOG[realmonth] + wasteFromPreviousMonth) / reservoirCapacity;
+            problem.TurbineDuMois = (data.MOG[realmonth] + wasteFromPreviousMonth)
+                                    / reservoirCapacity;
             problem.NiveauInitialDuMois = monthInitialLevel;
             problem.reservoirCapacity = reservoirCapacity;
 
@@ -468,9 +477,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
                 problem.TurbineMin[dayMonth] = data.dailyMinGen[day] / reservoirCapacity;
 
-                problem.TurbineCible[dayMonth]
-                  = (dailyTargetGen[day] + wasteFromPreviousMonth / daysPerMonth)
-                    / reservoirCapacity;
+                problem.TurbineCible[dayMonth] = (dailyTargetGen[day]
+                                                  + wasteFromPreviousMonth / daysPerMonth)
+                                                 / reservoirCapacity;
 
                 problem.niveauBas[dayMonth] = lowLevel[(day + 1) % 365];
                 problem.apports[dayMonth] = srcinflows[day] / reservoirCapacity;
@@ -495,10 +504,12 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 dayMonth = 0;
                 for (uint day = firstDay; day != endDay; ++day)
                 {
-                    ventilationResults.HydrauliqueModulableQuotidien[day]
-                      = problem.Turbine[dayMonth] * reservoirCapacity;
+                    ventilationResults.HydrauliqueModulableQuotidien[day] = problem
+                                                                              .Turbine[dayMonth]
+                                                                            * reservoirCapacity;
 
-                    ventilationResults.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
+                    ventilationResults.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours
+                                                                          [dayMonth];
 
                     if (debugData)
                     {
@@ -512,8 +523,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
                 ventilationResults.NiveauxReservoirsDebutJours[firstDay] = monthInitialLevel;
                 for (uint day = firstDay + 1; day != endDay; ++day)
+                {
                     ventilationResults.NiveauxReservoirsDebutJours[day]
                       = ventilationResults.NiveauxReservoirsFinJours[day - 1];
+                }
 
                 monthInitialLevel = problem.niveauxFinJours[dayMonth - 1];
 
@@ -531,10 +544,6 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             H2O2_J_Free(problem);
         }
 
-        uint firstDaySimu = parameters_.simulationDays.first;
-        state.problemeHebdo->previousSimulationFinalLevel[area.index]
-          = ventilationResults.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
-
         if (debugData)
         {
             debugData->writeDailyDebugData(calendar_, initReservoirLvlMonth, y, area.name);
@@ -542,13 +551,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     }
 }
 
-void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                                     uint y,
+void HydroManagement::prepareDailyOptimalGenerations(uint y,
                                                      Antares::Data::Area::ScratchMap& scratchmap)
 {
-    areas_.each(
-      [&](Data::Area& area) {
-          prepareDailyOptimalGenerations(state, area, y, scratchmap);
-          });
+    areas_.each([&](Data::Area& area)
+                { prepareDailyOptimalGenerations(area, y, scratchmap); });
 }
 } // namespace Antares

@@ -21,8 +21,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 
-#include <antares/series/series.h>
 #include <yuni/core/noncopyable.h>
+
+#include <antares/series/series.h>
 
 namespace Antares
 {
@@ -32,7 +33,8 @@ namespace Load
 {
 
 class Prepro;
-class Container final : private Yuni::NonCopyable<Container>
+
+class Container final: private Yuni::NonCopyable<Container>
 {
 public:
     //! \name Constructor & Destructor
@@ -68,10 +70,11 @@ public:
 public:
     //! Data for the pre-processor
     Data::Load::Prepro* prepro;
+
+    TimeSeriesNumbers tsNumbers;
+
     /*! Data for time-series */
     TimeSeries series;
-
-    TimeSeries::numbers tsNumbers;
 
 }; // class Container
 

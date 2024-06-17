@@ -27,16 +27,13 @@ namespace Solver
 {
 namespace Variable
 {
-enum Constant
-{
-    maxHoursInAYear = 8785,
-    maxDaysInAYear = 7 * 53 + 1, // 366,
-    maxWeeksInAYear = 53,
-    maxHoursInADay = 24,
-    maxMonths = 12,
-    maxDaysInAWeek = 7,
-    maxHoursInAWeek = 24 * 7, // 168,
-};
+constexpr unsigned int maxHoursInAYear = 8785;
+constexpr unsigned int maxDaysInAYear = 7 * 53 + 1; // 366,
+constexpr unsigned int maxWeeksInAYear = 53;
+constexpr unsigned int maxHoursInADay = 24;
+constexpr unsigned int maxMonths = 12;
+constexpr unsigned int maxDaysInAWeek = 7;
+constexpr unsigned int maxHoursInAWeek = 24 * 7; // 168
 
 template<int I>
 struct PrecisionToPrintfFormat
@@ -46,6 +43,7 @@ struct PrecisionToPrintfFormat
         return "%.6f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<0>
 {
@@ -54,6 +52,7 @@ struct PrecisionToPrintfFormat<0>
         return "%.0f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<1>
 {
@@ -62,6 +61,7 @@ struct PrecisionToPrintfFormat<1>
         return "%.1f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<2>
 {
@@ -70,6 +70,7 @@ struct PrecisionToPrintfFormat<2>
         return "%.2f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<3>
 {
@@ -78,6 +79,7 @@ struct PrecisionToPrintfFormat<3>
         return "%.3f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<4>
 {
@@ -86,6 +88,7 @@ struct PrecisionToPrintfFormat<4>
         return "%.4f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<5>
 {

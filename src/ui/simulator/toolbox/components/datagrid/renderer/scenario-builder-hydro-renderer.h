@@ -39,16 +39,6 @@ public:
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;
 }; // class hydroScBuilderRenderer
-
-class hydroMaxPowerScBuilderRenderer : public ScBuilderRendererAreasAsRows
-{
-public:
-    hydroMaxPowerScBuilderRenderer() = default;
-
-    bool cellValue(int x, int y, const Yuni::String& value);
-    double cellNumericValue(int x, int y) const;
-}; // class hydroMaxPowerScBuilderRenderer
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

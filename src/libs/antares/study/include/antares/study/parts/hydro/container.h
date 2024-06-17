@@ -22,10 +22,10 @@
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
 #include <optional>
-#include "prepro.h"
-#include "series.h"
 #include "../../fwd.h"
 #include "allocation.h"
+#include "prepro.h"
+#include "series.h"
 
 namespace Antares::Data
 {
@@ -142,9 +142,6 @@ public:
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
 
-    // Useful for solver RAM estimation
-    bool hydroModulable;
-
     //! Daily reservoir level ({min,avg,max}x365)
     Matrix<double> reservoirLevel;
 
@@ -159,7 +156,8 @@ public:
 
     //! Data for time-series
     DataSeriesHydro* series;
-    // TODO : following time series could be hosted by the series data member above (of type DataSeriesHydro),
+    // TODO : following time series could be hosted by the series data member above (of type
+    // DataSeriesHydro),
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
@@ -182,7 +180,5 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
                            int modType);
 
 } // namespace Antares::Data
-
-#include <antares/study/area/area.h>
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__ */

@@ -72,7 +72,6 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 
-		include/antares/solver/optimisation/opt_period_string_generator_base.h
 		include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
 
@@ -192,12 +191,14 @@ else ()
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
 target_link_libraries(model_antares
-        PUBLIC
-        utils
-        sirius_solver
-        infeasible_problem_analysis
-        antares-solver-simulation
-        Antares::benchmarking
+		PUBLIC
+		Antares::solverUtils
+		sirius_solver
+		antares-solver-simulation
+		Antares::benchmarking
+        Antares::optimization-options
+		PRIVATE
+		infeasible_problem_analysis
 )
 
 target_include_directories(model_antares

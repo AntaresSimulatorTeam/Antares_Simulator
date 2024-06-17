@@ -21,15 +21,14 @@
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
-#include "antares/solver/variable/variable.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/opt_time_writer.h"
+#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/adequacy/all.h"
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/state.h"
-#include "antares/solver/simulation/common-eco-adq.h"
-
-#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
-#include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/solver/simulation/opt_time_writer.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Simulation
 {

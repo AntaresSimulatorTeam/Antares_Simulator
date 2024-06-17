@@ -19,18 +19,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <algorithm>
 #include "antares/study/scenario-builder/rules.h"
-#include "antares/study/study.h"
+
+#include <algorithm>
+
 #include <antares/logs/logs.h>
-#include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/scenario-builder/TSnumberData.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 namespace Antares::Data::ScenarioBuilder
 {
-Rules::Rules(Study& study) : study_(study), pAreaCount(0)
+Rules::Rules(Study& study):
+    study_(study),
+    pAreaCount(0)
 {
 }
 
@@ -45,8 +49,6 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
         solar.saveToINIFile(study_, file);
         // hydro
         hydro.saveToINIFile(study_, file);
-        // hydroMaxPower
-        hydroMaxPower.saveToINIFile(study_, file);
         // wind
         wind.saveToINIFile(study_, file);
         // Thermal clusters, renewable clusters, links NTS : each area
@@ -72,7 +74,6 @@ bool Rules::reset()
     load.reset(study_);
     solar.reset(study_);
     hydro.reset(study_);
-    hydroMaxPower.reset(study_);
     wind.reset(study_);
 
     // Thermal
@@ -130,11 +131,15 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     const ClusterName& clustername = splitKey[3];
 
     if (clustername.empty())
+    {
         return false;
+    }
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     if (const ThermalCluster* cluster = area->thermal.list.findInAll(clustername); cluster)
     {
@@ -146,8 +151,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername;
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -162,14 +166,20 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     const ClusterName& clustername = splitKey[3];
 
     if (!study_.parameters.renewableGeneration.isClusters())
+    {
         return false;
+    }
 
     if (clustername.empty())
+    {
         return false;
+    }
 
     Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     const RenewableCluster* cluster = area->renewable.list.findInAll(clustername);
 
@@ -183,8 +193,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId
-              = (area->id).to<std::string>() + "." + clustername;
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername;
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -199,7 +208,9 @@ bool Rules::readLoad(const AreaName::Vector& splitKey, String value, bool update
 
     const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     uint val = fromStringToTSnumber(value);
     load.setTSnumber(area->index, year, val);
@@ -213,7 +224,9 @@ bool Rules::readWind(const AreaName::Vector& splitKey, String value, bool update
 
     const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     uint val = fromStringToTSnumber(value);
     wind.setTSnumber(area->index, year, val);
@@ -227,24 +240,12 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
 
     const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     uint val = fromStringToTSnumber(value);
     hydro.setTSnumber(area->index, year, val);
-    return true;
-}
-
-bool Rules::readHydroMaxPower(const AreaName::Vector& splitKey, String tsNumberAsString, bool updaterMode)
-{
-    const uint year = splitKey[2].to<uint>();
-    const AreaName& areaname = splitKey[1];
-
-    const Data::Area* area = getArea(areaname, updaterMode);
-    if (!area)
-        return false;
-
-    uint tsNumber = fromStringToTSnumber(tsNumberAsString);
-    hydroMaxPower.setTSnumber(area->index, year, tsNumber);
     return true;
 }
 
@@ -255,7 +256,9 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updat
 
     const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     uint val = fromStringToTSnumber(value);
     solar.setTSnumber(area->index, year, val);
@@ -269,7 +272,9 @@ bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, String valu
 
     const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     double val = fromStringToHydroLevel(value, 1.);
     hydroInitialLevels.setTSnumber(area->index, year, val);
@@ -312,15 +317,21 @@ bool Rules::readLink(const AreaName::Vector& splitKey, String value, bool update
 
     Data::Area* fromArea = getArea(fromAreaName, updaterMode);
     if (!fromArea)
+    {
         return false;
+    }
 
     const Data::Area* toArea = getArea(toAreaName, updaterMode);
     if (!toArea)
+    {
         return false;
+    }
 
     AreaLink* link = getLink(fromAreaName, toAreaName, updaterMode);
     if (!link)
+    {
         return false;
+    }
 
     uint val = fromStringToTSnumber(value);
     fromArea = link->from;
@@ -333,18 +344,22 @@ bool Rules::checkGroupExists(const std::string& groupName) const
     const auto& groups = study_.bindingConstraintsGroups;
     if (!groups[groupName])
     {
-        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName << "' does not exist";
+        logs.warning() << "[scenario-builder] The binding constraint group '" << groupName
+                       << "' does not exist";
         return false;
     }
     return true;
 }
 
-bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
+bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, String value)
+{
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
 
     if (!checkGroupExists(group_name))
+    {
         return false;
+    }
 
     auto tsNumber = fromStringToTSnumber(value);
     binding_constraints.setTSnumber(group_name, year, tsNumber);
@@ -354,91 +369,111 @@ bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String valu
 bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     if (splitKey.size() <= 2)
+    {
         return false;
+    }
 
     const AreaName& kind_of_scenario = splitKey[0]; // load, thermal, hydro, ..., hydro levels, ...
     if (kind_of_scenario.size() > 3)
+    {
         return false;
+    }
 
     if (kind_of_scenario == "t")
+    {
         return readThermalCluster(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "r")
+    {
         return readRenewableCluster(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "l")
+    {
         return readLoad(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "w")
+    {
         return readWind(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "h")
+    {
         return readHydro(splitKey, value, updaterMode);
-    else if (kind_of_scenario == "hgp")
-        return readHydroMaxPower(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "s")
+    {
         return readSolar(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "hl")
         return readInitialHydroLevels(splitKey, value, updaterMode);
     else if (kind_of_scenario == "hfl")
         return readFinalHydroLevels(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "ntc")
+    {
         return readLink(splitKey, value, updaterMode);
+    }
     else if (kind_of_scenario == "bc")
+    {
         return readBindingConstraints(splitKey, value);
+    }
     return false;
 }
 
-bool Rules::apply()
-{
-    bool returned_status = true;
-    if (pAreaCount)
+    bool Rules::apply()
     {
-        returned_status = load.apply(study_) && returned_status;
-        returned_status = solar.apply(study_) && returned_status;
-        returned_status = hydro.apply(study_) && returned_status;
-        returned_status = hydroMaxPower.apply(study_) && returned_status;
-        returned_status = wind.apply(study_) && returned_status;
-        for (uint i = 0; i != pAreaCount; ++i)
+        bool returned_status = true;
+        if (pAreaCount)
         {
-            returned_status = thermal[i].apply(study_) && returned_status;
-            returned_status = renewable[i].apply(study_) && returned_status;
-            returned_status = linksNTC[i].apply(study_) && returned_status;
+            returned_status = load.apply(study_) && returned_status;
+            returned_status = solar.apply(study_) && returned_status;
+            returned_status = hydro.apply(study_) && returned_status;
+            returned_status = wind.apply(study_) && returned_status;
+            for (uint i = 0; i != pAreaCount; ++i)
+            {
+                returned_status = thermal[i].apply(study_) && returned_status;
+                returned_status = renewable[i].apply(study_) && returned_status;
+                returned_status = linksNTC[i].apply(study_) && returned_status;
+            }
+            returned_status = hydroLevels.apply(study_) && returned_status;
+            returned_status = binding_constraints.apply(study_) && returned_status;
         }
         returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;
         returned_status = binding_constraints.apply(study_) && returned_status;
     }
-    else
-        returned_status = false;
-    return returned_status;
-}
 
-void Rules::sendWarningsForDisabledClusters()
-{
-    for (auto it = disabledClustersOnRuleActive.begin(); it != disabledClustersOnRuleActive.end();
-         it++)
+    void Rules::sendWarningsForDisabledClusters()
     {
-        std::vector<uint>& scenariiForCurrentCluster = it->second;
-        int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
-        std::vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
+        for (auto it = disabledClustersOnRuleActive.begin();
+             it != disabledClustersOnRuleActive.end();
+             it++)
+        {
+            std::vector<uint>& scenariiForCurrentCluster = it->second;
+            int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
+            std::vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
 
-        // Listing the 10 first years for which the current cluster was given a specific TS number
-        // in the scenario builder.
-        // Note that this list of years size could be less then 10, but are at least 1.
-        std::string listYears = std::to_string(*itv);
-        itv++;
-        for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10;
-             itv++, year_count++)
-            listYears += ", " + std::to_string(*itv);
+            // Listing the 10 first years for which the current cluster was given a specific TS
+            // number in the scenario builder. Note that this list of years size could be less then
+            // 10, but are at least 1.
+            std::string listYears = std::to_string(*itv);
+            itv++;
+            for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10;
+                 itv++, year_count++)
+            {
+                listYears += ", " + std::to_string(*itv);
+            }
 
-        // Adding last scenario to the list
-        if (nbScenariiForCluster > 10)
-            listYears += ", ..., " + std::to_string(scenariiForCurrentCluster.back());
+            // Adding last scenario to the list
+            if (nbScenariiForCluster > 10)
+            {
+                listYears += ", ..., " + std::to_string(scenariiForCurrentCluster.back());
+            }
 
-        logs.warning()
-          << "Cluster " << it->first
-          << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
-        logs.warning() << listYears;
+            logs.warning() << "Cluster " << it->first
+                           << " not found: it may be disabled, though given TS numbers in sc "
+                              "builder for year(s) :";
+            logs.warning() << listYears;
+        }
     }
-}
 
 } // namespace Antares::Data::ScenarioBuilder
-
-

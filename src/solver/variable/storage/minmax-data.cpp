@@ -19,10 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "antares/solver/variable/storage/intermediate.h"
 #include "antares/solver/variable/storage/minmax-data.h"
+
 #include <cfloat>
+
+#include <yuni/yuni.h>
+
+#include "antares/solver/variable/storage/intermediate.h"
 
 using namespace Yuni;
 
@@ -40,7 +43,7 @@ struct ArrayInitializer
         for (uint i = 0; i != Size; ++i)
         {
             MinMaxData::Data& data = array[i];
-            data.value = DBL_MAX;             // +inf
+            data.value = DBL_MAX;         // +inf
             data.indice = (uint32_t)(-1); // invalid indice
         }
     }
@@ -50,7 +53,7 @@ struct ArrayInitializer
         for (uint i = 0; i != Size; ++i)
         {
             MinMaxData::Data& data = array[i];
-            data.value = DBL_MAX;             // +inf
+            data.value = DBL_MAX;         // +inf
             data.indice = (uint32_t)(-1); // invalid indice
         }
     }
@@ -68,7 +71,7 @@ struct ArrayInitializer<Size, false>
             // you can hold in a double, but the smallest positive number you can
             // hold in a double
             MinMaxData::Data& data = array[i];
-            data.value = -DBL_MAX;            // -inf
+            data.value = -DBL_MAX;        // -inf
             data.indice = (uint32_t)(-1); // invalid indice
         }
     }
@@ -81,7 +84,7 @@ struct ArrayInitializer<Size, false>
             // you can hold in a double, but the smallest positive number you can
             // hold in a double
             MinMaxData::Data& data = array[i];
-            data.value = -DBL_MAX;            // -inf
+            data.value = -DBL_MAX;        // -inf
             data.indice = (uint32_t)(-1); // invalid indice
         }
     }
@@ -159,7 +162,8 @@ struct MergeArray<0, Size>
 
 } // anonymous namespace
 
-MinMaxData::MinMaxData() : hourly(nullptr)
+MinMaxData::MinMaxData():
+    hourly(nullptr)
 {
 }
 
@@ -210,7 +214,3 @@ void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
-
-
-
-
