@@ -611,7 +611,7 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
     // ForEach area
     areas.each(
-      [&](Data::Area& area)
+      [this](Data::Area& area)
       {
           if (not parameters.geographicTrimming)
           {
@@ -789,7 +789,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
                     buffer << "@ " << i->first << "\r\n";
                 }
             }
-            areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
+            areas.each([&buffer](const Data::Area& area) { buffer << area.name << "\r\n"; });
             resultWriter.addEntryFromBuffer(path.c_str(), buffer);
         }
 
@@ -880,7 +880,7 @@ bool Study::areaDelete(Area* area)
     // and the scenario builder data *before* reloading uiinfo.
     {
         // Updating all hydro allocation
-        areas.each([&](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
+        areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
 
         // We __must__ update the scenario builder data
         // We may delete an area and re-create a new one with the same
@@ -947,7 +947,7 @@ void Study::areaDelete(Area::Vector& arealist)
                             << area.name;
 
                 // Updating all hydro allocation
-                areas.each([&](Data::Area& areait) { areait.hydro.allocation.remove(area.id); });
+                areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area.id); });
 
                 // Remove all binding constraints attached to the area
                 bindingConstraints.remove(*i);
@@ -1046,7 +1046,8 @@ bool Study::areaRename(Area* area, AreaName newName)
     logs.info() << "renaming area " << area->name << " into " << newName;
 
     // Updating all hydro allocation
-    areas.each([&](Data::Area& areait) { areait.hydro.allocation.rename(oldid, newid); });
+    areas.each([&oldid, &newid](Data::Area& areait)
+        { areait.hydro.allocation.rename(oldid, newid); });
 
     ScenarioBuilderUpdater updaterSB(*this);
     bool ret = true;
@@ -1179,34 +1180,33 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
 void Study::destroyAllLoadTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.load.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.load.prepro); });
 }
 
 void Study::destroyAllSolarTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.solar.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.solar.prepro); });
 }
 
 void Study::destroyAllHydroTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
 }
 
 void Study::destroyAllWindTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.wind.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.wind.prepro); });
 }
 
 void Study::destroyAllThermalTSGeneratorData()
 {
-    areas.each(
-      [&](Data::Area& area)
-      {
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              FreeAndNil(cluster->prepro);
-          }
-      });
+    areas.each([](Data::Area& area)
+    {
+        for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
+        {
+            FreeAndNil(cluster->prepro);
+        }
+    });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
@@ -1447,8 +1447,9 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String areaname;
 
         areas.each(
-          [&](const Area& area)
+          [&output, &linkname, &areaname](const Area& area)
           {
+
               if (areaname.size() < area.id.size())
               {
                   areaname = area.id;
@@ -1459,19 +1460,12 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
               {
                   auto& link = *(i->second);
                   uint len = link.from->id.size() + link.with->id.size();
-                  len += output ? 3 : 1;
+                  len += 3;
                   if (len > linkname.size())
                   {
                       linkname.clear();
                       linkname << i->second->from->id;
-                      if (output)
-                      {
-                          linkname << " - "; // 3
-                      }
-                      else
-                      {
-                          linkname << SEP;
-                      }
+                      linkname << " - "; // 3
                       linkname << i->second->with->id;
                   }
               }
@@ -1527,7 +1521,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         // or even constraints
 
         areas.each(
-          [&](const Area& area)
+          [&areaname, &clustername](const Area& area)
           {
               if (areaname.size() < area.id.size())
               {
