@@ -86,7 +86,7 @@ private:
     /*!
     ** \brief Regenerate time-series if required for a given year
     */
-    void regenerateTimeSeries(uint year, bool include_hydro = true);
+    void regenerateTimeSeries(uint year);
 
     /*!
     ** \brief Builds sets of parallel years

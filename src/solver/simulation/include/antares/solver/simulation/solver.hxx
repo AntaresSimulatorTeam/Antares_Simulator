@@ -434,7 +434,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 }
 
 template<class ImplementationType>
-void ISimulation<ImplementationType>::regenerateTimeSeries(uint year, bool include_hydro)
+void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
 {
     // A preprocessor can be launched for several reasons:
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
