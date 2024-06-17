@@ -66,7 +66,6 @@ public:
     HydroManagement(const Data::AreaList& areas,
                     const Data::Parameters& params,
                     const Date::Calendar& calendar,
-                    unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
     //! Perform the hydro ventilation

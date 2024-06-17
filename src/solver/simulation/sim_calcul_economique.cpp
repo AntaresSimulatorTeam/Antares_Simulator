@@ -71,7 +71,7 @@ static void importShortTermStorages(
 
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     int NombreDePasDeTemps,
+                                     unsigned int NombreDePasDeTemps,
                                      uint numspace)
 {
     int NombrePaliers;
