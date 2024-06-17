@@ -429,6 +429,11 @@ bool PartHydro::checkProperties(Study& study)
             area.hydro.leewayUpperBound = 0.;
         }
 
+        if (area.hydro.leewayLowerBound > area.hydro.leewayUpperBound)
+        {
+              logs.error() << area.id << ": Leeway lower bound greater than leeway upper bound.";
+        }
+
         if (area.hydro.pumpingEfficiency < 0)
         {
             logs.error() << area.id << ": Invalid pumping efficiency";
