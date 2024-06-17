@@ -47,7 +47,12 @@ set(SRC_SIMULATION
 		include/antares/solver/simulation/hydro-final-reservoir-level-functions.h
 		hydro-final-reservoir-level-functions.cpp
 		TimeSeriesNumbersWriter.cpp
-		include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h)
+		include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
+		economy_mode.cpp
+		adequacy_mode.cpp
+		include/antares/solver/simulation/economy_mode.h
+		include/antares/solver/simulation/adequacy_mode.h
+)
 source_group("simulation" FILES ${SRC_SIMULATION})
 
 #
