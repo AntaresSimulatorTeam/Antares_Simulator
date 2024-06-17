@@ -213,9 +213,9 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
     else
     {
-        simulationDaysPerMonth[(uint)ca.month] = study.calendar.months[(uint)ca.month].days
+        simulationDaysPerMonth[ca.month] = study.calendar.months[ca.month].days
                                                  - ca.dayMonth;
-        simulationDaysPerMonth[(uint)cb.month] = cb.dayMonth + 1;
+        simulationDaysPerMonth[cb.month] = cb.dayMonth + 1;
         for (uint i = ca.month + 1; i < cb.month; ++i)
         {
             simulationDaysPerMonth[i] = study.calendar.months[i].days;
@@ -270,9 +270,9 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     thermalTSRefresh = globalThermalTSgeneration;
 
     study.areas.each(
-      [this, globalThermalTSgeneration](Data::Area& area)
+      [this, globalThermalTSgeneration](const Data::Area& area)
       {
-          for (auto& c: area.thermal.list.each_enabled_and_not_mustrun())
+          for (const auto& c: area.thermal.list.each_enabled_and_not_mustrun())
           {
               thermalTSRefresh = thermalTSRefresh || c->doWeGenerateTS(globalThermalTSgeneration);
           }
