@@ -465,12 +465,6 @@ public:
 
     struct
     {
-        //! Initial reservoir levels
-        InitialReservoirLevels iniLevels;
-    } initialReservoirLevels;
-
-    struct
-    {
         //! Hydro heuristic policy
         HydroHeuristicPolicy hhPolicy;
     } hydroHeuristicPolicy;
@@ -480,11 +474,6 @@ public:
         //! Hydro Pricing Mode
         HydroPricingMode hpMode;
     } hydroPricing;
-
-    // In case of hydro hot start and MC years simultaneous run
-    // ... Answers the question : do all sets of simultaneous years have the same size ?
-    //     (obvious if the parallel mode is not required : answer is yes).
-    bool allSetsHaveSameSize;
 
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;

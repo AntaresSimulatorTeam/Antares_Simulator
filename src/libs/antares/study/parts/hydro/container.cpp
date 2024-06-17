@@ -938,10 +938,9 @@ bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
     return ret;
 }
 
-void getWaterValue(const double& level /* format : in % of reservoir capacity */,
+double getWaterValue(const double& level /* format : in % of reservoir capacity */,
                    const Matrix<double>& waterValues,
-                   const uint day,
-                   double& waterValueToReturn)
+                   const uint day)
 {
     assert((level >= 0. && level <= 100.) && "getWaterValue function : invalid level");
     double levelUp = ceil(level);
@@ -949,13 +948,10 @@ void getWaterValue(const double& level /* format : in % of reservoir capacity */
 
     if ((int)(levelUp) == (int)(levelDown))
     {
-        waterValueToReturn = waterValues[(int)(levelUp)][day];
+        return waterValues[(int)(levelUp)][day];
     }
-    else
-    {
-        waterValueToReturn = waterValues[(int)(levelUp)][day] * (level - levelDown)
-                             + waterValues[(int)(levelDown)][day] * (levelUp - level);
-    }
+    return waterValues[(int)(levelUp)][day] * (level - levelDown)
+            + waterValues[(int)(levelDown)][day] * (levelUp - level);
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,

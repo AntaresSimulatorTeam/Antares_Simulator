@@ -77,7 +77,6 @@ public:
                         study.calendar,
                         resultWriter)
     {
-        hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
         scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
@@ -97,7 +96,6 @@ private:
     Data::Study& study;
     Variable::State& state;
     bool yearByYear;
-    bool hydroHotStart;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
@@ -152,14 +150,7 @@ public:
             double* randomReservoirLevel = nullptr;
 
             // 1 - Applying random levels for current year
-            if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-            {
-                randomReservoirLevel = state.problemeHebdo->previousYearFinalLevels.data();
-            }
-            else
-            {
-                randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
-            }
+            randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
             // removed
@@ -265,8 +256,6 @@ inline ISimulation<ImplementationType>::ISimulation(
     {
         pYearByYear = false;
     }
-
-    pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
 }
 
 template<class ImplementationType>
@@ -765,34 +754,12 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
                   }
               }
 
-              if (pHydroHotStart)
+              // Current area's hydro starting (or initial) level computation
+              // (no matter if the year is performed or not, we always draw a random initial
+              // reservoir level to ensure the same results)
+              if (isPerformed)
               {
-                  if (!isPerformed || !area.hydro.reservoirManagement)
-                  {
-                      // This initial level should be unused, so -1, as impossible value, is
-                      // suitable.
-                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = -1.;
-                      areaIndex++;
-                      return; // Skipping the current area
-                  }
-
-                  if (!pFirstSetParallelWithAPerformedYearWasRun)
-                  {
-                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
-                  }
-                  // Else : means the start levels (multiple areas are affected) of a year are
-                  // retrieved from a previous year and
-                  //		  these levels are updated inside the year job (see year job).
-              }
-              else
-              {
-                  // Current area's hydro starting (or initial) level computation
-                  // (no matter if the year is performed or not, we always draw a random initial
-                  // reservoir level to ensure the same results)
-                  if (isPerformed)
-                  {
-                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
-                  }
+                  randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
               }
 
               areaIndex++;
