@@ -418,7 +418,7 @@ bool Study::reloadXCastData()
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
     bool ret = true;
     areas.each(
-      [&](Data::Area& area)
+      [this, &ret](Data::Area& area)
       {
           assert(area.load.prepro);
           assert(area.solar.prepro);

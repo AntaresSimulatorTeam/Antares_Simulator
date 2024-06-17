@@ -1325,14 +1325,12 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each(
-      [&](Data::Area& area)
-      {
-          if (!area.load.prepro)
-          {
-              area.load.prepro = new Antares::Data::Load::Prepro();
-          }
-      });
+    l->each([](Data::Area& area) {
+        if (!area.load.prepro)
+        {
+            area.load.prepro = new Antares::Data::Load::Prepro();
+        }
+    });
 }
 
 void AreaListEnsureDataSolarPrepro(AreaList* l)

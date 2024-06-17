@@ -54,7 +54,7 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     }
 
     value.words(" ,;\t\r\n",
-                [&](const AnyString& element) -> bool
+                [&v](const AnyString& element) -> bool
                 {
                     ShortString16 word(element);
                     word.toLower();
