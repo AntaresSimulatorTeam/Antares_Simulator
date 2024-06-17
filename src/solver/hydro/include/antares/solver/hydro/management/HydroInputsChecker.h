@@ -32,7 +32,6 @@ class HydroInputsChecker
 public:
     explicit HydroInputsChecker(Antares::Data::Study& study);
     void Execute(uint year);
-    void Refresh(bool);
 
 private:
     Data::AreaList& areas_;

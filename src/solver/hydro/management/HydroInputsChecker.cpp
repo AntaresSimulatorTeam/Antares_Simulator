@@ -56,16 +56,11 @@ void HydroInputsChecker::Execute(uint year)
         prepareInflows_.Run(year);
         minGenerationScaling_.Run(year);
 
-        if (!refresh_ && !checksOnGenerationPowerBounds(year))
+        if (!checksOnGenerationPowerBounds(year))
         {
             throw FatalError("hydro inputs checks: invalid minimum generation");
         }
     }
-}
-
-void HydroInputsChecker::Refresh(bool refresh)
-{
-    refresh_ = refresh;
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year) const

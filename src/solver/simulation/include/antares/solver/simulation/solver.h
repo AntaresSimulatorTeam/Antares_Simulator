@@ -88,7 +88,6 @@ private:
     */
     void regenerateTimeSeries(uint year, bool include_hydro = true);
 
-    void regenerateHydroTimeSeries(uint year);
     /*!
     ** \brief Builds sets of parallel years
     **

@@ -434,17 +434,6 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 }
 
 template<class ImplementationType>
-void ISimulation<ImplementationType>::regenerateHydroTimeSeries(uint year)
-{
-    using namespace TSGenerator;
-    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
-    {
-        pDurationCollector("tsgen_hydro") << [year, this]
-        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
-    }
-}
-
-template<class ImplementationType>
 void ISimulation<ImplementationType>::regenerateTimeSeries(uint year, bool include_hydro)
 {
     // A preprocessor can be launched for several reasons:
@@ -471,9 +460,10 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year, bool inclu
           << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
     }
     // Hydro
-    if (include_hydro)
+    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        regenerateHydroTimeSeries(year);
+        pDurationCollector("tsgen_hydro") << [year, this]
+        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
     }
 
     // Thermal
@@ -1008,8 +998,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     {
         if (!batch.regenerateTS)
         {
-            hydroInputsChecker.Refresh(!batch.regenerateTS);
-
             for (auto year: batch.yearsIndices)
             {
                 hydroInputsChecker.Execute(year);
@@ -1026,7 +1014,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         if (batch.regenerateTS)
         {
             regenerateTimeSeries(batch.yearForTSgeneration);
-            hydroInputsChecker.Refresh(batch.regenerateTS);
         }
         computeRandomNumbers(randomForParallelYears,
                              batch.yearsIndices,
