@@ -174,16 +174,15 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea,
     {
         if (!ini.empty())
         {
-            AreaName areaname;
             ini.each(
-              [&](const IniFile::Section& section)
+              [this](const IniFile::Section& section)
               {
                   for (auto* p = section.firstProperty; p; p = p->next)
                   {
                       double coeff = p->value.to<double>();
                       if (!Utils::isZero(coeff))
                       {
-                          areaname = p->key;
+                          AreaName areaname = p->key;
                           areaname.toLower();
                           pValues[areaname] = coeff;
                       }
