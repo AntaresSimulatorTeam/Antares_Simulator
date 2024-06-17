@@ -103,7 +103,7 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
     uint indx = 0;
 
     study.areas.each(
-      [&](Data::Area& area)
+      [&indx, &r](Data::Area& area)
       {
           area.buildLinksIndexes();
 
@@ -441,8 +441,7 @@ void StudyRangeLimits::checkIntegrity() const
 
 void StudyRuntimeInfos::disableAllFilters(Study& study)
 {
-    study.areas.each(
-      [&](Data::Area& area)
+    study.areas.each([](Data::Area& area)
       {
           area.filterSynthesis = filterAll;
           area.filterYearByYear = filterAll;

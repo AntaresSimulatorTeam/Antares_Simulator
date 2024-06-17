@@ -94,9 +94,8 @@ bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
 
 void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int nb_years)
 {
-    std::for_each(groups_.begin(),
-                  groups_.end(),
-                  [&](auto& group) { group->timeseriesNumbers.reset(nb_years); });
+    std::ranges::for_each(groups_, [&nb_years](auto& group)
+        { group->timeseriesNumbers.reset(nb_years); });
 }
 
 BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const
