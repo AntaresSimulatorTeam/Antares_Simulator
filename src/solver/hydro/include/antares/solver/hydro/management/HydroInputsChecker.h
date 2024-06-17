@@ -32,6 +32,7 @@ class HydroInputsChecker
 public:
     explicit HydroInputsChecker(Antares::Data::Study& study);
     void Execute(uint year);
+    void Refresh(bool);
 
 private:
     Data::AreaList& areas_;
@@ -42,6 +43,8 @@ private:
     const uint endYear_;
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
+    bool refresh_ = false;
+    std::map<uint, bool> checked_years_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;

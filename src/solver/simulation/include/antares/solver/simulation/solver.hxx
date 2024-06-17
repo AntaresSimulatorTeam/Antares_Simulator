@@ -1006,32 +1006,27 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Loop over sets of parallel years to check hydro inputs
     for (const auto& batch: setsOfParallelYears)
     {
-        // 1 - We may want to regenerate the time-series this year.
-        // This is the case when the preprocessors are enabled from the
-        // interface and/or the refresh is enabled.
-        if (batch.regenerateTS)
+        if (!batch.regenerateTS)
         {
-            regenerateHydroTimeSeries(batch.yearForTSgeneration);
-        }
+            hydroInputsChecker.Refresh(!batch.regenerateTS);
 
-        for (auto year: batch.yearsIndices)
-        {
-            hydroInputsChecker.Execute(year);
+            for (auto year: batch.yearsIndices)
+            {
+                hydroInputsChecker.Execute(year);
+            }
         }
     }
 
-    // Reset internal state for the hydro TS generation random generator
-    study.runtime->random[Data::seedTsGenHydro].reset(study.parameters.seed[Data::seedTsGenHydro]);
-
     // Loop over sets of parallel years to run the simulation
-    for (auto batch: setsOfParallelYears)
+    for (auto& batch: setsOfParallelYears)
     {
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
         if (batch.regenerateTS)
         {
-            regenerateTimeSeries(batch.yearForTSgeneration, false);
+            regenerateTimeSeries(batch.yearForTSgeneration);
+            hydroInputsChecker.Refresh(batch.regenerateTS);
         }
         computeRandomNumbers(randomForParallelYears,
                              batch.yearsIndices,
@@ -1042,6 +1037,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         Concurrency::FutureSet results;
         for (auto y: batch.yearsIndices)
         {
+            // for each year not handled earlier
+            hydroInputsChecker.Execute(y);
             bool performCalculations = batch.isYearPerformed[y];
             unsigned int numSpace = 999999;
             if (performCalculations)
@@ -1081,7 +1078,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         results.join();
         pResultWriter.flush();
 
-        // At this point, the first set of parallel year(s) was run with at least one year performed
+        // At this point, the first set of parallel year(s) was run with at least one year
+        // performed
         if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
         {
             pFirstSetParallelWithAPerformedYearWasRun = true;
