@@ -1273,13 +1273,10 @@ Area* AreaList::findFromPosition(const int x, const int y) const
         for (auto i = this->areas.rbegin(); i != end; ++i)
         {
             auto lastArea = i->second;
-            if (lastArea->ui)
+            if (lastArea->ui && std::abs(lastArea->ui->x - x) < nearestDistance
+                             && std::abs(lastArea->ui->y - y) < nearestDistance)
             {
-                if (std::abs(lastArea->ui->x - x) < nearestDistance
-                    && std::abs(lastArea->ui->y - y) < nearestDistance)
-                {
-                    nearestItem = lastArea;
-                }
+                nearestItem = lastArea;
             }
         }
         return nearestItem;
@@ -1696,9 +1693,9 @@ void AreaList::removeWindTimeseries()
 void AreaList::removeThermalTimeseries()
 {
     each(
-      [](Data::Area& area)
+      [](const Data::Area& area)
       {
-          for (auto& c: area.thermal.list.all())
+          for (const auto& c: area.thermal.list.all())
           {
               c->series.reset();
           }

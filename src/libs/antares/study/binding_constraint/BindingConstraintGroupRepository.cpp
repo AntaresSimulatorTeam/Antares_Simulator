@@ -60,10 +60,7 @@ bool BindingConstraintGroupRepository::buildFrom(const BindingConstraintsReposit
 
 bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
 {
-    bool allConsistent = !std::any_of(
-      groups_.begin(),
-      groups_.end(),
-      [](const auto& group)
+    bool allConsistent = !std::ranges::any_of(groups_, [](const auto& group)
       {
           const auto& constraints = group->constraints();
           if (constraints.empty())
@@ -71,9 +68,7 @@ bool BindingConstraintGroupRepository::timeSeriesWidthConsistentInGroups() const
               return false;
           }
           auto width = (*constraints.begin())->RHSTimeSeries().width;
-          bool isConsistent = std::all_of(
-            constraints.begin(),
-            constraints.end(),
+          bool isConsistent = std::ranges::all_of(constraints,
             [&width](const std::shared_ptr<BindingConstraint>& bc)
             {
                 bool sameWidth = bc->RHSTimeSeries().width == width;
@@ -100,11 +95,9 @@ void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int n
 
 BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const
 {
-    if (auto group = std::find_if(groups_.begin(),
-                                  groups_.end(),
-                                  [&name](auto& group_of_constraint)
-                                  { return group_of_constraint->name() == name; });
-        group != groups_.end())
+    if (auto group = std::ranges::find_if(groups_, [&name](auto& group_of_constraint)
+                { return group_of_constraint->name() == name; });
+            group != groups_.end())
     {
         return group->get();
     }
