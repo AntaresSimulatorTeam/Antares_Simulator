@@ -414,10 +414,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 break;
             case NON:
                 throw solutionNotFound(area.name.c_str(), y);
-                break;
             case EMERGENCY_SHUT_DOWN:
                 throw fatalError(area.name.c_str(), y);
-                break;
             }
 
             H2O_J_Free(problem);
@@ -535,10 +533,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 break;
             case NON:
                 throw solutionNotFound(area.name.c_str(), y);
-                break;
             case EMERGENCY_SHUT_DOWN:
                 throw fatalError(area.name.c_str(), y);
-                break;
             }
 
             H2O2_J_Free(problem);
@@ -554,7 +550,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 void HydroManagement::prepareDailyOptimalGenerations(uint y,
                                                      Antares::Data::Area::ScratchMap& scratchmap)
 {
-    areas_.each([&](Data::Area& area)
+    areas_.each([this, &scratchmap, &y](Data::Area& area)
                 { prepareDailyOptimalGenerations(area, y, scratchmap); });
 }
 } // namespace Antares
