@@ -311,15 +311,11 @@ void Parameters::reset()
     readonly = false;
     synthesis = true;
 
-    // Initial reservoir levels
-    initialReservoirLevels.iniLevels = irlColdStart;
-
     // Hydro heuristic policy
     hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
 
     // Hydro pricing
     hydroPricing.hpMode = hpHeuristic;
-    allSetsHaveSameSize = true;
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
@@ -810,19 +806,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
-    if (key == "initial-reservoir-levels")
-    {
-        auto iniLevels = StringToInitialReservoirLevels(value);
-        if (iniLevels != irlUnknown)
-        {
-            d.initialReservoirLevels.iniLevels = iniLevels;
-            return true;
-        }
-        logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
-                       << "'. reset to cold start mode.";
-        d.initialReservoirLevels.iniLevels = irlColdStart;
-        return false;
-    }
 
     if (key == "number-of-cores-mode")
     {
@@ -1152,6 +1135,15 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     // deprecated but needed for testing old studies
     if (key == "include-split-exported-mps")
     {
+        return true;
+    }
+
+    if (key == "initial-reservoir-levels") // ignored since 9.2
+    {
+        if (version >= StudyVersion(9,2))
+            logs.warning() << "Option initial-reservoir-levels is deprecated, please remove it from the study";
+        else if (value == "hot start")
+            logs.warning() << "Hydro hot start not supported with this solver, please use a version < 9.2";
         return true;
     }
 
@@ -1874,8 +1866,6 @@ void Parameters::saveToINI(IniFile& ini) const
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
-        section->add("initial-reservoir-levels",
-                     InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
         section->add("hydro-heuristic-policy",
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));

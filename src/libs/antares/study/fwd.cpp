@@ -91,43 +91,6 @@ const char* SeedToID(SeedIndex seed)
     return "";
 }
 
-// ... Initial reservoir levels ...
-InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text)
-{
-    if (!text)
-    {
-        return irlUnknown;
-    }
-
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
-    if (s == "cold start")
-    {
-        return irlColdStart;
-    }
-    if (s == "hot start")
-    {
-        return irlHotStart;
-    }
-
-    return irlUnknown;
-}
-
-const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
-{
-    switch (iniLevels)
-    {
-    case irlColdStart:
-        return "cold start";
-    case irlHotStart:
-        return "hot start";
-    case irlUnknown:
-        return "";
-    }
-    return "";
-}
-
 // ... Hydro heuristic policy ...
 HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
 {

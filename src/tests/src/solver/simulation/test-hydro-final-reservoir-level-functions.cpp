@@ -57,7 +57,6 @@ struct Fixture
         area_2->hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears);
 
 
-
         // Scenario builder for initial and final reservoir levels
         // -------------------------------------------------------
         uint areasCount = study->areas.size();
@@ -81,9 +80,9 @@ struct Fixture
         // -----------------------------
         uint nbInflowTS = 2;
         // ... Area 1 : Inflows time series numbers for each year
-        area_1->hydro.series->timeseriesNumbers.resize(1, nbInflowTS);
-        area_1->hydro.series->timeseriesNumbers[0][0] = 0;
-        area_1->hydro.series->timeseriesNumbers[0][1] = 1;
+        area_1->hydro.series->timeseriesNumbers.reset(nbYears);
+        area_1->hydro.series->timeseriesNumbers[0] = 0;
+        area_1->hydro.series->timeseriesNumbers[1] = 1;
         // ... Area 1 : Inflows time series
         area_1->hydro.series->storage.resize(nbInflowTS, 365);
         area_1->hydro.series->storage.timeSeries.fill(200.);
@@ -91,9 +90,9 @@ struct Fixture
         area_1->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 200. + 2.;
 
         // ... Area 2 : time series numbers for each year
-        area_2->hydro.series->timeseriesNumbers.resize(1, nbInflowTS);
-        area_2->hydro.series->timeseriesNumbers[0][0] = 0;
-        area_2->hydro.series->timeseriesNumbers[0][1] = 1;
+        area_2->hydro.series->timeseriesNumbers.reset(nbYears);
+        area_2->hydro.series->timeseriesNumbers[0] = 0;
+        area_2->hydro.series->timeseriesNumbers[1] = 1;
         // ... Area 2 : Inflows time series
         area_2->hydro.series->storage.resize(nbInflowTS, 365);
         area_2->hydro.series->storage.timeSeries.fill(300.);

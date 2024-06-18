@@ -64,9 +64,9 @@ With `..._MPS` options, the full expression of the faulty problem(s) is printed 
 thus allowing further analysis of the infeasibility issue.
 
 
-## Details on the "initial-reservoir-levels" parameter
-[//]: # (TODO: update this paragraph)
-_**This section is under construction**_
+## Details on the "initial-reservoir-levels" parameter (DEPRECATED since 9.2)
+
+### version 9.2: The reservoir level is now always determined with cold start behavior.
 
 This parameter can take the two values "cold start" or "hot start". [default: cold start]. Simulations results may in some circumstances be heavily impacted by this setting, hence proper attention should be paid to its meaning before considering changing the default value.
 
