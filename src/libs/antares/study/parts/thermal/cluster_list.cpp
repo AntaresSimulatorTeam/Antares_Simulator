@@ -175,11 +175,11 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
 }
 
 
-bool ThermalClusterList::validateClusters(const Parameters& parameters)
+bool ThermalClusterList::validateClusters(const Parameters& parameters) const
 {
     bool ret = true;
 
-    for (auto& cluster : allClusters_)
+    for (const auto& cluster : allClusters_)
     {
         // update the minUpDownTime
         cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
@@ -378,7 +378,7 @@ void ThermalClusterList::reverseCalculationOfSpinning()
 
 void ThermalClusterList::enableMustrunForEveryone()
 {
-    for (auto& c: allClusters_)
+    for (const auto& c : allClusters_)
     {
         c->mustrun = true;
     }
@@ -585,13 +585,10 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
 
 bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& folder)
 {
-    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
-                                           & timeSeriesThermal;
-
     Clob buffer;
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };
 
-    auto loadPrepro = [&buffer, &folder, &study, &globalThermalTSgeneration](auto& c)
+    auto loadPrepro = [&buffer, &folder, &study](auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();

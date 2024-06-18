@@ -376,7 +376,6 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 }
 
 AreaList::AreaList(Study& study):
-    byIndex(nullptr),
     pStudy(study)
 {
 }

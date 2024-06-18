@@ -115,7 +115,7 @@ public:
     bool loadPreproFromFolder(Study& s, const AnyString& folder);
     bool validatePrepro(const Study& study);
 
-    bool validateClusters(const Parameters& param);
+    bool validateClusters(const Parameters& param) const;
 
     bool loadEconomicCosts(Study& s, const AnyString& folder);
 

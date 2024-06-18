@@ -689,7 +689,7 @@ public:
 
 public:
     //! All areas by their index
-    Area** byIndex;
+    Area** byIndex = nullptr;
     //! All areas in the list
     Area::Map areas;
 
