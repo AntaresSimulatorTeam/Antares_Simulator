@@ -79,6 +79,16 @@ jobs:
           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev libtbb-dev
           sudo apt-get install g++-10 gcc-10
 
+      - name: Update alternatives
+        #mpicxx  uses "g++" so we need g++ to be symbolic link to g++-10
+        run: |
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+          sudo update-alternatives --set cc /usr/bin/gcc
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+          sudo update-alternatives --set c++ /usr/bin/g++
+
       - name: Config OR-Tools URL
         run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
