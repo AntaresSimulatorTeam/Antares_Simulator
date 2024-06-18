@@ -164,39 +164,51 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                                                   HOURS_PER_YEAR,
                                                   options) && ret;
 
-        // Special operations when not ran from the interface (aka solver)
-        if (study.usedByTheSolver)
-        {
-            if (!study.parameters.include.thermal.minStablePower)
-            {
-                cluster->minStablePower = 0.;
-            }
-            if (!study.parameters.include.thermal.minUPTime)
-            {
-                cluster->minUpDownTime = 1;
-                cluster->minUpTime = 1;
-                cluster->minDownTime = 1;
-            }
-            else
-            {
-                cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
-            }
-
-            if (!study.parameters.include.reserve.spinning)
-            {
-                cluster->spinning = 0;
-            }
-
-            cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
-        }
-
         // Check the data integrity of the cluster
-        cluster->integrityCheck();
         addToCompleteList(cluster);
     }
 
     rebuildIndexes();
     rebuildIndex();
+
+    return ret;
+}
+
+
+bool ThermalClusterList::validateClusters(const Parameters& parameters)
+{
+    bool ret = true;
+
+    for (auto& cluster : allClusters_)
+    {
+        // update the minUpDownTime
+        cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
+
+        if (!parameters.include.thermal.minStablePower)
+        {
+            cluster->minStablePower = 0.;
+        }
+        if (!parameters.include.thermal.minUPTime)
+        {
+            cluster->minUpDownTime = 1;
+            cluster->minUpTime = 1;
+            cluster->minDownTime = 1;
+        }
+        else
+        {
+            cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
+        }
+
+        if (!parameters.include.reserve.spinning)
+        {
+            cluster->spinning = 0;
+        }
+
+        cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
+
+        ret = cluster->integrityCheck() && ret;
+
+    }
 
     return ret;
 }
@@ -261,35 +273,11 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "min-up-time")
     {
-        if (p->value.to<uint>(cluster.minUpTime))
-        {
-            if (cluster.minUpTime < 1)
-            {
-                cluster.minUpTime = 1;
-            }
-            if (cluster.minUpTime > 168)
-            {
-                cluster.minUpTime = 168;
-            }
-            return true;
-        }
-        return false;
+        return p->value.to<uint>(cluster.minUpTime);
     }
     if (p->key == "min-down-time")
     {
-        if (p->value.to<uint>(cluster.minDownTime))
-        {
-            if (cluster.minDownTime < 1)
-            {
-                cluster.minDownTime = 1;
-            }
-            if (cluster.minDownTime > 168)
-            {
-                cluster.minDownTime = 168;
-            }
-            return true;
-        }
-        return false;
+        return p->value.to<uint>(cluster.minDownTime);
     }
     if (p->key == "name")
     {
@@ -368,8 +356,6 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << property->key << "`: The property is unknown and ignored";
             }
         }
-        // update the minUpDownTime
-        cluster.minUpDownTime = std::max(cluster.minUpTime, cluster.minDownTime);
     }
     return true;
 }
