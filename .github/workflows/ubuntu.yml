@@ -56,8 +56,9 @@ jobs:
         run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
       - name: fech xpansion
-        run: git clone https://github.com/AntaresSimulatorTeam/antares-xpansion.git src/antares-xpansion
-
+        run: |
+          git clone https://github.com/AntaresSimulatorTeam/antares-xpansion.git src/antares-xpansion
+          cd src/antares-xpansion && git apply ../patches/0001-remove-gflags.patch 
       - name: Restore vcpkg binary dir from cache
         id: cache-vcpkg-binary
         uses: actions/cache/restore@v4
