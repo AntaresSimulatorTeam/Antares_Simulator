@@ -78,7 +78,7 @@ bool FinalLevelValidator::compatibleWithReservoirProperties()
     if (hydro_.reservoirManagement && !hydro_.useWaterValue)
         return true;
 
-    logs.info() << "Final reservoir level not applicable! Year:" << year_ + 1
+    logs.warning() << "Final reservoir level not applicable! Year:" << year_ + 1
                 << ", Area:" << areaName_
                 << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
                    "reservoir level is provided ";
