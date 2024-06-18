@@ -389,6 +389,43 @@ else()
 
 endif()
 
+
+find_package (Boost REQUIRED COMPONENTS program_options)
+
+# ugly fix required due to conan packages and policies vs. boost brainfucking name rules
+if (MSVC)
+	list(APPEND CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
+endif ()
+find_package(MPI REQUIRED)
+
+find_package(Boost REQUIRED COMPONENTS mpi serialization)
+include_directories(${Boost_INCLUDE_DIRS})
+
+message(STATUS "BOOST_MPI_LIBRARY : " ${Boost_MPI_LIBRARY})
+message(STATUS "Boost_SERIALIZATION_LIBRARY : " ${Boost_SERIALIZATION_LIBRARY})
+message(STATUS "BOOST_LIBRARIES : " ${Boost_INCLUDE_DIRS})
+
+install(FILES
+		$<TARGET_FILE:Boost::mpi>
+		$<TARGET_FILE:Boost::serialization>
+		$<TARGET_FILE:Boost::program_options>
+		DESTINATION bin)
+
+		find_package(jsoncpp CONFIG REQUIRED)
+if (MSVC)
+	set(JSONCPP_LIB jsoncpp_lib)
+else ()
+	set(JSONCPP_LIB jsoncpp_static)
+endif ()
+message("Using jsoncpp target ${JSONCPP_LIB}")
+
+install(FILES
+		$<TARGET_FILE:${JSONCPP_LIB}>
+		DESTINATION bin
+)
+
+add_subdirectory(antares-xpansion/src/cpp)
+
 # Load packaging facilities.
 include(CPack)
 

@@ -28,6 +28,17 @@
       "version>=": "1.81.0"
     },
     {
+      "name": "boost-mpi",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-program-options",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "gtest"
+    },
+    {
       "name": "minizip-ng",
       "default-features": false,
       "version>=": "4.0.0",

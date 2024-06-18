@@ -54,6 +54,9 @@ jobs:
       - name: Install VCPKG
         run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
+      - name: fech xpansion
+        run: git clone https://github.com/AntaresSimulatorTeam/antares-xpansion.git src/antares-xpansion
+
       - name: Restore vcpkg binary dir from cache
         id: cache-vcpkg-binary
         uses: actions/cache/restore@v4
@@ -71,7 +74,7 @@ jobs:
       - name: Install libraries
         run: |
           sudo apt-get update
-          sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+          sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev libtbb-dev
           sudo apt-get install g++-10 gcc-10
 
       - name: Config OR-Tools URL
