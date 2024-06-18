@@ -1,0 +1,50 @@
+From fc15334cd69397f62b0f8c0867a567ab3a05b3d9 Mon Sep 17 00:00:00 2001
+From: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+Date: Tue, 18 Jun 2024 17:01:51 +0200
+Subject: [PATCH 1/2] remove gflags
+
+Signed-off-by: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+---
+ src/cpp/helpers/CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/cpp/helpers/CMakeLists.txt b/src/cpp/helpers/CMakeLists.txt
+index 325a463f..8df77d58 100644
+--- a/src/cpp/helpers/CMakeLists.txt
++++ b/src/cpp/helpers/CMakeLists.txt
+@@ -50,7 +50,6 @@ target_link_libraries (helpers
+ 	PUBLIC
+ 		${JSONCPP_LIB}
+ 		solvers
+-		gflags::gflags
+ 		Boost::boost Boost::program_options
+ 		MINIZIP::minizip-ng
+ )
+-- 
+2.39.2.windows.1
+
+
+From 7bd3f2513d89fd8714686dd4213d49a0c44a86d9 Mon Sep 17 00:00:00 2001
+From: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+Date: Tue, 18 Jun 2024 17:17:21 +0200
+Subject: [PATCH 2/2] minizip-patch1
+
+Signed-off-by: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+---
+ src/cpp/helpers/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/cpp/helpers/CMakeLists.txt b/src/cpp/helpers/CMakeLists.txt
+index 8df77d58..af98e171 100644
+--- a/src/cpp/helpers/CMakeLists.txt
++++ b/src/cpp/helpers/CMakeLists.txt
+@@ -51,5 +51,5 @@ target_link_libraries (helpers
+ 		${JSONCPP_LIB}
+ 		solvers
+ 		Boost::boost Boost::program_options
+-		MINIZIP::minizip-ng
++		MINIZIP::minizip
+ )
+-- 
+2.39.2.windows.1
+
