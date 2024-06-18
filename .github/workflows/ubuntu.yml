@@ -11,6 +11,7 @@ on:
       - release/*
       - doc/*
       - dependabot/*
+      - test-xpansion-cpp-libs
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
