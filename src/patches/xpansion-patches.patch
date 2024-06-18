@@ -1,7 +1,7 @@
 From fc15334cd69397f62b0f8c0867a567ab3a05b3d9 Mon Sep 17 00:00:00 2001
 From: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
 Date: Tue, 18 Jun 2024 17:01:51 +0200
-Subject: [PATCH 1/3] remove gflags
+Subject: [PATCH 1/5] remove gflags
 
 Signed-off-by: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
 ---
@@ -27,7 +27,7 @@ index 325a463f..8df77d58 100644
 From 7bd3f2513d89fd8714686dd4213d49a0c44a86d9 Mon Sep 17 00:00:00 2001
 From: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
 Date: Tue, 18 Jun 2024 17:17:21 +0200
-Subject: [PATCH 2/3] minizip-patch1
+Subject: [PATCH 2/5] minizip-patch1
 
 Signed-off-by: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
 ---
@@ -52,7 +52,7 @@ index 8df77d58..af98e171 100644
 From f4e8c153cf631ec37060c74ebc7cdbffa2ad505a Mon Sep 17 00:00:00 2001
 From: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
 Date: Tue, 18 Jun 2024 17:25:19 +0200
-Subject: [PATCH 3/3] update minizip api version
+Subject: [PATCH 3/5] update minizip api version
 
 Signed-off-by: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
 ---
@@ -86,6 +86,73 @@ index d90619e7..23c78b5a 100644
  }
  void ArchiveWriter::InitFileInfo() {
    fileInfo_.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
+-- 
+2.39.2.windows.1
+
+
+From 735c813c895088b0b6b51a66ead80906543bbb3f Mon Sep 17 00:00:00 2001
+From: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+Date: Tue, 18 Jun 2024 17:54:14 +0200
+Subject: [PATCH 4/5] always coin
+
+Signed-off-by: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+---
+ src/cpp/multisolver_interface/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/cpp/multisolver_interface/CMakeLists.txt b/src/cpp/multisolver_interface/CMakeLists.txt
+index b12d262a..2d050eb9 100644
+--- a/src/cpp/multisolver_interface/CMakeLists.txt
++++ b/src/cpp/multisolver_interface/CMakeLists.txt
+@@ -56,7 +56,7 @@ target_include_directories (solvers
+ 
+ 
+ #CLP-CBC
+-if(COIN_OR)
++# if(COIN_OR)
+ 	target_link_libraries (solvers
+ 		PUBLIC
+ 			Coin::Clp
+@@ -66,4 +66,4 @@ if(COIN_OR)
+ 			Coin::Cbc
+ 		   ${CMAKE_DL_LIBS}
+ 	)
+-endif()
++# endif()
+-- 
+2.39.2.windows.1
+
+
+From 2c5301c3d4cda953d6bbd7a5c9ec94a700585755 Mon Sep 17 00:00:00 2001
+From: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+Date: Tue, 18 Jun 2024 17:55:03 +0200
+Subject: [PATCH 5/5] alwayd coin
+
+Signed-off-by: Abdoulbari Zakir <abdoulbari.zakir@gmail.com>
+---
+ src/cpp/multisolver_interface/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/cpp/multisolver_interface/CMakeLists.txt b/src/cpp/multisolver_interface/CMakeLists.txt
+index 2d050eb9..2259d7ac 100644
+--- a/src/cpp/multisolver_interface/CMakeLists.txt
++++ b/src/cpp/multisolver_interface/CMakeLists.txt
+@@ -27,13 +27,13 @@ list(APPEND XPRESS_LOAD
+ 	)
+ 
+ #Clp - CBc
+-IF(COIN_OR)
++# IF(COIN_OR)
+ 	list(APPEND Solver_sources
+ 		${CMAKE_CURRENT_LIST_DIR}/SolverCbc.cpp
+ 		${CMAKE_CURRENT_LIST_DIR}/SolverClp.cpp
+ 		${CMAKE_CURRENT_LIST_DIR}/COIN_common_functions.cpp
+ 	)
+-ENDIF(COIN_OR)
++# ENDIF(COIN_OR)
+ 
+ 
+ # ---------------------------------------------------------------------------
 -- 
 2.39.2.windows.1
 
