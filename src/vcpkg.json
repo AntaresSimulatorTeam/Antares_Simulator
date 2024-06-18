@@ -42,6 +42,9 @@
       "name": "jsoncpp"
     },
     {
+      "name": "yaml-cpp"
+    },
+    {
       "name": "minizip-ng",
       "default-features": false,
       "version>=": "4.0.0",
