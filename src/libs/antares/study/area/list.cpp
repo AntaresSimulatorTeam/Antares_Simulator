@@ -376,7 +376,6 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 }
 
 AreaList::AreaList(Study& study):
-    byIndex(nullptr),
     pStudy(study)
 {
 }
@@ -994,6 +993,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
         ret = area.thermal.list.loadPreproFromFolder(study, buffer) && ret;
+        ret = area.thermal.list.validatePrepro(study) && ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
@@ -1182,6 +1182,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) && ret;
+            ret = area.thermal.list.validateClusters(pStudy.parameters) && ret;
         }
     }
 

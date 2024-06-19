@@ -512,20 +512,6 @@ bool Data::ThermalCluster::integrityCheck()
 
     bool ret = true;
 
-    if (minUpTime > 168 or 0 == minUpTime)
-    {
-        logs.error() << "Thermal cluster " << parentArea->name << "/" << pName
-                     << ": The min. up time must be between 1 and 168";
-        minUpTime = 1;
-        ret = false;
-    }
-    if (minDownTime > 168 or 0 == minDownTime)
-    {
-        logs.error() << "Thermal cluster " << parentArea->name << "/" << pName
-                     << ": The min. down time must be between 1 and 168";
-        minDownTime = 1;
-        ret = false;
-    }
     if (nominalCapacity < 0.)
     {
         logs.error() << "Thermal cluster " << parentArea->name << "/" << pName
