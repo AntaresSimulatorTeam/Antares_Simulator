@@ -612,30 +612,27 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& fol
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadPrepro);
 }
 
-bool ThermalClusterList::validatePrepro(const Study& study)
-{
+bool ThermalClusterList::validatePrepro(const Study& study) {
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };
 
-    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
-                                           & timeSeriesThermal;
+    const bool globalThermalTSgeneration =
+        study.parameters.timeSeriesToGenerate & timeSeriesThermal;
 
-    if (!study.usedByTheSolver || !globalThermalTSgeneration)
+    if (!study.usedByTheSolver)
         return true;
 
-    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro),
-            [&study, &globalThermalTSgeneration](auto& c)
-    {
-        bool result = true;
+    return std::ranges::all_of(
+        allClusters_ | std::views::filter(hasPrepro),
+        [&globalThermalTSgeneration](auto& c) {
+            if (globalThermalTSgeneration && !c->prepro->validate()) {
+                return false;
+            }
 
-        result = c->prepro->validate() && result;
-
-        if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
-        {
-            result = c->prepro->normalizeAndCheckNPO();
-        }
-
-        return result;
-    });
+            if (c->doWeGenerateTS(globalThermalTSgeneration)) {
+                return c->prepro->normalizeAndCheckNPO();
+            }
+            return true;
+        });
 }
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
