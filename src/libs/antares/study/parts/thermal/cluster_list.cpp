@@ -619,15 +619,15 @@ bool ThermalClusterList::validatePrepro(const Study& study)
     const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
                                            & timeSeriesThermal;
 
+    if (!study.usedByTheSolver || !globalThermalTSgeneration)
+        return true;
+
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro),
             [&study, &globalThermalTSgeneration](auto& c)
     {
         bool result = true;
 
-        if (study.usedByTheSolver && globalThermalTSgeneration)
-        {
-            result = c->prepro->validate() && result;
-        }
+        result = c->prepro->validate() && result;
 
         if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
         {
