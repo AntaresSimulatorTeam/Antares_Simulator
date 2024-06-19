@@ -137,6 +137,8 @@ public:
     */
     void fixBadValues();
 
+    bool validateValues();
+
     /*!
     ** \brief Try to detect then fix refresh intervals
     */

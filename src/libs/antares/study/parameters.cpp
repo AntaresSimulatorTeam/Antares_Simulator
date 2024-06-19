@@ -562,43 +562,11 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     if (key == "simulation.start")
     {
-        uint day;
-        if (not value.to(day))
-        {
-            return false;
-        }
-        if (day == 0)
-        {
-            day = 1;
-        }
-        else
-        {
-            if (day > 365)
-            {
-                day = 365;
-            }
-            --day;
-        }
-        d.simulationDays.first = day;
-        return true;
+        return value.to<uint>(d.simulationDays.first);
     }
     if (key == "simulation.end")
     {
-        uint day;
-        if (not value.to(day))
-        {
-            return false;
-        }
-        if (day == 0)
-        {
-            day = 1;
-        }
-        else if (day > 365)
-        {
-            day = 365;
-        }
-        d.simulationDays.end = day; // not included
-        return true;
+        return value.to<uint>(d.simulationDays.end);
     }
 
     if (key == "thematic-trimming")
@@ -1367,6 +1335,29 @@ void Parameters::fixBadValues()
     {
         nbTimeSeriesSolar = 1;
     }
+
+    validateValues();
+}
+
+bool Parameters::validateValues()
+{
+    auto& firstDay = simulationDays.first;
+    if (firstDay == 0)
+    {
+        firstDay = 1;
+    }
+    else
+    {
+        if (firstDay > 365)
+        {
+            firstDay = 365;
+        }
+        --firstDay;
+    }
+
+    simulationDays.end = std::clamp(simulationDays.end, 1u, 365u);
+
+    return true;
 }
 
 uint64_t Parameters::memoryUsage() const
