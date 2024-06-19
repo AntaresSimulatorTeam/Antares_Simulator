@@ -28,9 +28,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 #define SEP IO::Separator
@@ -235,5 +233,4 @@ bool RenewableClusterList::validateClusters() const
 
 #undef SEP
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
