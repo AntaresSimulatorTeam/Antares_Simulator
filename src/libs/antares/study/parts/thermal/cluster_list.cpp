@@ -181,22 +181,8 @@ bool ThermalClusterList::validateClusters(const Parameters& parameters) const
 
     for (const auto& cluster : allClusters_)
     {
-        if (cluster->minUpTime < 1)
-        {
-            cluster->minUpTime = 1;
-        }
-        if (cluster->minUpTime > 168)
-        {
-            cluster->minUpTime = 168;
-        }
-        if (cluster->minDownTime < 1)
-        {
-            cluster->minDownTime = 1;
-        }
-        if (cluster->minDownTime > 168)
-        {
-            cluster->minDownTime = 168;
-        }
+        cluster->minUpTime = std::clamp(cluster->minUpTime, 1u, 168u);
+        cluster->minDownTime = std::clamp(cluster->minDownTime, 1u, 168u);
 
         // update the minUpDownTime
         cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
