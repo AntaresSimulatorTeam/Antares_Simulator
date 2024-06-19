@@ -211,10 +211,6 @@ bool ThermalClusterList::validateClusters(const Parameters& parameters) const
             cluster->minUpTime = 1;
             cluster->minDownTime = 1;
         }
-        else
-        {
-            cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
-        }
 
         if (!parameters.include.reserve.spinning)
         {
