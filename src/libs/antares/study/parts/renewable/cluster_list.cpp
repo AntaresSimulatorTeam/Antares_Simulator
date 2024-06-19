@@ -211,7 +211,6 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                     continue;
                 }
 
-                cluster->integrityCheck();
                 addToCompleteList(cluster);
             }
         }
@@ -221,6 +220,17 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
         return ret;
     }
     return false;
+}
+
+bool RenewableClusterList::validateClusters() const
+{
+    bool ret = true;
+    for (const auto& cluster : allClusters_)
+    {
+        ret = cluster->integrityCheck() && ret;
+    }
+
+    return ret;
 }
 
 #undef SEP
