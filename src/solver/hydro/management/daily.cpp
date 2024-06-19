@@ -362,6 +362,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
     if (debugData)
     {
+        dayYear = 0;
         for (uint month = 0; month != 12; ++month)
         {
             auto daysPerMonth = calendar_.months[month].days;
@@ -371,6 +372,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 auto dYear = day + dayYear;
                 debugData->DailyTargetGen[dYear] = dailyTargetGen[dYear];
             }
+            dayYear += daysPerMonth;
         }
     }
 
