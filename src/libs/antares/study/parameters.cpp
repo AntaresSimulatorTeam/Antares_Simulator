@@ -1189,46 +1189,9 @@ bool Parameters::loadFromINI(const IniFile& ini,
         }
     }
 
-    // forcing value
-    if (options.nbYears != 0)
-    {
-        if (options.nbYears > nbYears)
-        {
-            // The variable `yearsFilter` must be enlarged
-            yearsFilter.resize(options.nbYears, false);
-        }
-        nbYears = options.nbYears;
-
-        // Resize years weight (add or remove item)
-        if (yearsWeight.size() != nbYears)
-        {
-            yearsWeight.resize(nbYears, 1.f);
-        }
-    }
-
-    // Simulation mode
-    // ... Enforcing simulation mode
-    if (options.forceMode != SimulationMode::Unknown)
-    {
-        mode = options.forceMode;
-        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
-    }
-    else
-    {
-        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
-    }
-
-    if (options.forceDerated)
-    {
-        derated = true;
-    }
-
     namedProblems = options.namedProblems;
 
     handleOptimizationOptions(options);
-
-    // Attempt to fix bad values if any
-    fixBadValues();
 
     fixRefreshIntervals();
 
@@ -1336,11 +1299,6 @@ void Parameters::fixBadValues()
         nbTimeSeriesSolar = 1;
     }
 
-    validateValues();
-}
-
-bool Parameters::validateValues()
-{
     if (simulationDays.first == 0)
         simulationDays.first = 1;
     else
@@ -1350,8 +1308,42 @@ bool Parameters::validateValues()
     }
 
     simulationDays.end = std::clamp(simulationDays.end, 1u, 365u);
+}
 
-    return true;
+void Parameters::validateOptions(const StudyLoadOptions& options)
+{
+    if (options.forceDerated)
+    {
+        derated = true;
+    }
+    // forcing value
+    if (options.nbYears != 0)
+    {
+        if (options.nbYears > nbYears)
+        {
+            // The variable `yearsFilter` must be enlarged
+            yearsFilter.resize(options.nbYears, false);
+        }
+        nbYears = options.nbYears;
+
+        // Resize years weight (add or remove item)
+        if (yearsWeight.size() != nbYears)
+        {
+            yearsWeight.resize(nbYears, 1.f);
+        }
+    }
+
+    // Simulation mode
+    // ... Enforcing simulation mode
+    if (options.forceMode != SimulationMode::Unknown)
+    {
+        mode = options.forceMode;
+        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
+    }
+    else
+    {
+        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
+    }
 }
 
 uint64_t Parameters::memoryUsage() const

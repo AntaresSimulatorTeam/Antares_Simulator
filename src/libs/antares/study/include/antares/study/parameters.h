@@ -137,7 +137,7 @@ public:
     */
     void fixBadValues();
 
-    bool validateValues();
+    void validateOptions(const StudyLoadOptions&);
 
     /*!
     ** \brief Try to detect then fix refresh intervals
