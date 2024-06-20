@@ -1346,7 +1346,7 @@ bool Parameters::validateValues()
     else
     {
         simulationDays.first = std::clamp(simulationDays.first, 1u, 365u);
-        --simulationDays.first; // value between 1 and 364 for edge cases
+        --simulationDays.first; // value between 0 and 364 for edge cases
     }
 
     simulationDays.end = std::clamp(simulationDays.end, 1u, 365u);
