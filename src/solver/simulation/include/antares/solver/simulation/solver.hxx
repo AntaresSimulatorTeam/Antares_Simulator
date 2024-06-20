@@ -1031,7 +1031,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         // interface and/or the refresh is enabled.
         if (batch.regenerateTS)
         {
-            regenerateTimeSeries(batch.yearForTSgeneration, false);
+            regenerateTimeSeries(batch.yearForTSgeneration);
         }
         computeRandomNumbers(randomForParallelYears,
                              batch.yearsIndices,
