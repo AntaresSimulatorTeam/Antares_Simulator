@@ -1021,7 +1021,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     }
 
     // Reset internal state for the hydro TS generation random generator
-    study.runtime->random[Data::seedTsGenHydro].reset(study.parameters.seed[Data::seedTsGenHydro]);
+    // study.runtime->random[Data::seedTsGenHydro].reset(study.parameters.seed[Data::seedTsGenHydro]);
 
     // Loop over sets of parallel years to run the simulation
     for (auto batch: setsOfParallelYears)
