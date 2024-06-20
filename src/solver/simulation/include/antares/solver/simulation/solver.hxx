@@ -1024,7 +1024,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // study.runtime->random[Data::seedTsGenHydro].reset(study.parameters.seed[Data::seedTsGenHydro]);
 
     // Loop over sets of parallel years to run the simulation
-    for (auto batch: setsOfParallelYears)
+    for (auto& batch: setsOfParallelYears)
     {
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
