@@ -1118,8 +1118,7 @@ bool firstKeyLetterIsValid(const String& name)
 }
 
 bool Parameters::loadFromINI(const IniFile& ini,
-                             const StudyVersion& version,
-                             const StudyLoadOptions& options)
+                             const StudyVersion& version)
 {
     // Reset inner data
     reset();
@@ -1957,7 +1956,7 @@ bool Parameters::loadFromFile(const AnyString& filename,
     IniFile ini;
     if (ini.open(filename))
     {
-        return loadFromINI(ini, version, options);
+        return loadFromINI(ini, version);
     }
 
     // Error otherwise
