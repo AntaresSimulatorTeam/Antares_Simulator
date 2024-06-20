@@ -1341,8 +1341,13 @@ void Parameters::fixBadValues()
 
 bool Parameters::validateValues()
 {
-    simulationDays.first = std::clamp(simulationDays.first, 2u, 365u);
-    --simulationDays.first; // value between 1 and 364 for edge cases
+    if (simulationDays.first == 0)
+        simulationDays.first = 1;
+    else
+    {
+        simulationDays.first = std::clamp(simulationDays.first, 2u, 365u);
+        --simulationDays.first; // value between 1 and 364 for edge cases
+    }
 
     simulationDays.end = std::clamp(simulationDays.end, 1u, 365u);
 
