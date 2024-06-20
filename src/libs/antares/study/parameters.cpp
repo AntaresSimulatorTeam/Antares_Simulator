@@ -1189,24 +1189,9 @@ bool Parameters::loadFromINI(const IniFile& ini,
         }
     }
 
-    namedProblems = options.namedProblems;
-
-    handleOptimizationOptions(options);
-
     fixRefreshIntervals();
 
     fixGenRefreshForNTC();
-
-    // Specific action before launching a simulation
-    if (options.usedByTheSolver)
-    {
-        prepareForSimulation(options);
-    }
-
-    if (options.mpsToExport || options.namedProblems)
-    {
-        this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
-    }
 
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
@@ -1344,6 +1329,20 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
     {
         logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
     }
+    // Specific action before launching a simulation
+    if (options.usedByTheSolver)
+    {
+        prepareForSimulation(options);
+    }
+
+    if (options.mpsToExport || options.namedProblems)
+    {
+        this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    }
+
+    namedProblems = options.namedProblems;
+
+    handleOptimizationOptions(options);
 }
 
 uint64_t Parameters::memoryUsage() const
