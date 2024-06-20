@@ -70,6 +70,8 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 
     writeValidFile();
     p.loadFromFile(path.string(), version, options);
+    p.validateOptions(options);
+    p.fixBadValues();
 
     BOOST_CHECK_EQUAL(p.nbYears, 5);
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
@@ -93,6 +95,8 @@ BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)
 {
     writeInvalidFile();
     BOOST_CHECK(p.loadFromFile(path.string(), version, options));
+    p.validateOptions(options);
+    p.fixBadValues();
 
     BOOST_CHECK_EQUAL(p.nbYears, 1);
     BOOST_CHECK_EQUAL(p.useCustomScenario, 0);
