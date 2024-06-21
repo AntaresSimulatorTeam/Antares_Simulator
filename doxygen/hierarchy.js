@@ -698,6 +698,7 @@ var hierarchy =
     ] ],
     [ "Antares::linkInfo", "classAntares_1_1linkInfo.html", null ],
     [ "Antares::Solver::Variable::Links< VariablePerLink >", "classAntares_1_1Solver_1_1Variable_1_1Links.html", null ],
+    [ "Antares::Data::LinkTsGeneration", "structAntares_1_1Data_1_1LinkTsGeneration.html", null ],
     [ "HourlyCSRProblem::LinkVariable", "structHourlyCSRProblem_1_1LinkVariable.html", null ],
     [ "Antares::Toolbox::Filter::Operator::List", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1List.html", null ],
     [ "Antares::TSGenerator::Predicate::Load", "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html", null ],

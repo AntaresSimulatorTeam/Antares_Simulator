@@ -9,6 +9,7 @@ var classAntares_1_1Data_1_1StudyLoadOptions =
     [ "forceParallel", "classAntares_1_1Data_1_1StudyLoadOptions.html#a55b89e7b19a8e8c0db2cdc78442b61a7", null ],
     [ "forceYearByYear", "classAntares_1_1Data_1_1StudyLoadOptions.html#a4875ece3163e52e25ac0efdd7faf12e9", null ],
     [ "ignoreConstraints", "classAntares_1_1Data_1_1StudyLoadOptions.html#a59fea6741a9c51f256d82c7ba740b7f5", null ],
+    [ "linksLoadTSGen", "classAntares_1_1Data_1_1StudyLoadOptions.html#ad74fd31bafdc9d9b6ea1b19e3efb5bd4", null ],
     [ "listSolvers", "classAntares_1_1Data_1_1StudyLoadOptions.html#a321b549782e271d775df3390e22f8ba2", null ],
     [ "loadOnlyNeeded", "classAntares_1_1Data_1_1StudyLoadOptions.html#af047639f21e6aaab8fc1c85f9663c37e", null ],
     [ "logMessage", "classAntares_1_1Data_1_1StudyLoadOptions.html#adf6f5e11176d0b8178e26988b28a5b58", null ],

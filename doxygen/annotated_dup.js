@@ -292,6 +292,7 @@ var annotated_dup =
         [ "HydroAllocation", "classAntares_1_1Data_1_1HydroAllocation.html", "classAntares_1_1Data_1_1HydroAllocation" ],
         [ "HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader" ],
         [ "LayerData", "classAntares_1_1Data_1_1LayerData.html", "classAntares_1_1Data_1_1LayerData" ],
+        [ "LinkTsGeneration", "structAntares_1_1Data_1_1LinkTsGeneration.html", null ],
         [ "Output", "classAntares_1_1Data_1_1Output.html", "classAntares_1_1Data_1_1Output" ],
         [ "Parameters", "classAntares_1_1Data_1_1Parameters.html", "classAntares_1_1Data_1_1Parameters" ],
         [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html", "classAntares_1_1Data_1_1PartHydro" ],

@@ -41,6 +41,7 @@ var classAntares_1_1Data_1_1Parameters =
     [ "intraModal", "classAntares_1_1Data_1_1Parameters.html#ae74580d04e1dfe5622419a21207c6a86", null ],
     [ "leapYear", "classAntares_1_1Data_1_1Parameters.html#a0d961081d5df614638783cc94da11b35", null ],
     [ "mode", "classAntares_1_1Data_1_1Parameters.html#a78e0f056264051b537ad5f76e207c98e", null ],
+    [ "nbLinkTStoGenerate", "classAntares_1_1Data_1_1Parameters.html#a29b2f4be58ec65aa087fc9b2f5ccb71a", null ],
     [ "nbTimeSeriesHydro", "classAntares_1_1Data_1_1Parameters.html#a353de2e6bce672559397d208f233c165", null ],
     [ "nbTimeSeriesLoad", "classAntares_1_1Data_1_1Parameters.html#a07cfd536130da356cf751bde90fe99be", null ],
     [ "nbTimeSeriesSolar", "classAntares_1_1Data_1_1Parameters.html#a89c9e023c565c54a1eb88a537ed79169", null ],
