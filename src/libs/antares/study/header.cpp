@@ -166,7 +166,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
         }
     }
 
-    if (validateVersion())
+    if (version.isSupported(true))
     {
         return true;
     }
@@ -177,28 +177,6 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
     }
 
     return false;
-}
-
-bool StudyHeader::validateVersion()
-{
-    if (version >= StudyVersion(7, 0))
-    {
-        if (version > Data::StudyVersion::latest())
-        {
-            logs.error() << "Header: This version is not supported (version found:"
-                << version.toString()
-                << ", expected: <=" << Data::StudyVersion::latest().toString() << ')';
-
-            return false;
-        }
-    }
-    else
-    {
-        logs.error() << "Version before 7.0 not supported, please upgrade";
-        return false;
-    }
-
-    return true;
 }
 
 bool StudyHeader::loadFromFile(const AnyString& filename, bool warnings)
