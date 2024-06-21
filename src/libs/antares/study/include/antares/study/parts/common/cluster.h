@@ -141,16 +141,16 @@ public:
     Matrix<> modulation;
 
     //! \brief Returns true if cluster participates in a reserve with this name
-    bool isParticipatingInReserve(std::string name);
+    bool isParticipatingInReserve(Data::ReserveName name);
 
     //! \brief Returns an array of all reserves the cluster is participating in
-    std::vector<std::string> listOfParticipatingReserves();
+    std::vector<Data::ReserveName> listOfParticipatingReserves();
 
     //! \brief Returns max power for a reserve if participating, -1 otherwise
-    float reserveMaxPower(std::string name);
+    float reserveMaxPower(Data::ReserveName name);
 
     //! \brief Returns participating cost for a reserve if participating, -1 otherwise
-    float reserveCost(std::string name);
+    float reserveCost(Data::ReserveName name);
 
     //! \brief Returns the number of reserves linked to this cluster
     unsigned int reserveParticipationsCount();
@@ -161,7 +161,7 @@ protected:
     Data::ClusterName pID;
     Data::ClusterName pGroup;
     //! reserve
-    std::map<std::string, ClusterReserveParticipation> clusterReservesParticipations;
+    std::map<Data::ReserveName, ClusterReserveParticipation> clusterReservesParticipations;
 
 private:
     virtual unsigned int precision() const = 0;

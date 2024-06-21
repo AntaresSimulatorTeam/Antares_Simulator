@@ -22,6 +22,7 @@
 #define __SOLVER_VARIABLE_INFO_H__
 
 #include <cmath>
+#include "./economy/vCardReserveParticipationByDispatchablePlant.h"
 
 namespace Antares
 {
@@ -368,11 +369,29 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             const Data::PartThermal& thermal = results.data.area->thermal;
             for (uint i = 0; i != container.size(); ++i)
             {
-                results.variableCaption = thermal.list.enabledClusterAt(i)->name();
+                if (typeid(VCardT) == typeid(Economy::VCardReserveParticipationByDispatchablePlant))
+                {
+                    auto [clusterName, reserveName]
+                      = thermal.list.reserveParticipationAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + clusterName;
+                }
+                else
+                    results.variableCaption = thermal.list.enabledClusterAt(i)->name();
 
                 container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
             }
         }
+    }
+
+    static bool setClusterReserveCaption(SurveyResults& results, uint reserveParticipationIdx)
+    {
+        assert(results.data.area && "Area is NULL");
+
+        auto& thermal = results.data.area->thermal;
+        auto [clusterName, reserveName]
+          = thermal.list.reserveParticipationAt(results.data.area, reserveParticipationIdx);
+        results.variableCaption = clusterName + " - " + reserveName;
+        return true;
     }
 
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
@@ -427,7 +446,11 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             for (uint i = 0; i != container.size(); ++i)
             {
-                res = setClusterCaption(results, fileLevel, i);
+                if (typeid(VCardType)
+                    == typeid(Economy::VCardReserveParticipationByDispatchablePlant))
+                    res = setClusterReserveCaption(results, i);
+                else
+                    res = setClusterCaption(results, fileLevel, i);
                 if (!res)
                     return;
                 results.variableUnit = VCardType::Unit();

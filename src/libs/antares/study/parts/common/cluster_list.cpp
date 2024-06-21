@@ -56,6 +56,48 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 }
 
 template<class ClusterT>
+std::pair<Data::ClusterName, Data::ReserveName> ClusterList<ClusterT>::reserveParticipationAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (auto const& [reserveUpName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (auto& cluster : allClusters_)
+        {
+            if (cluster->isParticipatingInReserve(reserveUpName))
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster->name(), reserveUpName};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    for (auto const& [reserveDownName, _] :
+         area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (auto& cluster : allClusters_)
+        {
+            if (cluster->isParticipatingInReserve(reserveDownName))
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster->name(), reserveDownName};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    throw std::out_of_range(
+      "This reserve participation index has not been found in all the reserve participations");
+}
+
+template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
 {
     for (auto cluster : all())
@@ -345,4 +387,3 @@ template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;
 
 } // namespace Antares::Data
-

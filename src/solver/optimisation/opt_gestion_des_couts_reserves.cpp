@@ -62,17 +62,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
                     }
                 }
-                for (const auto& clusterReserveParticipation :
-                     reservesDuPays.areaCapacityReservationsDown[index].AllReservesParticipation)
-                {
-                    if (clusterReserveParticipation.maxPower >= 0)
-                    {
-                        var = variableManager.ClusterReserveParticipation(
-                          clusterReserveParticipation.indexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
-                    }
-                }
-                    
+
                 var = variableManager.InternalExcessReserve(
                   reservesDuPays.areaCapacityReservationsUp[index].globalReserveIndex, pdtHebdo);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -88,8 +78,20 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                       = reservesDuPays.areaCapacityReservationsUp[index].failureCost;
                 }
             }
+
             for (int index = 0; index < reservesDuPays.areaCapacityReservationsDown.size(); index++)
             {
+                for (const auto& clusterReserveParticipation :
+                     reservesDuPays.areaCapacityReservationsDown[index].AllReservesParticipation)
+                {
+                    if (clusterReserveParticipation.maxPower >= 0)
+                    {
+                        var = variableManager.ClusterReserveParticipation(
+                          clusterReserveParticipation.indexClusterParticipation, pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                }
+
                 var = variableManager.InternalExcessReserve(
                   reservesDuPays.areaCapacityReservationsDown[index].globalReserveIndex, pdtHebdo);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)

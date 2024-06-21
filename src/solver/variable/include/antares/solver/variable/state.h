@@ -104,7 +104,7 @@ public:
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
-    int getIndexFromClusterAndReserve(std::string reserveName, std::string clusterName);
+    int getIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName);
 private:
     /*!
     ** \brief Initialize some variable according a thermal cluster index
@@ -190,8 +190,12 @@ public:
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
     //! Reserve Participation for all thermal group types (nuclear / coal / ...) for the whole year
     //! per reserve
-    std::map<std::string, std::map<Data::ThermalDispatchableGroup, double>>
+    std::map<Data::ReserveName, std::map<Data::ThermalDispatchableGroup, double>>
       thermalReserveParticipationPerGroupForYear[Variable::maxHoursInAYear];
+
+    //! Reserve Participation for all clusters per reserve
+    std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
+      thermalReserveParticipationPerClusterForYear[Variable::maxHoursInAYear];
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)

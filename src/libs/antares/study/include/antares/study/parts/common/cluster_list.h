@@ -96,6 +96,17 @@ public:
     SharedPtr operator[](std::size_t idx) const { return allClusters_[idx]; }
 
     SharedPtr enabledClusterAt(unsigned int index) const;
+
+    /*!
+    ** @brief Get the cluster and reserve names for a given index of reserveParticipation
+    ** @param area The area where to took for the reserveParticipation
+    ** @param index Global index of the reserveParicipation
+    ** @return the cluster and reserve names
+    */
+    std::pair<Data::ClusterName, Data::ReserveName> reserveParticipationAt(
+      const Area* area,
+      unsigned int index) const;
+
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **

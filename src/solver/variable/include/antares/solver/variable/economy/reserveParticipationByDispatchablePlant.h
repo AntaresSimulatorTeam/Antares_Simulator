@@ -24,10 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCostByDispatchablePlant_H__
-#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCostByDispatchablePlant_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByDispatchablePlant_H__
+#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByDispatchablePlant_H__
 
 #include "../variable.h"
+#include "./vCardReserveParticipationByDispatchablePlant.h"
 
 namespace Antares
 {
@@ -37,83 +38,24 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardReserveParticipationCostByDispatchablePlant
-{
-    //! Caption
-    static std::string Caption()
-    {
-        return "RESERVE PARTICIPATION COST by plant";
-    }
-    //! Unit
-    static std::string Unit()
-    {
-        return "Reserve Participation Cost - Euro";
-    }
-
-    //! The short description of the variable
-    static std::string Description()
-    {
-        return "Reserve Participation costs by all the clusters";
-    }
-
-    //! The expected results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
-      ResultsType;
-
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationCostByDispatchablePlant VCardForSpatialAggregate;
-
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::de),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable
-        columnCount = Category::dynamicColumns,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
-
-    typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
-
-    // typedef IntermediateValues IntermediateValuesType;
-
-}; // class VCard
 
 /*!
 ** \brief C02 Average value of the overrall OperatingCost emissions expected from all
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class ReserveParticipationCostByDispatchablePlant
- : public Variable::IVariable<ReserveParticipationCostByDispatchablePlant<NextT>,
+class ReserveParticipationByDispatchablePlant
+ : public Variable::IVariable<ReserveParticipationByDispatchablePlant<NextT>,
                               NextT,
-                              VCardReserveParticipationCostByDispatchablePlant>
+                              VCardReserveParticipationByDispatchablePlant>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardReserveParticipationCostByDispatchablePlant VCardType;
+    typedef VCardReserveParticipationByDispatchablePlant VCardType;
     //! Ancestor
-    typedef Variable::
-      IVariable<ReserveParticipationCostByDispatchablePlant<NextT>, NextT, VCardType>
+    typedef Variable::IVariable<ReserveParticipationByDispatchablePlant<NextT>, NextT, VCardType>
       AncestorType;
 
     //! List of expected results
@@ -141,11 +83,11 @@ public:
     };
 
 public:
-    ReserveParticipationCostByDispatchablePlant() : pValuesForTheCurrentYear(NULL), pSize(0)
+    ReserveParticipationByDispatchablePlant() : pValuesForTheCurrentYear(NULL), pSize(0)
     {
     }
 
-    ~ReserveParticipationCostByDispatchablePlant()
+    ~ReserveParticipationByDispatchablePlant()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             delete[] pValuesForTheCurrentYear[numSpace];
@@ -164,14 +106,13 @@ public:
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
-
         // Get the area
         pSize = 0;
         for (int areaIndex = 0; areaIndex < study->areas.size(); areaIndex++)
         {
             if (study->areas[areaIndex]->allCapacityReservations.size() > 0)
             {
-                pSize = area->thermal.list.allClustersCount();
+                pSize = area->thermal.list.reserveParticipationsCount();
                 break;
             }
         }
@@ -239,13 +180,21 @@ public:
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Get end year calculations
-        if (pSize) {
+        if (pSize)
+        {
             for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
-                i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
-                ++i)
+                 i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
+                 ++i)
             {
-                pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
-                    = state.thermalClusterReserveParticipationCostForYear[i];
+                for (auto const& [reserveName, reserveParticipation] :
+                     state.thermalReserveParticipationPerClusterForYear[i][state.thermalCluster
+                                                                             ->name()])
+                {
+                    pValuesForTheCurrentYear[numSpace][state.getIndexFromReserveAndCluster(
+                                                         reserveName, state.thermalCluster->name())]
+                      .hour[i]
+                      = reserveParticipation;
+                }
             }
         }
 
@@ -340,11 +289,11 @@ private:
     size_t pSize;
     unsigned int pNbYearsParallel;
 
-}; // class ReserveParticipationCostByDispatchablePlant
+}; // class ReserveParticipationByDispatchablePlant
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCostByDispatchablePlant_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByDispatchablePlant_H__

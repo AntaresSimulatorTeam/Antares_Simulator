@@ -101,13 +101,13 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 
 
 void Cluster::addReserveParticipation(
-  std::string name,
+  Data::ReserveName name,
   ClusterReserveParticipation reserveParticipation)
 {
     clusterReservesParticipations.emplace(name, reserveParticipation);
 }
 
-bool Cluster::isParticipatingInReserve(std::string name)
+bool Cluster::isParticipatingInReserve(Data::ReserveName name)
 {
     if (clusterReservesParticipations.contains(name))
         return true;
@@ -115,7 +115,7 @@ bool Cluster::isParticipatingInReserve(std::string name)
         return false;
 }
 
-float Cluster::reserveMaxPower(std::string name)
+float Cluster::reserveMaxPower(Data::ReserveName name)
 {
     if (clusterReservesParticipations.contains(name))
         return clusterReservesParticipations.at(name).maxPower;
@@ -123,7 +123,7 @@ float Cluster::reserveMaxPower(std::string name)
         return -1;
 }
 
-float Cluster::reserveCost(std::string name)
+float Cluster::reserveCost(Data::ReserveName name)
 {
     if (clusterReservesParticipations.contains(name))
         return clusterReservesParticipations.at(name).participationCost;
@@ -160,9 +160,9 @@ bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
     return (s1->getFullName() < s2->getFullName());
 }
 
-std::vector<std::string> Cluster::listOfParticipatingReserves()
+std::vector<Data::ReserveName> Cluster::listOfParticipatingReserves()
 {
-    std::vector<std::string> reserves;
+    std::vector<Data::ReserveName> reserves;
     for (auto reserve: clusterReservesParticipations)
     {
         reserves.push_back(reserve.first);

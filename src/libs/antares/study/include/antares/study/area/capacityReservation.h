@@ -44,13 +44,13 @@ private:
 /// @brief Stores all the Capacity reservations in two vectors for the up and down reserves
 struct AllCapacityReservations
 {
-    std::map<std::string, CapacityReservation> areaCapacityReservationsUp;
-    std::map<std::string, CapacityReservation> areaCapacityReservationsDown;
+    std::map<Data::ReserveName, CapacityReservation> areaCapacityReservationsUp;
+    std::map<Data::ReserveName, CapacityReservation> areaCapacityReservationsDown;
 
     /// @brief Check if the capacity reservation name already exist in both the up and down reserves
     /// @param name
     /// @return true if the capacity reservation already existed
-    bool contains(std::string name)
+    bool contains(Data::ReserveName name)
     {
         return areaCapacityReservationsUp.contains(name) || areaCapacityReservationsDown.contains(name);
     }
