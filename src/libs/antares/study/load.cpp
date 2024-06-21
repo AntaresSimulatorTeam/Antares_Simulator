@@ -47,12 +47,6 @@ bool Study::internalLoadHeader(const String& path)
         return false;
     }
 
-    if (!header.validateVersion())
-    {
-        logs.error() << path << ": error with the version, aborting";
-        return false;
-    }
-
     // Informations about the study
     logs.info();
     logs.notice() << "Preparing " << header.caption << "...";

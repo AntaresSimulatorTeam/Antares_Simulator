@@ -166,10 +166,16 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
         }
     }
 
+    if (validateVersion())
+    {
+        return true;
+    }
+
     if (warnings)
     {
         logs.error() << "Study header: Invalid format";
     }
+
     return false;
 }
 
