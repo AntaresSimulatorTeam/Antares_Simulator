@@ -21,7 +21,10 @@
 
 #include "antares/study/area/links.h"
 
+#include <filesystem>
 #include <limits>
+
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include <yuni/yuni.h>
 
@@ -132,6 +135,58 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     success = indirectCapacities.loadFromFile(filename, false) && success;
 
     return success;
+}
+
+// This function is "lazy", it only loads files if they exist
+// and set a `valid` flag
+bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
+{
+    const std::string idprepro = std::string(from->id) + "/" + std::string(with->id);
+    tsGeneration.prepro =
+        std::make_unique<Data::PreproAvailability>(idprepro, tsGeneration.unitCount);
+
+    bool anyFileWasLoaded = false;
+
+    // file name without suffix, .txt for general infos and mod_direct/indirect.txt
+    fs::path preproFile = folder / "prepro" / with->id.c_str();
+
+    // Prepro
+    fs::path filepath = preproFile;
+    filepath += ".txt";
+    if (fs::exists(filepath))
+    {
+        anyFileWasLoaded = true;
+        tsGeneration.valid = tsGeneration.prepro->data.loadFromCSVFile(
+                                     filepath.string(),
+                                     Antares::Data::PreproAvailability::preproAvailabilityMax,
+                                     DAYS_PER_YEAR)
+                                && tsGeneration.prepro->validate();
+    }
+
+    // Modulation
+    filepath = preproFile;
+    filepath += "_mod_direct.txt";
+    if (fs::exists(filepath))
+    {
+        anyFileWasLoaded = true;
+        tsGeneration.valid &= tsGeneration.modulationCapacityDirect
+                                      .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
+    }
+
+    filepath = preproFile;
+    filepath += "_mod_indirect.txt";
+    if (fs::exists(filepath))
+    {
+        anyFileWasLoaded = true;
+        tsGeneration.valid &= tsGeneration.modulationCapacityIndirect
+                                        .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
+    }
+
+    if (anyFileWasLoaded)
+    {
+        return tsGeneration.valid;
+    }
+    return true;
 }
 
 bool AreaLink::isLinkPhysical() const
@@ -448,13 +503,55 @@ bool handleKey(Data::AreaLink& link, const String& key, const String& value)
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
+    return false;
+}
+
+bool handleTSGenKey(Data::LinkTsGeneration& out,
+                    const std::string& key,
+                    const String& value)
+{
+
+    if (key == "unitcount")
+    {
+        return value.to<uint>(out.unitCount);
+    }
+
+    if (key == "nominalcapacity")
+    {
+        return value.to<double>(out.nominalCapacity);
+    }
+
+    if (key == "law.planned")
+    {
+        return value.to(out.plannedLaw);
+    }
+
+    if (key == "law.forced")
+    {
+        return value.to(out.forcedLaw);
+    }
+
+    if (key == "volatility.planned")
+    {
+        return value.to(out.plannedVolatility);
+    }
+
+    if (key == "volatility.forced")
+    {
+        return value.to(out.forcedVolatility);
+    }
+
+    if (key == "force-no-generation")
+    {
+        return value.to<bool>(out.forceNoGeneration);
+    }
 
     return false;
 }
 
 bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
-    return handleKey(link, key, value);
+    return handleKey(link, key, value) || handleTSGenKey(link.tsGeneration, key, value);
 }
 
 [[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
@@ -475,7 +572,7 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder, bool loadTSGen)
 {
     // Assert
     assert(area);
@@ -599,6 +696,11 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::pa
             {
                 logs.warning() << '`' << p->key << "`: Unknown property";
             }
+        }
+
+        if (loadTSGen)
+        {
+            ret = link.loadTSGenTimeSeries(folder) && ret;
         }
 
         // From the solver only

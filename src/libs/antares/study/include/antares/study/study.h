@@ -588,8 +588,9 @@ public:
     ScenarioBuilder::Sets* scenarioRules = nullptr;
     //@}
 
-    TimeSeries::TS scenarioHydroLevels;
-
+    TimeSeries::TS scenarioInitialHydroLevels;
+    // Hydro Final Levels
+    TimeSeries::TS scenarioFinalHydroLevels;
     /*!
     ** \brief Runtime informations
     **

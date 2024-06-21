@@ -220,6 +220,7 @@ void StudyBuilder::setNumberMCyears(unsigned int nbYears)
 {
     study->parameters.resetPlaylist(nbYears);
     study->areas.resizeAllTimeseriesNumbers(nbYears);
+    study->areas.each([&](Data::Area& area) { area.hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears); });
 }
 
 void StudyBuilder::playOnlyYear(unsigned int year)

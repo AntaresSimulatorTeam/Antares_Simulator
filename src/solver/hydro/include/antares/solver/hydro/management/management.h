@@ -122,6 +122,8 @@ public:
 private:
     //! Prepare inflows scaling for each area
     void prepareInflowsScaling(uint year);
+    //! prepare data for Final reservoir level
+    void changeInflowsToAccommodateFinalLevels(uint yearIndex);
     //! Prepare minimum generation scaling for each area
     void minGenerationScaling(uint year);
     //! check Monthly minimum generation is lower than available inflows
