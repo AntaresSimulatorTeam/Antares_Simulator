@@ -39,6 +39,9 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 
+
+#include "hydro-final-reservoir-level-functions.h"
+
 namespace Antares::Solver::Simulation
 {
 
@@ -349,6 +352,7 @@ void ISimulation<ImplementationType>::run()
         if (study.parameters.useCustomScenario)
         {
             ApplyCustomScenario(study);
+            CheckFinalReservoirLevelsConfiguration(study);
         }
 
         // Launching the simulation for all years
@@ -744,15 +748,15 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
                                                         max[firstDayOfMonth],
                                                         randomHydroGenerator);
 
-              // Possibly update the intial level from scenario builder
-              if (study.parameters.useCustomScenario)
-              {
-                  double levelFromScenarioBuilder = study.scenarioHydroLevels[areaIndex][y];
-                  if (levelFromScenarioBuilder >= 0.)
-                  {
-                      randomLevel = levelFromScenarioBuilder;
-                  }
-              }
+            // Possibly update the intial level from scenario builder
+            if (study.parameters.useCustomScenario)
+            {
+                double levelFromScenarioBuilder = study.scenarioInitialHydroLevels[areaIndex][y];
+                if (levelFromScenarioBuilder >= 0.)
+                {
+                    randomLevel = levelFromScenarioBuilder;
+                }
+            }
 
               // Current area's hydro starting (or initial) level computation
               // (no matter if the year is performed or not, we always draw a random initial

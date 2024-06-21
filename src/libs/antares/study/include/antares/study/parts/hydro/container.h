@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
+#include <optional>
 #include "../../fwd.h"
 #include "allocation.h"
 #include "prepro.h"
@@ -80,7 +81,7 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    PartHydro();
+    PartHydro(const Data::Area& area);
     //! Destructor
     ~PartHydro();
 
@@ -164,6 +165,8 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
+
+    std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
 
 private:
     static bool checkReservoirLevels(const Study& study);
