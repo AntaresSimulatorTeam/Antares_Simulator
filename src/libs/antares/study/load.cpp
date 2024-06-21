@@ -286,7 +286,7 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 class SetHandlerAreas
 {
 public:
-    SetHandlerAreas(Study& study):
+    explicit SetHandlerAreas(Study& study):
         pStudy(study)
     {
     }
@@ -411,7 +411,7 @@ bool Study::reloadXCastData()
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
     bool ret = true;
     areas.each(
-      [&](Data::Area& area)
+      [this, &ret](Data::Area& area)
       {
           assert(area.load.prepro);
           assert(area.solar.prepro);

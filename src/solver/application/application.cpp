@@ -118,7 +118,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        pDurationCollector("study_loading") << [&]
+        pDurationCollector("study_loading") << [this, &study, &options]
         {
             if (study.loadFromFolder(pSettings.studyFolder, options))
             {

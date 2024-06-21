@@ -47,7 +47,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     unsigned int year = opt_runtime_data.year;
     area_list_.each(
-      [&](Data::Area& area)
+      [this, &hourInYear, &year](Data::Area& area)
       {
           double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
           for (uint h = 0; h != nbHoursInWeek; ++h)
