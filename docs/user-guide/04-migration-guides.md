@@ -18,7 +18,6 @@ with XXX in
 - "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
 - number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
 
-Add bool argument to optionally load time-series. This bool is false (default value) in antares-solver, and true in antares-ts-generator. Parameters are loaded in any case.- 
 
 
 ## v9.1.0
