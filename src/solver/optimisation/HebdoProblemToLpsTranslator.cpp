@@ -83,7 +83,7 @@ ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(const PRO
         throw WeeklyProblemTranslationException("ConstraintesCount exceed NombreDeTermesDesLignes size");
     }
 
-    auto ret = ConstantDataFromAntares();
+    ConstantDataFromAntares ret;
 
     ret.VariablesCount = problem->NombreDeVariables;
     ret.ConstraintesCount = problem->NombreDeContraintes;
