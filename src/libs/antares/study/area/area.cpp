@@ -45,28 +45,21 @@ void Area::internalInitialize()
 }
 
 Area::Area():
-    hydro(*this),
     reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+    miscGen(fhhMax, HOURS_PER_YEAR),
+    hydro(*this)
 {
     internalInitialize();
 }
 
-Area::Area(const AnyString& name):
-    hydro(*this),
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+Area::Area(const AnyString& name) : Area()
 {
     internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(this->name);
 }
 
-Area::Area(const AnyString& name, const AnyString& id):
-
-    hydro(*this),
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+Area::Area(const AnyString& name, const AnyString& id) : Area()
 {
     internalInitialize();
     this->name = name;
