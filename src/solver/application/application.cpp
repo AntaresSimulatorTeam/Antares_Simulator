@@ -34,7 +34,6 @@
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/config/config.h"
-#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
