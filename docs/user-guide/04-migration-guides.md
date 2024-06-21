@@ -2,7 +2,7 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v9.2.0
-### (TS-generator only) TS generation for links
+### (TS-generator only) TS generation for link capacities
 In files input/links/<link1>/properties.ini, add the following properties
 - tsgen_direct_XXX,
 - tsgen_indirect_XXX
