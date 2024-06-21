@@ -566,43 +566,11 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     if (key == "simulation.start")
     {
-        uint day;
-        if (not value.to(day))
-        {
-            return false;
-        }
-        if (day == 0)
-        {
-            day = 1;
-        }
-        else
-        {
-            if (day > 365)
-            {
-                day = 365;
-            }
-            --day;
-        }
-        d.simulationDays.first = day;
-        return true;
+        return value.to<uint>(d.simulationDays.first);
     }
     if (key == "simulation.end")
     {
-        uint day;
-        if (not value.to(day))
-        {
-            return false;
-        }
-        if (day == 0)
-        {
-            day = 1;
-        }
-        else if (day > 365)
-        {
-            day = 365;
-        }
-        d.simulationDays.end = day; // not included
-        return true;
+        return value.to<uint>(d.simulationDays.end);
     }
 
     if (key == "thematic-trimming")
@@ -1158,8 +1126,7 @@ bool firstKeyLetterIsValid(const String& name)
 }
 
 bool Parameters::loadFromINI(const IniFile& ini,
-                             const StudyVersion& version,
-                             const StudyLoadOptions& options)
+                             const StudyVersion& version)
 {
     // Reset inner data
     reset();
@@ -1229,61 +1196,9 @@ bool Parameters::loadFromINI(const IniFile& ini,
         }
     }
 
-    // forcing value
-    if (options.nbYears != 0)
-    {
-        if (options.nbYears > nbYears)
-        {
-            // The variable `yearsFilter` must be enlarged
-            yearsFilter.resize(options.nbYears, false);
-        }
-        nbYears = options.nbYears;
-
-        // Resize years weight (add or remove item)
-        if (yearsWeight.size() != nbYears)
-        {
-            yearsWeight.resize(nbYears, 1.f);
-        }
-    }
-
-    // Simulation mode
-    // ... Enforcing simulation mode
-    if (options.forceMode != SimulationMode::Unknown)
-    {
-        mode = options.forceMode;
-        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
-    }
-    else
-    {
-        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
-    }
-
-    if (options.forceDerated)
-    {
-        derated = true;
-    }
-
-    namedProblems = options.namedProblems;
-
-    handleOptimizationOptions(options);
-
-    // Attempt to fix bad values if any
-    fixBadValues();
-
     fixRefreshIntervals();
 
     fixGenRefreshForNTC();
-
-    // Specific action before launching a simulation
-    if (options.usedByTheSolver)
-    {
-        prepareForSimulation(options);
-    }
-
-    if (options.mpsToExport || options.namedProblems)
-    {
-        this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
-    }
 
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
@@ -1375,6 +1290,66 @@ void Parameters::fixBadValues()
     {
         nbTimeSeriesSolar = 1;
     }
+
+    if (simulationDays.first == 0)
+        simulationDays.first = 1;
+    else
+    {
+        simulationDays.first = std::clamp(simulationDays.first, 1u, 365u);
+        --simulationDays.first; // value between 0 and 364 for edge cases
+    }
+
+    simulationDays.end = std::clamp(simulationDays.end, 1u, 365u);
+}
+
+void Parameters::validateOptions(const StudyLoadOptions& options)
+{
+    if (options.forceDerated)
+    {
+        derated = true;
+    }
+    // forcing value
+    if (options.nbYears != 0)
+    {
+        if (options.nbYears > nbYears)
+        {
+            // The variable `yearsFilter` must be enlarged
+            yearsFilter.resize(options.nbYears, false);
+        }
+        nbYears = options.nbYears;
+
+        // Resize years weight (add or remove item)
+        if (yearsWeight.size() != nbYears)
+        {
+            yearsWeight.resize(nbYears, 1.f);
+        }
+    }
+
+    // Simulation mode
+    // ... Enforcing simulation mode
+    if (options.forceMode != SimulationMode::Unknown)
+    {
+        mode = options.forceMode;
+        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
+    }
+    else
+    {
+        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
+    }
+    // Specific action before launching a simulation
+    if (options.usedByTheSolver)
+    {
+        prepareForSimulation(options);
+    }
+
+    if (options.mpsToExport || options.namedProblems)
+    {
+        this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    }
+
+    namedProblems = options.namedProblems;
+
+    handleOptimizationOptions(options);
 }
 
 uint64_t Parameters::memoryUsage() const
@@ -1990,7 +1965,7 @@ bool Parameters::loadFromFile(const AnyString& filename,
     IniFile ini;
     if (ini.open(filename))
     {
-        return loadFromINI(ini, version, options);
+        return loadFromINI(ini, version);
     }
 
     // Error otherwise
