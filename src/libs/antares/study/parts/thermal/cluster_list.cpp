@@ -159,51 +159,55 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
             options = Matrix<>::optFixedSize,
         };
 
-        bool r = cluster->modulation.loadFromCSVFile(modulationFile,
-                                                     thermalModulationMax,
-                                                     HOURS_PER_YEAR,
-                                                     options);
-        if (!r && study.usedByTheSolver)
-        {
-            cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
-            cluster->modulation.fill(1.);
-            cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
-        }
-        ret = ret && r;
-
-        // Special operations when not ran from the interface (aka solver)
-        if (study.usedByTheSolver)
-        {
-            if (!study.parameters.include.thermal.minStablePower)
-            {
-                cluster->minStablePower = 0.;
-            }
-            if (!study.parameters.include.thermal.minUPTime)
-            {
-                cluster->minUpDownTime = 1;
-                cluster->minUpTime = 1;
-                cluster->minDownTime = 1;
-            }
-            else
-            {
-                cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
-            }
-
-            if (!study.parameters.include.reserve.spinning)
-            {
-                cluster->spinning = 0;
-            }
-
-            cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
-        }
+        ret = cluster->modulation.loadFromCSVFile(modulationFile,
+                                                  thermalModulationMax,
+                                                  HOURS_PER_YEAR,
+                                                  options) && ret;
 
         // Check the data integrity of the cluster
-        cluster->integrityCheck();
         addToCompleteList(cluster);
     }
 
     rebuildIndexes();
     rebuildIndex();
+
+    return ret;
+}
+
+
+bool ThermalClusterList::validateClusters(const Parameters& parameters) const
+{
+    bool ret = true;
+
+    for (const auto& cluster : allClusters_)
+    {
+        cluster->minUpTime = std::clamp(cluster->minUpTime, 1u, 168u);
+        cluster->minDownTime = std::clamp(cluster->minDownTime, 1u, 168u);
+
+        // update the minUpDownTime
+        cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
+
+        if (!parameters.include.thermal.minStablePower)
+        {
+            cluster->minStablePower = 0.;
+        }
+        if (!parameters.include.thermal.minUPTime)
+        {
+            cluster->minUpDownTime = 1;
+            cluster->minUpTime = 1;
+            cluster->minDownTime = 1;
+        }
+
+        if (!parameters.include.reserve.spinning)
+        {
+            cluster->spinning = 0;
+        }
+
+        cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
+
+        ret = cluster->integrityCheck() && ret;
+
+    }
 
     return ret;
 }
@@ -268,35 +272,11 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "min-up-time")
     {
-        if (p->value.to<uint>(cluster.minUpTime))
-        {
-            if (cluster.minUpTime < 1)
-            {
-                cluster.minUpTime = 1;
-            }
-            if (cluster.minUpTime > 168)
-            {
-                cluster.minUpTime = 168;
-            }
-            return true;
-        }
-        return false;
+        return p->value.to<uint>(cluster.minUpTime);
     }
     if (p->key == "min-down-time")
     {
-        if (p->value.to<uint>(cluster.minDownTime))
-        {
-            if (cluster.minDownTime < 1)
-            {
-                cluster.minDownTime = 1;
-            }
-            if (cluster.minDownTime > 168)
-            {
-                cluster.minDownTime = 168;
-            }
-            return true;
-        }
-        return false;
+        return p->value.to<uint>(cluster.minDownTime);
     }
     if (p->key == "name")
     {
@@ -375,8 +355,6 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << property->key << "`: The property is unknown and ignored";
             }
         }
-        // update the minUpDownTime
-        cluster.minUpDownTime = std::max(cluster.minUpTime, cluster.minDownTime);
     }
     return true;
 }
@@ -399,7 +377,7 @@ void ThermalClusterList::reverseCalculationOfSpinning()
 
 void ThermalClusterList::enableMustrunForEveryone()
 {
-    for (auto& c: allClusters_)
+    for (const auto& c : allClusters_)
     {
         c->mustrun = true;
     }
@@ -606,32 +584,41 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
 
 bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& folder)
 {
-    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
-                                           & timeSeriesThermal;
-
     Clob buffer;
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };
 
-    auto loadAndCheckPrepro = [&buffer, &folder, &study, &globalThermalTSgeneration](auto c)
+    auto loadPrepro = [&buffer, &folder, &study](auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
-        bool result = c->prepro->loadFromFolder(study, buffer);
-
-        if (study.usedByTheSolver && globalThermalTSgeneration)
-        {
-            result = c->prepro->validate() && result;
-        }
-
-        if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
-        {
-            result = c->prepro->normalizeAndCheckNPO();
-        }
-        return result;
+        return c->prepro->loadFromFolder(study, buffer);
     };
 
-    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadAndCheckPrepro);
+    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadPrepro);
+}
+
+bool ThermalClusterList::validatePrepro(const Study& study) {
+    auto hasPrepro = [](auto c) { return (bool)c->prepro; };
+
+    const bool globalThermalTSgeneration =
+        study.parameters.timeSeriesToGenerate & timeSeriesThermal;
+
+    if (!study.usedByTheSolver)
+        return true;
+
+    return std::ranges::all_of(
+        allClusters_ | std::views::filter(hasPrepro),
+        [&globalThermalTSgeneration](auto& c) {
+            if (globalThermalTSgeneration && !c->prepro->validate()) {
+                return false;
+            }
+
+            if (c->doWeGenerateTS(globalThermalTSgeneration)) {
+                return c->prepro->normalizeAndCheckNPO();
+            }
+            return true;
+        });
 }
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)

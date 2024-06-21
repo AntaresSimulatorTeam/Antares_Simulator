@@ -250,9 +250,6 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
 
-    std::vector<double> CoutHoraireDuPalierThermiqueUp;
-    std::vector<double> CoutHoraireDuPalierThermiqueDown;
-
     std::vector<int> NombreMaxDeGroupesEnMarcheDuPalierThermique;
     std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 };
@@ -302,8 +299,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
 
     double WeeklyWaterValueStateRegular;
-    double WeeklyWaterValueStateUp;
-    double WeeklyWaterValueStateDown;
 
     bool TurbinageEntreBornes;
     bool SansHeuristique;
@@ -405,9 +400,6 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     std::vector<double> ProductionThermiqueDuPalier;
 
-    std::vector<double> ProductionThermiqueDuPalierUp;
-    std::vector<double> ProductionThermiqueDuPalierDown;
-
     std::vector<double> NombreDeGroupesEnMarcheDuPalier;
     std::vector<double> NombreDeGroupesQuiDemarrentDuPalier;
 
@@ -423,20 +415,11 @@ struct RESULTATS_HORAIRES
     std::vector<int> ValeursHorairesLmrViolations; // adq patch lmr violations
     std::vector<double> ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
     std::vector<double> ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
-    std::vector<double> ValeursHorairesDeDefaillancePositiveUp;
-    std::vector<double> ValeursHorairesDeDefaillancePositiveDown;
-    std::vector<double> ValeursHorairesDeDefaillancePositiveAny;
 
     std::vector<double> ValeursHorairesDeDefaillanceNegative;
-    std::vector<double> ValeursHorairesDeDefaillanceNegativeUp;
-    std::vector<double> ValeursHorairesDeDefaillanceNegativeDown;
-    std::vector<double> ValeursHorairesDeDefaillanceNegativeAny;
 
-    std::vector<double> ValeursHorairesDeDefaillanceEnReserve;
     std::vector<double> PompageHoraire;
     std::vector<double> TurbinageHoraire;
-    std::vector<double> TurbinageHoraireUp;
-    std::vector<double> TurbinageHoraireDown;
 
     std::vector<double> niveauxHoraires;
     std::vector<double> valeurH2oHoraire;
@@ -576,7 +559,6 @@ struct PROBLEME_HEBDO
 
     bool YaDeLaReserveJmoins1 = false;
 
-    std::vector<double> previousYearFinalLevels;
     std::vector<ALL_MUST_RUN_GENERATION> AllMustRunGeneration;
 
     OptimizationStatistics optimizationStatistics[2];
@@ -586,7 +568,6 @@ struct PROBLEME_HEBDO
 
     /* Hydro management */
     std::vector<double> CoefficientEcretementPMaxHydraulique;
-    bool hydroHotStart = false;
     std::vector<double> previousSimulationFinalLevel;
 
     /* Results */

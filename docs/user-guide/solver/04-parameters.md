@@ -588,8 +588,7 @@ _**This section is under construction**_
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
 
 ---
-#### initial-reservoir-levels
-[//]: # (TODO: complete the usage paragraph)
+#### initial-reservoir-levels (DEPRECATED since 9.2: cold start is default behavior)
 - **Expected value:** one of the following (case-insensitive):
     - `cold start`
     - `hot start`
@@ -792,12 +791,14 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
 ---
 #### playlist_year
 - **Expected value:** `+ =` or `- =`, followed by a positive integer (example: `playlist_year + = 5`)
-- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`.
+- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`, ignored otherwise.
 - **Usage:**
     - for every Monte-Carlo year that you want the Antares Simulator to **study**, add the parameter entry
       `playlist_year + = i`, where `i` is the index of the year.
     - for every Monte-Carlo year that you want the Antares Simulator to **skip**, add the parameter entry
       `playlist_year - = i`, where `i` is the index of the year.
+
+_Please note that by convention, the first year has index 0._
 
 ---
 #### playlist_year_weight

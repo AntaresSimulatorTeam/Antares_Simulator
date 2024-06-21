@@ -54,7 +54,7 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     }
 
     value.words(" ,;\t\r\n",
-                [&](const AnyString& element) -> bool
+                [&v](const AnyString& element)
                 {
                     ShortString16 word(element);
                     word.toLower();
@@ -208,13 +208,6 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
-Parameters::Parameters():
-    noOutput(false)
-{
-}
-
-Parameters::~Parameters() = default;
-
 bool Parameters::economy() const
 {
     return mode == SimulationMode::Economy;
@@ -231,8 +224,8 @@ void Parameters::resetSeeds()
     // For retro-compatibility, the wind ts-generator should produce the
     // same results than before 3.8.
     // It must have the same seed than before
-    auto increment = (unsigned)antaresSeedIncrement;
-    auto s = (unsigned)antaresSeedDefaultValue;
+    auto increment = antaresSeedIncrement;
+    auto s = antaresSeedDefaultValue;
 
     seed[seedTsGenWind] = s;
     // The same way for all others
@@ -311,15 +304,11 @@ void Parameters::reset()
     readonly = false;
     synthesis = true;
 
-    // Initial reservoir levels
-    initialReservoirLevels.iniLevels = irlColdStart;
-
     // Hydro heuristic policy
     hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
 
     // Hydro pricing
     hydroPricing.hpMode = hpHeuristic;
-    allSetsHaveSameSize = true;
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
@@ -814,19 +803,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
-    if (key == "initial-reservoir-levels")
-    {
-        auto iniLevels = StringToInitialReservoirLevels(value);
-        if (iniLevels != irlUnknown)
-        {
-            d.initialReservoirLevels.iniLevels = iniLevels;
-            return true;
-        }
-        logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
-                       << "'. reset to cold start mode.";
-        d.initialReservoirLevels.iniLevels = irlColdStart;
-        return false;
-    }
 
     if (key == "number-of-cores-mode")
     {
@@ -1160,6 +1136,15 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     // deprecated but needed for testing old studies
     if (key == "include-split-exported-mps")
     {
+        return true;
+    }
+
+    if (key == "initial-reservoir-levels") // ignored since 9.2
+    {
+        if (version >= StudyVersion(9,2))
+            logs.warning() << "Option initial-reservoir-levels is deprecated, please remove it from the study";
+        else if (value == "hot start")
+            logs.warning() << "Hydro hot start not supported with this solver, please use a version < 9.2";
         return true;
     }
 
@@ -1883,8 +1868,6 @@ void Parameters::saveToINI(IniFile& ini) const
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
-        section->add("initial-reservoir-levels",
-                     InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
         section->add("hydro-heuristic-policy",
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
@@ -2000,7 +1983,7 @@ void Parameters::saveToINI(IniFile& ini) const
 }
 
 bool Parameters::loadFromFile(const AnyString& filename,
-                              StudyVersion& version,
+                              const StudyVersion& version,
                               const StudyLoadOptions& options)
 {
     // Loading the INI file
