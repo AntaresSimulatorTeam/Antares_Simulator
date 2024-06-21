@@ -4,7 +4,7 @@ var classAntares_1_1Data_1_1PartHydro =
       [ "genMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a144240360470d881195163d3ffb16507", null ],
       [ "pumpMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a46e953e6bdbeffa9e047d86c905a9d2e", null ]
     ] ],
-    [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html#a04d548a70f2829cc320ea34d473f3f02", null ],
+    [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html#abdd292c5236872f584cc0901594cce87", null ],
     [ "~PartHydro", "classAntares_1_1Data_1_1PartHydro.html#a129570fc5addc93e3ec1cf1f0264fa3e", null ],
     [ "LoadDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#acad6e4644d4c78c6f7621e19bb22baf0", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1PartHydro.html#a076984e01722b7147ab993e224cbe4db", null ],

@@ -1,0 +1,546 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer.png" usemap="#Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer_map" alt=""/>
+  <map id="Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer_map" name="Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer_map">
+<area href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows.html" alt="Antares::Component::Datagrid::Renderer::ScBuilderRendererAreasAsRows" shape="rect" coords="0,168,450,192"/>
+<area href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html" alt="Antares::Component::Datagrid::Renderer::ScBuilderRendererBase" shape="rect" coords="0,112,450,136"/>
+<area href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html" title="Data provider for Datagrids." alt="Antares::Component::Datagrid::Renderer::IRenderer" shape="rect" coords="0,56,450,80"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a1608a001efc78e89884f1a1b9a787f2f" id="r_a1608a001efc78e89884f1a1b9a787f2f"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer.html#a1608a001efc78e89884f1a1b9a787f2f">cellValue</a> (int x, int y) const</td></tr>
+<tr class="memdesc:a1608a001efc78e89884f1a1b9a787f2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the string representation of a <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Cell.html">Cell</a>.  <br /></td></tr>
+<tr class="separator:a1608a001efc78e89884f1a1b9a787f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a330931303f295f16f88dff6cd96d97e5" id="r_a330931303f295f16f88dff6cd96d97e5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer.html#a330931303f295f16f88dff6cd96d97e5">cellValue</a> (int x, int y, const Yuni::String &amp;value)</td></tr>
+<tr class="memdesc:a330931303f295f16f88dff6cd96d97e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to modify a cell value.  <br /></td></tr>
+<tr class="separator:a330931303f295f16f88dff6cd96d97e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bfbc1901be7aaeb33787276c1cca1ce" id="r_a1bfbc1901be7aaeb33787276c1cca1ce"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer.html#a1bfbc1901be7aaeb33787276c1cca1ce">cellNumericValue</a> (int x, int y) const</td></tr>
+<tr class="memdesc:a1bfbc1901be7aaeb33787276c1cca1ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the floating value of a <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Cell.html">Cell</a>.  <br /></td></tr>
+<tr class="separator:a1bfbc1901be7aaeb33787276c1cca1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b79f2e41b0470b09c24c925f7dd128c" id="r_a8b79f2e41b0470b09c24c925f7dd128c"><td class="memItemLeft" align="right" valign="top">IRenderer::CellStyle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer.html#a8b79f2e41b0470b09c24c925f7dd128c">cellStyle</a> (int x, int y) const</td></tr>
+<tr class="separator:a8b79f2e41b0470b09c24c925f7dd128c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows.html">Antares::Component::Datagrid::Renderer::ScBuilderRendererAreasAsRows</a></td></tr>
+<tr class="memitem:a8109541c516e9ef6f7d8d701e59e04d6 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows" id="r_a8109541c516e9ef6f7d8d701e59e04d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows.html#a8109541c516e9ef6f7d8d701e59e04d6">height</a> () const override</td></tr>
+<tr class="memdesc:a8109541c516e9ef6f7d8d701e59e04d6 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows"><td class="mdescLeft">&#160;</td><td class="mdescRight">The effective height of the grid.  <br /></td></tr>
+<tr class="separator:a8109541c516e9ef6f7d8d701e59e04d6 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43f1951e4a4be1d9d325612e2faea0b4 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows" id="r_a43f1951e4a4be1d9d325612e2faea0b4"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows.html#a43f1951e4a4be1d9d325612e2faea0b4">rowCaption</a> (int rowIndx) const override</td></tr>
+<tr class="memdesc:a43f1951e4a4be1d9d325612e2faea0b4 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the caption of a row.  <br /></td></tr>
+<tr class="separator:a43f1951e4a4be1d9d325612e2faea0b4 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25b0491d9ed25ee2b42a06162041c908 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows" id="r_a25b0491d9ed25ee2b42a06162041c908"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows.html#a25b0491d9ed25ee2b42a06162041c908">valid</a> () const override</td></tr>
+<tr class="separator:a25b0491d9ed25ee2b42a06162041c908 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html">Antares::Component::Datagrid::Renderer::ScBuilderRendererBase</a></td></tr>
+<tr class="memitem:ae5df1da63bf7a41dee813893aa4736c9 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_ae5df1da63bf7a41dee813893aa4736c9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html#ae5df1da63bf7a41dee813893aa4736c9">width</a> () const override</td></tr>
+<tr class="memdesc:ae5df1da63bf7a41dee813893aa4736c9 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">The effective width of the grid.  <br /></td></tr>
+<tr class="separator:ae5df1da63bf7a41dee813893aa4736c9 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd7297e62111d0f4cd78d96bad9f1425 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_abd7297e62111d0f4cd78d96bad9f1425"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html#abd7297e62111d0f4cd78d96bad9f1425">columnCaption</a> (int colIndx) const override</td></tr>
+<tr class="memdesc:abd7297e62111d0f4cd78d96bad9f1425 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the caption of a column.  <br /></td></tr>
+<tr class="separator:abd7297e62111d0f4cd78d96bad9f1425 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a033a014d6f147ae352e002ecf0a2b391 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_a033a014d6f147ae352e002ecf0a2b391"><td class="memItemLeft" align="right" valign="top">wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html#a033a014d6f147ae352e002ecf0a2b391">cellValue</a> (int x, int y) const override</td></tr>
+<tr class="memdesc:a033a014d6f147ae352e002ecf0a2b391 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the string representation of a <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Cell.html">Cell</a>.  <br /></td></tr>
+<tr class="separator:a033a014d6f147ae352e002ecf0a2b391 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4dbe927de6b46312bdb49db162cd9ef inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_af4dbe927de6b46312bdb49db162cd9ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html#af4dbe927de6b46312bdb49db162cd9ef">resetColors</a> (int, int, wxColour &amp;, wxColour &amp;) const override</td></tr>
+<tr class="separator:af4dbe927de6b46312bdb49db162cd9ef inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dd176f202ec3145d61021c3dc5baaa4 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_a7dd176f202ec3145d61021c3dc5baaa4"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html#a7dd176f202ec3145d61021c3dc5baaa4">maxWidthResize</a> () const override</td></tr>
+<tr class="memdesc:a7dd176f202ec3145d61021c3dc5baaa4 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">The most suitable column count.  <br /></td></tr>
+<tr class="separator:a7dd176f202ec3145d61021c3dc5baaa4 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d73d600fe9a6c495141e92104f71d73 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_a4d73d600fe9a6c495141e92104f71d73"><td class="memItemLeft" align="right" valign="top">IRenderer::CellStyle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html#a4d73d600fe9a6c495141e92104f71d73">cellStyle</a> (int col, int row) const override</td></tr>
+<tr class="separator:a4d73d600fe9a6c495141e92104f71d73 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1bd8dfe598436329a72e0ddd8a1d46f inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_aa1bd8dfe598436329a72e0ddd8a1d46f"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>control</b> (wxWindow *gridPanel)</td></tr>
+<tr class="separator:aa1bd8dfe598436329a72e0ddd8a1d46f inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71160860784a76ebd29e7964675ad056 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_a71160860784a76ebd29e7964675ad056"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>onRulesChanged</b> (<a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Data::ScenarioBuilder::Rules::Ptr</a> rules)</td></tr>
+<tr class="memdesc:a71160860784a76ebd29e7964675ad056 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event: A rules set has been changed. <br /></td></tr>
+<tr class="separator:a71160860784a76ebd29e7964675ad056 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a></td></tr>
+<tr class="memitem:acafb38091cfe2d8162c08d05a9a2bafa inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_acafb38091cfe2d8162c08d05a9a2bafa"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>IRenderer</b> ()</td></tr>
+<tr class="memdesc:acafb38091cfe2d8162c08d05a9a2bafa inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
+<tr class="separator:acafb38091cfe2d8162c08d05a9a2bafa inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e8abb30ce4bb393b85309146e72a8d8 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a0e8abb30ce4bb393b85309146e72a8d8"><td class="memItemLeft" align="right" valign="top">
+virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IRenderer</b> ()</td></tr>
+<tr class="memdesc:a0e8abb30ce4bb393b85309146e72a8d8 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a0e8abb30ce4bb393b85309146e72a8d8 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61b01e55be57b8dd9141ae07958655c3 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a61b01e55be57b8dd9141ae07958655c3"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a61b01e55be57b8dd9141ae07958655c3">internalWidth</a> () const</td></tr>
+<tr class="memdesc:a61b01e55be57b8dd9141ae07958655c3 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The real width of the matrix in memory.  <br /></td></tr>
+<tr class="separator:a61b01e55be57b8dd9141ae07958655c3 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26c1ba94f0278733d6d98b505f8690e6 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a26c1ba94f0278733d6d98b505f8690e6"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a26c1ba94f0278733d6d98b505f8690e6">internalHeight</a> () const</td></tr>
+<tr class="memdesc:a26c1ba94f0278733d6d98b505f8690e6 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The real height of the matrix in memory.  <br /></td></tr>
+<tr class="separator:a26c1ba94f0278733d6d98b505f8690e6 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5369c226610a85f5c091e4a45643eb93 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a5369c226610a85f5c091e4a45643eb93"><td class="memItemLeft" align="right" valign="top">
+virtual wxString&#160;</td><td class="memItemRight" valign="bottom"><b>asString</b> (int x, int y) const</td></tr>
+<tr class="memdesc:a5369c226610a85f5c091e4a45643eb93 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a cell as a string. <br /></td></tr>
+<tr class="separator:a5369c226610a85f5c091e4a45643eb93 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1add6b3049fa0fa5b3e48f8fd15b3f30 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a1add6b3049fa0fa5b3e48f8fd15b3f30"><td class="memItemLeft" align="right" valign="top">
+virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>asDouble</b> (int x, int y) const</td></tr>
+<tr class="memdesc:a1add6b3049fa0fa5b3e48f8fd15b3f30 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a cell as a double. <br /></td></tr>
+<tr class="separator:a1add6b3049fa0fa5b3e48f8fd15b3f30 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d7b7ae2ec6dbac4384a29d3e5c4bfe inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a76d7b7ae2ec6dbac4384a29d3e5c4bfe"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><b>appendCellValue</b> (int x, int y, Yuni::String &amp;s) const</td></tr>
+<tr class="separator:a76d7b7ae2ec6dbac4384a29d3e5c4bfe inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dcd0ee93e27de0588c1ab01d24241f5 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a2dcd0ee93e27de0588c1ab01d24241f5"><td class="memItemLeft" align="right" valign="top">
+IRenderer::CellStyle&#160;</td><td class="memItemRight" valign="bottom"><b>cellStyleWithNumericCheck</b> (int x, int y) const</td></tr>
+<tr class="separator:a2dcd0ee93e27de0588c1ab01d24241f5 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cb4e0fc560dd2368dc6ecc649a96410 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a4cb4e0fc560dd2368dc6ecc649a96410"><td class="memItemLeft" align="right" valign="top">
+virtual wxColour&#160;</td><td class="memItemRight" valign="bottom"><b>cellBackgroundColor</b> (int, int) const</td></tr>
+<tr class="separator:a4cb4e0fc560dd2368dc6ecc649a96410 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af54c4d1abcb4a55b8b9437b48699f11f inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_af54c4d1abcb4a55b8b9437b48699f11f"><td class="memItemLeft" align="right" valign="top">
+virtual wxColour&#160;</td><td class="memItemRight" valign="bottom"><b>cellTextColor</b> (int, int) const</td></tr>
+<tr class="separator:af54c4d1abcb4a55b8b9437b48699f11f inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3340a67b96adc00239efe1b2509166d5 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a3340a67b96adc00239efe1b2509166d5"><td class="memItemLeft" align="right" valign="top">virtual wxColour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a3340a67b96adc00239efe1b2509166d5">verticalBorderColor</a> (int x, int y) const</td></tr>
+<tr class="memdesc:a3340a67b96adc00239efe1b2509166d5 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the color of the vertical right border.  <br /></td></tr>
+<tr class="separator:a3340a67b96adc00239efe1b2509166d5 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba4c5e841e836e0e421e59a89d986fb1 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_aba4c5e841e836e0e421e59a89d986fb1"><td class="memItemLeft" align="right" valign="top">virtual wxColour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#aba4c5e841e836e0e421e59a89d986fb1">horizontalBorderColor</a> (int x, int y) const</td></tr>
+<tr class="memdesc:aba4c5e841e836e0e421e59a89d986fb1 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the color of the horizontal bottom border.  <br /></td></tr>
+<tr class="separator:aba4c5e841e836e0e421e59a89d986fb1 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9258157bce367d0665aea26ecc5a0068 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a9258157bce367d0665aea26ecc5a0068"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a9258157bce367d0665aea26ecc5a0068">cellAlignment</a> (int x, int y) const</td></tr>
+<tr class="memdesc:a9258157bce367d0665aea26ecc5a0068 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the alignment of a cell (-1: left, 0: center, +1: right)  <br /></td></tr>
+<tr class="separator:a9258157bce367d0665aea26ecc5a0068 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af00b61bfab183e88d9e2120decd9167c inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_af00b61bfab183e88d9e2120decd9167c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#af00b61bfab183e88d9e2120decd9167c">columnWidthCustom</a> (int x) const</td></tr>
+<tr class="memdesc:af00b61bfab183e88d9e2120decd9167c inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get how the a column must resize (0: auto, &gt;0: specific width, &lt;0: use custom string)  <br /></td></tr>
+<tr class="separator:af00b61bfab183e88d9e2120decd9167c inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5409ded03bf39e799892bd90dc6ded8e inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a5409ded03bf39e799892bd90dc6ded8e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a5409ded03bf39e799892bd90dc6ded8e">hintForColumnWidth</a> (int x, wxString &amp;out) const</td></tr>
+<tr class="memdesc:a5409ded03bf39e799892bd90dc6ded8e inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">String to use.  <br /></td></tr>
+<tr class="separator:a5409ded03bf39e799892bd90dc6ded8e inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a964b356284c5805e0a9b79c9138511b8 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a964b356284c5805e0a9b79c9138511b8"><td class="memItemLeft" align="right" valign="top">virtual Date::Precision&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a964b356284c5805e0a9b79c9138511b8">precision</a> ()</td></tr>
+<tr class="memdesc:a964b356284c5805e0a9b79c9138511b8 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time Precision.  <br /></td></tr>
+<tr class="separator:a964b356284c5805e0a9b79c9138511b8 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0faf8a368f92179766ce7597a8a2865d inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a0faf8a368f92179766ce7597a8a2865d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a0faf8a368f92179766ce7597a8a2865d">ensureDataAreLoaded</a> ()</td></tr>
+<tr class="memdesc:a0faf8a368f92179766ce7597a8a2865d inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make sure all data are effectively loaded.  <br /></td></tr>
+<tr class="separator:a0faf8a368f92179766ce7597a8a2865d inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada6518d90d3c947a642248be9d8f5197 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_ada6518d90d3c947a642248be9d8f5197"><td class="memItemLeft" align="right" valign="top">virtual uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#ada6518d90d3c947a642248be9d8f5197">maxHeightResize</a> () const</td></tr>
+<tr class="memdesc:ada6518d90d3c947a642248be9d8f5197 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The most suitable column count.  <br /></td></tr>
+<tr class="separator:ada6518d90d3c947a642248be9d8f5197 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e068c1b7cdb51034a48b4eddbeff1bc inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a4e068c1b7cdb51034a48b4eddbeff1bc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a4e068c1b7cdb51034a48b4eddbeff1bc">resizeMatrixToXColumns</a> (uint)</td></tr>
+<tr class="memdesc:a4e068c1b7cdb51034a48b4eddbeff1bc inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize the internal matrix with a given col count.  <br /></td></tr>
+<tr class="separator:a4e068c1b7cdb51034a48b4eddbeff1bc inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a746a5e7772df74899d7f25768c073b7b inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a746a5e7772df74899d7f25768c073b7b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a746a5e7772df74899d7f25768c073b7b">onMatrixResize</a> (uint oldX, uint oldY, uint &amp;newX, uint &amp;newY)</td></tr>
+<tr class="memdesc:a746a5e7772df74899d7f25768c073b7b inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event trigerred before resizing a matrix.  <br /></td></tr>
+<tr class="separator:a746a5e7772df74899d7f25768c073b7b inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e91aeb191a5c2d0745ecf4aedccbad0 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a3e91aeb191a5c2d0745ecf4aedccbad0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a3e91aeb191a5c2d0745ecf4aedccbad0">onMatrixLoad</a> ()</td></tr>
+<tr class="memdesc:a3e91aeb191a5c2d0745ecf4aedccbad0 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event triggered right after a matrix was loaded by the renderer.  <br /></td></tr>
+<tr class="separator:a3e91aeb191a5c2d0745ecf4aedccbad0 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a033d8e56f2db1ef226043b16cec46552 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a033d8e56f2db1ef226043b16cec46552"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a033d8e56f2db1ef226043b16cec46552">circularShiftRowsUntilDate</a> (MonthName month, uint daymonth)</td></tr>
+<tr class="memdesc:a033d8e56f2db1ef226043b16cec46552 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate all rows until a given date.  <br /></td></tr>
+<tr class="separator:a033d8e56f2db1ef226043b16cec46552 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef0a4c1416e79a21ba6f6c6053b8743 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_abef0a4c1416e79a21ba6f6c6053b8743"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onSelectCell</b> (uint, uint)</td></tr>
+<tr class="memdesc:abef0a4c1416e79a21ba6f6c6053b8743 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">A cell has been selected. <br /></td></tr>
+<tr class="separator:abef0a4c1416e79a21ba6f6c6053b8743 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9302e4001856487e93888aa26a0080b3 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a9302e4001856487e93888aa26a0080b3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a9302e4001856487e93888aa26a0080b3">onScroll</a> ()</td></tr>
+<tr class="memdesc:a9302e4001856487e93888aa26a0080b3 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">A scroll event has been triggered.  <br /></td></tr>
+<tr class="separator:a9302e4001856487e93888aa26a0080b3 inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3937f767340ecb757c7e885bf2d4f57f inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a3937f767340ecb757c7e885bf2d4f57f"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>applyLayerFiltering</b> (size_t layerID, <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html">VGridHelper</a> *gridHelper)</td></tr>
+<tr class="separator:a3937f767340ecb757c7e885bf2d4f57f inherit pub_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a></td></tr>
+<tr class="memitem:ab93abb8ae198b7b8f40bb47e67b66520 inherit pub_types_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_ab93abb8ae198b7b8f40bb47e67b66520"><td class="memItemLeft" align="right" valign="top"><a id="ab93abb8ae198b7b8f40bb47e67b66520" name="ab93abb8ae198b7b8f40bb47e67b66520"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CellStyle</b> { <br />
+&#160;&#160;<b>cellStyleDefault</b> = 0
+, <b>cellStyleCustom</b>
+, <b>cellStyleDefaultAlternate</b>
+, <b>cellStyleDefaultDisabled</b>
+, <br />
+&#160;&#160;<b>cellStyleDefaultAlternateDisabled</b>
+, <b>cellStyleDefaultCenter</b>
+, <b>cellStyleDefaultCenterAlternate</b>
+, <b>cellStyleDefaultCenterDisabled</b>
+, <br />
+&#160;&#160;<b>cellStyleDefaultCenterAlternateDisabled</b>
+, <b>cellStyleWarning</b>
+, <b>cellStyleError</b>
+, <b>cellStyleDisabled</b>
+, <br />
+&#160;&#160;<b>cellStyleAverage</b>
+, <b>cellStyleSum</b>
+, <b>cellStyleMinMax</b>
+, <b>cellStyleConstraintEnabled</b>
+, <br />
+&#160;&#160;<b>cellStyleConstraintDisabled</b>
+, <b>cellStyleConstraintNoWeight</b>
+, <b>cellStyleConstraintWeight</b>
+, <b>cellStyleConstraintWeightCount</b>
+, <br />
+&#160;&#160;<b>cellStyleConstraintOperator</b>
+, <b>cellStyleConstraintType</b>
+, <b>cellStyleLayerDisabled</b>
+, <b>cellStyleFilterYearByYearOn</b>
+, <br />
+&#160;&#160;<b>cellStyleFilterYearByYearOff</b>
+, <b>cellStyleFilterSynthesisOn</b>
+, <b>cellStyleFilterSynthesisOff</b>
+, <b>cellStyleFilterUndefined</b>
+, <br />
+&#160;&#160;<b>cellStyleAdqPatchVirtual</b>
+, <b>cellStyleAdqPatchOutside</b>
+, <b>cellStyleAdqPatchInside</b>
+, <b>cellStyleMax</b>
+<br />
+ }</td></tr>
+<tr class="separator:ab93abb8ae198b7b8f40bb47e67b66520 inherit pub_types_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a></td></tr>
+<tr class="memitem:a60adc740cf1c16866798f4172560f990 inherit pub_static_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a60adc740cf1c16866798f4172560f990"><td class="memItemLeft" align="right" valign="top">
+static const wxChar *&#160;</td><td class="memItemRight" valign="bottom"><b>CellStyleToCSSClass</b> (CellStyle s)</td></tr>
+<tr class="separator:a60adc740cf1c16866798f4172560f990 inherit pub_static_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad704b13e85fc5db1baef703661578ac7 inherit pub_static_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_ad704b13e85fc5db1baef703661578ac7"><td class="memItemLeft" align="right" valign="top">
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>CellStyleToCSSClass</b> (CellStyle s, Yuni::String &amp;str)</td></tr>
+<tr class="separator:ad704b13e85fc5db1baef703661578ac7 inherit pub_static_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a></td></tr>
+<tr class="memitem:a6d127515c753267d75ac502214953aaa inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a6d127515c753267d75ac502214953aaa"><td class="memItemLeft" align="right" valign="top">
+Yuni::Event&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onRefresh</b></td></tr>
+<tr class="memdesc:a6d127515c753267d75ac502214953aaa inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event on refresh. <br /></td></tr>
+<tr class="separator:a6d127515c753267d75ac502214953aaa inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfa8caccc646bbba2e51455a62266400 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_acfa8caccc646bbba2e51455a62266400"><td class="memItemLeft" align="right" valign="top">
+Date::Precision&#160;</td><td class="memItemRight" valign="bottom"><b>dataGridPrecision</b></td></tr>
+<tr class="memdesc:acfa8caccc646bbba2e51455a62266400 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The real precision asked by the datagrid. <br /></td></tr>
+<tr class="separator:acfa8caccc646bbba2e51455a62266400 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a121003b8d2b98b2af248db4734e26e62 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_a121003b8d2b98b2af248db4734e26e62"><td class="memItemLeft" align="right" valign="top">
+Data::Study::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>study</b></td></tr>
+<tr class="memdesc:a121003b8d2b98b2af248db4734e26e62 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attached study (if any) <br /></td></tr>
+<tr class="separator:a121003b8d2b98b2af248db4734e26e62 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8611b95de14c70992135c5654219726 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_ac8611b95de14c70992135c5654219726"><td class="memItemLeft" align="right" valign="top">
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>invalidate</b></td></tr>
+<tr class="memdesc:ac8611b95de14c70992135c5654219726 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">True to invalidate the current data and force a refresh for the next call to <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1DBGrid.html">DBGrid</a>:onDraw. <br /></td></tr>
+<tr class="separator:ac8611b95de14c70992135c5654219726 inherit pub_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html">Antares::Component::Datagrid::Renderer::ScBuilderRendererBase</a></td></tr>
+<tr class="memitem:a7bd9ec0e8128514b8f80a133cd3b0ce7 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_a7bd9ec0e8128514b8f80a133cd3b0ce7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html#a7bd9ec0e8128514b8f80a133cd3b0ce7">onStudyClosed</a> ()</td></tr>
+<tr class="memdesc:a7bd9ec0e8128514b8f80a133cd3b0ce7 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event: the study has been closed.  <br /></td></tr>
+<tr class="separator:a7bd9ec0e8128514b8f80a133cd3b0ce7 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc32e52ca3746c89310586fff3fac516 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_abc32e52ca3746c89310586fff3fac516"><td class="memItemLeft" align="right" valign="top">
+wxWindow *&#160;</td><td class="memItemRight" valign="bottom"><b>gridPanel</b> ()</td></tr>
+<tr class="separator:abc32e52ca3746c89310586fff3fac516 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a></td></tr>
+<tr class="memitem:abd87b138a31893c1243267b4a74d5604 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer" id="r_abd87b138a31893c1243267b4a74d5604"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#abd87b138a31893c1243267b4a74d5604">onStudyLoaded</a> ()</td></tr>
+<tr class="memdesc:abd87b138a31893c1243267b4a74d5604 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event: the study has been loaded.  <br /></td></tr>
+<tr class="separator:abd87b138a31893c1243267b4a74d5604 inherit pro_methods_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html">Antares::Component::Datagrid::Renderer::ScBuilderRendererBase</a></td></tr>
+<tr class="memitem:a58a8ea2b831e22ebc954b9580d5f5ab0 inherit pro_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase" id="r_a58a8ea2b831e22ebc954b9580d5f5ab0"><td class="memItemLeft" align="right" valign="top">
+<a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Data::ScenarioBuilder::Rules::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pRules</b></td></tr>
+<tr class="separator:a58a8ea2b831e22ebc954b9580d5f5ab0 inherit pro_attribs_classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1bfbc1901be7aaeb33787276c1cca1ce" name="a1bfbc1901be7aaeb33787276c1cca1ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bfbc1901be7aaeb33787276c1cca1ce">&#9670;&#160;</a></span>cellNumericValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer::cellNumericValue </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the floating value of a <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Cell.html">Cell</a>. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a31099cc351d326659b345110e8631bda">Antares::Component::Datagrid::Renderer::IRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a8b79f2e41b0470b09c24c925f7dd128c" name="a8b79f2e41b0470b09c24c925f7dd128c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b79f2e41b0470b09c24c925f7dd128c">&#9670;&#160;</a></span>cellStyle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IRenderer::CellStyle Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer::cellStyle </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html">Antares::Component::Datagrid::Renderer::IRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a1608a001efc78e89884f1a1b9a787f2f" name="a1608a001efc78e89884f1a1b9a787f2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1608a001efc78e89884f1a1b9a787f2f">&#9670;&#160;</a></span>cellValue() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">wxString Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer::cellValue </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the string representation of a <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Cell.html">Cell</a>. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a47cb1db482e61583ba707e7892a8ac0c">Antares::Component::Datagrid::Renderer::IRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a330931303f295f16f88dff6cd96d97e5" name="a330931303f295f16f88dff6cd96d97e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a330931303f295f16f88dff6cd96d97e5">&#9670;&#160;</a></span>cellValue() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Antares::Component::Datagrid::Renderer::hydroFinalLevelsScBuilderRenderer::cellValue </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Yuni::String &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Try to modify a cell value. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the operation succeeded, False otherwise </dd></dl>
+
+<p>Implements <a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1IRenderer.html#a3b92c937bdeb3742aec8e5173691cf8e">Antares::Component::Datagrid::Renderer::IRenderer</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/ui/simulator/toolbox/components/datagrid/renderer/<a class="el" href="scenario-builder-hydro-final-levels-renderer_8h_source.html">scenario-builder-hydro-final-levels-renderer.h</a></li>
+<li>src/ui/simulator/toolbox/components/datagrid/renderer/<b>scenario-builder-hydro-final-levels-renderer.cpp</b></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Component</b></li><li class="navelem"><b>Datagrid</b></li><li class="navelem"><b>Renderer</b></li><li class="navelem"><a class="el" href="classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroFinalLevelsScBuilderRenderer.html">hydroFinalLevelsScBuilderRenderer</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>

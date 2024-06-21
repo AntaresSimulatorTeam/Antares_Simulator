@@ -1,5 +1,14 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#aa287ab48cc64ba1214fb73614a54b6ed":[7,0,0,12,4,4,105,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html":[7,0,0,12,4,4,106],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a0b2b1aeda62055d1f0e77ce6a3235bb4":[7,0,0,12,4,4,106,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a823522da4a8825bd05d5ed5c939028b8":[7,0,0,12,4,4,106,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html":[7,0,0,12,4,4,107],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a505308cb0c9d12d92da113e99e29d35c":[7,0,0,12,4,4,107,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#acf75f329abb2d376d024d61e481f6300":[7,0,0,12,4,4,107,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[7,0,0,12,4,4,108],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[7,0,0,12,4,4,108,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[7,0,0,12,4,4,108,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[7,0,0,12,4,4,109,0],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[7,0,0,12,4,9],
@@ -240,14 +249,5 @@ var NAVTREEINDEX24 =
 "structStudyForBCTest.html":[7,0,219],
 "structStudyWithBConCluster.html":[7,0,220],
 "structStudyWithBConLink.html":[7,0,221],
-"structTIME__MEASURE.html":[7,0,231],
-"structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html":[7,0,235],
-"structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[7,0,236],
-"structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html":[7,0,237],
-"structTSNumbersPredicate.html":[7,0,238],
-"structTestContext.html":[7,0,224],
-"structThermalClusterStudy.html":[7,0,229],
-"structThermalIniFile.html":[7,0,230],
-"structTimeSeriesFile.html":[7,0,234],
-"structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,240]
+"structTIME__MEASURE.html":[7,0,231]
 };

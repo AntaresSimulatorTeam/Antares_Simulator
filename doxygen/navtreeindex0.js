@@ -53,7 +53,7 @@ var NAVTREEINDEX0 =
 "HydroPower_8h_source.html":[8,0,0,2,5,0,0,0,0,2,23],
 "HydroTSNumberData_8h_source.html":[8,0,0,1,0,25,0,0,0,8,3],
 "IStudyLoader_8h_source.html":[8,0,0,1,0,26,0,0,0,0],
-"ITimeSeriesNumbersWriter_8h_source.html":[8,0,0,2,7,0,0,0,0,9],
+"ITimeSeriesNumbersWriter_8h_source.html":[8,0,0,2,7,0,0,0,0,10],
 "InitializationError_8hpp_source.html":[8,0,0,1,0,8,0,0,0,1],
 "LinearProblemMatrixStartUpCosts_8h_source.html":[8,0,0,2,5,0,0,0,0,5],
 "LinearProblemMatrix_8h_source.html":[8,0,0,2,5,0,0,0,0,4],
