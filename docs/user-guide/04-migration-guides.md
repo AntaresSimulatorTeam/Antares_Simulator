@@ -1,5 +1,25 @@
 # Migration guides
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
+
+## v9.2.0
+### (TS-generator only) TS generation for link capacities
+In files input/links/<link1>/properties.ini, add the following properties
+- tsgen_direct_XXX,
+- tsgen_indirect_XXX
+with XXX in
+- unitcount (unsigned int, default 1)
+- nominalcapacity (float)
+- law.planned (string "uniform"/"geometric")
+- law.forced (same)
+- volatility.planned (double in [0,1])
+- volatility.forced (same)
+
+- "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in maintenance", "maximum of groups in maintenance".
+- "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
+- number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
+
+
+
 ## v9.1.0
 ### Input 
 #### Hydro Maximum Generation/Pumping Power

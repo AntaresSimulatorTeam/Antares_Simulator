@@ -938,6 +938,7 @@ static inline void logPerformedYearsInAset(setOfParallelYears& set)
                 << " perfomed)";
 
     std::string performedYearsToLog = "";
+
     std::ranges::for_each(set.yearsIndices,
                           [&set, &performedYearsToLog](const uint& y)
                           {
