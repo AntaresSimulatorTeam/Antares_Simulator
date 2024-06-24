@@ -125,10 +125,6 @@ void MinMaxData::resetSup()
     ArrayInitializer<maxHoursInAYear, false>::Init(hourly);
 }
 
-void MinMaxData::initialize()
-{
-}
-
 void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
 {
     MergeArray<true, maxMonths>::Do(year, monthly, rhs.month);

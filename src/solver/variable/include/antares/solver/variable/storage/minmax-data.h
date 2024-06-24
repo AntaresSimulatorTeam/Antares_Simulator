@@ -36,8 +36,6 @@ public:
         uint32_t indice;
     };
 
-    void initialize();
-
     void resetInf();
     void resetSup();
 
