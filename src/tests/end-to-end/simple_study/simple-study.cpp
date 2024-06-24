@@ -290,8 +290,7 @@ BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
       .fillColumnWith(0, -1.0); // Negative inflow will cause a consistency error with mingen
 
     auto simulation = builder.simulation;
-    simulation->create();
-    BOOST_CHECK_THROW(simulation->run(), Antares::FatalError);
+    BOOST_CHECK_THROW(simulation->create(), Antares::FatalError);
 }
 BOOST_AUTO_TEST_SUITE_END()
 
