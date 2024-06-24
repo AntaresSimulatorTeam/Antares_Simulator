@@ -72,22 +72,6 @@ template<bool OpInferior, uint Size>
 struct MergeArray
 {
     template<class U>
-    static void Do(const uint year,
-                   Antares::Memory::Array<MinMaxData::Data>& results,
-                   const U& values)
-    {
-        for (uint i = 0; i != Size; ++i)
-        {
-            MinMaxData::Data& data = results[i];
-            if (values[i] < data.value - eps)
-            {
-                data.value = values[i];
-                data.indice = year + 1; // The year is zero-based
-            }
-        }
-    }
-
-    template<class U>
     static void Do(const uint year, MinMaxData::Data* results, const U& values)
     {
         for (uint i = 0; i != Size; ++i)
@@ -105,22 +89,6 @@ struct MergeArray
 template<uint Size>
 struct MergeArray<0, Size>
 {
-    template<class U>
-    static void Do(const uint year,
-                   Antares::Memory::Array<MinMaxData::Data>& results,
-                   const U& values)
-    {
-        for (uint i = 0; i != Size; ++i)
-        {
-            MinMaxData::Data& data = results[i];
-            if (values[i] > data.value + eps)
-            {
-                data.value = values[i];
-                data.indice = year + 1; // The year is zero-based
-            }
-        }
-    }
-
     template<class U>
     static void Do(const uint year, MinMaxData::Data* results, const U& values)
     {
