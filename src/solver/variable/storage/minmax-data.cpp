@@ -56,29 +56,23 @@ struct MergeArray
     {
         for (uint i = 0; i != Size; ++i)
         {
-            if (values[i] < results[i].value - eps)
-            {
-                results[i].value = values[i];
-                results[i].indice = year + 1; // The year is zero-based
-            }
-        }
-    }
-
-}; // class MergeArray
-
-template<uint Size>
-struct MergeArray<0, Size>
-{
-    template<class U>
-    static void Do(const uint year, std::vector<MinMaxData::Data> results, const U& values)
-    {
-        for (uint i = 0; i != Size; ++i)
-        {
             MinMaxData::Data& data = results[i];
-            if (values[i] > data.value + eps)
+
+            if (OpInferior)
             {
-                data.value = values[i];
-                data.indice = year + 1; // The year is zero-based
+                if (values[i] < data.value - eps)
+                {
+                    data.value = values[i];
+                    data.indice = year + 1; // The year is zero-based
+                }
+            }
+            else
+            {
+                if (values[i] > data.value + eps)
+                {
+                    data.value = values[i];
+                    data.indice = year + 1; // The year is zero-based
+                }
             }
         }
     }
