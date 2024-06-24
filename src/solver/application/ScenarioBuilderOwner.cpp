@@ -25,7 +25,7 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 #include "antares/study/study.h"
-#include "hydro-final-reservoir-level-functions.h"
+#include "antares/solver/simulation/hydro-final-reservoir-level-functions.h"
 
 
 Antares::Solver::ScenarioBuilderOwner::ScenarioBuilderOwner(Data::Study& study):
