@@ -43,7 +43,7 @@ struct ArrayInitializer
         for (uint i = 0; i != Size; ++i)
         {
             MinMaxData::Data& data = array[i];
-            data.value = DBL_MAX;         // +inf
+            data.value = OpInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
             data.indice = (uint32_t)(-1); // invalid indice
         }
     }
