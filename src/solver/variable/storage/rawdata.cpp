@@ -42,7 +42,7 @@ RawData::~RawData()
 
 void RawData::initializeFromStudy(const Data::Study& study)
 {
-    Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
+    Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
     nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
     year = new double[nbYearsCapacity];
 }
@@ -50,7 +50,7 @@ void RawData::initializeFromStudy(const Data::Study& study)
 void RawData::reset()
 {
     // Reset
-    Antares::Memory::Zero(HOURS_PER_YEAR, hourly);
+    Antares::Memory::Zero(maxHoursInAYear, hourly);
     (void)::memset(monthly, 0, sizeof(double) * maxMonths);
     (void)::memset(weekly, 0, sizeof(double) * maxWeeksInAYear);
     (void)::memset(daily, 0, sizeof(double) * maxDaysInAYear);
@@ -61,7 +61,7 @@ void RawData::merge(unsigned int y, const IntermediateValues& rhs)
 {
     unsigned int i;
     // StdDeviation value for each hour throughout all years
-    for (i = 0; i != HOURS_PER_YEAR; ++i)
+    for (i = 0; i != maxHoursInAYear; ++i)
     {
         hourly[i] += rhs.hour[i];
     }

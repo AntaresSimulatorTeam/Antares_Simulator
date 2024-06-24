@@ -104,7 +104,7 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<Category::hourly, HOURS_PER_YEAR, VCardT>(
+                InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
                   report,
                   ::Antares::Memory::RawPointer(rawdata.hourly));
                 break;
@@ -161,7 +161,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return +sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
+        return +sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
     }
 
     template<template<class, int> class DecoratorT>
