@@ -202,7 +202,7 @@ void HydroManagement::prepareEffectiveDemand(
   HydroSpecificMap& hydro_specific_map)
 {
     areas_.each(
-      [this](Data::Area& area)
+      [this, &year, &hydro_specific_map](Data::Area& area)
       {
           auto& data = area.hydro.managementData[year];
           auto& hydro_specific = hydro_specific_map[&area];
