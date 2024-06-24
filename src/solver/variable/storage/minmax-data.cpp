@@ -53,19 +53,6 @@ struct ArrayInitializer
 template<uint Size>
 struct ArrayInitializer<Size, false>
 {
-    static void Init(Antares::Memory::Array<MinMaxData::Data>& array)
-    {
-        for (uint i = 0; i != Size; ++i)
-        {
-            // Contrary to what we could guess, DBL_MIN is not the smallest number
-            // you can hold in a double, but the smallest positive number you can
-            // hold in a double
-            MinMaxData::Data& data = array[i];
-            data.value = -DBL_MAX;        // -inf
-            data.indice = (uint32_t)(-1); // invalid indice
-        }
-    }
-
     static void Init(MinMaxData::Data* array)
     {
         for (uint i = 0; i != Size; ++i)
