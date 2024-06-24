@@ -46,7 +46,7 @@ public:
     Data monthly[maxMonths];
     Data weekly[maxWeeksInAYear];
     Data daily[maxDaysInAYear];
-    Data hourly[HOURS_PER_YEAR];
+    Data hourly[maxHoursInAYear];
 
 }; // class MinMaxData
 

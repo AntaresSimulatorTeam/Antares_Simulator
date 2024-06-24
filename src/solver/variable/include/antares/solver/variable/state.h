@@ -115,14 +115,14 @@ private:
 
     void yearEndBuildThermalClusterCalculateStartupCosts(
       const uint& maxDurationON,
-      const std::array<uint, Variable::HOURS_PER_YEAR>& ON_min,
-      const std::array<uint, Variable::HOURS_PER_YEAR>& ON_opt,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
-    std::array<uint, Variable::HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
+    std::array<uint, Variable::maxHoursInAYear> computeEconomicallyOptimalNbClustersONforEachHour(
       const uint& maxDurationON,
-      const std::array<uint, Variable::HOURS_PER_YEAR>& ON_min,
-      const std::array<uint, Variable::HOURS_PER_YEAR>& ON_max) const;
+      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_max) const;
 
     /*!
     ** \brief Smooth the thermal units run after resolutions
@@ -182,17 +182,17 @@ public:
     VALEURS_DE_NTC_ET_RESISTANCES ntc;
 
     //! Thermal production for the current thermal cluster for the whole year
-    double thermalClusterProductionForYear[Variable::HOURS_PER_YEAR];
+    double thermalClusterProductionForYear[Variable::maxHoursInAYear];
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)
-    uint thermalClusterDispatchedUnitsCountForYear[Variable::HOURS_PER_YEAR];
+    uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];
 
     //! Thermal operating cost for the current thermal cluster for the whole year
-    double thermalClusterOperatingCostForYear[Variable::HOURS_PER_YEAR];
+    double thermalClusterOperatingCostForYear[Variable::maxHoursInAYear];
     //! Thermal NP Cost for the current thermal cluster for the whole year
-    double thermalClusterNonProportionalCostForYear[Variable::HOURS_PER_YEAR];
+    double thermalClusterNonProportionalCostForYear[Variable::maxHoursInAYear];
     //! Minimum power of the cluster for the whole year
-    double thermalClusterPMinOfTheClusterForYear[Variable::HOURS_PER_YEAR];
+    double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
 
     double renewableClusterProduction;
 

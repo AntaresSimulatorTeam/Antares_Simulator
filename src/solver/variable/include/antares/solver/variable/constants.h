@@ -27,7 +27,7 @@ namespace Solver
 {
 namespace Variable
 {
-constexpr unsigned int HOURS_PER_YEAR = 8785;
+constexpr unsigned int maxHoursInAYear = 8785;
 constexpr unsigned int maxDaysInAYear = 7 * 53 + 1; // 366,
 constexpr unsigned int maxWeeksInAYear = 53;
 constexpr unsigned int maxHoursInADay = 24;

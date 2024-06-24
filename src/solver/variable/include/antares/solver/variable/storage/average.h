@@ -100,7 +100,7 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
+                InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(report,
                                                                                 Memory::RawPointer(
                                                                                   avgdata.hourly));
                 break;

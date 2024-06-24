@@ -54,7 +54,7 @@ public:
 
     uint64_t dynamicMemoryUsage() const
     {
-        return sizeof(double) * HOURS_PER_YEAR + sizeof(double) * nbYearsCapacity;
+        return sizeof(double) * maxHoursInAYear + sizeof(double) * nbYearsCapacity;
     }
 
 public:

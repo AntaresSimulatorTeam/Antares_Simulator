@@ -301,7 +301,7 @@ public:
     {
         for (uint i = 0; i != VCardType::columnCount; ++i)
         {
-            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
+            for (uint h = 0; h != maxHoursInAYear; ++h)
             {
                 pValuesForYearLocalReport[numSpace][i].hour[h] = (pValuesForTheCurrentYear[numSpace]
                                                                                           [i]

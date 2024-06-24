@@ -533,8 +533,8 @@ SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWrite
     values = new ValueType[maxVariables];
     for (uint i = 0; i != maxVariables; ++i)
     {
-        values[i] = new double[HOURS_PER_YEAR];
-        memset(values[i], 0, sizeof(double) * HOURS_PER_YEAR);
+        values[i] = new double[maxHoursInAYear];
+        memset(values[i], 0, sizeof(double) * maxHoursInAYear);
     }
 
     // captions
@@ -638,7 +638,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
     for (auto j = data.rowCaptions.begin(); j != end; ++j, ++y)
     {
         // asserts
-        assert(y < HOURS_PER_YEAR);
+        assert(y < maxHoursInAYear);
 
         buffer.append("\t").append(j->c_str());
 
@@ -646,7 +646,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
         for (uint i = 0; i != data.columnIndex; ++i)
         {
             assert(i < maxVariables && "i greater can not be greater than maxVariables");
-            assert(y < HOURS_PER_YEAR && "y can not be greater than HOURS_PER_YEAR");
+            assert(y < maxHoursInAYear && "y can not be greater than maxHoursInAYear");
 
             if (digestNonApplicableStatus[y][i])
             {
@@ -791,7 +791,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     for (uint y = heightBegin; y < heightEnd; ++y)
     {
         // Asserts
-        assert(y < HOURS_PER_YEAR);
+        assert(y < maxHoursInAYear);
         // Index
         writeDateToFileDescriptor(y + 1, precisionLevel);
 
