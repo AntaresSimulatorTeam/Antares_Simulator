@@ -50,7 +50,8 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 
 void HydroInputsChecker::Execute(uint year)
 {
-    if (!checked_years_[year])
+
+    if (year < endYear_ && !checked_years_[year])
     {
         checked_years_[year] = true;
         prepareInflows_.Run(year);
