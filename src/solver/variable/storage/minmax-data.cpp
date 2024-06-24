@@ -38,16 +38,6 @@ constexpr double eps = 1.e-7;
 template<uint Size, bool OpInferior>
 struct ArrayInitializer
 {
-    static void Init(Antares::Memory::Array<MinMaxData::Data>& array)
-    {
-        for (uint i = 0; i != Size; ++i)
-        {
-            MinMaxData::Data& data = array[i];
-            data.value = DBL_MAX;         // +inf
-            data.indice = (uint32_t)(-1); // invalid indice
-        }
-    }
-
     static void Init(MinMaxData::Data* array)
     {
         for (uint i = 0; i != Size; ++i)
