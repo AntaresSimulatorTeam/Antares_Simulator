@@ -81,15 +81,6 @@ struct MergeArray
 
 } // anonymous namespace
 
-MinMaxData::MinMaxData()
-{
-    annual.resize(1);
-    monthly.resize(maxMonths);
-    weekly.resize(maxWeeksInAYear);
-    daily.resize(maxDaysInAYear);
-    hourly.resize(maxHoursInAYear);
-}
-
 void MinMaxData::resetInf()
 {
     ArrayInitializer<1, true>::Init(annual);

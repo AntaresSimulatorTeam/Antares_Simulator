@@ -36,20 +36,17 @@ public:
         uint32_t indice;
     };
 
-    MinMaxData();
-    ~MinMaxData() = default;
-
     void resetInf();
     void resetSup();
 
     void mergeInf(uint year, const IntermediateValues& rhs);
     void mergeSup(uint year, const IntermediateValues& rhs);
 
-    std::vector<Data> annual;
-    std::vector<Data> monthly;
-    std::vector<Data> weekly;
-    std::vector<Data> daily;
-    std::vector<Data> hourly;
+    std::vector<Data> annual{1};
+    std::vector<Data> monthly{maxMonths};
+    std::vector<Data> weekly{maxWeeksInAYear};
+    std::vector<Data> daily{maxDaysInAYear};
+    std::vector<Data> hourly{maxHoursInAYear};
 
 }; // class MinMaxData
 
