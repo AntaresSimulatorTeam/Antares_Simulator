@@ -33,20 +33,15 @@ namespace // anonymous
 {
 constexpr double eps = 1.e-7;
 
-template<uint Size, bool OpInferior>
-struct ArrayInitializer
+static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
 {
-    static void Init(std::vector<MinMaxData::Data>& array)
+    for (auto& data : array)
     {
-        for (uint i = 0; i != Size; ++i)
-        {
-            MinMaxData::Data& data = array[i];
-            data.value = OpInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
-            data.indice = (uint32_t)(-1); // invalid indice
-        }
+        data.value = opInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
+        data.indice = (uint32_t)(-1); // invalid indice
     }
+}
 
-}; // class ArrayInitializer
 
 template<bool OpInferior, uint Size>
 struct MergeArray
@@ -83,20 +78,20 @@ struct MergeArray
 
 void MinMaxData::resetInf()
 {
-    ArrayInitializer<1, true>::Init(annual);
-    ArrayInitializer<maxMonths, true>::Init(monthly);
-    ArrayInitializer<maxWeeksInAYear, true>::Init(weekly);
-    ArrayInitializer<maxDaysInAYear, true>::Init(daily);
-    ArrayInitializer<maxHoursInAYear, true>::Init(hourly);
+    initArray(true, annual);
+    initArray(true, monthly);
+    initArray(true, weekly);
+    initArray(true, daily);
+    initArray(true, hourly);
 }
 
 void MinMaxData::resetSup()
 {
-    ArrayInitializer<1, false>::Init(annual);
-    ArrayInitializer<maxMonths, false>::Init(monthly);
-    ArrayInitializer<maxWeeksInAYear, false>::Init(weekly);
-    ArrayInitializer<maxDaysInAYear, false>::Init(daily);
-    ArrayInitializer<maxHoursInAYear, false>::Init(hourly);
+    initArray(false, annual);
+    initArray(false, monthly);
+    initArray(false, weekly);
+    initArray(false, daily);
+    initArray(false, hourly);
 }
 
 void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
