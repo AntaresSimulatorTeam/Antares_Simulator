@@ -154,7 +154,6 @@ public:
     //! Current hour from the begining of the simulation
     unsigned int hourInTheSimulation;
 
-    Yuni::String spilledUnsupplied;
     //! The current area
     Data::Area* area;
 

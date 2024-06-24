@@ -94,6 +94,17 @@ enum ThermalDispatchableGroup
     groupMax
 };
 
+enum ThermalUnsuppliedSpilled
+{
+    //! Spilled
+    ThermalUnsuppliedSpilledSpilled = 0,
+    //! Unsupplied
+    ThermalUnsuppliedSpilledUnsupplied,
+
+    //! The highest value
+    unsuppliedSpilledMax
+};
+
 /*!
 ** \brief A single thermal cluster
 */

@@ -124,6 +124,34 @@ std::pair<Data::ThermalDispatchableGroup, Data::ReserveName>
 }
 
 template<class ClusterT>
+std::pair<Data::ThermalUnsuppliedSpilled, Data::ReserveName>
+ClusterList<ClusterT>::reserveParticipationUnsuppliedSpilledAt(const Area* area, unsigned int index) const
+{
+    int column = 0;
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (int indexUnsuppliedSpilled = 0; indexUnsuppliedSpilled < Data::unsuppliedSpilledMax; indexUnsuppliedSpilled++)
+        {
+            if (column == index)
+                return { static_cast<Data::ThermalUnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
+            column++;
+        }
+    }
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (int indexUnsuppliedSpilled = 0; indexUnsuppliedSpilled < Data::unsuppliedSpilledMax; indexUnsuppliedSpilled++)
+        {
+            if (column == index)
+                return { static_cast<Data::ThermalUnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
+            column++;
+        }
+    }
+    throw std::out_of_range("This reserve status index has not been found in all the "
+        "reserve participations");
+}
+
+
+template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
 {
     for (auto cluster : all())

@@ -61,6 +61,8 @@
 #include "dtgMarginAfterCsr.h"
 #include "spilledEnergy.h"
 #include "reserveParticipationCost.h"
+#include "reserveParticipationByGroup.h"
+#include "reserveParticipationUnsuppliedSpilled.h"
 
 #include "lold.h"
 #include "lolp.h"
@@ -75,7 +77,7 @@
 #include "nbOfDispatchedUnitsByPlant.h"
 #include "profitByPlant.h"
 #include "reserveParticipationByDispatchablePlant.h"
-#include "reserveParticipationByGroup.h"
+
 
 // By RES plant
 #include "productionByRenewablePlant.h"
@@ -174,9 +176,10 @@ typedef                           // Prices
                                           <ReserveParticipationCost // Participation cost to the reserves
                                             <ReserveParticipationByDispatchablePlant // Participation per cluster
                                               <ReserveParticipationByGroup // Participation per thermal group
-                                              // Links
-                                              <Variable::Economy::Links // All links
-                                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                               <ReserveParticipationUnsuppliedSpilled
+                                                  // Links
+                                                 <Variable::Economy::Links // All links
+                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

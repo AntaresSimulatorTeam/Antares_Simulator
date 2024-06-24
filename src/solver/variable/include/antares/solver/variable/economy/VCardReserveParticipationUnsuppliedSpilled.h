@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__
-#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
+#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
 
 #include "../storage/results.h"
 
@@ -37,23 +37,23 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardReserveParticipationByDispatchablePlant
+struct VCardReserveParticipationUnsuppliedSpilled
 {
     //! Caption
     static std::string Caption()
     {
-        return "CLUSTER PARTICIPATION TO RESERVE";
+        return "RESERVE UNSUPPLIED OR SPILLED ENERGY";
     }
     //! Unit
     static std::string Unit()
     {
-        return "Reserve Participation Power - MWh";
+        return "MWh";
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "Reserve Participation from a cluster to a reserve";
+        return "Reserve unsupplied or spilled Power";
     }
 
     //! The expected results
@@ -62,14 +62,14 @@ struct VCardReserveParticipationByDispatchablePlant
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationByDispatchablePlant VCardForSpatialAggregate;
+    typedef VCardReserveParticipationUnsuppliedSpilled VCardForSpatialAggregate;
 
     enum
     {
         //! Data Level
         categoryDataLevel = Category::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::de),
+        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
@@ -95,9 +95,23 @@ struct VCardReserveParticipationByDispatchablePlant
     // typedef IntermediateValues IntermediateValuesType;
 
 }; // class VCard
+
+static std::string thermalUnsuppliedSpilledToString(Data::ThermalUnsuppliedSpilled idx)
+{
+    switch (idx)
+    {
+    case 0:
+        return "UNSP.";
+    case 1:
+        return "SPIL."; 
+    default:
+        return "<unknown>";
+    }
+}
+
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__
+#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__

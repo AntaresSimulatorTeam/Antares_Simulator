@@ -417,44 +417,10 @@ void State::yearEndBuildCalculateReserveParticipationCosts(
         uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear
             = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
-        Yuni::IO::File::Stream file;
-        Yuni::String pathFolder = study.folderOutput;
-        pathFolder << SEP << "reserves";
-        if (Yuni::IO::Directory::Exists(pathFolder) || Yuni::IO::Directory::Create(pathFolder))
+        for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
-            pathFolder << SEP << thermalCluster->parentArea->name;
-            if (Yuni::IO::Directory::Exists(pathFolder) || Yuni::IO::Directory::Create(pathFolder))
-            {
-                Yuni::String path;
-                path << pathFolder << SEP << thermalCluster->name() << ".txt";
-                if (file.openRW(path))
-                {
-                    for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
-                    {
-                        thermalClusterOperatingCostForYear[h]
-                            += thermalClusterReserveParticipationCostForYear[h];
-                        std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
-
-                        for (auto res : clusterReserves)
-                        {
-                            file << "Hour " << h + 1 << " : cluster " << thermalCluster->name() << " is participating to reserve " << res << " for " << thermalReserveParticipationPerGroupForYear[h][thermalCluster->groupID][res] << " mw\n";
-                        }
-                    }
-                    file.close();
-                }
-                else
-                {
-                    logs.error() << "Reserves : impossible to write " << path;
-                }
-            }
-            else
-            {
-                logs.error() << "Reserves : impossible to write " << pathFolder;
-            }
-        }
-        else
-        {
-            logs.error() << "Reserves : impossible to write " << pathFolder;
+            thermalClusterOperatingCostForYear[h]
+                += thermalClusterReserveParticipationCostForYear[h];
         }
     }
 }

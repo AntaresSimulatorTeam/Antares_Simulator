@@ -24,6 +24,7 @@
 #include <cmath>
 #include "./economy/vCardReserveParticipationByDispatchablePlant.h"
 #include "./economy/vCardReserveParticipationByGroup.h"
+#include "./economy/vCardReserveParticipationUnsuppliedSpilled.h"
 
 namespace Antares
 {
@@ -381,6 +382,12 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                       = thermal.list.reserveParticipationGroupAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + Economy::thermalDispatchableGroupToString(groupName);
                 }
+                else if (typeid(VCardT) == typeid(Economy::VCardReserveParticipationUnsuppliedSpilled))
+                {
+                    auto [unsuppliedOrSpilled, reserveName]
+                        = thermal.list.reserveParticipationGroupAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + Economy::thermalDispatchableGroupToString(unsuppliedOrSpilled);
+                }
                 else
                     results.variableCaption = thermal.list.enabledClusterAt(i)->name();
 
@@ -464,6 +471,13 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                     auto [groupName, reserveName]
                       = thermal.list.reserveParticipationGroupAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + Economy::thermalDispatchableGroupToString(groupName);
+                    res = true;
+                }
+                else if (typeid(VCardType) == typeid(Economy::VCardReserveParticipationUnsuppliedSpilled))
+                {
+                    auto [unsuppliedOrSpilled, reserveName]
+                        = thermal.list.reserveParticipationUnsuppliedSpilledAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + Economy::thermalUnsuppliedSpilledToString(unsuppliedOrSpilled);
                     res = true;
                 }
                 else
