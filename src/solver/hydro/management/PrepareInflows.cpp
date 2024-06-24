@@ -10,7 +10,11 @@ PrepareInflows::PrepareInflows(Data::AreaList& areas, const Date::Calendar& cale
 {
 }
 
-void PrepareInflows::Run(uint year)
+void PrepareInflows::Run(uint year){
+    LoadInflows(year);
+    ChangeInflowsToAccommodateFinalLevels(year);
+}
+void PrepareInflows::LoadInflows(uint year)
 {
     areas_.each(
       // un-const because now data is a member of area  [&](const Data::Area& area)
@@ -59,5 +63,24 @@ void PrepareInflows::Run(uint year)
           data.totalYearInflows = totalYearInflows;
       });
 }
+
+void PrepareInflows::ChangeInflowsToAccommodateFinalLevels(uint year)
+{
+    areas_.each([this, &year](Data::Area& area) 
+    {
+        auto& data = area.hydro.managementData[year];
+
+        if (!area.hydro.deltaBetweenFinalAndInitialLevels[year].has_value())
+            return;
+
+        // Must be done before prepareMonthlyTargetGenerations
+        double delta = area.hydro.deltaBetweenFinalAndInitialLevels[year].value();
+        if (delta < 0)
+            data.inflows[0] -= delta;
+        else if (delta > 0)
+            data.inflows[11] -= delta;
+    });
+}
+
 
 } // namespace Antares

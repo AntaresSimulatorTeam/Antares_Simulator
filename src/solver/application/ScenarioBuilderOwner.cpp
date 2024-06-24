@@ -25,6 +25,8 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 #include "antares/study/study.h"
+#include "hydro-final-reservoir-level-functions.h"
+
 
 Antares::Solver::ScenarioBuilderOwner::ScenarioBuilderOwner(Data::Study& study):
     study_(study)
@@ -52,6 +54,7 @@ void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()  {
     if (study_.parameters.useCustomScenario)
     {
         ApplyCustomScenario(study_);
+        CheckFinalReservoirLevelsConfiguration(study_);
     }
 }
 
