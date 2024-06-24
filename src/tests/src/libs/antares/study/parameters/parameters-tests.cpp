@@ -70,6 +70,8 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 
     writeValidFile();
     p.loadFromFile(path.string(), version, options);
+    p.validateOptions(options);
+    p.fixBadValues();
 
     BOOST_CHECK_EQUAL(p.nbYears, 5);
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
@@ -93,6 +95,8 @@ BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)
 {
     writeInvalidFile();
     BOOST_CHECK(p.loadFromFile(path.string(), version, options));
+    p.validateOptions(options);
+    p.fixBadValues();
 
     BOOST_CHECK_EQUAL(p.nbYears, 1);
     BOOST_CHECK_EQUAL(p.useCustomScenario, 0);
@@ -189,7 +193,6 @@ void Fixture::writeValidFile()
             threshold-csr-variable-bounds-relaxation = 3
 
             [other preferences]
-            initial-reservoir-levels = cold start
             hydro-heuristic-policy = accommodate rule curves
             hydro-pricing-mode = fast
             power-fluctuations = free modulations

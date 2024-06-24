@@ -78,10 +78,11 @@ struct HydroMaxPowerStudy: public StudyBuilder
 HydroMaxPowerStudy::HydroMaxPowerStudy()
 {
     simulationBetweenDays(0, 14);
-    setNumberMCyears(1);
 
     area = addAreaToStudy("Area");
     area->thermal.unsuppliedEnergyCost = 1;
+
+	setNumberMCyears(1);
 
     TimeSeriesConfigurer loadTSconfig(area->load.series.timeSeries);
     loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);

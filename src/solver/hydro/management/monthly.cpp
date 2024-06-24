@@ -158,7 +158,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
 {
     uint indexArea = 0;
     areas_.each(
-      [&](Data::Area& area)
+      [this, &random_reservoir_level, &y, &indexArea, &hydro_specific_map](Data::Area& area)
       {
           auto& data = area.hydro.managementData[y];
           auto& hydro_specific = hydro_specific_map[&area];
@@ -173,8 +173,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
           {
               lvi = random_reservoir_level[indexArea];
           }
-
-          indexArea++;
 
           double solutionCost = 0.;
           double solutionCostNoised = 0.;

@@ -500,97 +500,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // enabled.
     //		 Useful for RAM estimation.
     maxNbYearsInParallel_save = maxNbYearsInParallel;
-
-    // Here we answer the question (useful only if hydro hot start is asked) : do all sets of
-    // parallel years have the same size ?
-    if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
-        && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
-    {
-        uint currentSetSize = (uint)setsOfParallelYears[0].size();
-        if (setsOfParallelYears.size() > 1)
-        {
-            for (uint s = 1; s < setsOfParallelYears.size(); s++)
-            {
-                if (setsOfParallelYears[s].size() != currentSetSize)
-                {
-                    parameters.allSetsHaveSameSize = false;
-                    break;
-                }
-            }
-        }
-    } // End if hot start
-}
-
-bool Study::checkHydroHotStart()
-{
-    bool hydroHotStart = (parameters.initialReservoirLevels.iniLevels == irlHotStart);
-
-    // No need to check further if hydro hot start is not required
-    if (!hydroHotStart)
-    {
-        return true;
-    }
-
-    // Here we answer the question (useful only if hydro hot start is asked) : In case of parallel
-    // run, do all sets of parallel years have the same size ?
-    if (maxNbYearsInParallel != 1 && !parameters.allSetsHaveSameSize)
-    {
-        logs.error() << "Hot Start Hydro option : conflict with parallelization parameters.";
-        logs.error()
-          << "Please update relevant simulation parameters or use Cold Start option.    ";
-        return false;
-    }
-
-    // Checking calendar conditions
-    // ... The simulation lasts one year exactly
-    uint nbDaysInSimulation = parameters.simulationDays.end - parameters.simulationDays.first + 1;
-    if (nbDaysInSimulation < 364)
-    {
-        logs.error()
-          << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
-        logs.error() << "Please update data or use Cold Start option.";
-        return false;
-    }
-
-    // ... For all areas for which reservoir management is enabled :
-    //     - Their starting level is initialized on the same day
-    //     - This day is the first day of the simulation calendar
-    const Area::Map::iterator end = areas.end();
-    for (Area::Map::iterator i = areas.begin(); i != end; ++i)
-    {
-        // Reference to the area
-        Area* area = i->second;
-
-        // No need to make a check on level initialization when reservoir management
-        // is not activated for the current area
-        if (!area->hydro.reservoirManagement)
-        {
-            continue;
-        }
-
-        // Month the reservoir level is initialized according to.
-        // This month number is given in the civil calendar, from january to december (0 is
-        // january).
-        int initLevelOnMonth = area->hydro.initializeReservoirLevelDate;
-
-        // Conversion of the previous month into simulation calendar
-        uint initLevelOnSimMonth = calendar.mapping.months[initLevelOnMonth];
-
-        // Previous month's first day in the year
-        uint initLevelOnSimDay = calendar.months[initLevelOnSimMonth].daysYear.first;
-
-        // Check the day of level initialization is the first day of simulation
-        if (initLevelOnSimDay != parameters.simulationDays.first)
-        {
-            logs.error()
-              << "Hot Start Hydro option : area '" << area->name
-              << "' - hydro level must be initialized on the first simulation month.    ";
-            logs.error() << "Please update data or use Cold Start option.";
-            return false;
-        }
-    } // End loop over areas
-
-    return true;
 }
 
 bool Study::initializeRuntimeInfos()
@@ -611,7 +520,7 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
     // ForEach area
     areas.each(
-      [&](Data::Area& area)
+      [this](Data::Area& area)
       {
           if (not parameters.geographicTrimming)
           {
@@ -789,7 +698,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
                     buffer << "@ " << i->first << "\r\n";
                 }
             }
-            areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
+            areas.each([&buffer](const Data::Area& area) { buffer << area.name << "\r\n"; });
             resultWriter.addEntryFromBuffer(path.c_str(), buffer);
         }
 
@@ -880,7 +789,7 @@ bool Study::areaDelete(Area* area)
     // and the scenario builder data *before* reloading uiinfo.
     {
         // Updating all hydro allocation
-        areas.each([&](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
+        areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
 
         // We __must__ update the scenario builder data
         // We may delete an area and re-create a new one with the same
@@ -947,7 +856,7 @@ void Study::areaDelete(Area::Vector& arealist)
                             << area.name;
 
                 // Updating all hydro allocation
-                areas.each([&](Data::Area& areait) { areait.hydro.allocation.remove(area.id); });
+                areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area.id); });
 
                 // Remove all binding constraints attached to the area
                 bindingConstraints.remove(*i);
@@ -1046,7 +955,8 @@ bool Study::areaRename(Area* area, AreaName newName)
     logs.info() << "renaming area " << area->name << " into " << newName;
 
     // Updating all hydro allocation
-    areas.each([&](Data::Area& areait) { areait.hydro.allocation.rename(oldid, newid); });
+    areas.each([&oldid, &newid](Data::Area& areait)
+        { areait.hydro.allocation.rename(oldid, newid); });
 
     ScenarioBuilderUpdater updaterSB(*this);
     bool ret = true;
@@ -1179,34 +1089,33 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
 void Study::destroyAllLoadTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.load.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.load.prepro); });
 }
 
 void Study::destroyAllSolarTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.solar.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.solar.prepro); });
 }
 
 void Study::destroyAllHydroTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
 }
 
 void Study::destroyAllWindTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.wind.prepro); });
+    areas.each([](Data::Area& area) { FreeAndNil(area.wind.prepro); });
 }
 
 void Study::destroyAllThermalTSGeneratorData()
 {
-    areas.each(
-      [&](Data::Area& area)
-      {
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              FreeAndNil(cluster->prepro);
-          }
-      });
+    areas.each([](const Data::Area& area)
+    {
+        for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
+        {
+            FreeAndNil(cluster->prepro);
+        }
+    });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
@@ -1447,8 +1356,9 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String areaname;
 
         areas.each(
-          [&](const Area& area)
+          [&output, &linkname, &areaname](const Area& area)
           {
+
               if (areaname.size() < area.id.size())
               {
                   areaname = area.id;
@@ -1459,19 +1369,12 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
               {
                   auto& link = *(i->second);
                   uint len = link.from->id.size() + link.with->id.size();
-                  len += output ? 3 : 1;
+                  len += 3;
                   if (len > linkname.size())
                   {
                       linkname.clear();
                       linkname << i->second->from->id;
-                      if (output)
-                      {
-                          linkname << " - "; // 3
-                      }
-                      else
-                      {
-                          linkname << SEP;
-                      }
+                      linkname << " - "; // 3
                       linkname << i->second->with->id;
                   }
               }
@@ -1527,7 +1430,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         // or even constraints
 
         areas.each(
-          [&](const Area& area)
+          [&areaname, &clustername](const Area& area)
           {
               if (areaname.size() < area.id.size())
               {

@@ -370,6 +370,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
     if (debugData)
     {
+        dayYear = 0;
         for (uint month = 0; month != 12; ++month)
         {
             auto daysPerMonth = calendar_.months[month].days;
@@ -379,6 +380,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 auto dYear = day + dayYear;
                 debugData->DailyTargetGen[dYear] = dailyTargetGen[dYear];
             }
+            dayYear += daysPerMonth;
         }
     }
 
@@ -422,10 +424,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 break;
             case NON:
                 throw solutionNotFound(area.name.c_str(), y);
-                break;
             case EMERGENCY_SHUT_DOWN:
                 throw fatalError(area.name.c_str(), y);
-                break;
             }
 
             H2O_J_Free(problem);
@@ -543,10 +543,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 break;
             case NON:
                 throw solutionNotFound(area.name.c_str(), y);
-                break;
             case EMERGENCY_SHUT_DOWN:
                 throw fatalError(area.name.c_str(), y);
-                break;
             }
 
             H2O2_J_Free(problem);
@@ -565,7 +563,7 @@ void HydroManagement::prepareDailyOptimalGenerations(
   HydroSpecificMap& hydro_specific_map)
 {
     areas_.each(
-      [&](Data::Area& area)
+      [this, &scratchmap, &y, &hydro_specific_map](Data::Area& area)
       { prepareDailyOptimalGenerations(area, y, scratchmap, hydro_specific_map[&area]); });
 }
 } // namespace Antares
