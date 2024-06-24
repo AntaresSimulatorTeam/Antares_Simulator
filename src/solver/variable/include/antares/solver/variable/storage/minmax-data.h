@@ -25,15 +25,7 @@
 #include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 class MinMaxData
 {
@@ -44,16 +36,6 @@ public:
         uint32_t indice;
     };
 
-public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    MinMaxData();
-    //! Destructor
-    ~MinMaxData();
-
     void initialize();
 
     void resetInf();
@@ -62,7 +44,6 @@ public:
     void mergeInf(uint year, const IntermediateValues& rhs);
     void mergeSup(uint year, const IntermediateValues& rhs);
 
-public:
     Data annual;
     Data monthly[maxMonths];
     Data weekly[maxWeeksInAYear];
@@ -71,10 +52,6 @@ public:
 
 }; // class MinMaxData
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
 
 #endif // __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__

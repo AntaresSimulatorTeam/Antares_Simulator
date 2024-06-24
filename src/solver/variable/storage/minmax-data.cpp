@@ -107,14 +107,6 @@ struct MergeArray<0, Size>
 
 } // anonymous namespace
 
-MinMaxData::MinMaxData()
-{
-}
-
-MinMaxData::~MinMaxData()
-{
-}
-
 void MinMaxData::resetInf()
 {
     ArrayInitializer<1, true>::Init(&annual);
