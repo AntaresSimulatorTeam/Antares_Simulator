@@ -45,7 +45,7 @@ public:
     void mergeInf(uint year, const IntermediateValues& rhs);
     void mergeSup(uint year, const IntermediateValues& rhs);
 
-    Data annual;
+    std::vector<Data> annual;
     std::vector<Data> monthly;
     std::vector<Data> weekly;
     std::vector<Data> daily;

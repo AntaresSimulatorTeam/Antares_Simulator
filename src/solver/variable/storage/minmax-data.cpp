@@ -27,8 +27,6 @@
 
 #include "antares/solver/variable/storage/intermediate.h"
 
-using namespace Yuni;
-
 namespace Antares::Solver::Variable::R::AllYears
 {
 namespace // anonymous
@@ -38,7 +36,7 @@ constexpr double eps = 1.e-7;
 template<uint Size, bool OpInferior>
 struct ArrayInitializer
 {
-    static void Init(MinMaxData::Data* array)
+    static void Init(std::vector<MinMaxData::Data> array)
     {
         for (uint i = 0; i != Size; ++i)
         {
@@ -91,6 +89,7 @@ struct MergeArray<0, Size>
 
 MinMaxData::MinMaxData()
 {
+    annual.resize(1);
     monthly.resize(maxMonths);
     weekly.resize(maxWeeksInAYear);
     daily.resize(maxDaysInAYear);
@@ -99,20 +98,20 @@ MinMaxData::MinMaxData()
 
 void MinMaxData::resetInf()
 {
-    ArrayInitializer<1, true>::Init(&annual);
-    ArrayInitializer<maxMonths, true>::Init(monthly.data());
-    ArrayInitializer<maxWeeksInAYear, true>::Init(weekly.data());
-    ArrayInitializer<maxDaysInAYear, true>::Init(daily.data());
-    ArrayInitializer<maxHoursInAYear, true>::Init(hourly.data());
+    ArrayInitializer<1, true>::Init(annual);
+    ArrayInitializer<maxMonths, true>::Init(monthly);
+    ArrayInitializer<maxWeeksInAYear, true>::Init(weekly);
+    ArrayInitializer<maxDaysInAYear, true>::Init(daily);
+    ArrayInitializer<maxHoursInAYear, true>::Init(hourly);
 }
 
 void MinMaxData::resetSup()
 {
-    ArrayInitializer<1, false>::Init(&annual);
-    ArrayInitializer<maxMonths, false>::Init(monthly.data());
-    ArrayInitializer<maxWeeksInAYear, false>::Init(weekly.data());
-    ArrayInitializer<maxDaysInAYear, false>::Init(daily.data());
-    ArrayInitializer<maxHoursInAYear, false>::Init(hourly.data());
+    ArrayInitializer<1, false>::Init(annual);
+    ArrayInitializer<maxMonths, false>::Init(monthly);
+    ArrayInitializer<maxWeeksInAYear, false>::Init(weekly);
+    ArrayInitializer<maxDaysInAYear, false>::Init(daily);
+    ArrayInitializer<maxHoursInAYear, false>::Init(hourly);
 }
 
 void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
@@ -121,7 +120,7 @@ void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
     MergeArray<true, maxWeeksInAYear>::Do(year, weekly.data(), rhs.week);
     MergeArray<true, maxDaysInAYear>::Do(year, daily.data(), rhs.day);
     MergeArray<true, maxHoursInAYear>::Do(year, hourly.data(), rhs.hour);
-    MergeArray<true, 1>::Do(year, &annual, &rhs.year);
+    MergeArray<true, 1>::Do(year, annual.data(), &rhs.year);
 }
 
 void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
@@ -130,7 +129,7 @@ void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
     MergeArray<false, maxWeeksInAYear>::Do(year, weekly.data(), rhs.week);
     MergeArray<false, maxDaysInAYear>::Do(year, daily.data(), rhs.day);
     MergeArray<false, maxHoursInAYear>::Do(year, hourly.data(), rhs.hour);
-    MergeArray<false, 1>::Do(year, &annual, &rhs.year);
+    MergeArray<false, 1>::Do(year, annual.data(), &rhs.year);
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
