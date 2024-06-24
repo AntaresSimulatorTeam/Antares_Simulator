@@ -107,14 +107,12 @@ struct MergeArray<0, Size>
 
 } // anonymous namespace
 
-MinMaxData::MinMaxData():
-    hourly(nullptr)
+MinMaxData::MinMaxData()
 {
 }
 
 MinMaxData::~MinMaxData()
 {
-    Antares::Memory::Release(hourly);
 }
 
 void MinMaxData::resetInf()
@@ -137,7 +135,6 @@ void MinMaxData::resetSup()
 
 void MinMaxData::initialize()
 {
-    Antares::Memory::Allocate(hourly, maxHoursInAYear);
 }
 
 void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)

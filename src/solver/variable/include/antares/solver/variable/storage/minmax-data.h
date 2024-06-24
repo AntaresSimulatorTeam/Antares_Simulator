@@ -67,7 +67,7 @@ public:
     Data monthly[maxMonths];
     Data weekly[maxWeeksInAYear];
     Data daily[maxDaysInAYear];
-    Antares::Memory::Stored<Data>::Type hourly;
+    Data hourly[maxHoursInAYear];
 
 }; // class MinMaxData
 
