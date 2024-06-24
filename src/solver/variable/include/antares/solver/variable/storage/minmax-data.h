@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 #define __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 
-#include <antares/memory/memory.h>
-#include <antares/study/study.h>
+#include <vector>
+
 #include "antares/solver/variable/storage/intermediate.h"
 
 namespace Antares::Solver::Variable::R::AllYears
