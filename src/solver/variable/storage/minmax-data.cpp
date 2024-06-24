@@ -89,39 +89,47 @@ struct MergeArray<0, Size>
 
 } // anonymous namespace
 
+MinMaxData::MinMaxData()
+{
+    monthly.resize(maxMonths);
+    weekly.resize(maxWeeksInAYear);
+    daily.resize(maxDaysInAYear);
+    hourly.resize(maxHoursInAYear);
+}
+
 void MinMaxData::resetInf()
 {
     ArrayInitializer<1, true>::Init(&annual);
-    ArrayInitializer<maxMonths, true>::Init(monthly);
-    ArrayInitializer<maxWeeksInAYear, true>::Init(weekly);
-    ArrayInitializer<maxDaysInAYear, true>::Init(daily);
-    ArrayInitializer<maxHoursInAYear, true>::Init(hourly);
+    ArrayInitializer<maxMonths, true>::Init(monthly.data());
+    ArrayInitializer<maxWeeksInAYear, true>::Init(weekly.data());
+    ArrayInitializer<maxDaysInAYear, true>::Init(daily.data());
+    ArrayInitializer<maxHoursInAYear, true>::Init(hourly.data());
 }
 
 void MinMaxData::resetSup()
 {
     ArrayInitializer<1, false>::Init(&annual);
-    ArrayInitializer<maxMonths, false>::Init(monthly);
-    ArrayInitializer<maxWeeksInAYear, false>::Init(weekly);
-    ArrayInitializer<maxDaysInAYear, false>::Init(daily);
-    ArrayInitializer<maxHoursInAYear, false>::Init(hourly);
+    ArrayInitializer<maxMonths, false>::Init(monthly.data());
+    ArrayInitializer<maxWeeksInAYear, false>::Init(weekly.data());
+    ArrayInitializer<maxDaysInAYear, false>::Init(daily.data());
+    ArrayInitializer<maxHoursInAYear, false>::Init(hourly.data());
 }
 
 void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
 {
-    MergeArray<true, maxMonths>::Do(year, monthly, rhs.month);
-    MergeArray<true, maxWeeksInAYear>::Do(year, weekly, rhs.week);
-    MergeArray<true, maxDaysInAYear>::Do(year, daily, rhs.day);
-    MergeArray<true, maxHoursInAYear>::Do(year, hourly, rhs.hour);
+    MergeArray<true, maxMonths>::Do(year, monthly.data(), rhs.month);
+    MergeArray<true, maxWeeksInAYear>::Do(year, weekly.data(), rhs.week);
+    MergeArray<true, maxDaysInAYear>::Do(year, daily.data(), rhs.day);
+    MergeArray<true, maxHoursInAYear>::Do(year, hourly.data(), rhs.hour);
     MergeArray<true, 1>::Do(year, &annual, &rhs.year);
 }
 
 void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
 {
-    MergeArray<false, maxMonths>::Do(year, monthly, rhs.month);
-    MergeArray<false, maxWeeksInAYear>::Do(year, weekly, rhs.week);
-    MergeArray<false, maxDaysInAYear>::Do(year, daily, rhs.day);
-    MergeArray<false, maxHoursInAYear>::Do(year, hourly, rhs.hour);
+    MergeArray<false, maxMonths>::Do(year, monthly.data(), rhs.month);
+    MergeArray<false, maxWeeksInAYear>::Do(year, weekly.data(), rhs.week);
+    MergeArray<false, maxDaysInAYear>::Do(year, daily.data(), rhs.day);
+    MergeArray<false, maxHoursInAYear>::Do(year, hourly.data(), rhs.hour);
     MergeArray<false, 1>::Do(year, &annual, &rhs.year);
 }
 

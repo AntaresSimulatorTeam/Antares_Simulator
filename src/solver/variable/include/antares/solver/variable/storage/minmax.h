@@ -84,17 +84,17 @@ protected:
             {
             case Category::hourly:
                 InternalExportIndices<maxHoursInAYear, VCardT>(report,
-                                                               Memory::RawPointer(minmax.hourly),
+                                                               Memory::RawPointer(minmax.hourly.data()),
                                                                fileLevel);
                 break;
             case Category::daily:
-                InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily, fileLevel);
+                InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily.data(), fileLevel);
                 break;
             case Category::weekly:
-                InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly, fileLevel);
+                InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly.data(), fileLevel);
                 break;
             case Category::monthly:
-                InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly, fileLevel);
+                InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly.data(), fileLevel);
                 break;
             case Category::annual:
                 InternalExportIndices<1, VCardT>(report, &minmax.annual, fileLevel);
@@ -107,16 +107,16 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<maxHoursInAYear, VCardT>(report,
-                                                              Memory::RawPointer(minmax.hourly));
+                                                              Memory::RawPointer(minmax.hourly.data()));
                 break;
             case Category::daily:
-                InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily);
+                InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily.data());
                 break;
             case Category::weekly:
-                InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly);
+                InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly.data());
                 break;
             case Category::monthly:
-                InternalExportValues<maxMonths, VCardT>(report, minmax.monthly);
+                InternalExportValues<maxMonths, VCardT>(report, minmax.monthly.data());
                 break;
             case Category::annual:
                 InternalExportValues<1, VCardT>(report, &minmax.annual);
