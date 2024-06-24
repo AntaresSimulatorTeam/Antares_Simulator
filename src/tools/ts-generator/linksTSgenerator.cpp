@@ -63,12 +63,10 @@ bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
 std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine)
 {
     std::vector<LinkTSgenerationParams> to_return(linksFromCmdLine.size());
-    // gp : following loop should be improved : we shouldn't need an index
-    unsigned int index = 0;
-    for (const auto& link_pair : linksFromCmdLine)
+    for (auto link = to_return.begin(); const auto& link_pair : linksFromCmdLine)
     {
-        to_return[index].namesPair = link_pair;
-        index++;
+        link->namesPair = link_pair;
+        link++;
     }
     return to_return;
 }
