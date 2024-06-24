@@ -12,7 +12,7 @@ PrepareInflows::PrepareInflows(Data::AreaList& areas, const Date::Calendar& cale
 
 void PrepareInflows::Run(uint year){
     LoadInflows(year);
-    ChangeInflowsToAccommodateFinalLevels(year);
+    //ChangeInflowsToAccommodateFinalLevels(year);
 }
 void PrepareInflows::LoadInflows(uint year)
 {
