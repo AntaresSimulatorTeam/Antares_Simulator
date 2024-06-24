@@ -43,7 +43,6 @@ private:
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
     bool refresh_ = false;
-    std::map<uint, bool> checked_years_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
