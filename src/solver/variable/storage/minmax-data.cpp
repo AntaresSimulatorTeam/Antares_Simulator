@@ -21,15 +21,10 @@
 
 #include "antares/solver/variable/storage/minmax-data.h"
 
-#include <cfloat>
-
-#include <yuni/yuni.h>
-
 #include "antares/solver/variable/storage/intermediate.h"
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-
 constexpr double eps = 1.e-7;
 
 static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
@@ -41,9 +36,12 @@ static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
     }
 }
 
-static void mergeArray(bool opInferior, const uint year, std::vector<MinMaxData::Data>& results, const double* values)
+static void mergeArray(bool opInferior,
+                       unsigned year,
+                       std::vector<MinMaxData::Data>& results,
+                       const double* values)
 {
-    for (uint i = 0; i != results.size(); ++i)
+    for (unsigned i = 0; i != results.size(); ++i)
     {
         MinMaxData::Data& data = results[i];
 
