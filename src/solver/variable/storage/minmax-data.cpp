@@ -29,8 +29,7 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-namespace // anonymous
-{
+
 constexpr double eps = 1.e-7;
 
 static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
@@ -42,39 +41,30 @@ static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
     }
 }
 
-
-template<bool OpInferior, uint Size>
-struct MergeArray
+static void mergeArray(bool opInferior, const uint year, std::vector<MinMaxData::Data>& results, const double* values)
 {
-    template<class U>
-    static void Do(const uint year, std::vector<MinMaxData::Data>& results, const U& values)
+    for (uint i = 0; i != results.size(); ++i)
     {
-        for (uint i = 0; i != Size; ++i)
-        {
-            MinMaxData::Data& data = results[i];
+        MinMaxData::Data& data = results[i];
 
-            if (OpInferior)
+        if (opInferior)
+        {
+            if (values[i] < data.value - eps)
             {
-                if (values[i] < data.value - eps)
-                {
-                    data.value = values[i];
-                    data.indice = year + 1; // The year is zero-based
-                }
+                data.value = values[i];
+                data.indice = year + 1; // The year is zero-based
             }
-            else
+        }
+        else
+        {
+            if (values[i] > data.value + eps)
             {
-                if (values[i] > data.value + eps)
-                {
-                    data.value = values[i];
-                    data.indice = year + 1; // The year is zero-based
-                }
+                data.value = values[i];
+                data.indice = year + 1; // The year is zero-based
             }
         }
     }
-
-}; // class MergeArray
-
-} // anonymous namespace
+}
 
 void MinMaxData::resetInf()
 {
@@ -96,20 +86,20 @@ void MinMaxData::resetSup()
 
 void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
 {
-    MergeArray<true, maxMonths>::Do(year, monthly, rhs.month);
-    MergeArray<true, maxWeeksInAYear>::Do(year, weekly, rhs.week);
-    MergeArray<true, maxDaysInAYear>::Do(year, daily, rhs.day);
-    MergeArray<true, maxHoursInAYear>::Do(year, hourly, rhs.hour);
-    MergeArray<true, 1>::Do(year, annual, &rhs.year);
+    mergeArray(true, year, monthly, rhs.month);
+    mergeArray(true, year, weekly, rhs.week);
+    mergeArray(true, year, daily, rhs.day);
+    mergeArray(true, year, hourly, rhs.hour);
+    mergeArray(true, year, annual, &rhs.year);
 }
 
 void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
 {
-    MergeArray<false, maxMonths>::Do(year, monthly, rhs.month);
-    MergeArray<false, maxWeeksInAYear>::Do(year, weekly, rhs.week);
-    MergeArray<false, maxDaysInAYear>::Do(year, daily, rhs.day);
-    MergeArray<false, maxHoursInAYear>::Do(year, hourly, rhs.hour);
-    MergeArray<false, 1>::Do(year, annual, &rhs.year);
+    mergeArray(false, year, monthly, rhs.month);
+    mergeArray(false, year, weekly, rhs.week);
+    mergeArray(false, year, daily, rhs.day);
+    mergeArray(false, year, hourly, rhs.hour);
+    mergeArray(false, year, annual, &rhs.year);
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
