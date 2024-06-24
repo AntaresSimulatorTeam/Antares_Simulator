@@ -280,7 +280,7 @@ struct MaxRowCount<hourly>
 {
     enum
     {
-        value = maxHoursInAYear
+        value = HOURS_PER_YEAR
     };
 };
 

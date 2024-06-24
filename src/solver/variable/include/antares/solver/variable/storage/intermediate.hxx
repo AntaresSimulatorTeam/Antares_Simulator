@@ -34,7 +34,7 @@ inline IntermediateValues::~IntermediateValues()
 
 inline void IntermediateValues::reset()
 {
-    Antares::Memory::Zero(maxHoursInAYear, hour);
+    Antares::Memory::Zero(HOURS_PER_YEAR, hour);
     memset(month, 0, sizeof(month));
     memset(week, 0, sizeof(week));
     memset(day, 0, sizeof(day));
@@ -53,7 +53,7 @@ inline const IntermediateValues::Type& IntermediateValues::operator[](
 
 inline uint64_t IntermediateValues::MemoryUsage()
 {
-    return +sizeof(Type) * maxHoursInAYear;
+    return +sizeof(Type) * HOURS_PER_YEAR;
 }
 
 template<class VCardT>
@@ -66,7 +66,7 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
         switch (precision)
         {
         case Category::hourly:
-            internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
+            internalExportAnnualValues<HOURS_PER_YEAR, VCardT>(report, hour, false);
             break;
         case Category::daily:
             internalExportAnnualValues<maxDaysInAYear, VCardT>(report, day, false);

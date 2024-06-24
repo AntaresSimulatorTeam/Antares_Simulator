@@ -312,7 +312,7 @@ public:
     {
         uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
                      * pNbYearsParallel;
-        r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
+        r += sizeof(double) * pSize * HOURS_PER_YEAR * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
     }

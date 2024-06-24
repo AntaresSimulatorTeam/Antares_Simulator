@@ -234,20 +234,20 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     uint endHourForCurrentYear = startHourForCurrentYear
                                  + study.runtime->rangeLimits.hour[Data::rangeCount];
 
-    assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
+    assert(endHourForCurrentYear <= Variable::HOURS_PER_YEAR);
 
     // Nombre minimal de groupes en fonctionnement à l'heure h (determiné par Peff  et Pnom)
-    std::array<uint, Variable::maxHoursInAYear> ON_min;
+    std::array<uint, Variable::HOURS_PER_YEAR> ON_min;
     // Nombre maximal de groupes en fonctionnement à l'heure h  (determine par Peff et Pmin)
-    std::array<uint, Variable::maxHoursInAYear> ON_max;
+    std::array<uint, Variable::HOURS_PER_YEAR> ON_max;
     // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
-    std::array<uint, Variable::maxHoursInAYear> ON_opt{};
+    std::array<uint, Variable::HOURS_PER_YEAR> ON_opt{};
 
     // Get cluster properties
     Data::ThermalCluster* currentCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex)
                                              .get();
 
-    assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
+    assert(endHourForCurrentYear <= Variable::HOURS_PER_YEAR);
     assert(endHourForCurrentYear <= currentCluster->series.timeSeries.height);
     assert(currentCluster);
 
@@ -373,8 +373,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 void State::yearEndBuildThermalClusterCalculateStartupCosts(
   const uint& maxDurationON,
-  const std::array<uint, Variable::maxHoursInAYear>& ON_min,
-  const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
+  const std::array<uint, Variable::HOURS_PER_YEAR>& ON_min,
+  const std::array<uint, Variable::HOURS_PER_YEAR>& ON_opt,
   const Data::ThermalCluster* currentCluster)
 {
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
@@ -422,18 +422,18 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(
     }
 }
 
-std::array<uint, Variable::maxHoursInAYear>
+std::array<uint, Variable::HOURS_PER_YEAR>
 State::computeEconomicallyOptimalNbClustersONforEachHour(
   const uint& maxDurationON,
-  const std::array<uint, Variable::maxHoursInAYear>& ON_min,
-  const std::array<uint, Variable::maxHoursInAYear>& ON_max) const
+  const std::array<uint, Variable::HOURS_PER_YEAR>& ON_min,
+  const std::array<uint, Variable::HOURS_PER_YEAR>& ON_max) const
 {
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear = startHourForCurrentYear
                                  + study.runtime->rangeLimits.hour[Data::rangeCount];
 
     // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
-    std::array<uint, Variable::maxHoursInAYear> ON_opt;
+    std::array<uint, Variable::HOURS_PER_YEAR> ON_opt;
 
     uint nivmax; // valeur maximale de ON_opt[h] , progressivement réactualisée à la baisse
     uint nivmin; // valeur minimale de ON_opt[h] , progressivement réactualisée à la hausse
