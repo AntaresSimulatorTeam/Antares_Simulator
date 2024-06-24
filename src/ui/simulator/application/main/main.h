@@ -693,7 +693,8 @@ private:
     Component::Notebook::Page* pageScBuilderSolar;
     Component::Notebook::Page* pageScBuilderNTC;
     Component::Notebook::Page* pageScBuilderRenewable;
-    Component::Notebook::Page* pageScBuilderHydroLevels;
+    Component::Notebook::Page* pageScBuilderHydroInitialLevels;
+    Component::Notebook::Page* pageScBuilderHydroFinalLevels;
 
     //! A context menu for the map
     wxMenu* pMapContextMenu;

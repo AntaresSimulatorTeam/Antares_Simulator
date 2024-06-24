@@ -42,7 +42,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     bool derated = study.parameters.derated;
 
     study.areas.each(
-      [&](Data::Area& area)
+      [&derated](Data::Area& area)
       {
           auto& hydroseries = *(area.hydro.series);
 
@@ -180,7 +180,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
             uint month = i % 12;
             uint realmonth = calendar.months[month].realmonth;
-            uint daysPerMonth = calendar.months[month].days;
 
             assert(l < series.ror.timeSeries.width);
             assert(not std::isnan(colPOW[realmonth]));
@@ -283,11 +282,11 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         else
         {
             logs.info() << "Archiving the hydro time-series";
-            const int precision = 0;
-            Yuni::String output;
             study.areas.each(
-              [&](const Data::Area& area)
+              [&study, &currentYear, &writer, &progression](const Data::Area& area)
               {
+                  const int precision = 0;
+                  Yuni::String output;
                   study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
                                        << currentYear << SEP << area.id;
 

@@ -202,7 +202,7 @@ void HydroManagement::prepareEffectiveDemand(
   HydroSpecificMap& hydro_specific_map)
 {
     areas_.each(
-      [&](Data::Area& area)
+      [this, &year, &hydro_specific_map](Data::Area& area)
       {
           auto& data = area.hydro.managementData[year];
           auto& hydro_specific = hydro_specific_map[&area];
@@ -216,7 +216,7 @@ void HydroManagement::prepareEffectiveDemand(
               double effectiveDemand = 0;
               // area.hydro.allocation is indexed by area index
               area.hydro.allocation.eachNonNull(
-                [&](unsigned areaIndex, double value)
+                [this, &effectiveDemand, &day, &hydro_specific_map](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
                     effectiveDemand += hydro_specific_map[area].daily[day].DLN * value;

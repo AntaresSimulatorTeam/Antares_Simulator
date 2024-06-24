@@ -362,7 +362,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                 logs.verbosityLevel = Logs::Verbosity::Warning::level;
                 // load all links
                 buffer.clear() << infos->folder << "/input/links/" << area->id;
-                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer.c_str()))
+                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer.c_str(), false))
                 {
                     delete arealist;
                     delete study;
@@ -391,20 +391,20 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     buffer.clear() << infos->folder << "/input/bindingconstraints/bindingconstraints.ini";
     if (ini.open(buffer))
     {
-        String v;
 
         ini.each(
-          [&](const IniFile::Section& section)
+          [&e](const IniFile::Section& section)
           {
               auto* property = section.firstProperty;
               for (; property; property = property->next)
               {
                   if (property->key == "id")
                   {
-                      v = property->value;
+                      String v = property->value;
                       v.toLower();
-                      buffer.clear() << "input/bindingconstraints/" << v << ".txt";
-                      e.add(buffer);
+                      String tmp;
+                      tmp << "input/bindingconstraints/" << v << ".txt";
+                      e.add(tmp);
                       // Go to the next binding constraint
                       break;
                   }

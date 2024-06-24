@@ -127,7 +127,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
                   "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\n";
 
     study.areas.each(
-      [&](const Data::Area& area)
+      [&out, &outLinks, &outThermal](const Data::Area& area)
       {
           out << area.id << '\t';
           out << area.name << '\n';

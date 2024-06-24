@@ -52,6 +52,10 @@ public:
     bool loadOnlyNeeded;
     //! Force the year-by-year flag
     bool forceYearByYear;
+
+    //! Load data associated to link TS generation
+    bool linksLoadTSGen = false;
+
     //! Force the derated mode
     bool forceDerated;
 

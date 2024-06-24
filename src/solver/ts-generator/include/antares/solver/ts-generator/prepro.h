@@ -115,6 +115,27 @@ public:
     unsigned int unitCount;
 }; // class PreproAvailability
 
+struct LinkTsGeneration
+{
+    unsigned unitCount = 0;
+    double nominalCapacity = 0;
+
+    double forcedVolatility = 0.;
+    double plannedVolatility = 0.;
+
+    Data::StatisticalLaw forcedLaw = LawUniform;
+    Data::StatisticalLaw plannedLaw = LawUniform;
+
+    std::unique_ptr<Data::PreproAvailability> prepro;
+
+    Matrix<> modulationCapacityDirect;
+    Matrix<> modulationCapacityIndirect;
+
+    bool valid = false;
+
+    bool forceNoGeneration = false;
+};
+
 } // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
