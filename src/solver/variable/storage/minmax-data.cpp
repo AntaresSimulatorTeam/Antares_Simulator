@@ -36,7 +36,7 @@ constexpr double eps = 1.e-7;
 template<uint Size, bool OpInferior>
 struct ArrayInitializer
 {
-    static void Init(std::vector<MinMaxData::Data> array)
+    static void Init(std::vector<MinMaxData::Data>& array)
     {
         for (uint i = 0; i != Size; ++i)
         {
@@ -52,7 +52,7 @@ template<bool OpInferior, uint Size>
 struct MergeArray
 {
     template<class U>
-    static void Do(const uint year, std::vector<MinMaxData::Data> results, const U& values)
+    static void Do(const uint year, std::vector<MinMaxData::Data>& results, const U& values)
     {
         for (uint i = 0; i != Size; ++i)
         {
