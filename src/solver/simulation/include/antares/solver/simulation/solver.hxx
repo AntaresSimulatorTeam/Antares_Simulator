@@ -343,7 +343,6 @@ void ISimulation<ImplementationType>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
         }
 
-        logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
             pDurationCollector("mc_years")
@@ -962,6 +961,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
     HydroInputsChecker hydroInputsChecker(study);
 
+    logs.info() << " Doing hydro validation";
+
     // Loop over sets of parallel years to check hydro inputs
     for (const auto& batch: setsOfParallelYears)
     {
@@ -975,6 +976,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             hydroInputsChecker.Execute(year);
         }
     }
+
+    logs.info() << " Starting the simulation";
 
     // Loop over sets of parallel years to run the simulation
     for (auto& batch: setsOfParallelYears)
