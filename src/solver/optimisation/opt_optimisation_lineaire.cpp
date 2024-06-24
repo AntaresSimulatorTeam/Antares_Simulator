@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <antares/logs/logs.h>
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
@@ -139,6 +139,34 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 }
 } // namespace
 
+void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                    unsigned nombreDeVariables,
+                    unsigned nombreDeContraintes)
+{
+    ProblemeAResoudre->CoutQuadratique.resize(nombreDeVariables);
+    ProblemeAResoudre->CoutLineaire.resize(nombreDeVariables);
+    ProblemeAResoudre->TypeDeVariable.resize(nombreDeVariables);
+    ProblemeAResoudre->Xmin.resize(nombreDeVariables);
+    ProblemeAResoudre->Xmax.resize(nombreDeVariables);
+    ProblemeAResoudre->X.resize(nombreDeVariables);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees.resize(nombreDeVariables);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.resize(nombreDeVariables);
+    ProblemeAResoudre->PositionDeLaVariable.resize(nombreDeVariables);
+    ProblemeAResoudre->Pi.resize(nombreDeVariables);
+    ProblemeAResoudre->Colonne.resize(nombreDeVariables);
+    ProblemeAResoudre->NomDesVariables.resize(nombreDeVariables);
+    ProblemeAResoudre->VariablesEntieres.resize(nombreDeVariables);
+
+    ProblemeAResoudre->Sens.resize(nombreDeContraintes);
+    ProblemeAResoudre->IndicesDebutDeLigne.resize(nombreDeContraintes);
+    ProblemeAResoudre->NombreDeTermesDesLignes.resize(nombreDeContraintes);
+    ProblemeAResoudre->SecondMembre.resize(nombreDeContraintes);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux.resize(nombreDeContraintes);
+    ProblemeAResoudre->CoutsMarginauxDesContraintes.resize(nombreDeContraintes);
+    ProblemeAResoudre->ComplementDeLaBase.resize(nombreDeContraintes);
+    ProblemeAResoudre->NomDesContraintes.resize(nombreDeContraintes);
+}
+
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
@@ -166,6 +194,9 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
+    resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
+                   problemeHebdo->ProblemeAResoudre->NombreDeVariables,
+                   problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
     if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
     {
         OPT_ExportStructures(problemeHebdo, writer);
