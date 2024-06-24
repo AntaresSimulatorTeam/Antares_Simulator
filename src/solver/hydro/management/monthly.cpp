@@ -318,6 +318,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
               auto content = buffer.str();
               resultWriter_.addEntryFromBuffer(path.str(), content);
           }
+          indexArea++;
       });
 }
 
