@@ -52,7 +52,7 @@ template<bool OpInferior, uint Size>
 struct MergeArray
 {
     template<class U>
-    static void Do(const uint year, MinMaxData::Data* results, const U& values)
+    static void Do(const uint year, std::vector<MinMaxData::Data> results, const U& values)
     {
         for (uint i = 0; i != Size; ++i)
         {
@@ -70,7 +70,7 @@ template<uint Size>
 struct MergeArray<0, Size>
 {
     template<class U>
-    static void Do(const uint year, MinMaxData::Data* results, const U& values)
+    static void Do(const uint year, std::vector<MinMaxData::Data> results, const U& values)
     {
         for (uint i = 0; i != Size; ++i)
         {
@@ -116,20 +116,20 @@ void MinMaxData::resetSup()
 
 void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
 {
-    MergeArray<true, maxMonths>::Do(year, monthly.data(), rhs.month);
-    MergeArray<true, maxWeeksInAYear>::Do(year, weekly.data(), rhs.week);
-    MergeArray<true, maxDaysInAYear>::Do(year, daily.data(), rhs.day);
-    MergeArray<true, maxHoursInAYear>::Do(year, hourly.data(), rhs.hour);
-    MergeArray<true, 1>::Do(year, annual.data(), &rhs.year);
+    MergeArray<true, maxMonths>::Do(year, monthly, rhs.month);
+    MergeArray<true, maxWeeksInAYear>::Do(year, weekly, rhs.week);
+    MergeArray<true, maxDaysInAYear>::Do(year, daily, rhs.day);
+    MergeArray<true, maxHoursInAYear>::Do(year, hourly, rhs.hour);
+    MergeArray<true, 1>::Do(year, annual, &rhs.year);
 }
 
 void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
 {
-    MergeArray<false, maxMonths>::Do(year, monthly.data(), rhs.month);
-    MergeArray<false, maxWeeksInAYear>::Do(year, weekly.data(), rhs.week);
-    MergeArray<false, maxDaysInAYear>::Do(year, daily.data(), rhs.day);
-    MergeArray<false, maxHoursInAYear>::Do(year, hourly.data(), rhs.hour);
-    MergeArray<false, 1>::Do(year, annual.data(), &rhs.year);
+    MergeArray<false, maxMonths>::Do(year, monthly, rhs.month);
+    MergeArray<false, maxWeeksInAYear>::Do(year, weekly, rhs.week);
+    MergeArray<false, maxDaysInAYear>::Do(year, daily, rhs.day);
+    MergeArray<false, maxHoursInAYear>::Do(year, hourly, rhs.hour);
+    MergeArray<false, 1>::Do(year, annual, &rhs.year);
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
