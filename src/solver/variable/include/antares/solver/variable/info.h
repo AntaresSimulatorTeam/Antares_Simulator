@@ -23,6 +23,7 @@
 
 #include <cmath>
 #include "./economy/vCardReserveParticipationByDispatchablePlant.h"
+#include "./economy/vCardReserveParticipationByGroup.h"
 
 namespace Antares
 {
@@ -372,8 +373,13 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 if (typeid(VCardT) == typeid(Economy::VCardReserveParticipationByDispatchablePlant))
                 {
                     auto [clusterName, reserveName]
-                      = thermal.list.reserveParticipationAt(results.data.area, i);
+                      = thermal.list.reserveParticipationClusterAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + clusterName;
+                } else if (typeid(VCardT) == typeid(Economy::VCardReserveParticipationByGroup))
+                {
+                    auto [groupName, reserveName]
+                      = thermal.list.reserveParticipationGroupAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + Economy::thermalDispatchableGroupToString(groupName);
                 }
                 else
                     results.variableCaption = thermal.list.enabledClusterAt(i)->name();
@@ -389,7 +395,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
 
         auto& thermal = results.data.area->thermal;
         auto [clusterName, reserveName]
-          = thermal.list.reserveParticipationAt(results.data.area, reserveParticipationIdx);
+          = thermal.list.reserveParticipationClusterAt(results.data.area, reserveParticipationIdx);
         results.variableCaption = clusterName + " - " + reserveName;
         return true;
     }
@@ -444,11 +450,22 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         bool res;
         if (*results.isPrinted)
         {
+            const Data::PartThermal& thermal = results.data.area->thermal;
             for (uint i = 0; i != container.size(); ++i)
             {
-                if (typeid(VCardType)
-                    == typeid(Economy::VCardReserveParticipationByDispatchablePlant))
-                    res = setClusterReserveCaption(results, i);
+                if (typeid(VCardType) == typeid(Economy::VCardReserveParticipationByDispatchablePlant))
+                {
+                    auto [clusterName, reserveName]
+                      = thermal.list.reserveParticipationClusterAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + clusterName;
+                    res = true;
+                } else if (typeid(VCardType) == typeid(Economy::VCardReserveParticipationByGroup))
+                {
+                    auto [groupName, reserveName]
+                      = thermal.list.reserveParticipationGroupAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + Economy::thermalDispatchableGroupToString(groupName);
+                    res = true;
+                }
                 else
                     res = setClusterCaption(results, fileLevel, i);
                 if (!res)

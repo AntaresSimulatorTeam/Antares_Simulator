@@ -75,6 +75,7 @@
 #include "nbOfDispatchedUnitsByPlant.h"
 #include "profitByPlant.h"
 #include "reserveParticipationByDispatchablePlant.h"
+#include "reserveParticipationByGroup.h"
 
 // By RES plant
 #include "productionByRenewablePlant.h"
@@ -172,9 +173,10 @@ typedef                           // Prices
                                         <ProfitByPlant
                                           <ReserveParticipationCost // Participation cost to the reserves
                                             <ReserveParticipationByDispatchablePlant // Participation per cluster
-                                             // Links
-                                             <Variable::Economy::Links // All links
-                                              >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                              <ReserveParticipationByGroup // Participation per thermal group
+                                              // Links
+                                              <Variable::Economy::Links // All links
+                                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

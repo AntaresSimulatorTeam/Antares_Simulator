@@ -58,7 +58,6 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     unitCountLastHour.resize(count, 0);
     productionLastHour.resize(count, 0);
     pminOfAGroup.resize(count, 0);
-    nbThermalGroupsForReserves.resize(Antares::Data::groupMax, 0);
 }
 
 State::State(Data::Study& s) :
@@ -252,14 +251,12 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
                         thermalClusterReserveParticipationCostForYear[hourInTheYear]
                             += participation * thermalCluster->reserveCost(res);
 
-                        thermalReserveParticipationPerGroupForYear[hourInTheYear][res][thermalCluster->groupID]
+                        thermalReserveParticipationPerGroupForYear[hourInTheYear][thermalCluster->groupID][res]
                             += participation;
 
-                        thermalReserveParticipationPerClusterForYear[hourInTheYear][thermalCluster->name()][res]
-                            += participation;
-
-                        thermal[area->index].nbThermalGroupsForReserves[thermalCluster->groupID]++;
-                        
+                        thermalReserveParticipationPerClusterForYear[hourInTheYear]
+                                                                    [thermalCluster->name()][res]
+                          += participation;
                     }
                 }
                 else
@@ -440,7 +437,7 @@ void State::yearEndBuildCalculateReserveParticipationCosts(
 
                         for (auto res : clusterReserves)
                         {
-                            file << "Hour " << h + 1 << " : cluster " << thermalCluster->name() << " is participating to reserve " << res << " for " << thermalReserveParticipationPerGroupForYear[h][res][thermalCluster->groupID] << " mw\n";
+                            file << "Hour " << h + 1 << " : cluster " << thermalCluster->name() << " is participating to reserve " << res << " for " << thermalReserveParticipationPerGroupForYear[h][thermalCluster->groupID][res] << " mw\n";
                         }
                     }
                     file.close();

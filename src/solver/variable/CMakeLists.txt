@@ -130,6 +130,7 @@ set(SRC_VARIABLE_ECONOMY
 	include/antares/solver/variable/economy/reserveParticipationCost.h
 	include/antares/solver/variable/economy/reserveParticipationByDispatchablePlant.h
 	include/antares/solver/variable/economy/vCardReserveParticipationByDispatchablePlant.h
+	include/antares/solver/variable/economy/reserveParticipationByGroup.h
 
         # Links
         include/antares/solver/variable/economy/links/flowLinear.h

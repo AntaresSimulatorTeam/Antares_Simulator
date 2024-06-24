@@ -56,9 +56,8 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 }
 
 template<class ClusterT>
-std::pair<Data::ClusterName, Data::ReserveName> ClusterList<ClusterT>::reserveParticipationAt(
-  const Area* area,
-  unsigned int index) const
+std::pair<Data::ClusterName, Data::ReserveName>
+  ClusterList<ClusterT>::reserveParticipationClusterAt(const Area* area, unsigned int index) const
 {
     int globalReserveParticipationIdx = 0;
 
@@ -93,8 +92,35 @@ std::pair<Data::ClusterName, Data::ReserveName> ClusterList<ClusterT>::reservePa
         }
     }
 
-    throw std::out_of_range(
-      "This reserve participation index has not been found in all the reserve participations");
+    throw std::out_of_range("This cluster reserve participation index has not been found in all "
+                            "the reserve participations");
+}
+
+template<class ClusterT>
+std::pair<Data::ThermalDispatchableGroup, Data::ReserveName>
+  ClusterList<ClusterT>::reserveParticipationGroupAt(const Area* area, unsigned int index) const
+{
+    int column = 0;
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (int indexGroup = 0; indexGroup < Data::groupMax; indexGroup++)
+        {
+            if (column == index)
+                return {static_cast<Data::ThermalDispatchableGroup>(indexGroup), reserveName};
+            column++;
+        }
+    }
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (int indexGroup = 0; indexGroup < Data::groupMax; indexGroup++)
+        {
+            if (column == index)
+                return {static_cast<Data::ThermalDispatchableGroup>(indexGroup), reserveName};
+            column++;
+        }
+    }
+    throw std::out_of_range("This group reserve participation index has not been found in all the "
+                            "reserve participations");
 }
 
 template<class ClusterT>
