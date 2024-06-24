@@ -45,7 +45,7 @@ AverageData::~AverageData()
 
 void AverageData::reset()
 {
-    Antares::Memory::Zero(maxHoursInAYear, hourly);
+    Antares::Memory::Zero(HOURS_PER_YEAR, hourly);
     (void)::memset(monthly, 0, sizeof(double) * maxMonths);
     (void)::memset(weekly, 0, sizeof(double) * maxWeeksInAYear);
     (void)::memset(daily, 0, sizeof(double) * maxDaysInAYear);
@@ -54,7 +54,7 @@ void AverageData::reset()
 
 void AverageData::initializeFromStudy(Data::Study& study)
 {
-    Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
+    Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
     nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
     year = new double[nbYearsCapacity];
 
@@ -70,7 +70,7 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
     double ratio = (double)yearsWeight[y] / (double)yearsWeightSum;
 
     // Average value for each hour throughout all years
-    for (i = 0; i != maxHoursInAYear; ++i)
+    for (i = 0; i != HOURS_PER_YEAR; ++i)
     {
         hourly[i] += rhs.hour[i] * ratio;
     }

@@ -77,7 +77,7 @@ public:
 protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
-        Antares::Memory::Allocate<double>(stdDeviationHourly, maxHoursInAYear);
+        Antares::Memory::Allocate<double>(stdDeviationHourly, HOURS_PER_YEAR);
         // Next
         NextType::initializeFromStudy(study);
 
@@ -91,7 +91,7 @@ protected:
         (void)::memset(stdDeviationMonthly, 0, sizeof(double) * maxMonths);
         (void)::memset(stdDeviationWeekly, 0, sizeof(double) * maxWeeksInAYear);
         (void)::memset(stdDeviationDaily, 0, sizeof(double) * maxDaysInAYear);
-        Antares::Memory::Zero(maxHoursInAYear, stdDeviationHourly);
+        Antares::Memory::Zero(HOURS_PER_YEAR, stdDeviationHourly);
         stdDeviationYear = 0.;
         // Next
         NextType::reset();
@@ -104,7 +104,7 @@ protected:
 
         unsigned int i;
         // StdDeviation value for each hour throughout all years
-        for (i = 0; i != maxHoursInAYear; ++i)
+        for (i = 0; i != HOURS_PER_YEAR; ++i)
         {
             stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
         }
@@ -142,7 +142,7 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<S, maxHoursInAYear, VCardT, Category::hourly>(
+                InternalExportValues<S, HOURS_PER_YEAR, VCardT, Category::hourly>(
                   report,
                   results,
                   Memory::RawPointer(stdDeviationHourly));
@@ -180,7 +180,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class, int> class DecoratorT>
