@@ -36,6 +36,9 @@ public:
         uint32_t indice;
     };
 
+    MinMaxData() = default;
+    ~MinMaxData() = default;
+
     void resetInf();
     void resetSup();
 
