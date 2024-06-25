@@ -1,4 +1,4 @@
-#include "tsGenerationOptions.h"
+#include "antares/tools/ts-generator/tsGenerationOptions.h"
 #include <antares/logs/logs.h>
 
 namespace Antares::TSGenerator {

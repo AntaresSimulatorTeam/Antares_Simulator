@@ -32,8 +32,8 @@
 #include <antares/writer/result_format.h>
 #include <antares/writer/writer_factory.h>
 
-#include "tsGenerationOptions.h"
-#include "linksTSgenerator.h"
+#include "antares/tools/ts-generator/tsGenerationOptions.h"
+#include "antares/tools/ts-generator/linksTSgenerator.h"
 
 using namespace Antares::TSGenerator;
 

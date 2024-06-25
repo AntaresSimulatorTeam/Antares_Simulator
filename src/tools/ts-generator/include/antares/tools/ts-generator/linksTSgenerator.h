@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "tsGenerationOptions.h"
+#include "antares/tools/ts-generator/tsGenerationOptions.h"
 #include <antares/solver/ts-generator/generator.h>
 
 namespace fs = std::filesystem;
