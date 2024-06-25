@@ -83,7 +83,13 @@ bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
     }
     // Load the general data
     buffer.clear() << folderSettings << SEP << "generaldata.ini";
-    if (!parameters.loadFromFile(buffer, header.version, options))
+    bool errorWhileLoading = !parameters.loadFromFile(buffer, header.version, options);
+
+    parameters.validateOptions(options);
+
+    parameters.fixBadValues();
+
+    if (errorWhileLoading)
     {
         if (options.loadOnlyNeeded)
         {
@@ -120,11 +126,11 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     if (usedByTheSolver)
     {
         // We have time-series to import
-        if (parameters.exportTimeSeriesInInput && header.version == StudyVersion::latest())
+        if (parameters.exportTimeSeriesInInput && header.version != StudyVersion::latest())
         {
             logs.info() << "Stochastic TS stored in input parametrized."
-                           " Disabling Store in input because study is not at latest version"
-                           "Prevents writing data in unsupported format at the study version";
+                           " Disabling Store in input because study is not at latest version."
+                           " This prevents writing data in unsupported format at the study version";
             parameters.exportTimeSeriesInInput = 0;
         }
     }
@@ -165,13 +171,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
                           parameters.firstWeekday,
                           parameters.firstMonthInYear,
                           parameters.leapYear});
-
-    // In case hydro hot start is enabled, check all conditions are met.
-    // (has to be called after areas load and calendar building)
-    if (usedByTheSolver && !checkHydroHotStart())
-    {
-        logs.error() << "hydro hot start is enabled, conditions are not met. Aborting";
-    }
 
     // Reducing memory footprint
     reduceMemoryUsage();
@@ -293,7 +292,7 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 class SetHandlerAreas
 {
 public:
-    SetHandlerAreas(Study& study):
+    explicit SetHandlerAreas(Study& study):
         pStudy(study)
     {
     }
@@ -418,7 +417,7 @@ bool Study::reloadXCastData()
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
     bool ret = true;
     areas.each(
-      [&](Data::Area& area)
+      [this, &ret](Data::Area& area)
       {
           assert(area.load.prepro);
           assert(area.solar.prepro);

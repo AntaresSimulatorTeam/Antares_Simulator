@@ -151,7 +151,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 {
     uint indexArea = 0;
     areas_.each(
-      [&](Data::Area& area)
+      [this, &random_reservoir_level, &y, &indexArea](Data::Area& area)
       {
           auto& data = tmpDataByArea_[&area];
 
@@ -165,8 +165,6 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
           {
               lvi = random_reservoir_level[indexArea];
           }
-
-          indexArea++;
 
           double solutionCost = 0.;
           double solutionCostNoised = 0.;
@@ -292,20 +290,22 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
                   auto monthName = calendar_.text.months[simulationMonth].name;
 
-                  buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
-                  buffer << '\t';
-                  buffer << data.inflows[realmonth] << '\t';
-                  buffer << data.MTG[realmonth] << '\t';
-                  buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
-                  buffer << data.MOL[realmonth] << '\t';
-                  buffer << minLvl[firstDay] << '\t';
-                  buffer << maxLvl[firstDay] << '\t';
-                  buffer << '\n';
-              }
-              auto content = buffer.str();
-              resultWriter_.addEntryFromBuffer(path.str(), content);
-          }
-      });
+                buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
+                buffer << '\t';
+                buffer << data.inflows[realmonth] << '\t';
+                buffer << data.MTG[realmonth] << '\t';
+                buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
+                buffer << data.MOL[realmonth] << '\t';
+                buffer << minLvl[firstDay] << '\t';
+                buffer << maxLvl[firstDay] << '\t';
+                buffer << '\n';
+            }
+            auto content = buffer.str();
+            resultWriter_.addEntryFromBuffer(path.str(), content);
+        }
+
+        indexArea++;
+    });
 }
 
 } // namespace Antares

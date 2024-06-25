@@ -73,13 +73,7 @@ bool Economy::simulationBegin()
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], 168, numSpace);
-
-            if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace].NombreDePasDeTemps)
-            {
-                logs.fatal() << "internal error";
-                return false;
-            }
+            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], nbHoursInAWeek, numSpace);
 
             auto options = createOptimizationOptions(study);
             weeklyOptProblems_[numSpace] = Antares::Solver::Optimization::WeeklyOptimization::
@@ -229,8 +223,6 @@ bool Economy::year(Progression::Task& progression,
 
         ++progression;
     }
-
-    updatingAnnualFinalHydroLevel(study.areas, currentProblem);
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);

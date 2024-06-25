@@ -39,6 +39,10 @@ class AvailabilityTSGeneratorData
 {
 public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
+    AvailabilityTSGeneratorData(Data::LinkTsGeneration&,
+                                Data::TimeSeries&,
+                                Matrix<>& modulation,
+                                const std::string& name);
 
     const unsigned& unitCount;
     const double& nominalCapacity;
@@ -58,6 +62,8 @@ public:
     const std::string& name;
 };
 
+using listOfLinks = std::vector<Data::AreaLink*>;
+
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
 /*!
@@ -71,8 +77,15 @@ bool generateThermalTimeSeries(Data::Study& study,
                                Solver::IResultWriter& writer,
                                const std::string& savePath);
 
+bool generateLinkTimeSeries(Data::Study& study,
+                            const listOfLinks& links,
+                            Solver::IResultWriter& writer,
+                            const std::string& savePath);
+
 std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
+
+listOfLinks getAllLinksToGen(Data::AreaList& areas);
 
 /*!
 ** \brief Destroy all TS Generators

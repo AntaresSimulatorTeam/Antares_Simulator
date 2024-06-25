@@ -119,20 +119,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.ShortTermStorage.resize(nbPays);
 
-    problem.previousYearFinalLevels.resize(0);
-    if (problem.hydroHotStart)
-    {
-        for (uint i = 0; i <= nbPays; i++)
-        {
-            auto& area = *(study.areas[i]);
-            if (area.hydro.reservoirManagement)
-            {
-                problem.previousYearFinalLevels.assign(nbPays, 0.);
-                break;
-            }
-        }
-    }
-
     problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
 
