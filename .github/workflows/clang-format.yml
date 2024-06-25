@@ -1,0 +1,33 @@
+name: Ubuntu CI (push and/or release)
+
+on:
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - release/*
+      - doc/*
+      - dependabot/*
+
+jobs:
+  build:
+    name: clang-format
+
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: clang-format
+        run: cd src && ./format-code.sh
+
+      - name: git diff
+        run: |
+          if [[ `git status --porcelain` ]]; then
+          echo OK
+          else
+          echo KO
+          fi
