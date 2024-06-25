@@ -563,8 +563,8 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
                                                       uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
-                 << " direct TS "
-                 << " and " << indirect << " indirect TS, expected the same number";
+                 << " direct TS " << " and " << indirect
+                 << " indirect TS, expected the same number";
     throw Antares::Error::ReadingStudy();
 }
 } // anonymous namespace

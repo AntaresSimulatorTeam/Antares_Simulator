@@ -88,11 +88,9 @@ bool LayerData::saveLayers(const AnyString& filename)
         }
 
         data << "[activeLayer]\n";
-        data << "activeLayerID"
-             << " = " << activeLayerID;
+        data << "activeLayerID" << " = " << activeLayerID;
         data << '\n';
-        data << "showAllLayer"
-             << " = " << showAllLayer;
+        data << "showAllLayer" << " = " << showAllLayer;
 
         file << data;
 

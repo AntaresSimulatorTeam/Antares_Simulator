@@ -112,8 +112,8 @@ bool FinalLevelValidator::hydroAllocationStartMatchesSimulation() const
         return true;
     }
 
-    logs.error() << "Year " << year_ + 1 << ", area '" << areaName_ << "' : "
-                 << "Hydro allocation must start on the 1st simulation month and "
+    logs.error() << "Year " << year_ + 1 << ", area '" << areaName_
+                 << "' : " << "Hydro allocation must start on the 1st simulation month and "
                  << "simulation last a whole year";
     return false;
 }

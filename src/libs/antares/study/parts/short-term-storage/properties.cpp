@@ -152,22 +152,20 @@ bool Properties::validate()
     }
     if (reservoirCapacity < 0)
     {
-        logs.error() << "Property reservoircapacity must be >= 0 "
-                     << "for short term storage " << name;
+        logs.error() << "Property reservoircapacity must be >= 0 " << "for short term storage "
+                     << name;
         return false;
     }
 
     if (efficiencyFactor < 0)
     {
-        logs.warning() << "Property efficiency must be >= 0 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiency must be >= 0 " << "for short term storage " << name;
         efficiencyFactor = 0;
     }
 
     if (efficiencyFactor > 1)
     {
-        logs.warning() << "Property efficiency must be <= 1 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiency must be <= 1 " << "for short term storage " << name;
         efficiencyFactor = 1;
     }
 

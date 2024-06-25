@@ -329,8 +329,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
-          << area.name << "'"
-          << " are not identical";
+          << area.name << "'" << " are not identical";
 
         return false;
     }
