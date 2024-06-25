@@ -7,16 +7,15 @@ namespace Antares::TSGenerator
 // ==================
 // Free functions
 // ==================
-std::vector<std::string> extractTargetAreas(fs::path sourceLinkDir)
+std::vector<std::string> extractTargetAreas(const fs::path& sourceLinkDir)
 {
     std::vector<std::string> to_return;
     fs::path pathToIni = sourceLinkDir / "properties.ini";
     IniFile ini;
     ini.open(pathToIni); // gp : we should handle reading issues
-    for (auto* s = ini.firstSection; s; s = s->next)
+    for (auto s = ini.firstSection; s; s = s->next)
     {
-        std::string targetAreaName = transformNameIntoID(s->name);
-        to_return.push_back(targetAreaName);
+        to_return.push_back(transformNameIntoID(s->name));
     }
     return to_return;
 }
@@ -62,12 +61,14 @@ bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
 
 std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine)
 {
-    std::vector<LinkTSgenerationParams> to_return(linksFromCmdLine.size());
-    for (auto link = to_return.begin(); const auto& link_pair : linksFromCmdLine)
-    {
-        link->namesPair = link_pair;
-        link++;
-    }
+    std::vector<LinkTSgenerationParams> to_return;
+    std::for_each(linksFromCmdLine.begin(), linksFromCmdLine.end(),
+                  [&to_return](const auto& link_pair)
+                  {
+                      LinkTSgenerationParams link;
+                      link.namesPair = link_pair;
+                      to_return.push_back(std::move(link));
+                  });
     return to_return;
 }
 
