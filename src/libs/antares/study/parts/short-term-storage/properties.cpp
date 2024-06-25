@@ -98,9 +98,6 @@ bool Properties::loadKey(const IniFile::Property* p)
     if (p->key == "name")
         return p->value.to<std::string>(this->name);
 
-    if (p->key == "storagecycle")
-        return p->value.to<unsigned int>(this->cycleDuration);
-
     if (p->key == "initiallevel")
         return valueForOptional(this->initialLevel);
 
