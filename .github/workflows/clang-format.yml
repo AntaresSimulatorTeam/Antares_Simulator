@@ -1,4 +1,4 @@
-name: Ubuntu CI (push and/or release)
+name: Check formatting
 
 on:
   push:
