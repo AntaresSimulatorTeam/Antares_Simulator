@@ -146,7 +146,6 @@ bool Properties::saveToFolder(const std::string& folder) const
     s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
 
     s->add("efficiency", this->efficiencyFactor);
-    s->add("storagecycle", this->cycleDuration);
     s->add("initialleveloptim", this->initialLevelOptim);
 
 
