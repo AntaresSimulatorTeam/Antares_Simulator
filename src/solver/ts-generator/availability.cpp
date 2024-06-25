@@ -612,23 +612,17 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-void writeResultsToDisk(const Data::Study& study,
-                        Solver::IResultWriter& writer,
-                        const Matrix<>& series,
-                        const std::string& savePath)
+void writeTStoDisk(Solver::IResultWriter& writer,
+                   const Matrix<>& series,
+                   const std::string& savePath)
 {
-    if (study.parameters.noOutput)
-    {
-        return;
-    }
-
     std::string buffer;
     series.saveToBuffer(buffer, 0);
     writer.addEntryFromBuffer(savePath, buffer);
 }
 
-void writeResultsToDisk(const Matrix<>& series,
-                        const std::filesystem::path savePath)
+void writeTStoDisk(const Matrix<>& series,
+                   const std::filesystem::path savePath)
 {
     std::string buffer;
     series.saveToBuffer(buffer, 0);
@@ -650,6 +644,12 @@ bool generateThermalTimeSeries(Data::Study& study,
     logs.info() << "Generating the thermal time-series";
 
     bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
+    bool doWeWrite = archive && !study.parameters.noOutput;
+    if (! doWeWrite)
+    {
+        logs.info() << "Study parammeters such that we don't write thermal TS.";
+        return true;
+    }
 
     auto generator = AvailabilityTSgenerator(study,
                                              study.parameters.nbTimeSeriesThermal,
@@ -660,12 +660,9 @@ bool generateThermalTimeSeries(Data::Study& study,
         AvailabilityTSGeneratorData tsGenerationData(cluster);
         generator.run(tsGenerationData);
 
-        if (archive) // For compatibilty with in memory thermal TS generation
-        {
-            std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id()
-                                   + ".txt";
-            writeResultsToDisk(study, writer, cluster->series.timeSeries, filePath);
-        }
+        std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id()
+                               + ".txt";
+        writeTStoDisk(writer, cluster->series.timeSeries, filePath);
     }
 
     return true;
@@ -704,7 +701,7 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
 
         std::string filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
                                + "_direct.txt";
-        writeResultsToDisk(ts.timeSeries, filePath);
+        writeTStoDisk(ts.timeSeries, filePath);
 
         // INDIRECT
         AvailabilityTSGeneratorData tsConfigDataIndirect(link, ts, link.modulationCapacityIndirect, link.namesPair.second);
@@ -713,7 +710,7 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
 
         filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
                                + "_indirect.txt";
-        writeResultsToDisk(ts.timeSeries, filePath);
+        writeTStoDisk(ts.timeSeries, filePath);
     }
 
     return true;
