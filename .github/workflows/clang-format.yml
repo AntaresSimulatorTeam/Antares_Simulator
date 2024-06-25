@@ -21,6 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Print version
+        run: clang-format --version
+
       - name: clang-format
         run: cd src && ./format-code.sh
 
