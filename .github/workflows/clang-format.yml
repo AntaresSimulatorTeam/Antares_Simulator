@@ -7,9 +7,6 @@ on:
       - feature/*
       - features/*
       - fix/*
-      - release/*
-      - doc/*
-      - dependabot/*
 
 jobs:
   build:
