@@ -483,7 +483,8 @@ static inline DayOfTheWeek NextDayOfTheWeek(DayOfTheWeek weekday)
 void Calendar::reset()
 {
 #ifndef NDEBUG
-    logs.debug() << "  reset calendar" << ", month : " << MonthToString(settings_.firstMonth)
+    logs.debug() << "  reset calendar"
+                 << ", month : " << MonthToString(settings_.firstMonth)
                  << ", january 1rst : " << DayOfTheWeekToString(settings_.weekday1rstJanuary)
                  << ", first weekday : " << DayOfTheWeekToString(settings_.weekFirstDay);
 #endif

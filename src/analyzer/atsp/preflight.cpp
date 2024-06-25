@@ -680,7 +680,8 @@ bool ATSP::preflight(const uint areaIndex)
             //
             f << "[general]"
               << "\ndistribution = " << Data::XCast::DistributionToNameID(info.distribution)
-              << "\ncapacity = 1" << "\nconversion = false";
+              << "\ncapacity = 1"
+              << "\nconversion = false";
             if (info.rawData)
             {
                 f << "\ntranslation = never\n";

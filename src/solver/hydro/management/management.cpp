@@ -385,23 +385,31 @@ bool HydroManagement::checkMinGeneration(uint year) const
 
 void HydroManagement::changeInflowsToAccommodateFinalLevels(uint year)
 {
-    areas_.each([this, &year](Data::Area& area) 
-    {
-        auto& data = tmpDataByArea_[&area];
+    areas_.each(
+      [this, &year](Data::Area& area)
+      {
+          auto& data = tmpDataByArea_[&area];
 
-        if (!area.hydro.deltaBetweenFinalAndInitialLevels[year].has_value())
-            return;
+          if (!area.hydro.deltaBetweenFinalAndInitialLevels[year].has_value())
+          {
+              return;
+          }
 
-        // Must be done before prepareMonthlyTargetGenerations
-        double delta = area.hydro.deltaBetweenFinalAndInitialLevels[year].value();
-        if (delta < 0)
-            data.inflows[0] -= delta;
-        else if (delta > 0)
-            data.inflows[11] -= delta;
-    });
+          // Must be done before prepareMonthlyTargetGenerations
+          double delta = area.hydro.deltaBetweenFinalAndInitialLevels[year].value();
+          if (delta < 0)
+          {
+              data.inflows[0] -= delta;
+          }
+          else if (delta > 0)
+          {
+              data.inflows[11] -= delta;
+          }
+      });
 }
 
-void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
+void HydroManagement::prepareNetDemand(uint year,
+                                       Data::SimulationMode mode,
                                        const Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each(

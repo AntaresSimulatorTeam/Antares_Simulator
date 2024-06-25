@@ -50,7 +50,7 @@ bool Study::importTimeseriesIntoInput()
         if (parameters.haveToImport(timeSeriesLoad))
         {
             logs.info() << "Importing load timeseries...";
-            for (const auto& [areaName, area] : areas)
+            for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing load timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "load" << SEP << "series";
@@ -63,7 +63,7 @@ bool Study::importTimeseriesIntoInput()
         if (parameters.haveToImport(timeSeriesSolar))
         {
             logs.info() << "Importing solar timeseries...";
-            for (const auto& [areaName, area] : areas)
+            for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing solar timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "solar" << SEP << "series";
@@ -76,7 +76,7 @@ bool Study::importTimeseriesIntoInput()
         if (parameters.haveToImport(timeSeriesHydro))
         {
             logs.info() << "Importing hydro timeseries...";
-            for (const auto& [areaName, area] : areas)
+            for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing hydro timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "hydro" << SEP << "series";
@@ -89,7 +89,7 @@ bool Study::importTimeseriesIntoInput()
         if (parameters.haveToImport(timeSeriesWind))
         {
             logs.info() << "Importing wind timeseries...";
-            for (const auto& [areaName, area] : areas)
+            for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing wind timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "wind" << SEP << "series";
@@ -104,7 +104,7 @@ bool Study::importTimeseriesIntoInput()
             logs.info() << "Importing thermal timeseries...";
             String msg;
 
-            for (const auto& [areaName, area] : areas)
+            for (const auto& [areaName, area]: areas)
             {
                 msg.clear() << "Importing thermal timeseries : " << areaName;
 

@@ -32,7 +32,7 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-PartHydro::PartHydro(const Data::Area& area) :
+PartHydro::PartHydro(const Data::Area& area):
     interDailyBreakdown(0.),
     intraDailyModulation(2.),
     intermonthlyBreakdown(0),
@@ -113,7 +113,9 @@ static bool loadProperties(Study& study,
                            T PartHydro::*ptr)
 {
     if (!property)
+    {
         return false;
+    }
 
     bool ret = true;
 
@@ -242,52 +244,74 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
     if (IniFile::Section* section = ini.find("inter-daily-breakdown"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::interDailyBreakdown) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::interDailyBreakdown)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("intra-daily-modulation"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::intraDailyModulation) && ret;
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             buffer,
+                             &PartHydro::intraDailyModulation)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("reservoir"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::reservoirManagement) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::reservoirManagement)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("reservoir capacity"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::reservoirCapacity) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::reservoirCapacity)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("follow load"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::followLoadModulations) && ret;
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             buffer,
+                             &PartHydro::followLoadModulations)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("use water"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::useWaterValue) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::useWaterValue)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("hard bounds"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::hardBoundsOnRuleCurves) && ret;
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             buffer,
+                             &PartHydro::hardBoundsOnRuleCurves)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("use heuristic"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::useHeuristicTarget) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::useHeuristicTarget)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("power to level"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::powerToLevel) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::powerToLevel)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("initialize reservoir date"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::initializeReservoirLevelDate) && ret;
+        ret = loadProperties(study,
+                             section->firstProperty,
+                             buffer,
+                             &PartHydro::initializeReservoirLevelDate)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("use leeway"))
@@ -297,17 +321,20 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
     if (IniFile::Section* section = ini.find("leeway low"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::leewayLowerBound) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::leewayLowerBound)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("leeway up"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::leewayUpperBound) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::leewayUpperBound)
+              && ret;
     }
 
     if (IniFile::Section* section = ini.find("pumping efficiency"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::pumpingEfficiency) && ret;
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::pumpingEfficiency)
+              && ret;
     }
 
     return ret;
@@ -317,10 +344,12 @@ bool PartHydro::checkReservoirLevels(const Study& study)
 {
     bool ret = true;
 
-    for (const auto& [areaName, area] : study.areas)
+    for (const auto& [areaName, area]: study.areas)
     {
         if (!study.usedByTheSolver)
+        {
             return true;
+        }
 
         auto& col = area->hydro.inflowPattern[0];
         bool errorInflow = false;
@@ -340,8 +369,8 @@ bool PartHydro::checkReservoirLevels(const Study& study)
         for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
         {
             if (!errorLevels
-                    && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
-                        || colAvg[day] > 100 || colMax[day] > 100))
+                && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
+                    || colAvg[day] > 100 || colMax[day] > 100))
             {
                 logs.error() << areaName << ": invalid reservoir level value";
                 errorLevels = true;
@@ -352,7 +381,7 @@ bool PartHydro::checkReservoirLevels(const Study& study)
         for (int i = 0; i < 101; i++)
         {
             if ((area->hydro.creditModulation[i][0] < 0)
-                    || (area->hydro.creditModulation[i][1] < 0))
+                || (area->hydro.creditModulation[i][1] < 0))
             {
                 logs.error() << areaName << ": invalid credit modulation value";
                 ret = false;
@@ -372,75 +401,73 @@ bool PartHydro::checkProperties(Study& study)
     // the study, because they are too small (< 1e-6). We cannot have reservoir management = yes and
     // capacity = 0 because of further division by capacity. reservoir management = no and capacity
     // = 0 is possible (no use of capacity further)
-    study.areas.each([&ret](Data::Area& area)
-    {
-        if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
-        {
-            logs.error() << area.name
-                         << ": reservoir capacity not defined. Impossible to manage.";
-            ret = false;
-        }
+    study.areas.each(
+      [&ret](Data::Area& area)
+      {
+          if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
+          {
+              logs.error() << area.name
+                           << ": reservoir capacity not defined. Impossible to manage.";
+              ret = false;
+          }
 
-        if (!area.hydro.useHeuristicTarget && !area.hydro.useWaterValue)
-        {
-            logs.error() << area.name
-                         << " : use water value = no conflicts with use heuristic target = no";
-            ret = false;
-        }
+          if (!area.hydro.useHeuristicTarget && !area.hydro.useWaterValue)
+          {
+              logs.error() << area.name
+                           << " : use water value = no conflicts with use heuristic target = no";
+              ret = false;
+          }
 
-        if (area.hydro.intraDailyModulation < 1.)
-        {
-            logs.error()
-              << area.id << ": Invalid intra-daily modulation. It must be >= 1.0, Got "
-              << area.hydro.intraDailyModulation << " (truncated to 1)";
-            area.hydro.intraDailyModulation = 1.;
-        }
+          if (area.hydro.intraDailyModulation < 1.)
+          {
+              logs.error() << area.id << ": Invalid intra-daily modulation. It must be >= 1.0, Got "
+                           << area.hydro.intraDailyModulation << " (truncated to 1)";
+              area.hydro.intraDailyModulation = 1.;
+          }
 
-        if (area.hydro.reservoirCapacity < 0)
-        {
-            logs.error() << area.id << ": Invalid reservoir capacity.";
-            area.hydro.reservoirCapacity = 0.;
-        }
+          if (area.hydro.reservoirCapacity < 0)
+          {
+              logs.error() << area.id << ": Invalid reservoir capacity.";
+              area.hydro.reservoirCapacity = 0.;
+          }
 
-        if (area.hydro.intermonthlyBreakdown < 0)
-        {
-            logs.error() << area.id << ": Invalid intermonthly breakdown";
-            area.hydro.intermonthlyBreakdown = 0.;
-        }
+          if (area.hydro.intermonthlyBreakdown < 0)
+          {
+              logs.error() << area.id << ": Invalid intermonthly breakdown";
+              area.hydro.intermonthlyBreakdown = 0.;
+          }
 
-        if (area.hydro.initializeReservoirLevelDate < 0)
-        {
-            logs.error() << area.id << ": Invalid initialize reservoir date";
-            area.hydro.initializeReservoirLevelDate = 0;
-        }
+          if (area.hydro.initializeReservoirLevelDate < 0)
+          {
+              logs.error() << area.id << ": Invalid initialize reservoir date";
+              area.hydro.initializeReservoirLevelDate = 0;
+          }
 
-        if (area.hydro.leewayLowerBound < 0.)
-        {
-            logs.error()
-              << area.id << ": Invalid leeway lower bound. It must be >= 0.0, Got "
-              << area.hydro.leewayLowerBound;
-            area.hydro.leewayLowerBound = 0.;
-        }
+          if (area.hydro.leewayLowerBound < 0.)
+          {
+              logs.error() << area.id << ": Invalid leeway lower bound. It must be >= 0.0, Got "
+                           << area.hydro.leewayLowerBound;
+              area.hydro.leewayLowerBound = 0.;
+          }
 
-        if (area.hydro.leewayUpperBound < 0.)
-        {
-            logs.error()
-              << area.id << ": Invalid leeway upper bound. It must be >= 0.0, Got "
-              << area.hydro.leewayUpperBound;
-            area.hydro.leewayUpperBound = 0.;
-        }
+          if (area.hydro.leewayUpperBound < 0.)
+          {
+              logs.error() << area.id << ": Invalid leeway upper bound. It must be >= 0.0, Got "
+                           << area.hydro.leewayUpperBound;
+              area.hydro.leewayUpperBound = 0.;
+          }
 
-        if (area.hydro.leewayLowerBound > area.hydro.leewayUpperBound)
-        {
+          if (area.hydro.leewayLowerBound > area.hydro.leewayUpperBound)
+          {
               logs.error() << area.id << ": Leeway lower bound greater than leeway upper bound.";
-        }
+          }
 
-        if (area.hydro.pumpingEfficiency < 0)
-        {
-            logs.error() << area.id << ": Invalid pumping efficiency";
-            area.hydro.pumpingEfficiency = 0.;
-        }
-    });
+          if (area.hydro.pumpingEfficiency < 0)
+          {
+              logs.error() << area.id << ": Invalid pumping efficiency";
+              area.hydro.pumpingEfficiency = 0.;
+          }
+      });
 
     return ret;
 }
@@ -465,40 +492,40 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
 
     struct AllSections
     {
-	IniFile::Section* s;
-	IniFile::Section* smod;
-	IniFile::Section* sIMB;
-	IniFile::Section* sreservoir;
-	IniFile::Section* sreservoirCapacity;
-	IniFile::Section* sFollowLoad;
-	IniFile::Section* sUseWater;
-	IniFile::Section* sHardBounds;
-	IniFile::Section* sInitializeReservoirDate;
-	IniFile::Section* sUseHeuristic;
-	IniFile::Section* sUseLeeway;
-	IniFile::Section* sPowerToLevel;
-	IniFile::Section* sLeewayLow;
-	IniFile::Section* sLeewayUp;
-	IniFile::Section* spumpingEfficiency;
+        IniFile::Section* s;
+        IniFile::Section* smod;
+        IniFile::Section* sIMB;
+        IniFile::Section* sreservoir;
+        IniFile::Section* sreservoirCapacity;
+        IniFile::Section* sFollowLoad;
+        IniFile::Section* sUseWater;
+        IniFile::Section* sHardBounds;
+        IniFile::Section* sInitializeReservoirDate;
+        IniFile::Section* sUseHeuristic;
+        IniFile::Section* sUseLeeway;
+        IniFile::Section* sPowerToLevel;
+        IniFile::Section* sLeewayLow;
+        IniFile::Section* sLeewayUp;
+        IniFile::Section* spumpingEfficiency;
 
-      AllSections(IniFile& ini) :
-	s(ini.addSection("inter-daily-breakdown")),
-	smod(ini.addSection("intra-daily-modulation")),
-	sIMB(ini.addSection("inter-monthly-breakdown")),
-	sreservoir(ini.addSection("reservoir")),
-	sreservoirCapacity(ini.addSection("reservoir capacity")),
-	sFollowLoad(ini.addSection("follow load")),
-	sUseWater(ini.addSection("use water")),
-	sHardBounds(ini.addSection("hard bounds")),
-	sInitializeReservoirDate(ini.addSection("initialize reservoir date")),
-	sUseHeuristic(ini.addSection("use heuristic")),
-	sUseLeeway(ini.addSection("use leeway")),
-	sPowerToLevel(ini.addSection("power to level")),
-	sLeewayLow(ini.addSection("leeway low")),
-	sLeewayUp(ini.addSection("leeway up")),
-	spumpingEfficiency(ini.addSection("pumping efficiency"))
+        AllSections(IniFile& ini):
+            s(ini.addSection("inter-daily-breakdown")),
+            smod(ini.addSection("intra-daily-modulation")),
+            sIMB(ini.addSection("inter-monthly-breakdown")),
+            sreservoir(ini.addSection("reservoir")),
+            sreservoirCapacity(ini.addSection("reservoir capacity")),
+            sFollowLoad(ini.addSection("follow load")),
+            sUseWater(ini.addSection("use water")),
+            sHardBounds(ini.addSection("hard bounds")),
+            sInitializeReservoirDate(ini.addSection("initialize reservoir date")),
+            sUseHeuristic(ini.addSection("use heuristic")),
+            sUseLeeway(ini.addSection("use leeway")),
+            sPowerToLevel(ini.addSection("power to level")),
+            sLeewayLow(ini.addSection("leeway low")),
+            sLeewayUp(ini.addSection("leeway up")),
+            spumpingEfficiency(ini.addSection("pumping efficiency"))
         {
-	}
+        }
     };
 
     // Init
@@ -515,7 +542,8 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
           allSections.s->add(area.id, area.hydro.interDailyBreakdown);
           allSections.smod->add(area.id, area.hydro.intraDailyModulation);
           allSections.sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
-          allSections.sInitializeReservoirDate->add(area.id, area.hydro.initializeReservoirLevelDate);
+          allSections.sInitializeReservoirDate->add(area.id,
+                                                    area.hydro.initializeReservoirLevelDate);
           allSections.sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
           allSections.sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
           allSections.spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
@@ -740,8 +768,8 @@ bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
 }
 
 double getWaterValue(const double& level /* format : in % of reservoir capacity */,
-                   const Matrix<double>& waterValues,
-                   const uint day)
+                     const Matrix<double>& waterValues,
+                     const uint day)
 {
     assert((level >= 0. && level <= 100.) && "getWaterValue function : invalid level");
     double levelUp = ceil(level);
@@ -752,7 +780,7 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
         return waterValues[(int)(levelUp)][day];
     }
     return waterValues[(int)(levelUp)][day] * (level - levelDown)
-            + waterValues[(int)(levelDown)][day] * (levelUp - level);
+           + waterValues[(int)(levelDown)][day] * (levelUp - level);
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,

@@ -213,16 +213,19 @@ void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, Strin
         auto& link = *(i->second);
         // Parameters
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id
-                       << "_parameters" << ".txt";
+                       << "_parameters"
+                       << ".txt";
         p.add(buffer);
 
         // Indirect capacities
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_direct" << ".txt";
+                       << SEP << link.with->id << "_direct"
+                       << ".txt";
         p.add(buffer);
         // Direct capacities
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_indirect" << ".txt";
+                       << SEP << link.with->id << "_indirect"
+                       << ".txt";
         p.add(buffer);
     }
 }
@@ -391,7 +394,6 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     buffer.clear() << infos->folder << "/input/bindingconstraints/bindingconstraints.ini";
     if (ini.open(buffer))
     {
-
         ini.each(
           [&e](const IniFile::Section& section)
           {

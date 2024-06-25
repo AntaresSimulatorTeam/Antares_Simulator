@@ -27,13 +27,13 @@
 
 #ifdef YUNI_OS_WINDOWS
 #include <io.h>
+
 #include <yuni/core/system/windows.hdr.h>
 #else
 #include <sys/types.h>
 #include <unistd.h>
 #endif
 #include <errno.h>
-
 #include <fstream>
 
 #include <antares/logs/logs.h>
