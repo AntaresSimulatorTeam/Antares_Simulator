@@ -27,7 +27,8 @@ jobs:
       - name: git diff
         run: |
           if [[ `git status --porcelain` ]]; then
-          echo OK
+          echo "Code is not well formatted, boo !"
+          exit 1
           else
-          echo KO
+          echo "Code is well formatted, congrats !"
           fi
