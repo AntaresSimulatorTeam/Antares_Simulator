@@ -54,7 +54,10 @@ void HydroInputsChecker::Execute(uint year)
     {
 	throw FatalError("hydro inputs checks: invalid minimum generation");
     }
-    CheckFinalReservoirLevelsConfiguration(areas_, parameters_, scenarioInitialHydroLevels_, scenarioFinalHydroLevels_, year);
+    if (parameters_.useCustomScenario)
+    {
+        CheckFinalReservoirLevelsConfiguration(areas_, parameters_, scenarioInitialHydroLevels_, scenarioFinalHydroLevels_, year);
+    }
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year) const
