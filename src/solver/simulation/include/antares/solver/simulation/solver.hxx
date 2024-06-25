@@ -966,7 +966,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Loop over sets of parallel years to check hydro inputs
     for (const auto& batch: setsOfParallelYears)
     {
-        // if refresh break
         if (batch.regenerateTS)
         {
             break;

@@ -33,7 +33,7 @@ namespace Antares::Data
     //! The maximum number of days in a year
 constexpr size_t dayYearCount = 366;
 
-struct HydroDailyLoadDemand
+struct DailyDemand
 {
     //! Net demand, for each day of the year, for each area
     double DLN = 0.;
@@ -41,7 +41,7 @@ struct HydroDailyLoadDemand
     double DLE = 0.;
 };
 
-struct HydroMonthlyDemandGeneration
+struct MonthlyGenerationTargetData
 {
     //! Monthly local effective demand
     double MLE = 0.;
@@ -56,8 +56,8 @@ struct HydroMonthlyDemandGeneration
 //!  Hydro Management Data for a given area
 struct TimeDependantHydroManagementData
 {
-    std::array<HydroDailyLoadDemand, dayYearCount> daily{0};
-    std::array<HydroMonthlyDemandGeneration, 12> monthly{0};
+    std::array<DailyDemand, dayYearCount> daily{0};
+    std::array<MonthlyGenerationTargetData, 12> monthly{0};
 };
 
 //! Area Hydro Management Data for a given year
