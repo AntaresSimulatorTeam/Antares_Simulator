@@ -28,10 +28,16 @@
 #define __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__
 
 #include "antares/study/study.h"
+/* #include "antares/study/parameters.h" */
+/* #include "antares/series/series.h" */
 
 namespace Antares::Solver
 {
-void CheckFinalReservoirLevelsConfiguration(const Data::Study& study);
+void CheckFinalReservoirLevelsConfiguration(Data::AreaList& areas,
+                                            const Data::Parameters& parameters,
+                                            const Data::TimeSeries::TS& scenarioInitialHydroLevels,
+                                            const Data::TimeSeries::TS& scenarioFinalHydroLevels,
+                                            uint year);
 } // namespace Antares::Solver
 
 #endif // __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__

@@ -54,7 +54,6 @@ void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()  {
     if (study_.parameters.useCustomScenario)
     {
         ApplyCustomScenario(study_);
-        CheckFinalReservoirLevelsConfiguration(study_);
     }
 }
 
