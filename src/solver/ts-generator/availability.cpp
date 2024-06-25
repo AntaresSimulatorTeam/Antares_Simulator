@@ -70,13 +70,13 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(LinkTSgenerationParams&
 
 namespace
 {
-class GeneratorTempData final
+class AvailabilityTSgenerator final
 {
 public:
-    explicit GeneratorTempData(Data::Study&, unsigned, MersenneTwister&);
-    explicit GeneratorTempData(bool, unsigned, MersenneTwister&);
+    explicit AvailabilityTSgenerator(Data::Study&, unsigned, MersenneTwister&);
+    explicit AvailabilityTSgenerator(bool, unsigned, MersenneTwister&);
 
-    void generateTS(AvailabilityTSGeneratorData&) const;
+    void run(AvailabilityTSGeneratorData&) const;
 
 private:
     bool derated;
@@ -101,14 +101,18 @@ private:
                                const T& duration) const;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen, MersenneTwister& rndGenerator):
+AvailabilityTSgenerator::AvailabilityTSgenerator(Data::Study& study,
+                                                 unsigned nbOfSeriesToGen,
+                                                 MersenneTwister& rndGenerator):
     derated(study.parameters.derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
     rndgenerator(rndGenerator)
 {
 }
 
-GeneratorTempData::GeneratorTempData(bool derated, unsigned int nbOfSeriesToGen, MersenneTwister& rndGenerator):
+AvailabilityTSgenerator::AvailabilityTSgenerator(bool derated,
+                                                 unsigned int nbOfSeriesToGen,
+                                                 MersenneTwister& rndGenerator):
     derated(derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
     rndgenerator(rndGenerator)
@@ -116,11 +120,11 @@ GeneratorTempData::GeneratorTempData(bool derated, unsigned int nbOfSeriesToGen,
 }
 
 template<class T>
-void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
-                                              double volatility,
-                                              std::array<double, 366>& A,
-                                              std::array<double, 366>& B,
-                                              const T& duration) const
+void AvailabilityTSgenerator::prepareIndispoFromLaw(Data::StatisticalLaw law,
+                                                    double volatility,
+                                                    std::array<double, 366>& A,
+                                                    std::array<double, 366>& B,
+                                                    const T& duration) const
 {
     switch (law)
     {
@@ -161,11 +165,11 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
     }
 }
 
-int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
-                                         int expec,
-                                         double volat,
-                                         double a,
-                                         double b) const
+int AvailabilityTSgenerator::durationGenerator(Data::StatisticalLaw law,
+                                               int expec,
+                                               double volat,
+                                               double a,
+                                               double b) const
 {
     if (volat == 0 || expec == 1)
     {
@@ -193,7 +197,7 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
     return 0;
 }
 
-void GeneratorTempData::generateTS(AvailabilityTSGeneratorData& tsGenerationData) const
+void AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData) const
 {
     assert(tsGenerationData.prepro);
 
@@ -647,14 +651,14 @@ bool generateThermalTimeSeries(Data::Study& study,
 
     bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
 
-    auto generator = GeneratorTempData(study,
-                                       study.parameters.nbTimeSeriesThermal,
-                                       study.runtime->random[Data::seedTsGenThermal]);
+    auto generator = AvailabilityTSgenerator(study,
+                                             study.parameters.nbTimeSeriesThermal,
+                                             study.runtime->random[Data::seedTsGenThermal]);
 
     for (auto* cluster: clusters)
     {
         AvailabilityTSGeneratorData tsGenerationData(cluster);
-        generator.generateTS(tsGenerationData);
+        generator.run(tsGenerationData);
 
         if (archive) // For compatibilty with in memory thermal TS generation
         {
@@ -675,9 +679,9 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
     logs.info();
     logs.info() << "Generation of links time-series";
 
-    auto generator = GeneratorTempData(generalParams.derated,
-                                       generalParams.nbLinkTStoGenerate,
-                                       generalParams.random);
+    auto generator = AvailabilityTSgenerator(generalParams.derated,
+                                             generalParams.nbLinkTStoGenerate,
+                                             generalParams.random);
     for (auto& link: links)
     {
         if (! link.hasValidData)
@@ -696,7 +700,7 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
         // DIRECT
         AvailabilityTSGeneratorData tsConfigDataDirect(link, ts, link.modulationCapacityDirect, link.namesPair.second);
 
-        generator.generateTS(tsConfigDataDirect);
+        generator.run(tsConfigDataDirect);
 
         std::string filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
                                + "_direct.txt";
@@ -705,7 +709,7 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
         // INDIRECT
         AvailabilityTSGeneratorData tsConfigDataIndirect(link, ts, link.modulationCapacityIndirect, link.namesPair.second);
 
-        generator.generateTS(tsConfigDataIndirect);
+        generator.run(tsConfigDataIndirect);
 
         filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
                                + "_indirect.txt";

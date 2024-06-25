@@ -56,7 +56,7 @@ bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
         params.random.reset(seed);
         return true;
     }
-    return true; // gp : should we return true here ?
+    return true;
 }
 
 std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine)
