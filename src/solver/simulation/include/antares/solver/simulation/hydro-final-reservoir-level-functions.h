@@ -28,8 +28,6 @@
 #define __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__
 
 #include "antares/study/study.h"
-/* #include "antares/study/parameters.h" */
-/* #include "antares/series/series.h" */
 
 namespace Antares::Solver
 {
