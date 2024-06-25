@@ -426,20 +426,6 @@ void Application::runSimulationInAdequacyMode()
                                         pOptimizationInfo);
 }
 
-static std::string timeToString()
-{
-    using namespace std::chrono;
-    auto time = system_clock::to_time_t(system_clock::now());
-    std::tm local_time = *std::localtime(&time);
-
-    char time_buffer[256];
-    std::strftime(time_buffer, sizeof(time_buffer), "%Y%m%d-%H%M%S", &local_time);
-
-    std::string currentTime = time_buffer;
-
-    return currentTime;
-}
-
 void Application::resetLogFilename() const
 {
     fs::path logfile = fs::path(pSettings.studyFolder.c_str()) / "logs";
@@ -451,7 +437,7 @@ void Application::resetLogFilename() const
     }
 
     logfile /= "solver-";               // append the filename
-    logfile += timeToString() + ".log"; // complete filename with timestamp and extension
+    logfile += FormattedTime("%Y%m%d-%H%M%S") + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename
     logs.logfile(logfile.string());

@@ -1,6 +1,6 @@
 
 #include "antares/tools/ts-generator/linksTSgenerator.h"
-#include <yuni/datetime/timestamp.h>
+#include "antares/utils/utils.h"
 
 namespace Antares::TSGenerator
 {
@@ -228,14 +228,6 @@ void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
     }
 }
 
-std::string DateAndTime()
-{
-    YString to_return;
-    unsigned int now = Yuni::DateTime::Now();
-    Yuni::DateTime::TimestampToString(to_return, "%Y%m%d-%H%M", now);
-    return to_return.to<std::string>();
-}
-
 // ==================
 // Class methods
 // ==================
@@ -334,12 +326,11 @@ void LinksTSgenerator::extractLinksSpecificTSparameters()
 
 bool LinksTSgenerator::generate()
 {
-    auto saveTSpath = fs::path(studyFolder_) / "output" / DateAndTime();
+    auto saveTSpath = fs::path(studyFolder_) / "output" / FormattedTime("%Y%m%d-%H%M");
     saveTSpath /= "ts-generator";
     saveTSpath /= "links";
 
     return generateLinkTimeSeries(linkList_, generalParams_, saveTSpath.string());
 }
-
 
 }
