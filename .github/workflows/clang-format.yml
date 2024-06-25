@@ -29,8 +29,10 @@ jobs:
 
       - name: git diff
         run: |
-          if [[ `git status --porcelain` ]]; then
-          echo "Code is not well formatted, boo !"
+          DIFF=`git status --porcelain`
+          if [[ $DIFF ]]; then
+          echo "The following files are not well formatted"
+          echo "$DIFF"
           exit 1
           else
           echo "Code is well formatted, congrats !"
