@@ -649,6 +649,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 
     for (auto* cluster: clusters)
     {
+        cluster->series.timeSeries.reset(study.parameters.nbTimeSeriesThermal, HOURS_PER_YEAR);
         AvailabilityTSGeneratorData tsGenerationData(cluster);
         generator.run(tsGenerationData);
     }
@@ -657,7 +658,7 @@ bool generateThermalTimeSeries(Data::Study& study,
     bool doWeWrite = archive && !study.parameters.noOutput;
     if (! doWeWrite)
     {
-        logs.info() << "Study parammeters such that we don't write thermal TS.";
+        logs.info() << "Study parameters forbid writing thermal TS.";
         return true;
     }
 
