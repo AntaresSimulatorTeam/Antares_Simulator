@@ -69,7 +69,7 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
     options.optOptions.ortoolsSolver = "xpress";
 
     writeValidFile();
-    p.loadFromFile(path.string(), version, options);
+    p.loadFromFile(path.string(), version);
     p.validateOptions(options);
     p.fixBadValues();
 
@@ -94,7 +94,7 @@ BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
 BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)
 {
     writeInvalidFile();
-    BOOST_CHECK(p.loadFromFile(path.string(), version, options));
+    BOOST_CHECK(p.loadFromFile(path.string(), version));
     p.validateOptions(options);
     p.fixBadValues();
 
