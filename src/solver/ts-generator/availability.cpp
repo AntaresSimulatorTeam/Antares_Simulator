@@ -649,7 +649,7 @@ bool generateThermalTimeSeries(Data::Study& study,
         auto clusterName = cluster->id();
         auto filePath = fs::path(savePath) / areaName / clusterName += ".txt";
 
-        writeTStoDisk(cluster->series.timeSeries, filePath.string());
+        writeTStoDisk(cluster->series.timeSeries, filePath);
     }
 
     return true;
@@ -681,22 +681,18 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
         Data::TimeSeries ts(fakeTSnumbers);
         ts.resize(generalParams.nbLinkTStoGenerate, HOURS_PER_YEAR);
 
-        // DIRECT
+        // === DIRECT =======================
         AvailabilityTSGeneratorData tsConfigDataDirect(link, ts, link.modulationCapacityDirect, link.namesPair.second);
-
         generator.run(tsConfigDataDirect);
 
-        std::string filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
-                               + "_direct.txt";
+        auto filePath = fs::path(savePath) / link.namesPair.first / link.namesPair.second += "_direct.txt";
         writeTStoDisk(ts.timeSeries, filePath);
 
-        // INDIRECT
+        // === INDIRECT =======================
         AvailabilityTSGeneratorData tsConfigDataIndirect(link, ts, link.modulationCapacityIndirect, link.namesPair.second);
-
         generator.run(tsConfigDataIndirect);
 
-        filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
-                               + "_indirect.txt";
+        filePath = fs::path(savePath) / link.namesPair.first / link.namesPair.second += "_indirect.txt";
         writeTStoDisk(ts.timeSeries, filePath);
     }
 
