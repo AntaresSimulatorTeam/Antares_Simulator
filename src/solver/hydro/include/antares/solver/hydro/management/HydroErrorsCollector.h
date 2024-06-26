@@ -24,9 +24,18 @@
 #include <string>
 #include <vector>
 
-#include <yuni/core/logs.h>
-
 #include <antares/study/area/area.h>
+
+struct AreaErrors
+{
+    explicit AreaErrors(const std::string& name);
+    std::string name_;
+    uint errors_counter_ = 10;
+    // const Antares::Data::Area& area_;
+    std::vector<std::string> messages_;
+
+    void PrintErrors() const;
+}
 
 class HydroErrorsCollector
 {
@@ -36,16 +45,21 @@ public:
     // endl
     HydroErrorsCollector& operator<<(std::ostream& (*function)(std::ostream&))
     {
-        function(*stream_);
-        messages_.push_back(buffer.str());
+        if (current_area_)
+        {
+            std::ostringstream buffer;
+            function(buffer);
+
+            error_counter_per_area_[current_area_].messages_.push_back(buffer.str());
+        }
         return *this;
     }
 
     HydroErrorsCollector& operator<<(const Antares::Data::Area& area)
     {
-        error_counter_per_area_[&area]++;
+        error_counter_per_area_[&area].errors_counter_++;
         // 10 par zone ?
-        flush_ = error_counter_per_area_[&area] > 10;
+        flush_ = error_counter_per_area_[&area].errors_counter_ > 10;
         return *this;
     }
     template<class T>
@@ -55,15 +69,19 @@ public:
 
 private:
     std::vector<std::string> messages_;
-    std::unordered_map<const Antares::Data::Area*, uint> error_counter_per_area_;
+    std::unordered_map<const Antares::Data::Area*, AreaErrors> error_counter_per_area_;
     bool flush_ = false;
+    Antares::Data::Area* current_area_ = nullptr;
 };
 
 template<class T>
 HydroErrorsCollector& HydroErrorsCollector::operator<<(const T& obj)
 {
-    std::ostringstream buffer;
-    buffer << obj;
-    messages_.push_back(buffer.str());
+    if (current_area_)
+    {
+        std::ostringstream buffer;
+        buffer << obj;
+        error_counter_per_area_[current_area_].messages_.push_back(buffer.str());
+    }
     return *this;
 }
