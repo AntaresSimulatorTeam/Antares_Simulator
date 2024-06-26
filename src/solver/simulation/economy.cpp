@@ -277,8 +277,10 @@ void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, u
     {
         auto& area = *study.areas[i];
         auto& scratchpad = scratchmap.at(&area);
-        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-        double* mrs = scratchpad.mustrunSum;
+
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+
+        auto& mrs = scratchpad.mustrunSum;
         for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
         {
             const auto& availableProduction = cluster->series.getColumn(year);

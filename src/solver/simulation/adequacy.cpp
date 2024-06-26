@@ -417,11 +417,11 @@ void Adequacy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, 
         auto &area = *study.areas[i];
         auto &scratchpad = scratchmap.at(&area);
 
-        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-        memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+        std::ranges::fill(scratchpad.originalMustrunSum, 0);
 
-        double *mrs = scratchpad.mustrunSum;
-        double *adq = scratchpad.originalMustrunSum;
+        auto& mrs = scratchpad.mustrunSum;
+        auto& adq = scratchpad.originalMustrunSum;
 
         for (const auto &cluster: area.thermal.list.each_mustrun_and_enabled())
         {
