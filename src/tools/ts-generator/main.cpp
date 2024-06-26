@@ -103,14 +103,9 @@ int main(int argc, char* argv[])
         Antares::logs.error() << ex.what();
     }
 
-    Benchmarking::DurationCollector durationCollector;
-
-    auto resultWriter = Solver::resultWriterFactory(Data::ResultFormat::legacyFilesDirectories,
-                                                    study->folderOutput,
-                                                    nullptr,
-                                                    durationCollector);
-
-    const auto thermalSavePath = fs::path("ts-generator") / "thermal";
+    auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
+    thermalSavePath /= "ts-generator";
+    thermalSavePath /= "thermal";
 
     // ============ THERMAL : Getting data for generating time-series =========
     std::vector<Data::ThermalCluster*> clusters;
@@ -137,7 +132,6 @@ int main(int argc, char* argv[])
 
     bool ret = TSGenerator::generateThermalTimeSeries(*study,
                                                       clusters,
-                                                      *resultWriter,
                                                       thermalSavePath.string());
 
     ret = linksTSgenerator.generate() && ret;
