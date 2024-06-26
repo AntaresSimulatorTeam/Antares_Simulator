@@ -1,12 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2be5eb8d41a753544ee76677a61fe8d7":[7,0,0,12,3,16,3],
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2d28eb8a97dd88e4cc7b3e8852115716":[7,0,0,12,3,16,5],
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a35182dfc037931e0a3e72ac76a76d7ce":[7,0,0,12,3,16,2],
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a4e621e06583f06088e59d02072b9d626":[7,0,0,12,3,16,7],
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a7ba42a043ab3c43a4aa8f6054521423d":[7,0,0,12,3,16,4],
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#aa059fab98b888cc2cd4a4cd5445bee56":[7,0,0,12,3,16,0],
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#aadfaa7b7a4158b05d21ed8f0fd86ad48":[7,0,0,12,3,16,1],
 "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html":[7,0,0,12,3,17],
 "classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd.html":[7,0,0,12,3,15],
 "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html":[7,0,0,12,3,18],
@@ -249,5 +242,12 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a7dc7bb7ebf79b56da46e957a26209413":[7,0,0,12,4,4,34,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a8e269a4ef1773ececaa424932039d1b2":[7,0,0,12,4,4,34,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html":[7,0,0,12,4,4,36],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a150e0c45103f5e688239f3e0b5a29c9c":[7,0,0,12,4,4,36,4]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a150e0c45103f5e688239f3e0b5a29c9c":[7,0,0,12,4,4,36,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a4b63e9974883e15ff7b106592368d893":[7,0,0,12,4,4,36,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a60f93e4c40a22d9d9d6cedadc45d9bc3":[7,0,0,12,4,4,36,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ad3e0cd98441cf1c568e038e2441f65aa":[7,0,0,12,4,4,36,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html":[7,0,0,12,4,4,37],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a4779a52a99b5f0d1c27352d42760dafd":[7,0,0,12,4,4,37,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a486ce0693a89676ba30a49bce3649b2a":[7,0,0,12,4,4,37,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a5297d1b25c3a805675eed24b65aa91bf":[7,0,0,12,4,4,37,3]
 };

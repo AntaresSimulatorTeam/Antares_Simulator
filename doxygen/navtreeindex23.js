@@ -1,19 +1,10 @@
 var NAVTREEINDEX23 =
 {
-"structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b":[7,0,0,4,1,1],
-"structAntares_1_1Date_1_1DayInterval.html#ad6dd27f028962beaa2f8f1ce1065f6bd":[7,0,0,4,1,0],
-"structAntares_1_1Date_1_1HourInterval.html":[7,0,0,4,2],
-"structAntares_1_1Date_1_1HourInterval.html#a53e86b3732adfe8635cab8d74fa5779d":[7,0,0,4,2,1],
-"structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[7,0,0,4,2,0],
-"structAntares_1_1DebugData.html":[7,0,0,24],
-"structAntares_1_1Forms_1_1CompareBySimulationMode.html":[7,0,0,7,1],
-"structAntares_1_1Forms_1_1CompareByTimestamp.html":[7,0,0,7,2],
-"structAntares_1_1Graph_1_1Edge_1_1addpWeight.html":[7,0,0,8,0,0],
 "structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[7,0,0,8,0,1],
 "structAntares_1_1Map_1_1Item_1_1SetCompare.html":[7,0,0,9,7,0],
 "structAntares_1_1Map_1_1MapRenderOptions.html":[7,0,0,9,9],
 "structAntares_1_1Matrix_1_1PredicateIdentity.html":[7,0,0,33,0],
-"structAntares_1_1Memory_1_1Stored.html":[7,0,0,39,1],
+"structAntares_1_1Memory_1_1Stored.html":[7,0,0,39,0],
 "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[7,0,0,10,6],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[7,0,0,10,11],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[7,0,0,12,1,3],
@@ -249,5 +240,14 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html#a3f21b906233221ae4fb5291046cc42e7":[7,0,0,12,4,4,104,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html#a82a00d81fab6a9f2a44f1bc945caa021":[7,0,0,12,4,4,104,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html":[7,0,0,12,4,4,105],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#a850d4181da4784d40201475e5016fd41":[7,0,0,12,4,4,105,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#a850d4181da4784d40201475e5016fd41":[7,0,0,12,4,4,105,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#aa287ab48cc64ba1214fb73614a54b6ed":[7,0,0,12,4,4,105,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html":[7,0,0,12,4,4,106],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a0b2b1aeda62055d1f0e77ce6a3235bb4":[7,0,0,12,4,4,106,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a823522da4a8825bd05d5ed5c939028b8":[7,0,0,12,4,4,106,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html":[7,0,0,12,4,4,107],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a505308cb0c9d12d92da113e99e29d35c":[7,0,0,12,4,4,107,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#acf75f329abb2d376d024d61e481f6300":[7,0,0,12,4,4,107,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[7,0,0,12,4,4,108],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[7,0,0,12,4,4,108,1]
 };

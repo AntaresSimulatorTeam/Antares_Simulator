@@ -1,14 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classIItem.html#ae20ab3549e27c3aab6d0529009fb3ca1":[7,0,124,33],
-"classIItem.html#af7b03e30b6ad384d9b73d286ed8db1e2":[7,0,124,28],
-"classIItem.html#aff762346860ec05fe386566a9352245a":[7,0,124,35],
-"classIItem_1_1IPart.html":[7,0,124,0],
-"classIItem_1_1IPart.html#a56e3a54b583e40ed3f6d46289af3fd82":[7,0,124,0,1],
-"classIItem_1_1IPart.html#ad28234ed96ce8ffcbc38ce521cd906f5":[7,0,124,0,0],
-"classIItem_1_1Tag.html":[7,0,124,1],
-"classIItem_1_1Tag.html#a03ecb8f2e70751863597edf59000f695":[7,0,124,1,1],
-"classIItem_1_1Tag.html#a744db431dc93c4ec31f8d0ec4de42352":[7,0,124,1,0],
 "classIItem_1_1Tag.html#ac96f2e7cdb26c00e59e50692fe0f131e":[7,0,124,1,3],
 "classIItem_1_1Tag.html#af1cce5df78504a1ddce9a4c3215798d7":[7,0,124,1,2],
 "classIProvider.html":[7,0,126],
@@ -134,8 +125,8 @@ var NAVTREEINDEX18 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[7,0,193,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[7,0,193,4],
 "classPublicStudy.html":[7,0,194],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,194,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,194,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,194,1],
 "classQuadraticProblemMatrix.html":[7,0,195],
 "classRealName.html":[7,0,197],
 "classResultMatrix.html":[7,0,203],
@@ -249,5 +240,14 @@ var NAVTREEINDEX18 =
 "classtolerances_1_1Tolerances.html":[7,0,25,1],
 "classtolerances_1_1Win__tolerances.html":[7,0,25,2],
 "classunfeasible__problem_1_1behavior__flag.html":[7,0,26,0],
-"classunfeasible__problem_1_1unfeasible__problem.html":[7,0,26,1]
+"classunfeasible__problem_1_1unfeasible__problem.html":[7,0,26,1],
+"classunfeasible__problem_1_1weeks__in__year.html":[7,0,26,2],
+"cleaner_8h_source.html":[8,0,0,1,0,25,0,0,0,10],
+"clipboard_8h_source.html":[8,0,0,5,2,1,0,0],
+"cluster-item_8h_source.html":[8,0,0,5,2,1,1,2,1,2],
+"cluster-order_8h_source.html":[8,0,0,5,2,1,1,2,0,0],
+"color_8h_source.html":[8,0,0,5,0,0,0,0,3],
+"column_8h_source.html":[8,0,0,5,2,1,1,1,1,8],
+"columnindex_8h_source.html":[8,0,0,5,2,1,1,1,0,0,1],
+"common-eco-adq_8h_source.html":[8,0,0,2,7,0,0,0,0,6]
 };

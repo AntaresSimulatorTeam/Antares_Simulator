@@ -1,12 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a4b63e9974883e15ff7b106592368d893":[7,0,0,12,4,4,36,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a60f93e4c40a22d9d9d6cedadc45d9bc3":[7,0,0,12,4,4,36,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ad3e0cd98441cf1c568e038e2441f65aa":[7,0,0,12,4,4,36,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html":[7,0,0,12,4,4,37],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a4779a52a99b5f0d1c27352d42760dafd":[7,0,0,12,4,4,37,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a486ce0693a89676ba30a49bce3649b2a":[7,0,0,12,4,4,37,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a5297d1b25c3a805675eed24b65aa91bf":[7,0,0,12,4,4,37,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a8f02b29457ffc8b4c7164ec7c8c65ed0":[7,0,0,12,4,4,37,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html":[7,0,0,12,4,4,38],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a1c096c38a895dc60c4b1cc08939f32d2":[7,0,0,12,4,4,38,3],
@@ -175,8 +168,6 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html#a1ca6ce768e1650ec5bb53a1a26f2bc0e":[7,0,0,12,4,6,0,3,1],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html#a64c9b00288adcd6301a63e2d3ac1b41a":[7,0,0,12,4,6,0,3,0],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html":[7,0,0,12,4,6,0,5],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a169e8eb48116aac60b3ffc52ef845c25":[7,0,0,12,4,6,0,5,2],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a4f3aee8c377a9deed52c0da394d1df8f":[7,0,0,12,4,6,0,5,1],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html":[7,0,0,12,4,6,0,8],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a02fc26267153c8dd7a1d55d4f2d63e9b":[7,0,0,12,4,6,0,8,0],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a3922838022f051023e92a12d5a37aa5e":[7,0,0,12,4,6,0,8,1],
@@ -249,5 +240,14 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ac3fbad71dbaf7b2f1631b97274bde7aa":[7,0,0,12,4,37,8],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad0f6dbc54dc792ebcd0ef0cdd0b1cd78":[7,0,0,12,4,37,9],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad402c65d36e0295eaf960a06ac40d863":[7,0,0,12,4,37,16],
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af40d76b1764e10de48d2d4503749ee0f":[7,0,0,12,4,37,4]
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af40d76b1764e10de48d2d4503749ee0f":[7,0,0,12,4,37,4],
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af451c9a90804b3d23c26748542da9047":[7,0,0,12,4,37,6],
+"classAntares_1_1Solver_1_1Variable_1_1ThermalState.html":[7,0,0,12,4,38],
+"classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html":[7,0,0,12,4,38,0],
+"classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a0e7f417a8ed9da6465a5733a1f6364ff":[7,0,0,12,4,38,0,2],
+"classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a33da0e126e67907c5ca144557f39efc1":[7,0,0,12,4,38,0,0],
+"classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a69e64f3ddf551f791ca1cc8e5fe850a1":[7,0,0,12,4,38,0,3],
+"classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#ad9882dd4922cf3d6a32167395f7f3a84":[7,0,0,12,4,38,0,1],
+"classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html":[7,0,0,12,20],
+"classAntares_1_1Solver_1_1ZipWriteJob.html":[7,0,0,12,21]
 };

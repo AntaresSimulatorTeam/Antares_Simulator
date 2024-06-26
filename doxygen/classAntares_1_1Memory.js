@@ -1,6 +1,5 @@
 var classAntares_1_1Memory =
 [
-    [ "Array", "classAntares_1_1Memory_1_1Array.html", "classAntares_1_1Memory_1_1Array" ],
     [ "Stored", "structAntares_1_1Memory_1_1Stored.html", null ],
     [ "Memory", "classAntares_1_1Memory.html#a1e460bed8929aa271443f1127267089f", null ],
     [ "~Memory", "classAntares_1_1Memory.html#a818e1363c749575340d34d6f3d5d07ed", null ],

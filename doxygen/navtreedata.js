@@ -91,19 +91,19 @@ var NAVTREEINDEX =
 "classAntares_1_1Data_1_1ThermalCluster.html#a7889efb33a0d010c6fe8c535a6680fb6",
 "classAntares_1_1Graph_1_1Edge.html",
 "classAntares_1_1Matrix.html#a1c274d7d896828136d9b0670ba7ac26f",
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2be5eb8d41a753544ee76677a61fe8d7",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a4b63e9974883e15ff7b106592368d893",
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af451c9a90804b3d23c26748542da9047",
-"classAntares_1_1Window_1_1AboutBox.html",
-"classAntares_1_1Window_1_1PerformerDialog.html",
-"classIItem.html#ae20ab3549e27c3aab6d0529009fb3ca1",
-"classunfeasible__problem_1_1weeks__in__year.html",
-"dir_a402f9b54a9557d270876965a5c082b8.html",
-"functions_vars_g.html",
-"npCostByDispatchablePlant_8h_source.html",
-"structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#aa287ab48cc64ba1214fb73614a54b6ed",
-"structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html"
+"classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html",
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a8f02b29457ffc8b4c7164ec7c8c65ed0",
+"classAntares_1_1Solver_1_1ZipWriter.html",
+"classAntares_1_1Window_1_1AnalyzerWizard.html#ad7f90f637150f467054896b58776c5d0",
+"classAntares_1_1Window_1_1Renewable_1_1Panel.html#a5ee83bbf64c89f3a1babab258f053732",
+"classIItem_1_1Tag.html#ac96f2e7cdb26c00e59e50692fe0f131e",
+"common_2cluster__list_8h_source.html",
+"dir_a8cbe387cdb765c91ec04f9622d2c7a7.html",
+"functions_vars_p.html",
+"opt__period__string__generator_8h_source.html",
+"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0",
+"structVARIABLES__DUALES__INTERCONNEXIONS.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
