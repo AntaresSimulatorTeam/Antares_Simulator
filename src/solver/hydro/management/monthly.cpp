@@ -290,22 +290,22 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
                   auto monthName = calendar_.text.months[simulationMonth].name;
 
-                buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
-                buffer << '\t';
-                buffer << data.inflows[realmonth] << '\t';
-                buffer << data.MTG[realmonth] << '\t';
-                buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
-                buffer << data.MOL[realmonth] << '\t';
-                buffer << minLvl[firstDay] << '\t';
-                buffer << maxLvl[firstDay] << '\t';
-                buffer << '\n';
-            }
-            auto content = buffer.str();
-            resultWriter_.addEntryFromBuffer(path.str(), content);
-        }
+                  buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
+                  buffer << '\t';
+                  buffer << data.inflows[realmonth] << '\t';
+                  buffer << data.MTG[realmonth] << '\t';
+                  buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
+                  buffer << data.MOL[realmonth] << '\t';
+                  buffer << minLvl[firstDay] << '\t';
+                  buffer << maxLvl[firstDay] << '\t';
+                  buffer << '\n';
+              }
+              auto content = buffer.str();
+              resultWriter_.addEntryFromBuffer(path.str(), content);
+          }
 
-        indexArea++;
-    });
+          indexArea++;
+      });
 }
 
 } // namespace Antares

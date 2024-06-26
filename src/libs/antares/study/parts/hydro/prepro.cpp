@@ -151,6 +151,7 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::st
     {
         mtrxOption = Matrix<>::optFixedSize | Matrix<>::optImmediate,
     };
+
     constexpr int maxNbOfLineToLoad = 12;
 
     data.resize(hydroPreproMax, 12, true);
@@ -160,7 +161,8 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::st
     bool ret = PreproHydroLoadSettings(this, buffer);
 
     buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-    ret = data.loadFromCSVFile(buffer, hydroPreproMax, maxNbOfLineToLoad, mtrxOption, &s.dataBuffer) && ret;
+    ret = data.loadFromCSVFile(buffer, hydroPreproMax, maxNbOfLineToLoad, mtrxOption, &s.dataBuffer)
+          && ret;
 
     return ret;
 }
@@ -203,8 +205,8 @@ bool PreproHydro::validate(const std::string& areaID)
         {
             ret = false;
             logs.error() << "Hydro: Prepro: `" << areaID
-                         << "`: minimum energy: At least one value is negative (line: "
-                         << (i + 1) << ')';
+                         << "`: minimum energy: At least one value is negative (line: " << (i + 1)
+                         << ')';
             continue;
         }
         if (colMin[i] > colMax[i])

@@ -22,8 +22,8 @@
 #include "antares/solver/misc/options.h"
 
 #include <algorithm>
-#include <fstream>
 #include <cassert>
+#include <fstream>
 #include <limits>
 #include <string.h>
 

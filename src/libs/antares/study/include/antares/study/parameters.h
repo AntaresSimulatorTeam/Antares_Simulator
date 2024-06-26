@@ -504,8 +504,7 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini,
-                     const StudyVersion& version);
+    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
 
     void resetPlayedYears(uint nbOfYears);
 

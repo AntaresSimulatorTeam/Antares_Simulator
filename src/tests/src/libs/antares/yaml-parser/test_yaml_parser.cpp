@@ -19,19 +19,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define BOOST_TEST_MODULE yamlcpp tests
-#include <boost/test/unit_test.hpp>
-#include <boost/test/data/test_case.hpp>
-#include "yaml-cpp/yaml.h"
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
+
+#include <boost/test/data/test_case.hpp>
+#include <boost/test/unit_test.hpp>
+
+#include "yaml-cpp/yaml.h"
 
 // our data types
 struct Vec3
 {
     float x, y, z;
 };
+
 struct Power
 {
     std::string name;
@@ -44,6 +47,7 @@ struct Monster
     Vec3 position;
     std::vector<Power> powers;
 };
+
 namespace YAML
 {
 template<>
@@ -71,6 +75,7 @@ struct convert<Vec3>
         return true;
     }
 };
+
 template<>
 struct convert<Power>
 {
@@ -89,6 +94,7 @@ struct convert<Power>
         return true;
     }
 };
+
 template<>
 struct convert<Monster>
 {
@@ -108,7 +114,7 @@ struct convert<Monster>
         rhs.name = node["name"].as<std::string>();
         rhs.position = node["position"].as<Vec3>();
         const YAML::Node& powers = node["powers"];
-        for (const auto power : powers)
+        for (const auto power: powers)
         {
             rhs.powers.push_back(power.as<Power>());
         }

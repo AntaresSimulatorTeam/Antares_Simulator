@@ -99,7 +99,9 @@ private:
                                const T& duration) const;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen, MersenneTwister& rndGenerator):
+GeneratorTempData::GeneratorTempData(Data::Study& study,
+                                     unsigned nbOfSeriesToGen,
+                                     MersenneTwister& rndGenerator):
     derated(study.parameters.derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
     rndgenerator(rndGenerator)
@@ -616,10 +618,13 @@ listOfLinks getAllLinksToGen(Data::AreaList& areas)
     areas.each(
       [&links](const Data::Area& area)
       {
-          std::ranges::for_each(area.links, [&links](auto& l)
+          std::ranges::for_each(area.links,
+                                [&links](auto& l)
                                 {
                                     if (!l.second->tsGeneration.forceNoGeneration)
+                                    {
                                         links.push_back(l.second);
+                                    }
                                 });
       });
 
@@ -698,7 +703,10 @@ bool generateLinkTimeSeries(Data::Study& study,
         }
 
         // DIRECT
-        AvailabilityTSGeneratorData tsConfigDataDirect(tsGenStruct, ts, tsGenStruct.modulationCapacityDirect, link->with->name);
+        AvailabilityTSGeneratorData tsConfigDataDirect(tsGenStruct,
+                                                       ts,
+                                                       tsGenStruct.modulationCapacityDirect,
+                                                       link->with->name);
 
         generator.generateTS(*link->from, tsConfigDataDirect);
 
@@ -707,12 +715,14 @@ bool generateLinkTimeSeries(Data::Study& study,
         writeResultsToDisk(study, writer, ts.timeSeries, filePath);
 
         // INDIRECT
-        AvailabilityTSGeneratorData tsConfigDataIndirect(tsGenStruct, ts, tsGenStruct.modulationCapacityIndirect, link->with->name);
+        AvailabilityTSGeneratorData tsConfigDataIndirect(tsGenStruct,
+                                                         ts,
+                                                         tsGenStruct.modulationCapacityIndirect,
+                                                         link->with->name);
 
         generator.generateTS(*link->from, tsConfigDataIndirect);
 
-        filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
-                               + "_indirect.txt";
+        filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str() + "_indirect.txt";
         writeResultsToDisk(study, writer, ts.timeSeries, filePath);
     }
 

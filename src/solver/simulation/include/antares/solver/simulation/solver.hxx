@@ -39,7 +39,6 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 
-
 #include "hydro-final-reservoir-level-functions.h"
 
 namespace Antares::Solver::Simulation
@@ -75,10 +74,7 @@ public:
         yearByYear(pYearByYear),
         pDurationCollector(durationCollector),
         pResultWriter(resultWriter),
-        hydroManagement(study.areas,
-                        study.parameters,
-                        study.calendar,
-                        resultWriter)
+        hydroManagement(study.areas, study.parameters, study.calendar, resultWriter)
     {
         scratchmap = study.areas.buildScratchMap(numSpace);
     }
@@ -162,11 +158,8 @@ public:
             simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
-            pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel] {
-                hydroManagement.makeVentilation(randomReservoirLevel,
-                                                y,
-                                                scratchmap);
-            };
+            pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel]
+            { hydroManagement.makeVentilation(randomReservoirLevel, y, scratchmap); };
 
             // Updating the state
             state.year = y;
@@ -748,15 +741,15 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
                                                         max[firstDayOfMonth],
                                                         randomHydroGenerator);
 
-            // Possibly update the intial level from scenario builder
-            if (study.parameters.useCustomScenario)
-            {
-                double levelFromScenarioBuilder = study.scenarioInitialHydroLevels[areaIndex][y];
-                if (levelFromScenarioBuilder >= 0.)
-                {
-                    randomLevel = levelFromScenarioBuilder;
-                }
-            }
+              // Possibly update the intial level from scenario builder
+              if (study.parameters.useCustomScenario)
+              {
+                  double levelFromScenarioBuilder = study.scenarioInitialHydroLevels[areaIndex][y];
+                  if (levelFromScenarioBuilder >= 0.)
+                  {
+                      randomLevel = levelFromScenarioBuilder;
+                  }
+              }
 
               // Current area's hydro starting (or initial) level computation
               // (no matter if the year is performed or not, we always draw a random initial
@@ -780,7 +773,12 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
         bool SpilledEnergySeedIsDefault = (currentSpilledEnergySeed == defaultSpilledEnergySeed);
         areaIndex = 0;
         study.areas.each(
-          [&isPerformed, &areaIndex, &randomUnsupplied, &randomSpilled, &randomForYears, &indexYear,
+          [&isPerformed,
+           &areaIndex,
+           &randomUnsupplied,
+           &randomSpilled,
+           &randomForYears,
+           &indexYear,
            &SpilledEnergySeedIsDefault](Data::Area& area)
           {
               (void)area; // Avoiding warnings at compilation (unused variable) on linux
@@ -1030,19 +1028,19 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             // continue;
 
             auto task = std::make_shared<yearJob<ImplementationType>>(
-                                                                        this,
-                                                                        y,
-                                                                        set_it->yearFailed,
-                                                                        set_it->isFirstPerformedYearOfASet,
-                                                                        pFirstSetParallelWithAPerformedYearWasRun,
-                                                                        numSpace,
-                                                                        randomForParallelYears,
-                                                                        performCalculations,
-                                                                        study,
-                                                                        state[numSpace],
-                                                                        pYearByYear,
-                                                                        pDurationCollector,
-                                                                        pResultWriter);
+              this,
+              y,
+              set_it->yearFailed,
+              set_it->isFirstPerformedYearOfASet,
+              pFirstSetParallelWithAPerformedYearWasRun,
+              numSpace,
+              randomForParallelYears,
+              performCalculations,
+              study,
+              state[numSpace],
+              pYearByYear,
+              pDurationCollector,
+              pResultWriter);
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 

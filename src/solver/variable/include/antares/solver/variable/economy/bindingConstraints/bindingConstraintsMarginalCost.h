@@ -147,7 +147,6 @@ public:
         NextType::simulationEnd();
     }
 
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -257,8 +256,8 @@ public:
                 for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
                 {
                     pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
-                        -= state.problemeHebdo
-                        ->ResultatsContraintesCouplantes[associatedBC_][dayInTheWeek];
+                      -= state.problemeHebdo
+                           ->ResultatsContraintesCouplantes[associatedBC_][dayInTheWeek];
 
                     dayInTheYear++;
                 }
@@ -270,7 +269,7 @@ public:
             {
                 uint weekInTheYear = state.weekInTheYear;
                 double weeklyValue = -state.problemeHebdo
-                    ->ResultatsContraintesCouplantes[associatedBC_][0];
+                                        ->ResultatsContraintesCouplantes[associatedBC_][0];
 
                 pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
 
