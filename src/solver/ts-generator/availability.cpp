@@ -74,7 +74,6 @@ namespace
 class AvailabilityTSgenerator final
 {
 public:
-    explicit AvailabilityTSgenerator(Data::Study&, unsigned, MersenneTwister&);
     explicit AvailabilityTSgenerator(bool, unsigned, MersenneTwister&);
 
     void run(AvailabilityTSGeneratorData&) const;
@@ -101,15 +100,6 @@ private:
                                std::array<double, 366>& B,
                                const T& duration) const;
 };
-
-AvailabilityTSgenerator::AvailabilityTSgenerator(Data::Study& study,
-                                                 unsigned nbOfSeriesToGen,
-                                                 MersenneTwister& rndGenerator):
-    derated(study.parameters.derated),
-    nbOfSeriesToGen_(nbOfSeriesToGen),
-    rndgenerator(rndGenerator)
-{
-}
 
 AvailabilityTSgenerator::AvailabilityTSgenerator(bool derated,
                                                  unsigned int nbOfSeriesToGen,
@@ -634,7 +624,7 @@ bool generateThermalTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the thermal time-series";
 
-    auto generator = AvailabilityTSgenerator(study,
+    auto generator = AvailabilityTSgenerator(study.parameters.derated,
                                              study.parameters.nbTimeSeriesThermal,
                                              study.runtime->random[Data::seedTsGenThermal]);
 

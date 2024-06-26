@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
     if (! checkOptions(settings))
         return 1;
 
+    // ============ THERMAL : Getting data for generating time-series =========
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
     studyOptions.prepareOutput = true;
@@ -92,7 +93,7 @@ int main(int argc, char* argv[])
     }
 
     study->initializeRuntimeInfos();
-    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal[/mc-0]
+    // Forces the writing of generated TS into the study's output sub-folder
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
 
     try
@@ -108,7 +109,6 @@ int main(int argc, char* argv[])
     thermalSavePath /= "ts-generator";
     thermalSavePath /= "thermal";
 
-    // ============ THERMAL : Getting data for generating time-series =========
     std::vector<Data::ThermalCluster*> clusters;
     if (settings.allThermal)
     {
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
     {
         logs.debug() << c->id();
     }
-
+    // ========================================================================
 
 
     LinksTSgenerator linksTSgenerator(settings);
