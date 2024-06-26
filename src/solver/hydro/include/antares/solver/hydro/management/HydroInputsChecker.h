@@ -23,6 +23,7 @@
 #include "antares/date/date.h"
 #include "antares/solver/hydro/management/MinGenerationScaling.h"
 #include "antares/solver/hydro/management/PrepareInflows.h"
+#include "antares/solver/simulation/hydro-final-reservoir-level-functions.h"
 #include "antares/study/study.h"
 namespace Antares
 {
@@ -42,7 +43,8 @@ private:
     const uint endYear_;
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
-    bool refresh_ = false;
+    const Data::TimeSeries::TS& scenarioInitialHydroLevels_;
+    const Data::TimeSeries::TS& scenarioFinalHydroLevels_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;

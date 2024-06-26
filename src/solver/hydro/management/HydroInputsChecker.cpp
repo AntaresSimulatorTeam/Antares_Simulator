@@ -40,7 +40,8 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
     endYear_(1 + study.runtime->rangeLimits.year[Data::rangeEnd]),
     prepareInflows_(study.areas, study.calendar),
     minGenerationScaling_(study.areas, study.calendar),
-    refresh_(false)
+    scenarioInitialHydroLevels_(study.scenarioInitialHydroLevels),
+    scenarioFinalHydroLevels_(study.scenarioFinalHydroLevels)
 {
 }
 
@@ -52,6 +53,10 @@ void HydroInputsChecker::Execute(uint year)
     if (!checksOnGenerationPowerBounds(year))
     {
 	throw FatalError("hydro inputs checks: invalid minimum generation");
+    }
+    if (parameters_.useCustomScenario)
+    {
+        CheckFinalReservoirLevelsConfiguration(areas_, parameters_, scenarioInitialHydroLevels_, scenarioFinalHydroLevels_, year);
     }
 }
 
