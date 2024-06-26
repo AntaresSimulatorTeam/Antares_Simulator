@@ -268,33 +268,32 @@ $(document).ready(function(){initNavTree('solver_2hydro_2include_2antares_2solve
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="comment">// \return The total inflow for the whole year</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordtype">double</span> prepareMonthlyTargetGenerations(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area, <a class="code hl_struct" href="structAntares_1_1TmpDataByArea.html">TmpDataByArea</a>&amp; data);</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(uint y,</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                                        Antares::Data::Area::ScratchMap&amp; scratchmap);</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area,</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                                        uint y,</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                                        Antares::Data::Area::ScratchMap&amp; scratchmap);</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    std::unordered_map&lt;const Data::Area*, TmpDataByArea&gt; tmpDataByArea_;</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1AreaList.html">Data::AreaList</a>&amp; areas_;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Date_1_1Calendar.html">Date::Calendar</a>&amp; calendar_;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; parameters_;</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> maxNbYearsInParallel_ = 0;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; resultWriter_;</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    HYDRO_VENTILATION_RESULTS ventilationResults_;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>}; <span class="comment">// class HydroManagement</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(uint y, Antares::Data::Area::ScratchMap&amp; scratchmap);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keywordtype">void</span> prepareDailyOptimalGenerations(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area,</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                                        uint y,</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                                        Antares::Data::Area::ScratchMap&amp; scratchmap);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    std::unordered_map&lt;const Data::Area*, TmpDataByArea&gt; tmpDataByArea_;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1AreaList.html">Data::AreaList</a>&amp; areas_;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Date_1_1Calendar.html">Date::Calendar</a>&amp; calendar_;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; parameters_;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> maxNbYearsInParallel_ = 0;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; resultWriter_;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    HYDRO_VENTILATION_RESULTS ventilationResults_;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>}; <span class="comment">// class HydroManagement</span></div>
 </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__</span></div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition</b> area.h:377</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition</b> area.h:52</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition</b> parameters.h:51</div></div>
 <div class="ttc" id="aclassAntares_1_1Date_1_1Calendar_html"><div class="ttname"><a href="classAntares_1_1Date_1_1Calendar.html">Antares::Date::Calendar</a></div><div class="ttdef"><b>Definition</b> date.h:180</div></div>
 <div class="ttc" id="aclassAntares_1_1HydroManagement_html"><div class="ttname"><a href="classAntares_1_1HydroManagement.html">Antares::HydroManagement</a></div><div class="ttdef"><b>Definition</b> management.h:105</div></div>
-<div class="ttc" id="aclassAntares_1_1HydroManagement_html_accf05b0286428d88463127457cce39e5"><div class="ttname"><a href="classAntares_1_1HydroManagement.html#accf05b0286428d88463127457cce39e5">Antares::HydroManagement::makeVentilation</a></div><div class="ttdeci">void makeVentilation(double *randomReservoirLevel, uint y, Antares::Data::Area::ScratchMap &amp;scratchmap)</div><div class="ttdoc">Perform the hydro ventilation.</div><div class="ttdef"><b>Definition</b> management.cpp:536</div></div>
+<div class="ttc" id="aclassAntares_1_1HydroManagement_html_accf05b0286428d88463127457cce39e5"><div class="ttname"><a href="classAntares_1_1HydroManagement.html#accf05b0286428d88463127457cce39e5">Antares::HydroManagement::makeVentilation</a></div><div class="ttdeci">void makeVentilation(double *randomReservoirLevel, uint y, Antares::Data::Area::ScratchMap &amp;scratchmap)</div><div class="ttdoc">Perform the hydro ventilation.</div><div class="ttdef"><b>Definition</b> management.cpp:544</div></div>
 <div class="ttc" id="aclassAntares_1_1MersenneTwister_html"><div class="ttname"><a href="classAntares_1_1MersenneTwister.html">Antares::MersenneTwister</a></div><div class="ttdoc">MersenneTwister Pseudo random number generator.</div><div class="ttdef"><b>Definition</b> mersenne-twister.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition</b> i_writer.h:34</div></div>
 <div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition</b> cbuilder.h:120</div></div>
