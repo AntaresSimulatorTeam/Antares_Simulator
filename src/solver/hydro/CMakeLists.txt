@@ -58,8 +58,8 @@ set(SRC_MANAGEMENT
         management/MinGenerationScaling.cpp
         include/antares/solver/hydro/management/HydroInputsChecker.h
         management/HydroInputsChecker.cpp
-        include/antares/solver/hydro/management/hydro-final-reservoir-level-functions.h
-        management/hydro-final-reservoir-level-functions.cpp
+        include/antares/solver/hydro/management/HydroErrorsCollector.h
+        management/HydroErrorsCollector.cpp
 )
 
 
