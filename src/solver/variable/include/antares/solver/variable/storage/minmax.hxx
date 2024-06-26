@@ -36,7 +36,6 @@ namespace AllYears
 template<bool OpInferior, class NextT>
 inline void MinMaxBase<OpInferior, NextT>::initializeFromStudy(Data::Study& study)
 {
-    minmax.initialize();
     // Next
     NextType::initializeFromStudy(study);
 }
