@@ -219,9 +219,9 @@ struct DebugData
 };
 
 inline void HydroManagement::prepareDailyOptimalGenerations(
-  Data::Area& area,
-  uint y,
-  Antares::Data::Area::ScratchMap& scratchmap)
+    Data::Area& area,
+    uint y,
+    Antares::Data::Area::ScratchMap& scratchmap)
 {
     const auto srcinflows = area.hydro.series->storage.getColumn(y);
 

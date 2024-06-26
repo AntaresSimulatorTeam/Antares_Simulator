@@ -19,14 +19,14 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #define BOOST_TEST_MODULE test utils
-#include <filesystem>
 #include <string>
 
 #include <boost/test/unit_test.hpp>
 
-#include <yuni/io/file.h>
-
 #include <antares/utils/utils.h>
+
+#include <yuni/io/file.h>
+#include <filesystem>
 
 namespace fs = std::filesystem;
 
@@ -99,8 +99,7 @@ BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
     {
         Yuni::String yuniNorm;
         Yuni::IO::Normalize(yuniNorm, path.string());
-        BOOST_CHECK_MESSAGE(path.lexically_normal().string() == yuniNorm,
-                            std::string("Check failed for ") + path.string());
+        BOOST_CHECK_MESSAGE(path.lexically_normal().string() == yuniNorm, std::string("Check failed for ") + path.string());
     };
     helper(fs::path("a/./b/.."));
     helper(fs::path("a/.///b/../"));

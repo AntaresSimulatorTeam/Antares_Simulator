@@ -31,7 +31,6 @@ namespace Data
 {
 class Study;
 }
-
 /**
  * @class FileTreeStudyLoader
  * @brief A class to load studies from the file tree.

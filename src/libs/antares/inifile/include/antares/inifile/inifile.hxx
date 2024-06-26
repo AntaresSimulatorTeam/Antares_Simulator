@@ -32,8 +32,7 @@ inline bool IniFile::empty() const
     return not firstSection;
 }
 
-inline IniFile::Section::Section(const AnyString& name):
-    name(name)
+inline IniFile::Section::Section(const AnyString& name): name(name)
 {
 }
 

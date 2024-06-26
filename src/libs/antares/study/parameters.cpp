@@ -1109,16 +1109,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "initial-reservoir-levels") // ignored since 9.2
     {
-        if (version >= StudyVersion(9, 2))
-        {
-            logs.warning()
-              << "Option initial-reservoir-levels is deprecated, please remove it from the study";
-        }
+        if (version >= StudyVersion(9,2))
+            logs.warning() << "Option initial-reservoir-levels is deprecated, please remove it from the study";
         else if (value == "hot start")
-        {
-            logs.warning()
-              << "Hydro hot start not supported with this solver, please use a version < 9.2";
-        }
+            logs.warning() << "Hydro hot start not supported with this solver, please use a version < 9.2";
         return true;
     }
 
@@ -1131,7 +1125,8 @@ bool firstKeyLetterIsValid(const String& name)
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
+bool Parameters::loadFromINI(const IniFile& ini,
+                             const StudyVersion& version)
 {
     // Reset inner data
     reset();
@@ -1297,9 +1292,7 @@ void Parameters::fixBadValues()
     }
 
     if (simulationDays.first == 0)
-    {
         simulationDays.first = 1;
-    }
     else
     {
         simulationDays.first = std::clamp(simulationDays.first, 1u, 365u);

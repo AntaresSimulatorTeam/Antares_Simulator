@@ -56,9 +56,10 @@ static void checkSetSolverSpecificParameters(bool status,
     }
 }
 
-static void TuneSolverSpecificOptions(MPSolver* solver,
-                                      const std::string& solverName,
-                                      const std::string& solverParameters)
+static void TuneSolverSpecificOptions(
+  MPSolver* solver,
+  const std::string& solverName,
+  const std::string& solverParameters)
 {
     if (!solver)
     {
@@ -133,6 +134,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
 
     return solver;
 }
+
 
 void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver) const
 {

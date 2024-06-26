@@ -152,7 +152,8 @@ private:
     // \return The total inflow for the whole year
     double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
 
-    void prepareDailyOptimalGenerations(uint y, Antares::Data::Area::ScratchMap& scratchmap);
+    void prepareDailyOptimalGenerations(uint y,
+                                        Antares::Data::Area::ScratchMap& scratchmap);
 
     void prepareDailyOptimalGenerations(Data::Area& area,
                                         uint y,
