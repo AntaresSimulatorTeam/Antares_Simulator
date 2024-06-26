@@ -643,14 +643,6 @@ bool generateThermalTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the thermal time-series";
 
-    bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
-    bool doWeWrite = archive && !study.parameters.noOutput;
-    if (! doWeWrite)
-    {
-        logs.info() << "Study parammeters such that we don't write thermal TS.";
-        return true;
-    }
-
     auto generator = AvailabilityTSgenerator(study,
                                              study.parameters.nbTimeSeriesThermal,
                                              study.runtime->random[Data::seedTsGenThermal]);
@@ -659,7 +651,18 @@ bool generateThermalTimeSeries(Data::Study& study,
     {
         AvailabilityTSGeneratorData tsGenerationData(cluster);
         generator.run(tsGenerationData);
+    }
 
+    bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
+    bool doWeWrite = archive && !study.parameters.noOutput;
+    if (! doWeWrite)
+    {
+        logs.info() << "Study parammeters such that we don't write thermal TS.";
+        return true;
+    }
+
+    for (auto* cluster: clusters)
+    {
         std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id()
                                + ".txt";
         writeTStoDisk(writer, cluster->series.timeSeries, filePath);
