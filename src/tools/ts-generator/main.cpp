@@ -22,8 +22,6 @@
 #include <memory>
 #include <string>
 
-#include <antares/checks/checkLoadedInputData.h>
-#include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/study/study.h>
@@ -92,15 +90,6 @@ int main(int argc, char* argv[])
     study->initializeRuntimeInfos();
     // Forces the writing of generated TS into the study's output sub-folder
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
-
-    try
-    {
-        Antares::Check::checkMinStablePower(true, study->areas);
-    }
-    catch (Error::InvalidParametersForThermalClusters& ex)
-    {
-        Antares::logs.error() << ex.what();
-    }
 
     auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
     thermalSavePath /= "ts-generator";
