@@ -167,9 +167,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>adequacy</b> () const
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resetPlaylist</b> (uint nbOfYears)</td></tr>
 <tr class="memdesc:aaaaa8525ad98ddcf4e49002965d6a603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the playlist (played years and associated years) <br /></td></tr>
 <tr class="separator:aaaaa8525ad98ddcf4e49002965d6a603"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5ab6acc28881031e89b2149c6a2fc20" id="r_aa5ab6acc28881031e89b2149c6a2fc20"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Parameters.html#aa5ab6acc28881031e89b2149c6a2fc20">loadFromFile</a> (const AnyString &amp;filename, const <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> &amp;version, const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;options)</td></tr>
-<tr class="memdesc:aa5ab6acc28881031e89b2149c6a2fc20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data from a file.  <br /></td></tr>
-<tr class="separator:aa5ab6acc28881031e89b2149c6a2fc20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3959b66b45305576b51bb96cf9f1037" id="r_af3959b66b45305576b51bb96cf9f1037"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Parameters.html#af3959b66b45305576b51bb96cf9f1037">loadFromFile</a> (const AnyString &amp;filename, const <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> &amp;version)</td></tr>
+<tr class="memdesc:af3959b66b45305576b51bb96cf9f1037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data from a file.  <br /></td></tr>
+<tr class="separator:af3959b66b45305576b51bb96cf9f1037"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f5a9de0308442c0b03b4d9ca3b72407" id="r_a1f5a9de0308442c0b03b4d9ca3b72407"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Parameters.html#a1f5a9de0308442c0b03b4d9ca3b72407">prepareForSimulation</a> (const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;options)</td></tr>
 <tr class="memdesc:a1f5a9de0308442c0b03b4d9ca3b72407"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare all settings for a simulation.  <br /></td></tr>
 <tr class="separator:a1f5a9de0308442c0b03b4d9ca3b72407"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -571,8 +571,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>namedProblems</b></td
 
 </div>
 </div>
-<a id="aa5ab6acc28881031e89b2149c6a2fc20" name="aa5ab6acc28881031e89b2149c6a2fc20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5ab6acc28881031e89b2149c6a2fc20">&#9670;&#160;</a></span>loadFromFile()</h2>
+<a id="af3959b66b45305576b51bb96cf9f1037" name="af3959b66b45305576b51bb96cf9f1037"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3959b66b45305576b51bb96cf9f1037">&#9670;&#160;</a></span>loadFromFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -587,13 +587,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>namedProblems</b></td
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> &amp;&#160;</td>
-          <td class="paramname"><em>version</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;&#160;</td>
-          <td class="paramname"><em>options</em>&#160;</td>
+          <td class="paramname"><em>version</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -634,8 +628,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>namedProblems</b></td
 
 <p>Prepare all settings for a simulation. </p>
 <p>The solver must be able to rely on all variables for performance reasons. The first case scenario can be the user who might not have disabled all settings, like the <code>refresh</code>, that can have a non-zero value even if the ts-generator is disabled. Another case would be the directives given by the command line.</p>
-<dl class="section note"><dt>Note</dt><dd>This method is automatically called from <code><a class="el" href="classAntares_1_1Data_1_1Parameters.html#aa5ab6acc28881031e89b2149c6a2fc20" title="Load data from a file.">loadFromFile()</a></code> if the flag options.usedByTheSolver is set. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classAntares_1_1Data_1_1Parameters.html#aa5ab6acc28881031e89b2149c6a2fc20" title="Load data from a file.">loadFromFile()</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This method is automatically called from <code><a class="el" href="classAntares_1_1Data_1_1Parameters.html#af3959b66b45305576b51bb96cf9f1037" title="Load data from a file.">loadFromFile()</a></code> if the flag options.usedByTheSolver is set. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classAntares_1_1Data_1_1Parameters.html#af3959b66b45305576b51bb96cf9f1037" title="Load data from a file.">loadFromFile()</a> </dd></dl>
 
 </div>
 </div>
