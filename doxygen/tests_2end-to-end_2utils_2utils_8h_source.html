@@ -314,81 +314,78 @@ $(document).ready(function(){initNavTree('tests_2end-to-end_2utils_2utils_8h_sou
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    {</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="keywordflow">return</span> rules_-&gt;load;</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">BindingConstraintsTSNumberData</a>&amp; bcGroup()</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    {</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <span class="keywordflow">return</span> rules_-&gt;binding_constraints;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    }</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html">hydroTSNumberData</a>&amp; hydro()</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    {</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="keywordflow">return</span> rules_-&gt;hydro;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    }</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <a class="code hl_typedef" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Rules::Ptr</a> rules_;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>};</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">BindingConstraintsTSNumberData</a>&amp; bcGroup()</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    {</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        <span class="keywordflow">return</span> rules_-&gt;binding_constraints;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    }</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html">hydroTSNumberData</a>&amp; hydro()</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">return</span> rules_-&gt;hydro;</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    }</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <a class="code hl_typedef" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Rules::Ptr</a> rules_;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>};</div>
 </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="comment">// =====================</span></div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="comment">// Simulation handler</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="comment">// =====================</span></div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="foldopen" id="foldopen00186" data-start="{" data-end="};">
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno"><a class="line" href="classSimulationHandler.html">  186</a></span><span class="keyword">class </span><a class="code hl_class" href="classSimulationHandler.html">SimulationHandler</a></div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>{</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <a class="code hl_class" href="classSimulationHandler.html">SimulationHandler</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study):</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        study_(study)</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    {</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="comment">// =====================</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="comment">// Simulation handler</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="comment">// =====================</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="foldopen" id="foldopen00183" data-start="{" data-end="};">
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classSimulationHandler.html">  183</a></span><span class="keyword">class </span><a class="code hl_class" href="classSimulationHandler.html">SimulationHandler</a></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>{</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <a class="code hl_class" href="classSimulationHandler.html">SimulationHandler</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study):</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        study_(study)</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    }</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <a class="code hl_class" href="classSimulationHandler.html">~SimulationHandler</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keywordtype">void</span> create();</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <a class="code hl_class" href="classSimulationHandler.html">~SimulationHandler</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordtype">void</span> create();</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">void</span> run()</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        simulation_-&gt;run();</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    }</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; rawSimu()</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    {</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordflow">return</span> *simulation_;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    }</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    std::shared_ptr&lt;ISimulation&lt;Economy&gt;&gt; simulation_;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <a class="code hl_class" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a> durationCollector_;</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <a class="code hl_struct" href="classSettings.html">Settings</a> settings_;</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study_;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a> resultWriter_;</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>};</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordtype">void</span> run()</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        simulation_-&gt;run();</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    }</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; rawSimu()</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="keywordflow">return</span> *simulation_;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    }</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    std::shared_ptr&lt;ISimulation&lt;Economy&gt;&gt; simulation_;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <a class="code hl_class" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a> durationCollector_;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <a class="code hl_struct" href="classSettings.html">Settings</a> settings_;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study_;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a> resultWriter_;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>};</div>
 </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="comment">// =========================</span></div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="comment">// Basic study builder</span></div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="comment">// =========================</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="foldopen" id="foldopen00219" data-start="{" data-end="};">
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="structStudyBuilder.html">  219</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structStudyBuilder.html">StudyBuilder</a></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>{</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <a class="code hl_struct" href="structStudyBuilder.html">StudyBuilder</a>();</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keywordtype">void</span> simulationBetweenDays(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstDay, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lastDay);</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Area</a>* addAreaToStudy(<span class="keyword">const</span> std::string&amp; areaName);</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordtype">void</span> setNumberMCyears(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbYears);</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordtype">void</span> playOnlyYear(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year);</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordtype">void</span> giveWeightToYear(<span class="keywordtype">float</span> weight, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year);</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="comment">// Data members</span></div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    std::shared_ptr&lt;Study&gt; study;</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    std::shared_ptr&lt;SimulationHandler&gt; simulation;</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>};</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="comment">// =========================</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="comment">// Basic study builder</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="comment">// =========================</span></div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="foldopen" id="foldopen00216" data-start="{" data-end="};">
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="structStudyBuilder.html">  216</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structStudyBuilder.html">StudyBuilder</a></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>{</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <a class="code hl_struct" href="structStudyBuilder.html">StudyBuilder</a>();</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordtype">void</span> simulationBetweenDays(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstDay, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lastDay);</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Area</a>* addAreaToStudy(<span class="keyword">const</span> std::string&amp; areaName);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keywordtype">void</span> setNumberMCyears(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbYears);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keywordtype">void</span> playOnlyYear(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordtype">void</span> giveWeightToYear(<span class="keywordtype">float</span> weight, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="comment">// Data members</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    std::shared_ptr&lt;Study&gt; study;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    std::shared_ptr&lt;SimulationHandler&gt; simulation;</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>};</div>
 </div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>std::shared_ptr&lt;Antares::Data::BindingConstraint&gt; addBindingConstraints(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                                                                        std::string name,</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                                                                        std::string group);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>std::shared_ptr&lt;Antares::Data::BindingConstraint&gt; addBindingConstraints(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                                                                        std::string name,</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                                                                        std::string group);</div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition</b> links.h:50</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition</b> area.h:52</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData</a></div><div class="ttdef"><b>Definition</b> BindingConstraintsTSNumbersData.h:32</div></div>
@@ -405,12 +402,12 @@ $(document).ready(function(){initNavTree('tests_2end-to-end_2utils_2utils_8h_sou
 <div class="ttc" id="aclassOutputRetriever_html"><div class="ttname"><a href="classOutputRetriever.html">OutputRetriever</a></div><div class="ttdef"><b>Definition</b> utils.h:104</div></div>
 <div class="ttc" id="aclassScenarioBuilderRule_html"><div class="ttname"><a href="classScenarioBuilderRule.html">ScenarioBuilderRule</a></div><div class="ttdef"><b>Definition</b> utils.h:159</div></div>
 <div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Command line settings for launching the simulation.</div><div class="ttdef"><b>Definition</b> options.h:37</div></div>
-<div class="ttc" id="aclassSimulationHandler_html"><div class="ttname"><a href="classSimulationHandler.html">SimulationHandler</a></div><div class="ttdef"><b>Definition</b> utils.h:187</div></div>
+<div class="ttc" id="aclassSimulationHandler_html"><div class="ttname"><a href="classSimulationHandler.html">SimulationHandler</a></div><div class="ttdef"><b>Definition</b> utils.h:184</div></div>
 <div class="ttc" id="aclassThermalClusterConfig_html"><div class="ttname"><a href="classThermalClusterConfig.html">ThermalClusterConfig</a></div><div class="ttdef"><b>Definition</b> utils.h:55</div></div>
 <div class="ttc" id="aclassTimeSeriesConfigurer_html"><div class="ttname"><a href="classTimeSeriesConfigurer.html">TimeSeriesConfigurer</a></div><div class="ttdef"><b>Definition</b> utils.h:37</div></div>
 <div class="ttc" id="aclassaverageResults_html"><div class="ttname"><a href="classaverageResults.html">averageResults</a></div><div class="ttdef"><b>Definition</b> utils.h:77</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_a57926881b164d4e92ae6218126c7e079"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#a57926881b164d4e92ae6218126c7e079">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typenameVCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition</b> info.h:790</div></div>
-<div class="ttc" id="astructStudyBuilder_html"><div class="ttname"><a href="structStudyBuilder.html">StudyBuilder</a></div><div class="ttdef"><b>Definition</b> utils.h:220</div></div>
+<div class="ttc" id="astructStudyBuilder_html"><div class="ttname"><a href="structStudyBuilder.html">StudyBuilder</a></div><div class="ttdef"><b>Definition</b> utils.h:217</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
