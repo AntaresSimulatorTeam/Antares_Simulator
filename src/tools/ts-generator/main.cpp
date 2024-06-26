@@ -22,15 +22,12 @@
 #include <memory>
 #include <string>
 
-#include <antares/benchmarking/DurationCollector.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
-#include <antares/writer/result_format.h>
-#include <antares/writer/writer_factory.h>
 
 #include "antares/tools/ts-generator/tsGenerationOptions.h"
 #include "antares/tools/ts-generator/linksTSgenerator.h"
@@ -133,7 +130,7 @@ int main(int argc, char* argv[])
 
     bool ret = TSGenerator::generateThermalTimeSeries(*study,
                                                       clusters,
-                                                      thermalSavePath.string());
+                                                      thermalSavePath);
 
     ret = linksTSgenerator.generate() && ret;
 

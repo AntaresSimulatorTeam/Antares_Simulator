@@ -330,7 +330,7 @@ bool LinksTSgenerator::generate()
     saveTSpath /= "ts-generator";
     saveTSpath /= "links";
 
-    return generateLinkTimeSeries(linkList_, generalParams_, saveTSpath.string());
+    return generateLinkTimeSeries(linkList_, generalParams_, saveTSpath);
 }
 
 }

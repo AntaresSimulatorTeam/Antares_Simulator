@@ -24,15 +24,13 @@
 #include <yuni/yuni.h>
 
 #include <antares/series/series.h>
-#include <antares/solver/ts-generator/law.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
 #include <antares/study/study.h>
-#include <antares/writer/i_writer.h>
-
 #include "xcast/xcast.h"
 
+namespace fs = std::filesystem;
 using LinkPair = std::pair<std::string, std::string>;
 using LinkPairs = std::vector<LinkPair>;
 
@@ -111,11 +109,11 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
-                               const std::string& savePath);
+                               const fs::path& savePath);
 
 bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
                             StudyParamsForLinkTS&,
-                            const std::string& savePath);
+                            const fs::path& savePath);
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);

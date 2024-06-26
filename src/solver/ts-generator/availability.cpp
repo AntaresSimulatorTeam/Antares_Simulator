@@ -19,20 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <cmath>
-#include <sstream>
 #include <string>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/solver/ts-generator/law.h>
 #include <antares/study/study.h>
-#include <antares/writer/i_writer.h>
 #include <antares/io/file.h> // For Antares::IO::fileSetContent
-#include "antares/study/simulation.h"
-
-#define SEP Yuni::IO::Separator
-namespace fs = std::filesystem;
 
 constexpr double FAILURE_RATE_EQ_1 = 0.999;
 
@@ -619,7 +612,7 @@ void writeTStoDisk(const Matrix<>& series,
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
-                               const std::string& savePath)
+                               const fs::path& savePath)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -647,7 +640,7 @@ bool generateThermalTimeSeries(Data::Study& study,
     {
         auto areaName = cluster->parentArea->id.to<std::string>();
         auto clusterName = cluster->id();
-        auto filePath = fs::path(savePath) / areaName / clusterName += ".txt";
+        auto filePath = savePath / areaName / clusterName += ".txt";
 
         writeTStoDisk(cluster->series.timeSeries, filePath);
     }
@@ -658,7 +651,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 // gp : we should try to add const identifiers before args here
 bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
                             StudyParamsForLinkTS& generalParams,
-                            const std::string& savePath)
+                            const fs::path& savePath)
 {
     logs.info();
     logs.info() << "Generation of links time-series";
@@ -685,14 +678,14 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
         AvailabilityTSGeneratorData tsConfigDataDirect(link, ts, link.modulationCapacityDirect, link.namesPair.second);
         generator.run(tsConfigDataDirect);
 
-        auto filePath = fs::path(savePath) / link.namesPair.first / link.namesPair.second += "_direct.txt";
+        auto filePath = savePath / link.namesPair.first / link.namesPair.second += "_direct.txt";
         writeTStoDisk(ts.timeSeries, filePath);
 
         // === INDIRECT =======================
         AvailabilityTSGeneratorData tsConfigDataIndirect(link, ts, link.modulationCapacityIndirect, link.namesPair.second);
         generator.run(tsConfigDataIndirect);
 
-        filePath = fs::path(savePath) / link.namesPair.first / link.namesPair.second += "_indirect.txt";
+        filePath = savePath / link.namesPair.first / link.namesPair.second += "_indirect.txt";
         writeTStoDisk(ts.timeSeries, filePath);
     }
 

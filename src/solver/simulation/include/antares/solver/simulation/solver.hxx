@@ -464,7 +464,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
 	    namespace fs = std::filesystem;
             fs::path savePath = fs::path(study.folderOutput.to<std::string>()) / "ts-generator"
                                 / "thermal" / "mc-" / std::to_string(year);
-            generateThermalTimeSeries(study, clusters, savePath.string());
+            generateThermalTimeSeries(study, clusters, savePath);
 
             // apply the spinning if we generated some in memory clusters
             for (auto* cluster: clusters)
