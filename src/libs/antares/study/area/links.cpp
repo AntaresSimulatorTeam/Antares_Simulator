@@ -142,8 +142,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
 {
     const std::string idprepro = std::string(from->id) + "/" + std::string(with->id);
-    tsGeneration.prepro = std::make_unique<Data::PreproAvailability>(idprepro,
-                                                                     tsGeneration.unitCount);
+    tsGeneration.prepro =
+        std::make_unique<Data::PreproAvailability>(idprepro, tsGeneration.unitCount);
 
     bool anyFileWasLoaded = false;
 
@@ -157,10 +157,10 @@ bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
     {
         anyFileWasLoaded = true;
         tsGeneration.valid = tsGeneration.prepro->data.loadFromCSVFile(
-                               filepath.string(),
-                               Antares::Data::PreproAvailability::preproAvailabilityMax,
-                               DAYS_PER_YEAR)
-                             && tsGeneration.prepro->validate();
+                                     filepath.string(),
+                                     Antares::Data::PreproAvailability::preproAvailabilityMax,
+                                     DAYS_PER_YEAR)
+                                && tsGeneration.prepro->validate();
     }
 
     // Modulation
@@ -170,7 +170,7 @@ bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
     {
         anyFileWasLoaded = true;
         tsGeneration.valid &= tsGeneration.modulationCapacityDirect
-                                .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
+                                      .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
     }
 
     filepath = preproFile;
@@ -179,7 +179,7 @@ bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
     {
         anyFileWasLoaded = true;
         tsGeneration.valid &= tsGeneration.modulationCapacityIndirect
-                                .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
+                                        .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
     }
 
     if (anyFileWasLoaded)
@@ -506,8 +506,11 @@ bool handleKey(Data::AreaLink& link, const String& key, const String& value)
     return false;
 }
 
-bool handleTSGenKey(Data::LinkTsGeneration& out, const std::string& key, const String& value)
+bool handleTSGenKey(Data::LinkTsGeneration& out,
+                    const std::string& key,
+                    const String& value)
 {
+
     if (key == "unitcount")
     {
         return value.to<uint>(out.unitCount);
@@ -569,11 +572,7 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study,
-                             AreaList* l,
-                             Area* area,
-                             const fs::path& folder,
-                             bool loadTSGen)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder, bool loadTSGen)
 {
     // Assert
     assert(area);

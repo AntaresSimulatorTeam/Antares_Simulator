@@ -337,14 +337,10 @@ void Application::prepare(int argc, char* argv[])
     // don't de-allocate these.
 
     if (!parseCommandLine(options)) // --help
-    {
         return;
-    }
 
     if (!handleOptions(options)) // --version, --list-solvers
-    {
-        return;
-    }
+       return;
 
     // Perform some checks
     checkAndCorrectSettingsAndOptions(pSettings, options);

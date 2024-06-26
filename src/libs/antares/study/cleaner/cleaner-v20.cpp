@@ -391,6 +391,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     buffer.clear() << infos->folder << "/input/bindingconstraints/bindingconstraints.ini";
     if (ini.open(buffer))
     {
+
         ini.each(
           [&e](const IniFile::Section& section)
           {

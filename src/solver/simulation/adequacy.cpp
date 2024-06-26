@@ -68,10 +68,7 @@ bool Adequacy::simulationBegin()
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            SIM_InitialisationProblemeHebdo(study,
-                                            pProblemesHebdo[numSpace],
-                                            nbHoursInAWeek,
-                                            numSpace);
+            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], nbHoursInAWeek, numSpace);
         }
     }
 
