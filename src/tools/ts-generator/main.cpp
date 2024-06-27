@@ -39,23 +39,23 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
                                                     const std::string& clustersToGen)
 {
     std::vector<Data::ThermalCluster*> clusters;
-    const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
+    const auto pairsAreaCluster = splitStringIntoPairs(clustersToGen, ';', '.');
 
-    for (const auto& [areaID, clusterID]: ids)
+    for (const auto& [areaName, clusterName]: pairsAreaCluster)
     {
-        logs.info() << "Searching for area: " << areaID << " and cluster: " << clusterID;
+        logs.info() << "Searching for area: " << areaName << " and cluster: " << clusterName;
 
-        auto* area = areas.find(areaID);
+        auto* area = areas.find(areaName);
         if (!area)
         {
-            logs.warning() << "Area not found: " << areaID;
+            logs.warning() << "Area not found: " << areaName;
             continue;
         }
 
-        auto* cluster = area->thermal.list.findInAll(clusterID);
+        auto* cluster = area->thermal.list.findInAll(clusterName);
         if (!cluster)
         {
-            logs.warning() << "Cluster not found: " << clusterID;
+            logs.warning() << "Cluster not found: " << clusterName;
             continue;
         }
 

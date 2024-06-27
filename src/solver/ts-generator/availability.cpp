@@ -76,7 +76,7 @@ private:
 
     uint nbOfSeriesToGen_;
 
-    MersenneTwister& rndgenerator;
+    MersenneTwister& randomGenerator_;
 
     static constexpr int Log_size = 4000;
 
@@ -96,10 +96,10 @@ private:
 
 AvailabilityTSgenerator::AvailabilityTSgenerator(bool derated,
                                                  unsigned int nbOfSeriesToGen,
-                                                 MersenneTwister& rndGenerator):
+                                                 MersenneTwister& randomGenerator):
     derated(derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
-    rndgenerator(rndGenerator)
+    randomGenerator_(randomGenerator)
 {
 }
 
@@ -160,7 +160,7 @@ int AvailabilityTSgenerator::durationGenerator(Data::StatisticalLaw law,
         return expec;
     }
 
-    double rndnumber = rndgenerator.next();
+    double rndnumber = randomGenerator_.next();
 
     switch (law)
     {
@@ -372,7 +372,7 @@ void AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData)
 
             if (lf[dayInTheYear] > 0. && lf[dayInTheYear] <= FAILURE_RATE_EQ_1)
             {
-                A = rndgenerator.next();
+                A = randomGenerator_.next();
                 last = FPOW[dayInTheYear][AUN];
 
                 if (A > last)
@@ -408,7 +408,7 @@ void AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData)
                 }
 
                 last = PPOW[dayInTheYear][AUN_app];
-                A = rndgenerator.next();
+                A = randomGenerator_.next();
 
                 if (A > last)
                 {
