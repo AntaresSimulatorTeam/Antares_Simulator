@@ -61,12 +61,12 @@ bool HydroInputsChecker::Execute(uint year)
     return !errorCollector_.ErrorsLimitReached();
 }
 
-bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year) const
+bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year)
 {
     return checkMinGeneration(year) && checkGenerationPowerConsistency(year);
 }
 
-bool HydroInputsChecker::checkMinGeneration(uint year) const
+bool HydroInputsChecker::checkMinGeneration(uint year)
 {
     bool ret = true;
     areas_.each(
@@ -99,7 +99,7 @@ bool HydroInputsChecker::checkMinGeneration(uint year) const
     return ret;
 }
 
-bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& area) const
+bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& area)
 {
     const auto& srcinflows = area.hydro.series->storage.getColumn(year);
     const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
@@ -134,7 +134,7 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
     return true;
 }
 
-bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& area) const
+bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& area)
 {
     const auto& data = area.hydro.managementData.at(year);
     if (data.totalYearMingen > data.totalYearInflows)
@@ -150,7 +150,7 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
     return true;
 }
 
-void HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
+bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& area)
 {
     const auto& data = area.hydro.managementData.at(year);
     for (uint month = 0; month != 12; ++month)
@@ -171,12 +171,12 @@ void HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& 
     return true;
 }
 
-bool HydroInputsChecker::checkGenerationPowerConsistency(uint year) const
+bool HydroInputsChecker::checkGenerationPowerConsistency(uint year)
 {
     bool ret = true;
 
     areas_.each(
-      [&ret, &year](const Data::Area& area)
+      [this, &ret, &year](const Data::Area& area)
       {
           const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
           const auto& srcmaxgen = area.hydro.series->maxHourlyGenPower.getColumn(year);
@@ -208,17 +208,16 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year) const
 
 void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
 {
-    if (!parameters.yearsFilter.at(year))
+    if (!parameters_.yearsFilter.at(year))
     {
         return;
     }
 
-    areas.each(
-      [&areas_, &parameters_, &scenarioInitialHydroLevels_, &scenarioFinalHydroLevels_, year](
-        Data::Area& area)
+    areas_.each(
+      [this, year](Data::Area& area)
       {
-          double initialLevel = scenarioInitialHydroLevels.entry[area.index][year];
-          double finalLevel = scenarioFinalHydroLevels.entry[area.index][year];
+          double initialLevel = scenarioInitialHydroLevels_.entry[area.index][year];
+          double finalLevel = scenarioFinalHydroLevels_.entry[area.index][year];
 
           Data::FinalLevelValidator validator(area.hydro,
                                               area.index,
@@ -226,8 +225,8 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                               initialLevel,
                                               finalLevel,
                                               year,
-                                              parameters.simulationDays.end,
-                                              parameters.firstMonthInYear);
+                                              parameters_.simulationDays.end,
+                                              parameters_.firstMonthInYear);
           if (!validator.check())
           {
               errorCollector_.FatalErrorHit();

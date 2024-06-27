@@ -49,17 +49,17 @@ private:
     HydroErrorsCollector errorCollector_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
-    bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
+    bool checkMonthlyMinGeneration(uint year, const Data::Area& area);
     //! check Yearly minimum generation is lower than available inflows
-    bool checkYearlyMinGeneration(uint year, const Data::Area& area) const;
+    bool checkYearlyMinGeneration(uint year, const Data::Area& area);
     //! check Weekly minimum generation is lower than available inflows
-    bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
+    bool checkWeeklyMinGeneration(uint year, const Data::Area& area);
     //! check Hourly minimum generation is lower than available inflows
-    bool checkGenerationPowerConsistency(uint year) const;
+    bool checkGenerationPowerConsistency(uint year);
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
-    bool checksOnGenerationPowerBounds(uint year) const;
+    bool checksOnGenerationPowerBounds(uint year);
     //! check minimum generation is lower than available inflows
-    bool checkMinGeneration(uint year) const;
+    bool checkMinGeneration(uint year);
 
     void CheckFinalReservoirLevelsConfiguration(uint year);
 };
