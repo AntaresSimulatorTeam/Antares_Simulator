@@ -83,7 +83,7 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportIndices<maxHoursInAYear, VCardT>(report,
+                InternalExportIndices<HOURS_PER_YEAR, VCardT>(report,
                                                                Memory::RawPointer(minmax.hourly.data()),
                                                                fileLevel);
                 break;
@@ -106,7 +106,7 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<maxHoursInAYear, VCardT>(report,
+                InternalExportValues<HOURS_PER_YEAR, VCardT>(report,
                                                               Memory::RawPointer(minmax.hourly.data()));
                 break;
             case Category::daily:
@@ -137,7 +137,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class> class DecoratorT>

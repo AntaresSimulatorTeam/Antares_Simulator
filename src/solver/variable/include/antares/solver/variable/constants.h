@@ -27,7 +27,6 @@ namespace Solver
 {
 namespace Variable
 {
-constexpr unsigned int maxHoursInAYear = 8785;
 
 template<int I>
 struct PrecisionToPrintfFormat

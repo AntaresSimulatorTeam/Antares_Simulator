@@ -35,8 +35,8 @@ IntermediateValues::IntermediateValues():
     calendar(nullptr),
     year(0.)
 {
-    Antares::Memory::Allocate<Type>(hour, maxHoursInAYear);
-    Antares::Memory::Zero(maxHoursInAYear, hour);
+    Antares::Memory::Allocate<Type>(hour, HOURS_PER_YEAR);
+    Antares::Memory::Zero(HOURS_PER_YEAR, hour);
     (void)::memset(month, 0, sizeof(Type) * MONTHS_PER_YEAR);
     (void)::memset(week, 0, sizeof(Type) * WEEKS_PER_YEAR);
     (void)::memset(day, 0, sizeof(Type) * DAYS_PER_YEAR);
@@ -89,7 +89,7 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
         // One day
         for (j = 0; j != HOURS_PER_DAY; ++j)
         {
-            assert(indx < maxHoursInAYear);
+            assert(indx < HOURS_PER_YEAR);
             d += hour[indx];
             ++indx;
         }
@@ -144,7 +144,7 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
         // One day
         for (j = 0; j != HOURS_PER_DAY; ++j)
         {
-            assert(indx < maxHoursInAYear);
+            assert(indx < HOURS_PER_YEAR);
             if (hour[indx] > 0.)
             {
                 day[i] = 100.;
