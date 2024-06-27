@@ -1958,8 +1958,7 @@ void Parameters::saveToINI(IniFile& ini) const
 }
 
 bool Parameters::loadFromFile(const AnyString& filename,
-                              const StudyVersion& version,
-                              const StudyLoadOptions& options)
+                              const StudyVersion& version)
 {
     // Loading the INI file
     IniFile ini;

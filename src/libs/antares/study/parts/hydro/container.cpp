@@ -32,7 +32,7 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-PartHydro::PartHydro(const Data::Area& area) :
+PartHydro::PartHydro() :
     interDailyBreakdown(0.),
     intraDailyModulation(2.),
     intermonthlyBreakdown(0),

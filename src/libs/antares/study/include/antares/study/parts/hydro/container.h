@@ -81,7 +81,7 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    PartHydro(const Data::Area& area);
+    PartHydro();
     //! Destructor
     ~PartHydro();
 

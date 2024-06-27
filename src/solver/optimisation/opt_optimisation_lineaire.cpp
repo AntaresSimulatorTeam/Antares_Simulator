@@ -20,10 +20,13 @@
  */
 
 #include <antares/logs/logs.h>
+#include "antares/solver/lps/LpsFromAntares.h"
+#include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 using namespace Antares;
@@ -61,11 +64,27 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
+namespace
+{
+void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
+                        int optimizationNumber,
+                        Solver::Simulation::ISimulationObserver& simulationObserver,
+                        const OptPeriodStringGenerator* optPeriodStringGenerator)
+{
+    simulationObserver.notifyHebdoProblem(*problemeHebdo,
+                                          optimizationNumber,
+                                          createMPSfilename(*optPeriodStringGenerator,
+                                                            optimizationNumber));
+}
+}
+
 bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            const AdqPatchParams& adqPatchParams,
                            Solver::IResultWriter& writer,
-                           int optimizationNumber)
+                           int optimizationNumber,
+                           Solver::Simulation::ISimulationObserver& simulationObserver
+                           )
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -101,6 +120,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
           numeroDeLIntervalle,
           problemeHebdo->weekInTheYear,
           problemeHebdo->year);
+
+        notifyProblemHebdo(problemeHebdo, optimizationNumber, simulationObserver, optPeriodStringGenerator.get());
 
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
@@ -170,7 +191,9 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer)
+                              Solver::IResultWriter& writer,
+                              Solver::Simulation::ISimulationObserver& simulationObserver
+                              )
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -206,7 +229,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      adqPatchParams,
                                      writer,
-                                     PREMIERE_OPTIMISATION);
+                                     PREMIERE_OPTIMISATION,
+                                     simulationObserver);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -219,7 +243,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      adqPatchParams,
                                      writer,
-                                     DEUXIEME_OPTIMISATION);
+                                     DEUXIEME_OPTIMISATION,
+                                     simulationObserver);
     }
     return ret;
 }

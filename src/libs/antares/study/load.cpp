@@ -83,7 +83,7 @@ bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
     }
     // Load the general data
     buffer.clear() << folderSettings << SEP << "generaldata.ini";
-    bool errorWhileLoading = !parameters.loadFromFile(buffer, header.version, options);
+    bool errorWhileLoading = !parameters.loadFromFile(buffer, header.version);
 
     parameters.validateOptions(options);
 

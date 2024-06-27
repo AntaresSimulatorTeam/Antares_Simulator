@@ -20,7 +20,6 @@ set(RTESOLVER_OPT
         opt_construction_variables_optimisees_quadratique.cpp
         opt_decompte_variables_et_contraintes.cpp
 		opt_decompte_variables_et_contraintes.cpp
-        opt_construction_matrice_des_contraintes_outils.cpp
         opt_gestion_des_bornes_cas_lineaire.cpp
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
@@ -173,7 +172,8 @@ set(RTESOLVER_OPT
 		variables/VariableManagement.cpp
 		variables/VariableManagerUtils.h
 		variables/VariableManagerUtils.cpp
-
+		include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
+		HebdoProblemToLpsTranslator.cpp
 )
 
 
@@ -197,6 +197,7 @@ target_link_libraries(model_antares
 		antares-solver-simulation
 		Antares::benchmarking
         Antares::optimization-options
+		Antares::lps
 		PRIVATE
 		infeasible_problem_analysis
 )
