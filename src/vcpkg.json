@@ -24,7 +24,7 @@
       "version>=": "1.81.0"
     },
     {
-      "name": "boost-algorithm",
+      "name": "boost-core",
       "version>=": "1.81.0"
     },
     {

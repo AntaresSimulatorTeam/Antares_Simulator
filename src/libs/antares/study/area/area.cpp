@@ -46,8 +46,7 @@ void Area::internalInitialize()
 
 Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR),
-    hydro(*this)
+    miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
 }

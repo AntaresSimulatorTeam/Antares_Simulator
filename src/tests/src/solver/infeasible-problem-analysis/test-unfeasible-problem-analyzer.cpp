@@ -24,16 +24,15 @@
 #include <boost/test/data/dataset.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
+#include <ortools/linear_solver/linear_solver.h>
 
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
 
-#include "ortools/linear_solver/linear_solver.h"
-
 namespace bdata = boost::unit_test::data;
 
-using operations_research::MPSolver;
+using namespace operations_research;
 
 using Antares::Optimization::ConstraintSlackAnalysis;
 using Antares::Optimization::UnfeasibilityAnalysis;

@@ -340,15 +340,6 @@ public:
     void pasteToColumn(uint x, const U* data);
 
     /*!
-    ** \brief Copy values into a given column in the matrix
-    **
-    ** \param x The column index (zero-based)
-    ** \param data The data to copy
-    */
-    template<class U>
-    void pasteToColumn(uint x, const Antares::Memory::Array<U>& data);
-
-    /*!
     ** \brief Set a entire column with a given value
     **
     ** \param x The column index (zero-based)

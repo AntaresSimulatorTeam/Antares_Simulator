@@ -233,7 +233,7 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip-ng)
+find_package(minizip-ng QUIET)
 if (minizip-ng_FOUND)
 	add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
 else ()
@@ -267,6 +267,7 @@ add_subdirectory("ext/yuni/src")
 OMESSAGE("") # empty line
 
 # Sub Directories
+add_subdirectory(api)
 add_subdirectory(libs) 		#antares-core fswalker
 
 if(BUILD_UI)

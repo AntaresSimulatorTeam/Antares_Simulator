@@ -34,52 +34,6 @@ class Memory final: public Yuni::Policy::ObjectLevelLockable<Memory>
 {
 public:
     template<class T>
-    class Array final
-    {
-    public:
-        //! \name Constructors
-        //@{
-        /*!
-        ** \brief Default constructor
-        */
-        Array() = default;
-
-        /*!
-        ** \brief Constructor from null
-        */
-        explicit Array(const Yuni::NullPtr&);
-
-        /*!
-        ** \brief Constructor with an initial allocation size
-        */
-        explicit Array(size_t size);
-
-        //! Copy constructor (must be empty)
-        Array(const Array& copy);
-
-        template<class U>
-        Array(const Array<U>&);
-
-        /*!
-        ** \brief Destructor
-        */
-        ~Array();
-        //@}
-
-        /*!
-        ** \brief
-        */
-        void allocate(size_t size);
-
-        T& operator[](uint i);
-        const T& operator[](uint i) const;
-
-    private:
-        T* pPointer = nullptr;
-
-    }; // class Array
-
-    template<class T>
     struct Stored final
     {
         using Type = T*;
@@ -101,7 +55,6 @@ public:
     template<class U>
     static void Assign(uint count, U* array, const U& value);
 
-public:
     template<class T>
     static void Allocate(T*& out, size_t size);
 
@@ -117,7 +70,6 @@ public:
     template<class T>
     static void Release(T*& pointer);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
