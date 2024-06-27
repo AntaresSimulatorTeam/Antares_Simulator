@@ -24,7 +24,9 @@
 #include <antares/antares/constants.h>
 #include "constants.h"
 
-namespace Antares::Solver::Variable::Category::DataLevel
+namespace Antares::Solver::Variable::Category
+{
+namespace DataLevel
 {
 //! Data that belong to a single area
 constexpr uint8_t area = 1;
@@ -258,6 +260,7 @@ inline void PrecisionLevelToStream(StreamT& out, int precisionLevel)
         out += NULL;
     }
 }
-} // namespace Antares::Solver::Variable::Category::DataLevel
+
+} // namespace Antares::Solver::Variable::Category
 
 #endif // __SOLVER_VARIABLE_CATEGORIES_H__
