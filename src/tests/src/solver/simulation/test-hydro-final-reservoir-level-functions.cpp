@@ -6,9 +6,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/unit_test.hpp>
 
-#include "include/antares/solver/simulation/hydro-final-reservoir-level-functions.h"
-#include "include/antares/study/parts/hydro/finalLevelValidator.h"
 #include <antares/study/study.h>
+
+#include "include/antares/solver/hydro/management/hydro-final-reservoir-level-functions.h"
+#include "include/antares/study/parts/hydro/finalLevelValidator.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;

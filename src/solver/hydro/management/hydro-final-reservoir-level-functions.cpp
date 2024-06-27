@@ -25,9 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "antares/solver/simulation/hydro-final-reservoir-level-functions.h"
-#include "antares/study/parts/hydro/finalLevelValidator.h"
+#include "antares/solver/hydro/management/hydro-final-reservoir-level-functions.h"
+
 #include <antares/antares/fatal-error.h>
+#include "antares/study/parts/hydro/finalLevelValidator.h"
 
 namespace Antares::Solver
 {
