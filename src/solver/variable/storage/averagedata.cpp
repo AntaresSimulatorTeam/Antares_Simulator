@@ -46,7 +46,7 @@ AverageData::~AverageData()
 void AverageData::reset()
 {
     Antares::Memory::Zero(maxHoursInAYear, hourly);
-    (void)::memset(monthly, 0, sizeof(double) * maxMonths);
+    (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
     (void)::memset(weekly, 0, sizeof(double) * maxWeeksInAYear);
     (void)::memset(daily, 0, sizeof(double) * maxDaysInAYear);
     (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
@@ -85,7 +85,7 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
         weekly[i] += rhs.week[i] * ratio;
     }
     // Average value for each month throughout all years
-    for (i = 0; i != maxMonths; ++i)
+    for (i = 0; i != MONTHS_PER_YEAR; ++i)
     {
         monthly[i] += rhs.month[i] * ratio;
     }

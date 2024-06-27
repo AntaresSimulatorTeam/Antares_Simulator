@@ -46,7 +46,7 @@ public:
     void mergeSup(uint year, const IntermediateValues& rhs);
 
     std::vector<Data> annual{1};
-    std::vector<Data> monthly{maxMonths};
+    std::vector<Data> monthly{MONTHS_PER_YEAR};
     std::vector<Data> weekly{maxWeeksInAYear};
     std::vector<Data> daily{maxDaysInAYear};
     std::vector<Data> hourly{maxHoursInAYear};

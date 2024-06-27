@@ -37,7 +37,7 @@ IntermediateValues::IntermediateValues():
 {
     Antares::Memory::Allocate<Type>(hour, maxHoursInAYear);
     Antares::Memory::Zero(maxHoursInAYear, hour);
-    (void)::memset(month, 0, sizeof(Type) * maxMonths);
+    (void)::memset(month, 0, sizeof(Type) * MONTHS_PER_YEAR);
     (void)::memset(week, 0, sizeof(Type) * maxWeeksInAYear);
     (void)::memset(day, 0, sizeof(Type) * maxDaysInAYear);
 }

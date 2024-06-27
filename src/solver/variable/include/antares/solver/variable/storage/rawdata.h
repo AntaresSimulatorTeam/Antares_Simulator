@@ -56,7 +56,7 @@ public:
     void merge(unsigned int year, const IntermediateValues& rhs);
 
 public:
-    double monthly[maxMonths];
+    double monthly[MONTHS_PER_YEAR];
     double weekly[maxWeeksInAYear];
     double daily[maxDaysInAYear];
     Antares::Memory::Stored<double>::Type hourly;

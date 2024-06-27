@@ -21,6 +21,7 @@
 #ifndef __SOLVER_VARIABLE_CATEGORIES_H__
 #define __SOLVER_VARIABLE_CATEGORIES_H__
 
+#include <antares/antares/constants.h>
 #include "constants.h"
 
 namespace Antares
@@ -307,7 +308,7 @@ struct MaxRowCount<monthly>
 {
     enum
     {
-        value = maxMonths
+        value = MONTHS_PER_YEAR
     };
 };
 } // namespace Category

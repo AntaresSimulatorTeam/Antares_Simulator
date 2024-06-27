@@ -94,7 +94,7 @@ protected:
                 InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly.data(), fileLevel);
                 break;
             case Category::monthly:
-                InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly.data(), fileLevel);
+                InternalExportIndices<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.data(), fileLevel);
                 break;
             case Category::annual:
                 InternalExportIndices<1, VCardT>(report, minmax.annual.data(), fileLevel);
@@ -116,7 +116,7 @@ protected:
                 InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly.data());
                 break;
             case Category::monthly:
-                InternalExportValues<maxMonths, VCardT>(report, minmax.monthly.data());
+                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.data());
                 break;
             case Category::annual:
                 InternalExportValues<1, VCardT>(report, minmax.annual.data());

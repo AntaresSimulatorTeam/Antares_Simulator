@@ -331,7 +331,7 @@ public:
                                                                    : 0.;
             }
 
-            for (uint m = 0; m != maxMonths; ++m)
+            for (uint m = 0; m != MONTHS_PER_YEAR; ++m)
             {
                 pValuesForYearLocalReport[numSpace][i].month[m] = (pValuesForTheCurrentYear
                                                                      [numSpace][i]

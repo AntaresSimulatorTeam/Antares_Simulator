@@ -75,7 +75,7 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
             internalExportAnnualValues<maxWeeksInAYear, VCardT>(report, week, false);
             break;
         case Category::monthly:
-            internalExportAnnualValues<maxMonths, VCardT>(report, month, false);
+            internalExportAnnualValues<MONTHS_PER_YEAR, VCardT>(report, month, false);
             break;
         case Category::annual:
             internalExportAnnualValues<1, VCardT>(report, &year, true);

@@ -117,7 +117,7 @@ protected:
                                                                                 rawdata.weekly);
                 break;
             case Category::monthly:
-                InternalExportValues<Category::monthly, maxMonths, VCardT>(report, rawdata.monthly);
+                InternalExportValues<Category::monthly, MONTHS_PER_YEAR, VCardT>(report, rawdata.monthly);
                 break;
             case Category::annual:
                 InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
