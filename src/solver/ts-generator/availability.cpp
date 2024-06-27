@@ -612,8 +612,7 @@ void writeTStoDisk(const Matrix<>& series,
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
-                               MersenneTwister& thermalRandom,
-                               const fs::path& savePath)
+                               MersenneTwister& thermalRandom)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -629,14 +628,12 @@ bool generateThermalTimeSeries(Data::Study& study,
         generator.run(tsGenerationData);
     }
 
-    bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
-    bool doWeWrite = archive && !study.parameters.noOutput;
-    if (! doWeWrite)
-    {
-        logs.info() << "Study parameters forbid writing thermal TS.";
-        return true;
-    }
+    return true;
+}
 
+void writeThermalTimeSeries(const std::vector<Data::ThermalCluster*>& clusters,
+                            const fs::path& savePath)
+{
     for (auto* cluster: clusters)
     {
         auto areaName = cluster->parentArea->id.to<std::string>();
@@ -645,8 +642,6 @@ bool generateThermalTimeSeries(Data::Study& study,
 
         writeTStoDisk(cluster->series.timeSeries, filePath);
     }
-
-    return true;
 }
 
 // gp : we should try to add const identifiers before args here

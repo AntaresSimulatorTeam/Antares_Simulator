@@ -79,20 +79,11 @@ int main(int argc, char* argv[])
     // ============ THERMAL : Getting data for generating time-series =========
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
-    studyOptions.prepareOutput = true;
-
     if (!study->loadFromFolder(settings.studyFolder, studyOptions))
     {
         logs.error() << "Invalid study given to the generator";
         return 1;
     }
-
-    // Forces the writing of generated TS into the study's output sub-folder
-    study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
-
-    auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
-    thermalSavePath /= "ts-generator";
-    thermalSavePath /= "thermal";
 
     std::vector<Data::ThermalCluster*> clusters;
     if (settings.allThermal)
@@ -105,7 +96,6 @@ int main(int argc, char* argv[])
     }
     // ========================================================================
 
-
     LinksTSgenerator linksTSgenerator(settings);
     linksTSgenerator.extractData();
 
@@ -115,8 +105,13 @@ int main(int argc, char* argv[])
 
     bool ret = TSGenerator::generateThermalTimeSeries(*study,
                                                       clusters,
-                                                      thermalRandom,
-                                                      thermalSavePath);
+                                                      thermalRandom);
+
+    auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
+    thermalSavePath /= "ts-generator";
+    thermalSavePath /= "thermal";
+
+    writeThermalTimeSeries(clusters, thermalSavePath);
 
     ret = linksTSgenerator.generate() && ret;
 

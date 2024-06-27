@@ -461,10 +461,16 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         if (refreshTSonCurrentYear)
         {
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-	    namespace fs = std::filesystem;
-            fs::path savePath = fs::path(study.folderOutput.to<std::string>()) / "ts-generator"
-                                / "thermal" / "mc-" / std::to_string(year);
-            generateThermalTimeSeries(study, clusters, study.runtime->random[Data::seedTsGenThermal], savePath);
+            generateThermalTimeSeries(study, clusters, study.runtime->random[Data::seedTsGenThermal]);
+
+            bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
+            bool doWeWrite = archive && !study.parameters.noOutput;
+            if (doWeWrite)
+            {
+                fs::path savePath = fs::path(study.folderOutput.to<std::string>()) / "ts-generator"
+                                    / "thermal" / "mc-" / std::to_string(year);
+                writeThermalTimeSeries(clusters, savePath);
+            }
 
             // apply the spinning if we generated some in memory clusters
             for (auto* cluster: clusters)
