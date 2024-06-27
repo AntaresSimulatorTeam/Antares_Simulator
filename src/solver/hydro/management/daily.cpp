@@ -86,11 +86,11 @@ struct DebugData
     std::array<double, 365> OVF{0};
     std::array<double, 365> DEV{0};
     std::array<double, 365> VIO{0};
-    std::array<double, 12> deviationMax{0};
-    std::array<double, 12> violationMax{0};
-    std::array<double, 12> WASTE{0};
-    std::array<double, 12> CoutTotal{0};
-    std::array<double, 12> previousMonthWaste{0};
+    std::array<double, MONTHS_PER_YEAR> deviationMax{0};
+    std::array<double, MONTHS_PER_YEAR> violationMax{0};
+    std::array<double, MONTHS_PER_YEAR> WASTE{0};
+    std::array<double, MONTHS_PER_YEAR> CoutTotal{0};
+    std::array<double, MONTHS_PER_YEAR> previousMonthWaste{0};
 
     Solver::IResultWriter& pWriter;
     const TmpDataByArea& data;
@@ -158,9 +158,9 @@ struct DebugData
              << ".txt";
 
         buffer << "\tNiveau init : " << data.MOL[initReservoirLvlMonth] << "\n";
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
-            uint realmonth = (initReservoirLvlMonth + month) % 12;
+            uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
             uint simulationMonth = calendar.mapping.months[realmonth];
 
             auto daysPerMonth = calendar.months[simulationMonth].days;
@@ -265,7 +265,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                                                 reservoirCapacity);
     }
 
-    for (uint month = 0; month != 12; ++month)
+    for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
     {
         auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
@@ -291,7 +291,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
         || (area.hydro.useHeuristicTarget && !area.hydro.followLoadModulations))
     {
         dayYear = 0;
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
             auto daysPerMonth = calendar_.months[month].days;
             for (uint day = 0; day != daysPerMonth; ++day)
@@ -306,7 +306,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
     else
     {
         dayYear = 0;
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
             uint realmonth = calendar_.months[month].realmonth;
             auto daysPerMonth = calendar_.months[month].days;
@@ -363,7 +363,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
     if (debugData)
     {
         dayYear = 0;
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
             auto daysPerMonth = calendar_.months[month].days;
 
@@ -378,9 +378,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
     if (not area.hydro.reservoirManagement)
     {
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
-            uint realmonth = (initReservoirLvlMonth + month) % 12;
+            uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
             uint simulationMonth = calendar_.mapping.months[realmonth];
 
             auto daysPerMonth = calendar_.months[simulationMonth].days;
@@ -445,9 +445,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
         Hydro_problem_costs h2o2_optim_costs(parameters_);
 
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
-            uint realmonth = (initReservoirLvlMonth + month) % 12;
+            uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
             uint simulationMonth = calendar_.mapping.months[realmonth];
 
             auto daysPerMonth = calendar_.months[simulationMonth].days;

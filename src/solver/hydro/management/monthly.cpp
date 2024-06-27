@@ -59,9 +59,9 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     {
         logs.warning() << area.id << ": lvi = " << lvi;
         logs.warning() << area.id << ": cost = " << problem.CoutDepassementVolume;
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
-            uint realmonth = (initLevelMonth + month) % 12;
+            uint realmonth = (initLevelMonth + month) % MONTHS_PER_YEAR;
             logs.warning() << "month: " << ((realmonth < 10) ? "0" : "") << realmonth
                            << ", turb.max: " << problem.TurbineMax[realmonth]
                            << ", turb.cible: " << problem.TurbineCible[realmonth]
@@ -72,9 +72,9 @@ static void CheckHydroAllocationProblem(Data::Area& area,
 
         logs.info();
         problem.Volume[initLevelMonth] = lvi;
-        for (uint month = 0; month != 12; ++month)
+        for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
-            uint realmonth = (initLevelMonth + month) % 12;
+            uint realmonth = (initLevelMonth + month) % MONTHS_PER_YEAR;
             logs.warning() << "month: " << ((realmonth < 10) ? "0" : "") << realmonth
                            << ", turbine: " << problem.Turbine[realmonth]
                            << ", volume: " << problem.Volume[realmonth];
@@ -86,14 +86,14 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
 {
     double total = 0;
 
-    for (uint realmonth = 0; realmonth != 12; ++realmonth)
+    for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
     {
         total += data.inflows[realmonth];
     }
 
     if (not area.hydro.followLoadModulations)
     {
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
             data.MTG[realmonth] = data.inflows[realmonth];
         }
@@ -103,7 +103,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
 
     double monthlyMaxDemand = -std::numeric_limits<double>::infinity();
 
-    for (uint realmonth = 0; realmonth != 12; ++realmonth)
+    for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
     {
         if (data.MLE[realmonth] > monthlyMaxDemand)
         {
@@ -114,7 +114,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
     if (!Utils::isZero(monthlyMaxDemand))
     {
         double coeff = 0.;
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
             assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
             coeff += std::pow(data.MLE[realmonth] / monthlyMaxDemand,
@@ -126,7 +126,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
             coeff = total / coeff;
         }
 
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
             assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
             data.MTG[realmonth] = coeff
@@ -138,7 +138,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
     {
         double coeff = total / 12.;
 
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
         {
             data.MTG[realmonth] = coeff;
         }
@@ -180,9 +180,9 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
               problem.CoutViolMaxDuVolumeMin = 1e5;
               problem.VolumeInitial = lvi;
 
-              for (unsigned month = 0; month != 12; ++month)
+              for (unsigned month = 0; month != MONTHS_PER_YEAR; ++month)
               {
-                  uint realmonth = (initReservoirLvlMonth + month) % 12;
+                  uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
 
                   uint simulationMonth = calendar_.mapping.months[realmonth];
                   uint firstDay = calendar_.months[simulationMonth].daysYear.first;
@@ -205,9 +205,9 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                       CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
                   }
 
-                  for (uint month = 0; month != 12; ++month)
+                  for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
                   {
-                      uint realmonth = (initReservoirLvlMonth + month) % 12;
+                      uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
 
                       data.MOG[realmonth] = problem.Turbine[month] * area.hydro.reservoirCapacity;
                       data.MOL[realmonth] = problem.Volume[month];
@@ -240,7 +240,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
           {
               auto& reservoirLevel = area.hydro.reservoirLevel[Data::PartHydro::average];
 
-              for (uint realmonth = 0; realmonth != 12; ++realmonth)
+              for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
               {
                   data.MOG[realmonth] = data.inflows[realmonth];
                   data.MOL[realmonth] = reservoirLevel[realmonth];
@@ -248,7 +248,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
           }
 
 #ifndef NDEBUG
-          for (uint realmonth = 0; realmonth != 12; ++realmonth)
+          for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
           {
               assert(!std::isnan(data.MOG[realmonth]) && "nan value detected for MOG");
               assert(!std::isnan(data.MOL[realmonth]) && "nan value detected for MOL");
@@ -280,9 +280,9 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
               buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen." << "\tTurbined" << "\tLevels"
                      << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
-              for (uint month = 0; month != 12; ++month)
+              for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
               {
-                  uint realmonth = (initReservoirLvlMonth + month) % 12;
+                  uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
 
                   uint simulationMonth = calendar_.mapping.months[realmonth];
 

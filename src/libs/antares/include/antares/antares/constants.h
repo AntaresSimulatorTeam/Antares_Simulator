@@ -59,7 +59,7 @@ const unsigned int HOURS_PER_YEAR = 8760;
 
 namespace Antares::Constants
 {
-extern const std::array<unsigned int, 12> daysPerMonth;
+extern const std::array<unsigned int, MONTHS_PER_YEAR> daysPerMonth;
 extern const unsigned int nbHoursInAWeek;
 } // namespace Antares::Constants
 
