@@ -446,6 +446,3 @@ endif()
 
 # Load packaging facilities.
 include(CPack)
-
-#Last. We need all target defined
-add_subdirectory(packaging)
