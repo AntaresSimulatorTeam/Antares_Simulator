@@ -38,5 +38,6 @@ public:
 private:
     std::unordered_map<const Antares::Data::Area*, uint> area_errors_counter_;
     bool errors_limit_reached_ = false;
+    bool stop_ = false;
     // std::vector<std::string> fatal_errors_;
 };

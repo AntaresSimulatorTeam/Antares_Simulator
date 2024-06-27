@@ -10,7 +10,7 @@ void HydroErrorsCollector::IncreaseCounterForArea(const Antares::Data::Area* are
     }
 
     area_errors_counter_[area]++;
-    errors_limit_reached_ = area_errors_counter_[area] > 10;
+    errors_limit_reached_ = area_errors_counter_[area] > 10 || errors_limit_reached_;
     stop_ = true;
 }
 
