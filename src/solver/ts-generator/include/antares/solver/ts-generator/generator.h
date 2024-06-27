@@ -50,7 +50,7 @@ struct LinkTSgenerationParams
 {
     LinkPair namesPair;
 
-    unsigned unitCount = 0;
+    unsigned unitCount = 1;
     double nominalCapacity = 0;
 
     double forcedVolatility = 0.;
