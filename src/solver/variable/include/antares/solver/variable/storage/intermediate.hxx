@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_HXX__
 #define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_HXX__
 
+#include <antares/solver/variable/print.h>
+
 namespace Antares
 {
 namespace Solver

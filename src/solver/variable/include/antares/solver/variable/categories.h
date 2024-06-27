@@ -22,7 +22,6 @@
 #define __SOLVER_VARIABLE_CATEGORIES_H__
 
 #include <antares/antares/constants.h>
-#include "constants.h"
 
 namespace Antares::Solver::Variable::Category
 {

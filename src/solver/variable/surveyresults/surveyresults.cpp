@@ -29,6 +29,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
+#include <antares/solver/variable/print.h>
 
 using namespace Yuni;
 using namespace Antares;

@@ -31,8 +31,7 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/concurrency/concurrency.h"
-#include "antares/solver//variable/constants.h"
-#include "antares/solver//variable/print.h"
+#include "antares/solver/variable/print.h"
 #include "antares/solver/hydro/management/management.h" // Added for use of randomReservoirLevel(...)
 #include "antares/solver/simulation/apply-scenario.h"
 #include "antares/solver/simulation/opt_time_writer.h"
