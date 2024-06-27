@@ -87,7 +87,7 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
     {
         double d = 0.;
         // One day
-        for (j = 0; j != maxHoursInADay; ++j)
+        for (j = 0; j != HOURS_PER_DAY; ++j)
         {
             assert(indx < maxHoursInAYear);
             d += hour[indx];
@@ -142,7 +142,7 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     {
         day[i] = 0.;
         // One day
-        for (j = 0; j != maxHoursInADay; ++j)
+        for (j = 0; j != HOURS_PER_DAY; ++j)
         {
             assert(indx < maxHoursInAYear);
             if (hour[indx] > 0.)
@@ -220,12 +220,12 @@ void IntermediateValues::computeDailyAveragesForCurrentYear()
     {
         // Compute sum of hourly values on the current day of year
         day_sum = 0.;
-        for (uint h = 0; h != maxHoursInADay; ++h)
+        for (uint h = 0; h != HOURS_PER_DAY; ++h)
         {
             day_sum += hour[indx];
             ++indx;
         }
-        day[d] = day_sum / maxHoursInADay;
+        day[d] = day_sum / HOURS_PER_DAY;
     }
 }
 
@@ -303,7 +303,7 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
     {
         d = 0.;
         // One day
-        for (j = 0; j != maxHoursInADay; ++j)
+        for (j = 0; j != HOURS_PER_DAY; ++j)
         {
             if (hour[indx] > 0.)
             {
