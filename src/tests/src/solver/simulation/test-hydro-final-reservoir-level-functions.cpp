@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE(final_level_unreachable_because_of_too_few_inflows___check_
 
 BOOST_AUTO_TEST_CASE(check_all_areas_final_levels_when_config_is_ok___all_checks_succeed)
 {
-    HydroInputsChecker hydro_input_checker(study);
+    HydroInputsChecker hydro_input_checker(*study);
 
     for (uint year: {0, 1})
     {
