@@ -216,15 +216,15 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
           double initialLevel = scenarioInitialHydroLevels_.entry[area.index][year];
           double finalLevel = scenarioFinalHydroLevels_.entry[area.index][year];
 
-          Data::FinalLevelValidator validator(area.hydro,
-                                              area.index,
-                                              area.name,
-                                              initialLevel,
-                                              finalLevel,
-                                              year,
-                                              parameters_.simulationDays.end,
-                                              parameters_.firstMonthInYear,
-                                              errorCollector_);
+          Antares::Solver::FinalLevelValidator validator(area.hydro,
+                                                         area.index,
+                                                         area.name,
+                                                         initialLevel,
+                                                         finalLevel,
+                                                         year,
+                                                         parameters_.simulationDays.end,
+                                                         parameters_.firstMonthInYear,
+                                                         errorCollector_);
           if (!validator.check())
           {
               errorCollector_.FatalErrorHit();
