@@ -29,7 +29,6 @@ env:
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages: yaml-cpp antlr4 boost-test
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
 
@@ -114,6 +113,24 @@ jobs:
       - name: Build
         run: |
           cmake --build _build -j$(nproc)
+
+      - name: Run API tests
+        run: |
+          cmake --install _build --prefix antares_install
+          cd src/api_client_example
+           cmake -B _build -S . \
+           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
+           -DCMAKE_BUILD_TYPE=Release \
+           -DBUILD_TESTING=ON \
+           -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+           -DVCPKG_TARGET_TRIPLET=x64-linux-release \
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/_build/vcpkg_installed/x64-linux-release"
+           cmake --build _build -j$(nproc)
+           cd _build
+           ctest -C Release --output-on-failure
 
       # simtest
       - name: Read simtest version

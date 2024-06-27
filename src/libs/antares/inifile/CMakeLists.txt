@@ -17,11 +17,11 @@ target_link_libraries(inifile
         PRIVATE
         io
         logs
-        Boost::boost
+        Boost::headers
 )
 
 target_include_directories(inifile
-                PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
