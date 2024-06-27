@@ -1,6 +1,8 @@
 name: SonarCloud
 
 on:
+    branches:
+      - develop
     pull_request:
 
 jobs:
