@@ -105,7 +105,7 @@ protected:
                                                                                   avgdata.hourly));
                 break;
             case Category::daily:
-                InternalExportValues<maxDaysInAYear, VCardT, Category::daily>(report,
+                InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report,
                                                                               avgdata.daily);
                 break;
             case Category::weekly:

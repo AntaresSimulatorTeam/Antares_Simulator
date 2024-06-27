@@ -60,7 +60,7 @@ public:
 public:
     double monthly[MONTHS_PER_YEAR];
     double weekly[WEEKS_PER_YEAR];
-    double daily[maxDaysInAYear];
+    double daily[DAYS_PER_YEAR];
     Antares::Memory::Stored<double>::Type hourly;
     double* year;
     unsigned int nbYearsCapacity;

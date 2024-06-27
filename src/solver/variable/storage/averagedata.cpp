@@ -48,7 +48,7 @@ void AverageData::reset()
     Antares::Memory::Zero(maxHoursInAYear, hourly);
     (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
     (void)::memset(weekly, 0, sizeof(double) * WEEKS_PER_YEAR);
-    (void)::memset(daily, 0, sizeof(double) * maxDaysInAYear);
+    (void)::memset(daily, 0, sizeof(double) * DAYS_PER_YEAR);
     (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
 }
 
@@ -75,7 +75,7 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
         hourly[i] += rhs.hour[i] * ratio;
     }
     // Average value for each day throughout all years
-    for (i = 0; i != maxDaysInAYear; ++i)
+    for (i = 0; i != DAYS_PER_YEAR; ++i)
     {
         daily[i] += rhs.day[i] * ratio;
     }

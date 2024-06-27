@@ -69,7 +69,7 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
             internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
             break;
         case Category::daily:
-            internalExportAnnualValues<maxDaysInAYear, VCardT>(report, day, false);
+            internalExportAnnualValues<DAYS_PER_YEAR, VCardT>(report, day, false);
             break;
         case Category::weekly:
             internalExportAnnualValues<WEEKS_PER_YEAR, VCardT>(report, week, false);

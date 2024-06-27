@@ -109,7 +109,7 @@ protected:
                   ::Antares::Memory::RawPointer(rawdata.hourly));
                 break;
             case Category::daily:
-                InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
+                InternalExportValues<Category::daily, DAYS_PER_YEAR, VCardT>(report,
                                                                               rawdata.daily);
                 break;
             case Category::weekly:

@@ -39,7 +39,7 @@ IntermediateValues::IntermediateValues():
     Antares::Memory::Zero(maxHoursInAYear, hour);
     (void)::memset(month, 0, sizeof(Type) * MONTHS_PER_YEAR);
     (void)::memset(week, 0, sizeof(Type) * WEEKS_PER_YEAR);
-    (void)::memset(day, 0, sizeof(Type) * maxDaysInAYear);
+    (void)::memset(day, 0, sizeof(Type) * DAYS_PER_YEAR);
 }
 
 void IntermediateValues::initializeFromStudy(Data::Study& study)

@@ -311,7 +311,7 @@ public:
                                                                    : 0.;
             }
 
-            for (uint d = 0; d != maxDaysInAYear; ++d)
+            for (uint d = 0; d != DAYS_PER_YEAR; ++d)
             {
                 pValuesForYearLocalReport[numSpace][i].day[d] = (pValuesForTheCurrentYear[numSpace]
                                                                                          [i]

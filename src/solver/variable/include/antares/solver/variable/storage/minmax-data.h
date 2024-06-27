@@ -48,7 +48,7 @@ public:
     std::vector<Data> annual{1};
     std::vector<Data> monthly{MONTHS_PER_YEAR};
     std::vector<Data> weekly{WEEKS_PER_YEAR};
-    std::vector<Data> daily{maxDaysInAYear};
+    std::vector<Data> daily{DAYS_PER_YEAR};
     std::vector<Data> hourly{maxHoursInAYear};
 
 }; // class MinMaxData
