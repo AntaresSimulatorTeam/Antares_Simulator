@@ -77,13 +77,6 @@ jobs:
         run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
-      - name: Download pre-compiled librairies
-        uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
-        with:
-          os: ${{env.os}}
-          ortools-url: ${{env.ORTOOLS_URL}}
-          ortools-dir: ${{env.ORTOOLS_DIR}}
-
       - name: Set up Python
         id: setup-python
         uses: actions/setup-python@v5
