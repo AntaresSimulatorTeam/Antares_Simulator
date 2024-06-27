@@ -39,14 +39,12 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* c
     forcedLaw(cluster->forcedLaw),
     plannedLaw(cluster->plannedLaw),
     prepro(cluster->prepro),
-    series(cluster->series.timeSeries),
     modulationCapacity(cluster->modulation[Data::thermalModulationCapacity]),
     name(cluster->name())
 {
 }
 
 AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(LinkTSgenerationParams& source,
-                                                         Data::TimeSeries& capacity,
                                                          Matrix<>& modulation,
                                                          const std::string& areaDestName):
     unitCount(source.unitCount),
@@ -56,7 +54,6 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(LinkTSgenerationParams&
     forcedLaw(source.forcedLaw),
     plannedLaw(source.plannedLaw),
     prepro(source.prepro.get()),
-    series(capacity.timeSeries),
     modulationCapacity(modulation[0]),
     name(areaDestName)
 {
@@ -69,7 +66,7 @@ class AvailabilityTSgenerator final
 public:
     explicit AvailabilityTSgenerator(bool, unsigned, MersenneTwister&);
 
-    void run(AvailabilityTSGeneratorData&) const;
+    Matrix<double> run(AvailabilityTSGeneratorData&) const;
 
 private:
     bool derated;
@@ -181,13 +178,16 @@ int AvailabilityTSgenerator::durationGenerator(Data::StatisticalLaw law,
     return 0;
 }
 
-void AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData) const
+Matrix<double> AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData) const
 {
     assert(tsGenerationData.prepro);
 
+    Matrix<double> to_return;
+    to_return.reset(nbOfSeriesToGen_, 24 * DAYS_PER_YEAR);
+
     if (0 == tsGenerationData.unitCount || 0 == tsGenerationData.nominalCapacity)
     {
-        return;
+        return to_return;
     }
 
     const auto& preproData = *(tsGenerationData.prepro);
@@ -301,18 +301,11 @@ void AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData)
     double last = 0;
 
     auto& modulation = tsGenerationData.modulationCapacity;
-    double* dstSeries = nullptr;
 
     const uint tsCount = nbOfSeriesToGen_ + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
     {
         uint hour = 0;
-
-        if (tsIndex > 1)
-        {
-            dstSeries = tsGenerationData.series[tsIndex - 2];
-        }
-
         for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
         {
             assert(dayInTheYear < 366);
@@ -562,7 +555,7 @@ void AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData)
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = std::round(AVPDayInTheYear * modulation[hour]);
+                    to_return[tsIndex - 2][hour] = std::round(AVPDayInTheYear * modulation[hour]);
                     ++hour;
                 }
             }
@@ -571,8 +564,9 @@ void AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData)
 
     if (derated)
     {
-        tsGenerationData.series.averageTimeseries();
+        to_return.averageTimeseries();
     }
+    return to_return;
 }
 } // namespace
 
@@ -623,9 +617,8 @@ bool generateThermalTimeSeries(Data::Study& study,
 
     for (auto* cluster: clusters)
     {
-        cluster->series.timeSeries.reset(study.parameters.nbTimeSeriesThermal, HOURS_PER_YEAR);
         AvailabilityTSGeneratorData tsGenerationData(cluster);
-        generator.run(tsGenerationData);
+        cluster->series.timeSeries = generator.run(tsGenerationData);
     }
 
     return true;
@@ -666,23 +659,19 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
         if (link.forceNoGeneration)
             continue; // Skipping the link
 
-        Data::TimeSeriesNumbers fakeTSnumbers; // gp : to quickly get rid of
-        Data::TimeSeries ts(fakeTSnumbers);
-        ts.resize(generalParams.nbLinkTStoGenerate, HOURS_PER_YEAR);
-
         // === DIRECT =======================
-        AvailabilityTSGeneratorData tsConfigDataDirect(link, ts, link.modulationCapacityDirect, link.namesPair.second);
-        generator.run(tsConfigDataDirect);
+        AvailabilityTSGeneratorData tsConfigDataDirect(link, link.modulationCapacityDirect, link.namesPair.second);
+        auto generated_ts = generator.run(tsConfigDataDirect);
 
         auto filePath = savePath / link.namesPair.first / link.namesPair.second += "_direct.txt";
-        writeTStoDisk(ts.timeSeries, filePath);
+        writeTStoDisk(generated_ts, filePath);
 
         // === INDIRECT =======================
-        AvailabilityTSGeneratorData tsConfigDataIndirect(link, ts, link.modulationCapacityIndirect, link.namesPair.second);
-        generator.run(tsConfigDataIndirect);
+        AvailabilityTSGeneratorData tsConfigDataIndirect(link, link.modulationCapacityIndirect, link.namesPair.second);
+        generated_ts = generator.run(tsConfigDataIndirect);
 
         filePath = savePath / link.namesPair.first / link.namesPair.second += "_indirect.txt";
-        writeTStoDisk(ts.timeSeries, filePath);
+        writeTStoDisk(generated_ts, filePath);
     }
 
     return true;

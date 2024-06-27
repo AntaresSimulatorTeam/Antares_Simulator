@@ -75,7 +75,6 @@ public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
 
     AvailabilityTSGeneratorData(LinkTSgenerationParams&,
-                                Data::TimeSeries&,
                                 Matrix<>& modulation,
                                 const std::string& name);
 
@@ -89,8 +88,6 @@ public:
     Data::StatisticalLaw& plannedLaw;
 
     Data::PreproAvailability* prepro;
-
-    Matrix<>& series;
 
     Matrix<>::ColumnType& modulationCapacity;
 
