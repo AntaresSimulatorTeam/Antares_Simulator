@@ -112,6 +112,7 @@ ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(
     copy(problem->IndicesColonnes, ret.ColumnIndexes);
     ret.ColumnIndexes.resize(ret.CoeffCount);
     copy(problem->IndicesDebutDeLigne, ret.Mdeb);
+    ret.Mdeb.push_back(ret.CoeffCount);
     return ret;
 }
 
