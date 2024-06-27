@@ -24,15 +24,7 @@
 #include <antares/antares/constants.h>
 #include "constants.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Category
-{
-namespace DataLevel
+namespace Antares::Solver::Variable::Category::DataLevel
 {
 //! Data that belong to a single area
 constexpr uint8_t area = 1;
@@ -266,54 +258,6 @@ inline void PrecisionLevelToStream(StreamT& out, int precisionLevel)
         out += NULL;
     }
 }
-
-template<int PrecisionLevel>
-struct MaxRowCount
-{
-    enum
-    {
-        value = 0
-    };
-};
-
-template<>
-struct MaxRowCount<hourly>
-{
-    enum
-    {
-        value = maxHoursInAYear
-    };
-};
-
-template<>
-struct MaxRowCount<daily>
-{
-    enum
-    {
-        value = maxDaysInAYear
-    };
-};
-
-template<>
-struct MaxRowCount<weekly>
-{
-    enum
-    {
-        value = maxWeeksInAYear
-    };
-};
-
-template<>
-struct MaxRowCount<monthly>
-{
-    enum
-    {
-        value = MONTHS_PER_YEAR
-    };
-};
-} // namespace Category
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Category::DataLevel
 
 #endif // __SOLVER_VARIABLE_CATEGORIES_H__
