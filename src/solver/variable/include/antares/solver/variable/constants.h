@@ -29,7 +29,6 @@ namespace Variable
 {
 constexpr unsigned int maxHoursInAYear = 8785;
 constexpr unsigned int maxHoursInADay = 24;
-constexpr unsigned int maxHoursInAWeek = 24 * 7; // 168
 
 template<int I>
 struct PrecisionToPrintfFormat
