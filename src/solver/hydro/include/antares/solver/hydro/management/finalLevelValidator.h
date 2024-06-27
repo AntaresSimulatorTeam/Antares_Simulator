@@ -26,6 +26,7 @@
 */
 #pragma once
 
+#include "antares/solver/hydro/management/HydroErrorsCollector.h"
 #include "antares/study/parts/hydro/container.h"
 
 namespace Antares
