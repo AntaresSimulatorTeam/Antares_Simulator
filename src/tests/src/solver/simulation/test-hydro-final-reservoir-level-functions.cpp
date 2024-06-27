@@ -7,9 +7,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/study/study.h>
+#include "antares/solver/hydro/management/HydroErrorsCollector.h"
+#include "antares/solver/hydro/management/finalLevelValidator.h"
 
 #include "include/antares/solver/hydro/management/HydroInputsChecker.h"
-#include "include/antares/study/parts/hydro/finalLevelValidator.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
@@ -106,6 +107,7 @@ struct Fixture
     Study::Ptr study = std::make_shared<Study>();
     Area* area_1;
     Area* area_2;
+    HydroErrorsCollector hydro_errors_collector;
 };
 
 BOOST_FIXTURE_TEST_SUITE(final_level_validator, Fixture)
@@ -120,7 +122,8 @@ BOOST_AUTO_TEST_CASE(all_parameters_good___check_succeeds_and_final_level_is_usa
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), true);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), true);
@@ -137,7 +140,8 @@ BOOST_AUTO_TEST_CASE(no_reservoir_management___check_succeeds_but_final_level_no
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), true);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
@@ -155,7 +159,8 @@ BOOST_AUTO_TEST_CASE(use_water_value_is_true___check_succeeds_but_final_level_no
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), true);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
@@ -173,7 +178,8 @@ BOOST_AUTO_TEST_CASE(final_level_not_set_by_user____check_succeeds_but_final_lev
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), true);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
@@ -191,7 +197,8 @@ BOOST_AUTO_TEST_CASE(initial_level_month_and_simulation_first_month_different___
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), false);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
@@ -209,7 +216,8 @@ BOOST_AUTO_TEST_CASE(simulation_does_last_a_whole_year___check_fails_and_final_l
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), false);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
@@ -228,7 +236,8 @@ BOOST_AUTO_TEST_CASE(final_level_out_of_rule_curves___check_fails_and_final_leve
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), false);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
@@ -250,7 +259,8 @@ BOOST_AUTO_TEST_CASE(final_level_unreachable_because_of_too_few_inflows___check_
                                   study->scenarioFinalHydroLevels[area_1->index][year],
                                   year,
                                   study->parameters.simulationDays.end,
-                                  study->parameters.firstMonthInYear);
+                                  study->parameters.firstMonthInYear,
+                                  hydro_errors_collector);
 
     BOOST_CHECK_EQUAL(validator.check(), false);
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);

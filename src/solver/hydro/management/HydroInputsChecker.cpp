@@ -24,10 +24,10 @@
 
 #include <antares/utils/utils.h>
 #include "antares/antares/fatal-error.h"
+#include "antares/solver/hydro/management/finalLevelValidator.h"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
-#include "antares/study/parts/hydro/finalLevelValidator.h"
 namespace Antares
 {
 
@@ -223,7 +223,8 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                               finalLevel,
                                               year,
                                               parameters_.simulationDays.end,
-                                              parameters_.firstMonthInYear);
+                                              parameters_.firstMonthInYear,
+                                              errorCollector_);
           if (!validator.check())
           {
               errorCollector_.FatalErrorHit();

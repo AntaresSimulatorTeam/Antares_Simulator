@@ -25,12 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "antares/study/parts/hydro/finalLevelValidator.h"
+#include "antares/solver/hydro/management/finalLevelValidator.h"
 
-namespace Antares::Data
+namespace Antares::Solver
 {
 
-FinalLevelValidator::FinalLevelValidator(PartHydro& hydro,
+FinalLevelValidator::FinalLevelValidator(Antares::Data::PartHydro& hydro,
                                          unsigned int areaIndex,
                                          const AreaName areaName, // gp : to std::string
                                          double initialLevel,

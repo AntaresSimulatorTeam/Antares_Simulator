@@ -60,6 +60,8 @@ set(SRC_MANAGEMENT
         management/HydroInputsChecker.cpp
         include/antares/solver/hydro/management/HydroErrorsCollector.h
         management/HydroErrorsCollector.cpp
+        include/antares/solver/hydro/management/finalLevelValidator.h
+        management/finalLevelValidator.cpp
 )
 
 

@@ -28,10 +28,15 @@
 
 #include "antares/study/parts/hydro/container.h"
 
-namespace Antares::Data
+namespace Antares
+{
+namespace Data
 {
 class PartHydro;
+}
 
+namespace Solver
+{
 class FinalLevelValidator
 {
 public:
@@ -69,5 +74,9 @@ private:
     double finalLevel_;
 
     bool finalLevelFineForUse_ = false;
+
+    // area input errors
+    HydroErrorsCollector& errorCollector_;
 };
-} // namespace Antares::Data
+} // namespace Solver
+} // namespace Antares
