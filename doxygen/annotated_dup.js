@@ -54,6 +54,12 @@ var annotated_dup =
         [ "IAction", "classAntares_1_1Action_1_1IAction.html", "classAntares_1_1Action_1_1IAction" ],
         [ "Text", "classAntares_1_1Action_1_1Text.html", "classAntares_1_1Action_1_1Text" ]
       ] ],
+      [ "API", null, [
+        [ "APIInternal", "classAntares_1_1API_1_1APIInternal.html", "classAntares_1_1API_1_1APIInternal" ],
+        [ "Error", "structAntares_1_1API_1_1Error.html", "structAntares_1_1API_1_1Error" ],
+        [ "SimulationObserver", "classAntares_1_1API_1_1SimulationObserver.html", "classAntares_1_1API_1_1SimulationObserver" ],
+        [ "SimulationResults", "structAntares_1_1API_1_1SimulationResults.html", "structAntares_1_1API_1_1SimulationResults" ]
+      ] ],
       [ "Component", null, [
         [ "Datagrid", null, [
           [ "Renderer", null, [
@@ -498,7 +504,9 @@ var annotated_dup =
           [ "interfacePostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html", null ],
           [ "InterpolateWaterValuePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd.html", null ],
           [ "ISimulation", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation" ],
+          [ "ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver" ],
           [ "ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", null ],
+          [ "NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver" ],
           [ "OptPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html", null ],
           [ "optRuntimeData", "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html", null ],
           [ "randomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html", null ],
@@ -708,18 +716,24 @@ var annotated_dup =
         [ "Application", "classAntares_1_1Solver_1_1Application.html", "classAntares_1_1Solver_1_1Application" ],
         [ "AreaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html", null ],
         [ "AreaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html", null ],
+        [ "ConstantDataFromAntares", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html", null ],
         [ "EnsureQueueStartedIfNeeded", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html", null ],
+        [ "HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator" ],
         [ "HydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html", null ],
         [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", "classAntares_1_1Solver_1_1ImmediateFileResultWriter" ],
         [ "InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html", "classAntares_1_1Solver_1_1InMemoryWriter" ],
         [ "IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "LoadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html", null ],
+        [ "LpsFromAntares", "classAntares_1_1Solver_1_1LpsFromAntares.html", null ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
         [ "Progression", "classAntares_1_1Solver_1_1Progression.html", "classAntares_1_1Solver_1_1Progression" ],
         [ "RenewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever.html", null ],
         [ "SolarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html", null ],
         [ "ThermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html", null ],
+        [ "WeeklyDataFromAntares", "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html", null ],
+        [ "WeeklyProblemId", "structAntares_1_1Solver_1_1WeeklyProblemId.html", null ],
+        [ "WeeklyProblemTranslationException", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html", null ],
         [ "WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ],
         [ "ZipWriteJob", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
         [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", "classAntares_1_1Solver_1_1ZipWriter" ]
@@ -1236,6 +1250,7 @@ var annotated_dup =
     [ "HydroPowerSmoothingUsingVariationSum", "classHydroPowerSmoothingUsingVariationSum.html", "classHydroPowerSmoothingUsingVariationSum" ],
     [ "I_MPS_writer", "classI__MPS__writer.html", null ],
     [ "IItem", "classIItem.html", "classIItem" ],
+    [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", "classInMemoryStudyLoader" ],
     [ "IntoUTF8ArgsTranslator", "classIntoUTF8ArgsTranslator.html", null ],
     [ "IProvider", "classIProvider.html", "classIProvider" ],
     [ "JIT", "classJIT.html", "classJIT" ],
@@ -1327,6 +1342,7 @@ var annotated_dup =
     [ "SimulationHandler", "classSimulationHandler.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
     [ "StartUpCostsData", "structStartUpCostsData.html", null ],
+    [ "StubOptPeriodStringGenerator", "classStubOptPeriodStringGenerator.html", null ],
     [ "StudyBuilder", "structStudyBuilder.html", null ],
     [ "StudyData", "classStudyData.html", "classStudyData" ],
     [ "StudyFixture", "structStudyFixture.html", null ],

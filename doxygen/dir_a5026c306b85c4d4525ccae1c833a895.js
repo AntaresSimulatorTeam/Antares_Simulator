@@ -10,6 +10,7 @@ var dir_a5026c306b85c4d4525ccae1c833a895 =
     [ "economy.h", "economy_8h_source.html", null ],
     [ "economy_mode.h", "economy__mode_8h_source.html", null ],
     [ "hydro-final-reservoir-level-functions.h", "hydro-final-reservoir-level-functions_8h_source.html", null ],
+    [ "ISimulationObserver.h", "ISimulationObserver_8h_source.html", null ],
     [ "ITimeSeriesNumbersWriter.h", "ITimeSeriesNumbersWriter_8h_source.html", null ],
     [ "opt_time_writer.h", "opt__time__writer_8h_source.html", null ],
     [ "sim_alloc_probleme_hebdo.h", "sim__alloc__probleme__hebdo_8h_source.html", null ],
@@ -20,7 +21,7 @@ var dir_a5026c306b85c4d4525ccae1c833a895 =
     [ "sim_structure_probleme_economique.h", "sim__structure__probleme__economique_8h_source.html", null ],
     [ "simulation.h", "solver_2simulation_2include_2antares_2solver_2simulation_2simulation_8h_source.html", null ],
     [ "solver.data.h", "solver_8data_8h_source.html", null ],
-    [ "solver.h", "solver_8h_source.html", null ],
+    [ "solver.h", "solver_2simulation_2include_2antares_2solver_2simulation_2solver_8h_source.html", null ],
     [ "solver.hxx", "solver_8hxx_source.html", null ],
     [ "solver_utils.h", "solver__utils_8h_source.html", null ],
     [ "timeseries-numbers.h", "timeseries-numbers_8h_source.html", null ]

@@ -165,16 +165,18 @@ $(document).ready(function(){initNavTree('adequacy__mode_8h_source.html',''); in
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;antares/infoCollection/StudyInfoCollector.h&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;antares/solver/misc/options.h&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/writer/i_writer.h&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>Antares::Solver</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">void</span> runSimulationInAdequacyMode(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                                 <span class="keyword">const</span> <a class="code hl_struct" href="classSettings.html">Settings</a>&amp; settings,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                                 <a class="code hl_class" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; durationCollector,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                                 IResultWriter&amp; resultWriter,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                                 <a class="code hl_struct" href="structBenchmarking_1_1OptimizationInfo.html">Benchmarking::OptimizationInfo</a>&amp; info);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/solver/simulation/ISimulationObserver.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;antares/writer/i_writer.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keywordtype">void</span> runSimulationInAdequacyMode(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                                 <span class="keyword">const</span> <a class="code hl_struct" href="classSettings.html">Settings</a>&amp; settings,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                                 <a class="code hl_class" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; durationCollector,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                                 IResultWriter&amp; resultWriter,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                                 <a class="code hl_struct" href="structBenchmarking_1_1OptimizationInfo.html">Benchmarking::OptimizationInfo</a>&amp; info,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                                 Simulation::ISimulationObserver&amp; simulationObserver);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
 <div class="ttc" id="aclassBenchmarking_1_1DurationCollector_html"><div class="ttname"><a href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a></div><div class="ttdef"><b>Definition</b> DurationCollector.h:36</div></div>
 <div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Command line settings for launching the simulation.</div><div class="ttdef"><b>Definition</b> options.h:37</div></div>

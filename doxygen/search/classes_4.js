@@ -11,7 +11,7 @@ var searchData=
   ['envforloading_8',['EnvForLoading',['../classAntares_1_1Data_1_1EnvForLoading.html',1,'Antares::Data']]],
   ['envforsaving_9',['EnvForSaving',['../classAntares_1_1Data_1_1BindingConstraintSaver_1_1EnvForSaving.html',1,'Antares::Data::BindingConstraintSaver']]],
   ['equalsto_10',['EqualsTo',['../classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1EqualsTo.html',1,'Antares::Toolbox::Filter::Operator']]],
-  ['error_11',['error',['../classjson__collector_1_1error.html',1,'json_collector.error'],['../classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Error.html',1,'Antares::Component::HTMLListbox::Item::Error']]],
+  ['error_11',['error',['../classjson__collector_1_1error.html',1,'json_collector.error'],['../classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Error.html',1,'Antares::Component::HTMLListbox::Item::Error'],['../structAntares_1_1API_1_1Error.html',1,'Antares::API::Error']]],
   ['eventsregistry_12',['EventsRegistry',['../classFSWalker_1_1EventsRegistry.html',1,'FSWalker']]],
   ['exchangebalance_13',['ExchangeBalance',['../classExchangeBalance.html',1,'']]],
   ['exchangebalancedata_14',['ExchangeBalanceData',['../structExchangeBalanceData.html',1,'']]],

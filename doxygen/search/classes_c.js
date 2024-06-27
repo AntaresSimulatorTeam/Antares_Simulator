@@ -35,7 +35,8 @@ var searchData=
   ['nullname_32',['NullName',['../classNullName.html',1,'']]],
   ['nullprovider_33',['NullProvider',['../classNullProvider.html',1,'']]],
   ['nullresultwriter_34',['NullResultWriter',['../classAntares_1_1Solver_1_1NullResultWriter.html',1,'Antares::Solver']]],
-  ['numbercontext_35',['NumberContext',['../classExprParser_1_1NumberContext.html',1,'ExprParser']]],
-  ['numbertscell_36',['NumberTsCell',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NumberTsCell.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['numbertscellthermal_37',['NumberTsCellThermal',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NumberTsCellThermal.html',1,'Antares::Component::Datagrid::Renderer']]]
+  ['nullsimulationobserver_35',['NullSimulationObserver',['../classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html',1,'Antares::Solver::Simulation']]],
+  ['numbercontext_36',['NumberContext',['../classExprParser_1_1NumberContext.html',1,'ExprParser']]],
+  ['numbertscell_37',['NumberTsCell',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NumberTsCell.html',1,'Antares::Component::Datagrid::Renderer']]],
+  ['numbertscellthermal_38',['NumberTsCellThermal',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NumberTsCellThermal.html',1,'Antares::Component::Datagrid::Renderer']]]
 ];
