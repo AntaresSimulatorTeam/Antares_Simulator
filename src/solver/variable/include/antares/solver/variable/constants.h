@@ -21,11 +21,7 @@
 #ifndef __SOLVER_VARIABLE_CONSTANT_H__
 #define __SOLVER_VARIABLE_CONSTANT_H__
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 
 template<int I>
@@ -120,8 +116,6 @@ static inline void AssignPrecisionToPrintfFormat(StringT& out, uint precision)
     }
 }
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #endif // __SOLVER_VARIABLE_CONSTANT_H__
