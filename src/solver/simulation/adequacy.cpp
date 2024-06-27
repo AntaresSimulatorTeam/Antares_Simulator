@@ -402,7 +402,33 @@ void Adequacy::simulationEnd()
 
 void Adequacy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, scratchmap, year);
-}
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto &area = *study.areas[i];
+        auto &scratchpad = scratchmap.at(&area);
 
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+        std::ranges::fill(scratchpad.originalMustrunSum, 0);
+
+        auto& mrs = scratchpad.mustrunSum;
+        auto& adq = scratchpad.originalMustrunSum;
+
+        for (const auto &cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto &availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+
+            if (cluster->mustrunOrigin)
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                {
+                    adq[h] += 2 * availableProduction[h]; // Why do we add the available production twice ?
+                }
+            }
+        }
+    }
+}
 } // namespace Antares::Solver::Simulation

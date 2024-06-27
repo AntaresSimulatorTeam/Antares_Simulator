@@ -66,11 +66,11 @@ public:
 
     //! Sum of all 'must-run' clusters
     // This variable is initialized every MC-year
-    double mustrunSum[HOURS_PER_YEAR];
+    std::array<double, HOURS_PER_YEAR> mustrunSum;
 
     //! Sum of all original 'must-run' clusters (adequacy only)
     // This variable is initialized every MC-year
-    double originalMustrunSum[HOURS_PER_YEAR];
+    std::array<double, HOURS_PER_YEAR> originalMustrunSum;
 
     /*!
      ** \brief Dispatchable Generation Margin
