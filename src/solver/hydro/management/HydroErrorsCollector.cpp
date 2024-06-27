@@ -2,30 +2,49 @@
 
 #include <yuni/core/logs.h>
 
-AreaErrors::AreaErrors(const std::string& name):
-    name_(name)
+void HydroErrorsCollector::IncreaseCounterForArea(const Antares::Data::Area* area)
 {
-}
-
-void AreaErrors::PrintErrors() const
-{
-    if (!messages_.empty())
+    if (stop && !area)
     {
-        logs.error() << "In Area " << name_;
-        for (const auto& msg: messages)
-        {
-            logs.error() << msg;
-        }
+        return;
     }
+
+    area_errors_counter_[area]++;
+    errors_limit_reached_ = area_errors_counter_[area] > 10;
+    stop_ = true;
 }
 
-bool HydroErrorsCollector::ReadyToFlush() const
+bool HydroErrorsCollector::ErrorsLimitReached() const
 {
-    return flush_;
+    return errors_limit_reached_;
 }
 
-bool HydroErrorsCollector::ExceptionHasToBeThrown() const
+bool HydroErrorsCollector::StopExecution() const
 {
-    return !error_counter_per_area_.empty();
+    return stop_ || errors_limit_reached_;
 }
 
+void HydroErrorsCollector::FatalErrorHit()
+{
+    stop_ = true;
+}
+
+// void HydroErrorsCollector::RecordFatalErrors(const std::string& msg, uint year)
+// {
+//     fatal_errors_.push_back("In year " + std::to_string(year) + " " + msg);
+// }
+
+// void HydroErrorsCollector::RecordFatalErrors(const std::string& msg,
+//                                              uint year,
+//                                              const Antares::Data::Area* area)
+// {
+//     fatal_errors_.push_back("In area " + area.name + " " + std::to_string(year) + " " + msg);
+// }
+
+// void HydroErrorsCollector::PrintFatalsErrors() const
+// {
+//     for (const auto& msg: fatal_errors)
+//     {
+//         logs.error() << msg;
+//     }
+// }

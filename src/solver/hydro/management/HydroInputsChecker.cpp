@@ -28,7 +28,7 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
-
+#include "antares/study/parts/hydro/finalLevelValidator.h"
 namespace Antares
 {
 
@@ -46,19 +46,20 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 {
 }
 
-void HydroInputsChecker::Execute(uint year)
+bool HydroInputsChecker::Execute(uint year)
 {
     prepareInflows_.Run(year);
     minGenerationScaling_.Run(year);
-
     if (!checksOnGenerationPowerBounds(year))
     {
-	throw FatalError("hydro inputs checks: invalid minimum generation");
+        errorCollector_.FatalErrorHit();
+        logs.error() << "hydro inputs checks: invalid minimum generation";
     }
     if (parameters_.useCustomScenario)
     {
-        CheckFinalReservoirLevelsConfiguration(areas_, parameters_, scenarioInitialHydroLevels_, scenarioFinalHydroLevels_, year);
+        CheckFinalReservoirLevelsConfiguration(year);
     }
+    return !errorCollector_.ErrorsLimitReached();
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year) const
@@ -123,6 +124,7 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
         }
         if (totalWeekMingen > totalWeekInflows)
         {
+            errorCollector_.IncreaseCounterForArea(&area);
             logs.error() << "In Area " << area.name << " the minimum generation of "
                          << totalWeekMingen << " MW in week " << week + 1 << " of TS-"
                          << area.hydro.series->mingen.getSeriesIndex(year) + 1
@@ -138,6 +140,7 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
     const auto& data = area.hydro.managementData.at(year);
     if (data.totalYearMingen > data.totalYearInflows)
     {
+        errorCollector_.IncreaseCounterForArea(&area);
         // Yearly minimum generation <= Yearly inflows
         logs.error() << "In Area " << area.name << " the minimum generation of "
                      << data.totalYearMingen << " MW of TS-"
@@ -148,7 +151,7 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
     return true;
 }
 
-bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
+void HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
 {
     const auto& data = area.hydro.managementData.at(year);
     for (uint month = 0; month != 12; ++month)
@@ -157,6 +160,7 @@ bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& 
         // Monthly minimum generation <= Monthly inflows for each month
         if (data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth])
         {
+            errorCollector_.IncreaseCounterForArea(&area);
             logs.error() << "In Area " << area.name << " the minimum generation of "
                          << data.totalMonthMingen[realmonth] << " MW in month " << month + 1
                          << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
@@ -188,6 +192,7 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year) const
 
               if (max < min)
               {
+                  errorCollector_.IncreaseCounterForArea(&area);
                   logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
                                << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
                                << " is incompatible with the maximum generation of " << max
@@ -201,4 +206,44 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year) const
 
     return ret;
 }
+
+void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
+{
+    if (!parameters.yearsFilter.at(year))
+    {
+        return;
+    }
+
+    areas.each(
+      [&areas_, &parameters_, &scenarioInitialHydroLevels_, &scenarioFinalHydroLevels_, year](
+        Data::Area& area)
+      {
+          double initialLevel = scenarioInitialHydroLevels.entry[area.index][year];
+          double finalLevel = scenarioFinalHydroLevels.entry[area.index][year];
+
+          Data::FinalLevelValidator validator(area.hydro,
+                                              area.index,
+                                              area.name,
+                                              initialLevel,
+                                              finalLevel,
+                                              year,
+                                              parameters.simulationDays.end,
+                                              parameters.firstMonthInYear);
+          if (!validator.check())
+          {
+              errorCollector_.FatalErrorHit();
+              logs.error() << "hydro final level : infeasibility";
+          }
+          if (validator.finalLevelFineForUse())
+          {
+              area.hydro.deltaBetweenFinalAndInitialLevels[year] = finalLevel - initialLevel;
+          }
+      });
+} // End function CheckFinalReservoirLevelsConfiguration
+
+bool HydroInputsChecker::StopExecution() const
+{
+    return errorCollector_.StopExecution();
+}
+
 } // namespace Antares

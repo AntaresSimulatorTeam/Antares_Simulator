@@ -21,9 +21,9 @@
 #pragma once
 #include <antares/study/area/area.h>
 #include "antares/date/date.h"
+#include "antares/solver/hydro/management/HydroErrorsCollector.h"
 #include "antares/solver/hydro/management/MinGenerationScaling.h"
 #include "antares/solver/hydro/management/PrepareInflows.h"
-#include "antares/solver/simulation/hydro-final-reservoir-level-functions.h"
 #include "antares/study/study.h"
 namespace Antares
 {
@@ -32,7 +32,8 @@ class HydroInputsChecker
 {
 public:
     explicit HydroInputsChecker(Antares::Data::Study& study);
-    void Execute(uint year);
+    bool Execute(uint year);
+    bool StopExecution() const;
 
 private:
     Data::AreaList& areas_;
@@ -45,6 +46,7 @@ private:
     MinGenerationScaling minGenerationScaling_;
     const Data::TimeSeries::TS& scenarioInitialHydroLevels_;
     const Data::TimeSeries::TS& scenarioFinalHydroLevels_;
+    HydroErrorsCollector errorCollector_;
 
     //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
     bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
@@ -58,6 +60,8 @@ private:
     bool checksOnGenerationPowerBounds(uint year) const;
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year) const;
+
+    void CheckFinalReservoirLevelsConfiguration(uint year);
 };
 
 } // namespace Antares
