@@ -69,9 +69,9 @@ private:
     unsigned int firstMonthOfSimulation_ = 0;
 
     // Data from area
-    PartHydro& hydro_;
+    Antares::Data::PartHydro& hydro_;
     unsigned int areaIndex_;
-    const AreaName areaName_;
+    const Antares::Data::AreaName areaName_;
     double initialLevel_;
     double finalLevel_;
 
