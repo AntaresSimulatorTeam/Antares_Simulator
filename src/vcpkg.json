@@ -1,0 +1,32 @@
+{
+  "name": "antares-simulator",
+  "version-string": "8.6.8",
+  "builtin-baseline": "9484a57dd560b89f0a583be08af6753611c57fd5",
+  "vcpkg-configuration": {
+    "overlay-triplets": [
+      "./triplets"
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "wxwidgets",
+      "platform": "windows"
+    },
+    {
+      "name": "boost-test",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "boost-algorithm",
+      "version>=": "1.81.0"
+    },
+    {
+      "name": "minizip-ng",
+      "default-features": false,
+      "version>=": "4.0.0",
+      "features": [
+        "zlib"
+      ]
+    }
+  ]
+}
