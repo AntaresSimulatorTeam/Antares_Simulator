@@ -113,7 +113,7 @@ protected:
                                                                               rawdata.daily);
                 break;
             case Category::weekly:
-                InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report,
+                InternalExportValues<Category::weekly, WEEKS_PER_YEAR, VCardT>(report,
                                                                                 rawdata.weekly);
                 break;
             case Category::monthly:

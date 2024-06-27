@@ -321,7 +321,7 @@ public:
                                                                   : 0.;
             }
 
-            for (uint w = 0; w != maxWeeksInAYear; ++w)
+            for (uint w = 0; w != WEEKS_PER_YEAR; ++w)
             {
                 pValuesForYearLocalReport[numSpace][i].week[w] = (pValuesForTheCurrentYear[numSpace]
                                                                                           [i]

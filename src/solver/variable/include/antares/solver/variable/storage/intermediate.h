@@ -135,7 +135,7 @@ public:
     //! Values for each month
     Type month[MONTHS_PER_YEAR];
     //! Values for each week
-    Type week[maxWeeksInAYear];
+    Type week[WEEKS_PER_YEAR];
     //! Values for each day in the year
     Type day[maxDaysInAYear];
     //! Values for each hour in the year

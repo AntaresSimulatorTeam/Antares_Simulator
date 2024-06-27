@@ -53,7 +53,9 @@
 const unsigned int HOURS_PER_DAY = 24;
 const unsigned int DAYS_PER_YEAR = 365;
 const unsigned int HOURS_PER_YEAR = 8760;
+
 const unsigned int MONTHS_PER_YEAR = 12;
+const unsigned int WEEKS_PER_YEAR = 12;
 
 namespace Antares::Constants
 {

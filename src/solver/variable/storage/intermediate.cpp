@@ -38,7 +38,7 @@ IntermediateValues::IntermediateValues():
     Antares::Memory::Allocate<Type>(hour, maxHoursInAYear);
     Antares::Memory::Zero(maxHoursInAYear, hour);
     (void)::memset(month, 0, sizeof(Type) * MONTHS_PER_YEAR);
-    (void)::memset(week, 0, sizeof(Type) * maxWeeksInAYear);
+    (void)::memset(week, 0, sizeof(Type) * WEEKS_PER_YEAR);
     (void)::memset(day, 0, sizeof(Type) * maxDaysInAYear);
 }
 
@@ -98,7 +98,7 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
     }
 
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
         week[i] = 0.;
     }
@@ -154,7 +154,7 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     }
 
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
         week[i] = 0.;
     }
@@ -232,7 +232,7 @@ void IntermediateValues::computeDailyAveragesForCurrentYear()
 void IntermediateValues::computeWeeklyAveragesForCurrentYear()
 {
     // Re-initialization (a previous MC year could have left non-nil values)
-    for (int w = 0; w != maxWeeksInAYear; ++w)
+    for (int w = 0; w != WEEKS_PER_YEAR; ++w)
     {
         week[w] = 0.;
     }
@@ -324,7 +324,7 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
     }
 
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
         week[i] = 0.;
     }

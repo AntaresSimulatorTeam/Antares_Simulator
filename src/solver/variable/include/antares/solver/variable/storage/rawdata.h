@@ -57,7 +57,7 @@ public:
 
 public:
     double monthly[MONTHS_PER_YEAR];
-    double weekly[maxWeeksInAYear];
+    double weekly[WEEKS_PER_YEAR];
     double daily[maxDaysInAYear];
     Antares::Memory::Stored<double>::Type hourly;
     double* year;

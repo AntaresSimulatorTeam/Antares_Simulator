@@ -89,7 +89,7 @@ protected:
     {
         // Reset
         (void)::memset(stdDeviationMonthly, 0, sizeof(double) * MONTHS_PER_YEAR);
-        (void)::memset(stdDeviationWeekly, 0, sizeof(double) * maxWeeksInAYear);
+        (void)::memset(stdDeviationWeekly, 0, sizeof(double) * WEEKS_PER_YEAR);
         (void)::memset(stdDeviationDaily, 0, sizeof(double) * maxDaysInAYear);
         Antares::Memory::Zero(maxHoursInAYear, stdDeviationHourly);
         stdDeviationYear = 0.;
@@ -114,7 +114,7 @@ protected:
             stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
         }
         // StdDeviation value for each week throughout all years
-        for (i = 0; i != maxWeeksInAYear; ++i)
+        for (i = 0; i != WEEKS_PER_YEAR; ++i)
         {
             stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
         }
@@ -153,7 +153,7 @@ protected:
                                                                                  stdDeviationDaily);
                 break;
             case Category::weekly:
-                InternalExportValues<S, maxWeeksInAYear, VCardT, Category::weekly>(
+                InternalExportValues<S, WEEKS_PER_YEAR, VCardT, Category::weekly>(
                   report,
                   results,
                   stdDeviationWeekly);
@@ -195,7 +195,7 @@ protected:
 
 public:
     double stdDeviationMonthly[MONTHS_PER_YEAR];
-    double stdDeviationWeekly[maxWeeksInAYear];
+    double stdDeviationWeekly[WEEKS_PER_YEAR];
     double stdDeviationDaily[maxDaysInAYear];
     Antares::Memory::Stored<double>::Type stdDeviationHourly;
     double stdDeviationYear;

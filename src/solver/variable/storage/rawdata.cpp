@@ -52,7 +52,7 @@ void RawData::reset()
     // Reset
     Antares::Memory::Zero(maxHoursInAYear, hourly);
     (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
-    (void)::memset(weekly, 0, sizeof(double) * maxWeeksInAYear);
+    (void)::memset(weekly, 0, sizeof(double) * WEEKS_PER_YEAR);
     (void)::memset(daily, 0, sizeof(double) * maxDaysInAYear);
     (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
 }
@@ -71,7 +71,7 @@ void RawData::merge(unsigned int y, const IntermediateValues& rhs)
         daily[i] += rhs.day[i];
     }
     // StdDeviation value for each week throughout all years
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
         weekly[i] += rhs.week[i];
     }
