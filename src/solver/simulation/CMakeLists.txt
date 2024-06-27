@@ -22,35 +22,36 @@ set(SRC_SIMULATION
         apply-scenario.cpp
 
 
-        # Solver
-        include/antares/solver/simulation/solver_utils.h
-        solver_utils.cpp
-        include/antares/solver/simulation/solver.h
-        include/antares/solver/simulation/solver.hxx
-        include/antares/solver/simulation/solver.data.h
-        solver.data.cpp
-        include/antares/solver/simulation/common-eco-adq.h
-        common-eco-adq.cpp
-        common-hydro-remix.cpp
-        common-hydro-levels.cpp
-        include/antares/solver/simulation/adequacy.h
-        adequacy.cpp
-        include/antares/solver/simulation/economy.h
-        economy.cpp
-        include/antares/solver/simulation/base_post_process.h
-        base_post_process.cpp
-        include/antares/solver/simulation/opt_time_writer.h
-        opt_time_writer.cpp
-        include/antares/solver/simulation/adequacy_patch_runtime_data.h
-        adequacy_patch_runtime_data.cpp
-        include/antares/solver/simulation/ITimeSeriesNumbersWriter.h
-        TimeSeriesNumbersWriter.cpp
-        include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
-
-        economy_mode.cpp
-        adequacy_mode.cpp
-        include/antares/solver/simulation/economy_mode.h
-        include/antares/solver/simulation/adequacy_mode.h
+		# Solver
+		include/antares/solver/simulation/solver_utils.h
+		solver_utils.cpp
+		include/antares/solver/simulation/solver.h
+		include/antares/solver/simulation/solver.hxx
+		include/antares/solver/simulation/solver.data.h
+		solver.data.cpp
+		include/antares/solver/simulation/common-eco-adq.h
+		common-eco-adq.cpp
+		common-hydro-remix.cpp
+		common-hydro-levels.cpp
+		include/antares/solver/simulation/adequacy.h
+		adequacy.cpp
+		include/antares/solver/simulation/economy.h
+		economy.cpp
+		include/antares/solver/simulation/base_post_process.h
+		base_post_process.cpp
+		include/antares/solver/simulation/opt_time_writer.h
+		opt_time_writer.cpp
+		include/antares/solver/simulation/adequacy_patch_runtime_data.h
+		adequacy_patch_runtime_data.cpp
+		include/antares/solver/simulation/ITimeSeriesNumbersWriter.h
+		include/antares/solver/simulation/hydro-final-reservoir-level-functions.h
+		hydro-final-reservoir-level-functions.cpp
+		TimeSeriesNumbersWriter.cpp
+		include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
+		economy_mode.cpp
+		adequacy_mode.cpp
+		include/antares/solver/simulation/economy_mode.h
+		include/antares/solver/simulation/adequacy_mode.h
 )
 source_group("simulation" FILES ${SRC_SIMULATION})
 

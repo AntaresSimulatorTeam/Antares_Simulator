@@ -135,14 +135,6 @@ void interpolateWaterValue(const Data::AreaList& areas,
 void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
 /*
-** \brief Updating the year final reservoir level, to be used as a start for the year.
-**
-** \param areas : the areas of study
-** \param problem The weekly problem, living over the whole simuation.
-*/
-void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
-
-/*
 ** \brief Compute the weighted average NTC for a link
 **
 ** \param areas : the areas of study

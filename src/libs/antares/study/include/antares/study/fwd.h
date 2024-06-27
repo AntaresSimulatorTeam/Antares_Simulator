@@ -361,6 +361,8 @@ enum SeedIndex
     seedHydroCosts,
     //! Seed - Hydro management
     seedHydroManagement,
+    //! The seed for links
+    seedTsGenLinks,
     //! The number of seeds
     seedMax,
 };
@@ -381,24 +383,6 @@ const char* SeedToCString(SeedIndex seed);
 ** Mainly used for saving / loading into generaldata.ini
 */
 const char* SeedToID(SeedIndex seed);
-
-// ... Initial reservoir levels ...
-enum InitialReservoirLevels
-{
-    irlColdStart = 0,
-    irlHotStart,
-    irlUnknown,
-};
-
-/*!
-** \brief Convert an Initial Reservoir Levels strategy into a text
-*/
-const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels);
-
-/*!
-** \brief Convert a text into an Initial Reservoir Levels strategy
-*/
-InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text);
 
 // ... Hydro heuristic policy ...
 enum HydroHeuristicPolicy

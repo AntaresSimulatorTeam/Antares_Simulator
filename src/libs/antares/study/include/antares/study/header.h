@@ -55,7 +55,6 @@ public:
     */
     static bool readVersionFromFile(const std::filesystem::path& filename, std::string& version);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -109,7 +108,8 @@ public:
      */
     static StudyVersion tryToFindTheVersion(const std::string& folder);
 
-public:
+    bool validateVersion();
+
     //! Caption of the study
     Yuni::String caption;
 

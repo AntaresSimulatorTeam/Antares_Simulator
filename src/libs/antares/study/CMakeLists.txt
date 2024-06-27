@@ -122,6 +122,8 @@ set(SRC_STUDY_PART_HYDRO
         include/antares/study/parts/hydro/allocation.h
         include/antares/study/parts/hydro/allocation.hxx
         parts/hydro/allocation.cpp
+        include/antares/study/parts/hydro/finalLevelValidator.h
+        parts/hydro/finalLevelValidator.cpp
         include/antares/study/parts/hydro/hydromaxtimeseriesreader.h
         parts/hydro/hydromaxtimeseriesreader.cpp
 )

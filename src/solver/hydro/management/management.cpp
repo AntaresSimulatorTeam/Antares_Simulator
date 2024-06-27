@@ -117,12 +117,10 @@ double BetaVariable(double a, double b, MersenneTwister& random)
 HydroManagement::HydroManagement(const Data::AreaList& areas,
                                  const Data::Parameters& params,
                                  const Date::Calendar& calendar,
-                                 unsigned int maxNbYearsInParallel,
                                  Solver::IResultWriter& resultWriter):
     areas_(areas),
     calendar_(calendar),
     parameters_(params),
-    maxNbYearsInParallel_(maxNbYearsInParallel),
     resultWriter_(resultWriter)
 {
     // Ventilation results memory allocation
@@ -145,7 +143,7 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
 void HydroManagement::prepareInflowsScaling(uint year)
 {
     areas_.each(
-      [&](const Data::Area& area)
+      [this, &year](const Data::Area& area)
       {
           const auto& srcinflows = area.hydro.series->storage.getColumn(year);
 
@@ -385,8 +383,25 @@ bool HydroManagement::checkMinGeneration(uint year) const
     return ret;
 }
 
-void HydroManagement::prepareNetDemand(uint year,
-                                       Data::SimulationMode mode,
+void HydroManagement::changeInflowsToAccommodateFinalLevels(uint year)
+{
+    areas_.each([this, &year](Data::Area& area) 
+    {
+        auto& data = tmpDataByArea_[&area];
+
+        if (!area.hydro.deltaBetweenFinalAndInitialLevels[year].has_value())
+            return;
+
+        // Must be done before prepareMonthlyTargetGenerations
+        double delta = area.hydro.deltaBetweenFinalAndInitialLevels[year].value();
+        if (delta < 0)
+            data.inflows[0] -= delta;
+        else if (delta > 0)
+            data.inflows[11] -= delta;
+    });
+}
+
+void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
                                        const Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each(
@@ -442,7 +457,7 @@ void HydroManagement::prepareNetDemand(uint year,
 void HydroManagement::prepareEffectiveDemand()
 {
     areas_.each(
-      [&](Data::Area& area)
+      [this](Data::Area& area)
       {
           auto& data = tmpDataByArea_[&area];
 
@@ -455,7 +470,7 @@ void HydroManagement::prepareEffectiveDemand()
               double effectiveDemand = 0;
               // area.hydro.allocation is indexed by area index
               area.hydro.allocation.eachNonNull(
-                [&](unsigned areaIndex, double value)
+                [this, &effectiveDemand, &day](unsigned areaIndex, double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
                     effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
@@ -529,6 +544,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
         throw FatalError("hydro management: invalid minimum generation");
     }
 
+    changeInflowsToAccommodateFinalLevels(y);
     prepareNetDemand(y, parameters_.mode, scratchmap);
     prepareEffectiveDemand();
 

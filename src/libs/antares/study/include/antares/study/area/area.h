@@ -689,7 +689,7 @@ public:
 
 public:
     //! All areas by their index
-    Area** byIndex;
+    Area** byIndex = nullptr;
     //! All areas in the list
     Area::Map areas;
 
@@ -727,7 +727,8 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning = true);
 bool AreaLinksLoadFromFolder(Study& s,
                              AreaList* l,
                              Area* area,
-                             const std::filesystem::path& folder);
+                             const std::filesystem::path& folder,
+                             bool loadTSGen);
 
 /*!
 ** \brief Save interconnections of a given area into a folder (`input/areas/[area]/ntc`)
