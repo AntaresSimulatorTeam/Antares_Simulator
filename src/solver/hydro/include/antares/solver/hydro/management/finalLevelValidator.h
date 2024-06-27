@@ -40,7 +40,7 @@ namespace Solver
 class FinalLevelValidator
 {
 public:
-    FinalLevelValidator(PartHydro& hydro,
+    FinalLevelValidator(Antares::Data::PartHydro& hydro,
                         unsigned int areaIndex,
                         const AreaName areaName,
                         double initialLevel,
