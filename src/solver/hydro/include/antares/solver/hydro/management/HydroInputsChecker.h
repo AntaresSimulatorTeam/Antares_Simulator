@@ -34,6 +34,7 @@ public:
     explicit HydroInputsChecker(Antares::Data::Study& study);
     bool Execute(uint year);
     bool StopExecution() const;
+    void CheckFinalReservoirLevelsConfiguration(uint year);
 
 private:
     Data::AreaList& areas_;
@@ -60,8 +61,6 @@ private:
     bool checksOnGenerationPowerBounds(uint year);
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year);
-
-    void CheckFinalReservoirLevelsConfiguration(uint year);
 };
 
 } // namespace Antares

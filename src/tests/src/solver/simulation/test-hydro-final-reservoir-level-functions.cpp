@@ -8,7 +8,7 @@
 
 #include <antares/study/study.h>
 
-#include "include/antares/solver/hydro/management/hydro-final-reservoir-level-functions.h"
+#include "include/antares/solver/hydro/management/HydroInputsChecker.h"
 #include "include/antares/study/parts/hydro/finalLevelValidator.h"
 
 using namespace Antares::Solver;
@@ -258,13 +258,11 @@ BOOST_AUTO_TEST_CASE(final_level_unreachable_because_of_too_few_inflows___check_
 
 BOOST_AUTO_TEST_CASE(check_all_areas_final_levels_when_config_is_ok___all_checks_succeed)
 {
-    for (uint year : {0, 1})
+    HydroInputsChecker hydro_input_checker(study);
+
+    for (uint year: {0, 1})
     {
-        CheckFinalReservoirLevelsConfiguration(study->areas,
-                                               study->parameters,
-                                               study->scenarioInitialHydroLevels,
-                                               study->scenarioFinalHydroLevels,
-                                               year);
+        hydro_input_checker.CheckFinalReservoirLevelsConfiguration(year);
     }
     // CheckFinalReservoirLevelsConfiguration(*study, 0);
     // CheckFinalReservoirLevelsConfiguration(*study, 1);
