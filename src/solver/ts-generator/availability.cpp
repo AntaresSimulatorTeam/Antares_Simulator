@@ -612,6 +612,7 @@ void writeTStoDisk(const Matrix<>& series,
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
+                               MersenneTwister& thermalRandom,
                                const fs::path& savePath)
 {
     logs.info();
@@ -619,7 +620,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 
     auto generator = AvailabilityTSgenerator(study.parameters.derated,
                                              study.parameters.nbTimeSeriesThermal,
-                                             study.runtime->random[Data::seedTsGenThermal]);
+                                             thermalRandom);
 
     for (auto* cluster: clusters)
     {

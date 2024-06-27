@@ -109,6 +109,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
+                               MersenneTwister& thermalRandom,
                                const fs::path& savePath);
 
 bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,

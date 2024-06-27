@@ -87,7 +87,6 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    study->initializeRuntimeInfos();
     // Forces the writing of generated TS into the study's output sub-folder
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
 
@@ -111,9 +110,12 @@ int main(int argc, char* argv[])
     linksTSgenerator.extractData();
 
     // ============ TS Generation =============================================
+    MersenneTwister thermalRandom;
+    thermalRandom.reset(study->parameters.seed[Data::seedTsGenThermal]);
 
     bool ret = TSGenerator::generateThermalTimeSeries(*study,
                                                       clusters,
+                                                      thermalRandom,
                                                       thermalSavePath);
 
     ret = linksTSgenerator.generate() && ret;
