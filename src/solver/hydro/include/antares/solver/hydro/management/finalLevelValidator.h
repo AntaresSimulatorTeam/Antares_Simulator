@@ -47,7 +47,8 @@ public:
                         double finalLevel,
                         const unsigned int year,
                         const unsigned int lastSimulationDay,
-                        const unsigned int firstMonthOfSimulation);
+                        const unsigned int firstMonthOfSimulation,
+                        HydroErrorsCollector& errorCollector);
     bool check();
     bool finalLevelFineForUse();
 
