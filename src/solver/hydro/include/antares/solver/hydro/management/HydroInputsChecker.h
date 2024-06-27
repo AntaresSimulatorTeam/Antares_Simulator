@@ -40,9 +40,6 @@ private:
     Data::AreaList& areas_;
     const Data::Parameters& parameters_;
     const Date::Calendar& calendar_;
-    Data::SimulationMode simulationMode_;
-    const uint firstYear_;
-    const uint endYear_;
     PrepareInflows prepareInflows_;
     MinGenerationScaling minGenerationScaling_;
     const Data::TimeSeries::TS& scenarioInitialHydroLevels_;
