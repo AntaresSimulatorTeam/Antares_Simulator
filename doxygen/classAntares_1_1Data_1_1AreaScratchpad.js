@@ -6,7 +6,7 @@ var classAntares_1_1Data_1_1AreaScratchpad =
     [ "dispatchableGenerationMargin", "classAntares_1_1Data_1_1AreaScratchpad.html#a9a4f624353f5a1be356bd79f7d3e2217", null ],
     [ "meanMaxDailyGenPower", "classAntares_1_1Data_1_1AreaScratchpad.html#a3493372f98b26a63a338ac63abc687f6", null ],
     [ "miscGenSum", "classAntares_1_1Data_1_1AreaScratchpad.html#aecd2caf1f234513c80f70acf18f1610b", null ],
-    [ "mustrunSum", "classAntares_1_1Data_1_1AreaScratchpad.html#a77d05c2e79e9b972605b7ff2aa4731f1", null ],
-    [ "originalMustrunSum", "classAntares_1_1Data_1_1AreaScratchpad.html#a9e8319ba3949322a1fa855f8454404d8", null ],
+    [ "mustrunSum", "classAntares_1_1Data_1_1AreaScratchpad.html#a9a1c581307a9389b2efe7d7c284c1e44", null ],
+    [ "originalMustrunSum", "classAntares_1_1Data_1_1AreaScratchpad.html#a89fa1f235e52e853d02c4da11a1b6bfc", null ],
     [ "pumpHasMod", "classAntares_1_1Data_1_1AreaScratchpad.html#a18731e3bfc38f7f8bd77228bc1296703", null ]
 ];
