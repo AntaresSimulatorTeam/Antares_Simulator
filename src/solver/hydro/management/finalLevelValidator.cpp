@@ -30,15 +30,16 @@
 namespace Antares::Solver
 {
 
-FinalLevelValidator::FinalLevelValidator(Antares::Data::PartHydro& hydro,
-                                         unsigned int areaIndex,
-                                         const AreaName areaName, // gp : to std::string
-                                         double initialLevel,
-                                         double finalLevel,
-                                         const unsigned int year,
-                                         const unsigned int lastSimulationDay,
-                                         const unsigned int firstMonthOfSimulation,
-                                         HydroErrorsCollector& errorCollector):
+FinalLevelValidator::FinalLevelValidator(
+  Antares::Data::PartHydro& hydro,
+  unsigned int areaIndex,
+  const Antares::Data::AreaName areaName, // gp : to std::string
+  double initialLevel,
+  double finalLevel,
+  const unsigned int year,
+  const unsigned int lastSimulationDay,
+  const unsigned int firstMonthOfSimulation,
+  HydroErrorsCollector& errorCollector):
     hydro_(hydro),
     areaName_(areaName),
     areaIndex_(areaIndex),

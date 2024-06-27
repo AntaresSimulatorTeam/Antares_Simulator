@@ -42,7 +42,7 @@ class FinalLevelValidator
 public:
     FinalLevelValidator(Antares::Data::PartHydro& hydro,
                         unsigned int areaIndex,
-                        const AreaName areaName,
+                        const Antares::Data::AreaName areaName,
                         double initialLevel,
                         double finalLevel,
                         const unsigned int year,
