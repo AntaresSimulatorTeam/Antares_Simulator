@@ -50,8 +50,16 @@ set(SRC_EXT_SOLVER_H2O2_DAILY
 set(SRC_MANAGEMENT
         include/antares/solver/hydro/management/management.h
         management/management.cpp
+        include/antares/solver/hydro/management/PrepareInflows.h
+        management/PrepareInflows.cpp
         management/monthly.cpp
         management/daily.cpp
+        include/antares/solver/hydro/management/MinGenerationScaling.h
+        management/MinGenerationScaling.cpp
+        include/antares/solver/hydro/management/HydroInputsChecker.h
+        management/HydroInputsChecker.cpp
+        include/antares/solver/hydro/management/hydro-final-reservoir-level-functions.h
+        management/hydro-final-reservoir-level-functions.cpp
 )
 
 
@@ -73,6 +81,7 @@ target_link_libraries(antares-solver-hydro
         sirius_solver
         Antares::date
         Antares::result_writer
+
 )
 
 target_include_directories(antares-solver-hydro

@@ -19,8 +19,9 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #define WIN32_LEAN_AND_MEAN
-#include "in-memory-study.h"
 
+#include "antares/application/ScenarioBuilderOwner.h"
+#include "in-memory-study.h"
 
 void initializeStudy(Study* study)
 {
@@ -193,6 +194,8 @@ void SimulationHandler::create()
                                                          durationCollector_,
                                                          resultWriter_,
                                                          observer_);
+    Antares::Solver::ScenarioBuilderOwner(study_).callScenarioBuilder();
+
     SIM_AllocationTableaux(study_);
 }
 

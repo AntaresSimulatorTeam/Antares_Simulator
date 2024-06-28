@@ -881,7 +881,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Links
     {
         fs::path folder = fs::path(study.folderInput.c_str()) / "links" / area.id.c_str();
-        ret = AreaLinksLoadFromFolder(study, list, &area, folder, options.linksLoadTSGen) && ret;
+        ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
     // UI
