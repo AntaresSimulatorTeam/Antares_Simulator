@@ -44,8 +44,6 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/adequacy_patch_runtime_data.h
         adequacy_patch_runtime_data.cpp
         include/antares/solver/simulation/ITimeSeriesNumbersWriter.h
-		include/antares/solver/simulation/hydro-final-reservoir-level-functions.h
-		hydro-final-reservoir-level-functions.cpp
         TimeSeriesNumbersWriter.cpp
 		include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
 		include/antares/solver/simulation/ISimulationObserver.h

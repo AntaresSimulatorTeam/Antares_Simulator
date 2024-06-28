@@ -29,6 +29,60 @@
 
 namespace Antares::Data
 {
+
+    //! The maximum number of days in a year
+constexpr size_t dayYearCount = 366;
+
+struct DailyDemand
+{
+    //! Net demand, for each day of the year, for each area
+    double DLN = 0.;
+    //! Daily local effective load
+    double DLE = 0.;
+};
+
+struct MonthlyGenerationTargetData
+{
+    //! Monthly local effective demand
+    double MLE = 0.;
+    //! Monthly optimal generation
+    double MOG = 0.;
+    //! Monthly optimal level
+    double MOL = 0.;
+    //! Monthly target generations
+    double MTG = 0.;
+};
+
+//!  Hydro Management Data for a given area
+struct TimeDependantHydroManagementData
+{
+    std::array<DailyDemand, dayYearCount> daily{0};
+    std::array<MonthlyGenerationTargetData, 12> monthly{0};
+};
+
+//! Area Hydro Management Data for a given year
+struct AreaDependantHydroManagementData
+{
+    //! inflows
+    std::array<double, 12> inflows{};
+    //! monthly minimal generation
+    std::array<double, 12> mingens{};
+
+    //! daily minimal generation
+    std::array<double, dayYearCount> dailyMinGen{};
+
+    // Data for minGen<->inflows preChecks
+    //! monthly total mingen
+    std::array<double, 12> totalMonthMingen{};
+    //! monthly total inflows
+    std::array<double, 12> totalMonthInflows{};
+    //! yearly total mingen
+    double totalYearMingen = 0;
+    //! yearly total inflows
+    double totalYearInflows = 0;
+
+}; // struct AreaDependantHydroManagementData
+
 /*!
 ** \brief Hydro for a single area
 */
@@ -165,6 +219,7 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
+    std::unordered_map<uint, AreaDependantHydroManagementData> managementData;
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
 

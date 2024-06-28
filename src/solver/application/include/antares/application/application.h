@@ -130,5 +130,6 @@ private:
     bool parseCommandLine(Data::StudyLoadOptions& options);
     void handleParserReturn(Yuni::GetOpt::Parser* parser);
     void postParametersChecks() const;
+
 }; // class Application
 } // namespace Antares::Solver

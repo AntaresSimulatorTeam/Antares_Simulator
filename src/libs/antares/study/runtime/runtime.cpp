@@ -175,6 +175,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     limits.month[rangeCount] = limits.month[rangeEnd] - limits.month[rangeBegin] + 1;
     // year
     limits.year[rangeBegin] = 0;
+    /// reminder to get rangeLimits.year[Data::rangeEnd]
     limits.year[rangeEnd] = study.parameters.nbYears - 1;
     limits.year[rangeCount] = study.parameters.effectiveNbYears;
 

@@ -6,9 +6,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/unit_test.hpp>
 
-#include "include/antares/solver/simulation/hydro-final-reservoir-level-functions.h"
-#include "include/antares/study/parts/hydro/finalLevelValidator.h"
 #include <antares/study/study.h>
+
+#include "include/antares/solver/hydro/management/hydro-final-reservoir-level-functions.h"
+#include "include/antares/study/parts/hydro/finalLevelValidator.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
@@ -257,7 +258,16 @@ BOOST_AUTO_TEST_CASE(final_level_unreachable_because_of_too_few_inflows___check_
 
 BOOST_AUTO_TEST_CASE(check_all_areas_final_levels_when_config_is_ok___all_checks_succeed)
 {
-    CheckFinalReservoirLevelsConfiguration(*study);
+    for (uint year : {0, 1})
+    {
+        CheckFinalReservoirLevelsConfiguration(study->areas,
+                                               study->parameters,
+                                               study->scenarioInitialHydroLevels,
+                                               study->scenarioFinalHydroLevels,
+                                               year);
+    }
+    // CheckFinalReservoirLevelsConfiguration(*study, 0);
+    // CheckFinalReservoirLevelsConfiguration(*study, 1);
 
     // Checks on Area 1 modifier
     BOOST_CHECK_EQUAL(area_1->hydro.deltaBetweenFinalAndInitialLevels[0].has_value(), true);

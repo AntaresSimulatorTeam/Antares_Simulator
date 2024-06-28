@@ -11,6 +11,7 @@ target_link_libraries(in-memory-study
         PUBLIC
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
         antares-solver-simulation
+        Antares::application
         PRIVATE
         Antares::infoCollection
 )
