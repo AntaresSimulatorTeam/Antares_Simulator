@@ -41,7 +41,7 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 {
 }
 
-HydroInputsChecker::Execute(uint year)
+void HydroInputsChecker::Execute(uint year)
 {
     prepareInflows_.Run(year);
     minGenerationScaling_.Run(year);
