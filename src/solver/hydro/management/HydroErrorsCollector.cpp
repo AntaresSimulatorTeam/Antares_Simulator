@@ -8,30 +8,21 @@ namespace Antares
 {
 void HydroErrorsCollector::Collect(const std::string& area_name, const std::string& message)
 {
+    logs.error() << "In Area " << area_name << " " << message;
+    area_errors_counter_[area_name]++;
+    errors_limit_reached_ = area_errors_counter_[area] > 10;
+    stop_ = true;
+
     if (errors_limit_reached_)
     {
         throw FatalError("Hydro validation has failed !")
-    }
-    else
-    {
-        logs.error() << "In Area " << area_name << " " << message;
-        area_errors_counter_[area_name]++;
-        errors_limit_reached_ = area_errors_counter_[area] > 10;
-        stop_ = true;
     }
 }
 
 void HydroErrorsCollector::Collect(const std::string& message)
 {
-    if (errors_limit_reached_)
-    {
-        throw FatalError("Hydro validation has failed !")
-    }
-    else
-    {
-        logs.error() << message;
-        stop_ = true;
-    }
+    logs.error() << message;
+    stop_ = true;
 }
 
 void HydroErrorsCollector::CheckForFatalErrors() const
