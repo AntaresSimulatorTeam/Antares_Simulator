@@ -174,8 +174,6 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees.resize(nombreDeVariables);
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.resize(nombreDeVariables);
     ProblemeAResoudre->PositionDeLaVariable.resize(nombreDeVariables);
-    ProblemeAResoudre->Pi.resize(nombreDeVariables);
-    ProblemeAResoudre->Colonne.resize(nombreDeVariables);
     ProblemeAResoudre->NomDesVariables.resize(nombreDeVariables);
     ProblemeAResoudre->VariablesEntieres.resize(nombreDeVariables);
 
