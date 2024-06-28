@@ -37,9 +37,10 @@ public:
     explicit AdequacyPatchOptimization(const Antares::Data::Study& study,
                                        const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
-                                       Antares::Data::AdequacyPatch::AdqPatchParams&,
+                                       Data::AdequacyPatch::AdqPatchParams&,
                                        uint numSpace,
-                                       IResultWriter& writer);
+                                       IResultWriter& writer,
+                                       Simulation::ISimulationObserver& observer);
 
     ~AdequacyPatchOptimization() override = default;
     void solve() override;

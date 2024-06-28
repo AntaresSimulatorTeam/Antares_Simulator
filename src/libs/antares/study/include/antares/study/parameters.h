@@ -76,8 +76,7 @@ public:
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
     bool loadFromFile(const AnyString& filename,
-                      const StudyVersion& version,
-                      const StudyLoadOptions& options);
+                      const StudyVersion& version);
 
     /*!
     ** \brief Prepare all settings for a simulation

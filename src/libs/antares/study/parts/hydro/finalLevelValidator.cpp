@@ -37,15 +37,15 @@ FinalLevelValidator::FinalLevelValidator(PartHydro& hydro,
                                          double finalLevel,
                                          const unsigned int year,
                                          const unsigned int lastSimulationDay,
-                                         const unsigned int firstMonthOfSimulation)
-    : hydro_(hydro),
-    areaName_(areaName),
-    areaIndex_(areaIndex),
-    initialLevel_(initialLevel),
-    finalLevel_(finalLevel),
+                                         const unsigned int firstMonthOfSimulation) :
     year_(year),
     lastSimulationDay_(lastSimulationDay),
-    firstMonthOfSimulation_(firstMonthOfSimulation)
+    firstMonthOfSimulation_(firstMonthOfSimulation),
+    hydro_(hydro),
+    areaIndex_(areaIndex),
+    areaName_(areaName),
+    initialLevel_(initialLevel),
+    finalLevel_(finalLevel)
 {
 }
 
@@ -96,7 +96,7 @@ bool FinalLevelValidator::checkForInfeasibility()
 
 bool FinalLevelValidator::hydroAllocationStartMatchesSimulation() const
 {
-    int initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
+    unsigned initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
     if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == firstMonthOfSimulation_)
         return true;
 

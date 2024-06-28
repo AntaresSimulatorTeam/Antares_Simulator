@@ -12,19 +12,18 @@ add_executable(tests-simple-study
 
 target_link_libraries(tests-simple-study
         PRIVATE
-        test_utils
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation
         antares-solver-ts-generator
         model_antares
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+        Antares::tests::in-memory-study
 )
 
 target_include_directories(tests-simple-study
         PRIVATE
         ${CMAKE_SOURCE_DIR}/solver
-        ${CMAKE_CURRENT_SOURCE_DIR}/../utils
 )
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)

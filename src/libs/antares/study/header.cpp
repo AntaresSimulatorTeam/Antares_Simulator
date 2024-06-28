@@ -166,18 +166,8 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
         }
     }
 
-    if (version >= StudyVersion(7, 0))
+    if (version.isSupported(true))
     {
-        if (version > Data::StudyVersion::latest())
-        {
-            if (warnings)
-            {
-                logs.error() << "Header: This version is not supported (version found:"
-                             << version.toString()
-                             << ", expected: <=" << Data::StudyVersion::latest().toString() << ')';
-            }
-            return false;
-        }
         return true;
     }
 
@@ -185,6 +175,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
     {
         logs.error() << "Study header: Invalid format";
     }
+
     return false;
 }
 

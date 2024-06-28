@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/solver/simulation/adequacy.h"
 
@@ -29,10 +29,10 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Adequacy::Adequacy(Data::Study& study, IResultWriter& resultWriter):
-    study(study),
-    preproOnly(false),
-    resultWriter(resultWriter)
+Adequacy::Adequacy(Data::Study& study,
+                   IResultWriter& resultWriter,
+                   Simulation::ISimulationObserver& simulationObserver) :
+ study(study), resultWriter(resultWriter), simulationObserver_(simulationObserver)
 {
 }
 
@@ -207,7 +207,8 @@ bool Adequacy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                              &currentProblem,
                                              study.parameters.adqPatchParams,
-                                             resultWriter);
+                                             resultWriter,
+                                             simulationObserver_.get());
 
                 computingHydroLevels(study.areas, currentProblem, false);
 
@@ -367,7 +368,7 @@ bool Adequacy::year(Progression::Task& progression,
     return true;
 }
 
-void Adequacy::incrementProgression(Progression::Task& progression)
+void Adequacy::incrementProgression(Progression::Task& progression) const
 {
     for (uint w = 0; w < pNbWeeks; ++w)
     {
@@ -402,7 +403,33 @@ void Adequacy::simulationEnd()
 
 void Adequacy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, scratchmap, year);
-}
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto &area = *study.areas[i];
+        auto &scratchpad = scratchmap.at(&area);
 
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+        std::ranges::fill(scratchpad.originalMustrunSum, 0);
+
+        auto& mrs = scratchpad.mustrunSum;
+        auto& adq = scratchpad.originalMustrunSum;
+
+        for (const auto &cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto &availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+
+            if (cluster->mustrunOrigin)
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                {
+                    adq[h] += 2 * availableProduction[h]; // Why do we add the available production twice ?
+                }
+            }
+        }
+    }
+}
 } // namespace Antares::Solver::Simulation
