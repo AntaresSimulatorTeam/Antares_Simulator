@@ -60,7 +60,8 @@ public:
             Variable::State& pState,
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
-            IResultWriter& resultWriter):
+            IResultWriter& resultWriter,
+            ISimulationObserver& simulationObserver):
         simulation_(simulation),
         y(pY),
         yearFailed(pYearFailed),
@@ -74,6 +75,7 @@ public:
         yearByYear(pYearByYear),
         pDurationCollector(durationCollector),
         pResultWriter(resultWriter),
+        simulationObserver_(simulationObserver),
         hydroManagement(study.areas,
                         study.parameters,
                         study.calendar,
@@ -100,6 +102,7 @@ private:
     bool yearByYear;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
+    std::reference_wrapper<ISimulationObserver> simulationObserver_;
     HydroManagement hydroManagement;
     Antares::Data::Area::ScratchMap scratchmap;
 
@@ -234,8 +237,9 @@ inline ISimulation<ImplementationType>::ISimulation(
   Data::Study& study,
   const ::Settings& settings,
   Benchmarking::DurationCollector& duration_collector,
-  IResultWriter& resultWriter):
-    ImplementationType(study, resultWriter),
+  IResultWriter& resultWriter,
+  Simulation::ISimulationObserver& simulationObserver):
+    ImplementationType(study, resultWriter, simulationObserver),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
@@ -244,7 +248,8 @@ inline ISimulation<ImplementationType>::ISimulation(
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
-    pResultWriter(resultWriter)
+    pResultWriter(resultWriter),
+    simulationObserver_(simulationObserver)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -298,9 +303,6 @@ void ISimulation<ImplementationType>::run()
     // Preprocessors
     // Determine if we have to use the preprocessors at least one time.
     pData.initialize(study.parameters);
-
-    // Prepro only ?
-    ImplementationType::preproOnly = settings.tsGeneratorsOnly;
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
@@ -1041,7 +1043,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                                                                         state[numSpace],
                                                                         pYearByYear,
                                                                         pDurationCollector,
-                                                                        pResultWriter);
+              pResultWriter,
+              simulationObserver_.get());
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 

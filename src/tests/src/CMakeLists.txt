@@ -1,3 +1,5 @@
+add_subdirectory(api_internal)
+add_subdirectory(api_lib)
 add_subdirectory(utils)
 
 add_subdirectory(libs)
