@@ -226,7 +226,7 @@ void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
         fs::path sourceAreaDir = toLinksDir / sourceAreaName;
         if (! readLinkPreproTimeSeries(link, sourceAreaDir))
         {
-            logs.warning() << "Could not load all prepro data for link '"
+            logs.warning() << "Could not load all prepro/modulation data for link '"
                            << link.namesPair.first << "." << link.namesPair.second << "'";
         }
     }

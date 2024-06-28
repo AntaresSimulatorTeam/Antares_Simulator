@@ -76,44 +76,49 @@ int main(int argc, char* argv[])
     if (! checkOptions(settings))
         return 1;
 
-    // ============ THERMAL : Getting data for generating time-series =========
-    auto study = std::make_shared<Data::Study>(true);
-    Data::StudyLoadOptions studyOptions;
-    if (!study->loadFromFolder(settings.studyFolder, studyOptions))
+    bool return_code {true};
+
+    if (thermalTSrequired(settings))
     {
-        logs.error() << "Invalid study given to the generator";
-        return 1;
+        // === Data for TS generation ===
+        auto study = std::make_shared<Data::Study>(true);
+        Data::StudyLoadOptions studyOptions;
+        if (!study->loadFromFolder(settings.studyFolder, studyOptions))
+        {
+            logs.error() << "Invalid study given to the generator";
+            return 1;
+        }
+
+        std::vector<Data::ThermalCluster*> clusters;
+        if (settings.allThermal)
+        {
+            clusters = getAllClustersToGen(study->areas, true);
+        }
+        else if (!settings.thermalListToGen.empty())
+        {
+            clusters = getClustersToGen(study->areas, settings.thermalListToGen);
+        }
+
+        // === TS generation ===
+        MersenneTwister thermalRandom;
+        thermalRandom.reset(study->parameters.seed[Data::seedTsGenThermal]);
+        return_code = TSGenerator::generateThermalTimeSeries(*study,
+                                                             clusters,
+                                                             thermalRandom);
+
+        // === Writing generated TS on disk ===
+        auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
+        thermalSavePath /= "ts-generator";
+        thermalSavePath /= "thermal";
+        writeThermalTimeSeries(clusters, thermalSavePath);
     }
 
-    std::vector<Data::ThermalCluster*> clusters;
-    if (settings.allThermal)
+    if (linkTSrequired(settings))
     {
-        clusters = getAllClustersToGen(study->areas, true);
+        LinksTSgenerator linksTSgenerator(settings);
+        linksTSgenerator.extractData();
+        return_code = linksTSgenerator.generate() && return_code;
     }
-    else if (!settings.thermalListToGen.empty())
-    {
-        clusters = getClustersToGen(study->areas, settings.thermalListToGen);
-    }
-    // ========================================================================
 
-    LinksTSgenerator linksTSgenerator(settings);
-    linksTSgenerator.extractData();
-
-    // ============ TS Generation =============================================
-    MersenneTwister thermalRandom;
-    thermalRandom.reset(study->parameters.seed[Data::seedTsGenThermal]);
-
-    bool ret = TSGenerator::generateThermalTimeSeries(*study,
-                                                      clusters,
-                                                      thermalRandom);
-
-    auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
-    thermalSavePath /= "ts-generator";
-    thermalSavePath /= "thermal";
-
-    writeThermalTimeSeries(clusters, thermalSavePath);
-
-    ret = linksTSgenerator.generate() && ret;
-
-    return !ret; // return 0 for success
+    return !return_code; // return 0 for success
 }
