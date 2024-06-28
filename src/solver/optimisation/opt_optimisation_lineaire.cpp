@@ -161,7 +161,6 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
     }
 }
 
-
 void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                     unsigned nombreDeVariables,
                     unsigned nombreDeContraintes)
@@ -190,34 +189,6 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->NomDesContraintes.resize(nombreDeContraintes);
 }
 } // namespace
-
-void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                    unsigned nombreDeVariables,
-                    unsigned nombreDeContraintes)
-{
-    ProblemeAResoudre->CoutQuadratique.resize(nombreDeVariables);
-    ProblemeAResoudre->CoutLineaire.resize(nombreDeVariables);
-    ProblemeAResoudre->TypeDeVariable.resize(nombreDeVariables);
-    ProblemeAResoudre->Xmin.resize(nombreDeVariables);
-    ProblemeAResoudre->Xmax.resize(nombreDeVariables);
-    ProblemeAResoudre->X.resize(nombreDeVariables);
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees.resize(nombreDeVariables);
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.resize(nombreDeVariables);
-    ProblemeAResoudre->PositionDeLaVariable.resize(nombreDeVariables);
-    ProblemeAResoudre->Pi.resize(nombreDeVariables);
-    ProblemeAResoudre->Colonne.resize(nombreDeVariables);
-    ProblemeAResoudre->NomDesVariables.resize(nombreDeVariables);
-    ProblemeAResoudre->VariablesEntieres.resize(nombreDeVariables);
-
-    ProblemeAResoudre->Sens.resize(nombreDeContraintes);
-    ProblemeAResoudre->IndicesDebutDeLigne.resize(nombreDeContraintes);
-    ProblemeAResoudre->NombreDeTermesDesLignes.resize(nombreDeContraintes);
-    ProblemeAResoudre->SecondMembre.resize(nombreDeContraintes);
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux.resize(nombreDeContraintes);
-    ProblemeAResoudre->CoutsMarginauxDesContraintes.resize(nombreDeContraintes);
-    ProblemeAResoudre->ComplementDeLaBase.resize(nombreDeContraintes);
-    ProblemeAResoudre->NomDesContraintes.resize(nombreDeContraintes);
-}
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
