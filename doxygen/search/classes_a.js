@@ -20,7 +20,7 @@ var searchData=
   ['links_17',['links',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links.html',1,'Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links'],['../classAntares_1_1Solver_1_1Variable_1_1Links.html',1,'Antares::Solver::Variable::Links&lt; VariablePerLink &gt;']]],
   ['linkstrimming_18',['linksTrimming',['../classAntares_1_1Window_1_1Options_1_1linksTrimming.html',1,'Antares::Window::Options']]],
   ['linkstrimminggrid_19',['linksTrimmingGrid',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1linksTrimmingGrid.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['linktsgeneration_20',['LinkTsGeneration',['../structAntares_1_1Data_1_1LinkTsGeneration.html',1,'Antares::Data']]],
+  ['linktsgenerationparams_20',['LinkTSgenerationParams',['../structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html',1,'Antares::TSGenerator']]],
   ['linkvariable_21',['LinkVariable',['../structHourlyCSRProblem_1_1LinkVariable.html',1,'HourlyCSRProblem']]],
   ['linkweights_22',['LinkWeights',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkWeights.html',1,'Antares::Component::Datagrid::Renderer::BindingConstraint']]],
   ['linux_5ftolerances_23',['Linux_tolerances',['../classtolerances_1_1Linux__tolerances.html',1,'tolerances']]],

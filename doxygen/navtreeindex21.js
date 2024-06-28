@@ -1,7 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"functions_s.html":[7,3,0,18],
-"functions_t.html":[7,3,0,19],
 "functions_type.html":[7,3,3,0],
 "functions_type.html":[7,3,3],
 "functions_type_b.html":[7,3,3,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX21 =
 "misc-gen_8h_source.html":[8,0,0,7,0,0,0,0,8],
 "miscGenMinusRowPSP_8h_source.html":[8,0,0,4,11,0,0,0,0,1,4],
 "misc_8h_source.html":[8,0,0,7,2,1,1,1,1,1,7],
-"modified-inode_8h_source.html":[8,0,0,6,1,2]
+"modified-inode_8h_source.html":[8,0,0,6,1,2],
+"modifiers_8hxx_source.html":[8,0,0,7,2,1,1,1,7],
+"modulo_8h_source.html":[8,0,0,7,2,1,1,1,0,1,6]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1Map_1_1Tool_1_1Tool.html#a777a88e9e5d510368b9b2e6098e52086":[7,0,0,10,1,2,9],
-"classAntares_1_1Map_1_1Tool_1_1Tool.html#a829f0727f3a69b9e3e25739a4476762b":[7,0,0,10,1,2,20],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#ab7c181225bba7c1c14aca3669a7b07bd":[7,0,0,10,1,2,4],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#ab7e16528efd01bfaa8d8c35d56626ec9":[7,0,0,10,1,2,13],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#ac6231afeb2ff28549c138e74e24a9333":[7,0,0,10,1,2,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html":[7,0,0,13,3,9],
 "classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html#a514838708ebf0122085df4122b8ccb91":[7,0,0,13,3,9,0],
 "classAntares_1_1Solver_1_1Simulation_1_1DispatchableMarginPostProcessCmd.html":[7,0,0,13,3,8],
-"classAntares_1_1Solver_1_1Simulation_1_1Economy.html":[7,0,0,13,3,10]
+"classAntares_1_1Solver_1_1Simulation_1_1Economy.html":[7,0,0,13,3,10],
+"classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a0235b9e54867b888aff232361a93b7ce":[7,0,0,13,3,10,4],
+"classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a34410d819e9c53fb9bc777ad1180a386":[7,0,0,13,3,10,3]
 };

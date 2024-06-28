@@ -1,7 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#ac48681e6bcd0a007de9b38f8fe14af90":[7,0,0,13,4,4,32,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#ae9ef57135b65f49f45a8d1ef7e149add":[7,0,0,13,4,4,32,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html":[7,0,0,13,4,4,33],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a417e78791cc72664a2750487cf556b9a":[7,0,0,13,4,4,33,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a9869b6961e7376f6670802fed92104be":[7,0,0,13,4,4,33,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a41aa0cd51b2e8a8335ca5432888d499a":[7,0,0,13,4,37,12],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a472737ca9f923c7ce931d63d8d71acb6":[7,0,0,13,4,37,11],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a4b4ffb33cb0b24ffa73f0d037c62246e":[7,0,0,13,4,37,14],
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a6caefb3783bfee57bf367a5f898fdbd7":[7,0,0,13,4,37,10]
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a6caefb3783bfee57bf367a5f898fdbd7":[7,0,0,13,4,37,10],
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a70829afa9c3d97b706fbafcdb6aecf1d":[7,0,0,13,4,37,13],
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#a9bc5ae944289790cc214a37b05d11d11":[7,0,0,13,4,37,1]
 };

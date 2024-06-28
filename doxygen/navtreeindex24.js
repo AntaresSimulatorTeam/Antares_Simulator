@@ -1,8 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a1fe574440a01eafe5bbc071c44c50afe":[7,0,0,13,4,4,94,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#aadfb87da0cbdf847bd5c14a18ee0b06e":[7,0,0,13,4,4,94,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html":[7,0,0,13,4,4,97],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#a2f63c70b0beb9c4342e6aac984392d17":[7,0,0,13,4,4,97,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html#ac7cc9bade436eb72571a588770de550f":[7,0,0,13,4,4,97,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html":[7,0,0,13,4,4,98],
@@ -101,6 +98,8 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html":[7,0,0,13,4,42],
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html":[7,0,0,13,23],
 "structAntares_1_1Solver_1_1WeeklyProblemId.html":[7,0,0,13,24],
+"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html":[7,0,0,16,3],
+"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html":[7,0,0,16,4],
 "structAntares_1_1TmpDataByArea.html":[7,0,0,48],
 "structAntares_1_1TmpDataByArea.html#a1ada46b994a596098d72bbc3fbdceec1":[7,0,0,48,5],
 "structAntares_1_1TmpDataByArea.html#a1c1b6559b1615beb4803088b24626dc1":[7,0,0,48,7],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "structMaxPumpingData.html":[7,0,140],
 "structMinDownTimeData.html":[7,0,143],
 "structMinHydroPowerData.html":[7,0,146],
-"structMonster.html":[7,0,149]
+"structMonster.html":[7,0,149],
+"structNbDispUnitsMinBoundSinceMinUpTimeData.html":[7,0,155]
 };

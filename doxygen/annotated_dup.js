@@ -300,7 +300,6 @@ var annotated_dup =
         [ "HydroAllocation", "classAntares_1_1Data_1_1HydroAllocation.html", "classAntares_1_1Data_1_1HydroAllocation" ],
         [ "HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader" ],
         [ "LayerData", "classAntares_1_1Data_1_1LayerData.html", "classAntares_1_1Data_1_1LayerData" ],
-        [ "LinkTsGeneration", "structAntares_1_1Data_1_1LinkTsGeneration.html", null ],
         [ "Output", "classAntares_1_1Data_1_1Output.html", "classAntares_1_1Data_1_1Output" ],
         [ "Parameters", "classAntares_1_1Data_1_1Parameters.html", "classAntares_1_1Data_1_1Parameters" ],
         [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html", "classAntares_1_1Data_1_1PartHydro" ],
@@ -817,7 +816,9 @@ var annotated_dup =
           [ "StudyData", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData" ],
           [ "XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast" ]
         ] ],
-        [ "AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ]
+        [ "AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ],
+        [ "LinkTSgenerationParams", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html", null ],
+        [ "StudyParamsForLinkTS", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html", null ]
       ] ],
       [ "UnitTests", null, [
         [ "Buffer", "classAntares_1_1UnitTests_1_1Buffer.html", null ],
