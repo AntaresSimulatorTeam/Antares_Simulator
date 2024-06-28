@@ -28,6 +28,7 @@
 #include <antares/solver/ts-generator/law.h>
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
+#include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include "antares/study/simulation.h"
 
 #define SEP Yuni::IO::Separator
@@ -36,21 +37,21 @@ constexpr double FAILURE_RATE_EQ_1 = 0.999;
 
 namespace Antares::TSGenerator
 {
-AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* source):
-    unitCount(source->unitCount),
-    nominalCapacity(source->nominalCapacity),
-    forcedVolatility(source->forcedVolatility),
-    plannedVolatility(source->plannedVolatility),
-    forcedLaw(source->forcedLaw),
-    plannedLaw(source->plannedLaw),
-    prepro(source->prepro),
-    series(source->series.timeSeries),
-    modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
-    name(source->name())
+AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* cluster):
+    unitCount(cluster->unitCount),
+    nominalCapacity(cluster->nominalCapacity),
+    forcedVolatility(cluster->forcedVolatility),
+    plannedVolatility(cluster->plannedVolatility),
+    forcedLaw(cluster->forcedLaw),
+    plannedLaw(cluster->plannedLaw),
+    prepro(cluster->prepro),
+    series(cluster->series.timeSeries),
+    modulationCapacity(cluster->modulation[Data::thermalModulationCapacity]),
+    name(cluster->name())
 {
 }
 
-AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration& source,
+AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(LinkTSgenerationParams& source,
                                                          Data::TimeSeries& capacity,
                                                          Matrix<>& modulation,
                                                          const std::string& areaDestName):
@@ -73,8 +74,9 @@ class GeneratorTempData final
 {
 public:
     explicit GeneratorTempData(Data::Study&, unsigned, MersenneTwister&);
+    explicit GeneratorTempData(bool, unsigned, MersenneTwister&);
 
-    void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster) const;
+    void generateTS(AvailabilityTSGeneratorData&) const;
 
 private:
     bool derated;
@@ -101,6 +103,13 @@ private:
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen, MersenneTwister& rndGenerator):
     derated(study.parameters.derated),
+    nbOfSeriesToGen_(nbOfSeriesToGen),
+    rndgenerator(rndGenerator)
+{
+}
+
+GeneratorTempData::GeneratorTempData(bool derated, unsigned int nbOfSeriesToGen, MersenneTwister& rndGenerator):
+    derated(derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
     rndgenerator(rndGenerator)
 {
@@ -184,28 +193,18 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
     return 0;
 }
 
-void GeneratorTempData::generateTS(const Data::Area& area,
-                                   AvailabilityTSGeneratorData& cluster) const
+void GeneratorTempData::generateTS(AvailabilityTSGeneratorData& tsGenerationData) const
 {
-    if (!cluster.prepro)
-    {
-        logs.error()
-          << "Cluster: " << area.name << '/' << cluster.name
-          << ": The timeseries will not be regenerated. All data related to the ts-generator for "
-          << "'thermal' have been released.";
-        return;
-    }
+    assert(tsGenerationData.prepro);
 
-    assert(cluster.prepro);
-
-    if (0 == cluster.unitCount || 0 == cluster.nominalCapacity)
+    if (0 == tsGenerationData.unitCount || 0 == tsGenerationData.nominalCapacity)
     {
         return;
     }
 
-    const auto& preproData = *(cluster.prepro);
+    const auto& preproData = *(tsGenerationData.prepro);
 
-    int AUN = cluster.unitCount;
+    int AUN = tsGenerationData.unitCount;
 
     auto& FOD = preproData.data[Data::PreproAvailability::foDuration];
 
@@ -219,13 +218,13 @@ void GeneratorTempData::generateTS(const Data::Area& area,
 
     auto& NPOmax = preproData.data[Data::PreproAvailability::npoMax];
 
-    double f_volatility = cluster.forcedVolatility;
+    double f_volatility = tsGenerationData.forcedVolatility;
 
-    double p_volatility = cluster.plannedVolatility;
+    double p_volatility = tsGenerationData.plannedVolatility;
 
-    auto f_law = cluster.forcedLaw;
+    auto f_law = tsGenerationData.forcedLaw;
 
-    auto p_law = cluster.plannedLaw;
+    auto p_law = tsGenerationData.plannedLaw;
 
     std::vector<std::vector<double>> FPOW(DAYS_PER_YEAR);
     std::vector<std::vector<double>> PPOW(DAYS_PER_YEAR);
@@ -247,8 +246,8 @@ void GeneratorTempData::generateTS(const Data::Area& area,
 
     for (uint d = 0; d < DAYS_PER_YEAR; ++d)
     {
-        FPOW[d].resize(cluster.unitCount + 1);
-        PPOW[d].resize(cluster.unitCount + 1);
+        FPOW[d].resize(tsGenerationData.unitCount + 1);
+        PPOW[d].resize(tsGenerationData.unitCount + 1);
 
         PODOfTheDay = (int)POD[d];
         FODOfTheDay = (int)FOD[d];
@@ -281,7 +280,7 @@ void GeneratorTempData::generateTS(const Data::Area& area,
             pp[d] = lp[d] / b;
         }
 
-        for (uint k = 0; k != cluster.unitCount + 1; ++k)
+        for (uint k = 0; k != tsGenerationData.unitCount + 1; ++k)
         {
             FPOW[d][k] = pow(a, (double)k);
             PPOW[d][k] = pow(b, (double)k);
@@ -313,7 +312,7 @@ void GeneratorTempData::generateTS(const Data::Area& area,
     double cumul = 0;
     double last = 0;
 
-    auto& modulation = cluster.modulationCapacity;
+    auto& modulation = tsGenerationData.modulationCapacity;
     double* dstSeries = nullptr;
 
     const uint tsCount = nbOfSeriesToGen_ + 2;
@@ -323,7 +322,7 @@ void GeneratorTempData::generateTS(const Data::Area& area,
 
         if (tsIndex > 1)
         {
-            dstSeries = cluster.series[tsIndex - 2];
+            dstSeries = tsGenerationData.series[tsIndex - 2];
         }
 
         for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
@@ -498,7 +497,7 @@ void GeneratorTempData::generateTS(const Data::Area& area,
                 }
             }
 
-            if (cluster.unitCount == 1)
+            if (tsGenerationData.unitCount == 1)
             {
                 if (POC == 1 && FOC == 1)
                 {
@@ -568,7 +567,7 @@ void GeneratorTempData::generateTS(const Data::Area& area,
             }
             NOW = (NOW + 1) % Log_size;
 
-            AVP[dayInTheYear] = AUN * cluster.nominalCapacity;
+            AVP[dayInTheYear] = AUN * tsGenerationData.nominalCapacity;
 
             if (tsIndex > 1)
             {
@@ -584,7 +583,7 @@ void GeneratorTempData::generateTS(const Data::Area& area,
 
     if (derated)
     {
-        cluster.series.averageTimeseries();
+        tsGenerationData.series.averageTimeseries();
     }
 }
 } // namespace
@@ -609,23 +608,6 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-listOfLinks getAllLinksToGen(Data::AreaList& areas)
-{
-    listOfLinks links;
-
-    areas.each(
-      [&links](const Data::Area& area)
-      {
-          std::ranges::for_each(area.links, [&links](auto& l)
-                                {
-                                    if (!l.second->tsGeneration.forceNoGeneration)
-                                        links.push_back(l.second);
-                                });
-      });
-
-    return links;
-}
-
 void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
                         const Matrix<>& series,
@@ -639,6 +621,20 @@ void writeResultsToDisk(const Data::Study& study,
     std::string buffer;
     series.saveToBuffer(buffer, 0);
     writer.addEntryFromBuffer(savePath, buffer);
+}
+
+void writeResultsToDisk(const Matrix<>& series,
+                        const std::filesystem::path savePath)
+{
+    std::string buffer;
+    series.saveToBuffer(buffer, 0);
+
+    std::filesystem::path parentDir = savePath.parent_path();
+    if (! std::filesystem::exists(parentDir))
+    {
+        std::filesystem::create_directories(parentDir);
+    }
+    Antares::IO::fileSetContent(savePath.string(), buffer);
 }
 
 bool generateThermalTimeSeries(Data::Study& study,
@@ -655,13 +651,12 @@ bool generateThermalTimeSeries(Data::Study& study,
                                        study.parameters.nbTimeSeriesThermal,
                                        study.runtime->random[Data::seedTsGenThermal]);
 
-    // TODO VP: parallel
     for (auto* cluster: clusters)
     {
-        AvailabilityTSGeneratorData tsConfigData(cluster);
-        generator.generateTS(*cluster->parentArea, tsConfigData);
+        AvailabilityTSGeneratorData tsGenerationData(cluster);
+        generator.generateTS(tsGenerationData);
 
-        if (archive) // compatibilty with in memory
+        if (archive) // For compatibilty with in memory thermal TS generation
         {
             std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id()
                                    + ".txt";
@@ -672,48 +667,49 @@ bool generateThermalTimeSeries(Data::Study& study,
     return true;
 }
 
-bool generateLinkTimeSeries(Data::Study& study,
-                            const listOfLinks& links,
-                            Solver::IResultWriter& writer,
+// gp : we should try to add const identifiers before args here
+bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
+                            StudyParamsForLinkTS& generalParams,
                             const std::string& savePath)
 {
     logs.info();
-    logs.info() << "Generating the links time-series";
+    logs.info() << "Generation of links time-series";
 
-    auto generator = GeneratorTempData(study,
-                                       study.parameters.nbLinkTStoGenerate,
-                                       study.runtime->random[Data::seedTsGenLinks]);
-
-    for (const auto& link: links)
+    auto generator = GeneratorTempData(generalParams.derated,
+                                       generalParams.nbLinkTStoGenerate,
+                                       generalParams.random);
+    for (auto& link: links)
     {
-        Data::TimeSeries ts(link->timeseriesNumbers);
-        ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
-
-        auto& tsGenStruct = link->tsGeneration;
-
-        if (!tsGenStruct.valid)
+        if (! link.hasValidData)
         {
-            logs.error() << "Missing data for link " << link->from->id << "/" << link->with->id;
+            logs.error() << "Missing data for link " << link.namesPair.first << "/" << link.namesPair.second;
             return false;
         }
 
+        if (link.forceNoGeneration)
+            continue; // Skipping the link
+
+        Data::TimeSeriesNumbers fakeTSnumbers; // gp : to quickly get rid of
+        Data::TimeSeries ts(fakeTSnumbers);
+        ts.resize(generalParams.nbLinkTStoGenerate, HOURS_PER_YEAR);
+
         // DIRECT
-        AvailabilityTSGeneratorData tsConfigDataDirect(tsGenStruct, ts, tsGenStruct.modulationCapacityDirect, link->with->name);
+        AvailabilityTSGeneratorData tsConfigDataDirect(link, ts, link.modulationCapacityDirect, link.namesPair.second);
 
-        generator.generateTS(*link->from, tsConfigDataDirect);
+        generator.generateTS(tsConfigDataDirect);
 
-        std::string filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
+        std::string filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
                                + "_direct.txt";
-        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
+        writeResultsToDisk(ts.timeSeries, filePath);
 
         // INDIRECT
-        AvailabilityTSGeneratorData tsConfigDataIndirect(tsGenStruct, ts, tsGenStruct.modulationCapacityIndirect, link->with->name);
+        AvailabilityTSGeneratorData tsConfigDataIndirect(link, ts, link.modulationCapacityIndirect, link.namesPair.second);
 
-        generator.generateTS(*link->from, tsConfigDataIndirect);
+        generator.generateTS(tsConfigDataIndirect);
 
-        filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
+        filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
                                + "_indirect.txt";
-        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
+        writeResultsToDisk(ts.timeSeries, filePath);
     }
 
     return true;
