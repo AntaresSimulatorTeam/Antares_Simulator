@@ -23,6 +23,7 @@
 #include <yuni/datetime/timestamp.h>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/application/ScenarioBuilderOwner.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
@@ -232,6 +233,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
+    ScenarioBuilderOwner(study).callScenarioBuilder();
+
     // alloc global vectors
     SIM_AllocationTableaux(study);
 }
@@ -256,7 +259,6 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
     pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
     pParameters = &(pStudy->parameters);
-
     readDataForTheStudy(options);
 
     postParametersChecks();
