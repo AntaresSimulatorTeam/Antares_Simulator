@@ -20,9 +20,8 @@
 */
 
 #pragma once
+#include <map>
 #include <string>
-#include <vector>
-
 namespace Antares
 {
 class HydroErrorsCollector
@@ -31,10 +30,10 @@ public:
     HydroErrorsCollector() = default;
     void Collect(const std::string& area_name, const std::string& message);
     void Collect(const std::string& message);
-    bool CheckForFatalErrors() const;
+    void CheckForFatalErrors() const;
 
 private:
-    std::unordered_map<std::string, uint> area_errors_counter_;
+    std::map<std::string, unsigned int> area_errors_counter_;
     bool errors_limit_reached_ = false;
     bool stop_ = false;
     // std::vector<std::string> fatal_errors_;

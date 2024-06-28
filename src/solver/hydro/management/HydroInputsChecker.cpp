@@ -241,7 +241,7 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
       });
 } // End function CheckFinalReservoirLevelsConfiguration
 
-bool HydroInputsChecker::CheckForFatalErrors() const
+void HydroInputsChecker::CheckForFatalErrors() const
 {
     errorCollector_.CheckForFatalErrors();
 }

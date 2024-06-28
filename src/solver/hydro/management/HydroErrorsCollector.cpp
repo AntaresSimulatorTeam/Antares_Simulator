@@ -10,12 +10,12 @@ void HydroErrorsCollector::Collect(const std::string& area_name, const std::stri
 {
     logs.error() << "In Area " << area_name << " " << message;
     area_errors_counter_[area_name]++;
-    errors_limit_reached_ = area_errors_counter_[area] > 10;
+    errors_limit_reached_ = area_errors_counter_[area_name] > 10;
     stop_ = true;
 
     if (errors_limit_reached_)
     {
-        throw FatalError("Hydro validation has failed !")
+        throw FatalError("Hydro validation has failed !");
     }
 }
 
@@ -29,7 +29,7 @@ void HydroErrorsCollector::CheckForFatalErrors() const
 {
     if (stop_ || errors_limit_reached_)
     {
-        throw FatalError("Hydro validation has failed !")
+        throw FatalError("Hydro validation has failed !");
     }
 }
 
