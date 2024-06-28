@@ -4,11 +4,6 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      6)
 set(ANTARES_VERSION_REVISION  8)
-
-# Beta release
-set(ANTARES_BETA 0)
-set(ANTARES_RC 0)
-
 set(ANTARES_VERSION_YEAR      2024)
 
 project(antares
@@ -18,6 +13,9 @@ set(ANTARES_PUBLISHER "RTE France")
 set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
+# Beta release
+set(ANTARES_BETA 0)
+set(ANTARES_RC 0)
 
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)
@@ -35,7 +33,7 @@ include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
 include(FetchContent)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
@@ -176,25 +174,11 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
-option(BUILD_TOOLS "Build antares tools" OFF)
-message(STATUS "Build antares tools: ${BUILD_TOOLS}")
-
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
-message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
+message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
 option(BUILD_MINIZIP "Build minizip" OFF)
-message(STATUS "Build minizip: ${BUILD_MINIZIP}")
-
-option(WITH_ANTLR4 "With antlr4" OFF)
-message(STATUS "With antlr4: ${WITH_ANTLR4}")
-
-option(WITH_YAMLCPP "With yaml-cpp" OFF)
-message(STATUS "With yaml-cpp: ${WITH_YAMLCPP}")
-
-option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
-if (${BUILD_MERSENNE_TWISTER_PYBIND11})
-    find_package(pybind11 REQUIRED)
-endif()
+message(STATUS "Build minizip ${BUILD_MINIZIP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -235,9 +219,6 @@ add_subdirectory(antares-deps)
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)
 
-#Boost header libraries
-find_package(Boost REQUIRED)
-
 #TODO : Add ZLIB if  VCPKG used why is this needed
 if (VCPKG_TOOLCHAIN) 
     #zlib
@@ -260,7 +241,11 @@ if (NOT sirius_solver_FOUND)
 	message (FATAL_ERROR "Sirius solver not found. Sirius solver can be compiled with -DBUILD_sirius=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
 endif()
 
-find_package(ortools)
+#gflags needed for ortools
+set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
+find_package(gflags)
+
+find_package(ortools QUIET)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
@@ -286,18 +271,27 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip-ng)
-if (minizip-ng_FOUND)
-	add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
-else ()
-	find_package(minizip)
-	if (minizip_FOUND)
-		message (STATUS "Found minizip (not minizip-ng).")
-	else ()
-		message (FATAL_ERROR "Minizip not found.")
-	endif ()
-endif ()
+find_package(minizip)
 
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
+    # Repository + tag
+    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
+    set(MZ_TAG "3.0.7")
+    # CMake flags
+    set(MZ_LZMA "OFF" CACHE INTERNAL "")
+    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+    set(MZ_WZAES "OFF" CACHE INTERNAL "")
+    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
+    set(MZ_ICONV "OFF" CACHE INTERNAL "")
+
+    FetchContent_Declare(minizip
+    GIT_REPOSITORY ${MZ_REPOSITORY}
+    GIT_TAG ${MZ_TAG})
+
+    FetchContent_MakeAvailable(minizip)
+endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
@@ -329,9 +323,7 @@ add_subdirectory(solver)	#antares solver and all associated libs
 add_subdirectory(analyzer)	#antares analyser
 
 # Tools
-if (BUILD_TOOLS)
 add_subdirectory(tools)	#All antares tools
-endif()
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
@@ -433,7 +425,7 @@ else()
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
 	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
 
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5")
     set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
@@ -444,3 +436,4 @@ endif()
 
 # Load packaging facilities.
 include(CPack)
+

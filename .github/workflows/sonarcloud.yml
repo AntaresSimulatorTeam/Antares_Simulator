@@ -52,6 +52,15 @@ jobs:
           path: 'antares-deps-version.json'
           prop_path: 'antares_deps_version'
 
+      - name: Download pre-compiled librairies
+        uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+        with:
+          antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+          os: ${{matrix.os}}
+          buildtype: Debug
+          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-dir: ${{env.ORTOOLS_DIR}}
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
