@@ -1,5 +1,13 @@
 var NAVTREEINDEX21 =
 {
+"functions_m.html":[7,3,0,12],
+"functions_n.html":[7,3,0,13],
+"functions_o.html":[7,3,0,14],
+"functions_p.html":[7,3,0,15],
+"functions_q.html":[7,3,0,16],
+"functions_r.html":[7,3,0,17],
+"functions_s.html":[7,3,0,18],
+"functions_t.html":[7,3,0,19],
 "functions_type.html":[7,3,3,0],
 "functions_type.html":[7,3,3],
 "functions_type_b.html":[7,3,3,1],
@@ -19,8 +27,8 @@ var NAVTREEINDEX21 =
 "functions_type_v.html":[7,3,3,15],
 "functions_u.html":[7,3,0,20],
 "functions_v.html":[7,3,0,21],
-"functions_vars.html":[7,3,2],
 "functions_vars.html":[7,3,2,0],
+"functions_vars.html":[7,3,2],
 "functions_vars_b.html":[7,3,2,1],
 "functions_vars_c.html":[7,3,2,2],
 "functions_vars_d.html":[7,3,2,3],
@@ -86,7 +94,7 @@ var NAVTREEINDEX21 =
 "htmllistbox_2item_2item_8h_source.html":[8,0,0,7,2,1,1,2,1,6],
 "hurdleCosts_8h_source.html":[8,0,0,4,11,0,0,0,0,2,1,6],
 "hurdles-cost_8h_source.html":[8,0,0,7,0,0,0,2,4],
-"hydro-final-reservoir-level-functions_8h_source.html":[8,0,0,4,8,0,0,0,0,9],
+"hydro-final-reservoir-level-functions_8h_source.html":[8,0,0,4,2,0,0,0,0,2,0],
 "hydroCost_8h_source.html":[8,0,0,4,11,0,0,0,0,2,9],
 "hydroLevelsData_8h_source.html":[8,0,0,3,0,25,0,0,0,8,2],
 "hydro_8h_source.html":[8,0,0,4,11,0,0,0,0,1,1],
@@ -241,13 +249,5 @@ var NAVTREEINDEX21 =
 "mersenne-twister_8h_source.html":[8,0,0,3,0,19,0,0,0,0],
 "message_8h_source.html":[8,0,0,7,2,2,24],
 "message_8hxx_source.html":[8,0,0,7,2,2,25],
-"minmax-data_8h_source.html":[8,0,0,4,11,0,0,0,0,3,6],
-"minmax_8h_source.html":[8,0,0,4,11,0,0,0,0,3,7],
-"minmax_8hxx_source.html":[8,0,0,4,11,0,0,0,0,3,8],
-"misc-gen_8h_source.html":[8,0,0,7,0,0,0,0,8],
-"miscGenMinusRowPSP_8h_source.html":[8,0,0,4,11,0,0,0,0,1,4],
-"misc_8h_source.html":[8,0,0,7,2,1,1,1,1,1,7],
-"modified-inode_8h_source.html":[8,0,0,6,1,2],
-"modifiers_8hxx_source.html":[8,0,0,7,2,1,1,1,7],
-"modulo_8h_source.html":[8,0,0,7,2,1,1,1,0,1,6]
+"minmax-data_8h_source.html":[8,0,0,4,11,0,0,0,0,3,6]
 };

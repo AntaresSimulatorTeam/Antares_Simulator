@@ -39,6 +39,7 @@ var hierarchy =
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
     [ "AreaBalanceData", "structAreaBalanceData.html", null ],
+    [ "Antares::Data::AreaDependantHydroManagementData", "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html", null ],
     [ "AreaHydroLevelData", "structAreaHydroLevelData.html", null ],
     [ "Antares::areaInfo", "classAntares_1_1areaInfo.html", null ],
     [ "Antares::Solver::AreaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html", [
@@ -214,6 +215,7 @@ var hierarchy =
     [ "Antares::Solver::Optimization::CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
     [ "Antares::Data::AdequacyPatch::CurtailmentSharing", "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html", null ],
     [ "Antares::Cycle", "classAntares_1_1Cycle.html", null ],
+    [ "Antares::Data::DailyDemand", "structAntares_1_1Data_1_1DailyDemand.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::Average< NextT, FileFilter >::Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::MinMaxData::Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::Raw< NextT, FileFilter >::Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html", null ],
@@ -356,6 +358,7 @@ var hierarchy =
     [ "Hydro_problem_costs", "classHydro__problem__costs.html", null ],
     [ "Antares::Data::HydroAllocation", "classAntares_1_1Data_1_1HydroAllocation.html", null ],
     [ "Antares::Solver::Simulation::hydroCostNoise", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html", null ],
+    [ "Antares::HydroInputsChecker", "classAntares_1_1HydroInputsChecker.html", null ],
     [ "Antares::HydroManagement", "classAntares_1_1HydroManagement.html", null ],
     [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],
     [ "HydroPowerData", "structHydroPowerData.html", null ],
@@ -755,9 +758,11 @@ var hierarchy =
       [ "check_general.check_interface", "classcheck__general_1_1check__interface.html", null ]
     ] ],
     [ "MinDownTimeData", "structMinDownTimeData.html", null ],
+    [ "Antares::MinGenerationScaling", "classAntares_1_1MinGenerationScaling.html", null ],
     [ "MinHydroPowerData", "structMinHydroPowerData.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::MinMaxData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html", null ],
     [ "Monster", "structMonster.html", null ],
+    [ "Antares::Data::MonthlyGenerationTargetData", "structAntares_1_1Data_1_1MonthlyGenerationTargetData.html", null ],
     [ "mpsWriterFactory", "classmpsWriterFactory.html", null ],
     [ "Antares::Solver::Variable::Common::VCardProxy< V >::Multiple", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardCongestionProbability::Multiple", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability_1_1Multiple.html", null ],
@@ -992,6 +997,7 @@ var hierarchy =
     [ "Antares::Matrix< T, ReadWriteT >::PredicateIdentity", "structAntares_1_1Matrix_1_1PredicateIdentity.html", null ],
     [ "Antares::UnitTests::PredicateIdentity", "structAntares_1_1UnitTests_1_1PredicateIdentity.html", null ],
     [ "PredicateIdentity", "structPredicateIdentity.html", null ],
+    [ "Antares::PrepareInflows", "classAntares_1_1PrepareInflows.html", null ],
     [ "Antares::Data::Load::Prepro", "classAntares_1_1Data_1_1Load_1_1Prepro.html", null ],
     [ "Antares::Data::Solar::Prepro", "classAntares_1_1Data_1_1Solar_1_1Prepro.html", null ],
     [ "Antares::Data::Wind::Prepro", "classAntares_1_1Data_1_1Wind_1_1Prepro.html", null ],
@@ -1102,6 +1108,7 @@ var hierarchy =
       [ "ConstraintBuilder::ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ]
     ] ],
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", null ],
+    [ "Antares::Solver::ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", null ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", null ],
     [ "SearchToken", "classSearchToken.html", null ],
     [ "Antares::IniFile::Section", "classAntares_1_1IniFile_1_1Section.html", null ],
@@ -1317,6 +1324,7 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::Variable::ThermalState", "classAntares_1_1Solver_1_1Variable_1_1ThermalState.html", null ],
     [ "TIME_MEASURE", "structTIME__MEASURE.html", null ],
+    [ "Antares::Data::TimeDependantHydroManagementData", "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html", null ],
     [ "TimeMeasurement", "classTimeMeasurement.html", null ],
     [ "Benchmarking::Timer", "classBenchmarking_1_1Timer.html", null ],
     [ "Yuni::Thread::Timer", null, [
@@ -1343,7 +1351,6 @@ var hierarchy =
     [ "Antares::Data::TimeSeriesToCStr< 32 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 4 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_014_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 8 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html", null ],
-    [ "Antares::TmpDataByArea", "structAntares_1_1TmpDataByArea.html", null ],
     [ "tolerances.Tolerances", "classtolerances_1_1Tolerances.html", [
       [ "tolerances.Linux_tolerances", "classtolerances_1_1Linux__tolerances.html", null ],
       [ "tolerances.Win_tolerances", "classtolerances_1_1Win__tolerances.html", null ]

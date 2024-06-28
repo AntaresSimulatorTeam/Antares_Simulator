@@ -1,5 +1,13 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html":[7,0,0,13,3,4],
+"classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[7,0,0,13,3,7],
+"classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html":[7,0,0,13,3,9],
+"classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html#a514838708ebf0122085df4122b8ccb91":[7,0,0,13,3,9,0],
+"classAntares_1_1Solver_1_1Simulation_1_1DispatchableMarginPostProcessCmd.html":[7,0,0,13,3,8],
+"classAntares_1_1Solver_1_1Simulation_1_1Economy.html":[7,0,0,13,3,10],
+"classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a0235b9e54867b888aff232361a93b7ce":[7,0,0,13,3,10,4],
+"classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a34410d819e9c53fb9bc777ad1180a386":[7,0,0,13,3,10,3],
 "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a561e37e845aa5746486a7e6252ea2cab":[7,0,0,13,3,10,0],
 "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a69e422d0546dfe86070963b1a5b80e2f":[7,0,0,13,3,10,2],
 "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ac6ba9f85ff17ff64d8564dc49040b80c":[7,0,0,13,3,10,1],
@@ -31,8 +39,8 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html":[7,0,0,13,3,22],
 "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html":[7,0,0,13,3,25],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html":[7,0,0,13,3,26],
-"classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[7,0,0,13,21],
-"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,13,22],
+"classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[7,0,0,13,22],
+"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,13,23],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html":[7,0,0,13,4,0,0],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a69253ca6687ddb497e19441f46c3376c":[7,0,0,13,4,0,0,1],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a8f404b70ff65e628ab0b85bd5f834abe":[7,0,0,13,4,0,0,4],
@@ -241,13 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5fbc5ef6573e106cc9673459c35bb83d":[7,0,0,13,4,4,35,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#adb9cf6e6d5c8d74acacb91b93c3a2343":[7,0,0,13,4,4,35,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html":[7,0,0,13,4,4,31],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html#a614facc3a689e802474d0a915d642994":[7,0,0,13,4,4,31,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html#aa82a6a5914d76bbe7841d89c73c55a13":[7,0,0,13,4,4,31,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html#ab9c4ef540d5e3b6eda38463989e0439c":[7,0,0,13,4,4,31,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html#acfb17464036656ee59ecf00b30b4c3de":[7,0,0,13,4,4,31,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html":[7,0,0,13,4,4,32],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#a18d6775490b17b46a7271b704c97fec5":[7,0,0,13,4,4,32,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#a86033de97f151b3d064bf057e32bae4e":[7,0,0,13,4,4,32,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#ac48681e6bcd0a007de9b38f8fe14af90":[7,0,0,13,4,4,32,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html#ae9ef57135b65f49f45a8d1ef7e149add":[7,0,0,13,4,4,32,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html#a614facc3a689e802474d0a915d642994":[7,0,0,13,4,4,31,1]
 };

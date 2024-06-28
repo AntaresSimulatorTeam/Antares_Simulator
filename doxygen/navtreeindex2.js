@@ -1,5 +1,9 @@
 var NAVTREEINDEX2 =
 {
+"classAntares_1_1Action_1_1Settings_1_1DecalAreaPosition.html#abb9074da3f949e83b521dc46ea5d93b0":[7,0,0,0,1,0,6],
+"classAntares_1_1Action_1_1Settings_1_1DecalAreaPosition.html#addc794bb28d6696cd9e831ebc2573940":[7,0,0,0,1,0,2],
+"classAntares_1_1Action_1_1Settings_1_1DecalAreaPosition.html#ae30fd18ea18fb38dc8be07727cc8e893":[7,0,0,0,1,0,5],
+"classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html":[7,0,0,0,1,1],
 "classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html#a1986a18aa38f0d191ecaeab5cda7af86":[7,0,0,0,1,1,0],
 "classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html#a1d36193fe3102a83d2ac46b420566607":[7,0,0,0,1,1,7],
 "classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html#a31d58083d88a3fb4d8d06c96039410d3":[7,0,0,0,1,1,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX2 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html#a427997d5cb7589457ee85ab04210dd29":[7,0,0,2,0,0,1,3,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html#a43caa9f9643afa5f7302760c27890643":[7,0,0,2,0,0,1,3,4],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html#a685d1ea35d6bf859bab09ce1e18bd494":[7,0,0,2,0,0,1,3,2],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html#a8846ff6f12ef1a6a01b6c1ea4f3d7b36":[7,0,0,2,0,0,1,3,6],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html#af592aba5baea3b1eaf59192865534dde":[7,0,0,2,0,0,1,3,1],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkWeights.html":[7,0,0,2,0,0,1,4],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkWeights.html#a5a513cba177b1f8c710fbd23bb661668":[7,0,0,2,0,0,1,4,4],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkWeights.html#a5d2f0bd06cf8ed3da336db5eccf9885f":[7,0,0,2,0,0,1,4,6]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html#a8846ff6f12ef1a6a01b6c1ea4f3d7b36":[7,0,0,2,0,0,1,3,6]
 };

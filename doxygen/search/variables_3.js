@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['dailymingen_0',['dailyMinGen',['../structAntares_1_1TmpDataByArea.html#a6514612afdb2202652c5f5ab49fbbab0',1,'Antares::TmpDataByArea']]],
+  ['dailymingen_0',['dailyMinGen',['../structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a57155e6320664236bdb1210e12adbec4',1,'Antares::Data::AreaDependantHydroManagementData']]],
   ['data_1',['data',['../classAntares_1_1Data_1_1PreproHydro.html#a4a2d65674b45c6898d7c4dcda24c36bb',1,'Antares::Data::PreproHydro::data'],['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ac3fbad71dbaf7b2f1631b97274bde7aa',1,'Antares::Solver::Variable::SurveyResults::data'],['../classAntares_1_1Data_1_1XCast.html#aa0c930c30e594fc9cf210bc35afb39b9',1,'Antares::Data::XCast::data'],['../classAntares_1_1Data_1_1PreproAvailability.html#a8200ee14439c0a05037f2368cbc213a0',1,'Antares::Data::PreproAvailability::data']]],
   ['databuffer_2',['dataBuffer',['../classAntares_1_1Data_1_1Study.html#ad441def28743298e5a1a6c1ebdb409f1',1,'Antares::Data::Study']]],
   ['datafile_3',['datafile',['../classJobFileReader.html#ae9f3841ba9ca032ada0a75d87c167461',1,'JobFileReader']]],
@@ -30,7 +30,6 @@ var searchData=
   ['displayprogression_27',['displayProgression',['../classSettings.html#aa742a4d5b98ed4e1fa60847e5a738db8',1,'Settings']]],
   ['displayversion_28',['displayVersion',['../classAntares_1_1Data_1_1StudyLoadOptions.html#ac6a4b3ef6417c0c875fedb892e8d89fe',1,'Antares::Data::StudyLoadOptions']]],
   ['distribution_29',['distribution',['../classAntares_1_1Data_1_1XCast.html#a240744a269ed67cb44095210d09bfdd4',1,'Antares::Data::XCast::distribution'],['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas_1_1Record.html#a0c3e70a70898ac08aaaaed4c590c8fff',1,'Antares::Component::Datagrid::Renderer::Analyzer::Areas::Record::distribution']]],
-  ['dle_30',['DLE',['../structAntares_1_1TmpDataByArea.html#a70b0958fc2e191880411dae93371a14c',1,'Antares::TmpDataByArea']]],
-  ['dln_31',['DLN',['../structAntares_1_1TmpDataByArea.html#a7b6e0a1938393057477f02ab3660614a',1,'Antares::TmpDataByArea']]],
-  ['dog_32',['DOG',['../structAntares_1_1TmpDataByArea.html#a432c65a9449d8cedfb4d18329da0416d',1,'Antares::TmpDataByArea']]]
+  ['dle_30',['DLE',['../structAntares_1_1Data_1_1DailyDemand.html#abf4245f123852739c1b3264dd244c53d',1,'Antares::Data::DailyDemand']]],
+  ['dln_31',['DLN',['../structAntares_1_1Data_1_1DailyDemand.html#a11ba7fd49661f192700bcd64117d193c',1,'Antares::Data::DailyDemand']]]
 ];

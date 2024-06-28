@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/simulation/include/antares/solver/simulation/hydro-final-reservoir-level-functions.h Source File</title>
+<title>Antares Simulator: src/solver/hydro/include/antares/solver/hydro/management/hydro-final-reservoir-level-functions.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -172,17 +172,23 @@ $(document).ready(function(){initNavTree('hydro-final-reservoir-level-functions_
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>Antares::Solver</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keywordtype">void</span> CheckFinalReservoirLevelsConfiguration(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>} <span class="comment">// namespace Antares::Solver</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keywordtype">void</span> CheckFinalReservoirLevelsConfiguration(<a class="code hl_class" href="classAntares_1_1Data_1_1AreaList.html">Data::AreaList</a>&amp; areas,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                                            <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; parameters,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                                            <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Matrix.html">Data::TimeSeries::TS</a>&amp; scenarioInitialHydroLevels,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                                            <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Matrix.html">Data::TimeSeries::TS</a>&amp; scenarioFinalHydroLevels,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                                            uint year);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_HYDRO_FINAL_RESERVOIR_PRE_CHECKS_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition</b> area.h:377</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition</b> parameters.h:51</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:46</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_44f9bd718728581550ea4fab84861031.html">simulation</a></li><li class="navelem"><a class="el" href="dir_46b36ea6fa9d77f27ee93d1bc566d14a.html">include</a></li><li class="navelem"><a class="el" href="dir_d37629c657dd31246671cde783e0428b.html">antares</a></li><li class="navelem"><a class="el" href="dir_fd28d3366d3b8c3567af53eb90468272.html">solver</a></li><li class="navelem"><a class="el" href="dir_a5026c306b85c4d4525ccae1c833a895.html">simulation</a></li><li class="navelem"><b>hydro-final-reservoir-level-functions.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_12cab7512ff0ffecffb5b6d80fa7bd44.html">hydro</a></li><li class="navelem"><a class="el" href="dir_0ad44d5965cb798732b588d4ff2ade5a.html">include</a></li><li class="navelem"><a class="el" href="dir_c8fab6c433788cb512af860fc6a8eefa.html">antares</a></li><li class="navelem"><a class="el" href="dir_7181ed59e89dd22aa941945b98a336a2.html">solver</a></li><li class="navelem"><a class="el" href="dir_2db9434eb87b318d51816735e7746688.html">hydro</a></li><li class="navelem"><a class="el" href="dir_9d4b1dd35cf1f877d49289cf5cae9095.html">management</a></li><li class="navelem"><b>hydro-final-reservoir-level-functions.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
