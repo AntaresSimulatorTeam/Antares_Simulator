@@ -130,7 +130,9 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
     BOOST_CHECK(std::ranges::equal(ret.VariablesType, problemHebdo.TypeDeVariable));
     BOOST_CHECK(ret.ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
     BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes));
-    BOOST_CHECK(std::ranges::equal(ret.Mdeb, problemHebdo.IndicesDebutDeLigne));
+    auto expectedMdeb = problemHebdo.IndicesDebutDeLigne;
+    expectedMdeb.push_back(problemHebdo.CoefficientsDeLaMatriceDesContraintes.size());
+    BOOST_CHECK(std::ranges::equal(ret.Mdeb, expectedMdeb));
 }
 
 // throw exception if NombreDeVariables is 0
