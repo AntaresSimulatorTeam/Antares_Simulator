@@ -33,13 +33,50 @@
 
 #include "xcast/xcast.h"
 
+using LinkPair = std::pair<std::string, std::string>;
+using LinkPairs = std::vector<LinkPair>;
+
 namespace Antares::TSGenerator
 {
+
+struct StudyParamsForLinkTS
+{
+    unsigned int nbLinkTStoGenerate = 1;
+    bool derated = false;
+    // gp : we will have a problem with that if seed-tsgen-links not set in
+    // gp : generaldata.ini. In that case, our default value is wrong.
+    MersenneTwister random;
+};
+
+struct LinkTSgenerationParams
+{
+    LinkPair namesPair;
+
+    unsigned unitCount = 0;
+    double nominalCapacity = 0;
+
+    double forcedVolatility = 0.;
+    double plannedVolatility = 0.;
+
+    Data::StatisticalLaw forcedLaw = Data::LawUniform;
+    Data::StatisticalLaw plannedLaw = Data::LawUniform;
+
+    std::unique_ptr<Data::PreproAvailability> prepro;
+
+    Matrix<> modulationCapacityDirect;
+    Matrix<> modulationCapacityIndirect;
+
+    bool forceNoGeneration = false;
+    bool hasValidData = true;
+};
+
+
 class AvailabilityTSGeneratorData
 {
 public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
-    AvailabilityTSGeneratorData(Data::LinkTsGeneration&,
+
+    AvailabilityTSGeneratorData(LinkTSgenerationParams&,
                                 Data::TimeSeries&,
                                 Matrix<>& modulation,
                                 const std::string& name);
@@ -77,15 +114,13 @@ bool generateThermalTimeSeries(Data::Study& study,
                                Solver::IResultWriter& writer,
                                const std::string& savePath);
 
-bool generateLinkTimeSeries(Data::Study& study,
-                            const listOfLinks& links,
-                            Solver::IResultWriter& writer,
+bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
+                            StudyParamsForLinkTS&,
                             const std::string& savePath);
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
 
-listOfLinks getAllLinksToGen(Data::AreaList& areas);
 
 /*!
 ** \brief Destroy all TS Generators
