@@ -227,6 +227,7 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                                          errorCollector_);
           if (!validator.check())
           {
+              errorCollector_.IncreaseCounterForArea(&area);
               errorCollector_.FatalErrorHit();
               logs.error() << "hydro final level : infeasibility";
           }
