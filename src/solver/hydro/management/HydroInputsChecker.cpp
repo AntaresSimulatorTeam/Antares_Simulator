@@ -124,7 +124,7 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
                 << " MW in week " << week + 1 << " of TS-"
                 << area.hydro.series->mingen.getSeriesIndex(year) + 1
                 << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
-            errorCollector_.Collect(area.name, msg);
+            errorCollector_.Collect(area.name, msg.str());
             return false;
         }
     }
@@ -142,7 +142,7 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
         msg << "In Area " << area.name << " the minimum generation of " << data.totalYearMingen
             << " MW of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
             << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
-        errorCollector_.Collect(area.name, msg);
+        errorCollector_.Collect(area.name, msg.str());
         return false;
     }
     return true;
@@ -163,7 +163,7 @@ bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& 
                 << area.hydro.series->mingen.getSeriesIndex(year) + 1
                 << " is incompatible with the inflows of " << data.totalMonthInflows[realmonth]
                 << " MW.";
-            errorCollector_.Collect(area.name, msg);
+            errorCollector_.Collect(area.name, msg.str());
             return false;
         }
     }
@@ -196,7 +196,7 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year)
                                << " is incompatible with the maximum generation of " << max
                                << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1
                                << " MW.";
-                  errorCollector_.Collect(area.name, msg);
+                  errorCollector_.Collect(area.name, msg.str());
                   ret = false;
                   return;
               }
@@ -232,7 +232,7 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
           {
               std::ostringstream msg;
               msg << "hydro final level : infeasibility";
-              errorCollector_.Collect(area.name, msg);
+              errorCollector_.Collect(area.name, msg.str());
           }
           if (validator.finalLevelFineForUse())
           {

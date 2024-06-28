@@ -107,7 +107,7 @@ bool FinalLevelValidator::hydroAllocationStartMatchesSimulation() const
     msg << "Year " << year_ + 1 << ", area '" << areaName_
         << "' : " << "Hydro allocation must start on the 1st simulation month and "
         << "simulation last a whole year";
-    errorCollector_.Collect(areaName_, msg);
+    errorCollector_.Collect(areaName_, msg.str());
 
     return false;
 }
@@ -124,7 +124,7 @@ bool FinalLevelValidator::isFinalLevelReachable() const
             << ". Incompatible total inflows: " << totalYearInflows
             << " with initial: " << initialLevel_ << " and final: " << finalLevel_
             << " reservoir levels.";
-        errorCollector_.Collect(areaName_, msg);
+        errorCollector_.Collect(areaName_, msg.str());
         return false;
     }
     return true;
@@ -153,7 +153,7 @@ bool FinalLevelValidator::isBetweenRuleCurves() const
             << ". Specifed final reservoir level: " << finalLevel_
             << " is incompatible with reservoir level rule curve [" << lowLevelLastDay << " , "
             << highLevelLastDay << "]";
-        errorCollector_.Collect(areaName_, msg);
+        errorCollector_.Collect(areaName_, msg.str());
         return false;
     }
     return true;
