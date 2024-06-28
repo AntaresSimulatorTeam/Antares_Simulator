@@ -76,7 +76,6 @@ class AvailabilityTSgenerator final
 public:
     explicit AvailabilityTSgenerator(Data::Study&, unsigned, MersenneTwister&);
     explicit AvailabilityTSgenerator(bool, unsigned, MersenneTwister&);
-    explicit GeneratorTempData(bool, unsigned, MersenneTwister&);
 
     void run(AvailabilityTSGeneratorData&) const;
 
@@ -616,20 +615,6 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
 
 void writeTStoDisk(const Matrix<>& series,
                    const std::filesystem::path savePath)
-{
-    std::string buffer;
-    series.saveToBuffer(buffer, 0);
-
-    std::filesystem::path parentDir = savePath.parent_path();
-    if (! std::filesystem::exists(parentDir))
-    {
-        std::filesystem::create_directories(parentDir);
-    }
-    Antares::IO::fileSetContent(savePath.string(), buffer);
-}
-
-void writeResultsToDisk(const Matrix<>& series,
-                        const std::filesystem::path savePath)
 {
     std::string buffer;
     series.saveToBuffer(buffer, 0);
