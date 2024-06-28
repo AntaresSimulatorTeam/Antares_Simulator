@@ -421,7 +421,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     pTimer->Start(150);
 
     // Event
-    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Run::onInternalMotion), NULL, this);
+    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Run::onInternalMotion), nullptr, this);
 }
 
 Run::~Run()

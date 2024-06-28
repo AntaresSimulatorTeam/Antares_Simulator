@@ -103,12 +103,12 @@ Component::Component(wxWindow* parent) :
     pSelectionPopUpMenu->Connect(Antares::Forms::MenusID::mnIDPopupSelectionHide,
                                  wxEVT_COMMAND_MENU_SELECTED,
                                  wxCommandEventHandler(Component::evtOnSelectionHide),
-                                 NULL,
+                                 nullptr,
                                  this);
     pSelectionPopUpMenu->Connect(Antares::Forms::MenusID::mnIDPopupSelectionShow,
                                  wxEVT_COMMAND_MENU_SELECTED,
                                  wxCommandEventHandler(Component::evtOnSelectionShow),
-                                 NULL,
+                                 nullptr,
                                  this);
 
     mainSizer->Layout();

@@ -33,7 +33,7 @@ namespace Spotlight
 {
 ItemArea::ItemArea(Data::Area* a) : area(a)
 {
-    assert(a != NULL);
+    assert(a != nullptr);
 
     caption(a->name);
     group("Area");

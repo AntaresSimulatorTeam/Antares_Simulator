@@ -58,7 +58,7 @@ wxString DSM::columnCaption(int colIndx) const
 
 void DSM::internalAreaChanged(Antares::Data::Area* area)
 {
-    this->matrix((area) ? &(area->reserves) : NULL);
+    this->matrix((area) ? &(area->reserves) : nullptr);
     Renderer::ARendererArea::internalAreaChanged(area);
 }
 

@@ -267,7 +267,7 @@ bool WalkerThread::triggerFileEvent(const String& filename,
                                     int64_t modified,
                                     uint64_t size)
 {
-    assert(pFileJob != NULL);
+    assert(pFileJob != nullptr);
 
     // Statistics
     ++statistics.fileCount;
@@ -320,7 +320,7 @@ void WalkerThread::walk(const String& path)
 
     do
     {
-        assert(pContext.top() != NULL);
+        assert(pContext.top() != nullptr);
         auto& context = *(pContext.top());
 
         if (pShouldStop)

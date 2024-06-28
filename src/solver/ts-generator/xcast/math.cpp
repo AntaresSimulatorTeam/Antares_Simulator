@@ -30,7 +30,7 @@ namespace XCast
 {
 void XCast::normal(float& x, float& y)
 {
-    assert(random != NULL);
+    assert(random != nullptr);
 
     double z;
     double xd;

@@ -136,7 +136,7 @@ bool FindExampleFolder(Yuni::String& folder)
 
 void Initialize(int argc, char** argv, bool initializeSearchPath)
 {
-    if (argc < 1 or argv[0] == NULL)
+    if (argc < 1 or argv[0] == nullptr)
     {
         logs.error() << "Impossible to find the root folder";
         return;

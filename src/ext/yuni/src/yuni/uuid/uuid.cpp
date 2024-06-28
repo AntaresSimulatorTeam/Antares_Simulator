@@ -69,7 +69,7 @@ void UUID::writeToCString(char cstring[42]) const
 
 bool UUID::initializeFromCString(const char* cstring)
 {
-    assert(cstring != NULL);
+    assert(cstring != nullptr);
 
 #ifndef YUNI_OS_WINDOWS
     // Why uuid_parse takes a char* and not a const char* ??

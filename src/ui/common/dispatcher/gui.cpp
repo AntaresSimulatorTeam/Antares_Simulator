@@ -269,7 +269,7 @@ private:
 void Close(wxWindow* window)
 {
     if (!window)
-        logs.debug() << "Impossible to close a NULL top level window";
+        logs.debug() << "Impossible to close a nullptr top level window";
     else
         ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobWindowClose(window));
 }
@@ -277,7 +277,7 @@ void Close(wxWindow* window)
 void Close(wxWindow* window, uint delay)
 {
     if (!window)
-        logs.debug() << "Impossible to close a NULL top level window";
+        logs.debug() << "Impossible to close a nullptr top level window";
     else
         ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobWindowClose(window),
                                          delay);
@@ -286,7 +286,7 @@ void Close(wxWindow* window, uint delay)
 void Destroy(wxWindow* window)
 {
     if (!window)
-        logs.debug() << "Impossible to destroy a NULL top level window";
+        logs.debug() << "Impossible to destroy a nullptr top level window";
     else
         ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobWindowDestroy(window));
 }
@@ -294,7 +294,7 @@ void Destroy(wxWindow* window)
 void Destroy(wxTimer* timer)
 {
     if (!timer)
-        logs.debug() << "Impossible to destroy a NULL timer";
+        logs.debug() << "Impossible to destroy a nullptr timer";
     else
     {
         ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)new JobTimerDestroy(timer));

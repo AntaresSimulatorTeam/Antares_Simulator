@@ -73,7 +73,7 @@ void ApplWnd::evtOnOptionsDistricts(wxCommandEvent&)
     Forms::Disabler<ApplWnd> disabler(*this);
     if (CurrentStudyIsValid())
     {
-        assert(NULL != pNotebook);
+        assert(nullptr != pNotebook);
         pNotebook->select("sets");
     }
 }

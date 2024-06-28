@@ -31,25 +31,25 @@ namespace Forms
 {
 void ApplWnd::loadUserNotes()
 {
-    assert(NULL != pUserNotes);
+    assert(nullptr != pUserNotes);
     pUserNotes->loadFromStudy();
 }
 
 void ApplWnd::saveUserNotes()
 {
-    assert(NULL != pUserNotes);
+    assert(nullptr != pUserNotes);
     pUserNotes->saveToStudy();
 }
 
 void ApplWnd::loadSets()
 {
-    assert(NULL != pSets);
+    assert(nullptr != pSets);
     pSets->loadFromStudy();
 }
 
 void ApplWnd::saveSets()
 {
-    assert(NULL != pSets);
+    assert(nullptr != pSets);
     pSets->saveToStudy();
 }
 

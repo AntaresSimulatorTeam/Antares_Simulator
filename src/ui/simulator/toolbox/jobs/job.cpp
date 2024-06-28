@@ -478,7 +478,7 @@ public:
     MessageFlusherTimer(const wxString& messageBuffer, wxStaticText* label, std::mutex& mutex) :
      wxTimer(), pMessageBuffer(messageBuffer), pLabel(label), pMutex(mutex)
     {
-        assert(pLabel != NULL);
+        assert(pLabel != nullptr);
     }
 
     virtual ~MessageFlusherTimer()
@@ -513,7 +513,7 @@ class ReadWriteStatsFlusherTimer final : public wxTimer
 public:
     ReadWriteStatsFlusherTimer(wxStaticText* label) : wxTimer(), pLabel(label)
     {
-        assert(pLabel != NULL);
+        assert(pLabel != nullptr);
     }
 
     virtual ~ReadWriteStatsFlusherTimer()
