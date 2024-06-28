@@ -32,6 +32,7 @@
 #include "antares/study/simulation.h"
 
 #define SEP Yuni::IO::Separator
+namespace fs = std::filesystem;
 
 constexpr double FAILURE_RATE_EQ_1 = 0.999;
 
@@ -612,15 +613,6 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-void writeTStoDisk(Solver::IResultWriter& writer,
-                   const Matrix<>& series,
-                   const std::string& savePath)
-{
-    std::string buffer;
-    series.saveToBuffer(buffer, 0);
-    writer.addEntryFromBuffer(savePath, buffer);
-}
-
 void writeTStoDisk(const Matrix<>& series,
                    const std::filesystem::path savePath)
 {
@@ -637,7 +629,6 @@ void writeTStoDisk(const Matrix<>& series,
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
-                               Solver::IResultWriter& writer,
                                const std::string& savePath)
 {
     logs.info();
@@ -649,6 +640,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 
     for (auto* cluster: clusters)
     {
+        cluster->series.timeSeries.reset(study.parameters.nbTimeSeriesThermal, HOURS_PER_YEAR);
         AvailabilityTSGeneratorData tsGenerationData(cluster);
         generator.run(tsGenerationData);
     }
@@ -657,15 +649,17 @@ bool generateThermalTimeSeries(Data::Study& study,
     bool doWeWrite = archive && !study.parameters.noOutput;
     if (! doWeWrite)
     {
-        logs.info() << "Study parammeters such that we don't write thermal TS.";
+        logs.info() << "Study parameters forbid writing thermal TS.";
         return true;
     }
 
     for (auto* cluster: clusters)
     {
-        std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id()
-                               + ".txt";
-        writeTStoDisk(writer, cluster->series.timeSeries, filePath);
+        auto areaName = cluster->parentArea->id.to<std::string>();
+        auto clusterName = cluster->id();
+        auto filePath = fs::path(savePath) / areaName / clusterName += ".txt";
+
+        writeTStoDisk(cluster->series.timeSeries, filePath.string());
     }
 
     return true;

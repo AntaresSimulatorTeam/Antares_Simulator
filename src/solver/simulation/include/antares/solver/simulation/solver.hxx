@@ -41,6 +41,7 @@
 
 
 #include "hydro-final-reservoir-level-functions.h"
+namespace fs = std::filesystem;
 
 namespace Antares::Solver::Simulation
 {
@@ -488,11 +489,9 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         if (refreshTSonCurrentYear)
         {
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-#define SEP Yuni::IO::Separator
-            const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP + "mc-"
-                                         + std::to_string(year);
-#undef SEP
-            generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
+            fs::path savePath = fs::path(study.folderOutput.to<std::string>()) / "ts-generator"
+                                / "thermal" / "mc-" / std::to_string(year);
+            generateThermalTimeSeries(study, clusters, savePath.string());
 
             // apply the spinning if we generated some in memory clusters
             for (auto* cluster: clusters)
