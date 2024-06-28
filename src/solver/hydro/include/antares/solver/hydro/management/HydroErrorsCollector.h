@@ -23,21 +23,20 @@
 #include <string>
 #include <vector>
 
-#include <antares/study/area/area.h>
-
+namespace Antares
+{
 class HydroErrorsCollector
 {
 public:
     HydroErrorsCollector() = default;
-    void IncreaseCounterForArea(const Antares::Data::Area* area);
-    bool StopExecution() const;
-    bool ErrorsLimitReached() const;
-    void FatalErrorHit();
-    // void RecordFatalErrors(const std::string& msg, uint year);
+    void Collect(const std::string& area_name, const std::string& message);
+    void Collect(const std::string& message);
+    bool CheckForFatalErrors() const;
 
 private:
-    std::unordered_map<const Antares::Data::Area*, uint> area_errors_counter_;
+    std::unordered_map<std::string, uint> area_errors_counter_;
     bool errors_limit_reached_ = false;
     bool stop_ = false;
     // std::vector<std::string> fatal_errors_;
 };
+} // namespace Antares

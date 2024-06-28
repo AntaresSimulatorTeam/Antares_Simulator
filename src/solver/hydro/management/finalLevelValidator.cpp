@@ -103,9 +103,12 @@ bool FinalLevelValidator::hydroAllocationStartMatchesSimulation() const
     if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == firstMonthOfSimulation_)
         return true;
 
-    logs.error() << "Year " << year_ + 1 << ", area '" << areaName_ << "' : "
-                 << "Hydro allocation must start on the 1st simulation month and "
-                 << "simulation last a whole year";
+    std::ostringstream msg;
+    msg << "Year " << year_ + 1 << ", area '" << areaName_
+        << "' : " << "Hydro allocation must start on the 1st simulation month and "
+        << "simulation last a whole year";
+    errorCollector_.Collect(areaName_, msg);
+
     return false;
 }
 
@@ -116,10 +119,12 @@ bool FinalLevelValidator::isFinalLevelReachable() const
 
     if ((finalLevel_ - initialLevel_) * reservoirCapacity > totalYearInflows)
     {
-        logs.error() << "Year: " << year_ + 1 << ". Area: " << areaName_
-                     << ". Incompatible total inflows: " << totalYearInflows
-                     << " with initial: " << initialLevel_
-                     << " and final: " << finalLevel_ << " reservoir levels.";
+        std::ostringstream msg;
+        msg << "Year: " << year_ + 1 << ". Area: " << areaName_
+            << ". Incompatible total inflows: " << totalYearInflows
+            << " with initial: " << initialLevel_ << " and final: " << finalLevel_
+            << " reservoir levels.";
+        errorCollector_.Collect(areaName_, msg);
         return false;
     }
     return true;
@@ -143,10 +148,12 @@ bool FinalLevelValidator::isBetweenRuleCurves() const
 
     if (finalLevel_ < lowLevelLastDay || finalLevel_ > highLevelLastDay)
     {
-        logs.error() << "Year: " << year_ + 1 << ". Area: " << areaName_
-                     << ". Specifed final reservoir level: " << finalLevel_
-                     << " is incompatible with reservoir level rule curve [" << lowLevelLastDay
-                     << " , " << highLevelLastDay << "]";
+        std::ostringstream msg;
+        msg << "Year: " << year_ + 1 << ". Area: " << areaName_
+            << ". Specifed final reservoir level: " << finalLevel_
+            << " is incompatible with reservoir level rule curve [" << lowLevelLastDay << " , "
+            << highLevelLastDay << "]";
+        errorCollector_.Collect(areaName_, msg);
         return false;
     }
     return true;

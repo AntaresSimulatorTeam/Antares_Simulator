@@ -973,17 +973,11 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         }
         for (auto year: batch.yearsIndices)
         {
-            if (!hydroInputsChecker.Execute(year))
-            {
-                throw FatalError("Hydro input validation has failed!");
-            }
+            hydroInputsChecker.Execute(year);
         }
     }
+    hydroInputsChecker.CheckForFatalErrors();
 
-    if (hydroInputsChecker.StopExecution())
-    {
-        throw FatalError("Hydro input validation has failed!");
-    }
     logs.info() << " Starting the simulation";
 
     // Loop over sets of parallel years to run the simulation
@@ -1006,10 +1000,9 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         for (auto y: batch.yearsIndices)
         {
             // for each year not handled earlier
-            if (!hydroInputsChecker.Execute(y) || hydroInputsChecker.StopExecution())
-            {
-                throw FatalError("Hydro input validation has failed!");
-            }
+            hydroInputsChecker.Execute(y);
+            hydroInputsChecker.CheckForFatalErrors();
+
             bool performCalculations = batch.isYearPerformed[y];
             unsigned int numSpace = 999999;
             if (performCalculations)

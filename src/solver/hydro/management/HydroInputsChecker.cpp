@@ -23,7 +23,6 @@
 #include <yuni/core/logs.h>
 
 #include <antares/utils/utils.h>
-#include "antares/antares/fatal-error.h"
 #include "antares/solver/hydro/management/finalLevelValidator.h"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
@@ -42,20 +41,20 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 {
 }
 
-bool HydroInputsChecker::Execute(uint year)
+HydroInputsChecker::Execute(uint year)
 {
     prepareInflows_.Run(year);
     minGenerationScaling_.Run(year);
     if (!checksOnGenerationPowerBounds(year))
     {
-        errorCollector_.FatalErrorHit();
-        logs.error() << "hydro inputs checks: invalid minimum generation";
+        std::ostringstream msg;
+        msg << "hydro inputs checks: invalid minimum generation in year " << year;
+        errorCollector_.Collect(msg.str());
     }
     if (parameters_.useCustomScenario)
     {
         CheckFinalReservoirLevelsConfiguration(year);
     }
-    return !errorCollector_.ErrorsLimitReached();
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year)
@@ -120,11 +119,12 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
         }
         if (totalWeekMingen > totalWeekInflows)
         {
-            errorCollector_.IncreaseCounterForArea(&area);
-            logs.error() << "In Area " << area.name << " the minimum generation of "
-                         << totalWeekMingen << " MW in week " << week + 1 << " of TS-"
-                         << area.hydro.series->mingen.getSeriesIndex(year) + 1
-                         << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
+            std::ostringstream msg;
+            msg << "In Area " << area.name << " the minimum generation of " << totalWeekMingen
+                << " MW in week " << week + 1 << " of TS-"
+                << area.hydro.series->mingen.getSeriesIndex(year) + 1
+                << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
+            errorCollector_.Collect(area.name, msg);
             return false;
         }
     }
@@ -136,12 +136,13 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
     const auto& data = area.hydro.managementData.at(year);
     if (data.totalYearMingen > data.totalYearInflows)
     {
-        errorCollector_.IncreaseCounterForArea(&area);
+        std::ostringstream msg;
+
         // Yearly minimum generation <= Yearly inflows
-        logs.error() << "In Area " << area.name << " the minimum generation of "
-                     << data.totalYearMingen << " MW of TS-"
-                     << area.hydro.series->mingen.getSeriesIndex(year) + 1
-                     << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
+        msg << "In Area " << area.name << " the minimum generation of " << data.totalYearMingen
+            << " MW of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
+            << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
+        errorCollector_.Collect(area.name, msg);
         return false;
     }
     return true;
@@ -156,12 +157,13 @@ bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& 
         // Monthly minimum generation <= Monthly inflows for each month
         if (data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth])
         {
-            errorCollector_.IncreaseCounterForArea(&area);
-            logs.error() << "In Area " << area.name << " the minimum generation of "
-                         << data.totalMonthMingen[realmonth] << " MW in month " << month + 1
-                         << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
-                         << " is incompatible with the inflows of "
-                         << data.totalMonthInflows[realmonth] << " MW.";
+            std::ostringstream msg;
+            msg << "In Area " << area.name << " the minimum generation of "
+                << data.totalMonthMingen[realmonth] << " MW in month " << month + 1 << " of TS-"
+                << area.hydro.series->mingen.getSeriesIndex(year) + 1
+                << " is incompatible with the inflows of " << data.totalMonthInflows[realmonth]
+                << " MW.";
+            errorCollector_.Collect(area.name, msg);
             return false;
         }
     }
@@ -188,12 +190,13 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year)
 
               if (max < min)
               {
-                  errorCollector_.IncreaseCounterForArea(&area);
+                  std::ostringstream msg;
                   logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
                                << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
                                << " is incompatible with the maximum generation of " << max
                                << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1
                                << " MW.";
+                  errorCollector_.Collect(area.name, msg);
                   ret = false;
                   return;
               }
@@ -227,9 +230,9 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                                          errorCollector_);
           if (!validator.check())
           {
-              errorCollector_.IncreaseCounterForArea(&area);
-              errorCollector_.FatalErrorHit();
-              logs.error() << "hydro final level : infeasibility";
+              std::ostringstream msg;
+              msg << "hydro final level : infeasibility";
+              errorCollector_.Collect(area.name, msg);
           }
           if (validator.finalLevelFineForUse())
           {
@@ -238,9 +241,9 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
       });
 } // End function CheckFinalReservoirLevelsConfiguration
 
-bool HydroInputsChecker::StopExecution() const
+bool HydroInputsChecker::CheckForFatalErrors() const
 {
-    return errorCollector_.StopExecution();
+    errorCollector_.CheckForFatalErrors();
 }
 
 } // namespace Antares
