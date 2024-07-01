@@ -43,11 +43,6 @@ public:
         template<class T>
         AreaReference& operator<<(const T& msg);
 
-        ~AreaReference()
-        {
-            // std::cout << areasErrorMap_ << std::endl;
-        }
-
     private:
         AreaSingleErrorMessage& areaSingleErrorMessage_;
     };
