@@ -66,7 +66,6 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
 {
     // alias to the simulation mode
     auto mode = rinfos.mode;
-    uint nbMonthsPerYear = 12;
 
     for (uint i = 0; i != 168; ++i)
     {
@@ -168,7 +167,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
         auto& colPowerOverWater = m[PreproHydro::powerOverWater];
         auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
 
-        for (uint month = 0; month < nbMonthsPerYear; ++month)
+        for (uint month = 0; month < MONTHS_PER_YEAR; ++month)
         {
             valueCol += colMaxEnergy[month] * (1. - colPowerOverWater[month]);
         }

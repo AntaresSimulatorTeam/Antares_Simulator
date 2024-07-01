@@ -36,7 +36,6 @@
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-#include "antares/solver/variable/constants.h"
 #include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation

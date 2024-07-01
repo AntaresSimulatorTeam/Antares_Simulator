@@ -54,13 +54,13 @@ public:
 
     uint64_t dynamicMemoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + sizeof(double) * nbYearsCapacity;
+        return sizeof(double) * HOURS_PER_YEAR + sizeof(double) * nbYearsCapacity;
     }
 
 public:
-    double monthly[maxMonths];
-    double weekly[maxWeeksInAYear];
-    double daily[maxDaysInAYear];
+    double monthly[MONTHS_PER_YEAR];
+    double weekly[WEEKS_PER_YEAR];
+    double daily[DAYS_PER_YEAR];
     Antares::Memory::Stored<double>::Type hourly;
     double* year;
     unsigned int nbYearsCapacity;

@@ -133,11 +133,11 @@ public:
     Antares::Data::StudyRuntimeInfos* pRuntimeInfo;
 
     //! Values for each month
-    Type month[maxMonths];
+    Type month[MONTHS_PER_YEAR];
     //! Values for each week
-    Type week[maxWeeksInAYear];
+    Type week[WEEKS_PER_YEAR];
     //! Values for each day in the year
-    Type day[maxDaysInAYear];
+    Type day[DAYS_PER_YEAR];
     //! Values for each hour in the year
     mutable Antares::Memory::Stored<Type>::Type hour;
     //! Year

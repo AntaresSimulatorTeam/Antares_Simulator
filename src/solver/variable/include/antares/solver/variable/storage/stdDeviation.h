@@ -77,7 +77,7 @@ public:
 protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
-        Antares::Memory::Allocate<double>(stdDeviationHourly, maxHoursInAYear);
+        Antares::Memory::Allocate<double>(stdDeviationHourly, HOURS_PER_YEAR);
         // Next
         NextType::initializeFromStudy(study);
 
@@ -88,10 +88,10 @@ protected:
     void reset()
     {
         // Reset
-        (void)::memset(stdDeviationMonthly, 0, sizeof(double) * maxMonths);
-        (void)::memset(stdDeviationWeekly, 0, sizeof(double) * maxWeeksInAYear);
-        (void)::memset(stdDeviationDaily, 0, sizeof(double) * maxDaysInAYear);
-        Antares::Memory::Zero(maxHoursInAYear, stdDeviationHourly);
+        (void)::memset(stdDeviationMonthly, 0, sizeof(double) * MONTHS_PER_YEAR);
+        (void)::memset(stdDeviationWeekly, 0, sizeof(double) * WEEKS_PER_YEAR);
+        (void)::memset(stdDeviationDaily, 0, sizeof(double) * DAYS_PER_YEAR);
+        Antares::Memory::Zero(HOURS_PER_YEAR, stdDeviationHourly);
         stdDeviationYear = 0.;
         // Next
         NextType::reset();
@@ -104,22 +104,22 @@ protected:
 
         unsigned int i;
         // StdDeviation value for each hour throughout all years
-        for (i = 0; i != maxHoursInAYear; ++i)
+        for (i = 0; i != HOURS_PER_YEAR; ++i)
         {
             stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
         }
         // StdDeviation value for each day throughout all years
-        for (i = 0; i != maxDaysInAYear; ++i)
+        for (i = 0; i != DAYS_PER_YEAR; ++i)
         {
             stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
         }
         // StdDeviation value for each week throughout all years
-        for (i = 0; i != maxWeeksInAYear; ++i)
+        for (i = 0; i != WEEKS_PER_YEAR; ++i)
         {
             stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
         }
         // StdDeviation value for each month throughout all years
-        for (i = 0; i != maxMonths; ++i)
+        for (i = 0; i != MONTHS_PER_YEAR; ++i)
         {
             stdDeviationMonthly[i] += rhs.month[i] * rhs.month[i] * pRatio;
         }
@@ -142,26 +142,27 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<S, maxHoursInAYear, VCardT, Category::hourly>(
+                InternalExportValues<S, HOURS_PER_YEAR, VCardT, Category::hourly>(
                   report,
                   results,
                   Memory::RawPointer(stdDeviationHourly));
                 break;
             case Category::daily:
-                InternalExportValues<S, maxDaysInAYear, VCardT, Category::daily>(report,
-                                                                                 results,
-                                                                                 stdDeviationDaily);
+                InternalExportValues<S, DAYS_PER_YEAR, VCardT, Category::daily>(report,
+                                                                                results,
+                                                                                stdDeviationDaily);
                 break;
             case Category::weekly:
-                InternalExportValues<S, maxWeeksInAYear, VCardT, Category::weekly>(
+                InternalExportValues<S, WEEKS_PER_YEAR, VCardT, Category::weekly>(
                   report,
                   results,
                   stdDeviationWeekly);
                 break;
             case Category::monthly:
-                InternalExportValues<S, maxMonths, VCardT, Category::monthly>(report,
-                                                                              results,
-                                                                              stdDeviationMonthly);
+                InternalExportValues<S, MONTHS_PER_YEAR, VCardT, Category::monthly>(
+                  report,
+                  results,
+                  stdDeviationMonthly);
                 break;
             case Category::annual:
                 InternalExportValues<S, 1, VCardT, Category::annual>(report,
@@ -180,7 +181,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class, int> class DecoratorT>
@@ -194,9 +195,9 @@ protected:
     }
 
 public:
-    double stdDeviationMonthly[maxMonths];
-    double stdDeviationWeekly[maxWeeksInAYear];
-    double stdDeviationDaily[maxDaysInAYear];
+    double stdDeviationMonthly[MONTHS_PER_YEAR];
+    double stdDeviationWeekly[WEEKS_PER_YEAR];
+    double stdDeviationDaily[DAYS_PER_YEAR];
     Antares::Memory::Stored<double>::Type stdDeviationHourly;
     double stdDeviationYear;
 
