@@ -22,6 +22,7 @@
 #pragma once
 #include <map>
 #include <string>
+
 namespace Antares
 {
 class HydroErrorsCollector

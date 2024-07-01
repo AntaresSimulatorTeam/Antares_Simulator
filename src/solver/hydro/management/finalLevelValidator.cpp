@@ -178,4 +178,4 @@ bool FinalLevelValidator::finalLevelFineForUse()
     return finalLevelFineForUse_;
 }
 
-} // namespace Antares::Data
+} // namespace Antares::Solver
