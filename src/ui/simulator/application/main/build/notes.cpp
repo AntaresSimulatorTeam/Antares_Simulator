@@ -30,7 +30,7 @@ namespace Forms
 {
 void ApplWnd::createNBNotes()
 {
-    assert(nullptr != pNotebook);
+    assert(pNotebook);
 
     pUserNotes = new Window::Notes(pNotebook);
     pNotebook->add(pUserNotes, wxT("notes"), wxT("User's Notes"));

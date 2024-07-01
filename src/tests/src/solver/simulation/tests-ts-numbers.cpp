@@ -55,7 +55,7 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 {
     Area* area = study->areaAdd(areaName);
-    BOOST_CHECK(area != nullptr);
+    BOOST_CHECK(area);
 
     return area;
 }

@@ -393,7 +393,7 @@ protected:
         if (shouldAbort || IsGUIAboutToQuit())
             return;
 
-        if (count && nullptr != (result = new MatrixType()))
+        if (count && (result = new MatrixType()))
         {
             char conversionBuffer[128];
             result->reset(ops.width, ops.height);

@@ -121,7 +121,7 @@ bool Stream::open(const AnyString& filename, int mode)
     pFd = ::fopen(filename.c_str(), OpenMode::ToCString(mode));
 #endif
 
-    return (nullptr != pFd);
+    return (pFd);
 }
 
 bool Stream::close()

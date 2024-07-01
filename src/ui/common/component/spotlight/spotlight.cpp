@@ -429,9 +429,9 @@ void Spotlight::resizeParentWindow()
         parent->SetSize(parent->GetSize().GetWidth(), idealH);
     }
 
-    assert(parent->GetSizer() != nullptr);
+    assert(parent->GetSizer());
     parent->GetSizer()->Layout();
-    assert(GetSizer() != nullptr);
+    assert(GetSizer());
     GetSizer()->Layout();
     Dispatcher::GUI::Refresh(parent);
 }

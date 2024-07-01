@@ -502,7 +502,7 @@ void Component::createAllControlsIfNeeded()
     OnStudyClosed.connect(this, &Component::onStudyClosed);
 
     // Layout
-    assert(GetSizer() != nullptr);
+    assert(GetSizer());
     GetSizer()->Layout();
 
     pControlsAlreadyCreated = true;

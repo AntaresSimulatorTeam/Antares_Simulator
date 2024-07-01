@@ -21,8 +21,8 @@ IJob::IJob() : pThread(nullptr)
 
 IJob::~IJob()
 {
-    assert(this != nullptr and "IJob: Destructor: Oo `this' is null !?");
-    assert(pThread == nullptr and "A job can not be attached to a thread when destroyed");
+    assert(this && "IJob: Destructor: Oo `this' is null !?");
+    assert(!pThread && "A job can not be attached to a thread when destroyed");
 }
 
 bool IJob::suspend(uint delay) const

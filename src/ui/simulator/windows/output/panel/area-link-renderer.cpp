@@ -174,7 +174,7 @@ int AreaLinkRenderer::height() const
 
 bool AreaLinkRenderer::valid() const
 {
-    return (nullptr != pMatrix);
+    return (pMatrix);
 }
 
 wxString AreaLinkRenderer::columnCaption(int colIndx) const

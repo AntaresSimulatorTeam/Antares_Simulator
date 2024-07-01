@@ -148,7 +148,7 @@ Flow TraverseWindowsFolder(const String& filename,
                            bool files)
 {
     // Convertir the filename
-    assert(opts.wbuffer != nullptr);
+    assert(opts.wbuffer);
     opts.wbuffer[0] = L'\\';
     opts.wbuffer[1] = L'\\';
     opts.wbuffer[2] = L'?';

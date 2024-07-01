@@ -66,7 +66,7 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
                 ORTOOLS_LibererProbleme(solver);
                 solver = nullptr;
             }
-            else if (ProbSpx != nullptr)
+            else if (ProbSpx)
             {
                 SPX_LibererProbleme(ProbSpx);
                 ProbSpx = nullptr;

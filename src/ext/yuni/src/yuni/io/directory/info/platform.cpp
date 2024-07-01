@@ -356,7 +356,7 @@ void IteratorDataFree(const IteratorData* data)
 
 IteratorData* IteratorDataNext(IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     if (data->next())
         return data;
     delete data;
@@ -365,43 +365,43 @@ IteratorData* IteratorDataNext(IteratorData* data)
 
 const String& IteratorDataFilename(const IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     return data->dirinfo.front().filename;
 }
 
 const String& IteratorDataParentName(const IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     return data->dirinfo.front().parent;
 }
 
 const String& IteratorDataName(const IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     return data->dirinfo.front().name;
 }
 
 uint64_t IteratorDataSize(const IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     return data->dirinfo.front().size;
 }
 
 int64_t IteratorDataModified(const IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     return data->dirinfo.front().modified;
 }
 
 bool IteratorDataIsFolder(const IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     return data->dirinfo.front().isFolder;
 }
 
 bool IteratorDataIsFile(const IteratorData* data)
 {
-    assert(data != nullptr);
+    assert(data);
     return !data->dirinfo.front().isFolder;
 }
 

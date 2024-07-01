@@ -399,12 +399,12 @@ bool CBuilder::completeCBuilderFromFile(const std::string& filename)
         CString<50, false> key;
         CString<50, false> value;
 
-        for (section = ini.firstSection; section != nullptr; section = section->next)
+        for (section = ini.firstSection; section ; section = section->next)
         {
             if (section->name == ".general")
             {
                 IniFile::Property* p = section->firstProperty;
-                for (; p != nullptr; p = p->next)
+                for (; p ; p = p->next)
                 {
                     key = p->key;
                     key.toLower();

@@ -41,7 +41,7 @@ namespace Options
 {
 static void ResetButton(Component::Button* button, bool value)
 {
-    assert(button != nullptr);
+    assert(button);
     if (value)
     {
         button->image("images/16x16/light_green.png");
@@ -56,7 +56,7 @@ static void ResetButton(Component::Button* button, bool value)
 
 static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapacities value)
 {
-    assert(button != nullptr);
+    assert(button);
     button->image(transmissionCapacityIcon(value));
     button->caption(GlobalTransmissionCapacitiesToString_Display(value));
 }

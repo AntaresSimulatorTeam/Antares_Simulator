@@ -19,7 +19,7 @@ namespace Yuni
 {
 int gettimeofday(struct timeval* tv, struct timezone* tz)
 {
-    if (nullptr != tv)
+    if (tv)
     {
         struct _timeb timebuffer;
         _ftime64_s(&timebuffer);
@@ -27,7 +27,7 @@ int gettimeofday(struct timeval* tv, struct timezone* tz)
         tv->tv_usec = (int64_t)(timebuffer.millitm * 1000);
     }
 
-    if (nullptr != tz)
+    if (tz)
     {
         static int tzflag = 0;
         if (!tzflag)

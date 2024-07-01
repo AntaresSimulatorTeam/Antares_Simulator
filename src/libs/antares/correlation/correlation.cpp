@@ -212,13 +212,13 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
     if (ini)
     {
         IniFile::Section* s;
-        for (s = ini->firstSection; s != nullptr; s = s->next) /* Each section */
+        for (s = ini->firstSection; s; s = s->next) /* Each section */
         {
             Area* from = AreaListLFind(l, s->name.c_str());
             if (from)
             {
                 IniFile::Property* p;
-                for (p = s->firstProperty; p != nullptr; p = p->next) /* Each property*/
+                for (p = s->firstProperty; p; p = p->next) /* Each property*/
                 {
                     Area* to = AreaListLFind(l, p->key.c_str());
                     if (to and to != from)
