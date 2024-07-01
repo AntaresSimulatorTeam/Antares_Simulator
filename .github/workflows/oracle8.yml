@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - fix/nodejs16
       - dependabot/*
 
   schedule:
