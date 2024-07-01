@@ -149,8 +149,8 @@ protected:
                 break;
             case Category::daily:
                 InternalExportValues<S, DAYS_PER_YEAR, VCardT, Category::daily>(report,
-                                                                                 results,
-                                                                                 stdDeviationDaily);
+                                                                                results,
+                                                                                stdDeviationDaily);
                 break;
             case Category::weekly:
                 InternalExportValues<S, WEEKS_PER_YEAR, VCardT, Category::weekly>(
@@ -159,9 +159,10 @@ protected:
                   stdDeviationWeekly);
                 break;
             case Category::monthly:
-                InternalExportValues<S, MONTHS_PER_YEAR, VCardT, Category::monthly>(report,
-                                                                              results,
-                                                                              stdDeviationMonthly);
+                InternalExportValues<S, MONTHS_PER_YEAR, VCardT, Category::monthly>(
+                  report,
+                  results,
+                  stdDeviationMonthly);
                 break;
             case Category::annual:
                 InternalExportValues<S, 1, VCardT, Category::annual>(report,

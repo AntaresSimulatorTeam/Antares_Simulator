@@ -21,10 +21,11 @@
 
 #include <cassert>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
-#include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/date/date.h>
 #include <antares/logs/logs.h>

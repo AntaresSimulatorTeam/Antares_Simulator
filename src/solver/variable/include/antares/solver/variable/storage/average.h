@@ -101,19 +101,19 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
-                                                                                Memory::RawPointer(
-                                                                                  avgdata.hourly));
+                                                                               Memory::RawPointer(
+                                                                                 avgdata.hourly));
                 break;
             case Category::daily:
-                InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report,
-                                                                              avgdata.daily);
+                InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report, avgdata.daily);
                 break;
             case Category::weekly:
                 InternalExportValues<WEEKS_PER_YEAR, VCardT, Category::weekly>(report,
-                                                                                avgdata.weekly);
+                                                                               avgdata.weekly);
                 break;
             case Category::monthly:
-                InternalExportValues<MONTHS_PER_YEAR, VCardT, Category::monthly>(report, avgdata.monthly);
+                InternalExportValues<MONTHS_PER_YEAR, VCardT, Category::monthly>(report,
+                                                                                 avgdata.monthly);
                 break;
             case Category::annual:
                 InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);

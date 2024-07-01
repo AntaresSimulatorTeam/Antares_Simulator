@@ -109,15 +109,15 @@ protected:
                   ::Antares::Memory::RawPointer(rawdata.hourly));
                 break;
             case Category::daily:
-                InternalExportValues<Category::daily, DAYS_PER_YEAR, VCardT>(report,
-                                                                              rawdata.daily);
+                InternalExportValues<Category::daily, DAYS_PER_YEAR, VCardT>(report, rawdata.daily);
                 break;
             case Category::weekly:
                 InternalExportValues<Category::weekly, WEEKS_PER_YEAR, VCardT>(report,
-                                                                                rawdata.weekly);
+                                                                               rawdata.weekly);
                 break;
             case Category::monthly:
-                InternalExportValues<Category::monthly, MONTHS_PER_YEAR, VCardT>(report, rawdata.monthly);
+                InternalExportValues<Category::monthly, MONTHS_PER_YEAR, VCardT>(report,
+                                                                                 rawdata.monthly);
                 break;
             case Category::annual:
                 InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);

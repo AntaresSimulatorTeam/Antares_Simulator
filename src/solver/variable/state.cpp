@@ -422,8 +422,7 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(
     }
 }
 
-std::array<uint, HOURS_PER_YEAR>
-State::computeEconomicallyOptimalNbClustersONforEachHour(
+std::array<uint, HOURS_PER_YEAR> State::computeEconomicallyOptimalNbClustersONforEachHour(
   const uint& maxDurationON,
   const std::array<uint, HOURS_PER_YEAR>& ON_min,
   const std::array<uint, HOURS_PER_YEAR>& ON_max) const

@@ -322,8 +322,8 @@ public:
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[state.hourInTheYear]
               += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
 
-            pminOfTheClusterForYear[numSpace][(cluster->areaWideIndex * HOURS_PER_YEAR)
-                                              + state.hourInTheYear]
+            pminOfTheClusterForYear[numSpace]
+                                   [(cluster->areaWideIndex * HOURS_PER_YEAR) + state.hourInTheYear]
               = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
         }
 
