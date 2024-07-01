@@ -335,16 +335,15 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
                 {
                     RESERVE_PARTICIPATION reserveParticipation;
-                    if (cluster->isParticipatingInReserve(key))
-                    {
-                        reserveParticipation.maxPower = cluster->reserveMaxPower(key);
-                        reserveParticipation.participationCost = cluster->reserveCost(key);
-                        reserveParticipation.clusterName = cluster->name();
-                        reserveParticipation.indexClusterParticipation
-                          = globalClusterParticipationIndex++;
-                        areaCapacityReservationsUp.AllReservesParticipation.push_back(
-                          reserveParticipation);
-                    }
+                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
+                    reserveParticipation.participationCost = cluster->reserveCost(key);
+                    reserveParticipation.clusterName = cluster->name();
+                    reserveParticipation.clusterIdInArea = cluster->index;
+                    reserveParticipation.indexClusterParticipation
+                        = globalClusterParticipationIndex;
+                    globalClusterParticipationIndex++;
+                    areaCapacityReservationsUp.AllReservesParticipation.push_back(
+                        reserveParticipation);
                 }
 
                 areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
@@ -367,16 +366,17 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
                 {
                     RESERVE_PARTICIPATION reserveParticipation;
-                    if (cluster->isParticipatingInReserve(key))
-                    {
+                    //if (cluster->isParticipatingInReserve(key))
+                    //{
                         reserveParticipation.maxPower = cluster->reserveMaxPower(key);
                         reserveParticipation.participationCost = cluster->reserveCost(key);
                         reserveParticipation.clusterName = cluster->name();
-                        reserveParticipation.indexClusterParticipation
-                          = globalClusterParticipationIndex++;
+                        reserveParticipation.clusterIdInArea = cluster->index;
+                        reserveParticipation.indexClusterParticipation = globalClusterParticipationIndex;
+                        globalClusterParticipationIndex++;
                         areaCapacityReservationsDown.AllReservesParticipation.push_back(
                           reserveParticipation);
-                    }
+                    //}
                 }
 
                 areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);

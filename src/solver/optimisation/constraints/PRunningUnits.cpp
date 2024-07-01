@@ -19,11 +19,11 @@ void PRunningUnits::add(int pays, int reserve, int cluster, int pdt, bool isUpRe
           = capacityReservation.AllReservesParticipation[cluster];
 
         int globalClusterIdx = data.thermalClusters[pays]
-          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipation.clusterIdInArea];
 
         builder.updateHourWithinWeek(pdt)
-          .RunningClusterReserveParticipation(globalClusterIdx, 1.0)
-          .ClusterReserveParticipation(globalClusterIdx, -1.0)
+          .RunningClusterReserveParticipation(reserveParticipation.indexClusterParticipation, 1.0)
+          .ClusterReserveParticipation(reserveParticipation.indexClusterParticipation, -1.0)
           .equalTo();
 
         ConstraintNamer namer(builder.data.NomDesContraintes);

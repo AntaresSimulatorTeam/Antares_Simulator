@@ -273,6 +273,7 @@ struct RESERVE_PARTICIPATION
     float participationCost = CLUSTER_NOT_PARTICIPATING;
     int indexClusterParticipation = 0;
     std::string clusterName;
+    int clusterIdInArea;
 };
 
 struct CAPACITY_RESERVATION

@@ -2,6 +2,9 @@
 
 void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
 {
+    int globalClusterIdx
+      = data.thermalClusters[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+
     if (!data.Simulation)
     {
         // 17 bis
@@ -14,9 +17,6 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
         // P^on_re+ : Participation of running units in cluster θ to Up reserves 
         // P : Power output from cluster θ
 
-        int globalClusterIdx = data.thermalClusters[pays]
-          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
-
         // 17 bis (1) : l * M + Sum(P^on_re-) - P <= 0
         {
             builder.updateHourWithinWeek(pdt);
@@ -27,8 +27,10 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllReservesParticipation)
                 {
-                    if (reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        builder.RunningClusterReserveParticipation(globalClusterIdx, 1);
+                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
+                        && (data.thermalClusters[pays]
+          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations.clusterIdInArea] == globalClusterIdx))
+                        builder.RunningClusterReserveParticipation(reserveParticipations.indexClusterParticipation, 1);
                 }
             }
 
@@ -61,8 +63,10 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllReservesParticipation)
                 {
-                    if (reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        builder.RunningClusterReserveParticipation(globalClusterIdx, 1);
+                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING) 
+                        && (data.thermalClusters[pays]
+          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations.clusterIdInArea] == globalClusterIdx))
+                        builder.RunningClusterReserveParticipation(reserveParticipations.indexClusterParticipation, 1);
                 }
             }
 
@@ -88,7 +92,7 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
     {
         // Lambda that count the number of reserves that the cluster is participating to
         auto countReservesFromCluster
-          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations)
+          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations, int globalClusterIdx, int pays, ReserveData data)
         {
             int counter = 0;
             for (const auto& capacityReservation : reservations)
@@ -96,7 +100,11 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllReservesParticipation)
                 {
-                    if (reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
+                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
+                        && (data.thermalClusters[pays]
+                             .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
+                                                                                .clusterIdInArea]
+                           == globalClusterIdx))
                         counter++;
                 }
             }
@@ -105,9 +113,9 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
 
         int nbConstraintsToAdd
           = countReservesFromCluster(
-              data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp)
+              data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data)
             + countReservesFromCluster(
-              data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown);
+              data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
 
         builder.data.NbTermesContraintesPourLesReserves += 2*(nbConstraintsToAdd+2);
 

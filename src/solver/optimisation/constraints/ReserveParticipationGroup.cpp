@@ -65,19 +65,19 @@ void ReserveParticipationGroup::BuildConstraints()
                     // 24
                     reserveSatisfaction.add(pays, reserve, pdt, true);
 
-                    uint32_t cluster = 0;
+                    uint32_t cluster_participation = 0;
                     for (const auto& clusterReserveParticipation :
                          areaReserveUp.AllReservesParticipation)
                     {
                         if (clusterReserveParticipation.maxPower >= 0)
                         {
                             // 16 bis
-                            pMaxReserve.add(pays, reserve, cluster, pdt, true);
+                            pMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
 
                             // 17 quater
-                            pRunningUnits.add(pays, reserve, cluster, pdt, true);
+                            pRunningUnits.add(pays, reserve, cluster_participation, pdt, true);
                         }
-                        cluster++;
+                        cluster_participation++;
                     }
                     reserve++;
                 }
@@ -90,19 +90,25 @@ void ReserveParticipationGroup::BuildConstraints()
                     // 24
                     reserveSatisfaction.add(pays, reserve, pdt, false);
 
-                    uint32_t cluster = 0;
+                    uint32_t cluster_participation = 0;
                     for (const auto& clusterReserveParticipation :
                          areaReserveDown.AllReservesParticipation)
                     {
                         if (clusterReserveParticipation.maxPower >= 0)
                         {
                             // 16 bis
-                            pMaxReserve.add(pays, reserve, cluster, pdt, false);
+                            pMaxReserve.add(pays,
+                                            reserve, cluster_participation,
+                                            pdt,
+                                            false);
 
                             // 17 quater
-                            pRunningUnits.add(pays, reserve, cluster, pdt, false);
+                            pRunningUnits.add(pays,
+                                              reserve, cluster_participation,
+                                              pdt,
+                                              false);
                         }
-                        cluster++;
+                        cluster_participation++;
                     }
                     reserve++;
                 }

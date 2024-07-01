@@ -27,8 +27,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
         {
             if (capacityReservation.AllReservesParticipation[cluster].maxPower != CLUSTER_NOT_PARTICIPATING)
                 builder.RunningClusterReserveParticipation(
-                  data.thermalClusters[pays]
-                    .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster],
+                  capacityReservation.AllReservesParticipation[cluster].indexClusterParticipation,
                   1);
         }
 
@@ -36,8 +35,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
           .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
           .equalTo();
         data.CorrespondanceCntNativesCntOptim[pdt]
-          .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation
-                                                                .globalReserveIndex]
+          .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation.globalReserveIndex]
           = builder.data.nombreDeContraintes;
         ConstraintNamer namer(builder.data.NomDesContraintes);
         const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
