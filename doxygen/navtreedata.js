@@ -101,9 +101,9 @@ var NAVTREEINDEX =
 "dir_8acb0bb0f0e165ff3e061f83060a4d60.html",
 "functions_m.html",
 "minmax_8h_source.html",
-"structAntares_1_1Data_1_1DailyDemand.html#a11ba7fd49661f192700bcd64117d193c",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7309dce5ec0dd2134b6e2788294af4a1",
-"structHydroMaxPowerStudy.html"
+"structAntares_1_1Data_1_1DailyDemand.html#abf4245f123852739c1b3264dd244c53d",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html#a3c6b2721c744e9eac116a64bcbbfbed6",
+"structMinDownTimeData.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

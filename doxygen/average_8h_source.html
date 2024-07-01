@@ -183,7 +183,7 @@ $(document).ready(function(){initNavTree('average_8h_source.html',''); initResiz
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">enum</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a196bf4ca81b82f0ad7f09df89019973faf51d1f7014684caae18ef93b22d50ff8">   46</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a196bf4ca81b82f0ad7f09df89019973faf51d1f7014684caae18ef93b22d50ff8">count</a> = 1 + NextT::count,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a800ea357819c35140e43a246e2694a42af51d1f7014684caae18ef93b22d50ff8">   46</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a800ea357819c35140e43a246e2694a42af51d1f7014684caae18ef93b22d50ff8">count</a> = 1 + NextT::count,</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    };</div>
@@ -243,20 +243,20 @@ $(document).ready(function(){initNavTree('average_8h_source.html',''); initResiz
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">switch</span> (precision)</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            {</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            <span class="keywordflow">case</span> Category::hourly:</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                InternalExportValues&lt;maxHoursInAYear, VCardT, Category::hourly&gt;(report,</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                                                                                Memory::RawPointer(</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                                                                                  avgdata.hourly));</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                InternalExportValues&lt;HOURS_PER_YEAR, VCardT, Category::hourly&gt;(report,</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                                                                               Memory::RawPointer(</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                                                                                 avgdata.hourly));</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordflow">case</span> Category::daily:</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                InternalExportValues&lt;maxDaysInAYear, VCardT, Category::daily&gt;(report,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                                                                              avgdata.daily);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <span class="keywordflow">case</span> Category::weekly:</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                InternalExportValues&lt;maxWeeksInAYear, VCardT, Category::weekly&gt;(report,</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                                                                                avgdata.weekly);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordflow">case</span> Category::monthly:</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                InternalExportValues&lt;maxMonths, VCardT, Category::monthly&gt;(report, avgdata.monthly);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                InternalExportValues&lt;DAYS_PER_YEAR, VCardT, Category::daily&gt;(report, avgdata.daily);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            <span class="keywordflow">case</span> Category::weekly:</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                InternalExportValues&lt;WEEKS_PER_YEAR, VCardT, Category::weekly&gt;(report,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                                                                               avgdata.weekly);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            <span class="keywordflow">case</span> Category::monthly:</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                InternalExportValues&lt;MONTHS_PER_YEAR, VCardT, Category::monthly&gt;(report,</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                                                                                 avgdata.monthly);</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            <span class="keywordflow">case</span> Category::annual:</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                InternalExportValues&lt;1, VCardT, Category::annual&gt;(report, avgdata.year);</div>
@@ -377,9 +377,9 @@ $(document).ready(function(){initNavTree('average_8h_source.html',''); initResiz
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition</b> variable.h:25</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html">Antares::Solver::Variable::R::AllYears::Average::Data</a></div><div class="ttdef"><b>Definition</b> average.h:52</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition</b> average.h:38</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html_a196bf4ca81b82f0ad7f09df89019973faf51d1f7014684caae18ef93b22d50ff8"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a196bf4ca81b82f0ad7f09df89019973faf51d1f7014684caae18ef93b22d50ff8">Antares::Solver::Variable::R::AllYears::Average::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">The count if item in the list.</div><div class="ttdef"><b>Definition</b> average.h:46</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html_a2330e2862e88201cfd95b64035125288"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a2330e2862e88201cfd95b64035125288">Antares::Solver::Variable::R::AllYears::Average::Name</a></div><div class="ttdeci">static const char * Name()</div><div class="ttdoc">Name of the filter.</div><div class="ttdef"><b>Definition</b> average.h:58</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html_a78db0f8bffc05da1df4366d1b2f25054"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a78db0f8bffc05da1df4366d1b2f25054">Antares::Solver::Variable::R::AllYears::Average::NextType</a></div><div class="ttdeci">NextT NextType</div><div class="ttdoc">Type of the net item in the list.</div><div class="ttdef"><b>Definition</b> average.h:41</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html_a800ea357819c35140e43a246e2694a42af51d1f7014684caae18ef93b22d50ff8"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a800ea357819c35140e43a246e2694a42af51d1f7014684caae18ef93b22d50ff8">Antares::Solver::Variable::R::AllYears::Average::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">The count if item in the list.</div><div class="ttdef"><b>Definition</b> average.h:46</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

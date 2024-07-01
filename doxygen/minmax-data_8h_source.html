@@ -190,10 +190,10 @@ $(document).ready(function(){initNavTree('minmax-data_8h_source.html',''); initR
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> mergeSup(uint year, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; rhs);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::vector&lt;Data&gt; annual{1};</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::vector&lt;Data&gt; monthly{maxMonths};</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::vector&lt;Data&gt; weekly{maxWeeksInAYear};</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::vector&lt;Data&gt; daily{maxDaysInAYear};</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::vector&lt;Data&gt; hourly{maxHoursInAYear};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::vector&lt;Data&gt; monthly{MONTHS_PER_YEAR};</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::vector&lt;Data&gt; weekly{WEEKS_PER_YEAR};</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::vector&lt;Data&gt; daily{DAYS_PER_YEAR};</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::vector&lt;Data&gt; hourly{HOURS_PER_YEAR};</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}; <span class="comment">// class MinMaxData</span></div>
 </div>

@@ -192,13 +192,13 @@ $(document).ready(function(){initNavTree('averagedata_8h_source.html',''); initR
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    uint64_t dynamicMemoryUsage()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">return</span> <span class="keyword">sizeof</span>(double) * maxHoursInAYear + <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>) * nbYearsCapacity;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">return</span> <span class="keyword">sizeof</span>(double) * HOURS_PER_YEAR + <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>) * nbYearsCapacity;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">double</span> monthly[maxMonths];</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">double</span> weekly[maxWeeksInAYear];</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">double</span> daily[maxDaysInAYear];</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">double</span> monthly[MONTHS_PER_YEAR];</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">double</span> weekly[WEEKS_PER_YEAR];</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">double</span> daily[DAYS_PER_YEAR];</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    Antares::Memory::Stored&lt;double&gt;::Type hourly;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">double</span>* year;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbYearsCapacity;</div>

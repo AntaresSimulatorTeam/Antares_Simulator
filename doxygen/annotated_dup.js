@@ -526,11 +526,6 @@ var annotated_dup =
             [ "VCardSpilledEnergy", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy" ]
           ] ],
           [ "Category", null, [
-            [ "MaxRowCount", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount.html", null ],
-            [ "MaxRowCount< daily >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01daily_01_4.html", null ],
-            [ "MaxRowCount< hourly >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01hourly_01_4.html", null ],
-            [ "MaxRowCount< monthly >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01monthly_01_4.html", null ],
-            [ "MaxRowCount< weekly >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01weekly_01_4.html", null ],
             [ "NextLevel", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html", null ]
           ] ],
           [ "Common", null, [

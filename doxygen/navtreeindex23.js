@@ -1,6 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structAntares_1_1Data_1_1DailyDemand.html#a11ba7fd49661f192700bcd64117d193c":[7,0,0,4,28,1],
 "structAntares_1_1Data_1_1DailyDemand.html#abf4245f123852739c1b3264dd244c53d":[7,0,0,4,28,0],
 "structAntares_1_1Data_1_1MonthlyGenerationTargetData.html":[7,0,0,4,36],
 "structAntares_1_1Data_1_1MonthlyGenerationTargetData.html#a93325064a31e8aa5ba40d51a88f5dfc2":[7,0,0,4,36,2],
@@ -89,12 +88,7 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[7,0,0,13,4,0,3,0],
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[7,0,0,13,4,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[7,0,0,13,4,8,0],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount.html":[7,0,0,13,4,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01daily_01_4.html":[7,0,0,13,4,1,1],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01hourly_01_4.html":[7,0,0,13,4,1,2],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01monthly_01_4.html":[7,0,0,13,4,1,3],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01weekly_01_4.html":[7,0,0,13,4,1,4],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[7,0,0,13,4,1,5],
+"structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[7,0,0,13,4,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html":[7,0,0,13,4,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html":[7,0,0,13,4,2,1],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html":[7,0,0,13,4,2,2],
@@ -249,5 +243,11 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html":[7,0,0,13,4,4,90],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a131cef324d11d9880f71aa83616a151c":[7,0,0,13,4,4,90,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#adbca1497b750785315490d938a62d0f2":[7,0,0,13,4,4,90,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html":[7,0,0,13,4,4,86]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html":[7,0,0,13,4,4,86],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7309dce5ec0dd2134b6e2788294af4a1":[7,0,0,13,4,4,86,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7949987ce1c23dcd30da757005e09002":[7,0,0,13,4,4,86,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html":[7,0,0,13,4,4,87],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#a6892e85e47da9b085273c0a01fc2f0ce":[7,0,0,13,4,4,87,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#ae7e192a761b40dc071ce0b483bfeb955":[7,0,0,13,4,4,87,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html":[7,0,0,13,4,4,88]
 };

@@ -227,7 +227,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordflow">for</span> (uint i = 0; i != ColumnCountT; ++i)</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        {</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            Antares::Memory::Stored&lt;double&gt;::ReturnType array = intermediateValues[i].hour;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            {</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                array[y] *= v;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            }</div>
@@ -240,7 +240,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">for</span> (uint i = 0; i != ColumnCountT; ++i)</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            Antares::Memory::Stored&lt;double&gt;::ReturnType array = intermediateValues[i].hour;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            {</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                array[y] = std::abs(array[y]) &gt; 0. ? 1. : 0.;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            }</div>
@@ -253,7 +253,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keywordflow">for</span> (uint i = 0; i != ColumnCountT; ++i)</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        {</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            Antares::Memory::Stored&lt;double&gt;::ReturnType array = intermediateValues[i].hour;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            {</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                array[y] = std::abs(array[y]) &gt; 0. ? 100. : 0.;</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            }</div>
@@ -399,7 +399,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            assert(src != NULL);</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <span class="keywordflow">for</span> (uint h = 0; h != maxHoursInAYear; ++h)</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <span class="keywordflow">for</span> (uint h = 0; h != HOURS_PER_YEAR; ++h)</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            {</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                out[i].hour[h] += src[h];</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            }</div>
@@ -415,7 +415,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            assert(src != NULL);</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>            <span class="keywordflow">for</span> (uint h = 0; h != maxHoursInAYear; ++h)</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>            <span class="keywordflow">for</span> (uint h = 0; h != HOURS_PER_YEAR; ++h)</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            {</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                <span class="keywordflow">if</span> (out[i].hour[h] &lt; src[h])</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                {</div>
@@ -443,7 +443,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keywordflow">for</span> (<span class="keyword">typename</span> Type::const_iterator i = intermediateValues.begin(); i != end; ++i)</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        {</div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            array = (*i).hour;</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            {</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>                array[y] *= v;</div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            }</div>
@@ -458,7 +458,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keywordflow">for</span> (<span class="keyword">typename</span> Type::const_iterator i = intermediateValues.begin(); i != end; ++i)</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        {</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            array = (*i).hour;</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            {</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                array[y] = std::abs(array[y]) &gt; 0. ? 1. : 0.;</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            }</div>
@@ -473,7 +473,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keywordflow">for</span> (<span class="keyword">typename</span> Type::const_iterator i = intermediateValues.begin(); i != end; ++i)</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        {</div>
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            array = (*i).hour;</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            {</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                array[y] = std::abs(array[y]) &gt; 0. ? 100. : 0.;</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            }</div>
@@ -670,7 +670,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);</div>
 <div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span> </div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>            assert(src != NULL);</div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>            <span class="keywordflow">for</span> (uint h = 0; h != maxHoursInAYear; ++h)</div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>            <span class="keywordflow">for</span> (uint h = 0; h != HOURS_PER_YEAR; ++h)</div>
 <div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>            {</div>
 <div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>                out[i].hour[h] += src[h];</div>
 <div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>            }</div>
@@ -686,7 +686,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);</div>
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span> </div>
 <div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>            assert(src != NULL);</div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>            <span class="keywordflow">for</span> (uint h = 0; h != maxHoursInAYear; ++h)</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>            <span class="keywordflow">for</span> (uint h = 0; h != HOURS_PER_YEAR; ++h)</div>
 <div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>            {</div>
 <div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>                <span class="keywordflow">if</span> (out[i].hour[h] &lt; src[h])</div>
 <div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>                {</div>
@@ -709,7 +709,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> MultiplyHourlyResultsBy(U&amp; intermediateValues, <span class="keyword">const</span> <span class="keywordtype">double</span> v)</div>
 <div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>    {</div>
 <div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>        assert(!std::isnan(v));</div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>        <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>        <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>        {</div>
 <div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>            intermediateValues.hour[y] *= v;</div>
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>        }</div>
@@ -718,7 +718,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> SetTo1IfPositive(U&amp; intermediateValues)</div>
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>    {</div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>        <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>        <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>        {</div>
 <div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>            intermediateValues.hour[y] = std::abs(intermediateValues.hour[y]) &gt; 0. ? 1. : 0.;</div>
 <div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        }</div>
@@ -727,7 +727,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
 <div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> Or(U&amp; intermediateValues)</div>
 <div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>    {</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>        <span class="keywordflow">for</span> (uint y = 0; y != maxHoursInAYear; ++y)</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>        <span class="keywordflow">for</span> (uint y = 0; y != HOURS_PER_YEAR; ++y)</div>
 <div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>        {</div>
 <div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>            intermediateValues.hour[y] = std::abs(intermediateValues.hour[y]) &gt; 0. ? 100. : 0.;</div>
 <div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>        }</div>
@@ -839,7 +839,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>          = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);</div>
 <div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span> </div>
 <div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>        assert(src != NULL);</div>
-<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>        <span class="keywordflow">for</span> (uint h = 0; h != maxHoursInAYear; ++h)</div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>        <span class="keywordflow">for</span> (uint h = 0; h != HOURS_PER_YEAR; ++h)</div>
 <div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>        {</div>
 <div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>            out.hour[h] += src[h];</div>
 <div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>        }</div>
@@ -852,7 +852,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>          = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);</div>
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span> </div>
 <div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>        assert(src != NULL);</div>
-<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>        <span class="keywordflow">for</span> (uint h = 0; h != maxHoursInAYear; ++h)</div>
+<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>        <span class="keywordflow">for</span> (uint h = 0; h != HOURS_PER_YEAR; ++h)</div>
 <div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>        {</div>
 <div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>            <span class="keywordflow">if</span> (out.hour[h] &lt; src[h])</div>
 <div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>            {</div>
