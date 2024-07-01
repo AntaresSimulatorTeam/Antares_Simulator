@@ -87,10 +87,9 @@ jobs:
     - name: Install gh if needed
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
-           yum -y install dnf
-           dnf -y install 'dnf-command(config-manager)'
-           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-           dnf -y install gh
+           wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
+           rpm -i gh_2.52.0_linux_amd64.rpm         
+           gh --version   
 
     - name: Configure
       run: |
