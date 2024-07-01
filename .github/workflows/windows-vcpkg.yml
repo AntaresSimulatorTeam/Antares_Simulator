@@ -138,6 +138,7 @@ jobs:
           cmake --build _build --config Release -j$(nproc)
 
       - name: Read simtest version
+        shell: bash
         run: |
           echo 'simtest<<EOF' >> $GITHUB_ENV
           cat ./simtest.json >> $GITHUB_ENV
