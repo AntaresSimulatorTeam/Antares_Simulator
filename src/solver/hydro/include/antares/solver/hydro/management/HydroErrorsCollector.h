@@ -52,7 +52,6 @@ public:
     void CheckForErrors() const;
 
 private:
-    // for log
     std::multimap<std::string, AreaSingleErrorMessage> areasErrorMap_;
 };
 
