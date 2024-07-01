@@ -41,7 +41,7 @@ namespace Options
 {
 static void ResetButton(Component::Button* button, bool value)
 {
-    assert(button != NULL);
+    assert(button);
     if (value)
     {
         button->image("images/16x16/light_green.png");
@@ -56,7 +56,7 @@ static void ResetButton(Component::Button* button, bool value)
 
 static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapacities value)
 {
-    assert(button != NULL);
+    assert(button);
     button->image(transmissionCapacityIcon(value));
     button->caption(GlobalTransmissionCapacitiesToString_Display(value));
 }
@@ -349,7 +349,7 @@ Optimization::Optimization(wxWindow* parent) :
     sizer->Add(panel, 0, wxALL | wxEXPAND);
 
     // refresh
-    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Optimization::onInternalMotion), NULL, this);
+    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Optimization::onInternalMotion), nullptr, this);
 
     refresh();
     SetSizer(sizer);

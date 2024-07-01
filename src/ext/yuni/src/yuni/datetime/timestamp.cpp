@@ -97,9 +97,9 @@ char* FormatTimestampToString(const AnyString& format, int64_t timestamp)
     if (timestamp <= 0)
     {
 #ifdef YUNI_OS_MSVC
-        timestamp = (int64_t)::_time64(NULL);
+        timestamp = (int64_t)::_time64(nullptr);
 #else
-        timestamp = (int64_t)::time(NULL);
+        timestamp = (int64_t)::time(nullptr);
 #endif
     }
 

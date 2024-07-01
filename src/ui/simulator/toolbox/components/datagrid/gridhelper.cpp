@@ -271,7 +271,7 @@ public:
                 attr = pStyles[(uint)style];
         }
 
-        assert(attr != NULL and "Invalid cell attribute");
+        assert(attr  &&"Invalid cell attribute");
         attr->IncRef();
         return attr;
     }

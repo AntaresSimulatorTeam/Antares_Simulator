@@ -61,7 +61,7 @@ void Converter::reset()
 {
     if (!valid())
         return;
-    iconv((iconv_t)pContext, NULL, NULL, NULL, NULL);
+    iconv((iconv_t)pContext, nullptr, nullptr, nullptr, nullptr);
 }
 
 const char* Converter::Name(Charset::Type type)

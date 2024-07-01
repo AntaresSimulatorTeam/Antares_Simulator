@@ -221,7 +221,7 @@ bool Create::performWL(Context& ctx)
         }
     }
     ctx.autoselectAreas.push_back(ctx.area);
-    return (ctx.area != NULL);
+    return (ctx.area);
 }
 
 void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)

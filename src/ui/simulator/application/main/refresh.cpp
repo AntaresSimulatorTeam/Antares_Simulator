@@ -315,7 +315,7 @@ void ApplWnd::refreshMenuOutput()
                       it->GetId(),
                       wxEVT_COMMAND_MENU_SELECTED,
                       wxCommandEventHandler(Forms::ApplWnd::evtOnOpenOutputInExplorer),
-                      NULL,
+                      nullptr,
                       parentForm);
                 }
             }

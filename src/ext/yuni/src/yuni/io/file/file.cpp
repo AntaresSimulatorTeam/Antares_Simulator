@@ -71,7 +71,7 @@ bool Size(const AnyString& filename, uint64_t& value)
     }
 
     HANDLE hndl = CreateFileW(
-      wstr.c_str(), 0, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+      wstr.c_str(), 0, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (hndl == INVALID_HANDLE_VALUE)
     {
         value = 0u;
@@ -158,7 +158,7 @@ bool GetLastWriteTime(HANDLE hFile)
         // Convert the last-write time to local time.
         if (!FileTimeToSystemTime(&ftWrite, &stUTC))
                 return false;
-        if (!SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal))
+        if (!SystemTimeToTzSpecificLocalTime(nullptr, &stUTC, &stLocal))
                 return false;
 
         return true;
