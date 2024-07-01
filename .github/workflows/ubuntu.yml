@@ -141,7 +141,7 @@ jobs:
           prop_path: 'version'
 
       - name: Read simtest version
-        - run: |
+        run: |
           echo 'simtest<<EOF' >> $GITHUB_ENV
           cat ./simtest.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
