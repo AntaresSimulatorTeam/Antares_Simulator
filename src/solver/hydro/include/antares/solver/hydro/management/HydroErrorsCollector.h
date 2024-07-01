@@ -61,7 +61,7 @@ private:
 };
 
 template<class T>
-HydroErrorsCollector::AreaReference& operator<<(const T& msg)
+HydroErrorsCollector::AreaReference& HydroErrorsCollector::AreaReference::operator<<(const T& msg)
 {
     std::ostringstream strfy;
     strfy << msg;
