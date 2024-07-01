@@ -27,8 +27,8 @@
 #include <yuni/core/getopt.h>
 #include <yuni/core/string.h>
 
-#include <antares/study/study.h>
 #include <antares/optimization-options/options.h>
+#include <antares/study/study.h>
 
 /*!
 ** \brief Command line settings for launching the simulation

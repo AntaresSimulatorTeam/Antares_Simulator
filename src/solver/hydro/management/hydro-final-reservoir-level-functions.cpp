@@ -40,30 +40,34 @@ void CheckFinalReservoirLevelsConfiguration(Data::AreaList& areas,
                                             uint year)
 {
     if (!parameters.yearsFilter.at(year))
-        return;
-
-    areas.each([&areas, &parameters, &scenarioInitialHydroLevels, &scenarioFinalHydroLevels, year](Data::Area &area)
     {
-         double initialLevel = scenarioInitialHydroLevels.entry[area.index][year];
-         double finalLevel = scenarioFinalHydroLevels.entry[area.index][year];
+        return;
+    }
 
-         Data::FinalLevelValidator validator(area.hydro,
-                                             area.index,
-                                             area.name,
-                                             initialLevel,
-                                             finalLevel,
-                                             year,
-                                             parameters.simulationDays.end,
-                                             parameters.firstMonthInYear);
-         if (!validator.check())
-         {
-             throw FatalError("hydro final level : infeasibility");
-         }
-         if (validator.finalLevelFineForUse())
-         {
-             area.hydro.deltaBetweenFinalAndInitialLevels[year] = finalLevel - initialLevel;
-         }
-     });
+    areas.each(
+      [&areas, &parameters, &scenarioInitialHydroLevels, &scenarioFinalHydroLevels, year](
+        Data::Area& area)
+      {
+          double initialLevel = scenarioInitialHydroLevels.entry[area.index][year];
+          double finalLevel = scenarioFinalHydroLevels.entry[area.index][year];
+
+          Data::FinalLevelValidator validator(area.hydro,
+                                              area.index,
+                                              area.name,
+                                              initialLevel,
+                                              finalLevel,
+                                              year,
+                                              parameters.simulationDays.end,
+                                              parameters.firstMonthInYear);
+          if (!validator.check())
+          {
+              throw FatalError("hydro final level : infeasibility");
+          }
+          if (validator.finalLevelFineForUse())
+          {
+              area.hydro.deltaBetweenFinalAndInitialLevels[year] = finalLevel - initialLevel;
+          }
+      });
 } // End function CheckFinalReservoirLevelsConfiguration
 
 } // namespace Antares::Solver

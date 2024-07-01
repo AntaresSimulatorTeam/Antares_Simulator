@@ -31,8 +31,10 @@ namespace Antares::Solver::Simulation
 {
 Adequacy::Adequacy(Data::Study& study,
                    IResultWriter& resultWriter,
-                   Simulation::ISimulationObserver& simulationObserver) :
- study(study), resultWriter(resultWriter), simulationObserver_(simulationObserver)
+                   Simulation::ISimulationObserver& simulationObserver):
+    study(study),
+    resultWriter(resultWriter),
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -68,7 +70,10 @@ bool Adequacy::simulationBegin()
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], nbHoursInAWeek, numSpace);
+            SIM_InitialisationProblemeHebdo(study,
+                                            pProblemesHebdo[numSpace],
+                                            nbHoursInAWeek,
+                                            numSpace);
         }
     }
 
@@ -405,8 +410,8 @@ void Adequacy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, 
 {
     for (uint i = 0; i < study.areas.size(); ++i)
     {
-        auto &area = *study.areas[i];
-        auto &scratchpad = scratchmap.at(&area);
+        auto& area = *study.areas[i];
+        auto& scratchpad = scratchmap.at(&area);
 
         std::ranges::fill(scratchpad.mustrunSum, 0);
         std::ranges::fill(scratchpad.originalMustrunSum, 0);
@@ -414,9 +419,9 @@ void Adequacy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, 
         auto& mrs = scratchpad.mustrunSum;
         auto& adq = scratchpad.originalMustrunSum;
 
-        for (const auto &cluster: area.thermal.list.each_mustrun_and_enabled())
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
         {
-            const auto &availableProduction = cluster->series.getColumn(year);
+            const auto& availableProduction = cluster->series.getColumn(year);
             for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
             {
                 mrs[h] += availableProduction[h];
@@ -426,7 +431,8 @@ void Adequacy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, 
             {
                 for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
                 {
-                    adq[h] += 2 * availableProduction[h]; // Why do we add the available production twice ?
+                    adq[h] += 2 * availableProduction[h]; // Why do we add the available production
+                                                          // twice ?
                 }
             }
         }

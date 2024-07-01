@@ -77,5 +77,9 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }
 
-    return OPT_OptimisationLineaire(options, problemeHebdo, adqPatchParams, writer, simulationObserver);
+    return OPT_OptimisationLineaire(options,
+                                    problemeHebdo,
+                                    adqPatchParams,
+                                    writer,
+                                    simulationObserver);
 }

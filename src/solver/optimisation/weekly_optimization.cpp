@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ */
 
 #include "antares/solver/optimisation/weekly_optimization.h"
 
@@ -25,19 +25,29 @@
 
 namespace Antares::Solver::Optimization
 {
-DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& options,
-                                                     PROBLEME_HEBDO* problemeHebdo,
-                                                     AdqPatchParams& adqPatchParams,
-                                                     uint thread_number,
-                                                     IResultWriter& writer,
-                                                     Simulation::ISimulationObserver& simulationObserver) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer, simulationObserver)
+DefaultWeeklyOptimization::DefaultWeeklyOptimization(
+  const OptimizationOptions& options,
+  PROBLEME_HEBDO* problemeHebdo,
+  AdqPatchParams& adqPatchParams,
+  uint thread_number,
+  IResultWriter& writer,
+  Simulation::ISimulationObserver& simulationObserver):
+    WeeklyOptimization(options,
+                       problemeHebdo,
+                       adqPatchParams,
+                       thread_number,
+                       writer,
+                       simulationObserver)
 {
 }
 
 void DefaultWeeklyOptimization::solve()
 {
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, simulationObserver_.get());
+    OPT_OptimisationHebdomadaire(options_,
+                                 problemeHebdo_,
+                                 adqPatchParams_,
+                                 writer_,
+                                 simulationObserver_.get());
 }
 
 } // namespace Antares::Solver::Optimization

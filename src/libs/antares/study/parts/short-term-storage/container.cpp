@@ -37,8 +37,7 @@ namespace Antares::Data::ShortTermStorage
 {
 bool STStorageInput::validate() const
 {
-    return std::ranges::all_of(storagesByIndex, [](auto& cluster)
-        { return cluster.validate(); });
+    return std::ranges::all_of(storagesByIndex, [](auto& cluster) { return cluster.validate(); });
 }
 
 bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
@@ -68,8 +67,9 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
         storagesByIndex.push_back(cluster);
     }
 
-    std::ranges::sort(storagesByIndex, [](const auto& a, const auto& b)
-        { return a.properties.name < b.properties.name; });
+    std::ranges::sort(storagesByIndex,
+                      [](const auto& a, const auto& b)
+                      { return a.properties.name < b.properties.name; });
 
     return true;
 }
@@ -100,8 +100,8 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
     IniFile ini;
 
     logs.debug() << "saving file " << pathIni;
-    std::ranges::for_each(storagesByIndex, [&ini](auto& storage)
-        { return storage.saveProperties(ini); });
+    std::ranges::for_each(storagesByIndex,
+                          [&ini](auto& storage) { return storage.saveProperties(ini); });
 
     return ini.save(pathIni);
 }
@@ -109,20 +109,20 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
 bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 {
     Yuni::IO::Directory::Create(folder);
-    return std::ranges::all_of(storagesByIndex, [&folder](auto& storage)
-            { return storage.saveSeries(folder + SEP + storage.id); });
+    return std::ranges::all_of(storagesByIndex,
+                               [&folder](auto& storage)
+                               { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
 std::size_t STStorageInput::count() const
 {
-    return std::ranges::count_if(storagesByIndex, [](const STStorageCluster& st)
-        { return st.properties.enabled; });
+    return std::ranges::count_if(storagesByIndex,
+                                 [](const STStorageCluster& st) { return st.properties.enabled; });
 }
 
 uint STStorageInput::removeDisabledClusters()
 {
-    return std::erase_if(storagesByIndex, [](const auto& c)
-        { return !c.enabled(); });
+    return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
 }
 
 } // namespace Antares::Data::ShortTermStorage
