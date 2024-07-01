@@ -32,11 +32,22 @@ public:
     void Collect(const std::string& area_name, const std::string& message);
     void Collect(const std::string& message);
     void CheckForFatalErrors() const;
+    template<class T>
+    std::ostream& operator<<(const T& obj);
 
 private:
+    // for log
+    constexpr unsigned int TRHESHOLD_NUMBER_OF_ERRORS_FOR_ONE_AREA = 10;
     std::map<std::string, unsigned int> area_errors_counter_;
     bool errors_limit_reached_ = false;
     bool stop_ = false;
     // std::vector<std::string> fatal_errors_;
 };
+
+template<class T>
+HydroErrorsCollector& HydroErrorsCollector::operator<<(const T& obj)
+{
+    logs.error() << obj;
+    return *this;
+}
 } // namespace Antares
