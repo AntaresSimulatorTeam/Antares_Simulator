@@ -176,8 +176,8 @@ bool Sets<T>::saveToFile(const StringT& filename) const
     using namespace Yuni;
     using namespace Antares;
 
-    IO::File::Stream file;
-    if (!file.open(filename, IO::OpenMode::write | IO::OpenMode::truncate))
+    Yuni::IO::File::Stream file;
+    if (!file.open(filename, Yuni::IO::OpenMode::write | Yuni::IO::OpenMode::truncate))
     {
         logs.error() << "I/O Error: " << filename << ": impossible to write the file";
         return false;
