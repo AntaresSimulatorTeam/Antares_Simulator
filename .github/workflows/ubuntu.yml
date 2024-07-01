@@ -154,7 +154,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{ fromJson(env.PACKAGE_JSON).version }}
+          simtest-tag: ${{ fromJson(env.simtest).version }}
           batch-name: valid-named-mps
           os: ${{ env.os }}
           variant: "named-mps"
