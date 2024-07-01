@@ -21,9 +21,8 @@
 
 #pragma once
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
-
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "base_weekly_optimization.h"
 
@@ -36,9 +35,8 @@ public:
                                        PROBLEME_HEBDO* problemeHebdo,
                                        Antares::Data::AdequacyPatch::AdqPatchParams&,
                                        uint numSpace,
-                                     IResultWriter& writer,
-                                     Simulation::ISimulationObserver& simulationObserver
-                                       );
+                                       IResultWriter& writer,
+                                       Simulation::ISimulationObserver& simulationObserver);
     ~DefaultWeeklyOptimization() override = default;
     void solve() override;
 };

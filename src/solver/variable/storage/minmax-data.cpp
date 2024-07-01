@@ -29,10 +29,10 @@ constexpr double eps = 1.e-7;
 
 static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
 {
-    for (auto& data : array)
+    for (auto& data: array)
     {
         data.value = opInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
-        data.indice = (uint32_t)(-1); // invalid indice
+        data.indice = (uint32_t)(-1);                 // invalid indice
     }
 }
 

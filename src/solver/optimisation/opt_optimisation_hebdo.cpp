@@ -45,8 +45,11 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
-        if (!OPT_PilotageOptimisationLineaire(
-              options, pProblemeHebdo, adqPatchParams, writer, simulationObserver))
+        if (!OPT_PilotageOptimisationLineaire(options,
+                                              pProblemeHebdo,
+                                              adqPatchParams,
+                                              writer,
+                                              simulationObserver))
         {
             logs.error() << "Linear optimization failed";
             throw UnfeasibleProblemError("Linear optimization failed");

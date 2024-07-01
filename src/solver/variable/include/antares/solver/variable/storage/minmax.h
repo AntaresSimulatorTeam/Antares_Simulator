@@ -84,14 +84,19 @@ protected:
             {
             case Category::hourly:
                 InternalExportIndices<maxHoursInAYear, VCardT>(report,
-                                                               Memory::RawPointer(minmax.hourly.data()),
+                                                               Memory::RawPointer(
+                                                                 minmax.hourly.data()),
                                                                fileLevel);
                 break;
             case Category::daily:
-                InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily.data(), fileLevel);
+                InternalExportIndices<maxDaysInAYear, VCardT>(report,
+                                                              minmax.daily.data(),
+                                                              fileLevel);
                 break;
             case Category::weekly:
-                InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly.data(), fileLevel);
+                InternalExportIndices<maxWeeksInAYear, VCardT>(report,
+                                                               minmax.weekly.data(),
+                                                               fileLevel);
                 break;
             case Category::monthly:
                 InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly.data(), fileLevel);
@@ -107,7 +112,8 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<maxHoursInAYear, VCardT>(report,
-                                                              Memory::RawPointer(minmax.hourly.data()));
+                                                              Memory::RawPointer(
+                                                                minmax.hourly.data()));
                 break;
             case Category::daily:
                 InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily.data());

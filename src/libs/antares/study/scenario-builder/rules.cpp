@@ -288,7 +288,9 @@ bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey, String value,
 
     const Data::Area* area = getArea(areaname, updaterMode);
     if (!area)
+    {
         return false;
+    }
 
     double finalLevel = fromStringToHydroLevel(value, 1.);
     hydroFinalLevels.setTSnumber(area->index, year, finalLevel);
@@ -450,8 +452,7 @@ bool Rules::apply()
 
 void Rules::sendWarningsForDisabledClusters()
 {
-    for (auto it = disabledClustersOnRuleActive.begin();
-         it != disabledClustersOnRuleActive.end();
+    for (auto it = disabledClustersOnRuleActive.begin(); it != disabledClustersOnRuleActive.end();
          it++)
     {
         std::vector<uint>& scenariiForCurrentCluster = it->second;

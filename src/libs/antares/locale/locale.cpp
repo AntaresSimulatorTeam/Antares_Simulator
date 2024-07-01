@@ -37,7 +37,7 @@ void InitializeDefaultLocale()
     }
 
 #else
-    if (! std::setlocale(LC_ALL, "en_US.utf8"))
+    if (!std::setlocale(LC_ALL, "en_US.utf8"))
     {
         std::cerr << "impossible to set locale to en_US.utf8" << std::endl;
     }

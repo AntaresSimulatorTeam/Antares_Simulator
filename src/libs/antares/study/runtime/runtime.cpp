@@ -214,8 +214,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
     else
     {
-        simulationDaysPerMonth[ca.month] = study.calendar.months[ca.month].days
-                                                 - ca.dayMonth;
+        simulationDaysPerMonth[ca.month] = study.calendar.months[ca.month].days - ca.dayMonth;
         simulationDaysPerMonth[cb.month] = cb.dayMonth + 1;
         for (uint i = ca.month + 1; i < cb.month; ++i)
         {
@@ -442,7 +441,8 @@ void StudyRangeLimits::checkIntegrity() const
 
 void StudyRuntimeInfos::disableAllFilters(Study& study)
 {
-    study.areas.each([](Data::Area& area)
+    study.areas.each(
+      [](Data::Area& area)
       {
           area.filterSynthesis = filterAll;
           area.filterYearByYear = filterAll;
