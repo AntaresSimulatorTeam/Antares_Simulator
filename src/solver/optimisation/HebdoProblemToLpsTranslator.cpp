@@ -21,6 +21,7 @@
  */
 
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
+
 #include "antares/solver/utils/filename.h"
 
 namespace Antares::Solver
@@ -31,7 +32,8 @@ namespace
 /**
  * @brief Copies elements from one container to another.
  *
- * This function takes two containers as arguments. It copies elements from the first container to the second one.
+ * This function takes two containers as arguments. It copies elements from the first container to
+ * the second one.
  *
  * @param in The container from which to copy elements.
  * @param out The container to which to copy elements.
@@ -41,14 +43,16 @@ void copy(const T& in, U& out)
 {
     std::ranges::copy(in, std::back_inserter(out));
 }
-}
+} // namespace
 
 WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
   const PROBLEME_ANTARES_A_RESOUDRE* problem,
   std::string_view name) const
 {
     if (problem == nullptr)
+    {
         return {};
+    }
     auto ret = WeeklyDataFromAntares();
 
     copy(problem->CoutLineaire, ret.LinearCost);
@@ -64,23 +68,33 @@ WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
     return ret;
 }
 
-ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(const PROBLEME_ANTARES_A_RESOUDRE* problem) const {
+ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(
+  const PROBLEME_ANTARES_A_RESOUDRE* problem) const
+{
     if (problem == nullptr)
+    {
         return ConstantDataFromAntares();
+    }
 
-    if (problem->NombreDeVariables <= 0) {
+    if (problem->NombreDeVariables <= 0)
+    {
         throw WeeklyProblemTranslationException("VariablesCount must be strictly positive");
     }
-    if (problem->NombreDeContraintes <= 0) {
+    if (problem->NombreDeContraintes <= 0)
+    {
         throw WeeklyProblemTranslationException("ConstraintesCount must be strictly positive");
     }
 
-    if (problem->NombreDeContraintes > problem->IndicesDebutDeLigne.size()) {
-        throw WeeklyProblemTranslationException("ConstraintesCount exceed IndicesDebutDeLigne size");
+    if (problem->NombreDeContraintes > problem->IndicesDebutDeLigne.size())
+    {
+        throw WeeklyProblemTranslationException(
+          "ConstraintesCount exceed IndicesDebutDeLigne size");
     }
 
-    if (problem->NombreDeContraintes > problem->NombreDeTermesDesLignes.size()) {
-        throw WeeklyProblemTranslationException("ConstraintesCount exceed NombreDeTermesDesLignes size");
+    if (problem->NombreDeContraintes > problem->NombreDeTermesDesLignes.size())
+    {
+        throw WeeklyProblemTranslationException(
+          "ConstraintesCount exceed NombreDeTermesDesLignes size");
     }
 
     ConstantDataFromAntares ret;
@@ -88,22 +102,23 @@ ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(const PRO
     ret.VariablesCount = problem->NombreDeVariables;
     ret.ConstraintesCount = problem->NombreDeContraintes;
 
-    ret.CoeffCount = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1] +
-                                problem->NombreDeTermesDesLignes[problem->NombreDeContraintes - 1];
+    ret.CoeffCount = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1]
+                     + problem->NombreDeTermesDesLignes[problem->NombreDeContraintes - 1];
 
     copy(problem->TypeDeVariable, ret.VariablesType);
 
-    copy(problem->CoefficientsDeLaMatriceDesContraintes,
-    ret.ConstraintsMatrixCoeff);
+    copy(problem->CoefficientsDeLaMatriceDesContraintes, ret.ConstraintsMatrixCoeff);
+    ret.ConstraintsMatrixCoeff.resize(ret.CoeffCount);
     copy(problem->IndicesColonnes, ret.ColumnIndexes);
-
+    ret.ColumnIndexes.resize(ret.CoeffCount);
     copy(problem->IndicesDebutDeLigne, ret.Mdeb);
+    ret.Mdeb.push_back(ret.CoeffCount);
     return ret;
 }
 
 WeeklyProblemTranslationException::WeeklyProblemTranslationException(
-  const std::string& string) noexcept
-: std::runtime_error{string}
+  const std::string& string) noexcept:
+    std::runtime_error{string}
 {
 }
 } // namespace Antares::Solver

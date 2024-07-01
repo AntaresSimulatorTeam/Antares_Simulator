@@ -64,12 +64,12 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
             if (options.ortoolsUsed && solver)
             {
                 ORTOOLS_LibererProbleme(solver);
-                solver = NULL;
+                solver = nullptr;
             }
-            else if (ProbSpx != NULL)
+            else if (ProbSpx)
             {
                 SPX_LibererProbleme(ProbSpx);
-                ProbSpx = NULL;
+                ProbSpx = nullptr;
             }
         }
     }

@@ -54,12 +54,12 @@ bool ATSP::loadFromINIFile(const String& filename)
         CString<50, false> key;
         CString<50, false> value;
 
-        for (section = ini.firstSection; section != NULL; section = section->next)
+        for (section = ini.firstSection; section; section = section->next)
         {
             if (section->name == ".general")
             {
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();
@@ -180,7 +180,7 @@ bool ATSP::loadFromINIFile(const String& filename)
                 info->distribution = Data::XCast::dtBeta;
 
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();

@@ -21,8 +21,9 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
 
-#include "scBuilderDataInterface.h"
 #include <functional>
+
+#include "scBuilderDataInterface.h"
 
 namespace Antares
 {

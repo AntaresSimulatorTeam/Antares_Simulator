@@ -30,7 +30,7 @@ namespace Forms
 {
 void ApplWnd::createNBSets()
 {
-    assert(NULL != pNotebook);
+    assert(pNotebook);
 
     pSets = new Window::Sets(pNotebook);
     pNotebook->add(pSets, wxT("sets"), wxT(""));

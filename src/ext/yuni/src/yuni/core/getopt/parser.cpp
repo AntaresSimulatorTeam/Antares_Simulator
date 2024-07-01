@@ -118,7 +118,7 @@ inline Context::Context(Parser& parser) : pParser(parser), pTokenIndex(1), pPara
 
 bool Context::findNextParameter(IOption* option, int argc, char* argv[])
 {
-    assert(option != NULL);
+    assert(option);
 
     if (not option->requireAdditionalParameter())
     {
@@ -343,7 +343,7 @@ GetOpt::ReturnCode Parser::operator()(int argc, char* argv[])
 
 void Parser::helpUsage(const char* argv0)
 {
-    assert(argv0 != NULL); // just in case
+    assert(argv0); // just in case// OK
 
     std::cout.write("Usage: ", 7);
     std::cout << ExtractFilenameOnly(argv0);

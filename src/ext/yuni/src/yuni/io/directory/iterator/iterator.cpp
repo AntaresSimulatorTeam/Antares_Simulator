@@ -148,7 +148,7 @@ Flow TraverseWindowsFolder(const String& filename,
                            bool files)
 {
     // Convertir the filename
-    assert(opts.wbuffer != NULL);
+    assert(opts.wbuffer);
     opts.wbuffer[0] = L'\\';
     opts.wbuffer[1] = L'\\';
     opts.wbuffer[2] = L'?';
@@ -199,12 +199,12 @@ Flow TraverseWindowsFolder(const String& filename,
         }
 
         const int sizeRequired
-          = WideCharToMultiByte(CP_UTF8, 0, data.cFileName, -1, NULL, 0, NULL, NULL);
+          = WideCharToMultiByte(CP_UTF8, 0, data.cFileName, -1, nullptr, 0, nullptr, nullptr);
         if (sizeRequired <= 0)
             continue;
         newName.reserve((uint)sizeRequired);
         WideCharToMultiByte(
-          CP_UTF8, 0, data.cFileName, -1, (char*)newName.data(), sizeRequired, NULL, NULL);
+          CP_UTF8, 0, data.cFileName, -1, (char*)newName.data(), sizeRequired, nullptr, nullptr);
         newName.resize(((uint)sizeRequired) - 1);
 
         newFilename.clear();

@@ -63,7 +63,7 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
  pDefaults(nullptr),
  pText(nullptr)
 {
-    assert(NULL != parent);
+    assert(parent);
     auto* config = new wxConfig(wxT(LOG_APPLICATION_NAME), wxT(LOG_APPLICATION_VENDOR));
 
     // Title of the Form

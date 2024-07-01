@@ -140,11 +140,10 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     }
 }
 
-void HydroManagement::prepareNetDemand(
-  uint year,
-  Data::SimulationMode mode,
-  const Antares::Data::Area::ScratchMap& scratchmap,
-  HydroSpecificMap& hydro_specific_map)
+void HydroManagement::prepareNetDemand(uint year,
+                                       Data::SimulationMode mode,
+                                       const Antares::Data::Area::ScratchMap& scratchmap,
+                                       HydroSpecificMap& hydro_specific_map)
 {
     areas_.each(
       [this, &year, &scratchmap, &mode, &hydro_specific_map](Data::Area& area)
@@ -197,9 +196,7 @@ void HydroManagement::prepareNetDemand(
       });
 }
 
-void HydroManagement::prepareEffectiveDemand(
-  uint year,
-  HydroSpecificMap& hydro_specific_map)
+void HydroManagement::prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map)
 {
     areas_.each(
       [this, &year, &hydro_specific_map](Data::Area& area)
@@ -216,7 +213,8 @@ void HydroManagement::prepareEffectiveDemand(
               double effectiveDemand = 0;
               // area.hydro.allocation is indexed by area index
               area.hydro.allocation.eachNonNull(
-                [this, &effectiveDemand, &day, &hydro_specific_map](unsigned areaIndex, double value)
+                [this, &effectiveDemand, &day, &hydro_specific_map](unsigned areaIndex,
+                                                                    double value)
                 {
                     const auto* area = areas_.byIndex[areaIndex];
                     effectiveDemand += hydro_specific_map[area].daily[day].DLN * value;

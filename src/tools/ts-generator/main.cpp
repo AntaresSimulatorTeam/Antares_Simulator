@@ -133,13 +133,13 @@ LinkPairs extractLinkNamesFromStudy(fs::path studyDir)
 {
     LinkPairs to_return;
     fs::path linksDir = studyDir / "input" / "links";
-    for (auto const& item : fs::directory_iterator{linksDir})
+    for (const auto& item: fs::directory_iterator{linksDir})
     {
         if (item.is_directory())
         {
             std::string sourceAreaName = item.path().filename().generic_string();
             auto targetAreas = extractTargetAreas(item);
-            for (auto& targetAreaName : targetAreas)
+            for (auto& targetAreaName: targetAreas)
             {
                 auto linkPair = std::make_pair(sourceAreaName, targetAreaName);
                 to_return.push_back(linkPair);
@@ -152,25 +152,26 @@ LinkPairs extractLinkNamesFromStudy(fs::path studyDir)
 bool pairs_match(const LinkPair& p1, const LinkPair& p2)
 {
     return (p1.first == p2.first && p1.second == p2.second)
-            || (p1.first == p2.second && p1.second == p2.first);
+           || (p1.first == p2.second && p1.second == p2.first);
 }
 
 const LinkPair* getMatchingPairInCollection(const LinkPair& pair, const LinkPairs& collection)
 {
-    for(const auto& p : collection)
+    for (const auto& p: collection)
     {
         if (pairs_match(pair, p))
+        {
             return &p;
+        }
     }
     return nullptr;
 }
 
-LinkPairs extractLinkNamesFromCmdLine(const LinkPairs& allLinks,
-                                  const std::string linksFromCmdLine)
+LinkPairs extractLinkNamesFromCmdLine(const LinkPairs& allLinks, const std::string linksFromCmdLine)
 {
     LinkPairs to_return;
     LinkPairs pairsFromCmdLine = splitStringIntoPairs(linksFromCmdLine, ';', '.');
-    for (auto& p : pairsFromCmdLine)
+    for (auto& p: pairsFromCmdLine)
     {
         if (const auto* found_pair = getMatchingPairInCollection(p, allLinks); found_pair)
         {
@@ -198,9 +199,11 @@ bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
     }
     if (key == "seed-tsgen-links")
     {
-        unsigned int seed {0};
-        if (! value.to<unsigned int>(seed))
+        unsigned int seed{0};
+        if (!value.to<unsigned int>(seed))
+        {
             return false;
+        }
         params.random.reset(seed);
         return true;
     }
@@ -218,14 +221,16 @@ StudyParamsForLinkTS readGeneralParamsForLinksTS(fs::path studyDir)
         // Skipping sections useless in the current context
         Yuni::String sectionName = section->name;
         if (sectionName != "general" && sectionName != "seeds - Mersenne Twister")
+        {
             continue;
+        }
 
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
-            if (! readLinkGeneralProperty(to_return, p->key, p->value))
+            if (!readLinkGeneralProperty(to_return, p->key, p->value))
             {
-                logs.warning() << ini.filename() << ": reading value of '"
-                               << p->key << "' went wrong";
+                logs.warning() << ini.filename() << ": reading value of '" << p->key
+                               << "' went wrong";
             }
         }
     }
@@ -236,7 +241,7 @@ std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmd
 {
     std::vector<LinkTSgenerationParams> to_return;
     to_return.reserve(linksFromCmdLine.size());
-    for (const auto& link_pair : linksFromCmdLine)
+    for (const auto& link_pair: linksFromCmdLine)
     {
         LinkTSgenerationParams params;
         params.namesPair = link_pair;
@@ -248,10 +253,12 @@ std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmd
 LinkTSgenerationParams* findLinkInList(const LinkPair& link_to_find,
                                        std::vector<LinkTSgenerationParams>& linkList)
 {
-    for(auto& link : linkList)
+    for (auto& link: linkList)
     {
         if (link.namesPair == link_to_find)
+        {
             return &link;
+        }
     }
     return nullptr;
 }
@@ -297,16 +304,15 @@ bool readLinkIniProperty(LinkTSgenerationParams* link,
     return true;
 }
 
-void readLinkIniProperties(LinkTSgenerationParams* link,
-                           IniFile::Section* section)
+void readLinkIniProperties(LinkTSgenerationParams* link, IniFile::Section* section)
 {
     for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
     {
-        if (! readLinkIniProperty(link, p->key, p->value))
+        if (!readLinkIniProperty(link, p->key, p->value))
         {
             std::string linkName = link->namesPair.first + "." + link->namesPair.second;
-            logs.warning() << "Link '" << linkName << "' : reading value of '"
-                           << p->key << "' went wrong";
+            logs.warning() << "Link '" << linkName << "' : reading value of '" << p->key
+                           << "' went wrong";
             link->hasValidData = false;
         }
     }
@@ -331,7 +337,7 @@ void readSourceAreaIniFile(fs::path pathToIni,
 
 void readIniProperties(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
 {
-    for(auto& link : linkList)
+    for (auto& link: linkList)
     {
         std::string sourceAreaName = link.namesPair.first;
         fs::path pathToIni = toLinksDir / sourceAreaName / "properties.ini";
@@ -339,8 +345,7 @@ void readIniProperties(std::vector<LinkTSgenerationParams>& linkList, fs::path t
     }
 }
 
-bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
-                              fs::path sourceAreaDir)
+bool readLinkPreproTimeSeries(LinkTSgenerationParams& link, fs::path sourceAreaDir)
 {
     bool to_return = true;
     const auto preproId = link.namesPair.first + "/" + link.namesPair.second;
@@ -353,21 +358,19 @@ bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
     if (fs::exists(preproFile))
     {
         to_return = link.prepro->data.loadFromCSVFile(
-                                              preproFile.string(),
-                                              Data::PreproAvailability::preproAvailabilityMax,
-                                              DAYS_PER_YEAR)
-                    && link.prepro->validate()
-                    && to_return;
+                      preproFile.string(),
+                      Data::PreproAvailability::preproAvailabilityMax,
+                      DAYS_PER_YEAR)
+                    && link.prepro->validate() && to_return;
     }
 
     auto modulationFileDirect = preproFileRoot;
     modulationFileDirect += "_mod_direct.txt";
     if (fs::exists(modulationFileDirect))
     {
-        to_return = link.modulationCapacityDirect.loadFromCSVFile(
-                                                modulationFileDirect.string(),
-                                                1,
-                                                HOURS_PER_YEAR)
+        to_return = link.modulationCapacityDirect.loadFromCSVFile(modulationFileDirect.string(),
+                                                                  1,
+                                                                  HOURS_PER_YEAR)
                     && to_return;
     }
 
@@ -375,10 +378,9 @@ bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
     modulationFileIndirect += "_mod_indirect.txt";
     if (fs::exists(modulationFileIndirect))
     {
-        to_return = link.modulationCapacityIndirect.loadFromCSVFile(
-                                                modulationFileIndirect.string(),
-                                                1,
-                                                HOURS_PER_YEAR)
+        to_return = link.modulationCapacityIndirect.loadFromCSVFile(modulationFileIndirect.string(),
+                                                                    1,
+                                                                    HOURS_PER_YEAR)
                     && to_return;
     }
     // Makes possible a skip of TS generation when time comes
@@ -386,17 +388,16 @@ bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
     return to_return;
 }
 
-void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
-                          fs::path toLinksDir)
+void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
 {
-    for(auto& link : linkList)
+    for (auto& link: linkList)
     {
         std::string sourceAreaName = link.namesPair.first;
         fs::path sourceAreaDir = toLinksDir / sourceAreaName;
-        if (! readLinkPreproTimeSeries(link, sourceAreaDir))
+        if (!readLinkPreproTimeSeries(link, sourceAreaDir))
         {
-            logs.warning() << "Could not load all prepro data for link '"
-                         << link.namesPair.first << "." << link.namesPair.second << "'";
+            logs.warning() << "Could not load all prepro data for link '" << link.namesPair.first
+                           << "." << link.namesPair.second << "'";
         }
     }
 }
@@ -416,6 +417,7 @@ std::string DateAndTime()
     Yuni::DateTime::TimestampToString(to_return, "%Y%m%d-%H%M", now);
     return to_return.to<std::string>();
 }
+
 // ============================================================================
 
 int main(int argc, char* argv[])
@@ -500,10 +502,11 @@ int main(int argc, char* argv[])
 
     // ============ LINKS : Getting data for generating LINKS time-series =====
     auto allLinksPairs = extractLinkNamesFromStudy(settings.studyFolder);
-    auto linksFromCmdLine = extractLinkNamesFromCmdLine(allLinksPairs,
-                                                                 settings.linksListToGen);
+    auto linksFromCmdLine = extractLinkNamesFromCmdLine(allLinksPairs, settings.linksListToGen);
     if (settings.allLinks)
+    {
         linksFromCmdLine = allLinksPairs;
+    }
 
     StudyParamsForLinkTS generalParams = readGeneralParamsForLinksTS(settings.studyFolder);
 
