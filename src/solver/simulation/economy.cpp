@@ -35,7 +35,7 @@ namespace Antares::Solver::Simulation
 {
 Economy::Economy(Data::Study& study,
                  IResultWriter& resultWriter,
-                 Simulation::ISimulationObserver& simulationObserver) :
+                 Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
     resultWriter(resultWriter),
@@ -76,7 +76,10 @@ bool Economy::simulationBegin()
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], nbHoursInAWeek, numSpace);
+            SIM_InitialisationProblemeHebdo(study,
+                                            pProblemesHebdo[numSpace],
+                                            nbHoursInAWeek,
+                                            numSpace);
 
             auto options = createOptimizationOptions(study);
             weeklyOptProblems_[numSpace] = Antares::Solver::Optimization::WeeklyOptimization::

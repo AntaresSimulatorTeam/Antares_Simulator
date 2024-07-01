@@ -53,13 +53,14 @@ public:
  * @brief The NullSimulationObserver class is a null object for the ISimulationObserver interface.
  * @details It overrides the notifyHebdoProblem method with an empty implementation.
  */
-class NullSimulationObserver : public ISimulationObserver
+class NullSimulationObserver: public ISimulationObserver
 {
 public:
     ~NullSimulationObserver() override = default;
+
     void notifyHebdoProblem(const PROBLEME_HEBDO&, int, std::string_view) override
     {
-        //null object pattern
+        // null object pattern
     }
 };
 } // namespace Antares::Solver::Simulation

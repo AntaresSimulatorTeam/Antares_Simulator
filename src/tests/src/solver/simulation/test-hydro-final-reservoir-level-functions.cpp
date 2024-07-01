@@ -14,16 +14,16 @@
 using namespace Antares::Solver;
 using namespace Antares::Data;
 
-
 struct Fixture
 {
     Fixture(const Fixture& f) = delete;
     Fixture(const Fixture&& f) = delete;
     Fixture& operator=(const Fixture& f) = delete;
     Fixture& operator=(const Fixture&& f) = delete;
+
     Fixture()
     {
-        // Simulation last day must be 365 so that final level checks succeeds 
+        // Simulation last day must be 365 so that final level checks succeeds
         study->parameters.simulationDays.end = 365;
         study->parameters.firstMonthInYear = january;
         uint nbYears = study->parameters.nbYears = 2;
@@ -56,7 +56,6 @@ struct Fixture
         // Resize vector final levels delta with initial levels
         area_1->hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears);
         area_2->hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears);
-
 
         // Scenario builder for initial and final reservoir levels
         // -------------------------------------------------------
@@ -97,7 +96,7 @@ struct Fixture
         // ... Area 2 : Inflows time series
         area_2->hydro.series->storage.resize(nbInflowTS, 365);
         area_2->hydro.series->storage.timeSeries.fill(300.);
-        area_2->hydro.series->storage[0][0] = 300. + 1.; //DAYS_PER_YEAR
+        area_2->hydro.series->storage[0][0] = 300. + 1.; // DAYS_PER_YEAR
         area_2->hydro.series->storage[0][DAYS_PER_YEAR - 1] = 300. + 2.;
     }
 
@@ -179,7 +178,8 @@ BOOST_AUTO_TEST_CASE(final_level_not_set_by_user____check_succeeds_but_final_lev
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
 }
 
-BOOST_AUTO_TEST_CASE(initial_level_month_and_simulation_first_month_different___check_fails_and_final_level_not_usable)
+BOOST_AUTO_TEST_CASE(
+  initial_level_month_and_simulation_first_month_different___check_fails_and_final_level_not_usable)
 {
     uint year = 0;
     area_1->hydro.initializeReservoirLevelDate = 3; // initialize reservoir level != January
@@ -234,7 +234,8 @@ BOOST_AUTO_TEST_CASE(final_level_out_of_rule_curves___check_fails_and_final_leve
     BOOST_CHECK_EQUAL(validator.finalLevelFineForUse(), false);
 }
 
-BOOST_AUTO_TEST_CASE(final_level_unreachable_because_of_too_few_inflows___check_fails_and_final_level_not_usable)
+BOOST_AUTO_TEST_CASE(
+  final_level_unreachable_because_of_too_few_inflows___check_fails_and_final_level_not_usable)
 {
     area_1->hydro.reservoirCapacity = 185000;
     uint year = 0;
@@ -258,7 +259,7 @@ BOOST_AUTO_TEST_CASE(final_level_unreachable_because_of_too_few_inflows___check_
 
 BOOST_AUTO_TEST_CASE(check_all_areas_final_levels_when_config_is_ok___all_checks_succeed)
 {
-    for (uint year : {0, 1})
+    for (uint year: {0, 1})
     {
         CheckFinalReservoirLevelsConfiguration(study->areas,
                                                study->parameters,

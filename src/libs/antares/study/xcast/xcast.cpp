@@ -207,7 +207,8 @@ bool XCast::loadFromFolder(const AnyString& folder)
               // For each property
               if (section.name == "general")
               {
-                  for (const IniFile::Property* p = section.firstProperty; p != nullptr; p = p->next)
+                  for (const IniFile::Property* p = section.firstProperty; p != nullptr;
+                       p = p->next)
                   {
                       CString<30, false> key = p->key;
                       key.toLower();

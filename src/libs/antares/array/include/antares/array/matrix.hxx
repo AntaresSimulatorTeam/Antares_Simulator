@@ -1044,8 +1044,6 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
                                                 uint options,
                                                 BufferType* buffer)
 {
-    using namespace Yuni;
-
     // Status
     bool result = false;
 
@@ -1057,7 +1055,7 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
 
     switch (loadFromFileToBuffer(*buffer, filename))
     {
-    case IO::errNone:
+    case Yuni::IO::errNone:
     {
         // Empty files
         if (buffer->empty())
@@ -1098,7 +1096,7 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
         }
         break;
     }
-    case IO::errNotFound:
+    case Yuni::IO::errNotFound:
     {
         if (not(options & optQuiet))
         {
@@ -1106,7 +1104,7 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
         }
         break;
     }
-    case IO::errMemoryLimit:
+    case Yuni::IO::errMemoryLimit:
     {
         if (not(options & optQuiet))
         {
