@@ -61,7 +61,7 @@ static void shortTermStorageCost(
                       pdtJour);
                     varInjection >= 0)
                 {
-                    linearCost[varInjection] = cost;
+                    linearCost[varInjection] = cost; 
                 }
 
                 if (const int varWithdrawal = variableManager.ShortTermStorageWithdrawal(
