@@ -222,7 +222,7 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                                          errorCollector_);
           if (!validator.check())
           {
-              logs.error() << "hydro final level : infeasibility";
+              errorCollector_(area.name) << "hydro final level : infeasibility";
           }
           if (validator.finalLevelFineForUse())
           {
