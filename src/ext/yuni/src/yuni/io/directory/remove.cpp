@@ -73,7 +73,7 @@ static bool RmDirRecursiveInternal(const AnyString& path)
                     buffer.clear() << path << SEP << (const char*)ep->d_name;
                     ::unlink(buffer.c_str());
                 }
-            } while ( ep = ::readdir(dp); ep ); // ...
+            } while (nullptr != (ep = ::readdir(dp)));
         }
         (void)::closedir(dp);
     }
