@@ -11,9 +11,9 @@ void HydroErrorsCollector::CheckForErrors() const
 {
     if (!areasErrorMap_.empty())
     {
-        for (const auto& [area_name, msg]: areasErrorMap_)
+        for (const auto& [area_name, area_msg]: areasErrorMap_)
         {
-            logs.error() << "In Area " << area_name << msg;
+            logs.error() << "In Area " << area_name << area_msg.message;
         }
         throw FatalError("Hydro validation has failed !");
     }
