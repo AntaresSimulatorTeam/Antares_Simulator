@@ -51,7 +51,6 @@ static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
     throw std::runtime_error(errorMessage);
 }
 
-
 // Class ZipWriteJob
 template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,

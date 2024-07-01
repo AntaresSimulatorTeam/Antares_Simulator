@@ -31,15 +31,13 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/concurrency/concurrency.h"
-#include "antares/solver/variable/constants.h"
-#include "antares/solver/variable/print.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-
-
+#include "antares/solver/variable/constants.h"
+#include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -76,10 +74,7 @@ public:
         pDurationCollector(durationCollector),
         pResultWriter(resultWriter),
         simulationObserver_(simulationObserver),
-        hydroManagement(study.areas,
-                        study.parameters,
-                        study.calendar,
-                        resultWriter)
+        hydroManagement(study.areas, study.parameters, study.calendar, resultWriter)
     {
         scratchmap = study.areas.buildScratchMap(numSpace);
     }
@@ -164,11 +159,8 @@ public:
             simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
-            pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel] {
-                hydroManagement.makeVentilation(randomReservoirLevel,
-                                                y,
-                                                scratchmap);
-            };
+            pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel]
+            { hydroManagement.makeVentilation(randomReservoirLevel, y, scratchmap); };
 
             // Updating the state
             state.year = y;
@@ -723,15 +715,15 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
                                                         max[firstDayOfMonth],
                                                         randomHydroGenerator);
 
-            // Possibly update the intial level from scenario builder
-            if (study.parameters.useCustomScenario)
-            {
-                double levelFromScenarioBuilder = study.scenarioInitialHydroLevels[areaIndex][y];
-                if (levelFromScenarioBuilder >= 0.)
-                {
-                    randomLevel = levelFromScenarioBuilder;
-                }
-            }
+              // Possibly update the intial level from scenario builder
+              if (study.parameters.useCustomScenario)
+              {
+                  double levelFromScenarioBuilder = study.scenarioInitialHydroLevels[areaIndex][y];
+                  if (levelFromScenarioBuilder >= 0.)
+                  {
+                      randomLevel = levelFromScenarioBuilder;
+                  }
+              }
 
               // Current area's hydro starting (or initial) level computation
               // (no matter if the year is performed or not, we always draw a random initial
@@ -755,7 +747,12 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
         bool SpilledEnergySeedIsDefault = (currentSpilledEnergySeed == defaultSpilledEnergySeed);
         areaIndex = 0;
         study.areas.each(
-          [&isPerformed, &areaIndex, &randomUnsupplied, &randomSpilled, &randomForYears, &indexYear,
+          [&isPerformed,
+           &areaIndex,
+           &randomUnsupplied,
+           &randomSpilled,
+           &randomForYears,
+           &indexYear,
            &SpilledEnergySeedIsDefault](Data::Area& area)
           {
               (void)area; // Avoiding warnings at compilation (unused variable) on linux

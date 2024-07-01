@@ -53,7 +53,14 @@ std::pair<int, char**> IntoUTF8ArgsTranslator::convert()
     for (int i = 0; i != argc_; ++i)
     {
         const uint len = (uint)wcslen(wargv[i]);
-        const uint newLen = WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, nullptr, 0, nullptr, nullptr);
+        const uint newLen = WideCharToMultiByte(CP_UTF8,
+                                                0,
+                                                wargv[i],
+                                                len,
+                                                nullptr,
+                                                0,
+                                                nullptr,
+                                                nullptr);
         argv_[i] = (char*)malloc((newLen + 1) * sizeof(char));
         memset(argv_[i], 0, (newLen + 1) * sizeof(char));
         WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv_[i], newLen, nullptr, nullptr);

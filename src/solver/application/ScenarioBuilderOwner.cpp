@@ -31,7 +31,8 @@ Antares::Solver::ScenarioBuilderOwner::ScenarioBuilderOwner(Data::Study& study):
 {
 }
 
-void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()  {
+void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()
+{
     TSGenerator::ResizeGeneratedTimeSeries(study_.areas, study_.parameters);
 
     // Sampled time-series Numbers
@@ -54,4 +55,3 @@ void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()  {
         ApplyCustomScenario(study_);
     }
 }
-
