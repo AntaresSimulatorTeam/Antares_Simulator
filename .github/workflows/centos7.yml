@@ -88,7 +88,8 @@ jobs:
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
            wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
-           rpm -qpR gh_2.52.0_linux_amd64.rpm            
+           rpm -i gh_2.52.0_linux_amd64.rpm         
+           gh --version   
 
     - name: Configure
       run: |
