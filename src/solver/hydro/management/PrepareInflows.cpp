@@ -19,8 +19,7 @@ void PrepareInflows::Run(uint year)
 void PrepareInflows::LoadInflows(uint year)
 {
     areas_.each(
-      // un-const because now data is a member of area  [&](const Data::Area& area)
-      [&](Data::Area& area)
+      [this, year](Data::Area& area)
       {
           const auto& srcinflows = area.hydro.series->storage.getColumn(year);
 
@@ -69,7 +68,7 @@ void PrepareInflows::LoadInflows(uint year)
 void PrepareInflows::ChangeInflowsToAccommodateFinalLevels(uint year)
 {
     areas_.each(
-      [this, &year](Data::Area& area)
+      [&year](Data::Area& area)
       {
           auto& data = area.hydro.managementData[year];
 

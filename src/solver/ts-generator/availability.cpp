@@ -612,10 +612,10 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-void writeResultsToDisk(const Data::Study& study,
-                        Solver::IResultWriter& writer,
-                        const Matrix<>& series,
-                        const std::string& savePath)
+static void writeResultsToDisk(const Data::Study& study,
+                               Solver::IResultWriter& writer,
+                               const Matrix<>& series,
+                               const std::string& savePath)
 {
     if (study.parameters.noOutput)
     {
@@ -627,7 +627,7 @@ void writeResultsToDisk(const Data::Study& study,
     writer.addEntryFromBuffer(savePath, buffer);
 }
 
-void writeResultsToDisk(const Matrix<>& series, const std::filesystem::path savePath)
+static void writeResultsToDisk(const Matrix<>& series, const std::filesystem::path& savePath)
 {
     std::string buffer;
     series.saveToBuffer(buffer, 0);

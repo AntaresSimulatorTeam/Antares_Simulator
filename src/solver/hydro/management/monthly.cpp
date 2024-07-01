@@ -151,7 +151,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(
     return total;
 }
 
-void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_level,
+void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
                                                        uint y,
                                                        HydroSpecificMap& hydro_specific_map)
 {
