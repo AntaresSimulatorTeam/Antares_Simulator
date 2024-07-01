@@ -25,7 +25,7 @@
 #include <yuni/core/math.h>
 
 //! The minimal allowed value for hurdle costs when not null
-#define LINK_MINIMAL_HURDLE_COSTS_NOT_nullptr 0.005
+#define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL 0.005
 
 using namespace Yuni;
 
@@ -129,7 +129,7 @@ bool connectionParameters::cellValue(int x, int y, const Yuni::String& value)
         double v;
         if (!value.to(v))
             return false;
-        if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_nullptr)
+        if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
             return Renderer::Matrix<>::cellValue(x, y, "0");
         break;
     }
