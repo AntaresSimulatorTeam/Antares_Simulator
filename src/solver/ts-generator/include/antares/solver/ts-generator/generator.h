@@ -70,6 +70,7 @@ struct LinkTSgenerationParams
     bool hasValidData = true;
 };
 
+
 class AvailabilityTSGeneratorData
 {
 public:
@@ -119,6 +120,7 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
+
 
 /*!
 ** \brief Destroy all TS Generators

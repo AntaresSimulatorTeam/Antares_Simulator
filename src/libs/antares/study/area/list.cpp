@@ -968,9 +968,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
         }
 
-        hydroSeries->resizeTSinDeratedMode(study.parameters.derated,
-                                           studyVersion,
-                                           study.usedByTheSolver);
+        hydroSeries->resizeTSinDeratedMode(
+            study.parameters.derated, studyVersion, study.usedByTheSolver);
     }
 
     // Wind
@@ -1279,7 +1278,7 @@ Area* AreaList::findFromPosition(const int x, const int y) const
         {
             auto lastArea = i->second;
             if (lastArea->ui && std::abs(lastArea->ui->x - x) < nearestDistance
-                && std::abs(lastArea->ui->y - y) < nearestDistance)
+                             && std::abs(lastArea->ui->y - y) < nearestDistance)
             {
                 nearestItem = lastArea;
             }
@@ -1327,14 +1326,12 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     /* Asserts */
     assert(l);
 
-    l->each(
-      [](Data::Area& area)
-      {
-          if (!area.load.prepro)
-          {
-              area.load.prepro = new Antares::Data::Load::Prepro();
-          }
-      });
+    l->each([](Data::Area& area) {
+        if (!area.load.prepro)
+        {
+            area.load.prepro = new Antares::Data::Load::Prepro();
+        }
+    });
 }
 
 void AreaListEnsureDataSolarPrepro(AreaList* l)

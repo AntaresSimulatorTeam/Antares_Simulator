@@ -41,8 +41,9 @@ public:
       Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
       PROBLEME_HEBDO* problemesHebdo,
       uint numSpace,
-      IResultWriter& writer,
-      Simulation::ISimulationObserver& simulationObserver);
+                                                      IResultWriter& writer,
+                                                      Simulation::ISimulationObserver& simulationObserver
+                                                      );
 
 protected:
     explicit WeeklyOptimization(const OptimizationOptions& options,
@@ -50,7 +51,8 @@ protected:
                                 Antares::Data::AdequacyPatch::AdqPatchParams&,
                                 uint numSpace,
                                 IResultWriter& writer,
-                                Simulation::ISimulationObserver& simulationObserver);
+                                Simulation::ISimulationObserver& simulationObserver
+                                );
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams_;

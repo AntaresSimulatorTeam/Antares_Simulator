@@ -223,7 +223,7 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
 bool RenewableClusterList::validateClusters() const
 {
     bool ret = true;
-    for (const auto& cluster: allClusters_)
+    for (const auto& cluster : allClusters_)
     {
         ret = cluster->integrityCheck() && ret;
     }

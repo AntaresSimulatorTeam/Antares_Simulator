@@ -59,7 +59,7 @@ bool ATSP::loadFromINIFile(const String& filename)
             if (section->name == ".general")
             {
                 IniFile::Property* p = section->firstProperty;
-                for (; p; p = p->next)
+                for (; p ; p = p->next)
                 {
                     key = p->key;
                     key.toLower();

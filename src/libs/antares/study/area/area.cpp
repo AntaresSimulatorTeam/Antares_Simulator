@@ -51,20 +51,19 @@ Area::Area():
     internalInitialize();
 }
 
-Area::Area(const AnyString& name):
-    Area()
+Area::Area(const AnyString& name) : Area()
 {
     internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(this->name);
 }
 
-Area::Area(const AnyString& name, const AnyString& id):
-    Area()
+Area::Area(const AnyString& name, const AnyString& id) : Area()
 {
     internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(id);
+
 }
 
 Area::~Area()

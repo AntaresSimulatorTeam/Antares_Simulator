@@ -80,16 +80,20 @@ public:
 
 private:
     //! Prepare the net demand for each area
-    void prepareNetDemand(uint year,
-                          Data::SimulationMode mode,
-                          const Antares::Data::Area::ScratchMap& scratchmap,
-                          HydroSpecificMap& hydro_specific_map);
+    void prepareNetDemand(
+      uint year,
+      Data::SimulationMode mode,
+      const Antares::Data::Area::ScratchMap& scratchmap,
+      HydroSpecificMap& hydro_specific_map);
     //! Prepare the effective demand for each area
-    void prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map);
+    void prepareEffectiveDemand(
+      uint year,
+      HydroSpecificMap& hydro_specific_map);
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level,
-                                          uint y,
-                                          HydroSpecificMap& hydro_specific_map);
+    void prepareMonthlyOptimalGenerations(
+      double* random_reservoir_level,
+      uint y,
+      HydroSpecificMap& hydro_specific_map);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
@@ -99,9 +103,10 @@ private:
       Antares::Data::AreaDependantHydroManagementData& data,
       Antares::Data::TimeDependantHydroManagementData& hydro_specific);
 
-    void prepareDailyOptimalGenerations(uint y,
-                                        Antares::Data::Area::ScratchMap& scratchmap,
-                                        HydroSpecificMap& hydro_specific_map);
+    void prepareDailyOptimalGenerations(
+      uint y,
+      Antares::Data::Area::ScratchMap& scratchmap,
+      HydroSpecificMap& hydro_specific_map);
 
     void prepareDailyOptimalGenerations(
       Data::Area& area,

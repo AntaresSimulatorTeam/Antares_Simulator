@@ -75,7 +75,8 @@ public:
     ** \param version Current study version
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
-    bool loadFromFile(const AnyString& filename, const StudyVersion& version);
+    bool loadFromFile(const AnyString& filename,
+                      const StudyVersion& version);
 
     /*!
     ** \brief Prepare all settings for a simulation
@@ -500,7 +501,8 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
+    bool loadFromINI(const IniFile& ini,
+                     const StudyVersion& version);
 
     void resetPlayedYears(uint nbOfYears);
 

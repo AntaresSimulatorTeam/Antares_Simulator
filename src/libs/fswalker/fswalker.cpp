@@ -320,7 +320,7 @@ void WalkerThread::walk(const String& path)
 
     do
     {
-        assert(pContext.top());
+        assert(pContext.top() );
         auto& context = *(pContext.top());
 
         if (pShouldStop)

@@ -513,11 +513,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (area.hydro.useWaterValue)
             {
-                problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular
-                  = getWaterValue(problem.previousSimulationFinalLevel[k] * 100
-                                    / area.hydro.reservoirCapacity,
-                                  area.hydro.waterValues,
-                                  weekFirstDay);
+                problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular =
+                    getWaterValue(
+                        problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
+                        area.hydro.waterValues,
+                        weekFirstDay);
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)

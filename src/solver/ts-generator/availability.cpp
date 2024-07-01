@@ -23,12 +23,12 @@
 #include <sstream>
 #include <string>
 
-#include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/solver/ts-generator/law.h>
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
+#include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include "antares/study/simulation.h"
 
 #define SEP Yuni::IO::Separator
@@ -101,18 +101,14 @@ private:
                                const T& duration) const;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study,
-                                     unsigned nbOfSeriesToGen,
-                                     MersenneTwister& rndGenerator):
+GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen, MersenneTwister& rndGenerator):
     derated(study.parameters.derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
     rndgenerator(rndGenerator)
 {
 }
 
-GeneratorTempData::GeneratorTempData(bool derated,
-                                     unsigned int nbOfSeriesToGen,
-                                     MersenneTwister& rndGenerator):
+GeneratorTempData::GeneratorTempData(bool derated, unsigned int nbOfSeriesToGen, MersenneTwister& rndGenerator):
     derated(derated),
     nbOfSeriesToGen_(nbOfSeriesToGen),
     rndgenerator(rndGenerator)
@@ -627,13 +623,14 @@ void writeResultsToDisk(const Data::Study& study,
     writer.addEntryFromBuffer(savePath, buffer);
 }
 
-void writeResultsToDisk(const Matrix<>& series, const std::filesystem::path savePath)
+void writeResultsToDisk(const Matrix<>& series,
+                        const std::filesystem::path savePath)
 {
     std::string buffer;
     series.saveToBuffer(buffer, 0);
 
     std::filesystem::path parentDir = savePath.parent_path();
-    if (!std::filesystem::exists(parentDir))
+    if (! std::filesystem::exists(parentDir))
     {
         std::filesystem::create_directories(parentDir);
     }
@@ -683,27 +680,21 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
                                        generalParams.random);
     for (auto& link: links)
     {
-        if (!link.hasValidData)
+        if (! link.hasValidData)
         {
-            logs.error() << "Missing data for link " << link.namesPair.first << "/"
-                         << link.namesPair.second;
+            logs.error() << "Missing data for link " << link.namesPair.first << "/" << link.namesPair.second;
             return false;
         }
 
         if (link.forceNoGeneration)
-        {
             continue; // Skipping the link
-        }
 
         Data::TimeSeriesNumbers fakeTSnumbers; // gp : to quickly get rid of
         Data::TimeSeries ts(fakeTSnumbers);
         ts.resize(generalParams.nbLinkTStoGenerate, HOURS_PER_YEAR);
 
         // DIRECT
-        AvailabilityTSGeneratorData tsConfigDataDirect(link,
-                                                       ts,
-                                                       link.modulationCapacityDirect,
-                                                       link.namesPair.second);
+        AvailabilityTSGeneratorData tsConfigDataDirect(link, ts, link.modulationCapacityDirect, link.namesPair.second);
 
         generator.generateTS(tsConfigDataDirect);
 
@@ -712,15 +703,12 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
         writeResultsToDisk(ts.timeSeries, filePath);
 
         // INDIRECT
-        AvailabilityTSGeneratorData tsConfigDataIndirect(link,
-                                                         ts,
-                                                         link.modulationCapacityIndirect,
-                                                         link.namesPair.second);
+        AvailabilityTSGeneratorData tsConfigDataIndirect(link, ts, link.modulationCapacityIndirect, link.namesPair.second);
 
         generator.generateTS(tsConfigDataIndirect);
 
         filePath = savePath + SEP + link.namesPair.first + SEP + link.namesPair.second
-                   + "_indirect.txt";
+                               + "_indirect.txt";
         writeResultsToDisk(ts.timeSeries, filePath);
     }
 

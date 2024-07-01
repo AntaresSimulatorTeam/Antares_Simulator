@@ -856,8 +856,7 @@ void Study::areaDelete(Area::Vector& arealist)
                             << area.name;
 
                 // Updating all hydro allocation
-                areas.each([&area](Data::Area& areait)
-                           { areait.hydro.allocation.remove(area.id); });
+                areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area.id); });
 
                 // Remove all binding constraints attached to the area
                 bindingConstraints.remove(*i);
@@ -957,7 +956,7 @@ bool Study::areaRename(Area* area, AreaName newName)
 
     // Updating all hydro allocation
     areas.each([&oldid, &newid](Data::Area& areait)
-               { areait.hydro.allocation.rename(oldid, newid); });
+        { areait.hydro.allocation.rename(oldid, newid); });
 
     ScenarioBuilderUpdater updaterSB(*this);
     bool ret = true;
@@ -1110,14 +1109,13 @@ void Study::destroyAllWindTSGeneratorData()
 
 void Study::destroyAllThermalTSGeneratorData()
 {
-    areas.each(
-      [](const Data::Area& area)
-      {
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              FreeAndNil(cluster->prepro);
-          }
-      });
+    areas.each([](const Data::Area& area)
+    {
+        for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
+        {
+            FreeAndNil(cluster->prepro);
+        }
+    });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
@@ -1360,6 +1358,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         areas.each(
           [&output, &linkname, &areaname](const Area& area)
           {
+
               if (areaname.size() < area.id.size())
               {
                   areaname = area.id;

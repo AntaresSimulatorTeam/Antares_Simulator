@@ -48,8 +48,7 @@ public:
     **
     ** \param study The current study
     */
-    Adequacy(Data::Study& study,
-             IResultWriter& resultWriter,
+    Adequacy(Data::Study& study, IResultWriter& resultWriter,
              Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~Adequacy() = default;

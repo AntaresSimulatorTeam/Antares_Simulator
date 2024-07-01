@@ -22,8 +22,8 @@
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 
 #include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/study/fwd.h"
 
 using namespace Antares::Data::AdequacyPatch;
@@ -47,11 +47,7 @@ void AdequacyPatchOptimization::solve()
 {
     Simulation::NullSimulationObserver nullSimulationObserver;
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(options_,
-                                 problemeHebdo_,
-                                 adqPatchParams_,
-                                 writer_,
-                                 nullSimulationObserver);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, nullSimulationObserver);
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = false;
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
@@ -68,11 +64,7 @@ void AdequacyPatchOptimization::solve()
         }
     }
 
-    OPT_OptimisationHebdomadaire(options_,
-                                 problemeHebdo_,
-                                 adqPatchParams_,
-                                 writer_,
-                                 nullSimulationObserver);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, nullSimulationObserver);
 }
 
 } // namespace Antares::Solver::Optimization

@@ -34,5 +34,6 @@ void runSimulationInEconomicMode(Antares::Data::Study& study,
                                  Benchmarking::DurationCollector& durationCollector,
                                  IResultWriter& resultWriter,
                                  Benchmarking::OptimizationInfo& info,
-                                 Simulation::ISimulationObserver& simulationObserver);
+                                 Simulation::ISimulationObserver& simulationObserver
+);
 }

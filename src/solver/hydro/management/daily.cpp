@@ -557,9 +557,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
     }
 }
 
-void HydroManagement::prepareDailyOptimalGenerations(uint y,
-                                                     Antares::Data::Area::ScratchMap& scratchmap,
-                                                     HydroSpecificMap& hydro_specific_map)
+void HydroManagement::prepareDailyOptimalGenerations(
+  uint y,
+  Antares::Data::Area::ScratchMap& scratchmap,
+  HydroSpecificMap& hydro_specific_map)
 {
     areas_.each(
       [this, &scratchmap, &y, &hydro_specific_map](Data::Area& area)

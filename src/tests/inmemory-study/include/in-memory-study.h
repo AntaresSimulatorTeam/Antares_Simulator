@@ -164,17 +164,14 @@ public:
     {
         return rules_->load;
     }
-
     BindingConstraintsTSNumberData& bcGroup()
     {
         return rules_->binding_constraints;
     }
-
     hydroTSNumberData& hydro()
     {
         return rules_->hydro;
     }
-
 private:
     Rules::Ptr rules_;
 };

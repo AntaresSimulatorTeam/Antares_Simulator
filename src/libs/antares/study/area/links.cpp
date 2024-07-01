@@ -21,9 +21,9 @@
 
 #include "antares/study/area/links.h"
 
-#include <array>
 #include <filesystem>
 #include <limits>
+#include <array>
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
@@ -308,13 +308,9 @@ namespace // anonymous
 
 bool isPropertyUsedForLinkTSgeneration(const std::string& key)
 {
-    std::array<std::string, 7> listKeys = {"unitcount",
-                                           "nominalcapacity",
-                                           "law.planned",
-                                           "law.forced",
-                                           "volatility.planned",
-                                           "volatility.forced",
-                                           "force-no-generation"};
+    std::array<std::string, 7> listKeys
+        = {"unitcount", "nominalcapacity", "law.planned", "law.forced",
+           "volatility.planned", "volatility.forced", "force-no-generation"};
     return std::find(listKeys.begin(), listKeys.end(), key) != listKeys.end();
 }
 

@@ -22,7 +22,6 @@
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
 #include <optional>
-
 #include "../../fwd.h"
 #include "allocation.h"
 #include "prepro.h"
@@ -31,7 +30,7 @@
 namespace Antares::Data
 {
 
-//! The maximum number of days in a year
+    //! The maximum number of days in a year
 constexpr size_t dayYearCount = 366;
 
 struct DailyDemand
@@ -234,7 +233,9 @@ private:
 // As this function can be called a lot of times, we pass working variables and returned variables
 // as arguments, so that we don't have to create them locally (as in a classical function) each
 // time.
-double getWaterValue(const double& level, const Matrix<double>& waterValues, const uint day);
+double getWaterValue(const double& level,
+                   const Matrix<double>& waterValues,
+                   const uint day);
 
 // Interpolates a rate from the credit modulation table according to a level
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
