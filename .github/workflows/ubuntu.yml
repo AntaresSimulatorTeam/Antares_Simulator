@@ -146,8 +146,6 @@ jobs:
           cat ./simtest.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-          echo '${{ fromJson(env.simtest).version }}'
-
       - name: Init submodule
         run: |
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
