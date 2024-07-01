@@ -182,7 +182,7 @@ bool Create::performWL(Context& ctx)
             if (pInfos.behavior == bhOverwrite)
                 (ctx.cluster)->reset();
         }
-        return (ctx.area);
+        return (ctx.area != nullptr);
     }
     return true;
 }
