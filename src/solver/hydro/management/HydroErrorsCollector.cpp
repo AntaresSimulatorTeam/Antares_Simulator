@@ -1,5 +1,7 @@
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
 
+#include <ranges>
+
 #include <yuni/core/logs.h>
 
 #include "antares/antares/fatal-error.h"
@@ -11,9 +13,17 @@ void HydroErrorsCollector::CheckForErrors() const
 {
     if (!areasErrorMap_.empty())
     {
-        for (const auto& [area_name, area_msg]: areasErrorMap_)
+        for (const auto& key: areasErrorMap_ | std::views::keys)
         {
-            logs.error() << "In Area " << area_name << area_msg.message;
+            auto first_elements = areasErrorMap_
+                                  | std::views::filter([&key](const auto& p)
+                                                       { return p.first == key; })
+                                  | std::views::take(10);
+
+            for (const auto& value: first_elements)
+            {
+                logs.error() << "In Area " << value.first << ": " << value.second << " ";
+            }
         }
         throw FatalError("Hydro validation has failed !");
     }
@@ -21,13 +31,7 @@ void HydroErrorsCollector::CheckForErrors() const
 
 HydroErrorsCollector::AreaReference::AreaReference(HydroErrorsCollector* collector,
                                                    const std::string& name):
-    areaSingleErrorMessage_(
-      collector->areasErrorMap_
-        .insert(
-
-          {name,
-           {.message = "", .message_number = (unsigned int)collector->areasErrorMap_.count(name)}})
-        ->second)
+    areaSingleErrorMessage_(collector->areasErrorMap_.insert({name, ""})->second)
 {
 }
 

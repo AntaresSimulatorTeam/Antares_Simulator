@@ -30,12 +30,6 @@ namespace Antares
 class HydroErrorsCollector
 {
 public:
-    struct AreaSingleErrorMessage
-    {
-        std::string message = "";
-        unsigned int message_number = 0;
-    };
-
     class AreaReference
     {
     public:
@@ -44,7 +38,7 @@ public:
         AreaReference& operator<<(const T& msg);
 
     private:
-        AreaSingleErrorMessage& areaSingleErrorMessage_;
+        std::string& areaSingleErrorMessage_;
     };
 
     AreaReference operator()(const std::string& name);
@@ -52,7 +46,7 @@ public:
     void CheckForErrors() const;
 
 private:
-    std::multimap<std::string, AreaSingleErrorMessage> areasErrorMap_;
+    std::multimap<std::string, std::string> areasErrorMap_;
 };
 
 template<class T>
@@ -60,7 +54,7 @@ HydroErrorsCollector::AreaReference& HydroErrorsCollector::AreaReference::operat
 {
     std::ostringstream strfy;
     strfy << msg;
-    areaSingleErrorMessage_.message += strfy.str();
+    areaSingleErrorMessage_ += strfy.str();
     return *this;
 }
 
