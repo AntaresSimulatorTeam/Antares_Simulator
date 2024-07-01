@@ -133,12 +133,20 @@ jobs:
            ctest -C Release --output-on-failure
 
       # simtest
-      - name: Read simtest version
+      - name: Read simtest version old action
         id: simtest-version
         uses: notiz-dev/github-action-json-property@release
         with:
           path: 'simtest.json'
           prop_path: 'version'
+
+      - name: Read simtest version
+        - run: |
+          echo 'simtest<<EOF' >> $GITHUB_ENV
+          cat ./simtest.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+          echo '${{ fromJson(env.simtest).version }}'
 
       - name: Init submodule
         run: |
@@ -148,7 +156,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ fromJson(env.PACKAGE_JSON).version }}
           batch-name: valid-named-mps
           os: ${{ env.os }}
           variant: "named-mps"
