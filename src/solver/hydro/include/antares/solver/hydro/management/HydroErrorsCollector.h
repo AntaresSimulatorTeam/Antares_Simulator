@@ -25,29 +25,33 @@
 
 namespace Antares
 {
+using AreaErrorMessages = std::vector<std::string>;
+
 class HydroErrorsCollector
 {
 public:
+    class AreaReference
+    {
+    public:
+        AreaReference(HydroErrorsCollector* collector, const std::string& name);
+        friend void operator<<(const AreaReference& ref, const std::string& msg);
+
+        ~AreaReference()
+        {
+            // std::cout << areasErrorMap_ << std::endl;
+        }
+
+    private:
+        AreaErrorMessages& areasErrorMessages_;
+    };
+
+    AreaReference operator()(const std::string& name);
     HydroErrorsCollector() = default;
-    void Collect(const std::string& area_name, const std::string& message);
-    void Collect(const std::string& message);
-    void CheckForFatalErrors() const;
-    template<class T>
-    std::ostream& operator<<(const T& obj);
+    void CheckForErrors() const;
 
 private:
     // for log
-    constexpr unsigned int TRHESHOLD_NUMBER_OF_ERRORS_FOR_ONE_AREA = 10;
-    std::map<std::string, unsigned int> area_errors_counter_;
-    bool errors_limit_reached_ = false;
-    bool stop_ = false;
-    // std::vector<std::string> fatal_errors_;
+    std::map<std::string, AreaErrorMessages> areasErrorMap_;
 };
 
-template<class T>
-HydroErrorsCollector& HydroErrorsCollector::operator<<(const T& obj)
-{
-    logs.error() << obj;
-    return *this;
-}
 } // namespace Antares

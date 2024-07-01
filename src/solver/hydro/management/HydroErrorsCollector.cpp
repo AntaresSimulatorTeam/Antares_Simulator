@@ -6,32 +6,37 @@
 
 namespace Antares
 {
-void HydroErrorsCollector::Collect(const std::string& area_name, const std::string& message)
-{
-    logs.error() << "In Area " << area_name << " " << message;
-    auto error_count = area_errors_counter_[area_name]++;
-    errors_limit_reached_ = error_count > TRHESHOLD_NUMBER_OF_ERRORS_FOR_ONE_AREA;
-    stop_ = true;
 
-    if (errors_limit_reached_)
+void HydroErrorsCollector::CheckForErrors() const
+{
+    if (!aresErrorMap_.empty())
     {
-        logs.error() << "Hydro validation has failed !";
-        logs.error() << error_count << " errors found in Area " << area_name;
-    }
-}
-
-void HydroErrorsCollector::Collect(const std::string& message)
-{
-    logs.error() << message;
-    stop_ = true;
-}
-
-void HydroErrorsCollector::CheckForFatalErrors() const
-{
-    if (stop_)
-    {
+        for (const auto& [area_name, area_msgs]: areasErrorMap_)
+        {
+            logs.error() << "In Area " << area_name;
+            for (const auto& msg: area_msgs)
+            {
+                logs.error() << msg;
+            }
+        }
         throw FatalError("Hydro validation has failed !");
     }
 }
 
+HydroErrorsCollector::AreaReference::AreaReference(HydroErrorsCollector* collector,
+                                                   const std::string& name):
+    areasErrorMap_(collector->areasErrorMap_[name])
+{
+}
+
+HydroErrorsCollector::AreaReference HydroErrorsCollector::operator()(const std::string& name)
+{
+    return AreaReference(this, name);
+}
+
+void operator<<(const HydroErrorsCollector::AreaReference& ref, const std::string& msg)
+{
+    // TODO what to do with empty msg?
+    ref.areasErrorMessages_.push_back(msg);
+}
 } // namespace Antares

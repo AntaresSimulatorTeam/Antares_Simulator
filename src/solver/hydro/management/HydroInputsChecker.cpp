@@ -48,9 +48,7 @@ void HydroInputsChecker::Execute(uint year)
     minGenerationScaling_.Run(year);
     if (!checksOnGenerationPowerBounds(year))
     {
-        std::ostringstream msg;
-        msg << "hydro inputs checks: invalid minimum generation in year " << year;
-        errorCollector_.Collect(msg.str());
+        logs.error() << "hydro inputs checks: invalid minimum generation in year " << year;
     }
     if (parameters_.useCustomScenario)
     {
@@ -120,12 +118,10 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
         }
         if (totalWeekMingen > totalWeekInflows)
         {
-            std::ostringstream msg;
-            msg << "In Area " << area.name << " the minimum generation of " << totalWeekMingen
-                << " MW in week " << week + 1 << " of TS-"
-                << area.hydro.series->mingen.getSeriesIndex(year) + 1
-                << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
-            errorCollector_.Collect(area.name, msg.str());
+            errorCollector_(area.name)
+              << " the minimum generation of " << totalWeekMingen << " MW in week " << week + 1
+              << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
+              << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
             return false;
         }
     }
@@ -137,13 +133,11 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
     const auto& data = area.hydro.managementData.at(year);
     if (data.totalYearMingen > data.totalYearInflows)
     {
-        std::ostringstream msg;
-
         // Yearly minimum generation <= Yearly inflows
-        msg << "In Area " << area.name << " the minimum generation of " << data.totalYearMingen
-            << " MW of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
-            << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
-        errorCollector_.Collect(area.name, msg.str());
+        errorCollector_(area.name)
+          << " the minimum generation of " << data.totalYearMingen << " MW of TS-"
+          << area.hydro.series->mingen.getSeriesIndex(year) + 1
+          << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
         return false;
     }
     return true;
@@ -158,13 +152,12 @@ bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& 
         // Monthly minimum generation <= Monthly inflows for each month
         if (data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth])
         {
-            std::ostringstream msg;
-            msg << "In Area " << area.name << " the minimum generation of "
-                << data.totalMonthMingen[realmonth] << " MW in month " << month + 1 << " of TS-"
-                << area.hydro.series->mingen.getSeriesIndex(year) + 1
-                << " is incompatible with the inflows of " << data.totalMonthInflows[realmonth]
-                << " MW.";
-            errorCollector_.Collect(area.name, msg.str());
+            errorCollector_(area.name)
+              << " the minimum generation of " << data.totalMonthMingen[realmonth]
+              << " MW in month " << month + 1 << " of TS-"
+              << area.hydro.series->mingen.getSeriesIndex(year) + 1
+              << " is incompatible with the inflows of " << data.totalMonthInflows[realmonth]
+              << " MW.";
             return false;
         }
     }
@@ -191,13 +184,11 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year)
 
               if (max < min)
               {
-                  std::ostringstream msg;
-                  logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
-                               << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
-                               << " is incompatible with the maximum generation of " << max
-                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1
-                               << " MW.";
-                  errorCollector_.Collect(area.name, msg.str());
+                  errorCollector_(area.name)
+                    << "In area: " << area.name << " [hourly] minimum generation of " << min
+                    << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
+                    << " is incompatible with the maximum generation of " << max
+                    << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1 << " MW.";
                   ret = false;
                   return;
               }
@@ -231,9 +222,7 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                                          errorCollector_);
           if (!validator.check())
           {
-              std::ostringstream msg;
-              msg << "hydro final level : infeasibility";
-              errorCollector_.Collect(area.name, msg.str());
+              logs.error() << "hydro final level : infeasibility";
           }
           if (validator.finalLevelFineForUse())
           {
@@ -242,9 +231,9 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
       });
 } // End function CheckFinalReservoirLevelsConfiguration
 
-void HydroInputsChecker::CheckForFatalErrors() const
+void HydroInputsChecker::CheckForErrors() const
 {
-    errorCollector_.CheckForFatalErrors();
+    errorCollector_.CheckForErrors();
 }
 
 } // namespace Antares

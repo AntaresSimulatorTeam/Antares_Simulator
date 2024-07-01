@@ -34,7 +34,7 @@ class HydroInputsChecker
 public:
     explicit HydroInputsChecker(Antares::Data::Study& study);
     void Execute(uint year);
-    void CheckForFatalErrors() const;
+    void CheckForErrors() const;
     void CheckFinalReservoirLevelsConfiguration(uint year);
 
 private:

@@ -115,11 +115,9 @@ bool FinalLevelValidator::hydroAllocationStartMatchesSimulation() const
         return true;
     }
 
-    std::ostringstream msg;
-    msg << "Year " << year_ + 1 << ", area '" << areaName_
-        << "' : " << "Hydro allocation must start on the 1st simulation month and "
-        << "simulation last a whole year";
-    errorCollector_.Collect(areaName_, msg.str());
+    errorCollector_(areaName_) << "Year " << year_ + 1 << ": "
+                               << "Hydro allocation must start on the 1st simulation month and "
+                               << "simulation last a whole year";
 
     return false;
 }
@@ -131,12 +129,10 @@ bool FinalLevelValidator::isFinalLevelReachable() const
 
     if ((finalLevel_ - initialLevel_) * reservoirCapacity > totalYearInflows)
     {
-        std::ostringstream msg;
-        msg << "Year: " << year_ + 1 << ". Area: " << areaName_
-            << ". Incompatible total inflows: " << totalYearInflows
-            << " with initial: " << initialLevel_ << " and final: " << finalLevel_
-            << " reservoir levels.";
-        errorCollector_.Collect(areaName_, msg.str());
+        errorCollector_(areaName_)
+          << "Year: " << year_ + 1 << " Incompatible total inflows: " << totalYearInflows
+          << " with initial: " << initialLevel_ << " and final: " << finalLevel_
+          << " reservoir levels.";
         return false;
     }
     return true;
@@ -162,12 +158,10 @@ bool FinalLevelValidator::isBetweenRuleCurves() const
 
     if (finalLevel_ < lowLevelLastDay || finalLevel_ > highLevelLastDay)
     {
-        std::ostringstream msg;
-        msg << "Year: " << year_ + 1 << ". Area: " << areaName_
-            << ". Specifed final reservoir level: " << finalLevel_
-            << " is incompatible with reservoir level rule curve [" << lowLevelLastDay << " , "
-            << highLevelLastDay << "]";
-        errorCollector_.Collect(areaName_, msg.str());
+        errorCollector_(areaName_)
+          << "Year: " << year_ + 1 << " Specifed final reservoir level: " << finalLevel_
+          << " is incompatible with reservoir level rule curve [" << lowLevelLastDay << " , "
+          << highLevelLastDay << "]";
         return false;
     }
     return true;
