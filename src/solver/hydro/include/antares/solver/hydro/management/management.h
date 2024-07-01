@@ -85,9 +85,9 @@ private:
                           const Antares::Data::Area::ScratchMap& scratchmap,
                           HydroSpecificMap& hydro_specific_map);
     //! Prepare the effective demand for each area
-    void prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map);
+    void prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map) const;
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level,
+    void prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
                                           uint y,
                                           HydroSpecificMap& hydro_specific_map);
 

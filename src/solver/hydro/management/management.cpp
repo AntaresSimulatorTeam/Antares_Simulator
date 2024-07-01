@@ -196,7 +196,7 @@ void HydroManagement::prepareNetDemand(uint year,
       });
 }
 
-void HydroManagement::prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map)
+void HydroManagement::prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map) const
 {
     areas_.each(
       [this, &year, &hydro_specific_map](Data::Area& area)
