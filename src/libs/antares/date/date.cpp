@@ -24,6 +24,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/date/date.h>
 #include <antares/logs/logs.h>
@@ -137,8 +138,9 @@ bool StringToMonth(MonthName& out, AnyString text)
         return false;
     }
     text.trim();
-    CString<MONTHS_PER_YEAR, false> t = text;
-    t.toLower();
+    std::string t = text;
+    boost::algorithm::to_lower(t);
+    /* t.toLower(); */
 
     if (t.size() == 3)
     {
