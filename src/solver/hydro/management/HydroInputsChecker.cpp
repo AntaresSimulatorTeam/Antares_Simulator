@@ -99,6 +99,7 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
     const auto& srcinflows = area.hydro.series->storage.getColumn(year);
     const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
     // Weekly minimum generation <= Weekly inflows for each week
+    bool ret = true;
     for (uint week = 0; week < calendar_.maxWeeksInYear - 1; ++week)
     {
         double totalWeekMingen = 0.0;
@@ -122,15 +123,16 @@ bool HydroInputsChecker::checkWeeklyMinGeneration(uint year, const Data::Area& a
               << " the minimum generation of " << totalWeekMingen << " MW in week " << week + 1
               << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
               << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
-            return false;
+            ret = false;
         }
     }
-    return true;
+    return ret;
 }
 
 bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& area)
 {
     const auto& data = area.hydro.managementData.at(year);
+    bool ret = true;
     if (data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
@@ -138,14 +140,15 @@ bool HydroInputsChecker::checkYearlyMinGeneration(uint year, const Data::Area& a
           << " the minimum generation of " << data.totalYearMingen << " MW of TS-"
           << area.hydro.series->mingen.getSeriesIndex(year) + 1
           << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
-        return false;
+        ret = false;
     }
-    return true;
+    return ret;
 }
 
 bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& area)
 {
     const auto& data = area.hydro.managementData.at(year);
+    bool ret = true;
     for (uint month = 0; month != 12; ++month)
     {
         uint realmonth = calendar_.months[month].realmonth;
@@ -158,10 +161,10 @@ bool HydroInputsChecker::checkMonthlyMinGeneration(uint year, const Data::Area& 
               << area.hydro.series->mingen.getSeriesIndex(year) + 1
               << " is incompatible with the inflows of " << data.totalMonthInflows[realmonth]
               << " MW.";
-            return false;
+            ret = false;
         }
     }
-    return true;
+    return ret;
 }
 
 bool HydroInputsChecker::checkGenerationPowerConsistency(uint year)
@@ -222,7 +225,9 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                                          errorCollector_);
           if (!validator.check())
           {
-              errorCollector_(area.name) << "hydro final level : infeasibility";
+              errorCollector_(area.name)
+                << "hydro final level : infeasibility for area " << area.name
+                << " please check the corresponding final level data (scenario-builder)";
           }
           if (validator.finalLevelFineForUse())
           {
