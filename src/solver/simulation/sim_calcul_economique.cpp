@@ -53,7 +53,8 @@ static void importShortTermStorages(
 
             // Properties
             toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
-            toInsert.efficiency = st.properties.injectionEfficiency;
+            toInsert.injectionEfficiency = st.properties.injectionEfficiency;
+            toInsert.withdrawalEfficiency = st.properties.withdrawalEfficiency;
             toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st.properties.initialLevel;
