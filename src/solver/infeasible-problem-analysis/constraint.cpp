@@ -18,12 +18,14 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "antares/solver/infeasible-problem-analysis/constraint.h"
-
 #include <algorithm>
 #include <cassert>
 #include <iomanip>
 #include <sstream>
+#include <boost/regex.hpp>
+#include <boost/algorithm/string/regex.hpp>
+
+#include "antares/solver/infeasible-problem-analysis/constraint.h"
 
 namespace
 {
@@ -40,24 +42,7 @@ Constraint::Constraint(const std::string& input, const double slackValue):
 
 std::size_t Constraint::extractComponentsFromName()
 {
-    const auto beg = name_.begin();
-    const auto end = name_.end();
-    std::size_t newPos = 0;
-    const std::size_t sepSize = 2;
-    const std::size_t inputSize = name_.size();
-    for (std::size_t pos = 0; pos < inputSize; pos = newPos + sepSize)
-    {
-        newPos = name_.find("::", pos);
-        if (newPos == std::string::npos)
-        {
-            nameComponents_.emplace_back(beg + pos, end);
-            break;
-        }
-        if (newPos > pos)
-        {
-            nameComponents_.emplace_back(beg + pos, beg + newPos);
-        }
-    }
+    boost::algorithm::split_regex(nameComponents_, name_, boost::regex("::"));
     return nameComponents_.size();
 }
 

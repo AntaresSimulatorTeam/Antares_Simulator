@@ -63,10 +63,8 @@ void InfeasibleProblemReport::sortConstraints()
 
 void InfeasibleProblemReport::trimConstraints()
 {
-    if (nbMaxVariables <= constraints_.size())
-    {
-        constraints_.resize(nbMaxVariables);
-    }
+    unsigned int nbConstraints = constraints_.size();
+    constraints_.resize(std::min(nbMaxVariables, nbConstraints));
 }
 
 void InfeasibleProblemReport::sortConstraintsByType()
