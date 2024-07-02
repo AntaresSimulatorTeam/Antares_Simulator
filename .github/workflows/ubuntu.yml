@@ -137,6 +137,8 @@ jobs:
           echo 'simtest<<EOF' >> $GITHUB_ENV
           cat ./simtest.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
+
+        run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
       - name: Init submodule
