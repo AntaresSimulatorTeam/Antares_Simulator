@@ -1,5 +1,7 @@
 var NAVTREEINDEX25 =
 {
+"structMaxHydroPowerData.html":[7,0,138],
+"structMaxPumpingData.html":[7,0,140],
 "structMinDownTimeData.html":[7,0,143],
 "structMinHydroPowerData.html":[7,0,146],
 "structMonster.html":[7,0,149],

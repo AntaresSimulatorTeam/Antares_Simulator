@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/libs/antares/study/include/antares/study/parts/hydro/finalLevelValidator.h Source File</title>
+<title>Antares Simulator: src/solver/hydro/include/antares/solver/hydro/management/finalLevelValidator.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -167,61 +167,73 @@ $(document).ready(function(){initNavTree('finalLevelValidator_8h_source.html',''
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/study/parts/hydro/container.h&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">class </span>PartHydro;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="foldopen" id="foldopen00035" data-start="{" data-end="};">
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1FinalLevelValidator.html">   35</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1FinalLevelValidator.html">FinalLevelValidator</a></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1FinalLevelValidator.html">FinalLevelValidator</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1PartHydro.html">PartHydro</a>&amp; hydro,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> areaIndex,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                        <span class="keyword">const</span> AreaName areaName,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                        <span class="keywordtype">double</span> initialLevel,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                        <span class="keywordtype">double</span> finalLevel,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lastSimulationDay,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstMonthOfSimulation);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">bool</span> check();</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> finalLevelFineForUse();</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">bool</span> wasSetInScenarioBuilder();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">bool</span> compatibleWithReservoirProperties();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">bool</span> skippingFinalLevelUse();</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">bool</span> checkForInfeasibility();</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">bool</span> hydroAllocationStartMatchesSimulation() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">bool</span> isFinalLevelReachable() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">double</span> calculateTotalInflows() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">bool</span> isBetweenRuleCurves() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// Data from simulation</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year_ = 0;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lastSimulationDay_ = 0;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstMonthOfSimulation_ = 0;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Data from area</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1PartHydro.html">PartHydro</a>&amp; hydro_;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> areaIndex_;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">const</span> AreaName areaName_;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">double</span> initialLevel_;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">double</span> finalLevel_;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/solver/hydro/management/HydroErrorsCollector.h&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;antares/study/parts/hydro/container.h&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>Antares</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span>Data</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">class </span>PartHydro;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">namespace </span>Solver</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1FinalLevelValidator.html">   41</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Solver_1_1FinalLevelValidator.html">FinalLevelValidator</a></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>{</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1FinalLevelValidator.html">FinalLevelValidator</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1PartHydro.html">Antares::Data::PartHydro</a>&amp; hydro,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> areaIndex,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                        <span class="keyword">const</span> Antares::Data::AreaName areaName,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                        <span class="keywordtype">double</span> initialLevel,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                        <span class="keywordtype">double</span> finalLevel,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lastSimulationDay,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstMonthOfSimulation,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                        <a class="code hl_class" href="classAntares_1_1HydroErrorsCollector.html">HydroErrorsCollector</a>&amp; errorCollector);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">bool</span> check();</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">bool</span> finalLevelFineForUse();</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">bool</span> wasSetInScenarioBuilder();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">bool</span> compatibleWithReservoirProperties();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">bool</span> skippingFinalLevelUse();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">bool</span> checkForInfeasibility();</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">bool</span> hydroAllocationStartMatchesSimulation() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">bool</span> isFinalLevelReachable() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">double</span> calculateTotalInflows() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">bool</span> isBetweenRuleCurves() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Data from simulation</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year_ = 0;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lastSimulationDay_ = 0;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> firstMonthOfSimulation_ = 0;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">bool</span> finalLevelFineForUse_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>};</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// Data from area</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1PartHydro.html">Antares::Data::PartHydro</a>&amp; hydro_;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> areaIndex_;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">const</span> Antares::Data::AreaName areaName_;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">double</span> initialLevel_;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">double</span> finalLevel_;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordtype">bool</span> finalLevelFineForUse_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// area input errors</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_class" href="classAntares_1_1HydroErrorsCollector.html">HydroErrorsCollector</a>&amp; errorCollector_;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>};</div>
 </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>} <span class="comment">// namespace Antares::Data</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1FinalLevelValidator_html"><div class="ttname"><a href="classAntares_1_1Data_1_1FinalLevelValidator.html">Antares::Data::FinalLevelValidator</a></div><div class="ttdef"><b>Definition</b> finalLevelValidator.h:36</div></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>} <span class="comment">// namespace Antares</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1PartHydro_html"><div class="ttname"><a href="classAntares_1_1Data_1_1PartHydro.html">Antares::Data::PartHydro</a></div><div class="ttdoc">Hydro for a single area.</div><div class="ttdef"><b>Definition</b> container.h:91</div></div>
+<div class="ttc" id="aclassAntares_1_1HydroErrorsCollector_html"><div class="ttname"><a href="classAntares_1_1HydroErrorsCollector.html">Antares::HydroErrorsCollector</a></div><div class="ttdef"><b>Definition</b> HydroErrorsCollector.h:32</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1FinalLevelValidator_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1FinalLevelValidator.html">Antares::Solver::FinalLevelValidator</a></div><div class="ttdef"><b>Definition</b> finalLevelValidator.h:42</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_87a455bccb09a92130c26a11a880c98a.html">libs</a></li><li class="navelem"><a class="el" href="dir_f35d736e29d8243b24d0b8688c8560d6.html">antares</a></li><li class="navelem"><a class="el" href="dir_ce980317fbc69b3f740ff45def79f52e.html">study</a></li><li class="navelem"><a class="el" href="dir_ade70c9ce0816f814aedf32407cf483d.html">include</a></li><li class="navelem"><a class="el" href="dir_79a3e724839bc9216a240bf576933a1b.html">antares</a></li><li class="navelem"><a class="el" href="dir_5e4647cf74155fd57847988678b744d8.html">study</a></li><li class="navelem"><a class="el" href="dir_648354d973dace25fe649075a998c814.html">parts</a></li><li class="navelem"><a class="el" href="dir_a09de2a846902f5a3d76c81d052b57f3.html">hydro</a></li><li class="navelem"><b>finalLevelValidator.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_12cab7512ff0ffecffb5b6d80fa7bd44.html">hydro</a></li><li class="navelem"><a class="el" href="dir_0ad44d5965cb798732b588d4ff2ade5a.html">include</a></li><li class="navelem"><a class="el" href="dir_c8fab6c433788cb512af860fc6a8eefa.html">antares</a></li><li class="navelem"><a class="el" href="dir_7181ed59e89dd22aa941945b98a336a2.html">solver</a></li><li class="navelem"><a class="el" href="dir_2db9434eb87b318d51816735e7746688.html">hydro</a></li><li class="navelem"><a class="el" href="dir_9d4b1dd35cf1f877d49289cf5cae9095.html">management</a></li><li class="navelem"><b>finalLevelValidator.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

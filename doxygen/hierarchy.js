@@ -51,6 +51,7 @@ var hierarchy =
       [ "Antares::Solver::ThermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html", null ],
       [ "Antares::Solver::WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ]
     ] ],
+    [ "Antares::HydroErrorsCollector::AreaReference", "classAntares_1_1HydroErrorsCollector_1_1AreaReference.html", null ],
     [ "Antares::Solver::Variable::Areas< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Areas.html", null ],
     [ "Antares::Data::AreaScratchpad", "classAntares_1_1Data_1_1AreaScratchpad.html", null ],
     [ "Antares::Data::AreaUI", "classAntares_1_1Data_1_1AreaUI.html", null ],
@@ -336,7 +337,7 @@ var hierarchy =
     [ "FictitiousLoadData", "structFictitiousLoadData.html", null ],
     [ "Benchmarking::FileContent", "classBenchmarking_1_1FileContent.html", null ],
     [ "PathList::FileInfo", "structPathList_1_1FileInfo.html", null ],
-    [ "Antares::Data::FinalLevelValidator", "classAntares_1_1Data_1_1FinalLevelValidator.html", null ],
+    [ "Antares::Solver::FinalLevelValidator", "classAntares_1_1Solver_1_1FinalLevelValidator.html", null ],
     [ "FinalStockEquivalentData", "structFinalStockEquivalentData.html", null ],
     [ "FinalStockExpressionData", "structFinalStockExpressionData.html", null ],
     [ "FirstDecoratorT", null, [
@@ -358,6 +359,7 @@ var hierarchy =
     [ "Hydro_problem_costs", "classHydro__problem__costs.html", null ],
     [ "Antares::Data::HydroAllocation", "classAntares_1_1Data_1_1HydroAllocation.html", null ],
     [ "Antares::Solver::Simulation::hydroCostNoise", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html", null ],
+    [ "Antares::HydroErrorsCollector", "classAntares_1_1HydroErrorsCollector.html", null ],
     [ "Antares::HydroInputsChecker", "classAntares_1_1HydroInputsChecker.html", null ],
     [ "Antares::HydroManagement", "classAntares_1_1HydroManagement.html", null ],
     [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],

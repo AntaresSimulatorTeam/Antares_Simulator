@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/hydro/include/antares/solver/hydro/management/HydroInputsChecker.h Source File</title>
+<title>Antares Simulator: src/solver/hydro/include/antares/solver/hydro/management/HydroErrorsCollector.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -110,7 +110,7 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('HydroInputsChecker_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('HydroErrorsCollector_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('HydroInputsChecker_8h_source.html','')
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">HydroInputsChecker.h</div></div>
+  <div class="headertitle"><div class="title">HydroErrorsCollector.h</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
@@ -159,62 +159,61 @@ $(document).ready(function(){initNavTree('HydroInputsChecker_8h_source.html','')
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">*/</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;antares/study/area/area.h&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;antares/date/date.h&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;antares/solver/hydro/management/HydroErrorsCollector.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;antares/solver/hydro/management/MinGenerationScaling.h&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;antares/solver/hydro/management/PrepareInflows.h&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/study/study.h&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>Antares</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="foldopen" id="foldopen00032" data-start="{" data-end="};">
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classAntares_1_1HydroInputsChecker.html">   32</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1HydroInputsChecker.html">HydroInputsChecker</a></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classAntares_1_1HydroInputsChecker.html">HydroInputsChecker</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">void</span> Execute(uint year);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">void</span> CheckForErrors() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">void</span> CheckFinalReservoirLevelsConfiguration(uint year);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1AreaList.html">Data::AreaList</a>&amp; areas_;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; parameters_;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Date_1_1Calendar.html">Date::Calendar</a>&amp; calendar_;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <a class="code hl_class" href="classAntares_1_1PrepareInflows.html">PrepareInflows</a> prepareInflows_;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_class" href="classAntares_1_1MinGenerationScaling.html">MinGenerationScaling</a> minGenerationScaling_;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Matrix.html">Data::TimeSeries::TS</a>&amp; scenarioInitialHydroLevels_;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Matrix.html">Data::TimeSeries::TS</a>&amp; scenarioFinalHydroLevels_;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_class" href="classAntares_1_1HydroErrorsCollector.html">HydroErrorsCollector</a> errorCollector_;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">bool</span> checkMonthlyMinGeneration(uint year, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">bool</span> checkYearlyMinGeneration(uint year, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">bool</span> checkWeeklyMinGeneration(uint year, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>&amp; area);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">bool</span> checkGenerationPowerConsistency(uint year);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">bool</span> checksOnGenerationPowerBounds(uint year);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">bool</span> checkMinGeneration(uint year);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>};</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>Antares</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1HydroErrorsCollector.html">   31</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1HydroErrorsCollector.html">HydroErrorsCollector</a></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1HydroErrorsCollector_1_1AreaReference.html">   34</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1HydroErrorsCollector_1_1AreaReference.html">AreaReference</a></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_class" href="classAntares_1_1HydroErrorsCollector_1_1AreaReference.html">AreaReference</a>(<a class="code hl_class" href="classAntares_1_1HydroErrorsCollector.html">HydroErrorsCollector</a>* collector, <span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_class" href="classAntares_1_1HydroErrorsCollector_1_1AreaReference.html">AreaReference</a>&amp; operator&lt;&lt;(<span class="keyword">const</span> T&amp; msg);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        std::string&amp; areaSingleErrorMessage_;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    };</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} <span class="comment">// namespace Antares</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition</b> area.h:377</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition</b> area.h:52</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition</b> parameters.h:51</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
-<div class="ttc" id="aclassAntares_1_1Date_1_1Calendar_html"><div class="ttname"><a href="classAntares_1_1Date_1_1Calendar.html">Antares::Date::Calendar</a></div><div class="ttdef"><b>Definition</b> date.h:180</div></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_class" href="classAntares_1_1HydroErrorsCollector_1_1AreaReference.html">AreaReference</a> operator()(<span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_class" href="classAntares_1_1HydroErrorsCollector.html">HydroErrorsCollector</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> CheckForErrors() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::map&lt;std::string, std::vector&lt;std::string&gt;&gt; areasErrorMap_;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::string&amp; CurrentMessage(<span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
+</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><a class="code hl_class" href="classAntares_1_1HydroErrorsCollector_1_1AreaReference.html">HydroErrorsCollector::AreaReference</a>&amp; HydroErrorsCollector::AreaReference::operator&lt;&lt;(<span class="keyword">const</span> T&amp; msg)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>{</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::ostringstream strfy;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    strfy &lt;&lt; msg;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    areaSingleErrorMessage_ += strfy.str();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>} <span class="comment">// namespace Antares</span></div>
+<div class="ttc" id="aclassAntares_1_1HydroErrorsCollector_1_1AreaReference_html"><div class="ttname"><a href="classAntares_1_1HydroErrorsCollector_1_1AreaReference.html">Antares::HydroErrorsCollector::AreaReference</a></div><div class="ttdef"><b>Definition</b> HydroErrorsCollector.h:35</div></div>
 <div class="ttc" id="aclassAntares_1_1HydroErrorsCollector_html"><div class="ttname"><a href="classAntares_1_1HydroErrorsCollector.html">Antares::HydroErrorsCollector</a></div><div class="ttdef"><b>Definition</b> HydroErrorsCollector.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1HydroInputsChecker_html"><div class="ttname"><a href="classAntares_1_1HydroInputsChecker.html">Antares::HydroInputsChecker</a></div><div class="ttdef"><b>Definition</b> HydroInputsChecker.h:33</div></div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:46</div></div>
-<div class="ttc" id="aclassAntares_1_1MinGenerationScaling_html"><div class="ttname"><a href="classAntares_1_1MinGenerationScaling.html">Antares::MinGenerationScaling</a></div><div class="ttdoc">Prepare minimum generation scaling for each area.</div><div class="ttdef"><b>Definition</b> MinGenerationScaling.h:31</div></div>
-<div class="ttc" id="aclassAntares_1_1PrepareInflows_html"><div class="ttname"><a href="classAntares_1_1PrepareInflows.html">Antares::PrepareInflows</a></div><div class="ttdoc">Prepare inflows scaling for each area.</div><div class="ttdef"><b>Definition</b> PrepareInflows.h:30</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_12cab7512ff0ffecffb5b6d80fa7bd44.html">hydro</a></li><li class="navelem"><a class="el" href="dir_0ad44d5965cb798732b588d4ff2ade5a.html">include</a></li><li class="navelem"><a class="el" href="dir_c8fab6c433788cb512af860fc6a8eefa.html">antares</a></li><li class="navelem"><a class="el" href="dir_7181ed59e89dd22aa941945b98a336a2.html">solver</a></li><li class="navelem"><a class="el" href="dir_2db9434eb87b318d51816735e7746688.html">hydro</a></li><li class="navelem"><a class="el" href="dir_9d4b1dd35cf1f877d49289cf5cae9095.html">management</a></li><li class="navelem"><b>HydroInputsChecker.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_12cab7512ff0ffecffb5b6d80fa7bd44.html">hydro</a></li><li class="navelem"><a class="el" href="dir_0ad44d5965cb798732b588d4ff2ade5a.html">include</a></li><li class="navelem"><a class="el" href="dir_c8fab6c433788cb512af860fc6a8eefa.html">antares</a></li><li class="navelem"><a class="el" href="dir_7181ed59e89dd22aa941945b98a336a2.html">solver</a></li><li class="navelem"><a class="el" href="dir_2db9434eb87b318d51816735e7746688.html">hydro</a></li><li class="navelem"><a class="el" href="dir_9d4b1dd35cf1f877d49289cf5cae9095.html">management</a></li><li class="navelem"><b>HydroErrorsCollector.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

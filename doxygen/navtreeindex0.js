@@ -49,7 +49,8 @@ var NAVTREEINDEX0 =
 "Group1_8h_source.html":[8,0,0,4,6,0,0,0,0,2,21],
 "HebdoProblemToLpsTranslator_8h_source.html":[8,0,0,4,6,0,0,0,0,4],
 "HydraulicSmoothingGroup_8h_source.html":[8,0,0,4,6,0,0,0,0,2,22],
-"HydroInputsChecker_8h_source.html":[8,0,0,4,2,0,0,0,0,2,1],
+"HydroErrorsCollector_8h_source.html":[8,0,0,4,2,0,0,0,0,2,1],
+"HydroInputsChecker_8h_source.html":[8,0,0,4,2,0,0,0,0,2,2],
 "HydroPowerGroup_8h_source.html":[8,0,0,4,6,0,0,0,0,2,24],
 "HydroPowerSmoothingUsingVariationMaxDown_8h_source.html":[8,0,0,4,6,0,0,0,0,2,25],
 "HydroPowerSmoothingUsingVariationMaxUp_8h_source.html":[8,0,0,4,6,0,0,0,0,2,26],
@@ -70,7 +71,7 @@ var NAVTREEINDEX0 =
 "MaxPumping_8h_source.html":[8,0,0,4,6,0,0,0,0,2,29],
 "MinDownTimeGroup_8h_source.html":[8,0,0,4,6,0,0,0,0,2,32],
 "MinDownTime_8h_source.html":[8,0,0,4,6,0,0,0,0,2,31],
-"MinGenerationScaling_8h_source.html":[8,0,0,4,2,0,0,0,0,2,3],
+"MinGenerationScaling_8h_source.html":[8,0,0,4,2,0,0,0,0,2,4],
 "MinHydroPower_8h_source.html":[8,0,0,4,6,0,0,0,0,2,33],
 "MinMaxHydroPowerGroup_8h_source.html":[8,0,0,4,6,0,0,0,0,2,34],
 "NTCTSNumberData_8h_source.html":[8,0,0,3,0,25,0,0,0,8,5],
@@ -81,7 +82,7 @@ var NAVTREEINDEX0 =
 "PMaxDispatchableGeneration_8h_source.html":[8,0,0,4,6,0,0,0,0,2,39],
 "PMinDispatchableGeneration_8h_source.html":[8,0,0,4,6,0,0,0,0,2,40],
 "PMinMaxDispatchableGenerationGroup_8h_source.html":[8,0,0,4,6,0,0,0,0,2,41],
-"PrepareInflows_8h_source.html":[8,0,0,4,2,0,0,0,0,2,4],
+"PrepareInflows_8h_source.html":[8,0,0,4,2,0,0,0,0,2,5],
 "ProblemMatrixEssential_8h_source.html":[8,0,0,4,6,0,0,0,0,14],
 "QuadraticProblemMatrix_8h_source.html":[8,0,0,4,6,0,0,0,0,15],
 "RenewableTSNumberData_8h_source.html":[8,0,0,3,0,25,0,0,0,8,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1CorrelationPost.html#a5cd23efc2939d98cb4036e453f2b0f69":[7,0,0,0,0,0,4,3],
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1CorrelationPost.html#ac163b556c88be1ec72bc8f3511471a2b":[7,0,0,0,0,0,4,2],
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1CorrelationPost.html#ae853dea9f11608a13ddfe2053acb9bc2":[7,0,0,0,0,0,4,5],
-"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1CorrelationPost.html#afea1f2ae1774781fedc7e03872351585":[7,0,0,0,0,0,4,1],
-"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Create.html":[7,0,0,0,0,0,5]
+"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1CorrelationPost.html#afea1f2ae1774781fedc7e03872351585":[7,0,0,0,0,0,4,1]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX22 =
 {
+"message_8hxx_source.html":[8,0,0,7,2,2,25],
+"minmax-data_8h_source.html":[8,0,0,4,11,0,0,0,0,3,6],
 "minmax_8h_source.html":[8,0,0,4,11,0,0,0,0,3,7],
 "minmax_8hxx_source.html":[8,0,0,4,11,0,0,0,0,3,8],
 "misc-gen_8h_source.html":[8,0,0,7,0,0,0,0,8],
@@ -176,7 +178,7 @@ var NAVTREEINDEX22 =
 "solar_8h_source.html":[8,0,0,4,11,0,0,0,0,1,7],
 "solver_2application_2include_2antares_2application_2application_8h_source.html":[8,0,0,4,0,0,0,0,0],
 "solver_2constraints-builder_2include_2antares_2solver_2constraints-builder_2grid_8h_source.html":[8,0,0,4,1,0,0,0,0,1],
-"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h_source.html":[8,0,0,4,2,0,0,0,0,2,2],
+"solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h_source.html":[8,0,0,4,2,0,0,0,0,2,3],
 "solver_2infeasible-problem-analysis_2include_2antares_2solver_2infeasible-problem-analysis_2constraint_8h_source.html":[8,0,0,4,3,0,0,0,0,1],
 "solver_2misc_2include_2antares_2solver_2misc_2options_8h_source.html":[8,0,0,4,5,0,0,0,0,4],
 "solver_2signal-handling_2include_2antares_2signal-handling_2common_8h_source.html":[8,0,0,4,7,0,0,0,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Data_1_1CompareAreaName.html":[7,0,0,4,23],
 "structAntares_1_1Data_1_1CompareBindingConstraintName.html":[7,0,0,4,24],
 "structAntares_1_1Data_1_1CompareClusterName.html":[7,0,0,4,25],
-"structAntares_1_1Data_1_1CompareLinkName.html":[7,0,0,4,26],
-"structAntares_1_1Data_1_1DailyDemand.html":[7,0,0,4,28],
-"structAntares_1_1Data_1_1DailyDemand.html#a11ba7fd49661f192700bcd64117d193c":[7,0,0,4,28,1]
+"structAntares_1_1Data_1_1CompareLinkName.html":[7,0,0,4,26]
 };

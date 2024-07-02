@@ -1,5 +1,7 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#ae7e192a761b40dc071ce0b483bfeb955":[7,0,0,13,4,4,87,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html":[7,0,0,13,4,4,88],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html#a3c6b2721c744e9eac116a64bcbbfbed6":[7,0,0,13,4,4,88,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html#a4dec4499ddff824162a54d431058a6e0":[7,0,0,13,4,4,88,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html":[7,0,0,13,4,4,89],
@@ -115,8 +117,8 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1dynamicColumns_01_4.html":[7,0,0,13,4,40],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1noColumn_01_4.html":[7,0,0,13,4,41],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html":[7,0,0,13,4,42],
-"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html":[7,0,0,13,24],
-"structAntares_1_1Solver_1_1WeeklyProblemId.html":[7,0,0,13,25],
+"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html":[7,0,0,13,25],
+"structAntares_1_1Solver_1_1WeeklyProblemId.html":[7,0,0,13,26],
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html":[7,0,0,16,3],
 "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html":[7,0,0,16,4],
 "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html":[7,0,0,15,1,0,1],
@@ -127,7 +129,7 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html":[7,0,0,15,1,11],
 "structAntares_1_1Toolbox_1_1Filter_1_1ResultNewInstance.html":[7,0,0,15,1,12],
 "structAntares_1_1UnitTests_1_1PredicateIdentity.html":[7,0,0,17,2],
-"structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[7,0,0,51],
+"structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[7,0,0,52],
 "structAntares_1_1Window_1_1Inspector_1_1Accumulator.html":[7,0,0,18,1,0],
 "structAntares_1_1Window_1_1Inspector_1_1AccumulatorCheck.html":[7,0,0,18,1,1],
 "structAntares_1_1Window_1_1Inspector_1_1Add.html":[7,0,0,18,1,2],
@@ -202,10 +204,10 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Window_1_1Inspector_1_1Unique.html":[7,0,0,18,1,76],
 "structAntares_1_1Window_1_1SortColor.html":[7,0,0,18,50],
 "structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html":[7,0,0,18,53,0,0],
-"structAntares_1_1linkInfo_1_1addpWeight.html":[7,0,0,34,0],
-"structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html":[7,0,0,34,1],
-"structAntares_1_1linkInfo_1_1comparepWeight.html":[7,0,0,34,2],
-"structAntares_1_1linkInfo_1_1comparepWeightWithImpedance.html":[7,0,0,34,3],
+"structAntares_1_1linkInfo_1_1addpWeight.html":[7,0,0,35,0],
+"structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html":[7,0,0,35,1],
+"structAntares_1_1linkInfo_1_1comparepWeight.html":[7,0,0,35,2],
+"structAntares_1_1linkInfo_1_1comparepWeightWithImpedance.html":[7,0,0,35,3],
 "structAreaBalanceData.html":[7,0,37],
 "structAreaHydroLevelData.html":[7,0,39],
 "structBOUND__FLEX__DOWN__NODE.html":[7,0,51],
@@ -247,7 +249,5 @@ var NAVTREEINDEX24 =
 "structHydroMaxPowerStudy.html":[7,0,116],
 "structHydroPowerData.html":[7,0,118],
 "structLEVEL__FLEX__DOWN__NODE.html":[7,0,130],
-"structLEVEL__FLEX__UP__NODE.html":[7,0,131],
-"structMaxHydroPowerData.html":[7,0,138],
-"structMaxPumpingData.html":[7,0,140]
+"structLEVEL__FLEX__UP__NODE.html":[7,0,131]
 };

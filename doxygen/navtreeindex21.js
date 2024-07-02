@@ -1,5 +1,8 @@
 var NAVTREEINDEX21 =
 {
+"functions_j.html":[7,3,0,9],
+"functions_k.html":[7,3,0,10],
+"functions_l.html":[7,3,0,11],
 "functions_m.html":[7,3,0,12],
 "functions_n.html":[7,3,0,13],
 "functions_o.html":[7,3,0,14],
@@ -94,11 +97,10 @@ var NAVTREEINDEX21 =
 "htmllistbox_2item_2item_8h_source.html":[8,0,0,7,2,1,1,2,1,6],
 "hurdleCosts_8h_source.html":[8,0,0,4,11,0,0,0,0,2,1,6],
 "hurdles-cost_8h_source.html":[8,0,0,7,0,0,0,2,4],
-"hydro-final-reservoir-level-functions_8h_source.html":[8,0,0,4,2,0,0,0,0,2,0],
 "hydroCost_8h_source.html":[8,0,0,4,11,0,0,0,0,2,9],
 "hydroLevelsData_8h_source.html":[8,0,0,3,0,25,0,0,0,8,2],
 "hydro_8h_source.html":[8,0,0,4,11,0,0,0,0,1,1],
-"hydromaxtimeseriesreader_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,4],
+"hydromaxtimeseriesreader_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,3],
 "hydromonthlypower_8h_source.html":[8,0,0,7,2,1,1,1,1,1,4],
 "hydroprepro_8h_source.html":[8,0,0,7,2,1,1,1,1,1,5],
 "hydrostorage_8h_source.html":[8,0,0,4,11,0,0,0,0,2,10],
@@ -160,8 +162,8 @@ var NAVTREEINDEX21 =
 "libs_2antares_2study_2include_2antares_2study_2parts_2common_2cluster_8h_source.html":[8,0,0,3,0,25,0,0,0,5,0,0],
 "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2allocation_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,0],
 "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,2],
-"libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2prepro_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,5],
-"libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2series_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,6],
+"libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2prepro_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,4],
+"libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2series_8h_source.html":[8,0,0,3,0,25,0,0,0,5,1,5],
 "libs_2antares_2study_2include_2antares_2study_2parts_2load_2container_8h_source.html":[8,0,0,3,0,25,0,0,0,5,2,0],
 "libs_2antares_2study_2include_2antares_2study_2parts_2load_2prepro_8h_source.html":[8,0,0,3,0,25,0,0,0,5,2,1],
 "libs_2antares_2study_2include_2antares_2study_2parts_2renewable_2cluster_8h_source.html":[8,0,0,3,0,25,0,0,0,5,3,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX21 =
 "memorystatistics_8h_source.html":[8,0,0,7,2,2,23],
 "menus_8h_source.html":[8,0,0,7,2,0,4],
 "mersenne-twister_8h_source.html":[8,0,0,3,0,19,0,0,0,0],
-"message_8h_source.html":[8,0,0,7,2,2,24],
-"message_8hxx_source.html":[8,0,0,7,2,2,25],
-"minmax-data_8h_source.html":[8,0,0,4,11,0,0,0,0,3,6]
+"message_8h_source.html":[8,0,0,7,2,2,24]
 };

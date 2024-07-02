@@ -1,5 +1,8 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[7,0,0,13,3,0,3],
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#acc70a60813365e67941864367f9083dd":[7,0,0,13,3,0,2],
+"classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html":[7,0,0,13,3,1],
 "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html":[7,0,0,13,3,4],
 "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html":[7,0,0,13,3,7],
 "classAntares_1_1Solver_1_1Simulation_1_1DTGmarginForAdqPatchPostProcessCmd.html":[7,0,0,13,3,9],
@@ -39,8 +42,8 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html":[7,0,0,13,3,22],
 "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html":[7,0,0,13,3,25],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html":[7,0,0,13,3,26],
-"classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[7,0,0,13,22],
-"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,13,23],
+"classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[7,0,0,13,23],
+"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,13,24],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html":[7,0,0,13,4,0,0],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a69253ca6687ddb497e19441f46c3376c":[7,0,0,13,4,0,0,1],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a8f404b70ff65e628ab0b85bd5f834abe":[7,0,0,13,4,0,0,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html":[7,0,0,13,4,4,35],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a34a604f67ef39e3236df26f6d2bdb7e8":[7,0,0,13,4,4,35,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5b304f49bd1ad489d47904ababa2e482":[7,0,0,13,4,4,35,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5fbc5ef6573e106cc9673459c35bb83d":[7,0,0,13,4,4,35,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#adb9cf6e6d5c8d74acacb91b93c3a2343":[7,0,0,13,4,4,35,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html":[7,0,0,13,4,4,31],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html#a614facc3a689e802474d0a915d642994":[7,0,0,13,4,4,31,1]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5fbc5ef6573e106cc9673459c35bb83d":[7,0,0,13,4,4,35,1]
 };

@@ -1127,115 +1127,118 @@ $(document).ready(function(){initNavTree('solver_8hxx_source.html',''); initResi
 <div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>            hydroInputsChecker.Execute(year);</div>
 <div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>        }</div>
 <div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>    }</div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span> </div>
-<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>    logs.info() &lt;&lt; <span class="stringliteral">&quot; Starting the simulation&quot;</span>;</div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span> </div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>    <span class="comment">// Loop over sets of parallel years to run the simulation</span></div>
-<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; batch: setsOfParallelYears)</div>
-<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>    {</div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>        <span class="comment">// 1 - We may want to regenerate the time-series this year.</span></div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>        <span class="comment">// This is the case when the preprocessors are enabled from the</span></div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>        <span class="comment">// interface and/or the refresh is enabled.</span></div>
-<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>        <span class="keywordflow">if</span> (batch.regenerateTS)</div>
-<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>        {</div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>            regenerateTimeSeries(batch.yearForTSgeneration);</div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>        }</div>
-<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>        computeRandomNumbers(randomForParallelYears,</div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>                             batch.yearsIndices,</div>
-<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>                             batch.isYearPerformed,</div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>                             randomHydroGenerator);</div>
-<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span> </div>
-<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>        <span class="keywordtype">bool</span> yearPerformed = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>        <a class="code hl_class" href="classAntares_1_1Concurrency_1_1FutureSet.html">Concurrency::FutureSet</a> results;</div>
-<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> y: batch.yearsIndices)</div>
-<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>        {</div>
-<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>            <span class="comment">// for each year not handled earlier</span></div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>            hydroInputsChecker.Execute(y);</div>
-<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>            <span class="keywordtype">bool</span> performCalculations = batch.isYearPerformed[y];</div>
-<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace = 999999;</div>
-<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>            <span class="keywordflow">if</span> (performCalculations)</div>
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>            {</div>
-<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>                yearPerformed = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>                numSpace = batch.performedYearToSpace[y];</div>
-<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>            }</div>
-<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span> </div>
-<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>            <span class="comment">// If the year has not to be rerun, we skip the computation of the year.</span></div>
-<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>            <span class="comment">// Note that, when we enter for the first time in the &quot;for&quot; loop, all years of the set</span></div>
-<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>            <span class="comment">// have to be rerun (meaning : they must be run once). if(!batch.yearFailed[y])</span></div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>            <span class="comment">// continue;</span></div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span> </div>
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>            <span class="keyword">auto</span> task = std::make_shared&lt;yearJob&lt;ImplementationType&gt;&gt;(</div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>              <span class="keyword">this</span>,</div>
-<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>              y,</div>
-<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>              batch.yearFailed,</div>
-<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>              batch.isFirstPerformedYearOfASet,</div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>              pFirstSetParallelWithAPerformedYearWasRun,</div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>              numSpace,</div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>              randomForParallelYears,</div>
-<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>              performCalculations,</div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>              study,</div>
-<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>              state[numSpace],</div>
-<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>              pYearByYear,</div>
-<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>              pDurationCollector,</div>
-<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>              pResultWriter,</div>
-<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>              simulationObserver_.get());</div>
-<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>            results.<a class="code hl_function" href="classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e">add</a>(Concurrency::AddTask(*pQueueService, task));</div>
-<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>        } <span class="comment">// End loop over years of the current set of parallel years</span></div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span> </div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>        logPerformedYearsInAset(batch);</div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span> </div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>        pQueueService-&gt;start();</div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span> </div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>        pQueueService-&gt;wait(Yuni::qseIdle);</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>        pQueueService-&gt;stop();</div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>        results.<a class="code hl_function" href="classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f">join</a>();</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>        pResultWriter.flush();</div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span> </div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>        <span class="comment">// At this point, the first set of parallel year(s) was run with at least one year</span></div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>        <span class="comment">// performed</span></div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>        <span class="keywordflow">if</span> (!pFirstSetParallelWithAPerformedYearWasRun &amp;&amp; yearPerformed)</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>        {</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>            pFirstSetParallelWithAPerformedYearWasRun = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>        }</div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span> </div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>        <span class="comment">// On regarde si au moins une année du lot n&#39;a pas trouvé de solution</span></div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; [year, failed]: batch.yearFailed)</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>        {</div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>            <span class="comment">// Si une année du lot d&#39;années n&#39;a pas trouvé de solution, on arrête tout</span></div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>            <span class="keywordflow">if</span> (failed)</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>            {</div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>                std::ostringstream msg;</div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>                msg &lt;&lt; <span class="stringliteral">&quot;Year &quot;</span> &lt;&lt; year + 1 &lt;&lt; <span class="stringliteral">&quot; has failed in the previous set of parallel year.&quot;</span>;</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>                <span class="keywordflow">throw</span> <a class="code hl_class" href="classAntares_1_1FatalError.html">FatalError</a>(msg.str());</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>            }</div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>        }</div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>        <span class="comment">// Computing the summary : adding the contribution of MC years</span></div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>        <span class="comment">// previously computed in parallel</span></div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>        ImplementationType::variables.computeSummary(batch.spaceToPerformedYear,</div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>                                                     batch.nbPerformedYears);</div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span> </div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>        <span class="comment">// Computing summary of spatial aggregations</span></div>
-<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>        ImplementationType::variables.computeSpatialAggregatesSummary(ImplementationType::variables,</div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>                                                                      batch.spaceToPerformedYear,</div>
-<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>                                                                      batch.nbPerformedYears);</div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span> </div>
-<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>        <span class="comment">// Computes statistics on annual (system and solution) costs, to be printed in output into</span></div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>        <span class="comment">// separate files</span></div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>        computeAnnualCostsStatistics(state, batch);</div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span> </div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>        <span class="comment">// Set to zero the random numbers of all parallel years</span></div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>        randomForParallelYears.reset();</div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>    hydroInputsChecker.CheckForErrors();</div>
+<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span> </div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>    logs.info() &lt;&lt; <span class="stringliteral">&quot; Starting the simulation&quot;</span>;</div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span> </div>
+<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>    <span class="comment">// Loop over sets of parallel years to run the simulation</span></div>
+<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; batch: setsOfParallelYears)</div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>    {</div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>        <span class="comment">// 1 - We may want to regenerate the time-series this year.</span></div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>        <span class="comment">// This is the case when the preprocessors are enabled from the</span></div>
+<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>        <span class="comment">// interface and/or the refresh is enabled.</span></div>
+<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>        <span class="keywordflow">if</span> (batch.regenerateTS)</div>
+<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>        {</div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>            regenerateTimeSeries(batch.yearForTSgeneration);</div>
+<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>        }</div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>        computeRandomNumbers(randomForParallelYears,</div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>                             batch.yearsIndices,</div>
+<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>                             batch.isYearPerformed,</div>
+<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>                             randomHydroGenerator);</div>
+<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span> </div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>        <span class="keywordtype">bool</span> yearPerformed = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>        <a class="code hl_class" href="classAntares_1_1Concurrency_1_1FutureSet.html">Concurrency::FutureSet</a> results;</div>
+<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> y: batch.yearsIndices)</div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>        {</div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>            <span class="comment">// for each year not handled earlier</span></div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>            hydroInputsChecker.Execute(y);</div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>            hydroInputsChecker.CheckForErrors();</div>
+<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span> </div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>            <span class="keywordtype">bool</span> performCalculations = batch.isYearPerformed[y];</div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace = 999999;</div>
+<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>            <span class="keywordflow">if</span> (performCalculations)</div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>            {</div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>                yearPerformed = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>                numSpace = batch.performedYearToSpace[y];</div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>            }</div>
+<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span> </div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>            <span class="comment">// If the year has not to be rerun, we skip the computation of the year.</span></div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>            <span class="comment">// Note that, when we enter for the first time in the &quot;for&quot; loop, all years of the set</span></div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>            <span class="comment">// have to be rerun (meaning : they must be run once). if(!batch.yearFailed[y])</span></div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>            <span class="comment">// continue;</span></div>
+<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span> </div>
+<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>            <span class="keyword">auto</span> task = std::make_shared&lt;yearJob&lt;ImplementationType&gt;&gt;(</div>
+<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>              <span class="keyword">this</span>,</div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>              y,</div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>              batch.yearFailed,</div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>              batch.isFirstPerformedYearOfASet,</div>
+<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>              pFirstSetParallelWithAPerformedYearWasRun,</div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>              numSpace,</div>
+<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>              randomForParallelYears,</div>
+<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>              performCalculations,</div>
+<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>              study,</div>
+<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>              state[numSpace],</div>
+<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>              pYearByYear,</div>
+<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>              pDurationCollector,</div>
+<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>              pResultWriter,</div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>              simulationObserver_.get());</div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>            results.<a class="code hl_function" href="classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e">add</a>(Concurrency::AddTask(*pQueueService, task));</div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>        } <span class="comment">// End loop over years of the current set of parallel years</span></div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span> </div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>        logPerformedYearsInAset(batch);</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span> </div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>        pQueueService-&gt;start();</div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span> </div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>        pQueueService-&gt;wait(Yuni::qseIdle);</div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>        pQueueService-&gt;stop();</div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>        results.<a class="code hl_function" href="classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f">join</a>();</div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>        pResultWriter.flush();</div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span> </div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>        <span class="comment">// At this point, the first set of parallel year(s) was run with at least one year</span></div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>        <span class="comment">// performed</span></div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>        <span class="keywordflow">if</span> (!pFirstSetParallelWithAPerformedYearWasRun &amp;&amp; yearPerformed)</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>        {</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>            pFirstSetParallelWithAPerformedYearWasRun = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>        }</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span> </div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>        <span class="comment">// On regarde si au moins une année du lot n&#39;a pas trouvé de solution</span></div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; [year, failed]: batch.yearFailed)</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>        {</div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>            <span class="comment">// Si une année du lot d&#39;années n&#39;a pas trouvé de solution, on arrête tout</span></div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>            <span class="keywordflow">if</span> (failed)</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>            {</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>                std::ostringstream msg;</div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>                msg &lt;&lt; <span class="stringliteral">&quot;Year &quot;</span> &lt;&lt; year + 1 &lt;&lt; <span class="stringliteral">&quot; has failed in the previous set of parallel year.&quot;</span>;</div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>                <span class="keywordflow">throw</span> <a class="code hl_class" href="classAntares_1_1FatalError.html">FatalError</a>(msg.str());</div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>            }</div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>        }</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>        <span class="comment">// Computing the summary : adding the contribution of MC years</span></div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>        <span class="comment">// previously computed in parallel</span></div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>        ImplementationType::variables.computeSummary(batch.spaceToPerformedYear,</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>                                                     batch.nbPerformedYears);</div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span> </div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>        <span class="comment">// Computing summary of spatial aggregations</span></div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>        ImplementationType::variables.computeSpatialAggregatesSummary(ImplementationType::variables,</div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>                                                                      batch.spaceToPerformedYear,</div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>                                                                      batch.nbPerformedYears);</div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span> </div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>        <span class="comment">// Computes statistics on annual (system and solution) costs, to be printed in output into</span></div>
+<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>        <span class="comment">// separate files</span></div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>        computeAnnualCostsStatistics(state, batch);</div>
 <div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span> </div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>    } <span class="comment">// End loop over sets of parallel years</span></div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span> </div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>    <span class="comment">// Writing annual costs statistics</span></div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    pAnnualStatistics.endStandardDeviations();</div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>    pAnnualStatistics.writeToOutput(pResultWriter);</div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>}</div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span> </div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span> </div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_SOLVER_HXX__</span></div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        <span class="comment">// Set to zero the random numbers of all parallel years</span></div>
+<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>        randomForParallelYears.reset();</div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span> </div>
+<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    } <span class="comment">// End loop over sets of parallel years</span></div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span> </div>
+<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    <span class="comment">// Writing annual costs statistics</span></div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>    pAnnualStatistics.endStandardDeviations();</div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>    pAnnualStatistics.writeToOutput(pResultWriter);</div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>}</div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span> </div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span> </div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_SOLVER_HXX__</span></div>
 </div>
 </div>
 </div>
@@ -1251,7 +1254,7 @@ $(document).ready(function(){initNavTree('solver_8hxx_source.html',''); initResi
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_ad4f8a799f2cf9214dada8b0ad8993214"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#ad4f8a799f2cf9214dada8b0ad8993214">Antares::Data::Study::areas</a></div><div class="ttdeci">AreaList areas</div><div class="ttdoc">All available areas.</div><div class="ttdef"><b>Definition</b> study.h:555</div></div>
 <div class="ttc" id="aclassAntares_1_1FatalError_html"><div class="ttname"><a href="classAntares_1_1FatalError.html">Antares::FatalError</a></div><div class="ttdoc">A generic exception for errors that should end the program.</div><div class="ttdef"><b>Definition</b> fatal-error.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1HydroInputsChecker_html"><div class="ttname"><a href="classAntares_1_1HydroInputsChecker.html">Antares::HydroInputsChecker</a></div><div class="ttdef"><b>Definition</b> HydroInputsChecker.h:32</div></div>
+<div class="ttc" id="aclassAntares_1_1HydroInputsChecker_html"><div class="ttname"><a href="classAntares_1_1HydroInputsChecker.html">Antares::HydroInputsChecker</a></div><div class="ttdef"><b>Definition</b> HydroInputsChecker.h:33</div></div>
 <div class="ttc" id="aclassAntares_1_1HydroManagement_html"><div class="ttname"><a href="classAntares_1_1HydroManagement.html">Antares::HydroManagement</a></div><div class="ttdef"><b>Definition</b> management.h:64</div></div>
 <div class="ttc" id="aclassAntares_1_1HydroManagement_html_accf05b0286428d88463127457cce39e5"><div class="ttname"><a href="classAntares_1_1HydroManagement.html#accf05b0286428d88463127457cce39e5">Antares::HydroManagement::makeVentilation</a></div><div class="ttdeci">void makeVentilation(double *randomReservoirLevel, uint y, Antares::Data::Area::ScratchMap &amp;scratchmap)</div><div class="ttdoc">Perform the hydro ventilation.</div><div class="ttdef"><b>Definition</b> management.cpp:276</div></div>
 <div class="ttc" id="aclassAntares_1_1MersenneTwister_html"><div class="ttname"><a href="classAntares_1_1MersenneTwister.html">Antares::MersenneTwister</a></div><div class="ttdoc">MersenneTwister Pseudo random number generator.</div><div class="ttdef"><b>Definition</b> mersenne-twister.h:41</div></div>
