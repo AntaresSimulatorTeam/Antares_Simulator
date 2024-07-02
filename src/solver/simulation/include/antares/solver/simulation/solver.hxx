@@ -321,6 +321,9 @@ void ISimulation<ImplementationType>::run()
     }
     else
     {
+        // Export ts-numbers into output
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
+
         if (not ImplementationType::simulationBegin())
         {
             return;
@@ -357,9 +360,6 @@ void ISimulation<ImplementationType>::run()
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
         ImplementationType::variables.simulationEnd();
-
-        // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.

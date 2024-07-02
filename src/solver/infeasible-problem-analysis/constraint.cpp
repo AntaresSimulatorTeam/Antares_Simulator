@@ -24,6 +24,8 @@
 #include <cassert>
 #include <iomanip>
 #include <sstream>
+#include <boost/regex.hpp>
+#include <boost/algorithm/string/regex.hpp>
 
 namespace
 {
@@ -40,24 +42,7 @@ Constraint::Constraint(const std::string& input, const double slackValue):
 
 std::size_t Constraint::extractItems()
 {
-    const auto beg = mInput.begin();
-    const auto end = mInput.end();
-    std::size_t newPos = 0;
-    const std::size_t sepSize = 2;
-    const std::size_t inputSize = mInput.size();
-    for (std::size_t pos = 0; pos < inputSize; pos = newPos + sepSize)
-    {
-        newPos = mInput.find("::", pos);
-        if (newPos == std::string::npos)
-        {
-            mItems.emplace_back(beg + pos, end);
-            break;
-        }
-        if (newPos > pos)
-        {
-            mItems.emplace_back(beg + pos, beg + newPos);
-        }
-    }
+    boost::algorithm::split_regex(mItems, mInput, boost::regex("::"));
     return mItems.size();
 }
 
@@ -158,6 +143,10 @@ ConstraintType Constraint::getType() const
     {
         return ConstraintType::hydro_reservoir_level;
     }
+    if (mItems.at(0) == "HydroPower")
+    {
+        return ConstraintType::hydro_production_weekly;
+    }
     if (mItems.at(0) == "Level")
     {
         return ConstraintType::short_term_storage_level;
@@ -209,6 +198,8 @@ std::string Constraint::prettyPrint() const
     case ConstraintType::hydro_reservoir_level:
         return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
                + getTimeStepInYear();
+    case ConstraintType::hydro_production_weekly:
+        return "Hydro weekly production at area '" + getAreaName() + "'";
     case ConstraintType::short_term_storage_level:
         return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '"
                + getSTSName() + "' at hour " + getTimeStepInYear();
