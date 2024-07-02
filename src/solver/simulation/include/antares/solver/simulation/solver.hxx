@@ -972,6 +972,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             hydroInputsChecker.Execute(year);
         }
     }
+    hydroInputsChecker.CheckForErrors();
 
     logs.info() << " Starting the simulation";
 
@@ -996,6 +997,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         {
             // for each year not handled earlier
             hydroInputsChecker.Execute(y);
+            hydroInputsChecker.CheckForErrors();
+
             bool performCalculations = batch.isYearPerformed[y];
             unsigned int numSpace = 999999;
             if (performCalculations)
