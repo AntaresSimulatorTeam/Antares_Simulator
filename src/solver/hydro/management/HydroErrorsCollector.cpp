@@ -15,12 +15,10 @@ void HydroErrorsCollector::CheckForErrors() const
     {
         for (const auto& key: areasErrorMap_ | std::views::keys)
         {
-            auto first_elements = areasErrorMap_
-                                  | std::views::filter([&key](const auto& p)
-                                                       { return p.first == key; })
-                                  | std::views::take(10);
-
-            for (const auto& value: first_elements)
+            for (const auto& value:
+                 areasErrorMap_
+                   | std::views::filter([&key](const auto& p) { return p.first == key; })
+                   | std::views::take(10))
             {
                 logs.error() << "In Area " << value.first << ": " << value.second << " ";
             }
