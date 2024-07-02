@@ -40,7 +40,7 @@ static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const MPVariable*>& slackVariables)
+    const std::vector<const MPVariable*>& slackVariables)
 {
     turnSlackVarsIntoConstraints(slackVariables);
     sortConstraints();
@@ -48,66 +48,66 @@ InfeasibleProblemReport::InfeasibleProblemReport(
 }
 
 void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
-  const std::vector<const MPVariable*>& slackVariables)
+    const std::vector<const MPVariable*>& slackVariables)
 {
     for (const MPVariable* slack: slackVariables)
     {
-        mConstraints.emplace_back(slack->name(), slack->solution_value());
+        constraints_.emplace_back(slack->name(), slack->solution_value());
     }
 }
 
 void InfeasibleProblemReport::sortConstraints()
 {
-    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
+    std::sort(std::begin(constraints_), std::end(constraints_), ::compareSlackSolutions);
 }
 
 void InfeasibleProblemReport::trimConstraints()
 {
-    if (nbVariables <= mConstraints.size())
+    if (nbMaxVariables <= constraints_.size())
     {
-        mConstraints.resize(nbVariables);
+        constraints_.resize(nbMaxVariables);
     }
 }
 
-void InfeasibleProblemReport::extractItems()
+void InfeasibleProblemReport::sortConstraintsByType()
 {
-    for (auto& c: mConstraints)
+    for (auto& c: constraints_)
     {
         if (c.extractComponentsFromName() == 0)
         {
             return;
         }
-        mTypes[c.getType()]++;
+        nbConstraintsByType_[c.getType()]++;
     }
 }
 
 void InfeasibleProblemReport::logSuspiciousConstraints()
 {
     Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
-    for (const auto& c: mConstraints)
+    for (const auto& c: constraints_)
     {
         Antares::logs.error() << c.prettyPrint();
     }
     Antares::logs.error() << "Possible causes of infeasibility:";
-    if (mTypes[ConstraintType::hydro_reservoir_level] > 0)
+    if (nbConstraintsByType_[ConstraintType::hydro_reservoir_level] > 0)
     {
         Antares::logs.error() << "* Hydro reservoir impossible to manage with cumulative options "
                                  "\"hard bounds without heuristic\"";
     }
-    if (mTypes[ConstraintType::fictitious_load] > 0)
+    if (nbConstraintsByType_[ConstraintType::fictitious_load] > 0)
     {
         Antares::logs.error() << "* Last resort shedding status,";
     }
-    if (mTypes[ConstraintType::short_term_storage_level] > 0)
+    if (nbConstraintsByType_[ConstraintType::short_term_storage_level] > 0)
     {
         Antares::logs.error()
           << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
              "lower & upper curves and initial level (if prescribed),";
     }
 
-    const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]
-                                 + mTypes[ConstraintType::binding_constraint_daily]
-                                 + mTypes[ConstraintType::binding_constraint_weekly];
+    const unsigned int bcCount = nbConstraintsByType_[ConstraintType::binding_constraint_hourly]
+                                 + nbConstraintsByType_[ConstraintType::binding_constraint_daily]
+                                 + nbConstraintsByType_[ConstraintType::binding_constraint_weekly];
     if (bcCount > 0)
     {
         Antares::logs.error() << "* Binding constraints,";
@@ -118,7 +118,7 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
 
 void InfeasibleProblemReport::prettyPrint()
 {
-    extractItems();
+    sortConstraintsByType();
     logSuspiciousConstraints();
 }
 
