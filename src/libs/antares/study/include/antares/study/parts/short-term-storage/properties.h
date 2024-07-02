@@ -48,7 +48,7 @@ public:
     bool initialLevelOptim = false;
 
     /// Efficiency factor for injection between 0 and 1
-    double efficiencyFactor = 1;
+    double injectionEfficiency = 1;
     /// Efficiency factor for withdrawal between 0 and 1
     double withdrawalEfficiency = 1;
 
