@@ -1,6 +1,7 @@
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
 
 #include <ranges>
+#include <set>
 
 #include <yuni/core/logs.h>
 
@@ -13,7 +14,13 @@ void HydroErrorsCollector::CheckForErrors() const
 {
     if (!areasErrorMap_.empty())
     {
-        for (const auto& key: areasErrorMap_ | std::views::keys)
+        std::set<std::string> uniqueKeys;
+        std::transform(areasErrorMap_.begin(),
+                       areasErrorMap_.end(),
+                       std::inserter(uniqueKeys, uniqueKeys.begin()),
+                       [](const auto& pair) { return pair.first; });
+
+        for (const auto& key: uniqueKeys)
         {
             for (const auto& value:
                  areasErrorMap_
@@ -23,6 +30,23 @@ void HydroErrorsCollector::CheckForErrors() const
                 logs.error() << "In Area " << value.first << ": " << value.second << " ";
             }
         }
+
+        // for (auto value = areasErrorMap_.begin(); value != areasErrorMap_.end();)
+        // {
+        //     const auto& key = value->first;
+        //     const auto& rangeEnd = areasErrorMap_.upper_bound(key);
+
+        //     const auto& limit = std::min(value + 10, rangeEnd);
+
+        //     for (; value != limit; ++value)
+        //     {
+        //         logs.error() << "In Area " << value.first << ": " << value.second << " ";
+        //     }
+
+        //     // Move iterator to the next key
+        //     value = rangeEnd;
+        // }
+
         throw FatalError("Hydro validation has failed !");
     }
 }
