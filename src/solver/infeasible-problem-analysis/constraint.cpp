@@ -34,21 +34,21 @@ const std::string kUnknown = "<unknown>";
 
 namespace Antares::Optimization
 {
-Constraint::Constraint(const std::string& input, const double slackValue):
-    mInput(input),
-    mSlackValue(slackValue)
+Constraint::Constraint(const std::string& name, const double slackValue):
+    name_(name),
+    slackValue_(slackValue)
 {
 }
 
-std::size_t Constraint::extractItems()
+std::size_t Constraint::extractComponentsFromName()
 {
-    boost::algorithm::split_regex(mItems, mInput, boost::regex("::"));
-    return mItems.size();
+    boost::algorithm::split_regex(nameComponents_, name_, boost::regex("::"));
+    return nameComponents_.size();
 }
 
 double Constraint::getSlackValue() const
 {
-    return mSlackValue;
+    return slackValue_;
 }
 
 class StringIsNotWellFormated: public std::runtime_error
@@ -102,7 +102,7 @@ std::string Constraint::getAreaName() const
     {
         return "<none>";
     }
-    return StringBetweenAngleBrackets(mItems.at(1));
+    return StringBetweenAngleBrackets(nameComponents_.at(1));
 }
 
 std::string Constraint::getTimeStepInYear() const
@@ -114,7 +114,7 @@ std::string Constraint::getTimeStepInYear() const
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
     case ConstraintType::short_term_storage_level:
-        return StringBetweenAngleBrackets(mItems.at(mItems.size() - 2));
+        return StringBetweenAngleBrackets(nameComponents_.at(nameComponents_.size() - 2));
     default:
         return kUnknown;
     }
@@ -122,32 +122,32 @@ std::string Constraint::getTimeStepInYear() const
 
 ConstraintType Constraint::getType() const
 {
-    assert(mItems.size() > 1);
-    if (mItems.at(1) == "hourly")
+    assert(nameComponents_.size() > 1);
+    if (nameComponents_.at(1) == "hourly")
     {
         return ConstraintType::binding_constraint_hourly;
     }
-    if (mItems.at(1) == "daily")
+    if (nameComponents_.at(1) == "daily")
     {
         return ConstraintType::binding_constraint_daily;
     }
-    if (mItems.at(1) == "weekly")
+    if (nameComponents_.at(1) == "weekly")
     {
         return ConstraintType::binding_constraint_weekly;
     }
-    if (mItems.at(0) == "FictiveLoads")
+    if (nameComponents_.at(0) == "FictiveLoads")
     {
         return ConstraintType::fictitious_load;
     }
-    if (mItems.at(0) == "AreaHydroLevel")
+    if (nameComponents_.at(0) == "AreaHydroLevel")
     {
         return ConstraintType::hydro_reservoir_level;
     }
-    if (mItems.at(0) == "HydroPower")
+    if (nameComponents_.at(0) == "HydroPower")
     {
         return ConstraintType::hydro_production_weekly;
     }
-    if (mItems.at(0) == "Level")
+    if (nameComponents_.at(0) == "Level")
     {
         return ConstraintType::short_term_storage_level;
     }
@@ -161,7 +161,7 @@ std::string Constraint::getBindingConstraintName() const
     case ConstraintType::binding_constraint_hourly:
     case ConstraintType::binding_constraint_daily:
     case ConstraintType::binding_constraint_weekly:
-        return mItems.at(0);
+        return nameComponents_.at(0);
     default:
         return kUnknown;
     }
@@ -171,7 +171,7 @@ std::string Constraint::getSTSName() const
 {
     if (getType() == ConstraintType::short_term_storage_level)
     {
-        return StringBetweenAngleBrackets(mItems.at(2));
+        return StringBetweenAngleBrackets(nameComponents_.at(2));
     }
     else
     {

@@ -46,7 +46,7 @@ private:
       const std::vector<const operations_research::MPVariable*>& slackVariables);
     void sortConstraints();
     void trimConstraints();
-    void extractItems();
+    void sortConstraintsByType();
     void logSuspiciousConstraints();
 
     std::vector<Constraint> constraints_;

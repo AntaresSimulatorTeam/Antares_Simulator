@@ -67,11 +67,11 @@ void InfeasibleProblemReport::trimConstraints()
     constraints_.resize(std::min(nbMaxVariables, nbConstraints));
 }
 
-void InfeasibleProblemReport::extractItems()
+void InfeasibleProblemReport::sortConstraintsByType()
 {
     for (auto& c: constraints_)
     {
-        if (c.extractItems() == 0)
+        if (c.extractComponentsFromName() == 0)
         {
             return;
         }
@@ -118,7 +118,7 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
 
 void InfeasibleProblemReport::prettyPrint()
 {
-    extractItems();
+    sortConstraintsByType();
     logSuspiciousConstraints();
 }
 
