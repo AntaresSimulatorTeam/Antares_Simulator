@@ -23,6 +23,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace Antares
 {
@@ -46,7 +47,8 @@ public:
     void CheckForErrors() const;
 
 private:
-    std::multimap<std::string, std::string> areasErrorMap_;
+    std::map<std::string, std::vector<std::string>> areasErrorMap_;
+    std::string& CurrentMessage(const std::string& name);
 };
 
 template<class T>

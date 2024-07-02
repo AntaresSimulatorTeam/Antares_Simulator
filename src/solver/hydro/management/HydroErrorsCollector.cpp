@@ -14,38 +14,13 @@ void HydroErrorsCollector::CheckForErrors() const
 {
     if (!areasErrorMap_.empty())
     {
-        std::set<std::string> uniqueKeys;
-        std::transform(areasErrorMap_.begin(),
-                       areasErrorMap_.end(),
-                       std::inserter(uniqueKeys, uniqueKeys.begin()),
-                       [](const auto& pair) { return pair.first; });
-
-        for (const auto& key: uniqueKeys)
+        for (const auto& [key, values]: areasErrorMap_)
         {
-            for (const auto& value:
-                 areasErrorMap_
-                   | std::views::filter([&key](const auto& p) { return p.first == key; })
-                   | std::views::take(10))
+            for (const auto& value: values | std::views::take(10))
             {
-                logs.error() << "In Area " << value.first << ": " << value.second << " ";
+                logs.error() << "In Area " << key << ": " << value << " ";
             }
         }
-
-        // for (auto value = areasErrorMap_.begin(); value != areasErrorMap_.end();)
-        // {
-        //     const auto& key = value->first;
-        //     const auto& rangeEnd = areasErrorMap_.upper_bound(key);
-
-        //     const auto& limit = std::min(value + 10, rangeEnd);
-
-        //     for (; value != limit; ++value)
-        //     {
-        //         logs.error() << "In Area " << value.first << ": " << value.second << " ";
-        //     }
-
-        //     // Move iterator to the next key
-        //     value = rangeEnd;
-        // }
 
         throw FatalError("Hydro validation has failed !");
     }
@@ -53,7 +28,7 @@ void HydroErrorsCollector::CheckForErrors() const
 
 HydroErrorsCollector::AreaReference::AreaReference(HydroErrorsCollector* collector,
                                                    const std::string& name):
-    areaSingleErrorMessage_(collector->areasErrorMap_.insert({name, ""})->second)
+    areaSingleErrorMessage_(collector->CurrentMessage(name))
 {
 }
 
@@ -62,4 +37,9 @@ HydroErrorsCollector::AreaReference HydroErrorsCollector::operator()(const std::
     return AreaReference(this, name);
 }
 
+std::string& HydroErrorsCollector::CurrentMessage(const std::string& name)
+{
+    auto& msgs = areasErrorMap_[name];
+    return *msgs.insert(msgs.end(), "");
+}
 } // namespace Antares
