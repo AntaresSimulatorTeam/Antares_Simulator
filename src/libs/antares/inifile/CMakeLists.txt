@@ -1,8 +1,8 @@
 set(SRC_INI
-        antares/inifile/inifile.h
-        antares/inifile/inifile.hxx
+        include/antares/inifile/inifile.h
+        include/antares/inifile/inifile.hxx
         inifile.cpp
-        )
+)
 
 source_group("misc\\inifile" FILES ${SRC_INI})
 
@@ -12,13 +12,19 @@ add_library(inifile
 add_library(Antares::inifile ALIAS inifile)
 
 target_link_libraries(inifile
+        PUBLIC
+        yuni-static-core
         PRIVATE
         io
         logs
-        yuni-static-core
-        )
+        Boost::headers
+)
 
 target_include_directories(inifile
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        )
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

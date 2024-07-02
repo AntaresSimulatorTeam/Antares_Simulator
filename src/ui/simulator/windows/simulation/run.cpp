@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "run.h"
@@ -47,24 +41,20 @@
 
 #include "../../toolbox/validator.h"
 #include "../../toolbox/create.h"
-#include <antares/solver.h>
 #include "../../application/study.h"
 #include "../../application/main/main.h"
 #include "../../application/menus.h"
 #include "../../windows/message.h"
 #include "../../toolbox/system/diskfreespace.hxx"
-#include <antares/config.h>
-#include <antares/Enum.hpp>
+#include <antares/config/config.h>
+#include "antares/antares/Enum.hpp"
+#include "antares/solver/utils/ortools_utils.h"
 
-#include <solver/utils/ortools_utils.h>
+#include <antares/solver/utils/ortools_utils.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Simulation
+namespace Antares::Window::Simulation
 {
 enum
 {
@@ -217,7 +207,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
                    "images/32x32/run.png",
                    wxString(wxT("For the study `"))
                      << wxStringFromUTF8(study.header.caption) << wxT("`, ")
-                     << wxStringFromUTF8(Data::StudyModeToCString(study.parameters.mode))),
+                     << wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode))),
                  0,
                  wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
@@ -242,7 +232,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     }
     {
         auto* lblMode = Antares::Component::CreateLabel(
-          pBigDaddy, wxStringFromUTF8(Data::StudyModeToCString(study.parameters.mode)));
+          pBigDaddy, wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode)));
         wxFont f = lblMode->GetFont();
         f.SetWeight(wxFONTWEIGHT_BOLD);
         lblMode->SetFont(f);
@@ -431,7 +421,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     pTimer->Start(150);
 
     // Event
-    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Run::onInternalMotion), NULL, this);
+    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Run::onInternalMotion), nullptr, this);
 }
 
 Run::~Run()
@@ -834,6 +824,6 @@ void Run::onOrtoolsCheckboxChanged(wxCommandEvent& WXUNUSED(event))
         sizer->Fit(this);
 }
 
-} // namespace Simulation
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Simulation
+
+

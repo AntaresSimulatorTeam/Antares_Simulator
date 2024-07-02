@@ -13,12 +13,15 @@ add_library(antares-fswalker
 	job.cpp
 )
 
+add_library(Antares::fswalker ALIAS antares-fswalker)
+
 target_include_directories(antares-fswalker
-		PRIVATE
+		PUBLIC
 			${CMAKE_SOURCE_DIR}/libs
 		)
 target_link_libraries(antares-fswalker
 		PRIVATE
 			yuni-static-core
+			antares-core
 			logs
 		)

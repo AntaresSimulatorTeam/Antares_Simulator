@@ -1,22 +1,37 @@
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+#include "antares/study/parts/common/cluster.h"
 
-#include "cluster.h"
-#include "../../study.h"
+#include <yuni/yuni.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 namespace Antares::Data
 {
-Cluster::Cluster(Area* parent) :
- unitCount(0),
- enabled(true),
- parentArea(parent),
- index(0),
- nominalCapacity(0.),
- areaWideIndex((uint)-1),
- series(nullptr)
-
+Cluster::Cluster(Area* parent):
+    parentArea(parent),
+    series(tsNumbers)
 {
 }
 
@@ -46,56 +61,61 @@ void Cluster::setName(const AnyString& newname)
 {
     pName = newname;
     pID.clear();
-    TransformNameIntoID(pName, pID);
+    pID = transformNameIntoID(pName);
 }
 
 #define SEP Yuni::IO::Separator
-int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
+
+bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 {
-    if (not folder.empty())
+    if (folder.empty())
     {
-        Yuni::Clob buffer;
-
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
-        if (Yuni::IO::Directory::Create(buffer))
-        {
-            int ret = 1;
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
-            ret = series->timeSeries.saveToCSVFile(buffer, precision()) && ret;
-
-            return ret;
-        }
-        return 0;
+        return true;
     }
-    return 1;
+
+    Yuni::Clob buffer;
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+    if (!Yuni::IO::Directory::Create(buffer))
+    {
+        return true;
+    }
+
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+    return series.timeSeries.saveToCSVFile(buffer, precision());
 }
 
-int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
-    if (not folder.empty())
+    if (folder.empty())
     {
-        auto& buffer = s.bufferLoadingTS;
-
-        int ret = 1;
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-                       << s.inputExtension;
-        ret = series->timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
-
-        if (s.usedByTheSolver && s.parameters.derated)
-            series->timeSeries.averageTimeseries();
-
-        series->timeseriesNumbers.clear();
-
-        return ret;
+        return true;
     }
-    return 1;
+
+    auto& buffer = s.bufferLoadingTS;
+
+    bool ret = true;
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+                   << s.inputExtension;
+    ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+    if (s.usedByTheSolver && s.parameters.derated)
+    {
+        series.timeSeries.averageTimeseries();
+    }
+
+    series.timeseriesNumbers.clear();
+
+    return ret;
 }
+
 #undef SEP
 
 void Cluster::invalidateArea()
 {
     if (parentArea)
+    {
         parentArea->forceReload();
+    }
 }
 
 bool Cluster::isVisibleOnLayer(const size_t& layerID) const
@@ -109,10 +129,7 @@ void Cluster::reset()
     enabled = true;
     nominalCapacity = 0.;
 
-    if (not series)
-        series = new DataSeriesCommon();
-
-    series->timeSeries.reset(1, HOURS_PER_YEAR);
+    series.timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
@@ -121,4 +138,3 @@ bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 }
 
 } // namespace Antares::Data
-

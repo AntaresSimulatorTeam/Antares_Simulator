@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "advanced.h"
@@ -162,14 +156,12 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
     // Initial reservoir levels
     {
         label = Component::CreateLabel(this, wxT("Initial reservoir levels"));
-        button = new Component::Button(this, wxT("cold start"), "images/16x16/tag.png");
+        button = new Component::Button(this, wxT(""), "images/16x16/tag.png");
         button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        onPopup.bind(this, &AdvancedParameters::onInitialReservoirLevels);
         button->onPopupMenu(onPopup);
+        button->caption("hydro hot start deprecated");
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnInitialReservoirLevels = button;
     }
     // Hydro heuristic policy
     {
@@ -291,7 +283,7 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
 
     // refresh
     Connect(
-      GetId(), wxEVT_MOTION, wxMouseEventHandler(AdvancedParameters::onInternalMotion), NULL, this);
+      GetId(), wxEVT_MOTION, wxMouseEventHandler(AdvancedParameters::onInternalMotion), nullptr, this);
 
     refresh();
     SetSizer(sizer);
@@ -333,12 +325,11 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.timeSeriesAccuracyOnCorrelation &= ~Data::timeSeriesWind;
         parameters.timeSeriesAccuracyOnCorrelation &= ~Data::timeSeriesSolar;
 
-        parameters.initialReservoirLevels.iniLevels = Data::irlColdStart;
         parameters.hydroHeuristicPolicy.hhPolicy = Data::hhpAccommodateRuleCurves;
         parameters.hydroPricing.hpMode = Data::hpHeuristic;
         parameters.power.fluctuations = Data::lssFreeModulations;
         parameters.shedding.policy = Data::shpShavePeaks;
-        parameters.unitCommitment.ucMode = Data::ucHeuristic;
+        parameters.unitCommitment.ucMode = Data::ucHeuristicFast;
         parameters.nbCores.ncMode = Data::ncAvg;
 
         parameters.renewableGeneration.rgModelling = Data::rgAggregated;
@@ -380,10 +371,6 @@ void AdvancedParameters::refresh()
     }
 
     wxString text;
-
-    text = wxStringFromUTF8(
-      InitialReservoirLevelsToCString(study.parameters.initialReservoirLevels.iniLevels));
-    pBtnInitialReservoirLevels->caption(text);
 
     text = wxStringFromUTF8(
       HydroHeuristicPolicyToCString(study.parameters.hydroHeuristicPolicy.hhPolicy));
@@ -509,58 +496,6 @@ void AdvancedParameters::onSelectNumericQualityHigh(wxCommandEvent&)
     study.parameters.timeSeriesAccuracyOnCorrelation |= pCurrentTS;
     if (old != study.parameters.timeSeriesAccuracyOnCorrelation)
     {
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onInitialReservoirLevels(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-    wxString text;
-
-    text = wxStringFromUTF8(InitialReservoirLevelsToCString(Data::irlColdStart));
-    text << wxT("   [default]");
-    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectColdStart),
-                 nullptr,
-                 this);
-
-    text.clear();
-    text << wxStringFromUTF8(InitialReservoirLevelsToCString(Data::irlHotStart));
-    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectHotStart),
-                 nullptr,
-                 this);
-}
-
-void AdvancedParameters::onSelectColdStart(wxCommandEvent&)
-{
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
-
-    if (study.parameters.initialReservoirLevels.iniLevels != Data::irlColdStart)
-    {
-        study.parameters.initialReservoirLevels.iniLevels = Data::irlColdStart;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectHotStart(wxCommandEvent&)
-{
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
-
-    if (study.parameters.initialReservoirLevels.iniLevels != Data::irlHotStart)
-    {
-        study.parameters.initialReservoirLevels.iniLevels = Data::irlHotStart;
         MarkTheStudyAsModified();
         refresh();
     }
@@ -806,52 +741,63 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
     wxMenuItem* it;
     wxString text;
 
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristic)); // Fast
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicFast)); // Fast
     text << wxT("   [default]");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristic),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicFast),
+                 nullptr,
+                 this);
+
+    text.clear();
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicAccurate)); // Accurate
+    text << wxT("   (slow)");
+    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicAccurate),
                  nullptr,
                  this);
 
     text.clear();
     text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucMILP)); // Accurate
-    text << wxT("   (slow)");
+    text << wxT("   ");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCMixedIntegerLinearProblem),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCMILP),
                  nullptr,
                  this);
 }
 
-void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCMode(Antares::Data::UnitCommitmentMode mode)
 {
-    auto& study = *GetCurrentStudy();
     if (not CurrentStudyIsValid())
         return;
+    auto study = GetCurrentStudy();
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristic)
+    if (study->parameters.unitCommitment.ucMode != mode)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucHeuristic;
+        study->parameters.unitCommitment.ucMode = mode;
         MarkTheStudyAsModified();
         refresh();
     }
 }
 
-void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
 {
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
+    onSelectUCMode(Data::ucHeuristicFast);
+}
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucMILP)
-    {
-        study.parameters.unitCommitment.ucMode = Data::ucMILP;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+void AdvancedParameters::onSelectUCHeuristicAccurate(wxCommandEvent& /* evt */)
+{
+    onSelectUCMode(Data::ucHeuristicAccurate);
+}
+
+void AdvancedParameters::onSelectUCMILP(wxCommandEvent& /* evt */)
+{
+    onSelectUCMode(Data::ucMILP);
 }
 
 void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*)

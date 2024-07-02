@@ -31,6 +31,7 @@
 */
 
 #include "antares/mersenne-twister/mersenne-twister.h"
+
 #include <cassert>
 
 #define MATRIX_A 0x9908b0dfUL   // constant vector a
@@ -110,6 +111,26 @@ MersenneTwister::Value MersenneTwister::next() const
     y ^= (y >> 18);
 
     return y * (1.0 / 4294967295.0);
+}
+
+MersenneTwister::Value MersenneTwister::min()
+{
+    return 0.;
+}
+
+MersenneTwister::Value MersenneTwister::max()
+{
+    return 1.;
+}
+
+void MersenneTwister::reset()
+{
+    reset(defaultSeed);
+}
+
+MersenneTwister::Value MersenneTwister::operator()()
+{
+    return next();
 }
 
 } // namespace Antares

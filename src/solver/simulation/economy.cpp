@@ -1,47 +1,45 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
-#include "economy.h"
-#include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/solver/simulation/economy.h"
+
 #include <antares/exception/AssertionError.hpp>
-#include "simulation.h"
-#include "../optimisation/opt_fonctions.h"
-#include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include "common-eco-adq.h"
+#include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
+Economy::Economy(Data::Study& study,
+                 IResultWriter& resultWriter,
+                 Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
-    resultWriter(resultWriter)
+    resultWriter(resultWriter),
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -78,42 +76,40 @@ bool Economy::simulationBegin()
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], 168, numSpace);
-
-            if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace].NombreDePasDeTemps)
-            {
-                logs.fatal() << "internal error";
-                return false;
-            }
+            SIM_InitialisationProblemeHebdo(study,
+                                            pProblemesHebdo[numSpace],
+                                            nbHoursInAWeek,
+                                            numSpace);
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] =
-                Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study,
-                                                    options,
-                                                    study.parameters.adqPatchParams,
-                                                    &pProblemesHebdo[numSpace],
-                                                    numSpace,
-                                                    resultWriter);
-            postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatchParams,
-                                                 &pProblemesHebdo[numSpace],
-                                                 numSpace,
-                                                 study.areas,
-                                                 study.parameters.shedding.policy,
-                                                 study.parameters.simplexOptimizationRange,
-                                                 study.calendar);
+            weeklyOptProblems_[numSpace] = Antares::Solver::Optimization::WeeklyOptimization::
+              create(study,
+                     options,
+                     study.parameters.adqPatchParams,
+                     &pProblemesHebdo[numSpace],
+                     numSpace,
+                     resultWriter,
+                     simulationObserver_.get());
+            postProcessesList_[numSpace] = interfacePostProcessList::create(
+              study.parameters.adqPatchParams,
+              &pProblemesHebdo[numSpace],
+              numSpace,
+              study.areas,
+              study.parameters.shedding.policy,
+              study.parameters.simplexOptimizationRange,
+              study.calendar);
         }
     }
 
-    for (auto& pb : pProblemesHebdo)
+    for (auto& pb: pProblemesHebdo)
+    {
         pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
+    }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
-
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
@@ -121,41 +117,53 @@ bool Economy::year(Progression::Task& progression,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
-                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
-                   OptimizationStatisticsWriter& optWriter)
+                   const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                   OptimizationStatisticsWriter& optWriter,
+                   const Antares::Data::Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();
-    pProblemesHebdo[numSpace].year = state.year;
+    auto& currentProblem = pProblemesHebdo[numSpace];
+    currentProblem.year = state.year;
 
-    PrepareRandomNumbers(study, pProblemesHebdo[numSpace], randomForYear);
+    PrepareRandomNumbers(study, currentProblem, randomForYear);
+    SetInitialHydroLevel(study, currentProblem, hydroVentilationResults);
 
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
     if (isFirstPerformedYearOfSimulation)
-        pProblemesHebdo[numSpace].firstWeekOfSimulation = true;
+    {
+        currentProblem.firstWeekOfSimulation = true;
+    }
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
-        pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
+        currentProblem.weekInTheYear = state.weekInTheYear = w;
+        currentProblem.HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear, 
-                                         numSpace, hourInTheYear, hydroVentilationResults);
+        ::SIM_RenseignementProblemeHebdo(study,
+                                         currentProblem,
+                                         state.weekInTheYear,
+                                         hourInTheYear,
+                                         hydroVentilationResults,
+                                         scratchmap);
 
-        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace], 
-                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
+        BuildThermalPartOfWeeklyProblem(study,
+                                        currentProblem,
+                                        hourInTheYear,
+                                        randomForYear.pThermalNoisesByArea,
+                                        state.year);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;
+        currentProblem.ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         try
         {
-            weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
+            weeklyOptProblems_[numSpace]->solve();
 
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
@@ -169,7 +177,7 @@ bool Economy::year(Progression::Task& progression,
             {
                 state.hourInTheWeek = hw;
 
-                state.ntc = pProblemesHebdo[numSpace].ValeursDeNTC[hw];
+                state.ntc = currentProblem.ValeursDeNTC[hw];
 
                 variables.hourBegin(state.hourInTheYear);
 
@@ -184,12 +192,10 @@ bool Economy::year(Progression::Task& progression,
 
             for (int opt = 0; opt < 7; opt++)
             {
-                state.optimalSolutionCost1 += pProblemesHebdo[numSpace].coutOptimalSolution1[opt];
-                state.optimalSolutionCost2 += pProblemesHebdo[numSpace].coutOptimalSolution2[opt];
+                state.optimalSolutionCost1 += currentProblem.coutOptimalSolution1[opt];
+                state.optimalSolutionCost2 += currentProblem.coutOptimalSolution2[opt];
             }
-            optWriter.addTime(w,
-                              pProblemesHebdo[numSpace].tempsResolution1[0],
-                              pProblemesHebdo[numSpace].tempsResolution2[0]);
+            optWriter.addTime(w, currentProblem.timeMeasure);
         }
         catch (Data::AssertionError& ex)
         {
@@ -220,15 +226,13 @@ bool Economy::year(Progression::Task& progression,
 
         hourInTheYear += nbHoursInAWeek;
 
-        pProblemesHebdo[numSpace].firstWeekOfSimulation = false;
+        currentProblem.firstWeekOfSimulation = false;
 
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study.areas, pProblemesHebdo[numSpace]);
-
     optWriter.finalize();
-    finalizeOptimizationStatistics(pProblemesHebdo[numSpace], state);
+    finalizeOptimizationStatistics(currentProblem, state);
 
     return true;
 }
@@ -236,7 +240,9 @@ bool Economy::year(Progression::Task& progression,
 void Economy::incrementProgression(Progression::Task& progression)
 {
     for (uint w = 0; w < pNbWeeks; ++w)
+    {
         ++progression;
+    }
 }
 
 // Retrieve weighted average balance for each area
@@ -264,9 +270,25 @@ void Economy::simulationEnd()
     }
 }
 
-void Economy::prepareClustersInMustRunMode(uint numSpace, uint year)
+void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, numSpace, year);
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto& area = *study.areas[i];
+        auto& scratchpad = scratchmap.at(&area);
+
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+
+        auto& mrs = scratchpad.mustrunSum;
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+        }
+    }
 }
 
 } // namespace Antares::Solver::Simulation

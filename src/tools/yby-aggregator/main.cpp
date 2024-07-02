@@ -1,51 +1,46 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
-#include <antares/args/args_to_utf8.h>
-#include <antares/utils/utils.h>
-#include <antares/version.h>
-#include <antares/sys/policy.h>
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/process.h>
-#include <yuni/io/directory/info.h>
 #include <yuni/core/system/suspend.h>
+#include <yuni/io/directory/info.h>
 #include <yuni/io/file.h>
-#include <antares/memory/memory.h>
-#include <antares/logs/hostinfo.h>
-#include <antares/locale.h>
-#include "../../config.h"
 
-#include "output.h"
+#include <antares/antares/version.h>
+#include <antares/args/args_to_utf8.h>
+#include <antares/locale/locale.h>
+#include <antares/logs/hostinfo.h>
+#include <antares/logs/logs.h>
+#include <antares/memory/memory.h>
+#include <antares/sys/policy.h>
+#include <antares/utils/utils.h>
+#include "antares/config/config.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
+
 #include "datafile.h"
-#include "studydata.h"
 #include "job.h"
+#include "output.h"
 #include "progress.h"
 
 using namespace Yuni;
@@ -72,22 +67,30 @@ static bool DetermineOutputType(String& out, const String& original)
 {
     out.clear() << original << SEP << "economy";
     if (IO::Directory::Exists(out))
+    {
         return true;
+    }
 
 #ifndef YUNI_OS_WINDOWS
     // Before 3.8, the folder economy was named 'Economy' instead of 'economy'
     out.clear() << original << SEP << "Economy";
     if (IO::Directory::Exists(out))
+    {
         return true;
+    }
 #endif
 
     out.clear() << original << SEP << "adequacy";
     if (IO::Directory::Exists(out))
+    {
         return true;
+    }
 #ifndef YUNI_OS_WINDOWS
     out.clear() << original << SEP << "Adequacy"; // for compatibility reasons
     if (IO::Directory::Exists(out))
+    {
         return true;
+    }
 #endif
     return false;
 }
@@ -185,10 +188,14 @@ static void PrepareTheWork(const String::Vector& outputs,
         // The new output
         auto output = std::make_shared<Output>(info.directory(), columns);
         if (!output)
+        {
             continue;
+        }
 
         if (not FindOutputFolder(info))
+        {
             continue;
+        }
         info.directory() << SEP << "mc-ind";
         if (not IO::Directory::Exists(info.directory()))
         {
@@ -207,7 +214,9 @@ static void PrepareTheWork(const String::Vector& outputs,
             ++Progress::Total;
             // if ((*i).size() < 5 || !(*i).startsWith("mc-i"))
             if ((*i).size() < 5)
+            {
                 continue;
+            }
 
             folderName = *i;
             uint year;
@@ -217,9 +226,13 @@ static void PrepareTheWork(const String::Vector& outputs,
                 continue;
             }
             if (minYear > year)
+            {
                 minYear = year;
+            }
             if (maxYear < year)
+            {
                 maxYear = year;
+            }
 
             for (uint d = 0; d != dataFiles.size(); ++d)
             {
@@ -367,11 +380,15 @@ static void ReadCommandLineOptions(int argc, char** argv)
         {
             IO::File::Stream pidfile(optPID, IO::OpenMode::write | IO::OpenMode::truncate);
             if (pidfile.opened())
+            {
                 pidfile << Yuni::ProcessID();
+            }
         }
 
         if (optJobs < 1)
+        {
             optJobs = 1;
+        }
         queueService.maximumThreadCount(optJobs);
     }
 
@@ -393,12 +410,18 @@ static void ReadCommandLineOptions(int argc, char** argv)
             String& areaname = optAreas[i];
             areaname.trim(" \t\"'");
             if (!areaname)
+            {
                 continue;
+            }
 
             if (System::windows)
+            {
                 newname.clear() << "areas\\" << areaname;
+            }
             else
+            {
                 newname.clear() << "areas/" << areaname;
+            }
 
             logs.info() << "registered " << newname;
             studydata.push_back(std::make_shared<StudyData>(newname, index));
@@ -411,7 +434,9 @@ static void ReadCommandLineOptions(int argc, char** argv)
                 String& linkfullname = optLinks[i];
                 linkfullname.trim(" \t\"'");
                 if (!linkfullname)
+                {
                     continue;
+                }
                 linkfullname.split(split, ",");
                 if (split.size() != 2)
                 {
@@ -441,11 +466,15 @@ static void ReadCommandLineOptions(int argc, char** argv)
     optDatum.clear();
     optTimes.clear();
     if (dataFiles.empty())
+    {
         return;
+    }
 
     // lower case for all columns
     for (uint i = 0; i != optColumns.size(); ++i)
+    {
         optColumns[i].toLower();
+    }
 
     PrepareTheWork(optOutputs, dataFiles, studydata, optColumns);
 }
@@ -459,15 +488,23 @@ static bool WriteAggregates()
         Output::Ptr output = *i;
         {
             if (!output->canContinue())
+            {
                 continue;
+            }
             const uint columnCount = (uint)output->columns.size();
             if (!columnCount)
+            {
                 continue;
+            }
             if (columnCount > 1)
+            {
                 logs.info() << "  checking " << output->path << "  (" << columnCount
                             << " variables)";
+            }
             else
+            {
                 logs.info() << "  checking " << output->path << "  (1 variable)";
+            }
         }
 
         String mcvarfolder;
@@ -486,7 +523,9 @@ static bool WriteAggregates()
             const StudyData::ShortString512& studyItemName = r->first;
             ResultsForAllDataLevels& alldatalevels = r->second;
             if (alldatalevels.empty())
+            {
                 continue;
+            }
 
             const ResultsForAllDataLevels::iterator tend = alldatalevels.end();
             ResultsForAllDataLevels::iterator t = alldatalevels.begin();
@@ -495,7 +534,9 @@ static bool WriteAggregates()
                 const DataFile::ShortString& dataLevelName = t->first;
                 ResultsForAllTimeLevels& alltimelevels = t->second;
                 if (alltimelevels.empty())
+                {
                     continue;
+                }
 
                 const ResultsForAllTimeLevels::iterator avend = alltimelevels.end();
                 ResultsForAllTimeLevels::iterator av = alltimelevels.begin();
@@ -504,7 +545,9 @@ static bool WriteAggregates()
                     const DataFile::ShortString& timeLevelName = av->first;
                     ResultsAllVars& allvars = av->second;
                     if (allvars.empty())
+                    {
                         continue;
+                    }
 
                     if (output->columns.size() != allvars.size())
                     {
@@ -522,7 +565,9 @@ static bool WriteAggregates()
 
                         ResultMatrix& matrix = allvars[v];
                         if (!matrix.width)
+                        {
                             continue;
+                        }
 
                         uint requiredHeight = 0;
                         for (uint y = 0; y != matrix.width; ++y)
@@ -531,7 +576,9 @@ static bool WriteAggregates()
                             if (column.height)
                             {
                                 if (!requiredHeight)
+                                {
                                     requiredHeight = column.height;
+                                }
                                 else
                                 {
                                     if (column.height != requiredHeight)
@@ -572,14 +619,18 @@ static bool WriteAggregates()
                               << dataLevelName << '/' << timeLevelName << '/' << output->columns[v];
                             path << ".nodata";
                             if (!IO::File::CreateEmptyFile(path))
+                            {
                                 logs.error() << "I/O error: impossible to write " << path;
+                            }
                         }
                         else
                         {
                             logs.info() << "    writing " << path;
                             logs.debug() << "    (" << matrix.width << 'x' << requiredHeight << ")";
                             if (!matrix.saveToCSVFile(path))
+                            {
                                 logs.error() << "impossible to write " << path;
+                            }
                             // empty log entry
                             logs.info();
                         }
@@ -600,7 +651,9 @@ int main(int argc, char* argv[])
     logs.applicationName("yby-aggregator");
 
     if (not memory.initializeTemporaryFolder())
+    {
         return EXIT_FAILURE;
+    }
 
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
     std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
@@ -625,7 +678,9 @@ int main(int argc, char* argv[])
         // wait for all queues
         queueService.wait(Yuni::qseIdle);
         while (JobFileReader::RemainJobsToExecute())
+        {
             SuspendMilliSeconds(170);
+        }
         progressBar.wait();
 
         if (progressBar.completed())

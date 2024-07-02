@@ -1,7 +1,7 @@
 OMESSAGE("antares-kirchhoff-constraints-builder")
 
 # Le main
-set(SRCS 	main.cpp)
+set(SRCS main.cpp)
 
 # if(WIN32)
 # 	FILE(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/win32/finder.o")
@@ -12,22 +12,31 @@ set(SRCS 	main.cpp)
 # endif(WIN32)
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-kirchhoff-constraints-builder")
+set(execname "antares-kirchhoff-constraints-builder")
 add_executable(${execname}  ${SRCS})
 install(TARGETS ${execname} EXPORT antares-kirchhoff-constraints-builder DESTINATION bin)
 
 INSTALL(EXPORT antares-kirchhoff-constraints-builder
-	FILE antares-skirchhoff-constraints-builderConfig.cmake
-	DESTINATION cmake
+        FILE antares-skirchhoff-constraints-builderConfig.cmake
+        DESTINATION cmake
 )
 
 set(KIRCHHOFF_CBUILDER_LIBS
-	yuni-static-core
-	${CMAKE_THREADS_LIBS_INIT}
+        yuni-static-core
+        ${CMAKE_THREADS_LIBS_INIT}
 )
 
-target_link_libraries(${execname} PRIVATE antares-solver-constraints-builder Antares::sys)
-target_link_libraries(${execname} PRIVATE ${KIRCHHOFF_CBUILDER_LIBS} )
+target_link_libraries(${execname}
+        PRIVATE
+        antares-solver-constraints-builder
+        Antares::sys
+        Antares::resources
+        Antares::locale
+)
+target_link_libraries(${execname}
+        PRIVATE
+        ${KIRCHHOFF_CBUILDER_LIBS}
+)
 
 import_std_libs(${execname})
 executable_strip(${execname})

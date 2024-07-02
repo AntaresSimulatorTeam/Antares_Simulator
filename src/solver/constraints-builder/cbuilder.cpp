@@ -1,36 +1,32 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+
+#include "antares/solver/constraints-builder/cbuilder.h"
+
 #include <cmath>
-#include "cbuilder.h"
-#include "grid.h"
+#include <filesystem>
 
-using namespace Yuni;
+#include "antares/solver/constraints-builder/grid.h"
 
-//#define SEP Yuni::IO::Separator
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -50,8 +46,11 @@ Yuni::String linkInfo::getName() const
 
 template class Graph::Grid<areaInfo>;
 
-CBuilder::CBuilder(Antares::Data::Study::Ptr study) :
- pPrefix(CB_PREFIX), pPrefixDelete(CB_PREFIX), pDelete(false), pStudy(study)
+CBuilder::CBuilder(Antares::Data::Study& study):
+    pPrefix(CB_PREFIX),
+    pPrefixDelete(CB_PREFIX),
+    pDelete(false),
+    pStudy(study)
 {
 }
 
@@ -75,7 +74,9 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
 {
     uint n = 0;
     for (auto it = pMesh.begin(); it != pMesh.end(); it++)
+    {
         n += (uint)(std::count(it->begin(), it->end(), lnkI));
+    }
 
     return n;
 }
@@ -84,47 +85,44 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 {
     Data::AreaLink* link = linkInfo->ptr;
 
-    for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
+    for (uint tsIndex = 0; tsIndex < link->indirectCapacities.timeSeries.width; ++tsIndex)
     {
         if ((-1.0 * link->indirectCapacities[tsIndex][hour]
-                    > link->parameters[Data::fhlLoopFlow][hour])
-                || (link->directCapacities[tsIndex][hour]
-                    < link->parameters[Data::fhlLoopFlow][hour]))
+             > link->parameters[Data::fhlLoopFlow][hour])
+            || (link->directCapacities[tsIndex][hour] < link->parameters[Data::fhlLoopFlow][hour]))
         {
-            logs.error() << "Error on loop flow to NTC comparison validity at hour "
-                << hour + 1 << " for line " << linkInfo->getName();
+            logs.error() << "Error on loop flow to NTC comparison validity at hour " << hour + 1
+                         << " for line " << linkInfo->getName();
             return false;
         }
     }
     if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
     {
         double sum = 0.0;
-        for (auto lnk : areaToLinks[link->from])
+        for (auto* lnk: areaToLinks[link->from])
         {
-            sum += link->from == lnk->ptr->from
-                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+            sum += link->from == lnk->ptr->from ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
         }
 
         if (sum != 0.0)
         {
             logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
-                << " on node " << link->from->id;
+                         << " on node " << link->from->id;
             return false;
         }
 
         sum = 0.0;
-        for (auto lnk : areaToLinks[link->with])
+        for (auto* lnk: areaToLinks[link->with])
         {
-            sum += link->with == lnk->ptr->from
-                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+            sum += link->with == lnk->ptr->from ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
         }
 
         if (sum != 0.0)
         {
             logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
-                << " on node " << link->with->id;
+                         << " on node " << link->with->id;
             return false;
         }
     }
@@ -135,11 +133,10 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
-            link->parameters[Data::fhlPShiftMinus][hour]
-            > link->parameters[Data::fhlPShiftPlus][hour])
+        link->parameters[Data::fhlPShiftMinus][hour] > link->parameters[Data::fhlPShiftPlus][hour])
     {
         logs.error() << "Error on phase shift calendar validity at hour " << hour + 1
-            << " for line " << linkInfo->getName();
+                     << " for line " << linkInfo->getName();
         return false;
     }
     return true;
@@ -148,9 +145,10 @@ bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 void CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
-            link->parameters[Data::fhlPShiftMinus][hour]
-            != link->parameters[Data::fhlPShiftPlus][hour])
+        link->parameters[Data::fhlPShiftMinus][hour] != link->parameters[Data::fhlPShiftPlus][hour])
+    {
         linkInfo->hasPShiftsEqual = false;
+    }
 }
 
 bool CBuilder::updateLinks()
@@ -175,22 +173,28 @@ bool CBuilder::updateLinks()
         linkInfo->avgImpedance = link->parameters[columnImpedance][0];
         for (size_t hour = 0; hour < HOURS_PER_YEAR - 1; hour++)
         {
-            if (link->parameters[columnImpedance][hour + 1] != link->parameters[columnImpedance][hour])
+            if (link->parameters[columnImpedance][hour + 1]
+                != link->parameters[columnImpedance][hour])
             {
                 impedances.insert(link->parameters[columnImpedance][hour + 1]);
             }
 
             // check validity of loopflow against NTC
             if (includeLoopFlow && !checkValidityOfNodalLoopFlow(linkInfo, hour))
+            {
                 return false;
+            }
 
             if (!includePhaseShift)
+            {
                 continue;
+            }
 
             updateLinkPhaseShift(linkInfo, hour);
             if (!checkLinkPhaseShift(linkInfo, hour))
+            {
                 return false;
-
+            }
         }
 
         linkInfo->nImpedanceChanges = (uint)impedances.size();
@@ -214,7 +218,6 @@ bool CBuilder::updateLinks()
         linkInfo->weight = linkInfo->getWeightWithImpedance();
     }
     return true;
-
 }
 
 bool CBuilder::update()
@@ -225,15 +228,19 @@ bool CBuilder::update()
     pMesh.clear();
 
     // Update impedances from study file and compute impedance changes
-    if(!updateLinks())
+    if (!updateLinks())
+    {
         return false;
+    }
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
         if ((*linkInfoIt)->enabled
             && ((*linkInfoIt)->type
                 == Antares::Data::atAC /*|| (*linkInfoIt)->type == linkInfo::tyACPST*/))
+        {
             enabledACLines.push_back(*linkInfoIt);
+        }
     }
 
     if (enabledACLines.empty())
@@ -257,7 +264,9 @@ bool CBuilder::update()
 
     // build the set of loops which span the grid
     if (!_grid.buildMesh())
+    {
         return false;
+    }
 
     // create the constraints
     logs.info() << "Compute Mesh ";
@@ -284,7 +293,9 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 {
     // build the set of loops which span the grid
     if (!update())
+    {
         return false;
+    }
 
     // create the constraints
     logs.info() << "Write constraints ";
@@ -293,7 +304,7 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 
     if (standalone)
     {
-        pStudy->saveToFolder(pStudy->folder);
+        pStudy.saveToFolder(pStudy.folder);
     }
     // return result;
     return result;
@@ -302,13 +313,15 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 bool CBuilder::deletePreviousConstraints()
 {
     if (pPrefixDelete.empty())
+    {
         return true;
+    }
 
     logs.info() << "Deleting previously built network constraints (with prefix  " << pPrefixDelete
                 << ")";
 
-    // Data::BindingConstraintsList::iterator it = pStudy->bindingConstraints.begin();
-    pStudy->bindingConstraints.removeConstraintsWhoseNameConstains(pPrefixDelete);
+    // Data::BindingConstraintsList::iterator it = pStudy.bindingConstraints.begin();
+    pStudy.bindingConstraints.removeConstraintsWhoseNameConstains(pPrefixDelete);
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
@@ -325,15 +338,13 @@ bool CBuilder::deletePreviousConstraints()
 
 bool CBuilder::saveCBuilderToFile(const String& filename) const
 {
-    if (!pStudy)
-        return false;
     String tmp;
 
     IniFile ini;
     auto* mainSection = ini.addSection(".general");
 
     // Study
-    mainSection->add("study", pStudy->folder);
+    mainSection->add("study", pStudy.folder);
 
     // Tmp
     /*wxStringToString(pPathTemp->GetValue(), tmp);
@@ -353,36 +364,33 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
     if (filename == "")
     {
-        YString buffer;
+        fs::path path = fs::path(pStudy.folder.c_str()) / "settings" / "constraintbuilder.ini";
 
-        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
-                       << "constraintbuilder.ini";
-        return ini.save(buffer);
+        return ini.save(path.string());
     }
 
     return ini.save(filename);
 }
 
-bool CBuilder::completeCBuilderFromFile(const String& filename)
+bool CBuilder::completeCBuilderFromFile(const std::string& filename)
 {
-    YString buffer;
+    fs::path path;
     if (filename == "")
     {
-        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
-                       << "constraintbuilder.ini";
-        if (!IO::File::Exists(buffer))
+        path = fs::path(pStudy.folder.c_str()) / "settings" / "constraintbuilder.ini";
+        if (!fs::exists(path))
         {
             return false;
         }
     }
     else
     {
-        buffer = filename;
+        path = filename;
     }
 
     logs.info() << "Read data";
     IniFile ini;
-    if (ini.open(buffer))
+    if (ini.open(path))
     {
         // logs.info() << "Reading " << filename;
         logs.info() << "Read data (INI file)";
@@ -390,21 +398,16 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
         CString<50, false> key;
         CString<50, false> value;
 
-        for (section = ini.firstSection; section != NULL; section = section->next)
+        for (section = ini.firstSection; section; section = section->next)
         {
             if (section->name == ".general")
             {
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();
 
-                    if (key == "study")
-                    {
-                        pStudyFolder = p->value;
-                        continue;
-                    }
                     if (key == "prefix")
                     {
                         pPrefix = p->value;
@@ -466,7 +469,7 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
 int CBuilder::alreadyExistingNetworkConstraints(const Yuni::String& prefix) const
 {
     int nSubCount = 0;
-    for (auto j = pStudy->bindingConstraints.begin(); j != pStudy->bindingConstraints.end(); j++)
+    for (auto j = pStudy.bindingConstraints.begin(); j != pStudy.bindingConstraints.end(); j++)
     {
         std::string name = (*j)->name().c_str();
         if (name.find(prefix.to<std::string>()) == 0) // name starts with the prefix

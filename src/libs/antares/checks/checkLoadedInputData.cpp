@@ -1,56 +1,69 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/study/version.h>
-
-#include <antares/checks/checkLoadedInputData.h>
+#include <antares/series/series.h>
 #include <antares/study/area/area.h>
+#include <antares/study/header.h>
+#include <antares/study/version.h>
 
 namespace Antares::Check
 {
-void checkStudyVersion(const AnyString& optStudyFolder)
+void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
+                       bool ortoolsUsed,
+                       const std::string& solverName)
 {
     using namespace Antares::Data;
-    auto version = StudyTryToFindTheVersion(optStudyFolder);
-    if (version == versionUnknown)
+    if (ucMode == UnitCommitmentMode::ucMILP)
     {
-        throw Error::InvalidStudy(optStudyFolder);
-    }
-    else
-    {
-        if ((uint)version > (uint)versionLatest)
+        if (!ortoolsUsed)
         {
-            throw Error::InvalidVersion(VersionToCStr(version),
-                                        VersionToCStr(versionLatest));
+            throw Error::IncompatibleMILPWithoutOrtools();
+        }
+
+        if (solverName == "sirius")
+        {
+            throw Error::IncompatibleMILPOrtoolsSolver();
         }
     }
 }
+
+void checkStudyVersion(const AnyString& optStudyFolder)
+{
+    using namespace Antares::Data;
+    auto version = StudyHeader::tryToFindTheVersion(optStudyFolder);
+
+    if (version == StudyVersion::unknown())
+    {
+        throw Error::InvalidStudy(optStudyFolder);
+    }
+
+    if (version > StudyVersion::latest())
+    {
+        throw Error::InvalidVersion(version.toString(), StudyVersion::latest().toString());
+    }
+}
+
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
 // = MILP ».
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
@@ -134,50 +147,56 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
     }
     else
     {
-        areas.each([](Antares::Data::Area& area) { area.thermal.checkAndCorrectAvailability(); });
+        areas.each([](const auto& area) { area.thermal.checkAndCorrectAvailability(); });
     }
 }
 
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
 template<class ExceptionT>
-static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
-                                     Matrix<double> Antares::Data::EconomicInputData::*matrix)
+static void checkThermalColumnNumber(
+  const Antares::Data::AreaList& areas,
+  Antares::Data::TimeSeries::TS Antares::Data::EconomicInputData::*matrix)
 {
     ExceptionT exception;
     bool error = false;
     for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
     {
         const auto& area = *(areas.byIndex[areaIndex]);
-        for (uint clusterIndex = 0; clusterIndex != area.thermal.clusterCount(); ++clusterIndex)
+        for (auto& cluster: area.thermal.list.each_enabled())
         {
-            const auto& cluster = *(area.thermal.clusters[clusterIndex]);
-            if (cluster.costgeneration == Antares::Data::setManually)
+            if (cluster->costgeneration == Antares::Data::setManually)
+            {
                 continue;
-            const uint otherMatrixWidth = (cluster.ecoInput.*matrix).width;
-            uint tsWidth = cluster.series->timeSeries.width;
+            }
+            const uint otherMatrixWidth = (cluster->ecoInput.*matrix).width;
+            uint tsWidth = cluster->series.timeSeries.width;
             if (otherMatrixWidth != 1 && otherMatrixWidth != tsWidth)
             {
-                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
+                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster->name()
                                << ". " << exception.what();
                 error = true;
             }
         }
     }
     if (error)
+    {
         throw exception;
+    }
 }
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(areas,
-                             &Antares::Data::EconomicInputData::fuelcost);
+    checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(
+      areas,
+      &Antares::Data::EconomicInputData::fuelcost);
 }
 
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(areas,
-                             &Antares::Data::EconomicInputData::co2cost);
+    checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(
+      areas,
+      &Antares::Data::EconomicInputData::co2cost);
 }
 
 } // namespace Antares::Check

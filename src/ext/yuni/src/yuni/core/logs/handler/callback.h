@@ -49,7 +49,7 @@ public:
     }
 
 public:
-    mutable Yuni::Event<void(int, const String&)> callback;
+    mutable Yuni::Event<void(int, const std::string&)> callback;
     mutable String pDispatchedMessage;
 
 }; // class Callback

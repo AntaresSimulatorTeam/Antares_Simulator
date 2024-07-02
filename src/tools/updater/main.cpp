@@ -1,40 +1,35 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs/logs.h>
-#include <antares/study/finder.h>
 #include <yuni/core/getopt.h>
+
+#include <antares/antares/version.h>
 #include <antares/args/args_to_utf8.h>
-#include <antares/utils/utils.h>
+#include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
 #include <antares/study/cleaner.h>
-#include <antares/version.h>
+#include <antares/study/finder/finder.h>
 #include <antares/sys/policy.h>
-#include <antares/locale.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -44,14 +39,14 @@ static bool onProgress(uint)
     return true;
 }
 
-class MyStudyFinder final : public Data::StudyFinder
+class MyStudyFinder final: public Data::StudyFinder
 {
 public:
-    void onStudyFound(const String& folder, Data::Version version) override
+    void onStudyFound(const String& folder, const Data::StudyVersion& version) override
     {
-        if (version == Data::versionUnknown || version == Data::versionFutur)
+        if (version == Data::StudyVersion::unknown() || version > Data::StudyVersion::latest())
         {
-            logs.info() << folder << " : version of study is too old, too new or unknown";
+            logs.info() << folder << " : version of study is too new or unknown";
             return;
         }
 
@@ -61,15 +56,14 @@ public:
             return;
         }
 
-        if ((int)Data::versionLatest == (int)version && (!removeUselessTimeseries))
+        if (Data::StudyVersion::latest() == version && (!removeUselessTimeseries))
         {
             logs.info() << folder << " : is up-to-date";
         }
         else
         {
-            logs.notice() << "Upgrading " << folder << "  (v" << Data::VersionToCStr(version)
-                          << " to " << Data::VersionToCStr((Data::Version)Data::versionLatest)
-                          << ")";
+            logs.notice() << "Upgrading " << folder << "  (v" << version.toString() << " to "
+                          << Data::StudyVersion::latest().toString() << ")";
 
             auto study = std::make_unique<Data::Study>();
 
@@ -87,10 +81,14 @@ public:
             if (study->loadFromFolder(folder, options))
             {
                 if (removeUselessTimeseries)
+                {
                     study->removeTimeseriesIfTSGeneratorEnabled();
+                }
 
                 if (forceReadonly)
+                {
                     study->parameters.readonly = true;
+                }
 
                 logs.info() << "Saving...";
                 study->saveToFolder(folder);
@@ -108,9 +106,11 @@ public:
         if (cleanup)
         {
             auto* cleaner = new Data::StudyCleaningInfos(folder.c_str());
-            cleaner->onProgress.bind(&onProgress);
+            cleaner->onProgress = &onProgress;
             if (cleaner->analyze())
+            {
                 cleaner->performCleanup();
+            }
             delete cleaner;
         }
 
@@ -159,7 +159,9 @@ std::string getMargin(int size)
 {
     std::string margin;
     for (int i = 0; i < size; i++)
+    {
         margin += " ";
+    }
     margin += " ";
     return margin;
 }
@@ -185,12 +187,12 @@ int main(int argc, char* argv[])
         GetOpt::Parser options;
 
         // General information
-        std::string updaterComment
-          = "\nFound studies are upgraded, unless dry run is enabled (-d | --dry).\n";
-        updaterComment
-          += "Following options make other options useless when used in the same run :\n";
-        updaterComment
-          += "(-h|--help), (-v|--version) and (-d | --dry), in that order of priority.\n";
+        std::string updaterComment = "\nFound studies are upgraded, unless dry run is enabled (-d "
+                                     "| --dry).\n";
+        updaterComment += "Following options make other options useless when used in the same run "
+                          ":\n";
+        updaterComment += "(-h|--help), (-v|--version) and (-d | --dry), in that order of "
+                          "priority.\n";
         updaterComment += "Thus they should be used alone.\n";
         updaterComment += "If previous options are not used, other options have an action in "
                           "addition to upgrade.\n";
@@ -235,15 +237,19 @@ int main(int argc, char* argv[])
                         'd',
                         "dry",
                         "Only Lists the study folders which would be upgraded but do nothing");
-        options.addFlag(
-          optForceReadonly, ' ', "force-readonly", "Force read-only mode for all studies found");
+        options.addFlag(optForceReadonly,
+                        ' ',
+                        "force-readonly",
+                        "Force read-only mode for all studies found");
 
         // Version
         bool optVersion = false;
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 1 : 0;
+        }
 
         if (optVersion)
         {

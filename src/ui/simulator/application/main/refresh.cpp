@@ -1,32 +1,26 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "main.h"
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../menus.h"
 #include <antares/date/date.h>
 #include <wx/menuitem.h>
@@ -34,6 +28,7 @@
 #include "../../../common/lock.h"
 #include <yuni/datetime/timestamp.h>
 #include "internal-ids.h"
+#include "application/study.h"
 
 using namespace Yuni;
 
@@ -41,9 +36,9 @@ namespace Antares
 {
 namespace Forms
 {
-struct CompareByStudyMode final
+struct CompareBySimulationMode final
 {
-    bool operator()(const Data::StudyMode a, const Data::StudyMode b) const
+    bool operator()(const Data::SimulationMode a, const Data::SimulationMode b) const
     {
         return b < a;
     }
@@ -117,14 +112,14 @@ void ApplWnd::refreshMenuOutput()
 
     // NOTE : in some rare cases, it may happen that two simulations have the
     // same timestamp
-    using StudyModeT = Data::StudyMode;
+    using SimulationModeT = Data::SimulationMode;
     using TemporalMap = std::map<int64_t, Data::Output::List, CompareByTimestamp>;
-    using Map = std::map<StudyModeT, TemporalMap, CompareByStudyMode>;
+    using Map = std::map<SimulationModeT, TemporalMap, CompareBySimulationMode>;
 
     // Getting the list of all available outputs
     const Data::Output::List& list = ListOfOutputsForTheCurrentStudy;
-    // The last study mode
-    Data::StudyMode lastMode = Data::stdmUnknown;
+    // The last simulation mode
+    Data::SimulationMode lastMode = Data::SimulationMode::Unknown;
 
     // Informations about the outputs
     Map map;
@@ -219,7 +214,7 @@ void ApplWnd::refreshMenuOutput()
 #ifndef YUNI_OS_WINDOWS
               (!more ? "images/16x16/minibullet_sel.png" : "images/16x16/minibullet.png"),
 #else
-              (((*i)->mode == Data::stdmEconomy) ? "images/misc/economy.png"
+              (((*i)->mode == Data::SimulationMode::Economy) ? "images/misc/economy.png"
                                                  : "images/misc/adequacy.png"),
 #endif
               s,
@@ -273,14 +268,14 @@ void ApplWnd::refreshMenuOutput()
                         // AppendTooManyItems(menu, more);
                         more = 0;
                     }
-                    // if (lastMode != Data::stdmUnknown)
+                    // if (lastMode != Data::SimulationMode::Unknown)
                     //	Menu::CreateEmptyItem(menu);
 
                     lastMode = (*i)->mode;
-                    if (lastMode == Data::stdmUnknown)
-                        lastMode = Data::stdmEconomy;
+                    if (lastMode == Data::SimulationMode::Unknown)
+                        lastMode = Data::SimulationMode::Economy;
                     Menu::CreateGroupItem(menu,
-                                          wxStringFromUTF8(StudyModeToCString(lastMode)),
+                                          wxStringFromUTF8(SimulationModeToCString(lastMode)),
                                           "images/16x16/empty.png");
                     total = 0;
                 }
@@ -308,7 +303,7 @@ void ApplWnd::refreshMenuOutput()
 #ifndef YUNI_OS_WINDOWS
                                                 "images/16x16/minibullet.png",
 #else
-                                                (((*i)->mode == Data::stdmEconomy)
+                                                (((*i)->mode == Data::SimulationMode::Economy)
                                                    ? "images/misc/economy.png"
                                                    : "images/misc/adequacy.png"),
 #endif
@@ -320,7 +315,7 @@ void ApplWnd::refreshMenuOutput()
                       it->GetId(),
                       wxEVT_COMMAND_MENU_SELECTED,
                       wxCommandEventHandler(Forms::ApplWnd::evtOnOpenOutputInExplorer),
-                      NULL,
+                      nullptr,
                       parentForm);
                 }
             }

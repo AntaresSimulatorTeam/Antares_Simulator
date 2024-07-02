@@ -6,3 +6,18 @@ add_subdirectory(output-folder)
 add_subdirectory(short-term-storage-input)
 add_subdirectory(thermal-price-definition)
 add_subdirectory(constraint)
+add_subdirectory(parts)
+add_subdirectory(series)
+add_subdirectory(parameters)
+
+add_executable(test-study)
+target_sources(test-study PRIVATE test_study.cpp)
+target_link_libraries(test-study
+        PRIVATE
+        Antares::study
+        Boost::unit_test_framework
+)
+
+add_test(NAME test-study COMMAND test-study)
+
+set_property(TEST test-study PROPERTY LABELS unit)

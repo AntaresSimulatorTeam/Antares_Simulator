@@ -1,59 +1,82 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "antares/io/file.h"
-#include <yuni/io/file.h>
+
 #include <yuni/core/system/suspend.h>
 #include <yuni/datetime/timestamp.h>
+#include <yuni/io/file.h>
+
 #ifdef YUNI_OS_WINDOWS
-#include <yuni/core/system/windows.hdr.h>
 #include <io.h>
+
+#include <yuni/core/system/windows.hdr.h>
 #else
-#include <unistd.h>
 #include <sys/types.h>
+#include <unistd.h>
 #endif
 #include <errno.h>
+#include <fstream>
+
 #include <antares/logs/logs.h>
 
-using namespace Yuni;
-using namespace Antares;
+namespace fs = std::filesystem;
 
-enum
-{
-    retryTimeout = 35, // seconds
-};
+constexpr int retryTimeout = 35; // seconds
 
-bool IOFileSetContent(const AnyString& filename, const AnyString& content)
+namespace Antares::IO
 {
-    if (System::windows)
+
+static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
+{
+    Antares::logs.error() << errorMessage;
+    throw std::runtime_error(errorMessage);
+}
+
+std::string readFile(const fs::path& filePath)
+{
+    std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
+    if (!file.is_open())
+    {
+        logErrorAndThrow(filePath.string() + ": file does not exist");
+    }
+
+    using Iterator = std::istreambuf_iterator<char>;
+    std::string content(Iterator{file}, Iterator{});
+    if (!file)
+    {
+        logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    }
+    return content;
+}
+
+bool fileSetContent(const std::string& filename, const std::string& content)
+{
+    if (Yuni::System::windows)
     {
         // On Windows,  there is still the hard limit to 256 chars even if the API allows more
         if (filename.size() >= 256)
+        {
             logs.warning() << "I/O error: Maximum path length limitation (> 256 characters)";
+        }
     }
 
     uint attempt = 0;
@@ -68,17 +91,17 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
                                << " (probably not enough disk space).";
 
                 // Notification via the UI interface
-                String text;
-                DateTime::TimestampToString(text, "%H:%M");
+                Yuni::String text;
+                Yuni::DateTime::TimestampToString(text, "%H:%M");
                 logs.info() << "Not enough disk space since " << text << ". Waiting...";
                 // break;
             }
             // waiting a little...
-            Suspend(retryTimeout);
+            Yuni::Suspend(retryTimeout);
         }
         ++attempt;
 
-        IO::File::Stream out(filename, IO::OpenMode::write);
+        Yuni::IO::File::Stream out(filename, Yuni::IO::OpenMode::write);
         if (not out.opened())
         {
             switch (errno)
@@ -99,7 +122,9 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
         }
 
         if (content.empty()) // ok, good, it's over
+        {
             return true;
+        }
 
         // little io trick : when the size if greater than a page size, it is possible
         // to use ftruncate to reduce block disk allocation
@@ -120,7 +145,9 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
             }
         }
         if (content.size() != out.write(content))
+        {
             continue; // not enough disk space
+        }
 
         // OK, good
         // Notifying the user / logs that we can safely continue. It could be interresting
@@ -138,3 +165,5 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
 
     return false;
 }
+
+} // namespace Antares::IO

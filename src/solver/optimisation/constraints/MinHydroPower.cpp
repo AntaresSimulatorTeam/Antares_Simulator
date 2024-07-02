@@ -1,34 +1,50 @@
-#include "MinHydroPower.h"
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+
+#include "antares/solver/optimisation/constraints/MinHydroPower.h"
 
 void MinHydroPower::add(int pays)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-    if (presenceHydro
-        && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
+        && (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes
+            || data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
     {
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteMinEnergieHydraulique[pays] = builder.data.nombreDeContraintes;
 
-        const int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        ConstraintNamer namer(builder.data.NomDesContraintes);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder.data.weekInTheYear);
+        namer.MinHydroPower(builder.data.nombreDeContraintes);
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-        namer.MinHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
-        for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+        for (int pdt = 0; pdt < data.NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
             builder.HydProd(pays, 1.0);
         }
 
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteMinEnergieHydraulique[pays] = builder.data.nombreDeContraintes;
         builder.greaterThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
+    {
+        data.NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
+    }
 }

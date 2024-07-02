@@ -1,39 +1,34 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <ui/common/wx-wrapper.h>
 #include "../main.h"
 #include "../../windows/studylogs.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include <stdio.h>
 #include <time.h>
 #include <wx/stdpaths.h>
 #include "../../windows/message.h"
 #include "../../toolbox/components/htmllistbox/item/error.h"
 #include "internal-ids.h"
+#include <atomic>
 
 using namespace Yuni;
 
@@ -53,9 +48,9 @@ public:
 using WaitingLogEntries = std::vector<LogInfo*>;
 
 WaitingLogEntries waitingLogEntry;
-Yuni::Mutex logMutex;
+std::mutex logMutex;
 
-Yuni::Atomic::Int<> logUpdateCount;
+std::atomic<int> logUpdateCount;
 
 class LogFlusherTimer final : public wxTimer
 {
@@ -177,7 +172,7 @@ void ApplWnd::destroyLogs()
     if (pLogFlusherTimer)
     {
         wxTimer* timer = pLogFlusherTimer;
-        pLogFlusherTimer = NULL;
+        pLogFlusherTimer = nullptr;
         delete timer;
     }
 }
@@ -201,7 +196,7 @@ void ApplWnd::destroyLogsViewer()
     if (pWndLogs)
     {
         pWndLogs->Destroy();
-        pWndLogs = NULL;
+        pWndLogs = nullptr;
     }
 }
 
@@ -211,9 +206,9 @@ void ApplWnd::connectLogCallback()
     logs.callback.connect(this, &ApplWnd::onLogMessageDeferred);
 }
 
-void ApplWnd::onLogMessageDeferred(int level, const String& message)
+void ApplWnd::onLogMessageDeferred(int level, const std::string& message)
 {
-    if (not message.empty() and message.first() != '[')
+    if (not message.empty() && message.front() != '[')
     {
         // wxLogError(), like wxLogWarning(), are routine with
         // variadic parameters, like the standard printf.

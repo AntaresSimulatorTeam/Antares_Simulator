@@ -1,37 +1,32 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #ifndef __ANTARES_LIBS_PATHS_LIST_H__
 #define __ANTARES_LIBS_PATHS_LIST_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/bind.h>
 #include <cstdio>
 #include <map>
+
+#include <yuni/yuni.h>
+#include <yuni/core/bind.h>
+#include <yuni/core/string.h>
 
 enum PathListOption
 {
@@ -57,6 +52,7 @@ public:
         size_t size;
         enum PathListOption options;
     };
+
     using ItemList = std::map<Yuni::Clob, FileInfo>;
 
     using iterator = ItemList::iterator;
@@ -66,6 +62,7 @@ public:
     PathList()
     {
     }
+
     ~PathList()
     {
     }
@@ -74,14 +71,17 @@ public:
     {
         return item.begin();
     }
+
     const_iterator begin() const
     {
         return item.begin();
     }
+
     iterator end()
     {
         return item.end();
     }
+
     const_iterator end() const
     {
         return item.end();
@@ -149,17 +149,23 @@ public:
             internalPrepare(s);
             ItemList::iterator i = item.find(pTmp);
             if (i != item.end())
+            {
                 item.erase(i);
+            }
         }
     }
 
     void remove(const PathList& toDelete)
     {
         if (item.empty() || toDelete.empty())
+        {
             return;
+        }
         const ItemList::const_iterator end = toDelete.item.end();
         for (ItemList::const_iterator i = toDelete.item.begin(); i != end; ++i)
+        {
             this->remove(i->first);
+        }
     }
 
     uint size() const
@@ -176,7 +182,9 @@ public:
     size_t sizeOnDisk(const StringT& sourceFolder) const
     {
         if (item.empty())
+        {
             return 0;
+        }
         pTmp = sourceFolder;
         return (!pTmp) ? 0 : internalSizeOnDisk();
     }
@@ -187,7 +195,9 @@ public:
     uint deleteAllEmptyFolders(const StringT& sourceFolder)
     {
         if (item.empty())
+        {
             return 0;
+        }
         pTmp = sourceFolder;
         return internalDeleteAllEmptyFolders();
     }
@@ -196,7 +206,9 @@ public:
     uint deleteAllFiles(const StringT& sourceFolder)
     {
         if (item.empty())
+        {
             return 0;
+        }
         pTmp = sourceFolder;
         return internalDeleteAllFiles();
     }
@@ -205,7 +217,7 @@ public:
     /*!
     ** \brief Event triggered from time to time
     */
-    Yuni::Bind<bool(uint)> onProgress;
+    std::function<bool(uint)> onProgress;
 
 private:
     template<class StringT>
@@ -216,10 +228,14 @@ private:
         {
 #ifdef YUNI_OS_WINDOWS
             if (pTmp[i] == '/')
+            {
                 pTmp[i] = '\\';
+            }
 #else
             if (pTmp[i] == '\\')
+            {
                 pTmp[i] = '/';
+            }
 #endif
         }
     }

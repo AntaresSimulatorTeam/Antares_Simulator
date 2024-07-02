@@ -1,7 +1,35 @@
-#include "report.h"
-#include "constraint.h"
-#include <antares/logs/logs.h>
+/*
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+#include "antares/solver/infeasible-problem-analysis/report.h"
+
 #include <algorithm>
+
+#include <antares/logs/logs.h>
+#include "antares/solver/infeasible-problem-analysis/constraint.h"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include "ortools/linear_solver/linear_solver.h"
+#pragma GCC diagnostic pop
+
+using namespace operations_research;
 
 static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
                                   const Antares::Optimization::Constraint& b)
@@ -9,28 +37,41 @@ static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
     return a.getSlackValue() > b.getSlackValue();
 }
 
-namespace Antares
-{
-namespace Optimization
+namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const operations_research::MPVariable*>& slackVariables)
+  const std::vector<const MPVariable*>& slackVariables)
 {
-    for (const operations_research::MPVariable* slack : slackVariables)
-    {
-        append(slack->name(), slack->solution_value());
-    }
-    trim();
+    turnSlackVarsIntoConstraints(slackVariables);
+    sortConstraints();
+    trimConstraints();
 }
 
-void InfeasibleProblemReport::append(const std::string& constraintName, double value)
+void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
+  const std::vector<const MPVariable*>& slackVariables)
 {
-    mConstraints.emplace_back(constraintName, value);
+    for (const MPVariable* slack: slackVariables)
+    {
+        mConstraints.emplace_back(slack->name(), slack->solution_value());
+    }
+}
+
+void InfeasibleProblemReport::sortConstraints()
+{
+    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
+}
+
+void InfeasibleProblemReport::trimConstraints()
+{
+    if (nbVariables <= mConstraints.size())
+    {
+        mConstraints.resize(nbVariables);
+    }
 }
 
 void InfeasibleProblemReport::extractItems()
 {
-    for (auto& c : mConstraints)
+    for (auto& c: mConstraints)
     {
         if (c.extractItems() == 0)
         {
@@ -43,7 +84,7 @@ void InfeasibleProblemReport::extractItems()
 void InfeasibleProblemReport::logSuspiciousConstraints()
 {
     Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
-    for (const auto& c : mConstraints)
+    for (const auto& c: mConstraints)
     {
         Antares::logs.error() << c.prettyPrint();
     }
@@ -57,6 +98,13 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     {
         Antares::logs.error() << "* Last resort shedding status,";
     }
+    if (mTypes[ConstraintType::short_term_storage_level] > 0)
+    {
+        Antares::logs.error()
+          << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
+             "lower & upper curves and initial level (if prescribed),";
+    }
+
     const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]
                                  + mTypes[ConstraintType::binding_constraint_daily]
                                  + mTypes[ConstraintType::binding_constraint_weekly];
@@ -74,14 +122,4 @@ void InfeasibleProblemReport::prettyPrint()
     logSuspiciousConstraints();
 }
 
-void InfeasibleProblemReport::trim()
-{
-    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
-    if (nbVariables <= mConstraints.size())
-    {
-        mConstraints.resize(nbVariables);
-    }
-}
-
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

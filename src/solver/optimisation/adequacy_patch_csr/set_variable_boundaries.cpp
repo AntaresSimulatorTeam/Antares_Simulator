@@ -1,49 +1,36 @@
 /*
-** Copyright 2007-2022 RTE
-** Authors: RTE-international / Redstork / Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include <pi_constantes_externes.h>
 
-#include "../solver/simulation/sim_structure_donnees.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
-
-#include "../solver/optimisation/opt_fonctions.h"
-
-#include "pi_constantes_externes.h"
-#include "sim_structure_probleme_economique.h"
-
-#include <yuni/core/math.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Yuni;
 
 void HourlyCSRProblem::setBoundsOnENS()
 {
     double* AdresseDuResultat;
-    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
@@ -51,12 +38,12 @@ void HourlyCSRProblem::setBoundsOnENS()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[area];
+            int var = variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour);
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
-            problemeAResoudre_.Xmax[var]
-              = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDENS[triggeredHour]
-                + belowThisThresholdSetToZero;
+            problemeAResoudre_.Xmax[var] = problemeHebdo_->ResultatsHoraires[area]
+                                             .ValeursHorairesDENS[triggeredHour]
+                                           + belowThisThresholdSetToZero;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
                                           .ValeursHorairesDeDefaillancePositive[triggeredHour];
@@ -75,16 +62,13 @@ void HourlyCSRProblem::setBoundsOnENS()
 
 void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 {
-    const auto& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
-
     // variables: Spilled Energy for each area inside adq patch
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[area];
+            int var = variableManager_.NegativeUnsuppliedEnergy(area, triggeredHour);
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var] = LINFINI_ANTARES;
@@ -106,8 +90,6 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 
 void HourlyCSRProblem::setBoundsOnFlows()
 {
-    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     std::vector<double>& Xmin = problemeAResoudre_.Xmin;
     std::vector<double>& Xmax = problemeAResoudre_.Xmax;
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];
@@ -127,24 +109,34 @@ void HourlyCSRProblem::setBoundsOnFlows()
         }
 
         // flow
-        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[Interco];
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
-        Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]) - belowThisThresholdSetToZero;
+        int var = variableManager_.NTCDirect(Interco, triggeredHour);
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
+                    + belowThisThresholdSetToZero;
+        Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco])
+                    - belowThisThresholdSetToZero;
         problemeAResoudre_.X[var] = ValeursDeNTC.ValeurDuFlux[Interco];
 
-        if (Math::Infinite(Xmax[var]) == 1)
+        if (std::isinf(Xmax[var]))
         {
-            if (Math::Infinite(Xmin[var]) == -1)
+            if (std::isinf(Xmin[var]))
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_NON_BORNEE;
+            }
             else
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
         }
         else
         {
-            if (Math::Infinite(Xmin[var]) == -1)
+            if (std::isinf(Xmin[var]))
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+            }
             else
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            }
         }
 
         double* AdresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[Interco]);
@@ -154,13 +146,13 @@ void HourlyCSRProblem::setBoundsOnFlows()
                      << problemeAResoudre_.Xmax[var];
 
         // direct / indirect flow
-        var = CorrespondanceVarNativesVarOptim
-                .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+        var = variableManager_.IntercoDirectCost(Interco, triggeredHour);
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
+                    + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        if (Math::Infinite(Xmax[var]) == 1)
+        if (std::isinf(Xmax[var]))
         {
             problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
         }
@@ -168,13 +160,13 @@ void HourlyCSRProblem::setBoundsOnFlows()
         logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
                      << problemeAResoudre_.Xmax[var];
 
-        var = CorrespondanceVarNativesVarOptim
-                .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+        var = variableManager_.IntercoIndirectCost(Interco, triggeredHour);
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco] + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]
+                    + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        if (Math::Infinite(Xmax[var]) == 1)
+        if (std::isinf(Xmax[var]))
         {
             problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
         }

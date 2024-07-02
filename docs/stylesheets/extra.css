@@ -9,3 +9,14 @@
     --md-hue: 213; /* [0, 360] */
     --md-accent-fg-color: #ff9800;
 }
+/* Use this class for images with transparent background, it will add padding and a white background in dark mode */
+.add-padding-and-white-bg {
+    padding: 20px;
+}
+[data-md-color-scheme="slate"] .add-padding-and-white-bg {
+    background-color: whitesmoke;
+}
+/* De-activate mkdocs' default h5 styling, which puts the h5 header in upper case */
+.md-typeset h5 {
+    text-transform: none;
+}

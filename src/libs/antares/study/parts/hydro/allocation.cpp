@@ -1,36 +1,30 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "allocation.h"
-#include "../../study.h"
-#include <yuni/core/math.h>
-#include <yuni/io/file.h>
+#include "antares/study/parts/hydro/allocation.h"
 
-using namespace Yuni;
+#include <antares/utils/utils.h>
+#include "antares/study/study.h"
+
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -42,7 +36,9 @@ static const Area* FindMappedAreaName(const AreaName& id,
 {
     auto i = mapping.find(id);
     if (i != mapping.end())
+    {
         return study.areas.findFromName(i->second);
+    }
     return study.areas.findFromName(id);
 }
 
@@ -62,7 +58,9 @@ void HydroAllocation::remove(const AreaName& areaid)
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     if (i != pValues.end())
+    {
         pValues.erase(i);
+    }
 }
 
 void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
@@ -109,7 +107,9 @@ void HydroAllocation::fromArea(const Area& area, double value)
 void HydroAllocation::fromArea(const Area* area, double value)
 {
     if (area)
+    {
         fromArea(area->id, value);
+    }
 }
 
 double HydroAllocation::fromArea(const AreaName& areaid) const
@@ -122,14 +122,18 @@ double HydroAllocation::fromArea(const AreaName& areaid) const
 void HydroAllocation::fromArea(const AreaName& areaid, double value)
 {
     assert(!pMustUseValuesFromAreaID);
-    if (Math::Zero(value))
+    if (Utils::isZero(value))
     {
         auto i = pValues.find(areaid);
         if (i != pValues.end())
+        {
             pValues.erase(i);
+        }
     }
     else
+    {
         pValues[areaid] = value;
+    }
 }
 
 void HydroAllocation::prepareForSolver(const AreaList& list)
@@ -140,7 +144,9 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
     {
         auto* targetarea = list.find(i->first);
         if (targetarea)
+        {
             pValuesFromAreaID[targetarea->index] = i->second;
+        }
     }
 
     pValues.clear();
@@ -158,34 +164,36 @@ void HydroAllocation::clear()
 #endif
 }
 
-bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyString& filename)
+bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path& filename)
 {
     clear();
 
     IniFile ini;
-    if (IO::File::Exists(filename) && ini.open(filename))
-    {
-        if (!ini.empty())
-        {
-            AreaName areaname;
-            ini.each([&](const IniFile::Section& section) {
-                for (auto* p = section.firstProperty; p; p = p->next)
-                {
-                    double coeff = p->value.to<double>();
-                    if (!Math::Zero(coeff))
-                    {
-                        areaname = p->key;
-                        areaname.toLower();
-                        pValues[areaname] = coeff;
-                    }
-                }
-            });
-        }
-    }
-    else
+    if (!fs::exists(filename) || !ini.open(filename))
     {
         pValues[referencearea] = 1.0;
+        return true;
     }
+
+    if (ini.empty())
+    {
+        return true;
+    }
+
+    ini.each(
+      [this](const IniFile::Section& section)
+      {
+          for (auto* p = section.firstProperty; p; p = p->next)
+          {
+              double coeff = p->value.to<double>();
+              if (!Utils::isZero(coeff))
+              {
+                  AreaName areaname = p->key;
+                  areaname.toLower();
+                  pValues[areaname] = coeff;
+              }
+          }
+      });
     return true;
 }
 
@@ -193,7 +201,7 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
 {
     if (pValues.empty())
     {
-        IO::File::CreateEmptyFile(filename);
+        Yuni::IO::File::CreateEmptyFile(filename);
         return true;
     }
     else
@@ -201,11 +209,11 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
         IniFile ini;
         auto* s = ini.addSection("[allocation]");
         auto end = pValues.end();
-        CString<64, false> str;
+        Yuni::CString<64, false> str;
         for (auto i = pValues.begin(); i != end; ++i)
         {
             double v = i->second;
-            if (not Math::Zero(v))
+            if (!Utils::isZero(v))
             {
                 str = v;
                 if (str.contains('.'))

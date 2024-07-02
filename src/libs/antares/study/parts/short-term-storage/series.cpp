@@ -1,37 +1,32 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <yuni/io/file.h>
-#include <antares/logs/logs.h>
-#include <antares/constants.h>
+#include "antares/study/parts/short-term-storage/series.h"
 
-#include <iomanip>
 #include <fstream>
+#include <iomanip>
 
-#include "series.h"
+#include <yuni/io/file.h>
+
+#include <antares/logs/logs.h>
+#include "antares/antares/constants.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -90,13 +85,13 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
     catch (const std::invalid_argument& ex)
     {
         logs.error() << "Failed reading file: " << path << " conversion to double failed at line "
-            << lineCount + 1 << "  value: " << line;
+                     << lineCount + 1 << "  value: " << line;
         return false;
     }
     catch (const std::out_of_range& ex)
     {
         logs.error() << "Failed reading file: " << path << " value is out of bounds at line "
-            << lineCount + 1 << "  value: " << line;
+                     << lineCount + 1 << "  value: " << line;
         return false;
     }
     return true;
@@ -104,9 +99,12 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
 
 void Series::fillDefaultSeriesIfEmpty()
 {
-    auto fillIfEmpty = [](std::vector<double>& v, double value) {
+    auto fillIfEmpty = [](std::vector<double>& v, double value)
+    {
         if (v.empty())
+        {
             v.resize(HOURS_PER_YEAR, value);
+        }
     };
 
     fillIfEmpty(maxInjectionModulation, 1.0);
@@ -127,9 +125,8 @@ bool Series::saveToFolder(const std::string& folder) const
 
     bool ret = true;
 
-    auto checkWrite = [&ret, &folder](const std::string& name, const std::vector<double>& content) {
-        ret = writeVectorToFile(folder + SEP + name, content) && ret;
-    };
+    auto checkWrite = [&ret, &folder](const std::string& name, const std::vector<double>& content)
+    { ret = writeVectorToFile(folder + SEP + name, content) && ret; };
 
     checkWrite("PMAX-injection.txt", maxInjectionModulation);
     checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
@@ -147,8 +144,10 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
         std::ofstream fout(path);
         fout << std::setprecision(14);
 
-        for (const auto& x : vect)
+        for (const auto& x: vect)
+        {
             fout << x << '\n';
+        }
     }
     catch (...)
     {
@@ -162,12 +161,12 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 bool Series::validate() const
 {
     return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
-        && validateRuleCurves();
+           && validateRuleCurves();
 }
 
-static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name )
+static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
 {
-    if(!std::all_of(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); }))
+    if (!std::all_of(v.begin(), v.end(), [](double d) { return (d >= 0.0 && d <= 1.0); }))
     {
         logs.warning() << "Values for " << name << " series should be between 0 and 1";
         return false;
@@ -195,15 +194,16 @@ bool Series::validateMaxInjection() const
 bool Series::validateMaxWithdrawal() const
 {
     return checkVectBetweenZeroOne(maxWithdrawalModulation, "PMAX withdrawal");
-
 }
 
 bool Series::validateRuleCurves() const
 {
     if (!validateUpperRuleCurve() || !validateLowerRuleCurve())
+    {
         return false;
+    }
 
-    for (int i = 0; i < HOURS_PER_YEAR; i++)
+    for (unsigned int i = 0; i < HOURS_PER_YEAR; i++)
     {
         if (lowerRuleCurve[i] > upperRuleCurve[i])
         {

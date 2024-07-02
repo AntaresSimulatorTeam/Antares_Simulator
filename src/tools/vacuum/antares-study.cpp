@@ -1,35 +1,32 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "antares-study.h"
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
+
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/directory/info.h>
+
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+
 #include "io.h"
 
 using namespace Yuni;
@@ -42,10 +39,13 @@ enum
     traces = 0
 };
 
-class UserData : private Yuni::NonCopyable<UserData>
+class UserData: private Yuni::NonCopyable<UserData>
 {
 public:
-    UserData() : bytesDeleted(0), filesDeleted(0), foldersDeleted(0)
+    UserData():
+        bytesDeleted(0),
+        filesDeleted(0),
+        foldersDeleted(0)
     {
     }
 
@@ -59,12 +59,15 @@ public:
     uint64_t foldersDeleted;
 };
 
-class AntaresStudyAnalyzerJob : public FSWalker::IJob
+class AntaresStudyAnalyzerJob: public FSWalker::IJob
 {
 public:
-    AntaresStudyAnalyzerJob(const String& folder) : folder(folder), userdata(nullptr)
+    AntaresStudyAnalyzerJob(const String& folder):
+        folder(folder),
+        userdata(nullptr)
     {
     }
+
     virtual ~AntaresStudyAnalyzerJob()
     {
     }
@@ -97,16 +100,22 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
     }
 
     if (traces)
+    {
         DateTime::TimestampToString(text, "%a, %d %b %Y", header.dateLastSave);
+    }
     if (header.dateLastSave > dateLimit)
     {
         // the study has been saved recently
         if (traces)
+        {
             logs.info() << "    - study status " << folder << ": modified recently " << text;
+        }
         return false;
     }
     if (traces)
+    {
         logs.info() << "    - study status " << folder << ": last save too old " << text;
+    }
 
     // The study has been modified a long time ago, we have to check
     // if it has been used recently. First of all, we will check the logs
@@ -121,8 +130,10 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
         {
             // There is at least one recent logfile. aborting
             if (traces)
+            {
                 logs.info() << "    - study status " << folder
                             << ": at least one recent simulation";
+            }
             return false;
         }
     }
@@ -138,8 +149,10 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
         {
             // There is at least one recent logfile. aborting
             if (traces)
+            {
                 logs.info() << "    - study status " << folder
                             << ": at least one recent simulation";
+            }
             return false;
         }
     }
@@ -148,15 +161,19 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
     return true;
 }
 
-class FolderRemover : public FSWalker::IJob
+class FolderRemover: public FSWalker::IJob
 {
 public:
     using Ptr = Yuni::Job::IJob::Ptr::Promote<FolderRemover>::Ptr;
 
 public:
-    FolderRemover(const String& folder) : folder(folder), userdata(nullptr), timeout(100)
+    FolderRemover(const String& folder):
+        folder(folder),
+        userdata(nullptr),
+        timeout(100)
     {
     }
+
     virtual ~FolderRemover()
     {
     }
@@ -194,7 +211,9 @@ protected:
             if (not job->finished())
             {
                 if (suspend(timeout))
+                {
                     return;
+                }
                 // it seems that we should wait a bit more longer to let
                 // other thread work
                 timeout = 400;
@@ -205,7 +224,9 @@ protected:
 
         // ok delete !
         if (traces)
+        {
             logs.info() << "  :: starting removal of " << folder;
+        }
 
         String::Vector foldersToDelete;
         uint64_t bytesDeleted = 0;
@@ -221,7 +242,9 @@ protected:
                 bytesDeleted += i.size();
                 ++filesDeleted;
                 if (not RemoveFile(i.filename(), i.size()))
+                {
                     logs.error() << "impossible to delete " << i.filename();
+                }
             }
             else
             {
@@ -239,12 +262,16 @@ protected:
         for (auto i = foldersToDelete.rbegin(); i != foldersToDelete.rend(); ++i)
         {
             if (not RemoveDirectoryIfEmpty(*i))
+            {
                 logs.error() << "impossible to delete directory " << *i;
+            }
         }
 
         // deletion of the root folder
         if (not RemoveDirectoryIfEmpty(folder))
+        {
             logs.error() << "impossible to delete directory " << folder;
+        }
     }
 
 }; // class AntaresStudyAnalyzerJob
@@ -252,7 +279,9 @@ protected:
 void AntaresStudyAnalyzerJob::onExecute()
 {
     if (traces)
+    {
         logs.info() << "  :: analyzing study " << folder;
+    }
     if (shouldBeDestroyed())
     {
         logs.info() << "study delete " << folder;
@@ -314,11 +343,15 @@ void AntaresStudyAnalyzerJob::onExecute()
 
         // dispatch all jobs
         foreach (auto& job, folderRemovalJob->dependencies)
+        {
             userdata->queue(job);
+        }
 
         // put in queue the last master job
         if (!dry)
+        {
             userdata->queue(folderRemovalJob);
+        }
     }
 }
 
@@ -343,8 +376,11 @@ const char* AntaresStudy::caption() const
     return "antares study";
 }
 
-AntaresStudy::AntaresStudy(int64_t dateLimit) :
- bytesDeleted(), filesDeleted(), foldersDeleted(), pDateLimit(dateLimit)
+AntaresStudy::AntaresStudy(int64_t dateLimit):
+    bytesDeleted(),
+    filesDeleted(),
+    foldersDeleted(),
+    pDateLimit(dateLimit)
 {
 }
 
@@ -363,10 +399,11 @@ void* AntaresStudy::userdataCreate(FSWalker::DispatchJobEvent& queue)
 
 void AntaresStudy::userdataDestroy(void* userdata)
 {
-    pMutex.lock();
-    bytesDeleted += ((UserData*)userdata)->bytesDeleted;
-    filesDeleted += ((UserData*)userdata)->filesDeleted;
-    foldersDeleted += ((UserData*)userdata)->foldersDeleted;
-    pMutex.unlock();
+    {
+        std::lock_guard lock(pMutex);
+        bytesDeleted += ((UserData*)userdata)->bytesDeleted;
+        filesDeleted += ((UserData*)userdata)->filesDeleted;
+        foldersDeleted += ((UserData*)userdata)->foldersDeleted;
+    }
     delete (UserData*)userdata;
 }

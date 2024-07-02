@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "atsp.h"
@@ -38,21 +32,23 @@ const uint ATSP::lonmois[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 const uint ATSP::durmois[12] = {744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744};
 const uint ATSP::posmois[12] = {0, 744, 1416, 2160, 2880, 3624, 4344, 5088, 5832, 6552, 7296, 8016};
 
-ATSP::ATSP() :
- pRoundingCount(),
- pRounding80percentCount(),
- pRoundingCountTotal(),
- HOR(0.92),
- pLimitMemory(200 * 1024 * 1024),
- pCacheMemoryUsed(),
- pAutoClean(false)
+ATSP::ATSP():
+    pRoundingCount(),
+    pRounding80percentCount(),
+    pRoundingCountTotal(),
+    HOR(0.92),
+    pLimitMemory(200 * 1024 * 1024),
+    pCacheMemoryUsed(),
+    pAutoClean(false)
 {
 }
 
 ATSP::~ATSP()
 {
     for (uint i = 0; i != pArea.size(); ++i)
+    {
         delete pArea[i];
+    }
 
     if (pAutoClean)
     {
@@ -88,23 +84,35 @@ void ATSP::printSummary() const
     logs.info() << "  trimming threshold               : " << pRoundOff;
 
     if (pUseUpperBound)
+    {
         logs.info() << "  upper bound  : " << pUpperBound;
+    }
     else
+    {
         logs.info() << "  upper bound  : (none)";
+    }
 
     if (pUseLowerBound)
+    {
         logs.info() << "  lower bound  : " << pLowerBound;
+    }
     else
+    {
         logs.info() << "  lower bound  : (none)";
+    }
 
     logs.info() << "  memory cache size : " << (pLimitMemory / 1024 / 1024) << "Mo";
     logs.info() << "  auto-clean : " << (pAutoClean ? "yes" : "no");
 
     logs.info();
     if (pArea.size() > 1)
+    {
         logs.info() << "  " << pArea.size() << " areas to analyze";
+    }
     else
+    {
         logs.info() << "  1 area to analyze";
+    }
 
     for (uint i = 0; i != pArea.size(); ++i)
     {
@@ -141,19 +149,25 @@ bool ATSP::writeMoments() const
     for (uint j = 0; j < 12; ++j)
     {
         for (uint k = 0; k < 4; ++k)
+        {
             f << "MONTH " << (j + 1) << '\t';
+        }
     }
     f << "\n\t";
 
     for (uint j = 0; j < 12; ++j)
+    {
         f << " EXPEC\t STAND\t SKEWN\t KURTO\t";
+    }
     f << '\n';
 
     for (uint i = 0; i < pArea.size(); ++i)
     {
         const AreaInfo& info = *(pArea[i]);
         if (!info.enabled)
+        {
             continue;
+        }
 
         f << info.name << '\t';
         const MomentCentrSingle& moment = moments_centr_net[i];
@@ -163,7 +177,9 @@ bool ATSP::writeMoments() const
             const double* m = moment.data[j];
 
             for (uint k = 0; k < 4; ++k)
+            {
                 f << m[k] << '\t';
+            }
         }
         f << '\n';
     }
@@ -180,13 +196,16 @@ bool ATSP::cachePreload(unsigned index,
     {
         options = Matrix<>::optImmediate | Matrix<>::optFixedSize,
     };
+
     if (pCacheMatrix[index].loadFromCSVFile(filename, NBS, height, options, &buffer))
     {
         pCacheLastValidIndex = index + 1;
         return true;
     }
     else
+    {
         pCacheMatrix[index].clear();
+    }
 
     return false;
 }

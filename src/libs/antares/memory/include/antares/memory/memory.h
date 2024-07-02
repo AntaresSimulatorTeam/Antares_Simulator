@@ -1,90 +1,38 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #ifndef __ANTARES_LIBS_MEMORY_MEMORY_H__
 #define __ANTARES_LIBS_MEMORY_MEMORY_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <yuni/core/bit/array.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
 /*!
 ** \brief Custom memory allocator for managed pointers
 */
-class Memory final : public Yuni::Policy::ObjectLevelLockable<Memory>
+class Memory final: public Yuni::Policy::ObjectLevelLockable<Memory>
 {
 public:
-    template<class T>
-    class Array final
-    {
-    public:
-        //! \name Constructors
-        //@{
-        /*!
-        ** \brief Default constructor
-        */
-        Array() = default;
-
-        /*!
-        ** \brief Constructor from null
-        */
-        explicit Array(const Yuni::NullPtr&);
-
-        /*!
-        ** \brief Constructor with an initial allocation size
-        */
-        explicit Array(size_t size);
-
-        //! Copy constructor (must be empty)
-        Array(const Array& copy);
-
-        template<class U>
-        Array(const Array<U>&);
-
-        /*!
-        ** \brief Destructor
-        */
-        ~Array();
-        //@}
-
-        /*!
-        ** \brief
-        */
-        void allocate(size_t size);
-
-        T& operator[](uint i);
-        const T& operator[](uint i) const;
-
-    private:
-        T* pPointer = nullptr;
-
-    }; // class Array
-
     template<class T>
     struct Stored final
     {
@@ -107,7 +55,6 @@ public:
     template<class U>
     static void Assign(uint count, U* array, const U& value);
 
-public:
     template<class T>
     static void Allocate(T*& out, size_t size);
 
@@ -123,7 +70,6 @@ public:
     template<class T>
     static void Release(T*& pointer);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!

@@ -13,6 +13,7 @@
 #include "integer.h"
 #include <stdio.h>
 #include <cassert>
+#include <filesystem>
 
 #ifdef YUNI_OS_MSVC
 #define YUNI_PRIVATE_MEMBUF_SPTRINF(BUFFER, SIZE, F, V) ::sprintf_s(BUFFER, SIZE, F, V)
@@ -294,6 +295,16 @@ public:
     }
 };
 
+// std::filesystem::path<>
+template<class CStringT>
+class Append<CStringT, std::filesystem::path> final
+{
+public:
+    static void Perform(CStringT& s, const std::filesystem::path& rhs)
+    {
+        s << rhs.string();
+    }
+};
 } // namespace CString
 } // namespace Extension
 } // namespace Yuni

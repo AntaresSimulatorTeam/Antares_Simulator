@@ -1,41 +1,36 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/study/ui-runtimeinfos.h"
+
 #include <yuni/yuni.h>
-#include "study.h"
-#include "ui-runtimeinfos.h"
+
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-UIRuntimeInfo::UIRuntimeInfo(Study& study) : pStudy(study)
+UIRuntimeInfo::UIRuntimeInfo(Study& study):
+    pStudy(study)
 {
     reloadAll();
 }
@@ -77,13 +72,14 @@ void UIRuntimeInfo::reload()
             {
                 const AreaLink::Map::iterator end = area->links.end();
                 for (AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
+                {
                     set.insert(i->second);
+                }
             }
 
-            for (uint j = 0; j < area->thermal.clusterCount(); ++j)
+            for (auto& cluster: area->thermal.list.each_enabled())
             {
-                ThermalCluster* cluster = area->thermal.clusters[j];
-                pClusters.push_back(cluster);
+                pClusters.push_back(cluster.get());
             }
         }
     }
@@ -117,7 +113,8 @@ void UIRuntimeInfo::reloadBindingConstraints()
     {
         const auto end = pStudy.bindingConstraints.end();
         auto i = pStudy.bindingConstraints.begin();
-        for (; i != end; ++i) {
+        for (; i != end; ++i)
+        {
             auto bc = *i;
             orderedConstraint.insert(bc);
         }
@@ -158,7 +155,9 @@ uint UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint
     {
         VectorByType::const_iterator j = i->second.find(type);
         if (j != i->second.end())
+        {
             return (uint)j->second.size();
+        }
     }
     return 0;
 }
@@ -170,7 +169,9 @@ uint UIRuntimeInfo::visibleClustersCount(uint layerID)
     for (auto cluster = pClusters.begin(); cluster != cEnd; cluster++)
     {
         if ((*cluster)->isVisibleOnLayer(layerID))
+        {
             count++;
+        }
     }
     return count;
 }
@@ -182,10 +183,11 @@ uint UIRuntimeInfo::visibleLinksCount(uint layerID)
     for (auto link = pLink.begin(); link != lEnd; link++)
     {
         if ((*link)->isVisibleOnLayer(layerID))
+        {
             count++;
+        }
     }
     return count;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

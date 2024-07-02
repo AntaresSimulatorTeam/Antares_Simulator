@@ -1,53 +1,40 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/study/area/links.h"
+
+#include <array>
+#include <filesystem>
 #include <limits>
-#include <yuni/yuni.h>
-#include "../study.h"
-#include "links.h"
-#include "area.h"
+
+#include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
-#include "../filter.h"
-#include "constants.h"
-#include "../fwd.h"
+#include "antares/study//study.h"
+#include "antares/study/area/area.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 using namespace Antares;
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
+namespace fs = std::filesystem;
 
 #define SEP (IO::Separator)
 
@@ -60,26 +47,31 @@ namespace Antares
 {
 namespace Data
 {
-AreaLink::AreaLink() :
- from(nullptr),
- with(nullptr),
- parameters(fhlMax, HOURS_PER_YEAR),
- directCapacities(1, HOURS_PER_YEAR),
- indirectCapacities(1, HOURS_PER_YEAR),
- useLoopFlow(false),
- usePST(false),
- useHurdlesCost(false),
- transmissionCapacities(LocalTransmissionCapacities::enabled),
- assetType(Data::atAC),
- index(0),
- indexForArea(0),
- displayComments(true),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- color{112, 112, 112},
- style(stPlain),
- linkWidth(1)
+AreaLink::AreaLink():
+    from(nullptr),
+    with(nullptr),
+    parameters(fhlMax, HOURS_PER_YEAR),
+    directCapacities(timeseriesNumbers),
+    indirectCapacities(timeseriesNumbers),
+    useLoopFlow(false),
+    usePST(false),
+    useHurdlesCost(false),
+    transmissionCapacities(LocalTransmissionCapacities::enabled),
+    assetType(Data::atAC),
+    index(0),
+    indexForArea(0),
+    displayComments(true),
+    filterSynthesis(filterAll),
+    filterYearByYear(filterAll),
+    color{112, 112, 112},
+    style(stPlain),
+    linkWidth(1)
 {
+    timeseriesNumbers.registerSeries(&directCapacities, "direct-capacity");
+    timeseriesNumbers.registerSeries(&indirectCapacities, "indirect-capacity");
+
+    directCapacities.reset();
+    indirectCapacities.reset();
 }
 
 AreaLink::~AreaLink()
@@ -94,14 +86,16 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     // Load link's data
     Matrix<> tmpMatrix;
     const uint matrixWidth = 8;
-    if (!tmpMatrix.loadFromCSVFile(
-          buffer, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
+    if (!tmpMatrix.loadFromCSVFile(buffer,
+                                   matrixWidth,
+                                   HOURS_PER_YEAR,
+                                   Matrix<>::optFixedSize | Matrix<>::optImmediate))
     {
         return false;
     }
 
     // Store data into link's data container
-    for (int h = 0; h < HOURS_PER_YEAR; h++)
+    for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
     {
         directCapacities[0][h] = tmpMatrix[0][h];
         indirectCapacities[0][h] = tmpMatrix[1][h];
@@ -131,11 +125,11 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
+    success = directCapacities.loadFromFile(filename, false) && success;
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
+    success = indirectCapacities.loadFromFile(filename, false) && success;
 
     return success;
 }
@@ -163,36 +157,43 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
         break;
     case GlobalTransmissionCapacities::nullForPhysicalLinks: // Use '0' only for physical links
         if (isLinkPhysical())
+        {
             transmissionCapacities = LocalTransmissionCapacities::null;
+        }
         break;
     case GlobalTransmissionCapacities::infiniteForPhysicalLinks: // Use 'infinity' only for physical
                                                                  // links
         if (isLinkPhysical())
+        {
             transmissionCapacities = LocalTransmissionCapacities::infinite;
+        }
         break;
     default:
         logs.error() << "Wrong global transmission capacity given to function" << __FUNCTION__;
     }
 }
 
-bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
+bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& folder)
 {
-    if (study.header.version < 820)
+    if (version < StudyVersion(8, 2))
+    {
         return linkLoadTimeSeries_for_version_below_810(folder);
+    }
     else
+    {
         return linkLoadTimeSeries_for_version_820_and_later(folder);
+    }
 }
 
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     Clob path;
-    TSNumbersPredicate predicate;
     std::string buffer;
 
     path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
          << SEP << with->id << ".txt";
 
-    timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
+    timeseriesNumbers.saveToBuffer(buffer);
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
@@ -210,8 +211,8 @@ void AreaLink::detach()
 void AreaLink::resetToDefaultValues()
 {
     parameters.reset(fhlMax, HOURS_PER_YEAR, true);
-    directCapacities.reset(1, HOURS_PER_YEAR, true);
-    indirectCapacities.reset(1, HOURS_PER_YEAR, true);
+    directCapacities.reset();
+    indirectCapacities.reset();
 
     for (uint i = 0; i != HOURS_PER_YEAR; ++i)
     {
@@ -262,7 +263,7 @@ void AreaLink::reverse()
     indirectCapacities.forceReload(true);
 
     // invert NTC values
-    directCapacities.swap(indirectCapacities);
+    directCapacities.timeSeries.swap(indirectCapacities.timeSeries);
 
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
@@ -271,7 +272,9 @@ void AreaLink::reverse()
 bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
 {
     if (from && with)
+    {
         return from->isVisibleOnLayer(layerID) && with->isVisibleOnLayer(layerID);
+    }
     return false;
 }
 
@@ -282,7 +285,9 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
     assert(with);
 
     if (warning && area->id > with->id)
+    {
         logs.warning() << "Link: `" << area->id << "` - `" << with->id << "`: Invalid orientation";
+    }
 
     if (area->id == with->id)
     {
@@ -300,22 +305,41 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
+
+bool isPropertyUsedForLinkTSgeneration(const std::string& key)
+{
+    std::array<std::string, 7> listKeys = {"unitcount",
+                                           "nominalcapacity",
+                                           "law.planned",
+                                           "law.forced",
+                                           "volatility.planned",
+                                           "volatility.forced",
+                                           "force-no-generation"};
+    return std::find(listKeys.begin(), listKeys.end(), key) != listKeys.end();
+}
+
 bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
+    {
         return value.to<bool>(link.useHurdlesCost);
+    }
     if (key == "loop-flow")
+    {
         return value.to<bool>(link.useLoopFlow);
+    }
     if (key == "use-phase-shifter")
+    {
         return value.to<bool>(link.usePST);
+    }
     if (key == "copper-plate")
     {
         bool copperPlate;
         if (value.to<bool>(copperPlate))
         {
             using LocalNTCtype = Data::LocalTransmissionCapacities;
-            link.transmissionCapacities
-              = copperPlate ? LocalNTCtype::infinite : LocalNTCtype::enabled;
+            link.transmissionCapacities = copperPlate ? LocalNTCtype::infinite
+                                                      : LocalNTCtype::enabled;
             return true;
         }
         return false;
@@ -323,15 +347,25 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     if (key == "asset-type")
     {
         if (value == "ac")
+        {
             link.assetType = atAC;
+        }
         else if (value == "dc")
+        {
             link.assetType = atDC;
+        }
         else if (value == "gaz")
+        {
             link.assetType = atGas;
+        }
         else if (value == "virt")
+        {
             link.assetType = atVirt;
+        }
         else if (value == "other")
+        {
             link.assetType = atOther;
+        }
         else
         {
             link.assetType = atOther;
@@ -342,13 +376,21 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     if (key == "link-style")
     {
         if (value == "plain")
+        {
             link.style = stPlain;
+        }
         else if (value == "dot")
+        {
             link.style = stDot;
+        }
         else if (value == "dash")
+        {
             link.style = stDash;
+        }
         else if (value == "dotdash")
+        {
             link.style = stDotDash;
+        }
         else
         {
             link.style = stPlain;
@@ -356,35 +398,42 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
         }
         return true;
     }
+
     if (key == "link-width")
     {
-        link.linkWidth = Math::MinMax<int>(value.to<int>(), 1, 6);
+        link.linkWidth = std::clamp(value.to<int>(), 1, 6);
         return true;
     }
     if (key == "colorr")
     {
-        link.color[0] = Math::MinMax<int>(value.to<int>(), 0, 255);
+        link.color[0] = std::clamp(value.to<int>(), 0, 255);
         return true;
     }
     if (key == "colorg")
     {
-        link.color[1] = Math::MinMax<int>(value.to<int>(), 0, 255);
+        link.color[1] = std::clamp(value.to<int>(), 0, 255);
         return true;
     }
     if (key == "colorb")
     {
-        link.color[2] = Math::MinMax<int>(value.to<int>(), 0, 255);
+        link.color[2] = std::clamp(value.to<int>(), 0, 255);
         return true;
     }
     if (key == "transmission-capacities")
     {
         using LocalNTCtype = Data::LocalTransmissionCapacities;
         if (value == "enabled")
+        {
             link.transmissionCapacities = LocalNTCtype::enabled;
+        }
         else if (value == "infinite")
+        {
             link.transmissionCapacities = LocalNTCtype::infinite;
+        }
         else if (value == "ignore")
+        {
             link.transmissionCapacities = LocalNTCtype::null;
+        }
         else
         {
             link.transmissionCapacities = LocalNTCtype::null;
@@ -394,7 +443,9 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     }
 
     if (key == "display-comments")
+    {
         return value.to<bool>(link.displayComments);
+    }
     if (key == "comments")
     {
         link.comments = value;
@@ -410,41 +461,42 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
-
-    return false;
+    // Properties used by TS generator only.
+    // We just skip them (otherwise : reading error)
+    return isPropertyUsedForLinkTSgeneration(key.to<std::string>());
 }
 
-void logLinkDataCheckError(bool& gotFatalError, const AreaLink& link, const String& msg, int hour)
+[[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
-    gotFatalError = true;
+    throw Antares::Error::ReadingStudy();
 }
 
-void logLinkDataCheckErrorDirectIndirect(bool& gotFatalError,
-                                         const AreaLink& link,
-                                         uint direct,
-                                         uint indirect)
+[[noreturn]] void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
+                                                      uint direct,
+                                                      uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
-                 << " direct TS "
-                 << " and " << indirect << " indirect TS, expected the same number";
-    gotFatalError = true;
+                 << " direct TS " << " and " << indirect
+                 << " indirect TS, expected the same number";
+    throw Antares::Error::ReadingStudy();
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const fs::path& folder)
 {
     // Assert
     assert(area);
 
     /* Initialize */
-    String buffer;
-    buffer << folder << SEP << "properties.ini";
+    fs::path path = folder / "properties.ini";
 
     IniFile ini;
-    if (!ini.open(buffer))
-        return 0;
+    if (!ini.open(path))
+    {
+        return false;
+    }
 
     bool ret = true;
     String key;
@@ -454,17 +506,16 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        buffer.clear();
-        TransformNameIntoID(s->name, buffer);
+        const std::string targetAreaName = transformNameIntoID(s->name);
 
         // Trying to find it
-        Area* linkedWith = AreaListLFind(l, buffer.c_str());
-        if (!linkedWith)
+        Area* targetArea = AreaListLFind(areaList, targetAreaName.c_str());
+        if (!targetArea)
         {
             logs.error() << '`' << s->name << "`: Impossible to find the area";
             continue;
         }
-        AreaLink* lnk = AreaAddLinkBetweenAreas(area, linkedWith);
+        AreaLink* lnk = AreaAddLinkBetweenAreas(area, targetArea);
         if (!lnk)
         {
             logs.error() << "Impossible to create a link between two areas";
@@ -476,19 +527,16 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study, folder) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder.string()) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
-            // Short names for link's properties
-            const uint nbDirectTS = link.directCapacities.width;
-            const uint nbIndirectTS = link.indirectCapacities.width;
+            const uint nbDirectTS = link.directCapacities.timeSeries.width;
+            const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
             if (nbDirectTS != nbIndirectTS)
             {
-                logLinkDataCheckErrorDirectIndirect(
-                  study.gotFatalError, link, nbDirectTS, nbIndirectTS);
-                return false;
+                logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
             }
 
             auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
@@ -499,63 +547,52 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
 
             for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
             {
-                auto& directCapacities = link.directCapacities[indexTS];
-                auto& indirectCapacities = link.indirectCapacities[indexTS];
+                const double* directCapacities = link.directCapacities[indexTS];
+                const double* indirectCapacities = link.indirectCapacities[indexTS];
 
                 // Checks on direct capacities
-                for (int h = 0; h < HOURS_PER_YEAR; h++)
+                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
                 {
                     if (directCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(study.gotFatalError, link, "direct capacity < 0", h);
-                        return false;
+                        logLinkDataCheckError(link, "direct capacity < 0", h);
                     }
                     if (directCapacities[h] < loopFlow[h])
                     {
-                        logLinkDataCheckError(
-                          study.gotFatalError, link, "direct capacity < loop flow", h);
-                        return false;
+                        logLinkDataCheckError(link, "direct capacity < loop flow", h);
                     }
                 }
 
                 // Checks on indirect capacities
-                for (int h = 0; h < HOURS_PER_YEAR; h++)
+                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
                 {
                     if (indirectCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(
-                          study.gotFatalError, link, "indirect capacitity < 0", h);
-                        return false;
+                        logLinkDataCheckError(link, "indirect capacitity < 0", h);
                     }
                     if (indirectCapacities[h] + loopFlow[h] < 0)
                     {
-                        logLinkDataCheckError(
-                          study.gotFatalError, link, "indirect capacity + loop flow < 0", h);
-                        return false;
+                        logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
                     }
                 }
             }
             // Checks on hurdle costs
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
                 if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
                 {
-                    logLinkDataCheckError(study.gotFatalError,
-                                          link,
+                    logLinkDataCheckError(link,
                                           "hurdle costs direct + hurdle cost indirect < 0",
                                           h);
-                    return false;
                 }
             }
 
             // Checks on P. shift min and max
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
-                    logLinkDataCheckError(
-                      study.gotFatalError, link, "phase shift plus < phase shift minus", h);
-                    return false;
+                    logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
                 }
             }
         }
@@ -568,7 +605,9 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             key.toLower();
             value = p->value;
             if (!AreaLinksInternalLoadFromProperty(link, key, value))
+            {
                 logs.warning() << '`' << p->key << "`: Unknown property";
+            }
         }
 
         // From the solver only
@@ -590,8 +629,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             case Data::LocalTransmissionCapacities::null:
             {
                 // Ignore transmission capacities
-                link.directCapacities.zero();
-                link.indirectCapacities.zero();
+                link.directCapacities.timeSeries.zero();
+                link.indirectCapacities.timeSeries.zero();
                 break;
             }
             case Data::LocalTransmissionCapacities::infinite:
@@ -636,12 +675,12 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 
         // Save direct capacities time series
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_direct.txt";
-        success = link.directCapacities.saveToCSVFile(filename, 6, false, true) && success;
+        success = link.directCapacities.saveToFile(filename, true) && success;
 
         // Save indirect capacities time series
 
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
-        success = link.indirectCapacities.saveToCSVFile(filename, 6, false, true) && success;
+        success = link.indirectCapacities.saveToFile(filename, true) && success;
     }
 
     return success;
@@ -672,7 +711,9 @@ bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const 
         section->add("colorb", link.color[2]);
         section->add("display-comments", link.displayComments);
         if (!link.comments.empty())
+        {
             section->add("comments", link.comments);
+        }
         section->add("filter-synthesis", datePrecisionIntoString(link.filterSynthesis));
         section->add("filter-year-by-year", datePrecisionIntoString(link.filterYearByYear));
     }
@@ -695,10 +736,14 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     }
 
     if (!saveAreaLinksConfigurationFileToFolder(area, folder))
+    {
         return false;
+    }
 
     if (!saveAreaLinksTimeSeriesToFolder(area, folder))
+    {
         return false;
+    }
 
     return true;
 }
@@ -706,7 +751,9 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
 void AreaLinkRemove(AreaLink* link)
 {
     if (!link)
+    {
         return;
+    }
 
     // Asserts
     assert(link->from);
@@ -726,8 +773,8 @@ uint64_t AreaLink::memoryUsage() const
 {
     uint64_t to_return = sizeof(AreaLink);
     to_return += parameters.valuesMemoryUsage();
-    to_return += directCapacities.valuesMemoryUsage();
-    to_return += indirectCapacities.valuesMemoryUsage();
+    to_return += directCapacities.memoryUsage();
+    to_return += indirectCapacities.memoryUsage();
 
     return to_return;
 }

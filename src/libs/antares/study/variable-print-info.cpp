@@ -1,46 +1,40 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "variable-print-info.h"
+#include "antares/study/variable-print-info.h"
+
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
+
 #include <antares/study/study.h>
-#include "../solver/variable/categories.h"
+#include "antares/solver/variable/categories.h"
 
 using namespace Antares::Solver::Variable;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // ============================================================
 // One variable print information
 // ============================================================
-VariablePrintInfo::VariablePrintInfo(uint dataLvl, uint fileLvl) :
+VariablePrintInfo::VariablePrintInfo(uint dataLvl, uint fileLvl):
     to_be_printed_(true),
     dataLevel_(dataLvl),
     fileLevel_(fileLvl)
@@ -51,6 +45,7 @@ void VariablePrintInfo::enablePrint(bool b)
 {
     to_be_printed_ = b;
 }
+
 bool VariablePrintInfo::isPrinted() const
 {
     return to_be_printed_;
@@ -60,6 +55,7 @@ void VariablePrintInfo::reverse()
 {
     to_be_printed_ = !to_be_printed_;
 }
+
 uint VariablePrintInfo::getMaxColumnsCount()
 {
     return maxNumberColumns_;
@@ -73,14 +69,12 @@ void VariablePrintInfo::setMaxColumns(uint maxColumnsNumber)
 // ============================================================
 // Variables print information collector
 // ============================================================
-variablePrintInfoCollector::variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo) :
- allvarsinfo(allvarsprintinfo)
+variablePrintInfoCollector::variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo):
+    allvarsinfo(allvarsprintinfo)
 {
 }
 
-void variablePrintInfoCollector::add(const AnyString& name,
-                                     uint dataLevel,
-                                     uint fileLevel)
+void variablePrintInfoCollector::add(const AnyString& name, uint dataLevel, uint fileLevel)
 {
     allvarsinfo->add(name.to<std::string>(), VariablePrintInfo(dataLevel, fileLevel));
 }
@@ -154,9 +148,11 @@ void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
 {
     // Initializing output variables status
     if (!isThematicTrimmingEnabled)
+    {
         setAllPrintStatusesTo(true);
+    }
 
-    for (const auto& varname : excluded_vars)
+    for (const auto& varname: excluded_vars)
     {
         setPrintStatus(varname, false); // varname is supposed to in uppercase already
     }
@@ -173,36 +169,36 @@ bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 {
-    for (auto& [name, variable] : allVarsPrintInfo)
+    for (auto& [name, variable]: allVarsPrintInfo)
     {
         variable.enablePrint(b);
     }
-
 }
 
 void AllVariablesPrintInfo::reverseAll()
 {
-    for (auto& [name, variable] : allVarsPrintInfo)
+    for (auto& [name, variable]: allVarsPrintInfo)
     {
         variable.reverse();
     }
-
 }
 
 unsigned int AllVariablesPrintInfo::numberOfEnabledVariables()
 {
-    return std::count_if(allVarsPrintInfo.begin(), 
-                         allVarsPrintInfo.end(), 
-                         [](auto& p) {return p.second.isPrinted(); });
+    return std::count_if(allVarsPrintInfo.begin(),
+                         allVarsPrintInfo.end(),
+                         [](auto& p) { return p.second.isPrinted(); });
 }
 
 std::vector<std::string> AllVariablesPrintInfo::namesOfVariablesWithPrintStatus(bool printStatus)
 {
     std::vector<std::string> vector_to_return;
-    for (auto& [name, variable] : allVarsPrintInfo)
+    for (auto& [name, variable]: allVarsPrintInfo)
     {
         if (variable.isPrinted() == printStatus)
+        {
             vector_to_return.push_back(name);
+        }
     }
     return vector_to_return;
 }
@@ -224,30 +220,30 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
         number of columns and especially what is this number ?
         If there are some unselected variables, the previous number is reduced.
         Note that synthesis reports always contain more columns than year by year reports.
-        So the computed max number of columns is actually the max number of columns in a synthesis report.
+        So the computed max number of columns is actually the max number of columns in a synthesis
+       report.
     */
 
     // Looping over all kinds of data levels (area report, link reports, districts reports, thermal
-    // reports,...) and for a given data level, looping over file levels 
+    // reports,...) and for a given data level, looping over file levels
     // (values reports, years ids reports, details reports, ...) the
-    // code can produce. 
+    // code can produce.
     // For one particular kind of report, looping over (selected) output variables
     // it contains, and incrementing a counter with as many columns as the current variable can take
     // up at most in a report.
 
-    for (uint CDataLevel = 1; CDataLevel <= Category::maxDataLevel; CDataLevel *= 2)
+    for (uint CDataLevel = 1; CDataLevel <= Category::DataLevel::maxDataLevel; CDataLevel *= 2)
     {
-        for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
+        for (uint CFileLevel = 1; CFileLevel <= Category::FileLevel::maxFileLevel; CFileLevel *= 2)
         {
             uint currentColumnsCount = 0;
-            for (auto& [name, variable] : allVarsPrintInfo)
+            for (auto& [name, variable]: allVarsPrintInfo)
             {
-                if (variable.isPrinted() &&
-                    variable.isPrintedOnFileLevel(CFileLevel) &&
-                    variable.isPrintedOnDataLevel(CDataLevel))
+                if (variable.isPrinted() && variable.isPrintedOnFileLevel(CFileLevel)
+                    && variable.isPrintedOnDataLevel(CDataLevel))
                 {
                     // For the current output variable, we retrieve the max number
-                    // of columns it takes in a sysnthesis report. 
+                    // of columns it takes in a sysnthesis report.
                     currentColumnsCount += variable.getMaxColumnsCount();
                 }
             }
@@ -259,22 +255,24 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
 {
-    numberSelectedAreaVariables =
-        std::count_if(allVarsPrintInfo.begin(),
-                      allVarsPrintInfo.end(),
-                      [](auto& p) {return p.second.isPrinted() &&
-                                          p.second.isPrintedOnDataLevel(Category::area); });
+    numberSelectedAreaVariables = std::count_if(allVarsPrintInfo.begin(),
+                                                allVarsPrintInfo.end(),
+                                                [](auto& p) {
+                                                    return p.second.isPrinted()
+                                                           && p.second.isPrintedOnDataLevel(
+                                                             Category::DataLevel::area);
+                                                });
 }
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
 {
-    numberSelectedLinkVariables =
-        std::count_if(allVarsPrintInfo.begin(),
-                      allVarsPrintInfo.end(),
-                      [](auto& p) {return p.second.isPrinted() &&
-                                          p.second.isPrintedOnDataLevel(Category::link);  });
+    numberSelectedLinkVariables = std::count_if(allVarsPrintInfo.begin(),
+                                                allVarsPrintInfo.end(),
+                                                [](auto& p) {
+                                                    return p.second.isPrinted()
+                                                           && p.second.isPrintedOnDataLevel(
+                                                             Category::DataLevel::link);
+                                                });
 }
 
-
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

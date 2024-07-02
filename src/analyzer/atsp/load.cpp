@@ -1,32 +1,27 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "atsp.h"
 #include <antares/inifile/inifile.h>
-#include "../../config.h"
+#include "antares/config/config.h"
+
+#include "atsp.h"
 
 using namespace Yuni;
 
@@ -59,12 +54,12 @@ bool ATSP::loadFromINIFile(const String& filename)
         CString<50, false> key;
         CString<50, false> value;
 
-        for (section = ini.firstSection; section != NULL; section = section->next)
+        for (section = ini.firstSection; section; section = section->next)
         {
             if (section->name == ".general")
             {
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();
@@ -87,23 +82,33 @@ bool ATSP::loadFromINIFile(const String& filename)
                     if (key == "target")
                     {
                         if (value == "load")
+                        {
                             pTimeseries = Data::timeSeriesLoad;
+                        }
                         else if (value == "solar")
+                        {
                             pTimeseries = Data::timeSeriesSolar;
+                        }
                         else if (value == "wind")
+                        {
                             pTimeseries = Data::timeSeriesWind;
+                        }
                         continue;
                     }
                     if (key == "width")
                     {
                         if (not value.to(pTimeseriesCount))
+                        {
                             logs.error() << "impossible to read the number of timeseries";
+                        }
                         continue;
                     }
                     if (key == "height")
                     {
                         if (not value.to(pMHeight))
+                        {
                             logs.error() << "impossible to read the height";
+                        }
                         continue;
                     }
                     if (key == "medium-term-autocorrelation")
@@ -154,7 +159,9 @@ bool ATSP::loadFromINIFile(const String& filename)
                             pLimitMemory *= 1024u * 1024u;
                         }
                         else
+                        {
                             pLimitMemory *= 1024u * 1024u;
+                        }
                         continue;
                     }
                     if (key == "clean")
@@ -173,7 +180,7 @@ bool ATSP::loadFromINIFile(const String& filename)
                 info->distribution = Data::XCast::dtBeta;
 
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();
@@ -219,7 +226,9 @@ bool ATSP::loadFromINIFile(const String& filename)
         }
 
         if (!checkStudyVersion())
+        {
             return false;
+        }
 
         logs.info() << "Target study: " << pStudyFolder;
 
@@ -297,29 +306,22 @@ bool ATSP::loadFromINIFile(const String& filename)
 
 bool ATSP::checkStudyVersion() const
 {
-    auto v = Data::StudyTryToFindTheVersion(pStudyFolder);
-    switch (v)
+    auto v = Data::StudyHeader::tryToFindTheVersion(pStudyFolder);
+    if (v == Data::StudyVersion::unknown())
     {
-    case Data::versionUnknown:
-    {
-        logs.error() << "The folder is not a study";
+        logs.error() << "Couldn't indentify the study version, is the folder a correct study ?";
         return false;
     }
-    case Data::versionFutur:
+    if (v > Data::StudyVersion::latest())
     {
         logs.error() << "The format of the study folder requires a more recent version of Antares";
         return false;
     }
-    default:
+    if (v < Data::StudyVersion::latest())
     {
-        if ((uint)v != (uint)Data::versionLatest)
-        {
-            logs.error() << "The study folder must be upgraded from v" << Data::VersionToCStr(v)
-                         << " to v"
-                         << Data::VersionToCStr(static_cast<Data::Version>(Data::versionLatest));
-            return false;
-        }
-    }
+        logs.error() << "The study folder must be upgraded from v" << v.toString() << " to v"
+                     << Data::StudyVersion::latest().toString();
+        return false;
     }
     return true;
 }
