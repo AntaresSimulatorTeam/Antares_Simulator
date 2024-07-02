@@ -134,7 +134,7 @@ jobs:
 
       - name: Read simtest version
         run: |
-          echo 'simtest<<EOF' >> $GITHUB_ENV
+          echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
           cat ./simtest.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
