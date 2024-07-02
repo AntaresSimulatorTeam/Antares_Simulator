@@ -138,6 +138,7 @@ jobs:
           cat ./simtest.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
+      - name: Export simtest version
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
