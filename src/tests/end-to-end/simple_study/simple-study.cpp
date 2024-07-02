@@ -309,6 +309,7 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     props.withdrawalNominalCapacity = 10;
     props.reservoirCapacity = 100;
     props.injectionEfficiency = .9;
+    props.withdrawalEfficiency = .8;
     props.initialLevel = .443;
     props.groupName = std::string("Some STS group");
     // Default values for series
