@@ -57,7 +57,8 @@ private:
 
     std::vector<const operations_research::MPVariable*> slackVariables_;
     const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|"
-                                                "^FictiveLoads::|^Level::";
+                                                "^FictiveLoads::|^Level::|"
+                                                "^HydroPower::";
 };
 
 } // namespace Antares::Optimization

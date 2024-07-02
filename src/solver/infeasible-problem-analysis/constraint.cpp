@@ -144,6 +144,10 @@ ConstraintType Constraint::getType() const
     {
         return ConstraintType::hydro_reservoir_level;
     }
+    if (nameComponents_.at(0) == "HydroPower")
+    {
+        return ConstraintType::hydro_production_weekly;
+    }
     if (nameComponents_.at(0) == "Level")
     {
         return ConstraintType::short_term_storage_level;
@@ -195,6 +199,8 @@ std::string Constraint::prettyPrint() const
     case ConstraintType::hydro_reservoir_level:
         return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
                + getTimeStepInYear();
+    case ConstraintType::hydro_production_weekly:
+        return "Hydro weekly production at area '" + getAreaName() + "'";
     case ConstraintType::short_term_storage_level:
         return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '"
                + getSTSName() + "' at hour " + getTimeStepInYear();

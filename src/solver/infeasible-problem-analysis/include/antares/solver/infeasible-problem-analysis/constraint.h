@@ -32,6 +32,7 @@ enum class ConstraintType
     binding_constraint_weekly,
     fictitious_load,
     hydro_reservoir_level,
+    hydro_production_weekly,
     short_term_storage_level,
     none
 };
