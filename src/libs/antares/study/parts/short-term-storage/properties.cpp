@@ -64,6 +64,11 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<double>(this->injectionEfficiency);
     }
 
+    if (p->key == "efficiencyWithdrawal")
+    {
+        return p->value.to<double>(this->withdrawalEfficiency);
+    }
+
     if (p->key == "name")
     {
         return p->value.to<std::string>(this->name);
@@ -106,6 +111,7 @@ void Properties::save(IniFile& ini) const
     s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
 
     s->add("efficiency", this->injectionEfficiency);
+    s->add("efficiencyWithdrawal", this->withdrawalEfficiency);
     s->add("initialleveloptim", this->initialLevelOptim);
     s->add("enabled", this->enabled);
 }
