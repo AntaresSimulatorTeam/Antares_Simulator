@@ -13,16 +13,13 @@ void HydroErrorsCollector::CheckForErrors() const
 {
     if (!areasErrorMap_.empty())
     {
-        for (const auto& key: areasErrorMap_ | std::views::keys)
+        for (const auto& value:
+             areasErrorMap_ | std::views::filter([&key](const auto& p) { return p.first == key; })
+               | std::views::take(10))
         {
-            for (const auto& value:
-                 areasErrorMap_
-                   | std::views::filter([&key](const auto& p) { return p.first == key; })
-                   | std::views::take(10))
-            {
-                logs.error() << "In Area " << value.first << ": " << value.second << " ";
-            }
+            logs.error() << "In Area " << value.first << ": " << value.second << " ";
         }
+
         throw FatalError("Hydro validation has failed !");
     }
 }
