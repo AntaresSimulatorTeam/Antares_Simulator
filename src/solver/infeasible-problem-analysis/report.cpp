@@ -73,7 +73,7 @@ void InfeasibleProblemReport::extractItems()
 {
     for (auto& c: mConstraints)
     {
-        if (c.extractItems() == 0)
+        if (c.extractComponentsFromName() == 0)
         {
             return;
         }
