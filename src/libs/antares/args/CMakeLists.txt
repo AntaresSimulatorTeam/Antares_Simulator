@@ -13,10 +13,13 @@ add_library(Antares::args_helper ALIAS args_helper)
 
 target_link_libraries(args_helper
         PRIVATE
-			yuni-static-core
-        )
+        yuni-static-core
+)
 
 target_include_directories(args_helper
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+install(DIRECTORY include/antares
+        DESTINATION "include"
 )

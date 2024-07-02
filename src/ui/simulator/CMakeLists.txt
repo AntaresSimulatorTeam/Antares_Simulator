@@ -1,6 +1,6 @@
 
 #Define executable name
-set(execname "antares-${ANTARES_PRG_VERSION}-ui-simulator")
+set(execname "antares-ui-simulator")
 
 # WxCore
 include("cmake/wxcore.cmake")
@@ -63,8 +63,6 @@ set(SRCS
 		windows/simulation/panel.cpp
 		windows/simulation/run.h
 		windows/simulation/run.cpp
-		windows/cleaner.h
-		windows/cleaner.cpp
 		windows/analyzer/analyzer.cpp
 		windows/analyzer/analyzer.h
 		windows/constraints-builder/constraintsbuilder.cpp
@@ -149,6 +147,9 @@ set(ANTARES_LIBS
 		Antares::date
 		Antares::study
         Antares::action
+		Antares::resources
+		Antares::locale
+		Antares::locator
 		yuni-static-core
 		yuni-static-uuid
 		model_antares

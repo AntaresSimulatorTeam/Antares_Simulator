@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__
 #define __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADVANCED_PARAMETERS_H__
@@ -75,11 +69,7 @@ private:
     void onNumericQuality(Component::Button&, wxMenu&, void*, Data::TimeSeriesType ts);
     void onSelectNumericQualityStandard(wxCommandEvent& evt);
     void onSelectNumericQualityHigh(wxCommandEvent& evt);
-
-    void onInitialReservoirLevels(Component::Button&, wxMenu&, void*);
-    void onSelectHotStart(wxCommandEvent& evt);
-    void onSelectColdStart(wxCommandEvent& evt);
-
+    
     void onHydroHeuristicPolicy(Component::Button&, wxMenu& menu, void*);
     void onSelectAccomodateRuleCurves(wxCommandEvent& evt);
     void onSelectMaximizeGeneration(wxCommandEvent& evt);
@@ -98,8 +88,11 @@ private:
     void onSelectSHPMinimizeDuration(wxCommandEvent& evt);
 
     void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
-    void onSelectUCHeuristic(wxCommandEvent& evt);
-    void onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt);
+
+    void onSelectUCMode(Antares::Data::UnitCommitmentMode mode);
+    void onSelectUCHeuristicFast(wxCommandEvent& evt);
+    void onSelectUCHeuristicAccurate(wxCommandEvent& evt);
+    void onSelectUCMILP(wxCommandEvent& evt);
 
     void onNumberOfCores(Component::Button&, wxMenu& menu, void*);
     template<Antares::Data::NumberOfCoresMode>
@@ -118,7 +111,6 @@ private:
     Component::Button* pBtnNumericQualityWind;
     Component::Button* pBtnNumericQualitySolar;
     Component::Button* pBtnPowerFluctuations;
-    Component::Button* pBtnInitialReservoirLevels;
     Component::Button* pBtnHydroHeuristicPolicy;
     Component::Button* pBtnHydroPricing;
     Component::Button* pBtnSheddingPolicy;

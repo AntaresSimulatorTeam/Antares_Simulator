@@ -1,44 +1,42 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "antares/sys/policy.h"
+
 #include <map>
-#include <yuni/io/file.h>
-#include "antares/sys/appdata.h"
-#include <antares/logs/logs.h>
-#include <antares/inifile/inifile.h>
-#include <antares/logs/hostname.hxx>
-#include "../config.h"
-#include <antares/fatal-error.h>
+#include <mutex>
+
+#include <yuni/core/system/cpu.h>
 #include <yuni/core/system/environment.h>
+#include <yuni/core/system/memory.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
-#include <yuni/core/system/cpu.h>
-#include <yuni/core/system/memory.h>
+#include <yuni/io/file.h>
+
+#include <antares/antares/fatal-error.h>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/hostname.hxx>
+#include <antares/logs/logs.h>
+#include "antares/config/config.h"
+#include "antares/sys/appdata.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -56,34 +54,37 @@ using PolicyMap = std::map<PolicyKey, String>;
 //! All entries
 static PolicyMap* entries = nullptr;
 
-//! Mutex for policy entries
-static Mutex gsMutex;
+static std::mutex gsMutex; //!< Mutex for policy entries
 
 template<class StringT>
 static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
 {
     IniFile ini;
     if (not ini.open(filename))
+    {
         return;
+    }
 
-    PolicyKey key;
-    ShortString128 hostnameVersion;
-    ShortString128 hostnameAll;
-    hostnameVersion << hostname << ':' << ANTARES_VERSION;
-    hostnameAll << hostname << ":*";
+    std::string hostnameVersion = hostname + ':' + ANTARES_VERSION;
+    std::string hostnameAll = hostname + ":*";
 
-    ini.each([&](const IniFile::Section& section) {
-        // This section is dedicated to another host
-        if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
-            or section.name == hostnameAll or section.name == hostnameVersion)
-        {
-            section.each([&](const IniFile::Property& property) {
-                key = property.key;
-                key.trim(" \t");
-                (*entries)[key] = property.value;
-            });
-        }
-    });
+    ini.each(
+      [&hostnameVersion, &hostnameAll](const IniFile::Section& section)
+      {
+          // This section is dedicated to another host
+          if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
+              or section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
+          {
+              section.each(
+                [](const IniFile::Property& property)
+                {
+                    PolicyKey key;
+                    key = property.key;
+                    key.trim(" \t");
+                    (*entries)[key] = property.value;
+                });
+          }
+      });
 }
 
 class PredicateEnv final
@@ -94,7 +95,9 @@ public:
     {
         PolicyMap::const_iterator i = entries->find(value);
         if (i != entries->end())
+        {
             out += i->second;
+        }
         else
         {
             const ShortString128 zeroT = value;
@@ -112,7 +115,9 @@ static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& p
     // Try to find the first occurence of an expression
     String::Size p = string.find("${", 0);
     if (p == String::npos)
+    {
         return 0;
+    }
 
     // Ok we have found something, let's go deeper...
     uint count = 0;
@@ -137,7 +142,9 @@ static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& p
         // The expression
         expr.adapt(string.c_str() + p + 2, end - p - 2);
         if (not expr.empty())
+        {
             predicate(out, expr);
+        }
 
         // Try to find the next one
         offset = end + 1;
@@ -145,7 +152,9 @@ static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& p
     } while (p != String::npos);
 
     if (offset < string.size())
+    {
         out.append(string.c_str() + offset, string.size() - offset);
+    }
     return count;
 }
 
@@ -159,7 +168,9 @@ static inline void ExpansionWL()
     {
         String& value = i->second;
         if (ExpandWL(out, value, predicate))
+        {
             value = out;
+        }
     }
 }
 
@@ -168,10 +179,12 @@ static inline void ExpansionWL()
 bool Open(bool expandEntries)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
 
     if (localPoliciesOpened)
+    {
         return true;
+    }
 
     String path;
     path.reserve(512);
@@ -191,10 +204,14 @@ bool Open(bool expandEntries)
 
     String localAppData;
     if (not OperatingSystem::FindAntaresLocalAppData(localAppData, false))
+    {
         localAppData.clear();
+    }
     String localAppDataAllUsers;
     if (not OperatingSystem::FindAntaresLocalAppData(localAppDataAllUsers, true))
+    {
         localAppDataAllUsers.clear();
+    }
 
     String pathLocalPolicy;
     pathLocalPolicy << localAppData << SEP << "localpolicy.ini";
@@ -202,9 +219,13 @@ bool Open(bool expandEntries)
     pathLocalPolicyAllUsers << localAppDataAllUsers << SEP << "localpolicy.ini";
 
     if (IO::File::Exists(pathLocalPolicy))
+    {
         OpenFromINIFileWL(pathLocalPolicy, hostname);
+    }
     if (IO::File::Exists(pathLocalPolicyAllUsers))
+    {
         OpenFromINIFileWL(pathLocalPolicyAllUsers, hostname);
+    }
 
     // informations about antares
     // version
@@ -225,21 +246,23 @@ bool Open(bool expandEntries)
     (*entries)[(key = "sys.cpu")] = System::CPU::Count();
     // how much memory ?
     (*entries)[(key = "sys.memory")].clear()
-      << (uint)Math::Round(((double)(System::Memory::Total() + 1) / 1024 / 1024 / 1024)) << " Go";
+      << (uint)std::round(((double)(System::Memory::Total() + 1) / 1024 / 1024 / 1024)) << " Go";
 
     // paths
     (*entries)[(key = "localpolicy.user.path")] = pathLocalPolicy;
     (*entries)[(key = "localpolicy.allusers.path")] = pathLocalPolicyAllUsers;
 
     if (expandEntries)
+    {
         ExpansionWL();
+    }
     return true;
 }
 
 void Close()
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
 
     if (localPoliciesOpened)
     {
@@ -252,18 +275,10 @@ void Close()
     }
 }
 
-bool HasKey(const PolicyKey& key)
-{
-    // avoid concurrent changes
-    MutexLocker locker(gsMutex);
-
-    return (not key.empty() and entries and entries->find(key) != entries->end());
-}
-
 bool Read(String& out, const PolicyKey& key)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
 
     if (not key.empty() and entries)
     {
@@ -281,7 +296,7 @@ bool Read(String& out, const PolicyKey& key)
 bool ReadAsBool(const PolicyKey& key, bool defval)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
 
     if (not key.empty() and entries)
     {
@@ -290,7 +305,9 @@ bool ReadAsBool(const PolicyKey& key, bool defval)
         {
             bool v;
             if (i->second.to(v))
+            {
                 return v;
+            }
         }
     }
     return defval;
@@ -299,10 +316,12 @@ bool ReadAsBool(const PolicyKey& key, bool defval)
 void DumpToString(Clob& out)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
 
     if (!entries or entries->empty())
+    {
         return;
+    }
 
     // The end of the container
     const PolicyMap::const_iterator end = entries->end();
@@ -314,7 +333,9 @@ void DumpToString(Clob& out)
         {
             uint len = i->first.size();
             if (len > maxlen)
+            {
                 maxlen = len;
+            }
         }
     }
 
@@ -330,43 +351,10 @@ void DumpToString(Clob& out)
     }
 }
 
-void DumpToStdOut()
-{
-    // avoid concurrent changes
-    MutexLocker locker(gsMutex);
-
-    if (!entries or entries->empty())
-        return;
-
-    // The end of the container
-    const PolicyMap::const_iterator end = entries->end();
-
-    // Find the longest key length
-    uint maxlen = 0;
-    {
-        for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
-        {
-            uint len = i->first.size();
-            if (len > maxlen)
-                maxlen = len;
-        }
-    }
-
-    maxlen += 3; // spaces after the key
-    PolicyKey row;
-
-    for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
-    {
-        row = i->first;
-        row.resize(maxlen, " ");
-        std::cout << "  " << row << ": " << i->second << '\n';
-    }
-}
-
 void DumpToLogs()
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
 
     if (not entries or entries->empty())
     {
@@ -383,28 +371,34 @@ void DumpToLogs()
     }
 }
 
+// TODO VP: delete
 void CheckRootPrefix(const char* argv0)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
 
-    if (!entries)
+    if (entries == nullptr)
+    {
         return;
-    auto i = entries->find("force_root_prefix");
-    if (i != entries->end() and not i->second.empty())
+    }
+    if (auto i = entries->find("force_root_prefix"); i != entries->end() and not i->second.empty())
     {
         AnyString adapter = argv0;
         if (IO::IsAbsolute(adapter))
         {
             if (0 != adapter.ifind(i->second))
+            {
                 throw FatalError("Invalid root prefix.");
+            }
         }
         else
         {
             String absfilename;
             IO::MakeAbsolute(absfilename, adapter);
             if (0 != absfilename.ifind(i->second))
+            {
                 throw FatalError("Invalid root prefix.");
+            }
         }
     }
 }

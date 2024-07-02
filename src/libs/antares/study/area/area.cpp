@@ -1,37 +1,35 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
+#include "antares/study/area/area.h"
+
 #include <cassert>
-#include "../study.h"
-#include "area.h"
-#include "ui.h"
-#include "scratchpad.h"
+
+#include <yuni/yuni.h>
+
+#include "antares/study//study.h"
+#include "antares/study/area/scratchpad.h"
+#include "antares/study/area/ui.h"
 #include "antares/study/parts/load/prepro.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 
@@ -41,34 +39,32 @@ void Area::internalInitialize()
 {
     // Make sure we have
     if (JIT::usedFromGUI)
+    {
         ui = new AreaUI();
+    }
 }
 
-Area::Area() :
+Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
     internalInitialize();
 }
 
-Area::Area(const AnyString& name) :
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
-{
-    internalInitialize();
-    this->name = name;
-    Antares::TransformNameIntoID(this->name, this->id);
-}
-
-Area::Area(const AnyString& name, const AnyString& id) :
-
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+Area::Area(const AnyString& name):
+    Area()
 {
     internalInitialize();
     this->name = name;
-    AreaName givenID = id;
-    Antares::TransformNameIntoID(givenID, this->id);
+    this->id = Antares::transformNameIntoID(this->name);
+}
+
+Area::Area(const AnyString& name, const AnyString& id):
+    Area()
+{
+    internalInitialize();
+    this->name = name;
+    this->id = Antares::transformNameIntoID(id);
 }
 
 Area::~Area()
@@ -93,7 +89,9 @@ void Area::clearAllLinks()
         {
             auto end = links.end();
             for (auto i = links.begin(); i != end; ++i)
+            {
                 delete i->second;
+            }
         }
         // Empty the container
         links.clear();
@@ -103,13 +101,17 @@ void Area::clearAllLinks()
 void Area::detachAllLinks()
 {
     while (not links.empty())
+    {
         AreaLinkRemove((links.begin())->second);
+    }
 }
 
 AreaLink* Area::findExistingLinkWith(Area& with)
 {
     if (&with == this)
+    {
         return nullptr;
+    }
 
     if (not links.empty())
     {
@@ -117,7 +119,9 @@ AreaLink* Area::findExistingLinkWith(Area& with)
         for (AreaLink::Map::iterator i = links.begin(); i != end; ++i)
         {
             if (i->second->from == &with or i->second->with == &with)
+            {
                 return i->second;
+            }
         }
     }
     if (!with.links.empty())
@@ -125,7 +129,9 @@ AreaLink* Area::findExistingLinkWith(Area& with)
         for (auto i = with.links.begin(); i != with.links.end(); ++i)
         {
             if (i->second->from == this or i->second->with == this)
+            {
                 return i->second;
+            }
         }
     }
     return nullptr;
@@ -141,7 +147,9 @@ const AreaLink* Area::findExistingLinkWith(const Area& with) const
             for (auto i = links.begin(); i != end; ++i)
             {
                 if (i->second->from == &with or i->second->with == &with)
+                {
                     return i->second;
+                }
             }
         }
         if (!with.links.empty())
@@ -150,7 +158,9 @@ const AreaLink* Area::findExistingLinkWith(const Area& with) const
             for (auto i = with.links.begin(); i != end; ++i)
             {
                 if (i->second->from == this or i->second->with == this)
+                {
                     return i->second;
+                }
             }
         }
     }
@@ -177,7 +187,9 @@ uint64_t Area::memoryUsage() const
     // Hydro
     ret += PreproHydroMemoryUsage(hydro.prepro);
     if (hydro.series)
+    {
         ret += hydro.series->memoryUsage();
+    }
 
     // Thermal
     ret += thermal.list.memoryUsage();
@@ -187,12 +199,16 @@ uint64_t Area::memoryUsage() const
 
     // UI
     if (ui)
+    {
         ret += ui->memoryUsage();
+    }
 
     // links
     auto end = links.end();
     for (auto i = links.begin(); i != end; ++i)
+    {
         ret += (i->second)->memoryUsage();
+    }
 
     return ret;
 }
@@ -205,27 +221,30 @@ void Area::createMissingData()
 
 void Area::createMissingTimeSeries()
 {
-    if (!load.series)
-        load.series = new DataSeriesLoad();
-    if (!solar.series)
-        solar.series = new DataSeriesSolar();
-    if (!wind.series)
-        wind.series = new DataSeriesWind();
     if (!hydro.series)
+    {
         hydro.series = new DataSeriesHydro();
-    thermal.list.ensureDataTimeSeries();
-    renewable.list.ensureDataTimeSeries();
+    }
 }
+
 void Area::createMissingPrepros()
 {
     if (!load.prepro)
+    {
         load.prepro = new Data::Load::Prepro();
+    }
     if (!solar.prepro)
+    {
         solar.prepro = new Data::Solar::Prepro();
+    }
     if (!wind.prepro)
+    {
         wind.prepro = new Data::Wind::Prepro();
+    }
     if (!hydro.prepro)
+    {
         hydro.prepro = new PreproHydro();
+    }
     thermal.list.ensureDataPrepro();
 }
 
@@ -264,50 +283,28 @@ void Area::resetToDefaultValues()
     invalidateJIT = true;
 }
 
-void Area::resizeAllTimeseriesNumbers(uint n)
+void Area::resizeAllTimeseriesNumbers(uint nbYears)
 {
-    assert(n < 200000); // arbitrary number
-
-    // asserts
-    assert(load.series and "load.series must not be nullptr !");
-    assert(solar.series and "solar.series must not be nullptr !");
-    assert(wind.series and "wind.series must not be nullptr !");
     assert(hydro.series and "series must not be nullptr !");
 
-    if (!n)
+    load.series.timeseriesNumbers.reset(nbYears);
+    solar.series.timeseriesNumbers.reset(nbYears);
+    wind.series.timeseriesNumbers.reset(nbYears);
+    hydro.series->timeseriesNumbers.reset(nbYears);
+    for (auto& namedLink: links)
     {
-        load.series->timeseriesNumbers.clear();
-        solar.series->timeseriesNumbers.clear();
-        wind.series->timeseriesNumbers.clear();
-        hydro.series->timeseriesNumbers.clear();
-        for (auto& namedLink : links)
-        {
-            AreaLink* link = namedLink.second;
-            link->timeseriesNumbers.clear();
-        }
+        AreaLink* link = namedLink.second;
+        link->timeseriesNumbers.reset(nbYears);
     }
-    else
-    {
-        load.series->timeseriesNumbers.resize(1, n);
-        solar.series->timeseriesNumbers.resize(1, n);
-        wind.series->timeseriesNumbers.resize(1, n);
-        hydro.series->timeseriesNumbers.resize(1, n);
-        for (auto& namedLink : links)
-        {
-            AreaLink* link = namedLink.second;
-            link->timeseriesNumbers.resize(1, n);
-        }
-    }
-    thermal.resizeAllTimeseriesNumbers(n);
-    renewable.resizeAllTimeseriesNumbers(n);
+    thermal.resizeAllTimeseriesNumbers(nbYears);
+    renewable.resizeAllTimeseriesNumbers(nbYears);
 }
 
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
 {
     bool noErrorMinStabPow = true;
-    for (uint l = 0; l != thermal.clusterCount(); ++l)
+    for (auto& cluster: thermal.list.each_enabled())
     {
-        auto& cluster = thermal.clusters[l];
         logs.debug() << "cluster : " << cluster->name();
         if ((not cluster->checkMinStablePower())
             || (cluster->minStablePower
@@ -351,11 +348,15 @@ bool Area::forceReload(bool reload) const
     {
         auto end = self.links.end();
         for (auto i = self.links.begin(); i != end; ++i)
+        {
             ret = (i->second)->forceReload(reload) and ret;
+        }
     }
 
     if (ui)
+    {
         self.ui->markAsModified();
+    }
 
     return ret;
 }
@@ -384,17 +385,23 @@ void Area::markAsModified() const
     {
         auto end = links.end();
         for (auto i = links.begin(); i != end; ++i)
+        {
             (i->second)->markAsModified();
+        }
     }
     if (ui)
+    {
         ui->markAsModified();
+    }
 }
 
 void Area::detachLinkFromID(const AreaName& id)
 {
     auto i = links.find(id);
     if (i != links.end())
+    {
         links.erase(i);
+    }
 }
 
 void Area::detachLink(const AreaLink* lnk)
@@ -431,4 +438,4 @@ void Area::buildLinksIndexes()
     }
 }
 
-} // namespace Antares
+} // namespace Antares::Data

@@ -1,52 +1,51 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "fswalker.h"
-#include <antares/antares.h>
-#include <stack>
+
+#include <algorithm>
 #include <list>
-#include <yuni/io/directory/info.h>
+#include <mutex>
+#include <stack>
+
 #include <yuni/core/noncopyable.h>
-#include <yuni/job/job.h>
-#include <yuni/job/queue/service.h>
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/suspend.h>
-#include <algorithm>
-#include "registry.inc.hxx"
-#include "filejob.inc.hxx"
+#include <yuni/io/directory/info.h>
+#include <yuni/job/job.h>
+#include <yuni/job/queue/service.h>
+
+#include <antares/antares/antares.h>
 #include <antares/logs/logs.h>
+
+#include "filejob.inc.hxx"
+#include "registry.inc.hxx"
 
 using namespace Yuni;
 using namespace Antares;
 
 namespace FSWalker
 {
-//! Mutex for the global queueservice
-static Yuni::Mutex gsMutex;
+
+static std::mutex gsMutex; //!< Mutex for the global queueservice
 static bool queueserviceInitialized = false;
 //! Global Queue service
 static Job::QueueService queueservice;
@@ -101,12 +100,14 @@ protected:
     void waitForAllJobs() const;
 
 private:
-    class DirectoryContext final : private Yuni::NonCopyable<DirectoryContext>
+    class DirectoryContext final: private Yuni::NonCopyable<DirectoryContext>
     {
     public:
         using Stack = std::stack<DirectoryContext*>;
 
-        explicit DirectoryContext(const String& path) : info(path), cursor(info.begin())
+        explicit DirectoryContext(const String& path):
+            info(path),
+            cursor(info.begin())
         {
             // Currently bug
             // info.directory() = path;
@@ -116,6 +117,7 @@ private:
         IO::Directory::Info info;
         IO::Directory::Info::iterator cursor;
     };
+
     //! Directory stack
     std::list<String> pStack;
     //! Context
@@ -133,12 +135,14 @@ private:
 
 }; // class WalkerThread
 
-WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStatistics(stats)
+WalkerThread::WalkerThread(Statistics& stats):
+    pFileJob(nullptr),
+    pOriginalStatistics(stats)
 {
-    pJobCounter = std::make_shared<Atomic::Int<32>>();
+    pJobCounter = std::make_shared<std::atomic<int>>();
     pShouldStop = false;
 
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
     if (not queueserviceInitialized)
     {
         queueserviceInitialized = true;
@@ -146,11 +150,17 @@ WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStat
         // jobCount == 0
         uint core = System::CPU::Count();
         if (core < 3)
+        {
             core = 3;
+        }
         else if (core >= 16)
+        {
             core -= 4;
+        }
         else if (core > 4)
+        {
             core -= 1;
+        }
         logs.info() << "queueservice: " << core << " workers";
         queueservice.maximumThreadCount(core);
 
@@ -257,7 +267,7 @@ bool WalkerThread::triggerFileEvent(const String& filename,
                                     int64_t modified,
                                     uint64_t size)
 {
-    assert(pFileJob != NULL);
+    assert(pFileJob);
 
     // Statistics
     ++statistics.fileCount;
@@ -279,9 +289,12 @@ bool WalkerThread::triggerFileEvent(const String& filename,
                     // timeout in ms based on constants
                     timeout = maxFilesPerJob * maxJobsInQueueReducedPressure / 4,
                 };
+
                 SuspendMilliSeconds(timeout);
                 if (pShouldStop)
+                {
                     return false;
+                }
             } while (queueservice.waitingJobsCount() > maxJobsInQueueReducedPressure);
             logs.debug() << logPrefix << "  :: resuming";
         }
@@ -298,18 +311,22 @@ bool WalkerThread::triggerFileEvent(const String& filename,
 void WalkerThread::walk(const String& path)
 {
     if (not onDirectoryEnter(path)) // nothing to walk through
+    {
         return;
+    }
 
     // Should we take care of files ?
     bool handleSingleFiles = not events.file.access.empty();
 
     do
     {
-        assert(pContext.top() != NULL);
+        assert(pContext.top());
         auto& context = *(pContext.top());
 
         if (pShouldStop)
+        {
             break;
+        }
 
         // Iterating all files
         {
@@ -326,7 +343,9 @@ void WalkerThread::walk(const String& path)
                         auto size = context.cursor.size();
                         auto modified = context.cursor.modified();
                         if (not triggerFileEvent(filename, parent, modified, size))
+                        {
                             return;
+                        }
                     }
 
                     // next entry
@@ -342,7 +361,9 @@ void WalkerThread::walk(const String& path)
                         ++context.cursor;
 
                         if (pShouldStop)
+                        {
                             break;
+                        }
                     }
                     else
                     {
@@ -356,7 +377,9 @@ void WalkerThread::walk(const String& path)
             }
 
             if (reloop)
+            {
                 continue;
+            }
         }
 
         // Leaving directories
@@ -364,7 +387,9 @@ void WalkerThread::walk(const String& path)
         {
             onDirectoryLeave();
             if (pStack.empty() || pContext.top()->cursor.valid())
+            {
                 break;
+            }
         } while (true);
     } while (not pStack.empty());
 
@@ -419,7 +444,9 @@ void WalkerThread::waitForAllJobs() const
             Suspend(2);
             // checking if we were asked to stop
             if (pShouldStop)
+            {
                 break;
+            }
         } while (true);
     }
 }
@@ -434,11 +461,14 @@ void WalkerThread::dispatchJob(IJob::Ptr job) const
     queueservice += job;
 }
 
-Walker::Walker() : pJobCount(0)
+Walker::Walker():
+    pJobCount(0)
 {
 }
 
-Walker::Walker(const AnyString& logprefix) : pJobCount(0), pLogPrefix(logprefix)
+Walker::Walker(const AnyString& logprefix):
+    pJobCount(0),
+    pLogPrefix(logprefix)
 {
 }
 
@@ -472,19 +502,22 @@ void Walker::run()
     pStats.aborted = false;
 
     if (pDirectory.empty())
+    {
         return;
+    }
 
     // If there is no extensions, there is nothing to do
     if (pExtensions.empty())
+    {
         return;
+    }
 
     // Sorting extensions by they priority in the reverse order
     // higher priority must be executed first
     std::sort(pExtensions.begin(),
               pExtensions.end(),
-              [](const IExtension::Ptr& a, const IExtension::Ptr& b) {
-                  return b->priority() < a->priority();
-              });
+              [](const IExtension::Ptr& a, const IExtension::Ptr& b)
+              { return b->priority() < a->priority(); });
 
     // The process has aborted by default from now on
     pStats.aborted = true;
@@ -496,7 +529,7 @@ void Walker::run()
     thread->logPrefix = pLogPrefix;
     // Extensions
     DispatchJobEvent callback;
-    callback.bind(thread, &WalkerThread::dispatchJob);
+    callback = std::bind(&WalkerThread::dispatchJob, thread, std::placeholders::_1);
     thread->events.initialize(pExtensions, callback);
 
     // Starting the thread !
@@ -517,6 +550,8 @@ void Walker::retrieveStatistics(Statistics& out)
 void Walker::add(IExtension::Ptr extension)
 {
     if (!(!extension))
+    {
         pExtensions.push_back(extension);
+    }
 }
 } // namespace FSWalker

@@ -1,0 +1,36 @@
+name: Check cpp formatting
+
+on:
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+
+jobs:
+  build:
+    name: clang-format
+
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Print version
+        run: clang-format --version
+
+      - name: clang-format
+        run: cd src && ./format-code.sh
+
+      - name: git diff
+        run: |
+          DIFF=`git status --porcelain`
+          if [[ $DIFF ]]; then
+          echo "The following files are not well formatted"
+          echo "$DIFF"
+          exit 1
+          else
+          echo "Code is well formatted, congrats !"
+          fi

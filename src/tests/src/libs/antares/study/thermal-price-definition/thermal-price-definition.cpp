@@ -1,20 +1,39 @@
+/*
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #define BOOST_TEST_MODULE "test thermal price definition"
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
-#include <yuni/io/file.h>
 #include <filesystem>
 #include <fstream>
 
-#include <study.h>
-#include <antares/exception/LoadingError.hpp>
+#include <boost/test/unit_test.hpp>
+
+#include <yuni/io/file.h>
 
 #include <antares/checks/checkLoadedInputData.h>
-#include "cluster_list.h"
+#include <antares/exception/LoadingError.hpp>
+#include <antares/study/study.h>
+#include "antares/study/parts/thermal/cluster_list.h"
 
-const auto SEP = Yuni::IO::Separator;
 using namespace Antares::Data;
 using std::filesystem::temp_directory_path;
 
@@ -55,7 +74,8 @@ struct ThermalIniFile
 
 struct TimeSeriesFile
 {
-    TimeSeriesFile(const std::string& name, std::size_t size) : name_(name)
+    TimeSeriesFile(const std::string& name, std::size_t size):
+        name_(name)
     {
         folder = temp_directory_path();
         std::ofstream outfile(folder / name, std::ofstream::out | std::ofstream::trunc);
@@ -71,7 +91,8 @@ struct TimeSeriesFile
         std::filesystem::remove(folder / name_);
     }
 
-    std::string getFolder() {
+    std::string getFolder()
+    {
         return folder.string();
     }
 
@@ -90,12 +111,13 @@ void fillThermalEconomicTimeSeries(ThermalCluster* c)
 // =================
 // The fixture
 // =================
-struct FixtureFull : private ThermalIniFile
+struct FixtureFull: private ThermalIniFile
 {
     FixtureFull(const FixtureFull& f) = delete;
     FixtureFull(const FixtureFull&& f) = delete;
     FixtureFull& operator=(const FixtureFull& f) = delete;
     FixtureFull& operator=(const FixtureFull&& f) = delete;
+
     FixtureFull()
     {
         area = study->areaAdd("area");
@@ -123,6 +145,7 @@ struct FixtureStudyOnly
 
 // Here, we need the "lightweight fixture"
 BOOST_AUTO_TEST_SUITE(EconomicInputData_loadFromFolder)
+
 BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_OK, FixtureStudyOnly)
 {
     TimeSeriesFile fuelCostTSfile("fuelCost.txt", 8760);
@@ -132,7 +155,8 @@ BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_OK, FixtureStudyOnly)
     BOOST_CHECK_EQUAL(eco.fuelcost[0][1432], 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values, FixtureStudyOnly)
+BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values,
+                        FixtureStudyOnly)
 {
     TimeSeriesFile fuelCostTSfile("fuelCost.txt", 80);
     EconomicInputData eco;
@@ -148,10 +172,11 @@ BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_value
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(s)
+
 BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.mapping["some cluster"];
+    auto cluster = clusterList.findInAll("some cluster");
 
     BOOST_CHECK(cluster->startupCost == 70000.0);
     BOOST_CHECK(cluster->costgeneration == useCostTimeseries);
@@ -162,12 +187,9 @@ BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
-    auto cluster = area->thermal.list.mapping["some cluster"];
+    auto cluster = area->thermal.list.findInAll("some cluster");
 
-    cluster->series = new DataSeriesCommon;
-    cluster->series->timeSeries.reset(3, 8760);
-
-    area->thermal.prepareAreaWideIndexes();
+    cluster->series.timeSeries.reset(3, 8760);
 
     auto& ecoInput = cluster->ecoInput;
     ecoInput.co2cost.reset(3, 8760);
@@ -178,12 +200,9 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
 BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
-    auto cluster = area->thermal.list.mapping["some cluster"];
+    auto cluster = area->thermal.list.findInAll("some cluster");
 
-    cluster->series = new DataSeriesCommon;
-    cluster->series->timeSeries.reset(3, 8760);
-
-    area->thermal.prepareAreaWideIndexes();
+    cluster->series.timeSeries.reset(3, 8760);
 
     auto& ecoInput = cluster->ecoInput;
     ecoInput.co2cost.reset(2, 8760);
@@ -195,12 +214,9 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
 BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
-    auto cluster = area->thermal.list.mapping["some cluster"];
+    auto cluster = area->thermal.list.findInAll("some cluster");
 
-    cluster->series = new DataSeriesCommon;
-    cluster->series->timeSeries.reset(3, 8760);
-
-    area->thermal.prepareAreaWideIndexes();
+    cluster->series.timeSeries.reset(3, 8760);
 
     cluster->ecoInput.fuelcost.reset(3, 8760);
     cluster->ecoInput.co2cost.reset(3, 8760);
@@ -209,10 +225,11 @@ BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
     BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(study->areas));
 }
 
-BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour, FixtureFull)
+BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour,
+                        FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.mapping["some cluster"];
+    auto cluster = clusterList.findInAll("some cluster");
 
     cluster->costgeneration = Data::setManually;
     cluster->ComputeCostTimeSeries();
@@ -221,17 +238,19 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMar
     BOOST_CHECK_EQUAL(cluster->costsTimeSeries[0].marginalCostTS[6737], 23);
 }
 
-BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour, FixtureFull)
+BOOST_FIXTURE_TEST_CASE(
+  ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour,
+  FixtureFull)
 {
     TimeSeriesFile fuel("fuelCost.txt", 8760);
     TimeSeriesFile co2("CO2Cost.txt", 8760);
 
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.mapping["some cluster"];
+    auto cluster = clusterList.findInAll("some cluster");
 
     cluster->modulation.reset(1, 8760);
     cluster->ecoInput.loadFromFolder(*study, folder);
-    fillThermalEconomicTimeSeries(cluster.get());
+    fillThermalEconomicTimeSeries(cluster);
 
     cluster->ComputeCostTimeSeries();
 
@@ -242,7 +261,7 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAn
 BOOST_FIXTURE_TEST_CASE(computeMarketBidCost, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.mapping["some cluster"];
+    auto cluster = clusterList.findInAll("some cluster");
 
     BOOST_CHECK_CLOSE(cluster->computeMarketBidCost(1, 2, 1), 24.12, 0.001);
 }

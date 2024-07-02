@@ -1,30 +1,24 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "study.h"
+#include "antares/study/study.h"
 #include <yuni/core/system/environment.h>
 #include <antares/study/area/area.h>
 #include <antares/inifile/inifile.h>
@@ -35,7 +29,7 @@
 #include "../toolbox/components/map/component.h"
 #include "../toolbox/components/mainpanel.h"
 #include "../toolbox/jobs.h"
-#include <antares/solver.h>
+
 #include "../toolbox/execute/execute.h"
 #include "../windows/message.h"
 #include <antares/date/date.h>
@@ -55,6 +49,9 @@
 
 #include "main/internal-data.h"
 #include "antares/study/ui-runtimeinfos.h"
+#include "antares/utils/utils.h"
+
+#include <atomic>
 
 using namespace Yuni;
 
@@ -67,7 +64,7 @@ String LastPathForOpeningAFile;
 wxString gLastOpenedStudyFolder;
 
 //! Ref counter to allow memory flush
-Atomic::Int<32> gMemoryFlushRefCount = 0;
+std::atomic<int> gMemoryFlushRefCount = 0;
 
 Event<void()> OnStudyClosed;
 Event<void()> OnStudyLoaded;
@@ -570,13 +567,17 @@ void MarkTheStudyAsModified(const Data::Study::Ptr& study)
     if (!(!study) and study == GetCurrentStudy())
         MarkTheStudyAsModified();
 }
-
 void MarkTheStudyAsModified()
 {
     auto study = GetCurrentStudy();
     if (!(!study))
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wvolatile"
         ++gInMemoryRevisionIncrement;
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
         if (!gStudyHasBeenModified)
         {
             gStudyHasBeenModified = true;
@@ -776,7 +777,7 @@ SaveResult SaveStudy()
     bool shouldInvalidateStudy = false;
 
     // Detection for old format
-    if (study.header.version != Data::versionLatest)
+    if (study.header.version != Data::StudyVersion::latest())
     {
         Window::Message message(
           &mainFrm,
@@ -784,9 +785,9 @@ SaveResult SaveStudy()
           wxT("The study was saved with a previous version of Antares"),
           wxString() << wxT("You can choose either to upgrade the study folder or to save it\n")
                      << wxT("into a new folder.\n\nCurrent version of Antares : ")
-                     << wxStringFromUTF8(Data::VersionToCStr((Data::Version)Data::versionLatest))
+                     << Data::StudyVersion::latest().toString()
                      << wxT("\nFormat version of the study : ")
-                     << wxStringFromUTF8(Data::VersionToCStr((Data::Version)study.header.version)),
+                     << study.header.version.toString(),
           "images/misc/save.png");
         message.add(Window::Message::btnUpgrade);
         message.add(Window::Message::btnSaveAs, false, 15);
@@ -997,18 +998,18 @@ void OpenStudyFromFolder(wxString folder)
     // Getting the version of the study
     String studyfolder;
     wxStringToString(folder, studyfolder);
-    auto version = Data::StudyTryToFindTheVersion(studyfolder);
+    auto version = Data::StudyHeader::tryToFindTheVersion(studyfolder);
 
-    if (version == Data::versionUnknown)
+    if (version == Data::StudyVersion::unknown())
     {
         logs.error() << studyfolder << ": it does not seem a valid study";
         return;
     }
 
-    if ((uint)version > (uint)Data::versionLatest)
+    if (version > Data::StudyVersion::latest())
     {
         logs.error() << "A more recent version of Antares is required to open `" << studyfolder
-            << "`  (" << Data::VersionToCStr(version) << ')';
+            << "`  (" << version.toString() << ')';
         return;
     }
 
@@ -1278,8 +1279,14 @@ void RefreshListOfOutputsForTheCurrentStudy()
     if (IsGUIAboutToQuit())
         return;
 
-    auto study = GetCurrentStudy();
-    Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, study);
+    if (auto study = GetCurrentStudy(); CurrentStudyIsValid())
+    {
+        Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, *study);
+    }
+    else
+    {
+        ListOfOutputsForTheCurrentStudy.clear();
+    }
 
     auto* mainfrm = Forms::ApplWnd::Instance();
     if (mainfrm)

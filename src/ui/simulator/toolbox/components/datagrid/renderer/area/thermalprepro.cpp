@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "thermalprepro.h"
@@ -44,13 +38,13 @@ namespace Renderer
 **
 ** MTBF: Mean Time Between Failure
 */
-static double MTBFForFO(Antares::Data::PreproThermal* preproThermal, int y)
+static double MTBFForFO(Antares::Data::PreproAvailability* preproThermal, int y)
 {
     if (y >= 0 and y < DAYS_PER_YEAR and preproThermal)
     {
         auto& data = preproThermal->data;
-        double rate = data[Antares::Data::PreproThermal::foRate][y];
-        double duration = data[Antares::Data::PreproThermal::foDuration][y];
+        double rate = data[Antares::Data::PreproAvailability::foRate][y];
+        double duration = data[Antares::Data::PreproAvailability::foDuration][y];
 
         if (Math::Zero(rate))
             return std::numeric_limits<double>::infinity();
@@ -66,13 +60,13 @@ static double MTBFForFO(Antares::Data::PreproThermal* preproThermal, int y)
 **
 ** MTBF: Mean Time Between Failure
 */
-static double MTBFForPO(Antares::Data::PreproThermal* preproThermal, int y)
+static double MTBFForPO(Antares::Data::PreproAvailability* preproThermal, int y)
 {
     if (y >= 0 and y < DAYS_PER_YEAR and preproThermal)
     {
         auto& data = preproThermal->data;
-        double rate = data[Antares::Data::PreproThermal::poRate][y];
-        double duration = data[Antares::Data::PreproThermal::poDuration][y];
+        double rate = data[Antares::Data::PreproAvailability::poRate][y];
+        double duration = data[Antares::Data::PreproAvailability::poDuration][y];
 
         if (Math::Zero(rate))
             return std::numeric_limits<double>::infinity();
@@ -85,7 +79,7 @@ static double MTBFForPO(Antares::Data::PreproThermal* preproThermal, int y)
 
 ThermalClusterPrepro::ThermalClusterPrepro(wxWindow* control,
                                            Toolbox::InputSelector::ThermalCluster* notifier) :
- MatrixAncestorType(control), pPreproThermal(nullptr)
+ MatrixAncestorType(control)
 {
     if (notifier)
         notifier->onThermalClusterChanged.connect(
@@ -153,14 +147,14 @@ double ThermalClusterPrepro::cellNumericValue(int x, int y) const
 {
     if (x > 5)
     {
-        if (y >= 0 and y < DAYS_PER_YEAR and pPreproThermal)
+        if (y >= 0 and y < DAYS_PER_YEAR and pPreproAvailability)
         {
             switch (x)
             {
             case 6:
-                return MTBFForFO(pPreproThermal, y);
+                return MTBFForFO(pPreproAvailability, y);
             case 7:
-                return MTBFForPO(pPreproThermal, y);
+                return MTBFForPO(pPreproAvailability, y);
             }
         }
         return 0.;
@@ -189,8 +183,8 @@ bool ThermalClusterPrepro::cellValue(int x, int y, const String& value)
 void ThermalClusterPrepro::internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
 {
     pCluster = cluster;
-    pPreproThermal = (cluster) ? cluster->prepro : nullptr;
-    MatrixAncestorType::matrix((pPreproThermal) ? &pPreproThermal->data : nullptr);
+    pPreproAvailability = (cluster) ? cluster->prepro : nullptr;
+    MatrixAncestorType::matrix((pPreproAvailability) ? &pPreproAvailability->data : nullptr);
     onRefresh();
 }
 
@@ -208,14 +202,14 @@ IRenderer::CellStyle ThermalClusterPrepro::cellStyle(int col, int row) const
         // MTBF FO
         if (col == 6)
         {
-            double mtbf = MTBFForFO(pPreproThermal, row);
+            double mtbf = MTBFForFO(pPreproAvailability, row);
             if (Math::Zero(mtbf))
                 return IRenderer::cellStyleWarning;
         }
         // MTBF PO
         if (col == 7)
         {
-            double mtbf = MTBFForPO(pPreproThermal, row);
+            double mtbf = MTBFForPO(pPreproAvailability, row);
             if (Math::Zero(mtbf))
                 return IRenderer::cellStyleWarning;
         }

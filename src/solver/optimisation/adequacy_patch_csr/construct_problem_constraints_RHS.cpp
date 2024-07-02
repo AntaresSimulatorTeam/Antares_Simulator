@@ -1,34 +1,28 @@
 /*
-** Copyright 2007-2022 RTE
-** Authors: RTE-international / Redstork / Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "hourly_csr_problem.h"
 #include <antares/logs/logs.h>
-#include <sim_structure_probleme_economique.h>
-#include "adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {
@@ -92,7 +86,9 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
     {
         if (numberOfConstraintCsrHourlyBinding.find(CntCouplante)
             == numberOfConstraintCsrHourlyBinding.end())
+        {
             continue;
+        }
 
         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
           = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
@@ -100,12 +96,12 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
         int Cnt = numberOfConstraintCsrHourlyBinding[CntCouplante];
 
         // 1. The original RHS of bingding constraint
-        SecondMembre[Cnt]
-          = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[triggeredHour];
+        SecondMembre[Cnt] = MatriceDesContraintesCouplantes
+                              .SecondMembreDeLaContrainteCouplante[triggeredHour];
 
         // 2. RHS part 2: flow other than 2<->2
-        int NbInterco
-          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+        int NbInterco = MatriceDesContraintesCouplantes
+                          .NombreDInterconnexionsDansLaContrainteCouplante;
         for (int Index = 0; Index < NbInterco; Index++)
         {
             int Interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[Index];
@@ -116,22 +112,22 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
                 || problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                      != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                double ValueOfFlow
-                  = problemeHebdo_->ValeursDeNTC[triggeredHour].ValeurDuFlux[Interco];
+                double ValueOfFlow = problemeHebdo_->ValeursDeNTC[triggeredHour]
+                                       .ValeurDuFlux[Interco];
                 SecondMembre[Cnt] -= ValueOfFlow * Poids;
             }
         }
 
         // 3. RHS part 3: - cluster
-        int NbClusters
-          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+        int NbClusters = MatriceDesContraintesCouplantes
+                           .NombreDePaliersDispatchDansLaContrainteCouplante;
 
         for (int Index = 0; Index < NbClusters; Index++)
         {
             int Area = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[Index];
 
-            int IndexNumeroDuPalierDispatch
-              = MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[Index];
+            int IndexNumeroDuPalierDispatch = MatriceDesContraintesCouplantes
+                                                .NumeroDuPalierDispatch[Index];
 
             double Poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[Index];
 

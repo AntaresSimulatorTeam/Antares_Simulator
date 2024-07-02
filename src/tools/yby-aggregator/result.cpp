@@ -1,31 +1,26 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "result.h"
+
 #include "progress.h"
 
 using namespace Yuni;
@@ -44,7 +39,9 @@ void AppendToBuffer(StringT& out, const char* buffer)
 
 } // anonymous namespace
 
-CellColumnData::CellColumnData() : rows(nullptr), height(0)
+CellColumnData::CellColumnData():
+    rows(nullptr),
+    height(0)
 {
 }
 
@@ -56,11 +53,17 @@ CellColumnData::~CellColumnData()
 {
 }
 
-ResultMatrix::ResultMatrix() : columns(nullptr), width(0), heightAfterAggregation(0)
+ResultMatrix::ResultMatrix():
+    columns(nullptr),
+    width(0),
+    heightAfterAggregation(0)
 {
 }
 
-ResultMatrix::ResultMatrix(const ResultMatrix&) : columns(NULL), width(0), heightAfterAggregation(0)
+ResultMatrix::ResultMatrix(const ResultMatrix&):
+    columns(nullptr),
+    width(0),
+    heightAfterAggregation(0)
 {
 }
 
@@ -80,7 +83,9 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
 {
     IO::File::Stream file;
     if (!file.openRW(filename))
+    {
         return false;
+    }
 
     Progress::Total = heightAfterAggregation;
     String buffer;
@@ -99,19 +104,25 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         {
             buffer << '\t';
             for (uint i = 0; i < width; ++i)
+            {
                 buffer << '\t' << "year";
+            }
             buffer << '\n';
 
             buffer << '\t';
             for (uint i = 0; i < width; ++i)
+            {
                 buffer << '\t' << (i + 1);
+            }
             buffer << '\n';
         }
         for (uint r = 0; r != 1; ++r)
         {
             buffer << '\t';
             for (uint i = 0; i < width; ++i)
+            {
                 buffer << '\t';
+            }
             buffer << '\n';
         }
     }
@@ -122,9 +133,12 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         {
             dataBufferHeight = 100
         };
+
         CellData* dataBuffer[dataBufferHeight];
         for (uint d = 0; d != dataBufferHeight; ++d)
+        {
             dataBuffer[d] = new CellData[width];
+        }
 
         uint dataBufferOffset = 0;
         for (uint y = 0; y != heightAfterAggregation; ++y)
@@ -139,8 +153,9 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
                         for (uint offset = 0; offset != maxH; ++offset)
                         {
                             assert(offset + y < columns[x].height);
-                            memcpy(
-                              dataBuffer[offset][x], columns[x].rows[offset + y], maxSizePerCell);
+                            memcpy(dataBuffer[offset][x],
+                                   columns[x].rows[offset + y],
+                                   maxSizePerCell);
                         }
                     }
                     else
@@ -148,8 +163,9 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
                         for (uint offset = 0; offset != dataBufferHeight; ++offset)
                         {
                             assert(offset + y < columns[x].height);
-                            memcpy(
-                              dataBuffer[offset][x], columns[x].rows[offset + y], maxSizePerCell);
+                            memcpy(dataBuffer[offset][x],
+                                   columns[x].rows[offset + y],
+                                   maxSizePerCell);
                         }
                     }
                 }
@@ -171,11 +187,15 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
             buffer << '\n';
             ++Progress::Current;
             if (++dataBufferOffset == dataBufferHeight)
+            {
                 dataBufferOffset = 0;
+            }
         }
 
         for (uint d = 0; d != dataBufferHeight; ++d)
+        {
             delete[] dataBuffer[d];
+        }
     }
     else
     {
@@ -183,12 +203,16 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         {
             buffer << '\t' << (1 + y) << '\t';
             if (columns[0].rows)
+            {
                 AppendToBuffer(buffer, columns[0].rows[y]);
+            }
             for (uint x = 1; x < width; ++x)
             {
                 buffer << '\t';
                 if (columns[x].rows)
+                {
                     AppendToBuffer(buffer, columns[x].rows[y]);
+                }
 
                 if (buffer.size() > 1024 * 1024 * 8)
                 {
@@ -202,6 +226,8 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
     }
 
     if (not buffer.empty())
+    {
         file << buffer;
+    }
     return true;
 }

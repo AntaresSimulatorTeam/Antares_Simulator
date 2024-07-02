@@ -1,53 +1,52 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "output.h"
+#include "antares/study/output.h"
+
+#include <filesystem>
+
 #include <yuni/io/directory/iterator.h>
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
-class OutputFolderIterator : public IO::Directory::IIterator<true>
+class OutputFolderIterator: public IO::Directory::IIterator<true>
 {
 public:
     using IteratorType = IO::Directory::IIterator<true>;
     using Flow = IO::Flow;
 
 public:
-    OutputFolderIterator(Data::Output::List& list) : pList(list)
+    OutputFolderIterator(Data::Output::List& list):
+        pList(list)
     {
     }
+
     virtual ~OutputFolderIterator()
     {
         // For code robustness and to avoid corrupt vtable
@@ -74,7 +73,9 @@ protected:
         {
             auto info = std::make_shared<Data::Output>(parent);
             if (info->valid())
+            {
                 pList.push_back(info);
+            }
             return IO::flowSkip;
         }
         return IO::flowContinue;
@@ -88,8 +89,12 @@ private:
 
 } // anonymous namespace
 
-Output::Output(const AnyString& folder) :
- version(0), timestamp(0), mode(Data::stdmEconomy), menuID(-1), viewMenuID(-1), outputViewerID(-1)
+Output::Output(const AnyString& folder):
+    timestamp(0),
+    mode(Data::SimulationMode::Economy),
+    menuID(-1),
+    viewMenuID(-1),
+    outputViewerID(-1)
 {
     loadFromFolder(folder);
 }
@@ -97,7 +102,7 @@ Output::Output(const AnyString& folder) :
 bool Output::valid() const
 {
     // The outputs as we know them was first introduced in Antares 3.0
-    return (uint)version <= (uint)Data::versionLatest;
+    return version <= Data::StudyVersion::latest();
 }
 
 bool Output::loadFromFolder(const AnyString& folder)
@@ -109,8 +114,7 @@ bool Output::loadFromFolder(const AnyString& folder)
     title.clear();
     name.clear();
     path.clear();
-    version = 0;
-    mode = Data::stdmUnknown;
+    mode = Data::SimulationMode::Unknown;
 
     // Load the INI file in memory
     IniFile ini;
@@ -135,33 +139,39 @@ bool Output::loadFromFolder(const AnyString& folder)
     {
         if (p->key == "version")
         {
-            version = p->value.to<uint>();
+            version.fromString(p->value);
 
             // Early checks about the version
-            if (version > (uint)Data::versionLatest)
+            if (version > Data::StudyVersion::latest())
             {
-                version = 0;
+                logs.warning() << "Study Version greater then supported";
                 return false;
             }
         }
         else
         {
             if (p->key == "title")
+            {
                 title = p->value;
+            }
             else
             {
                 if (p->key == "mode")
                 {
-                    StringToStudyMode(mode, p->value);
+                    StringToSimulationMode(mode, p->value);
                 }
                 else
                 {
                     if (p->key == "timestamp")
+                    {
                         timestamp = p->value.to<uint>();
+                    }
                     else
                     {
                         if (p->key == "name")
+                        {
                             name = p->value;
+                        }
                     }
                 }
             }
@@ -172,7 +182,9 @@ bool Output::loadFromFolder(const AnyString& folder)
 
     // Post-processing about the title
     if (not name.empty())
+    {
         title << " - " << name;
+    }
 
     return true;
 }
@@ -183,13 +195,12 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
 
     if (not study.folder.empty())
     {
-        String folder;
-        folder << study.folder << SEP << "output";
+        fs::path folder = fs::path(study.folder.c_str()) / "output";
 
-        if (IO::Directory::Exists(folder))
+        if (fs::exists(folder))
         {
             OutputFolderIterator iterator(out);
-            iterator.add(folder);
+            iterator.add(folder.string());
             iterator.start();
             iterator.wait(15000); // 15s - arbitrary
         }
@@ -206,5 +217,4 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

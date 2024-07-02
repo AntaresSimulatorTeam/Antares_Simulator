@@ -1,96 +1,75 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+#include "antares/solver/misc/options.h"
+
+#include <algorithm>
+#include <cassert>
+#include <fstream>
+#include <limits>
+#include <string.h>
 
 #include <yuni/yuni.h>
-#include <yuni/core/system/process.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
 
-#include <antares/logs/logs.h>
-#include <antares/study/study.h>
-#include <cassert>
-#include <string.h>
-#include <limits>
-#include <algorithm>
-
-#include "options.h"
-#include "../config.h"
-
-#include "../../config.h"
-
+#include <antares/antares/constants.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/Enum.hpp>
-#include <antares/constants.h>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include "antares/antares/Enum.hpp"
+#include "antares/config/config.h"
+#include "antares/solver/utils/ortools_utils.h"
 
-#include "utils/ortools_utils.h"
-
-using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-static std::string availableOrToolsSolversString()
-{
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-    std::string availableSolverListStr;
-    for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
-    {
-        availableSolverListStr += *it + ";";
-    }
-    // Remove last semicolumn
-    if (!availableSolverListStr.empty())
-        availableSolverListStr.pop_back();
-    return availableSolverListStr;
-}
-
-std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
-                                             Antares::Data::StudyLoadOptions& options)
+std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
 {
     settings.reset();
 
-    auto parser = std::unique_ptr<GetOpt::Parser>(new GetOpt::Parser());
+    auto parser = std::make_unique<Yuni::GetOpt::Parser>();
 
-    parser->addParagraph(String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
+    parser->addParagraph(Yuni::String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
 
     // Simulation mode
     parser->addParagraph("Simulation");
     // --input
     parser->addFlag(options.studyFolder, 'i', "input", "Study folder");
     // --expansion
-    parser->addFlag(
-      options.forceExpansion, ' ', "expansion", "Force the simulation in expansion mode");
+    parser->addFlag(options.forceExpansion,
+                    ' ',
+                    "expansion",
+                    "Force the simulation in expansion mode");
     // --economy
     parser->addFlag(options.forceEconomy, ' ', "economy", "Force the simulation in economy mode");
     // --adequacy
-    parser->addFlag(
-      options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
+    parser->addFlag(options.forceAdequacy,
+                    ' ',
+                    "adequacy",
+                    "Force the simulation in adequacy mode");
     // --parallel
-    parser->addFlag(
-      options.enableParallel, ' ', "parallel", "Enable the parallel computation of MC years");
+    parser->addFlag(options.enableParallel,
+                    ' ',
+                    "parallel",
+                    "Enable the parallel computation of MC years");
     // --force-parallel
     parser->add(options.maxNbYearsInParallel,
                 ' ',
@@ -99,24 +78,39 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
 
     // add option for ortools use
     // --use-ortools
-    parser->addFlag(
-      options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
+    parser->addFlag(options.optOptions.ortoolsUsed,
+                    ' ',
+                    "use-ortools",
+                    "Use ortools library to launch solver");
 
     //--ortools-solver
-    parser->add(options.ortoolsSolver,
+    parser->add(options.optOptions.ortoolsSolver,
                 ' ',
                 "ortools-solver",
                 "Ortools solver used for simulation (only available with use-ortools "
                 "option)\nAvailable solver list : "
                   + availableOrToolsSolversString());
 
+    //--xpress-parameters
+    parser->add(
+      options.optOptions.solverParameters,
+      ' ',
+      "solver-parameters",
+      "Set xpress solver specific parameters. The specified string must be wrapped into quotes: "
+      "--solver-parameters=\"param1 value1 param2 value2\". The syntax of parameters is solver "
+      "specfic, examples are given in Antares-Simulator online documentation.");
+
     parser->addParagraph("\nParameters");
     // --name
-    parser->add(
-      settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
+    parser->add(settings.simulationName,
+                'n',
+                "name",
+                "Set the name of the new simulation to VALUE");
     // --generators-only
-    parser->addFlag(
-      settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
+    parser->addFlag(settings.tsGeneratorsOnly,
+                    'g',
+                    "generators-only",
+                    "Run the time-series generators only");
 
     // --comment-file
     parser->add(settings.commentFile,
@@ -126,8 +120,10 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --force
     parser->addFlag(settings.ignoreWarningsErrors, 'f', "force", "Ignore all warnings at loading");
     // --no-output
-    parser->addFlag(
-      settings.noOutput, ' ', "no-output", "Do not write the results in the output folder");
+    parser->addFlag(settings.noOutput,
+                    ' ',
+                    "no-output",
+                    "Do not write the results in the output folder");
     // --year
     parser->add(options.nbYears, 'y', "year", "Override the number of MC years");
     // --year-by-year
@@ -174,21 +170,30 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                     "named-mps-problems",
                     "Export named constraints and variables in mps (both optim).");
 
+    // --solver-logs
+    parser->addFlag(options.optOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
+
     parser->addParagraph("\nMisc.");
     // --progress
-    parser->addFlag(
-      settings.displayProgression, ' ', "progress", "Display the progress of each task");
+    parser->addFlag(settings.displayProgression,
+                    ' ',
+                    "progress",
+                    "Display the progress of each task");
 
     // --pid
     parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
 
     // --list-solvers
-    parser->addFlag(
-      options.listSolvers, 'l', "list-solvers", "List available OR-Tools solvers, then exit.");
+    parser->addFlag(options.listSolvers,
+                    'l',
+                    "list-solvers",
+                    "List available OR-Tools solvers, then exit.");
     // --version
 
-    parser->addFlag(
-      options.displayVersion, 'v', "version", "Print the version of antares-solver and exit");
+    parser->addFlag(options.displayVersion,
+                    'v',
+                    "version",
+                    "Print the version of antares-solver and exit");
 
     // The last argument is the study folder.
     // Unlike all other arguments, it does not need to be given after a --flag.
@@ -202,24 +207,26 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     const auto& optPID = settings.PID;
     if (!optPID.empty())
     {
-        IO::File::Stream pidfile;
-        if (pidfile.openRW(optPID))
-            pidfile << ProcessID();
+        if (std::ofstream pidfile(optPID); pidfile.is_open())
+        {
+            pidfile << getpid();
+        }
         else
+        {
             throw Error::WritingPID(optPID);
+        }
     }
 
     // Simulation name
     if (!options.simulationName.empty())
-        settings.simulationName = options.simulationName;
-
-    if (options.nbYears > MAX_NB_MC_YEARS)
     {
-        throw Error::InvalidNumberOfMCYears(options.nbYears);
+        settings.simulationName = options.simulationName;
     }
 
     if (options.maxNbYearsInParallel)
+    {
         options.forceParallel = true;
+    }
 
     if (options.enableParallel && options.forceParallel)
     {
@@ -231,11 +238,15 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
         settings.simplexOptimRange.trim(" \t");
         settings.simplexOptimRange.toLower();
         if (settings.simplexOptimRange == "week")
+        {
             options.simplexOptimizationRange = Data::sorWeek;
+        }
         else
         {
             if (settings.simplexOptimRange == "day")
+            {
                 options.simplexOptimizationRange = Data::sorDay;
+            }
             else
             {
                 throw Error::InvalidOptimizationRange();
@@ -244,17 +255,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkOrtoolsSolver(options);
-
-    // PID
-    if (!optPID.empty())
-    {
-        IO::File::Stream pidfile;
-        if (pidfile.openRW(optPID))
-            pidfile << ProcessID();
-        else
-            throw Error::WritingPID(optPID);
-    }
+    checkOrtoolsSolver(options.optOptions);
 
     // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
@@ -263,51 +264,43 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkOrtoolsSolver(Data::StudyLoadOptions& options)
+void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
-    std::string baseSolver = "sirius";
-    if (options.ortoolsUsed)
+    if (optOptions.ortoolsUsed)
     {
+        const std::string& solverName = optOptions.ortoolsSolver;
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-        if (availableSolverList.empty())
-        {
-            throw Error::InvalidSolver(options.ortoolsSolver);
-        }
 
         // Check if solver is available
-        bool found
-          = (std::find(
-               availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
-             != availableSolverList.end());
-
+        bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), solverName)
+                      != availableSolverList.end());
         if (!found)
         {
-            logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
-                           << "'. reset to " << baseSolver;
-            options.ortoolsSolver = baseSolver;
+            throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
         }
     }
 }
 
-void Settings::checkAndSetStudyFolder(Yuni::String folder)
+void Settings::checkAndSetStudyFolder(const std::string& folder)
 {
     // The study folder
     if (folder.empty())
+    {
         throw Error::NoStudyProvided();
+    }
 
     // Making the path absolute
-    String abspath;
-    IO::MakeAbsolute(abspath, folder);
-    IO::Normalize(folder, abspath);
+    std::filesystem::path abspath = std::filesystem::absolute(folder);
+    abspath = abspath.lexically_normal();
 
     // Checking if the path exists
-    if (!IO::Directory::Exists(folder))
+    if (!std::filesystem::exists(abspath))
     {
         throw Error::StudyFolderDoesNotExist(folder);
     }
 
     // Copying the result
-    studyFolder = folder;
+    studyFolder = abspath.string();
 }
 
 void Settings::reset()

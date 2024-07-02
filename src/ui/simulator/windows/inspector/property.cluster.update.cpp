@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include "property.cluster.update.h"
 #include <antares/study/area/constants.h>
 #include <ui/simulator/application/study.h>
@@ -80,7 +100,7 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
     using SetType = std::set<AreaType>;
     SetType set;
 
-    for (auto cluster : clusters)
+    for (auto& cluster : clusters)
     {
         if (cluster->group() != name)
         {
@@ -102,7 +122,7 @@ bool ClusterUpdater::changeUnit(const wxVariant& value)
 {
     using unitT = decltype(Antares::Data::ThermalCluster::unitCount);
     const auto nbUnits = static_cast<unitT>(value.GetLong());
-    for (auto cluster : clusters)
+    for (auto& cluster : clusters)
         cluster->unitCount = nbUnits;
 
     // refresh the installed capacity
@@ -119,13 +139,13 @@ bool ClusterUpdater::changeNominalCapacity(const wxVariant& value)
     double d = value.GetDouble();
     if (d < 0.)
     {
-        for (auto cluster : clusters)
+        for (auto& cluster : clusters)
             cluster->nominalCapacity = 0.;
         pFrame.delayApply();
     }
     else
     {
-        for (auto cluster : clusters)
+        for (auto& cluster : clusters)
             cluster->nominalCapacity = d;
     }
 
@@ -141,7 +161,7 @@ bool ClusterUpdater::changeNominalCapacity(const wxVariant& value)
 bool ClusterUpdater::changeEnabled(const wxVariant& value)
 {
     const bool d = value.GetBool();
-    for (auto cluster : clusters)
+    for (auto& cluster : clusters)
         cluster->enabled = d;
     // Notify
     OnCommonSettingsChanged();

@@ -1,35 +1,31 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+
+#include "antares/paths/list.h"
+
+#include <ctime>
 
 #include <yuni/yuni.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/directory/iterator.h>
-#include "antares/paths/list.h"
-#include <ctime>
 #ifdef YUNI_OS_WINDOWS
 #include <direct.h>
 #endif
@@ -68,14 +64,18 @@ size_t PathList::totalSizeInBytes() const
 
     const ItemList::const_iterator end = item.end();
     for (ItemList::const_iterator i = item.begin(); i != end; ++i)
+    {
         size += i->second.size;
+    }
     return size;
 }
 
 uint PathList::internalDeleteAllEmptyFolders()
 {
     if (!pTmp || item.empty())
+    {
         return 0;
+    }
 
     Clob buffer;
     uint count = 0;
@@ -89,9 +89,13 @@ uint PathList::internalDeleteAllEmptyFolders()
             buffer.clear() << pTmp << SEP << i->first;
 
             if (IO::Directory::Remove(buffer) || !IO::Directory::Exists(buffer))
+            {
                 ++count;
+            }
             else
+            {
                 logs.warning() << "I/O error: could not remove " << buffer;
+            }
         }
     }
     return count;
@@ -100,7 +104,9 @@ uint PathList::internalDeleteAllEmptyFolders()
 uint PathList::internalDeleteAllFiles()
 {
     if (!pTmp || item.empty())
+    {
         return 0;
+    }
 
     Clob buffer;
     uint count = 0;
@@ -113,25 +119,32 @@ uint PathList::internalDeleteAllFiles()
         {
             buffer.clear() << pTmp << SEP << i->first;
             if (IO::File::Delete(buffer) || !IO::File::Exists(buffer))
+            {
                 ++count;
+            }
             else
+            {
                 logs.warning() << "I/O error: could not delete " << buffer;
+            }
         }
     }
     return count;
 }
 
-class PathListIterator : public IO::Directory::IIterator<true>
+class PathListIterator: public IO::Directory::IIterator<true>
 {
 public:
     using IteratorType = IO::Directory::IIterator<true>;
     using Flow = IO::Flow;
 
 public:
-    PathListIterator(PathList& l, const PathList& e, Yuni::Bind<bool(uint)>& progress) :
-     list(l), exclude(e), onProgress(progress)
+    PathListIterator(PathList& l, const PathList& e, std::function<bool(uint)>& progress):
+        list(l),
+        exclude(e),
+        onProgress(progress)
     {
     }
+
     virtual ~PathListIterator()
     {
         // For code robustness and to avoid corrupt vtable
@@ -158,7 +171,9 @@ protected:
     virtual Flow onFile(const String& filename, const String&, const String&, uint64_t size)
     {
         if (pathListOptNotFound == exclude.find(filename.c_str() + offset))
+        {
             list.add(filename.c_str() + offset, (size_t)size);
+        }
         return IO::flowContinue;
     }
 
@@ -166,7 +181,7 @@ private:
     PathList& list;
     const PathList& exclude;
     uint offset;
-    Yuni::Bind<bool(uint)>& onProgress;
+    std::function<bool(uint)>& onProgress;
 };
 
 void PathList::internalAddFromFolder(const Clob& folder, const PathList& exclude)

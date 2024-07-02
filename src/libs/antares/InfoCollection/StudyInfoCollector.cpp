@@ -1,14 +1,37 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 //
 // Created by marechaljas on 22/08/23.
 //
 
 #include "antares/infoCollection/StudyInfoCollector.h"
+
+#include <antares/config/config.h>
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/benchmarking/file_content.h"
-#include "../../../config.h"
 
 using namespace Antares::Data;
-namespace Benchmarking {
+
+namespace Benchmarking
+{
 
 // Collecting data study
 // ---------------------------
@@ -43,7 +66,9 @@ void StudyInfoCollector::performedYearsCountToFileContent(FileContent& file_cont
     for (uint i = 0; i < study_.parameters.nbYears; i++)
     {
         if (study_.parameters.yearsFilter[i])
+        {
             nbPerformedYears++;
+        }
     }
 
     // Adding an item related to number of performed years to the file content
@@ -58,14 +83,8 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     auto end = study_.areas.end();
     for (auto i = study_.areas.begin(); i != end; ++i)
     {
-        Area& area = *(i->second);
-        auto end = area.thermal.list.end();
-        for (auto i = area.thermal.list.begin(); i != end; ++i)
-        {
-            auto& cluster = i->second;
-            if (cluster->enabled)
-                nbEnabledThermalClusters++;
-        }
+        const Area& area = *(i->second);
+        nbEnabledThermalClusters += area.thermal.list.enabledAndNotMustRunCount();
     }
 
     // Adding an item related to number of enabled thermal clusters to the file content
@@ -74,27 +93,27 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
 
 void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
 {
-    auto activeContraints = study_.bindingConstraints.activeContraints();
-    auto nbEnabledBC = activeContraints.size();
+    auto activeConstraints = study_.bindingConstraints.activeConstraints();
+    auto nbEnabledBC = activeConstraints.size();
     unsigned nbEnabledHourlyBC(0);
     unsigned nbEnabledDailyBC(0);
     unsigned nbEnabledWeeklyBC(0);
 
-    for (uint i = 0; i < nbEnabledBC; i++)
+    for (const auto& bc: activeConstraints)
     {
-        switch (activeContraints[i]->type())
+        switch (bc->type())
         {
-            case BindingConstraint::Type::typeHourly:
-                nbEnabledHourlyBC++;
-                break;
-            case BindingConstraint::Type::typeDaily:
-                nbEnabledDailyBC++;
-                break;
-            case BindingConstraint::Type::typeWeekly:
-                nbEnabledWeeklyBC++;
-                break;
-            default:
-                break;
+        case BindingConstraint::Type::typeHourly:
+            nbEnabledHourlyBC++;
+            break;
+        case BindingConstraint::Type::typeDaily:
+            nbEnabledDailyBC++;
+            break;
+        case BindingConstraint::Type::typeWeekly:
+            nbEnabledWeeklyBC++;
+            break;
+        default:
+            break;
         }
     }
 
@@ -106,8 +125,8 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
 
 void StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
 {
-    const char* unitCommitment
-            = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
+    const char* unitCommitment = UnitCommitmentModeToCString(
+      study_.parameters.unitCommitment.ucMode);
     file_content.addItemToSection("study", "unit commitment", unitCommitment);
 }
 
@@ -119,25 +138,25 @@ void StudyInfoCollector::maxNbYearsInParallelToFileContent(FileContent& file_con
 void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 {
     // Example : 8.3.0 -> 830
-    const unsigned int version
-            = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
+    const unsigned int version = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO
+                                 + ANTARES_VERSION_BUILD;
 
     file_content.addItemToSection("study", "antares version", version);
 }
 
 void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
 {
-    const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
+    const bool& ortoolsUsed = study_.parameters.optOptions.ortoolsUsed;
     file_content.addItemToSection("study", "ortools used", ortoolsUsed ? "true" : "false");
 }
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
+    const bool& ortoolsUsed = study_.parameters.optOptions.ortoolsUsed;
     std::string ortoolsSolver = "none";
     if (ortoolsUsed)
     {
-        ortoolsSolver = study_.parameters.ortoolsSolver;
+        ortoolsSolver = study_.parameters.optOptions.ortoolsSolver;
     }
     file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
 }
@@ -148,8 +167,9 @@ void SimulationInfoCollector::toFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
     file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);
-    file_content.addItemToSection(
-            "optimization problem", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
+    file_content.addItemToSection("optimization problem",
+                                  "non-zero coefficients",
+                                  opt_info_.nbNonZeroCoeffs);
 }
 
-}
+} // namespace Benchmarking

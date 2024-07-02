@@ -1,38 +1,31 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <math.h>
-#include "opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
-
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/simulation.h"
 
 constexpr double ZERO_PMIN = 1.e-2;
 
@@ -49,13 +42,17 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
     for (int hour = 0; hour < PremierPdt; hour++)
     {
         if (NbGrpCourbeGuide[hour] > NbMx)
+        {
             NbMx = NbGrpCourbeGuide[hour];
+        }
     }
 
     for (int hour = DernierPdt; hour < NombreDePasDeTemps; hour++)
     {
         if (NbGrpCourbeGuide[hour] > NbMx)
+        {
             NbMx = NbGrpCourbeGuide[hour];
+        }
     }
 
     for (int hour = 0; hour < PremierPdt; hour++)
@@ -78,7 +75,9 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
         for (countMUT = 0; countMUT < MUTetMDT && hour < DernierPdt; countMUT++, hour++)
         {
             if (NbGrpCourbeGuide[hour] > NbMx)
+            {
                 NbMx = NbGrpCourbeGuide[hour];
+            }
         }
 
         hour -= countMUT;
@@ -101,8 +100,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
     for (uint32_t Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
         const std::vector<double>& PminDuPalierThermiquePendantUneHeure
           = PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;
         const std::vector<double>& TailleUnitaireDUnGroupeDuPalierThermique
@@ -114,15 +112,18 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
         for (int Palier = 0; Palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; Palier++)
         {
-            PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDispoEtCout
-              = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[Palier];
-            std::vector<double>& PuissanceMinDuPalierThermique
-              = PuissanceDispoEtCout.PuissanceMinDuPalierThermique;
+            PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDispoEtCout = PaliersThermiquesDuPays
+                                                                         .PuissanceDisponibleEtCout
+                                                                           [Palier];
+            std::vector<double>& PuissanceMinDuPalierThermique = PuissanceDispoEtCout
+                                                                   .PuissanceMinDuPalierThermique;
             const std::vector<double>& PuissanceDisponibleDuPalierThermique
               = PuissanceDispoEtCout.PuissanceDisponibleDuPalierThermique;
 
             if (fabs(PminDuPalierThermiquePendantUneHeure[Palier]) < ZERO_PMIN)
+            {
                 continue;
+            }
 
             for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
@@ -130,13 +131,19 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
                 NbGrpCourbeGuide[Pdt] = 0;
                 if (fabs(P) < ZERO_PMIN)
+                {
                     continue;
+                }
 
                 if (TailleUnitaireDUnGroupeDuPalierThermique[Palier] > ZERO_PMIN)
-                    NbGrpCourbeGuide[Pdt]
-                      = (int)ceil(P / TailleUnitaireDUnGroupeDuPalierThermique[Palier]);
+                {
+                    NbGrpCourbeGuide[Pdt] = (int)ceil(
+                      P / TailleUnitaireDUnGroupeDuPalierThermique[Palier]);
+                }
                 else
+                {
                     NbGrpCourbeGuide[Pdt] = (int)ceil(P);
+                }
             }
 
             double EcartOpt = LINFINI_ANTARES;
@@ -146,17 +153,25 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
             int IntervalleDAjustement = MUTetMDT;
             if (NombreDePasDeTemps - MUTetMDT < IntervalleDAjustement)
+            {
                 IntervalleDAjustement = NombreDePasDeTemps - MUTetMDT;
+            }
 
             if (IntervalleDAjustement < 0)
+            {
                 IntervalleDAjustement = 0;
+            }
 
             for (int hour = 0; hour <= IntervalleDAjustement; hour++)
             {
                 int PremierPdt = hour;
                 int DernierPdt = NombreDePasDeTemps - IntervalleDAjustement + hour;
-                double Ecart = OPT_CalculerAireMaxPminJour(
-                  PremierPdt, DernierPdt, MUTetMDT, NombreDePasDeTemps, NbGrpCourbeGuide, NbGrpOpt);
+                double Ecart = OPT_CalculerAireMaxPminJour(PremierPdt,
+                                                           DernierPdt,
+                                                           MUTetMDT,
+                                                           NombreDePasDeTemps,
+                                                           NbGrpCourbeGuide,
+                                                           NbGrpOpt);
                 if (Ecart < EcartOpt)
                 {
                     EcartOpt = Ecart;
@@ -165,23 +180,34 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
             }
 
             if (iOpt < 0)
+            {
                 continue;
+            }
 
             int PremierPdt = iOpt;
             int DernierPdt = NombreDePasDeTemps - IntervalleDAjustement + iOpt;
 
-            OPT_CalculerAireMaxPminJour(
-              PremierPdt, DernierPdt, MUTetMDT, NombreDePasDeTemps, NbGrpCourbeGuide, NbGrpOpt);
+            OPT_CalculerAireMaxPminJour(PremierPdt,
+                                        DernierPdt,
+                                        MUTetMDT,
+                                        NombreDePasDeTemps,
+                                        NbGrpCourbeGuide,
+                                        NbGrpOpt);
 
             for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
                 if (PminDuPalierThermiquePendantUneHeure[Palier] * NbGrpOpt[Pdt]
                     > PuissanceMinDuPalierThermique[Pdt])
-                    PuissanceMinDuPalierThermique[Pdt]
-                      = PminDuPalierThermiquePendantUneHeure[Palier] * NbGrpOpt[Pdt];
+                {
+                    PuissanceMinDuPalierThermique[Pdt] = PminDuPalierThermiquePendantUneHeure
+                                                           [Palier]
+                                                         * NbGrpOpt[Pdt];
+                }
 
                 if (PuissanceMinDuPalierThermique[Pdt] > PuissanceDisponibleDuPalierThermique[Pdt])
+                {
                     PuissanceMinDuPalierThermique[Pdt] = PuissanceDisponibleDuPalierThermique[Pdt];
+                }
             }
         }
     }

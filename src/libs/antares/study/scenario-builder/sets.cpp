@@ -1,45 +1,37 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "sets.h"
-#include "../study.h"
+#include "antares/study/scenario-builder/sets.h"
+
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
+namespace Antares::Data::ScenarioBuilder
 {
-namespace Data
-{
-namespace ScenarioBuilder
-{
-Sets::Sets() : pStudy(nullptr)
+Sets::Sets():
+    pStudy(nullptr)
 {
     inUpdaterMode = false;
 }
@@ -63,22 +55,30 @@ void Sets::clear()
 bool Sets::loadFromStudy(Study& study)
 {
     if (not study.usedByTheSolver)
+    {
         logs.info() << "  Loading data for the scenario builder overlay";
+    }
 
     setStudy(study);
 
     // Loading from the INI file
-    String filename;
-    filename << study.folder << SEP << "settings" << SEP << "scenariobuilder.dat";
+    std::filesystem::path filename = std::filesystem::path(study.folder.c_str()) / "settings"
+                                     / "scenariobuilder.dat";
     bool r = true;
     // If the source code below is changed, please change it in loadFromINIFile too
-    if (IO::Exists(filename))
-        r = internalLoadFromINIFile(filename);
+    if (std::filesystem::exists(filename))
+    {
+        r = internalLoadFromINIFile(filename.string());
+    }
     else
+    {
         pMap.clear();
+    }
 
     if (pMap.empty())
+    {
         createNew("Default Ruleset");
+    }
     return r;
 }
 
@@ -90,7 +90,9 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
     RulesScenarioName id = name;
     id.toLower();
     if (exists(id))
+    {
         return nullptr;
+    }
 
     // The rule set does not exist, creating a new empty one
     auto newRulesSet = std::make_shared<Rules>(*pStudy);
@@ -106,13 +108,19 @@ Rules::Ptr Sets::rename(const RulesScenarioName& lname, const RulesScenarioName&
     RulesScenarioName id = newname;
     id.toLower();
     if (id == lname)
+    {
         return find(lname);
+    }
     if (exists(id))
+    {
         return nullptr;
+    }
 
     Rules::Map::iterator i = pMap.find(lname);
     if (i == pMap.end())
+    {
         return nullptr;
+    }
     Rules::Ptr rules = i->second;
     pMap.erase(i);
     rules->setName(newname);
@@ -124,11 +132,15 @@ bool Sets::remove(const RulesScenarioName& lname)
 {
     // Checking in a first time if the name already exists
     if (lname.empty())
+    {
         return true;
+    }
 
     Rules::Map::iterator i = pMap.find(lname);
     if (i == pMap.end())
+    {
         return false;
+    }
     pMap.erase(i);
     return true;
 }
@@ -151,7 +163,9 @@ bool Sets::internalSaveToIniFile(const AnyString& filename) const
 
     // There is no ruleset. Trivial. Aborting.
     if (pMap.empty())
+    {
         return true;
+    }
 
     const Rules::Map::const_iterator end = pMap.end();
     for (Rules::Map::const_iterator i = pMap.begin(); i != end; ++i)
@@ -160,7 +174,9 @@ bool Sets::internalSaveToIniFile(const AnyString& filename) const
         // Export the informations of the current ruleset
         const Rules::Ptr& ruleset = i->second;
         if (!(!ruleset))
+        {
             ruleset->saveToINIFile(file);
+        }
     }
     return true;
 }
@@ -174,33 +190,39 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
 
     IniFile ini;
     if (not ini.open(filename))
+    {
         return false;
+    }
 
-    ini.each([&](const IniFile::Section& section) {
-        if (section.name.empty())
-            return;
+    ini.each(
+      [this](const IniFile::Section& section)
+      {
+          if (section.name.empty())
+          {
+              return;
+          }
 
-        RulesScenarioName name = section.name;
-        name.trim(" \t");
-        if (!name)
-            return;
+          RulesScenarioName name = section.name;
+          name.trim(" \t");
+          if (!name)
+          {
+              return;
+          }
 
-        // Create a new ruleset
-        Rules::Ptr rulesetptr = createNew(name);
-        Rules& ruleset = *rulesetptr;
-        AreaName::Vector splitKey;
+          // Create a new ruleset
+          Rules::Ptr rulesetptr = createNew(name);
+          Rules& ruleset = *rulesetptr;
+          AreaName::Vector splitKey;
 
-        for (auto* p = section.firstProperty; p != nullptr; p = p->next)
-        {
-            p->key.split(splitKey, ",", true, false);
-            ruleset.readLine(splitKey, p->value, inUpdaterMode);
-        }
+          for (auto* p = section.firstProperty; p != nullptr; p = p->next)
+          {
+              p->key.split(splitKey, ",", true, false);
+              ruleset.readLine(splitKey, p->value, inUpdaterMode);
+          }
 
-        ruleset.sendWarningsForDisabledClusters();
-    });
+          ruleset.sendWarningsForDisabledClusters();
+      });
     return true;
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder

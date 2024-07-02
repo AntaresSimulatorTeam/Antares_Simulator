@@ -1,64 +1,59 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <algorithm>  // std::adjacent_find
-#include <iterator>   // std::back_inserter
-#include <functional> // std::not_equal_to
-#include <map>
-#include <string>
+#include "antares/solver/simulation/timeseries-numbers.h"
+
+#include <algorithm> // std::adjacent_find
 #include <array>
 #include <filesystem>
+#include <functional> // std::not_equal_to
+#include <iterator>   // std::back_inserter
+#include <map>
+#include <string>
 #include <utility>
 
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/ITimeSeriesNumbersWriter.h"
 #include "antares/study/fwd.h"
-#include "timeseries-numbers.h"
-#include "ITimeSeriesNumbersWriter.h"
-#include "BindingConstraintsTimeSeriesNumbersWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
 using namespace std;
 
 const map<TimeSeriesType, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
-                                            {timeSeriesHydro, 1},
-                                            {timeSeriesWind, 2},
-                                            {timeSeriesThermal, 3},
-                                            {timeSeriesSolar, 4},
-                                            {timeSeriesRenewable, 5},
-                                            {timeSeriesTransmissionCapacities, 6}};
+                                                {timeSeriesHydro, 1},
+                                                {timeSeriesWind, 2},
+                                                {timeSeriesThermal, 3},
+                                                {timeSeriesSolar, 4},
+                                                {timeSeriesRenewable, 5},
+                                                {timeSeriesTransmissionCapacities, 6}};
 
-const map<TimeSeriesType, string> ts_to_tsTitle
-  = {{timeSeriesLoad, "load"},
-     {timeSeriesHydro, "hydro"},
-     {timeSeriesWind, "wind"},
-     {timeSeriesThermal, "thermal"},
-     {timeSeriesSolar, "solar"},
-     {timeSeriesRenewable, "renewable clusters"},
-     {timeSeriesTransmissionCapacities, "transmission capacities"}};
+const map<TimeSeriesType, string> ts_to_tsTitle = {{timeSeriesLoad, "load"},
+                                                   {timeSeriesHydro, "hydro"},
+                                                   {timeSeriesWind, "wind"},
+                                                   {timeSeriesThermal, "thermal"},
+                                                   {timeSeriesSolar, "solar"},
+                                                   {timeSeriesRenewable, "renewable clusters"},
+                                                   {timeSeriesTransmissionCapacities,
+                                                    "transmission capacities"}};
 
 void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSintermodal,
                                       std::string& interModalTsMsg)
@@ -71,7 +66,9 @@ void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSin
         if (isTSintermodal[it->second])
         {
             if (!isFirstLogged)
+            {
                 interModalTsMsg.append(", ");
+            }
             interModalTsMsg.append(ts_to_tsTitle.at(it->first));
             isFirstLogged = false;
         }
@@ -86,162 +83,87 @@ static bool GenerateDeratedMode(Study& study)
 {
     logs.info() << "  :: using the `derated` mode";
     if (study.parameters.useCustomScenario)
+    {
         logs.warning() << "The derated mode is enabled. The custom building mode will be ignored";
-
-    study.areas.each([&](Area& area) {
-        area.load.series->timeseriesNumbers.zero();
-        area.solar.series->timeseriesNumbers.zero();
-        area.wind.series->timeseriesNumbers.zero();
-        area.hydro.series->timeseriesNumbers.zero();
-
-        for (uint i = 0; i != area.thermal.clusterCount(); ++i)
-        {
-            auto& cluster = *(area.thermal.clusters[i]);
-            cluster.series->timeseriesNumbers.zero();
-        }
-
-        for (uint i = 0; i != area.renewable.clusterCount(); ++i)
-        {
-            auto& cluster = *(area.renewable.clusters[i]);
-            cluster.series->timeseriesNumbers.zero();
-        }
-    });
+    }
 
     return true;
 }
 
-class areaNumberOfTSretriever
+class AreaNumberOfTSretriever
 {
 public:
-    areaNumberOfTSretriever(Study& study) : study_(study)
-    {
-    }
+    virtual ~AreaNumberOfTSretriever() = default;
     virtual std::vector<uint> getAreaTimeSeriesNumber(const Area& area) = 0;
-    virtual uint getGeneratedTimeSeriesNumber() = 0;
-
-protected:
-    Study& study_;
 };
 
-class loadAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class LoadAreaNumberOfTSretriever: public AreaNumberOfTSretriever
 {
 public:
-    loadAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
-    {
-        std::vector<uint> to_return = {area.load.series->timeSeries.width};
-        return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesLoad;
+        return {area.load.series.timeSeries.width};
     }
 };
 
-class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class HydroAreaNumberOfTSretriever: public AreaNumberOfTSretriever
 {
 public:
-    hydroAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
-    {
-        std::vector<uint> to_return = {area.hydro.series->count};
-        return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesHydro;
+        return {area.hydro.series->TScount()};
     }
 };
 
-class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class WindAreaNumberOfTSretriever: public AreaNumberOfTSretriever
 {
 public:
-    windAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
-    {
-        std::vector<uint> to_return = {area.wind.series->timeSeries.width};
-        return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesWind;
+        return {area.wind.series.timeSeries.width};
     }
 };
 
-class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class SolarAreaNumberOfTSretriever: public AreaNumberOfTSretriever
 {
 public:
-    solarAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
-    {
-        std::vector<uint> to_return = {area.solar.series->timeSeries.width};
-        return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesSolar;
+        return {area.solar.series.timeSeries.width};
     }
 };
 
-class thermalAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class ThermalAreaNumberOfTSretriever: public AreaNumberOfTSretriever
 {
 public:
-    thermalAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return;
-        uint clusterCount = (uint)area.thermal.clusterCount();
-        for (uint i = 0; i != clusterCount; ++i)
+        for (auto& cluster: area.thermal.list.each_enabled())
         {
-            auto& cluster = *(area.thermal.clusters[i]);
-            to_return.push_back(cluster.series->timeSeries.width);
+            to_return.push_back(cluster->series.timeSeries.width);
         }
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return study_.parameters.nbTimeSeriesThermal;
-    }
 };
 
-class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class RenewClustersAreaNumberOfTSretriever: public AreaNumberOfTSretriever
 {
 public:
-    renewClustersAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return;
-        uint clusterCount = (uint)area.renewable.clusterCount();
-        for (uint i = 0; i != clusterCount; ++i)
+        for (const auto& cluster: area.renewable.list.each_enabled())
         {
-            auto& cluster = *(area.renewable.clusters[i]);
-            to_return.push_back(cluster.series->timeSeries.width);
+            to_return.push_back(cluster->series.timeSeries.width);
         }
         return to_return;
     }
-    uint getGeneratedTimeSeriesNumber()
-    {
-        return 1;
-    }
 };
 
-class areaLinksTransCapaNumberOfTSretriever : public areaNumberOfTSretriever
+class AreaLinksTransCapaNumberOfTSretriever: public AreaNumberOfTSretriever
 {
 public:
-    using areaNumberOfTSretriever::areaNumberOfTSretriever;
-    virtual ~areaLinksTransCapaNumberOfTSretriever() = default;
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return;
@@ -249,14 +171,9 @@ public:
         for (auto it = area.links.begin(); it != area.links.end(); ++it)
         {
             const auto& link = *(it->second);
-            to_return.push_back(link.directCapacities.width);
-            to_return.push_back(link.indirectCapacities.width);
+            to_return.push_back(link.directCapacities.timeSeries.width);
         }
         return to_return;
-    }
-    uint getGeneratedTimeSeriesNumber() override
-    {
-        return 1;
     }
 };
 
@@ -264,48 +181,28 @@ class IntraModalConsistencyChecker
 {
 public:
     IntraModalConsistencyChecker(const TimeSeriesType ts,
-                                 const array<bool, timeSeriesCount>& isTSintramodal,
-                                 const array<bool, timeSeriesCount>& isTSgenerated,
-                                 areaNumberOfTSretriever* tsCounter,
-                                 Study& study) :
-     tsCounter_(tsCounter), study_(study), nbTimeseries_(0)
+                                 AreaNumberOfTSretriever* tsCounter,
+                                 Study& study):
+        tsCounter_(tsCounter),
+        study_(study)
     {
-        int indexTS = ts_to_tsIndex.at(ts);
-        isTSintramodal_ = isTSintramodal[indexTS];
-        isTSgenerated_ = isTSgenerated[indexTS];
         tsTitle_ = ts_to_tsTitle.at(ts);
     }
+
     ~IntraModalConsistencyChecker() = default;
-    bool check();
+    bool checkTSconsistency();
+
     uint getTimeSeriesNumber()
     {
         return nbTimeseries_;
     }
 
 private:
-    bool checkTSconsistency();
-
-private:
-    bool isTSintramodal_;
-    bool isTSgenerated_;
-    areaNumberOfTSretriever* tsCounter_;
+    AreaNumberOfTSretriever* tsCounter_;
     Study& study_;
-    uint nbTimeseries_;
+    uint nbTimeseries_ = 0;
     string tsTitle_;
 };
-
-bool IntraModalConsistencyChecker::check()
-{
-    if (isTSintramodal_ && not isTSgenerated_)
-    {
-        if (not checkTSconsistency())
-            return false;
-    }
-    else
-        nbTimeseries_ = tsCounter_->getGeneratedTimeSeriesNumber();
-
-    return true;
-}
 
 bool IntraModalConsistencyChecker::checkTSconsistency()
 {
@@ -324,60 +221,53 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
                      << "'s numbers of time-series are not equal for all areas";
         return false;
     }
+    // At this point, all elements are identical or 1
+    nbTimeseries_ = *(std::max_element(listNumberTS.begin(), listNumberTS.end()));
 
-    auto result = find_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) { return x != 1; });
-    if (result == listNumberTS.end())
-    { // All elements are equal to 1 or list is empty
-        nbTimeseries_ = 1;
-    }
-    else
-    {
-        nbTimeseries_ = *result;
-    }
     return true;
 }
 
 bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                 const array<bool, timeSeriesCount>& isTSintramodal,
-                                const array<bool, timeSeriesCount>& isTSgenerated,
                                 Study& study)
 {
     // Initialization of a map associating a time-series to an object that retrieves
     // the number of time series inside an area
-    using mapTStoRetriever = map<TimeSeriesType, shared_ptr<areaNumberOfTSretriever>>;
+    using mapTStoRetriever = map<TimeSeriesType, shared_ptr<AreaNumberOfTSretriever>>;
     mapTStoRetriever ts_to_numberOfTSretrievers;
-    ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<loadAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<hydroAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<windAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<solarAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesThermal]
-      = make_shared<thermalAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesRenewable]
-      = make_shared<renewClustersAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities]
-      = make_shared<areaLinksTransCapaNumberOfTSretriever>(study);
+    ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<LoadAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<HydroAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<WindAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<SolarAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesThermal] = make_shared<ThermalAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesRenewable] = make_shared<
+      RenewClustersAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities] = make_shared<
+      AreaLinksTransCapaNumberOfTSretriever>();
 
     // Loop over TS kind and check intra-modal consistency
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();
     for (; it != ts_to_numberOfTSretrievers.end(); ++it)
     {
         const TimeSeriesType tsKind = it->first;
-        areaNumberOfTSretriever* tsRetriever = (it->second).get();
+        AreaNumberOfTSretriever* tsRetriever = (it->second).get();
         int indexTS = ts_to_tsIndex.at(it->first);
-        IntraModalConsistencyChecker intraModalchecker(
-          tsKind, isTSintramodal, isTSgenerated, tsRetriever, study);
-        if (!intraModalchecker.check())
-            return false;
-        nbTimeseriesByMode[indexTS] = intraModalchecker.getTimeSeriesNumber();
+        if (isTSintramodal[indexTS])
+        {
+            IntraModalConsistencyChecker intraModalchecker(tsKind, tsRetriever, study);
+            if (!intraModalchecker.checkTSconsistency())
+            {
+                return false;
+            }
+            nbTimeseriesByMode[indexTS] = intraModalchecker.getTimeSeriesNumber();
+        }
     }
 
     return true;
 }
 
-bool checkInterModalConsistencyForArea(Area& area,
-                                       const array<bool, timeSeriesCount>& isTSintermodal,
-                                       const array<bool, timeSeriesCount>& isTSgenerated,
-                                       Study& study)
+bool checkInterModalConsistencyForArea(const Area& area,
+                                       const array<bool, timeSeriesCount>& isTSintermodal)
 {
     // 1. Making a list of TS numbers :
     //    In this list, we put the numbers of TS of every "inter-modal" mode over the current area.
@@ -386,55 +276,41 @@ bool checkInterModalConsistencyForArea(Area& area,
     // The list containing the numbers of TS of every "inter-modal" mode over the current area
     std::vector<uint> listNumberTsOverArea;
 
-    auto& parameters = study.parameters;
-
     // Load : Add load's number of TS in area ...
     int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->timeSeries.width;
-        listNumberTsOverArea.push_back(nbTimeSeries);
+        listNumberTsOverArea.push_back(area.load.series.timeSeries.width);
     }
 
     // Solar : Add solar's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesSolar);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->timeSeries.width;
-        listNumberTsOverArea.push_back(nbTimeSeries);
+        listNumberTsOverArea.push_back(area.solar.series.timeSeries.width);
     }
 
     // Wind : Add wind's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesWind);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind : area.wind.series->timeSeries.width;
-        listNumberTsOverArea.push_back(nbTimeSeries);
+        listNumberTsOverArea.push_back(area.wind.series.timeSeries.width);
     }
 
     // Hydro : Add hydro's number of TS in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesHydro);
     if (isTSintermodal[indexTS])
     {
-        uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydro : area.hydro.series->count;
-        listNumberTsOverArea.push_back(nbTimeSeries);
+        listNumberTsOverArea.push_back(area.hydro.series->TScount());
     }
 
     // Thermal : Add thermal's number of TS of each cluster in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesThermal);
     if (isTSintermodal[indexTS])
     {
-        const uint clusterCount = (uint)area.thermal.clusterCount();
-        for (uint j = 0; j != clusterCount; ++j)
+        for (auto& cluster: area.thermal.list.each_enabled())
         {
-            auto& cluster = *(area.thermal.clusters[j]);
-            uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesThermal
-                                                       : cluster.series->timeSeries.width;
-            listNumberTsOverArea.push_back(nbTimeSeries);
+            listNumberTsOverArea.push_back(cluster->series.timeSeries.width);
         }
     }
 
@@ -442,12 +318,9 @@ bool checkInterModalConsistencyForArea(Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
     if (isTSintermodal[indexTS])
     {
-        const uint clusterCount = (uint)area.renewable.clusterCount();
-        for (uint j = 0; j != clusterCount; ++j)
+        for (const auto& cluster: area.renewable.list.each_enabled())
         {
-            auto& cluster = *(area.renewable.clusters[j]);
-            uint nbTimeSeries = cluster.series->timeSeries.width;
-            listNumberTsOverArea.push_back(nbTimeSeries);
+            listNumberTsOverArea.push_back(cluster->series.timeSeries.width);
         }
     }
 
@@ -456,8 +329,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
-          << area.name << "'"
-          << " are not identical";
+          << area.name << "'" << " are not identical";
 
         return false;
     }
@@ -496,386 +368,378 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
                                  uint year,
                                  AreaList& areas)
 {
-    areas.each([&](Area& area) {
-        // -------------
-        // Load ...
-        // -------------
-        assert(year < area.load.series->timeseriesNumbers.height);
-        int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
+    areas.each(
+      [year, &isTSintramodal, &intramodal_draws](Area& area)
+      {
+          // -------------
+          // Load ...
+          // -------------
+          assert(year < area.load.series.timeseriesNumbers.height());
+          int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
 
-        if (isTSintramodal[indexTS])
-            area.load.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+          if (isTSintramodal[indexTS] && area.load.series.timeSeries.width > 1)
+          {
+              area.load.series.timeseriesNumbers[year] = intramodal_draws[indexTS];
+          }
 
-        // -------------
-        // Solar ...
-        // -------------
-        assert(year < area.solar.series->timeseriesNumbers.height);
-        indexTS = ts_to_tsIndex.at(timeSeriesSolar);
+          // -------------
+          // Solar ...
+          // -------------
+          assert(year < area.solar.series.timeseriesNumbers.height());
+          indexTS = ts_to_tsIndex.at(timeSeriesSolar);
 
-        if (isTSintramodal[indexTS])
-            area.solar.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+          if (isTSintramodal[indexTS] && area.solar.series.timeSeries.width > 1)
+          {
+              area.solar.series.timeseriesNumbers[year] = intramodal_draws[indexTS];
+          }
 
-        // -------------
-        // Wind ...
-        // -------------
-        assert(year < area.wind.series->timeseriesNumbers.height);
-        indexTS = ts_to_tsIndex.at(timeSeriesWind);
+          // -------------
+          // Wind ...
+          // -------------
+          assert(year < area.wind.series.timeseriesNumbers.height());
+          indexTS = ts_to_tsIndex.at(timeSeriesWind);
 
-        if (isTSintramodal[indexTS])
-            area.wind.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+          if (isTSintramodal[indexTS] && area.wind.series.timeSeries.width > 1)
+          {
+              area.wind.series.timeseriesNumbers[year] = intramodal_draws[indexTS];
+          }
 
-        // -------------
-        // Hydro ...
-        // -------------
-        assert(year < area.hydro.series->timeseriesNumbers.height);
-        indexTS = ts_to_tsIndex.at(timeSeriesHydro);
+          // -------------
+          // Hydro ...
+          // -------------
+          assert(year < area.hydro.series->timeseriesNumbers.height());
+          indexTS = ts_to_tsIndex.at(timeSeriesHydro);
 
-        if (isTSintramodal[indexTS])
-            area.hydro.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+          if (isTSintramodal[indexTS] && area.hydro.series->TScount() > 1)
+          {
+              area.hydro.series->timeseriesNumbers[year] = intramodal_draws[indexTS];
+          }
 
-        // -------------
-        // Thermal ...
-        // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesThermal);
+          // -------------
+          // Thermal ...
+          // -------------
+          indexTS = ts_to_tsIndex.at(timeSeriesThermal);
 
-        if (isTSintramodal[indexTS])
-        {
-            auto end_th_clusters = area.thermal.list.mapping.end();
-            for (auto i = area.thermal.list.mapping.begin(); i != end_th_clusters; ++i)
-            {
-                ThermalClusterList::SharedPtr cluster = i->second;
-                if (cluster->enabled)
-                    cluster->series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
-            }
-        }
+          if (isTSintramodal[indexTS])
+          {
+              for (auto& cluster: area.thermal.list.each_enabled())
+              {
+                  cluster->series.timeseriesNumbers[year] = intramodal_draws[indexTS];
+              }
+          }
 
-        // --------------------------
-        // Renewable clusters ...
-        // --------------------------
-        indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
+          // --------------------------
+          // Renewable clusters ...
+          // --------------------------
+          indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
 
-        if (isTSintramodal[indexTS])
-        {
-            auto end_rn_clusters = area.renewable.list.cluster.end();
-            for (auto j = area.renewable.list.cluster.begin(); j != end_rn_clusters; ++j)
-            {
-                RenewableClusterList::SharedPtr cluster = j->second;
-                if (cluster->enabled)
-                    cluster->series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
-            }
-        }
+          if (isTSintramodal[indexTS])
+          {
+              for (auto& cluster: area.renewable.list.each_enabled())
+              {
+                  cluster->series.timeseriesNumbers[year] = intramodal_draws[indexTS];
+              }
+          }
 
-        // -------------------------------
-        // Transmission capacities ...
-        // -------------------------------
-        indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
+          // -------------------------------
+          // Transmission capacities ...
+          // -------------------------------
+          indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
 
-        if (isTSintramodal[indexTS])
-        {
-            for (auto it = area.links.begin(); it != area.links.end(); ++it)
-            {
-                auto& link = *(it->second);
-                link.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
-            }
-        }
-    });
+          if (isTSintramodal[indexTS])
+          {
+              for (auto it = area.links.begin(); it != area.links.end(); ++it)
+              {
+                  auto& link = *(it->second);
+                  if (link.directCapacities.timeSeries.width > 1)
+                  {
+                      link.timeseriesNumbers[year] = intramodal_draws[indexTS];
+                  }
+              }
+          }
+      });
 }
 
 void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& isTSintramodal,
-                                           const array<bool, timeSeriesCount>& isTSgenerated,
-                                           array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                            uint year,
                                            Study& study)
 {
-    study.areas.each([&](Area& area) {
-        // -------------
-        // Load ...
-        // -------------
-        int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
+    study.areas.each(
+      [&study, &isTSintramodal, year](Area& area)
+      {
+          // -------------
+          // Load ...
+          // -------------
+          int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
 
-        if (!isTSintramodal[indexTS])
-        {
-            uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.load.series->timeSeries.width;
-            area.load.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
-        }
+          if (!isTSintramodal[indexTS])
+          {
+              area.load.series.timeseriesNumbers[year] = (uint32_t)(floor(
+                study.runtime->random[seedTimeseriesNumbers].next()
+                * area.load.series.timeSeries.width));
+          }
 
-        // -------------
-        // Solar ...
-        // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesSolar);
+          // -------------
+          // Solar ...
+          // -------------
+          indexTS = ts_to_tsIndex.at(timeSeriesSolar);
 
-        if (!isTSintramodal[indexTS])
-        {
-            uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.solar.series->timeSeries.width;
-            area.solar.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
-        }
+          if (!isTSintramodal[indexTS])
+          {
+              area.solar.series.timeseriesNumbers[year] = (uint32_t)(floor(
+                study.runtime->random[seedTimeseriesNumbers].next()
+                * area.solar.series.timeSeries.width));
+          }
 
-        // -------------
-        // Wind ...
-        // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesWind);
+          // -------------
+          // Wind ...
+          // -------------
+          indexTS = ts_to_tsIndex.at(timeSeriesWind);
 
-        if (!isTSintramodal[indexTS])
-        {
-            uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.wind.series->timeSeries.width;
-            area.wind.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
-        }
+          if (!isTSintramodal[indexTS])
+          {
+              area.wind.series.timeseriesNumbers[year] = (uint32_t)(floor(
+                study.runtime->random[seedTimeseriesNumbers].next()
+                * area.wind.series.timeSeries.width));
+          }
 
-        // -------------
-        // Hydro ...
-        // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesHydro);
+          // -------------
+          // Hydro ...
+          // -------------
+          indexTS = ts_to_tsIndex.at(timeSeriesHydro);
 
-        if (!isTSintramodal[indexTS])
-        {
-            uint nbTimeSeries
-              = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS] : area.hydro.series->ror.width;
-            area.hydro.series->timeseriesNumbers[0][year]
-              = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
-        }
+          if (!isTSintramodal[indexTS])
+          {
+              area.hydro.series->timeseriesNumbers[year] = (uint32_t)(floor(
+                study.runtime->random[seedTimeseriesNumbers].next()
+                * area.hydro.series->TScount()));
+          }
 
-        // -------------
-        // Thermal ...
-        // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesThermal);
+          // -------------
+          // Thermal ...
+          // -------------
+          indexTS = ts_to_tsIndex.at(timeSeriesThermal);
 
-        auto end_th_clusters = area.thermal.list.mapping.end();
-        for (auto i = area.thermal.list.mapping.begin(); i != end_th_clusters; ++i)
-        {
-            ThermalClusterList::SharedPtr cluster = i->second;
-            if (not cluster->enabled)
-                study.runtime->random[seedTimeseriesNumbers].next();
-            else
-            {
-                if (!isTSintramodal[indexTS])
-                {
-                    uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                               : cluster->series->timeSeries.width;
-                    cluster->series->timeseriesNumbers[0][year] = (uint32_t)(
-                      floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
-                }
-            }
-        }
+          for (auto& cluster: area.thermal.list.all())
+          {
+              if (!cluster->enabled)
+              {
+                  study.runtime->random[seedTimeseriesNumbers].next();
+              }
+              else
+              {
+                  if (!isTSintramodal[indexTS])
+                  {
+                      cluster->series.timeseriesNumbers[year] = (uint32_t)(floor(
+                        study.runtime->random[seedTimeseriesNumbers].next()
+                        * cluster->series.timeSeries.width));
+                  }
+              }
+          }
 
-        // --------------------------
-        // Renewable clusters ...
-        // --------------------------
-        indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
+          // --------------------------
+          // Renewable clusters ...
+          // --------------------------
+          indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
 
-        auto end_rn_clusters = area.renewable.list.cluster.end();
-        for (auto j = area.renewable.list.cluster.begin(); j != end_rn_clusters; ++j)
-        {
-            RenewableClusterList::SharedPtr cluster = j->second;
-            if (not cluster->enabled)
-                study.runtime->random[seedTimeseriesNumbers].next();
-            else
-            {
-                if (!isTSintramodal[indexTS])
-                {
-                    // There is no TS generation for renewable clusters
-                    uint nbTimeSeries = cluster->series->timeSeries.width;
-                    cluster->series->timeseriesNumbers[0][year] = (uint32_t)(
-                      floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
-                }
-            }
-        }
+          for (auto& cluster: area.renewable.list.each_enabled())
+          {
+              if (!isTSintramodal[indexTS])
+              {
+                  // There is no TS generation for renewable clusters
+                  uint nbTimeSeries = cluster->series.timeSeries.width;
+                  cluster->series.timeseriesNumbers[year] = (uint32_t)(floor(
+                    study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+              }
+          }
 
-        // -------------------------------
-        // Transmission capacities ...
-        // -------------------------------
-        indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
+          // -------------------------------
+          // Transmission capacities ...
+          // -------------------------------
+          indexTS = ts_to_tsIndex.at(timeSeriesTransmissionCapacities);
 
-        if (!isTSintramodal[indexTS])
-        {
-            for (auto it = area.links.begin(); it != area.links.end(); ++it)
-            {
-                auto& link = *(it->second);
-                const uint nbTimeSeries = link.directCapacities.width;
-                if (nbTimeSeries == 1)
-                {
-                    // Random generator (mersenne-twister) must not be called here
-                    // in order to avoid a shift in the random generator results
-                    // that would cause a change of Antares results
-                    link.timeseriesNumbers[0][year] = 0;
-                }
-                else
-                {
-                    link.timeseriesNumbers[0][year] = (uint32_t)(
-                      floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
-                }
-            }
-        }
-    });
+          if (!isTSintramodal[indexTS])
+          {
+              for (auto it = area.links.begin(); it != area.links.end(); ++it)
+              {
+                  auto& link = *(it->second);
+                  const uint nbTimeSeries = link.directCapacities.timeSeries.width;
+                  if (nbTimeSeries > 1)
+                  {
+                      link.timeseriesNumbers[year] = (uint32_t)(floor(
+                        study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                  }
+              }
+          }
+      });
     // Binding constraints
     for (auto& group: study.bindingConstraintsGroups)
     {
         const auto nbTimeSeries = group->numberOfTimeseries();
-        auto& value = group->timeseriesNumbers[0][year];
-        if (nbTimeSeries == 1)
+        auto& groupTsNumber = group->timeseriesNumbers[year];
+        if (nbTimeSeries > 1)
         {
-            value = 0;
-        }
-        else
-        {
-            value  = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            groupTsNumber = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next()
+                                             * nbTimeSeries));
         }
     }
 }
 
-Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
+Data::TimeSeriesNumbers* getFirstTSnumberInterModalMatrixFoundInArea(
   Area& area,
   const array<bool, timeSeriesCount>& isTSintermodal)
 {
-    Matrix<uint32_t>* tsNumbersMtx = nullptr;
+    Data::TimeSeriesNumbers* tsNumbersMtx = nullptr;
     if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
-        tsNumbersMtx = &(area.load.series->timeseriesNumbers);
+    {
+        tsNumbersMtx = &(area.load.series.timeseriesNumbers);
+    }
     else
     {
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
-            tsNumbersMtx = &(area.solar.series->timeseriesNumbers);
+        {
+            tsNumbersMtx = &(area.solar.series.timeseriesNumbers);
+        }
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesWind)])
-            tsNumbersMtx = &(area.wind.series->timeseriesNumbers);
+        {
+            tsNumbersMtx = &(area.wind.series.timeseriesNumbers);
+        }
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
+        {
             tsNumbersMtx = &(area.hydro.series->timeseriesNumbers);
+        }
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)]
-                 && area.thermal.clusterCount() > 0)
-            tsNumbersMtx = &(area.thermal.clusters[0]->series->timeseriesNumbers);
+                 && !area.thermal.list.each_enabled().empty())
+        {
+            std::shared_ptr<ThermalCluster> cluster = *(area.thermal.list.each_enabled().begin());
+            tsNumbersMtx = &(cluster->series.timeseriesNumbers);
+        }
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
-                 && area.renewable.clusterCount() > 0)
-            tsNumbersMtx = &(area.renewable.clusters[0]->series->timeseriesNumbers);
+                 && area.renewable.list.enabledCount() > 0)
+        {
+            std::shared_ptr<RenewableCluster> cluster = *(
+              area.renewable.list.each_enabled().begin());
+            tsNumbersMtx = &(cluster->series.timeseriesNumbers);
+        }
     }
     assert(tsNumbersMtx);
 
     return tsNumbersMtx;
 }
 
-void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
-                                             Area& area,
-                                             const array<bool, timeSeriesCount>& isTSintermodal,
-                                             const uint years)
+static void applyMatrixDrawsToInterModalModesInArea(
+  Data::TimeSeriesNumbers& tsNumbersMtx,
+  Area& area,
+  const array<bool, timeSeriesCount>& isTSintermodal,
+  const uint years)
 {
     for (uint year = 0; year < years; ++year)
     {
-        const uint draw = tsNumbersMtx->entry[0][year];
+        const uint32_t draw = tsNumbersMtx[year];
         assert(draw < 100000);
 
-        assert(year < area.load.series->timeseriesNumbers.height);
+        assert(year < area.load.series.timeseriesNumbers.height());
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
-            area.load.series->timeseriesNumbers[0][year] = draw;
+        {
+            area.load.series.timeseriesNumbers[year] = draw;
+        }
 
-        assert(year < area.solar.series->timeseriesNumbers.height);
+        assert(year < area.solar.series.timeseriesNumbers.height());
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
-            area.solar.series->timeseriesNumbers[0][year] = draw;
+        {
+            area.solar.series.timeseriesNumbers[year] = draw;
+        }
 
-        assert(year < area.wind.series->timeseriesNumbers.height);
+        assert(year < area.wind.series.timeseriesNumbers.height());
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesWind)])
-            area.wind.series->timeseriesNumbers[0][year] = draw;
+        {
+            area.wind.series.timeseriesNumbers[year] = draw;
+        }
 
-        assert(year < area.hydro.series->timeseriesNumbers.height);
+        assert(year < area.hydro.series->timeseriesNumbers.height());
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
-            area.hydro.series->timeseriesNumbers[0][year] = draw;
+        {
+            area.hydro.series->timeseriesNumbers[year] = draw;
+        }
 
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)])
         {
-            uint clusterCount = (uint)area.thermal.clusterCount();
-            for (uint i = 0; i != clusterCount; ++i)
+            for (auto& cluster: area.thermal.list.each_enabled())
             {
-                auto& cluster = *(area.thermal.clusters[i]);
-                assert(year < cluster.series->timeseriesNumbers.height);
-                cluster.series->timeseriesNumbers[0][year] = draw;
+                assert(year < cluster->series.timeseriesNumbers.height());
+                cluster->series.timeseriesNumbers[year] = draw;
             }
         }
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)])
         {
-            uint clusterCount = (uint)area.renewable.clusterCount();
-            for (uint i = 0; i != clusterCount; ++i)
+            for (const auto& cluster: area.renewable.list.each_enabled())
             {
-                auto& cluster = *(area.renewable.clusters[i]);
-                assert(year < cluster.series->timeseriesNumbers.height);
-                cluster.series->timeseriesNumbers[0][year] = draw;
+                assert(year < cluster->series.timeseriesNumbers.height());
+                cluster->series.timeseriesNumbers[year] = draw;
             }
         }
     }
 }
 
-// Set tsNumbers to 1 for all years if only one TS is present
-static void fixTSNumbersSingleAreaSingleMode(Matrix<uint32_t>& tsNumbers, uint width, uint years)
+bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(std::vector<uint> w)
 {
-    if (width == 1)
+    auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
+    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
+}
+
+using Checks = std::vector<std::pair<const Antares::Data::TimeSeriesNumbers*, std::string>>;
+
+static Checks buildChecksFromStudy(const AreaList& areas)
+{
+    Checks toCheck;
+
+    // LINKS
+    for (const auto& [_, area]: areas)
     {
-        for (uint year = 0; year < years; year++)
+        const std::string areaID = area->id.to<std::string>();
+        for (const auto& [_, link]: area->links)
         {
-            tsNumbers[0][year] = 0;
+            const std::string areaID2 = link->with->id.to<std::string>();
+            toCheck.push_back({&link->timeseriesNumbers, "link " + areaID + " / " + areaID2});
         }
     }
+
+    // HYDRO
+    for (const auto& [_, area]: areas)
+    {
+        const std::string areaID = area->id.to<std::string>();
+        toCheck.push_back({&area->hydro.series->timeseriesNumbers, "hydro " + areaID});
+    }
+
+    return toCheck;
 }
 
-static void fixTSNumbersWhenWidthIsOne(Study& study)
+static bool performChecks(const Checks& toCheck)
 {
-    const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
+    bool ret = true;
+    for (const auto& [tsNumber, context]: toCheck)
+    {
+        const auto errorMessageMaybe = tsNumber->checkSeriesNumberOfColumnsConsistency();
+        if (errorMessageMaybe.has_value())
+        {
+            logs.error() << "Inconsistent number of columns for " << context << " ("
+                         << errorMessageMaybe.value() << ")";
+            ret = false;
+        }
+    }
+    if (!ret)
+    {
+        logs.error() << "Please check that all series have the same number of columns or 1 column, "
+                        "or a combination of 1 column and the same number of columns";
+    }
 
-    study.areas.each([&years](Area& area) {
-        // Load
-        fixTSNumbersSingleAreaSingleMode(
-                area.load.series->timeseriesNumbers, area.load.series->timeSeries.width, years);
-        // Solar
-        fixTSNumbersSingleAreaSingleMode(
-                area.solar.series->timeseriesNumbers, area.solar.series->timeSeries.width, years);
-        // Wind
-        fixTSNumbersSingleAreaSingleMode(
-                area.wind.series->timeseriesNumbers, area.wind.series->timeSeries.width, years);
-        // Hydro
-        fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
-
-        // Thermal
-        std::for_each(area.thermal.clusters.cbegin(),
-                      area.thermal.clusters.cend(),
-                      [&years](const Data::ThermalCluster* cluster) {
-                          fixTSNumbersSingleAreaSingleMode(cluster->series->timeseriesNumbers,
-                                                           cluster->series->timeSeries.width,
-                                                           years);
-                      });
-
-        // Renewables
-        std::for_each(area.renewable.clusters.cbegin(),
-                      area.renewable.clusters.cend(),
-                      [&years](const Data::RenewableCluster* cluster)
-
-                      {
-                          fixTSNumbersSingleAreaSingleMode(cluster->series->timeseriesNumbers,
-                                                           cluster->series->timeSeries.width,
-                                                           years);
-                      });
-
-        // NTC
-        std::for_each(area.links.cbegin(),
-                      area.links.cend(),
-                      [&years](const std::pair<Data::AreaName, Data::AreaLink*>& it) {
-                          auto link = it.second;
-                          fixTSNumbersSingleAreaSingleMode(
-                            link->timeseriesNumbers, link->directCapacities.width, years);
-                      });
-    });
-    study.bindingConstraintsGroups.fixTSNumbersWhenWidthIsOne();
+    return ret;
 }
 
-bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
+bool TimeSeriesNumbers::CheckNumberOfColumns(const AreaList& areas)
 {
-    std::vector<uint> removedOnes;
-    // Remove all 1
-    std::remove_copy(w.begin(), w.end(), std::back_inserter(removedOnes), 1);
-    // Try to find adjacent elements that are pairwise different
-    auto result
-      = std::adjacent_find(removedOnes.begin(), removedOnes.end(), std::not_equal_to<uint>());
-    // Return "no such pair exists"
-    return result == removedOnes.end();
+    Checks toCheck = buildChecksFromStudy(areas);
+    return performChecks(toCheck);
 }
 
 bool TimeSeriesNumbers::Generate(Study& study)
@@ -885,66 +749,63 @@ bool TimeSeriesNumbers::Generate(Study& study)
     auto& parameters = study.parameters;
 
     if (parameters.derated)
+    {
         return GenerateDeratedMode(study);
+    }
 
     const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
 
-    const array<bool, timeSeriesCount> isTSintramodal
-      = {(bool)(timeSeriesLoad & parameters.intraModal),
-         (bool)(timeSeriesHydro & parameters.intraModal),
-         (bool)(timeSeriesWind & parameters.intraModal)
-           && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesThermal & parameters.intraModal),
-         (bool)(timeSeriesSolar & parameters.intraModal)
-           && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesRenewable & parameters.intraModal)
-           && parameters.renewableGeneration.isClusters(),
-         (bool)(timeSeriesTransmissionCapacities & parameters.intraModal)};
+    const array<bool, timeSeriesCount> isTSintramodal = {
+      (bool)(timeSeriesLoad & parameters.intraModal),
+      (bool)(timeSeriesHydro & parameters.intraModal),
+      (bool)(timeSeriesWind & parameters.intraModal)
+        && parameters.renewableGeneration.isAggregated(),
+      (bool)(timeSeriesThermal & parameters.intraModal),
+      (bool)(timeSeriesSolar & parameters.intraModal)
+        && parameters.renewableGeneration.isAggregated(),
+      (bool)(timeSeriesRenewable & parameters.intraModal)
+        && parameters.renewableGeneration.isClusters(),
+      (bool)(timeSeriesTransmissionCapacities & parameters.intraModal)};
 
     array<uint, timeSeriesCount> nbTimeseriesByMode;
 
     array<uint32_t, timeSeriesCount> intramodal_draws;
     std::fill(intramodal_draws.begin(), intramodal_draws.end(), 0);
 
-    const array<bool, timeSeriesCount> isTSgenerated
-      = {(bool)(timeSeriesLoad & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesHydro & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesWind & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesThermal & parameters.timeSeriesToRefresh),
-         (bool)(timeSeriesSolar & parameters.timeSeriesToRefresh),
-         false,  // TS generation is always disabled for renewables
-         false}; // TS generation is always disabled for links transmission capacities
-
-    if (not checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, isTSgenerated, study))
+    if (!checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, study))
+    {
         return false;
+    }
 
     for (uint year = 0; year < years; ++year)
     {
-        // Intra-modal TS : draw and store TS numbres
-        drawTSnumbersForIntraModal(
-          intramodal_draws, isTSintramodal, nbTimeseriesByMode, study.runtime->random);
+        // Intra-modal TS : draw and store TS numbers
+        drawTSnumbersForIntraModal(intramodal_draws,
+                                   isTSintramodal,
+                                   nbTimeseriesByMode,
+                                   study.runtime->random);
         storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers
-        drawAndStoreTSnumbersForNOTintraModal(
-          isTSintramodal, isTSgenerated, nbTimeseriesByMode, year, study);
+        drawAndStoreTSnumbersForNOTintraModal(isTSintramodal, year, study);
     }
 
     // ===============
     // Inter-modal
     // ===============
 
-    const array<bool, timeSeriesCount> isTSintermodal
-      = {(bool)(timeSeriesLoad & parameters.interModal),
-         (bool)(timeSeriesHydro & parameters.interModal),
-         (bool)(timeSeriesWind & parameters.interModal)
-           && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesThermal & parameters.interModal),
-         (bool)(timeSeriesSolar & parameters.interModal)
-           && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesRenewable & parameters.interModal)
-           && parameters.renewableGeneration.isClusters(),
-         false}; // links transmission capacities time series cannot be inter-modal
+    const array<bool, timeSeriesCount> isTSintermodal = {
+      (bool)(timeSeriesLoad & parameters.interModal),
+      (bool)(timeSeriesHydro & parameters.interModal),
+      (bool)(timeSeriesWind & parameters.interModal)
+        && parameters.renewableGeneration.isAggregated(),
+      (bool)(timeSeriesThermal & parameters.interModal),
+      (bool)(timeSeriesSolar & parameters.interModal)
+        && parameters.renewableGeneration.isAggregated(),
+      (bool)(timeSeriesRenewable & parameters.interModal)
+        && parameters.renewableGeneration.isClusters(),
+      false // links transmission capacities time series cannot be inter-modal
+    };
 
     if (std::any_of(std::begin(isTSintermodal), std::end(isTSintermodal), [](bool x) { return x; }))
     {
@@ -957,32 +818,36 @@ bool TimeSeriesNumbers::Generate(Study& study)
         for (auto i = study.areas.begin(); i != end; ++i)
         {
             auto& area = *(i->second);
-            if (not checkInterModalConsistencyForArea(area, isTSintermodal, isTSgenerated, study))
+            if (not checkInterModalConsistencyForArea(area, isTSintermodal))
+            {
                 return false;
+            }
 
-            Matrix<uint32_t>* tsNumbersMtx
-              = getFirstTSnumberInterModalMatrixFoundInArea(area, isTSintermodal);
+            Data::TimeSeriesNumbers* tsNumbersMtx = getFirstTSnumberInterModalMatrixFoundInArea(
+              area,
+              isTSintermodal);
 
-            applyMatrixDrawsToInterModalModesInArea(tsNumbersMtx, area, isTSintermodal, years);
+            applyMatrixDrawsToInterModalModesInArea(*tsNumbersMtx, area, isTSintermodal, years);
         }
     }
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IResultWriter& resultWriter)
+void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study,
+                                                        IResultWriter& resultWriter)
 {
     using namespace Antares::Data;
 
     if (study.parameters.storeTimeseriesNumbers)
     {
-        fixTSNumbersWhenWidthIsOne(study);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesLoad>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesSolar>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesHydro>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesWind>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesThermal>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesRenewable>(resultWriter);
-        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(
+          resultWriter);
 
         Simulation::BindingConstraintsTimeSeriesNumbersWriter ts_writer(resultWriter);
         ts_writer.write(study.bindingConstraintsGroups);

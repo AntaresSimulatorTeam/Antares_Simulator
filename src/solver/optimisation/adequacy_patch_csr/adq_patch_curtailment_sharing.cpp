@@ -1,50 +1,45 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "adq_patch_curtailment_sharing.h"
-#include "../opt_fonctions.h"
-#include "csr_quadratic_problem.h"
-#include "count_constraints_variables.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <cmath>
+
+#include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 using namespace Yuni;
 
 namespace Antares::Data::AdequacyPatch
 {
-double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
+double LmrViolationAreaHour(PROBLEME_HEBDO* problemeHebdo,
                             double totalNodeBalance,
-                            const double threshold,
+                            double threshold,
                             int Area,
                             int hour)
 {
-    const double ensInit
-      = problemeHebdo->ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour];
+    const double ensInit = problemeHebdo->ResultatsHoraires[Area]
+                             .ValeursHorairesDeDefaillancePositive[hour];
 
     problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour] = 0;
     // check LMR violations
@@ -77,8 +72,8 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
         else if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
-            flowsNode1toNodeA
-              -= std::min(0.0, problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
+            flowsNode1toNodeA -= std::min(0.0,
+                                          problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
         }
         Interco = problemeHebdo->IndexSuivantIntercoOrigine[Interco];
     }
@@ -93,14 +88,14 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
         else if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
-            flowsNode1toNodeA
-              += std::max(0.0, problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
+            flowsNode1toNodeA += std::max(0.0,
+                                          problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
         }
         Interco = problemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }
 
-    double ensInit
-      = problemeHebdo->ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour];
+    double ensInit = problemeHebdo->ResultatsHoraires[Area]
+                       .ValeursHorairesDeDefaillancePositive[hour];
     if (!setNTCOutsideToInsideToZero)
     {
         densNew = std::max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
@@ -128,15 +123,15 @@ void HourlyCSRProblem::calculateCsrParameters()
             problemeHebdo_->adequacyPatchRuntimeData->addCSRTriggeredAtAreaHour(Area, hour);
 
             // calculate netPositionInit and the RHS of the AreaBalance constraints
-            std::tie(netPositionInit, std::ignore, std::ignore) 
-                = calculateAreaFlowBalance(problemeHebdo_, 
-                                           adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
-                                           Area, 
-                                           hour);
-            double ensInit
-              = problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour];
-            double spillageInit
-              = problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDeDefaillanceNegative[hour];
+            std::tie(netPositionInit, std::ignore, std::ignore) = calculateAreaFlowBalance(
+              problemeHebdo_,
+              adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+              Area,
+              hour);
+            double ensInit = problemeHebdo_->ResultatsHoraires[Area]
+                               .ValeursHorairesDeDefaillancePositive[hour];
+            double spillageInit = problemeHebdo_->ResultatsHoraires[Area]
+                                    .ValeursHorairesDeDefaillanceNegative[hour];
 
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
@@ -150,8 +145,8 @@ void HourlyCSRProblem::allocateProblem()
 
     problemeAResoudre_.NombreDeVariables = countVariables(problemeHebdo_);
     nbConst = problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
-    int nbTerms
-      = 3 * nbConst; // This is a rough estimate, reallocations may happen later if it's too low
+    int nbTerms = 3 * nbConst; // This is a rough estimate, reallocations may happen later if it's
+                               // too low
     OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_, nbTerms);
 }
 
@@ -166,14 +161,18 @@ void HourlyCSRProblem::buildProblemVariables()
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
-    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_, problemeAResoudre_, *this);
+    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_,
+                                                               problemeAResoudre_,
+                                                               *this);
     csrProb.buildConstraintMatrix();
 }
 
 void HourlyCSRProblem::setVariableBounds()
 {
     for (int var = 0; var < problemeAResoudre_.NombreDeVariables; var++)
+    {
         problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+    }
 
     logs.debug() << "[CSR] bounds";
     setBoundsOnENS();
@@ -197,7 +196,9 @@ void HourlyCSRProblem::setProblemCost()
 
     setQuadraticCost();
     if (adqPatchParams_.curtailmentSharing.includeHurdleCost)
+    {
         setLinearCost();
+    }
 }
 
 void HourlyCSRProblem::solveProblem(uint week, int year)

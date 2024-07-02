@@ -1,14 +1,34 @@
+/*
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #define BOOST_TEST_MODULE test save scenario - builder.dat
-#define BOOST_TEST_DYN_LINK
-#include <boost/test/unit_test.hpp>
-
-#include <string>
 #include <filesystem>
 #include <fstream>
+#include <string>
 
-#include <study.h>
-#include <rules.h>
-#include <scenario-builder/sets.h>
+#include <boost/test/unit_test.hpp>
+
+#include <antares/study/scenario-builder/rules.h>
+#include <antares/study/scenario-builder/sets.h>
+#include <antares/study/study.h>
+
 #include "area/files-helper.h"
 
 using namespace std;
@@ -26,10 +46,12 @@ class referenceScBuilderFile
 public:
     referenceScBuilderFile() = default;
     ~referenceScBuilderFile() = default;
+
     string path() const
     {
         return absolute_path_;
     }
+
     void write();
 
     void append(const string line);
@@ -49,7 +71,9 @@ void referenceScBuilderFile::write()
     ofstream file;
     file.open(absolute_path_);
     for (uint i = 0; i < content_.size(); ++i)
+    {
         file << content_[i] << endl;
+    }
     file << endl;
 }
 
@@ -59,15 +83,12 @@ void referenceScBuilderFile::write()
 
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-    area->thermal.clusters.push_back(cluster.get());
-    area->thermal.list.add(cluster);
-    area->thermal.list.mapping[cluster->id()] = cluster;
+    area->thermal.list.addToCompleteList(cluster);
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-    area->renewable.clusters.push_back(cluster.get());
-    area->renewable.list.add(cluster);
+    area->renewable.list.addToCompleteList(cluster);
 }
 
 template<class ClusterType>
@@ -75,7 +96,6 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 {
     auto cluster = std::make_shared<ClusterType>(area);
     cluster->setName(clusterName);
-    cluster->series = new DataSeriesCommon();
 
     addClusterToAreaList(area, cluster);
 
@@ -91,13 +111,14 @@ struct commonFixture
     commonFixture(const commonFixture&& f) = delete;
     commonFixture& operator=(const commonFixture& f) = delete;
     commonFixture& operator=(const commonFixture&& f) = delete;
+
     commonFixture()
     {
         study = std::make_shared<Study>();
         // Set study parameters
         study->parameters.nbYears = 20;
-        study->parameters.timeSeriesToGenerate
-          = 0; // No generated time-series, only ready made time-series
+        study->parameters.timeSeriesToGenerate = 0; // No generated time-series, only ready made
+                                                    // time-series
 
         // Add areas
         area_1 = study->areaAdd("Area 1");
@@ -107,27 +128,21 @@ struct commonFixture
 
         // Load : set the nb of ready made TS
         uint nbReadyMadeTS = 13;
-        area_1->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_2->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_3->load.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_1->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->load.series.timeSeries.resize(nbReadyMadeTS, 1);
 
         // Wind : set the nb of ready made TS
         nbReadyMadeTS = 17;
-        area_1->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_2->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_3->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
+        area_1->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
 
         // Solar : set the nb of ready made TS
         nbReadyMadeTS = 9;
-        area_1->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_2->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-        area_3->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-
-        // Hydro : set the nb of ready made TS
-        nbReadyMadeTS = 12;
-        area_1->hydro.series->count = nbReadyMadeTS;
-        area_2->hydro.series->count = nbReadyMadeTS;
-        area_3->hydro.series->count = nbReadyMadeTS;
+        area_1->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_2->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+        area_3->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
 
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
@@ -145,14 +160,9 @@ struct commonFixture
         thCluster_31 = addClusterToArea<ThermalCluster>(area_3, "th-cluster-31");
 
         // Thermal clusters : set the nb of ready made TS
-        thCluster_11->series->timeSeries.resize(14, 1);
-        thCluster_12->series->timeSeries.resize(14, 1);
-        thCluster_31->series->timeSeries.resize(14, 1);
-
-        // Thermal clusters : update areas local numbering for clusters
-        area_1->thermal.prepareAreaWideIndexes();
-        area_2->thermal.prepareAreaWideIndexes();
-        area_3->thermal.prepareAreaWideIndexes();
+        thCluster_11->series.timeSeries.resize(14, 1);
+        thCluster_12->series.timeSeries.resize(14, 1);
+        thCluster_31->series.timeSeries.resize(14, 1);
 
         // Add renewable clusters
         rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
@@ -160,14 +170,9 @@ struct commonFixture
         rnCluster_32 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-32");
 
         // Renewable clusters : set the nb of ready made TS
-        rnCluster_21->series->timeSeries.resize(9, 1);
-        rnCluster_31->series->timeSeries.resize(9, 1);
-        rnCluster_32->series->timeSeries.resize(9, 1);
-
-        // Renewable clusters : update areas local numbering for clusters
-        area_1->renewable.prepareAreaWideIndexes();
-        area_2->renewable.prepareAreaWideIndexes();
-        area_3->renewable.prepareAreaWideIndexes();
+        rnCluster_21->series.timeSeries.resize(9, 1);
+        rnCluster_31->series.timeSeries.resize(9, 1);
+        rnCluster_32->series.timeSeries.resize(9, 1);
 
         // Resize all TS numbers storage (1 column x nbYears lines)
         area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
@@ -181,7 +186,6 @@ struct commonFixture
         study->bindingConstraintsGroups.add("group1");
         study->bindingConstraintsGroups.add("group2");
         study->bindingConstraintsGroups.add("group3");
-
 
         // Scenario builder initialization
         study->scenarioRules = new ScenarioBuilder::Sets();
@@ -214,17 +218,20 @@ struct commonFixture
 // Scenario builder save fixture
 // ======================================
 
-struct saveFixture : public commonFixture
+struct saveFixture: public commonFixture
 {
-    saveFixture() : commonFixture()
+    saveFixture():
+        commonFixture()
     {
     }
+
     ~saveFixture();
     void saveScenarioBuilder();
 
     // Data members
-    std::string path_to_generated_file
-      = fs::current_path().append(generatedScBuilderFileName).string();
+    std::string path_to_generated_file = fs::current_path()
+                                           .append(generatedScBuilderFileName)
+                                           .string();
     referenceScBuilderFile referenceFile;
 };
 
@@ -249,7 +256,8 @@ BOOST_AUTO_TEST_SUITE(s)
 // Tests on Load
 // ====================
 BOOST_FIXTURE_TEST_CASE(
-  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->load.setTSnumber(area_2->index, 11, 6);
 
@@ -264,7 +272,8 @@ BOOST_FIXTURE_TEST_CASE(
 }
 
 BOOST_FIXTURE_TEST_CASE(
-  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->load.setTSnumber(area_3->index, 7, 2);
     my_rule->load.setTSnumber(area_2->index, 11, 6);
@@ -292,7 +301,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Wind
 // ====================
 BOOST_FIXTURE_TEST_CASE(
-  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->wind.setTSnumber(area_3->index, 19, 17);
 
@@ -310,7 +320,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Solar
 // ====================
 BOOST_FIXTURE_TEST_CASE(
-  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->solar.setTSnumber(area_1->index, 9, 9);
     my_rule->solar.setTSnumber(area_3->index, 18, 7);
@@ -332,7 +343,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Hydro
 // =================
 BOOST_FIXTURE_TEST_CASE(
-  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->hydro.setTSnumber(area_2->index, 17, 12);
     my_rule->hydro.setTSnumber(area_3->index, 18, 7);
@@ -354,7 +366,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Thermal clusters
 // ===========================
 BOOST_FIXTURE_TEST_CASE(
-  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->thermal[area_3->index].setTSnumber(thCluster_31.get(), 5, 13);
     my_rule->thermal[area_1->index].setTSnumber(thCluster_11.get(), 19, 8);
@@ -377,7 +390,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Renewable clusters
 // =============================
 BOOST_FIXTURE_TEST_CASE(
-  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
     my_rule->renewable[area_2->index].setTSnumber(rnCluster_21.get(), 19, 8);
@@ -397,14 +411,15 @@ BOOST_FIXTURE_TEST_CASE(
 }
 
 // ========================
-// Tests on Hydro levels
+// Tests on Hydro initial levels
 // ========================
 BOOST_FIXTURE_TEST_CASE(
-  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
-    my_rule->hydroLevels.setTSnumber(area_1->index, 9, 9);
-    my_rule->hydroLevels.setTSnumber(area_3->index, 18, 7);
-    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 9, 9);
+    my_rule->hydroInitialLevels.setTSnumber(area_3->index, 18, 7);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
 
     saveScenarioBuilder();
 
@@ -418,11 +433,35 @@ BOOST_FIXTURE_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
+// ========================
+// Tests on Hydro final levels
+// ========================
+BOOST_FIXTURE_TEST_CASE(
+  HYDRO_FINAL_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
+{
+    my_rule->hydroFinalLevels.setTSnumber(area_1->index, 4, 8);
+    my_rule->hydroFinalLevels.setTSnumber(area_2->index, 11, 3);
+    my_rule->hydroFinalLevels.setTSnumber(area_3->index, 15, 2);
+
+    saveScenarioBuilder();
+
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("hfl,area 1,4 = 8");
+    referenceFile.append("hfl,area 2,11 = 3");
+    referenceFile.append("hfl,area 3,15 = 2");
+    referenceFile.write();
+
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
 // ======================
 // Tests on Links NTC
 // ======================
 BOOST_FIXTURE_TEST_CASE(
-  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->linksNTC[area_1->index].setDataForLink(link_12, 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
@@ -442,7 +481,9 @@ BOOST_FIXTURE_TEST_CASE(
 }
 
 BOOST_FIXTURE_TEST_CASE(
-    BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical, saveFixture) {
+  BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
+{
     my_rule->binding_constraints.setTSnumber("group1", 5, 20);
     my_rule->binding_constraints.setTSnumber("group2", 19, 1);
     my_rule->binding_constraints.setTSnumber("group3", 5, 43);
@@ -464,7 +505,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on All assets together
 // ================================
 BOOST_FIXTURE_TEST_CASE(
-  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->load.setTSnumber(area_2->index, 11, 6);
     my_rule->load.setTSnumber(area_3->index, 7, 2);
@@ -477,7 +519,7 @@ BOOST_FIXTURE_TEST_CASE(
     my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
     my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
-    my_rule->hydroLevels.setTSnumber(area_1->index, 5, 8);
+    my_rule->hydroInitialLevels.setTSnumber(area_1->index, 5, 8);
     my_rule->binding_constraints.setTSnumber("group3", 10, 6);
 
     saveScenarioBuilder();

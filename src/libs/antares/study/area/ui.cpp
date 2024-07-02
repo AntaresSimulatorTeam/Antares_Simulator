@@ -1,35 +1,30 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "ui.h"
-#include <antares/logs/logs.h>
-#include <yuni/core/math.h>
-#include <antares/inifile/inifile.h>
+#include "antares/study/area/ui.h"
+
 #include <sstream>
+
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -121,9 +116,13 @@ static inline void AreaColorToHSVModel(const AreaUI& area, StringT& out)
     else
     {
         if (rgb_max == rgb.g)
+        {
             hsv.hue = 85 + 43 * (rgb.b - rgb.r) / (rgb_max - rgb_min);
+        }
         else // rgb_max == rgb.b */
+        {
             hsv.hue = 171 + 43 * (rgb.r - rgb.g) / (rgb_max - rgb_min);
+        }
     }
     Convert(hsv, out);
 }
@@ -135,19 +134,29 @@ static inline bool AreaUIInternalLoadProperty(AreaUI& ui, const StringT& key, co
     if (key.size() == 1)
     {
         if (key == "x")
+        {
             return value.template to<int>(ui.x);
+        }
         if (key == "y")
+        {
             return value.template to<int>(ui.y);
+        }
     }
     else
     {
         // Color
         if (key == "color_r")
+        {
             return value.template to<int>(ui.color[0]);
+        }
         if (key == "color_g")
+        {
             return value.template to<int>(ui.color[1]);
+        }
         if (key == "color_b")
+        {
             return value.template to<int>(ui.color[2]);
+        }
         if (key == "layers")
         {
             std::stringstream stringStream(value.template to<std::string>());
@@ -156,9 +165,13 @@ static inline bool AreaUIInternalLoadProperty(AreaUI& ui, const StringT& key, co
                 size_t n;
                 stringStream >> n;
                 if (n != 0)
+                {
                     ui.mapLayersVisibilityList.push_back(n);
+                }
                 if (stringStream.eof())
+                {
                     break;
+                }
             }
             return true;
         }
@@ -169,7 +182,10 @@ static inline bool AreaUIInternalLoadProperty(AreaUI& ui, const StringT& key, co
 
 } // anonymous namespace
 
-AreaUI::AreaUI() : x(0), y(0), pModified(true)
+AreaUI::AreaUI():
+    x(0),
+    y(0),
+    pModified(true)
 {
     color[0] = defaultRed;
     color[1] = defaultGreen;
@@ -218,12 +234,16 @@ bool AreaUI::loadFromFile(const AnyString& filename)
 
                 // Property
                 if (!AreaUIInternalLoadProperty(*this, key, value))
+                {
                     logs.warning() << ": `" << key << "`: Unknown property";
+                }
             }
 
             // Bound checking - limits 0..255
             for (uint i = 0; i < 3; ++i)
-                color[i] = Math::MinMax<int>(color[i], 0, 255);
+            {
+                color[i] = std::clamp(color[i], 0, 255);
+            }
 
             pModified = false;
         }
@@ -301,7 +321,9 @@ bool AreaUI::saveToFile(const AnyString& filename, bool force) const
             data << "[ui]\nx = " << x << "\ny = " << y << "\ncolor_r = " << color[0]
                  << "\ncolor_g = " << color[1] << "\ncolor_b = " << color[2] << "\nlayers =";
             for (size_t i = 0, size = mapLayersVisibilityList.size(); i < size; i++)
+            {
                 data << " " << mapLayersVisibilityList[i];
+            }
             data << '\n';
             data << "[layerX]\n";
             for (std::map<size_t, int>::const_iterator iterator = layerX.begin();

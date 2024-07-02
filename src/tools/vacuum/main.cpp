@@ -1,46 +1,43 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+
+#include <fswalker/fswalker.h>
 
 #include <yuni/yuni.h>
 #include <yuni/core/getopt.h>
-#include <yuni/io/directory/info.h>
 #include <yuni/datetime/timestamp.h>
+#include <yuni/io/directory/info.h>
 #include <yuni/job/job.h>
-#include <yuni/job/queue/service.h>
 #include <yuni/job/queue/q-event.h>
-#include <antares/antares.h>
-#include <fswalker/fswalker.h>
-#include <antares/logs/logs.h>
+#include <yuni/job/queue/service.h>
+
+#include <antares/antares/version.h>
 #include <antares/args/args_to_utf8.h>
-#include <antares/version.h>
-#include <antares/locale.h>
-#include "modified-inode.h"
+#include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
+#include "antares/antares/antares.h"
+
 #include "antares-study.h"
 #include "io.h"
+#include "modified-inode.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -48,7 +45,7 @@ using namespace Antares;
 static inline double Round2ndPlace(double v)
 {
     v *= 100.;
-    v = Math::Trunc(v);
+    v = std::trunc(v);
     return v / 100.;
 }
 
@@ -188,13 +185,15 @@ static void NotifyStatistics(const String& logprefix,
 
 namespace // anonymous
 {
-class DirectoryCleanerJob : public Job::IJob
+class DirectoryCleanerJob: public Job::IJob
 {
 public:
-    DirectoryCleanerJob(const String& directory, int64_t dateLimit) :
-     directory(directory), dateLimit(dateLimit)
+    DirectoryCleanerJob(const String& directory, int64_t dateLimit):
+        directory(directory),
+        dateLimit(dateLimit)
     {
     }
+
     virtual ~DirectoryCleanerJob()
     {
     }
@@ -290,7 +289,9 @@ int main(int argc, char** argv)
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 42 : 0;
+        }
 
         if (optVersion)
         {
@@ -299,7 +300,9 @@ int main(int argc, char** argv)
         }
 
         if (not optLogs.empty())
+        {
             logs.logfile(optLogs);
+        }
 
         if (!optMaxDays)
         {
@@ -308,7 +311,9 @@ int main(int argc, char** argv)
         }
 
         if (optDelete)
+        {
             dry = false;
+        }
     }
 
     logs.notice() << "Antares Vacuum v" << VersionToCString();
@@ -323,21 +328,29 @@ int main(int argc, char** argv)
     }
 
     if (dry)
+    {
         logs.info() << "dry run mode (nothing will de deleted)";
+    }
 
     foreach (auto& input, optInput)
+    {
         inputFolders.insert(input);
+    }
 
     foreach (auto& path, optEachFolderIn)
     {
         IO::Directory::Info info(path);
         for (auto i = info.folder_begin(); i.valid(); ++i)
+        {
             inputFolders.insert(i.filename());
+        }
     }
     optEachFolderIn.clear();
 
     foreach (auto& input, inputFolders)
+    {
         logs.info() << "added directory " << input;
+    }
     else logs.warning() << "no directory to analyze";
 
     // GO !
@@ -349,7 +362,9 @@ int main(int argc, char** argv)
         queueservice.maximumThreadCount(4);
 
         foreach (auto& input, inputFolders)
+        {
             queueservice += new DirectoryCleanerJob(input, dateLimit);
+        }
 
         queueservice.start();
         queueservice.wait(Yuni::qseIdle);

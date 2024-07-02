@@ -1,9 +1,6 @@
 name: "Download extract .tgz precompiled libraries"
 description: "Download and extract .tgz precompiled libraries from antares-deps and antares-simulator repository"
 inputs:
-  antares-deps-version:
-    description: 'antares-deps version'
-    required: true
   os:
     description: 'operational system used for github action'
     required: true
@@ -20,18 +17,12 @@ inputs:
 
 runs:
   using: "composite"
-  steps: 
-  - name: Download & extract antares-deps
-    shell: bash
-    run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
-           tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
-           rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
+  steps:
 
   - name: Download & extract OR-Tools
     shell: bash
     run: |
-           mkdir ${{inputs.ortools-dir}}
+           mkdir -p  ${{inputs.ortools-dir}}
            cd ${{inputs.ortools-dir}}
            wget ${{inputs.ortools-url}} -O ortools.zip
            unzip ortools.zip

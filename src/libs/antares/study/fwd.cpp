@@ -1,38 +1,31 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "fwd.h"
+#include "antares/study/fwd.h"
+
 #include <algorithm>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 const char* SeedToCString(SeedIndex seed)
 {
@@ -98,50 +91,25 @@ const char* SeedToID(SeedIndex seed)
     return "";
 }
 
-// ... Initial reservoir levels ...
-InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text)
-{
-    if (!text)
-        return irlUnknown;
-
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
-    if (s == "cold start")
-        return irlColdStart;
-    if (s == "hot start")
-        return irlHotStart;
-
-    return irlUnknown;
-}
-
-const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
-{
-    switch (iniLevels)
-    {
-    case irlColdStart:
-        return "cold start";
-    case irlHotStart:
-        return "hot start";
-    case irlUnknown:
-        return "";
-    }
-    return "";
-}
-
 // ... Hydro heuristic policy ...
 HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
 {
     if (!text)
+    {
         return hhpUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "accommodate rule curves")
+    {
         return hhpAccommodateRuleCurves;
+    }
     if (s == "maximize generation")
+    {
         return hhpMaximizeGeneration;
+    }
 
     return hhpUnknown;
 }
@@ -164,15 +132,21 @@ const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
 HydroPricingMode StringToHydroPricingMode(const AnyString& text)
 {
     if (!text)
+    {
         return hpUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "fast")
+    {
         return hpHeuristic;
+    }
     if (s == "accurate") // mixed integer linear problem
+    {
         return hpMILP;
+    }
 
     return hpUnknown;
 }
@@ -194,17 +168,25 @@ const char* HydroPricingModeToCString(HydroPricingMode hpm)
 PowerFluctuations StringToPowerFluctuations(const AnyString& text)
 {
     if (!text)
+    {
         return lssUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "minimize ramping")
+    {
         return lssMinimizeRamping;
+    }
     if (s == "free modulations")
+    {
         return lssFreeModulations;
+    }
     if (s == "minimize excursions")
+    {
         return lssMinimizeExcursions;
+    }
 
     return lssUnknown;
 }
@@ -228,15 +210,21 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
 SheddingPolicy StringToSheddingPolicy(const AnyString& text)
 {
     if (!text)
+    {
         return shpUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "shave peaks")
+    {
         return shpShavePeaks;
+    }
     if (s == "minimize duration")
+    {
         return shpMinimizeDuration;
+    }
 
     return shpUnknown;
 }
@@ -258,15 +246,25 @@ const char* SheddingPolicyToCString(SheddingPolicy strategy)
 UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
 {
     if (!text)
+    {
         return ucUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "fast")
-        return ucHeuristic;
-    if (s == "accurate") // mixed integer linear problem
+    {
+        return ucHeuristicFast;
+    }
+    if (s == "accurate")
+    {
+        return ucHeuristicAccurate;
+    }
+    if (s == "milp") // mixed integer linear problem
+    {
         return ucMILP;
+    }
 
     return ucUnknown;
 }
@@ -275,10 +273,12 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
 {
     switch (ucommitment)
     {
-    case ucHeuristic:
+    case ucHeuristicFast:
         return "fast";
-    case ucMILP:
+    case ucHeuristicAccurate:
         return "accurate"; // (slow)
+    case ucMILP:
+        return "milp"; // (possibly very slow)
     case ucUnknown:
         return "";
     }
@@ -288,21 +288,33 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
 NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text)
 {
     if (!text)
+    {
         return ncUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "minimum")
+    {
         return ncMin;
+    }
     if (s == "low")
+    {
         return ncLow;
+    }
     if (s == "medium")
+    {
         return ncAvg;
+    }
     if (s == "high")
+    {
         return ncHigh;
+    }
     if (s == "maximum")
+    {
         return ncMax;
+    }
 
     return ncUnknown;
 }
@@ -370,13 +382,21 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     v.toLower();
     if (v == "both-optims"
         || v == "true") // Case "true" : for compatibily with older study versions
+    {
         return mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    }
     if (v == "none" || v == "false") // Case "false" : for compatibily with older study versions
+    {
         return mpsExportStatus::NO_EXPORT;
+    }
     if (v == "optim-1")
+    {
         return mpsExportStatus::EXPORT_FIRST_OPTIM;
+    }
     if (v == "optim-2")
+    {
         return mpsExportStatus::EXPORT_SECOND_OPTIM;
+    }
 
     return mpsExportStatus::UNKNOWN_EXPORT;
 }
@@ -489,5 +509,4 @@ std::string styleToString(const StyleType& style)
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

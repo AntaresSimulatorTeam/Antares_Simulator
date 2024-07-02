@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "hydromonthlypower.h"
@@ -37,45 +31,45 @@ namespace Datagrid
 {
 namespace Renderer
 {
-HydroMonthlyPower::HydroMonthlyPower(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
- MatrixAncestorType(control), Renderer::ARendererArea(control, notifier)
+HydroMonthlyHours::HydroMonthlyHours(wxWindow* control,
+                                     Toolbox::InputSelector::Area* notifier,
+                                     HoursType type) :
+ MatrixAncestorType(control), Renderer::ARendererArea(control, notifier), hoursType(type)
 {
 }
 
-HydroMonthlyPower::~HydroMonthlyPower()
+HydroMonthlyHours::~HydroMonthlyHours()
 {
     destroyBoundEvents();
 }
 
-wxString HydroMonthlyPower::columnCaption(int colIndx) const
+wxString HydroMonthlyHours::columnCaption(int colIndx) const
 {
-    switch (colIndx)
+    if (colIndx == 0 && hoursType == HoursType::Generation)
     {
-    case Data::PartHydro::genMaxP:
-        return wxT("  Generating Max Power  \n   (MW)   ");
-    case Data::PartHydro::genMaxE:
         return wxT("  Generating Max Energy  \n   (Hours at Pmax)   ");
-    case Data::PartHydro::pumpMaxP:
-        return wxT(" Pumping Max Power  \n   (MW)   ");
-    case Data::PartHydro::pumpMaxE:
-        return wxT("  Pumping Max Energy \n   (Hours at Pmax)   ");
-    default:
+    }
+    else if (colIndx == 0 && hoursType == HoursType::Pumping)
+    {
+        return wxT("  Pumping Max Energy  \n   (Hours at Pmax)   ");
+    }
+    else
+    {
         return wxEmptyString;
     }
-    return wxEmptyString;
 }
 
-wxString HydroMonthlyPower::cellValue(int x, int y) const
+wxString HydroMonthlyHours::cellValue(int x, int y) const
 {
     return MatrixAncestorType::cellValue(x, y);
 }
 
-double HydroMonthlyPower::cellNumericValue(int x, int y) const
+double HydroMonthlyHours::cellNumericValue(int x, int y) const
 {
     return MatrixAncestorType::cellNumericValue(x, y);
 }
 
-bool HydroMonthlyPower::cellValue(int x, int y, const String& value)
+bool HydroMonthlyHours::cellValue(int x, int y, const String& value)
 {
     double v;
     if (not value.to(v))
@@ -93,7 +87,7 @@ bool HydroMonthlyPower::cellValue(int x, int y, const String& value)
     return MatrixAncestorType::cellValue(x, y, String() << Math::Round(v, round));
 }
 
-void HydroMonthlyPower::internalAreaChanged(Antares::Data::Area* area)
+void HydroMonthlyHours::internalAreaChanged(Antares::Data::Area* area)
 {
     // FIXME for some reasons, the variable study here is not properly initialized
     if (area && !study)
@@ -101,66 +95,47 @@ void HydroMonthlyPower::internalAreaChanged(Antares::Data::Area* area)
 
     Data::PartHydro* pHydro = (area) ? &(area->hydro) : nullptr;
     Renderer::ARendererArea::internalAreaChanged(area);
-    if (pHydro)
-        MatrixAncestorType::matrix(&pHydro->maxPower);
+    if (pHydro && hoursType == HoursType::Generation)
+        MatrixAncestorType::matrix(&pHydro->dailyNbHoursAtGenPmax);
+    else if (pHydro && hoursType == HoursType::Pumping)
+        MatrixAncestorType::matrix(&pHydro->dailyNbHoursAtPumpPmax);
     else
         MatrixAncestorType::matrix(nullptr);
 }
 
-IRenderer::CellStyle HydroMonthlyPower::cellStyle(int col, int row) const
+IRenderer::CellStyle HydroMonthlyHours::cellStyle(int col, int row) const
 {
-    switch (col)
+    if (double MaxE = MatrixAncestorType::cellNumericValue(0, row);
+        col == 0 && (MaxE < 0. || MaxE > 24.))
     {
-    case 0:
+        return IRenderer::cellStyleError;
+    }
+    else
     {
-        double genMaxP = MatrixAncestorType::cellNumericValue(0, row);
-        if (genMaxP < 0.)
-            return IRenderer::cellStyleError;
-        break;
+        return IRenderer::cellStyleWithNumericCheck(col, row);
     }
-    case 1:
-    {
-        double genMaxE = MatrixAncestorType::cellNumericValue(1, row);
-        if (genMaxE < 0. || genMaxE > 24.)
-            return IRenderer::cellStyleError;
-        break;
-    }
-    case 2:
-    {
-        double PumpMaxP = MatrixAncestorType::cellNumericValue(2, row);
-        if (PumpMaxP < 0.)
-            return IRenderer::cellStyleError;
-        break;
-    }
-    case 3:
-    {
-        double PumpMaxE = MatrixAncestorType::cellNumericValue(3, row);
-        if (PumpMaxE < 0. || PumpMaxE > 24.)
-            return IRenderer::cellStyleError;
-        break;
-    }
-    }
-    return IRenderer::cellStyleWithNumericCheck(col, row);
 }
 
-wxString HydroMonthlyPower::rowCaption(int row) const
+wxString HydroMonthlyHours::rowCaption(int row) const
 {
     if (!study || row >= study->calendar.maxDaysInYear)
         return wxEmptyString;
     return wxStringFromUTF8(study->calendar.text.daysYear[row]);
 }
 
-void HydroMonthlyPower::onStudyClosed()
+void HydroMonthlyHours::onStudyClosed()
 {
     MatrixAncestorType::onStudyClosed();
     Renderer::ARendererArea::onStudyClosed();
 }
 
-void HydroMonthlyPower::onStudyLoaded()
+void HydroMonthlyHours::onStudyLoaded()
 {
     MatrixAncestorType::onStudyLoaded();
     Renderer::ARendererArea::onStudyLoaded();
 }
+
+// Pump
 
 } // namespace Renderer
 } // namespace Datagrid

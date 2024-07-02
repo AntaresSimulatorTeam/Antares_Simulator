@@ -1,43 +1,37 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "study.h"
-#include <antares/benchmarking/DurationCollector.h>
-#include "scenario-builder/sets.h"
-#include <yuni/core/string/wstring.h>
 #include <fstream>
+
+#include <yuni/core/string/wstring.h>
+
+#include <antares/benchmarking/DurationCollector.h>
+#include "antares/study/scenario-builder/sets.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 bool Study::resetFolderIcon() const
 {
@@ -46,12 +40,14 @@ bool Study::resetFolderIcon() const
         buffer.clear() << folder << SEP << "Desktop.ini";
         IO::File::Stream file;
         if (not file.openRW(buffer))
+        {
             return false;
+        }
         buffer.clear() << "[.shellclassinfo]\r\n"
                        << "iconfile = settings/resources/study.ico\r\n"
                        << "iconindex = 0\r\n"
-                       << "infotip = Antares Study" << VersionToCStr((Version)header.version)
-                       << ": " << header.caption << "\r\n";
+                       << "infotip = Antares Study" << header.version.toString() << ": "
+                       << header.caption << "\r\n";
         file << buffer;
     }
 
@@ -60,7 +56,9 @@ bool Study::resetFolderIcon() const
         // The file should be closed at this point
         Yuni::WString wbuffer(folder);
         if (not wbuffer.empty())
+        {
             SetFileAttributesW(wbuffer.c_str(), FILE_ATTRIBUTE_SYSTEM);
+        }
     }
 #endif
 
@@ -70,7 +68,9 @@ bool Study::resetFolderIcon() const
 bool Study::saveToFolder(const AnyString& newfolder)
 {
     if (newfolder.empty())
+    {
         return false;
+    }
 
     logs.notice() << "Exporting the study...";
     const String location = newfolder;
@@ -134,8 +134,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     // In this case, we have to invalidate all matrices to make sure that all
     // data will be rewritten to avoid data loss
     // (if filenames have changed for examples)
-    bool versionUpgrade = ((uint)header.version != (uint)versionLatest);
-    if (versionUpgrade)
+    if (header.version != StudyVersion::latest())
     {
         logs.info() << "  performing a format upgrade";
         // Invalidate all matrices
@@ -143,7 +142,9 @@ bool Study::saveToFolder(const AnyString& newfolder)
         markAsModified();
         // Invalidate the scenario builder data
         if (not scenarioRules)
+        {
             scenarioRulesCreate();
+        }
     }
 
     buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder" << Yuni::IO::Separator
@@ -265,5 +266,4 @@ bool Study::saveToFolder(const AnyString& newfolder)
     return ret;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
