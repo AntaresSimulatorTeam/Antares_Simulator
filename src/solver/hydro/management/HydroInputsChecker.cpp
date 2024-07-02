@@ -225,7 +225,9 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
                                                          errorCollector_);
           if (!validator.check())
           {
-            errorCollector_(area.name) << "hydro final level : infeasibility for area " << area.name << " please check the corresponding final level data (scenario-builder)";
+              errorCollector_(area.name)
+                << "hydro final level : infeasibility for area " << area.name
+                << " please check the corresponding final level data (scenario-builder)";
           }
           if (validator.finalLevelFineForUse())
           {
