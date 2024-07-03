@@ -43,8 +43,9 @@ InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const MPVariable*>& slackVariables)
 {
     turnSlackVarsIntoConstraints(slackVariables);
-    sortConstraints();
+    sortConstraintsBySlackValue();
     trimConstraints();
+    sortConstraintsByType();
 }
 
 void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
@@ -56,7 +57,7 @@ void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
     }
 }
 
-void InfeasibleProblemReport::sortConstraints()
+void InfeasibleProblemReport::sortConstraintsBySlackValue()
 {
     std::sort(std::begin(constraints_), std::end(constraints_), ::compareSlackSolutions);
 }
@@ -119,7 +120,6 @@ void InfeasibleProblemReport::logInfeasibilityCauses()
 
 void InfeasibleProblemReport::prettyPrint()
 {
-    sortConstraintsByType();
     logSuspiciousConstraints();
     logInfeasibilityCauses();
 }
