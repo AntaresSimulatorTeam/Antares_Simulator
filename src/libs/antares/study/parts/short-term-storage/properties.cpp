@@ -177,13 +177,15 @@ bool Properties::validate()
 
     if (withdrawalEfficiency < 0)
     {
-        logs.warning() << "Property withdrawalEfficiency must be >= 0 " << "for short term storage " << name;
+        logs.warning() << "Property withdrawalEfficiency must be >= 0 " << "for short term storage "
+                       << name;
         withdrawalEfficiency = 0;
     }
 
     if (withdrawalEfficiency > 1)
     {
-        logs.warning() << "Property withdrawalEfficiency must be <= 1 " << "for short term storage " << name;
+        logs.warning() << "Property withdrawalEfficiency must be <= 1 " << "for short term storage "
+                       << name;
         withdrawalEfficiency = 1;
     }
 
