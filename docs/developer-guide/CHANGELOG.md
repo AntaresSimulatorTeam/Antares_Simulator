@@ -83,7 +83,7 @@ toc_depth: 2
 * Fix invalid index causing segfault in `test-study` test (#1902)
 
 ## Branch 8.8.x (end of support 12/2025)
-### 8.8.6 (06/2024)
+### 8.8.6 (07/2024)
 #### Bugfix
 - Fix missing synthesis results for links (#2115)
 #### Dependencies
@@ -323,7 +323,7 @@ toc_depth: 2
 * Array, logs jit and correlation in makefile (#1410)
 
 ## Branch 8.6.x (end of support 06/2025)
-### 8.6.8 (06/2024)
+### 8.6.8 (07/2024)
 #### Bugfix
 - [UI] Remove propery storagecycle for short term storage added when saving a study (#2037)
 #### Dependencies
