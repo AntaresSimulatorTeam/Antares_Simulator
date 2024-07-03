@@ -59,7 +59,7 @@ private:
 
     // Get specific items
     std::string areaName() const;
-    std::string STSName() const;
+    std::string STSname() const;
     std::string timeStep() const;
     std::string shortName() const;
 };

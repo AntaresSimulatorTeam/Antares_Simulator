@@ -130,21 +130,14 @@ std::string Constraint::shortName() const
     return nameComponents_.at(0);
 }
 
-std::string Constraint::STSName() const
+std::string Constraint::STSname() const
 {
-    if (type() == ConstraintType::short_term_storage_level)
-    {
-        return StringBetweenAngleBrackets(nameComponents_.at(2));
-    }
-    else
-    {
-        return kUnknown;
-    }
+    return StringBetweenAngleBrackets(nameComponents_.at(2));
 }
 
 std::string Constraint::prettyPrint() const
 {
-    switch (getType())
+    switch (type())
     {
     case ConstraintType::binding_constraint_hourly:
         return "Hourly binding constraint '" + shortName() + "' at hour "
@@ -154,7 +147,6 @@ std::string Constraint::prettyPrint() const
                + timeStep();
     case ConstraintType::binding_constraint_weekly:
         return "Weekly binding constraint '" + shortName();
-
     case ConstraintType::fictitious_load:
         return "Last resort shedding status at area '" + areaName() + "' at hour "
                + timeStep();
@@ -165,8 +157,7 @@ std::string Constraint::prettyPrint() const
         return "Hydro weekly production at area '" + areaName() + "'";
     case ConstraintType::short_term_storage_level:
         return "Short-term-storage reservoir constraint at area '" + areaName() + "' in STS '"
-               + STSName() + "' at hour " + timeStep();
-
+               + STSname() + "' at hour " + timeStep();
     default:
         return kUnknown;
     }
