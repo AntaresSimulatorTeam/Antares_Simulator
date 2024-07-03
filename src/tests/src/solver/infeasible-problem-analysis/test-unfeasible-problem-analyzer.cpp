@@ -171,9 +171,9 @@ std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintN
 }
 
 static const std::string validConstraintNames[] = {
-  "BC::hourly::hour<36>",
-  "BC::daily::day<67>",
-  "BC::weekly::week<12>",
+  "BC-name-1::hourly::hour<36>",
+  "BC-name-2::daily::day<67>",
+  "BC-name-3::weekly::week<12>",
   "FictiveLoads::hour<25>",
   "AreaHydroLevel::hour<8>",
 };
