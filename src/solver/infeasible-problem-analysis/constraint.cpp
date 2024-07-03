@@ -42,10 +42,9 @@ Constraint::Constraint(const std::string& name, const double slackValue):
 {
 }
 
-std::size_t Constraint::extractComponentsFromName()
+void Constraint::extractComponentsFromName()
 {
     boost::algorithm::split_regex(nameComponents_, name_, boost::regex("::"));
-    return nameComponents_.size();
 }
 
 double Constraint::getSlackValue() const

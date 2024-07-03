@@ -45,7 +45,7 @@ public:
 
     double getSlackValue() const;
 
-    std::size_t extractComponentsFromName();
+    void extractComponentsFromName();
     std::string prettyPrint() const;
     ConstraintType type() const;
 

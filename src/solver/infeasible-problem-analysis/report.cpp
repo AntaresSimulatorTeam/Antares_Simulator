@@ -71,10 +71,7 @@ void InfeasibleProblemReport::sortConstraintsByType()
 {
     for (auto& c: constraints_)
     {
-        if (c.extractComponentsFromName() == 0)
-        {
-            return;
-        }
+        c.extractComponentsFromName();
         nbConstraintsByType_[c.type()]++;
     }
 }
