@@ -175,6 +175,18 @@ bool Properties::validate()
         injectionEfficiency = 1;
     }
 
+    if (withdrawalEfficiency < 0)
+    {
+        logs.warning() << "Property withdrawalEfficiency must be >= 0 " << "for short term storage " << name;
+        withdrawalEfficiency = 0;
+    }
+
+    if (withdrawalEfficiency > 1)
+    {
+        logs.warning() << "Property withdrawalEfficiency must be <= 1 " << "for short term storage " << name;
+        withdrawalEfficiency = 1;
+    }
+
     if (initialLevel < 0)
     {
         initialLevel = initiallevelDefault;
