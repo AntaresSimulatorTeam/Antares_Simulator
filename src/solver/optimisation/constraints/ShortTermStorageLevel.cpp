@@ -43,7 +43,7 @@ void ShortTermStorageLevel::add(int pdt, int pays)
                                  -1,
                                  builder.data.NombreDePasDeTempsPourUneOptimisation)
           .ShortTermStorageInjection(index, -1.0 * storage.injectionEfficiency)
-          .ShortTermStorageWithdrawal(index, 1.0 / storage.withdrawalEfficiency)
+          .ShortTermStorageWithdrawal(index, 1.0 * storage.withdrawalEfficiency)
           .equalTo()
           .build();
     }
