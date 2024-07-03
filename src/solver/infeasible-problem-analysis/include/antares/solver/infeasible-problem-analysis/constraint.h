@@ -42,7 +42,7 @@ class Constraint
 public:
     // Construct object
     Constraint() = default;
-    Constraint(const std::string& input, const double slackValue);
+    Constraint(const std::string& name, const double slackValue);
 
     // Raw members
     double getSlackValue() const;
@@ -58,9 +58,9 @@ private:
     double slackValue_;
 
     // Get specific items
-    std::string getAreaName() const;
-    std::string getSTSName() const;
-    std::string getTimeStepInYear() const;
-    std::string getBindingConstraintName() const;
+    std::string areaName() const;
+    std::string STSName() const;
+    std::string timeStep() const;
+    std::string shortName() const;
 };
 } // namespace Antares::Optimization

@@ -35,8 +35,8 @@ const std::string kUnknown = "<unknown>";
 
 namespace Antares::Optimization
 {
-Constraint::Constraint(const std::string& input, const double slackValue):
-    name_(input),
+Constraint::Constraint(const std::string& name, const double slackValue):
+    name_(name),
     slackValue_(slackValue)
 {
 }
@@ -95,7 +95,7 @@ std::string StringBetweenAngleBrackets(const std::string& str)
     return std::string(left + 1, right);
 }
 
-std::string Constraint::getAreaName() const
+std::string Constraint::areaName() const
 {
     if ((getType() == ConstraintType::binding_constraint_hourly)
         || (getType() == ConstraintType::binding_constraint_daily)
@@ -106,7 +106,7 @@ std::string Constraint::getAreaName() const
     return StringBetweenAngleBrackets(nameComponents_.at(1));
 }
 
-std::string Constraint::getTimeStepInYear() const
+std::string Constraint::timeStep() const
 {
     switch (getType())
     {
@@ -155,20 +155,12 @@ ConstraintType Constraint::getType() const
     return ConstraintType::none;
 }
 
-std::string Constraint::getBindingConstraintName() const
+std::string Constraint::shortName() const
 {
-    switch (getType())
-    {
-    case ConstraintType::binding_constraint_hourly:
-    case ConstraintType::binding_constraint_daily:
-    case ConstraintType::binding_constraint_weekly:
-        return nameComponents_.at(0);
-    default:
-        return kUnknown;
-    }
+    return nameComponents_.at(0);
 }
 
-std::string Constraint::getSTSName() const
+std::string Constraint::STSName() const
 {
     if (getType() == ConstraintType::short_term_storage_level)
     {
@@ -185,25 +177,25 @@ std::string Constraint::prettyPrint() const
     switch (getType())
     {
     case ConstraintType::binding_constraint_hourly:
-        return "Hourly binding constraint '" + getBindingConstraintName() + "' at hour "
-               + getTimeStepInYear();
+        return "Hourly binding constraint '" + shortName() + "' at hour "
+               + timeStep();
     case ConstraintType::binding_constraint_daily:
-        return "Daily binding constraint '" + getBindingConstraintName() + "' at day "
-               + getTimeStepInYear();
+        return "Daily binding constraint '" + shortName() + "' at day "
+               + timeStep();
     case ConstraintType::binding_constraint_weekly:
-        return "Weekly binding constraint '" + getBindingConstraintName();
+        return "Weekly binding constraint '" + shortName();
 
     case ConstraintType::fictitious_load:
-        return "Last resort shedding status at area '" + getAreaName() + "' at hour "
-               + getTimeStepInYear();
+        return "Last resort shedding status at area '" + areaName() + "' at hour "
+               + timeStep();
     case ConstraintType::hydro_reservoir_level:
-        return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
-               + getTimeStepInYear();
+        return "Hydro reservoir constraint at area '" + areaName() + "' at hour "
+               + timeStep();
     case ConstraintType::hydro_production_weekly:
-        return "Hydro weekly production at area '" + getAreaName() + "'";
+        return "Hydro weekly production at area '" + areaName() + "'";
     case ConstraintType::short_term_storage_level:
-        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '"
-               + getSTSName() + "' at hour " + getTimeStepInYear();
+        return "Short-term-storage reservoir constraint at area '" + areaName() + "' in STS '"
+               + STSName() + "' at hour " + timeStep();
 
     default:
         return kUnknown;

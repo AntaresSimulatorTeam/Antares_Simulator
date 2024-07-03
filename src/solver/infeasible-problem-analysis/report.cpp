@@ -114,8 +114,6 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     {
         Antares::logs.error() << "* Binding constraints,";
     }
-
-    Antares::logs.error() << "* Negative hurdle costs on lines with infinite capacity (rare).";
 }
 
 void InfeasibleProblemReport::prettyPrint()
