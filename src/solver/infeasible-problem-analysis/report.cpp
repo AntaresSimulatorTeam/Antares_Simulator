@@ -40,7 +40,7 @@ static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-    const std::vector<const MPVariable*>& slackVariables)
+  const std::vector<const MPVariable*>& slackVariables)
 {
     turnSlackVarsIntoConstraints(slackVariables);
     sortConstraints();
@@ -48,7 +48,7 @@ InfeasibleProblemReport::InfeasibleProblemReport(
 }
 
 void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
-    const std::vector<const MPVariable*>& slackVariables)
+  const std::vector<const MPVariable*>& slackVariables)
 {
     for (const MPVariable* slack: slackVariables)
     {

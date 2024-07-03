@@ -18,14 +18,15 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include "antares/solver/infeasible-problem-analysis/constraint.h"
+
 #include <algorithm>
 #include <cassert>
 #include <iomanip>
 #include <sstream>
-#include <boost/regex.hpp>
-#include <boost/algorithm/string/regex.hpp>
 
-#include "antares/solver/infeasible-problem-analysis/constraint.h"
+#include <boost/algorithm/string/regex.hpp>
+#include <boost/regex.hpp>
 
 namespace
 {
