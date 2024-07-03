@@ -40,14 +40,11 @@ enum class ConstraintType
 class Constraint
 {
 public:
-    // Construct object
     Constraint() = default;
     Constraint(const std::string& name, const double slackValue);
 
-    // Raw members
     double getSlackValue() const;
 
-    // Extract items, check consistency
     std::size_t extractComponentsFromName();
     std::string prettyPrint() const;
     ConstraintType type() const;
@@ -57,7 +54,6 @@ private:
     std::vector<std::string> nameComponents_;
     double slackValue_;
 
-    // Get specific items
     std::string areaName() const;
     std::string STSname() const;
     std::string timeStep() const;
