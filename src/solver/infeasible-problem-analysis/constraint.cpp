@@ -27,6 +27,7 @@
 
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace
 {
@@ -61,38 +62,23 @@ public:
     }
 };
 
-std::string StringBetweenAngleBrackets(const std::string& str)
+std::string StringBetweenAngleBrackets(const std::string& constraintName)
 {
-    const auto& begin = str.begin();
-    const auto& end = str.end();
+    std::vector<std::string> split_name;
+    boost::split(split_name, constraintName, boost::is_any_of("<>"));
 
-    auto left = std::find(begin, end, '<');
-
-    if (left == end)
+    std::string err_msg = "Error: ";
+    if (split_name.size() < 3)
     {
-        std::ostringstream stream;
-        stream << std::string("Error the string: ") << std::quoted(str)
-               << " does not contains the left angle bracket " << std::quoted("<");
-        throw StringIsNotWellFormated(stream.str());
+        err_msg += "constraint name '" + constraintName + "' misses '<' and/or '>' bracket";
+        throw StringIsNotWellFormated(err_msg);
     }
-
-    auto right = std::find(begin, end, '>');
-    if (right == end)
+    if (split_name[1].empty())
     {
-        std::ostringstream stream;
-        stream << std::string("Error the string: ") << std::quoted(str)
-               << " does not contains the right angle bracket " << std::quoted(">");
-        throw StringIsNotWellFormated(stream.str());
+        err_msg += "constraint name '" + constraintName + "' must be of format '*<str>*'";
+        throw StringIsNotWellFormated(err_msg);
     }
-
-    if (std::distance(left, right) <= 1)
-    {
-        std::ostringstream stream;
-        stream << std::string("Error the string: ") << std::quoted(str) << " must be of format  "
-               << std::quoted("*<str>*");
-        throw StringIsNotWellFormated(stream.str());
-    }
-    return std::string(left + 1, right);
+    return split_name[1];
 }
 
 std::string Constraint::areaName() const
