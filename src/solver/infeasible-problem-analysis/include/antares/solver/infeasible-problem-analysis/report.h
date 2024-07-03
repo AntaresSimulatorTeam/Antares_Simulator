@@ -48,6 +48,7 @@ private:
     void trimConstraints();
     void sortConstraintsByType();
     void logSuspiciousConstraints();
+    void logInfeasibilityCauses();
 
     std::vector<Constraint> constraints_;
     std::map<ConstraintType, unsigned int> nbConstraintsByType_;

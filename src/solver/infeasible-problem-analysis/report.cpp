@@ -83,6 +83,10 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     {
         Antares::logs.error() << c.prettyPrint();
     }
+}
+
+void InfeasibleProblemReport::logInfeasibilityCauses()
+{
     Antares::logs.error() << "Possible causes of infeasibility:";
     if (nbConstraintsByType_[ConstraintType::hydro_reservoir_level] > 0)
     {
@@ -100,8 +104,8 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     if (nbConstraintsByType_[ConstraintType::short_term_storage_level] > 0)
     {
         Antares::logs.error()
-          << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
-             "lower & upper curves and initial level (if prescribed),";
+                << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
+                   "lower & upper curves and initial level (if prescribed),";
     }
 
     const unsigned int bcCount = nbConstraintsByType_[ConstraintType::binding_constraint_hourly]
@@ -117,6 +121,7 @@ void InfeasibleProblemReport::prettyPrint()
 {
     sortConstraintsByType();
     logSuspiciousConstraints();
+    logInfeasibilityCauses();
 }
 
 } // namespace Antares::Optimization
