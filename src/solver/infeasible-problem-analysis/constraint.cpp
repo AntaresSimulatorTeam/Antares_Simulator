@@ -91,7 +91,7 @@ std::string Constraint::timeStep() const
     return StringBetweenAngleBrackets(nameComponents_.at(nameComponents_.size() - 2));
 }
 
-ConstraintType Constraint::getType() const
+ConstraintType Constraint::type() const
 {
     assert(nameComponents_.size() > 1);
     if (nameComponents_.at(1) == "hourly")
@@ -132,7 +132,7 @@ std::string Constraint::shortName() const
 
 std::string Constraint::STSName() const
 {
-    if (getType() == ConstraintType::short_term_storage_level)
+    if (type() == ConstraintType::short_term_storage_level)
     {
         return StringBetweenAngleBrackets(nameComponents_.at(2));
     }

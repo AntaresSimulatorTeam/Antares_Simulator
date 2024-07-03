@@ -75,7 +75,7 @@ void InfeasibleProblemReport::sortConstraintsByType()
         {
             return;
         }
-        nbConstraintsByType_[c.getType()]++;
+        nbConstraintsByType_[c.type()]++;
     }
 }
 

@@ -50,7 +50,7 @@ public:
     // Extract items, check consistency
     std::size_t extractComponentsFromName();
     std::string prettyPrint() const;
-    ConstraintType getType() const;
+    ConstraintType type() const;
 
 private:
     std::string name_;
