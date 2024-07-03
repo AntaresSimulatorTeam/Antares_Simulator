@@ -1,12 +1,7 @@
 name: Check cpp formatting
 
 on:
-  push:
-    branches:
-      - develop
-      - feature/*
-      - features/*
-      - fix/*
+  pull_request:
 
 jobs:
   build:
