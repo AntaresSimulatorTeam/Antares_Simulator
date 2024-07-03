@@ -83,28 +83,12 @@ std::string StringBetweenAngleBrackets(const std::string& constraintName)
 
 std::string Constraint::areaName() const
 {
-    if ((getType() == ConstraintType::binding_constraint_hourly)
-        || (getType() == ConstraintType::binding_constraint_daily)
-        || (getType() == ConstraintType::binding_constraint_weekly))
-    {
-        return "<none>";
-    }
     return StringBetweenAngleBrackets(nameComponents_.at(1));
 }
 
 std::string Constraint::timeStep() const
 {
-    switch (getType())
-    {
-    case ConstraintType::binding_constraint_hourly:
-    case ConstraintType::binding_constraint_daily:
-    case ConstraintType::fictitious_load:
-    case ConstraintType::hydro_reservoir_level:
-    case ConstraintType::short_term_storage_level:
-        return StringBetweenAngleBrackets(nameComponents_.at(nameComponents_.size() - 2));
-    default:
-        return kUnknown;
-    }
+    return StringBetweenAngleBrackets(nameComponents_.at(nameComponents_.size() - 2));
 }
 
 ConstraintType Constraint::getType() const
