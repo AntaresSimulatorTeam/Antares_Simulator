@@ -26,23 +26,30 @@
 */
 #pragma once
 
+#include "antares/solver/hydro/management/HydroErrorsCollector.h"
 #include "antares/study/parts/hydro/container.h"
 
-namespace Antares::Data
+namespace Antares
+{
+namespace Data
 {
 class PartHydro;
+}
 
+namespace Solver
+{
 class FinalLevelValidator
 {
 public:
-    FinalLevelValidator(PartHydro& hydro,
+    FinalLevelValidator(Antares::Data::PartHydro& hydro,
                         unsigned int areaIndex,
-                        const AreaName areaName,
+                        const Antares::Data::AreaName areaName,
                         double initialLevel,
                         double finalLevel,
                         const unsigned int year,
                         const unsigned int lastSimulationDay,
-                        const unsigned int firstMonthOfSimulation);
+                        const unsigned int firstMonthOfSimulation,
+                        HydroErrorsCollector& errorCollector);
     bool check();
     bool finalLevelFineForUse();
 
@@ -62,12 +69,16 @@ private:
     unsigned int firstMonthOfSimulation_ = 0;
 
     // Data from area
-    PartHydro& hydro_;
+    Antares::Data::PartHydro& hydro_;
     unsigned int areaIndex_;
-    const AreaName areaName_;
+    const Antares::Data::AreaName areaName_;
     double initialLevel_;
     double finalLevel_;
 
     bool finalLevelFineForUse_ = false;
+
+    // area input errors
+    HydroErrorsCollector& errorCollector_;
 };
-} // namespace Antares::Data
+} // namespace Solver
+} // namespace Antares

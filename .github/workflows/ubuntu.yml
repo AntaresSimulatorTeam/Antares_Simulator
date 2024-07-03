@@ -132,13 +132,15 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure
 
-      # simtest
       - name: Read simtest version
-        id: simtest-version
-        uses: notiz-dev/github-action-json-property@release
-        with:
-          path: 'simtest.json'
-          prop_path: 'version'
+        run: |
+          echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
+          cat ./simtest.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - name: Export simtest version
+        run: |
+          echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
       - name: Init submodule
         run: |
@@ -148,7 +150,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-named-mps
           os: ${{ env.os }}
           variant: "named-mps"
@@ -176,7 +178,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v830
           os: ${{ env.os }}
 
@@ -184,7 +186,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-milp
           variant: "milp-cbc"
           os: ${{ env.os }}
@@ -193,7 +195,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v860
           os: ${{ env.os }}
 
@@ -201,7 +203,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v870
           os: ${{ env.os }}
 
@@ -209,7 +211,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v910
           os: ${{ env.os }}
 
@@ -217,7 +219,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: short-tests
           os: ${{ env.os }}
 
@@ -225,7 +227,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-mps
           os: ${{ env.os }}
 
@@ -233,7 +235,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: adequacy-patch-CSR
           os: ${{ env.os }}
 
@@ -241,7 +243,7 @@ jobs:
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-parallel
           os: ${{ env.os }}
           variant: "parallel"
@@ -250,7 +252,7 @@ jobs:
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: ts-generator
           os: ${{ env.os }}
           variant: "tsgenerator"
@@ -259,7 +261,7 @@ jobs:
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: medium-tests
           os: ${{ env.os }}
 
@@ -267,7 +269,7 @@ jobs:
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-1
           os: ${{ env.os }}
 
@@ -275,7 +277,7 @@ jobs:
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-2
           os: ${{ env.os }}
 
@@ -283,7 +285,7 @@ jobs:
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-3
           os: ${{ env.os }}
 

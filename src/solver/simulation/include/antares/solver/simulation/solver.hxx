@@ -312,6 +312,9 @@ void ISimulation<ImplementationType>::run()
     }
     else
     {
+        // Export ts-numbers into output
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
+
         if (not ImplementationType::simulationBegin())
         {
             return;
@@ -348,9 +351,6 @@ void ISimulation<ImplementationType>::run()
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
         ImplementationType::variables.simulationEnd();
-
-        // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -972,6 +972,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             hydroInputsChecker.Execute(year);
         }
     }
+    hydroInputsChecker.CheckForErrors();
 
     logs.info() << " Starting the simulation";
 
@@ -996,6 +997,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         {
             // for each year not handled earlier
             hydroInputsChecker.Execute(y);
+            hydroInputsChecker.CheckForErrors();
+
             bool performCalculations = batch.isYearPerformed[y];
             unsigned int numSpace = 999999;
             if (performCalculations)
