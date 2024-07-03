@@ -46,11 +46,11 @@ private:
       const std::vector<const operations_research::MPVariable*>& slackVariables);
     void sortConstraints();
     void trimConstraints();
-    void extractItems();
+    void sortConstraintsByType();
     void logSuspiciousConstraints();
 
-    std::vector<Constraint> mConstraints;
-    std::map<ConstraintType, unsigned int> mTypes;
-    const unsigned int nbVariables = 10;
+    std::vector<Constraint> constraints_;
+    std::map<ConstraintType, unsigned int> nbConstraintsByType_;
+    const unsigned int nbMaxVariables = 10;
 };
 } // namespace Antares::Optimization
