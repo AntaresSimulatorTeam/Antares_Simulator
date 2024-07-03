@@ -64,7 +64,8 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<double>(this->injectionEfficiency);
     }
 
-    if (p->key == "efficiencyWithdrawal")
+
+    if (p->key == "efficiencywithdrawal")
     {
         return p->value.to<double>(this->withdrawalEfficiency);
     }
