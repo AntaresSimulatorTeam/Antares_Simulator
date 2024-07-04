@@ -28,6 +28,10 @@
       "version>=": "1.81.0"
     },
     {
+      "name": "boost-regex",
+      "version>=": "1.81.0"
+    },
+    {
       "name": "minizip-ng",
       "default-features": false,
       "version>=": "4.0.0",

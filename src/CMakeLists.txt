@@ -196,6 +196,7 @@ endif()
 
 #Boost header libraries
 find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS regex REQUIRED)
 
 #Sirius solver
 if(POLICY CMP0074)
