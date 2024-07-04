@@ -25,9 +25,9 @@
 #include <iomanip>
 #include <sstream>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
-#include <boost/algorithm/string.hpp>
 
 namespace
 {
@@ -139,19 +139,15 @@ std::string Constraint::prettyPrint() const
     switch (type())
     {
     case ConstraintType::binding_constraint_hourly:
-        return "Hourly binding constraint '" + shortName() + "' at hour "
-               + timeStep();
+        return "Hourly binding constraint '" + shortName() + "' at hour " + timeStep();
     case ConstraintType::binding_constraint_daily:
-        return "Daily binding constraint '" + shortName() + "' at day "
-               + timeStep();
+        return "Daily binding constraint '" + shortName() + "' at day " + timeStep();
     case ConstraintType::binding_constraint_weekly:
         return "Weekly binding constraint '" + shortName();
     case ConstraintType::fictitious_load:
-        return "Last resort shedding status at area '" + areaName() + "' at hour "
-               + timeStep();
+        return "Last resort shedding status at area '" + areaName() + "' at hour " + timeStep();
     case ConstraintType::hydro_reservoir_level:
-        return "Hydro reservoir constraint at area '" + areaName() + "' at hour "
-               + timeStep();
+        return "Hydro reservoir constraint at area '" + areaName() + "' at hour " + timeStep();
     case ConstraintType::hydro_production_weekly:
         return "Hydro weekly production at area '" + areaName() + "'";
     case ConstraintType::short_term_storage_level:
