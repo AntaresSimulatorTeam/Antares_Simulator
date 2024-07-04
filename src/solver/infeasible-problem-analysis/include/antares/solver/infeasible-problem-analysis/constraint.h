@@ -41,9 +41,7 @@ class Constraint
 {
 public:
     Constraint() = default;
-    Constraint(const std::string& name, const double slackValue);
-
-    double getSlackValue() const;
+    Constraint(const std::string& name);
 
     void extractComponentsFromName();
     std::string prettyPrint() const;
@@ -52,7 +50,6 @@ public:
 private:
     std::string name_;
     std::vector<std::string> nameComponents_;
-    double slackValue_;
 
     std::string areaName() const;
     std::string STSname() const;

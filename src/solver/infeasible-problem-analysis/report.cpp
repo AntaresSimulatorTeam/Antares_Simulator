@@ -31,20 +31,12 @@
 
 using namespace operations_research;
 
-static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
-                                  const Antares::Optimization::Constraint& b)
-{
-    return a.getSlackValue() > b.getSlackValue();
-}
-
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const MPVariable*>& slackVariables)
 {
     turnSlackVarsIntoConstraints(slackVariables);
-    sortConstraintsBySlackValue();
-    trimConstraints();
     sortConstraintsByType();
 }
 
@@ -53,19 +45,8 @@ void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
 {
     for (const MPVariable* slack: slackVariables)
     {
-        constraints_.emplace_back(slack->name(), slack->solution_value());
+        constraints_.emplace_back(slack->name());
     }
-}
-
-void InfeasibleProblemReport::sortConstraintsBySlackValue()
-{
-    std::sort(std::begin(constraints_), std::end(constraints_), ::compareSlackSolutions);
-}
-
-void InfeasibleProblemReport::trimConstraints()
-{
-    unsigned int nbConstraints = constraints_.size();
-    constraints_.resize(std::min(nbMaxVariables, nbConstraints));
 }
 
 void InfeasibleProblemReport::sortConstraintsByType()

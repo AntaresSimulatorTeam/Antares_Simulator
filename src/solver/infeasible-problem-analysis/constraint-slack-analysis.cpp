@@ -31,9 +31,14 @@
 
 using namespace operations_research;
 
+static bool compareSlackSolutions(const MPVariable* a,
+                                  const MPVariable* b)
+{
+    return a->solution_value() > b->solution_value();
+}
+
 namespace Antares::Optimization
 {
-
 void ConstraintSlackAnalysis::run(MPSolver* problem)
 {
     addSlackVariables(problem);
@@ -53,6 +58,9 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
     }
 
     hasDetectedInfeasibilityCause_ = true;
+
+    sortSlackVariablesByValue();
+    trimSlackVariables();
 }
 
 void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
@@ -102,6 +110,17 @@ void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
         objective->SetCoefficient(slack, 1.);
     }
     objective->SetMinimization();
+}
+
+void ConstraintSlackAnalysis::sortSlackVariablesByValue()
+{
+    std::sort(std::begin(slackVariables_), std::end(slackVariables_), ::compareSlackSolutions);
+}
+
+void ConstraintSlackAnalysis::trimSlackVariables()
+{
+    unsigned int nbSlackVars = slackVariables_.size();
+    slackVariables_.resize(std::min(nbMaxSlackVarsToKeep, nbSlackVars));
 }
 
 void ConstraintSlackAnalysis::printReport() const

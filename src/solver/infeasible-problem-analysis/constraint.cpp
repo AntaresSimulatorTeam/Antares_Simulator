@@ -36,20 +36,14 @@ const std::string kUnknown = "<unknown>";
 
 namespace Antares::Optimization
 {
-Constraint::Constraint(const std::string& name, const double slackValue):
-    name_(name),
-    slackValue_(slackValue)
+Constraint::Constraint(const std::string& name):
+    name_(name)
 {
 }
 
 void Constraint::extractComponentsFromName()
 {
     boost::algorithm::split_regex(nameComponents_, name_, boost::regex("::"));
-}
-
-double Constraint::getSlackValue() const
-{
-    return slackValue_;
 }
 
 class StringIsNotWellFormated: public std::runtime_error

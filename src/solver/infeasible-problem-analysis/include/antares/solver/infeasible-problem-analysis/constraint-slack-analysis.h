@@ -54,8 +54,12 @@ public:
 private:
     void buildObjective(operations_research::MPSolver* problem) const;
     void addSlackVariables(operations_research::MPSolver* problem);
+    void sortSlackVariablesByValue();
+    void trimSlackVariables();
 
     std::vector<const operations_research::MPVariable*> slackVariables_;
+    const unsigned int nbMaxSlackVarsToKeep = 10;
+
     const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|"
                                                 "^FictiveLoads::|^Level::|"
                                                 "^HydroPower::";
