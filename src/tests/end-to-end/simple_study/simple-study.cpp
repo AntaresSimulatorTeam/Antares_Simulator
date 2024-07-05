@@ -318,17 +318,16 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     storages.push_back(sts);
 
     // Fatal gen at h=1
-    {
-        auto& windTS = area->wind.series.timeSeries;
-        TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
-        windTS[0][1] = 100;
-    }
+    auto& windTS = area->wind.series.timeSeries;
+    TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
+    windTS[0][1] = 100;
 
-    // Fatal load at h=2
+    // Fatal load at h=2-10
+    auto& loadTS = area->load.series.timeSeries;
+    TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
+    for (int i = 2; i < 10; i++)
     {
-        auto& loadTS = area->load.series.timeSeries;
-        TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
-        loadTS[0][2] = 100;
+        loadTS[0][i] = 100;
     }
 
     // Usual values, avoid spillage & unsupplied energy
