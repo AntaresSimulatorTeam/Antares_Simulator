@@ -48,16 +48,12 @@ ConstraintSlackAnalysis::ConstraintSlackAnalysis()
     watchedConstraintTypes_.push_back(std::make_shared<HydroLevel>());
     watchedConstraintTypes_.push_back(std::make_shared<STS>());
     watchedConstraintTypes_.push_back(std::make_shared<HydroProduction>());
-
-    std::vector<std::string> patterns;
-    std::for_each(watchedConstraintTypes_.begin(), watchedConstraintTypes_.end(),
-                  [&](auto& c) { patterns.push_back(c->regexId()); });
-    constraint_name_pattern_ = boost::algorithm::join(patterns, "|");
 }
 
 void ConstraintSlackAnalysis::run(MPSolver* problem)
 {
-    addSlackVariables(problem);
+    selectConstraintsToWatch(problem);
+    addSlackVariablesToConstraints(problem);
     if (slackVariables_.empty())
     {
         logs.error() << title() << " : no constraints have been selected";
@@ -79,7 +75,24 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
     trimSlackVariables();
 }
 
-void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
+void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
+{
+    std::vector<std::string> patterns;
+    std::for_each(watchedConstraintTypes_.begin(), watchedConstraintTypes_.end(),
+                  [&](auto& c) { patterns.push_back(c->regexId()); });
+    std::string constraint_name_pattern { boost::algorithm::join(patterns, "|") };
+
+    std::regex rgx(constraint_name_pattern);
+    for (MPConstraint* c: problem->constraints())
+    {
+        if (std::regex_search(c->name(), rgx))
+        {
+            constraintsToWatch_.push_back(c);
+        }
+    }
+}
+
+void ConstraintSlackAnalysis::addSlackVariablesToConstraints(MPSolver* problem)
 {
     /* Optimization:
         We assess that less than 1 every 3 constraint will match
@@ -88,29 +101,25 @@ void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
     */
     const unsigned int selectedConstraintsInverseRatio = 3;
     slackVariables_.reserve(problem->NumConstraints() / selectedConstraintsInverseRatio);
-    std::regex rgx(constraint_name_pattern_);
     const double infinity = MPSolver::infinity();
-    for (MPConstraint* constraint: problem->constraints())
+    for (MPConstraint* c: constraintsToWatch_)
     {
-        if (std::regex_search(constraint->name(), rgx))
+        if (c->lb() != -infinity)
         {
-            if (constraint->lb() != -infinity)
-            {
-                const MPVariable* slack = problem->MakeNumVar(0,
-                                                              infinity,
-                                                              constraint->name() + "::low");
-                constraint->SetCoefficient(slack, 1.);
-                slackVariables_.push_back(slack);
-            }
+            const MPVariable* slack = problem->MakeNumVar(0,
+                                                          infinity,
+                                                          c->name() + "::low");
+            c->SetCoefficient(slack, 1.);
+            slackVariables_.push_back(slack);
+        }
 
-            if (constraint->ub() != infinity)
-            {
-                const MPVariable* slack = problem->MakeNumVar(0,
-                                                              infinity,
-                                                              constraint->name() + "::up");
-                constraint->SetCoefficient(slack, -1.);
-                slackVariables_.push_back(slack);
-            }
+        if (c->ub() != infinity)
+        {
+            const MPVariable* slack = problem->MakeNumVar(0,
+                                                          infinity,
+                                                          c->name() + "::up");
+            c->SetCoefficient(slack, -1.);
+            slackVariables_.push_back(slack);
         }
     }
 }

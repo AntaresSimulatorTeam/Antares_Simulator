@@ -27,6 +27,7 @@
 
 namespace operations_research
 {
+class MPConstraint;
 class MPVariable;
 class MPSolver;
 } // namespace operations_research
@@ -53,15 +54,16 @@ public:
     }
 
 private:
+    void selectConstraintsToWatch(operations_research::MPSolver* problem);
+    void addSlackVariablesToConstraints(operations_research::MPSolver* problem);
     void buildObjective(operations_research::MPSolver* problem) const;
-    void addSlackVariables(operations_research::MPSolver* problem);
     void sortSlackVariablesByValue();
     void trimSlackVariables();
 
+    std::vector<operations_research::MPConstraint*> constraintsToWatch_;
     std::vector<const operations_research::MPVariable*> slackVariables_;
     std::vector<std::shared_ptr<WatchedConstraint>> watchedConstraintTypes_;
     const unsigned int nbMaxSlackVarsToKeep = 10;
-    std::string constraint_name_pattern_;
 };
 
 } // namespace Antares::Optimization
