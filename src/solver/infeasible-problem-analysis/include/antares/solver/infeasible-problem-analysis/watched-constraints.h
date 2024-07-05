@@ -11,12 +11,16 @@ class WatchedConstraint
 {
 public:
     void setConstraintName(std::string constraintName);
-    std::string regexId();
+    std::string regexId() const;
     virtual std::shared_ptr<WatchedConstraint> clone() const = 0;
     virtual std::string infeasisibity() = 0;
     virtual std::string infeasisibityCause() = 0;
 
 protected:
+    void setRegexId(std::string name);
+    const std::vector<std::string>& splitName() const;
+
+private:
     std::string name_;
     std::string regexId_;
     std::vector<std::string> splitName_;

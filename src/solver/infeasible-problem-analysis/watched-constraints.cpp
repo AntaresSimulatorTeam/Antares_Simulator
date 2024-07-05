@@ -65,9 +65,19 @@ void WatchedConstraint::setConstraintName(std::string name)
     boost::algorithm::split_regex(splitName_, name_, boost::regex("::"));
 }
 
-std::string WatchedConstraint::regexId()
+std::string WatchedConstraint::regexId() const
 {
     return regexId_;
+}
+
+void WatchedConstraint::setRegexId(std::string regexId)
+{
+    regexId_ = regexId;
+}
+
+const std::vector<std::string>& WatchedConstraint::splitName() const
+{
+    return splitName_;
 }
 
 // =======================================
@@ -75,7 +85,7 @@ std::string WatchedConstraint::regexId()
 // =======================================
 HourlyBC::HourlyBC()
 {
-    regexId_ = "::hourly::";
+    setRegexId("::hourly::");
 }
 
 std::shared_ptr<WatchedConstraint> HourlyBC::clone() const
@@ -85,7 +95,7 @@ std::shared_ptr<WatchedConstraint> HourlyBC::clone() const
 
 std::string HourlyBC::infeasisibity()
 {
-    return "Hourly BC '" + shortName(splitName_) + "' at hour " + timeStep(splitName_);
+    return "Hourly BC '" + shortName(splitName()) + "' at hour " + timeStep(splitName());
 }
 
 std::string HourlyBC::infeasisibityCause()
@@ -98,7 +108,7 @@ std::string HourlyBC::infeasisibityCause()
 // =======================================
 DailyBC::DailyBC()
 {
-    regexId_ = "::daily::";
+    setRegexId("::daily::");
 }
 
 std::shared_ptr<WatchedConstraint> DailyBC::clone() const
@@ -108,7 +118,7 @@ std::shared_ptr<WatchedConstraint> DailyBC::clone() const
 
 std::string DailyBC::infeasisibity()
 {
-    return "Daily BC '" + shortName(splitName_) + "' at day " + timeStep(splitName_);
+    return "Daily BC '" + shortName(splitName()) + "' at day " + timeStep(splitName());
 }
 
 std::string DailyBC::infeasisibityCause()
@@ -121,7 +131,7 @@ std::string DailyBC::infeasisibityCause()
 // =======================================
 WeeklyBC::WeeklyBC()
 {
-    regexId_ = "::weekly::";
+    setRegexId("::weekly::");
 }
 
 std::shared_ptr<WatchedConstraint> WeeklyBC::clone() const
@@ -131,7 +141,7 @@ std::shared_ptr<WatchedConstraint> WeeklyBC::clone() const
 
 std::string WeeklyBC::infeasisibity()
 {
-    return "Weekly BC '" + shortName(splitName_);
+    return "Weekly BC '" + shortName(splitName());
 }
 
 std::string WeeklyBC::infeasisibityCause()
@@ -144,7 +154,7 @@ std::string WeeklyBC::infeasisibityCause()
 // =======================================
 FictitiousLoad::FictitiousLoad()
 {
-    regexId_ = "^FictiveLoads::";
+    setRegexId("^FictiveLoads::");
 }
 
 std::shared_ptr<WatchedConstraint> FictitiousLoad::clone() const
@@ -154,8 +164,8 @@ std::shared_ptr<WatchedConstraint> FictitiousLoad::clone() const
 
 std::string FictitiousLoad::infeasisibity()
 {
-    return "Last resort shedding status at area '" + areaName(splitName_) + "' at hour "
-           + timeStep(splitName_);
+    return "Last resort shedding status at area '" + areaName(splitName()) + "' at hour "
+           + timeStep(splitName());
 }
 
 std::string FictitiousLoad::infeasisibityCause()
@@ -168,7 +178,7 @@ std::string FictitiousLoad::infeasisibityCause()
 // =======================================
 HydroLevel::HydroLevel()
 {
-    regexId_ = "^AreaHydroLevel::";
+    setRegexId("^AreaHydroLevel::");
 }
 
 std::shared_ptr<WatchedConstraint> HydroLevel::clone() const
@@ -178,8 +188,8 @@ std::shared_ptr<WatchedConstraint> HydroLevel::clone() const
 
 std::string HydroLevel::infeasisibity()
 {
-    return "Hydro level constraint at area '" + areaName(splitName_) + "' at hour "
-           + timeStep(splitName_);
+    return "Hydro level constraint at area '" + areaName(splitName()) + "' at hour "
+           + timeStep(splitName());
 }
 
 std::string HydroLevel::infeasisibityCause()
@@ -193,7 +203,7 @@ std::string HydroLevel::infeasisibityCause()
 // =======================================
 STS::STS()
 {
-    regexId_ = "^Level::";
+    setRegexId("^Level::");
 }
 
 std::shared_ptr<WatchedConstraint> STS::clone() const
@@ -203,8 +213,8 @@ std::shared_ptr<WatchedConstraint> STS::clone() const
 
 std::string STS::infeasisibity()
 {
-    return "Short-term-storage reservoir constraint at area '" + areaName(splitName_) + "' in STS '"
-           + STSname(splitName_) + "' at hour " + timeStep(splitName_);
+    return "Short-term-storage reservoir constraint at area '" + areaName(splitName()) + "' in STS '"
+           + STSname(splitName()) + "' at hour " + timeStep(splitName());
 }
 
 std::string STS::infeasisibityCause()
@@ -218,7 +228,7 @@ std::string STS::infeasisibityCause()
 // =======================================
 HydroProduction::HydroProduction()
 {
-    regexId_ = "^HydroPower::";
+    setRegexId("^HydroPower::");
 }
 
 std::shared_ptr<WatchedConstraint> HydroProduction::clone() const
@@ -228,7 +238,7 @@ std::shared_ptr<WatchedConstraint> HydroProduction::clone() const
 
 std::string HydroProduction::infeasisibity()
 {
-    return "Hydro weekly production at area '" + areaName(splitName_) + "'";
+    return "Hydro weekly production at area '" + areaName(splitName()) + "'";
 }
 
 std::string HydroProduction::infeasisibityCause()
