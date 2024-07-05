@@ -1,5 +1,5 @@
 
-#include "detected-infeasible-constraints.h"
+#include "antares/solver/infeasible-problem-analysis/detected-infeasible-constraints.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>

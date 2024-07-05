@@ -24,7 +24,6 @@
 #include <regex>
 
 #include <antares/logs/logs.h>
-#include "antares/solver/infeasible-problem-analysis/constraint.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #pragma GCC diagnostic pop
