@@ -384,8 +384,8 @@ BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixtur
     unsigned int groupNb = 0; // Used to reach the first group of STS results
     OutputRetriever output(simulation->rawSimu());
 
-    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(1), 56); //injection
-    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(2), 48); //withdrawal
+    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(1), 56); // injection
+    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(2), 48); // withdrawal
 }
 
 BOOST_AUTO_TEST_SUITE_END()
