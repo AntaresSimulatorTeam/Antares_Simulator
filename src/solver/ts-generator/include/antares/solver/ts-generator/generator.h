@@ -24,15 +24,13 @@
 #include <yuni/yuni.h>
 
 #include <antares/series/series.h>
-#include <antares/solver/ts-generator/law.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
 #include <antares/study/study.h>
-#include <antares/writer/i_writer.h>
-
 #include "xcast/xcast.h"
 
+namespace fs = std::filesystem;
 using LinkPair = std::pair<std::string, std::string>;
 using LinkPairs = std::vector<LinkPair>;
 
@@ -52,7 +50,7 @@ struct LinkTSgenerationParams
 {
     LinkPair namesPair;
 
-    unsigned unitCount = 0;
+    unsigned unitCount = 1;
     double nominalCapacity = 0;
 
     double forcedVolatility = 0.;
@@ -77,7 +75,6 @@ public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
 
     AvailabilityTSGeneratorData(LinkTSgenerationParams&,
-                                Data::TimeSeries&,
                                 Matrix<>& modulation,
                                 const std::string& name);
 
@@ -91,8 +88,6 @@ public:
     Data::StatisticalLaw& plannedLaw;
 
     Data::PreproAvailability* prepro;
-
-    Matrix<>& series;
 
     Matrix<>::ColumnType& modulationCapacity;
 
@@ -111,11 +106,14 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
-                               const std::string& savePath);
+                               MersenneTwister& thermalRandom);
+
+void writeThermalTimeSeries(const std::vector<Data::ThermalCluster*>& clusters,
+                            const fs::path& savePath);
 
 bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
                             StudyParamsForLinkTS&,
-                            const std::string& savePath);
+                            const fs::path& savePath);
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);

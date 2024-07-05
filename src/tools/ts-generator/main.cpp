@@ -22,15 +22,10 @@
 #include <memory>
 #include <string>
 
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/checks/checkLoadedInputData.h>
-#include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
-#include <antares/writer/result_format.h>
-#include <antares/writer/writer_factory.h>
 
 #include "antares/tools/ts-generator/tsGenerationOptions.h"
 #include "antares/tools/ts-generator/linksTSgenerator.h"
@@ -44,9 +39,9 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
                                                     const std::string& clustersToGen)
 {
     std::vector<Data::ThermalCluster*> clusters;
-    const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
+    const auto pairsAreaCluster = splitStringIntoPairs(clustersToGen, ';', '.');
 
-    for (const auto& [areaID, clusterID]: ids)
+    for (const auto& [areaID, clusterID]: pairsAreaCluster)
     {
         logs.info() << "Searching for area: " << areaID << " and cluster: " << clusterID;
 
@@ -81,61 +76,49 @@ int main(int argc, char* argv[])
     if (! checkOptions(settings))
         return 1;
 
-    auto study = std::make_shared<Data::Study>(true);
-    Data::StudyLoadOptions studyOptions;
-    studyOptions.prepareOutput = true;
+    bool return_code {true};
 
-    if (!study->loadFromFolder(settings.studyFolder, studyOptions))
+    if (thermalTSrequired(settings))
     {
-        logs.error() << "Invalid study given to the generator";
-        return 1;
+        // === Data for TS generation ===
+        auto study = std::make_shared<Data::Study>(true);
+        Data::StudyLoadOptions studyOptions;
+        if (!study->loadFromFolder(settings.studyFolder, studyOptions))
+        {
+            logs.error() << "Invalid study given to the generator";
+            return 1;
+        }
+
+        std::vector<Data::ThermalCluster*> clusters;
+        if (settings.allThermal)
+        {
+            clusters = getAllClustersToGen(study->areas, true);
+        }
+        else if (!settings.thermalListToGen.empty())
+        {
+            clusters = getClustersToGen(study->areas, settings.thermalListToGen);
+        }
+
+        // === TS generation ===
+        MersenneTwister thermalRandom;
+        thermalRandom.reset(study->parameters.seed[Data::seedTsGenThermal]);
+        return_code = TSGenerator::generateThermalTimeSeries(*study,
+                                                             clusters,
+                                                             thermalRandom);
+
+        // === Writing generated TS on disk ===
+        auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
+        thermalSavePath /= "ts-generator";
+        thermalSavePath /= "thermal";
+        writeThermalTimeSeries(clusters, thermalSavePath);
     }
 
-    study->initializeRuntimeInfos();
-    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal[/mc-0]
-    study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
-
-    try
+    if (linkTSrequired(settings))
     {
-        Antares::Check::checkMinStablePower(true, study->areas);
-    }
-    catch (Error::InvalidParametersForThermalClusters& ex)
-    {
-        Antares::logs.error() << ex.what();
+        LinksTSgenerator linksTSgenerator(settings);
+        linksTSgenerator.extractData();
+        return_code = linksTSgenerator.generate() && return_code;
     }
 
-    auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
-    thermalSavePath /= "ts-generator";
-    thermalSavePath /= "thermal";
-
-    // ============ THERMAL : Getting data for generating time-series =========
-    std::vector<Data::ThermalCluster*> clusters;
-    if (settings.allThermal)
-    {
-        clusters = getAllClustersToGen(study->areas, true);
-    }
-    else if (!settings.thermalListToGen.empty())
-    {
-        clusters = getClustersToGen(study->areas, settings.thermalListToGen);
-    }
-
-    for (auto& c: clusters)
-    {
-        logs.debug() << c->id();
-    }
-
-
-
-    LinksTSgenerator linksTSgenerator(settings);
-    linksTSgenerator.extractData();
-
-    // ============ TS Generation =============================================
-
-    bool ret = TSGenerator::generateThermalTimeSeries(*study,
-                                                      clusters,
-                                                      thermalSavePath.string());
-
-    ret = linksTSgenerator.generate() && ret;
-
-    return !ret; // return 0 for success
+    return !return_code; // return 0 for success
 }

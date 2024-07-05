@@ -26,4 +26,6 @@ bool parseOptions(int, char*[], Settings&);
 std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings&);
 
 bool checkOptions(Settings& options);
+bool linkTSrequired(Settings& options);
+bool thermalTSrequired(Settings& options);
 }

@@ -166,52 +166,56 @@ void readIniProperties(std::vector<LinkTSgenerationParams>& linkList, fs::path t
     }
 }
 
-    bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
-                                  fs::path sourceAreaDir)
+fs::path makePreproFile(const fs::path& preproFilePath, const std::string& changingEnd)
+{
+    auto to_return = preproFilePath;
+    to_return += changingEnd + ".txt";
+    return to_return;
+}
+
+bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
+                              fs::path sourceAreaDir)
+{
+    bool to_return = true;
+    const auto preproId = link.namesPair.first + "/" + link.namesPair.second;
+    link.prepro = std::make_unique<Data::PreproAvailability>(preproId, link.unitCount);
+
+    auto preproFileRoot = sourceAreaDir / "prepro" / link.namesPair.second;
+
+    // Testing files existence
+    auto preproFile = makePreproFile(preproFileRoot, "");
+    auto modulationDirectFile = makePreproFile(preproFileRoot, "_mod_direct");
+    auto modulationIndirectFile = makePreproFile(preproFileRoot, "_mod_indirect");
+    std::vector<fs::path> paths {preproFile, modulationDirectFile, modulationIndirectFile};
+    if (std::any_of(paths.begin(), paths.end(), [](auto& path) {return ! fs::exists(path);}))
     {
-        bool to_return = true;
-        const auto preproId = link.namesPair.first + "/" + link.namesPair.second;
-        link.prepro = std::make_unique<Data::PreproAvailability>(preproId, link.unitCount);
+        link.hasValidData = false;
+        return false;
+    }
 
-        auto preproFileRoot = sourceAreaDir / "prepro" / link.namesPair.second;
-
-        auto preproFile = preproFileRoot;
-        preproFile += ".txt";
-        if (fs::exists(preproFile))
-        {
-            to_return = link.prepro->data.loadFromCSVFile(
+    // Files loading
+    to_return = link.prepro->data.loadFromCSVFile(
                     preproFile.string(),
                     Data::PreproAvailability::preproAvailabilityMax,
                     DAYS_PER_YEAR)
-                        && link.prepro->validate()
-                        && to_return;
-        }
+                && link.prepro->validate()
+                && to_return;
 
-        auto modulationFileDirect = preproFileRoot;
-        modulationFileDirect += "_mod_direct.txt";
-        if (fs::exists(modulationFileDirect))
-        {
-            to_return = link.modulationCapacityDirect.loadFromCSVFile(
-                    modulationFileDirect.string(),
+    to_return = link.modulationCapacityDirect.loadFromCSVFile(
+                    modulationDirectFile.string(),
                     1,
                     HOURS_PER_YEAR)
-                        && to_return;
-        }
+                && to_return;
 
-        auto modulationFileIndirect = preproFileRoot;
-        modulationFileIndirect += "_mod_indirect.txt";
-        if (fs::exists(modulationFileIndirect))
-        {
-            to_return = link.modulationCapacityIndirect.loadFromCSVFile(
-                    modulationFileIndirect.string(),
+    to_return = link.modulationCapacityIndirect.loadFromCSVFile(
+                    modulationIndirectFile.string(),
                     1,
                     HOURS_PER_YEAR)
-                        && to_return;
-        }
-        // Makes it possible to skip a link's TS generation when time comes
-        link.hasValidData = link.hasValidData && to_return;
-        return to_return;
-    }
+                && to_return;
+
+    link.hasValidData = link.hasValidData && to_return;
+    return to_return;
+}
 
 void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
                           fs::path toLinksDir)
@@ -222,7 +226,7 @@ void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
         fs::path sourceAreaDir = toLinksDir / sourceAreaName;
         if (! readLinkPreproTimeSeries(link, sourceAreaDir))
         {
-            logs.warning() << "Could not load all prepro data for link '"
+            logs.warning() << "Could not load all prepro/modulation data for link '"
                            << link.namesPair.first << "." << link.namesPair.second << "'";
         }
     }
@@ -330,7 +334,7 @@ bool LinksTSgenerator::generate()
     saveTSpath /= "ts-generator";
     saveTSpath /= "links";
 
-    return generateLinkTimeSeries(linkList_, generalParams_, saveTSpath.string());
+    return generateLinkTimeSeries(linkList_, generalParams_, saveTSpath);
 }
 
 }

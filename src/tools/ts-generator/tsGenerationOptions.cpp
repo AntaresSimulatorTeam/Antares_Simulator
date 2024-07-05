@@ -63,4 +63,12 @@ bool checkOptions(Settings& options)
     return true;
 }
 
+bool linkTSrequired(Settings& options)
+{
+    return options.allLinks || !options.linksListToGen.empty();
+}
+bool thermalTSrequired(Settings& options)
+{
+    return options.allThermal || !options.thermalListToGen.empty();
+}
 }
