@@ -10,8 +10,8 @@ set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
         include/antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h
         include/antares/solver/infeasible-problem-analysis/report.h
         report.cpp
-        include/antares/solver/infeasible-problem-analysis/detected-infeasible-constraints.h
-        detected-infeasible-constraints.cpp
+        include/antares/solver/infeasible-problem-analysis/watched-constraints.h
+        watched-constraints.cpp
 )
 
 add_library(infeasible_problem_analysis ${SRC_INFEASIBLE_PROBLEM_ANALYSIS})

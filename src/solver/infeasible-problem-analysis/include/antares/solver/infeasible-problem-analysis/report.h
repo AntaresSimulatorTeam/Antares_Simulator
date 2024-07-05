@@ -25,7 +25,7 @@
 #include <vector>
 #include <memory>
 
-#include "detected-infeasible-constraints.h"
+#include "watched-constraints.h"
 #include "ortools/linear_solver/linear_solver.h"
 
 using namespace operations_research;
@@ -43,7 +43,7 @@ public:
     InfeasibleProblemReport() = delete;
     explicit InfeasibleProblemReport(
       const std::vector<const operations_research::MPVariable*>& slackVariables,
-      const std::vector<std::shared_ptr<DetectedConstraint>>&);
+      const std::vector<std::shared_ptr<WatchedConstraint>>&);
     void logSuspiciousConstraints();
     void logInfeasibilityCauses();
 
@@ -51,9 +51,9 @@ private:
     void buildConstraintsFromSlackVars();
     void filterConstraintsToOneByType();
 
-    const std::vector<std::shared_ptr<DetectedConstraint>>& constraintTypes_;
+    const std::vector<std::shared_ptr<WatchedConstraint>>& constraintTypes_;
     const std::vector<const MPVariable*>& slackVariables_;
-    std::vector<std::shared_ptr<DetectedConstraint>> constraints_;
-    std::vector<std::shared_ptr<DetectedConstraint>> uniqueConstraintByType_;
+    std::vector<std::shared_ptr<WatchedConstraint>> constraints_;
+    std::vector<std::shared_ptr<WatchedConstraint>> uniqueConstraintByType_;
 };
 } // namespace Antares::Optimization

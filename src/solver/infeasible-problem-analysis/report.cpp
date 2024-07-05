@@ -24,15 +24,12 @@
 #include <regex>
 
 #include <antares/logs/logs.h>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic pop
 
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const MPVariable*>& slackVariables,
-  const std::vector<std::shared_ptr<DetectedConstraint>>& constraintTypes) :
+  const std::vector<std::shared_ptr<WatchedConstraint>>& constraintTypes) :
     slackVariables_(slackVariables),
     constraintTypes_(constraintTypes)
 {

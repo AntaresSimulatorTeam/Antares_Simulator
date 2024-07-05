@@ -23,7 +23,7 @@
 #include <vector>
 
 #include "unfeasibility-analysis.h"
-#include "detected-infeasible-constraints.h"
+#include "watched-constraints.h"
 
 namespace operations_research
 {
@@ -59,8 +59,8 @@ private:
     void trimSlackVariables();
 
     std::vector<const operations_research::MPVariable*> slackVariables_;
+    std::vector<std::shared_ptr<WatchedConstraint>> watchedConstraintTypes_;
     const unsigned int nbMaxSlackVarsToKeep = 10;
-    std::vector<std::shared_ptr<DetectedConstraint>> detectedConstraintTypes_;
     std::string constraint_name_pattern_;
 };
 

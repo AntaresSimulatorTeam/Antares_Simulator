@@ -18,12 +18,11 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
-
 #include <regex>
 #include <boost/algorithm/string.hpp>
 
 #include <antares/logs/logs.h>
+#include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/report.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -42,16 +41,16 @@ namespace Antares::Optimization
 {
 ConstraintSlackAnalysis::ConstraintSlackAnalysis()
 {
-    detectedConstraintTypes_.push_back(std::make_shared<HourlyBC>());
-    detectedConstraintTypes_.push_back(std::make_shared<DailyBC>());
-    detectedConstraintTypes_.push_back(std::make_shared<WeeklyBC>());
-    detectedConstraintTypes_.push_back(std::make_shared<FictitiousLoad>());
-    detectedConstraintTypes_.push_back(std::make_shared<HydroLevel>());
-    detectedConstraintTypes_.push_back(std::make_shared<STS>());
-    detectedConstraintTypes_.push_back(std::make_shared<HydroProduction>());
+    watchedConstraintTypes_.push_back(std::make_shared<HourlyBC>());
+    watchedConstraintTypes_.push_back(std::make_shared<DailyBC>());
+    watchedConstraintTypes_.push_back(std::make_shared<WeeklyBC>());
+    watchedConstraintTypes_.push_back(std::make_shared<FictitiousLoad>());
+    watchedConstraintTypes_.push_back(std::make_shared<HydroLevel>());
+    watchedConstraintTypes_.push_back(std::make_shared<STS>());
+    watchedConstraintTypes_.push_back(std::make_shared<HydroProduction>());
 
     std::vector<std::string> patterns;
-    std::for_each(detectedConstraintTypes_.begin(), detectedConstraintTypes_.end(),
+    std::for_each(watchedConstraintTypes_.begin(), watchedConstraintTypes_.end(),
                   [&](auto& c) { patterns.push_back(c->regexId()); });
     constraint_name_pattern_ = boost::algorithm::join(patterns, "|");
 }
@@ -142,7 +141,7 @@ void ConstraintSlackAnalysis::trimSlackVariables()
 
 void ConstraintSlackAnalysis::printReport() const
 {
-    InfeasibleProblemReport report(slackVariables_, detectedConstraintTypes_);
+    InfeasibleProblemReport report(slackVariables_, watchedConstraintTypes_);
     report.logSuspiciousConstraints();
     report.logInfeasibilityCauses();
 }

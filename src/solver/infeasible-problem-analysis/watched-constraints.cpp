@@ -1,5 +1,5 @@
 
-#include "antares/solver/infeasible-problem-analysis/detected-infeasible-constraints.h"
+#include "antares/solver/infeasible-problem-analysis/watched-constraints.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -59,13 +59,13 @@ namespace Antares::Optimization
 // =======================================
 // Generic constraint logger
 // =======================================
-void DetectedConstraint::setConstraintName(std::string name)
+void WatchedConstraint::setConstraintName(std::string name)
 {
     name_ = name;
     boost::algorithm::split_regex(splitName_, name_, boost::regex("::"));
 }
 
-std::string DetectedConstraint::regexId()
+std::string WatchedConstraint::regexId()
 {
     return regexId_;
 }
@@ -78,7 +78,7 @@ HourlyBC::HourlyBC()
     regexId_ = "::hourly::";
 }
 
-std::shared_ptr<DetectedConstraint> HourlyBC::clone() const
+std::shared_ptr<WatchedConstraint> HourlyBC::clone() const
 {
     return std::make_shared<HourlyBC>(*this);
 }
@@ -101,7 +101,7 @@ DailyBC::DailyBC()
     regexId_ = "::daily::";
 }
 
-std::shared_ptr<DetectedConstraint> DailyBC::clone() const
+std::shared_ptr<WatchedConstraint> DailyBC::clone() const
 {
     return std::make_shared<DailyBC>(*this);
 }
@@ -124,7 +124,7 @@ WeeklyBC::WeeklyBC()
     regexId_ = "::weekly::";
 }
 
-std::shared_ptr<DetectedConstraint> WeeklyBC::clone() const
+std::shared_ptr<WatchedConstraint> WeeklyBC::clone() const
 {
     return std::make_shared<WeeklyBC>(*this);
 }
@@ -147,7 +147,7 @@ FictitiousLoad::FictitiousLoad()
     regexId_ = "^FictiveLoads::";
 }
 
-std::shared_ptr<DetectedConstraint> FictitiousLoad::clone() const
+std::shared_ptr<WatchedConstraint> FictitiousLoad::clone() const
 {
     return std::make_shared<FictitiousLoad>(*this);
 }
@@ -170,7 +170,7 @@ HydroLevel::HydroLevel()
     regexId_ = "^AreaHydroLevel::";
 }
 
-std::shared_ptr<DetectedConstraint> HydroLevel::clone() const
+std::shared_ptr<WatchedConstraint> HydroLevel::clone() const
 {
     return std::make_shared<HydroLevel>(*this);
 }
@@ -194,7 +194,7 @@ STS::STS()
     regexId_ = "^Level::";
 }
 
-std::shared_ptr<DetectedConstraint> STS::clone() const
+std::shared_ptr<WatchedConstraint> STS::clone() const
 {
     return std::make_shared<STS>(*this);
 }
@@ -219,7 +219,7 @@ HydroProduction::HydroProduction()
     regexId_ = "^HydroPower::";
 }
 
-std::shared_ptr<DetectedConstraint> HydroProduction::clone() const
+std::shared_ptr<WatchedConstraint> HydroProduction::clone() const
 {
     return std::make_shared<HydroProduction>(*this);
 }
