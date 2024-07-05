@@ -42,16 +42,16 @@ namespace Antares::Optimization
 {
 ConstraintSlackAnalysis::ConstraintSlackAnalysis()
 {
-    detectedConstraints_.push_back(std::make_shared<HourlyBC>());
-    detectedConstraints_.push_back(std::make_shared<DailyBC>());
-    detectedConstraints_.push_back(std::make_shared<WeeklyBC>());
-    detectedConstraints_.push_back(std::make_shared<FictitiousLoad>());
-    detectedConstraints_.push_back(std::make_shared<HydroLevel>());
-    detectedConstraints_.push_back(std::make_shared<STS>());
-    detectedConstraints_.push_back(std::make_shared<HydroProduction>());
+    detectedConstraintTypes_.push_back(std::make_shared<HourlyBC>());
+    detectedConstraintTypes_.push_back(std::make_shared<DailyBC>());
+    detectedConstraintTypes_.push_back(std::make_shared<WeeklyBC>());
+    detectedConstraintTypes_.push_back(std::make_shared<FictitiousLoad>());
+    detectedConstraintTypes_.push_back(std::make_shared<HydroLevel>());
+    detectedConstraintTypes_.push_back(std::make_shared<STS>());
+    detectedConstraintTypes_.push_back(std::make_shared<HydroProduction>());
 
     std::vector<std::string> patterns;
-    std::for_each(detectedConstraints_.begin(), detectedConstraints_.end(),
+    std::for_each(detectedConstraintTypes_.begin(), detectedConstraintTypes_.end(),
                   [&](auto& c) { patterns.push_back(c->regexId()); });
     constraint_name_pattern_ = boost::algorithm::join(patterns, "|");
 }
@@ -142,8 +142,9 @@ void ConstraintSlackAnalysis::trimSlackVariables()
 
 void ConstraintSlackAnalysis::printReport() const
 {
-    InfeasibleProblemReport report(slackVariables_, detectedConstraints_);
-    report.prettyPrint();
+    InfeasibleProblemReport report(slackVariables_, detectedConstraintTypes_);
+    report.logSuspiciousConstraints();
+    report.logInfeasibilityCauses();
 }
 
 } // namespace Antares::Optimization

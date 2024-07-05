@@ -78,6 +78,11 @@ HourlyBC::HourlyBC()
     regexId_ = "::hourly::";
 }
 
+std::shared_ptr<DetectedConstraint> HourlyBC::clone() const
+{
+    return std::make_shared<HourlyBC>(*this);
+}
+
 std::string HourlyBC::infeasisibity()
 {
     return "Hourly BC '" + shortName(splitName_) + "' at hour " + timeStep(splitName_);
@@ -94,6 +99,11 @@ std::string HourlyBC::infeasisibityCause()
 DailyBC::DailyBC()
 {
     regexId_ = "::daily::";
+}
+
+std::shared_ptr<DetectedConstraint> DailyBC::clone() const
+{
+    return std::make_shared<DailyBC>(*this);
 }
 
 std::string DailyBC::infeasisibity()
@@ -114,6 +124,11 @@ WeeklyBC::WeeklyBC()
     regexId_ = "::weekly::";
 }
 
+std::shared_ptr<DetectedConstraint> WeeklyBC::clone() const
+{
+    return std::make_shared<WeeklyBC>(*this);
+}
+
 std::string WeeklyBC::infeasisibity()
 {
     return "Weekly BC '" + shortName(splitName_);
@@ -132,6 +147,11 @@ FictitiousLoad::FictitiousLoad()
     regexId_ = "^FictiveLoads::";
 }
 
+std::shared_ptr<DetectedConstraint> FictitiousLoad::clone() const
+{
+    return std::make_shared<FictitiousLoad>(*this);
+}
+
 std::string FictitiousLoad::infeasisibity()
 {
     return "Last resort shedding status at area '" + areaName(splitName_) + "' at hour " + timeStep(splitName_);
@@ -148,6 +168,11 @@ std::string FictitiousLoad::infeasisibityCause()
 HydroLevel::HydroLevel()
 {
     regexId_ = "^AreaHydroLevel::";
+}
+
+std::shared_ptr<DetectedConstraint> HydroLevel::clone() const
+{
+    return std::make_shared<HydroLevel>(*this);
 }
 
 std::string HydroLevel::infeasisibity()
@@ -169,6 +194,11 @@ STS::STS()
     regexId_ = "^Level::";
 }
 
+std::shared_ptr<DetectedConstraint> STS::clone() const
+{
+    return std::make_shared<STS>(*this);
+}
+
 std::string STS::infeasisibity()
 {
     return "Short-term-storage reservoir constraint at area '" + areaName(splitName_) + "' in STS '"
@@ -187,6 +217,11 @@ std::string STS::infeasisibityCause()
 HydroProduction::HydroProduction()
 {
     regexId_ = "^HydroPower::";
+}
+
+std::shared_ptr<DetectedConstraint> HydroProduction::clone() const
+{
+    return std::make_shared<HydroProduction>(*this);
 }
 
 std::string HydroProduction::infeasisibity()

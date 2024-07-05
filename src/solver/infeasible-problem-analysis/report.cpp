@@ -21,89 +21,69 @@
 #include "antares/solver/infeasible-problem-analysis/report.h"
 
 #include <algorithm>
+#include <regex>
 
 #include <antares/logs/logs.h>
 #include "antares/solver/infeasible-problem-analysis/constraint.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-#include "ortools/linear_solver/linear_solver.h"
 #pragma GCC diagnostic pop
-
-using namespace operations_research;
 
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const MPVariable*>& slackVariables,
-  const std::vector<std::shared_ptr<DetectedConstraint>>& loggers)
+  const std::vector<std::shared_ptr<DetectedConstraint>>& constraintTypes) :
+    slackVariables_(slackVariables),
+    constraintTypes_(constraintTypes)
 {
-    turnSlackVarsIntoConstraints(slackVariables);
-    sortConstraintsByType();
+    buildConstraintsFromSlackVars();
+    filterConstraintsToOneByType();
 }
 
-void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
-  const std::vector<const MPVariable*>& slackVariables)
+void InfeasibleProblemReport::buildConstraintsFromSlackVars()
 {
-    for (const MPVariable* slack: slackVariables)
+    for (const auto& slackVar : slackVariables_)
     {
-        constraints_.emplace_back(slack->name());
+        for (const auto& cType : constraintTypes_)
+        {
+            if (std::regex_search(slackVar->name(), std::regex(cType->regexId())))
+            {
+                constraints_.push_back(cType->clone());
+                constraints_.back()->setConstraintName(slackVar->name());
+            }
+        }
     }
 }
 
-void InfeasibleProblemReport::sortConstraintsByType()
+void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
-    for (auto& c: constraints_)
+    std::vector<std::string> typesPicked;
+    for (const auto& c: constraints_)
     {
-        c.extractComponentsFromName();
-        nbConstraintsByType_[c.type()]++;
+        if (std::find(typesPicked.begin(), typesPicked.end(), c->regexId()) == typesPicked.end())
+        {
+            uniqueConstraintByType_.push_back(c);
+            typesPicked.push_back(c->regexId());
+        }
     }
 }
 
 void InfeasibleProblemReport::logSuspiciousConstraints()
 {
-    Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
     for (const auto& c: constraints_)
     {
-        Antares::logs.error() << c.prettyPrint();
+        Antares::logs.error() << c->infeasisibity();
     }
 }
 
 void InfeasibleProblemReport::logInfeasibilityCauses()
 {
     Antares::logs.error() << "Possible causes of infeasibility:";
-    if (nbConstraintsByType_[ConstraintType::hydro_reservoir_level] > 0)
+    for (const auto& c: uniqueConstraintByType_)
     {
-        Antares::logs.error() << "* Hydro reservoir impossible to manage with cumulative options "
-                                 "\"hard bounds without heuristic\"";
+        Antares::logs.error() << c->infeasisibityCause();
     }
-    if (nbConstraintsByType_[ConstraintType::hydro_production_weekly] > 0)
-    {
-        Antares::logs.error() << "* impossible to generate exactly the weekly hydro target";
-    }
-    if (nbConstraintsByType_[ConstraintType::fictitious_load] > 0)
-    {
-        Antares::logs.error() << "* Last resort shedding status,";
-    }
-    if (nbConstraintsByType_[ConstraintType::short_term_storage_level] > 0)
-    {
-        Antares::logs.error()
-          << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
-             "lower & upper curves and initial level (if prescribed),";
-    }
-
-    const unsigned int bcCount = nbConstraintsByType_[ConstraintType::binding_constraint_hourly]
-                                 + nbConstraintsByType_[ConstraintType::binding_constraint_daily]
-                                 + nbConstraintsByType_[ConstraintType::binding_constraint_weekly];
-    if (bcCount > 0)
-    {
-        Antares::logs.error() << "* Binding constraints,";
-    }
-}
-
-void InfeasibleProblemReport::prettyPrint()
-{
-    logSuspiciousConstraints();
-    logInfeasibilityCauses();
 }
 
 } // namespace Antares::Optimization

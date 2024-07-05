@@ -60,7 +60,7 @@ private:
 
     std::vector<const operations_research::MPVariable*> slackVariables_;
     const unsigned int nbMaxSlackVarsToKeep = 10;
-    std::vector<std::shared_ptr<DetectedConstraint>> detectedConstraints_;
+    std::vector<std::shared_ptr<DetectedConstraint>> detectedConstraintTypes_;
     std::string constraint_name_pattern_;
 };
 
