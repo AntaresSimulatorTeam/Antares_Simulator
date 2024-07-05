@@ -21,12 +21,12 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
-#include "watched-constraints.h"
 #include "ortools/linear_solver/linear_solver.h"
+#include "watched-constraints.h"
 
 using namespace operations_research;
 

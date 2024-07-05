@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace Antares::Optimization
 {
@@ -22,7 +22,7 @@ protected:
     std::vector<std::string> splitName_;
 };
 
-class HourlyBC : public WatchedConstraint
+class HourlyBC: public WatchedConstraint
 {
 public:
     HourlyBC();
@@ -31,7 +31,7 @@ public:
     std::string infeasisibityCause() override;
 };
 
-class DailyBC : public WatchedConstraint
+class DailyBC: public WatchedConstraint
 {
 public:
     DailyBC();
@@ -40,16 +40,16 @@ public:
     std::string infeasisibityCause() override;
 };
 
-class WeeklyBC : public WatchedConstraint
+class WeeklyBC: public WatchedConstraint
 {
 public:
     WeeklyBC();
-     std::shared_ptr<WatchedConstraint> clone() const override;
+    std::shared_ptr<WatchedConstraint> clone() const override;
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
 
-class FictitiousLoad : public WatchedConstraint
+class FictitiousLoad: public WatchedConstraint
 {
 public:
     FictitiousLoad();
@@ -58,7 +58,7 @@ public:
     std::string infeasisibityCause() override;
 };
 
-class HydroLevel : public WatchedConstraint
+class HydroLevel: public WatchedConstraint
 {
 public:
     HydroLevel();
@@ -67,7 +67,7 @@ public:
     std::string infeasisibityCause() override;
 };
 
-class STS : public WatchedConstraint
+class STS: public WatchedConstraint
 {
 public:
     STS();
@@ -76,7 +76,7 @@ public:
     std::string infeasisibityCause() override;
 };
 
-class HydroProduction : public WatchedConstraint
+class HydroProduction: public WatchedConstraint
 {
 public:
     std::shared_ptr<WatchedConstraint> clone() const override;
@@ -84,5 +84,4 @@ public:
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
-}
-
+} // namespace Antares::Optimization

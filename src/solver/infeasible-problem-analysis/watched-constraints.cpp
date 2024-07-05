@@ -9,7 +9,7 @@ class StringIsNotWellFormated: public std::runtime_error
 {
 public:
     StringIsNotWellFormated(const std::string& error_message):
-            std::runtime_error(error_message)
+        std::runtime_error(error_message)
     {
     }
 };
@@ -154,7 +154,8 @@ std::shared_ptr<WatchedConstraint> FictitiousLoad::clone() const
 
 std::string FictitiousLoad::infeasisibity()
 {
-    return "Last resort shedding status at area '" + areaName(splitName_) + "' at hour " + timeStep(splitName_);
+    return "Last resort shedding status at area '" + areaName(splitName_) + "' at hour "
+           + timeStep(splitName_);
 }
 
 std::string FictitiousLoad::infeasisibityCause()
@@ -177,7 +178,8 @@ std::shared_ptr<WatchedConstraint> HydroLevel::clone() const
 
 std::string HydroLevel::infeasisibity()
 {
-    return "Hydro level constraint at area '" + areaName(splitName_) + "' at hour " + timeStep(splitName_);
+    return "Hydro level constraint at area '" + areaName(splitName_) + "' at hour "
+           + timeStep(splitName_);
 }
 
 std::string HydroLevel::infeasisibityCause()
@@ -233,4 +235,4 @@ std::string HydroProduction::infeasisibityCause()
 {
     return "* impossible to generate exactly the weekly hydro target";
 }
-}
+} // namespace Antares::Optimization

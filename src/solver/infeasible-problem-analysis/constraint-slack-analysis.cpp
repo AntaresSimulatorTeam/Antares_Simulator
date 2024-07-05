@@ -18,11 +18,13 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
+
 #include <regex>
+
 #include <boost/algorithm/string.hpp>
 
 #include <antares/logs/logs.h>
-#include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/report.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -31,8 +33,7 @@
 
 using namespace operations_research;
 
-static bool compareSlackSolutions(const MPVariable* a,
-                                  const MPVariable* b)
+static bool compareSlackSolutions(const MPVariable* a, const MPVariable* b)
 {
     return a->solution_value() > b->solution_value();
 }
@@ -78,9 +79,10 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
 void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
 {
     std::vector<std::string> patterns;
-    std::for_each(watchedConstraintTypes_.begin(), watchedConstraintTypes_.end(),
+    std::for_each(watchedConstraintTypes_.begin(),
+                  watchedConstraintTypes_.end(),
                   [&](auto& c) { patterns.push_back(c->regexId()); });
-    std::string constraint_name_pattern { boost::algorithm::join(patterns, "|") };
+    std::string constraint_name_pattern{boost::algorithm::join(patterns, "|")};
 
     std::regex rgx(constraint_name_pattern);
     for (MPConstraint* c: problem->constraints())
@@ -106,18 +108,14 @@ void ConstraintSlackAnalysis::addSlackVariablesToConstraints(MPSolver* problem)
     {
         if (c->lb() != -infinity)
         {
-            const MPVariable* slack = problem->MakeNumVar(0,
-                                                          infinity,
-                                                          c->name() + "::low");
+            const MPVariable* slack = problem->MakeNumVar(0, infinity, c->name() + "::low");
             c->SetCoefficient(slack, 1.);
             slackVariables_.push_back(slack);
         }
 
         if (c->ub() != infinity)
         {
-            const MPVariable* slack = problem->MakeNumVar(0,
-                                                          infinity,
-                                                          c->name() + "::up");
+            const MPVariable* slack = problem->MakeNumVar(0, infinity, c->name() + "::up");
             c->SetCoefficient(slack, -1.);
             slackVariables_.push_back(slack);
         }
