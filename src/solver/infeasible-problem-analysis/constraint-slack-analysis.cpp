@@ -21,6 +21,7 @@
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 
 #include <regex>
+#include <boost/algorithm/string.hpp>
 
 #include <antares/logs/logs.h>
 #include "antares/solver/infeasible-problem-analysis/report.h"
@@ -39,6 +40,22 @@ static bool compareSlackSolutions(const MPVariable* a,
 
 namespace Antares::Optimization
 {
+ConstraintSlackAnalysis::ConstraintSlackAnalysis()
+{
+    detectedConstraints_.push_back(std::make_shared<HourlyBC>());
+    detectedConstraints_.push_back(std::make_shared<DailyBC>());
+    detectedConstraints_.push_back(std::make_shared<WeeklyBC>());
+    detectedConstraints_.push_back(std::make_shared<FictitiousLoad>());
+    detectedConstraints_.push_back(std::make_shared<HydroLevel>());
+    detectedConstraints_.push_back(std::make_shared<STS>());
+    detectedConstraints_.push_back(std::make_shared<HydroProduction>());
+
+    std::vector<std::string> patterns;
+    std::for_each(detectedConstraints_.begin(), detectedConstraints_.end(),
+                  [&](auto& c) { patterns.push_back(c->regexId()); });
+    constraint_name_pattern_ = boost::algorithm::join(patterns, "|");
+}
+
 void ConstraintSlackAnalysis::run(MPSolver* problem)
 {
     addSlackVariables(problem);
@@ -72,7 +89,7 @@ void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
     */
     const unsigned int selectedConstraintsInverseRatio = 3;
     slackVariables_.reserve(problem->NumConstraints() / selectedConstraintsInverseRatio);
-    std::regex rgx(constraint_name_pattern);
+    std::regex rgx(constraint_name_pattern_);
     const double infinity = MPSolver::infinity();
     for (MPConstraint* constraint: problem->constraints())
     {
@@ -125,7 +142,7 @@ void ConstraintSlackAnalysis::trimSlackVariables()
 
 void ConstraintSlackAnalysis::printReport() const
 {
-    InfeasibleProblemReport report(slackVariables_);
+    InfeasibleProblemReport report(slackVariables_, detectedConstraints_);
     report.prettyPrint();
 }
 

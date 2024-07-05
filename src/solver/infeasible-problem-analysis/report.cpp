@@ -34,7 +34,8 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const MPVariable*>& slackVariables)
+  const std::vector<const MPVariable*>& slackVariables,
+  const std::vector<std::shared_ptr<DetectedConstraint>>& loggers)
 {
     turnSlackVarsIntoConstraints(slackVariables);
     sortConstraintsByType();

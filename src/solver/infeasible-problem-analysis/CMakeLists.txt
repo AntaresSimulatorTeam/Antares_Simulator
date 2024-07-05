@@ -12,6 +12,8 @@ set(SRC_INFEASIBLE_PROBLEM_ANALYSIS
         report.cpp
         include/antares/solver/infeasible-problem-analysis/constraint.h
         constraint.cpp
+        detected-infeasible-constraints.h
+        detected-infeasible-constraints.cpp
 )
 
 add_library(infeasible_problem_analysis ${SRC_INFEASIBLE_PROBLEM_ANALYSIS})

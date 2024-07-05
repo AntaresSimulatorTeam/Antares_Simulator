@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "unfeasibility-analysis.h"
+#include "detected-infeasible-constraints.h"
 
 namespace operations_research
 {
@@ -40,7 +41,7 @@ namespace Antares::Optimization
 class ConstraintSlackAnalysis: public UnfeasibilityAnalysis
 {
 public:
-    ConstraintSlackAnalysis() = default;
+    ConstraintSlackAnalysis();
     ~ConstraintSlackAnalysis() override = default;
 
     void run(operations_research::MPSolver* problem) override;
@@ -59,10 +60,8 @@ private:
 
     std::vector<const operations_research::MPVariable*> slackVariables_;
     const unsigned int nbMaxSlackVarsToKeep = 10;
-
-    const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|"
-                                                "^FictiveLoads::|^Level::|"
-                                                "^HydroPower::";
+    std::vector<std::shared_ptr<DetectedConstraint>> detectedConstraints_;
+    std::string constraint_name_pattern_;
 };
 
 } // namespace Antares::Optimization

@@ -23,8 +23,10 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "constraint.h"
+#include "detected-infeasible-constraints.h"
 
 namespace operations_research
 {
@@ -38,7 +40,8 @@ class InfeasibleProblemReport
 public:
     InfeasibleProblemReport() = delete;
     explicit InfeasibleProblemReport(
-      const std::vector<const operations_research::MPVariable*>& slackVariables);
+      const std::vector<const operations_research::MPVariable*>& slackVariables,
+      const std::vector<std::shared_ptr<DetectedConstraint>>&);
     void prettyPrint();
 
 private:
