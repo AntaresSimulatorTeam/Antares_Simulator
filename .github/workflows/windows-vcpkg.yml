@@ -226,6 +226,14 @@ jobs:
           batch-name: valid-v910
           os: ${{ env.test-platform }}
 
+      - name: Run tests introduced in 9.2
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v920
+          os: ${{ env.os }}
+
       - name: Run short-tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
