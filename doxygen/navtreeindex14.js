@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5fbc5ef6573e106cc9673459c35bb83d":[7,0,0,13,4,4,35,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#adb9cf6e6d5c8d74acacb91b93c3a2343":[7,0,0,13,4,4,35,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html":[7,0,0,13,4,4,31],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price.html#a614facc3a689e802474d0a915d642994":[7,0,0,13,4,4,31,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1State.html#ab4521b1158f3b42f3f9b2e2b56423867":[7,0,0,13,4,35,27],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#ab923ce202f9511e42a0902dd85b34c03":[7,0,0,13,4,35,32],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#abd8f5e5a534485c0a7929a363cea64c2":[7,0,0,13,4,35,23],
-"classAntares_1_1Solver_1_1Variable_1_1State.html#ac2e213c74fbfc92a53edc03f360159ea":[7,0,0,13,4,35,3],
-"classAntares_1_1Solver_1_1Variable_1_1State.html#ac8ac6f85e6b7e6c6ee3f863e40257ade":[7,0,0,13,4,35,15]
+"classAntares_1_1Solver_1_1Variable_1_1State.html#ac2e213c74fbfc92a53edc03f360159ea":[7,0,0,13,4,35,3]
 };

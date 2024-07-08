@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a9a0b9f64860444efa5f38063a1440430":[7,0,0,13,3,0,0],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[7,0,0,13,3,0,3],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#acc70a60813365e67941864367f9083dd":[7,0,0,13,3,0,2],
 "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html":[7,0,0,13,3,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html#afb99997899d03017559e1e90f4afad5b":[7,0,0,13,4,4,30,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html":[7,0,0,13,4,4,35],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a34a604f67ef39e3236df26f6d2bdb7e8":[7,0,0,13,4,4,35,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5b304f49bd1ad489d47904ababa2e482":[7,0,0,13,4,4,35,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5fbc5ef6573e106cc9673459c35bb83d":[7,0,0,13,4,4,35,1]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#a5b304f49bd1ad489d47904ababa2e482":[7,0,0,13,4,4,35,3]
 };

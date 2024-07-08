@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Data_1_1CompareLinkName.html":[7,0,0,4,26],
 "structAntares_1_1Data_1_1DailyDemand.html":[7,0,0,4,28],
 "structAntares_1_1Data_1_1DailyDemand.html#a11ba7fd49661f192700bcd64117d193c":[7,0,0,4,28,1],
 "structAntares_1_1Data_1_1DailyDemand.html#abf4245f123852739c1b3264dd244c53d":[7,0,0,4,28,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html":[7,0,0,13,4,4,86],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7309dce5ec0dd2134b6e2788294af4a1":[7,0,0,13,4,4,86,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7949987ce1c23dcd30da757005e09002":[7,0,0,13,4,4,86,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html":[7,0,0,13,4,4,87],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#a6892e85e47da9b085273c0a01fc2f0ce":[7,0,0,13,4,4,87,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html":[7,0,0,13,4,4,87]
 };

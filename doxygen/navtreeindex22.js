@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"message_8h_source.html":[8,0,0,7,2,2,24],
 "message_8hxx_source.html":[8,0,0,7,2,2,25],
 "minmax-data_8h_source.html":[8,0,0,4,11,0,0,0,0,3,6],
 "minmax_8h_source.html":[8,0,0,4,11,0,0,0,0,3,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Data_1_1BindingConstraintStructures.html":[7,0,0,4,20],
 "structAntares_1_1Data_1_1CompareAreaName.html":[7,0,0,4,23],
 "structAntares_1_1Data_1_1CompareBindingConstraintName.html":[7,0,0,4,24],
-"structAntares_1_1Data_1_1CompareClusterName.html":[7,0,0,4,25],
-"structAntares_1_1Data_1_1CompareLinkName.html":[7,0,0,4,26]
+"structAntares_1_1Data_1_1CompareClusterName.html":[7,0,0,4,25]
 };

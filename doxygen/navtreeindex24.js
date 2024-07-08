@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#a6892e85e47da9b085273c0a01fc2f0ce":[7,0,0,13,4,4,87,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#ae7e192a761b40dc071ce0b483bfeb955":[7,0,0,13,4,4,87,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html":[7,0,0,13,4,4,88],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html#a3c6b2721c744e9eac116a64bcbbfbed6":[7,0,0,13,4,4,88,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "structHourlyCSRProblem_1_1LinkVariable.html":[7,0,113,0],
 "structHydroMaxPowerStudy.html":[7,0,116],
 "structHydroPowerData.html":[7,0,118],
-"structLEVEL__FLEX__DOWN__NODE.html":[7,0,130],
-"structLEVEL__FLEX__UP__NODE.html":[7,0,131]
+"structLEVEL__FLEX__DOWN__NODE.html":[7,0,130]
 };
