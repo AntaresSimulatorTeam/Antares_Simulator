@@ -30,7 +30,7 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                     if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
                         && (data.thermalClusters[pays]
           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations.clusterIdInArea] == globalClusterIdx))
-                        builder.RunningClusterReserveParticipation(reserveParticipations.indexClusterParticipation, 1);
+                        builder.RunningClusterReserveParticipation(reserveParticipations.globalIndexClusterParticipation, 1);
                 }
             }
 
@@ -66,7 +66,7 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                     if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING) 
                         && (data.thermalClusters[pays]
           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations.clusterIdInArea] == globalClusterIdx))
-                        builder.RunningClusterReserveParticipation(reserveParticipations.indexClusterParticipation, 1);
+                        builder.RunningClusterReserveParticipation(reserveParticipations.globalIndexClusterParticipation, 1);
                 }
             }
 

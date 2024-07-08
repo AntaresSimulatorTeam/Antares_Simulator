@@ -248,6 +248,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        auto& area = state.area;
         double costForSpilledOrUnsuppliedEnergy =
           // Total UnsupliedEnergy emissions
           (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
@@ -259,28 +260,26 @@ public:
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
                 - state.area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
-        for (const auto& thermalReserves : state.problemeHebdo->allReserves.thermalAreaReserves)
+        auto thermalReserves = state.problemeHebdo->allReserves.thermalAreaReserves[area->index];
+        for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
         {
-            for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
-            {
-                costForSpilledOrUnsuppliedEnergy
-                  += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                         .ValeursHorairesInternalUnsatisfied[reserveUp.globalReserveIndex]
-                       * reserveUp.failureCost
-                     + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                           .ValeursHorairesInternalExcessReserve[reserveUp.globalReserveIndex]
-                         * reserveUp.spillageCost;
-            }
-            for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
-            {
-                costForSpilledOrUnsuppliedEnergy
-                  += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                         .ValeursHorairesInternalUnsatisfied[reserveDown.globalReserveIndex]
-                       * reserveDown.failureCost
-                     + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                           .ValeursHorairesInternalExcessReserve[reserveDown.globalReserveIndex]
-                         * reserveDown.spillageCost;
-            }
+            costForSpilledOrUnsuppliedEnergy
+                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalUnsatisfied[reserveUp.areaReserveIndex]
+                    * reserveUp.failureCost
+                    + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex]
+                        * reserveUp.spillageCost;
+        }
+        for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
+        {
+            costForSpilledOrUnsuppliedEnergy
+                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalUnsatisfied[reserveDown.areaReserveIndex]
+                    * reserveDown.failureCost
+                    + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalExcessReserve[reserveDown.areaReserveIndex]
+                        * reserveDown.spillageCost;
         }
         
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;

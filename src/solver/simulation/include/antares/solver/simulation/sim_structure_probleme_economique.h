@@ -271,7 +271,8 @@ struct RESERVE_PARTICIPATION
 {
     float maxPower = CLUSTER_NOT_PARTICIPATING;
     float participationCost = CLUSTER_NOT_PARTICIPATING;
-    int indexClusterParticipation = 0;
+    int globalIndexClusterParticipation = 0;
+    int areaIndexClusterParticipation = 0;
     std::string clusterName;
     int clusterIdInArea;
 };
@@ -285,6 +286,7 @@ struct CAPACITY_RESERVATION
 
     std::string reserveName;
     int globalReserveIndex;
+    int areaReserveIndex;
 };
 
 

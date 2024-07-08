@@ -2,15 +2,15 @@
 
 void POutBounds::add(int pays, int cluster, int pdt)
 {
-    data.CorrespondanceCntNativesCntOptim[pdt]
-      .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster]
-      = -1;
-    data.CorrespondanceCntNativesCntOptim[pdt]
-      .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster]
-      = -1;
-
     int globalClusterIdx
       = data.thermalClusters[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[globalClusterIdx]
+      = -1;
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[globalClusterIdx]
+      = -1;
 
     if (!data.Simulation)
     {
@@ -40,7 +40,7 @@ void POutBounds::add(int pays, int cluster, int pdt)
                                                                                 .clusterIdInArea]
                            == globalClusterIdx))
                     {
-                        builder.RunningClusterReserveParticipation(reserveParticipations.indexClusterParticipation, 1);
+                        builder.RunningClusterReserveParticipation(reserveParticipations.globalIndexClusterParticipation, 1);
                     }
                 }
             }
@@ -49,10 +49,10 @@ void POutBounds::add(int pays, int cluster, int pdt)
             {
                 builder.DispatchableProduction(globalClusterIdx, -1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster]
+                  .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster]
+                  .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
@@ -79,7 +79,7 @@ void POutBounds::add(int pays, int cluster, int pdt)
                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
                                                                                 .clusterIdInArea]
                            == globalClusterIdx))
-                        builder.RunningClusterReserveParticipation(reserveParticipations.indexClusterParticipation, 1);
+                        builder.RunningClusterReserveParticipation(reserveParticipations.globalIndexClusterParticipation, 1);
                 }
             }
 
@@ -87,10 +87,10 @@ void POutBounds::add(int pays, int cluster, int pdt)
             {
                 builder.DispatchableProduction(globalClusterIdx, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster]
+                  .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster]
+                  .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

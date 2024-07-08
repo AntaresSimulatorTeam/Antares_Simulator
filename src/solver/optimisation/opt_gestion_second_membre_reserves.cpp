@@ -86,8 +86,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                  cluster < problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
                  cluster++)
             {
+                int globalClusterIdx = problemeHebdo->PaliersThermiquesDuPays[pays]
+                                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
                 int cnt1 = CorrespondanceCntNativesCntOptim
-                            .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster];
+                      .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[globalClusterIdx];
                 if (cnt1 >= 0)
                 {
                     SecondMembre[cnt1] = problemeHebdo->PaliersThermiquesDuPays[pays]
@@ -97,7 +99,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                 }
                 
                 int cnt2 = CorrespondanceCntNativesCntOptim
-                            .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster];
+                      .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[globalClusterIdx];
                 if (cnt2 >= 0)
                 {
                     SecondMembre[cnt2] = problemeHebdo->PaliersThermiquesDuPays[pays]

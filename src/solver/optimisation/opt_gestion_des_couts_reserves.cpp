@@ -57,7 +57,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
                         var = variableManager.ClusterReserveParticipation(
-                          clusterReserveParticipation.indexClusterParticipation,
+                          clusterReserveParticipation.globalIndexClusterParticipation,
                           pdtHebdo);
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
                     }
@@ -87,7 +87,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
                         var = variableManager.ClusterReserveParticipation(
-                          clusterReserveParticipation.indexClusterParticipation, pdtHebdo);
+                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
                     }
                 }

@@ -280,8 +280,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     int globalClusterParticipationIndex = 0;
     for (uint i = 0; i < study.areas.size(); ++i)
     {
+        int areaReserveIndex = 0;
+        int areaClusterParticipationIndex = 0;
         const auto& area = *(study.areas.byIndex[i]);
-
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
@@ -324,7 +325,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 areaCapacityReservationsUp.spillageCost = val.spillageCost;
                 areaCapacityReservationsUp.reserveName = key;
                 areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
+                areaCapacityReservationsUp.areaReserveIndex = areaReserveIndex;
                 globalReserveIndex++;
+                areaReserveIndex++;
                 if (val.need.timeSeries.width > 0)
                 {
                     for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
@@ -339,9 +342,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                     reserveParticipation.participationCost = cluster->reserveCost(key);
                     reserveParticipation.clusterName = cluster->name();
                     reserveParticipation.clusterIdInArea = cluster->index;
-                    reserveParticipation.indexClusterParticipation
+                    reserveParticipation.globalIndexClusterParticipation
                         = globalClusterParticipationIndex;
+                    reserveParticipation.areaIndexClusterParticipation
+                        = areaClusterParticipationIndex;
                     globalClusterParticipationIndex++;
+                   areaClusterParticipationIndex++;
                     areaCapacityReservationsUp.AllReservesParticipation.push_back(
                         reserveParticipation);
                 }
@@ -355,7 +361,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 areaCapacityReservationsDown.spillageCost = val.spillageCost;
                 areaCapacityReservationsDown.reserveName = key;
                 areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
+                areaCapacityReservationsDown.areaReserveIndex = areaReserveIndex;
                 globalReserveIndex++;
+                areaReserveIndex++;
                 if (val.need.timeSeries.width > 0)
                 {
                     for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
@@ -372,8 +380,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                         reserveParticipation.participationCost = cluster->reserveCost(key);
                         reserveParticipation.clusterName = cluster->name();
                         reserveParticipation.clusterIdInArea = cluster->index;
-                        reserveParticipation.indexClusterParticipation = globalClusterParticipationIndex;
+                        reserveParticipation.globalIndexClusterParticipation = globalClusterParticipationIndex;
+                        reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
                         globalClusterParticipationIndex++;
+                        areaClusterParticipationIndex++;
                         areaCapacityReservationsDown.AllReservesParticipation.push_back(
                           reserveParticipation);
                     //}

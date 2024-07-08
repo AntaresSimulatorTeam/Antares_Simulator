@@ -100,7 +100,7 @@ public:
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
-    int getIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName);
+    int getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName);
 private:
     /*!
     ** \brief Initialize some variable according a thermal cluster index

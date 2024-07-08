@@ -22,8 +22,8 @@ void PRunningUnits::add(int pays, int reserve, int cluster, int pdt, bool isUpRe
           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipation.clusterIdInArea];
 
         builder.updateHourWithinWeek(pdt)
-          .RunningClusterReserveParticipation(reserveParticipation.indexClusterParticipation, 1.0)
-          .ClusterReserveParticipation(reserveParticipation.indexClusterParticipation, -1.0)
+          .RunningClusterReserveParticipation(reserveParticipation.globalIndexClusterParticipation, 1.0)
+          .ClusterReserveParticipation(reserveParticipation.globalIndexClusterParticipation, -1.0)
           .equalTo();
 
         ConstraintNamer namer(builder.data.NomDesContraintes);

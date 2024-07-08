@@ -23,7 +23,7 @@ void PMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool isUpRese
           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipation.clusterIdInArea];
 
         builder.updateHourWithinWeek(pdt)
-          .RunningClusterReserveParticipation(reserveParticipation.indexClusterParticipation, 1.0)
+          .RunningClusterReserveParticipation(reserveParticipation.globalIndexClusterParticipation, 1.0)
           .NumberOfDispatchableUnits(globalClusterIdx, -reserveParticipation.maxPower)
           .lessThan();
 
