@@ -4,7 +4,7 @@ Before building, make sure that dependencies are [installed](2-Dependencies-inst
 
 ## Install VCPKG
 
-Although you may install third party dependencies yourself, the preferred way is 
+Although you may install third party dependencies yourself, the preferred way is
 to rely on [vcpkg](https://github.com/microsoft/vcpkg) and its CMake integration
 to build and install most of them.
 
@@ -67,10 +67,10 @@ Here is a list of mandatory or optional CMake configuration options:
 | `CMAKE_TOOLCHAIN_FILE` | no           | Path to VCPKG toolchain file, allows to integrate VCPKG with cmake build         | `../vcpkg/scripts/buildsystems/vcpkg.cmake` |                                                           |
 | `VCPKG_TARGET_TRIPLET` | no           | Define VCPKG triplet (build type for dependencies etc.)                          | `x64-windows-antares` / `x64-linux-antares` |                                                           |
 
-> 💡 **Disable the UI build to make builds faster**  
+> 💡 **Disable the UI build to make builds faster**
 > The UI takes up a good chunk of compilation time. It is enabled by default, but you can disable it by turning off `BUILD_UI`
 
-> 💡 **Use Ninja to speed up target generation by CMake**  
+> 💡 **Use Ninja to speed up target generation by CMake**
 > At configure time, you may specify Ninja for generation instead of traditional Make. This will speed up the update
 > step after you make small changes to the code.
 > ```
@@ -96,15 +96,13 @@ Here is a list of mandatory or optional CMake configuration options:
     ```
 
 > 💡 Compilation can be done on several processors with `-j` option.
-  
 
-The final GUI file can be executed at `_build/ui/simulator/antares-X.Y-ui-simulator`
 
 ## Developer tips
 
-### Use a compiler cache  
+### Use a compiler cache
 In order to avoid unnecessary rebuilds, for example when you switch branches, you may use a compiler cache
-such as ccache. Using it under Linux systems is pretty easy with CMake, you only need to specify it 
+such as ccache. Using it under Linux systems is pretty easy with CMake, you only need to specify it
 as the compiler launcher at configure time:
 ```
 cmake ... -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache ...
@@ -117,7 +115,6 @@ ignore = all
 ```
 This way git won't waste time computing diff on these when checking out, diffing commits, etc. git operations should be a lot faster.
 Keep in mind that your submodules won't be updated.
-
 
 
 [^1]: GUI support has been dropped in favor of [Antares Web](https://antares-web.readthedocs.io)
