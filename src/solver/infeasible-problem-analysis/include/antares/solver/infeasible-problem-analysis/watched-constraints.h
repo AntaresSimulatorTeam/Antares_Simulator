@@ -2,9 +2,9 @@
 #pragma once
 
 #include <memory>
+#include <regex>
 #include <string>
 #include <vector>
-#include <regex>
 
 namespace Antares::Optimization
 {
@@ -86,9 +86,15 @@ class ConstraintsFactory
 public:
     std::shared_ptr<WatchedConstraint> create(std::string regexId) const;
     std::regex regexFilter();
+
 private:
-    const std::vector<std::string> regex_ids_ = {"::hourly::", "::daily::", "::weekly::", "^FictiveLoads::",
-                                                 "^AreaHydroLevel::", "^Level::", "^HydroPower::"};
+    const std::vector<std::string> regex_ids_ = {"::hourly::",
+                                                 "::daily::",
+                                                 "::weekly::",
+                                                 "^FictiveLoads::",
+                                                 "^AreaHydroLevel::",
+                                                 "^Level::",
+                                                 "^HydroPower::"};
 };
 
 } // namespace Antares::Optimization
