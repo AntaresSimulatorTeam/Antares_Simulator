@@ -43,7 +43,7 @@ public:
     InfeasibleProblemReport() = delete;
     explicit InfeasibleProblemReport(
       const std::vector<const operations_research::MPVariable*>& slackVariables,
-      const std::vector<std::shared_ptr<WatchedConstraint>>&);
+      const ConstraintsFactory&);
     void logSuspiciousConstraints();
     void logInfeasibilityCauses();
 
@@ -51,7 +51,7 @@ private:
     void buildConstraintsFromSlackVars();
     void filterConstraintsToOneByType();
 
-    const std::vector<std::shared_ptr<WatchedConstraint>>& constraintTypes_;
+    const ConstraintsFactory& constraintsFactory_;
     const std::vector<const MPVariable*>& slackVariables_;
     std::vector<std::shared_ptr<WatchedConstraint>> constraints_;
     std::vector<std::shared_ptr<WatchedConstraint>> uniqueConstraintByType_;

@@ -4,24 +4,23 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <regex>
 
 namespace Antares::Optimization
 {
 class WatchedConstraint
 {
 public:
-    void setConstraintName(std::string constraintName);
+    WatchedConstraint(std::string constraintName);
     std::string regexId() const;
-    virtual std::shared_ptr<WatchedConstraint> clone() const = 0;
     virtual std::string infeasisibity() = 0;
     virtual std::string infeasisibityCause() = 0;
 
 protected:
-    void setRegexId(std::string name);
     const std::vector<std::string>& splitName() const;
 
-private:
-    std::string name_;
+protected:
+    std::string constraintName_;
     std::string regexId_;
     std::vector<std::string> splitName_;
 };
@@ -29,8 +28,7 @@ private:
 class HourlyBC: public WatchedConstraint
 {
 public:
-    HourlyBC();
-    std::shared_ptr<WatchedConstraint> clone() const override;
+    HourlyBC(std::string constraintName);
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
@@ -38,8 +36,7 @@ public:
 class DailyBC: public WatchedConstraint
 {
 public:
-    DailyBC();
-    std::shared_ptr<WatchedConstraint> clone() const override;
+    DailyBC(std::string constraintName);
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
@@ -47,8 +44,7 @@ public:
 class WeeklyBC: public WatchedConstraint
 {
 public:
-    WeeklyBC();
-    std::shared_ptr<WatchedConstraint> clone() const override;
+    WeeklyBC(std::string constraintName);
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
@@ -56,8 +52,7 @@ public:
 class FictitiousLoad: public WatchedConstraint
 {
 public:
-    FictitiousLoad();
-    std::shared_ptr<WatchedConstraint> clone() const override;
+    FictitiousLoad(std::string constraintName);
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
@@ -65,8 +60,7 @@ public:
 class HydroLevel: public WatchedConstraint
 {
 public:
-    HydroLevel();
-    std::shared_ptr<WatchedConstraint> clone() const override;
+    HydroLevel(std::string constraintName);
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
@@ -74,8 +68,7 @@ public:
 class STS: public WatchedConstraint
 {
 public:
-    STS();
-    std::shared_ptr<WatchedConstraint> clone() const override;
+    STS(std::string constraintName);
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
@@ -83,9 +76,19 @@ public:
 class HydroProduction: public WatchedConstraint
 {
 public:
-    std::shared_ptr<WatchedConstraint> clone() const override;
-    HydroProduction();
+    HydroProduction(std::string constraintName);
     std::string infeasisibity() override;
     std::string infeasisibityCause() override;
 };
+
+class ConstraintsFactory
+{
+public:
+    std::shared_ptr<WatchedConstraint> create(std::string regexId) const;
+    std::regex regexFilter();
+private:
+    const std::vector<std::string> regex_ids_ = {"::hourly::", "::daily::", "::weekly::", "^FictiveLoads::",
+                                                 "^AreaHydroLevel::", "^Level::", "^HydroPower::"};
+};
+
 } // namespace Antares::Optimization

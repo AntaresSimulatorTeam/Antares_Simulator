@@ -40,16 +40,6 @@ static bool compareSlackSolutions(const MPVariable* a, const MPVariable* b)
 
 namespace Antares::Optimization
 {
-ConstraintSlackAnalysis::ConstraintSlackAnalysis()
-{
-    watchedConstraintTypes_.push_back(std::make_shared<HourlyBC>());
-    watchedConstraintTypes_.push_back(std::make_shared<DailyBC>());
-    watchedConstraintTypes_.push_back(std::make_shared<WeeklyBC>());
-    watchedConstraintTypes_.push_back(std::make_shared<FictitiousLoad>());
-    watchedConstraintTypes_.push_back(std::make_shared<HydroLevel>());
-    watchedConstraintTypes_.push_back(std::make_shared<STS>());
-    watchedConstraintTypes_.push_back(std::make_shared<HydroProduction>());
-}
 
 void ConstraintSlackAnalysis::run(MPSolver* problem)
 {
@@ -78,13 +68,7 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
 
 void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
 {
-    std::vector<std::string> patterns;
-    std::for_each(watchedConstraintTypes_.begin(),
-                  watchedConstraintTypes_.end(),
-                  [&](auto& c) { patterns.push_back(c->regexId()); });
-    std::string constraint_name_pattern{boost::algorithm::join(patterns, "|")};
-
-    std::regex rgx(constraint_name_pattern);
+    std::regex rgx = constraintFactory_.regexFilter();
     for (MPConstraint* c: problem->constraints())
     {
         if (std::regex_search(c->name(), rgx))
@@ -148,7 +132,7 @@ void ConstraintSlackAnalysis::trimSlackVariables()
 
 void ConstraintSlackAnalysis::printReport() const
 {
-    InfeasibleProblemReport report(slackVariables_, watchedConstraintTypes_);
+    InfeasibleProblemReport report(slackVariables_, constraintFactory_);
     report.logSuspiciousConstraints();
     report.logInfeasibilityCauses();
 }

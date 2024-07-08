@@ -4,6 +4,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
+#include <regex>
 
 class StringIsNotWellFormated: public std::runtime_error
 {
@@ -59,20 +60,14 @@ namespace Antares::Optimization
 // =======================================
 // Generic constraint logger
 // =======================================
-void WatchedConstraint::setConstraintName(std::string name)
+WatchedConstraint::WatchedConstraint(std::string name) : constraintName_(name)
 {
-    name_ = name;
-    boost::algorithm::split_regex(splitName_, name_, boost::regex("::"));
+    boost::algorithm::split_regex(splitName_, constraintName_, boost::regex("::"));
 }
 
 std::string WatchedConstraint::regexId() const
 {
     return regexId_;
-}
-
-void WatchedConstraint::setRegexId(std::string regexId)
-{
-    regexId_ = regexId;
 }
 
 const std::vector<std::string>& WatchedConstraint::splitName() const
@@ -83,14 +78,9 @@ const std::vector<std::string>& WatchedConstraint::splitName() const
 // =======================================
 // Hourly BC logger
 // =======================================
-HourlyBC::HourlyBC()
+HourlyBC::HourlyBC(std::string constraintName) : WatchedConstraint(constraintName)
 {
-    setRegexId("::hourly::");
-}
-
-std::shared_ptr<WatchedConstraint> HourlyBC::clone() const
-{
-    return std::make_shared<HourlyBC>(*this);
+    regexId_ = "::hourly::";
 }
 
 std::string HourlyBC::infeasisibity()
@@ -106,14 +96,9 @@ std::string HourlyBC::infeasisibityCause()
 // =======================================
 // Daily BC logger
 // =======================================
-DailyBC::DailyBC()
+DailyBC::DailyBC(std::string constraintName) : WatchedConstraint(constraintName)
 {
-    setRegexId("::daily::");
-}
-
-std::shared_ptr<WatchedConstraint> DailyBC::clone() const
-{
-    return std::make_shared<DailyBC>(*this);
+    regexId_ = "::daily::";
 }
 
 std::string DailyBC::infeasisibity()
@@ -129,14 +114,9 @@ std::string DailyBC::infeasisibityCause()
 // =======================================
 // Weekly BC constraint
 // =======================================
-WeeklyBC::WeeklyBC()
+WeeklyBC::WeeklyBC(std::string constraintName) : WatchedConstraint(constraintName)
 {
-    setRegexId("::weekly::");
-}
-
-std::shared_ptr<WatchedConstraint> WeeklyBC::clone() const
-{
-    return std::make_shared<WeeklyBC>(*this);
+    regexId_ = "::weekly::";
 }
 
 std::string WeeklyBC::infeasisibity()
@@ -152,14 +132,9 @@ std::string WeeklyBC::infeasisibityCause()
 // =======================================
 // Fictitious load constraint
 // =======================================
-FictitiousLoad::FictitiousLoad()
+FictitiousLoad::FictitiousLoad(std::string constraintName) : WatchedConstraint(constraintName)
 {
-    setRegexId("^FictiveLoads::");
-}
-
-std::shared_ptr<WatchedConstraint> FictitiousLoad::clone() const
-{
-    return std::make_shared<FictitiousLoad>(*this);
+    regexId_ = "^FictiveLoads::";
 }
 
 std::string FictitiousLoad::infeasisibity()
@@ -176,14 +151,9 @@ std::string FictitiousLoad::infeasisibityCause()
 // =======================================
 // Hydro level constraint
 // =======================================
-HydroLevel::HydroLevel()
+HydroLevel::HydroLevel(std::string constraintName) : WatchedConstraint(constraintName)
 {
-    setRegexId("^AreaHydroLevel::");
-}
-
-std::shared_ptr<WatchedConstraint> HydroLevel::clone() const
-{
-    return std::make_shared<HydroLevel>(*this);
+    regexId_ = "^AreaHydroLevel::";
 }
 
 std::string HydroLevel::infeasisibity()
@@ -201,14 +171,9 @@ std::string HydroLevel::infeasisibityCause()
 // =======================================
 // Short term storage constraint
 // =======================================
-STS::STS()
+STS::STS(std::string constraintName) : WatchedConstraint(constraintName)
 {
-    setRegexId("^Level::");
-}
-
-std::shared_ptr<WatchedConstraint> STS::clone() const
-{
-    return std::make_shared<STS>(*this);
+    regexId_ = "^Level::";
 }
 
 std::string STS::infeasisibity()
@@ -226,14 +191,9 @@ std::string STS::infeasisibityCause()
 // =======================================
 // Hydro production constraint
 // =======================================
-HydroProduction::HydroProduction()
+HydroProduction::HydroProduction(std::string constraintName) : WatchedConstraint(constraintName)
 {
-    setRegexId("^HydroPower::");
-}
-
-std::shared_ptr<WatchedConstraint> HydroProduction::clone() const
-{
-    return std::make_shared<HydroProduction>(*this);
+    regexId_ = "^HydroPower::";
 }
 
 std::string HydroProduction::infeasisibity()
@@ -245,4 +205,32 @@ std::string HydroProduction::infeasisibityCause()
 {
     return "* impossible to generate exactly the weekly hydro target";
 }
+
+// =======================================
+// Constraints factory
+// =======================================
+std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varName) const
+{
+    if (std::regex_search(varName, std::regex("::hourly::")))
+        return std::make_shared<HourlyBC>(varName);
+    if (std::regex_search(varName, std::regex("::daily::")))
+        return std::make_shared<DailyBC>(varName);
+    if (std::regex_search(varName, std::regex("::weekly::")))
+        return std::make_shared<WeeklyBC>(varName);
+    if (std::regex_search(varName, std::regex("^FictiveLoads::")))
+        return std::make_shared<FictitiousLoad>(varName);
+    if (std::regex_search(varName, std::regex("^AreaHydroLevel::")))
+        return std::make_shared<HydroLevel>(varName);
+    if (std::regex_search(varName, std::regex("^Level::")))
+        return std::make_shared<STS>(varName);
+    if (std::regex_search(varName, std::regex("^HydroPower::")))
+        return std::make_shared<HydroProduction>(varName);
+    return nullptr;
+}
+
+std::regex ConstraintsFactory::regexFilter()
+{
+    return std::regex(boost::algorithm::join(regex_ids_, "|"));
+}
+
 } // namespace Antares::Optimization

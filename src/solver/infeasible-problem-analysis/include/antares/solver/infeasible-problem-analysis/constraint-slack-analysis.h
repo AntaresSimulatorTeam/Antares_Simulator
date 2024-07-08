@@ -42,7 +42,6 @@ namespace Antares::Optimization
 class ConstraintSlackAnalysis: public UnfeasibilityAnalysis
 {
 public:
-    ConstraintSlackAnalysis();
     ~ConstraintSlackAnalysis() override = default;
 
     void run(operations_research::MPSolver* problem) override;
@@ -62,7 +61,7 @@ private:
 
     std::vector<operations_research::MPConstraint*> constraintsToWatch_;
     std::vector<const operations_research::MPVariable*> slackVariables_;
-    std::vector<std::shared_ptr<WatchedConstraint>> watchedConstraintTypes_;
+    ConstraintsFactory constraintFactory_;
     const unsigned int nbMaxSlackVarsToKeep = 10;
 };
 

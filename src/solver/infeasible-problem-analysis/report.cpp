@@ -29,9 +29,9 @@ namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const MPVariable*>& slackVariables,
-  const std::vector<std::shared_ptr<WatchedConstraint>>& constraintTypes):
+  const ConstraintsFactory& factory):
     slackVariables_(slackVariables),
-    constraintTypes_(constraintTypes)
+    constraintsFactory_(factory)
 {
     buildConstraintsFromSlackVars();
     filterConstraintsToOneByType();
@@ -41,14 +41,7 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars()
 {
     for (const auto& slackVar: slackVariables_)
     {
-        for (const auto& cType: constraintTypes_)
-        {
-            if (std::regex_search(slackVar->name(), std::regex(cType->regexId())))
-            {
-                constraints_.push_back(cType->clone());
-                constraints_.back()->setConstraintName(slackVar->name());
-            }
-        }
+        constraints_.push_back(constraintsFactory_.create(slackVar->name()));
     }
 }
 
