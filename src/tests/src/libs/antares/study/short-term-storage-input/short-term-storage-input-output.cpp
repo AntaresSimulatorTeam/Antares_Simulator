@@ -115,7 +115,7 @@ void createIniFile(bool enabled)
     outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
     outfile << "reservoircapacity = 31200.000000" << std::endl;
     outfile << "efficiency = 0.75" << std::endl;
-    outfile << "efficiencyWithdrawal = 0.9" << std::endl;
+    outfile << "efficiencywithdrawal = 0.9" << std::endl;
     outfile << "initiallevel = 0.50000" << std::endl;
     outfile << "enabled = " << (enabled ? "true" : "false") << std::endl;
     outfile.close();
@@ -135,7 +135,7 @@ void createIniFileWrongValue()
     outfile << "withdrawalnominalcapacity = -900.000000" << std::endl;
     outfile << "reservoircapacity = -31200.000000" << std::endl;
     outfile << "efficiency = 4" << std::endl;
-    outfile << "efficiencyWithdrawal = -2" << std::endl;
+    outfile << "efficiencywithdrawal = -2" << std::endl;
     outfile << "initiallevel = -0.50000" << std::endl;
 
     outfile.close();
