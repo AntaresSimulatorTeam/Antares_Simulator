@@ -92,6 +92,10 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
         Antares::logs.error() << "* Hydro reservoir impossible to manage with cumulative options "
                                  "\"hard bounds without heuristic\"";
     }
+    if (nbConstraintsByType_[ConstraintType::hydro_production_weekly] > 0)
+    {
+        Antares::logs.error() << "* impossible to generate exactly the weekly hydro target";
+    }
     if (nbConstraintsByType_[ConstraintType::fictitious_load] > 0)
     {
         Antares::logs.error() << "* Last resort shedding status,";

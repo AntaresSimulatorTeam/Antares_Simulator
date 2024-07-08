@@ -308,7 +308,8 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     props.injectionNominalCapacity = 10;
     props.withdrawalNominalCapacity = 10;
     props.reservoirCapacity = 100;
-    props.efficiencyFactor = .9;
+    props.injectionEfficiency = .9;
+    props.withdrawalEfficiency = .8;
     props.initialLevel = .443;
     props.groupName = std::string("Some STS group");
     // Default values for series
@@ -317,17 +318,16 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     storages.push_back(sts);
 
     // Fatal gen at h=1
-    {
-        auto& windTS = area->wind.series.timeSeries;
-        TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
-        windTS[0][1] = 100;
-    }
+    auto& windTS = area->wind.series.timeSeries;
+    TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
+    windTS[0][1] = 100;
 
-    // Fatal load at h=2
+    // Fatal load at h=2-10
+    auto& loadTS = area->load.series.timeSeries;
+    TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
+    for (int i = 2; i < 10; i++)
     {
-        auto& loadTS = area->load.series.timeSeries;
-        TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
-        loadTS[0][2] = 100;
+        loadTS[0][i] = 100;
     }
 
     // Usual values, avoid spillage & unsupplied energy
@@ -343,6 +343,51 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
                  == props.initialLevel * props.reservoirCapacity.value(),
                tt::tolerance(0.001));
 }
+
+BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixture)
+{
+    using namespace Antares::Data::ShortTermStorage;
+    setNumberMCyears(1);
+    auto& storages = area->shortTermStorage.storagesByIndex;
+    STStorageCluster sts;
+    auto& props = sts.properties;
+    props.name = "my-sts";
+    props.injectionNominalCapacity = 10;
+    props.withdrawalNominalCapacity = 10;
+    props.reservoirCapacity = 100;
+    props.injectionEfficiency = .6;
+    props.withdrawalEfficiency = .8;
+    props.initialLevel = .5;
+    props.groupName = std::string("Some STS group");
+    // Default values for series
+    sts.series->fillDefaultSeriesIfEmpty();
+
+    storages.push_back(sts);
+
+    // Fatal gen at h=1
+    auto& windTS = area->wind.series.timeSeries;
+    TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
+    windTS[0][1] = 100;
+
+    // Fatal load at h=2
+    auto& loadTS = area->load.series.timeSeries;
+    TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
+    loadTS[0][2] = 100;
+
+    // Usual values, avoid spillage & unsupplied energy
+    area->thermal.unsuppliedEnergyCost = 1.e3;
+    area->thermal.spilledEnergyCost = 1.;
+
+    simulation->create();
+    simulation->run();
+
+    unsigned int groupNb = 0; // Used to reach the first group of STS results
+    OutputRetriever output(simulation->rawSimu());
+
+    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(1), 56); // injection
+    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(2), 48); // withdrawal
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(HYDRO_MAX_POWER)
