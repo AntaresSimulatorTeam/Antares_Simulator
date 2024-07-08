@@ -11,8 +11,6 @@ Binding Constraints can take many forms (hourly, daily, weekly), involve flows o
 
 In other words, it is possible to make Antares work as a genuine DC OPF, provided that consistent binding constraints are written down for each cycle belonging to any cycle basis of the graph made out from all AC components of the power system (V vertices, E edges).
 
-The declaration of binding constraints can be made manually through the regular GUI. However, it is preferable not to carry out this task that way because there are many different possible formulations, among which some are better than others:
-
 - In a fully connected graph (V, E), there are as many binding constraints to write down as there are cycles in any cycle basis of the graph, which amounts to (E+1-V). The number of different possible basis is equal to that of spanning trees, which can be assessed by the Kirchhoff's theorem [^15]
 
 - Among all cycle basis, some should be preferred to others because they lead to a sparser constraint matrix.
@@ -44,8 +42,6 @@ Besides, the KCG takes into account the fact that the "best estimates" of all cr
 
 From a practical standpoint, assessments of $Y^-, Y^+$ should be derived from knowledge about the actual components installed on the grid, while $Z_l$ and $ \varphi_l $ can be estimated by various methods.
 
-In addition to the previous functionalities, the KCG's GUI also includes the following options:
-
 - Choice of a specific period of time for which the constraints should be applied, while completely relaxed at other moments
 - Before actual generation of binding constraints, preview of the "minimal length" spanning tree used as starting point for the optimal basis algorithm (left column of the table – links displayed with "0" do not belong to the tree)
 - Before actual generation of binding constraints, preview of the "optimal cycle basis" used as starting point for constraints generation (right column of the table – links displayed with "n" appear in n different cycles of the basis)
@@ -76,8 +72,6 @@ The binary is located in Antares_Simulator/bin/
 **study_path**: the path of the study, mandatory
 
 **option_file_path**: Optional. The path of the **constraintbuilder.ini** file. It's normally located in *study_path/settings/*. If not provided the constraint builder will take the default values, which are defined at the end of cbuilder.h.
-
-Those values were used to fill the GUI default values, and then the GUI created the file. That's why it's optional since only the default values are guaranteed to work.
 
 ### Results
 
