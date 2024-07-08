@@ -20,6 +20,7 @@
  */
 #include "antares/solver/infeasible-problem-analysis/constraint.h"
 
+#include <algorithm>
 #include <cassert>
 #include <iomanip>
 #include <sstream>
