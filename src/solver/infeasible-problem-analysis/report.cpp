@@ -47,13 +47,13 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars()
 
 void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
-    std::vector<std::string> typesPicked;
+    std::vector<std::string> pickedTypes;
     for (const auto& c: constraints_)
     {
-        if (std::find(typesPicked.begin(), typesPicked.end(), c->regexId()) == typesPicked.end())
+        if (std::find(pickedTypes.begin(), pickedTypes.end(), c->regexId()) == pickedTypes.end())
         {
             uniqueConstraintByType_.push_back(c);
-            typesPicked.push_back(c->regexId());
+            pickedTypes.push_back(c->regexId());
         }
     }
 }

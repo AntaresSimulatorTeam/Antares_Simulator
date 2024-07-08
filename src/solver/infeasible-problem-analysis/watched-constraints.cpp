@@ -4,7 +4,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
-#include <regex>
 
 class StringIsNotWellFormated: public std::runtime_error
 {
