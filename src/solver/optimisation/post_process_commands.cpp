@@ -263,9 +263,9 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                 const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 // write down densNew values for all the hours
-                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour]
-                  = std::max(0.0, densNew - dtgMrg);
-                ;
+                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour] = std::max(
+                  0.0,
+                  densNew);
                 // copy spilled Energy values into spilled Energy values after CSR
                 problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesSpilledEnergyAfterCSR[hour]
                   = problemeHebdo_->ResultatsHoraires[Area]
