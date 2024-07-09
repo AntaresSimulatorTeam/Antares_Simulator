@@ -256,14 +256,11 @@ ConstraintsFactory::ConstraintsFactory()
 
 std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varName) const
 {
-    for (auto& [pattern, createFunction]: regex_to_constraints_)
-    {
-        if (std::regex_search(varName, std::regex(pattern)))
-        {
-            return createFunction(varName);
-        }
-    }
-    return nullptr; // Cannot happen
+    return std::find_if(regex_to_constraints_.begin(),
+                        regex_to_constraints_.end(),
+                        [&varName](auto& p)
+                        { return std::regex_search(varName, std::regex(p.first)); })
+      ->second(varName);
 }
 
 std::regex ConstraintsFactory::constraintsFilter()
