@@ -1,4 +1,4 @@
-name: Check cpp formatting
+name: Check cpp formatting using clang 18.1.3
 
 on:
   pull_request:
@@ -23,7 +23,7 @@ jobs:
         run: |
           DIFF=`git status --porcelain`
           if [[ $DIFF ]]; then
-          echo "The following files are not well formatted"
+          echo "The following files are not well formatted, please make sure to use clang-format 18.1.3"
           echo "$DIFF"
           exit 1
           else
