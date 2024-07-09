@@ -249,7 +249,7 @@ std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varNam
     return nullptr;
 }
 
-std::regex ConstraintsFactory::regexFilter()
+std::regex ConstraintsFactory::constraintsFilter()
 {
     return std::regex(boost::algorithm::join(regex_ids_, "|"));
 }

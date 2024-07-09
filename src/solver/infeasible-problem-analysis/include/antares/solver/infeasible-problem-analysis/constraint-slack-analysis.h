@@ -61,7 +61,6 @@ private:
 
     std::vector<operations_research::MPConstraint*> constraintsToWatch_;
     std::vector<const operations_research::MPVariable*> slackVariables_;
-    ConstraintsFactory constraintFactory_;
     const unsigned int nbMaxSlackVarsToKeep = 10;
 };
 

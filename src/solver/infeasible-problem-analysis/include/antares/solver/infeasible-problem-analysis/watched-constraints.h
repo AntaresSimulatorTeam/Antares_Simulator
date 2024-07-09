@@ -85,7 +85,7 @@ class ConstraintsFactory
 {
 public:
     std::shared_ptr<WatchedConstraint> create(std::string regexId) const;
-    std::regex regexFilter();
+    std::regex constraintsFilter();
 
 private:
     const std::vector<std::string> regex_ids_ = {"::hourly::",

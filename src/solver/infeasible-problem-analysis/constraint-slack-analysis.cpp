@@ -68,7 +68,8 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
 
 void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
 {
-    std::regex rgx = constraintFactory_.regexFilter();
+    ConstraintsFactory factory;
+    std::regex rgx = factory.constraintsFilter();
     for (MPConstraint* c: problem->constraints())
     {
         if (std::regex_search(c->name(), rgx))
@@ -132,7 +133,7 @@ void ConstraintSlackAnalysis::trimSlackVariables()
 
 void ConstraintSlackAnalysis::printReport() const
 {
-    InfeasibleProblemReport report(slackVariables_, constraintFactory_);
+    InfeasibleProblemReport report(slackVariables_);
     report.logSuspiciousConstraints();
     report.logInfeasibilityCauses();
 }
