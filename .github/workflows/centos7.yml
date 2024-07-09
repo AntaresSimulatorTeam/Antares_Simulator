@@ -5,6 +5,7 @@ on:
     types: [created]
   push:
     branches:
+      - fix/centos-nodejs
       - develop
       - dependabot/*
   schedule:
@@ -57,6 +58,7 @@ jobs:
         echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
         echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
         echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite" >> $GITHUB_ENV
+        echo "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true" >> $GITHUB_ENV
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
