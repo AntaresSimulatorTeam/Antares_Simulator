@@ -242,22 +242,22 @@ std::shared_ptr<WatchedConstraint> createHydroProduction(std::string varName)
 
 ConstraintsFactory::ConstraintsFactory()
 {
-    regex_to_constraints_["::hourly::"] = createHourlyBC;
-    regex_to_constraints_["::daily::"] = createDailyBC;
-    regex_to_constraints_["::weekly::"] = createWeeklyBC;
-    regex_to_constraints_["^FictiveLoads::"] = createFictitiousLoad;
-    regex_to_constraints_["^AreaHydroLevel::"] = createHydroLevel;
-    regex_to_constraints_["^Level::"] = createSTS;
-    regex_to_constraints_["^HydroPower::"] = createHydroProduction;
+    regex_to_ctypes_["::hourly::"] = createHourlyBC;
+    regex_to_ctypes_["::daily::"] = createDailyBC;
+    regex_to_ctypes_["::weekly::"] = createWeeklyBC;
+    regex_to_ctypes_["^FictiveLoads::"] = createFictitiousLoad;
+    regex_to_ctypes_["^AreaHydroLevel::"] = createHydroLevel;
+    regex_to_ctypes_["^Level::"] = createSTS;
+    regex_to_ctypes_["^HydroPower::"] = createHydroProduction;
 
-    auto keyView = std::views::keys(regex_to_constraints_);
+    auto keyView = std::views::keys(regex_to_ctypes_);
     regex_ids_ = {keyView.begin(), keyView.end()};
 }
 
 std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varName) const
 {
-    return std::find_if(regex_to_constraints_.begin(),
-                        regex_to_constraints_.end(),
+    return std::find_if(regex_to_ctypes_.begin(),
+                        regex_to_ctypes_.end(),
                         [&varName](auto& p)
                         { return std::regex_search(varName, std::regex(p.first)); })
       ->second(varName);

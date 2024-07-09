@@ -90,7 +90,7 @@ public:
 
 private:
     std::map<std::string, std::function<std::shared_ptr<WatchedConstraint>(std::string)>>
-      regex_to_constraints_;
+      regex_to_ctypes_;
     std::vector<std::string> regex_ids_;
 };
 
