@@ -152,7 +152,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // en mode fast : est pris depuis l'heuristique
 }
 
-int State::getIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName)
+int State::getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName)
 {
     for (auto reserve : problemeHebdo->allReserves.thermalAreaReserves[area->index].areaCapacityReservationsUp)
     {
@@ -161,7 +161,7 @@ int State::getIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::Cl
             for (auto cluster : reserve.AllReservesParticipation)
             {
                 if (cluster.clusterName == clusterName)
-                    return cluster.indexClusterParticipation;
+                    return cluster.areaIndexClusterParticipation;
             }
         }
     }
@@ -172,7 +172,7 @@ int State::getIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::Cl
             for (auto cluster : reserve.AllReservesParticipation)
             {
                 if (cluster.clusterName == clusterName)
-                    return cluster.indexClusterParticipation;
+                    return cluster.areaIndexClusterParticipation;
             }
         }
     }
@@ -237,7 +237,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
             std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
             for (auto res : clusterReserves)
             {
-                int reserveParticipationIdx = getIndexFromReserveAndCluster(res, thermalCluster->name());
+                int reserveParticipationIdx = getAreaIndexFromReserveAndCluster(res, thermalCluster->name());
                 if (reserveParticipationIdx != -1)
                 {
                     thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
