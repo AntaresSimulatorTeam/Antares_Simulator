@@ -13,8 +13,8 @@ class WatchedConstraint
 public:
     WatchedConstraint(std::string constraintName);
     std::string regexId() const;
-    virtual std::string infeasisibity() = 0;
-    virtual std::string infeasisibityCause() = 0;
+    virtual std::string infeasibility() = 0;
+    virtual std::string infeasibilityCause() = 0;
 
 protected:
     const std::vector<std::string>& splitName() const;
@@ -29,56 +29,56 @@ class HourlyBC: public WatchedConstraint
 {
 public:
     HourlyBC(std::string constraintName);
-    std::string infeasisibity() override;
-    std::string infeasisibityCause() override;
+    std::string infeasibility() override;
+    std::string infeasibilityCause() override;
 };
 
 class DailyBC: public WatchedConstraint
 {
 public:
     DailyBC(std::string constraintName);
-    std::string infeasisibity() override;
-    std::string infeasisibityCause() override;
+    std::string infeasibility() override;
+    std::string infeasibilityCause() override;
 };
 
 class WeeklyBC: public WatchedConstraint
 {
 public:
     WeeklyBC(std::string constraintName);
-    std::string infeasisibity() override;
-    std::string infeasisibityCause() override;
+    std::string infeasibility() override;
+    std::string infeasibilityCause() override;
 };
 
 class FictitiousLoad: public WatchedConstraint
 {
 public:
     FictitiousLoad(std::string constraintName);
-    std::string infeasisibity() override;
-    std::string infeasisibityCause() override;
+    std::string infeasibility() override;
+    std::string infeasibilityCause() override;
 };
 
 class HydroLevel: public WatchedConstraint
 {
 public:
     HydroLevel(std::string constraintName);
-    std::string infeasisibity() override;
-    std::string infeasisibityCause() override;
+    std::string infeasibility() override;
+    std::string infeasibilityCause() override;
 };
 
 class STS: public WatchedConstraint
 {
 public:
     STS(std::string constraintName);
-    std::string infeasisibity() override;
-    std::string infeasisibityCause() override;
+    std::string infeasibility() override;
+    std::string infeasibilityCause() override;
 };
 
 class HydroProduction: public WatchedConstraint
 {
 public:
     HydroProduction(std::string constraintName);
-    std::string infeasisibity() override;
-    std::string infeasisibityCause() override;
+    std::string infeasibility() override;
+    std::string infeasibilityCause() override;
 };
 
 class ConstraintsFactory

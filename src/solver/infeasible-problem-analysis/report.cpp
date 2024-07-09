@@ -60,7 +60,7 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
 {
     for (const auto& c: constraints_)
     {
-        Antares::logs.error() << c->infeasisibity();
+        Antares::logs.error() << c->infeasibility();
     }
 }
 
@@ -69,7 +69,7 @@ void InfeasibleProblemReport::logInfeasibilityCauses()
     Antares::logs.error() << "Possible causes of infeasibility:";
     for (const auto& c: uniqueConstraintByType_)
     {
-        Antares::logs.error() << c->infeasisibityCause();
+        Antares::logs.error() << c->infeasibilityCause();
     }
 }
 

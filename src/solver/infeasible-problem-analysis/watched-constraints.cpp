@@ -84,12 +84,12 @@ HourlyBC::HourlyBC(std::string constraintName):
     regexId_ = "::hourly::";
 }
 
-std::string HourlyBC::infeasisibity()
+std::string HourlyBC::infeasibility()
 {
     return "Hourly BC '" + shortName(splitName()) + "' at hour " + timeStep(splitName());
 }
 
-std::string HourlyBC::infeasisibityCause()
+std::string HourlyBC::infeasibilityCause()
 {
     return "* Hourly binding constraints.";
 }
@@ -103,12 +103,12 @@ DailyBC::DailyBC(std::string constraintName):
     regexId_ = "::daily::";
 }
 
-std::string DailyBC::infeasisibity()
+std::string DailyBC::infeasibility()
 {
     return "Daily BC '" + shortName(splitName()) + "' at day " + timeStep(splitName());
 }
 
-std::string DailyBC::infeasisibityCause()
+std::string DailyBC::infeasibilityCause()
 {
     return "* Daily binding constraints,";
 }
@@ -122,12 +122,12 @@ WeeklyBC::WeeklyBC(std::string constraintName):
     regexId_ = "::weekly::";
 }
 
-std::string WeeklyBC::infeasisibity()
+std::string WeeklyBC::infeasibility()
 {
     return "Weekly BC '" + shortName(splitName());
 }
 
-std::string WeeklyBC::infeasisibityCause()
+std::string WeeklyBC::infeasibilityCause()
 {
     return "* Weekly binding constraints.";
 }
@@ -141,13 +141,13 @@ FictitiousLoad::FictitiousLoad(std::string constraintName):
     regexId_ = "^FictiveLoads::";
 }
 
-std::string FictitiousLoad::infeasisibity()
+std::string FictitiousLoad::infeasibility()
 {
     return "Last resort shedding status at area '" + areaName(splitName()) + "' at hour "
            + timeStep(splitName());
 }
 
-std::string FictitiousLoad::infeasisibityCause()
+std::string FictitiousLoad::infeasibilityCause()
 {
     return "* Last resort shedding status.";
 }
@@ -161,13 +161,13 @@ HydroLevel::HydroLevel(std::string constraintName):
     regexId_ = "^AreaHydroLevel::";
 }
 
-std::string HydroLevel::infeasisibity()
+std::string HydroLevel::infeasibility()
 {
     return "Hydro level constraint at area '" + areaName(splitName()) + "' at hour "
            + timeStep(splitName());
 }
 
-std::string HydroLevel::infeasisibityCause()
+std::string HydroLevel::infeasibilityCause()
 {
     return "* Hydro reservoir impossible to manage with cumulative options "
            "\"hard bounds without heuristic\"";
@@ -182,13 +182,13 @@ STS::STS(std::string constraintName):
     regexId_ = "^Level::";
 }
 
-std::string STS::infeasisibity()
+std::string STS::infeasibility()
 {
     return "Short-term-storage reservoir constraint at area '" + areaName(splitName())
            + "' in STS '" + STSname(splitName()) + "' at hour " + timeStep(splitName());
 }
 
-std::string STS::infeasisibityCause()
+std::string STS::infeasibilityCause()
 {
     return "* Short-term storage reservoir level impossible to manage. Please check inflows, "
            "lower & upper curves and initial level (if prescribed),";
@@ -203,12 +203,12 @@ HydroProduction::HydroProduction(std::string constraintName):
     regexId_ = "^HydroPower::";
 }
 
-std::string HydroProduction::infeasisibity()
+std::string HydroProduction::infeasibility()
 {
     return "Hydro weekly production at area '" + areaName(splitName()) + "'";
 }
 
-std::string HydroProduction::infeasisibityCause()
+std::string HydroProduction::infeasibilityCause()
 {
     return "* impossible to generate exactly the weekly hydro target";
 }
