@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - fix/gcov-tnr
     pull_request:
 
 jobs:
