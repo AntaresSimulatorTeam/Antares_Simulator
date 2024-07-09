@@ -22,8 +22,6 @@
 
 #include <regex>
 
-#include <boost/algorithm/string.hpp>
-
 #include <antares/logs/logs.h>
 #include "antares/solver/infeasible-problem-analysis/report.h"
 #pragma GCC diagnostic push
