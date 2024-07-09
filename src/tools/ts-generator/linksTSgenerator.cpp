@@ -1,5 +1,6 @@
 
 #include "antares/tools/ts-generator/linksTSgenerator.h"
+
 #include "antares/utils/utils.h"
 
 namespace Antares::TSGenerator
@@ -28,10 +29,12 @@ bool pairs_match(const LinkPair& p1, const LinkPair& p2)
 
 const LinkPair* getMatchingPairInCollection(const LinkPair& pair, const LinkPairs& collection)
 {
-    for(const auto& p : collection)
+    for (const auto& p: collection)
     {
         if (pairs_match(pair, p))
+        {
             return &p;
+        }
     }
     return nullptr;
 }
@@ -50,9 +53,11 @@ bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
     }
     if (key == "seed-tsgen-links")
     {
-        unsigned int seed {0};
-        if (! value.to<unsigned int>(seed))
+        unsigned int seed{0};
+        if (!value.to<unsigned int>(seed))
+        {
             return false;
+        }
         params.random.reset(seed);
         return true;
     }
@@ -62,7 +67,8 @@ bool readLinkGeneralProperty(StudyParamsForLinkTS& params,
 std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmdLine)
 {
     std::vector<LinkTSgenerationParams> to_return;
-    std::for_each(linksFromCmdLine.begin(), linksFromCmdLine.end(),
+    std::for_each(linksFromCmdLine.begin(),
+                  linksFromCmdLine.end(),
                   [&to_return](const auto& link_pair)
                   {
                       LinkTSgenerationParams link;
@@ -75,10 +81,12 @@ std::vector<LinkTSgenerationParams> CreateLinkList(const LinkPairs& linksFromCmd
 LinkTSgenerationParams* findLinkInList(const LinkPair& link_to_find,
                                        std::vector<LinkTSgenerationParams>& linkList)
 {
-    for(auto& link : linkList)
+    for (auto& link: linkList)
     {
         if (link.namesPair == link_to_find)
+        {
             return &link;
+        }
     }
     return nullptr;
 }
@@ -124,16 +132,15 @@ bool readLinkIniProperty(LinkTSgenerationParams* link,
     return true;
 }
 
-void readLinkIniProperties(LinkTSgenerationParams* link,
-                           IniFile::Section* section)
+void readLinkIniProperties(LinkTSgenerationParams* link, IniFile::Section* section)
 {
     for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
     {
-        if (! readLinkIniProperty(link, p->key, p->value))
+        if (!readLinkIniProperty(link, p->key, p->value))
         {
             std::string linkName = link->namesPair.first + "." + link->namesPair.second;
-            logs.warning() << "Link '" << linkName << "' : reading value of '"
-                           << p->key << "' went wrong";
+            logs.warning() << "Link '" << linkName << "' : reading value of '" << p->key
+                           << "' went wrong";
             link->hasValidData = false;
         }
     }
@@ -158,7 +165,7 @@ void readSourceAreaIniFile(fs::path pathToIni,
 
 void readIniProperties(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
 {
-    for(auto& link : linkList)
+    for (auto& link: linkList)
     {
         std::string sourceAreaName = link.namesPair.first;
         fs::path pathToIni = toLinksDir / sourceAreaName / "properties.ini";
@@ -173,8 +180,7 @@ fs::path makePreproFile(const fs::path& preproFilePath, const std::string& chang
     return to_return;
 }
 
-bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
-                              fs::path sourceAreaDir)
+bool readLinkPreproTimeSeries(LinkTSgenerationParams& link, fs::path sourceAreaDir)
 {
     bool to_return = true;
     const auto preproId = link.namesPair.first + "/" + link.namesPair.second;
@@ -186,45 +192,40 @@ bool readLinkPreproTimeSeries(LinkTSgenerationParams& link,
     auto preproFile = makePreproFile(preproFileRoot, "");
     auto modulationDirectFile = makePreproFile(preproFileRoot, "_mod_direct");
     auto modulationIndirectFile = makePreproFile(preproFileRoot, "_mod_indirect");
-    std::vector<fs::path> paths {preproFile, modulationDirectFile, modulationIndirectFile};
-    if (std::any_of(paths.begin(), paths.end(), [](auto& path) {return ! fs::exists(path);}))
+    std::vector<fs::path> paths{preproFile, modulationDirectFile, modulationIndirectFile};
+    if (std::any_of(paths.begin(), paths.end(), [](auto& path) { return !fs::exists(path); }))
     {
         link.hasValidData = false;
         return false;
     }
 
     // Files loading
-    to_return = link.prepro->data.loadFromCSVFile(
-                    preproFile.string(),
-                    Data::PreproAvailability::preproAvailabilityMax,
-                    DAYS_PER_YEAR)
-                && link.prepro->validate()
+    to_return = link.prepro->data.loadFromCSVFile(preproFile.string(),
+                                                  Data::PreproAvailability::preproAvailabilityMax,
+                                                  DAYS_PER_YEAR)
+                && link.prepro->validate() && to_return;
+
+    to_return = link.modulationCapacityDirect.loadFromCSVFile(modulationDirectFile.string(),
+                                                              1,
+                                                              HOURS_PER_YEAR)
                 && to_return;
 
-    to_return = link.modulationCapacityDirect.loadFromCSVFile(
-                    modulationDirectFile.string(),
-                    1,
-                    HOURS_PER_YEAR)
-                && to_return;
-
-    to_return = link.modulationCapacityIndirect.loadFromCSVFile(
-                    modulationIndirectFile.string(),
-                    1,
-                    HOURS_PER_YEAR)
+    to_return = link.modulationCapacityIndirect.loadFromCSVFile(modulationIndirectFile.string(),
+                                                                1,
+                                                                HOURS_PER_YEAR)
                 && to_return;
 
     link.hasValidData = link.hasValidData && to_return;
     return to_return;
 }
 
-void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
-                          fs::path toLinksDir)
+void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList, fs::path toLinksDir)
 {
-    for(auto& link : linkList)
+    for (auto& link: linkList)
     {
         std::string sourceAreaName = link.namesPair.first;
         fs::path sourceAreaDir = toLinksDir / sourceAreaName;
-        if (! readLinkPreproTimeSeries(link, sourceAreaDir))
+        if (!readLinkPreproTimeSeries(link, sourceAreaDir))
         {
             logs.warning() << "Could not load all prepro/modulation data for link '"
                            << link.namesPair.first << "." << link.namesPair.second << "'";
@@ -235,7 +236,7 @@ void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList,
 // ==================
 // Class methods
 // ==================
-LinksTSgenerator::LinksTSgenerator(Settings & settings) :
+LinksTSgenerator::LinksTSgenerator(Settings& settings):
     studyFolder_(settings.studyFolder),
     linksFromCmdLineOptions_(settings.linksListToGen),
     generateTSforAllLinks_(settings.allLinks)
@@ -248,9 +249,13 @@ void LinksTSgenerator::extractData()
 
     LinkPairs namesLinksToGenerate;
     if (generateTSforAllLinks_)
+    {
         namesLinksToGenerate = allLinksPairs;
+    }
     else
+    {
         namesLinksToGenerate = extractLinkNamesFromCmdLine(allLinksPairs);
+    }
 
     linkList_ = CreateLinkList(namesLinksToGenerate);
     extractLinksSpecificTSparameters();
@@ -262,13 +267,13 @@ LinkPairs LinksTSgenerator::extractLinkNamesFromStudy()
 {
     LinkPairs to_return;
     fs::path linksDir = studyFolder_ / "input" / "links";
-    for (auto const& item : fs::directory_iterator{linksDir})
+    for (const auto& item: fs::directory_iterator{linksDir})
     {
         if (item.is_directory())
         {
             std::string sourceAreaName = item.path().filename().generic_string();
             auto targetAreas = extractTargetAreas(item);
-            for (auto& targetAreaName : targetAreas)
+            for (auto& targetAreaName: targetAreas)
             {
                 auto linkPair = std::make_pair(sourceAreaName, targetAreaName);
                 to_return.push_back(linkPair);
@@ -282,7 +287,7 @@ LinkPairs LinksTSgenerator::extractLinkNamesFromCmdLine(const LinkPairs& allLink
 {
     LinkPairs to_return;
     LinkPairs pairsFromCmdLine = splitStringIntoPairs(linksFromCmdLineOptions_, ';', '.');
-    for (auto& p : pairsFromCmdLine)
+    for (auto& p: pairsFromCmdLine)
     {
         if (const auto* found_pair = getMatchingPairInCollection(p, allLinks); found_pair)
         {
@@ -307,14 +312,16 @@ StudyParamsForLinkTS LinksTSgenerator::readGeneralParamsForLinksTS()
         // Skipping sections useless in the current context
         Yuni::String sectionName = section->name;
         if (sectionName != "general" && sectionName != "seeds - Mersenne Twister")
+        {
             continue;
+        }
 
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
-            if (! readLinkGeneralProperty(to_return, p->key, p->value))
+            if (!readLinkGeneralProperty(to_return, p->key, p->value))
             {
-                logs.warning() << ini.filename() << ": reading value of '"
-                               << p->key << "' went wrong";
+                logs.warning() << ini.filename() << ": reading value of '" << p->key
+                               << "' went wrong";
             }
         }
     }
@@ -337,4 +344,4 @@ bool LinksTSgenerator::generate()
     return generateLinkTimeSeries(linkList_, generalParams_, saveTSpath);
 }
 
-}
+} // namespace Antares::TSGenerator

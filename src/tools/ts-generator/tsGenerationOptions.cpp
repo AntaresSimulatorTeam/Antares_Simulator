@@ -1,9 +1,12 @@
 #include "antares/tools/ts-generator/tsGenerationOptions.h"
+
 #include <antares/logs/logs.h>
 
-namespace Antares::TSGenerator {
+namespace Antares::TSGenerator
+{
 
-std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings &settings) {
+std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings& settings)
+{
     auto parser = std::make_unique<Yuni::GetOpt::Parser>();
     parser->addParagraph("Antares Time Series generator\n");
 
@@ -29,20 +32,19 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings &settings
     return parser;
 }
 
-
 bool parseOptions(int argc, char* argv[], Settings& options)
 {
     auto parser = createTsGeneratorParser(options);
     switch (auto ret = parser->operator()(argc, argv); ret)
     {
         using namespace Yuni::GetOpt;
-        case ReturnCode::error:
-            logs.error() << "Unknown arguments, aborting";
-            return false;
-        case ReturnCode::help:
-            return false;
-        default:
-            break;
+    case ReturnCode::error:
+        logs.error() << "Unknown arguments, aborting";
+        return false;
+    case ReturnCode::help:
+        return false;
+    default:
+        break;
     }
     return true;
 }
@@ -67,8 +69,9 @@ bool linkTSrequired(Settings& options)
 {
     return options.allLinks || !options.linksListToGen.empty();
 }
+
 bool thermalTSrequired(Settings& options)
 {
     return options.allThermal || !options.thermalListToGen.empty();
 }
-}
+} // namespace Antares::TSGenerator

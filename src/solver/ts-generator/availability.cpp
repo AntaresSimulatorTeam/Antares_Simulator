@@ -26,7 +26,6 @@
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/solver/ts-generator/law.h>
 #include <antares/study/study.h>
-#include <antares/io/file.h> // For Antares::IO::fileSetContent
 
 constexpr double FAILURE_RATE_EQ_1 = 0.999;
 
@@ -591,8 +590,7 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-void writeTStoDisk(const Matrix<>& series,
-                   const std::filesystem::path savePath)
+void writeTStoDisk(const Matrix<>& series, const std::filesystem::path savePath)
 {
     std::string buffer;
     series.saveToBuffer(buffer, 0);
@@ -664,14 +662,18 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
         }
 
         // === DIRECT =======================
-        AvailabilityTSGeneratorData tsConfigDataDirect(link, link.modulationCapacityDirect, link.namesPair.second);
+        AvailabilityTSGeneratorData tsConfigDataDirect(link,
+                                                       link.modulationCapacityDirect,
+                                                       link.namesPair.second);
         auto generated_ts = generator.run(tsConfigDataDirect);
 
         auto filePath = savePath / link.namesPair.first / link.namesPair.second += "_direct.txt";
         writeTStoDisk(generated_ts, filePath);
 
         // === INDIRECT =======================
-        AvailabilityTSGeneratorData tsConfigDataIndirect(link, link.modulationCapacityIndirect, link.namesPair.second);
+        AvailabilityTSGeneratorData tsConfigDataIndirect(link,
+                                                         link.modulationCapacityIndirect,
+                                                         link.namesPair.second);
         generated_ts = generator.run(tsConfigDataIndirect);
 
         filePath = savePath / link.namesPair.first / link.namesPair.second += "_indirect.txt";

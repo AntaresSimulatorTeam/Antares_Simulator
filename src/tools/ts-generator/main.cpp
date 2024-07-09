@@ -26,9 +26,8 @@
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
-
-#include "antares/tools/ts-generator/tsGenerationOptions.h"
 #include "antares/tools/ts-generator/linksTSgenerator.h"
+#include "antares/tools/ts-generator/tsGenerationOptions.h"
 using namespace Antares::TSGenerator;
 
 using namespace Antares::TSGenerator;
@@ -70,13 +69,17 @@ int main(int argc, char* argv[])
     logs.applicationName("ts-generator");
 
     Settings settings;
-    if (! parseOptions(argc, argv, settings))
+    if (!parseOptions(argc, argv, settings))
+    {
         return 1;
+    }
 
-    if (! checkOptions(settings))
+    if (!checkOptions(settings))
+    {
         return 1;
+    }
 
-    bool return_code {true};
+    bool return_code{true};
 
     if (thermalTSrequired(settings))
     {
@@ -102,12 +105,11 @@ int main(int argc, char* argv[])
         // === TS generation ===
         MersenneTwister thermalRandom;
         thermalRandom.reset(study->parameters.seed[Data::seedTsGenThermal]);
-        return_code = TSGenerator::generateThermalTimeSeries(*study,
-                                                             clusters,
-                                                             thermalRandom);
+        return_code = TSGenerator::generateThermalTimeSeries(*study, clusters, thermalRandom);
 
         // === Writing generated TS on disk ===
-        auto thermalSavePath = fs::path(settings.studyFolder) / "output" / FormattedTime("%Y%m%d-%H%M");
+        auto thermalSavePath = fs::path(settings.studyFolder) / "output"
+                               / FormattedTime("%Y%m%d-%H%M");
         thermalSavePath /= "ts-generator";
         thermalSavePath /= "thermal";
         writeThermalTimeSeries(clusters, thermalSavePath);

@@ -28,6 +28,7 @@
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
 #include <antares/study/study.h>
+
 #include "xcast/xcast.h"
 
 namespace fs = std::filesystem;

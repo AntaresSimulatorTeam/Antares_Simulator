@@ -454,7 +454,9 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         if (refreshTSonCurrentYear)
         {
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-            generateThermalTimeSeries(study, clusters, study.runtime->random[Data::seedTsGenThermal]);
+            generateThermalTimeSeries(study,
+                                      clusters,
+                                      study.runtime->random[Data::seedTsGenThermal]);
 
             bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
             bool doWeWrite = archive && !study.parameters.noOutput;
@@ -467,7 +469,9 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
 
             // apply the spinning if we generated some in memory clusters
             for (auto* cluster: clusters)
+            {
                 cluster->calculationOfSpinning();
+            }
         }
     };
 }

@@ -1,12 +1,13 @@
 
 #pragma once
 
-#include "antares/tools/ts-generator/tsGenerationOptions.h"
 #include <antares/solver/ts-generator/generator.h>
+#include "antares/tools/ts-generator/tsGenerationOptions.h"
 
 namespace fs = std::filesystem;
 
-namespace Antares::TSGenerator {
+namespace Antares::TSGenerator
+{
 
 class LinksTSgenerator
 {
@@ -28,4 +29,4 @@ private:
     StudyParamsForLinkTS generalParams_;
 };
 
-} // End Antares::TSGenerator
+} // namespace Antares::TSGenerator
