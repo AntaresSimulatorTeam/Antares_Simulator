@@ -2,7 +2,6 @@
 #include "antares/solver/infeasible-problem-analysis/watched-constraints.h"
 
 #include <ranges>
-
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
