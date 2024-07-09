@@ -33,7 +33,7 @@ namespace AntaresStudy
 namespace Constraint
 {
 Weights::Weights(const AnyString& name, Antares::Data::ConstraintName targetName) :
- pOriginalConstraintName(name), targetName(targetName), pCurrentContext(NULL)
+ pOriginalConstraintName(name), targetName(targetName), pCurrentContext(nullptr)
 {
     pInfos.caption << "Weights";
 }

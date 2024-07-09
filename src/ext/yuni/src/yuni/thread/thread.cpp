@@ -89,8 +89,8 @@ extern "C" YUNI_THREAD_FNC_RETURN threadCallbackExecute(void* arg)
 
 #ifndef YUNI_OS_WINDOWS
     // pthread - Adjust cancellation behaviors
-    // ::pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-    ::pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    // ::pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, nullptr);
+    ::pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, nullptr);
 #endif
 
     if (thread.onStarting())

@@ -169,7 +169,8 @@ struct PROPERTIES
     double reservoirCapacity;
     double injectionNominalCapacity;
     double withdrawalNominalCapacity;
-    double efficiency;
+    double injectionEfficiency;
+    double withdrawalEfficiency;
     double initialLevel;
     bool initialLevelOptim;
 

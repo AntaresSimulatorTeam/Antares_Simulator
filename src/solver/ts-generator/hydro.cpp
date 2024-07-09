@@ -66,7 +66,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
     auto& studyRTI = *(study.runtime);
     auto& calendar = study.calendar;
 
-    uint DIM = 12 * study.areas.size();
+    uint DIM = MONTHS_PER_YEAR * study.areas.size();
     uint DEM = DIM / 2;
 
     Matrix<double> CHSKY;
@@ -95,7 +95,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
     for (uint i = 0; i < DIM; i++)
     {
-        uint areaIndexI = i / 12;
+        uint areaIndexI = i / MONTHS_PER_YEAR;
         auto* prepro = study.areas.byIndex[areaIndexI]->hydro.prepro;
 
         auto& corre = CORRE[i];
@@ -104,10 +104,10 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
         for (uint j = 0; j < DIM; j++)
         {
-            uint areaIndexJ = j / 12;
+            uint areaIndexJ = j / MONTHS_PER_YEAR;
             auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro;
 
-            x = std::abs(((int)(i % 12) - (int)(j % 12)) / 2.);
+            x = std::abs(((int)(i % MONTHS_PER_YEAR) - (int)(j % MONTHS_PER_YEAR)) / 2.);
 
             corre[j] = annualCorrAreaI[areaIndexJ]
                        * pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
@@ -167,7 +167,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         }
         for (uint i = 0; i < DIM; ++i)
         {
-            auto& area = *(study.areas.byIndex[i / 12]);
+            auto& area = *(study.areas.byIndex[i / MONTHS_PER_YEAR]);
             auto& prepro = *area.hydro.prepro;
             auto& series = *area.hydro.series;
             auto ror = series.ror[l];
@@ -178,7 +178,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             auto& colMaxEnergy = prepro.data[Data::PreproHydro::maximumEnergy];
             auto& colPOW = prepro.data[Data::PreproHydro::powerOverWater];
 
-            uint month = i % 12;
+            uint month = i % MONTHS_PER_YEAR;
             uint realmonth = calendar.months[month].realmonth;
 
             assert(l < series.ror.timeSeries.width);

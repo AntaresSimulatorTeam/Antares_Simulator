@@ -308,8 +308,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
                 Xmin[var] = 0.0;
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
 
                 var = variableManager.IntercoIndirectCost(interco, pdtJour);
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
@@ -329,8 +329,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
                 Xmin[var] = 0.0;
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
             }
         }
 
@@ -382,16 +382,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     {
                         Xmin[var] = 0.0;
                         Xmax[var] = LINFINI_ANTARES;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
                     var = variableManager.HydProdUp(pays, pdtJour);
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
                         Xmin[var] = 0.0;
                         Xmax[var] = LINFINI_ANTARES;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
                 }
                 else if (problemeHebdo->TypeDeLissageHydraulique
@@ -404,8 +404,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                         Xmin[var] = 0.0;
                         Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                       .MaxDesPmaxHydrauliques;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
 
                     var = variableManager.HydProdUp(pays, pdtJour);
@@ -414,8 +414,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                         Xmin[var] = 0.0;
                         Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                       .MaxDesPmaxHydrauliques;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
                 }
             }
@@ -440,8 +440,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmin[var] = 0.0;
                 Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
                               .ApportNaturelHoraire[pdtHebdo];
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
             }
 
             var = variableManager.HydroLevel(pays, pdtJour);
@@ -453,7 +453,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                               .NiveauHoraireSup[pdtHebdo];
                 double* adresseDuResultat = &(
                   problemeHebdo->ResultatsHoraires[pays].niveauxHoraires[pdtHebdo]);
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 
@@ -492,14 +492,14 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmin[var] = -(LINFINI_ANTARES);
                 Xmax[var] = LINFINI_ANTARES;
 
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
 
                 //	Note: if there were a single optimization run instead of two; the following
                 // could be used: 	adresseDuResultat =
                 //&(problemeHebdo->CaracteristiquesHydrauliques[pays].LevelForTimeInterval);
                 //	AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
             }
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
@@ -510,8 +510,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays].TailleReservoir
                                 / double(100);
 
-                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
-                    AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+                    AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
                 }
             }
         }

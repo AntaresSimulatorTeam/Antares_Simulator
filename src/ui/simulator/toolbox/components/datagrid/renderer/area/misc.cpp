@@ -100,7 +100,7 @@ double Misc::cellNumericValue(int x, int y) const
 
 void Misc::internalAreaChanged(Antares::Data::Area* area)
 {
-    this->matrix((area) ? &(area->miscGen) : NULL);
+    this->matrix((area) ? &(area->miscGen) : nullptr);
     Renderer::ARendererArea::internalAreaChanged(area);
 }
 

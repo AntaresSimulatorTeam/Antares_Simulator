@@ -75,7 +75,7 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] *= v;
             }
@@ -88,7 +88,7 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
             }
@@ -101,7 +101,7 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
             }
@@ -247,7 +247,7 @@ struct VariableAccessor
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
             {
                 out[i].hour[h] += src[h];
             }
@@ -263,7 +263,7 @@ struct VariableAccessor
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
             {
                 if (out[i].hour[h] < src[h])
                 {
@@ -289,7 +289,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] *= v;
             }
@@ -304,7 +304,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
             }
@@ -319,7 +319,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
             }
@@ -516,7 +516,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
             {
                 out[i].hour[h] += src[h];
             }
@@ -532,7 +532,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
             {
                 if (out[i].hour[h] < src[h])
                 {
@@ -553,7 +553,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
         assert(!std::isnan(v));
-        for (uint y = 0; y != maxHoursInAYear; ++y)
+        for (uint y = 0; y != HOURS_PER_YEAR; ++y)
         {
             intermediateValues.hour[y] *= v;
         }
@@ -562,7 +562,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     template<class U>
     static void SetTo1IfPositive(U& intermediateValues)
     {
-        for (uint y = 0; y != maxHoursInAYear; ++y)
+        for (uint y = 0; y != HOURS_PER_YEAR; ++y)
         {
             intermediateValues.hour[y] = std::abs(intermediateValues.hour[y]) > 0. ? 1. : 0.;
         }
@@ -571,7 +571,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     template<class U>
     static void Or(U& intermediateValues)
     {
-        for (uint y = 0; y != maxHoursInAYear; ++y)
+        for (uint y = 0; y != HOURS_PER_YEAR; ++y)
         {
             intermediateValues.hour[y] = std::abs(intermediateValues.hour[y]) > 0. ? 100. : 0.;
         }
@@ -683,7 +683,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
 
         assert(src != NULL);
-        for (uint h = 0; h != maxHoursInAYear; ++h)
+        for (uint h = 0; h != HOURS_PER_YEAR; ++h)
         {
             out.hour[h] += src[h];
         }
@@ -696,7 +696,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
 
         assert(src != NULL);
-        for (uint h = 0; h != maxHoursInAYear; ++h)
+        for (uint h = 0; h != HOURS_PER_YEAR; ++h)
         {
             if (out.hour[h] < src[h])
             {

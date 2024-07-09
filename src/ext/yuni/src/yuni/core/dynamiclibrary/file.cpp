@@ -215,7 +215,7 @@ bool File::loadFromRawFilename(const AnyString& filename, File::Relocation r, Fi
 bool File::hasSymbol(const AnyString& name) const
 {
     return NullHandle != pHandle
-           and NULL != reinterpret_cast<Symbol::Handle>(YUNI_DYNLIB_DLSYM(pHandle, name.c_str()));
+           && reinterpret_cast<Symbol::Handle>(YUNI_DYNLIB_DLSYM(pHandle, name.c_str()));
 }
 
 Symbol File::resolve(const AnyString& name) const

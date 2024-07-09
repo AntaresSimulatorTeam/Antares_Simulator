@@ -70,8 +70,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer,
-                                      Solver::Simulation::ISimulationObserver& simulationObserver
-                                      );
+                                      Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 
@@ -92,8 +91,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
                               Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver& simulationObserver
-                              );
+                              Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/
 

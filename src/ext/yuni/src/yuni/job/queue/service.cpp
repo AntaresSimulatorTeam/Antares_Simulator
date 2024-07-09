@@ -37,14 +37,14 @@ static inline uint OptimalCPUCount()
     return count;
 }
 
-QueueService::QueueService() : pStatus(sStopped), pThreads(NULL)
+QueueService::QueueService() : pStatus(sStopped), pThreads(nullptr)
 {
     uint count = OptimalCPUCount();
     pMinimumThreadCount = count;
     pMaximumThreadCount = count;
 }
 
-QueueService::QueueService(bool autostart) : pStatus(sStopped), pThreads(NULL)
+QueueService::QueueService(bool autostart) : pStatus(sStopped), pThreads(nullptr)
 {
     uint count = OptimalCPUCount();
     pMinimumThreadCount = count;
@@ -172,7 +172,7 @@ void QueueService::stop(uint timeout)
             return;
 
         threads = (ThreadArray*)pThreads;
-        pThreads = NULL;
+        pThreads = nullptr;
         pStatus = sStopping;
     }
 

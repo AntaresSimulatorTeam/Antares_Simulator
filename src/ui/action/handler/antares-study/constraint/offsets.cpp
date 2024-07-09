@@ -33,7 +33,7 @@ namespace AntaresStudy
 namespace Constraint
 {
 Offsets::Offsets(const AnyString& name, Antares::Data::ConstraintName targetName) :
- pOriginalConstraintName(name), targetName(targetName), pCurrentContext(NULL)
+ pOriginalConstraintName(name), targetName(targetName), pCurrentContext(nullptr)
 {
     pInfos.caption << "Offsets";
 }

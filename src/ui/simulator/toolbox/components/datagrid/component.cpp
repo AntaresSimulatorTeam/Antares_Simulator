@@ -517,7 +517,7 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
                                       wxDefaultPosition,
                                       wxSize(-1, 22),
                                       0,
-                                      NULL,
+                                      nullptr,
                                       wxCB_READONLY);
         pLayerFilter->SetFont(wxFont(wxFontInfo().Bold()));
         pLayerFilter->AppendString("All");

@@ -19,22 +19,45 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "internal-data.h"
-#include <antares/study/study.h>
+#pragma once
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 namespace Antares
 {
-namespace Forms
+
+class HydroErrorsCollector
 {
-MainFormData::MainFormData(ApplWnd& form) : wipEnabled(false), wipPanel(nullptr), pMainForm(form)
+public:
+    class AreaReference
+    {
+    public:
+        AreaReference(HydroErrorsCollector* collector, const std::string& name);
+        template<class T>
+        AreaReference& operator<<(const T& msg);
+
+    private:
+        std::string& areaSingleErrorMessage_;
+    };
+
+    AreaReference operator()(const std::string& name);
+    HydroErrorsCollector() = default;
+    void CheckForErrors() const;
+
+private:
+    std::map<std::string, std::vector<std::string>> areasErrorMap_;
+    std::string& CurrentMessage(const std::string& name);
+};
+
+template<class T>
+HydroErrorsCollector::AreaReference& HydroErrorsCollector::AreaReference::operator<<(const T& msg)
 {
+    std::ostringstream strfy;
+    strfy << msg;
+    areaSingleErrorMessage_ += strfy.str();
+    return *this;
 }
 
-void MainFormData::editCurrentLocation(const wxString& string)
-{
-    assert(pEditCurrentLocation);
-    pEditCurrentLocation->SetItemLabel(wxString(wxT("Current tab : ")) << string);
-}
-
-} // namespace Forms
 } // namespace Antares

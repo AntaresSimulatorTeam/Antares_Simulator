@@ -21,6 +21,7 @@
 
 #include <string>
 
+#include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/solver/ts-generator/law.h>
@@ -597,7 +598,7 @@ void writeTStoDisk(const Matrix<>& series,
     series.saveToBuffer(buffer, 0);
 
     std::filesystem::path parentDir = savePath.parent_path();
-    if (! std::filesystem::exists(parentDir))
+    if (!std::filesystem::exists(parentDir))
     {
         std::filesystem::create_directories(parentDir);
     }
@@ -650,14 +651,17 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
                                              generalParams.random);
     for (auto& link: links)
     {
-        if (! link.hasValidData)
+        if (!link.hasValidData)
         {
-            logs.error() << "Missing data for link " << link.namesPair.first << "/" << link.namesPair.second;
+            logs.error() << "Missing data for link " << link.namesPair.first << "/"
+                         << link.namesPair.second;
             return false;
         }
 
         if (link.forceNoGeneration)
+        {
             continue; // Skipping the link
+        }
 
         // === DIRECT =======================
         AvailabilityTSGeneratorData tsConfigDataDirect(link, link.modulationCapacityDirect, link.namesPair.second);

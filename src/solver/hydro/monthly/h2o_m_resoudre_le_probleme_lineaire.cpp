@@ -132,7 +132,7 @@ RESOLUTION:
         {
             SPX_LibererProbleme(ProbSpx);
 
-            ProbSpx = NULL;
+            ProbSpx = nullptr;
             PremierPassage = false;
             goto RESOLUTION;
         }

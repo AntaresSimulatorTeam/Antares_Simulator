@@ -364,8 +364,7 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
     if (filename == "")
     {
-        fs::path path = fs::path(pStudy.folder.c_str()) / "settings"
-                                     / "constraintbuilder.ini";
+        fs::path path = fs::path(pStudy.folder.c_str()) / "settings" / "constraintbuilder.ini";
 
         return ini.save(path.string());
     }
@@ -399,12 +398,12 @@ bool CBuilder::completeCBuilderFromFile(const std::string& filename)
         CString<50, false> key;
         CString<50, false> value;
 
-        for (section = ini.firstSection; section != NULL; section = section->next)
+        for (section = ini.firstSection; section; section = section->next)
         {
             if (section->name == ".general")
             {
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();

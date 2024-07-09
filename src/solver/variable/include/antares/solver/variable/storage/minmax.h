@@ -83,18 +83,25 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportIndices<maxHoursInAYear, VCardT>(report,
-                                                               Memory::RawPointer(minmax.hourly.data()),
-                                                               fileLevel);
+                InternalExportIndices<HOURS_PER_YEAR, VCardT>(report,
+                                                              Memory::RawPointer(
+                                                                minmax.hourly.data()),
+                                                              fileLevel);
                 break;
             case Category::daily:
-                InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily.data(), fileLevel);
+                InternalExportIndices<DAYS_PER_YEAR, VCardT>(report,
+                                                             minmax.daily.data(),
+                                                             fileLevel);
                 break;
             case Category::weekly:
-                InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly.data(), fileLevel);
+                InternalExportIndices<WEEKS_PER_YEAR, VCardT>(report,
+                                                              minmax.weekly.data(),
+                                                              fileLevel);
                 break;
             case Category::monthly:
-                InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly.data(), fileLevel);
+                InternalExportIndices<MONTHS_PER_YEAR, VCardT>(report,
+                                                               minmax.monthly.data(),
+                                                               fileLevel);
                 break;
             case Category::annual:
                 InternalExportIndices<1, VCardT>(report, minmax.annual.data(), fileLevel);
@@ -106,17 +113,18 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<maxHoursInAYear, VCardT>(report,
-                                                              Memory::RawPointer(minmax.hourly.data()));
+                InternalExportValues<HOURS_PER_YEAR, VCardT>(report,
+                                                             Memory::RawPointer(
+                                                               minmax.hourly.data()));
                 break;
             case Category::daily:
-                InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily.data());
+                InternalExportValues<DAYS_PER_YEAR, VCardT>(report, minmax.daily.data());
                 break;
             case Category::weekly:
-                InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly.data());
+                InternalExportValues<WEEKS_PER_YEAR, VCardT>(report, minmax.weekly.data());
                 break;
             case Category::monthly:
-                InternalExportValues<maxMonths, VCardT>(report, minmax.monthly.data());
+                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.data());
                 break;
             case Category::annual:
                 InternalExportValues<1, VCardT>(report, minmax.annual.data());
@@ -137,7 +145,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class> class DecoratorT>

@@ -53,7 +53,8 @@ static void importShortTermStorages(
 
             // Properties
             toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
-            toInsert.efficiency = st.properties.efficiencyFactor;
+            toInsert.injectionEfficiency = st.properties.injectionEfficiency;
+            toInsert.withdrawalEfficiency = st.properties.withdrawalEfficiency;
             toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st.properties.initialLevel;
@@ -513,11 +514,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (area.hydro.useWaterValue)
             {
-                problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular =
-                    getWaterValue(
-                        problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
-                        area.hydro.waterValues,
-                        weekFirstDay);
+                problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular
+                  = getWaterValue(problem.previousSimulationFinalLevel[k] * 100
+                                    / area.hydro.reservoirCapacity,
+                                  area.hydro.waterValues,
+                                  weekFirstDay);
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)

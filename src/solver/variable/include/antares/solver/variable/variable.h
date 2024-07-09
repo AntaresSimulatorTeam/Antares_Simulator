@@ -30,7 +30,6 @@
 #include <yuni/core/static/if.h>
 
 #include "categories.h"
-#include "constants.h"
 #include "container.h"
 #include "endoflist.h"
 #include "info.h"

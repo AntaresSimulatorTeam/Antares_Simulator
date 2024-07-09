@@ -131,7 +131,7 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
         {
             logs.warning() << "Error while parsing: " << token;
             logs.warning() << "Correct format is: \"object1" << delimiter2 << "object2"
-                << delimiter1 << "object3" << delimiter2 << "object4\"";
+                           << delimiter1 << "object3" << delimiter2 << "object4\"";
         }
     }
 

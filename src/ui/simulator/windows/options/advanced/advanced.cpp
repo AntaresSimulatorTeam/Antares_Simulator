@@ -283,7 +283,7 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
 
     // refresh
     Connect(
-      GetId(), wxEVT_MOTION, wxMouseEventHandler(AdvancedParameters::onInternalMotion), NULL, this);
+      GetId(), wxEVT_MOTION, wxMouseEventHandler(AdvancedParameters::onInternalMotion), nullptr, this);
 
     refresh();
     SetSizer(sizer);

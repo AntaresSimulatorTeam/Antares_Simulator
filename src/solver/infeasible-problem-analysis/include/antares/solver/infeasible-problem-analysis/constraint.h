@@ -32,6 +32,7 @@ enum class ConstraintType
     binding_constraint_weekly,
     fictitious_load,
     hydro_reservoir_level,
+    hydro_production_weekly,
     short_term_storage_level,
     none
 };
@@ -47,14 +48,14 @@ public:
     double getSlackValue() const;
 
     // Extract items, check consistency
-    std::size_t extractItems();
+    std::size_t extractComponentsFromName();
     std::string prettyPrint() const;
     ConstraintType getType() const;
 
 private:
-    std::string mInput;
-    std::vector<std::string> mItems;
-    double mSlackValue;
+    std::string name_;
+    std::vector<std::string> nameComponents_;
+    double slackValue_;
 
     // Get specific items
     std::string getAreaName() const;
