@@ -105,9 +105,7 @@ std::string FormattedTime(const std::string& format)
     char time_buffer[256];
     std::strftime(time_buffer, sizeof(time_buffer), format.c_str(), &local_time);
 
-    std::string currentTime = time_buffer;
-
-    return currentTime;
+    return std::string(time_buffer);
 }
 
 std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
