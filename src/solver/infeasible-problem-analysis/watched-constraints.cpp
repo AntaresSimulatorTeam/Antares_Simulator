@@ -66,11 +66,6 @@ WatchedConstraint::WatchedConstraint(std::string name):
     boost::algorithm::split_regex(splitName_, constraintName_, boost::regex("::"));
 }
 
-std::string WatchedConstraint::regexId() const
-{
-    return regexId_;
-}
-
 const std::vector<std::string>& WatchedConstraint::splitName() const
 {
     return splitName_;
@@ -82,7 +77,6 @@ const std::vector<std::string>& WatchedConstraint::splitName() const
 HourlyBC::HourlyBC(std::string constraintName):
     WatchedConstraint(constraintName)
 {
-    regexId_ = "::hourly::";
 }
 
 std::string HourlyBC::infeasibility()
@@ -101,7 +95,6 @@ std::string HourlyBC::infeasibilityCause()
 DailyBC::DailyBC(std::string constraintName):
     WatchedConstraint(constraintName)
 {
-    regexId_ = "::daily::";
 }
 
 std::string DailyBC::infeasibility()
@@ -120,7 +113,6 @@ std::string DailyBC::infeasibilityCause()
 WeeklyBC::WeeklyBC(std::string constraintName):
     WatchedConstraint(constraintName)
 {
-    regexId_ = "::weekly::";
 }
 
 std::string WeeklyBC::infeasibility()
@@ -139,7 +131,6 @@ std::string WeeklyBC::infeasibilityCause()
 FictitiousLoad::FictitiousLoad(std::string constraintName):
     WatchedConstraint(constraintName)
 {
-    regexId_ = "^FictiveLoads::";
 }
 
 std::string FictitiousLoad::infeasibility()
@@ -159,7 +150,6 @@ std::string FictitiousLoad::infeasibilityCause()
 HydroLevel::HydroLevel(std::string constraintName):
     WatchedConstraint(constraintName)
 {
-    regexId_ = "^AreaHydroLevel::";
 }
 
 std::string HydroLevel::infeasibility()
@@ -180,7 +170,6 @@ std::string HydroLevel::infeasibilityCause()
 STS::STS(std::string constraintName):
     WatchedConstraint(constraintName)
 {
-    regexId_ = "^Level::";
 }
 
 std::string STS::infeasibility()
@@ -201,7 +190,6 @@ std::string STS::infeasibilityCause()
 HydroProduction::HydroProduction(std::string constraintName):
     WatchedConstraint(constraintName)
 {
-    regexId_ = "^HydroPower::";
 }
 
 std::string HydroProduction::infeasibility()

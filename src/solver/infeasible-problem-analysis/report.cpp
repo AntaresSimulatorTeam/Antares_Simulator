@@ -48,10 +48,10 @@ void InfeasibleProblemReport::filterConstraintsToOneByType()
     std::vector<std::string> pickedTypes;
     for (const auto& c: constraints_)
     {
-        if (std::find(pickedTypes.begin(), pickedTypes.end(), c->regexId()) == pickedTypes.end())
+        if (std::find(pickedTypes.begin(), pickedTypes.end(), typeid(c).name()) == pickedTypes.end())
         {
             uniqueConstraintByType_.push_back(c);
-            pickedTypes.push_back(c->regexId());
+            pickedTypes.push_back(typeid(c).name());
         }
     }
 }

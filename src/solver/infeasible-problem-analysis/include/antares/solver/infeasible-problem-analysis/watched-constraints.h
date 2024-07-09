@@ -14,7 +14,6 @@ class WatchedConstraint
 {
 public:
     WatchedConstraint(std::string constraintName);
-    std::string regexId() const;
     virtual std::string infeasibility() = 0;
     virtual std::string infeasibilityCause() = 0;
 
@@ -23,7 +22,6 @@ protected:
 
 protected:
     std::string constraintName_;
-    std::string regexId_;
     std::vector<std::string> splitName_;
 };
 
