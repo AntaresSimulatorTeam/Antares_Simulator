@@ -43,8 +43,9 @@ InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const MPVariable*>& slackVariables)
 {
     turnSlackVarsIntoConstraints(slackVariables);
-    sortConstraints();
+    sortConstraintsBySlackValue();
     trimConstraints();
+    sortConstraintsByType();
 }
 
 void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
@@ -56,7 +57,7 @@ void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
     }
 }
 
-void InfeasibleProblemReport::sortConstraints()
+void InfeasibleProblemReport::sortConstraintsBySlackValue()
 {
     std::sort(std::begin(constraints_), std::end(constraints_), ::compareSlackSolutions);
 }
@@ -71,11 +72,8 @@ void InfeasibleProblemReport::sortConstraintsByType()
 {
     for (auto& c: constraints_)
     {
-        if (c.extractComponentsFromName() == 0)
-        {
-            return;
-        }
-        nbConstraintsByType_[c.getType()]++;
+        c.extractComponentsFromName();
+        nbConstraintsByType_[c.type()]++;
     }
 }
 
@@ -86,6 +84,10 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     {
         Antares::logs.error() << c.prettyPrint();
     }
+}
+
+void InfeasibleProblemReport::logInfeasibilityCauses()
+{
     Antares::logs.error() << "Possible causes of infeasibility:";
     if (nbConstraintsByType_[ConstraintType::hydro_reservoir_level] > 0)
     {
@@ -114,14 +116,12 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     {
         Antares::logs.error() << "* Binding constraints,";
     }
-
-    Antares::logs.error() << "* Negative hurdle costs on lines with infinite capacity (rare).";
 }
 
 void InfeasibleProblemReport::prettyPrint()
 {
-    sortConstraintsByType();
     logSuspiciousConstraints();
+    logInfeasibilityCauses();
 }
 
 } // namespace Antares::Optimization
