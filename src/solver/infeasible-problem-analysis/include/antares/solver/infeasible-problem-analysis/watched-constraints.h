@@ -5,6 +5,8 @@
 #include <regex>
 #include <string>
 #include <vector>
+#include <map>
+#include <functional>
 
 namespace Antares::Optimization
 {
@@ -84,17 +86,13 @@ public:
 class ConstraintsFactory
 {
 public:
+    ConstraintsFactory();
     std::shared_ptr<WatchedConstraint> create(std::string regexId) const;
     std::regex constraintsFilter();
 
 private:
-    const std::vector<std::string> regex_ids_ = {"::hourly::",
-                                                 "::daily::",
-                                                 "::weekly::",
-                                                 "^FictiveLoads::",
-                                                 "^AreaHydroLevel::",
-                                                 "^Level::",
-                                                 "^HydroPower::"};
+    std::map<std::string, std::function<std::shared_ptr<WatchedConstraint>(std::string)>> regex_to_constraints_;
+    std::vector<std::string> regex_ids_;
 };
 
 } // namespace Antares::Optimization

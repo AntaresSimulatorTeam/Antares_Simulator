@@ -4,6 +4,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
+#include <ranges>
 
 class StringIsNotWellFormated: public std::runtime_error
 {
@@ -216,37 +217,59 @@ std::string HydroProduction::infeasibilityCause()
 // =======================================
 // Constraints factory
 // =======================================
+std::shared_ptr<WatchedConstraint> createHourlyBC(std::string varName)
+{
+    return std::make_shared<HourlyBC>(varName);
+}
+std::shared_ptr<WatchedConstraint> createDailyBC(std::string varName)
+{
+    return std::make_shared<DailyBC>(varName);
+}
+std::shared_ptr<WatchedConstraint> createWeeklyBC(std::string varName)
+{
+    return std::make_shared<WeeklyBC>(varName);
+}
+std::shared_ptr<WatchedConstraint> createFictitiousLoad(std::string varName)
+{
+    return std::make_shared<FictitiousLoad>(varName);
+}
+std::shared_ptr<WatchedConstraint> createHydroLevel(std::string varName)
+{
+    return std::make_shared<HydroLevel>(varName);
+}
+std::shared_ptr<WatchedConstraint> createSTS(std::string varName)
+{
+    return std::make_shared<STS>(varName);
+}
+std::shared_ptr<WatchedConstraint> createHydroProduction(std::string varName)
+{
+    return std::make_shared<HydroProduction>(varName);
+}
+
+
+ConstraintsFactory::ConstraintsFactory()
+{
+    regex_to_constraints_["::hourly::"] = createHourlyBC;
+    regex_to_constraints_["::daily::"] = createDailyBC;
+    regex_to_constraints_["::weekly::"] = createWeeklyBC;
+    regex_to_constraints_["^FictiveLoads::"] = createFictitiousLoad;
+    regex_to_constraints_["^AreaHydroLevel::"] = createHydroLevel;
+    regex_to_constraints_["^Level::"] = createSTS;
+    regex_to_constraints_["^HydroPower::"] = createHydroProduction;
+
+    auto keyView = std::views::keys(regex_to_constraints_);
+    regex_ids_ = { keyView.begin(), keyView.end() };
+}
+
 std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varName) const
 {
-    if (std::regex_search(varName, std::regex("::hourly::")))
+    for (auto& [pattern, createFunction]: regex_to_constraints_)
     {
-        return std::make_shared<HourlyBC>(varName);
+        if (std::regex_search(varName, std::regex(pattern)))
+        {
+            return createFunction(varName);
+        }
     }
-    if (std::regex_search(varName, std::regex("::daily::")))
-    {
-        return std::make_shared<DailyBC>(varName);
-    }
-    if (std::regex_search(varName, std::regex("::weekly::")))
-    {
-        return std::make_shared<WeeklyBC>(varName);
-    }
-    if (std::regex_search(varName, std::regex("^FictiveLoads::")))
-    {
-        return std::make_shared<FictitiousLoad>(varName);
-    }
-    if (std::regex_search(varName, std::regex("^AreaHydroLevel::")))
-    {
-        return std::make_shared<HydroLevel>(varName);
-    }
-    if (std::regex_search(varName, std::regex("^Level::")))
-    {
-        return std::make_shared<STS>(varName);
-    }
-    if (std::regex_search(varName, std::regex("^HydroPower::")))
-    {
-        return std::make_shared<HydroProduction>(varName);
-    }
-    return nullptr;
 }
 
 std::regex ConstraintsFactory::constraintsFilter()
