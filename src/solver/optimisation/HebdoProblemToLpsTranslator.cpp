@@ -85,13 +85,13 @@ ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(
         throw WeeklyProblemTranslationException("ConstraintesCount must be strictly positive");
     }
 
-    if (problem->NombreDeContraintes > problem->IndicesDebutDeLigne.size())
+    if (problem->NombreDeContraintes > (int)problem->IndicesDebutDeLigne.size())
     {
         throw WeeklyProblemTranslationException(
           "ConstraintesCount exceed IndicesDebutDeLigne size");
     }
 
-    if (problem->NombreDeContraintes > problem->NombreDeTermesDesLignes.size())
+    if (problem->NombreDeContraintes > (int)problem->NombreDeTermesDesLignes.size())
     {
         throw WeeklyProblemTranslationException(
           "ConstraintesCount exceed NombreDeTermesDesLignes size");
