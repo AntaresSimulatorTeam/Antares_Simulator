@@ -70,13 +70,10 @@ void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
 {
     ConstraintsFactory factory;
     std::regex rgx = factory.constraintsFilter();
-    for (MPConstraint* c: problem->constraints())
-    {
-        if (std::regex_search(c->name(), rgx))
-        {
-            constraintsToWatch_.push_back(c);
-        }
-    }
+    std::copy_if(problem->constraints().begin(),
+                 problem->constraints().end(),
+                 std::back_inserter(constraintsToWatch_),
+                 [&rgx](auto* c) { return std::regex_search(c->name(), rgx); });
 }
 
 void ConstraintSlackAnalysis::addSlackVariablesToConstraints(MPSolver* problem)
