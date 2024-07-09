@@ -1,10 +1,11 @@
 
 #include "antares/solver/infeasible-problem-analysis/watched-constraints.h"
 
+#include <ranges>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
-#include <ranges>
 
 class StringIsNotWellFormated: public std::runtime_error
 {
@@ -209,31 +210,36 @@ std::shared_ptr<WatchedConstraint> createHourlyBC(std::string varName)
 {
     return std::make_shared<HourlyBC>(varName);
 }
+
 std::shared_ptr<WatchedConstraint> createDailyBC(std::string varName)
 {
     return std::make_shared<DailyBC>(varName);
 }
+
 std::shared_ptr<WatchedConstraint> createWeeklyBC(std::string varName)
 {
     return std::make_shared<WeeklyBC>(varName);
 }
+
 std::shared_ptr<WatchedConstraint> createFictitiousLoad(std::string varName)
 {
     return std::make_shared<FictitiousLoad>(varName);
 }
+
 std::shared_ptr<WatchedConstraint> createHydroLevel(std::string varName)
 {
     return std::make_shared<HydroLevel>(varName);
 }
+
 std::shared_ptr<WatchedConstraint> createSTS(std::string varName)
 {
     return std::make_shared<STS>(varName);
 }
+
 std::shared_ptr<WatchedConstraint> createHydroProduction(std::string varName)
 {
     return std::make_shared<HydroProduction>(varName);
 }
-
 
 ConstraintsFactory::ConstraintsFactory()
 {
@@ -246,7 +252,7 @@ ConstraintsFactory::ConstraintsFactory()
     regex_to_constraints_["^HydroPower::"] = createHydroProduction;
 
     auto keyView = std::views::keys(regex_to_constraints_);
-    regex_ids_ = { keyView.begin(), keyView.end() };
+    regex_ids_ = {keyView.begin(), keyView.end()};
 }
 
 std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varName) const
@@ -258,6 +264,7 @@ std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varNam
             return createFunction(varName);
         }
     }
+    return nullptr; // Cannot happen
 }
 
 std::regex ConstraintsFactory::constraintsFilter()

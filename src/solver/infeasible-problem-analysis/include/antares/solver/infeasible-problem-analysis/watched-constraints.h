@@ -1,12 +1,12 @@
 
 #pragma once
 
+#include <functional>
+#include <map>
 #include <memory>
 #include <regex>
 #include <string>
 #include <vector>
-#include <map>
-#include <functional>
 
 namespace Antares::Optimization
 {
@@ -89,7 +89,8 @@ public:
     std::regex constraintsFilter();
 
 private:
-    std::map<std::string, std::function<std::shared_ptr<WatchedConstraint>(std::string)>> regex_to_constraints_;
+    std::map<std::string, std::function<std::shared_ptr<WatchedConstraint>(std::string)>>
+      regex_to_constraints_;
     std::vector<std::string> regex_ids_;
 };
 

@@ -34,7 +34,8 @@ InfeasibleProblemReport::InfeasibleProblemReport(
     filterConstraintsToOneByType();
 }
 
-void InfeasibleProblemReport::buildConstraintsFromSlackVars(const std::vector<const MPVariable*>& slackVariables)
+void InfeasibleProblemReport::buildConstraintsFromSlackVars(
+  const std::vector<const MPVariable*>& slackVariables)
 {
     const ConstraintsFactory constraintsFactory;
     for (const auto& slackVar: slackVariables)
@@ -48,10 +49,11 @@ void InfeasibleProblemReport::filterConstraintsToOneByType()
     std::vector<std::string> pickedTypes;
     for (const auto& c: constraints_)
     {
-        if (std::find(pickedTypes.begin(), pickedTypes.end(), typeid(c).name()) == pickedTypes.end())
+        std::string cType = typeid(*c).name();
+        if (std::find(pickedTypes.begin(), pickedTypes.end(), cType) == pickedTypes.end())
         {
             uniqueConstraintByType_.push_back(c);
-            pickedTypes.push_back(typeid(c).name());
+            pickedTypes.push_back(cType);
         }
     }
 }

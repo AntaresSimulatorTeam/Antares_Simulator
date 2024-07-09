@@ -41,8 +41,7 @@ class InfeasibleProblemReport
 {
 public:
     InfeasibleProblemReport() = delete;
-    explicit InfeasibleProblemReport(
-      const std::vector<const operations_research::MPVariable*>&);
+    explicit InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>&);
     void logSuspiciousConstraints();
     void logInfeasibilityCauses();
 
