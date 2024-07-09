@@ -57,9 +57,7 @@ std::string STSname(std::vector<std::string> splitName)
 namespace Antares::Optimization
 {
 
-// =======================================
-// Generic constraint logger
-// =======================================
+// --- Generic constraint ---
 WatchedConstraint::WatchedConstraint(std::string name):
     constraintName_(name)
 {
@@ -69,14 +67,6 @@ WatchedConstraint::WatchedConstraint(std::string name):
 const std::vector<std::string>& WatchedConstraint::splitName() const
 {
     return splitName_;
-}
-
-// =======================================
-// Hourly BC logger
-// =======================================
-HourlyBC::HourlyBC(std::string constraintName):
-    WatchedConstraint(constraintName)
-{
 }
 
 std::string HourlyBC::infeasibility()
@@ -89,14 +79,7 @@ std::string HourlyBC::infeasibilityCause()
     return "* Hourly binding constraints.";
 }
 
-// =======================================
-// Daily BC logger
-// =======================================
-DailyBC::DailyBC(std::string constraintName):
-    WatchedConstraint(constraintName)
-{
-}
-
+// --- Daily BC constraint ---
 std::string DailyBC::infeasibility()
 {
     return "Daily BC '" + shortName(splitName()) + "' at day " + timeStep(splitName());
@@ -107,14 +90,7 @@ std::string DailyBC::infeasibilityCause()
     return "* Daily binding constraints,";
 }
 
-// =======================================
-// Weekly BC constraint
-// =======================================
-WeeklyBC::WeeklyBC(std::string constraintName):
-    WatchedConstraint(constraintName)
-{
-}
-
+// --- Weekly BC constraint ---
 std::string WeeklyBC::infeasibility()
 {
     return "Weekly BC '" + shortName(splitName());
@@ -125,14 +101,7 @@ std::string WeeklyBC::infeasibilityCause()
     return "* Weekly binding constraints.";
 }
 
-// =======================================
-// Fictitious load constraint
-// =======================================
-FictitiousLoad::FictitiousLoad(std::string constraintName):
-    WatchedConstraint(constraintName)
-{
-}
-
+// --- Fictitious load constraint ---
 std::string FictitiousLoad::infeasibility()
 {
     return "Last resort shedding status at area '" + areaName(splitName()) + "' at hour "
@@ -144,14 +113,7 @@ std::string FictitiousLoad::infeasibilityCause()
     return "* Last resort shedding status.";
 }
 
-// =======================================
-// Hydro level constraint
-// =======================================
-HydroLevel::HydroLevel(std::string constraintName):
-    WatchedConstraint(constraintName)
-{
-}
-
+// --- Hydro level constraint ---
 std::string HydroLevel::infeasibility()
 {
     return "Hydro level constraint at area '" + areaName(splitName()) + "' at hour "
@@ -164,14 +126,7 @@ std::string HydroLevel::infeasibilityCause()
            "\"hard bounds without heuristic\"";
 }
 
-// =======================================
-// Short term storage constraint
-// =======================================
-STS::STS(std::string constraintName):
-    WatchedConstraint(constraintName)
-{
-}
-
+// --- Short term storage constraint ---
 std::string STS::infeasibility()
 {
     return "Short-term-storage reservoir constraint at area '" + areaName(splitName())
@@ -184,14 +139,7 @@ std::string STS::infeasibilityCause()
            "lower & upper curves and initial level (if prescribed),";
 }
 
-// =======================================
-// Hydro production constraint
-// =======================================
-HydroProduction::HydroProduction(std::string constraintName):
-    WatchedConstraint(constraintName)
-{
-}
-
+// --- Hydro production constraint ---
 std::string HydroProduction::infeasibility()
 {
     return "Hydro weekly production at area '" + areaName(splitName()) + "'";
@@ -202,9 +150,7 @@ std::string HydroProduction::infeasibilityCause()
     return "* impossible to generate exactly the weekly hydro target";
 }
 
-// =======================================
-// Constraints factory
-// =======================================
+// --- Constraints factory ---
 std::shared_ptr<WatchedConstraint> createHourlyBC(std::string varName)
 {
     return std::make_shared<HourlyBC>(varName);
