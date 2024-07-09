@@ -186,17 +186,18 @@ $(document).ready(function(){initNavTree('report_8h_source.html',''); initResiza
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> turnSlackVarsIntoConstraints(</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keyword">const</span> std::vector&lt;const operations_research::MPVariable*&gt;&amp; slackVariables);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> sortConstraints();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> sortConstraintsBySlackValue();</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">void</span> trimConstraints();</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">void</span> sortConstraintsByType();</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">void</span> logSuspiciousConstraints();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::vector&lt;Constraint&gt; constraints_;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::map&lt;ConstraintType, unsigned int&gt; nbConstraintsByType_;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbMaxVariables = 10;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>};</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">void</span> logInfeasibilityCauses();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    std::vector&lt;Constraint&gt; constraints_;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::map&lt;ConstraintType, unsigned int&gt; nbConstraintsByType_;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbMaxVariables = 10;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>};</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>} <span class="comment">// namespace Antares::Optimization</span></div>
 <div class="ttc" id="aclassAntares_1_1Optimization_1_1InfeasibleProblemReport_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1InfeasibleProblemReport.html">Antares::Optimization::InfeasibleProblemReport</a></div><div class="ttdef"><b>Definition</b> report.h:37</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
