@@ -20,7 +20,7 @@ class study_run:
 
     def run(self):
         print("\nRunning the study")
-        solver_full_path = str(Path(self.solver_path).resolve())
+        solver_full_path = "gcov " + str(Path(self.solver_path).resolve())
 
         command = [solver_full_path, "-i", str(self.study_path)]
         if self.use_ortools:
