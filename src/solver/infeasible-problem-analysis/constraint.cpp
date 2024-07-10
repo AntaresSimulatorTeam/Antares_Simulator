@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <sstream>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/regex.hpp>
 
@@ -35,16 +36,15 @@ const std::string kUnknown = "<unknown>";
 
 namespace Antares::Optimization
 {
-Constraint::Constraint(const std::string& input, const double slackValue):
-    name_(input),
+Constraint::Constraint(const std::string& name, const double slackValue):
+    name_(name),
     slackValue_(slackValue)
 {
 }
 
-std::size_t Constraint::extractComponentsFromName()
+void Constraint::extractComponentsFromName()
 {
     boost::algorithm::split_regex(nameComponents_, name_, boost::regex("::"));
-    return nameComponents_.size();
 }
 
 double Constraint::getSlackValue() const
@@ -61,67 +61,36 @@ public:
     }
 };
 
-std::string StringBetweenAngleBrackets(const std::string& str)
+std::string StringBetweenAngleBrackets(const std::string& constraintName)
 {
-    const auto& begin = str.begin();
-    const auto& end = str.end();
+    std::vector<std::string> split_name;
+    boost::split(split_name, constraintName, boost::is_any_of("<>"));
 
-    auto left = std::find(begin, end, '<');
-
-    if (left == end)
+    std::string err_msg = "Error: ";
+    if (split_name.size() < 3)
     {
-        std::ostringstream stream;
-        stream << std::string("Error the string: ") << std::quoted(str)
-               << " does not contains the left angle bracket " << std::quoted("<");
-        throw StringIsNotWellFormated(stream.str());
+        err_msg += "constraint name '" + constraintName + "' misses '<' and/or '>' bracket";
+        throw StringIsNotWellFormated(err_msg);
     }
-
-    auto right = std::find(begin, end, '>');
-    if (right == end)
+    if (split_name[1].empty())
     {
-        std::ostringstream stream;
-        stream << std::string("Error the string: ") << std::quoted(str)
-               << " does not contains the right angle bracket " << std::quoted(">");
-        throw StringIsNotWellFormated(stream.str());
+        err_msg += "constraint name '" + constraintName + "' must be of format '*<str>*'";
+        throw StringIsNotWellFormated(err_msg);
     }
-
-    if (std::distance(left, right) <= 1)
-    {
-        std::ostringstream stream;
-        stream << std::string("Error the string: ") << std::quoted(str) << " must be of format  "
-               << std::quoted("*<str>*");
-        throw StringIsNotWellFormated(stream.str());
-    }
-    return std::string(left + 1, right);
+    return split_name[1];
 }
 
-std::string Constraint::getAreaName() const
+std::string Constraint::areaName() const
 {
-    if ((getType() == ConstraintType::binding_constraint_hourly)
-        || (getType() == ConstraintType::binding_constraint_daily)
-        || (getType() == ConstraintType::binding_constraint_weekly))
-    {
-        return "<none>";
-    }
     return StringBetweenAngleBrackets(nameComponents_.at(1));
 }
 
-std::string Constraint::getTimeStepInYear() const
+std::string Constraint::timeStep() const
 {
-    switch (getType())
-    {
-    case ConstraintType::binding_constraint_hourly:
-    case ConstraintType::binding_constraint_daily:
-    case ConstraintType::fictitious_load:
-    case ConstraintType::hydro_reservoir_level:
-    case ConstraintType::short_term_storage_level:
-        return StringBetweenAngleBrackets(nameComponents_.at(nameComponents_.size() - 2));
-    default:
-        return kUnknown;
-    }
+    return StringBetweenAngleBrackets(nameComponents_.at(nameComponents_.size() - 2));
 }
 
-ConstraintType Constraint::getType() const
+ConstraintType Constraint::type() const
 {
     assert(nameComponents_.size() > 1);
     if (nameComponents_.at(1) == "hourly")
@@ -155,56 +124,35 @@ ConstraintType Constraint::getType() const
     return ConstraintType::none;
 }
 
-std::string Constraint::getBindingConstraintName() const
+std::string Constraint::shortName() const
 {
-    switch (getType())
-    {
-    case ConstraintType::binding_constraint_hourly:
-    case ConstraintType::binding_constraint_daily:
-    case ConstraintType::binding_constraint_weekly:
-        return nameComponents_.at(0);
-    default:
-        return kUnknown;
-    }
+    return nameComponents_.at(0);
 }
 
-std::string Constraint::getSTSName() const
+std::string Constraint::STSname() const
 {
-    if (getType() == ConstraintType::short_term_storage_level)
-    {
-        return StringBetweenAngleBrackets(nameComponents_.at(2));
-    }
-    else
-    {
-        return kUnknown;
-    }
+    return StringBetweenAngleBrackets(nameComponents_.at(2));
 }
 
 std::string Constraint::prettyPrint() const
 {
-    switch (getType())
+    switch (type())
     {
     case ConstraintType::binding_constraint_hourly:
-        return "Hourly binding constraint '" + getBindingConstraintName() + "' at hour "
-               + getTimeStepInYear();
+        return "Hourly binding constraint '" + shortName() + "' at hour " + timeStep();
     case ConstraintType::binding_constraint_daily:
-        return "Daily binding constraint '" + getBindingConstraintName() + "' at day "
-               + getTimeStepInYear();
+        return "Daily binding constraint '" + shortName() + "' at day " + timeStep();
     case ConstraintType::binding_constraint_weekly:
-        return "Weekly binding constraint '" + getBindingConstraintName();
-
+        return "Weekly binding constraint '" + shortName();
     case ConstraintType::fictitious_load:
-        return "Last resort shedding status at area '" + getAreaName() + "' at hour "
-               + getTimeStepInYear();
+        return "Last resort shedding status at area '" + areaName() + "' at hour " + timeStep();
     case ConstraintType::hydro_reservoir_level:
-        return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
-               + getTimeStepInYear();
+        return "Hydro reservoir constraint at area '" + areaName() + "' at hour " + timeStep();
     case ConstraintType::hydro_production_weekly:
-        return "Hydro weekly production at area '" + getAreaName() + "'";
+        return "Hydro weekly production at area '" + areaName() + "'";
     case ConstraintType::short_term_storage_level:
-        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '"
-               + getSTSName() + "' at hour " + getTimeStepInYear();
-
+        return "Short-term-storage reservoir constraint at area '" + areaName() + "' in STS '"
+               + STSname() + "' at hour " + timeStep();
     default:
         return kUnknown;
     }
