@@ -65,7 +65,10 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
 
     sortSlackVariablesByValue();
     trimSlackVariables();
-    hasDetectedInfeasibilityCause_ = anySlackVariableNonZero();
+    if (hasDetectedInfeasibilityCause_ = anySlackVariableNonZero(); !hasDetectedInfeasibilityCause_)
+    {
+        logs.warning() << title() << " : no violation detected for selected constraints.";
+    }
 }
 
 void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
@@ -132,14 +135,15 @@ void ConstraintSlackAnalysis::trimSlackVariables()
 bool ConstraintSlackAnalysis::anySlackVariableNonZero()
 {
     return std::ranges::any_of(slackVariables_,
-                               [&](auto& v) {return v->solution_value() > thresholdNonZero;});
+                               [&](auto& v) { return v->solution_value() > thresholdNonZero; });
 }
 
 void ConstraintSlackAnalysis::printReport() const
 {
     InfeasibleProblemReport report(slackVariables_);
-    report.logSuspiciousConstraints();
-    report.logInfeasibilityCauses();
+    report.storeSuspiciousConstraints();
+    report.storeInfeasibilityCauses();
+    std::ranges::for_each(report.get(), [](auto& line) { logs.error() << line; });
 }
 
 } // namespace Antares::Optimization

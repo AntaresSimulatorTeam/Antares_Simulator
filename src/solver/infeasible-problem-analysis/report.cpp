@@ -78,22 +78,28 @@ void InfeasibleProblemReport::filterConstraintsToOneByType()
     std::ranges::sort(constraints_, greaterValue);
 }
 
-void InfeasibleProblemReport::logSuspiciousConstraints()
+void InfeasibleProblemReport::storeSuspiciousConstraints()
 {
+    report_.push_back("Violated constraints:");
     for (const auto& c: constraints_)
     {
-        Antares::logs.error() << c->infeasibility();
+        report_.push_back(c->infeasibility());
     }
 }
 
-void InfeasibleProblemReport::logInfeasibilityCauses()
+void InfeasibleProblemReport::storeInfeasibilityCauses()
 {
     filterConstraintsToOneByType();
     Antares::logs.error() << "Possible causes of infeasibility:";
     for (const auto& c: constraints_)
     {
-        Antares::logs.error() << c->infeasibilityCause();
+        report_.push_back(c->infeasibilityCause());
     }
+}
+
+std::vector<std::string> InfeasibleProblemReport::get()
+{
+    return report_;
 }
 
 } // namespace Antares::Optimization

@@ -40,13 +40,15 @@ class InfeasibleProblemReport
 public:
     InfeasibleProblemReport() = delete;
     explicit InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>&);
-    void logSuspiciousConstraints();
-    void logInfeasibilityCauses();
+    void storeSuspiciousConstraints();
+    void storeInfeasibilityCauses();
+    std::vector<std::string> get();
 
 private:
     void buildConstraintsFromSlackVars(const std::vector<const operations_research::MPVariable*>&);
     void filterConstraintsToOneByType();
 
     std::vector<std::shared_ptr<WatchedConstraint>> constraints_;
+    std::vector<std::string> report_;
 };
 } // namespace Antares::Optimization
