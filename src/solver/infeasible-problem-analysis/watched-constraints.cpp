@@ -202,10 +202,9 @@ ConstraintsFactory::ConstraintsFactory()
 
 std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varName) const
 {
-    return std::find_if(regex_to_ctypes_.begin(),
-                        regex_to_ctypes_.end(),
-                        [&varName](auto& p)
-                        { return std::regex_search(varName, std::regex(p.first)); })
+    return std::ranges::find_if(regex_to_ctypes_,
+                                [&varName](auto& p)
+                                { return std::regex_search(varName, std::regex(p.first)); })
       ->second(varName);
 }
 
