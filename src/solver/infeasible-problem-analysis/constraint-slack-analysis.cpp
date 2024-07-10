@@ -138,12 +138,17 @@ bool ConstraintSlackAnalysis::anySlackVariableNonZero()
                                [&](auto& v) { return v->solution_value() > thresholdNonZero; });
 }
 
+std::vector<const operations_research::MPVariable*>& ConstraintSlackAnalysis::largestSlackVariables()
+{
+    return slackVariables_;
+}
+
 void ConstraintSlackAnalysis::printReport() const
 {
     InfeasibleProblemReport report(slackVariables_);
     report.storeSuspiciousConstraints();
     report.storeInfeasibilityCauses();
-    std::ranges::for_each(report.getLogs(), [](auto& line) { logs.error() << line; });
+    std::ranges::for_each(report.getLogs(), [](auto& line) { logs.notice() << line; });
 }
 
 } // namespace Antares::Optimization

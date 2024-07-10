@@ -179,6 +179,29 @@ std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintN
     return problem;
 }
 
+std::unique_ptr<MPSolver> create_3_constraintsViolationsProblem()
+{
+    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+    const double infinity = problem->infinity();
+
+    auto* var1 = problem->MakeNumVar(0, 1, "var1");
+    auto* constr1 = problem->MakeRowConstraint("BC-name-1::hourly::hour<5>");
+    constr1->SetBounds(2, infinity);
+    constr1->SetCoefficient(var1, 1);
+
+    auto* var2 = problem->MakeNumVar(0, 1, "var2");
+    auto* constr2 = problem->MakeRowConstraint("BC-name-2::hourly::hour<10>");
+    constr2->SetBounds(4, infinity);
+    constr2->SetCoefficient(var2, 1);
+
+    auto* var3 = problem->MakeNumVar(0, 1, "var3");
+    auto* constr3 = problem->MakeRowConstraint("BC-name-3::hourly::hour<15>");
+    constr3->SetBounds(8, infinity);
+    constr3->SetCoefficient(var3, 1);
+
+    return problem;
+}
+
 static const std::string validConstraintNames[] = {"BC-name-1::hourly::hour<36>",
                                                    "BC-name-2::daily::day<67>",
                                                    "BC-name-3::weekly::week<12>",
@@ -218,6 +241,23 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
     analysis.run(feasibleProblem.get());
     BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
 }
+
+BOOST_AUTO_TEST_CASE(analysis_resulting_slack_variables_are_ordered_and_trimmed)
+{
+    std::unique_ptr<MPSolver> problem = create_3_constraintsViolationsProblem();
+    BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
+
+    ConstraintSlackAnalysis analysis;
+    analysis.run(problem.get());
+    BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());
+
+    auto& violatedConstraints = analysis.largestSlackVariables();
+    BOOST_CHECK_EQUAL(violatedConstraints.size(), 3);
+    BOOST_CHECK_EQUAL(violatedConstraints[0]->name(), "BC-name-3::hourly::hour<15>::low");
+    BOOST_CHECK_EQUAL(violatedConstraints[1]->name(), "BC-name-2::hourly::hour<10>::low");
+    BOOST_CHECK_EQUAL(violatedConstraints[2]->name(), "BC-name-1::hourly::hour<5>::low");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -229,10 +269,10 @@ BOOST_AUTO_TEST_CASE(constraints_associated_to_all_incoming_slack_vars_are_repor
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
 
     std::vector<const operations_research::MPVariable*> slackVariables;
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-1::hourly::hour<36>"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-2::hourly::hour<65>"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<25>"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "HydroPower::area<some-area>::week<45>"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-1::hourly::hour<36>::low"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-2::hourly::hour<65>::up"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<25>::low"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "HydroPower::area<some-area>::week<45>::up"));
 
     InfeasibleProblemReport report(slackVariables);
     report.storeSuspiciousConstraints();
