@@ -30,6 +30,7 @@
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
+#include "antares/solver/infeasible-problem-analysis/report.h"
 
 namespace bdata = boost::unit_test::data;
 
@@ -40,6 +41,7 @@ using Antares::Optimization::UnfeasibilityAnalysis;
 using Antares::Optimization::UnfeasiblePbAnalyzer;
 using Antares::Optimization::VariableBounds;
 using Antares::Optimization::VariablesBoundsConsistency;
+using Antares::Optimization::InfeasibleProblemReport;
 
 bool variableEquals(const VariableBounds& lhs, const VariableBounds& rhs)
 {
@@ -83,7 +85,7 @@ private:
     bool& hasPrinted_;
 };
 
-BOOST_AUTO_TEST_SUITE(unfeasible_problem_analyzer)
+BOOST_AUTO_TEST_SUITE(general_unfeasible_problem_analyzer)
 
 BOOST_AUTO_TEST_CASE(analyzer_should_call_analysis_and_print_detected_issues)
 {
@@ -116,6 +118,9 @@ BOOST_AUTO_TEST_CASE(analyzer_should_call_analysis_and_print_detected_issues)
     BOOST_CHECK(hasRun2);
     BOOST_CHECK(hasPrinted2);
 }
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(variable_bounds_consistency_analyzer)
 
 BOOST_AUTO_TEST_CASE(analysis_should_detect_inconsistent_variable_bounds)
 {
@@ -131,15 +136,16 @@ BOOST_AUTO_TEST_CASE(analysis_should_detect_inconsistent_variable_bounds)
     auto expected = VariableBounds("not-ok-var", 1, -1);
     BOOST_CHECK(variableEquals(incorrectVars[0], expected));
 }
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(slack_variables_analyzer)
 
 /*!
- * Creates a problem with 2 variables linked by 1 constraint:
+ * Creates a 2 problems (feasible and infeasible) with 2 variables linked by 1 constraint:
  *  - Variable 1 must be greater than 1
  *  - Variable 2 must be smaller than -1
- *  - but if feasible is false, constraint enforces that variable 2 is greater than variable 1 -->
- * infeasible
+ *  - For infeasible problem, constraint enforces that variable 2 is greater than variable 1
  */
-
 std::unique_ptr<MPSolver> createProblem(const std::string& constraintName)
 {
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
@@ -205,12 +211,58 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_ill_named_constraint)
 
 BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
 {
-    std::unique_ptr<MPSolver> feasibleProblem = createFeasibleProblem("BC::hourly::hour<36>");
+    std::unique_ptr<MPSolver> feasibleProblem = createFeasibleProblem("BC-name::hourly::hour<36>");
     BOOST_CHECK(feasibleProblem->Solve() == MPSolver::OPTIMAL);
 
     ConstraintSlackAnalysis analysis;
     analysis.run(feasibleProblem.get());
     BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(slack_variables_report)
+
+BOOST_AUTO_TEST_CASE(constraints_associated_to_all_incoming_slack_vars_are_reported)
+{
+    // The problem is needed only to create variables, impossible otherwise.
+    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+
+    std::vector<const operations_research::MPVariable*> slackVariables;
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-1::hourly::hour<36>"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-2::hourly::hour<65>"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<25>"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "HydroPower::area<some-area>::week<45>"));
+
+    InfeasibleProblemReport report(slackVariables);
+    report.storeSuspiciousConstraints();
+    auto reportLogs = report.getLogs();
+
+    BOOST_CHECK_EQUAL(reportLogs.size(), 5); // Expecting 5 lines in the report
+    BOOST_CHECK_EQUAL(reportLogs[1], "Hourly BC 'BC-1' at hour 36");
+    BOOST_CHECK_EQUAL(reportLogs[2], "Hourly BC 'BC-2' at hour 65");
+    BOOST_CHECK_EQUAL(reportLogs[3], "Last resort shedding status at area 'some-area' at hour 25");
+    BOOST_CHECK_EQUAL(reportLogs[4], "Hydro weekly production at area 'some-area'");
+}
+
+BOOST_AUTO_TEST_CASE(infeasibility_cause__only_one_constraint_of_type)
+{
+    // The problem is needed only to create variables, impossible otherwise.
+    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+
+    std::vector<const operations_research::MPVariable*> slackVariables;
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-1::hourly::hour<36>"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-2::hourly::hour<65>"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<25>"));
+    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<56>"));
+
+    InfeasibleProblemReport report(slackVariables);
+    report.storeInfeasibilityCauses();
+    auto reportLogs = report.getLogs();
+
+    BOOST_CHECK_EQUAL(reportLogs.size(), 3); // Expecting 3 lines in the report
+    BOOST_CHECK_EQUAL(reportLogs[1], "* Hourly binding constraints.");
+    BOOST_CHECK_EQUAL(reportLogs[2], "* Last resort shedding status.");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

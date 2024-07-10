@@ -42,7 +42,7 @@ public:
     explicit InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>&);
     void storeSuspiciousConstraints();
     void storeInfeasibilityCauses();
-    std::vector<std::string> get();
+    std::vector<std::string> getLogs();
 
 private:
     void buildConstraintsFromSlackVars(const std::vector<const operations_research::MPVariable*>&);

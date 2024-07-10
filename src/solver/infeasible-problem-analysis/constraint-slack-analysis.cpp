@@ -143,7 +143,7 @@ void ConstraintSlackAnalysis::printReport() const
     InfeasibleProblemReport report(slackVariables_);
     report.storeSuspiciousConstraints();
     report.storeInfeasibilityCauses();
-    std::ranges::for_each(report.get(), [](auto& line) { logs.error() << line; });
+    std::ranges::for_each(report.getLogs(), [](auto& line) { logs.error() << line; });
 }
 
 } // namespace Antares::Optimization

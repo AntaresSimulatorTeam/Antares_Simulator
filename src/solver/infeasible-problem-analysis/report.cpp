@@ -97,7 +97,7 @@ void InfeasibleProblemReport::storeInfeasibilityCauses()
     }
 }
 
-std::vector<std::string> InfeasibleProblemReport::get()
+std::vector<std::string> InfeasibleProblemReport::getLogs()
 {
     return report_;
 }
