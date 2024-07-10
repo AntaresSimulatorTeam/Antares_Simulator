@@ -28,6 +28,7 @@ protected:
 class HourlyBC: public WatchedConstraint
 {
     using WatchedConstraint::WatchedConstraint;
+
 public:
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
@@ -36,6 +37,7 @@ public:
 class DailyBC: public WatchedConstraint
 {
     using WatchedConstraint::WatchedConstraint;
+
 public:
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
@@ -44,6 +46,7 @@ public:
 class WeeklyBC: public WatchedConstraint
 {
     using WatchedConstraint::WatchedConstraint;
+
 public:
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
@@ -52,6 +55,7 @@ public:
 class FictitiousLoad: public WatchedConstraint
 {
     using WatchedConstraint::WatchedConstraint;
+
 public:
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
@@ -60,6 +64,7 @@ public:
 class HydroLevel: public WatchedConstraint
 {
     using WatchedConstraint::WatchedConstraint;
+
 public:
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
@@ -68,6 +73,7 @@ public:
 class STS: public WatchedConstraint
 {
     using WatchedConstraint::WatchedConstraint;
+
 public:
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
@@ -76,6 +82,7 @@ public:
 class HydroProduction: public WatchedConstraint
 {
     using WatchedConstraint::WatchedConstraint;
+
 public:
     std::string infeasibility() override;
     std::string infeasibilityCause() override;

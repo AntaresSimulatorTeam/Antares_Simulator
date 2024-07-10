@@ -173,15 +173,13 @@ std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintN
     return problem;
 }
 
-static const std::string validConstraintNames[] = {
-  "BC-name-1::hourly::hour<36>",
-  "BC-name-2::daily::day<67>",
-  "BC-name-3::weekly::week<12>",
-  "FictiveLoads::area<some-area>::hour<25>",
-  "AreaHydroLevel::area<some-area>::hour<8>",
-  "Level::area<some-area>::hour<28>",
-  "HydroPower::area<some-area>::week<45>"
-};
+static const std::string validConstraintNames[] = {"BC-name-1::hourly::hour<36>",
+                                                   "BC-name-2::daily::day<67>",
+                                                   "BC-name-3::weekly::week<12>",
+                                                   "FictiveLoads::area<some-area>::hour<25>",
+                                                   "AreaHydroLevel::area<some-area>::hour<8>",
+                                                   "Level::area<some-area>::hour<28>",
+                                                   "HydroPower::area<some-area>::week<45>"};
 
 BOOST_DATA_TEST_CASE(analysis_should_detect_unfeasible_constraint,
                      bdata::make(validConstraintNames),
