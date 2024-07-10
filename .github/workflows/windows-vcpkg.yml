@@ -37,7 +37,6 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      os: windows-latest
       os: windows-2022
       vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows-release
@@ -97,7 +96,7 @@ jobs:
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-zip
         with:
-          os: ${{env.os}}
+          os: windows-latest
           ortools-url: ${{env.ORTOOLS_URL}}
           ortools-dir: ${{env.ORTOOLS_DIR}}
 
