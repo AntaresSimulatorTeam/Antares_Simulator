@@ -18,6 +18,7 @@ add_library(infeasible_problem_analysis ${SRC_INFEASIBLE_PROBLEM_ANALYSIS})
 target_link_libraries(infeasible_problem_analysis
         PRIVATE
         ortools::ortools
+        Boost::headers
         Antares::logs
 )
 target_include_directories(infeasible_problem_analysis
