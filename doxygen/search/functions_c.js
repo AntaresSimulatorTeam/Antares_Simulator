@@ -2,7 +2,7 @@ var searchData=
 [
   ['mainformdata_0',['MainFormData',['../classAntares_1_1Forms_1_1MainFormData.html#a006947648a430dcdcc0fb6a34c4e752d',1,'Antares::Forms::MainFormData']]],
   ['mainnotebookcurrentequipmentpage_1',['mainNotebookCurrentEquipmentPage',['../classAntares_1_1Forms_1_1ApplWnd.html#af6e14c0939020acb268217be8610d7bf',1,'Antares::Forms::ApplWnd']]],
-  ['mainpanel_2',['mainpanel',['../classAntares_1_1Component_1_1MainPanel.html#a12e27b6a74ebab04c04a48b1ef4d7a3b',1,'Antares::Component::MainPanel::MainPanel()'],['../classAntares_1_1Forms_1_1ApplWnd.html#a471b7542dad7e13501e4bcf4333644a2',1,'Antares::Forms::ApplWnd::mainPanel()']]],
+  ['mainpanel_2',['mainpanel',['../classAntares_1_1Forms_1_1ApplWnd.html#a471b7542dad7e13501e4bcf4333644a2',1,'Antares::Forms::ApplWnd::mainPanel()'],['../classAntares_1_1Component_1_1MainPanel.html#a12e27b6a74ebab04c04a48b1ef4d7a3b',1,'Antares::Component::MainPanel::MainPanel()']]],
   ['makeallentriesabsolute_3',['makeAllEntriesAbsolute',['../classAntares_1_1Matrix.html#ac05a2599d757155f2d58d4b6929bbc89',1,'Antares::Matrix']]],
   ['makeventilation_4',['makeVentilation',['../classAntares_1_1HydroManagement.html#accf05b0286428d88463127457cce39e5',1,'Antares::HydroManagement']]],
   ['manageloglevelmessage_5',['manageLogLevelMessage',['../classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#ac2e0b2e5a685f4d457bfb5db4c858d0d',1,'Antares::Toolbox::Jobs::Job']]],

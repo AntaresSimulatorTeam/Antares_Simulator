@@ -817,7 +817,9 @@ var annotated_dup =
           [ "XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast" ]
         ] ],
         [ "AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ],
+        [ "LinksTSgenerator", "classAntares_1_1TSGenerator_1_1LinksTSgenerator.html", null ],
         [ "LinkTSgenerationParams", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html", null ],
+        [ "Settings", "structAntares_1_1TSGenerator_1_1Settings.html", "structAntares_1_1TSGenerator_1_1Settings" ],
         [ "StudyParamsForLinkTS", "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html", null ]
       ] ],
       [ "UnitTests", null, [

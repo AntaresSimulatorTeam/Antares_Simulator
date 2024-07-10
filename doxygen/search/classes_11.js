@@ -25,7 +25,7 @@ var searchData=
   ['sets_3c_20singlesetofareas_20_3e_22',['Sets&lt; SingleSetOfAreas &gt;',['../classAntares_1_1Data_1_1Sets.html',1,'Antares::Data']]],
   ['sets_3c_20singlesetoflinks_20_3e_23',['Sets&lt; SingleSetOfLinks &gt;',['../classAntares_1_1Data_1_1Sets.html',1,'Antares::Data']]],
   ['setsofareas_24',['SetsOfAreas',['../classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html',1,'Antares::Solver::Variable']]],
-  ['settings_25',['settings',['../classSettings.html',1,'Settings'],['../structAntares_1_1Date_1_1Calendar_1_1Settings.html',1,'Antares::Date::Calendar::Settings'],['../classAntares_1_1Map_1_1Settings.html',1,'Antares::Map::Settings']]],
+  ['settings_25',['settings',['../classSettings.html',1,'Settings'],['../structAntares_1_1TSGenerator_1_1Settings.html',1,'Antares::TSGenerator::Settings'],['../structAntares_1_1Date_1_1Calendar_1_1Settings.html',1,'Antares::Date::Calendar::Settings'],['../classAntares_1_1Map_1_1Settings.html',1,'Antares::Map::Settings']]],
   ['shiftcontext_26',['ShiftContext',['../classExprParser_1_1ShiftContext.html',1,'ExprParser']]],
   ['shorttermstoragelevel_27',['ShortTermStorageLevel',['../classShortTermStorageLevel.html',1,'']]],
   ['shorttermstorageleveldata_28',['ShortTermStorageLevelData',['../structShortTermStorageLevelData.html',1,'']]],

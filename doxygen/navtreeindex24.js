@@ -1,5 +1,8 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7309dce5ec0dd2134b6e2788294af4a1":[7,0,0,13,4,4,86,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7949987ce1c23dcd30da757005e09002":[7,0,0,13,4,4,86,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html":[7,0,0,13,4,4,87],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#a6892e85e47da9b085273c0a01fc2f0ce":[7,0,0,13,4,4,87,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#ae7e192a761b40dc071ce0b483bfeb955":[7,0,0,13,4,4,87,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html":[7,0,0,13,4,4,88],
@@ -120,8 +123,13 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html":[7,0,0,13,4,42],
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html":[7,0,0,13,25],
 "structAntares_1_1Solver_1_1WeeklyProblemId.html":[7,0,0,13,26],
-"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html":[7,0,0,16,3],
-"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html":[7,0,0,16,4],
+"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html":[7,0,0,16,4],
+"structAntares_1_1TSGenerator_1_1Settings.html":[7,0,0,16,5],
+"structAntares_1_1TSGenerator_1_1Settings.html#a6ec5d8d2e2827a019c8ed7d1f3605959":[7,0,0,16,5,0],
+"structAntares_1_1TSGenerator_1_1Settings.html#abdce4e3fac8b79c797fb3a211b14126b":[7,0,0,16,5,1],
+"structAntares_1_1TSGenerator_1_1Settings.html#ac3be8bf0b35454fac9fd90e3d510939f":[7,0,0,16,5,2],
+"structAntares_1_1TSGenerator_1_1Settings.html#aeaebfc4ee66d6615bf628d17129d02ee":[7,0,0,16,5,3],
+"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html":[7,0,0,16,6],
 "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html":[7,0,0,15,1,0,1],
 "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html":[7,0,0,15,1,0,10,0],
 "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html#a642711eb0d42db7674ccb0b2803888f3":[7,0,0,15,1,0,10,0,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX24 =
 "structExchangeBalanceData.html":[7,0,88],
 "structFictitiousLoadData.html":[7,0,96],
 "structFinalStockEquivalentData.html":[7,0,98],
-"structFinalStockExpressionData.html":[7,0,100],
-"structFixture.html":[7,0,102],
-"structFixtureFull.html":[7,0,103],
-"structFixtureStudyOnly.html":[7,0,105],
-"structFlowDissociationData.html":[7,0,107],
-"structHourlyCSRProblem_1_1LinkVariable.html":[7,0,113,0],
-"structHydroMaxPowerStudy.html":[7,0,116],
-"structHydroPowerData.html":[7,0,118],
-"structLEVEL__FLEX__DOWN__NODE.html":[7,0,130]
+"structFinalStockExpressionData.html":[7,0,100]
 };
