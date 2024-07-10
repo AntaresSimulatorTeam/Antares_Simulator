@@ -203,8 +203,6 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_ill_named_constraint)
     BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
 }
 
-// TODO: this test should be improved by changing the API, the current interface does not allow
-//       to check that no constraint was identified...
 BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
 {
     std::unique_ptr<MPSolver> feasibleProblem = createFeasibleProblem("BC::hourly::hour<36>");
@@ -212,7 +210,7 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
 
     ConstraintSlackAnalysis analysis;
     analysis.run(feasibleProblem.get());
-    BOOST_CHECK(analysis.hasDetectedInfeasibilityCause()); // Would expect false here instead?
+    BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -50,7 +50,7 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
     addSlackVariablesToConstraints(problem);
     if (slackVariables_.empty())
     {
-        logs.error() << title() << " : no constraints have been selected";
+        logs.warning() << title() << " : no constraints have been selected";
         return;
     }
 
@@ -63,10 +63,9 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
         return;
     }
 
-    hasDetectedInfeasibilityCause_ = true;
-
     sortSlackVariablesByValue();
     trimSlackVariables();
+    hasDetectedInfeasibilityCause_ = anySlackVariableNonZero();
 }
 
 void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
@@ -128,6 +127,12 @@ void ConstraintSlackAnalysis::trimSlackVariables()
 {
     unsigned int nbSlackVars = slackVariables_.size();
     slackVariables_.resize(std::min(nbMaxSlackVarsToKeep, nbSlackVars));
+}
+
+bool ConstraintSlackAnalysis::anySlackVariableNonZero()
+{
+    return std::ranges::any_of(slackVariables_,
+                               [&](auto& v) {return v->solution_value() > thresholdNonZero;});
 }
 
 void ConstraintSlackAnalysis::printReport() const

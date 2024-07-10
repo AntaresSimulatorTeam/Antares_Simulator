@@ -58,9 +58,11 @@ private:
     void buildObjective(operations_research::MPSolver* problem) const;
     void sortSlackVariablesByValue();
     void trimSlackVariables();
+    bool anySlackVariableNonZero();
 
     std::vector<operations_research::MPConstraint*> constraintsToWatch_;
     std::vector<const operations_research::MPVariable*> slackVariables_;
+    const double thresholdNonZero = 1e-06;
 };
 
 } // namespace Antares::Optimization
