@@ -119,14 +119,12 @@ public:
     yearRandomNumbers()
     {
         pThermalNoisesByArea = nullptr;
-        pNbClustersByArea = nullptr;
         pNbAreas = 0;
     }
 
     ~yearRandomNumbers()
     {
         // General
-        delete[] pNbClustersByArea;
 
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
@@ -178,7 +176,7 @@ public:
     void reset()
     {
         // General
-        memset(pNbClustersByArea, 0, pNbAreas * sizeof(size_t));
+        pNbClustersByArea.assign(pNbAreas, 0);
 
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
@@ -221,7 +219,7 @@ public:
 
     // Data for thermal noises
     double** pThermalNoisesByArea;
-    size_t* pNbClustersByArea;
+    std::vector<size_t> pNbClustersByArea;
 
     // Data for reservoir levels
     double* pReservoirLevels;

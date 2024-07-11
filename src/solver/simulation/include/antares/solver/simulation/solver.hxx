@@ -606,7 +606,7 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
     {
         // General :
         randomForParallelYears.pYears[y].setNbAreas(nbAreas);
-        randomForParallelYears.pYears[y].pNbClustersByArea = new size_t[nbAreas];
+        randomForParallelYears.pYears[y].pNbClustersByArea.resize(nbAreas);
 
         // Thermal noises :
         randomForParallelYears.pYears[y].pThermalNoisesByArea = new double*[nbAreas];
