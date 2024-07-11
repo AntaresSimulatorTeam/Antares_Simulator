@@ -121,22 +121,7 @@ public:
         pNbAreas = 0;
     }
 
-    ~yearRandomNumbers()
-    {
-        // Hydro costs noises
-        switch (pPowerFluctuations)
-        {
-        case Data::lssMinimizeRamping:
-        case Data::lssMinimizeExcursions:
-        {
-            delete[] pHydroCosts_rampingOrExcursion;
-            break;
-        }
-
-        case Data::lssUnknown:
-            break;
-        }
-    }
+    ~yearRandomNumbers() = default;
 
     void setNbAreas(uint nbAreas)
     {
@@ -179,7 +164,7 @@ public:
         case Data::lssMinimizeRamping:
         case Data::lssMinimizeExcursions:
         {
-            memset(pHydroCosts_rampingOrExcursion, 0, pNbAreas * sizeof(double));
+            pHydroCosts_rampingOrExcursion.assign(pNbAreas, 0);
             break;
         }
 
@@ -205,7 +190,7 @@ public:
 
     // Hydro costs noises
     std::vector<std::vector<double>> pHydroCostsByArea_freeMod;
-    double* pHydroCosts_rampingOrExcursion;
+    std::vector<double> pHydroCosts_rampingOrExcursion;
 };
 
 class randomNumbers

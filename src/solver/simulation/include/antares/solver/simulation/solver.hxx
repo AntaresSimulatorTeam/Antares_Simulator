@@ -641,7 +641,7 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
         case Data::lssMinimizeRamping:
         case Data::lssMinimizeExcursions:
         {
-            randomForParallelYears.pYears[y].pHydroCosts_rampingOrExcursion = new double[nbAreas];
+            randomForParallelYears.pYears[y].pHydroCosts_rampingOrExcursion.resize(nbAreas);
             break;
         }
         case Data::lssUnknown:
