@@ -396,7 +396,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            DONNEES_MENSUELLES* problem = H2O_J_Instanciation();
+            auto problem = H2O_J_Instanciation();
             H2O_J_AjouterBruitAuCout(*problem);
             problem->NombreDeJoursDuMois = (int)daysPerMonth;
             problem->TurbineDuMois = hydro_specific.monthly[realmonth].MOG;
@@ -410,7 +410,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 dayMonth++;
             }
 
-            H2O_J_OptimiserUnMois(problem);
+            H2O_J_OptimiserUnMois(problem.get());
             switch (problem->ResultatsValides)
             {
             case OUI:
@@ -428,7 +428,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 throw fatalError(area.name.c_str(), y);
             }
 
-            H2O_J_Free(problem);
+            H2O_J_Free(problem.get());
 
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
