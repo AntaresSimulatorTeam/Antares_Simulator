@@ -146,10 +146,9 @@ public:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double* randomReservoirLevel = nullptr;
 
             // 1 - Applying random levels for current year
-            randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+            auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
             // removed
@@ -159,7 +158,7 @@ public:
 
             // 4 - Hydraulic ventilation
             pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel]
-            { hydroManagement.makeVentilation(randomReservoirLevel, y, scratchmap); };
+            { hydroManagement.makeVentilation(randomReservoirLevel.data(), y, scratchmap); };
 
             // Updating the state
             state.year = y;
@@ -621,7 +620,7 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
         }
 
         // Reservoir levels
-        randomForParallelYears.pYears[y].pReservoirLevels = new double[nbAreas];
+        randomForParallelYears.pYears[y].pReservoirLevels.resize(nbAreas);
 
         // Noises on unsupplied and spilled energy
         randomForParallelYears.pYears[y].pUnsuppliedEnergy = new double[nbAreas];
