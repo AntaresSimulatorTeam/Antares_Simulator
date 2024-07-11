@@ -191,7 +191,7 @@ jobs:
           variant: "milp-cbc"
           os: ${{ env.os }}
 
-      - name: Run tests introduced in v860
+      - name: Run tests introduced in 8.6.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -199,7 +199,7 @@ jobs:
           batch-name: valid-v860
           os: ${{ env.os }}
 
-      - name: Run tests introduced in v870
+      - name: Run tests introduced in 8.7.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -207,12 +207,20 @@ jobs:
           batch-name: valid-v870
           os: ${{ env.os }}
 
-      - name: Run tests introduced in v910
+      - name: Run tests introduced in 9.1.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v910
+          os: ${{ env.os }}
+
+      - name: Run tests introduced in 9.2.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v920
           os: ${{ env.os }}
 
       - name: Run short-tests
