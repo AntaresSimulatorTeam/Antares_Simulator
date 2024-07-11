@@ -85,14 +85,14 @@ void ConstraintSlackAnalysis::addSlackVariablesToConstraints(MPSolver* problem)
     const double infinity = MPSolver::infinity();
     for (MPConstraint* c: constraintsToWatch_)
     {
-        if (c->lb() != -infinity)
+        if (c->lb() > -infinity)
         {
             const MPVariable* slack = problem->MakeNumVar(0, infinity, c->name() + "::low");
             c->SetCoefficient(slack, 1.);
             slackVariables_.push_back(slack);
         }
 
-        if (c->ub() != infinity)
+        if (c->ub() < infinity)
         {
             const MPVariable* slack = problem->MakeNumVar(0, infinity, c->name() + "::up");
             c->SetCoefficient(slack, -1.);
