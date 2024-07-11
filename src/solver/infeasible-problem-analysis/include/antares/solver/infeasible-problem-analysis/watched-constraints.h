@@ -13,15 +13,15 @@ namespace Antares::Optimization
 class WatchedConstraint
 {
 public:
-    WatchedConstraint(const std::string& name);
+    explicit WatchedConstraint(const std::string& name);
+    virtual ~WatchedConstraint() = default;
     virtual std::string infeasibility() = 0;
     virtual std::string infeasibilityCause() = 0;
 
 protected:
     const std::vector<std::string>& splitName() const;
 
-protected:
-    std::string fullName_;
+private:
     std::vector<std::string> splitName_;
 };
 
@@ -30,6 +30,7 @@ class HourlyBC: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    ~HourlyBC() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -39,6 +40,7 @@ class DailyBC: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    ~DailyBC() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -48,6 +50,7 @@ class WeeklyBC: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    ~WeeklyBC() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -57,6 +60,7 @@ class FictitiousLoad: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    ~FictitiousLoad() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -66,6 +70,7 @@ class HydroLevel: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    ~HydroLevel() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -75,6 +80,7 @@ class STS: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    ~STS() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -84,6 +90,7 @@ class HydroProduction: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    ~HydroProduction() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -91,7 +98,7 @@ public:
 class ConstraintsFactory
 {
 public:
-    ConstraintsFactory();
+    explicit ConstraintsFactory();
     std::shared_ptr<WatchedConstraint> create(std::string pair) const;
     std::regex constraintsFilter();
 

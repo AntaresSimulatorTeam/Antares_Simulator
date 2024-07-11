@@ -59,10 +59,9 @@ namespace Antares::Optimization
 {
 
 // --- Generic constraint ---
-WatchedConstraint::WatchedConstraint(const std::string& name):
-    fullName_(std::move(name))
+WatchedConstraint::WatchedConstraint(const std::string& name)
 {
-    boost::algorithm::split_regex(splitName_, fullName_, boost::regex("::"));
+    boost::algorithm::split_regex(splitName_, name, boost::regex("::"));
 }
 
 const std::vector<std::string>& WatchedConstraint::splitName() const
