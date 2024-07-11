@@ -28,8 +28,6 @@
 #include "ortools/linear_solver/linear_solver.h"
 #include "watched-constraints.h"
 
-using namespace operations_research;
-
 namespace operations_research
 {
 class MPVariable;
@@ -46,7 +44,7 @@ public:
     void logInfeasibilityCauses();
 
 private:
-    void buildConstraintsFromSlackVars(const std::vector<const MPVariable*>&);
+    void buildConstraintsFromSlackVars(const std::vector<const operations_research::MPVariable*>&);
     void filterConstraintsToOneByType();
 
     std::vector<std::shared_ptr<WatchedConstraint>> constraints_;

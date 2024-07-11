@@ -38,7 +38,7 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
   const std::vector<const MPVariable*>& slackVariables)
 {
     const ConstraintsFactory constraintsFactory;
-    for (const auto& slackVar: slackVariables)
+    for (const auto* slackVar: slackVariables)
     {
         constraints_.push_back(constraintsFactory.create(slackVar->name()));
     }
