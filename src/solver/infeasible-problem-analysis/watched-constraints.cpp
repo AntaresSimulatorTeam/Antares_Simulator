@@ -152,50 +152,16 @@ std::string HydroProduction::infeasibilityCause()
 }
 
 // --- Constraints factory ---
-std::shared_ptr<WatchedConstraint> createHourlyBC(std::string varName)
-{
-    return std::make_shared<HourlyBC>(varName);
-}
-
-std::shared_ptr<WatchedConstraint> createDailyBC(std::string varName)
-{
-    return std::make_shared<DailyBC>(varName);
-}
-
-std::shared_ptr<WatchedConstraint> createWeeklyBC(std::string varName)
-{
-    return std::make_shared<WeeklyBC>(varName);
-}
-
-std::shared_ptr<WatchedConstraint> createFictitiousLoad(std::string varName)
-{
-    return std::make_shared<FictitiousLoad>(varName);
-}
-
-std::shared_ptr<WatchedConstraint> createHydroLevel(std::string varName)
-{
-    return std::make_shared<HydroLevel>(varName);
-}
-
-std::shared_ptr<WatchedConstraint> createSTS(std::string varName)
-{
-    return std::make_shared<STS>(varName);
-}
-
-std::shared_ptr<WatchedConstraint> createHydroProduction(std::string varName)
-{
-    return std::make_shared<HydroProduction>(varName);
-}
-
 ConstraintsFactory::ConstraintsFactory()
 {
-    regex_to_ctypes_["::hourly::"] = createHourlyBC;
-    regex_to_ctypes_["::daily::"] = createDailyBC;
-    regex_to_ctypes_["::weekly::"] = createWeeklyBC;
-    regex_to_ctypes_["^FictiveLoads::"] = createFictitiousLoad;
-    regex_to_ctypes_["^AreaHydroLevel::"] = createHydroLevel;
-    regex_to_ctypes_["^Level::"] = createSTS;
-    regex_to_ctypes_["^HydroPower::"] = createHydroProduction;
+    regex_to_ctypes_ = {
+      {"::hourly::", [](std::string name) { return std::make_shared<HourlyBC>(name); }},
+      {"::daily::", [](std::string name) { return std::make_shared<DailyBC>(name); }},
+      {"::weekly::", [](std::string name) { return std::make_shared<WeeklyBC>(name); }},
+      {"^FictiveLoads::", [](std::string name) { return std::make_shared<FictitiousLoad>(name); }},
+      {"^AreaHydroLevel::", [](std::string name) { return std::make_shared<HydroLevel>(name); }},
+      {"^Level::", [](std::string name) { return std::make_shared<STS>(name); }},
+      {"^HydroPower::", [](std::string name) { return std::make_shared<HydroProduction>(name); }}};
 
     auto keyView = std::views::keys(regex_to_ctypes_);
     regex_ids_ = {keyView.begin(), keyView.end()};
