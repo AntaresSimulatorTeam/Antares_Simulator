@@ -609,14 +609,14 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
         randomForParallelYears.pYears[y].pNbClustersByArea.resize(nbAreas);
 
         // Thermal noises :
-        randomForParallelYears.pYears[y].pThermalNoisesByArea = new double*[nbAreas];
+        randomForParallelYears.pYears[y].pThermalNoisesByArea.resize(nbAreas);
 
         for (uint a = 0; a != nbAreas; ++a)
         {
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
             size_t nbClusters = area.thermal.list.allClustersCount();
-            randomForParallelYears.pYears[y].pThermalNoisesByArea[a] = new double[nbClusters];
+            randomForParallelYears.pYears[y].pThermalNoisesByArea[a].resize(nbClusters);
             randomForParallelYears.pYears[y].pNbClustersByArea[a] = nbClusters;
         }
 

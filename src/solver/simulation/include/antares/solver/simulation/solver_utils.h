@@ -118,21 +118,11 @@ class yearRandomNumbers
 public:
     yearRandomNumbers()
     {
-        pThermalNoisesByArea = nullptr;
         pNbAreas = 0;
     }
 
     ~yearRandomNumbers()
     {
-        // General
-
-        // Thermal noises
-        for (uint a = 0; a != pNbAreas; a++)
-        {
-            delete[] pThermalNoisesByArea[a];
-        }
-        delete[] pThermalNoisesByArea;
-
         // Reservoir levels, spilled and unsupplied energy
         delete[] pReservoirLevels;
         delete[] pUnsuppliedEnergy;
@@ -181,7 +171,7 @@ public:
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
         {
-            memset(pThermalNoisesByArea[a], 0, pNbClustersByArea[a] * sizeof(double));
+            pThermalNoisesByArea[a].assign(pNbClustersByArea[a], 0);
         }
 
         // Reservoir levels, spilled and unsupplied energy costs
@@ -218,7 +208,7 @@ public:
     Data::PowerFluctuations pPowerFluctuations;
 
     // Data for thermal noises
-    double** pThermalNoisesByArea;
+    std::vector<std::vector<double>> pThermalNoisesByArea;
     std::vector<size_t> pNbClustersByArea;
 
     // Data for reservoir levels
