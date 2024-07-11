@@ -23,6 +23,7 @@
 
 #include <ortools/linear_solver/linear_solver.h>
 
+#include <format>
 #include <boost/test/data/dataset.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
@@ -179,26 +180,25 @@ std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintN
     return problem;
 }
 
-std::unique_ptr<MPSolver> create_3_constraintsViolationsProblem()
+void addInfeasibleConstraintToProblem(MPSolver* problem, const std::string& name, unsigned int numId)
+{
+    // Make a constraint that can never be satisfied, of type : var > A,
+    // where : bound_inf(var) = 0, bound_sup(var) = 1 and A > 1.
+    std::string varName = "var" + std::to_string(numId);
+    auto* var = problem->MakeNumVar(0, 1, varName); // var in [0, 1]
+    auto* constraint = problem->MakeRowConstraint(name);
+    constraint->SetCoefficient(var, 1);
+    constraint->SetBounds(numId + 2, problem->infinity()); // A = numId + 2 > 1 necessarily
+}
+
+std::unique_ptr<MPSolver> create_n_constraintsViolationsProblem(const unsigned int n)
 {
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-    const double infinity = problem->infinity();
-
-    auto* var1 = problem->MakeNumVar(0, 1, "var1");
-    auto* constr1 = problem->MakeRowConstraint("BC-name-1::hourly::hour<5>");
-    constr1->SetBounds(2, infinity);
-    constr1->SetCoefficient(var1, 1);
-
-    auto* var2 = problem->MakeNumVar(0, 1, "var2");
-    auto* constr2 = problem->MakeRowConstraint("BC-name-2::hourly::hour<10>");
-    constr2->SetBounds(4, infinity);
-    constr2->SetCoefficient(var2, 1);
-
-    auto* var3 = problem->MakeNumVar(0, 1, "var3");
-    auto* constr3 = problem->MakeRowConstraint("BC-name-3::hourly::hour<15>");
-    constr3->SetBounds(8, infinity);
-    constr3->SetCoefficient(var3, 1);
-
+    for (int i = 1; i <= n; i++)
+    {
+        std::string name = std::format("BC-name-{}::hourly::hour<{}>", i, 5*i);
+        addInfeasibleConstraintToProblem(problem.get(), name, i);
+    }
     return problem;
 }
 
@@ -244,7 +244,7 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
 
 BOOST_AUTO_TEST_CASE(analysis_resulting_slack_variables_are_ordered_and_trimmed)
 {
-    std::unique_ptr<MPSolver> problem = create_3_constraintsViolationsProblem();
+    std::unique_ptr<MPSolver> problem = create_n_constraintsViolationsProblem(3);
     BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
 
     ConstraintSlackAnalysis analysis;
@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE(constraints_associated_to_all_incoming_slack_vars_are_repor
     BOOST_CHECK_EQUAL(reportLogs[4], "Hydro weekly production at area 'some-area'");
 }
 
-BOOST_AUTO_TEST_CASE(infeasibility_cause__only_one_constraint_of_type)
+BOOST_AUTO_TEST_CASE(_4_constraints_but_only_2_infeasibility_causes_reported)
 {
     // The problem is needed only to create variables, impossible otherwise.
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
