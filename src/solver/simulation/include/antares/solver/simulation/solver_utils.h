@@ -200,7 +200,7 @@ public:
         pMaxNbPerformedYears(maxNbPerformedYearsInAset)
     {
         // Allocate a table of parallel years structures
-        pYears = new yearRandomNumbers[maxNbPerformedYearsInAset];
+        pYears.resize(maxNbPerformedYearsInAset);
 
         // Tells these structures their power fluctuations mode
         for (uint y = 0; y < maxNbPerformedYearsInAset; ++y)
@@ -209,10 +209,7 @@ public:
         }
     }
 
-    ~randomNumbers()
-    {
-        delete[] pYears;
-    }
+    ~randomNumbers() = default;
 
     void reset()
     {
@@ -225,7 +222,7 @@ public:
     }
 
     uint pMaxNbPerformedYears;
-    yearRandomNumbers* pYears;
+    std::vector<yearRandomNumbers> pYears;
 
     // Associates :
     //		year number (0, ..., total nb of years to compute - 1) --> index of the year's space
