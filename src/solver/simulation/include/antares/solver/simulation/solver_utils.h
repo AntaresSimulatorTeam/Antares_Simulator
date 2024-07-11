@@ -123,9 +123,6 @@ public:
 
     ~yearRandomNumbers()
     {
-        // Reservoir levels, spilled and unsupplied energy
-        delete[] pSpilledEnergy;
-
         // Hydro costs noises
         switch (pPowerFluctuations)
         {
@@ -175,7 +172,7 @@ public:
         // Reservoir levels, spilled and unsupplied energy costs
         pReservoirLevels.assign(pNbAreas, 0);
         pUnsuppliedEnergy.assign(pNbAreas, 0);
-        memset(pSpilledEnergy, 0, pNbAreas * sizeof(double));
+        pSpilledEnergy.assign(pNbAreas, 0);
 
         // Hydro costs noises
         switch (pPowerFluctuations)
@@ -214,7 +211,7 @@ public:
 
     // Data for unsupplied and spilled energy costs
     std::vector<double> pUnsuppliedEnergy;
-    double* pSpilledEnergy;
+    std::vector<double> pSpilledEnergy;
 
     // Hydro costs noises
     double** pHydroCostsByArea_freeMod;

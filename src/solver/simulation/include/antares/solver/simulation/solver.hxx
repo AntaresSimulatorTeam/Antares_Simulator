@@ -624,7 +624,7 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
 
         // Noises on unsupplied and spilled energy
         randomForParallelYears.pYears[y].pUnsuppliedEnergy.resize(nbAreas);
-        randomForParallelYears.pYears[y].pSpilledEnergy = new double[nbAreas];
+        randomForParallelYears.pYears[y].pSpilledEnergy.resize(nbAreas);
 
         // Hydro costs noises
         switch (study.parameters.power.fluctuations)
