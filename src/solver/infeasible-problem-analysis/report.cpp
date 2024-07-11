@@ -28,14 +28,14 @@
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const MPVariable*>& slackVariables)
+  const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
     buildConstraintsFromSlackVars(slackVariables);
     filterConstraintsToOneByType();
 }
 
 void InfeasibleProblemReport::buildConstraintsFromSlackVars(
-  const std::vector<const MPVariable*>& slackVariables)
+  const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
     const ConstraintsFactory constraintsFactory;
     for (const auto* slackVar: slackVariables)

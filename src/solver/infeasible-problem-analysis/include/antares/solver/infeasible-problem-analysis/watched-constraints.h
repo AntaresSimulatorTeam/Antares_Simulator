@@ -80,6 +80,7 @@ class STS: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
+    virtual ~STS() = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -89,7 +90,7 @@ class HydroProduction: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~STS() = default;
+    virtual ~HydroProduction() = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
