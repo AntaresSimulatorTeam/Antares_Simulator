@@ -30,7 +30,7 @@ class HourlyBC: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~HourlyBC() = default;
+    ~HourlyBC() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -40,7 +40,7 @@ class DailyBC: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~DailyBC() = default;
+    ~DailyBC() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -50,7 +50,7 @@ class WeeklyBC: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~WeeklyBC() = default;
+    ~WeeklyBC() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -60,7 +60,7 @@ class FictitiousLoad: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~FictitiousLoad() = default;
+    ~FictitiousLoad() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -70,7 +70,7 @@ class HydroLevel: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~HydroLevel() = default;
+    ~HydroLevel() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -80,7 +80,7 @@ class STS: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~STS() = default;
+    ~STS() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
@@ -90,7 +90,7 @@ class HydroProduction: public WatchedConstraint
     using WatchedConstraint::WatchedConstraint;
 
 public:
-    virtual ~HydroProduction() = default;
+    ~HydroProduction() override = default;
     std::string infeasibility() override;
     std::string infeasibilityCause() override;
 };
