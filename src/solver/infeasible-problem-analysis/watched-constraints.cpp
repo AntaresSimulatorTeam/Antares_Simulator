@@ -59,10 +59,10 @@ namespace Antares::Optimization
 {
 
 // --- Generic constraint ---
-WatchedConstraint::WatchedConstraint(std::string name):
-    constraintName_(name)
+WatchedConstraint::WatchedConstraint(const std::string& name):
+    fullName_(std::move(name))
 {
-    boost::algorithm::split_regex(splitName_, constraintName_, boost::regex("::"));
+    boost::algorithm::split_regex(splitName_, fullName_, boost::regex("::"));
 }
 
 const std::vector<std::string>& WatchedConstraint::splitName() const
@@ -162,22 +162,21 @@ ConstraintsFactory::ConstraintsFactory()
       {"^AreaHydroLevel::", [](std::string name) { return std::make_shared<HydroLevel>(name); }},
       {"^Level::", [](std::string name) { return std::make_shared<STS>(name); }},
       {"^HydroPower::", [](std::string name) { return std::make_shared<HydroProduction>(name); }}};
-
-    auto keyView = std::views::keys(regex_to_ctypes_);
-    regex_ids_ = {keyView.begin(), keyView.end()};
 }
 
-std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string varName) const
+std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string name) const
 {
     return std::ranges::find_if(regex_to_ctypes_,
-                                [&varName](auto& p)
-                                { return std::regex_search(varName, std::regex(p.first)); })
-      ->second(varName);
+                                [&name](auto& pair)
+                                { return std::regex_search(name, std::regex(pair.first)); })
+      ->second(name);
 }
 
 std::regex ConstraintsFactory::constraintsFilter()
 {
-    return std::regex(boost::algorithm::join(regex_ids_, "|"));
+    auto keyView = std::views::keys(regex_to_ctypes_);
+    std::vector<std::string> regex_ids = {keyView.begin(), keyView.end()};
+    return std::regex(boost::algorithm::join(regex_ids, "|"));
 }
 
 } // namespace Antares::Optimization

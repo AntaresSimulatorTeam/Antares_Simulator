@@ -13,7 +13,7 @@ namespace Antares::Optimization
 class WatchedConstraint
 {
 public:
-    WatchedConstraint(std::string constraintName);
+    WatchedConstraint(const std::string& name);
     virtual std::string infeasibility() = 0;
     virtual std::string infeasibilityCause() = 0;
 
@@ -21,7 +21,7 @@ protected:
     const std::vector<std::string>& splitName() const;
 
 protected:
-    std::string constraintName_;
+    std::string fullName_;
     std::vector<std::string> splitName_;
 };
 
@@ -92,13 +92,12 @@ class ConstraintsFactory
 {
 public:
     ConstraintsFactory();
-    std::shared_ptr<WatchedConstraint> create(std::string regexId) const;
+    std::shared_ptr<WatchedConstraint> create(std::string pair) const;
     std::regex constraintsFilter();
 
 private:
     std::map<std::string, std::function<std::shared_ptr<WatchedConstraint>(std::string)>>
       regex_to_ctypes_;
-    std::vector<std::string> regex_ids_;
 };
 
 } // namespace Antares::Optimization
