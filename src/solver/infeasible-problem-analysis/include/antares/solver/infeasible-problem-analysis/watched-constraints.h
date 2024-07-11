@@ -92,11 +92,11 @@ class ConstraintsFactory
 {
 public:
     ConstraintsFactory();
-    std::shared_ptr<WatchedConstraint> create(std::string pair) const;
+    std::unique_ptr<WatchedConstraint> create(const std::string& pair) const;
     std::regex constraintsFilter();
 
 private:
-    std::map<std::string, std::function<std::shared_ptr<WatchedConstraint>(std::string)>>
+    std::map<std::string, std::function<std::unique_ptr<WatchedConstraint>(const std::string&)>>
       regex_to_ctypes_;
 };
 

@@ -154,22 +154,25 @@ std::string HydroProduction::infeasibilityCause()
 // --- Constraints factory ---
 ConstraintsFactory::ConstraintsFactory()
 {
-    regex_to_ctypes_ = {
-      {"::hourly::", [](std::string name) { return std::make_shared<HourlyBC>(name); }},
-      {"::daily::", [](std::string name) { return std::make_shared<DailyBC>(name); }},
-      {"::weekly::", [](std::string name) { return std::make_shared<WeeklyBC>(name); }},
-      {"^FictiveLoads::", [](std::string name) { return std::make_shared<FictitiousLoad>(name); }},
-      {"^AreaHydroLevel::", [](std::string name) { return std::make_shared<HydroLevel>(name); }},
-      {"^Level::", [](std::string name) { return std::make_shared<STS>(name); }},
-      {"^HydroPower::", [](std::string name) { return std::make_shared<HydroProduction>(name); }}};
+    regex_to_ctypes_ = {{"::hourly::", std::make_unique<HourlyBC, const std::string&>},
+                        {"::daily::", std::make_unique<DailyBC, const std::string&>},
+                        {"::weekly::", std::make_unique<WeeklyBC, const std::string&>},
+                        {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&>},
+                        {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&>},
+                        {"^Level::", std::make_unique<STS, const std::string&>},
+                        {"^HydroPower::", std::make_unique<HydroProduction, const std::string&>}};
 }
 
-std::shared_ptr<WatchedConstraint> ConstraintsFactory::create(std::string name) const
+std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name) const
 {
-    return std::ranges::find_if(regex_to_ctypes_,
-                                [&name](auto& pair)
-                                { return std::regex_search(name, std::regex(pair.first)); })
-      ->second(name);
+    auto it = std::ranges::find_if(regex_to_ctypes_,
+                                   [&name](auto& pair)
+                                   { return std::regex_search(name, std::regex(pair.first)); });
+    if (it != regex_to_ctypes_.end())
+    {
+        return it->second(name);
+    }
+    return nullptr;
 }
 
 std::regex ConstraintsFactory::constraintsFilter()
