@@ -40,7 +40,11 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
     const ConstraintsFactory constraintsFactory;
     for (const auto* slackVar: slackVariables)
     {
-        constraints_.push_back(constraintsFactory.create(slackVar->name()));
+        auto constraint = constraintsFactory.create(slackVar->name());
+        if (constraint)
+        {
+            constraints_.push_back(std::move(constraint));
+        }
     }
 }
 
