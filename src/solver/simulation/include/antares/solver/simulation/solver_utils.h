@@ -126,16 +126,6 @@ public:
         // Hydro costs noises
         switch (pPowerFluctuations)
         {
-        case Data::lssFreeModulations:
-        {
-            for (uint a = 0; a != pNbAreas; a++)
-            {
-                delete[] pHydroCostsByArea_freeMod[a];
-            }
-            delete[] pHydroCostsByArea_freeMod;
-            break;
-        }
-
         case Data::lssMinimizeRamping:
         case Data::lssMinimizeExcursions:
         {
@@ -181,7 +171,7 @@ public:
         {
             for (uint a = 0; a != pNbAreas; a++)
             {
-                memset(pHydroCostsByArea_freeMod[a], 0, 8784 * sizeof(double));
+                pHydroCostsByArea_freeMod[a].assign(8784, 0);
             }
             break;
         }
@@ -214,7 +204,7 @@ public:
     std::vector<double> pSpilledEnergy;
 
     // Hydro costs noises
-    double** pHydroCostsByArea_freeMod;
+    std::vector<std::vector<double>> pHydroCostsByArea_freeMod;
     double* pHydroCosts_rampingOrExcursion;
 };
 

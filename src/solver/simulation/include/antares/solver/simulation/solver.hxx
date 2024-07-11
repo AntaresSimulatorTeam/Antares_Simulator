@@ -631,10 +631,10 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
         {
         case Data::lssFreeModulations:
         {
-            randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod = new double*[nbAreas];
+            randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod.resize(nbAreas);
             for (uint a = 0; a != nbAreas; ++a)
             {
-                randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod[a] = new double[8784];
+                randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod[a].resize(8784);
             }
             break;
         }
@@ -802,7 +802,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
             {
                 for (auto i = study.areas.begin(); i != end; ++i)
                 {
-                    double* noise = randomForYears.pYears[indexYear]
+                    auto& noise = randomForYears.pYears[indexYear]
                                       .pHydroCostsByArea_freeMod[areaIndex];
                     std::set<hydroCostNoise, compareHydroCostsNoises> setHydroCostsNoises;
                     for (uint j = 0; j != 8784; ++j)
