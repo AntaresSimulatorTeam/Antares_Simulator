@@ -803,7 +803,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
                 for (auto i = study.areas.begin(); i != end; ++i)
                 {
                     auto& noise = randomForYears.pYears[indexYear]
-                                      .pHydroCostsByArea_freeMod[areaIndex];
+                                    .pHydroCostsByArea_freeMod[areaIndex];
                     std::set<hydroCostNoise, compareHydroCostsNoises> setHydroCostsNoises;
                     for (uint j = 0; j != 8784; ++j)
                     {
