@@ -144,6 +144,8 @@ std::unique_ptr<MPSolver> createProblem(const std::string& constraintName)
 {
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
     const double infinity = problem->infinity();
+    problem->MakeNumVar(1, infinity, "var1");
+    problem->MakeNumVar(-infinity, -1, "var2");
     auto constraint = problem->MakeRowConstraint(constraintName);
     constraint->SetBounds(0, infinity);
     return problem;
