@@ -428,7 +428,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 throw fatalError(area.name.c_str(), y);
             }
 
-            H2O_J_Free(problem.get());
+            H2O_J_Free(problem);
 
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
