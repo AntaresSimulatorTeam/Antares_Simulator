@@ -22,9 +22,9 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-std::shared_ptr<DONNEES_MENSUELLES> H2O_J_Instanciation(void)
+DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 {
-    auto DonneesMensuelles = std::make_shared<DONNEES_MENSUELLES>();
+    DONNEES_MENSUELLES* DonneesMensuelles = new DONNEES_MENSUELLES;
 
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
