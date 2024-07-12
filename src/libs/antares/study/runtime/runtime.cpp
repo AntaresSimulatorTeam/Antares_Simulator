@@ -90,6 +90,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         r.thermalPlantTotalCount += area.thermal.list.enabledAndNotMustRunCount();
         r.thermalPlantTotalCountMustRun += area.thermal.list.enabledAndMustRunCount();
         r.reserveParticipationCount += area.thermal.list.reserveParticipationsCount();
+        r.reserveParticipationCount += area.shortTermStorage.reserveParticipationsCount();
         r.capacityReservationCount
           += area.allCapacityReservations.areaCapacityReservationsUp.size();
         r.capacityReservationCount

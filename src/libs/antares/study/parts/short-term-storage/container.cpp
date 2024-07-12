@@ -24,10 +24,14 @@
 #include <filesystem>
 #include <algorithm>
 #include <string>
+#include <numeric>
 
 #include "antares/study/parts/short-term-storage/container.h"
+#include "antares/study/study.h"
 
 #define SEP Yuni::IO::Separator
+
+using namespace Yuni;
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -82,6 +86,65 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
     return ret;
 }
 
+bool STStorageInput::loadReserveParticipations(Area& area, const AnyString& file)
+{
+    IniFile ini;
+    if (!ini.open(file, false))
+        return false;
+    ini.each(
+      [&](const IniFile::Section& section)
+      {
+          std::string tmpClusterName;
+          float tmpMaxPower = 0;
+          float tmpParticipationCost = 0;
+          for (auto* p = section.firstProperty; p; p = p->next)
+          {
+              CString<30, false> tmp;
+              tmp = p->key;
+              tmp.toLower();
+
+              if (tmp == "cluster-name")
+              {
+                  TransformNameIntoID(p->value, tmpClusterName);
+              }
+              else if (tmp == "max-power")
+              {
+                  if (!p->value.to<float>(tmpMaxPower))
+                  {
+                      logs.warning()
+                        << area.name << ": invalid max power for reserve " << section.name;
+                  }
+              }
+              else if (tmp == "participation-cost")
+              {
+                  if (!p->value.to<float>(tmpParticipationCost))
+                  {
+                      logs.warning()
+                        << area.name << ": invalid participation cost for reserve " << section.name;
+                  }
+              }
+          }
+          auto reserve = area.allCapacityReservations.getReserveByName(section.name);
+          auto cluster = getClusterByName(tmpClusterName);
+          if (reserve && cluster)
+          {
+              ClusterReserveParticipation tmpReserveParticipation{
+                reserve.value(), tmpMaxPower, tmpParticipationCost};
+              cluster.value().get().addReserveParticipation(section.name, tmpReserveParticipation);
+          }
+          else
+          {
+              if (!reserve)
+                  logs.warning() << area.name << ": does not contains this reserve "
+                                 << section.name;
+              if (!cluster)
+                  logs.warning() << area.name << ": does not contains this cluster "
+                                 << tmpClusterName;
+          }
+      });
+    return true;
+}
+
 bool STStorageInput::saveToFolder(const std::string& folder) const
 {
     // create empty list.ini if there's no sts in this area
@@ -123,6 +186,42 @@ uint STStorageInput::removeDisabledClusters()
     storagesByIndex.erase(it, storagesByIndex.end());
 
     return disabledCount;
+}
+
+std::optional<std::reference_wrapper<STStorageCluster>> STStorageInput::getClusterByName(
+  const std::string& name)
+{
+    auto it = std::find_if(storagesByIndex.begin(),
+                           storagesByIndex.end(),
+                           [&name](STStorageCluster& cluster) { return cluster.id == name; });
+    if (it != storagesByIndex.end())
+        return std::ref(*it);
+    else
+        return std::nullopt;
+}
+
+size_t STStorageInput::getClusterIdx(STStorageCluster& cluster)
+{
+    auto it = std::find_if(storagesByIndex.begin(),
+                           storagesByIndex.end(),
+                           [&cluster](STStorageCluster& elem) { return &elem == &cluster; });
+    if (it != storagesByIndex.end())
+    {
+        return std::distance(storagesByIndex.begin(), it);
+    }
+    else
+    {
+        throw std::out_of_range("This Short Term Storage is not in the list");
+    }
+}
+
+uint STStorageInput::reserveParticipationsCount()
+{
+    return std::accumulate(storagesByIndex.begin(),
+                           storagesByIndex.end(),
+                           0,
+                           [](int total, STStorageCluster& cluster)
+                           { return total + cluster.reserveParticipationsCount(); });
 }
 
 } // namespace Antares::Data::ShortTermStorage

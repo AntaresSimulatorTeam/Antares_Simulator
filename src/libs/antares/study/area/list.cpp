@@ -1027,6 +1027,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
         ret = area.shortTermStorage.validate() && ret;
+
+        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "clusters" << SEP
+                       << area.id << SEP << "reserves.ini";
+        ret = area.shortTermStorage.loadReserveParticipations(area, buffer) && ret;
     }
 
     // Renewable cluster list

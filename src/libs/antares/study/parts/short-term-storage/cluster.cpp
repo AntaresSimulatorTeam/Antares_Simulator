@@ -88,4 +88,31 @@ bool STStorageCluster::saveSeries(const std::string& path) const
     return series->saveToFolder(path);
 }
 
+void STStorageCluster::addReserveParticipation(
+  Data::ReserveName name,
+  ClusterReserveParticipation& reserveParticipation)
+{
+    clusterReservesParticipations.emplace(name, reserveParticipation);
+}
+
+float STStorageCluster::reserveMaxPower(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).maxPower;
+    else
+        return -1;
+}
+
+float STStorageCluster::reserveCost(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).participationCost;
+    else
+        return -1;
+}
+
+uint STStorageCluster::reserveParticipationsCount(){
+    return clusterReservesParticipations.size();
+}
+
 } // namespace Antares::Data::ShortTermStorage

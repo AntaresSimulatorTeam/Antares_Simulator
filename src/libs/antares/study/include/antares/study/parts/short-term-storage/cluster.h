@@ -25,6 +25,7 @@
 #include <antares/inifile/inifile.h>
 #include "properties.h"
 #include "series.h"
+#include <antares/study/area/capacityReservation.h>
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -40,10 +41,25 @@ public:
     void saveProperties(IniFile& ini) const;
     bool saveSeries(const std::string& path) const;
 
+    void addReserveParticipation(Data::ReserveName name,
+                                 ClusterReserveParticipation& reserveParticipation);
+
+    //! \brief Returns max power for a reserve if participating, -1 otherwise
+    float reserveMaxPower(Data::ReserveName name);
+
+    //! \brief Returns participating cost for a reserve if participating, -1 otherwise
+    float reserveCost(Data::ReserveName name);
+
+    //! \brief Returns the number of reserve the cluster is participating to
+    uint reserveParticipationsCount();
+
     std::string id;
 
     std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
 
+private:
+    //! reserve
+    std::map<Data::ReserveName, ClusterReserveParticipation> clusterReservesParticipations;
 };
 } // namespace Antares::Data::ShortTermStorage

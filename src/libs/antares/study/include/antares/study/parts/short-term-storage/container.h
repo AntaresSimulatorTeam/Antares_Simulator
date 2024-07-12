@@ -34,6 +34,9 @@ public:
     bool createSTStorageClustersFromIniFile(const std::string& path);
     /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
+
+    bool loadReserveParticipations(Area& area, const AnyString& file);
+
     /// Number of enabled ST storages, ignoring disabled ST storages
     std::size_t count() const;
     /// erase disabled cluster from the vector
@@ -42,6 +45,14 @@ public:
 
     bool saveToFolder(const std::string& folder) const;
     bool saveDataSeriesToFolder(const std::string& folder) const;
+
+    std::optional<std::reference_wrapper<STStorageCluster>> getClusterByName(
+      const std::string& name);
+
+    size_t getClusterIdx(STStorageCluster& cluster);
+
+    // returns the number of reserve participations of all clusters
+    uint reserveParticipationsCount();
 
     std::vector<STStorageCluster> storagesByIndex;
 };

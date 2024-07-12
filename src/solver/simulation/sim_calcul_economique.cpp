@@ -39,15 +39,21 @@ using namespace Antares;
 using namespace Antares::Data;
 
 static void importShortTermStorages(
-  const AreaList& areas,
-  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+  AreaList& areas,
+  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut,
+  PROBLEME_HEBDO& problem)
 {
     int clusterGlobalIndex = 0;
+    int globalReserveIndex = 0;
+    int globalClusterParticipationIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
-        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        int areaReserveIndex = 0;
+        int areaClusterParticipationIndex = 0;
+        auto area = areas[areaIndex];
+        ShortTermStorageOut[areaIndex].resize(area->shortTermStorage.count());
         int storageIndex = 0;
-        for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
+        for (auto st : area->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
@@ -67,6 +73,84 @@ static void importShortTermStorages(
             storageIndex++;
             clusterGlobalIndex++;
         }
+
+        AREA_RESERVES_VECTOR areaReserves;
+
+        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsUp)
+        {
+            CAPACITY_RESERVATION areaCapacityReservationsUp;
+            areaCapacityReservationsUp.failureCost = val.failureCost;
+            areaCapacityReservationsUp.spillageCost = val.spillageCost;
+            areaCapacityReservationsUp.reserveName = key;
+            areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
+            areaCapacityReservationsUp.areaReserveIndex = areaReserveIndex;
+            globalReserveIndex++;
+            areaReserveIndex++;
+            if (val.need.timeSeries.width > 0)
+            {
+                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                {
+                    areaCapacityReservationsUp.need.push_back(
+                      val.need.timeSeries.entry[0][indexSeries]);
+                }
+            }
+            for (size_t idx = 0; auto& cluster : area->shortTermStorage.storagesByIndex)
+            {
+                RESERVE_PARTICIPATION reserveParticipation;
+                reserveParticipation.maxPower = cluster.reserveMaxPower(key);
+                reserveParticipation.participationCost = cluster.reserveCost(key);
+                reserveParticipation.clusterName = cluster.id;
+                reserveParticipation.clusterIdInArea = idx;
+                reserveParticipation.globalIndexClusterParticipation
+                  = globalClusterParticipationIndex;
+                reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                globalClusterParticipationIndex++;
+                areaClusterParticipationIndex++;
+                areaCapacityReservationsUp.AllReservesParticipation.push_back(reserveParticipation);
+                idx++;
+            }
+
+            areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
+        }
+        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsDown)
+        {
+            CAPACITY_RESERVATION areaCapacityReservationsDown;
+            areaCapacityReservationsDown.failureCost = val.failureCost;
+            areaCapacityReservationsDown.spillageCost = val.spillageCost;
+            areaCapacityReservationsDown.reserveName = key;
+            areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
+            areaCapacityReservationsDown.areaReserveIndex = areaReserveIndex;
+            globalReserveIndex++;
+            areaReserveIndex++;
+            if (val.need.timeSeries.width > 0)
+            {
+                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                {
+                    areaCapacityReservationsDown.need.push_back(
+                      val.need.timeSeries.entry[0][indexSeries]);
+                }
+            }
+            for (size_t idx = 0; auto& cluster : area->shortTermStorage.storagesByIndex)
+            {
+                RESERVE_PARTICIPATION reserveParticipation;
+                reserveParticipation.maxPower = cluster.reserveMaxPower(key);
+                reserveParticipation.participationCost = cluster.reserveCost(key);
+                reserveParticipation.clusterName = cluster.id;
+                reserveParticipation.clusterIdInArea = idx;
+                reserveParticipation.globalIndexClusterParticipation
+                  = globalClusterParticipationIndex;
+                reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                globalClusterParticipationIndex++;
+                areaClusterParticipationIndex++;
+                areaCapacityReservationsDown.AllReservesParticipation.push_back(
+                  reserveParticipation);
+                idx++;
+            }
+
+            areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);
+        }
+
+        problem.allReserves.thermalAreaReserves.push_back(areaReserves);
     }
 }
 
@@ -220,7 +304,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
 
-    importShortTermStorages(study.areas, problem.ShortTermStorage);
+    importShortTermStorages(study.areas, problem.ShortTermStorage, problem);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {

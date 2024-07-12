@@ -57,9 +57,9 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     const uint linkCount = study.runtime->interconnectionsCount();
 
-    problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
-    problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
-    problem.DefaillanceNegativeUtiliserConsoAbattue.assign(nbPays, false);
+    problem.DefaillanceNegativeUtiliserPMinThermique = std::vector<bool>(nbPays, false);
+    problem.DefaillanceNegativeUtiliserHydro = std::vector<bool>(nbPays, false);
+    problem.DefaillanceNegativeUtiliserConsoAbattue = std::vector<bool>(nbPays, false);
 
     problem.CoefficientEcretementPMaxHydraulique.assign(nbPays, 0.);
 
