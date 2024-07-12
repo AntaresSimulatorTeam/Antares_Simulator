@@ -104,8 +104,7 @@ Study::~Study()
 
 void Study::clear()
 {
-    // Releasing runtime infos
-    FreeAndNil(runtime);
+    runtime.reset();
     FreeAndNil(scenarioRules);
     FreeAndNil(uiinfo);
 
@@ -504,9 +503,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
 bool Study::initializeRuntimeInfos()
 {
-    delete runtime;
-    runtime = new StudyRuntimeInfos();
-    return runtime->loadFromStudy(*this);
+    runtime = std::make_unique<StudyRuntimeInfos>();
+    return (runtime != nullptr);
 }
 
 void Study::performTransformationsBeforeLaunchingSimulation()

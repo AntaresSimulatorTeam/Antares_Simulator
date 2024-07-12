@@ -596,7 +596,7 @@ public:
     **
     ** These informations are only needed when a study is processed.
     */
-    StudyRuntimeInfos* runtime = nullptr;
+    std::unique_ptr<StudyRuntimeInfos> runtime;
 
     // Antares::Solver::Variable::State* state;
 
