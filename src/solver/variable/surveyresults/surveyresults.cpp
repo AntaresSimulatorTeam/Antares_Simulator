@@ -231,7 +231,6 @@ namespace Variable
 {
 static inline uint GetRangeLimit(const Data::Study& study, int precisionLevel, int index)
 {
-    assert(study.runtime && "invalid runtime data");
     switch (precisionLevel)
     {
     case Category::hourly:

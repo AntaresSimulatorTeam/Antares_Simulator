@@ -1156,7 +1156,6 @@ struct TS final
 void Study::initializeProgressMeter(bool tsGeneratorOnly)
 {
     uint years = tsGeneratorOnly ? 1 : (runtime.rangeLimits.year[rangeEnd] + 1);
-    assert(runtime);
 
     int ticksPerYear = 0;
     int ticksPerOutput = 0;

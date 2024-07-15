@@ -188,6 +188,7 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 
 void SimulationHandler::create()
 {
+    study_.runtime.loadFromStudy(study_);
     addScratchpadToEachArea(study_);
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,

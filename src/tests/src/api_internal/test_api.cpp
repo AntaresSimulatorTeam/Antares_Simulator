@@ -44,6 +44,7 @@ public:
         StudyBuilder builder;
         builder.addAreaToStudy("area1");
         builder.addAreaToStudy("area2");
+        builder.study->runtime.loadFromStudy(*builder.study);
         builder.setNumberMCyears(1);
         builder.study->parameters.resultFormat = ResultFormat::inMemory;
         builder.study->prepareOutput();
