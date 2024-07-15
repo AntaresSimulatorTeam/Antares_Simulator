@@ -31,7 +31,6 @@ InfeasibleProblemReport::InfeasibleProblemReport(
   const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
     buildConstraintsFromSlackVars(slackVariables);
-    filterConstraintsToOneByType();
 }
 
 void InfeasibleProblemReport::buildConstraintsFromSlackVars(
@@ -53,6 +52,11 @@ bool compTypeName(const std::shared_ptr<WatchedConstraint> a, const std::shared_
     return typeid(*a).name() < typeid(*b).name();
 }
 
+bool sameType(const std::shared_ptr<WatchedConstraint> a, const std::shared_ptr<WatchedConstraint> b)
+{
+    return typeid(*a).name() == typeid(*b).name();
+}
+
 bool compValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
 {
     return a->slackValue() < b->slackValue();
@@ -60,8 +64,9 @@ bool compValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<Watch
 
 void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
-    std::sort(constraints_.begin(), constraints_.end(), compTypeName);
-    std::unique(constraints_.begin(), constraints_.end(), compValue);
+    std::stable_sort(constraints_.begin(), constraints_.end(), compTypeName);
+    auto first_duplicate = std::unique(constraints_.begin(), constraints_.end(), sameType);
+    constraints_.erase(first_duplicate, constraints_.end());
     std::sort(constraints_.begin(), constraints_.end(), compValue);
 }
 
@@ -75,7 +80,8 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
 
 void InfeasibleProblemReport::logInfeasibilityCauses()
 {
-    Antares::logs.error() << "Possible causes of infeasibility:";
+    filterConstraintsToOneByType();
+    report_.push_back("Possible causes of infeasibility:");
     for (const auto& c: constraints_)
     {
         Antares::logs.error() << c->infeasibilityCause();
