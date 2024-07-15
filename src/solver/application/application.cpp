@@ -224,7 +224,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         writeComment(study);
     }
 
-    study.initializeRuntimeInfos();
+    if (!study.initializeRuntimeInfos())
+    {
+        throw Error::RuntimeInfoInitialization();
+    }
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
