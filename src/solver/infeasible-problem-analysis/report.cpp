@@ -84,7 +84,7 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
 void InfeasibleProblemReport::logInfeasibilityCauses()
 {
     filterConstraintsToOneByType();
-    report_.push_back("Possible causes of infeasibility:");
+    Antares::logs.error() << "Possible causes of infeasibility:";
     for (const auto& c: constraints_)
     {
         Antares::logs.error() << c->infeasibilityCause();
