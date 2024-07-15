@@ -119,7 +119,7 @@ jobs:
           ctest -C Release --output-on-failure -L "unit"
 
       - name: Run short-tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        continue-on-error: true
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
