@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
     BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
 }
 
-BOOST_AUTO_TEST_CASE(analysis_resulting_slack_variables_are_ordered_and_trimmed)
+BOOST_AUTO_TEST_CASE(analysis_slack_variables_are_ordered)
 {
     std::unique_ptr<MPSolver> problem = create_n_constraintsViolationsProblem(3);
     BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
@@ -256,6 +256,21 @@ BOOST_AUTO_TEST_CASE(analysis_resulting_slack_variables_are_ordered_and_trimmed)
     BOOST_CHECK_EQUAL(violatedConstraints[0]->name(), "BC-name-3::hourly::hour<15>::low");
     BOOST_CHECK_EQUAL(violatedConstraints[1]->name(), "BC-name-2::hourly::hour<10>::low");
     BOOST_CHECK_EQUAL(violatedConstraints[2]->name(), "BC-name-1::hourly::hour<5>::low");
+}
+
+BOOST_AUTO_TEST_CASE(analysis_slack_variables_are_ordered_and_limited_to_10)
+{
+    std::unique_ptr<MPSolver> problem = create_n_constraintsViolationsProblem(15);
+    BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
+
+    ConstraintSlackAnalysis analysis;
+    analysis.run(problem.get());
+    BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());
+
+    auto& violatedConstraints = analysis.largestSlackVariables();
+    BOOST_CHECK_EQUAL(violatedConstraints.size(), 10);
+    BOOST_CHECK_EQUAL(violatedConstraints[0]->name(), "BC-name-15::hourly::hour<75>::low");
+    BOOST_CHECK_EQUAL(violatedConstraints[9]->name(), "BC-name-6::hourly::hour<30>::low");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
