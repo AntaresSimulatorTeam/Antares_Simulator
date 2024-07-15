@@ -428,6 +428,8 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     logs.debug() << "Releasing runtime data";
 }
 
+
+
 #ifndef NDEBUG
 void StudyRangeLimits::checkIntegrity() const
 {
