@@ -23,7 +23,7 @@
 
 #include <ortools/linear_solver/linear_solver.h>
 
-#include <format>
+#include <cstdio>
 #include <ranges>
 #include <boost/test/data/dataset.hpp>
 #include <boost/test/data/test_case.hpp>
@@ -197,7 +197,8 @@ std::unique_ptr<MPSolver> create_n_constraintsViolationsProblem(const int n)
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
     for (auto i : std::ranges::iota_view(1, n + 1)) // From 1 to n included
     {
-        std::string name = std::format("BC-name-{}::hourly::hour<{}>", i, 5*i);
+        char name[32];
+        std::sprintf(name, "BC-name-%d::hourly::hour<%d>", i, 5*i);
         addInfeasibleConstraintToProblem(problem.get(), name, i);
     }
     return problem;
