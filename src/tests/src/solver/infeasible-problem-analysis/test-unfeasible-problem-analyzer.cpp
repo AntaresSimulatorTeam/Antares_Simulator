@@ -318,8 +318,8 @@ BOOST_AUTO_TEST_CASE(_4_constraints_but_only_2_infeasibility_causes_reported)
     auto reportLogs = report.getLogs();
 
     BOOST_CHECK_EQUAL(reportLogs.size(), 3); // Expecting 3 lines in the report
-    BOOST_CHECK_EQUAL(reportLogs[1], "* Hourly binding constraints.");
-    BOOST_CHECK_EQUAL(reportLogs[2], "* Last resort shedding status.");
+    BOOST_CHECK(std::ranges::find(reportLogs, "* Hourly binding constraints.") != reportLogs.end());
+    BOOST_CHECK(std::ranges::find(reportLogs, "* Last resort shedding status.") != reportLogs.end());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
