@@ -40,7 +40,7 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
     const ConstraintsFactory constraintsFactory;
     for (const auto* slackVar: slackVariables)
     {
-        auto constraint = constraintsFactory.create(slackVar->name());
+        auto constraint = constraintsFactory.create(slackVar->name(), slackVar->solution_value());
         if (constraint)
         {
             constraints_.push_back(std::move(constraint));
@@ -48,18 +48,21 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
     }
 }
 
+bool compTypeName(const std::shared_ptr<WatchedConstraint> a, const std::shared_ptr<WatchedConstraint> b)
+{
+    return typeid(*a).name() < typeid(*b).name();
+}
+
+bool compValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
+{
+    return a->slackValue() < b->slackValue();
+}
+
 void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
-    std::vector<std::string> pickedTypes;
-    for (const auto& c: constraints_)
-    {
-        std::string cType = typeid(*c).name();
-        if (std::find(pickedTypes.begin(), pickedTypes.end(), cType) == pickedTypes.end())
-        {
-            uniqueConstraintByType_.push_back(c);
-            pickedTypes.push_back(cType);
-        }
-    }
+    std::sort(constraints_.begin(), constraints_.end(), compTypeName);
+    std::unique(constraints_.begin(), constraints_.end(), compValue);
+    std::sort(constraints_.begin(), constraints_.end(), compValue);
 }
 
 void InfeasibleProblemReport::logSuspiciousConstraints()
@@ -73,7 +76,7 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
 void InfeasibleProblemReport::logInfeasibilityCauses()
 {
     Antares::logs.error() << "Possible causes of infeasibility:";
-    for (const auto& c: uniqueConstraintByType_)
+    for (const auto& c: constraints_)
     {
         Antares::logs.error() << c->infeasibilityCause();
     }

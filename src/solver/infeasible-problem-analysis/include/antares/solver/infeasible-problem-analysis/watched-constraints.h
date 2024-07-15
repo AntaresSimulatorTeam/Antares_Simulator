@@ -13,16 +13,18 @@ namespace Antares::Optimization
 class WatchedConstraint
 {
 public:
-    explicit WatchedConstraint(const std::string& name);
+    explicit WatchedConstraint(const std::string& name, const double slackValue);
     virtual ~WatchedConstraint() = default;
     virtual std::string infeasibility() = 0;
     virtual std::string infeasibilityCause() = 0;
+    double slackValue() const;
 
 protected:
     const std::vector<std::string>& splitName() const;
 
 private:
     std::vector<std::string> splitName_;
+    double slack_value_;
 };
 
 class HourlyBC: public WatchedConstraint
@@ -99,11 +101,11 @@ class ConstraintsFactory
 {
 public:
     explicit ConstraintsFactory();
-    std::unique_ptr<WatchedConstraint> create(const std::string& pair) const;
+    std::unique_ptr<WatchedConstraint> create(const std::string&, const double) const;
     std::regex constraintsFilter();
 
 private:
-    std::map<std::string, std::function<std::unique_ptr<WatchedConstraint>(const std::string&)>>
+    std::map<std::string, std::function<std::unique_ptr<WatchedConstraint>(const std::string&, const double)>>
       regex_to_ctypes_;
 };
 

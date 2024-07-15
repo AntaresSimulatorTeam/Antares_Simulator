@@ -48,6 +48,5 @@ private:
     void filterConstraintsToOneByType();
 
     std::vector<std::shared_ptr<WatchedConstraint>> constraints_;
-    std::vector<std::shared_ptr<WatchedConstraint>> uniqueConstraintByType_;
 };
 } // namespace Antares::Optimization

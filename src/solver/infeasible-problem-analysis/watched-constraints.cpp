@@ -59,7 +59,8 @@ namespace Antares::Optimization
 {
 
 // --- Generic constraint ---
-WatchedConstraint::WatchedConstraint(const std::string& name)
+WatchedConstraint::WatchedConstraint(const std::string& name, const double slackValue) :
+    slack_value_(slackValue)
 {
     boost::algorithm::split_regex(splitName_, name, boost::regex("::"));
 }
@@ -67,6 +68,11 @@ WatchedConstraint::WatchedConstraint(const std::string& name)
 const std::vector<std::string>& WatchedConstraint::splitName() const
 {
     return splitName_;
+}
+
+double WatchedConstraint::slackValue() const
+{
+    return slack_value_;
 }
 
 std::string HourlyBC::infeasibility()
@@ -153,23 +159,23 @@ std::string HydroProduction::infeasibilityCause()
 // --- Constraints factory ---
 ConstraintsFactory::ConstraintsFactory()
 {
-    regex_to_ctypes_ = {{"::hourly::", std::make_unique<HourlyBC, const std::string&>},
-                        {"::daily::", std::make_unique<DailyBC, const std::string&>},
-                        {"::weekly::", std::make_unique<WeeklyBC, const std::string&>},
-                        {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&>},
-                        {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&>},
-                        {"^Level::", std::make_unique<STS, const std::string&>},
-                        {"^HydroPower::", std::make_unique<HydroProduction, const std::string&>}};
+    regex_to_ctypes_ = {{"::hourly::", std::make_unique<HourlyBC, const std::string&, const double>},
+                        {"::daily::", std::make_unique<DailyBC, const std::string&, const double>},
+                        {"::weekly::", std::make_unique<WeeklyBC, const std::string&, const double>},
+                        {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&, const double>},
+                        {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&, const double>},
+                        {"^Level::", std::make_unique<STS, const std::string&, const double>},
+                        {"^HydroPower::", std::make_unique<HydroProduction, const std::string&, const double>}};
 }
 
-std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name) const
+std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name, const double value) const
 {
     auto it = std::ranges::find_if(regex_to_ctypes_,
                                    [&name](auto& pair)
                                    { return std::regex_search(name, std::regex(pair.first)); });
     if (it != regex_to_ctypes_.end())
     {
-        return it->second(name);
+        return it->second(name, value);
     }
     return nullptr;
 }
