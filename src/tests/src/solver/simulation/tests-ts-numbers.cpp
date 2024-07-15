@@ -38,7 +38,6 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 {
     study->parameters.derated = false;
 
-    study->initializeRuntimeInfos();
     study->runtime.rangeLimits.year[rangeBegin] = 0;
     study->runtime.rangeLimits.year[rangeEnd] = nbYears - 1;
 
