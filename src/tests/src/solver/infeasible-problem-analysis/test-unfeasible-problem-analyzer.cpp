@@ -24,6 +24,7 @@
 #include <ortools/linear_solver/linear_solver.h>
 
 #include <format>
+#include <ranges>
 #include <boost/test/data/dataset.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
@@ -191,10 +192,10 @@ void addInfeasibleConstraintToProblem(MPSolver* problem, const std::string& name
     constraint->SetBounds(numId + 2, problem->infinity()); // A = numId + 2 > 1 necessarily
 }
 
-std::unique_ptr<MPSolver> create_n_constraintsViolationsProblem(const unsigned int n)
+std::unique_ptr<MPSolver> create_n_constraintsViolationsProblem(const int n)
 {
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-    for (int i = 1; i <= n; i++)
+    for (auto i : std::ranges::iota_view(1, n + 1)) // From 1 to n included
     {
         std::string name = std::format("BC-name-{}::hourly::hour<{}>", i, 5*i);
         addInfeasibleConstraintToProblem(problem.get(), name, i);
