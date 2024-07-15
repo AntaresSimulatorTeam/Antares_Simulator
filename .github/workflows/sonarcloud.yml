@@ -78,6 +78,16 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
 
+      - name: Read simtest version
+        run: |
+          echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
+          cat ./simtest.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - name: Export simtest version
+        run: |
+          echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
+
       - name: Init submodule
         run: |
           git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
@@ -107,6 +117,14 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/_build
           ctest -C Release --output-on-failure -L "unit"
+
+      - name: Run short-tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: short-tests
+          os: ${{ matrix.os }}
 
       - name: Collect coverage into one XML report
         run: |
