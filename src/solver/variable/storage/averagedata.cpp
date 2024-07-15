@@ -53,7 +53,7 @@ void AverageData::reset()
 void AverageData::initializeFromStudy(Data::Study& study)
 {
     Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
-    nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
+    nbYearsCapacity = study.runtime.rangeLimits.year[Data::rangeEnd] + 1;
     year.resize(nbYearsCapacity);
 
     yearsWeight = study.parameters.getYearsWeight();

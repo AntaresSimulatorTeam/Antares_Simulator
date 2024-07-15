@@ -31,6 +31,7 @@
 
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
+#include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
@@ -596,7 +597,7 @@ public:
     **
     ** These informations are only needed when a study is processed.
     */
-    std::unique_ptr<StudyRuntimeInfos> runtime;
+    StudyRuntimeInfos runtime;
 
     // Antares::Solver::Variable::State* state;
 
@@ -690,7 +691,6 @@ YString StudyCreateOutputPath(SimulationMode mode,
                               int64_t startTime);
 } // namespace Antares::Data
 
-#include "runtime.h"
 #include "study.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_STUDY_H__ */

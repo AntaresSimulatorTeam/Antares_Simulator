@@ -230,9 +230,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     uint maxDurationON; // nombre d'heures de fonctionnement d'un groupe au delà duquel un
     // arrêt/redémarrage est préférable
     uint maxUnitNeeded = 0;
-    uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+    uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear = startHourForCurrentYear
-                                 + study.runtime->rangeLimits.hour[Data::rangeCount];
+                                 + study.runtime.rangeLimits.hour[Data::rangeCount];
 
     assert(endHourForCurrentYear <= HOURS_PER_YEAR);
 
@@ -377,9 +377,9 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(
   const std::array<uint, HOURS_PER_YEAR>& ON_opt,
   const Data::ThermalCluster* currentCluster)
 {
-    uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+    uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear = startHourForCurrentYear
-                                 + study.runtime->rangeLimits.hour[Data::rangeCount];
+                                 + study.runtime.rangeLimits.hour[Data::rangeCount];
 
     for (uint hour = startHourForCurrentYear; hour < endHourForCurrentYear; ++hour)
     {
@@ -427,9 +427,9 @@ std::array<uint, HOURS_PER_YEAR> State::computeEconomicallyOptimalNbClustersONfo
   const std::array<uint, HOURS_PER_YEAR>& ON_min,
   const std::array<uint, HOURS_PER_YEAR>& ON_max) const
 {
-    uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+    uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear = startHourForCurrentYear
-                                 + study.runtime->rangeLimits.hour[Data::rangeCount];
+                                 + study.runtime.rangeLimits.hour[Data::rangeCount];
 
     // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
     std::array<uint, HOURS_PER_YEAR> ON_opt;

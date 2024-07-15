@@ -325,9 +325,9 @@ void ISimulation<ImplementationType>::run()
         logs.info();
 
         // Launching the simulation for all years
-        logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
-                    << " .. " << (1 + study.runtime->rangeLimits.year[Data::rangeEnd])
-                    << "], total: " << study.runtime->rangeLimits.year[Data::rangeCount];
+        logs.info() << "MC-Years : [" << (study.runtime.rangeLimits.year[Data::rangeBegin] + 1)
+                    << " .. " << (1 + study.runtime.rangeLimits.year[Data::rangeEnd])
+                    << "], total: " << study.runtime.rangeLimits.year[Data::rangeCount];
 
         // Current state
         std::vector<Variable::State> state(pNbMaxPerformedYearsInParallel, Variable::State(study));
@@ -337,7 +337,7 @@ void ISimulation<ImplementationType>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
         }
 
-        uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
+        uint finalYear = 1 + study.runtime.rangeLimits.year[Data::rangeEnd];
         {
             pDurationCollector("mc_years")
               << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
@@ -455,7 +455,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
             generateThermalTimeSeries(study,
                                       clusters,
-                                      study.runtime->random[Data::seedTsGenThermal]);
+                                      study.runtime.random[Data::seedTsGenThermal]);
 
             bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
             bool doWeWrite = archive && !study.parameters.noOutput;
@@ -511,7 +511,7 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
         // Some thermal clusters may override the global parameter.
         // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
         bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal
-                                      || study.runtime->thermalTSRefresh;
+                                      || study.runtime.thermalTSRefresh;
         refreshing = refreshing
                      || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
 
@@ -660,8 +660,6 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
   std::map<unsigned int, bool>& isYearPerformed,
   MersenneTwister& randomHydroGenerator)
 {
-    auto& runtime = *study.runtime;
-
     uint indexYear = 0;
     std::vector<unsigned int>::iterator ity;
 
@@ -686,7 +684,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
             for (auto& cluster: area.thermal.list.all())
             {
                 uint clusterIndex = cluster->areaWideIndex;
-                double thermalNoise = runtime.random[Data::seedThermalCosts].next();
+                double thermalNoise = study.runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
                 {
                     randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex]
@@ -745,8 +743,8 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
 
         // ... Unsupplied and spilled energy costs noises (french : bruits sur la defaillance
         // positive et negatives) ... references to the random number generators
-        auto& randomUnsupplied = study.runtime->random[Data::seedUnsuppliedEnergyCosts];
-        auto& randomSpilled = study.runtime->random[Data::seedSpilledEnergyCosts];
+        auto& randomUnsupplied = study.runtime.random[Data::seedUnsuppliedEnergyCosts];
+        auto& randomSpilled = study.runtime.random[Data::seedSpilledEnergyCosts];
 
         int currentSpilledEnergySeed = study.parameters.seed[Data::seedSpilledEnergyCosts];
         int defaultSpilledEnergySeed = Data::antaresSeedDefaultValue
@@ -786,7 +784,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
           }); // each area
 
         // ... Hydro costs noises ...
-        auto& randomHydro = study.runtime->random[Data::seedHydroCosts];
+        auto& randomHydro = study.runtime.random[Data::seedHydroCosts];
 
         Data::PowerFluctuations powerFluctuations = study.parameters.power.fluctuations;
         switch (powerFluctuations)
