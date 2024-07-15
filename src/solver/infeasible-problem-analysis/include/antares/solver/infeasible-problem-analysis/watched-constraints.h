@@ -105,7 +105,8 @@ public:
     std::regex constraintsFilter();
 
 private:
-    std::map<std::string, std::function<std::unique_ptr<WatchedConstraint>(const std::string&, const double)>>
+    std::map<std::string,
+             std::function<std::unique_ptr<WatchedConstraint>(const std::string&, const double)>>
       regex_to_ctypes_;
 };
 
