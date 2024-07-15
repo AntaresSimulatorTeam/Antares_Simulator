@@ -64,10 +64,10 @@ bool compValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<Watch
 
 void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
-    std::stable_sort(constraints_.begin(), constraints_.end(), compTypeName);
-    auto first_duplicate = std::unique(constraints_.begin(), constraints_.end(), sameType);
-    constraints_.erase(first_duplicate, constraints_.end());
-    std::sort(constraints_.begin(), constraints_.end(), compValue);
+    std::ranges::stable_sort(constraints_, compTypeName);
+    auto duplicates = std::ranges::unique(constraints_, sameType);
+    constraints_.erase(duplicates.begin(), duplicates.end());
+    std::ranges::sort(constraints_, compValue);
 }
 
 void InfeasibleProblemReport::logSuspiciousConstraints()
