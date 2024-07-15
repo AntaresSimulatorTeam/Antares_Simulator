@@ -61,7 +61,7 @@ private:
 
     std::vector<operations_research::MPConstraint*> constraintsToWatch_;
     std::vector<const operations_research::MPVariable*> slackVariables_;
-    const unsigned int nbMaxSlackVarsToKeep = 10;
+    static const unsigned int nbMaxSlackVarsToKeep = 10;
 };
 
 } // namespace Antares::Optimization
