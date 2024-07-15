@@ -33,7 +33,7 @@ bool Study::importTimeseriesIntoInput()
 {
     // Special case: some thermal clusters may force TS generation
     const bool importThermal = parameters.haveToImport(timeSeriesThermal)
-                               && runtime->thermalTSRefresh;
+                               && runtime.thermalTSRefresh;
     // Something to import ?
     if ((parameters.exportTimeSeriesInInput && parameters.timeSeriesToGenerate) || importThermal)
     {

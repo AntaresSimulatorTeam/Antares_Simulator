@@ -139,8 +139,6 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
     BOOST_CHECK(findDisabledCluster("Cluster2") != sts.end());
 
-    study->initializeRuntimeInfos(); // This should remove all disabled short-term storages
-
     // Check that only "Cluster1" is found
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
     BOOST_CHECK(findDisabledCluster("Cluster2") == sts.end());

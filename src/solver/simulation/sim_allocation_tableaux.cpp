@@ -29,9 +29,9 @@ using namespace Antares;
 
 void SIM_AllocationTableaux(const Data::Study& study)
 {
-    transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
+    transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime.interconnectionsCount());
 
-    for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
+    for (uint i = 0; i != study.runtime.interconnectionsCount(); i++)
     {
         transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
     }

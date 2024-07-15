@@ -235,13 +235,13 @@ static inline uint GetRangeLimit(const Data::Study& study, int precisionLevel, i
     switch (precisionLevel)
     {
     case Category::hourly:
-        return study.runtime->rangeLimits.hour[index];
+        return study.runtime.rangeLimits.hour[index];
     case Category::daily:
-        return study.runtime->rangeLimits.day[index];
+        return study.runtime.rangeLimits.day[index];
     case Category::weekly:
-        return study.runtime->rangeLimits.week[index];
+        return study.runtime.rangeLimits.week[index];
     case Category::monthly:
-        return study.runtime->rangeLimits.month[index];
+        return study.runtime.rangeLimits.month[index];
     case Category::annual:
         return 0;
     default:
@@ -360,7 +360,7 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
             if (++error == 1)
             {
                 // We should disabled errors on NaN if the quadratic optimization has failed
-                if (not data.study.runtime->quadraticOptimizationHasFailed)
+                if (not data.study.runtime.quadraticOptimizationHasFailed)
                 {
                     logs.error() << "'NaN' value detected";
                 }
@@ -608,7 +608,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
 {
     // Main Header
     {
-        const unsigned int nbLinks = data.study.runtime->interconnectionsCount();
+        const unsigned int nbLinks = data.study.runtime.interconnectionsCount();
         buffer.append("\tdigest\n\tVARIABLES\tAREAS\tLINKS\n")
           .append("\t")
           .append(std::to_string(data.columnIndex))

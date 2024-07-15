@@ -224,12 +224,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         writeComment(study);
     }
 
-    // Runtime data dedicated for the solver
-    if (!study.initializeRuntimeInfos())
-    {
-        throw Error::RuntimeInfoInitialization();
-    }
-
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
 
@@ -391,7 +385,7 @@ void Application::execute()
     pStudy->computePThetaInfForThermalClusters();
 
     // Run the simulation
-    switch (pStudy->runtime->mode)
+    switch (pStudy->runtime.mode)
     {
     case Data::SimulationMode::Economy:
     case Data::SimulationMode::Expansion:

@@ -25,10 +25,12 @@
 #include <vector>
 
 #include <antares/mersenne-twister/mersenne-twister.h>
-#include "antares/study/study.h"
+#include <antares/study/parameters.h>
 
 namespace Antares::Data
 {
+
+class Study;
 
 enum RangeLimitsIndex
 {

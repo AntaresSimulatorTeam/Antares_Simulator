@@ -63,7 +63,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
     Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
 
-    auto& studyRTI = *(study.runtime);
+    auto& studyRTI = study.runtime;
     auto& calendar = study.calendar;
 
     uint DIM = MONTHS_PER_YEAR * study.areas.size();

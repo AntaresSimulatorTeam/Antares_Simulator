@@ -56,7 +56,7 @@ void addScratchpadToEachArea(Study& study)
     {
         for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i)
         {
-            area->scratchpad.emplace_back(*study.runtime, *area);
+            area->scratchpad.emplace_back(study.runtime, *area);
         }
     }
 }
@@ -188,7 +188,6 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 
 void SimulationHandler::create()
 {
-    study_.initializeRuntimeInfos();
     addScratchpadToEachArea(study_);
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,

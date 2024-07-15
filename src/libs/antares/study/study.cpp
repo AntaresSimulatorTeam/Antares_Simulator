@@ -104,7 +104,6 @@ Study::~Study()
 
 void Study::clear()
 {
-    runtime.reset();
     FreeAndNil(scenarioRules);
     FreeAndNil(uiinfo);
 
@@ -499,12 +498,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // enabled.
     //		 Useful for RAM estimation.
     maxNbYearsInParallel_save = maxNbYearsInParallel;
-}
-
-bool Study::initializeRuntimeInfos()
-{
-    runtime = std::make_unique<StudyRuntimeInfos>();
-    return (runtime != nullptr);
 }
 
 void Study::performTransformationsBeforeLaunchingSimulation()
@@ -1162,7 +1155,7 @@ struct TS final
 
 void Study::initializeProgressMeter(bool tsGeneratorOnly)
 {
-    uint years = tsGeneratorOnly ? 1 : (runtime->rangeLimits.year[rangeEnd] + 1);
+    uint years = tsGeneratorOnly ? 1 : (runtime.rangeLimits.year[rangeEnd] + 1);
     assert(runtime);
 
     int ticksPerYear = 0;
@@ -1174,7 +1167,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         // Output - Areas
         ticksPerOutput += (int)areas.size();
         // Output - Links
-        ticksPerOutput += (int)runtime->interconnectionsCount();
+        ticksPerOutput += (int)runtime.interconnectionsCount();
         // Output - digest
         ticksPerOutput += 1;
         ticksPerYear = 1;
@@ -1223,11 +1216,11 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         }
         if (TS<timeSeriesThermal>::IsNeeded(*this, y))
         {
-            n = runtime->thermalPlantTotalCount;
+            n = runtime.thermalPlantTotalCount;
             if (0 != (timeSeriesThermal & parameters.timeSeriesToArchive))
             {
-                n += (int)runtime->thermalPlantTotalCount;
-                n += (int)runtime->thermalPlantTotalCountMustRun;
+                n += (int)runtime.thermalPlantTotalCount;
+                n += (int)runtime.thermalPlantTotalCountMustRun;
             }
             progression.add(y, Solver::Progression::sectTSGThermal, n);
         }
