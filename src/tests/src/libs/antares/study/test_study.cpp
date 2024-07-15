@@ -139,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
     BOOST_CHECK(findDisabledCluster("Cluster2") != sts.end());
 
-    study->runtime.loadFromStudy(*study);
+    study->initializeRuntimeInfos();
 
     // Check that only "Cluster1" is found
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());

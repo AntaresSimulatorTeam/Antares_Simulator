@@ -40,6 +40,7 @@ void initializeStudy(Study& study)
 {
     study.parameters.derated = false;
 
+    study.initializeRuntimeInfos();
     study.runtime.rangeLimits.year[rangeBegin] = 0;
     study.runtime.rangeLimits.year[rangeEnd] = 0;
     study.runtime.rangeLimits.year[rangeCount] = 1;

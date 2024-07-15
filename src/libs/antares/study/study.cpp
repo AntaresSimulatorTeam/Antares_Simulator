@@ -500,6 +500,11 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     maxNbYearsInParallel_save = maxNbYearsInParallel;
 }
 
+bool Study::initializeRuntimeInfos()
+{
+    return runtime.loadFromStudy(*this);
+}
+
 void Study::performTransformationsBeforeLaunchingSimulation()
 {
 // Those computations are also made from the TS-Generator (ts-generator/xcast/xcast.cpp)

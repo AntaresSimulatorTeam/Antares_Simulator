@@ -330,6 +330,11 @@ public:
     void performTransformationsBeforeLaunchingSimulation();
 
     /*!
+    ** \brief Initialize runtime informations required by the solver
+    */
+    bool initializeRuntimeInfos();
+
+    /*!
     ** \brief Prepare the output where the results of the simulation will be written
     */
     void prepareOutput();
