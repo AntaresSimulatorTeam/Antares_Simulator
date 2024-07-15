@@ -37,7 +37,7 @@
 #include <yuni/core/getopt.h>
 #include <antares/study/finder.h>
 #include <antares/args/args_to_utf8.h>
-#include <antares/antares/version.h>
+#include <antares/study/version.h>
 #include <antares/locale/locale.h>
 #include <antares/solver/utils/ortools_utils.h>
 
