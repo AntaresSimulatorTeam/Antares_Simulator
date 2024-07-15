@@ -1,4 +1,3 @@
-
 #include "antares/solver/infeasible-problem-analysis/watched-constraints.h"
 
 #include <ranges>
@@ -59,7 +58,7 @@ namespace Antares::Optimization
 {
 
 // --- Generic constraint ---
-WatchedConstraint::WatchedConstraint(const std::string& name, const double slackValue) :
+WatchedConstraint::WatchedConstraint(const std::string& name, const double slackValue):
     slack_value_(slackValue)
 {
     boost::algorithm::split_regex(splitName_, name, boost::regex("::"));
@@ -159,16 +158,18 @@ std::string HydroProduction::infeasibilityCause()
 // --- Constraints factory ---
 ConstraintsFactory::ConstraintsFactory()
 {
-    regex_to_ctypes_ = {{"::hourly::", std::make_unique<HourlyBC, const std::string&, const double>},
-                        {"::daily::", std::make_unique<DailyBC, const std::string&, const double>},
-                        {"::weekly::", std::make_unique<WeeklyBC, const std::string&, const double>},
-                        {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&, const double>},
-                        {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&, const double>},
-                        {"^Level::", std::make_unique<STS, const std::string&, const double>},
-                        {"^HydroPower::", std::make_unique<HydroProduction, const std::string&, const double>}};
+    regex_to_ctypes_ = {
+      {"::hourly::", std::make_unique<HourlyBC, const std::string&, const double>},
+      {"::daily::", std::make_unique<DailyBC, const std::string&, const double>},
+      {"::weekly::", std::make_unique<WeeklyBC, const std::string&, const double>},
+      {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&, const double>},
+      {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&, const double>},
+      {"^Level::", std::make_unique<STS, const std::string&, const double>},
+      {"^HydroPower::", std::make_unique<HydroProduction, const std::string&, const double>}};
 }
 
-std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name, const double value) const
+std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name,
+                                                              const double value) const
 {
     auto it = std::ranges::find_if(regex_to_ctypes_,
                                    [&name](auto& pair)
