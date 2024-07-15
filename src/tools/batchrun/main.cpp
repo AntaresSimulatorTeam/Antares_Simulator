@@ -38,6 +38,7 @@
 #include <antares/study/finder.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/study/version.h>
+#include <antares/version.h>
 #include <antares/locale.h>
 #include <antares/solver/utils/ortools_utils.h>
 
@@ -260,7 +261,7 @@ int main(int argc, char* argv[])
 
             // The folder that contains the solver
             String dirname;
-            IO::parent_path(dirname, solver);
+            IO::parentPath(dirname, solver);
 
             String cmd;
 
