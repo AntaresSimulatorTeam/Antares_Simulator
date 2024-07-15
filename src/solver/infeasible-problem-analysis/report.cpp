@@ -24,8 +24,6 @@
 #include <regex>
 #include <typeindex>
 
-#include <antares/logs/logs.h>
-
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
@@ -90,7 +88,7 @@ void InfeasibleProblemReport::storeSuspiciousConstraints()
 void InfeasibleProblemReport::storeInfeasibilityCauses()
 {
     filterConstraintsToOneByType();
-    Antares::logs.error() << "Possible causes of infeasibility:";
+    report_.push_back("Possible causes of infeasibility:");
     for (const auto& c: constraints_)
     {
         report_.push_back(c->infeasibilityCause());
