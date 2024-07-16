@@ -21,29 +21,29 @@
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE unfeasible_problem_analyzer
 
-#include <ortools/linear_solver/linear_solver.h>
-
 #include <cstdio>
+#include <ortools/linear_solver/linear_solver.h>
 #include <ranges>
+
 #include <boost/test/data/dataset.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
+#include "antares/solver/infeasible-problem-analysis/report.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
-#include "antares/solver/infeasible-problem-analysis/report.h"
 
 namespace bdata = boost::unit_test::data;
 
 using namespace operations_research;
 
 using Antares::Optimization::ConstraintSlackAnalysis;
+using Antares::Optimization::InfeasibleProblemReport;
 using Antares::Optimization::UnfeasibilityAnalysis;
 using Antares::Optimization::UnfeasiblePbAnalyzer;
 using Antares::Optimization::VariableBounds;
 using Antares::Optimization::VariablesBoundsConsistency;
-using Antares::Optimization::InfeasibleProblemReport;
 
 bool variableEquals(const VariableBounds& lhs, const VariableBounds& rhs)
 {
@@ -142,10 +142,10 @@ void addOneVarConstraintToProblem(MPSolver* problem,
 std::unique_ptr<MPSolver> createProblemWith_n_violatedConstraints(const int n)
 {
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-    for (auto i : std::ranges::iota_view(1, n + 1)) // From 1 to n included
+    for (auto i: std::ranges::iota_view(1, n + 1)) // From 1 to n included
     {
         char name[32];
-        std::sprintf(name, "BC-name-%d::hourly::hour<%d>", i, 5*i);
+        std::sprintf(name, "BC-name-%d::hourly::hour<%d>", i, 5 * i);
         // Make a constraint that can never be satisfied, of type : var > A,
         // where : bound_inf(var) = 0, bound_sup(var) = 1 and A > 1.
         addOneVarConstraintToProblem(problem.get(), name, 0, 1, i + 2);
@@ -281,7 +281,6 @@ BOOST_AUTO_TEST_CASE(analysis_slack_variables_are_ordered_and_limited_to_10)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-
 BOOST_AUTO_TEST_SUITE(slack_variables_report)
 
 BOOST_AUTO_TEST_CASE(constraints_associated_to_all_incoming_slack_vars_are_reported)
@@ -292,8 +291,10 @@ BOOST_AUTO_TEST_CASE(constraints_associated_to_all_incoming_slack_vars_are_repor
     std::vector<const operations_research::MPVariable*> slackVariables;
     slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-1::hourly::hour<36>::low"));
     slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-2::hourly::hour<65>::up"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<25>::low"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "HydroPower::area<some-area>::week<45>::up"));
+    slackVariables.push_back(
+      problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<25>::low"));
+    slackVariables.push_back(
+      problem->MakeNumVar(0, 1, "HydroPower::area<some-area>::week<45>::up"));
 
     InfeasibleProblemReport report(slackVariables);
     report.storeSuspiciousConstraints();
@@ -313,9 +314,17 @@ BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_salck_value)
 
     addOneVarConstraintToProblem(problem.get(), "HydroPower::area<cz00>::week<0>", 0., 1., 2.);
     addOneVarConstraintToProblem(problem.get(), "BC-1::hourly::hour<36>", 0., 1., 3.);
-    addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<25>", 0., 1., 4.);
+    addOneVarConstraintToProblem(problem.get(),
+                                 "FictiveLoads::area<some-area>::hour<25>",
+                                 0.,
+                                 1.,
+                                 4.);
     addOneVarConstraintToProblem(problem.get(), "BC-2::hourly::hour<65>", 0., 1., 5.);
-    addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<56>", 0., 1., 6.);
+    addOneVarConstraintToProblem(problem.get(),
+                                 "FictiveLoads::area<some-area>::hour<56>",
+                                 0.,
+                                 1.,
+                                 6.);
 
     BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
 

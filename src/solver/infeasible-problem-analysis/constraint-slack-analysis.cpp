@@ -138,7 +138,8 @@ bool ConstraintSlackAnalysis::anySlackVariableNonZero()
                                [&](auto& v) { return v->solution_value() > thresholdNonZero; });
 }
 
-std::vector<const operations_research::MPVariable*>& ConstraintSlackAnalysis::largestSlackVariables()
+std::vector<const operations_research::MPVariable*>&
+ConstraintSlackAnalysis::largestSlackVariables()
 {
     return slackVariables_;
 }
