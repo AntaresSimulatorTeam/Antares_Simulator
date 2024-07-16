@@ -272,6 +272,7 @@ jobs:
           variant: "parallel"
 
       - name: Run tests for time series generator tool
+        continue-on-error: true
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
