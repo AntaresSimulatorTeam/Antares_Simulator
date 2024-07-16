@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <regex>
+#include <typeindex>
 
 #include <antares/logs/logs.h>
 
@@ -47,14 +48,16 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
     }
 }
 
-bool compTypeName(const std::shared_ptr<WatchedConstraint> a, const std::shared_ptr<WatchedConstraint> b)
+bool compTypeName(const std::shared_ptr<WatchedConstraint> a,
+                  const std::shared_ptr<WatchedConstraint> b)
 {
-    return typeid(*a).name() < typeid(*b).name();
+    return std::type_index(typeid(*a)) < std::type_index(typeid(*b));
 }
 
-bool sameType(const std::shared_ptr<WatchedConstraint> a, const std::shared_ptr<WatchedConstraint> b)
+bool sameType(const std::shared_ptr<WatchedConstraint> a,
+              const std::shared_ptr<WatchedConstraint> b)
 {
-    return typeid(*a).name() == typeid(*b).name();
+    return std::type_index(typeid(*a)) == std::type_index(typeid(*b));
 }
 
 bool compValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
