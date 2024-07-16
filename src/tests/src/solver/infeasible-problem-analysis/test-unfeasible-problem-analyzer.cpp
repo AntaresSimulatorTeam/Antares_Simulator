@@ -306,52 +306,32 @@ BOOST_AUTO_TEST_CASE(constraints_associated_to_all_incoming_slack_vars_are_repor
     BOOST_CHECK_EQUAL(reportLogs[4], "Hydro weekly production at area 'some-area'");
 }
 
-BOOST_AUTO_TEST_CASE(_4_constraints_but_only_2_infeasibility_causes_reported)
+BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_salck_value)
 {
     // The problem is needed only to create variables, impossible otherwise.
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
 
-    std::vector<const operations_research::MPVariable*> slackVariables;
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-1::hourly::hour<36>"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "BC-2::hourly::hour<65>"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<25>"));
-    slackVariables.push_back(problem->MakeNumVar(0, 1, "FictiveLoads::area<some-area>::hour<56>"));
+    addOneVarConstraintToProblem(problem.get(), "HydroPower::area<cz00>::week<0>", 0., 1., 2.);
+    addOneVarConstraintToProblem(problem.get(), "BC-1::hourly::hour<36>", 0., 1., 3.);
+    addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<25>", 0., 1., 4.);
+    addOneVarConstraintToProblem(problem.get(), "BC-2::hourly::hour<65>", 0., 1., 5.);
+    addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<56>", 0., 1., 6.);
 
-    InfeasibleProblemReport report(slackVariables);
+    BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
+
+    ConstraintSlackAnalysis analysis;
+    analysis.run(problem.get());
+    BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());
+
+    InfeasibleProblemReport report(analysis.largestSlackVariables());
     report.storeInfeasibilityCauses();
     auto reportLogs = report.getLogs();
 
-    BOOST_CHECK_EQUAL(reportLogs.size(), 3); // Expecting 3 lines in the report
-    BOOST_CHECK(std::ranges::find(reportLogs, "* Hourly binding constraints.") != reportLogs.end());
-    BOOST_CHECK(std::ranges::find(reportLogs, "* Last resort shedding status.") != reportLogs.end());
+    BOOST_CHECK_EQUAL(reportLogs.size(), 4); // Expecting 4 lines in the report
+    BOOST_CHECK_EQUAL(reportLogs[0], "Possible causes of infeasibility:");
+    BOOST_CHECK_EQUAL(reportLogs[1], "* Last resort shedding status.");
+    BOOST_CHECK_EQUAL(reportLogs[2], "* Hourly binding constraints.");
+    BOOST_CHECK_EQUAL(reportLogs[3], "* impossible to generate exactly the weekly hydro target");
 }
-
-    BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_salck_value)
-    {
-        // The problem is needed only to create variables, impossible otherwise.
-        std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-
-        addOneVarConstraintToProblem(problem.get(), "HydroPower::area<cz00>::week<0>", 0., 1., 2.);
-        addOneVarConstraintToProblem(problem.get(), "BC-1::hourly::hour<36>", 0., 1., 3.);
-        addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<25>", 0., 1., 4.);
-        addOneVarConstraintToProblem(problem.get(), "BC-2::hourly::hour<65>", 0., 1., 5.);
-        addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<56>", 0., 1., 6.);
-
-        BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
-
-        ConstraintSlackAnalysis analysis;
-        analysis.run(problem.get());
-        BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());
-
-        InfeasibleProblemReport report(analysis.largestSlackVariables());
-        report.storeInfeasibilityCauses();
-        auto reportLogs = report.getLogs();
-
-        BOOST_CHECK_EQUAL(reportLogs.size(), 4); // Expecting 4 lines in the report
-        BOOST_CHECK_EQUAL(reportLogs[0], "Possible causes of infeasibility:");
-        BOOST_CHECK_EQUAL(reportLogs[1], "* Last resort shedding status.");
-        BOOST_CHECK_EQUAL(reportLogs[2], "* Hourly binding constraints.");
-        BOOST_CHECK_EQUAL(reportLogs[3], "* impossible to generate exactly the weekly hydro target");
-    }
 
 BOOST_AUTO_TEST_SUITE_END()
