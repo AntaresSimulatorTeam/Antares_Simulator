@@ -152,13 +152,4 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
     BOOST_CHECK_EQUAL(actualOutput_suffix, expectedOutput_suffix);
 }
 
-BOOST_FIXTURE_TEST_CASE(check_filename_limit, Fixture)
-{
-    auto s = std::make_unique<Study>();
-    s->folder = "abc";
-    BOOST_CHECK(s->checkForFilenameLimits(true));
-    BOOST_CHECK(s->checkForFilenameLimits(true, "abc"));
-    BOOST_CHECK(s->checkForFilenameLimits(false, "abc"));
-}
-
 BOOST_AUTO_TEST_SUITE_END()

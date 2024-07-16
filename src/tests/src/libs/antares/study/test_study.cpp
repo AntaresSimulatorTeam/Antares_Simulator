@@ -291,4 +291,14 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     BOOST_CHECK(!v.fromString("4.5"));
     BOOST_CHECK(v == StudyVersion::unknown());
 }
+
+BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
+{
+    auto s = std::make_unique<Study>();
+    s->folder = "abc";
+    BOOST_CHECK(s->checkForFilenameLimits(true));
+    BOOST_CHECK(s->checkForFilenameLimits(true, "abc"));
+    BOOST_CHECK(s->checkForFilenameLimits(false, "abc"));
+}
+
 BOOST_AUTO_TEST_SUITE_END() // version
