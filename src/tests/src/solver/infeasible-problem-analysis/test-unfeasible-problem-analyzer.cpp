@@ -307,7 +307,7 @@ BOOST_AUTO_TEST_CASE(constraints_associated_to_all_incoming_slack_vars_are_repor
     BOOST_CHECK_EQUAL(reportLogs[4], "Hydro weekly production at area 'some-area'");
 }
 
-BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_salck_value)
+BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_slack_value)
 {
     // The problem is needed only to create variables, impossible otherwise.
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
