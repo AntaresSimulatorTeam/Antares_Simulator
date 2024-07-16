@@ -31,10 +31,15 @@
 
 using namespace operations_research;
 
-static bool compareSlackSolutions(const MPVariable* a, const MPVariable* b)
+namespace
+{
+bool compareSlackSolutions(const MPVariable* a, const MPVariable* b)
 {
     return a->solution_value() > b->solution_value();
 }
+
+constexpr unsigned int nbMaxSlackVarsToKeep = 10;
+} // namespace
 
 namespace Antares::Optimization
 {
