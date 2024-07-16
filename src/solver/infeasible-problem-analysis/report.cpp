@@ -48,7 +48,7 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
     }
 }
 
-bool compTypeName(const std::shared_ptr<WatchedConstraint> a,
+bool lessTypeName(const std::shared_ptr<WatchedConstraint> a,
                   const std::shared_ptr<WatchedConstraint> b)
 {
     return std::type_index(typeid(*a)) < std::type_index(typeid(*b));
@@ -60,22 +60,22 @@ bool sameType(const std::shared_ptr<WatchedConstraint> a,
     return std::type_index(typeid(*a)) == std::type_index(typeid(*b));
 }
 
-bool compValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
+bool greaterValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
 {
-    return a->slackValue() < b->slackValue();
+    return a->slackValue() > b->slackValue();
 }
 
 void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
     // 1. Grouping constraints by C++ type (inside a group, order of instances remains unchanged)
-    std::ranges::stable_sort(constraints_, compTypeName);
+    std::ranges::stable_sort(constraints_, lessTypeName);
     // 2. Keeping the first instances of each group, and rejecting others (= duplicates) to the end
     // of vector
     auto duplicates = std::ranges::unique(constraints_, sameType);
     // 3. Removing trailing duplicates
     constraints_.erase(duplicates.begin(), duplicates.end());
-    // 4. Sorting remaining constraints by slack value
-    std::ranges::sort(constraints_, compValue);
+    // 4. Sorting remaining constraints by slack value (in descending order)
+    std::ranges::sort(constraints_, greaterValue);
 }
 
 void InfeasibleProblemReport::logSuspiciousConstraints()
