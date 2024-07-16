@@ -87,6 +87,72 @@ private:
     bool& hasPrinted_;
 };
 
+/*!
+ * Creates a 2 problems (feasible and infeasible) with 2 variables linked by 1 constraint:
+ *  - Variable 1 must be greater than 1
+ *  - Variable 2 must be smaller than -1
+ *  - For infeasible problem, constraint enforces that variable 2 is greater than variable 1
+ */
+std::unique_ptr<MPSolver> createProblem(const std::string& constraintName)
+{
+    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+    const double infinity = problem->infinity();
+    problem->MakeNumVar(1, infinity, "var1");
+    problem->MakeNumVar(-infinity, -1, "var2");
+    auto constraint = problem->MakeRowConstraint(constraintName);
+    constraint->SetBounds(0, infinity);
+    return problem;
+}
+
+std::unique_ptr<MPSolver> createFeasibleProblem(const std::string& constraintName)
+{
+    auto problem = createProblem(constraintName);
+    auto constraint = problem->LookupConstraintOrNull(constraintName);
+    auto var1 = problem->LookupVariableOrNull("var1");
+    auto var2 = problem->LookupVariableOrNull("var2");
+    constraint->SetCoefficient(var1, 1);
+    constraint->SetCoefficient(var2, -1);
+    return problem;
+}
+
+std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintName)
+{
+    auto problem = createProblem(constraintName);
+    auto constraint = problem->LookupConstraintOrNull(constraintName);
+    auto var1 = problem->LookupVariableOrNull("var1");
+    auto var2 = problem->LookupVariableOrNull("var2");
+    constraint->SetCoefficient(var1, -1);
+    constraint->SetCoefficient(var2, 1);
+    return problem;
+}
+
+void addOneVarConstraintToProblem(MPSolver* problem,
+                                  const std::string& name,
+                                  const double& varLowBnd,
+                                  const double& varUpBnd,
+                                  const double& ConstLowBnd)
+{
+    std::string varName = "slack-for-" + name;
+    auto* var = problem->MakeNumVar(varLowBnd, varUpBnd, varName);
+    auto* constraint = problem->MakeRowConstraint(name);
+    constraint->SetCoefficient(var, 1);
+    constraint->SetBounds(ConstLowBnd, problem->infinity());
+}
+
+std::unique_ptr<MPSolver> createProblemWith_n_violatedConstraints(const int n)
+{
+    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+    for (auto i : std::ranges::iota_view(1, n + 1)) // From 1 to n included
+    {
+        char name[32];
+        std::sprintf(name, "BC-name-%d::hourly::hour<%d>", i, 5*i);
+        // Make a constraint that can never be satisfied, of type : var > A,
+        // where : bound_inf(var) = 0, bound_sup(var) = 1 and A > 1.
+        addOneVarConstraintToProblem(problem.get(), name, 0, 1, i + 2);
+    }
+    return problem;
+}
+
 BOOST_AUTO_TEST_SUITE(general_unfeasible_problem_analyzer)
 
 BOOST_AUTO_TEST_CASE(analyzer_should_call_analysis_and_print_detected_issues)
@@ -142,68 +208,6 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(slack_variables_analyzer)
 
-/*!
- * Creates a 2 problems (feasible and infeasible) with 2 variables linked by 1 constraint:
- *  - Variable 1 must be greater than 1
- *  - Variable 2 must be smaller than -1
- *  - For infeasible problem, constraint enforces that variable 2 is greater than variable 1
- */
-std::unique_ptr<MPSolver> createProblem(const std::string& constraintName)
-{
-    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-    const double infinity = problem->infinity();
-    problem->MakeNumVar(1, infinity, "var1");
-    problem->MakeNumVar(-infinity, -1, "var2");
-    auto constraint = problem->MakeRowConstraint(constraintName);
-    constraint->SetBounds(0, infinity);
-    return problem;
-}
-
-std::unique_ptr<MPSolver> createFeasibleProblem(const std::string& constraintName)
-{
-    auto problem = createProblem(constraintName);
-    auto constraint = problem->LookupConstraintOrNull(constraintName);
-    auto var1 = problem->LookupVariableOrNull("var1");
-    auto var2 = problem->LookupVariableOrNull("var2");
-    constraint->SetCoefficient(var1, 1);
-    constraint->SetCoefficient(var2, -1);
-    return problem;
-}
-
-std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintName)
-{
-    auto problem = createProblem(constraintName);
-    auto constraint = problem->LookupConstraintOrNull(constraintName);
-    auto var1 = problem->LookupVariableOrNull("var1");
-    auto var2 = problem->LookupVariableOrNull("var2");
-    constraint->SetCoefficient(var1, -1);
-    constraint->SetCoefficient(var2, 1);
-    return problem;
-}
-
-void addInfeasibleConstraintToProblem(MPSolver* problem, const std::string& name, unsigned int numId)
-{
-    // Make a constraint that can never be satisfied, of type : var > A,
-    // where : bound_inf(var) = 0, bound_sup(var) = 1 and A > 1.
-    std::string varName = "var" + std::to_string(numId);
-    auto* var = problem->MakeNumVar(0, 1, varName); // var in [0, 1]
-    auto* constraint = problem->MakeRowConstraint(name);
-    constraint->SetCoefficient(var, 1);
-    constraint->SetBounds(numId + 2, problem->infinity()); // A = numId + 2 > 1 necessarily
-}
-
-std::unique_ptr<MPSolver> create_n_constraintsViolationsProblem(const int n)
-{
-    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-    for (auto i : std::ranges::iota_view(1, n + 1)) // From 1 to n included
-    {
-        char name[32];
-        std::sprintf(name, "BC-name-%d::hourly::hour<%d>", i, 5*i);
-        addInfeasibleConstraintToProblem(problem.get(), name, i);
-    }
-    return problem;
-}
-
 static const std::string validConstraintNames[] = {"BC-name-1::hourly::hour<36>",
                                                    "BC-name-2::daily::day<67>",
                                                    "BC-name-3::weekly::week<12>",
@@ -246,7 +250,7 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
 
 BOOST_AUTO_TEST_CASE(analysis_slack_variables_are_ordered)
 {
-    std::unique_ptr<MPSolver> problem = create_n_constraintsViolationsProblem(3);
+    std::unique_ptr<MPSolver> problem = createProblemWith_n_violatedConstraints(3);
     BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
 
     ConstraintSlackAnalysis analysis;
@@ -262,7 +266,7 @@ BOOST_AUTO_TEST_CASE(analysis_slack_variables_are_ordered)
 
 BOOST_AUTO_TEST_CASE(analysis_slack_variables_are_ordered_and_limited_to_10)
 {
-    std::unique_ptr<MPSolver> problem = create_n_constraintsViolationsProblem(15);
+    std::unique_ptr<MPSolver> problem = createProblemWith_n_violatedConstraints(15);
     BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
 
     ConstraintSlackAnalysis analysis;
@@ -321,5 +325,33 @@ BOOST_AUTO_TEST_CASE(_4_constraints_but_only_2_infeasibility_causes_reported)
     BOOST_CHECK(std::ranges::find(reportLogs, "* Hourly binding constraints.") != reportLogs.end());
     BOOST_CHECK(std::ranges::find(reportLogs, "* Last resort shedding status.") != reportLogs.end());
 }
+
+    BOOST_AUTO_TEST_CASE(Infeasibility_causes_are_unique_and_sorted_by_salck_value)
+    {
+        // The problem is needed only to create variables, impossible otherwise.
+        std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+
+        addOneVarConstraintToProblem(problem.get(), "HydroPower::area<cz00>::week<0>", 0., 1., 2.);
+        addOneVarConstraintToProblem(problem.get(), "BC-1::hourly::hour<36>", 0., 1., 3.);
+        addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<25>", 0., 1., 4.);
+        addOneVarConstraintToProblem(problem.get(), "BC-2::hourly::hour<65>", 0., 1., 5.);
+        addOneVarConstraintToProblem(problem.get(), "FictiveLoads::area<some-area>::hour<56>", 0., 1., 6.);
+
+        BOOST_CHECK(problem->Solve() == MPSolver::INFEASIBLE);
+
+        ConstraintSlackAnalysis analysis;
+        analysis.run(problem.get());
+        BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());
+
+        InfeasibleProblemReport report(analysis.largestSlackVariables());
+        report.storeInfeasibilityCauses();
+        auto reportLogs = report.getLogs();
+
+        BOOST_CHECK_EQUAL(reportLogs.size(), 4); // Expecting 4 lines in the report
+        BOOST_CHECK_EQUAL(reportLogs[0], "Possible causes of infeasibility:");
+        BOOST_CHECK_EQUAL(reportLogs[1], "* Last resort shedding status.");
+        BOOST_CHECK_EQUAL(reportLogs[2], "* Hourly binding constraints.");
+        BOOST_CHECK_EQUAL(reportLogs[3], "* impossible to generate exactly the weekly hydro target");
+    }
 
 BOOST_AUTO_TEST_SUITE_END()
