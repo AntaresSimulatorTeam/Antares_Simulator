@@ -64,9 +64,13 @@ bool compValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<Watch
 
 void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
+    // 1. Grouping constraints by C++ type (inside a group, order of instances remains unchanged)
     std::ranges::stable_sort(constraints_, compTypeName);
+    // 2. Keeping the first instances of each group, and rejecting others (= duplicates) to the end of vector
     auto duplicates = std::ranges::unique(constraints_, sameType);
+    // 3. Removing trailing duplicates
     constraints_.erase(duplicates.begin(), duplicates.end());
+    // 4. Sorting remaining constraints by slack value
     std::ranges::sort(constraints_, compValue);
 }
 
