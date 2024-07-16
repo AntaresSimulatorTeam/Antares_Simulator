@@ -54,20 +54,6 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-static std::string availableOrToolsSolversString()
-{
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-    std::string availableSolverListStr;
-    for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
-    {
-        availableSolverListStr += *it + ";";
-    }
-    // Remove last semicolumn
-    if (!availableSolverListStr.empty())
-        availableSolverListStr.pop_back();
-    return availableSolverListStr;
-}
-
 std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                                              Antares::Data::StudyLoadOptions& options)
 {
