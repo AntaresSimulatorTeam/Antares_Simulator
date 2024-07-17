@@ -246,7 +246,7 @@ void XCast::allocateTemporaryData()
 
     Allocator<Yuni::Logs::Verbosity::Debug::enabled> m;
 
-    A = m.allocate<float>(p);
+    A.resize(p);
     B = m.allocate<float>(p);
     G = m.allocate<float>(p);
     D = m.allocate<float>(p);
@@ -330,7 +330,6 @@ void XCast::destroyTemporaryData()
         delete[] DATL;
         delete[] CORR;
         delete[] FO;
-        delete[] A;
         delete[] B;
         delete[] G;
         delete[] D;

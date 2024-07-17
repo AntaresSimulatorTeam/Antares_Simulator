@@ -195,7 +195,7 @@ private:
     bool pAccuracyOnCorrelation;
     bool All_normal; // all processes are Normal
 
-    float* A; // les variables de A à CO sont des vues de ALPH à CORR pour un mois particulier
+    std::vector<float> A; // les variables de A à CO sont des vues de ALPH à CORR pour un mois particulier
     float* B;
     float* G;
     float* D;
