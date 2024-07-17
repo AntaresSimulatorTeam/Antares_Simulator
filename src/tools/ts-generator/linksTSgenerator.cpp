@@ -237,8 +237,8 @@ void readPreproTimeSeries(std::vector<LinkTSgenerationParams>& linkList, fs::pat
 // Class methods
 // ==================
 LinksTSgenerator::LinksTSgenerator(Settings& settings):
-    studyFolder_(settings.studyFolder),
     linksFromCmdLineOptions_(settings.linksListToGen),
+    studyFolder_(settings.studyFolder),
     generateTSforAllLinks_(settings.allLinks)
 {
 }

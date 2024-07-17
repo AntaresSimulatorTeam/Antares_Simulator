@@ -44,8 +44,8 @@ public:
         StudyBuilder builder;
         builder.addAreaToStudy("area1");
         builder.addAreaToStudy("area2");
-        builder.setNumberMCyears(1);
         builder.study->initializeRuntimeInfos();
+        builder.setNumberMCyears(1);
         builder.study->parameters.resultFormat = ResultFormat::inMemory;
         builder.study->prepareOutput();
         return std::move(builder.study);

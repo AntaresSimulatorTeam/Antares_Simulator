@@ -78,7 +78,7 @@ SimulationResults APIInternal::execute() const
       study_->parameters.resultFormat, study_->folderOutput, ioQueueService, durationCollector);
     SimulationObserver simulationObserver;
     // Run the simulation
-    switch (study_->runtime->mode)
+    switch (study_->runtime.mode)
     {
     case Data::SimulationMode::Economy:
     case Data::SimulationMode::Expansion:

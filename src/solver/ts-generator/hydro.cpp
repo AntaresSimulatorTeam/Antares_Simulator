@@ -63,7 +63,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
     Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
 
-    auto& studyRTI = *(study.runtime);
+    auto& studyRTI = study.runtime;
     auto& calendar = study.calendar;
 
     uint DIM = MONTHS_PER_YEAR * study.areas.size();
@@ -72,7 +72,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
     Matrix<double> CHSKY;
     CHSKY.reset(DIM, DIM);
 
-    double* QCHOLTemp = new double[DIM];
+    std::vector<double> QCHOLTemp(DIM);
 
     Matrix<double> B;
     B.reset(DIM, DIM);
@@ -84,7 +84,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                                           B.entry,
                                           nullmatrx,
                                           study.areas.size(),
-                                          QCHOLTemp,
+                                          QCHOLTemp.data(),
                                           true))
     {
         throw FatalError("TS Generator: Hydro: Invalid correlation matrix");
@@ -122,7 +122,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                                                 B.entry,
                                                 nullmatrx,
                                                 DIM,
-                                                QCHOLTemp,
+                                                QCHOLTemp.data(),
                                                 true);
         if (r < 1.)
         {
@@ -134,15 +134,13 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         }
     }
 
-    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
+    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp.data());
 
     B.clear();
     CORRE.clear();
+    QCHOLTemp.clear();
 
-    delete[] QCHOLTemp;
-    QCHOLTemp = nullptr;
-
-    double* NORM = new double[DIM];
+    std::vector<double> NORM(DIM);
     for (uint i = 0; i != DIM; ++i)
     {
         NORM[i] = 0.;
@@ -307,8 +305,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
               });
         }
     }
-
-    delete[] NORM;
 
     return true;
 }
