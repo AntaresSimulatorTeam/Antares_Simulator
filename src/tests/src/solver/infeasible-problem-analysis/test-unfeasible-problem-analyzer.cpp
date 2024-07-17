@@ -87,56 +87,32 @@ private:
     bool& hasPrinted_;
 };
 
-/*!
- * Creates a 2 problems (feasible and infeasible) with 2 variables linked by 1 constraint:
- *  - Variable 1 must be greater than 1
- *  - Variable 2 must be smaller than -1
- *  - For infeasible problem, constraint enforces that variable 2 is greater than variable 1
- */
-std::unique_ptr<MPSolver> createProblem(const std::string& constraintName)
+void addOneVarConstraintToProblem(MPSolver* problem,
+                                  const std::string& varName,
+                                  const double& varLowBnd,
+                                  const double& varUpBnd,
+                                  const double& ConstLowBnd)
 {
-    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
-    const double infinity = problem->infinity();
-    problem->MakeNumVar(1, infinity, "var1");
-    problem->MakeNumVar(-infinity, -1, "var2");
-    auto constraint = problem->MakeRowConstraint(constraintName);
-    constraint->SetBounds(0, infinity);
-    return problem;
+    auto* var = problem->MakeNumVar(varLowBnd, varUpBnd, varName);
+    auto* constraint = problem->MakeRowConstraint(varName);
+    constraint->SetCoefficient(var, 1);
+    constraint->SetBounds(ConstLowBnd, problem->infinity());
 }
 
 std::unique_ptr<MPSolver> createFeasibleProblem(const std::string& constraintName)
 {
-    auto problem = createProblem(constraintName);
-    auto constraint = problem->LookupConstraintOrNull(constraintName);
-    auto var1 = problem->LookupVariableOrNull("var1");
-    auto var2 = problem->LookupVariableOrNull("var2");
-    constraint->SetCoefficient(var1, 1);
-    constraint->SetCoefficient(var2, -1);
+    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+    // Following constraint is easily satisfied
+    addOneVarConstraintToProblem(problem.get(), constraintName, 0., 1., 0.);
     return problem;
 }
 
 std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintName)
 {
-    auto problem = createProblem(constraintName);
-    auto constraint = problem->LookupConstraintOrNull(constraintName);
-    auto var1 = problem->LookupVariableOrNull("var1");
-    auto var2 = problem->LookupVariableOrNull("var2");
-    constraint->SetCoefficient(var1, -1);
-    constraint->SetCoefficient(var2, 1);
+    std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
+    // Following constraint cannot be satisfied
+    addOneVarConstraintToProblem(problem.get(), constraintName, 0., 1., 2.);
     return problem;
-}
-
-void addOneVarConstraintToProblem(MPSolver* problem,
-                                  const std::string& name,
-                                  const double& varLowBnd,
-                                  const double& varUpBnd,
-                                  const double& ConstLowBnd)
-{
-    std::string varName = "slack-for-" + name;
-    auto* var = problem->MakeNumVar(varLowBnd, varUpBnd, varName);
-    auto* constraint = problem->MakeRowConstraint(name);
-    constraint->SetCoefficient(var, 1);
-    constraint->SetBounds(ConstLowBnd, problem->infinity());
 }
 
 std::unique_ptr<MPSolver> createProblemWith_n_violatedConstraints(const int n)
