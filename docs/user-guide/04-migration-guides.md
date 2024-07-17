@@ -19,6 +19,9 @@ with XXX in
 - number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
 
 
+### Input
+#### Short term storage: efficiency for withdrawal
+In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
 
 ## v9.1.0
 ### Input 

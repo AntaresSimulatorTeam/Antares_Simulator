@@ -25,19 +25,21 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "antares/study/parts/hydro/finalLevelValidator.h"
+#include "antares/solver/hydro/management/finalLevelValidator.h"
 
-namespace Antares::Data
+namespace Antares::Solver
 {
 
-FinalLevelValidator::FinalLevelValidator(PartHydro& hydro,
-                                         unsigned int areaIndex,
-                                         const AreaName areaName, // gp : to std::string
-                                         double initialLevel,
-                                         double finalLevel,
-                                         const unsigned int year,
-                                         const unsigned int lastSimulationDay,
-                                         const unsigned int firstMonthOfSimulation):
+FinalLevelValidator::FinalLevelValidator(
+  Antares::Data::PartHydro& hydro,
+  unsigned int areaIndex,
+  const Antares::Data::AreaName areaName, // gp : to std::string
+  double initialLevel,
+  double finalLevel,
+  const unsigned int year,
+  const unsigned int lastSimulationDay,
+  const unsigned int firstMonthOfSimulation,
+  HydroErrorsCollector& errorCollector):
     year_(year),
     lastSimulationDay_(lastSimulationDay),
     firstMonthOfSimulation_(firstMonthOfSimulation),
@@ -45,7 +47,8 @@ FinalLevelValidator::FinalLevelValidator(PartHydro& hydro,
     areaIndex_(areaIndex),
     areaName_(areaName),
     initialLevel_(initialLevel),
-    finalLevel_(finalLevel)
+    finalLevel_(finalLevel),
+    errorCollector_(errorCollector)
 {
 }
 
@@ -112,9 +115,10 @@ bool FinalLevelValidator::hydroAllocationStartMatchesSimulation() const
         return true;
     }
 
-    logs.error() << "Year " << year_ + 1 << ", area '" << areaName_
-                 << "' : " << "Hydro allocation must start on the 1st simulation month and "
-                 << "simulation last a whole year";
+    errorCollector_(areaName_) << "Year " << year_ + 1 << ": "
+                               << "Hydro allocation must start on the 1st simulation month and "
+                               << "simulation last a whole year";
+
     return false;
 }
 
@@ -125,10 +129,10 @@ bool FinalLevelValidator::isFinalLevelReachable() const
 
     if ((finalLevel_ - initialLevel_) * reservoirCapacity > totalYearInflows)
     {
-        logs.error() << "Year: " << year_ + 1 << ". Area: " << areaName_
-                     << ". Incompatible total inflows: " << totalYearInflows
-                     << " with initial: " << initialLevel_ << " and final: " << finalLevel_
-                     << " reservoir levels.";
+        errorCollector_(areaName_)
+          << "Year: " << year_ + 1 << " Incompatible total inflows: " << totalYearInflows
+          << " with initial: " << initialLevel_ << " and final: " << finalLevel_
+          << " reservoir levels.";
         return false;
     }
     return true;
@@ -154,10 +158,10 @@ bool FinalLevelValidator::isBetweenRuleCurves() const
 
     if (finalLevel_ < lowLevelLastDay || finalLevel_ > highLevelLastDay)
     {
-        logs.error() << "Year: " << year_ + 1 << ". Area: " << areaName_
-                     << ". Specifed final reservoir level: " << finalLevel_
-                     << " is incompatible with reservoir level rule curve [" << lowLevelLastDay
-                     << " , " << highLevelLastDay << "]";
+        errorCollector_(areaName_)
+          << "Year: " << year_ + 1 << " Specifed final reservoir level: " << finalLevel_
+          << " is incompatible with reservoir level rule curve [" << lowLevelLastDay << " , "
+          << highLevelLastDay << "]";
         return false;
     }
     return true;
@@ -168,4 +172,4 @@ bool FinalLevelValidator::finalLevelFineForUse()
     return finalLevelFineForUse_;
 }
 
-} // namespace Antares::Data
+} // namespace Antares::Solver

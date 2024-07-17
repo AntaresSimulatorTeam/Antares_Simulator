@@ -312,6 +312,9 @@ void ISimulation<ImplementationType>::run()
     }
     else
     {
+        // Export ts-numbers into output
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
+
         if (not ImplementationType::simulationBegin())
         {
             return;
@@ -348,9 +351,6 @@ void ISimulation<ImplementationType>::run()
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
         ImplementationType::variables.simulationEnd();
-
-        // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, pResultWriter);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -454,15 +454,24 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         if (refreshTSonCurrentYear)
         {
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-#define SEP Yuni::IO::Separator
-            const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP + "mc-"
-                                         + std::to_string(year);
-#undef SEP
-            generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
+            generateThermalTimeSeries(study,
+                                      clusters,
+                                      study.runtime->random[Data::seedTsGenThermal]);
+
+            bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
+            bool doWeWrite = archive && !study.parameters.noOutput;
+            if (doWeWrite)
+            {
+                fs::path savePath = fs::path(study.folderOutput.to<std::string>()) / "ts-generator"
+                                    / "thermal" / "mc-" / std::to_string(year);
+                writeThermalTimeSeries(clusters, savePath);
+            }
 
             // apply the spinning if we generated some in memory clusters
             for (auto* cluster: clusters)
+            {
                 cluster->calculationOfSpinning();
+            }
         }
     };
 }
@@ -972,6 +981,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             hydroInputsChecker.Execute(year);
         }
     }
+    hydroInputsChecker.CheckForErrors();
 
     logs.info() << " Starting the simulation";
 
@@ -996,6 +1006,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         {
             // for each year not handled earlier
             hydroInputsChecker.Execute(y);
+            hydroInputsChecker.CheckForErrors();
+
             bool performCalculations = batch.isYearPerformed[y];
             unsigned int numSpace = 999999;
             if (performCalculations)

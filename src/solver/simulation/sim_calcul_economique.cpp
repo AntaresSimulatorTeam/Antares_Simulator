@@ -53,7 +53,8 @@ static void importShortTermStorages(
 
             // Properties
             toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
-            toInsert.efficiency = st.properties.efficiencyFactor;
+            toInsert.injectionEfficiency = st.properties.injectionEfficiency;
+            toInsert.withdrawalEfficiency = st.properties.withdrawalEfficiency;
             toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st.properties.initialLevel;
@@ -836,12 +837,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     }
 
                     marginGen = weekGenerationTarget;
-
-                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-                        < weekTarget_tmp)
-                    {
-                        marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
-                    }
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
