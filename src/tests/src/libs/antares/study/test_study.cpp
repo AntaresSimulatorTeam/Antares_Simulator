@@ -295,7 +295,7 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 {
     auto s = std::make_unique<Study>();
-    BOOST_CHECK(s->checkForFilenameLimits(true)); //empty areas should return true
+    BOOST_CHECK(s->checkForFilenameLimits(true)); // empty areas should return true
 
     BOOST_CHECK(study->checkForFilenameLimits(true));
     BOOST_CHECK(study->checkForFilenameLimits(false));
