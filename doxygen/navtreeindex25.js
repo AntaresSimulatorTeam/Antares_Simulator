@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structDONNEES__MENSUELLES.html":[7,0,84],
 "structDONNEES__MENSUELLES__ETENDUES.html":[7,0,85],
 "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html":[7,0,86],
 "structExchangeBalanceData.html":[7,0,88],

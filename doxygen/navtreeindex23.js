@@ -1,6 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a60fcd44e887317aed1a6fd9b1091beca":[7,0,0,4,8,4],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a663632954510a40a15c142cc52c83a1f":[7,0,0,4,8,3],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a90bf17c584ea36e506a0acf21bc3516f":[7,0,0,4,8,1],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a91be09ab1b04fb428495540cd3fa551f":[7,0,0,4,8,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html#a890570e0a4fd9a83b540ce42cbe5ae92":[7,0,0,13,4,4,83,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html":[7,0,0,13,4,4,84],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html#a3066fd88b76ddb1f060166c7216e656f":[7,0,0,13,4,4,84,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html#ad200b7245ee9acb8c16a971ee82e09eb":[7,0,0,13,4,4,84,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html#ad200b7245ee9acb8c16a971ee82e09eb":[7,0,0,13,4,4,84,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverflow.html":[7,0,0,13,4,4,85]
 };

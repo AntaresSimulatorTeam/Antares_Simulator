@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('common-eco-adq_8h_source.html',''); in
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keywordtype">void</span> BuildThermalPartOfWeeklyProblem(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study,</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                                     <a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                                     <span class="keyword">const</span> <span class="keywordtype">int</span> PasDeTempsDebut,</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                                     <span class="keywordtype">double</span>** thermalNoises,</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                                     std::vector&lt;std::vector&lt;double&gt;&gt;&amp; thermalNoises,</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                                     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year);</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keywordtype">bool</span> ShouldUseQuadraticOptimisation(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
@@ -273,7 +273,7 @@ $(document).ready(function(){initNavTree('common-eco-adq_8h_source.html',''); in
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_COMMON_ECONOMY_ADEQUACY_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition</b> area.h:377</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:61</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1TimeSeriesNumbers_html"><div class="ttname"><a href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">Antares::Data::TimeSeriesNumbers</a></div><div class="ttdef"><b>Definition</b> series.h:42</div></div>
 <div class="ttc" id="aclassAntares_1_1Date_1_1Calendar_html"><div class="ttname"><a href="classAntares_1_1Date_1_1Calendar.html">Antares::Date::Calendar</a></div><div class="ttdef"><b>Definition</b> date.h:180</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:46</div></div>
