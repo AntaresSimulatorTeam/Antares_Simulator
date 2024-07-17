@@ -1326,6 +1326,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
+// TODO VP: Could be removed with the GUI
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
 {
     enum

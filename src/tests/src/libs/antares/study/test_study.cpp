@@ -295,10 +295,16 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 {
     auto s = std::make_unique<Study>();
-    s->folder = "abc";
-    BOOST_CHECK(s->checkForFilenameLimits(true));
-    BOOST_CHECK(s->checkForFilenameLimits(true, "abc"));
-    BOOST_CHECK(s->checkForFilenameLimits(false, "abc"));
+    BOOST_CHECK(s->checkForFilenameLimits(true)); //empty areas should return true
+
+    BOOST_CHECK(study->checkForFilenameLimits(true));
+    BOOST_CHECK(study->checkForFilenameLimits(false));
+    BOOST_CHECK(study->checkForFilenameLimits(true, "abc"));
+
+    std::string str(10000, 'a');
+    study->areas[0]->id = str;
+    study->areas[0]->name = str;
+    BOOST_CHECK(study->checkForFilenameLimits(true)); // areaname limits size to 128
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version
