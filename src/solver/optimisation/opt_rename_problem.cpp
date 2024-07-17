@@ -430,6 +430,14 @@ void ConstraintNamer::STTurbiningMaxReserve(unsigned int constraint,
       constraint, "STTurbiningMaxReserve", clusterName, reserveName);
 }
 
+void ConstraintNamer::STPumpingMaxReserve(unsigned int constraint,
+                                          const std::string& clusterName,
+                                          const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(
+      constraint, "STPumpingMaxReserve", clusterName, reserveName);
+}
+
 void ConstraintNamer::ReserveSatisfaction(unsigned int constraint, const std::string& reserveName)
 {
     SetThermalClusterReserveElementName(constraint, "ReserveSatisfaction", reserveName);

@@ -28,6 +28,7 @@
 #include "ReserveSatisfaction.h"
 #include "POutBounds.h"
 #include "STTurbiningMaxReserve.h"
+#include "STPumpingMaxReserve.h"
 
 /**
  * @brief Group of reserve constraints

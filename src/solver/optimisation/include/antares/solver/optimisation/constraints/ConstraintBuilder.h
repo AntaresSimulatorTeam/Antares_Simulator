@@ -111,10 +111,15 @@ public:
                                                           int offset = 0,
                                                           int delta = 0);
 
-    ConstraintBuilder& STStorageClusterReserveParticipation(unsigned int index,
-                                                            double coeff,
-                                                            int offset = 0,
-                                                            int delta = 0);
+    ConstraintBuilder& STStorageTurbiningClusterReserveParticipation(unsigned int index,
+                                                                     double coeff,
+                                                                     int offset = 0,
+                                                                     int delta = 0);
+
+    ConstraintBuilder& STStoragePumpingClusterReserveParticipation(unsigned int index,
+                                                                   double coeff,
+                                                                   int offset = 0,
+                                                                   int delta = 0);
 
     ConstraintBuilder& InternalUnsatisfiedReserve(unsigned int pays,
                                                   double coeff,

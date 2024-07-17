@@ -136,6 +136,15 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                             SecondMembre[cnt] = reserveParticipation.maxTurbining;
                             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                         }
+                        cnt
+                          = CorrespondanceCntNativesCntOptim
+                              .NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation
+                                [reserveParticipation.globalIndexClusterParticipation];
+                        if (cnt >= 0)
+                        {
+                            SecondMembre[cnt] = reserveParticipation.maxPumping;
+                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                        }
                     }
                 }
                 auto& areaReservesDown
@@ -152,6 +161,15 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                         if (cnt >= 0)
                         {
                             SecondMembre[cnt] = reserveParticipation.maxTurbining;
+                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                        }
+                        cnt
+                          = CorrespondanceCntNativesCntOptim
+                              .NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation
+                                [reserveParticipation.globalIndexClusterParticipation];
+                        if (cnt >= 0)
+                        {
+                            SecondMembre[cnt] = reserveParticipation.maxPumping;
                             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                         }
                     }

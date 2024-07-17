@@ -47,7 +47,8 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> runningThermalClusterReserveParticipationIndex;
     std::vector<int> thermalClusterReserveParticipationIndex;
-    std::vector<int> STStorageClusterReserveParticipationIndex;
+    std::vector<int> STStorageTurbiningClusterReserveParticipationIndex;
+    std::vector<int> STStoragePumpingClusterReserveParticipationIndex;
     std::vector<int> internalUnsatisfiedReserveIndex;
     std::vector<int> internalExcessReserveIndex;
 

@@ -52,6 +52,7 @@ void ReserveParticipationGroup::BuildConstraints()
         PRunningUnits pRunningUnits(builder_, data);
         ReserveSatisfaction reserveSatisfaction(builder_, data);
         STTurbiningMaxReserve STTurbiningMaxReserve(builder_, data);
+        STPumpingMaxReserve STPumpingMaxReserve(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
@@ -127,6 +128,12 @@ void ReserveParticipationGroup::BuildConstraints()
                                 // 15 (k)
                                 STTurbiningMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
                             }
+                            if (clusterReserveParticipation.maxPumping >= 0)
+                            {
+                                // 15 (l)
+                                STPumpingMaxReserve.add(
+                                  pays, reserve, cluster_participation, pdt, true);
+                            }
                             cluster_participation++;
                         }
                         reserve++;
@@ -145,6 +152,12 @@ void ReserveParticipationGroup::BuildConstraints()
                             {
                                 // 15 (k)
                                 STTurbiningMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
+                            }
+                            if (clusterReserveParticipation.maxPumping >= 0)
+                            {
+                                // 15 (l)
+                                STPumpingMaxReserve.add(
+                                  pays, reserve, cluster_participation, pdt, true);
                             }
                             cluster_participation++;
                         }

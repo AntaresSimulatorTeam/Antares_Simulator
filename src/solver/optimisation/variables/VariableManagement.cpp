@@ -64,14 +64,26 @@ int& VariableManager::ThermalClusterReserveParticipation(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].thermalClusterReserveParticipationIndex[index];
 }
 
-int& VariableManager::STStorageClusterReserveParticipation(unsigned int index,
-                                                           unsigned int hourInWeek,
-                                                           int offset,
-                                                           int delta)
+int& VariableManager::STStorageTurbiningClusterReserveParticipation(unsigned int index,
+                                                                    unsigned int hourInWeek,
+                                                                    int offset,
+                                                                    int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
 
-    return CorrespondanceVarNativesVarOptim_[pdt].STStorageClusterReserveParticipationIndex[index];
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .STStorageTurbiningClusterReserveParticipationIndex[index];
+}
+
+int& VariableManager::STStoragePumpingClusterReserveParticipation(unsigned int index,
+                                                                  unsigned int hourInWeek,
+                                                                  int offset,
+                                                                  int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .STStoragePumpingClusterReserveParticipationIndex[index];
 }
 
 int& VariableManager::InternalUnsatisfiedReserve(unsigned int index,

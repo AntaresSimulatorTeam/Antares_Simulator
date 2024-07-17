@@ -164,6 +164,9 @@ public:
     void STTurbiningMaxReserve(unsigned int constraint,
                                const std::string& clusterName,
                                const std::string& reserveName);
+    void STPumpingMaxReserve(unsigned int constraint,
+                             const std::string& clusterName,
+                             const std::string& reserveName);
     void ReserveSatisfaction(unsigned int constraint, const std::string& reserveName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
