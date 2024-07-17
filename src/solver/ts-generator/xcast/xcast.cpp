@@ -261,10 +261,10 @@ void XCast::allocateTemporaryData()
     MINI = m.allocate<float>(p);
     ESPE = m.allocate<float>(p);
     STDE = m.allocate<float>(p);
-    DIFF = m.allocate<float>(p);
-    TREN = m.allocate<float>(p);
-    WIEN = m.allocate<float>(p + 1);
-    BROW = m.allocate<float>(p);
+    DIFF.resize(p);
+    TREN.resize(p);
+    WIEN.resize(p + 1);
+    BROW.resize(p);
 
     BASI = m.allocate<float>(p);
     ALPH = m.allocate<float>(p);
@@ -343,10 +343,6 @@ void XCast::destroyTemporaryData()
         delete[] Presque_mini;
         delete[] ESPE;
         delete[] STDE;
-        delete[] DIFF;
-        delete[] TREN;
-        delete[] WIEN;
-        delete[] BROW;
         delete[] BASI;
         delete[] ALPH;
         delete[] BETA;

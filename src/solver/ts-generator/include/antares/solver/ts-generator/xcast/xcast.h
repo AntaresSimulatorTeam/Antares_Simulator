@@ -220,10 +220,10 @@ private:
     float** LISS;
     float** DATL;
 
-    float* DIFF;
-    float* TREN;
-    float* WIEN;
-    float* BROW;
+    std::vector<float> DIFF;
+    std::vector<float> TREN;
+    std::vector<float> WIEN;
+    std::vector<float> BROW;
 
     float* BASI; // used only if all processes are Normal
     float* ALPH; // used only if all processes are Normal
