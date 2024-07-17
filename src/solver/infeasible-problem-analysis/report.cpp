@@ -21,107 +21,79 @@
 #include "antares/solver/infeasible-problem-analysis/report.h"
 
 #include <algorithm>
+#include <regex>
+#include <typeindex>
 
 #include <antares/logs/logs.h>
-#include "antares/solver/infeasible-problem-analysis/constraint.h"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#include "ortools/linear_solver/linear_solver.h"
-#pragma GCC diagnostic pop
-
-using namespace operations_research;
-
-static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
-                                  const Antares::Optimization::Constraint& b)
-{
-    return a.getSlackValue() > b.getSlackValue();
-}
 
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const MPVariable*>& slackVariables)
+  const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
-    turnSlackVarsIntoConstraints(slackVariables);
-    sortConstraintsBySlackValue();
-    trimConstraints();
-    sortConstraintsByType();
+    buildConstraintsFromSlackVars(slackVariables);
 }
 
-void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
-  const std::vector<const MPVariable*>& slackVariables)
+void InfeasibleProblemReport::buildConstraintsFromSlackVars(
+  const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
-    for (const MPVariable* slack: slackVariables)
+    const ConstraintsFactory constraintsFactory;
+    for (const auto* slackVar: slackVariables)
     {
-        constraints_.emplace_back(slack->name(), slack->solution_value());
+        auto constraint = constraintsFactory.create(slackVar->name(), slackVar->solution_value());
+        if (constraint)
+        {
+            constraints_.push_back(std::move(constraint));
+        }
     }
 }
 
-void InfeasibleProblemReport::sortConstraintsBySlackValue()
+bool lessTypeName(const std::shared_ptr<WatchedConstraint> a,
+                  const std::shared_ptr<WatchedConstraint> b)
 {
-    std::sort(std::begin(constraints_), std::end(constraints_), ::compareSlackSolutions);
+    return std::type_index(typeid(*a)) < std::type_index(typeid(*b));
 }
 
-void InfeasibleProblemReport::trimConstraints()
+bool sameType(const std::shared_ptr<WatchedConstraint> a,
+              const std::shared_ptr<WatchedConstraint> b)
 {
-    unsigned int nbConstraints = constraints_.size();
-    constraints_.resize(std::min(nbMaxVariables, nbConstraints));
+    return std::type_index(typeid(*a)) == std::type_index(typeid(*b));
 }
 
-void InfeasibleProblemReport::sortConstraintsByType()
+bool greaterValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
 {
-    for (auto& c: constraints_)
-    {
-        c.extractComponentsFromName();
-        nbConstraintsByType_[c.type()]++;
-    }
+    return a->slackValue() > b->slackValue();
+}
+
+void InfeasibleProblemReport::filterConstraintsToOneByType()
+{
+    // 1. Grouping constraints by C++ type (inside a group, order of instances remains unchanged)
+    std::ranges::stable_sort(constraints_, lessTypeName);
+    // 2. Keeping the first instances of each group, and rejecting others (= duplicates) to the end
+    // of vector
+    auto duplicates = std::ranges::unique(constraints_, sameType);
+    // 3. Removing trailing duplicates
+    constraints_.erase(duplicates.begin(), duplicates.end());
+    // 4. Sorting remaining constraints by slack value (in descending order)
+    std::ranges::sort(constraints_, greaterValue);
 }
 
 void InfeasibleProblemReport::logSuspiciousConstraints()
 {
-    Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
     for (const auto& c: constraints_)
     {
-        Antares::logs.error() << c.prettyPrint();
+        Antares::logs.error() << c->infeasibility();
     }
 }
 
 void InfeasibleProblemReport::logInfeasibilityCauses()
 {
+    filterConstraintsToOneByType();
     Antares::logs.error() << "Possible causes of infeasibility:";
-    if (nbConstraintsByType_[ConstraintType::hydro_reservoir_level] > 0)
+    for (const auto& c: constraints_)
     {
-        Antares::logs.error() << "* Hydro reservoir impossible to manage with cumulative options "
-                                 "\"hard bounds without heuristic\"";
+        Antares::logs.error() << c->infeasibilityCause();
     }
-    if (nbConstraintsByType_[ConstraintType::hydro_production_weekly] > 0)
-    {
-        Antares::logs.error() << "* impossible to generate exactly the weekly hydro target";
-    }
-    if (nbConstraintsByType_[ConstraintType::fictitious_load] > 0)
-    {
-        Antares::logs.error() << "* Last resort shedding status,";
-    }
-    if (nbConstraintsByType_[ConstraintType::short_term_storage_level] > 0)
-    {
-        Antares::logs.error()
-          << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
-             "lower & upper curves and initial level (if prescribed),";
-    }
-
-    const unsigned int bcCount = nbConstraintsByType_[ConstraintType::binding_constraint_hourly]
-                                 + nbConstraintsByType_[ConstraintType::binding_constraint_daily]
-                                 + nbConstraintsByType_[ConstraintType::binding_constraint_weekly];
-    if (bcCount > 0)
-    {
-        Antares::logs.error() << "* Binding constraints,";
-    }
-}
-
-void InfeasibleProblemReport::prettyPrint()
-{
-    logSuspiciousConstraints();
-    logInfeasibilityCauses();
 }
 
 } // namespace Antares::Optimization
