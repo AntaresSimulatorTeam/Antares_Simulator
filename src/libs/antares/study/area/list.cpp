@@ -449,8 +449,7 @@ const AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with) c
 
 void AreaList::clear()
 {
-    delete[] byIndex;
-    byIndex = nullptr;
+    byIndex.clear();
 
     if (!areas.empty())
     {
@@ -467,16 +466,12 @@ void AreaList::clear()
 
 void AreaList::rebuildIndexes()
 {
-    delete[] byIndex;
+    byIndex.clear();
 
-    if (areas.empty())
-    {
-        byIndex = nullptr;
-    }
-    else
+    if (!areas.empty())
     {
         using AreaWeakPtr = Area*;
-        byIndex = new AreaWeakPtr[areas.size()];
+        byIndex.resize(areas.size());
 
         uint indx = 0;
         auto end = areas.end();
