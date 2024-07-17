@@ -78,7 +78,7 @@ private:
         //! The total number of ticks to achieve
         unsigned maxTickCount;
         //! The current number of ticks
-        std::atomic<unsigned > tickCount;
+        std::atomic<unsigned> tickCount;
         //! The last number of ticks, to reduce the log verbosity
         unsigned lastTickCount;
         // Caption to use when displaying logs
@@ -104,7 +104,7 @@ public:
             return *this;
         }
 
-        Task& operator+=(int value)
+        Task& operator+=(unsigned value)
         {
             pPart.tickCount += value;
             return *this;
