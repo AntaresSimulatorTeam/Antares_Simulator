@@ -1162,8 +1162,8 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
 {
     uint years = tsGeneratorOnly ? 1 : (runtime.rangeLimits.year[rangeEnd] + 1);
 
-    int ticksPerYear = 0;
-    int ticksPerOutput = 0;
+    unsigned ticksPerYear = 0;
+    unsigned ticksPerOutput = 0;
 
     if (not tsGeneratorOnly)
     {
@@ -1177,7 +1177,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         ticksPerYear = 1;
     }
 
-    int n;
+    unsigned n;
 
     for (uint y = 0; y != years; ++y)
     {
@@ -1186,7 +1186,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesLoad * areas.size() * 365;
             if (0 != (timeSeriesLoad & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGLoad, n);
         }
@@ -1195,7 +1195,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesSolar * areas.size() * 365;
             if (0 != (timeSeriesSolar & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGSolar, n);
         }
@@ -1204,7 +1204,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesWind * areas.size() * 365;
             if (0 != (timeSeriesWind & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGWind, n);
         }
@@ -1214,7 +1214,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesHydro;
             if (0 != (timeSeriesHydro & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGHydro, n);
         }
@@ -1223,8 +1223,8 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = runtime.thermalPlantTotalCount;
             if (0 != (timeSeriesThermal & parameters.timeSeriesToArchive))
             {
-                n += (int)runtime.thermalPlantTotalCount;
-                n += (int)runtime.thermalPlantTotalCountMustRun;
+                n += runtime.thermalPlantTotalCount;
+                n += runtime.thermalPlantTotalCountMustRun;
             }
             progression.add(y, Solver::Progression::sectTSGThermal, n);
         }
@@ -1244,23 +1244,23 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     n = 0;
     if (0 != (timeSeriesLoad & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesSolar & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesWind & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesHydro & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesThermal & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (n)
     {
