@@ -196,9 +196,9 @@ private:
     bool All_normal; // all processes are Normal
 
     std::vector<float> A; // les variables de A à CO sont des vues de ALPH à CORR pour un mois particulier
-    float* B;
-    float* G;
-    float* D;
+    std::vector<float> B;
+    std::vector<float> G;
+    std::vector<float> D;
     int* M;
     float* T;
     Data::XCast::Distribution* L;
