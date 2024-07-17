@@ -12,7 +12,6 @@ toc_depth: 2
   (Only for the complete Antares Simulator solution with GUI)
 - [minizip](https://github.com/zlib-ng/minizip-ng) library, with its dependency zlib
 - [Boost](https://www.boost.org/) libraries: header libraries and boost-test library
-- [libuuid](https://linux.die.net/man/3/libuuid) on Linux systems
 
 We favor using [vcpkg](https://github.com/microsoft/vcpkg) for building and installing most of those dependencies,
 see [build instructions](3-Build.md) which explain how it integrates with CMake build.
@@ -42,29 +41,24 @@ OR-Tools may be installed in one of 2 ways:
     run again a cmake configure step, therefore it's not advised for developers.
 
 
-## Linux: libuuid and wxWidgets
+## Linux: wxWidgets
 
-On Linux systems, libuuid development packages need to be installed with your 
-OS package manager.
-You will also need to install wxWidgets if you want to build the GUI.
+If you want to build the GUI, you need to install wxWidgets.
 
 === "Centos"
 
     ```
-    sudo yum install libuuid-devel
     sudo yum install wxGTK3-devel
     ```
 
 === "Ubuntu 20.04 or 22.04 / Debian 11"
 
     ```
-    sudo apt install uuid-dev
     sudo apt install libwxgtk3.0-gtk3-dev
     ```
 
 === "Ubuntu 23.04 / Debian 12"
 
     ```
-    sudo apt install uuid-dev
     sudo apt install libwxgtk3.2-dev
     ```
