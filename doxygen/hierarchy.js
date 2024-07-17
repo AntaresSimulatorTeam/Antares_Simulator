@@ -139,7 +139,6 @@ var hierarchy =
     [ "computeTimeStepLevel", "classcomputeTimeStepLevel.html", null ],
     [ "CONSOMMATIONS_ABATTUES", "structCONSOMMATIONS__ABATTUES.html", null ],
     [ "Antares::Solver::ConstantDataFromAntares", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html", null ],
-    [ "Antares::Optimization::Constraint", "classAntares_1_1Optimization_1_1Constraint.html", null ],
     [ "ConstraintBuilder", "classConstraintBuilder.html", null ],
     [ "ConstraintBuilderData", "classConstraintBuilderData.html", null ],
     [ "ConstraintFactory", "classConstraintFactory.html", [
@@ -190,6 +189,7 @@ var hierarchy =
       [ "MaxPumpingGroup", "classMaxPumpingGroup.html", null ],
       [ "MinMaxHydroPowerGroup", "classMinMaxHydroPowerGroup.html", null ]
     ] ],
+    [ "Antares::Optimization::ConstraintsFactory", "classAntares_1_1Optimization_1_1ConstraintsFactory.html", null ],
     [ "Antares::Data::Solar::Container", "classAntares_1_1Data_1_1Solar_1_1Container.html", null ],
     [ "Antares::Data::Wind::Container", "classAntares_1_1Data_1_1Wind_1_1Container.html", null ],
     [ "Antares::Private::OutputViewerData::Content", "classAntares_1_1Private_1_1OutputViewerData_1_1Content.html", null ],
@@ -1100,10 +1100,10 @@ var hierarchy =
         [ "Antares::Error::WritingPID", "classAntares_1_1Error_1_1WritingPID.html", null ]
       ] ],
       [ "Antares::FatalError", "classAntares_1_1FatalError.html", null ],
-      [ "Antares::Optimization::StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
       [ "Antares::Solver::WeeklyProblemTranslationException", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html", null ],
-      [ "ConstraintBuilder::ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ]
+      [ "ConstraintBuilder::ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ],
+      [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", null ]
     ] ],
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", null ],
     [ "Antares::Solver::ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", null ],
@@ -1492,6 +1492,15 @@ var hierarchy =
     [ "Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links_1_1Record_1_1Vector.html", null ],
     [ "Antares::VENTILATION_HYDRO_RESULTS_BY_AREA", "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html", null ],
     [ "FSWalker::WalkerThread", "classFSWalker_1_1WalkerThread.html", null ],
+    [ "Antares::Optimization::WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", [
+      [ "Antares::Optimization::DailyBC", "classAntares_1_1Optimization_1_1DailyBC.html", null ],
+      [ "Antares::Optimization::FictitiousLoad", "classAntares_1_1Optimization_1_1FictitiousLoad.html", null ],
+      [ "Antares::Optimization::HourlyBC", "classAntares_1_1Optimization_1_1HourlyBC.html", null ],
+      [ "Antares::Optimization::HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", null ],
+      [ "Antares::Optimization::HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", null ],
+      [ "Antares::Optimization::STS", "classAntares_1_1Optimization_1_1STS.html", null ],
+      [ "Antares::Optimization::WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ]
+    ] ],
     [ "Antares::Solver::WeeklyDataFromAntares", "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html", null ],
     [ "Antares::Solver::Optimization::WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", [
       [ "Antares::Solver::Optimization::AdequacyPatchOptimization", "classAntares_1_1Solver_1_1Optimization_1_1AdequacyPatchOptimization.html", null ],

@@ -3,7 +3,7 @@ var searchData=
   ['fake_5fbuffer_5ffactory_0',['fake_buffer_factory',['../classfake__buffer__factory.html',1,'']]],
   ['fakelogger_1',['fakeLogger',['../classAntares_1_1UnitTests_1_1fakeLogger.html',1,'Antares::UnitTests']]],
   ['fatalerror_2',['FatalError',['../classAntares_1_1FatalError.html',1,'Antares']]],
-  ['fictitiousload_3',['FictitiousLoad',['../classFictitiousLoad.html',1,'']]],
+  ['fictitiousload_3',['fictitiousload',['../classAntares_1_1Optimization_1_1FictitiousLoad.html',1,'Antares::Optimization::FictitiousLoad'],['../classFictitiousLoad.html',1,'FictitiousLoad']]],
   ['fictitiousloaddata_4',['FictitiousLoadData',['../structFictitiousLoadData.html',1,'']]],
   ['filecontent_5',['FileContent',['../classBenchmarking_1_1FileContent.html',1,'Benchmarking']]],
   ['fileinfo_6',['FileInfo',['../structPathList_1_1FileInfo.html',1,'PathList']]],

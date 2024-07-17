@@ -1,5 +1,13 @@
 var NAVTREEINDEX21 =
 {
+"functions_func_t.html":[7,3,1,18],
+"functions_func_u.html":[7,3,1,19],
+"functions_func_v.html":[7,3,1,20],
+"functions_func_w.html":[7,3,1,21],
+"functions_func_x.html":[7,3,1,22],
+"functions_func_y.html":[7,3,1,23],
+"functions_func_z.html":[7,3,1,24],
+"functions_func_~.html":[7,3,1,25],
 "functions_g.html":[7,3,0,6],
 "functions_h.html":[7,3,0,7],
 "functions_i.html":[7,3,0,8],
@@ -241,13 +249,5 @@ var NAVTREEINDEX21 =
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md16":[3,6,0],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md17":[3,6,1],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md18":[3,7],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md19":[3,8],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md5":[3,0],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md6":[3,1],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md7":[3,2],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md8":[3,3],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md9":[3,4],
-"memory_8h_source.html":[8,0,0,3,0,18,0,0,0,0],
-"memory_8hxx_source.html":[8,0,0,3,0,18,0,0,0,1],
-"memorystatistics_2memorystatistics_8h_source.html":[8,0,0,7,2,2,8,0]
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md19":[3,8]
 };

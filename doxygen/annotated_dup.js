@@ -431,17 +431,24 @@ var annotated_dup =
       [ "Optimization", null, [
         [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", null ],
         [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", null ],
-        [ "Constraint", "classAntares_1_1Optimization_1_1Constraint.html", null ],
+        [ "ConstraintsFactory", "classAntares_1_1Optimization_1_1ConstraintsFactory.html", null ],
         [ "ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", null ],
+        [ "DailyBC", "classAntares_1_1Optimization_1_1DailyBC.html", null ],
+        [ "FictitiousLoad", "classAntares_1_1Optimization_1_1FictitiousLoad.html", null ],
+        [ "HourlyBC", "classAntares_1_1Optimization_1_1HourlyBC.html", null ],
+        [ "HydroLevel", "classAntares_1_1Optimization_1_1HydroLevel.html", null ],
+        [ "HydroProduction", "classAntares_1_1Optimization_1_1HydroProduction.html", null ],
         [ "InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
         [ "Nomenclature", "classAntares_1_1Optimization_1_1Nomenclature.html", null ],
         [ "PROBLEME_SIMPLEXE_NOMME", "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html", null ],
         [ "ProblemSimplexeNommeConverter", "classAntares_1_1Optimization_1_1ProblemSimplexeNommeConverter.html", null ],
-        [ "StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ],
+        [ "STS", "classAntares_1_1Optimization_1_1STS.html", null ],
         [ "UnfeasibilityAnalysis", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html", null ],
         [ "UnfeasiblePbAnalyzer", "classAntares_1_1Optimization_1_1UnfeasiblePbAnalyzer.html", null ],
         [ "VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
-        [ "VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", null ]
+        [ "VariablesBoundsConsistency", "classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html", null ],
+        [ "WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", null ],
+        [ "WeeklyBC", "classAntares_1_1Optimization_1_1WeeklyBC.html", null ]
       ] ],
       [ "Private", null, [
         [ "Component", null, [
@@ -1348,6 +1355,7 @@ var annotated_dup =
     [ "SimulationHandler", "classSimulationHandler.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
     [ "StartUpCostsData", "structStartUpCostsData.html", null ],
+    [ "StringIsNotWellFormated", "classStringIsNotWellFormated.html", null ],
     [ "StubOptPeriodStringGenerator", "classStubOptPeriodStringGenerator.html", null ],
     [ "StudyBuilder", "structStudyBuilder.html", null ],
     [ "StudyData", "classStudyData.html", "classStudyData" ],
