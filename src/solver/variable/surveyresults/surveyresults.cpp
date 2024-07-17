@@ -356,13 +356,10 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
         if (std::isnan(v))
         {
             buffer.append("\tNaN", 4);
-            if (++error == 1)
+            // We should disabled errors on NaN if the quadratic optimization has failed
+            if (++error == 1 && !data.study.runtime.quadraticOptimizationHasFailed)
             {
-                // We should disabled errors on NaN if the quadratic optimization has failed
-                if (not data.study.runtime.quadraticOptimizationHasFailed)
-                {
-                    logs.error() << "'NaN' value detected";
-                }
+                logs.error() << "'NaN' value detected";
             }
         }
         else

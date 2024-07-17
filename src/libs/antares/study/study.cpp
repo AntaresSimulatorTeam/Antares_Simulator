@@ -1169,9 +1169,9 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     {
         // One tick at the begining and 2 at the end of the year
         // Output - Areas
-        ticksPerOutput += (int)areas.size();
+        ticksPerOutput += areas.size();
         // Output - Links
-        ticksPerOutput += (int)runtime.interconnectionsCount();
+        ticksPerOutput += runtime.interconnectionsCount();
         // Output - digest
         ticksPerOutput += 1;
         ticksPerYear = 1;
