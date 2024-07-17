@@ -96,7 +96,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                         else
                         {
                             // For running units in cluster
-                            variableManager.ClusterReserveParticipation(clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                            variableManager.ThermalClusterReserveParticipation(
+                              clusterReserveParticipation.globalIndexClusterParticipation, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -105,7 +106,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                             NombreDeVariables++;
 
                             // For all units in cluster (off units can participate to the reserves)
-                            variableManager.RunningClusterReserveParticipation(clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                            variableManager.RunningThermalClusterReserveParticipation(
+                              clusterReserveParticipation.globalIndexClusterParticipation, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -160,7 +162,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                         else
                         {
                             // For running units in cluster
-                            variableManager.ClusterReserveParticipation(clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                            variableManager.ThermalClusterReserveParticipation(
+                              clusterReserveParticipation.globalIndexClusterParticipation, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -169,7 +172,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                             NombreDeVariables++;
 
                             // For all units in cluster (off units can participate to the reserves)
-                            variableManager.RunningClusterReserveParticipation(clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                            variableManager.RunningThermalClusterReserveParticipation(
+                              clusterReserveParticipation.globalIndexClusterParticipation, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;

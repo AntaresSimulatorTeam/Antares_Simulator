@@ -407,7 +407,7 @@ bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyStrin
           auto cluster = area.thermal.list.getClusterByName(tmpClusterName);
           if (reserve && cluster)
           {
-              ClusterReserveParticipation tmpReserveParticipation{
+              ThermalClusterReserveParticipation tmpReserveParticipation{
                 reserve.value(), tmpMaxPower, tmpParticipationCost};
               cluster.value().get()->addReserveParticipation(section.name, tmpReserveParticipation);
           }

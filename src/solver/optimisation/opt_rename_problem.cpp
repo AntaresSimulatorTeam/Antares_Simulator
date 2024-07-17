@@ -422,6 +422,14 @@ void ConstraintNamer::POutBoundMax(unsigned int constraint, const std::string& c
     SetThermalClusterElementName(constraint, "POutBoundMax", clusterName);
 }
 
+void ConstraintNamer::STTurbiningMaxReserve(unsigned int constraint,
+                                            const std::string& clusterName,
+                                            const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(
+      constraint, "STTurbiningMaxReserve", clusterName, reserveName);
+}
+
 void ConstraintNamer::ReserveSatisfaction(unsigned int constraint, const std::string& reserveName)
 {
     SetThermalClusterReserveElementName(constraint, "ReserveSatisfaction", reserveName);

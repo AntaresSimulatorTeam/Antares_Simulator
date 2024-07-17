@@ -140,6 +140,8 @@ set(RTESOLVER_OPT
 		constraints/PRunningUnits.cpp
 		include/antares/solver/optimisation/constraints/ReserveSatisfaction.h
 		constraints/ReserveSatisfaction.cpp
+		include/antares/solver/optimisation/constraints/STTurbiningMaxReserve.h
+		constraints/STTurbiningMaxReserve.cpp
 
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp

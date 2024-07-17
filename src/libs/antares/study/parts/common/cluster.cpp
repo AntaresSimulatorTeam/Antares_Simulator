@@ -102,7 +102,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 
 void Cluster::addReserveParticipation(
   Data::ReserveName name,
-  ClusterReserveParticipation reserveParticipation)
+  ThermalClusterReserveParticipation reserveParticipation)
 {
     clusterReservesParticipations.emplace(name, reserveParticipation);
 }

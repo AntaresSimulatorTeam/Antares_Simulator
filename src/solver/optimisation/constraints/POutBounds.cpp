@@ -40,7 +40,8 @@ void POutBounds::add(int pays, int cluster, int pdt)
                                                                                 .clusterIdInArea]
                            == globalClusterIdx))
                     {
-                        builder.RunningClusterReserveParticipation(reserveParticipations.globalIndexClusterParticipation, 1);
+                        builder.RunningThermalClusterReserveParticipation(
+                          reserveParticipations.globalIndexClusterParticipation, 1);
                     }
                 }
             }
@@ -79,7 +80,8 @@ void POutBounds::add(int pays, int cluster, int pdt)
                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
                                                                                 .clusterIdInArea]
                            == globalClusterIdx))
-                        builder.RunningClusterReserveParticipation(reserveParticipations.globalIndexClusterParticipation, 1);
+                        builder.RunningThermalClusterReserveParticipation(
+                          reserveParticipations.globalIndexClusterParticipation, 1);
                 }
             }
 
@@ -106,10 +108,11 @@ void POutBounds::add(int pays, int cluster, int pdt)
     {
         // Lambda that count the number of reserves that the cluster is participating to
         auto countReservesFromCluster
-          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations,
-                      int globalClusterIdx,
-                      int pays,
-                      ReserveData data)
+          = [cluster](
+              const std::vector<CAPACITY_RESERVATION<RESERVE_PARTICIPATION_THERMAL>>& reservations,
+              int globalClusterIdx,
+              int pays,
+              ReserveData data)
         {
             int counter = 0;
             for (const auto& capacityReservation : reservations)

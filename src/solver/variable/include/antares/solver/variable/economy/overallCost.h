@@ -264,22 +264,22 @@ public:
         for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
         {
             costForSpilledOrUnsuppliedEnergy
-                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                        .ValeursHorairesInternalUnsatisfied[reserveUp.areaReserveIndex]
-                    * reserveUp.failureCost
-                    + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                        .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex]
-                        * reserveUp.spillageCost;
+              += state.hourlyResults->Reserves[state.hourInTheWeek]
+                     .ValeursHorairesInternalUnsatisfied[reserveUp.areaReserveIndex]
+                   * reserveUp.failureCost
+                 + state.hourlyResults->Reserves[state.hourInTheWeek]
+                       .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex]
+                     * reserveUp.spillageCost;
         }
         for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
         {
             costForSpilledOrUnsuppliedEnergy
-                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                        .ValeursHorairesInternalUnsatisfied[reserveDown.areaReserveIndex]
-                    * reserveDown.failureCost
-                    + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                        .ValeursHorairesInternalExcessReserve[reserveDown.areaReserveIndex]
-                        * reserveDown.spillageCost;
+              += state.hourlyResults->Reserves[state.hourInTheWeek]
+                     .ValeursHorairesInternalUnsatisfied[reserveDown.areaReserveIndex]
+                   * reserveDown.failureCost
+                 + state.hourlyResults->Reserves[state.hourInTheWeek]
+                       .ValeursHorairesInternalExcessReserve[reserveDown.areaReserveIndex]
+                     * reserveDown.spillageCost;
         }
         
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;

@@ -95,7 +95,8 @@ bool STStorageInput::loadReserveParticipations(Area& area, const AnyString& file
       [&](const IniFile::Section& section)
       {
           std::string tmpClusterName;
-          float tmpMaxPower = 0;
+          float tmpMaxTurbining = 0;
+          float tmpMaxPumping = 0;
           float tmpParticipationCost = 0;
           for (auto* p = section.firstProperty; p; p = p->next)
           {
@@ -107,12 +108,20 @@ bool STStorageInput::loadReserveParticipations(Area& area, const AnyString& file
               {
                   TransformNameIntoID(p->value, tmpClusterName);
               }
-              else if (tmp == "max-power")
+              else if (tmp == "max-turbining")
               {
-                  if (!p->value.to<float>(tmpMaxPower))
+                  if (!p->value.to<float>(tmpMaxTurbining))
+                  {
+                      logs.warning() << area.name << ": invalid max turbining power for reserve "
+                                     << section.name;
+                  }
+              }
+              else if (tmp == "max-pumping")
+              {
+                  if (!p->value.to<float>(tmpMaxPumping))
                   {
                       logs.warning()
-                        << area.name << ": invalid max power for reserve " << section.name;
+                        << area.name << ": invalid max pumping power for reserve " << section.name;
                   }
               }
               else if (tmp == "participation-cost")
@@ -128,8 +137,8 @@ bool STStorageInput::loadReserveParticipations(Area& area, const AnyString& file
           auto cluster = getClusterByName(tmpClusterName);
           if (reserve && cluster)
           {
-              ClusterReserveParticipation tmpReserveParticipation{
-                reserve.value(), tmpMaxPower, tmpParticipationCost};
+              STStorageClusterReserveParticipation tmpReserveParticipation{
+                reserve.value(), tmpMaxTurbining, tmpMaxPumping, tmpParticipationCost};
               cluster.value().get().addReserveParticipation(section.name, tmpReserveParticipation);
           }
           else

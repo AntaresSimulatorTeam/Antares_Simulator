@@ -238,20 +238,20 @@ public:
         for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
         {
             pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
-                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                .ValeursHorairesInternalUnsatisfied[reserveUp.areaReserveIndex];
+              += state.hourlyResults->Reserves[state.hourInTheWeek]
+                   .ValeursHorairesInternalUnsatisfied[reserveUp.areaReserveIndex];
             pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
-                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex];
+              += state.hourlyResults->Reserves[state.hourInTheWeek]
+                   .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex];
         }
         for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
         {
             pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
-                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                .ValeursHorairesInternalUnsatisfied[reserveDown.areaReserveIndex];
+              += state.hourlyResults->Reserves[state.hourInTheWeek]
+                   .ValeursHorairesInternalUnsatisfied[reserveDown.areaReserveIndex];
             pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
-                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                .ValeursHorairesInternalExcessReserve[reserveDown.areaReserveIndex];
+              += state.hourlyResults->Reserves[state.hourInTheWeek]
+                   .ValeursHorairesInternalExcessReserve[reserveDown.areaReserveIndex];
         }
 
         // Next variable

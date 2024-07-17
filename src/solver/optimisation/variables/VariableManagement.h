@@ -22,15 +22,20 @@ public:
                                 int offset = 0,
                                 int delta = 0);
 
-    int& RunningClusterReserveParticipation(unsigned int index,
-                                       unsigned int hourInWeek,
-                                       int offset = 0,
-                                       int delta = 0);
+    int& RunningThermalClusterReserveParticipation(unsigned int index,
+                                                   unsigned int hourInWeek,
+                                                   int offset = 0,
+                                                   int delta = 0);
 
-    int& ClusterReserveParticipation(unsigned int index,
-                                       unsigned int hourInWeek,
-                                       int offset = 0,
-                                       int delta = 0);
+    int& ThermalClusterReserveParticipation(unsigned int index,
+                                            unsigned int hourInWeek,
+                                            int offset = 0,
+                                            int delta = 0);
+
+    int& STStorageClusterReserveParticipation(unsigned int index,
+                                              unsigned int hourInWeek,
+                                              int offset = 0,
+                                              int delta = 0);
 
     int& InternalUnsatisfiedReserve(unsigned int index,
                                     unsigned int hourInWeek,

@@ -90,21 +90,21 @@ struct AllCapacityReservations
     }
 };
 
-/// @brief Represents the cluster reserve participation to a given reserve
-struct ClusterReserveParticipation
+/// @brief Represents the thermal cluster reserve participation to a given reserve
+struct ThermalClusterReserveParticipation
 {
     std::reference_wrapper<CapacityReservation> capacityReservation;
     float maxPower = 0;
     float participationCost = 0;
 
-    ClusterReserveParticipation(std::reference_wrapper<CapacityReservation> reserve,
-                                float power,
-                                float cost) :
+    ThermalClusterReserveParticipation(std::reference_wrapper<CapacityReservation> reserve,
+                                       float power,
+                                       float cost) :
      capacityReservation(reserve), maxPower(power), participationCost(cost)
     {
     }
 
-    ClusterReserveParticipation& operator=(const ClusterReserveParticipation& other)
+    ThermalClusterReserveParticipation& operator=(const ThermalClusterReserveParticipation& other)
     {
         // Check for self-assignment
         if (this != &other)
@@ -112,6 +112,41 @@ struct ClusterReserveParticipation
             // Copy the values from the other object
             capacityReservation = other.capacityReservation;
             maxPower = other.maxPower;
+            participationCost = other.participationCost;
+        }
+        return *this;
+    }
+};
+
+/// @brief Represents the Short Term Storage cluster reserve participation to a given reserve
+struct STStorageClusterReserveParticipation
+{
+    std::reference_wrapper<CapacityReservation> capacityReservation;
+    float maxTurbining = 0;
+    float maxPumping = 0;
+    float participationCost = 0;
+
+    STStorageClusterReserveParticipation(std::reference_wrapper<CapacityReservation> reserve,
+                                         float turbining,
+                                         float pumping,
+                                         float cost) :
+     capacityReservation(reserve),
+     maxTurbining(turbining),
+     maxPumping(pumping),
+     participationCost(cost)
+    {
+    }
+
+    STStorageClusterReserveParticipation& operator=(
+      const STStorageClusterReserveParticipation& other)
+    {
+        // Check for self-assignment
+        if (this != &other)
+        {
+            // Copy the values from the other object
+            capacityReservation = other.capacityReservation;
+            maxTurbining = other.maxTurbining;
+            maxPumping = other.maxPumping;
             participationCost = other.participationCost;
         }
         return *this;

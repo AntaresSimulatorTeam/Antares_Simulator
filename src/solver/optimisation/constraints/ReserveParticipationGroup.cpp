@@ -36,8 +36,8 @@ ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
     return {.Simulation = simulation_,
             .areaReserves = problemeHebdo_->allReserves,
             .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays,
-            .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim
-            };
+            .shortTermStorageOfArea = problemeHebdo_->ShortTermStorage,
+            .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim};
 }
 
 /**
@@ -51,66 +51,105 @@ void ReserveParticipationGroup::BuildConstraints()
         PMaxReserve pMaxReserve(builder_, data);
         PRunningUnits pRunningUnits(builder_, data);
         ReserveSatisfaction reserveSatisfaction(builder_, data);
+        STTurbiningMaxReserve STTurbiningMaxReserve(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             // Adding constraints for ReservesUp and ReservesDown
             for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
             {
-                auto areaReservesUp
-                  = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
-                uint32_t reserve = 0;
-                for (const auto& areaReserveUp : areaReservesUp)
+                // Thermal clusters reserve participations
                 {
-                    // 24
-                    reserveSatisfaction.add(pays, reserve, pdt, true);
-
-                    uint32_t cluster_participation = 0;
-                    for (const auto& clusterReserveParticipation :
-                         areaReserveUp.AllReservesParticipation)
+                    auto &areaReservesUp
+                      = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
+                    uint32_t reserve = 0;
+                for (const auto& areaReserveUp : areaReservesUp)
                     {
-                        if (clusterReserveParticipation.maxPower >= 0)
-                        {
-                            // 16 bis
-                            pMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
+                        // 24
+                        reserveSatisfaction.add(pays, reserve, pdt, true);
 
-                            // 17 quater
-                            pRunningUnits.add(pays, reserve, cluster_participation, pdt, true);
+                        uint32_t cluster_participation = 0;
+                    for (const auto& clusterReserveParticipation :
+                             areaReserveUp.AllReservesParticipation)
+                        {
+                        if (clusterReserveParticipation.maxPower >= 0)
+                            {
+                                // 16 bis
+                                pMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
+
+                                // 17 quater
+                                pRunningUnits.add(pays, reserve, cluster_participation, pdt, true);
+                            }
+                            cluster_participation++;
                         }
-                        cluster_participation++;
+                        reserve++;
                     }
-                    reserve++;
+
+                    reserve = 0;
+                    auto &areaReservesDown
+                      = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
+                for (const auto& areaReserveDown : areaReservesDown)
+                    {
+                        // 24
+                        reserveSatisfaction.add(pays, reserve, pdt, false);
+
+                        uint32_t cluster_participation = 0;
+                    for (const auto& clusterReserveParticipation :
+                             areaReserveDown.AllReservesParticipation)
+                        {
+                        if (clusterReserveParticipation.maxPower >= 0)
+                            {
+                                // 16 bis
+                                pMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
+
+                                // 17 quater
+                                pRunningUnits.add(pays, reserve, cluster_participation, pdt, false);
+                            }
+                            cluster_participation++;
+                        }
+                        reserve++;
+                    }
                 }
 
-                reserve = 0;
-                auto areaReservesDown
-                  = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
-                for (const auto& areaReserveDown : areaReservesDown)
+                // ShortTerm Storage reserve participations
                 {
-                    // 24
-                    reserveSatisfaction.add(pays, reserve, pdt, false);
-
-                    uint32_t cluster_participation = 0;
-                    for (const auto& clusterReserveParticipation :
-                         areaReserveDown.AllReservesParticipation)
+                    auto &areaReservesUp
+                      = data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp;
+                    uint32_t reserve = 0;
+                    for (const auto& areaReserveUp : areaReservesUp)
                     {
-                        if (clusterReserveParticipation.maxPower >= 0)
+                        uint32_t cluster_participation = 0;
+                        for (const auto& clusterReserveParticipation :
+                             areaReserveUp.AllReservesParticipation)
                         {
-                            // 16 bis
-                            pMaxReserve.add(pays,
-                                            reserve, cluster_participation,
-                                            pdt,
-                                            false);
-
-                            // 17 quater
-                            pRunningUnits.add(pays,
-                                              reserve, cluster_participation,
-                                              pdt,
-                                              false);
+                            if (clusterReserveParticipation.maxTurbining >= 0)
+                            {
+                                // 15 (k)
+                                STTurbiningMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
+                            }
+                            cluster_participation++;
                         }
-                        cluster_participation++;
+                        reserve++;
                     }
-                    reserve++;
+
+                    auto &areaReservesDown
+                      = data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown;
+                    reserve = 0;
+                    for (const auto& areaReserveDown : areaReservesDown)
+                    {
+                        uint32_t cluster_participation = 0;
+                        for (const auto& clusterReserveParticipation :
+                             areaReserveDown.AllReservesParticipation)
+                        {
+                            if (clusterReserveParticipation.maxTurbining >= 0)
+                            {
+                                // 15 (k)
+                                STTurbiningMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
+                            }
+                            cluster_participation++;
+                        }
+                        reserve++;
+                    }
                 }
             }
         }

@@ -26,8 +26,9 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
              cluster++)
         {
             if (capacityReservation.AllReservesParticipation[cluster].maxPower != CLUSTER_NOT_PARTICIPATING)
-                builder.RunningClusterReserveParticipation(
-                  capacityReservation.AllReservesParticipation[cluster].globalIndexClusterParticipation,
+                builder.RunningThermalClusterReserveParticipation(
+                  capacityReservation.AllReservesParticipation[cluster]
+                    .globalIndexClusterParticipation,
                   1);
         }
 

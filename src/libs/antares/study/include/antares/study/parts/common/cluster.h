@@ -109,7 +109,7 @@ public:
     //! @param name the name of the reserve to add
     //! @param reserveParticipation the reserve participation to add
     void addReserveParticipation(std::string name,
-                                 ClusterReserveParticipation reserveParticipation);
+                                 ThermalClusterReserveParticipation reserveParticipation);
 
     uint unitCount = 0;
 
@@ -161,7 +161,7 @@ protected:
     Data::ClusterName pID;
     Data::ClusterName pGroup;
     //! reserve
-    std::map<Data::ReserveName, ClusterReserveParticipation> clusterReservesParticipations;
+    std::map<Data::ReserveName, ThermalClusterReserveParticipation> clusterReservesParticipations;
 
 private:
     virtual unsigned int precision() const = 0;

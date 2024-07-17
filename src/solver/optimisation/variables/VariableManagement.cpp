@@ -43,24 +43,35 @@ int& VariableManager::DispatchableProduction(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuPalierThermique[index];
 }
 
-int& VariableManager::RunningClusterReserveParticipation(unsigned int index,
-                                                    unsigned int hourInWeek,
-                                                    int offset,
-                                                    int delta)
+int& VariableManager::RunningThermalClusterReserveParticipation(unsigned int index,
+                                                                unsigned int hourInWeek,
+                                                                int offset,
+                                                                int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
 
-    return CorrespondanceVarNativesVarOptim_[pdt].runningClusterReserveParticipationIndex[index];
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .runningThermalClusterReserveParticipationIndex[index];
 }
 
-int& VariableManager::ClusterReserveParticipation(unsigned int index,
-                                                    unsigned int hourInWeek,
-                                                    int offset,
-                                                    int delta)
+int& VariableManager::ThermalClusterReserveParticipation(unsigned int index,
+                                                         unsigned int hourInWeek,
+                                                         int offset,
+                                                         int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
 
-    return CorrespondanceVarNativesVarOptim_[pdt].clusterReserveParticipationIndex[index];
+    return CorrespondanceVarNativesVarOptim_[pdt].thermalClusterReserveParticipationIndex[index];
+}
+
+int& VariableManager::STStorageClusterReserveParticipation(unsigned int index,
+                                                           unsigned int hourInWeek,
+                                                           int offset,
+                                                           int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt].STStorageClusterReserveParticipationIndex[index];
 }
 
 int& VariableManager::InternalUnsatisfiedReserve(unsigned int index,

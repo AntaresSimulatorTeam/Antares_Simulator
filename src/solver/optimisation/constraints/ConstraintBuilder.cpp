@@ -49,19 +49,27 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::RunningClusterReserveParticipation(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::RunningThermalClusterReserveParticipation(unsigned int index,
                                                                    double coeff,
                                                                    int offset,
                                                                    int delta){
-    AddVariable(variableManager_.RunningClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.RunningThermalClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ClusterReserveParticipation(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::ThermalClusterReserveParticipation(unsigned int index,
                                                                    double coeff,
                                                                    int offset,
                                                                    int delta){
-    AddVariable(variableManager_.ClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.ThermalClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::STStorageClusterReserveParticipation(unsigned int index,
+                                                                   double coeff,
+                                                                   int offset,
+                                                                   int delta){
+    AddVariable(variableManager_.STStorageClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 

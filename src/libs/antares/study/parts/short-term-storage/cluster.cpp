@@ -90,15 +90,23 @@ bool STStorageCluster::saveSeries(const std::string& path) const
 
 void STStorageCluster::addReserveParticipation(
   Data::ReserveName name,
-  ClusterReserveParticipation& reserveParticipation)
+  STStorageClusterReserveParticipation& reserveParticipation)
 {
     clusterReservesParticipations.emplace(name, reserveParticipation);
 }
 
-float STStorageCluster::reserveMaxPower(Data::ReserveName name)
+float STStorageCluster::reserveMaxTurbining(Data::ReserveName name)
 {
     if (clusterReservesParticipations.contains(name))
-        return clusterReservesParticipations.at(name).maxPower;
+        return clusterReservesParticipations.at(name).maxTurbining;
+    else
+        return -1;
+}
+
+float STStorageCluster::reserveMaxPumping(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).maxPumping;
     else
         return -1;
 }

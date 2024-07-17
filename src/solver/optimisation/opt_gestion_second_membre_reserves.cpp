@@ -52,60 +52,109 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            int pdtGlobal = problemeHebdo->weekInTheYear * problemeHebdo->NombreDePasDeTempsDUneJournee * problemeHebdo->NombreDeJours + pdtJour;
-            auto areaReservesUp = areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
-            for (const auto& areaReserveUp : areaReservesUp)
+            int pdtGlobal = problemeHebdo->weekInTheYear
+                              * problemeHebdo->NombreDePasDeTempsDUneJournee
+                              * problemeHebdo->NombreDeJours
+                            + pdtJour;
+
+            // Thermal clusters
             {
-                int cnt
-                  = CorrespondanceCntNativesCntOptim
-                      .NumeroDeContrainteDesContraintesDeBesoinEnReserves[areaReserveUp
-                                                                            .globalReserveIndex];
-                if (cnt >= 0)
+                auto& areaReservesUp
+                  = areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
+                for (const auto& areaReserveUp : areaReservesUp)
                 {
-                    SecondMembre[cnt] = areaReserveUp.need.at(pdtGlobal);
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                    int cnt = CorrespondanceCntNativesCntOptim
+                                .NumeroDeContrainteDesContraintesDeBesoinEnReserves
+                                  [areaReserveUp.globalReserveIndex];
+                    if (cnt >= 0)
+                    {
+                        SecondMembre[cnt] = areaReserveUp.need.at(pdtGlobal);
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                    }
+                }
+
+                auto& areaReservesDown
+                  = areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
+                for (const auto& areaReserveDown : areaReservesDown)
+                {
+                    int cnt = CorrespondanceCntNativesCntOptim
+                                .NumeroDeContrainteDesContraintesDeBesoinEnReserves
+                                  [areaReserveDown.globalReserveIndex];
+                    if (cnt >= 0)
+                    {
+                        SecondMembre[cnt] = areaReserveDown.need.at(pdtGlobal);
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                    }
+                }
+
+                for (uint32_t cluster = 0;
+                     cluster
+                     < problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
+                     cluster++)
+                {
+                    int globalClusterIdx
+                      = problemeHebdo->PaliersThermiquesDuPays[pays]
+                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+                    int cnt1
+                      = CorrespondanceCntNativesCntOptim
+                          .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[globalClusterIdx];
+                    if (cnt1 >= 0)
+                    {
+                        SecondMembre[cnt1] = problemeHebdo->PaliersThermiquesDuPays[pays]
+                                               .PuissanceDisponibleEtCout[cluster]
+                                               .PuissanceMinDuPalierThermiqueRef[pdtJour];
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
+                    }
+
+                    int cnt2
+                      = CorrespondanceCntNativesCntOptim
+                          .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[globalClusterIdx];
+                    if (cnt2 >= 0)
+                    {
+                        SecondMembre[cnt2] = problemeHebdo->PaliersThermiquesDuPays[pays]
+                                               .PuissanceDisponibleEtCout[cluster]
+                                               .PuissanceDisponibleDuPalierThermiqueRef[pdtJour];
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
+                    }
                 }
             }
 
-            auto areaReservesDown
-              = areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
-            for (const auto& areaReserveDown : areaReservesDown)
+            // Short Term Storage clusters
             {
-                int cnt
-                  = CorrespondanceCntNativesCntOptim
-                      .NumeroDeContrainteDesContraintesDeBesoinEnReserves[areaReserveDown
-                                                                            .globalReserveIndex];
-                if (cnt >= 0)
+                auto& areaReservesUp
+                  = areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp;
+                for (const auto& areaReserveUp : areaReservesUp)
                 {
-                    SecondMembre[cnt] = areaReserveDown.need.at(pdtGlobal);
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                    for (const auto& reserveParticipation : areaReserveUp.AllReservesParticipation)
+                    {
+                        int cnt
+                          = CorrespondanceCntNativesCntOptim
+                              .NumeroDeContrainteDesContraintesSTStorageClusterMaxWithdrawParticipation
+                                [reserveParticipation.globalIndexClusterParticipation];
+                        if (cnt >= 0)
+                        {
+                            SecondMembre[cnt] = reserveParticipation.maxTurbining;
+                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                        }
+                    }
                 }
-            }
-
-            for (uint32_t cluster = 0;
-                 cluster < problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
-                 cluster++)
-            {
-                int globalClusterIdx = problemeHebdo->PaliersThermiquesDuPays[pays]
-                                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
-                int cnt1 = CorrespondanceCntNativesCntOptim
-                      .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[globalClusterIdx];
-                if (cnt1 >= 0)
+                auto& areaReservesDown
+                  = areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown;
+                for (const auto& areaReserveDown : areaReservesDown)
                 {
-                    SecondMembre[cnt1] = problemeHebdo->PaliersThermiquesDuPays[pays]
-                                          .PuissanceDisponibleEtCout[cluster]
-                                          .PuissanceMinDuPalierThermiqueRef[pdtJour];
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
-                }
-                
-                int cnt2 = CorrespondanceCntNativesCntOptim
-                      .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[globalClusterIdx];
-                if (cnt2 >= 0)
-                {
-                    SecondMembre[cnt2] = problemeHebdo->PaliersThermiquesDuPays[pays]
-                                          .PuissanceDisponibleEtCout[cluster]
-                                          .PuissanceDisponibleDuPalierThermiqueRef[pdtJour];
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
+                    for (const auto& reserveParticipation :
+                         areaReserveDown.AllReservesParticipation)
+                    {
+                        int cnt
+                          = CorrespondanceCntNativesCntOptim
+                              .NumeroDeContrainteDesContraintesSTStorageClusterMaxWithdrawParticipation
+                                [reserveParticipation.globalIndexClusterParticipation];
+                        if (cnt >= 0)
+                        {
+                            SecondMembre[cnt] = reserveParticipation.maxTurbining;
+                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                        }
+                    }
                 }
             }
         }

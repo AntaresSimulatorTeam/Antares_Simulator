@@ -101,15 +101,20 @@ public:
                                               int offset = 0,
                                               int delta = 0);
 
-    ConstraintBuilder& RunningClusterReserveParticipation(unsigned int index,
-                                                     double coeff,
-                                                     int offset = 0,
-                                                     int delta = 0);
+    ConstraintBuilder& RunningThermalClusterReserveParticipation(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset = 0,
+                                                                 int delta = 0);
 
-    ConstraintBuilder& ClusterReserveParticipation(unsigned int index,
-                                                     double coeff,
-                                                     int offset = 0,
-                                                     int delta = 0);
+    ConstraintBuilder& ThermalClusterReserveParticipation(unsigned int index,
+                                                          double coeff,
+                                                          int offset = 0,
+                                                          int delta = 0);
+
+    ConstraintBuilder& STStorageClusterReserveParticipation(unsigned int index,
+                                                            double coeff,
+                                                            int offset = 0,
+                                                            int delta = 0);
 
     ConstraintBuilder& InternalUnsatisfiedReserve(unsigned int pays,
                                                   double coeff,
@@ -306,6 +311,7 @@ struct ReserveData
 {
     bool Simulation;
     ALL_AREA_RESERVES& areaReserves;
-    std::vector<PALIERS_THERMIQUES> thermalClusters;
+    std::vector<PALIERS_THERMIQUES>& thermalClusters;
+    std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageOfArea;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };

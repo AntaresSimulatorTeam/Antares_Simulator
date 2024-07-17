@@ -42,10 +42,13 @@ public:
     bool saveSeries(const std::string& path) const;
 
     void addReserveParticipation(Data::ReserveName name,
-                                 ClusterReserveParticipation& reserveParticipation);
+                                 STStorageClusterReserveParticipation& reserveParticipation);
 
-    //! \brief Returns max power for a reserve if participating, -1 otherwise
-    float reserveMaxPower(Data::ReserveName name);
+    //! \brief Returns max turbining power for a reserve if participating, -1 otherwise
+    float reserveMaxTurbining(Data::ReserveName name);
+    
+    //! \brief Returns max pumping power for a reserve if participating, -1 otherwise
+    float reserveMaxPumping(Data::ReserveName name);
 
     //! \brief Returns participating cost for a reserve if participating, -1 otherwise
     float reserveCost(Data::ReserveName name);
@@ -60,6 +63,6 @@ public:
 
 private:
     //! reserve
-    std::map<Data::ReserveName, ClusterReserveParticipation> clusterReservesParticipations;
+    std::map<Data::ReserveName, STStorageClusterReserveParticipation> clusterReservesParticipations;
 };
 } // namespace Antares::Data::ShortTermStorage

@@ -45,8 +45,9 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
 
-    std::vector<int> runningClusterReserveParticipationIndex;
-    std::vector<int> clusterReserveParticipationIndex;
+    std::vector<int> runningThermalClusterReserveParticipationIndex;
+    std::vector<int> thermalClusterReserveParticipationIndex;
+    std::vector<int> STStorageClusterReserveParticipationIndex;
     std::vector<int> internalUnsatisfiedReserveIndex;
     std::vector<int> internalExcessReserveIndex;
 
@@ -100,6 +101,9 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesContraintesDeBesoinEnReserves;
     std::vector<int> NumeroDeContrainteDesContraintesDePuissanceMinDuPalier;
     std::vector<int> NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier;
+
+    std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterMaxWithdrawParticipation;
+    std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation;
 
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
@@ -195,6 +199,7 @@ struct RESULTS
     std::vector<double> level;      // MWh
     std::vector<double> injection;  // MWh
     std::vector<double> withdrawal; // MWh
+    std::vector<double> reserveParticipationOfCluster; // MWh
 };
 } // namespace ShortTermStorage
 
@@ -267,41 +272,54 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 };
 
 constexpr float CLUSTER_NOT_PARTICIPATING = -1.0f;
-struct RESERVE_PARTICIPATION
+struct RESERVE_PARTICIPATION_BASE
 {
-    float maxPower = CLUSTER_NOT_PARTICIPATING;
     float participationCost = CLUSTER_NOT_PARTICIPATING;
     int globalIndexClusterParticipation = 0;
     int areaIndexClusterParticipation = 0;
     std::string clusterName;
     int clusterIdInArea;
+
+    virtual ~RESERVE_PARTICIPATION_BASE() = default;
 };
 
+struct RESERVE_PARTICIPATION_THERMAL : public RESERVE_PARTICIPATION_BASE
+{
+    float maxPower = CLUSTER_NOT_PARTICIPATING;
+};
+
+struct RESERVE_PARTICIPATION_STSTORAGE : public RESERVE_PARTICIPATION_BASE
+{
+    float maxTurbining = CLUSTER_NOT_PARTICIPATING;
+    float maxPumping = CLUSTER_NOT_PARTICIPATING;
+};
+
+template<typename ReserveType>
 struct CAPACITY_RESERVATION
 {
-    std::vector<RESERVE_PARTICIPATION> AllReservesParticipation;//!< Vector size is number of clusters in this area
-    std::vector<int> need;//!<  Vector size is number of hours in year
+    std::vector<ReserveType>
+      AllReservesParticipation; //!< Vector size is number of clusters in this area
+    std::vector<int> need;      //!< Vector size is number of hours in year
     float failureCost = 0;
     float spillageCost = 0;
-
     std::string reserveName;
     int globalReserveIndex;
     int areaReserveIndex;
 };
 
-
 //Vector size is number of reserves up or down
+template<typename ReserveType>
 struct AREA_RESERVES_VECTOR
 {
-    std::vector<CAPACITY_RESERVATION> areaCapacityReservationsUp;
-    std::vector<CAPACITY_RESERVATION> areaCapacityReservationsDown;
+    std::vector<CAPACITY_RESERVATION<ReserveType>> areaCapacityReservationsUp;
+    std::vector<CAPACITY_RESERVATION<ReserveType>> areaCapacityReservationsDown;
 };
 
 //Vector size is number of areas, contains all the reserves
 struct ALL_AREA_RESERVES
 {
-    std::vector<AREA_RESERVES_VECTOR> thermalAreaReserves;
-    std::vector<AREA_RESERVES_VECTOR> shortTermStorageAreaReserves;
+    std::vector<AREA_RESERVES_VECTOR<RESERVE_PARTICIPATION_THERMAL>> thermalAreaReserves;
+    std::vector<AREA_RESERVES_VECTOR<RESERVE_PARTICIPATION_STSTORAGE>> shortTermStorageAreaReserves;
     //other types of reserves to be implemented here
 };
 
@@ -466,7 +484,7 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
 };
 
-struct RESERVE_THERMIQUE
+struct RESERVES
 {
     std::vector<double> ValeursHorairesInternalUnsatisfied;
     std::vector<double> ValeursHorairesInternalExcessReserve;
@@ -501,7 +519,7 @@ struct RESULTATS_HORAIRES
 
     std::vector<double> CoutsMarginauxHoraires;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
-    std::vector<RESERVE_THERMIQUE> ReserveThermique;
+    std::vector<RESERVES> Reserves;
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
 };
@@ -573,6 +591,7 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     ALL_AREA_RESERVES allReserves;
+    int nbReserveParticipations = 0;
 
     uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;

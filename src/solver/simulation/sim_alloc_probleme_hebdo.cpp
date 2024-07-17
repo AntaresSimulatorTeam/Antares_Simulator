@@ -173,10 +173,12 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .assign(linkCount, 0);
         variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
           .assign(linkCount, 0);
-        variablesMapping.runningClusterReserveParticipationIndex
-          .assign(study.runtime->reserveParticipationCount, 0);
-        variablesMapping.clusterReserveParticipationIndex
-          .assign(study.runtime->reserveParticipationCount, 0);
+        variablesMapping.runningThermalClusterReserveParticipationIndex.assign(
+          study.runtime->reserveParticipationCount * study.runtime->capacityReservationCount, 0);
+        variablesMapping.thermalClusterReserveParticipationIndex.assign(
+          study.runtime->reserveParticipationCount * study.runtime->capacityReservationCount, 0);
+        variablesMapping.STStorageClusterReserveParticipationIndex.assign(
+          study.runtime->reserveParticipationCount * study.runtime->capacityReservationCount, 0);
         variablesMapping.internalUnsatisfiedReserveIndex
           .assign(study.runtime->capacityReservationCount, 0);
         variablesMapping.internalExcessReserveIndex
@@ -256,8 +258,15 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
             study.runtime->thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .NumeroDeContrainteDesContraintesSTStorageClusterMaxWithdrawParticipation.assign(
+            study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation.assign(
+            study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, -1);
+
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne.assign(
+            study.runtime->thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k].VariableDualeParInterconnexion
           .assign(linkCount, 0.);
@@ -473,7 +482,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
-        problem.ResultatsHoraires[k].ReserveThermique.resize(NombreDePasDeTemps);
+        problem.ResultatsHoraires[k].Reserves.resize(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
@@ -525,12 +534,10 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ProductionThermique[j]
               .NombreDeGroupesQuiTombentEnPanneDuPalier
               .assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ReserveThermique[j]
-              .ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
-            problem.ResultatsHoraires[k]
-              .ReserveThermique[j]
-              .ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
+            problem.ResultatsHoraires[k].Reserves[j].ValeursHorairesInternalUnsatisfied.assign(
+              nbReserves, 0.);
+            problem.ResultatsHoraires[k].Reserves[j].ValeursHorairesInternalExcessReserve.assign(
+              nbReserves, 0.);
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
@@ -541,6 +548,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].withdrawal.resize(
               nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
+            problem.ResultatsHoraires[k].ShortTermStorage[pdt].reserveParticipationOfCluster.resize(
+              nbReserveParticipations);
         }
     }
 }
