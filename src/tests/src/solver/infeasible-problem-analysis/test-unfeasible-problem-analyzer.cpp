@@ -88,13 +88,14 @@ private:
 };
 
 void addOneVarConstraintToProblem(MPSolver* problem,
-                                  const std::string& varName,
+                                  const std::string& constraintName,
                                   const double& varLowBnd,
                                   const double& varUpBnd,
                                   const double& ConstLowBnd)
 {
+    std::string varName = "lonely-var-in-" + constraintName;
     auto* var = problem->MakeNumVar(varLowBnd, varUpBnd, varName);
-    auto* constraint = problem->MakeRowConstraint(varName);
+    auto* constraint = problem->MakeRowConstraint(constraintName);
     constraint->SetCoefficient(var, 1);
     constraint->SetBounds(ConstLowBnd, problem->infinity());
 }
