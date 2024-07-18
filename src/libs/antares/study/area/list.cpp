@@ -470,7 +470,6 @@ void AreaList::rebuildIndexes()
 
     if (!areas.empty())
     {
-        using AreaWeakPtr = Area*;
         byIndex.resize(areas.size());
 
         uint indx = 0;
