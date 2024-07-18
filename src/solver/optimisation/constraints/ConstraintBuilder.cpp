@@ -65,6 +65,28 @@ ConstraintBuilder& ConstraintBuilder::ThermalClusterReserveParticipation(unsigne
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::STStorageClusterReserveUpParticipation(unsigned int index,
+                                                                             double coeff,
+                                                                             int offset,
+                                                                             int delta)
+{
+    AddVariable(
+      variableManager_.STStorageClusterReserveUpParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::STStorageClusterReserveDownParticipation(unsigned int index,
+                                                                               double coeff,
+                                                                               int offset,
+                                                                               int delta)
+{
+    AddVariable(
+      variableManager_.STStorageClusterReserveDownParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::STStorageTurbiningClusterReserveParticipation(
   unsigned int index,
   double coeff,

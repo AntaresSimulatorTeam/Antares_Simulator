@@ -70,6 +70,13 @@ public:
                                                 const std::string& elementType,
                                                 const std::string& clusterName,
                                                 const std::string& reserveName);
+    void SetSTStorageClusterElementName(unsigned int variable,
+                                        const std::string& variableType,
+                                        const std::string& clusterName);
+    void SetSTStorageClusterAndReserveElementName(unsigned int variable,
+                                                  const std::string& elementType,
+                                                  const std::string& clusterName,
+                                                  const std::string& reserveName);
     void SetThermalClusterReserveElementName(unsigned int variable,
                                              const std::string& elementType,
                                              const std::string& reserveName);
@@ -161,12 +168,20 @@ public:
     void POutCapacityThreasholdSup(unsigned int constraint, const std::string& clusterName);
     void POutBoundMin(unsigned int constraint, const std::string& clusterName);
     void POutBoundMax(unsigned int constraint, const std::string& clusterName);
+    void STReserveUpParticipation(unsigned int constraint,
+                                  const std::string& clusterName,
+                                  const std::string& reserveName);
+    void STReserveDownParticipation(unsigned int constraint,
+                                    const std::string& clusterName,
+                                    const std::string& reserveName);
     void STTurbiningMaxReserve(unsigned int constraint,
                                const std::string& clusterName,
                                const std::string& reserveName);
     void STPumpingMaxReserve(unsigned int constraint,
                              const std::string& clusterName,
                              const std::string& reserveName);
+    void STTurbiningCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
+    void STPumpingCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
     void ReserveSatisfaction(unsigned int constraint, const std::string& reserveName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);

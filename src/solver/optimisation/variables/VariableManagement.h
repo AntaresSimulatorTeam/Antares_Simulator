@@ -32,6 +32,16 @@ public:
                                             int offset = 0,
                                             int delta = 0);
 
+    int& STStorageClusterReserveUpParticipation(unsigned int index,
+                                                unsigned int hourInWeek,
+                                                int offset = 0,
+                                                int delta = 0);
+
+    int& STStorageClusterReserveDownParticipation(unsigned int index,
+                                                  unsigned int hourInWeek,
+                                                  int offset = 0,
+                                                  int delta = 0);
+
     int& STStorageTurbiningClusterReserveParticipation(unsigned int index,
                                                        unsigned int hourInWeek,
                                                        int offset = 0,

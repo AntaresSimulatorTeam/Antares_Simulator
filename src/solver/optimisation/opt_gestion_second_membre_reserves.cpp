@@ -174,6 +174,29 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                         }
                     }
                 }
+                for (const auto& cluster : problemeHebdo->ShortTermStorage[pays])
+                {
+                    int globalClusterIdx = cluster.clusterGlobalIndex;
+                    int cnt1
+                      = CorrespondanceCntNativesCntOptim
+                          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholds
+                            [globalClusterIdx];
+                    if (cnt1 >= 0)
+                    {
+                        SecondMembre[cnt1] = cluster.series.get()->maxWithdrawalModulation[pdtJour];
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
+                    }
+
+                    int cnt2
+                      = CorrespondanceCntNativesCntOptim
+                          .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds
+                            [globalClusterIdx];
+                    if (cnt2 >= 0)
+                    {
+                        SecondMembre[cnt1] = cluster.series.get()->maxInjectionModulation[pdtJour];
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
+                    }
+                }
             }
         }
     }

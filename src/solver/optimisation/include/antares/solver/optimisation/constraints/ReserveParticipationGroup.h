@@ -21,14 +21,6 @@
 
 #pragma once
 #include "AbstractStartUpCostsGroup.h"
-#include "ConstraintGroup.h"
-#include "PMaxReserve.h"
-#include "POutCapacityThreasholds.h"
-#include "PRunningUnits.h"
-#include "ReserveSatisfaction.h"
-#include "POutBounds.h"
-#include "STTurbiningMaxReserve.h"
-#include "STPumpingMaxReserve.h"
 
 /**
  * @brief Group of reserve constraints

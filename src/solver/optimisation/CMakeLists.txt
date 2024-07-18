@@ -144,6 +144,14 @@ set(RTESOLVER_OPT
 		constraints/STTurbiningMaxReserve.cpp
 		include/antares/solver/optimisation/constraints/STPumpingMaxReserve.h
 		constraints/STPumpingMaxReserve.cpp
+		include/antares/solver/optimisation/constraints/STTurbiningCapacityThreasholds.h
+		constraints/STTurbiningCapacityThreasholds.cpp
+		include/antares/solver/optimisation/constraints/STPumpingCapacityThreasholds.h
+		constraints/STPumpingCapacityThreasholds.cpp
+		include/antares/solver/optimisation/constraints/STReserveUpParticipation.h
+		constraints/STReserveUpParticipation.cpp
+		include/antares/solver/optimisation/constraints/STReserveDownParticipation.h
+		constraints/STReserveDownParticipation.cpp
 
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp

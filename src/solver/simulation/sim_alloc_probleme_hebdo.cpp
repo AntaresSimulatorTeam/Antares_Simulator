@@ -177,6 +177,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           study.runtime->thermalPlantTotalCount * study.runtime->capacityReservationCount, 0);
         variablesMapping.thermalClusterReserveParticipationIndex.assign(
           study.runtime->thermalPlantTotalCount * study.runtime->capacityReservationCount, 0);
+        variablesMapping.STStorageClusterReserveUpParticipationIndex.assign(
+          study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, 0);
+        variablesMapping.STStorageClusterReserveDownParticipationIndex.assign(
+          study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, 0);
         variablesMapping.STStorageTurbiningClusterReserveParticipationIndex.assign(
           study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, 0);
         variablesMapping.STStoragePumpingClusterReserveParticipationIndex.assign(
@@ -265,6 +269,12 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation.assign(
             study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholds.assign(
+            study.runtime->shortTermStorageCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds.assign(
+            study.runtime->shortTermStorageCount, -1);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne.assign(

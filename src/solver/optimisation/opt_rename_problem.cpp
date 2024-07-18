@@ -101,6 +101,30 @@ void Namer::SetThermalClusterAndReserveElementName(unsigned int variable,
       BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
 }
 
+void Namer::SetSTStorageClusterElementName(unsigned int variable,
+                                           const std::string& elementType,
+                                           const std::string& clusterName)
+{
+    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTerm Storage Cluster"
+                          + "<" + clusterName + ">";
+
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+}
+
+void Namer::SetSTStorageClusterAndReserveElementName(unsigned int variable,
+                                                     const std::string& elementType,
+                                                     const std::string& clusterName,
+                                                     const std::string& reserveName)
+{
+    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTerm Storage Cluster"
+                          + "<" + clusterName + ">" + SEPARATOR + "Reserve" + "<" + reserveName
+                          + ">";
+
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+}
+
 void Namer::SetThermalClusterReserveElementName(unsigned int variable,
                                                 const std::string& elementType,
                                                 const std::string& reserveName)
@@ -422,11 +446,27 @@ void ConstraintNamer::POutBoundMax(unsigned int constraint, const std::string& c
     SetThermalClusterElementName(constraint, "POutBoundMax", clusterName);
 }
 
+void ConstraintNamer::STReserveUpParticipation(unsigned int constraint,
+                                               const std::string& clusterName,
+                                               const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(
+      constraint, "STReserveUpParticipation", clusterName, reserveName);
+}
+
+void ConstraintNamer::STReserveDownParticipation(unsigned int constraint,
+                                                 const std::string& clusterName,
+                                                 const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(
+      constraint, "STReserveDownParticipation", clusterName, reserveName);
+}
+
 void ConstraintNamer::STTurbiningMaxReserve(unsigned int constraint,
                                             const std::string& clusterName,
                                             const std::string& reserveName)
 {
-    SetThermalClusterAndReserveElementName(
+    SetSTStorageClusterAndReserveElementName(
       constraint, "STTurbiningMaxReserve", clusterName, reserveName);
 }
 
@@ -434,8 +474,20 @@ void ConstraintNamer::STPumpingMaxReserve(unsigned int constraint,
                                           const std::string& clusterName,
                                           const std::string& reserveName)
 {
-    SetThermalClusterAndReserveElementName(
+    SetSTStorageClusterAndReserveElementName(
       constraint, "STPumpingMaxReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::STTurbiningCapacityThreasholds(unsigned int constraint,
+                                                     const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constraint, "STTurbiningCapacityThreasholds", clusterName);
+}
+
+void ConstraintNamer::STPumpingCapacityThreasholds(unsigned int constraint,
+                                                   const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constraint, "STPumpingCapacityThreasholds", clusterName);
 }
 
 void ConstraintNamer::ReserveSatisfaction(unsigned int constraint, const std::string& reserveName)

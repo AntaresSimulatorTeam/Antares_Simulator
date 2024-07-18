@@ -47,6 +47,8 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> runningThermalClusterReserveParticipationIndex;
     std::vector<int> thermalClusterReserveParticipationIndex;
+    std::vector<int> STStorageClusterReserveUpParticipationIndex;
+    std::vector<int> STStorageClusterReserveDownParticipationIndex;
     std::vector<int> STStorageTurbiningClusterReserveParticipationIndex;
     std::vector<int> STStoragePumpingClusterReserveParticipationIndex;
     std::vector<int> internalUnsatisfiedReserveIndex;
@@ -105,6 +107,8 @@ struct CORRESPONDANCES_DES_CONTRAINTES
 
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterMaxWithdrawParticipation;
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation;
+    std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholds;
+    std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds;
 
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
