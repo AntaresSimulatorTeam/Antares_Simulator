@@ -201,11 +201,11 @@ private:
     std::vector<float> G;
     std::vector<float> D;
     int* M;
-    float* T;
+    std::vector<float> T;
     Data::XCast::Distribution* L;
     std::vector<bool> BO;
-    float* MA;
-    float* MI;
+    std::vector<float> MA;
+    std::vector<float> MI;
     float** FO; // contrainte : FO >=0
 
     float STEP;

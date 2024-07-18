@@ -251,10 +251,10 @@ void XCast::allocateTemporaryData()
     G.resize(p);
     D.resize(p);
     M = m.allocate<int>(p);
-    T = m.allocate<float>(p);
+    T.resize(p);
     BO.resize(p);
-    MA = m.allocate<float>(p);
-    MI = m.allocate<float>(p);
+    MA.resize(p);
+    MI.resize(p);
     L = m.allocate<Data::XCast::Distribution>(p);
     POSI.resize(p);
     MAXI.resize(p);
@@ -331,10 +331,7 @@ void XCast::destroyTemporaryData()
         delete[] CORR;
         delete[] FO;
         delete[] M;
-        delete[] T;
         delete[] L;
-        delete[] MA;
-        delete[] MI;
         delete[] Presque_maxi;
         delete[] Presque_mini;
         delete[] BASI;
