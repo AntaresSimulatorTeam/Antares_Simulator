@@ -52,7 +52,7 @@ public:
         return "Slack variables analysis";
     }
 
-    std::vector<const operations_research::MPVariable*>& largestSlackVariables();
+    const std::vector<const operations_research::MPVariable*>& largestSlackVariables();
 
 private:
     void selectConstraintsToWatch(operations_research::MPSolver* problem);

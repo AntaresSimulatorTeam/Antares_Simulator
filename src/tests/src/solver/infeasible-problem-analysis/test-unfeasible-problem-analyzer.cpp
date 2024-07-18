@@ -89,9 +89,9 @@ private:
 
 void addOneVarConstraintToProblem(MPSolver* problem,
                                   const std::string& constraintName,
-                                  const double& varLowBnd,
-                                  const double& varUpBnd,
-                                  const double& ConstLowBnd)
+                                  double varLowBnd,
+                                  double varUpBnd,
+                                  double ConstLowBnd)
 {
     std::string varName = "lonely-var-in-" + constraintName;
     auto* var = problem->MakeNumVar(varLowBnd, varUpBnd, varName);
@@ -121,11 +121,11 @@ std::unique_ptr<MPSolver> createProblemWith_n_violatedConstraints(const int n)
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
     for (auto i: std::ranges::iota_view(1, n + 1)) // From 1 to n included
     {
-        char name[32];
-        std::sprintf(name, "BC-name-%d::hourly::hour<%d>", i, 5 * i);
+        std::stringstream name;
+        name << "BC-name-" << i << "::hourly::hour<" << 5 * i << ">";
         // Make a constraint that can never be satisfied, of type : var > A,
         // where : bound_inf(var) = 0, bound_sup(var) = 1 and A > 1.
-        addOneVarConstraintToProblem(problem.get(), name, 0, 1, i + 2);
+        addOneVarConstraintToProblem(problem.get(), name.str(), 0., 1., double(i + 2));
     }
     return problem;
 }
