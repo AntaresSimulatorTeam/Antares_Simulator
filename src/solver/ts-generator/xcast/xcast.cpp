@@ -114,8 +114,6 @@ void XCast::applyTransferFunction(PredicateT& predicate)
     float a[maxPoints];
     float b[maxPoints];
 
-    float* dailyResults;
-
     const uint processCount = (uint)pData.localareas.size();
 
     for (uint s = 0; s != processCount; ++s)
@@ -145,7 +143,7 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                 b[i] = (p0[y] * p1[x] - p1[y] * p0[x]) / (p1[x] - p0[x]);
             }
 
-            dailyResults = DATA[s];
+            auto& dailyResults = DATA[s];
             for (h = 0; h != HOURS_PER_DAY; ++h)
             {
                 for (i = 0; i != tf.width; ++i)
@@ -278,13 +276,13 @@ void XCast::allocateTemporaryData()
     Presque_mini.resize(p);
     pQCHOLTotal.resize(p);
 
-    CORR = m.allocate<float*>(p);
+    CORR.resize(p);
     Triangle_reference.resize(p);
     Triangle_courant.resize(p);
-    FO = m.allocate<float*>(p);
-    LISS = m.allocate<float*>(p);
-    DATL = m.allocate<float*>(p);
-    DATA = m.allocate<float*>(p);
+    FO.resize(p);
+    LISS.resize(p);
+    DATL.resize(p);
+    DATA.resize(p);
     Carre_courant.resize(p);
     Carre_reference.resize(p);
 
@@ -295,11 +293,11 @@ void XCast::allocateTemporaryData()
         Carre_courant[i].resize(p);
         Carre_reference[i].resize(p);
 
-        CORR[i] = m.allocate<float>(p);
-        FO[i] = m.allocate<float>(24);
-        LISS[i] = m.allocate<float>(24);
-        DATL[i] = m.allocate<float>(24);
-        DATA[i] = m.allocate<float>(24);
+        CORR[i].resize(p);
+        FO[i].resize(24);
+        LISS[i].resize(24);
+        DATL[i].resize(24);
+        DATA[i].resize(24);
     }
 }
 
@@ -307,20 +305,6 @@ void XCast::destroyTemporaryData()
 {
     if (!pNeverInitialized)
     {
-        uint p = (uint)pData.localareas.size();
-        for (uint i = 0; i != p; ++i)
-        {
-            delete[] CORR[i];
-            delete[] FO[i];
-            delete[] LISS[i];
-            delete[] DATL[i];
-            delete[] DATA[i];
-        }
-        delete[] DATA;
-        delete[] LISS;
-        delete[] DATL;
-        delete[] CORR;
-        delete[] FO;
         delete[] L;
     }
 }
@@ -442,7 +426,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
+                memcpy(FO[s].data(), xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
@@ -457,7 +441,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                 for (uint s = 0; s != processCount; ++s)
                 {
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
@@ -478,7 +462,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     }
 
                     auto& column = srcData.translation[0];
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
                     assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
                            && "Bound checking");
 
@@ -495,7 +479,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                 for (uint s = 0; s != processCount; ++s)
                 {
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
@@ -514,7 +498,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     auto& series = predicate.matrix(currentArea);
                     assert(tsIndex < series.width);
                     auto& column = series.column(tsIndex);
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {

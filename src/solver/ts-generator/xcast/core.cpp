@@ -417,7 +417,7 @@ bool XCast::generateValuesForTheCurrentDay()
 
                     for (uint s = 0; s != processCount; ++s)
                     {
-                        float* corr_s = CORR[s];
+                        auto& corr_s = CORR[s];
                         auto& userMonthlyCorr = pCorrMonth->column(s);
                         for (uint t = 0; t < s; ++t)
                         {

@@ -206,20 +206,20 @@ private:
     std::vector<bool> BO;
     std::vector<float> MA;
     std::vector<float> MI;
-    float** FO; // contrainte : FO >=0
+    std::vector<std::vector<float>> FO; // contrainte : FO >=0
 
     float STEP;
     float SQST;
     std::vector<float> POSI;
-    float** CORR;
+    std::vector<std::vector<float>> CORR;
     std::vector<float> MAXI;
     std::vector<float> MINI;
     std::vector<float> Presque_maxi;
     std::vector<float> Presque_mini;
     std::vector<float> ESPE;
     std::vector<float> STDE;
-    float** LISS;
-    float** DATL;
+    std::vector<std::vector<float>> LISS;
+    std::vector<std::vector<float>> DATL;
 
     std::vector<float> DIFF;
     std::vector<float> TREN;
@@ -237,7 +237,7 @@ private:
 
     std::vector<float> D_COPIE;
 
-    float** DATA;
+    std::vector<std::vector<float>> DATA;
 
     // cholesky temporary data
     std::vector<float> pQCHOLTotal;
