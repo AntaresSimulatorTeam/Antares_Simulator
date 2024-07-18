@@ -58,11 +58,6 @@ XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer)
 {
 }
 
-XCast::~XCast()
-{
-    destroyTemporaryData();
-}
-
 template<class PredicateT>
 void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, PredicateT& predicate)
 {
@@ -298,13 +293,6 @@ void XCast::allocateTemporaryData()
         LISS[i].resize(24);
         DATL[i].resize(24);
         DATA[i].resize(24);
-    }
-}
-
-void XCast::destroyTemporaryData()
-{
-    if (!pNeverInitialized)
-    {
     }
 }
 

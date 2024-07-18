@@ -74,7 +74,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~XCast();
+    ~XCast() = default;
     //@}
 
     //! \name Loading
@@ -105,7 +105,6 @@ public:
 
 private:
     void allocateTemporaryData();
-    void destroyTemporaryData();
 
     template<class PredicateT>
     void updateMissingCoefficients(PredicateT& predicate);
