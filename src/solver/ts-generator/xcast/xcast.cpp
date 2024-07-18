@@ -279,21 +279,21 @@ void XCast::allocateTemporaryData()
     pQCHOLTotal.resize(p);
 
     CORR = m.allocate<float*>(p);
-    Triangle_reference = m.allocate<float*>(p);
-    Triangle_courant = m.allocate<float*>(p);
+    Triangle_reference.resize(p);
+    Triangle_courant.resize(p);
     FO = m.allocate<float*>(p);
     LISS = m.allocate<float*>(p);
     DATL = m.allocate<float*>(p);
     DATA = m.allocate<float*>(p);
-    Carre_courant = m.allocate<float*>(p);
-    Carre_reference = m.allocate<float*>(p);
+    Carre_courant.resize(p);
+    Carre_reference.resize(p);
 
     for (uint i = 0; i != p; ++i)
     {
-        Triangle_reference[i] = m.allocate<float>(p);
-        Triangle_courant[i] = m.allocate<float>(p);
-        Carre_courant[i] = m.allocate<float>(p);
-        Carre_reference[i] = m.allocate<float>(p);
+        Triangle_reference[i].resize(p);
+        Triangle_courant[i].resize(p);
+        Carre_courant[i].resize(p);
+        Carre_reference[i].resize(p);
 
         CORR[i] = m.allocate<float>(p);
         FO[i] = m.allocate<float>(24);
@@ -314,17 +314,9 @@ void XCast::destroyTemporaryData()
             delete[] FO[i];
             delete[] LISS[i];
             delete[] DATL[i];
-            delete[] Triangle_reference[i];
-            delete[] Triangle_courant[i];
             delete[] DATA[i];
-            delete[] Carre_courant[i];
-            delete[] Carre_reference[i];
         }
-        delete[] Carre_courant;
-        delete[] Carre_reference;
         delete[] DATA;
-        delete[] Triangle_reference;
-        delete[] Triangle_courant;
         delete[] LISS;
         delete[] DATL;
         delete[] CORR;

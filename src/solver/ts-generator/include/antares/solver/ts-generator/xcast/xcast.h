@@ -230,10 +230,10 @@ private:
     std::vector<float> ALPH; // used only if all processes are Normal
     std::vector<float> BETA; // used only if all processes are Normal
 
-    float** Triangle_reference;
-    float** Triangle_courant;
-    float** Carre_reference;
-    float** Carre_courant;
+    std::vector<std::vector<float>> Triangle_reference;
+    std::vector<std::vector<float>> Triangle_courant;
+    std::vector<std::vector<float>> Carre_reference;
+    std::vector<std::vector<float>> Carre_courant;
 
     std::vector<float> D_COPIE;
 
