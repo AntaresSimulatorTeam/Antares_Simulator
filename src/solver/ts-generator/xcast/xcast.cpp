@@ -266,9 +266,9 @@ void XCast::allocateTemporaryData()
     WIEN.resize(p + 1);
     BROW.resize(p);
 
-    BASI = m.allocate<float>(p);
-    ALPH = m.allocate<float>(p);
-    BETA = m.allocate<float>(p);
+    BASI.resize(p);
+    ALPH.resize(p);
+    BETA.resize(p);
 
     D_COPIE = m.allocate<float>(p);
 
@@ -334,9 +334,6 @@ void XCast::destroyTemporaryData()
         delete[] L;
         delete[] Presque_maxi;
         delete[] Presque_mini;
-        delete[] BASI;
-        delete[] ALPH;
-        delete[] BETA;
         delete[] pQCHOLTotal;
     }
 }

@@ -226,9 +226,9 @@ private:
     std::vector<float> WIEN;
     std::vector<float> BROW;
 
-    float* BASI; // used only if all processes are Normal
-    float* ALPH; // used only if all processes are Normal
-    float* BETA; // used only if all processes are Normal
+    std::vector<float> BASI; // used only if all processes are Normal
+    std::vector<float> ALPH; // used only if all processes are Normal
+    std::vector<float> BETA; // used only if all processes are Normal
 
     float** Triangle_reference;
     float** Triangle_courant;
