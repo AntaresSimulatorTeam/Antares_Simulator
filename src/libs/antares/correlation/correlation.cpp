@@ -509,11 +509,6 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
         pMode = modeAnnual;
         if (JIT::usedFromGUI)
         {
-            // Reset
-            annual = std::make_shared<Matrix<>>();
-            annual->resize(study.areas.size(), study.areas.size());
-            annual->fillUnit();
-
             // Preparing the monthly correlation matrices
             monthly.resize(12);
             for (int i = 0; i < 12; ++i)
@@ -522,15 +517,14 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
                 monthly[i].fillUnit();
             }
         }
-        else
-        {
-            annual = std::make_shared<Matrix<>>();
-            annual->resize(study.areas.size(), study.areas.size());
-            annual->fillUnit();
-        }
+
+        annual = std::make_shared<Matrix<>>();
+        annual->resize(study.areas.size(), study.areas.size());
+        annual->fillUnit();
 
         return false;
     }
+
     return true;
 }
 
