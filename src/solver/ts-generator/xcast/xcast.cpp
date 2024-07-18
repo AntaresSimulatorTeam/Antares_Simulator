@@ -274,8 +274,8 @@ void XCast::allocateTemporaryData()
 
     pUseConversion.resize(p);
 
-    Presque_maxi = m.allocate<float>(p);
-    Presque_mini = m.allocate<float>(p);
+    Presque_maxi.resize(p);
+    Presque_mini.resize(p);
     pQCHOLTotal = m.allocate<float>(p);
 
     CORR = m.allocate<float*>(p);
@@ -332,8 +332,6 @@ void XCast::destroyTemporaryData()
         delete[] FO;
         delete[] M;
         delete[] L;
-        delete[] Presque_maxi;
-        delete[] Presque_mini;
         delete[] pQCHOLTotal;
     }
 }

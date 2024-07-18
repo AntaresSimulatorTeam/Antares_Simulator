@@ -214,8 +214,8 @@ private:
     float** CORR;
     std::vector<float> MAXI;
     std::vector<float> MINI;
-    float* Presque_maxi;
-    float* Presque_mini;
+    std::vector<float> Presque_maxi;
+    std::vector<float> Presque_mini;
     std::vector<float> ESPE;
     std::vector<float> STDE;
     float** LISS;
