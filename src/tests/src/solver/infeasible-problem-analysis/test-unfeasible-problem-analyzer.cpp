@@ -21,7 +21,6 @@
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE unfeasible_problem_analyzer
 
-#include <cstdio>
 #include <ortools/linear_solver/linear_solver.h>
 #include <ranges>
 
