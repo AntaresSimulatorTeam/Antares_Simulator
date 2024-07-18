@@ -202,7 +202,7 @@ private:
     std::vector<float> D;
     std::vector<int> M;
     std::vector<float> T;
-    Data::XCast::Distribution* L;
+    std::vector<Data::XCast::Distribution> L;
     std::vector<bool> BO;
     std::vector<float> MA;
     std::vector<float> MI;

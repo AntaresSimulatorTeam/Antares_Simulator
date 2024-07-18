@@ -253,7 +253,7 @@ void XCast::allocateTemporaryData()
     BO.resize(p);
     MA.resize(p);
     MI.resize(p);
-    L = m.allocate<Data::XCast::Distribution>(p);
+    L.resize(p);
     POSI.resize(p);
     MAXI.resize(p);
     MINI.resize(p);
@@ -305,7 +305,6 @@ void XCast::destroyTemporaryData()
 {
     if (!pNeverInitialized)
     {
-        delete[] L;
     }
 }
 
