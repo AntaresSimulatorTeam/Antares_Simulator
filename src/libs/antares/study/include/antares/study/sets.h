@@ -134,7 +134,7 @@ public:
     */
     Sets(const Sets& rhs);
     //! Destructor
-    ~Sets();
+    ~Sets() = default;
     //@}
 
     //! \name Iterators
@@ -269,7 +269,7 @@ private:
     MapType pMap;
     MapOptions pOptions;
     //!
-    TypePtr* pByIndex;
+    std::vector<TypePtr> pByIndex;
     IDType* pNameByIndex;
     mutable bool pModified;
 
