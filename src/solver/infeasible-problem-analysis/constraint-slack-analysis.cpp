@@ -33,7 +33,7 @@ using namespace operations_research;
 
 namespace
 {
-bool compareSlackSolutions(const MPVariable* a, const MPVariable* b)
+bool greaterSlackSolutions(const MPVariable* a, const MPVariable* b)
 {
     return a->solution_value() > b->solution_value();
 }
@@ -123,7 +123,7 @@ void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
 
 void ConstraintSlackAnalysis::sortSlackVariablesByValue()
 {
-    std::sort(std::begin(slackVariables_), std::end(slackVariables_), ::compareSlackSolutions);
+    std::sort(std::begin(slackVariables_), std::end(slackVariables_), ::greaterSlackSolutions);
 }
 
 void ConstraintSlackAnalysis::trimSlackVariables()
