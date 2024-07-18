@@ -193,51 +193,9 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
     }
 }
 
-namespace
-{
-template<int DebugT>
-class Allocator
-{
-public:
-    Allocator():
-        allocated(0)
-    {
-    }
-
-    ~Allocator()
-    {
-        logs.debug() << "  allocated " << (allocated / 1024) << "Ko";
-    }
-
-    template<class T>
-    inline T* allocate(const size_t s)
-    {
-        allocated += sizeof(T) * s;
-        return new T[s];
-    }
-
-public:
-    size_t allocated;
-};
-
-template<>
-class Allocator<0>
-{
-public:
-    template<class T>
-    inline T* allocate(const size_t s) const
-    {
-        return new T[s];
-    }
-};
-
-} // namespace
-
 void XCast::allocateTemporaryData()
 {
     uint p = (uint)pData.localareas.size();
-
-    Allocator<Yuni::Logs::Verbosity::Debug::enabled> m;
 
     A.resize(p);
     B.resize(p);
