@@ -107,7 +107,10 @@ bool XCast::generateValuesForTheCurrentDay()
                 }
             }
 
-            if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal.data()))
+            if (Cholesky<float>(Triangle_courant,
+                                pCorrMonth->entry,
+                                processCount,
+                                pQCHOLTotal.data()))
             {
                 // la matrice C n'est pas admissible, on abandonne
                 logs.error() << "TS " << pTSName << " generator: invalid correlation matrix";
