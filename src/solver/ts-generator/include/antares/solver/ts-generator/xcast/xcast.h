@@ -200,7 +200,7 @@ private:
     std::vector<float> B;
     std::vector<float> G;
     std::vector<float> D;
-    int* M;
+    std::vector<int> M;
     std::vector<float> T;
     Data::XCast::Distribution* L;
     std::vector<bool> BO;
@@ -235,12 +235,12 @@ private:
     float** Carre_reference;
     float** Carre_courant;
 
-    float* D_COPIE;
+    std::vector<float> D_COPIE;
 
     float** DATA;
 
     // cholesky temporary data
-    float* pQCHOLTotal;
+    std::vector<float> pQCHOLTotal;
 
     //!
     std::vector<bool> pUseConversion;

@@ -250,7 +250,7 @@ void XCast::allocateTemporaryData()
     B.resize(p);
     G.resize(p);
     D.resize(p);
-    M = m.allocate<int>(p);
+    M.resize(p);
     T.resize(p);
     BO.resize(p);
     MA.resize(p);
@@ -270,13 +270,13 @@ void XCast::allocateTemporaryData()
     ALPH.resize(p);
     BETA.resize(p);
 
-    D_COPIE = m.allocate<float>(p);
+    D_COPIE.resize(p);
 
     pUseConversion.resize(p);
 
     Presque_maxi.resize(p);
     Presque_mini.resize(p);
-    pQCHOLTotal = m.allocate<float>(p);
+    pQCHOLTotal.resize(p);
 
     CORR = m.allocate<float*>(p);
     Triangle_reference = m.allocate<float*>(p);
@@ -322,7 +322,6 @@ void XCast::destroyTemporaryData()
         }
         delete[] Carre_courant;
         delete[] Carre_reference;
-        delete[] D_COPIE;
         delete[] DATA;
         delete[] Triangle_reference;
         delete[] Triangle_courant;
@@ -330,9 +329,7 @@ void XCast::destroyTemporaryData()
         delete[] DATL;
         delete[] CORR;
         delete[] FO;
-        delete[] M;
         delete[] L;
-        delete[] pQCHOLTotal;
     }
 }
 
