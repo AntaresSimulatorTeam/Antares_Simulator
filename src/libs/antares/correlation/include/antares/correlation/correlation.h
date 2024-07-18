@@ -147,7 +147,7 @@ public:
     //! The correlation matrix for the whole year
     Matrix<>* annual;
     //! All correlation matrices per month (12)
-    Matrix<>* monthly; // [12]
+    std::vector<Matrix<>> monthly; // [12]
 
     //! The name to displays in logs
     Yuni::CString<30, false> correlationName;

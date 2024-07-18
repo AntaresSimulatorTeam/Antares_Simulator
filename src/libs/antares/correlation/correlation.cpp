@@ -328,7 +328,6 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
 
 Correlation::Correlation():
     annual(nullptr),
-    monthly(nullptr),
     pMode(modeNone)
 {
 }
@@ -336,7 +335,6 @@ Correlation::Correlation():
 Correlation::~Correlation()
 {
     delete annual;
-    delete[] monthly;
 }
 
 bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
@@ -406,7 +404,7 @@ void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
         logs.error() << correlationName << ": the annual correlation coefficients are missing";
     }
 
-    if (monthly)
+    if (!monthly.empty())
     {
         for (int month = 0; month < 12; month++)
         {
@@ -441,7 +439,7 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
 
     if (JIT::usedFromGUI or pMode == modeMonthly)
     {
-        monthly = new Matrix<>[12];
+        monthly.resize(12);
         for (uint i = 0; i < 12; ++i)
         {
             monthly[i].resize(study.areas.size(), study.areas.size());
@@ -481,11 +479,8 @@ void Correlation::reset(Study& study)
         delete annual;
         annual = nullptr;
     }
-    if (monthly)
-    {
-        delete[] monthly;
-        monthly = nullptr;
-    }
+
+    monthly.clear();
 
     pMode = modeAnnual;
     if (JIT::usedFromGUI)
@@ -496,7 +491,7 @@ void Correlation::reset(Study& study)
         annual->fillUnit();
 
         // Preparing the monthly correlation matrices
-        monthly = new Matrix<>[12];
+        monthly.resize(12);
         for (int i = 0; i < 12; ++i)
         {
             monthly[i].resize(study.areas.size(), study.areas.size());
@@ -519,11 +514,8 @@ void Correlation::clear()
         delete annual;
         annual = nullptr;
     }
-    if (monthly)
-    {
-        delete[] monthly;
-        monthly = nullptr;
-    }
+
+    monthly.clear();
 }
 
 bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
@@ -534,11 +526,8 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
         delete annual;
         annual = nullptr;
     }
-    if (monthly)
-    {
-        delete[] monthly;
-        monthly = nullptr;
-    }
+
+    monthly.clear();
 
     if (!internalLoadFromINITry(study, ini, warnings))
     {
@@ -552,7 +541,7 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
             annual->fillUnit();
 
             // Preparing the monthly correlation matrices
-            monthly = new Matrix<>[12];
+            monthly.resize(12);
             for (int i = 0; i < 12; ++i)
             {
                 monthly[i].resize(study.areas.size(), study.areas.size());
@@ -638,7 +627,7 @@ uint64_t Correlation::memoryUsage() const
     {
         r += annual->memoryUsage();
     }
-    if (monthly)
+    if (!monthly.empty())
     {
         for (uint i = 0; i != 12; ++i)
         {
