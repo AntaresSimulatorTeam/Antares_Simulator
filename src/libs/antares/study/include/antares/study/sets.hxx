@@ -27,7 +27,6 @@ namespace Data
 {
 template<class T>
 inline Sets<T>::Sets():
-    pNameByIndex(NULL),
     pModified(false)
 {
 }
@@ -36,7 +35,6 @@ template<class T>
 inline Sets<T>::Sets(const Sets& rhs):
     pMap(rhs.pMap),
     pOptions(rhs.pOptions),
-    pNameByIndex(NULL),
     pModified(false)
 {
     if (rhs.pByIndex)
@@ -73,12 +71,7 @@ template<class T>
 void Sets<T>::clear()
 {
     pByIndex.clear();
-    if (pNameByIndex)
-    {
-        delete[] pNameByIndex;
-        pNameByIndex = NULL;
-    }
-
+    pNameByIndex.clear();
     pMap.clear();
     pOptions.clear();
 }
@@ -389,12 +382,13 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
 template<class T>
 void Sets<T>::rebuildIndexes()
 {
-    delete[] pNameByIndex;
+    pNameByIndex.clear();
     pByIndex.clear();
+
     if (!pMap.empty())
     {
         pByIndex.resize(pMap.size());
-        pNameByIndex = new IDType[pMap.size()];
+        pNameByIndex.resize(pMap.size());
         const typename MapType::iterator end = pMap.end();
         uint index = 0;
         for (typename MapType::iterator i = pMap.begin(); i != end; ++i)
@@ -403,10 +397,6 @@ void Sets<T>::rebuildIndexes()
             pNameByIndex[index] = i->first;
             ++index;
         }
-    }
-    else
-    {
-        pNameByIndex = NULL;
     }
 }
 

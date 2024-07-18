@@ -270,7 +270,7 @@ private:
     MapOptions pOptions;
     //!
     std::vector<TypePtr> pByIndex;
-    IDType* pNameByIndex;
+    std::vector<IDType> pNameByIndex;
     mutable bool pModified;
 
 }; // class Sets
