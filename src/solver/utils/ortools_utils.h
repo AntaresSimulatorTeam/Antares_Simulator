@@ -22,6 +22,13 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
 std::list<std::string> getAvailableOrtoolsSolverName();
 
 /*!
+ *  \brief Return a single string containing all solvers available, separated by a ", " and ending
+ * with a ".".
+ *
+ */
+std::string availableOrToolsSolversString();
+
+/*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
  *  \return MPSolver

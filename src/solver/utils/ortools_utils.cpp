@@ -401,6 +401,19 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     return result;
 }
 
+std::string availableOrToolsSolversString()
+{
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+    std::ostringstream solvers;
+    for (const std::string& avail: availableSolverList)
+    {
+        bool last = &avail == &availableSolverList.back();
+        std::string sep = last ? "." : ", ";
+        solvers << avail << sep;
+    }
+    return solvers.str();
+}
+
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
                           const std::string& solverName)
 {
