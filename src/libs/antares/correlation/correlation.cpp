@@ -327,14 +327,8 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
 }
 
 Correlation::Correlation():
-    annual(nullptr),
     pMode(modeNone)
 {
-}
-
-Correlation::~Correlation()
-{
-    delete annual;
 }
 
 bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
@@ -426,7 +420,7 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
 
     if (JIT::usedFromGUI or pMode == modeAnnual)
     {
-        annual = new Matrix<>();
+        annual = std::make_shared<Matrix<>>();
         annual->resize(study.areas.size(), study.areas.size());
         annual->fillUnit();
 
@@ -473,20 +467,13 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
 
 void Correlation::reset(Study& study)
 {
-    // Clean
-    if (annual)
-    {
-        delete annual;
-        annual = nullptr;
-    }
-
-    monthly.clear();
+    this->clear();
 
     pMode = modeAnnual;
     if (JIT::usedFromGUI)
     {
         // Reset
-        annual = new Matrix<>();
+        annual = std::make_shared<Matrix<>>();
         annual->resize(study.areas.size(), study.areas.size());
         annual->fillUnit();
 
@@ -500,7 +487,7 @@ void Correlation::reset(Study& study)
     }
     else
     {
-        annual = new Matrix<>();
+        annual = std::make_shared<Matrix<>>();
         annual->resize(study.areas.size(), study.areas.size());
         annual->fillUnit();
     }
@@ -508,26 +495,13 @@ void Correlation::reset(Study& study)
 
 void Correlation::clear()
 {
-    // Clean
-    if (annual)
-    {
-        delete annual;
-        annual = nullptr;
-    }
-
+    annual.reset();
     monthly.clear();
 }
 
 bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
 {
-    // Clean
-    if (annual)
-    {
-        delete annual;
-        annual = nullptr;
-    }
-
-    monthly.clear();
+    this->clear();
 
     if (!internalLoadFromINITry(study, ini, warnings))
     {
@@ -536,7 +510,7 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
         if (JIT::usedFromGUI)
         {
             // Reset
-            annual = new Matrix<>();
+            annual = std::make_shared<Matrix<>>();
             annual->resize(study.areas.size(), study.areas.size());
             annual->fillUnit();
 
@@ -550,7 +524,7 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
         }
         else
         {
-            annual = new Matrix<>();
+            annual = std::make_shared<Matrix<>>();
             annual->resize(study.areas.size(), study.areas.size());
             annual->fillUnit();
         }
@@ -597,7 +571,7 @@ void Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
     {
         for (uint i = 0; i != 12; ++i)
         {
-            array[i] = annual;
+            array[i] = annual.get();
         }
         break;
     }

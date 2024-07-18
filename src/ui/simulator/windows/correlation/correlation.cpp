@@ -318,7 +318,7 @@ void CorrelationPanel::assignMatrices(Data::Correlation* corr)
                 if (pData->renderer[i])
                     pData->renderer[i]->matrix(&(corr->monthly[i]));
             }
-            pData->renderer[12]->matrix(corr->annual);
+            pData->renderer[12]->matrix(corr->annual.get());
         }
     }
 }

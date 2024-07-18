@@ -62,7 +62,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~Correlation();
+    ~Correlation() = default;
     //@}
 
     //! \name Mode
@@ -145,7 +145,7 @@ public:
 
 public:
     //! The correlation matrix for the whole year
-    Matrix<>* annual;
+    std::shared_ptr<Matrix<>> annual;
     //! All correlation matrices per month (12)
     std::vector<Matrix<>> monthly; // [12]
 
