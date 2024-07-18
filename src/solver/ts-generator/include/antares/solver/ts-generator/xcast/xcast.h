@@ -203,7 +203,7 @@ private:
     int* M;
     float* T;
     Data::XCast::Distribution* L;
-    bool* BO;
+    std::vector<bool> BO;
     float* MA;
     float* MI;
     float** FO; // contrainte : FO >=0
@@ -243,7 +243,7 @@ private:
     float* pQCHOLTotal;
 
     //!
-    bool* pUseConversion;
+    std::vector<bool> pUseConversion;
 
     //! Name of the current timeseries
     Yuni::CString<32, false> pTSName;

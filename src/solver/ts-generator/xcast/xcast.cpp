@@ -252,7 +252,7 @@ void XCast::allocateTemporaryData()
     D.resize(p);
     M = m.allocate<int>(p);
     T = m.allocate<float>(p);
-    BO = m.allocate<bool>(p);
+    BO.resize(p);
     MA = m.allocate<float>(p);
     MI = m.allocate<float>(p);
     L = m.allocate<Data::XCast::Distribution>(p);
@@ -272,7 +272,7 @@ void XCast::allocateTemporaryData()
 
     D_COPIE = m.allocate<float>(p);
 
-    pUseConversion = m.allocate<bool>(p);
+    pUseConversion.resize(p);
 
     Presque_maxi = m.allocate<float>(p);
     Presque_mini = m.allocate<float>(p);
@@ -333,7 +333,6 @@ void XCast::destroyTemporaryData()
         delete[] M;
         delete[] T;
         delete[] L;
-        delete[] BO;
         delete[] MA;
         delete[] MI;
         delete[] Presque_maxi;
@@ -342,7 +341,6 @@ void XCast::destroyTemporaryData()
         delete[] ALPH;
         delete[] BETA;
         delete[] pQCHOLTotal;
-        delete[] pUseConversion;
     }
 }
 
