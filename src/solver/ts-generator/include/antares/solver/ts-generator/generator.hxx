@@ -42,14 +42,14 @@ inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
 template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
 {
-    auto* xcast = reinterpret_cast<XCast::XCast*>(
-      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
+    std::shared_ptr<XCast::XCast> xcast(reinterpret_cast<XCast::XCast*>(
+      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]));
 
-    if (not xcast)
+    if (!xcast)
     {
         logs.debug() << "Preparing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-        xcast = new XCast::XCast(study, T, writer);
-        study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = xcast;
+        xcast = std::make_shared<XCast::XCast>(study, T, writer);
+        study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = xcast.get();
     }
 
     // The current year
@@ -84,9 +84,9 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
 template<enum Data::TimeSeriesType T>
 void Destroy(Data::Study& study, uint year)
 {
-    auto* xcast = reinterpret_cast<XCast::XCast*>(
-      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
-    if (not xcast)
+    std::shared_ptr<XCast::XCast> xcast(reinterpret_cast<XCast::XCast*>(
+      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]));
+    if (!xcast)
     {
         return;
     }
@@ -136,8 +136,7 @@ void Destroy(Data::Study& study, uint year)
         logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
         study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
         study.destroyTSGeneratorData<T>();
-        delete xcast;
-        xcast = nullptr;
+        xcast.reset();
     }
 }
 
