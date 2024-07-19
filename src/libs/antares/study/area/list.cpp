@@ -465,16 +465,16 @@ void AreaList::rebuildIndexes()
 {
     byIndex.clear();
 
-	byIndex.resize(areas.size());
+    byIndex.resize(areas.size());
 
-	uint indx = 0;
-	auto end = areas.end();
-	for (auto i = areas.begin(); i != end; ++i, ++indx)
-	{
-		Area* area = i->second;
-		byIndex[indx] = area;
-		area->index = indx;
-	}
+    uint indx = 0;
+    auto end = areas.end();
+    for (auto i = areas.begin(); i != end; ++i, ++indx)
+    {
+        Area* area = i->second;
+        byIndex[indx] = area;
+        area->index = indx;
+    }
 }
 
 Area* AreaList::add(Area* a)
