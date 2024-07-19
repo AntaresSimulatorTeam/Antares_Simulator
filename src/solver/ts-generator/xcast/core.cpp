@@ -93,7 +93,7 @@ bool XCast::generateValuesForTheCurrentDay()
     // si les parametres ont change on reinitialise certaines variables intermediaires
     if (pNewMonth)
     {
-        if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal))
+        if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal.data()))
         {
             // C n'est pas sdp, mais peut-etre proche de sdp
             // on tente un abattement de 0.999
@@ -107,7 +107,10 @@ bool XCast::generateValuesForTheCurrentDay()
                 }
             }
 
-            if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal))
+            if (Cholesky<float>(Triangle_courant,
+                                pCorrMonth->entry,
+                                processCount,
+                                pQCHOLTotal.data()))
             {
                 // la matrice C n'est pas admissible, on abandonne
                 logs.error() << "TS " << pTSName << " generator: invalid correlation matrix";
@@ -227,7 +230,7 @@ bool XCast::generateValuesForTheCurrentDay()
                                      Carre_reference,
                                      pCorrMonth->entry,
                                      processCount,
-                                     pQCHOLTotal);
+                                     pQCHOLTotal.data());
         if (shrink == -1.f)
         {
             // sortie impossible  car on a v�rifi� que C est d.p
@@ -414,7 +417,7 @@ bool XCast::generateValuesForTheCurrentDay()
 
                     for (uint s = 0; s != processCount; ++s)
                     {
-                        float* corr_s = CORR[s];
+                        auto& corr_s = CORR[s];
                         auto& userMonthlyCorr = pCorrMonth->column(s);
                         for (uint t = 0; t < s; ++t)
                         {
@@ -453,7 +456,7 @@ bool XCast::generateValuesForTheCurrentDay()
                                                  Carre_courant,
                                                  Carre_reference,
                                                  processCount,
-                                                 pQCHOLTotal);
+                                                 pQCHOLTotal.data());
                     if (shrink <= 1.f)
                     {
                         if (shrink == -1.f)
