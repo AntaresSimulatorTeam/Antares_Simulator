@@ -388,7 +388,7 @@ void ThermalClusterList::ensureDataPrepro()
     {
         if (!c->prepro)
         {
-            c->prepro = new PreproAvailability(c->id(), c->unitCount);
+            c->prepro = std::make_shared<PreproAvailability>(c->id(), c->unitCount);
         }
     }
 }

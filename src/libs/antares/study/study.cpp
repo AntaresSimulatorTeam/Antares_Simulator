@@ -1104,18 +1104,6 @@ void Study::destroyAllWindTSGeneratorData()
     areas.each([](Data::Area& area) { FreeAndNil(area.wind.prepro); });
 }
 
-void Study::destroyAllThermalTSGeneratorData()
-{
-    areas.each(
-      [](const Data::Area& area)
-      {
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              FreeAndNil(cluster->prepro);
-          }
-      });
-}
-
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
     for (const auto& constraint: bindingConstraints)

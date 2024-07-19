@@ -129,11 +129,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent):
     assert(parent && "A parent for a thermal dispatchable cluster can not be null");
 }
 
-Data::ThermalCluster::~ThermalCluster()
-{
-    delete prepro;
-}
-
 uint ThermalCluster::groupId() const
 {
     return groupID;
@@ -202,7 +197,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // prepro
     if (!prepro)
     {
-        prepro = new PreproAvailability(id(), unitCount);
+        prepro = std::make_shared<PreproAvailability>(id(), unitCount);
     }
 
     prepro->copyFrom(*cluster.prepro);
@@ -477,7 +472,7 @@ void Data::ThermalCluster::reset()
     //   we must simply reset their content.
     if (!prepro)
     {
-        prepro = new PreproAvailability(id(), unitCount);
+        prepro = std::make_shared<PreproAvailability>(id(), unitCount);
     }
 
     prepro->reset();

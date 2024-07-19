@@ -115,7 +115,7 @@ public:
     explicit ThermalCluster(Data::Area* parent);
 
     ThermalCluster() = delete;
-    ~ThermalCluster();
+    ~ThermalCluster() = default;
 
     /*!
     ** \brief Invalidate all data associated to the thermal cluster
@@ -353,7 +353,7 @@ public:
     std::vector<double> PthetaInf;
 
     //! Data for the preprocessor
-    PreproAvailability* prepro = nullptr;
+    std::shared_ptr<PreproAvailability> prepro;
 
     /*!
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time
