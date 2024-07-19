@@ -391,10 +391,6 @@ public:
     ** \brief Re-Initialize/Re-Load the scenario builder data
     */
     void scenarioRulesCreate();
-    /*!
-    ** \brief Re-Initialize/Re-Load the scenario builder data but consider a single ruleset only
-    */
-    void scenarioRulesCreate(const RulesScenarioName& thisoneonly);
 
     /*!
     ** \brief Release the scenario builder
@@ -586,7 +582,7 @@ public:
     //! \name Scenario Builder
     //@{
     //! Rules for building scenarios (can be null)
-    ScenarioBuilder::Sets* scenarioRules = nullptr;
+    std::shared_ptr<ScenarioBuilder::Sets> scenarioRules;
     //@}
 
     TimeSeries::TS scenarioInitialHydroLevels;

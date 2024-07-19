@@ -35,32 +35,16 @@ String StudyIconFile;
 void Study::scenarioRulesCreate()
 {
     // releasing the previous instance of the scenario builder
-    delete scenarioRules;
+    scenarioRules.reset();
 
     // When ran from the solver, the scenario builder must be present
-    scenarioRules = new ScenarioBuilder::Sets();
-    scenarioRules->loadFromStudy(*this);
-}
-
-void Study::scenarioRulesCreate(const RulesScenarioName& /*thisoneonly*/)
-{
-    // releasing the previous instance of the scenario builder
-    delete scenarioRules;
-    // When ran from the solver, the scenario builder must be present
-    scenarioRules = new ScenarioBuilder::Sets();
+    scenarioRules = std::make_shared<ScenarioBuilder::Sets>();
     scenarioRules->loadFromStudy(*this);
 }
 
 void Study::scenarioRulesDestroy()
 {
-    if (scenarioRules)
-    {
-        // releasing the previous instance of the scenario builder
-        // safety dereferencing for the interface if running
-        ScenarioBuilder::Sets* sb = scenarioRules;
-        scenarioRules = nullptr;
-        delete sb;
-    }
+    scenarioRules.reset();
 }
 
 void Study::scenarioRulesLoadIfNotAvailable()
@@ -68,7 +52,7 @@ void Study::scenarioRulesLoadIfNotAvailable()
     if (!scenarioRules)
     {
         // When ran from the solver, the scenario builder must be present
-        scenarioRules = new ScenarioBuilder::Sets();
+        scenarioRules = std::make_shared<ScenarioBuilder::Sets>();
         scenarioRules->loadFromStudy(*this);
     }
 }

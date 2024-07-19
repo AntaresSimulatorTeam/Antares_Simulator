@@ -104,7 +104,7 @@ Study::~Study()
 
 void Study::clear()
 {
-    FreeAndNil(scenarioRules);
+    scenarioRules.reset();
     FreeAndNil(uiinfo);
 
     // areas
