@@ -43,7 +43,8 @@ bool CBuilder::completeFromStudy()
         {
             // for all links of the study
             // check if it has been enabled in the INI File
-            std::shared_ptr<linkInfo> k(findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id));
+            std::shared_ptr<linkInfo> k(
+              findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id));
             if (!k)
             {
                 k = std::make_shared<linkInfo>();
