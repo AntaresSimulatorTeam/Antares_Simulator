@@ -182,7 +182,7 @@ $(document).ready(function(){initNavTree('cholesky_8hxx_source.html',''); initRe
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordflow">for</span> (uint i = 0; i &lt; size; ++i)</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">typename</span> MatrixSubColumn&lt;U1&gt;::Type Li = L[i];</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">auto</span>&amp; Li = L[i];</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="comment">// on calcule d&#39;abord L[i][i]</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        som = A[i][i];</div>
@@ -198,8 +198,8 @@ $(document).ready(function(){initNavTree('cholesky_8hxx_source.html',''); initRe
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="comment">// maintenant on cherche L[k][i], k &gt; i.</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            <span class="keywordflow">for</span> (uint k = i + 1; k &lt; size; ++k)</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                <span class="keyword">typename</span> MatrixSubColumn&lt;U1&gt;::Type Lk = L[k];</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                <span class="keyword">typename</span> MatrixSubColumn&lt;U2&gt;::Type Ak = A[k];</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                <span class="keyword">auto</span>&amp; Lk = L[k];</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                <span class="keyword">auto</span>&amp; Ak = A[k];</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                <span class="keywordflow">if</span> (temp[k] == Ak[k])</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                {</div>
