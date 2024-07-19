@@ -43,10 +43,10 @@ bool CBuilder::completeFromStudy()
         {
             // for all links of the study
             // check if it has been enabled in the INI File
-            linkInfo* k = findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id);
+            std::shared_ptr<linkInfo> k(findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id));
             if (!k)
             {
-                k = new linkInfo();
+                k = std::make_shared<linkInfo>();
 
                 logs.info() << "Read data (link " << nCount++ << ")";
                 // if Yes, complete the linkInfo
@@ -54,7 +54,7 @@ bool CBuilder::completeFromStudy()
                 k->ptr = j->second;
                 k->type = k->ptr->assetType;
 
-                pLink.push_back(k);
+                pLink.push_back(k.get());
             }
         }
     }
