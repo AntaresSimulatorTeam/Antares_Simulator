@@ -155,7 +155,7 @@ public:
     */
     TypePtr add(const IDType& name)
     {
-        TypePtr p = new T();
+        TypePtr p = std::make_shared<T>();
         pMap[name] = p;
         pOptions[name].reset(name);
         return p;
