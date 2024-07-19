@@ -14,12 +14,12 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
         // Π : Pumping Power output from cluster 
         // Πmax : Maximum Pumping Power from cluster
 
-        // 15 (n) (1) : Sum(Π^on_re-) - Π <= 0
+        // 15 (n) (1) : Sum(Π^on_re+) - Π <= 0
         {
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
-                 data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown)
+                 data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp)
             {
                 for (const auto& reserveParticipations :
                      capacityReservation.AllReservesParticipation)
@@ -46,12 +46,12 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             }
         }
 
-        // 15 (n) (2) :  Π + Sum(Π^on_re+) <= Πmax
+        // 15 (n) (2) :  Π + Sum(Π^on_re-) <= Πmax
         {
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
-                 data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp)
+                 data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown)
             {
                 for (const auto& reserveParticipations :
                      capacityReservation.AllReservesParticipation)
@@ -108,20 +108,20 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             return counter;
         };
 
-        int nbConstraintsToAdd
-          = countReservesFromCluster(
-              data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp,
-              globalClusterIdx,
-              pays,
-              data)
-            + countReservesFromCluster(
-              data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown,
-              globalClusterIdx,
-              pays,
-              data);
+        int nbTermsUp = countReservesFromCluster(
+          data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp,
+          globalClusterIdx,
+          pays,
+          data);
+        int nbTermsDown = countReservesFromCluster(
+          data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown,
+          globalClusterIdx,
+          pays,
+          data);
 
-        builder.data.NbTermesContraintesPourLesReserves += 2 * (nbConstraintsToAdd + 1);
+        builder.data.NbTermesContraintesPourLesReserves
+          += (nbTermsUp + 1) * (nbTermsUp > 0) + (nbTermsDown + 1) * (nbTermsDown > 0);
 
-        builder.data.nombreDeContraintes += 2 * nbConstraintsToAdd;
+        builder.data.nombreDeContraintes += (nbTermsUp > 0) + (nbTermsDown > 0);
     }
 }

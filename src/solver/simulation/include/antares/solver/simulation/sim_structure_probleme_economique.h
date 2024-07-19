@@ -596,7 +596,6 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     ALL_AREA_RESERVES allReserves;
-    int nbReserveParticipations = 0;
 
     uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;

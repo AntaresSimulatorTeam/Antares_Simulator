@@ -110,20 +110,20 @@ void STTurbiningCapacityThreasholds::add(int pays, int cluster, int pdt)
             return counter;
         };
 
-        int nbConstraintsToAdd
-          = countReservesFromCluster(
-              data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp,
-              globalClusterIdx,
-              pays,
-              data)
-            + countReservesFromCluster(
-              data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown,
-              globalClusterIdx,
-              pays,
-              data);
+        int nbTermsUp = countReservesFromCluster(
+          data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp,
+          globalClusterIdx,
+          pays,
+          data);
+        int nbTermsDown = countReservesFromCluster(
+          data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown,
+          globalClusterIdx,
+          pays,
+          data);
 
-        builder.data.NbTermesContraintesPourLesReserves += 2 * (nbConstraintsToAdd + 1);
+        builder.data.NbTermesContraintesPourLesReserves
+          += (nbTermsUp + 1) * (nbTermsUp > 0) + (nbTermsDown + 1) * (nbTermsDown > 0);
 
-        builder.data.nombreDeContraintes += 2 * nbConstraintsToAdd;
+        builder.data.nombreDeContraintes += (nbTermsUp > 0) + (nbTermsDown > 0);
     }
 }

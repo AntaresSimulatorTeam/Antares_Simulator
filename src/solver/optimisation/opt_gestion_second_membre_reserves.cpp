@@ -183,7 +183,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                             [globalClusterIdx];
                     if (cnt1 >= 0)
                     {
-                        SecondMembre[cnt1] = cluster.series.get()->maxWithdrawalModulation[pdtJour];
+                        SecondMembre[cnt1] = cluster.series.get()->maxWithdrawalModulation[pdtJour] * cluster.withdrawalNominalCapacity;
                         AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
                     }
 
@@ -193,7 +193,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                             [globalClusterIdx];
                     if (cnt2 >= 0)
                     {
-                        SecondMembre[cnt1] = cluster.series.get()->maxInjectionModulation[pdtJour];
+                        SecondMembre[cnt1] = cluster.series.get()->maxInjectionModulation[pdtJour] * cluster.injectionNominalCapacity;
                         AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
                     }
                 }

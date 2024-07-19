@@ -45,7 +45,7 @@ static void importShortTermStorages(
 {
     int clusterGlobalIndex = 0;
     int globalReserveIndex = 0;
-    int& globalClusterParticipationIndex = problem.nbReserveParticipations;
+    int globalSTStorageClusterParticipationIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         int areaReserveIndex = 0;
@@ -103,9 +103,9 @@ static void importShortTermStorages(
                 reserveParticipation.clusterName = cluster.id;
                 reserveParticipation.clusterIdInArea = idx;
                 reserveParticipation.globalIndexClusterParticipation
-                  = globalClusterParticipationIndex;
+                  = globalSTStorageClusterParticipationIndex;
                 reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
-                globalClusterParticipationIndex++;
+                globalSTStorageClusterParticipationIndex++;
                 areaClusterParticipationIndex++;
                 areaCapacityReservationsUp.AllReservesParticipation.push_back(reserveParticipation);
                 idx++;
@@ -140,9 +140,9 @@ static void importShortTermStorages(
                 reserveParticipation.clusterName = cluster.id;
                 reserveParticipation.clusterIdInArea = idx;
                 reserveParticipation.globalIndexClusterParticipation
-                  = globalClusterParticipationIndex;
+                  = globalSTStorageClusterParticipationIndex;
                 reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
-                globalClusterParticipationIndex++;
+                globalSTStorageClusterParticipationIndex++;
                 areaClusterParticipationIndex++;
                 areaCapacityReservationsDown.AllReservesParticipation.push_back(
                   reserveParticipation);
@@ -363,7 +363,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     NombrePaliers = 0;
     int globalReserveIndex = 0;
-    int& globalClusterParticipationIndex = problem.nbReserveParticipations;
+    int globalThermalClusterParticipationIndex = 0;
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         int areaReserveIndex = 0;
@@ -429,10 +429,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                     reserveParticipation.clusterName = cluster->name();
                     reserveParticipation.clusterIdInArea = cluster->index;
                     reserveParticipation.globalIndexClusterParticipation
-                        = globalClusterParticipationIndex;
+                        = globalThermalClusterParticipationIndex;
                     reserveParticipation.areaIndexClusterParticipation
                         = areaClusterParticipationIndex;
-                    globalClusterParticipationIndex++;
+                    globalThermalClusterParticipationIndex++;
                    areaClusterParticipationIndex++;
                     areaCapacityReservationsUp.AllReservesParticipation.push_back(
                         reserveParticipation);
@@ -465,10 +465,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                     reserveParticipation.clusterName = cluster->name();
                     reserveParticipation.clusterIdInArea = cluster->index;
                     reserveParticipation.globalIndexClusterParticipation
-                      = globalClusterParticipationIndex;
+                      = globalThermalClusterParticipationIndex;
                     reserveParticipation.areaIndexClusterParticipation
                       = areaClusterParticipationIndex;
-                    globalClusterParticipationIndex++;
+                    globalThermalClusterParticipationIndex++;
                     areaClusterParticipationIndex++;
                     areaCapacityReservationsDown.AllReservesParticipation.push_back(
                       reserveParticipation);
