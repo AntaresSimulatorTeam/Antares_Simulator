@@ -62,8 +62,6 @@ SimulationResults APIInternal::execute() const
         return {.simulationPath{}, .antares_problems{}, .error = err};
     }
 
-    study_->computePThetaInfForThermalClusters();
-
     // Only those two fields are used un simulation
     Settings settings;
     settings.tsGeneratorsOnly = false;
@@ -77,6 +75,9 @@ SimulationResults APIInternal::execute() const
     auto resultWriter = Solver::resultWriterFactory(
       study_->parameters.resultFormat, study_->folderOutput, ioQueueService, durationCollector);
     SimulationObserver simulationObserver;
+
+    study_->computePThetaInfForThermalClusters();
+
     // Run the simulation
     switch (study_->runtime.mode)
     {
@@ -104,8 +105,6 @@ SimulationResults APIInternal::execute() const
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
 
-    // Stop the display of the progression
-    study_->progression.stop();
     return
     {
         .simulationPath = study_->folderOutput.c_str(),

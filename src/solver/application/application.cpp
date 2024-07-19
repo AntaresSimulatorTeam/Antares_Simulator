@@ -20,7 +20,6 @@
  */
 #include "antares/application/application.h"
 
-#include <yuni/datetime/timestamp.h>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
@@ -30,7 +29,6 @@
 #include <antares/infoCollection/StudyInfoCollector.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
-#include <antares/study/version.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
@@ -43,6 +41,10 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/study/simulation.h"
+
+#include "antares/solver/simulation/economy.h"
+#include "antares/solver/simulation/adequacy.h"
+#include "antares/solver/simulation/solver.h"
 
 using namespace Antares::Check;
 
@@ -394,10 +396,10 @@ void Application::execute()
     {
     case Data::SimulationMode::Economy:
     case Data::SimulationMode::Expansion:
-        runSimulationInEconomicMode();
+        runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Economy>>();
         break;
     case Data::SimulationMode::Adequacy:
-        runSimulationInAdequacyMode();
+        runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Adequacy>>();
         break;
     default:
         break;
