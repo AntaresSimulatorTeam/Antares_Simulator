@@ -451,16 +451,13 @@ void AreaList::clear()
 {
     byIndex.clear();
 
-    if (!areas.empty())
-    {
-        Area::Map copy;
-        copy.swap(areas);
+    Area::Map copy;
+    copy.swap(areas);
 
-        auto end = copy.end();
-        for (auto i = copy.begin(); i != end; ++i)
-        {
-            delete i->second;
-        }
+    auto end = copy.end();
+    for (auto i = copy.begin(); i != end; ++i)
+    {
+        delete i->second;
     }
 }
 
