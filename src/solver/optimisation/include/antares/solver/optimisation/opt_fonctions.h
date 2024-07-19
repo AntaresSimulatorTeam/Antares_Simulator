@@ -110,7 +110,7 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermiques(PROBLEME_HEBDO*,
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(PROBLEME_HEBDO*,
                                                                                      bool);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,

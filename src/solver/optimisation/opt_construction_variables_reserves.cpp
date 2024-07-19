@@ -28,7 +28,7 @@
 
 #include <spx_constantes_externes.h>
 
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermiques(
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
   PROBLEME_HEBDO* problemeHebdo,
   bool Simulation)
 {
@@ -152,7 +152,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                 for (auto& clusterReserveParticipation :
                      areaReserveDown.AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower >= 0)
+                    if (clusterReserveParticipation.maxPower > 0)
                     {
                         const auto& clusterName
                           = PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex];
@@ -186,18 +186,17 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                         }
                     }
                 }
-                
+
                 // Short Term Storage Clusters
-                clusterIndex = 0;
                 for (auto& clusterReserveParticipation :
                      areaReserveDown.AllSTStorageReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxTurbining >= 0)
+                    if (clusterReserveParticipation.maxTurbining > 0)
                     {
                         const auto& clusterName = clusterReserveParticipation.clusterName;
                         if (Simulation)
                         {
-                            NombreDeVariables += 4;
+                            NombreDeVariables++;
                         }
                         else
                         {
@@ -211,6 +210,18 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
                             NombreDeVariables++;
 
+                            clusterIndex++;
+                        }
+                    }
+                    if (clusterReserveParticipation.maxPumping > 0)
+                    {
+                        const auto& clusterName = clusterReserveParticipation.clusterName;
+                        if (Simulation)
+                        {
+                            NombreDeVariables++;
+                        }
+                        else
+                        {
                             // For Pumping participation to the reserves
                             variableManager.STStoragePumpingClusterReserveParticipation(
                               clusterReserveParticipation.globalIndexClusterParticipation, pdt)
@@ -220,7 +231,19 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                             variableNamer.ParticipationOfSTStoragePumpingToReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
                             NombreDeVariables++;
-
+                            clusterIndex++;
+                        }
+                    }
+                    if (clusterReserveParticipation.maxTurbining > 0
+                        || clusterReserveParticipation.maxPumping > 0)
+                    {
+                        const auto& clusterName = clusterReserveParticipation.clusterName;
+                        if (Simulation)
+                        {
+                            NombreDeVariables += 2;
+                        }
+                        else
+                        {
                             // For Short Term Storage participation to the up reserves
                             variableManager.STStorageClusterReserveUpParticipation(
                               clusterReserveParticipation.globalIndexClusterParticipation, pdt)

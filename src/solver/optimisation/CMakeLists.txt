@@ -40,7 +40,7 @@ set(RTESOLVER_OPT
         opt_decompte_variables_et_contraintes_reserves.cpp
         opt_init_minmax_groupes_couts_demarrage.cpp
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
-		opt_construction_variables_reserves_thermiques.cpp
+		opt_construction_variables_reserves.cpp
 		include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
 		include/antares/solver/optimisation/base_weekly_optimization.h

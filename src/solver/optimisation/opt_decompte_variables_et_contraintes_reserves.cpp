@@ -32,7 +32,7 @@ void OPT_DecompteDesVariablesEtDesContraintesReserves(PROBLEME_HEBDO* problemeHe
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrixReserves(problemeHebdo, true, builder).Run();
 
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermiques(problemeHebdo,
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(problemeHebdo,
                                                                                     true);
 }
 

@@ -243,7 +243,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                                       false);
-        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermiques(problemeHebdo,
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(problemeHebdo,
                                                                                       false);
         
     }
