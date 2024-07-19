@@ -179,7 +179,7 @@ private:
     //! The correlation matrix for the current month
     const Matrix<float>* pCorrMonth;
 
-    bool pNeverInitialized;
+    bool pNeverInitialized = true;
     uint Nombre_points_intermediaire;
 
     //! True when starting a new month (some data may have to be reinitialized)
@@ -191,7 +191,7 @@ private:
     uint pNDPMatrixCount;
     uint pLevellingCount;
 
-    bool pAccuracyOnCorrelation;
+    bool pAccuracyOnCorrelation = false;
     bool All_normal; // all processes are Normal
 
     // les variables de A à CO sont des vues de ALPH à CORR pour un mois particulier

@@ -52,8 +52,6 @@ enum
 XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer):
     study(study),
     timeSeriesType(ts),
-    pNeverInitialized(true),
-    pAccuracyOnCorrelation(false),
     pWriter(writer)
 {
 }
