@@ -60,7 +60,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             // Thermal clusters
             {
                 auto& areaReservesUp
-                  = areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
+                  = areaReserves[pays].areaCapacityReservationsUp;
                 for (const auto& areaReserveUp : areaReservesUp)
                 {
                     int cnt = CorrespondanceCntNativesCntOptim
@@ -74,7 +74,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                 }
 
                 auto& areaReservesDown
-                  = areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
+                  = areaReserves[pays].areaCapacityReservationsDown;
                 for (const auto& areaReserveDown : areaReservesDown)
                 {
                     int cnt = CorrespondanceCntNativesCntOptim
@@ -122,10 +122,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             // Short Term Storage clusters
             {
                 auto& areaReservesUp
-                  = areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp;
+                  = areaReserves[pays].areaCapacityReservationsUp;
                 for (const auto& areaReserveUp : areaReservesUp)
                 {
-                    for (const auto& reserveParticipation : areaReserveUp.AllReservesParticipation)
+                    for (const auto& reserveParticipation :
+                         areaReserveUp.AllSTStorageReservesParticipation)
                     {
                         int cnt
                           = CorrespondanceCntNativesCntOptim
@@ -148,11 +149,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     }
                 }
                 auto& areaReservesDown
-                  = areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown;
+                  = areaReserves[pays].areaCapacityReservationsDown;
                 for (const auto& areaReserveDown : areaReservesDown)
                 {
                     for (const auto& reserveParticipation :
-                         areaReserveDown.AllReservesParticipation)
+                         areaReserveDown.AllSTStorageReservesParticipation)
                     {
                         int cnt
                           = CorrespondanceCntNativesCntOptim

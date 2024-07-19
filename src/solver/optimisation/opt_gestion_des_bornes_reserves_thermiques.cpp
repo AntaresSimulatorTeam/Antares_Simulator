@@ -52,7 +52,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
         {
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
-            auto areaReserves = problemeHebdo->allReserves.thermalAreaReserves[pays];
+            auto areaReserves = problemeHebdo->allReserves[pays];
 
             for (const auto& areaReserveUp : areaReserves.areaCapacityReservationsUp)
             {
@@ -77,7 +77,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat2;
 
                 for (const auto& clusterReserveParticipation :
-                     areaReserveUp.AllReservesParticipation)
+                     areaReserveUp.AllThermalReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
@@ -130,7 +130,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat2;
 
                 for (const auto& clusterReserveParticipation :
-                     areaReserveDown.AllReservesParticipation)
+                     areaReserveDown.AllThermalReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {

@@ -19,10 +19,10 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
-                 data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp)
+                 data.areaReserves[pays].areaCapacityReservationsUp)
             {
                 for (const auto& reserveParticipations :
-                     capacityReservation.AllReservesParticipation)
+                     capacityReservation.AllSTStorageReservesParticipation)
                 {
                     if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
                         && (data.shortTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
@@ -51,10 +51,10 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
-                 data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown)
+                 data.areaReserves[pays].areaCapacityReservationsDown)
             {
                 for (const auto& reserveParticipations :
-                     capacityReservation.AllReservesParticipation)
+                     capacityReservation.AllSTStorageReservesParticipation)
                 {
                     if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
                         && (data.shortTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
@@ -85,18 +85,17 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
     else
     {
         // Lambda that count the number of reserves that the cluster is participating to
-        auto countReservesFromCluster =
-          [cluster](
-            const std::vector<CAPACITY_RESERVATION<RESERVE_PARTICIPATION_STSTORAGE>>& reservations,
-            int globalClusterIdx,
-            int pays,
-            ReserveData data)
+        auto countReservesFromCluster
+          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations,
+                      int globalClusterIdx,
+                      int pays,
+                      ReserveData data)
         {
             int counter = 0;
             for (const auto& capacityReservation : reservations)
             {
                 for (const auto& reserveParticipations :
-                     capacityReservation.AllReservesParticipation)
+                     capacityReservation.AllSTStorageReservesParticipation)
                 {
                     if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
                         && (data.shortTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
@@ -109,15 +108,9 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
         };
 
         int nbTermsUp = countReservesFromCluster(
-          data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp,
-          globalClusterIdx,
-          pays,
-          data);
+          data.areaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data);
         int nbTermsDown = countReservesFromCluster(
-          data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown,
-          globalClusterIdx,
-          pays,
-          data);
+          data.areaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
 
         builder.data.NbTermesContraintesPourLesReserves
           += (nbTermsUp + 1) * (nbTermsUp > 0) + (nbTermsDown + 1) * (nbTermsDown > 0);

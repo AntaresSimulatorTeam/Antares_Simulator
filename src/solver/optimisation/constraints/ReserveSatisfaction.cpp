@@ -3,15 +3,12 @@
 void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
 {
     CAPACITY_RESERVATION thermalCapacityReservation
-      = isUpReserve
-          ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
-          : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
+      = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
+                    : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
     CAPACITY_RESERVATION STStorageCapacityReservation
-      = isUpReserve
-          ? data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsUp[reserve]
-          : data.areaReserves.shortTermStorageAreaReserves[pays]
-              .areaCapacityReservationsDown[reserve];
+      = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
+                    : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
     data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesContraintesDeBesoinEnReserves
       [thermalCapacityReservation.globalReserveIndex]
@@ -31,35 +28,37 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
 
         // Thermal clusters reserve participation
         for (size_t cluster = 0;
-             cluster < thermalCapacityReservation.AllReservesParticipation.size();
+             cluster < thermalCapacityReservation.AllThermalReservesParticipation.size();
              cluster++)
         {
-            if (thermalCapacityReservation.AllReservesParticipation[cluster].maxPower
+            if (thermalCapacityReservation.AllThermalReservesParticipation[cluster].maxPower
                 != CLUSTER_NOT_PARTICIPATING)
                 builder.RunningThermalClusterReserveParticipation(
-                  thermalCapacityReservation.AllReservesParticipation[cluster]
+                  thermalCapacityReservation.AllThermalReservesParticipation[cluster]
                     .globalIndexClusterParticipation,
                   1);
         }
 
         // Short Term Storage clusters reserve participation
         for (size_t cluster = 0;
-             cluster < STStorageCapacityReservation.AllReservesParticipation.size();
+             cluster < STStorageCapacityReservation.AllSTStorageReservesParticipation.size();
              cluster++)
         {
-            if ((STStorageCapacityReservation.AllReservesParticipation[cluster].maxTurbining
+            if ((STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
+                   .maxTurbining
                  != CLUSTER_NOT_PARTICIPATING)
-                || (STStorageCapacityReservation.AllReservesParticipation[cluster].maxPumping
+                || (STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
+                      .maxPumping
                     != CLUSTER_NOT_PARTICIPATING))
             {
                 if (isUpReserve)
                     builder.STStorageClusterReserveUpParticipation(
-                      STStorageCapacityReservation.AllReservesParticipation[cluster]
+                      STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
                         .globalIndexClusterParticipation,
                       1);
                 else
                     builder.STStorageClusterReserveDownParticipation(
-                      STStorageCapacityReservation.AllReservesParticipation[cluster]
+                      STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
                         .globalIndexClusterParticipation,
                       1);
             }
@@ -84,20 +83,22 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
     {
         int nbTermes = 0;
         for (size_t cluster = 0;
-             cluster < thermalCapacityReservation.AllReservesParticipation.size();
+             cluster < thermalCapacityReservation.AllThermalReservesParticipation.size();
              cluster++)
         {
-            if (thermalCapacityReservation.AllReservesParticipation[cluster].maxPower
+            if (thermalCapacityReservation.AllThermalReservesParticipation[cluster].maxPower
                 != CLUSTER_NOT_PARTICIPATING)
                 nbTermes++;
         }
         for (size_t cluster = 0;
-             cluster < STStorageCapacityReservation.AllReservesParticipation.size();
+             cluster < STStorageCapacityReservation.AllSTStorageReservesParticipation.size();
              cluster++)
         {
-            if ((STStorageCapacityReservation.AllReservesParticipation[cluster].maxTurbining
+            if ((STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
+                   .maxTurbining
                  != CLUSTER_NOT_PARTICIPATING)
-                || (STStorageCapacityReservation.AllReservesParticipation[cluster].maxPumping
+                || (STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
+                      .maxPumping
                     != CLUSTER_NOT_PARTICIPATING))
                 nbTermes++;
         }

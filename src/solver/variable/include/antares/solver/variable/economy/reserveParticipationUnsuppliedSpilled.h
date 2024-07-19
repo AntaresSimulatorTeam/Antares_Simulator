@@ -233,8 +233,8 @@ public:
         auto& area = state.area;
         auto& thermal = state.thermal;
         int column = 0;
-        
-        auto thermalReserves = state.problemeHebdo->allReserves.thermalAreaReserves[area->index];
+
+        auto thermalReserves = state.problemeHebdo->allReserves[area->index];
         for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
         {
             pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]

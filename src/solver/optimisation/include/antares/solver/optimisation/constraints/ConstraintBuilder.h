@@ -325,7 +325,7 @@ struct StartUpCostsData
 struct ReserveData
 {
     bool Simulation;
-    ALL_AREA_RESERVES& areaReserves;
+    std::vector<AREA_RESERVES_VECTOR>& areaReserves;
     std::vector<PALIERS_THERMIQUES>& thermalClusters;
     std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageOfArea;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;

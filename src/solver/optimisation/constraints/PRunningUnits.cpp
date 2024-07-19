@@ -11,11 +11,10 @@ void PRunningUnits::add(int pays, int reserve, int cluster, int pdt, bool isUpRe
         // P^on : Participation of running units
 
         CAPACITY_RESERVATION capacityReservation
-          = isUpReserve
-              ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
-              : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
+          = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
+                        : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
-        auto& reserveParticipation = capacityReservation.AllReservesParticipation[cluster];
+        auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
 
         int globalClusterIdx = data.thermalClusters[pays]
           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipation.clusterIdInArea];

@@ -96,6 +96,18 @@ public:
     void ParticipationOfUnitsToReserve(unsigned int variable,
                                        const std::string& clusterName,
                                        const std::string& reserveName);
+    void ParticipationOfSTStorageTurbiningToReserve(unsigned int variable,
+                                                    const std::string& clusterName,
+                                                    const std::string& reserveName);
+    void ParticipationOfSTStoragePumpingToReserve(unsigned int variable,
+                                                  const std::string& clusterName,
+                                                  const std::string& reserveName);
+    void ParticipationOfSTStorageToUpReserve(unsigned int variable,
+                                             const std::string& clusterName,
+                                             const std::string& reserveName);
+    void ParticipationOfSTStorageToDownReserve(unsigned int variable,
+                                               const std::string& clusterName,
+                                               const std::string& reserveName);
     void ParticipationOfRunningUnitsToReserve(unsigned int variable,
                                               const std::string& clusterName,
                                               const std::string& reserveName);

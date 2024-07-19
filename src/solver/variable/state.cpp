@@ -154,24 +154,22 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 int State::getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName)
 {
-    for (auto& reserve :
-         problemeHebdo->allReserves.thermalAreaReserves[area->index].areaCapacityReservationsUp)
+    for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsUp)
     {
         if (reserve.reserveName == reserveName)
         {
-            for (auto& cluster : reserve.AllReservesParticipation)
+            for (auto& cluster : reserve.AllThermalReservesParticipation)
             {
                 if (cluster.clusterName == clusterName)
                     return cluster.areaIndexClusterParticipation;
             }
         }
     }
-    for (auto& reserve :
-         problemeHebdo->allReserves.thermalAreaReserves[area->index].areaCapacityReservationsDown)
+    for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsDown)
     {
         if (reserve.reserveName == reserveName)
         {
-            for (auto& cluster : reserve.AllReservesParticipation)
+            for (auto& cluster : reserve.AllThermalReservesParticipation)
             {
                 if (cluster.clusterName == clusterName)
                     return cluster.areaIndexClusterParticipation;

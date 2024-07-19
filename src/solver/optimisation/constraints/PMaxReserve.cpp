@@ -9,14 +9,13 @@ void PMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool isUpRese
         // constraint : P - M * B <= 0
         // P : Participation power
         // M : Number of running units in the cluster
-        // B : Maximum accessible power if each unit running on the cluster for the reserve 
+        // B : Maximum accessible power if each unit running on the cluster for the reserve
 
         CAPACITY_RESERVATION capacityReservation
-          = isUpReserve
-              ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
-              : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
+          = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
+                        : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
-        auto& reserveParticipation = capacityReservation.AllReservesParticipation[cluster];
+        auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
 
         int globalClusterIdx = data.thermalClusters[pays]
           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipation.clusterIdInArea];

@@ -22,10 +22,10 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
-                 data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown)
+                 data.areaReserves[pays].areaCapacityReservationsDown)
             {
                 for (const auto& reserveParticipations :
-                     capacityReservation.AllReservesParticipation)
+                     capacityReservation.AllThermalReservesParticipation)
                 {
                     if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
                         && (data.thermalClusters[pays]
@@ -61,10 +61,10 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
             builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
-                 data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp)
+                 data.areaReserves[pays].areaCapacityReservationsUp)
             {
                 for (const auto& reserveParticipations :
-                     capacityReservation.AllReservesParticipation)
+                     capacityReservation.AllThermalReservesParticipation)
                 {
                     if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
                         && (data.thermalClusters[pays]
@@ -98,17 +98,16 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
     {
         // Lambda that count the number of reserves that the cluster is participating to
         auto countReservesFromCluster
-          = [cluster](
-              const std::vector<CAPACITY_RESERVATION<RESERVE_PARTICIPATION_THERMAL>>& reservations,
-              int globalClusterIdx,
-              int pays,
-              ReserveData data)
+          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations,
+                      int globalClusterIdx,
+                      int pays,
+                      ReserveData data)
         {
             int counter = 0;
             for (const auto& capacityReservation : reservations)
             {
                 for (const auto& reserveParticipations :
-                     capacityReservation.AllReservesParticipation)
+                     capacityReservation.AllThermalReservesParticipation)
                 {
                     if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
                         && (data.thermalClusters[pays]
@@ -123,9 +122,9 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
 
         int nbConstraintsToAdd
           = countReservesFromCluster(
-              data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data)
+              data.areaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data)
             + countReservesFromCluster(
-              data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
+              data.areaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
 
         builder.data.NbTermesContraintesPourLesReserves += 2*(nbConstraintsToAdd+2);
 

@@ -41,7 +41,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
     {
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            auto reservesDuPays = problemeHebdo->allReserves.thermalAreaReserves[pays];
+            auto reservesDuPays = problemeHebdo->allReserves[pays];
 
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -52,7 +52,8 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
             for (int index = 0; index < reservesDuPays.areaCapacityReservationsUp.size(); index++)
             {
                 for (const auto& clusterReserveParticipation :
-                     reservesDuPays.areaCapacityReservationsUp[index].AllReservesParticipation)
+                     reservesDuPays.areaCapacityReservationsUp[index]
+                       .AllThermalReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
@@ -81,7 +82,8 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
             for (int index = 0; index < reservesDuPays.areaCapacityReservationsDown.size(); index++)
             {
                 for (const auto& clusterReserveParticipation :
-                     reservesDuPays.areaCapacityReservationsDown[index].AllReservesParticipation)
+                     reservesDuPays.areaCapacityReservationsDown[index]
+                       .AllThermalReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {

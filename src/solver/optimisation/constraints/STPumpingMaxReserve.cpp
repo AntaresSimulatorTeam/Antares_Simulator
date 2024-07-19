@@ -9,14 +9,12 @@ void STPumpingMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool 
         // cluster constraint : Π <= Π^max Π : Pumping power Π^max : Maximum accessible pumping
         // limit of the cluster for the reserve
 
-        CAPACITY_RESERVATION<RESERVE_PARTICIPATION_STSTORAGE>& capacityReservation
-          = isUpReserve ? data.areaReserves.shortTermStorageAreaReserves[pays]
-                            .areaCapacityReservationsUp[reserve]
-                        : data.areaReserves.shortTermStorageAreaReserves[pays]
-                            .areaCapacityReservationsDown[reserve];
+        CAPACITY_RESERVATION& capacityReservation
+          = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
+                        : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
         RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
-          = capacityReservation.AllReservesParticipation[cluster];
+          = capacityReservation.AllSTStorageReservesParticipation[cluster];
 
         int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
 

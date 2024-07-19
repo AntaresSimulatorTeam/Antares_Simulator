@@ -10,14 +10,12 @@ void STTurbiningMaxReserve::add(int pays, int reserve, int cluster, int pdt, boo
         // H : Turbining power
         // H^max : Maximum accessible power of the cluster for the reserve
 
-        CAPACITY_RESERVATION<RESERVE_PARTICIPATION_STSTORAGE>& capacityReservation
-          = isUpReserve ? data.areaReserves.shortTermStorageAreaReserves[pays]
-                            .areaCapacityReservationsUp[reserve]
-                        : data.areaReserves.shortTermStorageAreaReserves[pays]
-                            .areaCapacityReservationsDown[reserve];
+        CAPACITY_RESERVATION& capacityReservation
+          = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
+                        : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
         RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
-          = capacityReservation.AllReservesParticipation[cluster];
+          = capacityReservation.AllSTStorageReservesParticipation[cluster];
 
         int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
 

@@ -118,6 +118,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
 
     problem.ShortTermStorage.resize(nbPays);
+    problem.allReserves.resize(nbPays);
 
     problem.previousYearFinalLevels.resize(0);
     if (problem.hydroHotStart)

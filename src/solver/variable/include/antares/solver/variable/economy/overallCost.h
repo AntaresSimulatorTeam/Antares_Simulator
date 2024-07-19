@@ -260,7 +260,7 @@ public:
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
                 - state.area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
-        auto thermalReserves = state.problemeHebdo->allReserves.thermalAreaReserves[area->index];
+        auto thermalReserves = state.problemeHebdo->allReserves[area->index];
         for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
         {
             costForSpilledOrUnsuppliedEnergy

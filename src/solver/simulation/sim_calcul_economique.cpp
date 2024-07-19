@@ -38,6 +38,60 @@
 using namespace Antares;
 using namespace Antares::Data;
 
+static void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
+{
+    int clusterGlobalIndex = 0;
+    int globalReserveIndex = 0;
+    for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
+    {
+        int areaReserveIndex = 0;
+        auto area = areas[areaIndex];
+        auto& areaReserves = problem.allReserves[areaIndex];
+
+        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsUp)
+        {
+            CAPACITY_RESERVATION areaCapacityReservationsUp;
+            areaCapacityReservationsUp.failureCost = val.failureCost;
+            areaCapacityReservationsUp.spillageCost = val.spillageCost;
+            areaCapacityReservationsUp.reserveName = key;
+            areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
+            areaCapacityReservationsUp.areaReserveIndex = areaReserveIndex;
+            globalReserveIndex++;
+            areaReserveIndex++;
+            if (val.need.timeSeries.width > 0)
+            {
+                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                {
+                    areaCapacityReservationsUp.need.push_back(
+                      val.need.timeSeries.entry[0][indexSeries]);
+                }
+            }
+
+            areaReserves.areaCapacityReservationsUp.emplace_back(areaCapacityReservationsUp);
+        }
+        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsDown)
+        {
+            CAPACITY_RESERVATION areaCapacityReservationsDown;
+            areaCapacityReservationsDown.failureCost = val.failureCost;
+            areaCapacityReservationsDown.spillageCost = val.spillageCost;
+            areaCapacityReservationsDown.reserveName = key;
+            areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
+            areaCapacityReservationsDown.areaReserveIndex = areaReserveIndex;
+            globalReserveIndex++;
+            areaReserveIndex++;
+            if (val.need.timeSeries.width > 0)
+            {
+                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                {
+                    areaCapacityReservationsDown.need.push_back(
+                      val.need.timeSeries.entry[0][indexSeries]);
+                }
+            }
+            areaReserves.areaCapacityReservationsDown.emplace_back(areaCapacityReservationsDown);
+        }
+    }
+}
+
 static void importShortTermStorages(
   AreaList& areas,
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut,
@@ -53,6 +107,8 @@ static void importShortTermStorages(
         auto area = areas[areaIndex];
         ShortTermStorageOut[areaIndex].resize(area->shortTermStorage.count());
         int storageIndex = 0;
+        auto& areaReserves = problem.allReserves[areaIndex];
+
         for (auto& st : area->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
@@ -74,85 +130,50 @@ static void importShortTermStorages(
             clusterGlobalIndex++;
         }
 
-        AREA_RESERVES_VECTOR<RESERVE_PARTICIPATION_STSTORAGE> areaReserves;
-
-        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsUp)
+        for (int areaReserveIdx = 0; auto const& [reserveName, _] :
+                                     area->allCapacityReservations.areaCapacityReservationsUp)
         {
-            CAPACITY_RESERVATION<RESERVE_PARTICIPATION_STSTORAGE> areaCapacityReservationsUp;
-            areaCapacityReservationsUp.failureCost = val.failureCost;
-            areaCapacityReservationsUp.spillageCost = val.spillageCost;
-            areaCapacityReservationsUp.reserveName = key;
-            areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
-            areaCapacityReservationsUp.areaReserveIndex = areaReserveIndex;
-            globalReserveIndex++;
-            areaReserveIndex++;
-            if (val.need.timeSeries.width > 0)
-            {
-                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
-                {
-                    areaCapacityReservationsUp.need.push_back(
-                      val.need.timeSeries.entry[0][indexSeries]);
-                }
-            }
             for (size_t idx = 0; auto& cluster : area->shortTermStorage.storagesByIndex)
             {
                 RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
-                reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(key);
-                reserveParticipation.maxPumping = cluster.reserveMaxPumping(key);
-                reserveParticipation.participationCost = cluster.reserveCost(key);
+                reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(reserveName);
+                reserveParticipation.maxPumping = cluster.reserveMaxPumping(reserveName);
+                reserveParticipation.participationCost = cluster.reserveCost(reserveName);
                 reserveParticipation.clusterName = cluster.id;
                 reserveParticipation.clusterIdInArea = idx;
                 reserveParticipation.globalIndexClusterParticipation
                   = globalSTStorageClusterParticipationIndex;
                 reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                areaReserves.areaCapacityReservationsUp[areaReserveIdx]
+                  .AllSTStorageReservesParticipation.push_back(reserveParticipation);
                 globalSTStorageClusterParticipationIndex++;
                 areaClusterParticipationIndex++;
-                areaCapacityReservationsUp.AllReservesParticipation.push_back(reserveParticipation);
                 idx++;
             }
-
-            areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
+            areaReserveIdx++;
         }
-        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsDown)
+        for (int areaReserveIdx = 0; auto const& [reserveName, _] :
+                                     area->allCapacityReservations.areaCapacityReservationsDown)
         {
-            CAPACITY_RESERVATION<RESERVE_PARTICIPATION_STSTORAGE> areaCapacityReservationsDown;
-            areaCapacityReservationsDown.failureCost = val.failureCost;
-            areaCapacityReservationsDown.spillageCost = val.spillageCost;
-            areaCapacityReservationsDown.reserveName = key;
-            areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
-            areaCapacityReservationsDown.areaReserveIndex = areaReserveIndex;
-            globalReserveIndex++;
-            areaReserveIndex++;
-            if (val.need.timeSeries.width > 0)
-            {
-                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
-                {
-                    areaCapacityReservationsDown.need.push_back(
-                      val.need.timeSeries.entry[0][indexSeries]);
-                }
-            }
             for (size_t idx = 0; auto& cluster : area->shortTermStorage.storagesByIndex)
             {
                 RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
-                reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(key);
-                reserveParticipation.maxPumping = cluster.reserveMaxPumping(key);
-                reserveParticipation.participationCost = cluster.reserveCost(key);
+                reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(reserveName);
+                reserveParticipation.maxPumping = cluster.reserveMaxPumping(reserveName);
+                reserveParticipation.participationCost = cluster.reserveCost(reserveName);
                 reserveParticipation.clusterName = cluster.id;
                 reserveParticipation.clusterIdInArea = idx;
                 reserveParticipation.globalIndexClusterParticipation
                   = globalSTStorageClusterParticipationIndex;
                 reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                areaReserves.areaCapacityReservationsDown[areaReserveIdx]
+                  .AllSTStorageReservesParticipation.push_back(reserveParticipation);
                 globalSTStorageClusterParticipationIndex++;
                 areaClusterParticipationIndex++;
-                areaCapacityReservationsDown.AllReservesParticipation.push_back(
-                  reserveParticipation);
                 idx++;
             }
-
-            areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);
+            areaReserveIdx++;
         }
-
-        problem.allReserves.shortTermStorageAreaReserves.push_back(areaReserves);
     }
 }
 
@@ -306,6 +327,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
 
+    importCapacityReservations(study.areas, problem);
+
     importShortTermStorages(study.areas, problem.ShortTermStorage, problem);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
@@ -372,7 +395,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
-        AREA_RESERVES_VECTOR<RESERVE_PARTICIPATION_THERMAL> areaReserves;
+        auto& areaReserves = problem.allReserves[i];
 
         for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
@@ -404,83 +427,55 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         if (study.parameters.unitCommitment.ucMode
             != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
         {
-            for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsUp)
+            for (int areaReserveIdx = 0; auto const& [reserveName, _] :
+                                         area.allCapacityReservations.areaCapacityReservationsUp)
             {
-                CAPACITY_RESERVATION<RESERVE_PARTICIPATION_THERMAL> areaCapacityReservationsUp;
-                areaCapacityReservationsUp.failureCost = val.failureCost;
-                areaCapacityReservationsUp.spillageCost = val.spillageCost;
-                areaCapacityReservationsUp.reserveName = key;
-                areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
-                areaCapacityReservationsUp.areaReserveIndex = areaReserveIndex;
-                globalReserveIndex++;
-                areaReserveIndex++;
-                if (val.need.timeSeries.width > 0)
-                {
-                    for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
-                    {
-                        areaCapacityReservationsUp.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
-                    }
-                }
-                for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
+                for (size_t idx = 0;
+                     auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
                 {
                     RESERVE_PARTICIPATION_THERMAL reserveParticipation;
-                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
-                    reserveParticipation.participationCost = cluster->reserveCost(key);
-                    reserveParticipation.clusterName = cluster->name();
-                    reserveParticipation.clusterIdInArea = cluster->index;
-                    reserveParticipation.globalIndexClusterParticipation
-                        = globalThermalClusterParticipationIndex;
-                    reserveParticipation.areaIndexClusterParticipation
-                        = areaClusterParticipationIndex;
-                    globalThermalClusterParticipationIndex++;
-                   areaClusterParticipationIndex++;
-                    areaCapacityReservationsUp.AllReservesParticipation.push_back(
-                        reserveParticipation);
-                }
-
-                areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
-            }
-            for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsDown)
-            {
-                CAPACITY_RESERVATION<RESERVE_PARTICIPATION_THERMAL> areaCapacityReservationsDown;
-                areaCapacityReservationsDown.failureCost = val.failureCost;
-                areaCapacityReservationsDown.spillageCost = val.spillageCost;
-                areaCapacityReservationsDown.reserveName = key;
-                areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
-                areaCapacityReservationsDown.areaReserveIndex = areaReserveIndex;
-                globalReserveIndex++;
-                areaReserveIndex++;
-                if (val.need.timeSeries.width > 0)
-                {
-                    for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
-                    {
-                        areaCapacityReservationsDown.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
-                    }
-                }
-                for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
-                {
-                    RESERVE_PARTICIPATION_THERMAL reserveParticipation;
-                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
-                    reserveParticipation.participationCost = cluster->reserveCost(key);
+                    reserveParticipation.maxPower = cluster->reserveMaxPower(reserveName);
+                    reserveParticipation.participationCost = cluster->reserveCost(reserveName);
                     reserveParticipation.clusterName = cluster->name();
                     reserveParticipation.clusterIdInArea = cluster->index;
                     reserveParticipation.globalIndexClusterParticipation
                       = globalThermalClusterParticipationIndex;
                     reserveParticipation.areaIndexClusterParticipation
                       = areaClusterParticipationIndex;
+                    areaReserves.areaCapacityReservationsUp[areaReserveIdx]
+                      .AllThermalReservesParticipation.push_back(reserveParticipation);
                     globalThermalClusterParticipationIndex++;
                     areaClusterParticipationIndex++;
-                    areaCapacityReservationsDown.AllReservesParticipation.push_back(
-                      reserveParticipation);
+                    idx++;
                 }
-
-                areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);
+                areaReserveIdx++;
+            }
+            for (int areaReserveIdx = 0; auto const& [reserveName, _] :
+                                         area.allCapacityReservations.areaCapacityReservationsDown)
+            {
+                for (size_t idx = 0;
+                     auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
+                {
+                    RESERVE_PARTICIPATION_THERMAL reserveParticipation;
+                    reserveParticipation.maxPower = cluster->reserveMaxPower(reserveName);
+                    reserveParticipation.participationCost = cluster->reserveCost(reserveName);
+                    reserveParticipation.clusterName = cluster->name();
+                    reserveParticipation.clusterIdInArea = cluster->index;
+                    reserveParticipation.globalIndexClusterParticipation
+                      = globalThermalClusterParticipationIndex;
+                    reserveParticipation.areaIndexClusterParticipation
+                      = areaClusterParticipationIndex;
+                    areaReserves.areaCapacityReservationsDown[areaReserveIdx]
+                      .AllThermalReservesParticipation.push_back(reserveParticipation);
+                    globalThermalClusterParticipationIndex++;
+                    areaClusterParticipationIndex++;
+                    idx++;
+                }
+                areaReserveIdx++;
             }
         }
-        
 
         NombrePaliers += clusterCount;
-        problem.allReserves.thermalAreaReserves.push_back(areaReserves);
     }
 
     problem.NombreDePaliersThermiques = NombrePaliers;

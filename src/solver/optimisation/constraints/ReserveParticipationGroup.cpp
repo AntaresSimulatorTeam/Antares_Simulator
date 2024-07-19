@@ -73,8 +73,7 @@ void ReserveParticipationGroup::BuildConstraints()
             {
                 // Thermal clusters reserve participations
                 {
-                    auto& areaReservesUp
-                      = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
+                    auto& areaReservesUp = data.areaReserves[pays].areaCapacityReservationsUp;
                     uint32_t reserve = 0;
                     for (const auto& areaReserveUp : areaReservesUp)
                     {
@@ -83,7 +82,7 @@ void ReserveParticipationGroup::BuildConstraints()
 
                         uint32_t cluster_participation = 0;
                         for (const auto& clusterReserveParticipation :
-                             areaReserveUp.AllReservesParticipation)
+                             areaReserveUp.AllThermalReservesParticipation)
                         {
                             if (clusterReserveParticipation.maxPower >= 0)
                             {
@@ -99,8 +98,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     }
 
                     reserve = 0;
-                    auto& areaReservesDown
-                      = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
+                    auto& areaReservesDown = data.areaReserves[pays].areaCapacityReservationsDown;
                     for (const auto& areaReserveDown : areaReservesDown)
                     {
                         // 24
@@ -108,7 +106,7 @@ void ReserveParticipationGroup::BuildConstraints()
 
                         uint32_t cluster_participation = 0;
                         for (const auto& clusterReserveParticipation :
-                             areaReserveDown.AllReservesParticipation)
+                             areaReserveDown.AllThermalReservesParticipation)
                         {
                             if (clusterReserveParticipation.maxPower >= 0)
                             {
@@ -126,14 +124,13 @@ void ReserveParticipationGroup::BuildConstraints()
 
                 // ShortTerm Storage reserve participations
                 {
-                    auto& areaReservesUp = data.areaReserves.shortTermStorageAreaReserves[pays]
-                                             .areaCapacityReservationsUp;
+                    auto& areaReservesUp = data.areaReserves[pays].areaCapacityReservationsUp;
                     uint32_t reserve = 0;
                     for (const auto& areaReserveUp : areaReservesUp)
                     {
                         uint32_t cluster_participation = 0;
                         for (const auto& clusterReserveParticipation :
-                             areaReserveUp.AllReservesParticipation)
+                             areaReserveUp.AllSTStorageReservesParticipation)
                         {
                             if (clusterReserveParticipation.maxTurbining >= 0)
                             {
@@ -159,14 +156,13 @@ void ReserveParticipationGroup::BuildConstraints()
                         reserve++;
                     }
 
-                    auto &areaReservesDown
-                      = data.areaReserves.shortTermStorageAreaReserves[pays].areaCapacityReservationsDown;
+                    auto& areaReservesDown = data.areaReserves[pays].areaCapacityReservationsDown;
                     reserve = 0;
                     for (const auto& areaReserveDown : areaReservesDown)
                     {
                         uint32_t cluster_participation = 0;
                         for (const auto& clusterReserveParticipation :
-                             areaReserveDown.AllReservesParticipation)
+                             areaReserveDown.AllSTStorageReservesParticipation)
                         {
                             if (clusterReserveParticipation.maxTurbining >= 0)
                             {

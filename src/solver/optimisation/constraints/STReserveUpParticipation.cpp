@@ -11,12 +11,11 @@ void STReserveUpParticipation::add(int pays, int reserve, int cluster, int pdt)
         // Π : Pumping participation to reserve
         // P : Up Reserve Participation
 
-        CAPACITY_RESERVATION<RESERVE_PARTICIPATION_STSTORAGE>& capacityReservation
-          = data.areaReserves.shortTermStorageAreaReserves[pays]
-              .areaCapacityReservationsUp[reserve];
+        CAPACITY_RESERVATION& capacityReservation
+          = data.areaReserves[pays].areaCapacityReservationsUp[reserve];
 
         RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
-          = capacityReservation.AllReservesParticipation[cluster];
+          = capacityReservation.AllSTStorageReservesParticipation[cluster];
 
         int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
 

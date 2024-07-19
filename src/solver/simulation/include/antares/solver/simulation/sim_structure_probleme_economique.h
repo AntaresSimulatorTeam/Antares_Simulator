@@ -299,11 +299,10 @@ struct RESERVE_PARTICIPATION_STSTORAGE : public RESERVE_PARTICIPATION_BASE
     float maxPumping = CLUSTER_NOT_PARTICIPATING;
 };
 
-template<typename ReserveType>
 struct CAPACITY_RESERVATION
 {
-    std::vector<ReserveType>
-      AllReservesParticipation; //!< Vector size is number of clusters in this area
+    std::vector<RESERVE_PARTICIPATION_THERMAL> AllThermalReservesParticipation; //!< Vector size is number of thermal clusters in this area
+    std::vector<RESERVE_PARTICIPATION_STSTORAGE> AllSTStorageReservesParticipation; //!< Vector size is number of Short Term Storage clusters in this area
     std::vector<int> need;      //!< Vector size is number of hours in year
     float failureCost = 0;
     float spillageCost = 0;
@@ -312,20 +311,11 @@ struct CAPACITY_RESERVATION
     int areaReserveIndex;
 };
 
-//Vector size is number of reserves up or down
-template<typename ReserveType>
+// Vector size is number of reserves up or down
 struct AREA_RESERVES_VECTOR
 {
-    std::vector<CAPACITY_RESERVATION<ReserveType>> areaCapacityReservationsUp;
-    std::vector<CAPACITY_RESERVATION<ReserveType>> areaCapacityReservationsDown;
-};
-
-//Vector size is number of areas, contains all the reserves
-struct ALL_AREA_RESERVES
-{
-    std::vector<AREA_RESERVES_VECTOR<RESERVE_PARTICIPATION_THERMAL>> thermalAreaReserves;
-    std::vector<AREA_RESERVES_VECTOR<RESERVE_PARTICIPATION_STSTORAGE>> shortTermStorageAreaReserves;
-    //other types of reserves to be implemented here
+    std::vector<CAPACITY_RESERVATION> areaCapacityReservationsUp;
+    std::vector<CAPACITY_RESERVATION> areaCapacityReservationsDown;
 };
 
 struct PALIERS_THERMIQUES
@@ -595,7 +585,7 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    ALL_AREA_RESERVES allReserves;
+    std::vector<AREA_RESERVES_VECTOR> allReserves;
 
     uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;

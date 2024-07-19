@@ -149,6 +149,38 @@ void VariableNamer::ParticipationOfUnitsToReserve(unsigned int variable,
       variable, "ParticipationOfUnitsToReserve", clusterName, reserveName);
 }
 
+void VariableNamer::ParticipationOfSTStorageTurbiningToReserve(unsigned int variable,
+                                                               const std::string& clusterName,
+                                                               const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfSTStorageTurbiningToReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfSTStoragePumpingToReserve(unsigned int variable,
+                                                             const std::string& clusterName,
+                                                             const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfSTStoragePumpingToReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfSTStorageToUpReserve(unsigned int variable,
+                                                        const std::string& clusterName,
+                                                        const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfSTStorageToUpReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfSTStorageToDownReserve(unsigned int variable,
+                                                          const std::string& clusterName,
+                                                          const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfSTStorageToDownReserve", clusterName, reserveName);
+}
+
 void VariableNamer::ParticipationOfRunningUnitsToReserve(unsigned int variable,
                                                          const std::string& clusterName,
                                                          const std::string& reserveName)
