@@ -102,7 +102,7 @@ jobs:
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DVCPKG_TARGET_TRIPLET=x64-linux-release \
           -DCODE_COVERAGE=ON \
-          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
           -DBUILD_TESTING=ON \
           -DMZ_CODE_COVERAGE=ON \
@@ -110,7 +110,7 @@ jobs:
 
       - name: Build
         run: |
-          build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j$(nproc)
+          build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config Release -j$(nproc)
 
       - name: Test and generate coverage
         continue-on-error: true
