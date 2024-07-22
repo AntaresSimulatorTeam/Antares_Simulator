@@ -66,13 +66,8 @@ public:
     //! List of studies
     using List = std::list<Ptr>;
 
-    //! A single set of areas
-    // CompareAreaName : to control the order of areas in a set of areas. This order can have an
-    // effect, even if tiny, on the results of aggregations.
-    using SingleSetOfAreas = std::set<Area*, CompareAreaName>;
-
     //! Multiple sets of areas
-    using SetsOfAreas = Antares::Data::Sets<SingleSetOfAreas>;
+    using SetsOfAreas = Antares::Data::Sets;
 
     //! Extension filename
     using FileExtension = std::string;

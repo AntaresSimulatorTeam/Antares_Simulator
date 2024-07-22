@@ -31,22 +31,23 @@
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include "antares/study/area/area.h"
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-template<class T>
 class Sets final
 {
 public:
-    //! Type
-    using Type = T;
-
     //
     using IDType = Yuni::CString<128, false>;
+
+    //! A single set of areas
+    // CompareAreaName : to control the order of areas in a set of areas. This order can have an
+    // effect, even if tiny, on the results of aggregations.
+    using SetAreasType = std::set<Area*, CompareAreaName>;
+
     //! Value
-    using TypePtr = std::shared_ptr<T>;
+    using TypePtr = std::shared_ptr<SetAreasType>;
 
     //! Map of Item
     using MapType = std::map<IDType, TypePtr>;
@@ -128,7 +129,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    Sets();
+    Sets() = default;
     /*!
     ** \brief Copy constructor
     */
@@ -155,7 +156,7 @@ public:
     */
     TypePtr add(const IDType& name)
     {
-        TypePtr p = std::make_shared<T>();
+        TypePtr p = std::make_shared<SetAreasType>();
         pMap[name] = p;
         pOptions[name].reset(name);
         return p;
@@ -253,8 +254,8 @@ public:
 
     IDType caption(const uint i) const;
 
-    T& operator[](uint i);
-    const T& operator[](uint i) const;
+    SetAreasType& operator[](uint i);
+    const SetAreasType& operator[](uint i) const;
 
 private:
     /*!
@@ -271,12 +272,10 @@ private:
     //!
     std::vector<TypePtr> pByIndex;
     std::vector<IDType> pNameByIndex;
-    mutable bool pModified;
+    mutable bool pModified = false;
 
 }; // class Sets
-
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "sets.hxx"
 

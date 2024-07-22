@@ -21,78 +21,11 @@
 #ifndef __ANTARES_LIBS_STUDY_SETS_HXX__
 #define __ANTARES_LIBS_STUDY_SETS_HXX__
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-template<class T>
-inline Sets<T>::Sets():
-    pModified(false)
-{
-}
 
-template<class T>
-inline Sets<T>::Sets(const Sets& rhs):
-    pMap(rhs.pMap),
-    pOptions(rhs.pOptions),
-    pModified(false)
-{
-    if (rhs.pByIndex)
-    {
-        rebuildIndexes();
-    }
-}
-
-template<class T>
-typename Sets<T>::iterator Sets<T>::begin()
-{
-    return pMap.begin();
-}
-
-template<class T>
-typename Sets<T>::const_iterator Sets<T>::begin() const
-{
-    return pMap.begin();
-}
-
-template<class T>
-typename Sets<T>::iterator Sets<T>::end()
-{
-    return pMap.end();
-}
-
-template<class T>
-typename Sets<T>::const_iterator Sets<T>::end() const
-{
-    return pMap.end();
-}
-
-template<class T>
-void Sets<T>::clear()
-{
-    pByIndex.clear();
-    pNameByIndex.clear();
-    pMap.clear();
-    pOptions.clear();
-}
-
-template<class T>
-inline T& Sets<T>::operator[](uint i)
-{
-    assert(i < pMap.size() && "Sets: operator[] index out of bounds");
-    return *(pByIndex[i]);
-}
-
-template<class T>
-inline const T& Sets<T>::operator[](uint i) const
-{
-    assert(i < pMap.size() && "Sets: operator[] index out of bounds");
-    return *(pByIndex[i]);
-}
-
-template<class T>
 template<class L>
-void Sets<T>::dumpToLogs(L& log) const
+void Sets::dumpToLogs(L& log) const
 {
     using namespace Yuni;
     const typename MapType::const_iterator end = pMap.end();
@@ -104,55 +37,8 @@ void Sets<T>::dumpToLogs(L& log) const
     }
 }
 
-template<class T>
-void Sets<T>::defaultForAreas()
-{
-    using namespace Yuni;
-    clear();
-    Options opts;
-    opts.caption = "All areas";
-    opts.comments = "Spatial aggregates on all areas";
-    opts.output = false;
-    opts.rules.push_back(Rule(ruleFilter, new String("add-all")));
-    auto item = std::make_shared<T>();
-    add("all areas", item, opts);
-}
-
-template<class T>
-YString Sets<T>::toString()
-{
-    using namespace Yuni;
-    using namespace Antares;
-    static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
-    const auto end = pOptions.cend();
-    YString ret = "";
-    for (auto i = pOptions.cbegin(); i != end; ++i)
-    {
-        const Options& opts = i->second;
-        ret << '[' << i->first << "]\n";
-        ret << "caption = " << opts.caption << '\n';
-        if (not opts.comments.empty())
-        {
-            ret << "comments = " << opts.comments << '\n';
-        }
-        if (!opts.output)
-        {
-            ret << "output = false\n";
-        }
-
-        for (uint r = 0; r != opts.rules.size(); ++r)
-        {
-            const Rule& rule = opts.rules[r];
-            ret << cmds[rule.first] << " = " << rule.second << '\n';
-        }
-        ret << '\n';
-    }
-    return ret;
-}
-
-template<class T>
 template<class StringT>
-bool Sets<T>::saveToFile(const StringT& filename) const
+bool Sets::saveToFile(const StringT& filename) const
 {
     using namespace Yuni;
     using namespace Antares;
@@ -190,107 +76,8 @@ bool Sets<T>::saveToFile(const StringT& filename) const
     return true;
 }
 
-template<class T>
-bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
-{
-    using namespace Yuni;
-    using namespace Antares;
-
-    // Empty the container first
-    clear();
-
-    // Loading the INI file
-    if (!std::filesystem::exists(filename))
-    {
-        // Error silently ignored
-        return true;
-    }
-
-    IniFile ini;
-    if (ini.open(filename))
-    {
-        Yuni::String value;
-
-        // each section...
-        for (auto* section = ini.firstSection; section != nullptr; section = section->next)
-        {
-            // Clearing the name.
-            if (!section->name)
-            {
-                continue;
-            }
-
-            // Creating a new section
-            auto item = std::make_shared<T>();
-            Options opts;
-            opts.caption = section->name;
-
-            // each property...
-            const IniFile::Property* p;
-            for (p = section->firstProperty; p != nullptr; p = p->next)
-            {
-                if (p->key.empty())
-                {
-                    continue;
-                }
-
-                value = p->value;
-                value.toLower();
-
-                if (p->key == "+")
-                {
-                    opts.rules.push_back(Rule(ruleAdd, new String(value)));
-                    continue;
-                }
-                if (p->key == "-")
-                {
-                    opts.rules.push_back(Rule(ruleRemove, new String(value)));
-                    continue;
-                }
-                if (p->key == "apply-filter")
-                {
-                    opts.rules.push_back(Rule(ruleFilter, new String(value)));
-                    continue;
-                }
-                if (p->key == "output")
-                {
-                    opts.output = value.to<bool>();
-                    continue;
-                }
-                if (p->key == "comments")
-                {
-                    opts.comments = p->value;
-                    opts.comments.trim(" \t");
-                    continue;
-                }
-                if (p->key == "caption")
-                {
-                    opts.caption = p->value;
-                    continue;
-                }
-
-                logs.warning() << "sets: `" << filename << "`: Invalid property `" << p->key
-                               << '\'';
-            }
-
-            // Add the new group
-            IDType newid = section->name;
-            newid.toLower();
-            add(newid, item, opts);
-        }
-
-        // Not modified anymore
-        pModified = false;
-        // All indexes must be rebuilt
-        rebuildIndexes();
-        return true;
-    }
-    return false;
-}
-
-template<class T>
 template<class HandlerT>
-inline void Sets<T>::rebuildAllFromRules(HandlerT& handler)
+inline void Sets::rebuildAllFromRules(HandlerT& handler)
 {
     for (uint i = 0; i != pMap.size(); ++i)
     {
@@ -298,9 +85,8 @@ inline void Sets<T>::rebuildAllFromRules(HandlerT& handler)
     }
 }
 
-template<class T>
 template<class HandlerT>
-void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
+void Sets::rebuildFromRules(const IDType& id, HandlerT& handler)
 {
     using namespace Yuni;
     using namespace Antares;
@@ -312,7 +98,7 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
     }
     // Options
     Options& opts = i->second;
-    Type& set = *(pMap[id]);
+    auto& set = *(pMap[id]);
 
     // Clear the result first
     handler.clear(set);
@@ -379,30 +165,8 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
                  << " rules, got " << opts.resultSize << " items";
 }
 
-template<class T>
-void Sets<T>::rebuildIndexes()
-{
-    pNameByIndex.clear();
-    pByIndex.clear();
-
-    if (!pMap.empty())
-    {
-        pByIndex.resize(pMap.size());
-        pNameByIndex.resize(pMap.size());
-        const typename MapType::iterator end = pMap.end();
-        uint index = 0;
-        for (typename MapType::iterator i = pMap.begin(); i != end; ++i)
-        {
-            pByIndex[index] = i->second;
-            pNameByIndex[index] = i->first;
-            ++index;
-        }
-    }
-}
-
-template<class T>
 template<class StringT>
-inline bool Sets<T>::hasOutput(const StringT& s) const
+inline bool Sets::hasOutput(const StringT& s) const
 {
     // Assert, if a C* container can not be found at compile time
     static_assert(Yuni::Traits::CString<StringT>::valid);
@@ -411,15 +175,8 @@ inline bool Sets<T>::hasOutput(const StringT& s) const
     return (i != pOptions.end()) ? i->second.output : false;
 }
 
-template<class T>
-inline bool Sets<T>::hasOutput(const uint index) const
-{
-    return hasOutput(IDType(pNameByIndex[index]));
-}
-
-template<class T>
 template<class StringT>
-inline uint Sets<T>::resultSize(const StringT& s) const
+inline uint Sets::resultSize(const StringT& s) const
 {
     // Assert, if a C* container can not be found at compile time
     static_assert(Yuni::Traits::CString<StringT>::valid);
@@ -428,9 +185,8 @@ inline uint Sets<T>::resultSize(const StringT& s) const
     return (i != pOptions.end()) ? i->second.resultSize : 0;
 }
 
-template<class T>
 template<class StringT>
-inline typename Sets<T>::IDType Sets<T>::caption(const StringT& s) const
+inline typename Sets::IDType Sets::caption(const StringT& s) const
 {
     // Assert, if a C* container can not be found at compile time
     static_assert(Yuni::Traits::CString<StringT>::valid);
@@ -438,26 +194,6 @@ inline typename Sets<T>::IDType Sets<T>::caption(const StringT& s) const
     typename MapOptions::const_iterator i = pOptions.find(s);
     return (i != pOptions.end()) ? i->second.caption : IDType();
 }
-
-template<class T>
-inline typename Sets<T>::IDType Sets<T>::caption(const uint i) const
-{
-    return caption(IDType(pNameByIndex[i]));
-}
-
-template<class T>
-inline uint Sets<T>::resultSize(const uint index) const
-{
-    return resultSize(IDType(pNameByIndex[index]));
-}
-
-template<class T>
-inline uint Sets<T>::size() const
-{
-    return (uint)pMap.size();
-}
-
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_SETS_HXX__

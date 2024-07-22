@@ -297,17 +297,17 @@ public:
     {
     }
 
-    void clear(Study::SingleSetOfAreas& set)
+    void clear(Sets::SetAreasType& set)
     {
         set.clear();
     }
 
-    uint size(Study::SingleSetOfAreas& set)
+    uint size(Sets::SetAreasType& set)
     {
         return (uint)set.size();
     }
 
-    bool add(Study::SingleSetOfAreas& set, const String& value)
+    bool add(Sets::SetAreasType& set, const String& value)
     {
         Area* area = AreaListLFind(&pStudy.areas, value.c_str());
         if (area)
@@ -318,7 +318,7 @@ public:
         return false;
     }
 
-    bool add(Study::SingleSetOfAreas& set, const Study::SingleSetOfAreas& otherSet)
+    bool add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
     {
         if (!otherSet.empty())
         {
@@ -331,7 +331,7 @@ public:
         return true;
     }
 
-    bool remove(Study::SingleSetOfAreas& set, const String& value)
+    bool remove(Sets::SetAreasType& set, const String& value)
     {
         Area* area = AreaListLFind(&pStudy.areas, value.c_str());
         if (area)
@@ -342,7 +342,7 @@ public:
         return false;
     }
 
-    bool remove(Study::SingleSetOfAreas& set, const Study::SingleSetOfAreas& otherSet)
+    bool remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
     {
         if (!otherSet.empty())
         {
@@ -355,7 +355,7 @@ public:
         return true;
     }
 
-    bool applyFilter(Study::SingleSetOfAreas& set, const String& value)
+    bool applyFilter(Sets::SetAreasType& set, const String& value)
     {
         if (value == "add-all")
         {
@@ -417,7 +417,7 @@ bool Study::reloadXCastData()
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
     bool ret = true;
     areas.each(
-      [this, &ret](Data::Area& area)
+      [this, &ret](Area& area)
       {
           assert(area.load.prepro);
           assert(area.solar.prepro);
