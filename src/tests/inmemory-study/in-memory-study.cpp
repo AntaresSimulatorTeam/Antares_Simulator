@@ -172,7 +172,7 @@ averageResults OutputRetriever::thermalNbUnitsON(ThermalCluster* cluster)
 ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 {
     study.scenarioRulesCreate();
-    auto sets = study.scenarioRules;
+    auto sets = study.scenarioRules.get();
     if (sets && !sets->empty())
     {
         rules_ = sets->createNew("Custom");

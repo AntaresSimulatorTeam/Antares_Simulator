@@ -124,11 +124,6 @@ public:
                   const Study& study);
 
     /*!
-    ** \brief
-    */
-    void retrieveMontlyMatrixArray(const Matrix<>* array[12]) const;
-
-    /*!
     ** \brief Get the amount of memory used the correlation matrices
     */
     uint64_t memoryUsage() const;
@@ -145,7 +140,7 @@ public:
 
 public:
     //! The correlation matrix for the whole year
-    std::unique_ptr<Matrix<>> annual;
+    Matrix<> annual;
     //! All correlation matrices per month (12)
     std::vector<Matrix<>> monthly; // [12]
 

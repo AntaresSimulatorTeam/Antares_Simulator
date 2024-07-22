@@ -389,9 +389,9 @@ void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
     // mode
     file << "[general]\nmode = " << ModeToCString(pMode) << "\n\n";
 
-    if (annual)
+    if (!annual.empty())
     {
-        ExportCorrelationCoefficients(study, *annual, file, "annual");
+        ExportCorrelationCoefficients(study, annual, file, "annual");
     }
     else
     {
@@ -420,14 +420,14 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
 
     if (JIT::usedFromGUI or pMode == modeAnnual)
     {
-        annual = std::make_unique<Matrix<>>();
-        annual->resize(study.areas.size(), study.areas.size());
-        annual->fillUnit();
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
 
         auto* section = ini.find("annual");
         if (section) // the section might be missing
         {
-            ReadCorrelationCoefficients(*this, study, *annual, ini, *section, warnings);
+            ReadCorrelationCoefficients(*this, study, annual, ini, *section, warnings);
         }
     }
 
@@ -467,15 +467,15 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
 
 void Correlation::reset(Study& study)
 {
-    this->clear();
+    clear();
 
     pMode = modeAnnual;
     if (JIT::usedFromGUI)
     {
         // Reset
-        annual = std::make_unique<Matrix<>>();
-        annual->resize(study.areas.size(), study.areas.size());
-        annual->fillUnit();
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
 
         // Preparing the monthly correlation matrices
         monthly.resize(12);
@@ -487,9 +487,9 @@ void Correlation::reset(Study& study)
     }
     else
     {
-        annual = std::make_unique<Matrix<>>();
-        annual->resize(study.areas.size(), study.areas.size());
-        annual->fillUnit();
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
     }
 }
 
@@ -501,7 +501,7 @@ void Correlation::clear()
 
 bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
 {
-    this->clear();
+    clear();
 
     if (!internalLoadFromINITry(study, ini, warnings))
     {
@@ -518,9 +518,9 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
             }
         }
 
-        annual = std::make_unique<Matrix<>>();
-        annual->resize(study.areas.size(), study.areas.size());
-        annual->fillUnit();
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
 
         return false;
     }
@@ -557,43 +557,12 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
     m[to.index][from.index] = v;
 }
 
-void Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
-{
-    switch (pMode)
-    {
-    case modeAnnual:
-    {
-        for (uint i = 0; i != 12; ++i)
-        {
-            array[i] = annual.get();
-        }
-        break;
-    }
-    case modeMonthly:
-    {
-        for (uint i = 0; i != 12; ++i)
-        {
-            array[i] = &(monthly[i]);
-        }
-        break;
-    }
-    default:
-    {
-        for (uint i = 0; i != 12; ++i)
-        {
-            array[i] = nullptr;
-        }
-        return;
-    }
-    }
-}
-
 uint64_t Correlation::memoryUsage() const
 {
     uint64_t r = sizeof(Correlation);
-    if (annual)
+    if (!annual.empty())
     {
-        r += annual->memoryUsage();
+        r += annual.memoryUsage();
     }
     if (!monthly.empty())
     {
@@ -608,9 +577,9 @@ uint64_t Correlation::memoryUsage() const
 bool Correlation::forceReload(bool reload) const
 {
     bool ret = true;
-    if (annual)
+    if (!annual.empty())
     {
-        ret = annual->forceReload(reload) and ret;
+        ret = annual.forceReload(reload) and ret;
     }
     for (uint i = 0; i != 12; ++i)
     {
@@ -622,9 +591,9 @@ bool Correlation::forceReload(bool reload) const
 
 void Correlation::markAsModified() const
 {
-    if (annual)
+    if (!annual.empty())
     {
-        annual->markAsModified();
+        annual.markAsModified();
     }
     for (uint i = 0; i != 12; ++i)
     {
@@ -719,8 +688,8 @@ void Correlation::copyFrom(const Correlation& source,
 
     // copying the annual correlation matrix
     std::cout << "ANNUAL\n";
-    CopyFromSingleMatrix(*source.annual,
-                         *annual,
+    CopyFromSingleMatrix(source.annual,
+                         annual,
                          studySource,
                          areaSourceIndex,
                          areaTargetIndex,
