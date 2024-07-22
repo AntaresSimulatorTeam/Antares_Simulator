@@ -135,48 +135,51 @@ BOOST_AUTO_TEST_CASE(analysis_should_detect_inconsistent_variable_bounds)
 /*!
  * Creates a problem with 2 variables linked by 1 constraint:
  *  - Variable 1 must be greater than 1
- *  - Variable 2 must be lesser than -1
+ *  - Variable 2 must be smaller than -1
  *  - but if feasible is false, constraint enforces that variable 2 is greater than variable 1 -->
  * infeasible
  */
-std::unique_ptr<MPSolver> createProblem(const std::string& constraintName, bool feasible)
+
+std::unique_ptr<MPSolver> createProblem(const std::string& constraintName)
 {
     std::unique_ptr<MPSolver> problem(MPSolver::CreateSolver("GLOP"));
     const double infinity = problem->infinity();
-    auto var1 = problem->MakeNumVar(1, infinity, "var1");
-    auto var2 = problem->MakeNumVar(-infinity, -1, "var2");
+    problem->MakeNumVar(1, infinity, "var1");
+    problem->MakeNumVar(-infinity, -1, "var2");
     auto constraint = problem->MakeRowConstraint(constraintName);
     constraint->SetBounds(0, infinity);
-    if (feasible)
-    {
-        constraint->SetCoefficient(var1, 1);
-        constraint->SetCoefficient(var2, -1);
-    }
-    else
-    {
-        constraint->SetCoefficient(var1, -1);
-        constraint->SetCoefficient(var2, 1);
-    }
     return problem;
 }
 
 std::unique_ptr<MPSolver> createFeasibleProblem(const std::string& constraintName)
 {
-    return createProblem(constraintName, true);
+    auto problem = createProblem(constraintName);
+    auto constraint = problem->LookupConstraintOrNull(constraintName);
+    auto var1 = problem->LookupVariableOrNull("var1");
+    auto var2 = problem->LookupVariableOrNull("var2");
+    constraint->SetCoefficient(var1, 1);
+    constraint->SetCoefficient(var2, -1);
+    return problem;
 }
 
 std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintName)
 {
-    return createProblem(constraintName, false);
+    auto problem = createProblem(constraintName);
+    auto constraint = problem->LookupConstraintOrNull(constraintName);
+    auto var1 = problem->LookupVariableOrNull("var1");
+    auto var2 = problem->LookupVariableOrNull("var2");
+    constraint->SetCoefficient(var1, -1);
+    constraint->SetCoefficient(var2, 1);
+    return problem;
 }
 
-static const std::string validConstraintNames[] = {
-  "BC-name-1::hourly::hour<36>",
-  "BC-name-2::daily::day<67>",
-  "BC-name-3::weekly::week<12>",
-  "FictiveLoads::hour<25>",
-  "AreaHydroLevel::hour<8>",
-};
+static const std::string validConstraintNames[] = {"BC-name-1::hourly::hour<36>",
+                                                   "BC-name-2::daily::day<67>",
+                                                   "BC-name-3::weekly::week<12>",
+                                                   "FictiveLoads::area<some-area>::hour<25>",
+                                                   "AreaHydroLevel::area<some-area>::hour<8>",
+                                                   "Level::area<some-area>::hour<28>",
+                                                   "HydroPower::area<some-area>::week<45>"};
 
 BOOST_DATA_TEST_CASE(analysis_should_detect_unfeasible_constraint,
                      bdata::make(validConstraintNames),

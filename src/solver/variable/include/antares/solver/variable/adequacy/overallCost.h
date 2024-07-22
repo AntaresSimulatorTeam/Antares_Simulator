@@ -194,7 +194,7 @@ public:
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Get end year calculations
-        for (unsigned int i = 0; i < state.study.runtime->rangeLimits.hour[Data::rangeCount]; ++i)
+        for (unsigned int i = 0; i < state.study.runtime.rangeLimits.hour[Data::rangeCount]; ++i)
         {
             pValuesForTheCurrentYear[numSpace][i] += state.thermalClusterOperatingCostForYear[i];
         }

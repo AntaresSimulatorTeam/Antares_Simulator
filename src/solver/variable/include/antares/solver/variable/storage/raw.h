@@ -120,7 +120,7 @@ protected:
                                                                                  rawdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
+                InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year.data());
                 break;
             }
         }

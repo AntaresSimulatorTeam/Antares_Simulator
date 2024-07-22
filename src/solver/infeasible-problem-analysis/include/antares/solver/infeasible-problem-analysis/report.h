@@ -21,10 +21,12 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
-#include "constraint.h"
+#include "ortools/linear_solver/linear_solver.h"
+#include "watched-constraints.h"
 
 namespace operations_research
 {
@@ -37,21 +39,14 @@ class InfeasibleProblemReport
 {
 public:
     InfeasibleProblemReport() = delete;
-    explicit InfeasibleProblemReport(
-      const std::vector<const operations_research::MPVariable*>& slackVariables);
-    void prettyPrint();
-
-private:
-    void turnSlackVarsIntoConstraints(
-      const std::vector<const operations_research::MPVariable*>& slackVariables);
-    void sortConstraintsBySlackValue();
-    void trimConstraints();
-    void sortConstraintsByType();
+    explicit InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>&);
     void logSuspiciousConstraints();
     void logInfeasibilityCauses();
 
-    std::vector<Constraint> constraints_;
-    std::map<ConstraintType, unsigned int> nbConstraintsByType_;
-    const unsigned int nbMaxVariables = 10;
+private:
+    void buildConstraintsFromSlackVars(const std::vector<const operations_research::MPVariable*>&);
+    void filterConstraintsToOneByType();
+
+    std::vector<std::shared_ptr<WatchedConstraint>> constraints_;
 };
 } // namespace Antares::Optimization
