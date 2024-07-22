@@ -109,7 +109,6 @@ void Study::clear()
 
     // areas
     setsOfAreas.clear();
-    setsOfLinks.clear();
 
     preproLoadCorrelation.clear();
     preproSolarCorrelation.clear();
@@ -149,9 +148,7 @@ void Study::createAsNew()
 
     // Sets
     setsOfAreas.defaultForAreas();
-    setsOfLinks.clear();
     setsOfAreas.markAsModified();
-    setsOfLinks.markAsModified();
 
     // Binding constraints
     bindingConstraints.clear();
@@ -1275,7 +1272,6 @@ bool Study::forceReload(bool reload) const
     ret = preproHydroCorrelation.forceReload(reload) and ret;
 
     ret = setsOfAreas.forceReload(reload) and ret;
-    ret = setsOfLinks.forceReload(reload) and ret;
     return ret;
 }
 
@@ -1291,7 +1287,6 @@ void Study::markAsModified() const
     bindingConstraints.markAsModified();
 
     setsOfAreas.markAsModified();
-    setsOfLinks.markAsModified();
 }
 
 void Study::relocate(const std::string& newFolder)

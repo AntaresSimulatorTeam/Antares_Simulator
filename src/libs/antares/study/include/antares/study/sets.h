@@ -194,8 +194,6 @@ public:
 
     uint size() const;
 
-    void rebuildIndexes();
-
     /*!
     ** \brief Get if the results for a given group should be written to the output
     */
@@ -239,12 +237,6 @@ public:
     void defaultForAreas();
 
     /*!
-    ** \brief Rebuild the lists of a group from the rules
-    */
-    template<class HandlerT>
-    void rebuildFromRules(const IDType& id, HandlerT& handler);
-
-    /*!
     ** \brief Rebuild the lists of all group from the rules
     */
     template<class HandlerT>
@@ -265,6 +257,14 @@ public:
     const T& operator[](uint i) const;
 
 private:
+    /*!
+    ** \brief Rebuild the lists of a group from the rules
+    */
+    template<class HandlerT>
+    void rebuildFromRules(const IDType& id, HandlerT& handler);
+
+    void rebuildIndexes();
+
     //! All groups
     MapType pMap;
     MapOptions pOptions;
