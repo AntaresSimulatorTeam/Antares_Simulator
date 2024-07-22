@@ -449,43 +449,31 @@ const AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with) c
 
 void AreaList::clear()
 {
-    delete[] byIndex;
-    byIndex = nullptr;
+    byIndex.clear();
 
-    if (!areas.empty())
+    Area::Map copy;
+    copy.swap(areas);
+
+    auto end = copy.end();
+    for (auto i = copy.begin(); i != end; ++i)
     {
-        Area::Map copy;
-        copy.swap(areas);
-
-        auto end = copy.end();
-        for (auto i = copy.begin(); i != end; ++i)
-        {
-            delete i->second;
-        }
+        delete i->second;
     }
 }
 
 void AreaList::rebuildIndexes()
 {
-    delete[] byIndex;
+    byIndex.clear();
 
-    if (areas.empty())
-    {
-        byIndex = nullptr;
-    }
-    else
-    {
-        using AreaWeakPtr = Area*;
-        byIndex = new AreaWeakPtr[areas.size()];
+    byIndex.resize(areas.size());
 
-        uint indx = 0;
-        auto end = areas.end();
-        for (auto i = areas.begin(); i != end; ++i, ++indx)
-        {
-            Area* area = i->second;
-            byIndex[indx] = area;
-            area->index = indx;
-        }
+    uint indx = 0;
+    auto end = areas.end();
+    for (auto i = areas.begin(); i != end; ++i, ++indx)
+    {
+        Area* area = i->second;
+        byIndex[indx] = area;
+        area->index = indx;
     }
 }
 

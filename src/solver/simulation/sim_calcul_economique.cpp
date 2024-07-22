@@ -87,7 +87,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
           study.areas,
-          study.runtime->areaLink);
+          study.runtime.areaLink);
     }
 
     problem.WaterValueAccurate = (study.parameters.hydroPricing.hpMode
@@ -101,9 +101,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NombreDePays = study.areas.size();
 
-    problem.NombreDInterconnexions = study.runtime->interconnectionsCount();
+    problem.NombreDInterconnexions = study.runtime.interconnectionsCount();
 
-    problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
+    problem.NumberOfShortTermStorages = study.runtime.shortTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
@@ -219,9 +219,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     importShortTermStorages(study.areas, problem.ShortTermStorage);
 
-    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
+    for (uint i = 0; i < study.runtime.interconnectionsCount(); ++i)
     {
-        auto& link = *(study.runtime->areaLink[i]);
+        auto& link = *(study.runtime.areaLink[i]);
         problem.PaysOrigineDeLInterconnexion[i] = link.from->index;
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
@@ -411,7 +411,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
 {
     const auto& parameters = study.parameters;
-    auto& studyruntime = *study.runtime;
+    auto& studyruntime = study.runtime;
     const uint nbPays = study.areas.size();
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
 

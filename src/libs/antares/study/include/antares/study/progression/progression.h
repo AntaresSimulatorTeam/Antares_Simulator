@@ -76,11 +76,11 @@ private:
 
     public:
         //! The total number of ticks to achieve
-        int maxTickCount;
+        unsigned maxTickCount;
         //! The current number of ticks
-        std::atomic<int> tickCount;
+        std::atomic<unsigned> tickCount;
         //! The last number of ticks, to reduce the log verbosity
-        int lastTickCount;
+        unsigned lastTickCount;
         // Caption to use when displaying logs
         // Example: 'year: 10000, task: thermal'
         Yuni::CString<40, false> caption;
@@ -104,7 +104,7 @@ public:
             return *this;
         }
 
-        Task& operator+=(int value)
+        Task& operator+=(unsigned value)
         {
             pPart.tickCount += value;
             return *this;
@@ -138,7 +138,7 @@ public:
     ** \internal The number of ticks should remain an `int` because
     **   we can not use unsigned atomic integer
     */
-    void add(uint year, Section section, int nbTicks);
+    void add(uint year, Section section, unsigned nbTicks);
 
     void add(Section section, int nbTicks);
 

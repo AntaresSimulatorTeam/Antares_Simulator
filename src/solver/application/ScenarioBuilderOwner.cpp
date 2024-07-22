@@ -39,7 +39,7 @@ void Antares::Solver::ScenarioBuilderOwner::callScenarioBuilder()
     // We will resize all matrix related to the time-series numbers
     // This operation can be done once since the number of years is constant
     // for a single simulation
-    study_.resizeAllTimeseriesNumbers(1 + study_.runtime->rangeLimits.year[Data::rangeEnd]);
+    study_.resizeAllTimeseriesNumbers(1 + study_.runtime.rangeLimits.year[Data::rangeEnd]);
     if (not TimeSeriesNumbers::CheckNumberOfColumns(study_.areas))
     {
         throw FatalError(
