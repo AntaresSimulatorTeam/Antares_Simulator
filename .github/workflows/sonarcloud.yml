@@ -97,7 +97,7 @@ jobs:
           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
           -DBUILD_TESTING=ON \
           -DMZ_CODE_COVERAGE=ON \
-          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
       - name: Build
