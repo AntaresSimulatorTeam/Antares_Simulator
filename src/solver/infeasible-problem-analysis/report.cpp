@@ -24,8 +24,6 @@
 #include <regex>
 #include <typeindex>
 
-#include <antares/logs/logs.h>
-
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
@@ -69,8 +67,7 @@ void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
     // 1. Grouping constraints by C++ type (inside a group, order of instances remains unchanged)
     std::ranges::stable_sort(constraints_, lessTypeName);
-    // 2. Keeping the first instances of each group, and rejecting others (= duplicates) to the end
-    // of vector
+    // 2. Keeping the first instances of each group, and rejecting others (= duplicates) to the end.
     auto duplicates = std::ranges::unique(constraints_, sameType);
     // 3. Removing trailing duplicates
     constraints_.erase(duplicates.begin(), duplicates.end());
@@ -78,22 +75,28 @@ void InfeasibleProblemReport::filterConstraintsToOneByType()
     std::ranges::sort(constraints_, greaterValue);
 }
 
-void InfeasibleProblemReport::logSuspiciousConstraints()
+void InfeasibleProblemReport::storeSuspiciousConstraints()
 {
+    report_.push_back("Violated constraints:");
     for (const auto& c: constraints_)
     {
-        Antares::logs.error() << c->infeasibility();
+        report_.push_back(c->infeasibility());
     }
 }
 
-void InfeasibleProblemReport::logInfeasibilityCauses()
+void InfeasibleProblemReport::storeInfeasibilityCauses()
 {
     filterConstraintsToOneByType();
-    Antares::logs.error() << "Possible causes of infeasibility:";
+    report_.push_back("Possible causes of infeasibility:");
     for (const auto& c: constraints_)
     {
-        Antares::logs.error() << c->infeasibilityCause();
+        report_.push_back(c->infeasibilityCause());
     }
+}
+
+std::vector<std::string> InfeasibleProblemReport::getLogs()
+{
+    return report_;
 }
 
 } // namespace Antares::Optimization
