@@ -467,7 +467,7 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
 
 void Correlation::reset(Study& study)
 {
-    this->clear();
+    clear();
 
     pMode = modeAnnual;
     if (JIT::usedFromGUI)
@@ -501,7 +501,7 @@ void Correlation::clear()
 
 bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
 {
-    this->clear();
+    clear();
 
     if (!internalLoadFromINITry(study, ini, warnings))
     {
