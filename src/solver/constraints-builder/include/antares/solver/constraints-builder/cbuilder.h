@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_CONSTRAINTSBUILDER_BUILDER_CBUILDER_H__
 #define __ANTARES_CONSTRAINTSBUILDER_BUILDER_CBUILDER_H__
 
@@ -231,7 +231,7 @@ public:
     */
     CBuilder(Antares::Data::Study&);
     //! Destructor
-    ~CBuilder();
+    ~CBuilder() = default;
     //@}
 
     /*!
@@ -262,7 +262,7 @@ public:
     {
         auto linkIT = std::find_if(pLink.begin(),
                                    pLink.end(),
-                                   [&u, &v](const linkInfo* edgeP) -> bool
+                                   [&u, &v](std::shared_ptr<linkInfo> edgeP) -> bool
                                    {
                                        if (edgeP->ptr->from->id == u && edgeP->ptr->with->id == v)
                                        {
@@ -279,7 +279,7 @@ public:
                                    });
         if (linkIT != pLink.end())
         {
-            return *linkIT;
+            return linkIT->get();
         }
 
         return nullptr;
@@ -294,11 +294,11 @@ public:
             auto a = area.second;
             std::for_each(pLink.begin(),
                           pLink.end(),
-                          [&a, this](linkInfo* edgeP)
+                          [&a, this](std::shared_ptr<linkInfo> edgeP)
                           {
                               if (edgeP->ptr->from == a || edgeP->ptr->with == a)
                               {
-                                  this->areaToLinks[a].insert(edgeP);
+                                  this->areaToLinks[a].insert(edgeP.get());
                               }
                           });
         }
@@ -308,7 +308,7 @@ public:
     {
         if (i < pLink.size())
         {
-            return pLink[i];
+            return pLink[i].get();
         }
         return nullptr;
     }
@@ -418,7 +418,7 @@ private:
       const double& secondMember);
 
 public:
-    Vector pLink;
+    std::vector<std::shared_ptr<linkInfo>> pLink;
 
 private:
     std::string pPrefix;
