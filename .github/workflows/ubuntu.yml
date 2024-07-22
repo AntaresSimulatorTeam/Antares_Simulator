@@ -147,7 +147,7 @@ jobs:
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
       - name: Run named mps tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -157,14 +157,14 @@ jobs:
           variant: "named-mps"
 
       - name: Run unfeasibility-related tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         run: |
           cd _build
           ctest -C Release --output-on-failure -R "^unfeasible$"
 
       - name: Run unit and end-to-end tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         run: |
           cd _build
@@ -178,7 +178,7 @@ jobs:
           path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
       - name: Run tests about infinity on BCs RHS
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -187,7 +187,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run MILP with CBC
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -197,7 +197,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 8.6.0
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -206,7 +206,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 8.7.0
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -215,7 +215,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 9.1.0
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -224,7 +224,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 9.2.0
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -233,7 +233,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run short-tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -242,7 +242,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run mps tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -251,7 +251,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests for adequacy patch (CSR)
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -260,7 +260,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run parallel tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -270,7 +270,7 @@ jobs:
           variant: "parallel"
 
       - name: Run tests for time series generator tool
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -280,7 +280,7 @@ jobs:
           variant: "tsgenerator"
 
       - name: Run medium-tests
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -289,7 +289,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-1
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -298,7 +298,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-2
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
@@ -307,7 +307,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-3
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
