@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - develop
-      - fix/centos7
       - dependabot/*
   schedule:
     - cron: '21 2 * * *'
