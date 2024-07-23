@@ -182,16 +182,16 @@ Note: Almost all variables of the system are defined twice (one value per state)
 | Notation                                          | Explanation                                                                                                                                                                        |
 |---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | $s\in \mathcal{S}$      | A single short-term storge reservoir |
-| $L_s(t)$      | Level at time t for storage $s$ |
-| $\underline{L}_s(t)$, $\overline{L}_s(t)$    | Minimum (resp. maximum) level at time $t$ for storage $s$ also known as "rule-curves" |
-| $L_s^0(s)$     | Initial level for storage $s$ (optional) |
-| $P^w_s(t)$    | Withdrawal at time t for storage $s$. Note that this is from the storage's perspective : the amount of power withdrawn from the storage |
-| $\underline{P}^i_s(t)$, $\overline{P}^i_s(t)$    | Minimum (resp. maximum) injection at time $t$ for storage $s$ |
+| $L_s$      | Level at time t for storage $s$ |
+| $\underline{L}_s$, $\overline{L}_s$    | Minimum (resp. maximum) level at time $t$ for storage $s$ also known as "rule-curves" |
+| $L_s^0$     | Initial level for storage $s$ (optional) |
+| $P^w_s$    | Withdrawal at time t for storage $s$. Note that this is from the storage's perspective : the amount of power withdrawn from the storage |
+| $\underline{P}^i_s$, $\overline{P}^i_s$    | Minimum (resp. maximum) injection at time $t$ for storage $s$ |
 | $\eta^i_s$ | Injection efficiency for storage $s$ |
-| $P^i_s(t)$    | Injection at time t for storage $s$. Note that this is from the storage's perspective : the amount of power injected into the storage |
-| $\underline{P}^w_s(t)$, $\overline{P}^w_s(t)$    | Minimum (resp. maximum) withdrawal at time $t$ for storage $s$ |
+| $P^i_s$    | Injection at time t for storage $s$. Note that this is from the storage's perspective : the amount of power injected into the storage |
+| $\underline{P}^w_s$, $\overline{P}^w_s$    | Minimum (resp. maximum) withdrawal at time $t$ for storage $s$ |
 | $\eta^w_s$ | Withdrawal efficiency for storage $s$ |
-| $I_s(t)$   | Inflows for storage $s$ at time $t$. Energy that is injected into the storage over time |
+| $I_s$   | Inflows for storage $s$ at time $t$. Energy that is injected into the storage over time |
 
 ### Binding constraints
 
@@ -283,30 +283,30 @@ $$
 L_s(t) - L_s(t-1) = \eta^i_s * P^i_s(t) - \eta^w_s * P^w_s(t) + I_s(t)
 $$
 
-Note that in this equation, time-steps are cycled.
+Note that in this equation, time-steps are cycled. From now on, time indices are omitted for simplicity.
 
 Bounded level
 
 $$
-0 \leq \underline{L}_s(t) \leq L_s(t) \leq \overline{L}_s(t)
+0 \leq \underline{L}_s \leq L_s \leq \overline{L}_s
 $$
 
 Bounded injection
 
 $$
-\underline{P}^i_s(t) \leq P^i_s(t) \leq \overline{P^i}_s(t)
+\underline{P}^i_s \leq P^i_s \leq \overline{P^i}_s
 $$
 
 Bounded withdrawal
 
 $$
-\underline{P}^w_s(t) \leq P^w_s(t) \leq \overline{P^w}_s(t)
+\underline{P}^w_s \leq P^w_s \leq \overline{P^w}_s
 $$
 
 Initial level (optional)
 
 $$
-L_s(0) = L_s^0(s)
+L_s(0) = L_s^0
 $$
 
 ### Balance between load and generation:
@@ -314,7 +314,7 @@ $$
 First Kirchhoff's law:
 
 $$
-\forall n \in N, \sum\_{l \in L\_n^+} F_l - \sum\_{l \in L\_n^-} F_l = \left( G\_n^+ + \sum\_{\lambda \in \Lambda\_n}(H\_\lambda - \Pi\_\lambda) + \sum\_{\theta \ \in \Theta\_n} P\_\theta + \sum_{s \in \mathcal{S}} \left(P^w_s(t) - P^i_s(t)\right)\right)-(G\_n^-+D\_n)
+\forall n \in N, \sum\_{l \in L\_n^+} F_l - \sum\_{l \in L\_n^-} F_l = \left( G\_n^+ + \sum\_{\lambda \in \Lambda\_n}(H\_\lambda - \Pi\_\lambda) + \sum\_{\theta \ \in \Theta\_n} P\_\theta + \sum_{s \in \mathcal{S}} \left(P^w_s - P^i_s\right)\right)-(G\_n^-+D\_n)
 $$
 
 
