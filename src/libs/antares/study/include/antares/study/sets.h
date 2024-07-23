@@ -35,6 +35,7 @@
 
 namespace Antares::Data
 {
+
 class Sets final
 {
 public:
@@ -273,8 +274,25 @@ private:
     std::vector<TypePtr> pByIndex;
     std::vector<IDType> pNameByIndex;
     mutable bool pModified = false;
-
 }; // class Sets
+
+class SetHandlerAreas
+{
+public:
+    explicit SetHandlerAreas(AreaList& areas);
+    void clear(Sets::SetAreasType& set);
+    uint size(Sets::SetAreasType& set);
+
+    bool add(Sets::SetAreasType& set, const Yuni::String& value);
+    bool add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
+    bool remove(Sets::SetAreasType& set, const Yuni::String& value);
+    bool remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
+    bool applyFilter(Sets::SetAreasType& set, const Yuni::String& value);
+
+private:
+    AreaList& areas_;
+}; // class SetHandlerAreas
+
 } // namespace Antares::Data
 
 #include "sets.hxx"

@@ -235,4 +235,91 @@ uint Sets::size() const
 {
     return (uint)pMap.size();
 }
+
+
+SetHandlerAreas::SetHandlerAreas(AreaList& areas):
+        areas_(areas)
+{
+}
+
+void SetHandlerAreas::clear(Sets::SetAreasType& set)
+{
+    set.clear();
+}
+
+uint SetHandlerAreas::size(Sets::SetAreasType& set)
+{
+    return (uint)set.size();
+}
+
+bool SetHandlerAreas::add(Sets::SetAreasType& set, const Yuni::String& value)
+{
+    Area* area = AreaListLFind(&areas_, value.c_str());
+    if (area)
+    {
+        set.insert(area);
+        return true;
+    }
+    return false;
+}
+
+bool SetHandlerAreas::add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
+{
+    if (!otherSet.empty())
+    {
+        auto end = otherSet.end();
+        for (auto i = otherSet.begin(); i != end; ++i)
+        {
+            set.insert(*i);
+        }
+    }
+    return true;
+}
+
+bool SetHandlerAreas::remove(Sets::SetAreasType& set, const Yuni::String& value)
+{
+    Area* area = AreaListLFind(&areas_, value.c_str());
+    if (area)
+    {
+        set.erase(area);
+        return true;
+    }
+    return false;
+}
+
+bool SetHandlerAreas::remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
+{
+    if (!otherSet.empty())
+    {
+        auto end = otherSet.end();
+        for (auto i = otherSet.begin(); i != end; ++i)
+        {
+            set.erase(*i);
+        }
+    }
+    return true;
+}
+
+bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const Yuni::String& value)
+{
+    if (value == "add-all")
+    {
+        auto end = areas_.end();
+        for (auto i = areas_.begin(); i != end; ++i)
+        {
+            set.insert(i->second);
+        }
+        return true;
+    }
+
+    if (value == "remove-all")
+    {
+        set.clear();
+        return true;
+    }
+    return false;
+}
+
+
+
 } // namespace Antares::Data
