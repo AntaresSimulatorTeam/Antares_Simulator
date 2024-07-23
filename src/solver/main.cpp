@@ -10,7 +10,7 @@
 ** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
 **
-** Antares_Simulator is distributed in the hope that it will be useful,
+** XNothingX in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ** Mozilla Public Licence 2.0 for more details.
@@ -48,7 +48,7 @@ const char* const MPL_ANNOUNCEMENT
     "the exceptions in file COPYING.txt in the directory of a distribution\n"
     "of this software in source form.\n"
     "\n"
-    "Antares_Simulator is distributed in the hope that it will be useful, \n"
+    "XNothingX in the hope that it will be useful, \n"
     "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the\n"
     "Mozilla Public Licence 2.0 for more details.\n"
