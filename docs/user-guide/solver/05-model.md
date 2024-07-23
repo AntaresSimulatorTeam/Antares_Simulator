@@ -178,6 +178,21 @@ Note: Almost all variables of the system are defined twice (one value per state)
 | $R\_\lambda \in \mathbb{R}^T_+$                   | stored energy level in reservoir $\lambda$                                                                                                                                         |
 | $\mathfrak{R}\_{\lambda_q} \in \mathbb{R}_+$      | filling level of reservoir layer $q$ at time $T$ (end of the week)                                                                                                                 |
 
+### Short-term storages
+| Notation                                          | Explanation                                                                                                                                                                        |
+|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| $s\in \mathcal{S}$      | A single short-term storge reservoir |
+| $L_s(t)$      | Level at time t for storage $s$ |
+| $\underline{L}_s(t)$, $\overline{L}_s(t)$    | Minimum (resp. maximum) level at time $t$ for storage $s$ also known as "rule-curves" |
+| $L_^0(s)$     | Initial level for storage $s$ (optional) |
+| $P^w_s(t)$    | Withdrawal at time t for storage $s$. Note that this is from the storage's perspective : the amount of power withdrawn from the storage |
+| $\underline{P}^i_s(t)$, $\overline{P}^i_s(t)$    | Minimum (resp. maximum) injection at time $t$ for storage $s$ |
+| $\eta^w_s$ | Injection efficiency for storage $s$ |
+| $P^i_s(t)$    | Injection at time t for storage $s$. Note that this is from the storage's perspective : the amount of power injected into the storage |
+| $\underline{P}^w_s(t)$, $\overline{P}^w_s(t)$    | Minimum (resp. maximum) withdrawal at time $t$ for storage $s$ |
+| $\eta^w_s$ | Withdrawal efficiency for storage $s$ |
+| $I_s(t)$   | Inflows for storage $s$ at time $t$. Energy that is injected into the storage over time |
+
 ### Binding constraints
 
 In problems $\mathcal{P}^k$, the need for a versatile modelling of the power system calls for the introduction of an arbitrary number of linear binding constraints between system's variables throughout the grid, expressed either in terms of hourly power, daily energies or weekly energies.
@@ -261,12 +276,45 @@ $\Omega\_{\mathrm{unit com}}$ is the expression derived from $\Omega\_{\mathrm{d
 
 ## Constraints related to the nominal system state
 
+### Short-term storage
+Level equation. For each short-term storage $s\in\mathcal{S}$,
+
+$$
+L_s(t) - L_s(t-1) = \eta^i_s * P^i_s(t) - \eta^w_s * P^w_s(t) + I_s(t)
+$$
+
+Note that in this equation, time-steps are cycled.
+
+Bounded level
+
+$$
+0 \leq \underline{L}_s(t) \leq L_s(t) \leq \overlind{L}_s(t)
+$$
+
+Bounded injection
+
+$$
+\underline{P}^i_s(t) \leq P^i_s(t) \leq \overline{P^i}_s(t)
+$$
+
+Bounded withdrawal
+
+$$
+\underline{P}^w_s(t) \leq P^w_s(t) \leq \overline{P^w}_s(t)
+$$
+
+Initial level (optional)
+
+$$
+L_s(0) = L_^0(s)
+$$
+
 ### Balance between load and generation:
 
 First Kirchhoff's law:
 
 $$
-\forall n \in N, \sum\_{l \in L\_n^+} F_l - \sum\_{l \in L\_n^-} F_l = \left( G\_n^+ + \sum\_{\lambda \in \Lambda\_n}(H\_\lambda - \Pi\_\lambda) + \sum\_{\theta \ \in \Theta\_n} P\_\theta\right)-(G\_n^-+D\_n)
+\forall n \in N, \sum\_{l \in L\_n^+} F_l - \sum\_{l \in L\_n^-} F_l = \left( G\_n^+ + \sum\_{\lambda \in \Lambda\_n}(H\_\lambda - \Pi\_\lambda) + \sum\_{\theta \ \in \Theta\_n} P\_\theta + \sum_{s \in \mathcal{S}} \left(P^w_s(t) - P^i_s(t)\right)\right)-(G\_n^-+D\_n)
 $$
 
 
