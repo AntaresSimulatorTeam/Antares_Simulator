@@ -134,54 +134,54 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
         const Yuni::String& arg = *(rule.second);
         switch (rule.first) // type
         {
-            case ruleAdd:
+        case ruleAdd:
+        {
+            // Trying to add a single item
+            if (!handler.add(set, arg))
             {
-                // Trying to add a single item
-                if (!handler.add(set, arg))
+                // Failed. Maybe the argument references another group
+                const IDType other = arg;
+                typename MapType::iterator i = pMap.find(other);
+                if (i != pMap.end())
                 {
-                    // Failed. Maybe the argument references another group
-                    const IDType other = arg;
-                    typename MapType::iterator i = pMap.find(other);
-                    if (i != pMap.end())
+                    if (handler.add(set, *(i->second)))
                     {
-                        if (handler.add(set, *(i->second)))
-                        {
-                            break;
-                        }
+                        break;
                     }
                 }
-                break;
             }
-            case ruleRemove:
+            break;
+        }
+        case ruleRemove:
+        {
+            // Trying to remove a single item
+            if (!handler.remove(set, arg))
             {
-                // Trying to remove a single item
-                if (!handler.remove(set, arg))
+                // Failed. Maybe the argument references another group
+                const IDType other = arg;
+                typename MapType::iterator i = pMap.find(other);
+                if (i != pMap.end())
                 {
-                    // Failed. Maybe the argument references another group
-                    const IDType other = arg;
-                    typename MapType::iterator i = pMap.find(other);
-                    if (i != pMap.end())
+                    if (handler.remove(set, *(i->second)))
                     {
-                        if (handler.remove(set, *(i->second)))
-                        {
-                            break;
-                        }
+                        break;
                     }
                 }
-                break;
             }
-            case ruleFilter:
-            {
-                handler.applyFilter(set, arg);
-                break;
-            }
-            case ruleNone:
-            case ruleMax:
-            {
-                // Huh ??
-                assert(false && "Should not be here !");
-                break;
-            }
+            break;
+        }
+        case ruleFilter:
+        {
+            handler.applyFilter(set, arg);
+            break;
+        }
+        case ruleNone:
+        case ruleMax:
+        {
+            // Huh ??
+            assert(false && "Should not be here !");
+            break;
+        }
         }
     }
     // Retrieving the size of the result set
@@ -190,7 +190,7 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
                  << " rules, got " << opts.resultSize << " items";
 }
 
-bool Sets::saveToFile(const Yuni::String &filename) const
+bool Sets::saveToFile(const Yuni::String& filename) const
 {
     Yuni::IO::File::Stream file;
     if (!file.open(filename, Yuni::IO::OpenMode::write | Yuni::IO::OpenMode::truncate))
@@ -395,8 +395,8 @@ void Sets::dumpToLogs() const
     for (typename MapType::const_iterator i = pMap.begin(); i != end; ++i)
     {
         logs.info() << "   found `" << i->first << "` (" << (uint)i->second->size() << ' '
-                   << (i->second->size() < 2 ? "item" : "items")
-                   << ((!hasOutput(i->first)) ? ", no output" : "") << ')';
+                    << (i->second->size() < 2 ? "item" : "items")
+                    << ((!hasOutput(i->first)) ? ", no output" : "") << ')';
     }
 }
 
@@ -406,7 +406,7 @@ uint Sets::size() const
 }
 
 SetHandlerAreas::SetHandlerAreas(AreaList& areas):
-        areas_(areas)
+    areas_(areas)
 {
 }
 

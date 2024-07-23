@@ -199,7 +199,7 @@ public:
     /*!
     ** \brief Get if the results for a given group should be written to the output
     */
-    bool hasOutput(const  Yuni::ShortString128& s) const;
+    bool hasOutput(const Yuni::ShortString128& s) const;
 
     /*!
     ** \brief Get if the results for a given group should be written to the output
@@ -209,7 +209,7 @@ public:
     /*!
     ** \brief Get the size of a result set
     */
-    uint resultSize(const  Yuni::ShortString128& s) const;
+    uint resultSize(const Yuni::ShortString128& s) const;
 
     /*!
     ** \brief Get the size of a result set
@@ -285,4 +285,3 @@ private:
 }; // class SetHandlerAreas
 
 } // namespace Antares::Data
-
