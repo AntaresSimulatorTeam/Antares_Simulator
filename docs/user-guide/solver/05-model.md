@@ -184,7 +184,7 @@ Note: Almost all variables of the system are defined twice (one value per state)
 | $s\in \mathcal{S}$      | A single short-term storge reservoir |
 | $L_s(t)$      | Level at time t for storage $s$ |
 | $\underline{L}_s(t)$, $\overline{L}_s(t)$    | Minimum (resp. maximum) level at time $t$ for storage $s$ also known as "rule-curves" |
-| $L_^0(s)$     | Initial level for storage $s$ (optional) |
+| $L_s^0(s)$     | Initial level for storage $s$ (optional) |
 | $P^w_s(t)$    | Withdrawal at time t for storage $s$. Note that this is from the storage's perspective : the amount of power withdrawn from the storage |
 | $\underline{P}^i_s(t)$, $\overline{P}^i_s(t)$    | Minimum (resp. maximum) injection at time $t$ for storage $s$ |
 | $\eta^w_s$ | Injection efficiency for storage $s$ |
@@ -306,7 +306,7 @@ $$
 Initial level (optional)
 
 $$
-L_s(0) = L_^0(s)
+L_s(0) = L_s^0(s)
 $$
 
 ### Balance between load and generation:
