@@ -187,7 +187,7 @@ Note: Almost all variables of the system are defined twice (one value per state)
 | $L_s^0(s)$     | Initial level for storage $s$ (optional) |
 | $P^w_s(t)$    | Withdrawal at time t for storage $s$. Note that this is from the storage's perspective : the amount of power withdrawn from the storage |
 | $\underline{P}^i_s(t)$, $\overline{P}^i_s(t)$    | Minimum (resp. maximum) injection at time $t$ for storage $s$ |
-| $\eta^w_s$ | Injection efficiency for storage $s$ |
+| $\eta^i_s$ | Injection efficiency for storage $s$ |
 | $P^i_s(t)$    | Injection at time t for storage $s$. Note that this is from the storage's perspective : the amount of power injected into the storage |
 | $\underline{P}^w_s(t)$, $\overline{P}^w_s(t)$    | Minimum (resp. maximum) withdrawal at time $t$ for storage $s$ |
 | $\eta^w_s$ | Withdrawal efficiency for storage $s$ |
