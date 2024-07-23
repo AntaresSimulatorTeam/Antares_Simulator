@@ -61,7 +61,6 @@ public:
     std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
 
-private:
     //! reserve
     std::map<Data::ReserveName, STStorageClusterReserveParticipation> clusterReservesParticipations;
 };

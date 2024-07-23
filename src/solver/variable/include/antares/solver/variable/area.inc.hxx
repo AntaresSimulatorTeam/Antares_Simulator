@@ -133,6 +133,13 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
             state.initFromThermalClusterIndex(cluster->areaWideIndex);
         }
 
+        for (int i = 0; i < area.shortTermStorage.storagesByIndex.size(); i++)
+        {
+            // Intiializing the state for the current short term storage cluster
+            state.initFromShortTermStorageClusterIndex(i);
+            i++;
+        }
+
         // Variables
         auto& variablesForArea = pAreas[area.index];
         variablesForArea.hourForEachArea(state, numSpace);

@@ -190,9 +190,10 @@ public:
                      state.thermalReserveParticipationPerClusterForYear[i][state.thermalCluster
                                                                              ->name()])
                 {
-                    pValuesForTheCurrentYear[numSpace][state.getAreaIndexFromReserveAndCluster(
-                                                         reserveName, state.thermalCluster->name())]
-                      .hour[i]
+                    pValuesForTheCurrentYear
+                      [numSpace][state.getAreaIndexReserveParticipationFromReserveAndThermalCluster(
+                                   reserveName, state.thermalCluster->name())]
+                        .hour[i]
                       = reserveParticipation;
                 }
             }

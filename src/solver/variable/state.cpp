@@ -152,7 +152,32 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // en mode fast : est pris depuis l'heuristique
 }
 
-int State::getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName)
+void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex)
+{
+    // asserts
+    assert(area);
+    assert(clusterAreaWideIndex < area->shortTermStorage.count());
+
+    STStorageCluster = &area->shortTermStorage.storagesByIndex[clusterAreaWideIndex];
+
+    // Reserves
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+    {
+        for (const auto& [resName, resParticipation] :
+             STStorageCluster->clusterReservesParticipations)
+        {
+            STStorageClusterReserveParticipationCostForYear[hourInTheYear]
+              += hourlyResults->ShortTermStorage[hourInTheWeek].reserveParticipationOfCluster
+                   [getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(
+                     resName, STStorageCluster->id)]
+                 * STStorageCluster->reserveCost(resName);
+        }
+    }
+}
+
+int State::getAreaIndexReserveParticipationFromReserveAndThermalCluster(
+  Data::ReserveName reserveName,
+  Data::ClusterName clusterName)
 {
     for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsUp)
     {
@@ -170,6 +195,35 @@ int State::getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data
         if (reserve.reserveName == reserveName)
         {
             for (auto& cluster : reserve.AllThermalReservesParticipation)
+            {
+                if (cluster.clusterName == clusterName)
+                    return cluster.areaIndexClusterParticipation;
+            }
+        }
+    }
+    return -1;
+}
+
+int State::getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(
+  Data::ReserveName reserveName,
+  Data::ClusterName clusterName)
+{
+    for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsUp)
+    {
+        if (reserve.reserveName == reserveName)
+        {
+            for (auto& cluster : reserve.AllSTStorageReservesParticipation)
+            {
+                if (cluster.clusterName == clusterName)
+                    return cluster.areaIndexClusterParticipation;
+            }
+        }
+    }
+    for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsDown)
+    {
+        if (reserve.reserveName == reserveName)
+        {
+            for (auto& cluster : reserve.AllSTStorageReservesParticipation)
             {
                 if (cluster.clusterName == clusterName)
                     return cluster.areaIndexClusterParticipation;
@@ -235,9 +289,11 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
         {
             std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
-            for (auto res : clusterReserves)
+            for (auto& res : clusterReserves)
             {
-                int reserveParticipationIdx = getAreaIndexFromReserveAndCluster(res, thermalCluster->name());
+                int reserveParticipationIdx
+                  = getAreaIndexReserveParticipationFromReserveAndThermalCluster(
+                    res, thermalCluster->name());
                 if (reserveParticipationIdx != -1)
                 {
                     thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
@@ -406,11 +462,10 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // Calculation of non linear and startup costs
     yearEndBuildThermalClusterCalculateStartupCosts(maxDurationON, ON_min, ON_opt, currentCluster);
     // Calculation of reserve participation costs
-    yearEndBuildCalculateReserveParticipationCosts(currentCluster);
+    yearEndBuildCalculateReserveParticipationCosts();
 }
 
-void State::yearEndBuildCalculateReserveParticipationCosts(
-    const Data::ThermalCluster* currentCluster)
+void State::yearEndBuildCalculateReserveParticipationCosts()
 {
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
     {
@@ -420,7 +475,8 @@ void State::yearEndBuildCalculateReserveParticipationCosts(
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
             thermalClusterOperatingCostForYear[h]
-                += thermalClusterReserveParticipationCostForYear[h];
+              += thermalClusterReserveParticipationCostForYear[h]
+                 + STStorageClusterReserveParticipationCostForYear[h];
         }
     }
 }

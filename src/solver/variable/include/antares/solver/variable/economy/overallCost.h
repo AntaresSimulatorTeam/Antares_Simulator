@@ -260,8 +260,8 @@ public:
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
                 - state.area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
-        auto thermalReserves = state.problemeHebdo->allReserves[area->index];
-        for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
+        auto reserves = state.problemeHebdo->allReserves[area->index];
+        for (const auto& reserveUp : reserves.areaCapacityReservationsUp)
         {
             costForSpilledOrUnsuppliedEnergy
               += state.hourlyResults->Reserves[state.hourInTheWeek]
@@ -271,7 +271,7 @@ public:
                        .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex]
                      * reserveUp.spillageCost;
         }
-        for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
+        for (const auto& reserveDown : reserves.areaCapacityReservationsDown)
         {
             costForSpilledOrUnsuppliedEnergy
               += state.hourlyResults->Reserves[state.hourInTheWeek]

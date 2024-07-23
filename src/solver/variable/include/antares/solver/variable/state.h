@@ -89,6 +89,16 @@ public:
     */
     void initFromThermalClusterIndex(const unsigned int areaWideIndex);
 
+     /*!
+     ** \brief Initialize some variable according a short term storage cluster index
+     **
+     ** We assume here that the variables related to an area
+     ** are properly initialized.
+     **
+     ** \param areaWideIndex Index of the short term storage cluster for the current area
+     */
+    void initFromShortTermStorageClusterIndex(const unsigned int areaWideIndex);
+
     /*!
     ** \brief End the year by smoothing the thermal units run
     ** and computing costs.
@@ -100,7 +110,11 @@ public:
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
-    int getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName);
+    int getAreaIndexReserveParticipationFromReserveAndThermalCluster(Data::ReserveName reserveName,
+                                                                     Data::ClusterName clusterName);
+    int getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(Data::ReserveName reserveName,
+                                                                     Data::ClusterName clusterName);
+
 private:
     /*!
     ** \brief Initialize some variable according a thermal cluster index
@@ -117,7 +131,7 @@ private:
       const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
-    void yearEndBuildCalculateReserveParticipationCosts(const Data::ThermalCluster* currentCluster);
+    void yearEndBuildCalculateReserveParticipationCosts();
 
     std::array<uint, Variable::maxHoursInAYear> computeEconomicallyOptimalNbClustersONforEachHour(
       const uint& maxDurationON,
@@ -159,6 +173,9 @@ public:
 
     //! The current thermal cluster (used in yearEndBuildForEachThermalCluster functions)
     Data::ThermalCluster* thermalCluster;
+
+    //! The current Short Term Storage cluster
+    Data::ShortTermStorage::STStorageCluster* STStorageCluster;
 
     //! The current renewable cluster
     Data::RenewableCluster* renewableCluster;
@@ -204,6 +221,9 @@ public:
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
     //! Reserves participation cost of the thermal cluster for the whole year
     double thermalClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];
+
+    //! Reserves participation cost of the Short Term Storage cluster for the whole year
+    double STStorageClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];
 
     double renewableClusterProduction;
 

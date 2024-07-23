@@ -42,7 +42,14 @@ inline void State::startANewYear()
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
-        memset(thermalClusterReserveParticipationCostForYear, 0, sizeof(thermalClusterNonProportionalCostForYear));
+    {
+        memset(thermalClusterReserveParticipationCostForYear,
+               0,
+               sizeof(thermalClusterNonProportionalCostForYear));
+        memset(STStorageClusterReserveParticipationCostForYear,
+               0,
+               sizeof(STStorageClusterReserveParticipationCostForYear));
+    }
 
     // Re-initializing annual costs (to be printed in output into separate files)
     annualSystemCost = 0.;
@@ -57,6 +64,9 @@ inline void State::yearEndResetThermal()
 {
     memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
+    memset(STStorageClusterReserveParticipationCostForYear,
+           0,
+           sizeof(STStorageClusterReserveParticipationCostForYear));
     memset(thermalClusterNonProportionalCostForYear,
            0,
            sizeof(thermalClusterNonProportionalCostForYear));
