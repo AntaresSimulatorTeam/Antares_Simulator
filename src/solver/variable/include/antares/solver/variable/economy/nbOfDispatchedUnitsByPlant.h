@@ -234,7 +234,7 @@ public:
                                                       uint year,
                                                       unsigned int numSpace)
     {
-        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
+        for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterDispatchedUnitsCountForYear[i] += static_cast<uint>(
               pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]);
@@ -247,8 +247,8 @@ public:
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Get end year calculations
-        for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
-             i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
+        for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
+             i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
             pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]

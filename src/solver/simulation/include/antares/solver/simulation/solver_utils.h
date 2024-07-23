@@ -118,52 +118,10 @@ class yearRandomNumbers
 public:
     yearRandomNumbers()
     {
-        pThermalNoisesByArea = nullptr;
-        pNbClustersByArea = nullptr;
         pNbAreas = 0;
     }
 
-    ~yearRandomNumbers()
-    {
-        // General
-        delete[] pNbClustersByArea;
-
-        // Thermal noises
-        for (uint a = 0; a != pNbAreas; a++)
-        {
-            delete[] pThermalNoisesByArea[a];
-        }
-        delete[] pThermalNoisesByArea;
-
-        // Reservoir levels, spilled and unsupplied energy
-        delete[] pReservoirLevels;
-        delete[] pUnsuppliedEnergy;
-        delete[] pSpilledEnergy;
-
-        // Hydro costs noises
-        switch (pPowerFluctuations)
-        {
-        case Data::lssFreeModulations:
-        {
-            for (uint a = 0; a != pNbAreas; a++)
-            {
-                delete[] pHydroCostsByArea_freeMod[a];
-            }
-            delete[] pHydroCostsByArea_freeMod;
-            break;
-        }
-
-        case Data::lssMinimizeRamping:
-        case Data::lssMinimizeExcursions:
-        {
-            delete[] pHydroCosts_rampingOrExcursion;
-            break;
-        }
-
-        case Data::lssUnknown:
-            break;
-        }
-    }
+    ~yearRandomNumbers() = default;
 
     void setNbAreas(uint nbAreas)
     {
@@ -178,18 +136,18 @@ public:
     void reset()
     {
         // General
-        memset(pNbClustersByArea, 0, pNbAreas * sizeof(size_t));
+        pNbClustersByArea.assign(pNbAreas, 0);
 
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
         {
-            memset(pThermalNoisesByArea[a], 0, pNbClustersByArea[a] * sizeof(double));
+            pThermalNoisesByArea[a].assign(pNbClustersByArea[a], 0);
         }
 
         // Reservoir levels, spilled and unsupplied energy costs
-        memset(pReservoirLevels, 0, pNbAreas * sizeof(double));
-        memset(pUnsuppliedEnergy, 0, pNbAreas * sizeof(double));
-        memset(pSpilledEnergy, 0, pNbAreas * sizeof(double));
+        pReservoirLevels.assign(pNbAreas, 0);
+        pUnsuppliedEnergy.assign(pNbAreas, 0);
+        pSpilledEnergy.assign(pNbAreas, 0);
 
         // Hydro costs noises
         switch (pPowerFluctuations)
@@ -198,7 +156,7 @@ public:
         {
             for (uint a = 0; a != pNbAreas; a++)
             {
-                memset(pHydroCostsByArea_freeMod[a], 0, 8784 * sizeof(double));
+                pHydroCostsByArea_freeMod[a].assign(8784, 0);
             }
             break;
         }
@@ -206,7 +164,7 @@ public:
         case Data::lssMinimizeRamping:
         case Data::lssMinimizeExcursions:
         {
-            memset(pHydroCosts_rampingOrExcursion, 0, pNbAreas * sizeof(double));
+            pHydroCosts_rampingOrExcursion.assign(pNbAreas, 0);
             break;
         }
 
@@ -220,19 +178,19 @@ public:
     Data::PowerFluctuations pPowerFluctuations;
 
     // Data for thermal noises
-    double** pThermalNoisesByArea;
-    size_t* pNbClustersByArea;
+    std::vector<std::vector<double>> pThermalNoisesByArea;
+    std::vector<size_t> pNbClustersByArea;
 
     // Data for reservoir levels
-    double* pReservoirLevels;
+    std::vector<double> pReservoirLevels;
 
     // Data for unsupplied and spilled energy costs
-    double* pUnsuppliedEnergy;
-    double* pSpilledEnergy;
+    std::vector<double> pUnsuppliedEnergy;
+    std::vector<double> pSpilledEnergy;
 
     // Hydro costs noises
-    double** pHydroCostsByArea_freeMod;
-    double* pHydroCosts_rampingOrExcursion;
+    std::vector<std::vector<double>> pHydroCostsByArea_freeMod;
+    std::vector<double> pHydroCosts_rampingOrExcursion;
 };
 
 class randomNumbers
@@ -242,7 +200,7 @@ public:
         pMaxNbPerformedYears(maxNbPerformedYearsInAset)
     {
         // Allocate a table of parallel years structures
-        pYears = new yearRandomNumbers[maxNbPerformedYearsInAset];
+        pYears.resize(maxNbPerformedYearsInAset);
 
         // Tells these structures their power fluctuations mode
         for (uint y = 0; y < maxNbPerformedYearsInAset; ++y)
@@ -251,10 +209,7 @@ public:
         }
     }
 
-    ~randomNumbers()
-    {
-        delete[] pYears;
-    }
+    ~randomNumbers() = default;
 
     void reset()
     {
@@ -267,7 +222,7 @@ public:
     }
 
     uint pMaxNbPerformedYears;
-    yearRandomNumbers* pYears;
+    std::vector<yearRandomNumbers> pYears;
 
     // Associates :
     //		year number (0, ..., total nb of years to compute - 1) --> index of the year's space

@@ -20,6 +20,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
+      BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +41,7 @@ jobs:
 
       - name: Config OR-Tools URL
         run: |
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v3
@@ -106,11 +107,12 @@ jobs:
           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
           -DBUILD_TESTING=ON \
           -DMZ_CODE_COVERAGE=ON \
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
       - name: Build
         run: |
-          build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config Release -j$(nproc)
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
 
       - name: Test and generate coverage
         continue-on-error: true
@@ -134,7 +136,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}"
+        run: sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
 
       - name: Cache vcpkg binary dir
         if: always()

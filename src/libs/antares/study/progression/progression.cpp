@@ -42,7 +42,7 @@ Progression::Task::Task(const Antares::Data::Study& study, uint year, Section se
     assert(&pProgression);
 }
 
-void Progression::add(uint year, Section section, int nbTicks)
+void Progression::add(uint year, Section section, unsigned nbTicks)
 {
     // This section is not thread-safe because always called before really launching
     // the simulation

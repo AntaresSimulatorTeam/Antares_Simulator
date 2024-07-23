@@ -208,7 +208,6 @@ set(SRC_STUDY
         include/antares/study/load-options.h
         load-options.cpp
         include/antares/study/runtime/runtime.h
-        include/antares/study/runtime/runtime.hxx
         runtime/runtime.cpp
         include/antares/study/runtime.h
         include/antares/study/study.h

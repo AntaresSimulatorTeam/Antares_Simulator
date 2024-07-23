@@ -56,7 +56,7 @@ void addScratchpadToEachArea(Study& study)
     {
         for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i)
         {
-            area->scratchpad.emplace_back(*study.runtime, *area);
+            area->scratchpad.emplace_back(study.runtime, *area);
         }
     }
 }
