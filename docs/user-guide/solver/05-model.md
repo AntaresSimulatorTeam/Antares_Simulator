@@ -288,7 +288,7 @@ Note that in this equation, time-steps are cycled.
 Bounded level
 
 $$
-0 \leq \underline{L}_s(t) \leq L_s(t) \leq \overlind{L}_s(t)
+0 \leq \underline{L}_s(t) \leq L_s(t) \leq \overline{L}_s(t)
 $$
 
 Bounded injection
