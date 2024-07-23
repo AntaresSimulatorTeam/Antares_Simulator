@@ -20,7 +20,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
-      BUILD_WRAPPER_OUT_DIR: $GITHUB_WORKSPACE/_build/output # Directory where build-wrapper output will be placed
+      BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
 
     steps:
       - uses: actions/checkout@v4
