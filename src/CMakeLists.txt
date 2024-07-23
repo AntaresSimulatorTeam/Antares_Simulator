@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
-set(ANTARES_VERSION_HI	      9)
-set(ANTARES_VERSION_LO	      2)
-set(ANTARES_VERSION_REVISION  0)
+set(ANTARES_VERSION_HI	      99)
+set(ANTARES_VERSION_LO	      99)
+set(ANTARES_VERSION_REVISION  99)
 
 
 # Beta release
