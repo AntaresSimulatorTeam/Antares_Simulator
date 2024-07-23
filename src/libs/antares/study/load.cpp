@@ -306,7 +306,7 @@ bool Study::internalLoadSets()
         SetHandlerAreas handler(areas);
         setsOfAreas.rebuildAllFromRules(handler);
         // Write the results into the logs
-        setsOfAreas.dumpToLogs(logs);
+        setsOfAreas.dumpToLogs();
         return true;
     }
 

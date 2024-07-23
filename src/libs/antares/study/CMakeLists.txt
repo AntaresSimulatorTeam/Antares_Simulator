@@ -249,8 +249,7 @@ set(SRC_STUDY
 
         # Sets
         include/antares/study/sets.h
-        include/antares/study/sets.hxx
-		area/sets.cpp
+        area/sets.cpp
 
         # variable selection
         include/antares/study/variable-print-info.h

@@ -18,8 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIBS_STUDY_SETS_H__
-#define __ANTARES_LIBS_STUDY_SETS_H__
+#pragma once
 
 #include <cassert>
 #include <map>
@@ -35,12 +34,13 @@
 
 namespace Antares::Data
 {
+class SetHandlerAreas;
 
 class Sets final
 {
 public:
     //
-    using IDType = Yuni::CString<128, false>;
+    using IDType = Yuni::ShortString128;
 
     //! A single set of areas
     // CompareAreaName : to control the order of areas in a set of areas. This order can have an
@@ -199,8 +199,7 @@ public:
     /*!
     ** \brief Get if the results for a given group should be written to the output
     */
-    template<class StringT>
-    bool hasOutput(const StringT& s) const;
+    bool hasOutput(const  Yuni::ShortString128& s) const;
 
     /*!
     ** \brief Get if the results for a given group should be written to the output
@@ -210,24 +209,21 @@ public:
     /*!
     ** \brief Get the size of a result set
     */
-    template<class StringT>
-    uint resultSize(const StringT& s) const;
+    uint resultSize(const  Yuni::ShortString128& s) const;
 
     /*!
     ** \brief Get the size of a result set
     */
     uint resultSize(const uint index) const;
 
-    template<class L>
-    void dumpToLogs(L& log) const;
+    void dumpToLogs() const;
 
     /*!
     ** \brief Load a rule set from an INI File
     */
     bool loadFromFile(const std::filesystem::path& filename);
 
-    template<class StringT>
-    bool saveToFile(const StringT& filename) const;
+    bool saveToFile(const Yuni::String& filename) const;
     /*!
     ** \brief format the string to match the options
     */
@@ -241,8 +237,7 @@ public:
     /*!
     ** \brief Rebuild the lists of all group from the rules
     */
-    template<class HandlerT>
-    void rebuildAllFromRules(HandlerT& handler);
+    void rebuildAllFromRules(SetHandlerAreas& handler);
 
     const IDType& nameByIndex(const uint i) const
     {
@@ -250,9 +245,7 @@ public:
         return pNameByIndex[i];
     }
 
-    template<class StringT>
-    IDType caption(const StringT& s) const;
-
+    IDType caption(const Yuni::ShortString128& s) const;
     IDType caption(const uint i) const;
 
     SetAreasType& operator[](uint i);
@@ -262,9 +255,7 @@ private:
     /*!
     ** \brief Rebuild the lists of a group from the rules
     */
-    template<class HandlerT>
-    void rebuildFromRules(const IDType& id, HandlerT& handler);
-
+    void rebuildFromRules(const IDType& id, SetHandlerAreas& handler);
     void rebuildIndexes();
 
     //! All groups
@@ -295,6 +286,3 @@ private:
 
 } // namespace Antares::Data
 
-#include "sets.hxx"
-
-#endif // __ANTARES_LIBS_STUDY_SETS_H__

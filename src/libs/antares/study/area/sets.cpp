@@ -1,4 +1,23 @@
-
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include "antares/study/sets.h"
 
 namespace Antares::Data
@@ -53,6 +72,24 @@ const Sets::SetAreasType& Sets::operator[](uint i) const
     return *(pByIndex[i]);
 }
 
+bool Sets::hasOutput(const Yuni::ShortString128& s) const
+{
+    typename MapOptions::const_iterator i = pOptions.find(s);
+    return (i != pOptions.end()) ? i->second.output : false;
+}
+
+uint Sets::resultSize(const Yuni::ShortString128& s) const
+{
+    typename MapOptions::const_iterator i = pOptions.find(s);
+    return (i != pOptions.end()) ? i->second.resultSize : 0;
+}
+
+Sets::IDType Sets::caption(const Yuni::ShortString128& s) const
+{
+    typename MapOptions::const_iterator i = pOptions.find(s);
+    return (i != pOptions.end()) ? i->second.caption : IDType();
+}
+
 void Sets::defaultForAreas()
 {
     using namespace Yuni;
@@ -64,6 +101,128 @@ void Sets::defaultForAreas()
     opts.rules.push_back(Rule(ruleFilter, new String("add-all")));
     auto item = std::make_shared<SetAreasType>();
     add("all areas", item, opts);
+}
+
+void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
+{
+    for (uint i = 0; i != pMap.size(); ++i)
+    {
+        rebuildFromRules(pNameByIndex[i], handler);
+    }
+}
+
+void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
+{
+    using namespace Yuni;
+    using namespace Antares;
+
+    typename MapOptions::iterator i = pOptions.find(id);
+    if (i == pOptions.end())
+    {
+        return;
+    }
+    // Options
+    Options& opts = i->second;
+    auto& set = *(pMap[id]);
+
+    // Clear the result first
+    handler.clear(set);
+    // Apply all rules
+    for (uint i = 0; i != opts.rules.size(); ++i)
+    {
+        const Rule& rule = opts.rules[i];
+        const Yuni::String& arg = *(rule.second);
+        switch (rule.first) // type
+        {
+            case ruleAdd:
+            {
+                // Trying to add a single item
+                if (!handler.add(set, arg))
+                {
+                    // Failed. Maybe the argument references another group
+                    const IDType other = arg;
+                    typename MapType::iterator i = pMap.find(other);
+                    if (i != pMap.end())
+                    {
+                        if (handler.add(set, *(i->second)))
+                        {
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            case ruleRemove:
+            {
+                // Trying to remove a single item
+                if (!handler.remove(set, arg))
+                {
+                    // Failed. Maybe the argument references another group
+                    const IDType other = arg;
+                    typename MapType::iterator i = pMap.find(other);
+                    if (i != pMap.end())
+                    {
+                        if (handler.remove(set, *(i->second)))
+                        {
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            case ruleFilter:
+            {
+                handler.applyFilter(set, arg);
+                break;
+            }
+            case ruleNone:
+            case ruleMax:
+            {
+                // Huh ??
+                assert(false && "Should not be here !");
+                break;
+            }
+        }
+    }
+    // Retrieving the size of the result set
+    opts.resultSize = handler.size(set);
+    logs.debug() << "  > set :: " << opts.caption << ": applying " << opts.rules.size()
+                 << " rules, got " << opts.resultSize << " items";
+}
+
+bool Sets::saveToFile(const Yuni::String &filename) const
+{
+    Yuni::IO::File::Stream file;
+    if (!file.open(filename, Yuni::IO::OpenMode::write | Yuni::IO::OpenMode::truncate))
+    {
+        logs.error() << "I/O Error: " << filename << ": impossible to write the file";
+        return false;
+    }
+
+    static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
+    const auto end = pOptions.cend();
+    for (auto i = pOptions.cbegin(); i != end; ++i)
+    {
+        const Options& opts = i->second;
+        file << '[' << i->first << "]\n";
+        file << "caption = " << opts.caption << '\n';
+        if (not opts.comments.empty())
+        {
+            file << "comments = " << opts.comments << '\n';
+        }
+        if (!opts.output)
+        {
+            file << "output = false\n";
+        }
+
+        for (uint r = 0; r != opts.rules.size(); ++r)
+        {
+            const Rule& rule = opts.rules[r];
+            file << cmds[rule.first] << " = " << rule.second << '\n';
+        }
+        file << '\n';
+    }
+    return true;
 }
 
 YString Sets::toString()
@@ -214,8 +373,6 @@ void Sets::rebuildIndexes()
     }
 }
 
-
-
 bool Sets::hasOutput(const uint index) const
 {
     return hasOutput(IDType(pNameByIndex[index]));
@@ -231,11 +388,22 @@ uint Sets::resultSize(const uint index) const
     return resultSize(IDType(pNameByIndex[index]));
 }
 
+void Sets::dumpToLogs() const
+{
+    using namespace Yuni;
+    const typename MapType::const_iterator end = pMap.end();
+    for (typename MapType::const_iterator i = pMap.begin(); i != end; ++i)
+    {
+        logs.info() << "   found `" << i->first << "` (" << (uint)i->second->size() << ' '
+                   << (i->second->size() < 2 ? "item" : "items")
+                   << ((!hasOutput(i->first)) ? ", no output" : "") << ')';
+    }
+}
+
 uint Sets::size() const
 {
     return (uint)pMap.size();
 }
-
 
 SetHandlerAreas::SetHandlerAreas(AreaList& areas):
         areas_(areas)
@@ -319,7 +487,5 @@ bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const Yuni::String& v
     }
     return false;
 }
-
-
 
 } // namespace Antares::Data
