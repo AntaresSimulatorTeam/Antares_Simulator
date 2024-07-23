@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - fix/centos7
       - dependabot/*
   schedule:
     - cron: '21 2 * * *'
@@ -44,7 +45,7 @@ jobs:
     - name: Install gcc 10
       run: |
         yum install -y centos-release-scl
-        yum install -y devtoolset-10-gcc*
+        yum install -y devtoolset-11-gcc*
 
     - name: Install cmake 3.28
       run: pip3 install cmake==3.28.4
@@ -94,7 +95,7 @@ jobs:
 
     - name: Configure
       run: |
-        source /opt/rh/devtoolset-10/enable
+        source /opt/rh/devtoolset-11/enable
         source /opt/rh/rh-git227/enable
         cmake -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -110,7 +111,7 @@ jobs:
 
     - name: Build
       run: |
-           source /opt/rh/devtoolset-10/enable
+           source /opt/rh/devtoolset-11/enable
            source /opt/rh/rh-git227/enable
            cmake --build _build --config Release -j$(nproc)
            ccache -s
