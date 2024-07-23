@@ -385,7 +385,10 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
     for (unsigned k = 0; k < nbPays; k++)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.enabledAndNotMustRunCount();
-        const uint nbReserveParticipations = study.areas.byIndex[k]->thermal.list.reserveParticipationsCount();
+        const uint nbThermalReserveParticipations
+          = study.areas.byIndex[k]->thermal.list.reserveParticipationsCount();
+        const uint nbSTStorageReserveParticipations
+          = study.areas.byIndex[k]->shortTermStorage.reserveParticipationsCount();
         const uint nbReserves = study.areas.byIndex[k]->allCapacityReservations.size();
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
@@ -533,7 +536,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier
               .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ParticipationReservesDuPalier
-              .assign(nbReserveParticipations, 0.);
+              .assign(nbThermalReserveParticipations, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierUp
               .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierDown
@@ -562,7 +565,9 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
               nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].reserveParticipationOfCluster.resize(
-              nbReserveParticipations);
+              nbThermalReserveParticipations);
+            problem.ResultatsHoraires[k].ShortTermStorage[pdt].reserveParticipationOfCluster.assign(
+              nbSTStorageReserveParticipations, 0.);
         }
     }
 }

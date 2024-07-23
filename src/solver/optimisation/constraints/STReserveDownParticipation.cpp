@@ -12,8 +12,8 @@ void STReserveDownParticipation::add(int pays, int reserve, int cluster, int pdt
         // P : Down Reserve Participation
 
         CAPACITY_RESERVATION& capacityReservation
-
           = data.areaReserves[pays].areaCapacityReservationsDown[reserve];
+
         RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
           = capacityReservation.AllSTStorageReservesParticipation[cluster];
 

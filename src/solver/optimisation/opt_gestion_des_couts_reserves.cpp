@@ -42,22 +42,32 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             auto reservesDuPays = problemeHebdo->allReserves[pays];
-
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
             int var;
-
-            
 
             for (int index = 0; index < reservesDuPays.areaCapacityReservationsUp.size(); index++)
             {
+                // Thermal clusters
                 for (const auto& clusterReserveParticipation :
                      reservesDuPays.areaCapacityReservationsUp[index]
                        .AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower >= 0)
+                    if (clusterReserveParticipation.maxPower > 0)
                     {
                         var = variableManager.ThermalClusterReserveParticipation(
+                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                }
+
+                // Short Term Storage clusters
+                for (const auto& clusterReserveParticipation :
+                     reservesDuPays.areaCapacityReservationsUp[index]
+                       .AllSTStorageReservesParticipation)
+                {
+                    if ((clusterReserveParticipation.maxTurbining > 0)
+                        || (clusterReserveParticipation.maxPumping > 0))
+                    {
+                        var = variableManager.STStorageClusterReserveUpParticipation(
                           clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
                     }
@@ -81,13 +91,28 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
 
             for (int index = 0; index < reservesDuPays.areaCapacityReservationsDown.size(); index++)
             {
+                // Thermal clusters
                 for (const auto& clusterReserveParticipation :
                      reservesDuPays.areaCapacityReservationsDown[index]
                        .AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower >= 0)
+                    if (clusterReserveParticipation.maxPower > 0)
                     {
                         var = variableManager.ThermalClusterReserveParticipation(
+                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                }
+
+                // Short Term Storage clusters
+                for (const auto& clusterReserveParticipation :
+                     reservesDuPays.areaCapacityReservationsDown[index]
+                       .AllSTStorageReservesParticipation)
+                {
+                    if ((clusterReserveParticipation.maxTurbining > 0)
+                        || (clusterReserveParticipation.maxPumping > 0))
+                    {
+                        var = variableManager.STStorageClusterReserveDownParticipation(
                           clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
                     }

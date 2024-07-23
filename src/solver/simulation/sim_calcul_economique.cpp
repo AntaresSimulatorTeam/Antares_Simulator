@@ -40,7 +40,6 @@ using namespace Antares::Data;
 
 static void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
 {
-    int clusterGlobalIndex = 0;
     int globalReserveIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
@@ -48,43 +47,47 @@ static void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
         auto area = areas[areaIndex];
         auto& areaReserves = problem.allReserves[areaIndex];
 
-        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsUp)
+        for (auto const& [reserveName, reserveCapacity] :
+             area->allCapacityReservations.areaCapacityReservationsUp)
         {
             CAPACITY_RESERVATION areaCapacityReservationsUp;
-            areaCapacityReservationsUp.failureCost = val.failureCost;
-            areaCapacityReservationsUp.spillageCost = val.spillageCost;
-            areaCapacityReservationsUp.reserveName = key;
+            areaCapacityReservationsUp.failureCost = reserveCapacity.failureCost;
+            areaCapacityReservationsUp.spillageCost = reserveCapacity.spillageCost;
+            areaCapacityReservationsUp.reserveName = reserveName;
             areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
             areaCapacityReservationsUp.areaReserveIndex = areaReserveIndex;
             globalReserveIndex++;
             areaReserveIndex++;
-            if (val.need.timeSeries.width > 0)
+            if (reserveCapacity.need.timeSeries.width > 0)
             {
-                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                for (int indexSeries = 0; indexSeries < reserveCapacity.need.timeSeries.height;
+                     indexSeries++)
                 {
                     areaCapacityReservationsUp.need.push_back(
-                      val.need.timeSeries.entry[0][indexSeries]);
+                      reserveCapacity.need.timeSeries.entry[0][indexSeries]);
                 }
             }
 
             areaReserves.areaCapacityReservationsUp.emplace_back(areaCapacityReservationsUp);
         }
-        for (auto const& [key, val] : area->allCapacityReservations.areaCapacityReservationsDown)
+        for (auto const& [reserveName, reserveCapacity] :
+             area->allCapacityReservations.areaCapacityReservationsDown)
         {
             CAPACITY_RESERVATION areaCapacityReservationsDown;
-            areaCapacityReservationsDown.failureCost = val.failureCost;
-            areaCapacityReservationsDown.spillageCost = val.spillageCost;
-            areaCapacityReservationsDown.reserveName = key;
+            areaCapacityReservationsDown.failureCost = reserveCapacity.failureCost;
+            areaCapacityReservationsDown.spillageCost = reserveCapacity.spillageCost;
+            areaCapacityReservationsDown.reserveName = reserveName;
             areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
             areaCapacityReservationsDown.areaReserveIndex = areaReserveIndex;
             globalReserveIndex++;
             areaReserveIndex++;
-            if (val.need.timeSeries.width > 0)
+            if (reserveCapacity.need.timeSeries.width > 0)
             {
-                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                for (int indexSeries = 0; indexSeries < reserveCapacity.need.timeSeries.height;
+                     indexSeries++)
                 {
                     areaCapacityReservationsDown.need.push_back(
-                      val.need.timeSeries.entry[0][indexSeries]);
+                      reserveCapacity.need.timeSeries.entry[0][indexSeries]);
                 }
             }
             areaReserves.areaCapacityReservationsDown.emplace_back(areaCapacityReservationsDown);
@@ -430,8 +433,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             for (int areaReserveIdx = 0; auto const& [reserveName, _] :
                                          area.allCapacityReservations.areaCapacityReservationsUp)
             {
-                for (size_t idx = 0;
-                     auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
+                for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
                 {
                     RESERVE_PARTICIPATION_THERMAL reserveParticipation;
                     reserveParticipation.maxPower = cluster->reserveMaxPower(reserveName);
@@ -446,15 +448,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                       .AllThermalReservesParticipation.push_back(reserveParticipation);
                     globalThermalClusterParticipationIndex++;
                     areaClusterParticipationIndex++;
-                    idx++;
                 }
                 areaReserveIdx++;
             }
             for (int areaReserveIdx = 0; auto const& [reserveName, _] :
                                          area.allCapacityReservations.areaCapacityReservationsDown)
             {
-                for (size_t idx = 0;
-                     auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
+                for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
                 {
                     RESERVE_PARTICIPATION_THERMAL reserveParticipation;
                     reserveParticipation.maxPower = cluster->reserveMaxPower(reserveName);
@@ -469,7 +469,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                       .AllThermalReservesParticipation.push_back(reserveParticipation);
                     globalThermalClusterParticipationIndex++;
                     areaClusterParticipationIndex++;
-                    idx++;
                 }
                 areaReserveIdx++;
             }

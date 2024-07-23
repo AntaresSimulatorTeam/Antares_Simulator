@@ -108,7 +108,7 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveDown.AllThermalReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxPower >= 0)
+                            if (clusterReserveParticipation.maxPower > 0)
                             {
                                 // 16 bis
                                 pMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
@@ -132,20 +132,20 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveUp.AllSTStorageReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxTurbining >= 0)
+                            if (clusterReserveParticipation.maxTurbining > 0)
                             {
                                 // 15 (k)
                                 STTurbiningMaxReserve.add(
                                   pays, reserve, cluster_participation, pdt, true);
                             }
-                            if (clusterReserveParticipation.maxPumping >= 0)
+                            if (clusterReserveParticipation.maxPumping > 0)
                             {
                                 // 15 (l)
                                 STPumpingMaxReserve.add(
                                   pays, reserve, cluster_participation, pdt, true);
                             }
-                            if (clusterReserveParticipation.maxTurbining >= 0
-                                || clusterReserveParticipation.maxPumping >= 0)
+                            if (clusterReserveParticipation.maxTurbining > 0
+                                || clusterReserveParticipation.maxPumping > 0)
                             {
                                 // 15 (o)
                                 STReserveUpParticipation.add(
@@ -164,19 +164,19 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveDown.AllSTStorageReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxTurbining >= 0)
+                            if (clusterReserveParticipation.maxTurbining > 0)
                             {
                                 // 15 (k)
                                 STTurbiningMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
                             }
-                            if (clusterReserveParticipation.maxPumping >= 0)
+                            if (clusterReserveParticipation.maxPumping > 0)
                             {
                                 // 15 (l)
                                 STPumpingMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, true);
+                                  pays, reserve, cluster_participation, pdt, false);
                             }
-                            if (clusterReserveParticipation.maxTurbining >= 0
-                                || clusterReserveParticipation.maxPumping >= 0)
+                            if (clusterReserveParticipation.maxTurbining > 0
+                                || clusterReserveParticipation.maxPumping > 0)
                             {
                                 // 15 (p)
                                 STReserveDownParticipation.add(

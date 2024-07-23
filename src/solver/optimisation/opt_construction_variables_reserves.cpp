@@ -86,7 +86,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 for (auto& clusterReserveParticipation :
                      areaReserveUp.AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower >= 0)
+                    if (clusterReserveParticipation.maxPower > 0)
                     {
                         const auto& clusterName
                           = PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex];

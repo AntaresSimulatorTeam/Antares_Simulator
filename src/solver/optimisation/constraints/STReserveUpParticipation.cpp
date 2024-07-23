@@ -21,11 +21,11 @@ void STReserveUpParticipation::add(int pays, int reserve, int cluster, int pdt)
 
         builder.updateHourWithinWeek(pdt)
           .STStorageTurbiningClusterReserveParticipation(
-            reserveParticipation.globalIndexClusterParticipation, 1.0)
-          .STStoragePumpingClusterReserveParticipation(
-            reserveParticipation.globalIndexClusterParticipation, 1.0)
-          .STStorageClusterReserveUpParticipation(
             reserveParticipation.globalIndexClusterParticipation, -1.0)
+          .STStoragePumpingClusterReserveParticipation(
+            reserveParticipation.globalIndexClusterParticipation, -1.0)
+          .STStorageClusterReserveUpParticipation(
+            reserveParticipation.globalIndexClusterParticipation, 1.0)
           .equalTo();
 
         ConstraintNamer namer(builder.data.NomDesContraintes);

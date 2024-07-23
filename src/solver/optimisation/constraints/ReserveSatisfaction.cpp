@@ -2,16 +2,12 @@
 
 void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
 {
-    CAPACITY_RESERVATION thermalCapacityReservation
+    CAPACITY_RESERVATION capacityReservation
       = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
                     : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
-    CAPACITY_RESERVATION STStorageCapacityReservation
-      = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
-                    : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
-
-    data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesContraintesDeBesoinEnReserves
-      [thermalCapacityReservation.globalReserveIndex]
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation.globalReserveIndex]
       = -1;
     if (!data.Simulation)
     {
@@ -28,47 +24,45 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
 
         // Thermal clusters reserve participation
         for (size_t cluster = 0;
-             cluster < thermalCapacityReservation.AllThermalReservesParticipation.size();
+             cluster < capacityReservation.AllThermalReservesParticipation.size();
              cluster++)
         {
-            if (thermalCapacityReservation.AllThermalReservesParticipation[cluster].maxPower
+            if (capacityReservation.AllThermalReservesParticipation[cluster].maxPower
                 != CLUSTER_NOT_PARTICIPATING)
                 builder.RunningThermalClusterReserveParticipation(
-                  thermalCapacityReservation.AllThermalReservesParticipation[cluster]
+                  capacityReservation.AllThermalReservesParticipation[cluster]
                     .globalIndexClusterParticipation,
                   1);
         }
 
         // Short Term Storage clusters reserve participation
         for (size_t cluster = 0;
-             cluster < STStorageCapacityReservation.AllSTStorageReservesParticipation.size();
+             cluster < capacityReservation.AllSTStorageReservesParticipation.size();
              cluster++)
         {
-            if ((STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
-                   .maxTurbining
+            if ((capacityReservation.AllSTStorageReservesParticipation[cluster].maxTurbining
                  != CLUSTER_NOT_PARTICIPATING)
-                || (STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
-                      .maxPumping
+                || (capacityReservation.AllSTStorageReservesParticipation[cluster].maxPumping
                     != CLUSTER_NOT_PARTICIPATING))
             {
                 if (isUpReserve)
                     builder.STStorageClusterReserveUpParticipation(
-                      STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
+                      capacityReservation.AllSTStorageReservesParticipation[cluster]
                         .globalIndexClusterParticipation,
                       1);
                 else
                     builder.STStorageClusterReserveDownParticipation(
-                      STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
+                      capacityReservation.AllSTStorageReservesParticipation[cluster]
                         .globalIndexClusterParticipation,
                       1);
             }
         }
 
-        builder.InternalUnsatisfiedReserve(thermalCapacityReservation.globalReserveIndex, 1)
-          .InternalExcessReserve(thermalCapacityReservation.globalReserveIndex, -1)
+        builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1)
+          .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
           .equalTo();
         data.CorrespondanceCntNativesCntOptim[pdt]
-          .NumeroDeContrainteDesContraintesDeBesoinEnReserves[thermalCapacityReservation
+          .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation
                                                                 .globalReserveIndex]
           = builder.data.nombreDeContraintes;
         ConstraintNamer namer(builder.data.NomDesContraintes);
@@ -76,29 +70,27 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
         namer.UpdateTimeStep(hourInTheYear);
         namer.UpdateArea(builder.data.NomsDesPays[pays]);
         namer.ReserveSatisfaction(builder.data.nombreDeContraintes,
-                                  thermalCapacityReservation.reserveName);
+                                  capacityReservation.reserveName);
         builder.build();
     }
     else
     {
         int nbTermes = 0;
         for (size_t cluster = 0;
-             cluster < thermalCapacityReservation.AllThermalReservesParticipation.size();
+             cluster < capacityReservation.AllThermalReservesParticipation.size();
              cluster++)
         {
-            if (thermalCapacityReservation.AllThermalReservesParticipation[cluster].maxPower
+            if (capacityReservation.AllThermalReservesParticipation[cluster].maxPower
                 != CLUSTER_NOT_PARTICIPATING)
                 nbTermes++;
         }
         for (size_t cluster = 0;
-             cluster < STStorageCapacityReservation.AllSTStorageReservesParticipation.size();
+             cluster < capacityReservation.AllSTStorageReservesParticipation.size();
              cluster++)
         {
-            if ((STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
-                   .maxTurbining
+            if ((capacityReservation.AllSTStorageReservesParticipation[cluster].maxTurbining
                  != CLUSTER_NOT_PARTICIPATING)
-                || (STStorageCapacityReservation.AllSTStorageReservesParticipation[cluster]
-                      .maxPumping
+                || (capacityReservation.AllSTStorageReservesParticipation[cluster].maxPumping
                     != CLUSTER_NOT_PARTICIPATING))
                 nbTermes++;
         }

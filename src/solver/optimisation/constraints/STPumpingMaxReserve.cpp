@@ -5,9 +5,10 @@ void STPumpingMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool 
     if (!data.Simulation)
     {
         // 15 (l)
-        // Participation to the reserve is bounded by the max pumping reserve participation of the
-        // cluster constraint : Π <= Π^max Π : Pumping power Π^max : Maximum accessible pumping
-        // limit of the cluster for the reserve
+        // Participation to the reserve is bounded by the max pumping reserve participation of the cluster
+        // Π <= Π^max 
+        // Π : Pumping power 
+        // Π^max : Maximum accessible limit of the cluster for the reserve
 
         CAPACITY_RESERVATION& capacityReservation
           = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
