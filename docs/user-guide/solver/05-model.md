@@ -183,12 +183,12 @@ Note: Almost all variables of the system are defined twice (one value per state)
 |---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | $s\in \mathcal{S}$      | A single short-term storge reservoir. There is one set of short-term storage per area. |
 | $L_s \in \mathbb{R}_+^T$      | Level for storage $s$ |
-| $\underline{L}_s \in \mathbb{R}^T$, $\overline{L}_s \in \mathbb{R}^T$    | Minimum (resp. maximum) level for storage $s$ also known as "rule-curves" |
+| $\underline{L}_s \in \mathbb{R}^T$, $\overline{L}_s \in \mathbb{R}_+^T$    | Minimum (resp. maximum) level for storage $s$ also known as "rule-curves" |
 | $L_s^0 \in \mathbb{R}_+$     | Initial level for storage $s$ (optional) |
-| $P^w_s \in \mathbb{R}_+^T$    | Withdrawal at time t for storage $s$. Note that this is from the storage's perspective : the amount of power withdrawn from the storage |
+| $P^w_s \in \mathbb{R}_+^T$    | Withdrawal for storage $s$. Note that this is from the storage's perspective : the amount of power withdrawn from the storage |
 | $\underline{P}^i_s \in \mathbb{R}_+^T$, $\overline{P}^i_s \in \mathbb{R}_+^T$    | Minimum (resp. maximum) injection at time $t$ for storage $s$ |
 | $\eta^i_s \in [0, 1]$ | Injection efficiency for storage $s$ |
-| $P^i_s \in \mathbb{R}_+^T$    | Injection at time t for storage $s$. Note that this is from the storage's perspective : the amount of power injected into the storage |
+| $P^i_s \in \mathbb{R}_+^T$    | Injection for storage $s$. Note that this is from the storage's perspective : the amount of power injected into the storage |
 | $\underline{P}^w_s \in \mathbb{R}_+^T$, $\overline{P}^w_s \in \mathbb{R}_+^T$    | Minimum (resp. maximum) withdrawal at time $t$ for storage $s$ |
 | $\eta^w_s \in [0, 1]$ | Withdrawal efficiency for storage $s$ |
 | $I_s \in \mathbb{R}^T$   | Inflows for storage $s$ at time $t$. Energy that is injected into the storage over time |
