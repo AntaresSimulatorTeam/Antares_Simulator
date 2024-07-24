@@ -301,10 +301,14 @@ BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
     BOOST_CHECK(study->checkForFilenameLimits(false));
     BOOST_CHECK(study->checkForFilenameLimits(true, "abc"));
 
-    std::string str(10000, 'a');
-    study->areas[0]->id = str;
-    study->areas[0]->name = str;
-    BOOST_CHECK(study->checkForFilenameLimits(true)); // areaname limits size to 128
+
+#ifdef YUNI_OS_WINDOWS
+    std::string area1name(128, 'a');
+    std::string area2name(128, 'b');
+    study->areas[0]->name = area1name;
+    study->areaAdd(area2name);
+    BOOST_CHECK(!study->checkForFilenameLimits(true)); // areaname limits size to 128
+#endif
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version
