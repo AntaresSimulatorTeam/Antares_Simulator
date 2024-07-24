@@ -184,7 +184,7 @@ int State::getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data
 
 void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
 {
-    uint serieIndex = thermalCluster->series.timeseriesNumbers[0][this->year];
+    uint serieIndex = thermalCluster->series.timeseriesNumbers[this->year];
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
         // alias to the production of the current thermal cluster
@@ -443,9 +443,9 @@ void State::yearEndBuildCalculateReserveParticipationCosts(
 {
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
     {
-        uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+        uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear
-            = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+            = startHourForCurrentYear + study.runtime.rangeLimits.hour[Data::rangeCount];
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
             thermalClusterOperatingCostForYear[h]

@@ -160,13 +160,13 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
           .assign(linkCount, 0);
         variablesMapping.runningClusterReserveParticipationIndex
-          .assign(study.runtime->reserveParticipationCount, 0);
+          .assign(study.runtime.reserveParticipationCount, 0);
         variablesMapping.clusterReserveParticipationIndex
-          .assign(study.runtime->reserveParticipationCount, 0);
+          .assign(study.runtime.reserveParticipationCount, 0);
         variablesMapping.internalUnsatisfiedReserveIndex
-          .assign(study.runtime->capacityReservationCount, 0);
+          .assign(study.runtime.capacityReservationCount, 0);
         variablesMapping.internalExcessReserveIndex
-          .assign(study.runtime->capacityReservationCount, 0);
+          .assign(study.runtime.capacityReservationCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime.thermalPlantTotalCount, 0);
@@ -222,13 +222,13 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeBesoinEnReserves.assign(
-            study.runtime->capacityReservationCount, 0);
+            study.runtime.capacityReservationCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier.assign(
-            study.runtime->thermalPlantTotalCount, 0);
+            study.runtime.thermalPlantTotalCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier.assign(
-            study.runtime->thermalPlantTotalCount, 0);
+            study.runtime.thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
@@ -439,10 +439,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
               .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ParticipationReservesDuPalier
               .assign(nbReserveParticipations, 0.);
-            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierUp
-              .assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierDown
-              .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesEnMarcheDuPalier
               .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesQuiDemarrentDuPalier

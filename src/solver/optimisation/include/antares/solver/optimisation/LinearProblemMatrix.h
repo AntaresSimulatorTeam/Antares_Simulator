@@ -56,6 +56,3 @@ private:
     AreaHydroLevelGroup areaHydroLevelGroup_;
     FinalStockGroup finalStockGroup_;
 };
-=======
-};
->>>>>>> develop
