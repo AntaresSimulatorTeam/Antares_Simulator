@@ -219,100 +219,11 @@ std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
         logs.fatal() << "Number of logical cores available is 0.";
     }
 
-    switch (nbLogicalCores)
-    {
-    case 1:
-        table["min"] = 1;
-        table["low"] = 1;
-        table["med"] = 1;
-        table["high"] = 1;
-        table["max"] = 1;
-        break;
-    case 2:
-        table["min"] = 1;
-        table["low"] = 1;
-        table["med"] = 1;
-        table["high"] = 2;
-        table["max"] = 2;
-        break;
-    case 3:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 2;
-        table["high"] = 2;
-        table["max"] = 3;
-        break;
-    case 4:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 2;
-        table["high"] = 3;
-        table["max"] = 4;
-        break;
-    case 5:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 4;
-        table["max"] = 5;
-        break;
-    case 6:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 4;
-        table["max"] = 6;
-        break;
-    case 7:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 5;
-        table["max"] = 7;
-        break;
-    case 8:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 4;
-        table["high"] = 6;
-        table["max"] = 8;
-        break;
-    case 9:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 5;
-        table["high"] = 7;
-        table["max"] = 8;
-        break;
-    case 10:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 5;
-        table["high"] = 8;
-        table["max"] = 9;
-        break;
-    case 11:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 6;
-        table["high"] = 8;
-        table["max"] = 10;
-        break;
-    case 12:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 6;
-        table["high"] = 9;
-        table["max"] = 11;
-        break;
-    default:
-        table["min"] = 1;
-        table["low"] = (uint)std::ceil(nbLogicalCores / 4.);
-        table["med"] = (uint)std::ceil(nbLogicalCores / 2.);
-        table["high"] = (uint)std::ceil(3 * nbLogicalCores / 4.);
-        table["max"] = nbLogicalCores - 1;
-        break;
-    }
+    table["min"] = 1;
+    table["low"] = (uint)std::ceil(nbLogicalCores / 4.);
+    table["med"] = (uint)std::ceil(nbLogicalCores / 2.);
+    table["high"] = (uint)std::ceil(3 * nbLogicalCores / 4.);
+    table["max"] = nbLogicalCores;
 
     return table;
 }
