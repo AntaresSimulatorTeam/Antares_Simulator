@@ -98,7 +98,7 @@ void Sets::defaultForAreas()
     opts.caption = "All areas";
     opts.comments = "Spatial aggregates on all areas";
     opts.output = false;
-    opts.rules.push_back(Rule(ruleFilter, new String("add-all")));
+    opts.rules.push_back(Rule(ruleFilter, "add-all"));
     auto district = std::make_shared<SetAreasType>();
     add("all areas", district, opts);
 }
@@ -131,16 +131,16 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
     for (uint i = 0; i != opts.rules.size(); ++i)
     {
         const Rule& rule = opts.rules[i];
-        const Yuni::String& arg = *(rule.second);
+        const std::string name = rule.second;
         switch (rule.first) // type
         {
         case ruleAdd:
         {
             // Trying to add a single item
-            if (!handler.add(set, arg))
+            if (!handler.add(set, name))
             {
                 // Failed. Maybe the argument references another group
-                const IDType other = arg;
+                const IDType other = name;
                 typename MapType::iterator i = pMap.find(other);
                 if (i != pMap.end())
                 {
@@ -152,24 +152,21 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
         case ruleRemove:
         {
             // Trying to remove a single item
-            if (!handler.remove(set, arg))
+            if (!handler.remove(set, name))
             {
                 // Failed. Maybe the argument references another group
-                const IDType other = arg;
+                const IDType other = name;
                 typename MapType::iterator i = pMap.find(other);
                 if (i != pMap.end())
                 {
-                    if (handler.remove(set, *(i->second)))
-                    {
-                        break;
-                    }
+                    handler.remove(set, *(i->second));
                 }
             }
             break;
         }
         case ruleFilter:
         {
-            handler.applyFilter(set, arg);
+            handler.applyFilter(set, name);
             break;
         }
         case ruleNone:
@@ -301,17 +298,17 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
 
                 if (p->key == "+")
                 {
-                    opts.rules.push_back(Rule(ruleAdd, new String(value)));
+                    opts.rules.push_back(Rule(ruleAdd, value.to<std::string>()));
                     continue;
                 }
                 if (p->key == "-")
                 {
-                    opts.rules.push_back(Rule(ruleRemove, new String(value)));
+                    opts.rules.push_back(Rule(ruleRemove, value.to<std::string>()));
                     continue;
                 }
                 if (p->key == "apply-filter")
                 {
-                    opts.rules.push_back(Rule(ruleFilter, new String(value)));
+                    opts.rules.push_back(Rule(ruleFilter, value.to<std::string>()));
                     continue;
                 }
                 if (p->key == "output")
@@ -417,7 +414,7 @@ uint SetHandlerAreas::size(Sets::SetAreasType& set)
     return (uint)set.size();
 }
 
-bool SetHandlerAreas::add(Sets::SetAreasType& set, const Yuni::String& value)
+bool SetHandlerAreas::add(Sets::SetAreasType& set, const std::string &value)
 {
     Area* area = AreaListLFind(&areas_, value.c_str());
     if (area)
@@ -433,7 +430,7 @@ void SetHandlerAreas::add(Sets::SetAreasType& set, const Sets::SetAreasType& oth
     set.insert(otherSet.begin(), otherSet.end());
 }
 
-bool SetHandlerAreas::remove(Sets::SetAreasType& set, const Yuni::String& value)
+bool SetHandlerAreas::remove(Sets::SetAreasType& set, const std::string &value)
 {
     Area* area = AreaListLFind(&areas_, value.c_str());
     if (area)
@@ -444,20 +441,12 @@ bool SetHandlerAreas::remove(Sets::SetAreasType& set, const Yuni::String& value)
     return false;
 }
 
-bool SetHandlerAreas::remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
+void SetHandlerAreas::remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
 {
-    if (!otherSet.empty())
-    {
-        auto end = otherSet.end();
-        for (auto i = otherSet.begin(); i != end; ++i)
-        {
-            set.erase(*i);
-        }
-    }
-    return true;
+    std::ranges::for_each(otherSet, [&set](auto* area) { set.erase(area); });
 }
 
-bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const Yuni::String& value)
+bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string &value)
 {
     if (value == "add-all")
     {

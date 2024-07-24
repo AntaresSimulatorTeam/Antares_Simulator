@@ -67,7 +67,7 @@ public:
     };
 
     //! Definition of a single rule
-    using Rule = std::pair<RuleType, Yuni::String::Ptr>;
+    using Rule = std::pair<RuleType, std::string>;
     //! Rule Set
     using RuleSet = std::vector<Rule>;
 
@@ -274,11 +274,11 @@ public:
     void clear(Sets::SetAreasType& set);
     uint size(Sets::SetAreasType& set);
 
-    bool add(Sets::SetAreasType& set, const Yuni::String& value);
+    bool add(Sets::SetAreasType& set, const std::string &value);
     void add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
-    bool remove(Sets::SetAreasType& set, const Yuni::String& value);
-    bool remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
-    bool applyFilter(Sets::SetAreasType& set, const Yuni::String& value);
+    bool remove(Sets::SetAreasType& set, const std::string &value);
+    void remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
+    bool applyFilter(Sets::SetAreasType& set, const std::string &value);
 
 private:
     AreaList& areas_;
