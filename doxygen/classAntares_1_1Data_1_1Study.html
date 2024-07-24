@@ -286,10 +286,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyAllWindTSGener
 void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyAllHydroTSGeneratorData</b> ()</td></tr>
 <tr class="memdesc:a55760ad3b5aa76ffdb24dca6cae3766c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy all data of the hydro TS generator. <br /></td></tr>
 <tr class="separator:a55760ad3b5aa76ffdb24dca6cae3766c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad32dd7c938cc135bed2da92a19b1cd64" id="r_ad32dd7c938cc135bed2da92a19b1cd64"><td class="memItemLeft" align="right" valign="top"><a id="ad32dd7c938cc135bed2da92a19b1cd64" name="ad32dd7c938cc135bed2da92a19b1cd64"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyAllThermalTSGeneratorData</b> ()</td></tr>
-<tr class="memdesc:ad32dd7c938cc135bed2da92a19b1cd64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy all data of the thermal TS generator. <br /></td></tr>
-<tr class="separator:ad32dd7c938cc135bed2da92a19b1cd64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa10e1e043ff44c8042267be05450e29e" id="r_aa10e1e043ff44c8042267be05450e29e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#aa10e1e043ff44c8042267be05450e29e">importTimeseriesIntoInput</a> ()</td></tr>
 <tr class="memdesc:aa10e1e043ff44c8042267be05450e29e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import all time-series into the input folder.  <br /></td></tr>
 <tr class="separator:aa10e1e043ff44c8042267be05450e29e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -557,10 +553,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeProgressMet
 <tr class="separator:aac4f66f52619d344e9aeec6e9a058f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Scenario Builder</h2></td></tr>
-<tr class="memitem:afec8cd7300e91b95cf3954d12a81e8bb" id="r_afec8cd7300e91b95cf3954d12a81e8bb"><td class="memItemLeft" align="right" valign="top"><a id="afec8cd7300e91b95cf3954d12a81e8bb" name="afec8cd7300e91b95cf3954d12a81e8bb"></a>
-<a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html">ScenarioBuilder::Sets</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRules</b> = nullptr</td></tr>
-<tr class="memdesc:afec8cd7300e91b95cf3954d12a81e8bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rules for building scenarios (can be null) <br /></td></tr>
-<tr class="separator:afec8cd7300e91b95cf3954d12a81e8bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab38f6175f709dd6eb830dab471b5ec16" id="r_ab38f6175f709dd6eb830dab471b5ec16"><td class="memItemLeft" align="right" valign="top"><a id="ab38f6175f709dd6eb830dab471b5ec16" name="ab38f6175f709dd6eb830dab471b5ec16"></a>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html">ScenarioBuilder::Sets</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRules</b></td></tr>
+<tr class="memdesc:ab38f6175f709dd6eb830dab471b5ec16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rules for building scenarios (can be null) <br /></td></tr>
+<tr class="separator:ab38f6175f709dd6eb830dab471b5ec16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa42db178e46759ddcfe6e052a4fda2a0" id="r_aa42db178e46759ddcfe6e052a4fda2a0"><td class="memItemLeft" align="right" valign="top"><a id="aa42db178e46759ddcfe6e052a4fda2a0" name="aa42db178e46759ddcfe6e052a4fda2a0"></a>
 <a class="el" href="classAntares_1_1Matrix.html">TimeSeries::TS</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioInitialHydroLevels</b></td></tr>
 <tr class="separator:aa42db178e46759ddcfe6e052a4fda2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -589,10 +585,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesLoadIfNo
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesCreate</b> ()</td></tr>
 <tr class="memdesc:a26561b5030df89b922edb0453ad1ae5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-Initialize/Re-Load the scenario builder data. <br /></td></tr>
 <tr class="separator:a26561b5030df89b922edb0453ad1ae5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54988cf6d7f39a379284e43ab95bd658" id="r_a54988cf6d7f39a379284e43ab95bd658"><td class="memItemLeft" align="right" valign="top"><a id="a54988cf6d7f39a379284e43ab95bd658" name="a54988cf6d7f39a379284e43ab95bd658"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesCreate</b> (const RulesScenarioName &amp;thisoneonly)</td></tr>
-<tr class="memdesc:a54988cf6d7f39a379284e43ab95bd658"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-Initialize/Re-Load the scenario builder data but consider a single ruleset only. <br /></td></tr>
-<tr class="separator:a54988cf6d7f39a379284e43ab95bd658"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad64c59f44620ab2636902f0fcc373a7b" id="r_ad64c59f44620ab2636902f0fcc373a7b"><td class="memItemLeft" align="right" valign="top"><a id="ad64c59f44620ab2636902f0fcc373a7b" name="ad64c59f44620ab2636902f0fcc373a7b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesDestroy</b> ()</td></tr>
 <tr class="memdesc:ad64c59f44620ab2636902f0fcc373a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release the scenario builder. <br /></td></tr>

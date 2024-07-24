@@ -50,7 +50,7 @@ var classAntares_1_1Data_1_1ThermalCluster =
     [ "nominalCapacityWithSpinning", "classAntares_1_1Data_1_1ThermalCluster.html#a7f3b8ff1963bca677d03bf2b1ff128a9", null ],
     [ "plannedLaw", "classAntares_1_1Data_1_1ThermalCluster.html#a730f262032ef10eb4ce8f1071d5e76a0", null ],
     [ "plannedVolatility", "classAntares_1_1Data_1_1ThermalCluster.html#acd394f35808a3f2204acc2cebbe66bf7", null ],
-    [ "prepro", "classAntares_1_1Data_1_1ThermalCluster.html#acb7f96f9dd4a1243dcd7e187f5bbf4a3", null ],
+    [ "prepro", "classAntares_1_1Data_1_1ThermalCluster.html#a971542651c66faf621b940dc840f9b19", null ],
     [ "PthetaInf", "classAntares_1_1Data_1_1ThermalCluster.html#a2d18c5ed4472fc3110f4dba2b21b3a6d", null ],
     [ "spinning", "classAntares_1_1Data_1_1ThermalCluster.html#a031033b42dcb2147f11970ddfb3f135b", null ],
     [ "spreadCost", "classAntares_1_1Data_1_1ThermalCluster.html#a7c751f7e0b479ff5fc82ae771c90e8f8", null ],
