@@ -38,7 +38,7 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* c
     plannedVolatility(cluster->plannedVolatility),
     forcedLaw(cluster->forcedLaw),
     plannedLaw(cluster->plannedLaw),
-    prepro(cluster->prepro),
+    prepro(cluster->prepro.get()),
     modulationCapacity(cluster->modulation[Data::thermalModulationCapacity]),
     name(cluster->name())
 {

@@ -134,7 +134,7 @@ public:
     */
     Sets(const Sets& rhs);
     //! Destructor
-    ~Sets();
+    ~Sets() = default;
     //@}
 
     //! \name Iterators
@@ -155,7 +155,7 @@ public:
     */
     TypePtr add(const IDType& name)
     {
-        TypePtr p = new T();
+        TypePtr p = std::make_shared<T>();
         pMap[name] = p;
         pOptions[name].reset(name);
         return p;
@@ -269,8 +269,8 @@ private:
     MapType pMap;
     MapOptions pOptions;
     //!
-    TypePtr* pByIndex;
-    IDType* pNameByIndex;
+    std::vector<TypePtr> pByIndex;
+    std::vector<IDType> pNameByIndex;
     mutable bool pModified;
 
 }; // class Sets

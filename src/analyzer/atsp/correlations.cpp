@@ -71,7 +71,7 @@ bool ATSP::computeMonthlyCorrelations()
     Matrix<> tmpNDP;
     tmpNDP.reset(realAreaCount, realAreaCount);
 
-    double* tmpArray = new double[realAreaCount + 1];
+    std::vector<double> tmpArray(realAreaCount + 1);
 
     // Initialize mapping, to skip areas which has been disabled
     // the real number of items is `realAreaCount`
@@ -342,7 +342,7 @@ bool ATSP::computeMonthlyCorrelations()
                                               resultNDP.entry,
                                               ID.entry,
                                               ID.width,
-                                              tmpArray);
+                                              tmpArray.data());
         if (shrink < 1.)
         {
             if (shrink <= -1.)
@@ -381,7 +381,7 @@ bool ATSP::computeMonthlyCorrelations()
                                               resultNDP.entry,
                                               CORR_MNPZ.entry,
                                               CORR_MNPZ.width,
-                                              tmpArray);
+                                              tmpArray.data());
         if (shrink < 1.)
         {
             if (shrink <= -1.) // CORR_MNPZ is too close to sdp boundary, shrink CORR_MNP instead
@@ -393,7 +393,7 @@ bool ATSP::computeMonthlyCorrelations()
                                                       resultNDP.entry,
                                                       ID.entry,
                                                       ID.width,
-                                                      tmpArray);
+                                                      tmpArray.data());
                 if (shrink <= -1.)
                 {
                     logs.error() << "invalid data, can not be processed";
@@ -505,7 +505,7 @@ bool ATSP::computeMonthlyCorrelations()
                                           resultNDP.entry,
                                           ID.entry,
                                           ID.width,
-                                          tmpArray);
+                                          tmpArray.data());
     if (shrink < 1.)
     {
         if (shrink <= -1.)
@@ -542,7 +542,7 @@ bool ATSP::computeMonthlyCorrelations()
                                           resultNDP.entry,
                                           CORR_YNPZ.entry,
                                           CORR_YNPZ.width,
-                                          tmpArray);
+                                          tmpArray.data());
     if (shrink < 1.)
     {
         if (shrink <= -1.) // CORR_YNP is too close to sdp boundary, shrink CORR_YNP instead
@@ -554,7 +554,7 @@ bool ATSP::computeMonthlyCorrelations()
                                                   resultNDP.entry,
                                                   ID.entry,
                                                   ID.width,
-                                                  tmpArray);
+                                                  tmpArray.data());
             if (shrink <= -1.)
             {
                 logs.error() << "invalid data, can not be processed";
