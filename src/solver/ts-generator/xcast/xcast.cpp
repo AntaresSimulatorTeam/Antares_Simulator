@@ -19,15 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <string>
-#include <sstream>
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/xcast.h"
-#include "antares/solver/ts-generator/xcast/predicate.hxx"
-#include <antares/logs/logs.h>
-#include <antares/antares/fatal-error.h>
+
 #include <limits>
+#include <sstream>
+#include <string>
+
+#include <yuni/yuni.h>
+
+#include <antares/antares/fatal-error.h>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include "antares/solver/ts-generator/xcast/predicate.hxx"
 
 using namespace Yuni;
 
@@ -46,18 +49,11 @@ enum
     mu = Data::XCast::dataCoeffMu,
 };
 
-XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer) :
- study(study),
- timeSeriesType(ts),
- pNeverInitialized(true),
- pAccuracyOnCorrelation(false),
- pWriter(writer)
+XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer):
+    study(study),
+    timeSeriesType(ts),
+    pWriter(writer)
 {
-}
-
-XCast::~XCast()
-{
-    destroyTemporaryData();
 }
 
 template<class PredicateT>
@@ -66,7 +62,9 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
     if (study.parameters.noOutput)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
+        {
             ++progression;
+        }
     }
     else
     {
@@ -80,15 +78,17 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
         output << "ts-generator" << SEP << predicate.timeSeriesName() << SEP << "mc-" << year;
         filename.reserve(output.size() + 80);
 
-        study.areas.each([&](Data::Area& area) {
-            filename.clear() << output << SEP << area.id << ".txt";
-            std::string buffer;
-            predicate.matrix(area).saveToBuffer(buffer);
+        study.areas.each(
+          [this, &filename, &progression, &predicate, &output](Data::Area& area)
+          {
+              filename.clear() << output << SEP << area.id << ".txt";
+              std::string buffer;
+              predicate.matrix(area).saveToBuffer(buffer);
 
-            pWriter.addEntryFromBuffer(filename.c_str(), buffer);
+              pWriter.addEntryFromBuffer(filename.c_str(), buffer);
 
-            ++progression;
-        });
+              ++progression;
+          });
     }
 }
 
@@ -106,8 +106,6 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 
     float a[maxPoints];
     float b[maxPoints];
-
-    float* dailyResults;
 
     const uint processCount = (uint)pData.localareas.size();
 
@@ -130,15 +128,15 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                 if (p1[x] <= p0[x])
                 {
                     std::ostringstream msg;
-                    msg << "Transfer function: invalid X-coordinate at index (" << i
-                        << ", " << (i + 1) << ")";
+                    msg << "Transfer function: invalid X-coordinate at index (" << i << ", "
+                        << (i + 1) << ")";
                     throw FatalError(msg.str());
                 }
                 a[i] = (p1[y] - p0[y]) / (p1[x] - p0[x]);
                 b[i] = (p0[y] * p1[x] - p1[y] * p0[x]) / (p1[x] - p0[x]);
             }
 
-            dailyResults = DATA[s];
+            auto& dailyResults = DATA[s];
             for (h = 0; h != HOURS_PER_DAY; ++h)
             {
                 for (i = 0; i != tf.width; ++i)
@@ -193,159 +191,64 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
     }
 }
 
-namespace
-{
-template<int DebugT>
-class Allocator
-{
-public:
-    Allocator() : allocated(0)
-    {
-    }
-    ~Allocator()
-    {
-        logs.debug() << "  allocated " << (allocated / 1024) << "Ko";
-    }
-    template<class T>
-    inline T* allocate(const size_t s)
-    {
-        allocated += sizeof(T) * s;
-        return new T[s];
-    }
-
-public:
-    size_t allocated;
-};
-
-template<>
-class Allocator<0>
-{
-public:
-    template<class T>
-    inline T* allocate(const size_t s) const
-    {
-        return new T[s];
-    }
-};
-
-} // namespace
-
 void XCast::allocateTemporaryData()
 {
     uint p = (uint)pData.localareas.size();
 
-    Allocator<Yuni::Logs::Verbosity::Debug::enabled> m;
+    A.resize(p);
+    B.resize(p);
+    G.resize(p);
+    D.resize(p);
+    M.resize(p);
+    T.resize(p);
+    BO.resize(p);
+    MA.resize(p);
+    MI.resize(p);
+    L.resize(p);
+    POSI.resize(p);
+    MAXI.resize(p);
+    MINI.resize(p);
+    ESPE.resize(p);
+    STDE.resize(p);
+    DIFF.resize(p);
+    TREN.resize(p);
+    WIEN.resize(p + 1);
+    BROW.resize(p);
 
-    A = m.allocate<float>(p);
-    B = m.allocate<float>(p);
-    G = m.allocate<float>(p);
-    D = m.allocate<float>(p);
-    M = m.allocate<int>(p);
-    T = m.allocate<float>(p);
-    BO = m.allocate<bool>(p);
-    MA = m.allocate<float>(p);
-    MI = m.allocate<float>(p);
-    L = m.allocate<Data::XCast::Distribution>(p);
-    POSI = m.allocate<float>(p);
-    MAXI = m.allocate<float>(p);
-    MINI = m.allocate<float>(p);
-    ESPE = m.allocate<float>(p);
-    STDE = m.allocate<float>(p);
-    DIFF = m.allocate<float>(p);
-    TREN = m.allocate<float>(p);
-    WIEN = m.allocate<float>(p + 1);
-    BROW = m.allocate<float>(p);
+    BASI.resize(p);
+    ALPH.resize(p);
+    BETA.resize(p);
 
-    BASI = m.allocate<float>(p);
-    ALPH = m.allocate<float>(p);
-    BETA = m.allocate<float>(p);
+    D_COPIE.resize(p);
 
-    D_COPIE = m.allocate<float>(p);
+    pUseConversion.resize(p);
 
-    pUseConversion = m.allocate<bool>(p);
+    Presque_maxi.resize(p);
+    Presque_mini.resize(p);
+    pQCHOLTotal.resize(p);
 
-    Presque_maxi = m.allocate<float>(p);
-    Presque_mini = m.allocate<float>(p);
-    pQCHOLTotal = m.allocate<float>(p);
-
-    CORR = m.allocate<float*>(p);
-    Triangle_reference = m.allocate<float*>(p);
-    Triangle_courant = m.allocate<float*>(p);
-    FO = m.allocate<float*>(p);
-    LISS = m.allocate<float*>(p);
-    DATL = m.allocate<float*>(p);
-    DATA = m.allocate<float*>(p);
-    Carre_courant = m.allocate<float*>(p);
-    Carre_reference = m.allocate<float*>(p);
+    CORR.resize(p);
+    Triangle_reference.resize(p);
+    Triangle_courant.resize(p);
+    FO.resize(p);
+    LISS.resize(p);
+    DATL.resize(p);
+    DATA.resize(p);
+    Carre_courant.resize(p);
+    Carre_reference.resize(p);
 
     for (uint i = 0; i != p; ++i)
     {
-        Triangle_reference[i] = m.allocate<float>(p);
-        Triangle_courant[i] = m.allocate<float>(p);
-        Carre_courant[i] = m.allocate<float>(p);
-        Carre_reference[i] = m.allocate<float>(p);
+        Triangle_reference[i].resize(p);
+        Triangle_courant[i].resize(p);
+        Carre_courant[i].resize(p);
+        Carre_reference[i].resize(p);
 
-        CORR[i] = m.allocate<float>(p);
-        FO[i] = m.allocate<float>(24);
-        LISS[i] = m.allocate<float>(24);
-        DATL[i] = m.allocate<float>(24);
-        DATA[i] = m.allocate<float>(24);
-    }
-}
-
-void XCast::destroyTemporaryData()
-{
-    if (!pNeverInitialized)
-    {
-        uint p = (uint)pData.localareas.size();
-        for (uint i = 0; i != p; ++i)
-        {
-            delete[] CORR[i];
-            delete[] FO[i];
-            delete[] LISS[i];
-            delete[] DATL[i];
-            delete[] Triangle_reference[i];
-            delete[] Triangle_courant[i];
-            delete[] DATA[i];
-            delete[] Carre_courant[i];
-            delete[] Carre_reference[i];
-        }
-        delete[] Carre_courant;
-        delete[] Carre_reference;
-        delete[] D_COPIE;
-        delete[] DATA;
-        delete[] Triangle_reference;
-        delete[] Triangle_courant;
-        delete[] LISS;
-        delete[] DATL;
-        delete[] CORR;
-        delete[] FO;
-        delete[] A;
-        delete[] B;
-        delete[] G;
-        delete[] D;
-        delete[] M;
-        delete[] T;
-        delete[] L;
-        delete[] BO;
-        delete[] MA;
-        delete[] MI;
-        delete[] POSI;
-        delete[] MAXI;
-        delete[] MINI;
-        delete[] Presque_maxi;
-        delete[] Presque_mini;
-        delete[] ESPE;
-        delete[] STDE;
-        delete[] DIFF;
-        delete[] TREN;
-        delete[] WIEN;
-        delete[] BROW;
-        delete[] BASI;
-        delete[] ALPH;
-        delete[] BETA;
-        delete[] pQCHOLTotal;
-        delete[] pUseConversion;
+        CORR[i].resize(p);
+        FO[i].resize(24);
+        LISS[i].resize(24);
+        DATL[i].resize(24);
+        DATA[i].resize(24);
     }
 }
 
@@ -384,20 +287,25 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
         }
 
-        pAccuracyOnCorrelation
-          = ((study.parameters.timeSeriesAccuracyOnCorrelation & timeSeriesType) != 0);
+        pAccuracyOnCorrelation = ((study.parameters.timeSeriesAccuracyOnCorrelation
+                                   & timeSeriesType)
+                                  != 0);
     }
 
     const uint processCount = (uint)pData.localareas.size();
 
     if (study.areas.size() > pData.localareas.size())
-        progression
-          += (nbTimeseries_ * DAYS_PER_YEAR) * ((uint)study.areas.size() - (uint)pData.localareas.size());
+    {
+        progression += (nbTimeseries_ * DAYS_PER_YEAR)
+                       * ((uint)study.areas.size() - (uint)pData.localareas.size());
+    }
 
     if (processCount == 0)
     {
         if (study.parameters.timeSeriesToArchive & timeSeriesType)
+        {
             exportTimeSeriesToTheOutput(progression, predicate);
+        }
         return true;
     }
 
@@ -461,20 +369,22 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
+                memcpy(FO[s].data(), xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
             for (uint j = 0; j != nbDaysPerMonth; ++j)
             {
                 if (not generateValuesForTheCurrentDay())
+                {
                     throw FatalError("xcast: Failed to generate values.");
+                }
 
 #ifndef NDEBUG
 
                 for (uint s = 0; s != processCount; ++s)
                 {
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
@@ -490,10 +400,12 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     auto& srcData = predicate.xcastData(currentArea);
                     if (srcData.useTranslation != Data::XCast::tsTranslationBeforeConversion)
+                    {
                         continue;
+                    }
 
                     auto& column = srcData.translation[0];
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
                     assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
                            && "Bound checking");
 
@@ -510,7 +422,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                 for (uint s = 0; s != processCount; ++s)
                 {
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
@@ -529,7 +441,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     auto& series = predicate.matrix(currentArea);
                     assert(tsIndex < series.width);
                     auto& column = series.column(tsIndex);
-                    float* dailyResults = DATA[s];
+                    auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
@@ -543,12 +455,16 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                                && "Bound checking");
                         auto& tsavg = srcData.translation[0];
                         for (uint h = 0; h != HOURS_PER_DAY; ++h)
+                        {
                             dailyResults[h] += (float)tsavg[hourInTheYear + h];
+                        }
                     }
 
                     assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
+                    {
                         column[hourInTheYear + h] = std::round(dailyResults[h]);
+                    }
 
                     ++progression;
                 }
@@ -570,11 +486,14 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (study.parameters.derated)
     {
-        study.areas.each([&](Data::Area& area) { predicate.matrix(area).averageTimeseries(); });
+        study.areas.each([&predicate](Data::Area& area)
+                         { predicate.matrix(area).averageTimeseries(); });
     }
 
     if (study.parameters.timeSeriesToArchive & timeSeriesType)
+    {
         exportTimeSeriesToTheOutput(progression, predicate);
+    }
 
     if (timeSeriesType == Data::timeSeriesLoad)
     {
@@ -646,6 +565,3 @@ bool XCast::run()
 }
 
 } // namespace Antares::TSGenerator::XCast
-
-
-

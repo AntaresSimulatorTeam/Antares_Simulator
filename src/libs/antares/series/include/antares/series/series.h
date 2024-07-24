@@ -21,6 +21,10 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
+#include <map>
+#include <optional>
+#include <string>
+
 #include <antares/array/matrix.h>
 
 namespace Antares::Data
@@ -32,13 +36,37 @@ namespace Antares::Data
  **  The goal is to handle indexing with the time series numbers: getCoefficient()
  **  and also providing a wrapper for all the Matrix<> functions such as resize()
  */
+class TimeSeries;
+
+class TimeSeriesNumbers
+{
+public:
+    void registerSeries(const TimeSeries* s, std::string label);
+    // Return a description of the error in case of inconsistent number of columns, std::nullopt
+    // otherwis
+    std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
+
+    uint32_t operator[](uint y) const;
+    uint32_t& operator[](uint y);
+
+    void clear();
+    void reset(uint h);
+
+    uint height() const;
+
+    void saveToBuffer(std::string& data) const;
+
+private:
+    Matrix<uint32_t> tsNumbers;
+    std::map<std::string, const TimeSeries*> series;
+};
+
 class TimeSeries
 {
 public:
-    using numbers = Matrix<uint32_t>;
     using TS = Matrix<double>;
 
-    explicit TimeSeries(numbers& tsNumbers);
+    explicit TimeSeries(TimeSeriesNumbers& tsNumbers);
     /*!
      ** \brief Load series from a file
      **
@@ -46,8 +74,7 @@ public:
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadFromFile(const std::string& path,
-                      const bool average);
+    bool loadFromFile(const std::string& path, const bool average);
     /*!
      ** \brief Save time series to a file
      **
@@ -72,6 +99,7 @@ public:
 
     void reset();
     void reset(uint32_t width, uint32_t height);
+    uint32_t numberOfColumns() const;
     void unloadFromMemory() const;
     void roundAllEntries();
     void resize(uint32_t timeSeriesCount, uint32_t timestepCount);
@@ -83,7 +111,7 @@ public:
     uint64_t memoryUsage() const;
 
     TS timeSeries;
-    numbers& timeseriesNumbers;
+    TimeSeriesNumbers& timeseriesNumbers;
 
     static const std::vector<double> emptyColumn; ///< used in getColumn if timeSeries empty
 };

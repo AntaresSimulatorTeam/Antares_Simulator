@@ -1,15 +1,12 @@
 set(PROJ logs)
 set(HEADERS
-        include/antares/${PROJ}/cleaner.h
         include/antares/${PROJ}/logs.h
-        include/antares/${PROJ}/logs.hxx
         include/antares/${PROJ}/hostinfo.h
         include/antares/${PROJ}/hostname.hxx
 )
 set(SRC_LOGS
         ${HEADERS}
         logs.cpp
-        cleaner.cpp
         hostinfo.cpp
 )
 source_group("misc\\logs" FILES ${SRC_LOGS})
@@ -25,7 +22,6 @@ endif ()
 target_link_libraries(${PROJ}
         PUBLIC
         yuni-static-core
-        antares-core
 )
 
 target_include_directories(${PROJ}

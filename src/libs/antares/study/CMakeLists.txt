@@ -23,8 +23,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/ThermalTSNumberData.h
         include/antares/study/scenario-builder/HydroTSNumberData.h
         scenario-builder/HydroTSNumberData.cpp
-        include/antares/study/scenario-builder/HydroMaxPowerTSNumberData.h
-        scenario-builder/HydroMaxPowerTSNumberData.cpp
         scenario-builder/SolarTSNumberData.cpp
         include/antares/study/scenario-builder/solarTSNumberData.h
         include/antares/study/scenario-builder/WindTSNumberData.h
@@ -71,9 +69,6 @@ source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/container.h
         parts/thermal/container.cpp
-        include/antares/study/parts/thermal/prepro.h
-        include/antares/study/parts/thermal/prepro.hxx
-        parts/thermal/prepro.cpp
         include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
         include/antares/study/parts/thermal/cluster.h
@@ -106,8 +101,6 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/series.h
         include/antares/study/parts/short-term-storage/cluster.h
         parts/short-term-storage/cluster.cpp
-        include/antares/study/parts/short-term-storage/STStorageOutputCaptions.h
-        parts/short-term-storage/STStorageOutputCaptions.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -216,7 +209,6 @@ set(SRC_STUDY
         include/antares/study/load-options.h
         load-options.cpp
         include/antares/study/runtime/runtime.h
-        include/antares/study/runtime/runtime.hxx
         runtime/runtime.cpp
         include/antares/study/runtime.h
         include/antares/study/study.h
@@ -291,7 +283,6 @@ add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
         PUBLIC
-        Boost::boost
         yuni-static-core
         Antares::date #parameters
         Antares::inifile #parameters

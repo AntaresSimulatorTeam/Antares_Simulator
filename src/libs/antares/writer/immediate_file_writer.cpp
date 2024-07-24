@@ -18,122 +18,94 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <yuni/core/string.h>
-#include <yuni/io/file.h>
 
-#include "private/immediate_file_writer.h"
+#include "immediate_file_writer.h"
+
+#include <filesystem>
+
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 
-
-// Create directory hierarchy (incl. root)
-// Don't complain if directories already exist
-// Example. Assuming /root exists, `createDirectoryHierarchy("/root", "a/b/c");`
-// Creates /root/a, /root/a/b, /root/a/b/c
-static bool createDirectory(const Yuni::String& path)
-{
-    using namespace Yuni;
-    if (!IO::Directory::Exists(path))
-    {
-        const bool ret = IO::Directory::Create(path);
-
-        if (!ret)
-        {
-            Antares::logs.error() << "Error creating directory " << path;
-            return false;
-        }
-    }
-    return true;
-}
-
-static bool createDirectoryHierarchy(const Yuni::String& root, const Yuni::String& toCreate)
-{
-    using namespace Yuni;
-    String::Vector dirs;
-    toCreate.split(dirs, IO::SeparatorAsString);
-    String currentDir = root;
-
-    if (!createDirectory(root))
-        return false;
-
-    // Remove file component
-    dirs.pop_back();
-
-    for (auto& dir : dirs)
-    {
-        currentDir << Yuni::IO::Separator << dir;
-        if (!createDirectory(currentDir))
-            return false;
-    }
-    return true;
-}
+namespace fs = std::filesystem;
 
 namespace Antares
 {
 namespace Solver
 {
-ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
- pOutputFolder(folderOutput)
+ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput):
+    pOutputFolder(folderOutput)
 {
 }
 
 ImmediateFileResultWriter::~ImmediateFileResultWriter() = default;
 
-static bool prepareDirectoryHierarchy(const YString& root,
-                                      const std::string& entryPath,
-                                      Yuni::String& output)
+static bool prepareDirectoryHierarchy(const fs::path& root,
+                                      const fs::path& entryPath,
+                                      fs::path& output)
 {
-    output << root << Yuni::IO::Separator << entryPath.c_str();
-    return createDirectoryHierarchy(root, entryPath.c_str());
+    // Use relative path to remove root dir part
+    fs::path fullPath = root / entryPath.relative_path();
+    output = fullPath;
+
+    fs::path directory = fullPath.parent_path();
+    if (fs::exists(directory))
+    {
+        return true;
+    }
+
+    return fs::create_directories(directory);
 }
 
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    Yuni::Clob& entryContent)
 {
-    Yuni::String output;
+    fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
-        IOFileSetContent(output, entryContent);
+    {
+        IO::fileSetContent(output.string(), entryContent);
+    }
 }
 
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    std::string& entryContent)
 {
-    Yuni::String output;
+    fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
-        IOFileSetContent(output, entryContent);
+    {
+        IO::fileSetContent(output.string(), entryContent);
+    }
 }
 
-void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
-                                                 const std::string& filePath)
+void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
+                                                 const fs::path& filePath)
 {
-    Yuni::String fullPath;
+    fs::path fullPath;
     if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
-        return;
-
-    switch (Yuni::IO::File::Copy(filePath.c_str(), fullPath))
     {
-        using namespace Yuni::IO;
-    case errNone:
-        break;
-    case errNotFound:
-        logs.error() << filePath << ": file does not exist";
-        break;
-    case errReadFailed:
-        logs.error() << "Read failed '" << filePath << "'";
-        break;
-    case errWriteFailed:
-        logs.error() << "Write failed '" << fullPath << "'";
-        break;
-    default:
-        logs.error() << "Unhandled error";
-        break;
+        return;
+    }
+
+    std::error_code ec;
+    try
+    {
+        fs::copy(filePath, fullPath, ec);
+    }
+    catch (const fs::filesystem_error& exc)
+    {
+        logs.error() << exc.what();
+    }
+
+    if (ec)
+    {
+        logs.error() << "Error: " << ec.message();
     }
 }
 
 void ImmediateFileResultWriter::flush()
-{}
+{
+}
 
 bool ImmediateFileResultWriter::needsTheJobQueue() const
 {
@@ -146,19 +118,28 @@ void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 }
 
 void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
-{}
+{
+}
+
 void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
-{}
-void NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
-{}
+{
+}
+
+void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
+{
+}
+
 void NullResultWriter::flush()
-{}
+{
+}
 
 bool NullResultWriter::needsTheJobQueue() const
 {
     return false;
 }
+
 void NullResultWriter::finalize(bool)
-{}
+{
+}
 } // namespace Solver
 } // namespace Antares

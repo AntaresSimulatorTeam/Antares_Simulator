@@ -20,29 +20,14 @@
 */
 #pragma once
 
+#include <map>
 #include <optional>
 #include <string>
-#include <map>
 
 #include <antares/inifile/inifile.h>
 
 namespace Antares::Data::ShortTermStorage
 {
-enum class Group
-{
-    PSP_open,
-    PSP_closed,
-    Pondage,
-    Battery,
-    Other1,
-    Other2,
-    Other3,
-    Other4,
-    Other5
-};
-
-unsigned int groupIndex(Group group);
-
 class Properties
 {
 public:
@@ -56,21 +41,25 @@ public:
     std::optional<double> withdrawalNominalCapacity;
     /// Not optional   Reservoir capacity in MWh, >= 0
     std::optional<double> reservoirCapacity;
+
     /// Initial level, <= 1
     double initialLevel = initiallevelDefault;
     /// Bool to optimise or not initial level
     bool initialLevelOptim = false;
-    /// Efficiency factor between 0 and 1
-    double efficiencyFactor = 1;
-    /// Used to sort outputs
-    Group group = Group::Other1;
+
+    /// Efficiency factor for injection between 0 and 1
+    double injectionEfficiency = 1;
+    /// Efficiency factor for withdrawal between 0 and 1
+    double withdrawalEfficiency = 1;
+
+    // Used to sort outputs
+    std::string groupName = "OTHER1";
     /// cluster name
     std::string name;
 
     /// Enabled ?
     bool enabled = true;
 
-    static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 private:
     static constexpr double initiallevelDefault = .5;
 };

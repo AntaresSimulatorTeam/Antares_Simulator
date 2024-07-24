@@ -21,9 +21,11 @@
 #ifndef __ANTARES_LIB_STUDY_AREA_HYDRO_ALLOCATION_H__
 #define __ANTARES_LIB_STUDY_AREA_HYDRO_ALLOCATION_H__
 
-#include "../../fwd.h"
+#include <filesystem>
 #include <map>
 #include <unordered_map>
+
+#include "../../fwd.h"
 
 namespace Antares
 {
@@ -89,7 +91,7 @@ public:
     /*!
     ** \brief Load allocation coefficients from a file
     */
-    bool loadFromFile(const AreaName& referencearea, const AnyString& filename);
+    bool loadFromFile(const AreaName& referencearea, const std::filesystem::path& filename);
 
     /*!
     ** \brief Load allocation coefficients from a file

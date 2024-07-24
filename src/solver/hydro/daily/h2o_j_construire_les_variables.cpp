@@ -33,13 +33,14 @@ extern "C"
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-void H2O_j_ConstruireLesVariables(int NbPdt,
-                                  std::vector<int>& NumeroDeVariableTurbine,
-                                  std::vector<double>& Xmin,
-                                  std::vector<double>& Xmax,
-                                  std::vector<int>& TypeDeVariable,
-                                  std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
-                                  CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables)
+void H2O_j_ConstruireLesVariables(
+  int NbPdt,
+  std::vector<int>& NumeroDeVariableTurbine,
+  std::vector<double>& Xmin,
+  std::vector<double>& Xmax,
+  std::vector<int>& TypeDeVariable,
+  std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
+  CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables)
 {
     int Var = 0;
 
@@ -56,14 +57,14 @@ void H2O_j_ConstruireLesVariables(int NbPdt,
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
     Var++;
 
     CorrespondanceDesVariables.NumeroDeLaVariableXi = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
     Var++;
 
     return;

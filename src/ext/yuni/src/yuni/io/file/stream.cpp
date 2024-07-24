@@ -121,7 +121,7 @@ bool Stream::open(const AnyString& filename, int mode)
     pFd = ::fopen(filename.c_str(), OpenMode::ToCString(mode));
 #endif
 
-    return (NULL != pFd);
+    return (pFd);
 }
 
 bool Stream::close()
@@ -130,7 +130,7 @@ bool Stream::close()
     {
         if (0 == ::fclose(pFd))
         {
-            pFd = NULL;
+            pFd = nullptr;
             return true;
         }
         return false;

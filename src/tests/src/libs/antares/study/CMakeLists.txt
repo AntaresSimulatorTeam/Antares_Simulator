@@ -8,6 +8,7 @@ add_subdirectory(thermal-price-definition)
 add_subdirectory(constraint)
 add_subdirectory(parts)
 add_subdirectory(series)
+add_subdirectory(parameters)
 
 add_executable(test-study)
 target_sources(test-study PRIVATE test_study.cpp)

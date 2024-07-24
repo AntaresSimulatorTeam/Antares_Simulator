@@ -19,17 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
-
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/simulation.h"
 
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     if (!problemeHebdo->OptimisationNotFastMode)
+    {
         return;
+    }
 
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
     ConstraintBuilder builder(builder_data);

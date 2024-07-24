@@ -6,11 +6,11 @@ VariableManager::VariableManager(
   std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
   std::vector<int>& NumeroDeVariableStockFinal,
   std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
-  const int32_t& NombreDePasDeTempsPourUneOptimisation) :
- CorrespondanceVarNativesVarOptim_(CorrespondanceVarNativesVarOptim),
- NumeroDeVariableStockFinal_(NumeroDeVariableStockFinal),
- NumeroDeVariableDeTrancheDeStock_(NumeroDeVariableDeTrancheDeStock),
- NombreDePasDeTempsPourUneOptimisation_(NombreDePasDeTempsPourUneOptimisation)
+  const int32_t& NombreDePasDeTempsPourUneOptimisation):
+    CorrespondanceVarNativesVarOptim_(CorrespondanceVarNativesVarOptim),
+    NumeroDeVariableStockFinal_(NumeroDeVariableStockFinal),
+    NumeroDeVariableDeTrancheDeStock_(NumeroDeVariableDeTrancheDeStock),
+    NombreDePasDeTempsPourUneOptimisation_(NombreDePasDeTempsPourUneOptimisation)
 {
 }
 

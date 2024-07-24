@@ -50,23 +50,18 @@
 
 #include <array>
 
-/*! Name of the app to use into logs */
-#define LOG_APPLICATION_NAME "antares"
-/*! Vendor */
-#define LOG_APPLICATION_VENDOR "RTE"
-
 const unsigned int HOURS_PER_DAY = 24;
+
+const unsigned int MONTHS_PER_YEAR = 12;
+const unsigned int WEEKS_PER_YEAR = 53;
 const unsigned int DAYS_PER_YEAR = 365;
 const unsigned int HOURS_PER_YEAR = 8760;
 
 namespace Antares::Constants
 {
-extern const std::array<unsigned int, 12> daysPerMonth;
+extern const std::array<unsigned int, MONTHS_PER_YEAR> daysPerMonth;
 extern const unsigned int nbHoursInAWeek;
 } // namespace Antares::Constants
-
-/*! Max number of MC years */
-constexpr unsigned int MAX_NB_MC_YEARS = 50000;
 
 enum AntaresConstants
 {

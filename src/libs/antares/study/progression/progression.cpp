@@ -20,26 +20,29 @@
 */
 
 #include "antares/study/progression/progression.h"
-#include "antares/study/study.h"
+
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 namespace Antares::Solver
 {
-Progression::Task::Task(const Antares::Data::Study& study, Section section) :
- pProgression(study.progression), pPart(study.progression.begin((uint)-1, section))
+Progression::Task::Task(const Antares::Data::Study& study, Section section):
+    pProgression(study.progression),
+    pPart(study.progression.begin((uint)-1, section))
 {
     assert(&pProgression);
 }
 
-Progression::Task::Task(const Antares::Data::Study& study, uint year, Section section) :
- pProgression(study.progression), pPart(study.progression.begin(year, section))
+Progression::Task::Task(const Antares::Data::Study& study, uint year, Section section):
+    pProgression(study.progression),
+    pPart(study.progression.begin(year, section))
 {
     assert(&pProgression);
 }
 
-void Progression::add(uint year, Section section, int nbTicks)
+void Progression::add(uint year, Section section, unsigned nbTicks)
 {
     // This section is not thread-safe because always called before really launching
     // the simulation
@@ -52,9 +55,13 @@ void Progression::add(uint year, Section section, int nbTicks)
     // Caption
     part.caption.clear() << "task 0 " << SectionToCStr(section) << ", ";
     if (year != (uint)-1)
+    {
         part.caption << "year: " << year << ", ";
+    }
     else
+    {
         part.caption << "post, ";
+    }
 }
 
 void Progression::end(Part& part)
@@ -94,11 +101,15 @@ void Progression::end(Part& part)
         // Only if started. This variable has no need to be modified because
         // never modified after the start of the simulation
         if (pStarted)
+        {
             logs.progress() << part.caption << "100";
+        }
         return;
     }
     else
+    {
         pProgressMeter.mutex.unlock();
+    }
 }
 
 bool Progression::Meter::onInterval(uint)
@@ -130,13 +141,16 @@ bool Progression::Meter::onInterval(uint)
 
     // Print all logs
     for (uint i = 0; i != count; ++i)
+    {
         logs.progress() << logsContainer[i];
+    }
 
     // True to continue the execution of the timer
     return true;
 }
 
-Progression::Progression() : pStarted(false)
+Progression::Progression():
+    pStarted(false)
 {
 }
 
@@ -159,9 +173,13 @@ bool Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer
             for (Part::MapPerSection::const_iterator j = i->second.begin(); j != jend; ++j)
             {
                 if (year != (uint)-1)
+                {
                     buffer << year;
+                }
                 else
+                {
                     buffer << "post";
+                }
                 buffer << ' ' << SectionToCStr(j->first) << '\n';
             }
         }
@@ -185,4 +203,3 @@ void Progression::stop()
 }
 
 } // namespace Antares::Solver
-

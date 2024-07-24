@@ -1,8 +1,18 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(ortools)
-find_dependency(minizip)
+find_dependency(Boost REQUIRED)
+find_package(minizip-ng QUIET) #Optional, don't use find_dependency it forces return in case of dep not found
+if (minizip-ng_FOUND)
+	add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
+else ()
+	find_dependency(minizip)
+	if (NOT minizip_FOUND)
+		message (FATAL_ERROR "Minizip dependency (minizip or minizip-ng) not found.")
+	endif ()
+endif ()
+find_dependency(ortools REQUIRED)
+find_dependency(sirius_solver REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/AntaresTargets.cmake")
 

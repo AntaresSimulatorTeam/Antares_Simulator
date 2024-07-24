@@ -25,9 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "antares/study/study.h"
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
+
 #include <antares/inifile/inifile.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -38,10 +39,30 @@ namespace Antares::Data
 
 HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
                                                    std::string areaID,
-                                                   std::string areaName) :
- hydro_(hydro), areaID_(areaID), areaName_(areaName)
+                                                   std::string areaName):
+    hydro_(hydro),
+    areaID_(areaID),
+    areaName_(areaName)
 {
     dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR, true);
+}
+
+static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& areaName)
+{
+    for (uint i = 0; i < 4U; ++i)
+    {
+        auto& col = dailyMaxPumpAndGen[i];
+        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+        {
+            if (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.))
+            {
+                logs.error() << areaName << ": invalid power or energy value";
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder,
@@ -67,33 +88,26 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
             enabledModeIsChanged = true;
         }
 
-        ret = dailyMaxPumpAndGen.loadFromCSVFile(
-                filePath, 4U, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(filePath,
+                                                 4U,
+                                                 DAYS_PER_YEAR,
+                                                 Matrix<>::optFixedSize,
+                                                 &fileContent)
               && ret;
 
         if (enabledModeIsChanged)
+        {
             JIT::enabled = true; // Back to the previous loading mode.
+        }
     }
     else
     {
-        ret = dailyMaxPumpAndGen.loadFromCSVFile(
-                filePath, 4U, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(filePath,
+                                                 4U,
+                                                 DAYS_PER_YEAR,
+                                                 Matrix<>::optFixedSize,
+                                                 &fileContent)
               && ret;
-
-        bool errorPowers = false;
-        for (uint i = 0; i < 4U; ++i)
-        {
-            auto& col = dailyMaxPumpAndGen[i];
-            for (uint day = 0; day < DAYS_PER_YEAR; ++day)
-            {
-                if (!errorPowers && (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.)))
-                {
-                    logs.error() << areaName_ << ": invalid power or energy value";
-                    errorPowers = true;
-                    ret = false;
-                }
-            }
-        }
     }
     return ret;
 }
@@ -127,8 +141,10 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
 bool HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
 {
     bool ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver);
+    ret = checkPower(dailyMaxPumpAndGen, areaName_) && ret;
     copyDailyMaxEnergy();
-    hydro_.series->buildHourlyMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP], dailyMaxPumpAndGen[pumpMaxP]);
+    hydro_.series->buildHourlyMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP],
+                                                  dailyMaxPumpAndGen[pumpMaxP]);
 
     return ret;
 }

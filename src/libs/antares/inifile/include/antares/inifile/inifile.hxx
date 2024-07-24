@@ -18,14 +18,13 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIBS_INIFILE_HXX__
-#define __ANTARES_LIBS_INIFILE_HXX__
+#pragma once
 
 namespace Antares
 {
 inline bool IniFile::loaded() const
 {
-    return not pFilename.empty();
+    return not filename_.empty();
 }
 
 inline bool IniFile::empty() const
@@ -33,18 +32,15 @@ inline bool IniFile::empty() const
     return not firstSection;
 }
 
-inline IniFile::Section::Section() : firstProperty(nullptr), lastProperty(nullptr), next(nullptr)
-{
-}
-
-inline IniFile::Section::Section(const AnyString& name) :
- name(name), firstProperty(nullptr), lastProperty(nullptr), next(nullptr)
+inline IniFile::Section::Section(const AnyString& name):
+    name(name)
 {
 }
 
 template<class U>
-IniFile::Property::Property(const AnyString& key, const U& value) :
- key(key), value(value), next(nullptr)
+IniFile::Property::Property(const AnyString& key, const U& value):
+    key(key),
+    value(value)
 {
     this->key.trim();
     this->key.toLower();
@@ -53,7 +49,7 @@ IniFile::Property::Property(const AnyString& key, const U& value) :
 
 inline bool IniFile::Section::empty() const
 {
-    return (NULL == firstProperty);
+    return !firstProperty;
 }
 
 template<class U>
@@ -61,9 +57,13 @@ IniFile::Property* IniFile::Section::add(const AnyString& key, const U& value)
 {
     auto* p = new Property(key, value);
     if (!lastProperty)
+    {
         firstProperty = p;
+    }
     else
+    {
         lastProperty->next = p;
+    }
     lastProperty = p;
     return p;
 }
@@ -72,7 +72,9 @@ template<class U>
 IniFile::Property* IniFile::Section::add(const AnyString& key, const std::optional<U>& value)
 {
     if (value.has_value())
+    {
         return add(key, value.value());
+    }
     return nullptr;
 }
 
@@ -88,37 +90,45 @@ inline IniFile::Section* IniFile::addSection(const AnyString& name)
     return add(new Section(name));
 }
 
-inline const YString& IniFile::filename() const
+inline const std::string& IniFile::filename() const
 {
-    return pFilename;
+    return filename_;
 }
 
 template<class CallbackT>
 void IniFile::each(const CallbackT& callback)
 {
     for (auto* section = firstSection; section; section = section->next)
+    {
         callback(*section);
+    }
 }
 
 template<class CallbackT>
 void IniFile::each(const CallbackT& callback) const
 {
     for (auto* section = firstSection; section; section = section->next)
+    {
         callback(*section);
+    }
 }
 
 template<class CallbackT>
 void IniFile::Section::each(const CallbackT& callback)
 {
     for (auto* property = firstProperty; property; property = property->next)
+    {
         callback(*property);
+    }
 }
 
 template<class CallbackT>
 void IniFile::Section::each(const CallbackT& callback) const
 {
     for (auto* property = firstProperty; property; property = property->next)
+    {
         callback(*property);
+    }
 }
 
 template<class CallbackT>
@@ -127,7 +137,9 @@ void IniFile::properties(const CallbackT& callback)
     for (auto* section = firstSection; section; section = section->next)
     {
         for (auto* property = section->firstProperty; property; property = property->next)
+        {
             callback(*property);
+        }
     }
 }
 
@@ -137,10 +149,10 @@ void IniFile::properties(const CallbackT& callback) const
     for (auto* section = firstSection; section; section = section->next)
     {
         for (auto* property = section->firstProperty; property; property = property->next)
+        {
             callback(*property);
+        }
     }
 }
 
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_INIFILE_HXX__

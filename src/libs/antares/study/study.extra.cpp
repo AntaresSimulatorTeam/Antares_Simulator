@@ -19,8 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/study/study.h"
+
+#include <yuni/yuni.h>
+
 #include "antares/study/scenario-builder/sets.h"
 
 using namespace Yuni;
@@ -139,7 +141,9 @@ bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String&
         // Looking for the next folder separator
         p = path.find(IO::Separator, offset);
         if (p >= path.size())
+        {
             return false;
+        }
 
         AnyString tmp(path, 0, p);
         if (!tmp.empty())
@@ -157,4 +161,3 @@ bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String&
 }
 
 } // namespace Antares::Data
-

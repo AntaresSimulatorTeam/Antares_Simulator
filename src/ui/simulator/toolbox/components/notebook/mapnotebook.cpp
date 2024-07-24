@@ -98,8 +98,8 @@ bool MapNotebook::remove(Page* page)
 MapNotebook::MapTabs::MapTabs(wxWindow* parent, Notebook& notebook) :
  Tabs(parent, notebook), undrawnLeftTabs(0), remainingRightTabs(0), pTabNameCtrl(nullptr)
 {
-    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(MapTabs::onMouseMove), NULL, this);
-    Connect(GetId(), wxEVT_LEAVE_WINDOW, wxMouseEventHandler(MapTabs::onMouseLeave), NULL, this);
+    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(MapTabs::onMouseMove), nullptr, this);
+    Connect(GetId(), wxEVT_LEAVE_WINDOW, wxMouseEventHandler(MapTabs::onMouseLeave), nullptr, this);
     // add Page button
     addPageButton = new tabButton(
       "images/16x16/white_add_18.png", this, tabButton::btnNone, "images/16x16/grey_add_18.png");

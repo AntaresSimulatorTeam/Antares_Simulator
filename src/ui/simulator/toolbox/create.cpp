@@ -38,7 +38,7 @@ CustomWxButton::CustomWxButton(wxWindow* parent, const wxString& title) :
             wxEVT_COMMAND_BUTTON_CLICKED,
             (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(
               wxCommandEventFunction, &CustomWxButton::evtOnUserClick),
-            NULL,
+            nullptr,
             this);
 }
 

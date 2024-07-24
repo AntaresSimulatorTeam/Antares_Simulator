@@ -26,9 +26,10 @@
 #pragma once
 
 #include "TSnumberData.h"
+
 namespace Antares::Data::ScenarioBuilder
 {
-class solarTSNumberData : public TSNumberData
+class solarTSNumberData: public TSNumberData
 {
 public:
     bool apply(Study& study) override;
@@ -40,4 +41,4 @@ inline CString<512, false> solarTSNumberData::get_prefix() const
 {
     return "s,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

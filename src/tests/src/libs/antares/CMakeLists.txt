@@ -1,6 +1,16 @@
 add_subdirectory(concurrency)
 add_subdirectory(writer)
 add_subdirectory(study)
+add_subdirectory(benchmarking)
+add_subdirectory(inifile)
+
+if(WITH_YAMLCPP)
+    add_subdirectory(yaml-parser)
+endif()
+
+if(WITH_ANTLR4)
+    add_subdirectory(antlr4-interface)
+endif()
 
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
@@ -114,5 +124,7 @@ target_link_libraries(test-utils
 		Antares::utils
 		yuni-static-core
 )
+set_target_properties(test-utils PROPERTIES FOLDER Unit-tests/test-utils)
+
 add_test(NAME test-utils COMMAND test-utils)
 set_property(TEST test-utils PROPERTY LABELS unit)

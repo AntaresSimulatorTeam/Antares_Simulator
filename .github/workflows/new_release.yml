@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       target_branch:
-        description: "Target branch or full commit SHA (default develop)"
-        default: "develop"
+        description: "Target branch or full commit SHA"
+        required: true
       release_tag:
         description: "Release tag"
         required: true
@@ -16,6 +16,10 @@ on:
         description: "Run all tests (true/false)"
         required: true
         type: string
+      set_latest:
+        description: "Set the release as latest"
+        required: true
+        type: boolean
 jobs:
       release:
         name: Release pushed tag
@@ -28,13 +32,14 @@ jobs:
               title: ${{ github.event.inputs.release_name }}
               tests: ${{ github.event.inputs.run-tests }}
               target_branch: ${{ github.event.inputs.target_branch }}
+              latest: ${{ github.event.inputs.set_latest }}
             run: |
               gh release create "$tag" \
                   --repo="$GITHUB_REPOSITORY" \
                   --title="$title" \
                   --notes="Run tests: $tests"\
-                  --target="$target_branch" 
-
+                  --target="$target_branch" \
+                  --latest=$latest
 
 
       ubuntu:
@@ -59,6 +64,7 @@ jobs:
         uses: ./.github/workflows/centos7.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       oracle8:
         name: Release - oracle8
@@ -66,7 +72,7 @@ jobs:
         uses: ./.github/workflows/oracle8.yml
         with:
           run-tests: ${{ inputs.run-tests }}
-          
+          target_branch: ${{ inputs.target_branch }}
 
       user_guide:
         name: User Guide

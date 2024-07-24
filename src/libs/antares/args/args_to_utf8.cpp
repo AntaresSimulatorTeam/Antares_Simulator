@@ -19,10 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/args/args_to_utf8.h"
 
+#include <yuni/yuni.h>
+
 #ifdef YUNI_OS_WINDOWS
+// Turning off format because order of windows and shellapi matters,
+// apparently
+// clang-format off
+
 #include <string.h>
 #include <cstdlib>
 #ifndef WIN32_LEAN_AND_MEAN
@@ -30,9 +35,13 @@
 #endif // WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shellapi.h>
+
+// clang-format on
 #endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv) : argc_(argc), argv_(argv)
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv):
+    argc_(argc),
+    argv_(argv)
 {
 }
 
@@ -44,10 +53,17 @@ std::pair<int, char**> IntoUTF8ArgsTranslator::convert()
     for (int i = 0; i != argc_; ++i)
     {
         const uint len = (uint)wcslen(wargv[i]);
-        const uint newLen = WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, NULL, 0, NULL, NULL);
+        const uint newLen = WideCharToMultiByte(CP_UTF8,
+                                                0,
+                                                wargv[i],
+                                                len,
+                                                nullptr,
+                                                0,
+                                                nullptr,
+                                                nullptr);
         argv_[i] = (char*)malloc((newLen + 1) * sizeof(char));
         memset(argv_[i], 0, (newLen + 1) * sizeof(char));
-        WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv_[i], newLen, NULL, NULL);
+        WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv_[i], newLen, nullptr, nullptr);
         argv_[i][newLen] = '\0';
     }
 #endif
@@ -58,7 +74,9 @@ IntoUTF8ArgsTranslator::~IntoUTF8ArgsTranslator()
 {
 #ifdef YUNI_OS_WINDOWS
     for (int i = 0; i != argc_; ++i)
+    {
         free(argv_[i]);
+    }
     free(argv_);
 #endif
 }

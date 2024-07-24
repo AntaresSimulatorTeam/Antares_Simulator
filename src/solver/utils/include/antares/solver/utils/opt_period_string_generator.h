@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <string>
 
 /*
     MPS and criterion generated files wear the same time interval sequence in their names.
@@ -35,11 +36,17 @@
    called.
 */
 
-#include "antares/solver/optimisation/opt_period_string_generator_base.h"
+class OptPeriodStringGenerator
+{
+public:
+    virtual std::string to_string() const = 0;
+    virtual ~OptPeriodStringGenerator() = default;
+};
+
 // ------------------------------------
 // Daily optimization
 // ------------------------------------
-class OptDailyStringGenerator final : public OptPeriodStringGenerator
+class OptDailyStringGenerator final: public OptPeriodStringGenerator
 {
 public:
     OptDailyStringGenerator(unsigned int day, unsigned int week, unsigned int year);
@@ -54,7 +61,7 @@ private:
 // ------------------------------------
 // Weekly optimization
 // ------------------------------------
-class OptWeeklyStringGenerator final : public OptPeriodStringGenerator
+class OptWeeklyStringGenerator final: public OptPeriodStringGenerator
 {
 public:
     OptWeeklyStringGenerator(unsigned int week, unsigned int year);

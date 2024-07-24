@@ -8,10 +8,12 @@ theme:
   logo: assets/logo.png
   favicon: assets/Icone.png
   prev_next_buttons_location: none
+  custom_dir: docs/overrides
   features:
     - navigation.instant
     - navigation.top
-    - navigation.expand
+    - content.tabs.link
+  # - navigation.expand
   #  - navigation.sections
   #   - header.autohide
   #   - toc.separate
@@ -28,34 +30,61 @@ theme:
         name: Switch to light mode
 
 nav:
-  - 'Home': index.md
-  - 'Antares ecosystem' : 'https://antares-doc.readthedocs.io'
-  - 'Reference guide':
-    - 'Introduction': 'reference-guide/01-introduction.md'
-    - 'Data organization': 'reference-guide/02-data_organization.md'
-    - 'Commands': 'reference-guide/03-commands.md'
-    - 'Active windows': 'reference-guide/04-active_windows.md'
-    - 'Output files': 'reference-guide/05-output_files.md'
-    - 'Time-Series analysis and generation': 'reference-guide/06-time_series_analysis_and_generation.md'
-    - 'Kirchhoff''s constraint generator': 'reference-guide/07-kirchhoffs_constraint_generator.md'
-    - 'Miscellaneous': 'reference-guide/08-miscellaneous.md'
-    - 'System requirements': 'reference-guide/09-system_requirements.md'
-    - 'Command line': 'reference-guide/10-command_line.md'
-    - 'Adequacy patch (v8.3.0+)': 'reference-guide/14-adequacy-patch.md'
-    - 'File format changes': 'reference-guide/13-file-format.md'
-    - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
-  - 'Optimisation problem' : 'reference-guide/11-modeling.md'
-  - 'Build':
-    - 'Introduction': 'build/0-INSTALL.md'
-    - 'Development requirements': 'build/1-Development-requirements.md'
-    - 'Dependencies install': 'build/2-Dependencies-install.md'
-    - 'Build': 'build/3-Build.md'
-    - 'Tests (user)': 'build/4-Tests-user.md'
-    - 'Tests (developer)' : 'build/4-Tests-dev.md'
-    - 'Installer creation': 'build/5-Installer-creation.md'
-    - 'Continuous Integration' : 'build/continuous-integration.md'
-    - 'OR-tools integration' : 'build/ortools-integration.md'
-  - 'Changelog': 'CHANGELOG.md'
+  - 'Home': 'index.md'
+  - 'User guide':
+    - 'Overview': 'user-guide/01-overview.md'
+    - 'Installation': 'user-guide/02-install.md'
+    - 'Getting started': 'user-guide/03-getting_started.md'
+    - 'Solver':
+        - 'Overview': 'user-guide/solver/01-overview.md'
+        - 'Input files': 'user-guide/solver/02-inputs.md'
+        - 'Output files': 'user-guide/solver/03-outputs.md'
+        - 'Parameters': 'user-guide/solver/04-parameters.md'
+        - 'Optimization model': 'user-guide/solver/05-model.md'
+        - 'Hydro heuristics': 'user-guide/solver/06-hydro-heuristics.md'
+        - 'Thermal heuristics': 'user-guide/solver/07-thermal-heuristic.md'
+        - 'Command-line instructions': 'user-guide/solver/08-command-line.md'
+        - 'Optional features':
+            - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
+            - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
+            - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
+        - 'Appendix': 'user-guide/solver/09-appendix.md'
+    - 'Time-series generation':
+        - 'Overview': 'user-guide/ts-generator/01-overview.md'
+        - 'Input files': 'user-guide/ts-generator/02-inputs.md'
+        - 'Output files': 'user-guide/ts-generator/03-outputs.md'
+        - 'Parameters': 'user-guide/ts-generator/04-parameters.md'
+        - 'Algorithm': 'user-guide/ts-generator/05-algorithm.md'
+        - 'Command-line instructions': 'user-guide/ts-generator/06-command-line.md'
+    - 'Other features':
+        - 'Batch Runner': 'user-guide/other-features/batchrun.md'
+        - 'Config Checker': 'user-guide/other-features/config.md'
+        - 'GUI': 'user-guide/other-features/ui-simulator.md'
+        - 'Kirchhoff''s constraint generator': 'user-guide/other-features/kirchhoff-constraints-builder.md'
+        - 'Study Cleaner': 'user-guide/other-features/study-cleaner.md'
+        - 'Study Finder': 'user-guide/other-features/study-finder.md'
+        - 'Study Updater': 'user-guide/other-features/study-updater.md'
+        - 'Time-Series Analyzer': 'user-guide/other-features/analyzer.md'
+        - 'Vacuum': 'user-guide/other-features/vacuum.md'
+        - 'Year-by-Year Aggregator': 'user-guide/other-features/ybyaggregator.md'
+    - 'Migration guides': 'user-guide/04-migration-guides.md'
+    - 'Attribution notices': 'user-guide/05-attribution_notices.md'
+  - 'Developer guide':
+    - 'Overview': 'developer-guide/0-Overview.md'
+    - 'Development requirements': 'developer-guide/1-Development-requirements.md'
+    - 'Dependencies install': 'developer-guide/2-Dependencies-install.md'
+    - 'Build': 'developer-guide/3-Build.md'
+    - 'Tests (user)': 'developer-guide/4-Tests-user.md'
+    - 'Tests (developer)': 'developer-guide/4-Tests-dev.md'
+    - 'Installer creation': 'developer-guide/5-Installer-creation.md'
+    - 'Continuous Integration': 'developer-guide/continuous-integration.md'
+    - 'OR-tools integration': 'developer-guide/ortools-integration.md'
+    - 'Changelog': 'developer-guide/CHANGELOG.md'
+  - 'External links':
+    - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
+    - 'Antares website': 'https://antares-simulator.org'
+    - 'RTE website': 'http://www.rte-france.com/'
+
 
 plugins:
   - search
@@ -76,11 +105,12 @@ markdown_extensions:
       permalink: true
       toc_depth: 3
   - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - admonition
   - pymdownx.details
   - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
 
 copyright: Copyright &copy; 2007 - 2024 RTE

@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_HXX__
 #define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_HXX__
 
+#include <antares/solver/variable/print.h>
+
 namespace Antares
 {
 namespace Solver
@@ -34,7 +36,7 @@ inline IntermediateValues::~IntermediateValues()
 
 inline void IntermediateValues::reset()
 {
-    Antares::Memory::Zero(maxHoursInAYear, hour);
+    Antares::Memory::Zero(HOURS_PER_YEAR, hour);
     memset(month, 0, sizeof(month));
     memset(week, 0, sizeof(week));
     memset(day, 0, sizeof(day));
@@ -53,7 +55,7 @@ inline const IntermediateValues::Type& IntermediateValues::operator[](
 
 inline uint64_t IntermediateValues::MemoryUsage()
 {
-    return +sizeof(Type) * maxHoursInAYear;
+    return +sizeof(Type) * HOURS_PER_YEAR;
 }
 
 template<class VCardT>
@@ -61,25 +63,25 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
                                                         int fileLevel,
                                                         int precision) const
 {
-    if (!(fileLevel & Category::id))
+    if (!(fileLevel & Category::FileLevel::id))
     {
         switch (precision)
         {
-            case Category::hourly:
-                internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
-                break;
-            case Category::daily:
-                internalExportAnnualValues<maxDaysInAYear, VCardT>(report, day, false);
-                break;
-            case Category::weekly:
-                internalExportAnnualValues<maxWeeksInAYear, VCardT>(report, week, false);
-                break;
-            case Category::monthly:
-                internalExportAnnualValues<maxMonths, VCardT>(report, month, false);
-                break;
-            case Category::annual:
-                internalExportAnnualValues<1, VCardT>(report, &year, true);
-                break;
+        case Category::hourly:
+            internalExportAnnualValues<HOURS_PER_YEAR, VCardT>(report, hour, false);
+            break;
+        case Category::daily:
+            internalExportAnnualValues<DAYS_PER_YEAR, VCardT>(report, day, false);
+            break;
+        case Category::weekly:
+            internalExportAnnualValues<WEEKS_PER_YEAR, VCardT>(report, week, false);
+            break;
+        case Category::monthly:
+            internalExportAnnualValues<MONTHS_PER_YEAR, VCardT>(report, month, false);
+            break;
+        case Category::annual:
+            internalExportAnnualValues<1, VCardT>(report, &year, true);
+            break;
         }
     }
 }

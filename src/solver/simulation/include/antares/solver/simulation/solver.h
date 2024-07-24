@@ -1,39 +1,39 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
-#include <antares/benchmarking/DurationCollector.h>
-
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
-#include "antares/solver/variable/state.h"
+
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/logs/logs.h>
+#include <antares/solver/simulation/ISimulationObserver.h>
+#include <antares/study/study.h>
+#include <antares/writer/writer_factory.h>
+#include "antares/solver/hydro/management/management.h"
 #include "antares/solver/misc/options.h"
 #include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
-#include "antares/solver/hydro/management/management.h"
-
-#include <antares/writer/writer_factory.h>
+#include "antares/solver/variable/state.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -42,7 +42,7 @@ template<class Impl>
 class yearJob;
 
 template<class Impl>
-class ISimulation : public Impl
+class ISimulation: public Impl
 {
     friend class yearJob<Impl>;
 
@@ -54,8 +54,9 @@ public:
     */
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
-                Benchmarking::IDurationCollector& duration_collector,
-                IResultWriter& resultWriter);
+                Benchmarking::DurationCollector& duration_collector,
+                IResultWriter& resultWriter,
+                Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~ISimulation();
     //@}
@@ -77,7 +78,6 @@ public:
     */
     void writeResults(bool synthesis, uint year = 0, uint numSpace = 9999);
 
-public:
     //! Reference to the current study
     Data::Study& study;
     //! The global settings
@@ -127,7 +127,7 @@ private:
     ** Storing these costs to compute std deviation later.
     */
     void computeAnnualCostsStatistics(std::vector<Variable::State>& state,
-                                      std::vector<setOfParallelYears>::iterator& set_it);
+                                      setOfParallelYears& batch);
 
     /*!
     ** \brief Iterate through all MC years
@@ -137,8 +137,6 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-
-private:
     //! Some temporary to avoid performing useless complex checks
     Solver::Private::Simulation::CacheData pData;
     //!
@@ -147,8 +145,6 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     //! Year by year output results
     bool pYearByYear;
-    //! Hydro hot start
-    bool pHydroHotStart;
     //! The first set of parallel year(s) with a performed year was already run ?
     bool pFirstSetParallelWithAPerformedYearWasRun;
 
@@ -156,7 +152,7 @@ private:
     annualCostsStatistics pAnnualStatistics;
 
     // Collecting durations inside the simulation
-    Benchmarking::IDurationCollector& pDurationCollector;
+    Benchmarking::DurationCollector& pDurationCollector;
 
 public:
     //! The queue service that runs every set of parallel years
@@ -164,6 +160,7 @@ public:
     //! Result writer
     Antares::Solver::IResultWriter& pResultWriter;
 
+    std::reference_wrapper<ISimulationObserver> simulationObserver_;
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

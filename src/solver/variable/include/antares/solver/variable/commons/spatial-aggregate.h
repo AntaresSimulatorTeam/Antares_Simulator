@@ -22,6 +22,7 @@
 #define __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
 
 #include "antares/solver/variable/variable.h"
+
 // #include <antares/logs/logs.h>	// In case it is needed
 
 namespace Antares
@@ -99,11 +100,13 @@ struct VCardProxy
     {
         return VCardOrigin::Caption();
     }
+
     //! Unit
     static std::string Unit()
     {
         return VCardOrigin::Unit();
     }
+
     //! The short description of the variable
     static std::string Description()
     {
@@ -120,30 +123,27 @@ struct VCardProxy
     typedef
       typename VCardOrigin::IntermediateValuesTypeForSpatialAg IntermediateValuesTypeForSpatialAg;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::setOfAreas,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = VCardOrigin::categoryFileLevel,
-        //! Precision (views)
-        precision = VCardOrigin::precision,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = VCardOrigin::decimal,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = VCardOrigin::columnCount,
-        //! The Spatial aggregation
-        spatialAggregate = Category::noSpatialAggregate,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::setOfAreas;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = VCardOrigin::categoryFileLevel;
+    //! Precision (views)
+    static constexpr uint8_t precision = VCardOrigin::precision;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = VCardOrigin::decimal;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = VCardOrigin::columnCount;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
 
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable,
-    };
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable;
 
     struct Multiple
     {
@@ -162,7 +162,7 @@ struct VCardProxy
 
 template<template<class> class VarT, class NextT = Container::EndOfList>
 class SpatialAggregate
- : public Variable::IVariable<SpatialAggregate<VarT, NextT>, NextT, VCardProxy<VarT>>
+    : public Variable::IVariable<SpatialAggregate<VarT, NextT>, NextT, VCardProxy<VarT>>
 {
 public:
     //! Type of the next static variable
@@ -189,11 +189,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -217,9 +217,11 @@ public:
         VarT<Container::EndOfList>::InitializeResultsFromStudy(AncestorType::pResults, study);
         pValuesForTheCurrentYear = new IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
+        }
 
-        auto& limits = study.runtime->rangeLimits;
+        auto& limits = study.runtime.rangeLimits;
 
         pRatioYear = 100. / (double)limits.year[Data::rangeCount];
         pRatioDay = 100. / (double)limits.day[Data::rangeCount];
@@ -271,10 +273,10 @@ public:
         NextType::yearEndBuildForEachThermalCluster(state, year);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(uint year)
@@ -301,17 +303,19 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
-    void hourForEachArea(State& state)
+    void hourForEachArea(State& state, unsigned int numSpace)
     {
         // Next variable
-        NextType::hourForEachArea(state);
+        NextType::hourForEachArea(state, numSpace);
     }
 
     template<class V, class SetT>
     void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set, uint numSpace)
     {
         if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
+        {
             internalSpatialAggregateForCurrentYear(allVars, set, numSpace);
+        }
 
         // Next variable
         NextType::template yearEndSpatialAggregates(allVars, year, set, numSpace);
@@ -323,18 +327,23 @@ public:
                                          uint nbYearsForCurrentSummary)
     {
         if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
+        {
             internalSpatialAggregateForParallelYears(numSpaceToYear, nbYearsForCurrentSummary);
+        }
 
         // Next variable
-        NextType::computeSpatialAggregatesSummary(
-          allVars, numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSpatialAggregatesSummary(allVars,
+                                                  numSpaceToYear,
+                                                  nbYearsForCurrentSummary);
     }
 
     template<class V, class SetT>
     void simulationEndSpatialAggregates(V& allVars, const SetT& set)
     {
         if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateOnce)
+        {
             internalSpatialAggregate(allVars, 0, set);
+        }
 
         // Next variable
         NextType::template simulationEndSpatialAggregates(allVars, set);
@@ -343,14 +352,18 @@ public:
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
         // Generate the Digest for the local results (districts part)
-        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas))
+        if (VCardType::columnCount != 0
+            && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
         {
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;
             results.isCurrentVarNA = AncestorType::isNonApplicable;
 
             VariableAccessorType::template BuildDigest<typename VCardType::VCardOrigin>(
-              results, AncestorType::pResults, digestLevel, dataLevel);
+              results,
+              AncestorType::pResults,
+              digestLevel,
+              dataLevel);
         }
         // Ask to build the digest to the next variable
         NextType::buildDigest(results, digestLevel, dataLevel);
@@ -361,7 +374,8 @@ public:
                                       int precision,
                                       uint numSpace) const
     {
-        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas))
+        if (VCardType::columnCount != 0
+            && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
         {
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;
@@ -371,7 +385,10 @@ public:
                                      VCardType::columnCount>
               VAType;
             VAType::template BuildAnnualSurveyReport<typename VCardType::VCardOrigin>(
-              results, pValuesForTheCurrentYear[numSpace], fileLevel, precision);
+              results,
+              pValuesForTheCurrentYear[numSpace],
+              fileLevel,
+              precision);
         }
     }
 
@@ -396,22 +413,31 @@ private:
 
             // The spatial cluster may be an average
             if (VCardType::VCardOrigin::spatialAggregate & Category::spatialAggregateAverage)
+            {
                 VariableAccessorType::MultiplyHourlyResultsBy(pValuesForTheCurrentYear[0],
                                                               1. / set.size());
+            }
             // The spatial cluster may be an average
             if (VCardType::VCardOrigin::spatialAggregate
                 & Category::spatialAggregateSumThen1IfPositive)
+            {
                 VariableAccessorType::SetTo1IfPositive(pValuesForTheCurrentYear[0]);
+            }
             if (VCardType::VCardOrigin::spatialAggregate & Category::spatialAggregateOr)
+            {
                 VariableAccessorType::Or(pValuesForTheCurrentYear[0]);
+            }
         }
         else
+        {
             assert(!set.empty() && "The set should not be empty at this point");
+        }
 
         // Compute all statistics for the current year (daily,weekly,monthly,...)
         VariableAccessorType::template ComputeStatistics<VCardOrigin>(pValuesForTheCurrentYear[0]);
-        VariableAccessorType::ComputeSummary(
-          pValuesForTheCurrentYear[0], AncestorType::pResults, year);
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[0],
+                                             AncestorType::pResults,
+                                             year);
     }
 
     template<class V, class SetT>
@@ -434,17 +460,25 @@ private:
 
             // The spatial cluster may be an average
             if (VCardType::VCardOrigin::spatialAggregate & Category::spatialAggregateAverage)
+            {
                 VariableAccessorType::MultiplyHourlyResultsBy(pValuesForTheCurrentYear[numSpace],
                                                               1. / set.size());
+            }
             // The spatial cluster may be an average
             if (VCardType::VCardOrigin::spatialAggregate
                 & Category::spatialAggregateSumThen1IfPositive)
+            {
                 VariableAccessorType::SetTo1IfPositive(pValuesForTheCurrentYear[numSpace]);
+            }
             if (VCardType::VCardOrigin::spatialAggregate & Category::spatialAggregateOr)
+            {
                 VariableAccessorType::Or(pValuesForTheCurrentYear[numSpace]);
+            }
         }
         else
+        {
             assert(!set.empty() && "The set should not be empty at this point");
+        }
 
         // Compute all statistics for the current year (daily,weekly,monthly,...)
         VariableAccessorType::template ComputeStatistics<VCardOrigin>(
@@ -458,8 +492,9 @@ private:
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {
             // Merge all those values with the global results
-            VariableAccessorType::ComputeSummary(
-              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
+            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                                 AncestorType::pResults,
+                                                 numSpaceToYear[numSpace]);
         }
     }
 

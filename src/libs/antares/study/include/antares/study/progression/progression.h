@@ -21,16 +21,19 @@
 #ifndef __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 #define __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 
-#include <yuni/core/singleton.h>
-#include <yuni/thread/timer.h>
-#include <mutex>
-#include <map>
-#include <list>
-#include <vector>
 #include <atomic>
-#include "../fwd.h"
+#include <list>
+#include <map>
+#include <mutex>
+#include <vector>
+
+#include <yuni/core/singleton.h>
 #include <yuni/io/file.h>
+#include <yuni/thread/timer.h>
+
 #include <antares/writer/i_writer.h>
+
+#include "../fwd.h"
 
 namespace Antares
 {
@@ -54,6 +57,7 @@ public:
         sectImportTS,
         sectMax
     };
+
     enum
     {
         npos = (uint)-1,
@@ -72,11 +76,11 @@ private:
 
     public:
         //! The total number of ticks to achieve
-        int maxTickCount;
+        unsigned maxTickCount;
         //! The current number of ticks
-        std::atomic<int> tickCount;
+        std::atomic<unsigned> tickCount;
         //! The last number of ticks, to reduce the log verbosity
-        int lastTickCount;
+        unsigned lastTickCount;
         // Caption to use when displaying logs
         // Example: 'year: 10000, task: thermal'
         Yuni::CString<40, false> caption;
@@ -100,7 +104,7 @@ public:
             return *this;
         }
 
-        Task& operator+=(int value)
+        Task& operator+=(unsigned value)
         {
             pPart.tickCount += value;
             return *this;
@@ -134,7 +138,7 @@ public:
     ** \internal The number of ticks should remain an `int` because
     **   we can not use unsigned atomic integer
     */
-    void add(uint year, Section section, int nbTicks);
+    void add(uint year, Section section, unsigned nbTicks);
 
     void add(Section section, int nbTicks);
 
@@ -160,14 +164,17 @@ protected:
     void end(Part& part);
 
 private:
-    class Meter final : public Yuni::Thread::Timer
+    class Meter final: public Yuni::Thread::Timer
     {
     public:
         Meter();
+
         virtual ~Meter()
         {
             if (logsContainer)
+            {
                 delete[] logsContainer;
+            }
         }
 
         void allocateLogsContainer(uint nb);

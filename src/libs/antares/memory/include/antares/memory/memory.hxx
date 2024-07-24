@@ -29,54 +29,6 @@ inline uint64_t Memory::processID() const
 }
 
 template<class T>
-Memory::Array<T>::Array(const Yuni::NullPtr&)
-{
-}
-
-template<class T>
-Memory::Array<T>::Array(const Memory::Array<T>&)
-{
-}
-
-template<class T>
-template<class U>
-Memory::Array<T>::Array(const Memory::Array<U>&)
-{
-}
-
-template<class T>
-inline Memory::Array<T>::Array(size_t size)
-{
-    allocate(size);
-}
-
-template<class T>
-inline Memory::Array<T>::~Array()
-{
-    delete[] pPointer;
-    pPointer = nullptr;
-}
-
-template<class T>
-void Memory::Array<T>::allocate(size_t size)
-{
-    delete[] pPointer;
-    pPointer = new T[size];
-}
-
-template<class T>
-T& Memory::Array<T>::operator[](uint i)
-{
-    return (T&)pPointer[i];
-}
-
-template<class T>
-const T& Memory::Array<T>::operator[](uint i) const
-{
-    return (const T&)pPointer[i];
-}
-
-template<class T>
 inline void Memory::Release(T*& pointer)
 {
     delete[] pointer;
@@ -118,7 +70,9 @@ template<class U>
 inline void Memory::Assign(uint count, U* array, const U& value)
 {
     for (uint i = 0; i != count; ++i)
+    {
         array[i] = value;
+    }
 }
 
 } // namespace Antares

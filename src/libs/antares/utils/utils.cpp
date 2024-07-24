@@ -20,10 +20,10 @@
 */
 
 #include "antares/utils/utils.h"
-#include <antares/logs/logs.h>
-
 
 #include <sstream>
+
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -33,15 +33,17 @@ void BeautifyName(YString& out, AnyString oldname)
 {
     out.clear();
     if (oldname.empty())
+    {
         return;
+    }
 
     oldname.trim(" \r\n\t");
     if (oldname.empty())
+    {
         return;
+    }
 
     out.reserve(oldname.size());
-
-
 
     auto end = oldname.utf8end();
     for (auto i = oldname.utf8begin(); i != end; ++i)
@@ -57,13 +59,17 @@ void BeautifyName(YString& out, AnyString oldname)
             out += c;
         }
         else
+        {
             out += ' ';
+        }
     }
 
     out.trim(" \t\r\n");
 
     while (std::string(out.c_str()).find("  ") != std::string::npos)
+    {
         out.replace("  ", " ");
+    }
 
     out.trim(" \t\r\n");
 }
@@ -76,11 +82,30 @@ void TransformNameIntoID(const AnyString& name, std::string& out)
     out = yuniOut;
 }
 
+std::string transformNameIntoID(const std::string& name)
+{
+    std::string out;
+    TransformNameIntoID(name, out);
+    return out;
+}
+
 void BeautifyName(std::string& out, const std::string& oldname)
 {
     YString yuniOut;
     BeautifyName(yuniOut, oldname);
     out = yuniOut.c_str();
+}
+
+std::string FormattedTime(const std::string& format)
+{
+    using namespace std::chrono;
+    auto time = system_clock::to_time_t(system_clock::now());
+    std::tm local_time = *std::localtime(&time);
+
+    char time_buffer[256];
+    std::strftime(time_buffer, sizeof(time_buffer), format.c_str(), &local_time);
+
+    return std::string(time_buffer);
 }
 
 std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
@@ -101,7 +126,11 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
             pairs.push_back({begin, end});
         }
         else
+        {
             logs.warning() << "Error while parsing: " << token;
+            logs.warning() << "Correct format is: \"object1" << delimiter2 << "object2"
+                           << delimiter1 << "object3" << delimiter2 << "object4\"";
+        }
     }
 
     return pairs;

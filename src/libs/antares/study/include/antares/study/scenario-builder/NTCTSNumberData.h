@@ -27,7 +27,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class ntcTSNumberData : public TSNumberData
+class ntcTSNumberData: public TSNumberData
 {
 public:
     ntcTSNumberData() = default;
@@ -67,4 +67,4 @@ inline CString<512, false> ntcTSNumberData::get_prefix() const
 {
     return "ntc,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

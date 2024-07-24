@@ -18,10 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <sstream>
 #include "antares/solver/utils/filename.h"
-#include "antares/solver/optimisation/opt_period_string_generator_base.h"
-#include "include/antares/solver/utils/opt_period_string_generator.h"
+
+#include <sstream>
 
 // ------------------------------------
 // Optimization period factory
@@ -32,16 +31,19 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
                                                                   unsigned int year)
 {
     if (isOptimizationWeekly)
+    {
         return std::make_shared<OptWeeklyStringGenerator>(week, year);
+    }
     else
+    {
         return std::make_shared<OptDailyStringGenerator>(day, week, year);
+    }
 }
 
-std::string createOptimizationFilename(
-  const std::string& title,
-  const OptPeriodStringGenerator& optPeriodStringGenerator,
-  unsigned int optNumber,
-  const std::string& extension)
+std::string createOptimizationFilename(const std::string& title,
+                                       const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                       unsigned int optNumber,
+                                       const std::string& extension)
 {
     std::ostringstream outputFile;
     outputFile << title.c_str() << "-";

@@ -1,32 +1,33 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #define BOOST_TEST_MODULE "test short term storage"
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
-#include <yuni/io/file.h>
 #include <filesystem>
 #include <fstream>
+
+#include <boost/test/unit_test.hpp>
+
+#include <yuni/io/file.h>
 
 #include "antares/study/parts/short-term-storage/container.h"
 
@@ -35,7 +36,8 @@
 using namespace std;
 using namespace Antares::Data;
 
-namespace {
+namespace
+{
 std::string getFolder()
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
@@ -56,7 +58,9 @@ void createIndividualFileSeries(const std::string& path, double value, unsigned 
     std::ofstream outfile(path);
 
     for (unsigned int i = 0; i < size; i++)
+    {
         outfile << value << std::endl;
+    }
 
     outfile.close();
 }
@@ -111,6 +115,7 @@ void createIniFile(bool enabled)
     outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
     outfile << "reservoircapacity = 31200.000000" << std::endl;
     outfile << "efficiency = 0.75" << std::endl;
+    outfile << "efficiencywithdrawal = 0.9" << std::endl;
     outfile << "initiallevel = 0.50000" << std::endl;
     outfile << "enabled = " << (enabled ? "true" : "false") << std::endl;
     outfile.close();
@@ -130,6 +135,7 @@ void createIniFileWrongValue()
     outfile << "withdrawalnominalcapacity = -900.000000" << std::endl;
     outfile << "reservoircapacity = -31200.000000" << std::endl;
     outfile << "efficiency = 4" << std::endl;
+    outfile << "efficiencywithdrawal = -2" << std::endl;
     outfile << "initiallevel = -0.50000" << std::endl;
 
     outfile.close();
@@ -150,18 +156,19 @@ void removeIniFile()
     std::string folder = getFolder();
     std::filesystem::remove(folder + SEP + "list.ini");
 }
-}
+} // namespace
 
 // =================
 // The fixture
 // =================
 struct Fixture
 {
-    Fixture(const Fixture & f) = delete;
-    Fixture(const Fixture && f) = delete;
-    Fixture & operator= (const Fixture & f) = delete;
-    Fixture& operator= (const Fixture && f) = delete;
+    Fixture(const Fixture& f) = delete;
+    Fixture(const Fixture&& f) = delete;
+    Fixture& operator=(const Fixture& f) = delete;
+    Fixture& operator=(const Fixture&& f) = delete;
     Fixture() = default;
+
     ~Fixture()
     {
         std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
@@ -178,7 +185,6 @@ struct Fixture
     ShortTermStorage::STStorageCluster cluster;
     ShortTermStorage::STStorageInput container;
 };
-
 
 // ==================
 // Tests section
@@ -202,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
     BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
-        && series.upperRuleCurve[1343] == 1);
+                && series.upperRuleCurve[1343] == 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
@@ -262,8 +268,8 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
     BOOST_CHECK(cluster.loadSeries(folder));
     BOOST_CHECK(cluster.series->validate());
     BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
-        && cluster.series->inflows[2756] == 0.5
-        && cluster.series->lowerRuleCurve[6392] == 0.5);
+                && cluster.series->inflows[2756] == 0.5
+                && cluster.series->lowerRuleCurve[6392] == 0.5);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)

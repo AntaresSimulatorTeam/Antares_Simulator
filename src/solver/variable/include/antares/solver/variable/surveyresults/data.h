@@ -22,10 +22,11 @@
 #define __SOLVER_VARIABLE_SURVEY_RESULTS_DATA_H__
 
 #include <yuni/yuni.h>
-#include "antares/antares/constants.h"
 #include <yuni/core/string.h>
+
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
+#include "antares/antares/constants.h"
 
 namespace Antares
 {

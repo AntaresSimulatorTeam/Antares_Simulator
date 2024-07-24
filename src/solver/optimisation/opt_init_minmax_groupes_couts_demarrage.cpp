@@ -19,21 +19,21 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/simulation.h"
 
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     if (!problemeHebdo->OptimisationNotFastMode)
+    {
         return;
+    }
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
         std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
@@ -55,13 +55,13 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
             {
                 if (TailleUnitaireDUnGroupeDuPalierThermique != 0)
                 {
-                    NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      = (int)ceil(PuissanceDisponibleDuPalierThermiqueRef[pdtHebdo]
-                                  / TailleUnitaireDUnGroupeDuPalierThermique);
+                    NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)ceil(
+                      PuissanceDisponibleDuPalierThermiqueRef[pdtHebdo]
+                      / TailleUnitaireDUnGroupeDuPalierThermique);
 
-                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      = (int)ceil(PuissanceMinDuPalierThermiqueRef[pdtHebdo]
-                                  / TailleUnitaireDUnGroupeDuPalierThermique);
+                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)ceil(
+                      PuissanceMinDuPalierThermiqueRef[pdtHebdo]
+                      / TailleUnitaireDUnGroupeDuPalierThermique);
                 }
                 else
                 {

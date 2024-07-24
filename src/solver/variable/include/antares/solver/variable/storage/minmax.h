@@ -39,7 +39,7 @@ template<class NextT = Empty>
 class Max;
 
 template<bool OpInferior, class NextT>
-struct MinMaxBase : public NextT
+struct MinMaxBase: public NextT
 {
 public:
     //! Type of the net item in the list
@@ -50,7 +50,7 @@ public:
         //! The count if item in the list
         count = 1 + NextT::count,
 
-        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
     //! Name of the filter
@@ -78,25 +78,33 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (fileLevel & Category::id)
+        if (fileLevel & Category::FileLevel::id)
         {
             switch (precision)
             {
             case Category::hourly:
-                InternalExportIndices<maxHoursInAYear, VCardT>(
-                  report, Memory::RawPointer(minmax.hourly), fileLevel);
+                InternalExportIndices<HOURS_PER_YEAR, VCardT>(report,
+                                                              Memory::RawPointer(
+                                                                minmax.hourly.data()),
+                                                              fileLevel);
                 break;
             case Category::daily:
-                InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily, fileLevel);
+                InternalExportIndices<DAYS_PER_YEAR, VCardT>(report,
+                                                             minmax.daily.data(),
+                                                             fileLevel);
                 break;
             case Category::weekly:
-                InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly, fileLevel);
+                InternalExportIndices<WEEKS_PER_YEAR, VCardT>(report,
+                                                              minmax.weekly.data(),
+                                                              fileLevel);
                 break;
             case Category::monthly:
-                InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly, fileLevel);
+                InternalExportIndices<MONTHS_PER_YEAR, VCardT>(report,
+                                                               minmax.monthly.data(),
+                                                               fileLevel);
                 break;
             case Category::annual:
-                InternalExportIndices<1, VCardT>(report, &minmax.annual, fileLevel);
+                InternalExportIndices<1, VCardT>(report, minmax.annual.data(), fileLevel);
                 break;
             }
         }
@@ -105,26 +113,30 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<maxHoursInAYear, VCardT>(report,
-                                                              Memory::RawPointer(minmax.hourly));
+                InternalExportValues<HOURS_PER_YEAR, VCardT>(report,
+                                                             Memory::RawPointer(
+                                                               minmax.hourly.data()));
                 break;
             case Category::daily:
-                InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily);
+                InternalExportValues<DAYS_PER_YEAR, VCardT>(report, minmax.daily.data());
                 break;
             case Category::weekly:
-                InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly);
+                InternalExportValues<WEEKS_PER_YEAR, VCardT>(report, minmax.weekly.data());
                 break;
             case Category::monthly:
-                InternalExportValues<maxMonths, VCardT>(report, minmax.monthly);
+                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.data());
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT>(report, &minmax.annual);
+                InternalExportValues<1, VCardT>(report, minmax.annual.data());
                 break;
             }
         }
         // Next
-        NextType::template buildSurveyReport<S, VCardT>(
-          report, results, dataLevel, fileLevel, precision);
+        NextType::template buildSurveyReport<S, VCardT>(report,
+                                                        results,
+                                                        dataLevel,
+                                                        fileLevel,
+                                                        precision);
     }
 
     void reset();
@@ -133,7 +145,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class> class DecoratorT>
@@ -157,7 +169,7 @@ private:
 }; // class MinMaxBase
 
 template<class NextT>
-class Min : public MinMaxBase<true, NextT>
+class Min: public MinMaxBase<true, NextT>
 {
 public:
     //! Implementation
@@ -171,6 +183,7 @@ public:
     {
         return "min";
     }
+
     enum
     {
         //! The count if item in the list
@@ -179,7 +192,7 @@ public:
 };
 
 template<class NextT>
-class Max : public MinMaxBase<false, NextT>
+class Max: public MinMaxBase<false, NextT>
 {
 public:
     //! Implementation
@@ -193,6 +206,7 @@ public:
     {
         return "max";
     }
+
     enum
     {
         //! The count if item in the list

@@ -21,14 +21,21 @@
 #ifndef __LIBS_ANTARES_IO_FILE_H__
 #define __LIBS_ANTARES_IO_FILE_H__
 
-#include <yuni/yuni.h>
+#include <filesystem>
+
 #include <yuni/core/string.h>
 
+namespace Antares::IO
+{
 /*!
 ** \brief Reset the content of a file
 **
 ** This routine will wait if there is not enough disk space
 */
-bool IOFileSetContent(const AnyString& filename, const AnyString& content);
+bool fileSetContent(const std::string& filename, const std::string& content);
+
+std::string readFile(const std::filesystem::path&);
+
+} // namespace Antares::IO
 
 #endif // __LIBS_ANTARES_IO_FILE_H__
