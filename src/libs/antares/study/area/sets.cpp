@@ -99,8 +99,8 @@ void Sets::defaultForAreas()
     opts.comments = "Spatial aggregates on all areas";
     opts.output = false;
     opts.rules.push_back(Rule(ruleFilter, new String("add-all")));
-    auto item = std::make_shared<SetAreasType>();
-    add("all areas", item, opts);
+    auto district = std::make_shared<SetAreasType>();
+    add("all areas", district, opts);
 }
 
 void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
@@ -144,10 +144,7 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
                 typename MapType::iterator i = pMap.find(other);
                 if (i != pMap.end())
                 {
-                    if (handler.add(set, *(i->second)))
-                    {
-                        break;
-                    }
+                    handler.add(set, *(i->second));
                 }
             }
             break;
@@ -286,7 +283,7 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
             }
 
             // Creating a new section
-            auto item = std::make_shared<SetAreasType>();
+            auto district = std::make_shared<SetAreasType>();
             Options opts;
             opts.caption = section->name;
 
@@ -341,7 +338,7 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
             // Add the new group
             IDType newid = section->name;
             newid.toLower();
-            add(newid, item, opts);
+            add(newid, district, opts);
         }
 
         // Not modified anymore
@@ -431,17 +428,9 @@ bool SetHandlerAreas::add(Sets::SetAreasType& set, const Yuni::String& value)
     return false;
 }
 
-bool SetHandlerAreas::add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
+void SetHandlerAreas::add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
 {
-    if (!otherSet.empty())
-    {
-        auto end = otherSet.end();
-        for (auto i = otherSet.begin(); i != end; ++i)
-        {
-            set.insert(*i);
-        }
-    }
-    return true;
+    set.insert(otherSet.begin(), otherSet.end());
 }
 
 bool SetHandlerAreas::remove(Sets::SetAreasType& set, const Yuni::String& value)

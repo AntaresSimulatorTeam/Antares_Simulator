@@ -275,7 +275,7 @@ public:
     uint size(Sets::SetAreasType& set);
 
     bool add(Sets::SetAreasType& set, const Yuni::String& value);
-    bool add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
+    void add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
     bool remove(Sets::SetAreasType& set, const Yuni::String& value);
     bool remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
     bool applyFilter(Sets::SetAreasType& set, const Yuni::String& value);
