@@ -33,7 +33,7 @@ using namespace operations_research;
 
 namespace
 {
-bool compareSlackSolutions(const MPVariable* a, const MPVariable* b)
+bool greaterSlackSolutions(const MPVariable* a, const MPVariable* b)
 {
     return a->solution_value() > b->solution_value();
 }
@@ -50,7 +50,7 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
     addSlackVariablesToConstraints(problem);
     if (slackVariables_.empty())
     {
-        logs.error() << title() << " : no constraints have been selected";
+        logs.warning() << title() << " : no constraints have been selected";
         return;
     }
 
@@ -63,10 +63,12 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
         return;
     }
 
-    hasDetectedInfeasibilityCause_ = true;
-
     sortSlackVariablesByValue();
     trimSlackVariables();
+    if (hasDetectedInfeasibilityCause_ = anySlackVariableNonZero(); !hasDetectedInfeasibilityCause_)
+    {
+        logs.warning() << title() << " : no violation detected for selected constraints.";
+    }
 }
 
 void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
@@ -121,7 +123,7 @@ void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
 
 void ConstraintSlackAnalysis::sortSlackVariablesByValue()
 {
-    std::sort(std::begin(slackVariables_), std::end(slackVariables_), ::compareSlackSolutions);
+    std::sort(std::begin(slackVariables_), std::end(slackVariables_), ::greaterSlackSolutions);
 }
 
 void ConstraintSlackAnalysis::trimSlackVariables()
@@ -130,11 +132,24 @@ void ConstraintSlackAnalysis::trimSlackVariables()
     slackVariables_.resize(std::min(nbMaxSlackVarsToKeep, nbSlackVars));
 }
 
+bool ConstraintSlackAnalysis::anySlackVariableNonZero()
+{
+    return std::ranges::any_of(slackVariables_,
+                               [&](auto& v) { return v->solution_value() > thresholdNonZero; });
+}
+
+const std::vector<const operations_research::MPVariable*>&
+ConstraintSlackAnalysis::largestSlackVariables()
+{
+    return slackVariables_;
+}
+
 void ConstraintSlackAnalysis::printReport() const
 {
     InfeasibleProblemReport report(slackVariables_);
-    report.logSuspiciousConstraints();
-    report.logInfeasibilityCauses();
+    report.storeSuspiciousConstraints();
+    report.storeInfeasibilityCauses();
+    std::ranges::for_each(report.getLogs(), [](auto& line) { logs.notice() << line; });
 }
 
 } // namespace Antares::Optimization
