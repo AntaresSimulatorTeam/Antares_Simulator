@@ -36,7 +36,7 @@ std::string StringBetweenAngleBrackets(const std::string& constraintName)
 
 std::string timeStep(std::vector<std::string> splitName)
 {
-    return StringBetweenAngleBrackets(splitName.at(splitName.size() - 2));
+    return StringBetweenAngleBrackets(splitName.rbegin()[1]);
 }
 
 std::string shortName(std::vector<std::string> splitName)
