@@ -414,7 +414,7 @@ uint SetHandlerAreas::size(Sets::SetAreasType& set)
     return (uint)set.size();
 }
 
-bool SetHandlerAreas::add(Sets::SetAreasType& set, const std::string &value)
+bool SetHandlerAreas::add(Sets::SetAreasType& set, const std::string& value)
 {
     Area* area = AreaListLFind(&areas_, value.c_str());
     if (area)
@@ -430,7 +430,7 @@ void SetHandlerAreas::add(Sets::SetAreasType& set, const Sets::SetAreasType& oth
     set.insert(otherSet.begin(), otherSet.end());
 }
 
-bool SetHandlerAreas::remove(Sets::SetAreasType& set, const std::string &value)
+bool SetHandlerAreas::remove(Sets::SetAreasType& set, const std::string& value)
 {
     Area* area = AreaListLFind(&areas_, value.c_str());
     if (area)
@@ -446,7 +446,7 @@ void SetHandlerAreas::remove(Sets::SetAreasType& set, const Sets::SetAreasType& 
     std::ranges::for_each(otherSet, [&set](auto* area) { set.erase(area); });
 }
 
-bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string &value)
+bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string& value)
 {
     if (value == "add-all")
     {

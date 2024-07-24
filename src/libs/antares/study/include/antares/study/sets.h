@@ -274,11 +274,11 @@ public:
     void clear(Sets::SetAreasType& set);
     uint size(Sets::SetAreasType& set);
 
-    bool add(Sets::SetAreasType& set, const std::string &value);
+    bool add(Sets::SetAreasType& set, const std::string& value);
     void add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
-    bool remove(Sets::SetAreasType& set, const std::string &value);
+    bool remove(Sets::SetAreasType& set, const std::string& value);
     void remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
-    bool applyFilter(Sets::SetAreasType& set, const std::string &value);
+    bool applyFilter(Sets::SetAreasType& set, const std::string& value);
 
 private:
     AreaList& areas_;
