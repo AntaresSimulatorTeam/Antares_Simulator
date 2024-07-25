@@ -205,6 +205,11 @@ public:
     std::map<Data::ThermalDispatchableGroup, std::map<Data::ReserveName, double>>
       thermalReserveParticipationPerGroupForYear[Variable::maxHoursInAYear];
 
+    //! Reserve Participation for all thermal SHort Term stoarges types (PSP / Battery / ...) for
+    //! the whole year per reserve
+    // std::map<Data::ShortTermStorage::Group, std::map<Data::ReserveName, double>>
+    //   STStorageReserveParticipationPerGroupForYear[Variable::maxHoursInAYear];
+
     //! Reserve Participation for all clusters per reserve
     std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
       reserveParticipationPerClusterForYear[Variable::maxHoursInAYear];

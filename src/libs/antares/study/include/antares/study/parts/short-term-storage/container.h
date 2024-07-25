@@ -42,7 +42,10 @@ public:
     /// erase disabled cluster from the vector
     uint removeDisabledClusters();
 
-
+    /// Get the names of the cluster and reserve of the participation
+    std::pair<Data::ClusterName, Data::ReserveName> reserveParticipationClusterAt(
+      const Area* area,
+      unsigned int index) const;
     bool saveToFolder(const std::string& folder) const;
     bool saveDataSeriesToFolder(const std::string& folder) const;
 

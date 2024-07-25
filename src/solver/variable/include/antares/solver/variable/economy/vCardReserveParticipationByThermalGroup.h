@@ -9,7 +9,7 @@
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
 **
-** There are special exceptions to the terms and conditi96ons of the
+** There are special exceptions to the terms and conditions of the
 ** license as they are applied to this software. View the full text of
 ** the exceptions in file COPYING.txt in the directory of this software
 ** distribution
@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
-#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByThermalGroup_H__
+#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByThermalGroup_H__
 
 #include "../storage/results.h"
 
@@ -37,12 +37,12 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardReserveParticipationUnsuppliedSpilled
+struct VCardReserveParticipationByThermalGroup
 {
     //! Caption
     static std::string Caption()
     {
-        return "RESERVE UNSUPPLIED OR SPILLED ENERGY";
+        return "GROUP PARTICIPATION TO RESERVE";
     }
     //! Unit
     static std::string Unit()
@@ -53,7 +53,7 @@ struct VCardReserveParticipationUnsuppliedSpilled
     //! The short description of the variable
     static std::string Description()
     {
-        return "Reserve unsupplied or spilled Power";
+        return "Reserve Participation from a group to a reserve";
     }
 
     //! The expected results
@@ -62,7 +62,7 @@ struct VCardReserveParticipationUnsuppliedSpilled
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationUnsuppliedSpilled VCardForSpatialAggregate;
+    typedef VCardReserveParticipationByThermalGroup VCardForSpatialAggregate;
 
     enum
     {
@@ -96,22 +96,38 @@ struct VCardReserveParticipationUnsuppliedSpilled
 
 }; // class VCard
 
-static std::string unsuppliedSpilledToString(Data::UnsuppliedSpilled idx)
+static std::string thermalDispatchableGroupToString(Data::ThermalDispatchableGroup idx)
 {
     switch (idx)
     {
     case 0:
-        return "UNSP.";
+        return "NUCLEAR";
     case 1:
-        return "SPIL."; 
+        return "LIGNITE";
+    case 2:
+        return "COAL";
+    case 3:
+        return "GAS";
+    case 4:
+        return "OIL";
+    case 5:
+        return "MIX. FUEL";
+    case 6:
+        return "MISC. DTG";
+    case 7:
+        return "MISC. DTG 2";
+    case 8:
+        return "MISC. DTG 3";
+    case 9:
+        return "MISC. DTG 4";
+
     default:
         return "<unknown>";
     }
 }
-
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
+#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__

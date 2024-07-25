@@ -197,6 +197,50 @@ uint STStorageInput::removeDisabledClusters()
     return disabledCount;
 }
 
+std::pair<Data::ClusterName, Data::ReserveName> STStorageInput::reserveParticipationClusterAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (auto const& [reserveUpName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (auto& cluster : storagesByIndex)
+        {
+            if (cluster.clusterReservesParticipations.find(reserveUpName)
+                != cluster.clusterReservesParticipations.end())
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster.id, reserveUpName};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    for (auto const& [reserveDownName, _] :
+         area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (auto& cluster : storagesByIndex)
+        {
+            if (cluster.clusterReservesParticipations.find(reserveDownName)
+                != cluster.clusterReservesParticipations.end())
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster.id, reserveDownName};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    throw std::out_of_range("This cluster reserve participation index has not been found in all "
+                            "the reserve participations");
+}
+
+
 std::optional<std::reference_wrapper<STStorageCluster>> STStorageInput::getClusterByName(
   const std::string& name)
 {

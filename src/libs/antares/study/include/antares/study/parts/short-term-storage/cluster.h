@@ -32,6 +32,9 @@ namespace Antares::Data::ShortTermStorage
 class STStorageCluster
 {
 public:
+    //! \brief Get the group name string
+    static const char* GroupName(enum Group grp);
+
     bool enabled() const;
     bool validate() const;
 

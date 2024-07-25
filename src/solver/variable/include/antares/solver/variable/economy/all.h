@@ -87,6 +87,7 @@
 #include "STStorageWithdrawalByCluster.h"
 #include "STStorageLevelsByCluster.h"
 #include "STStorageCashFlowByCluster.h"
+#include "reserveParticipationBySTStorage.h"
 
 // Output variables associated to links
 #include "links/flowLinear.h"
@@ -173,13 +174,13 @@ typedef                           // Prices
                                        <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
                                                                    // plant
                                         <ProfitByPlant
-                                          <ReserveParticipationCost // Participation cost to the reserves
-                                            <ReserveParticipationByDispatchablePlant // Participation per cluster
-                                              <ReserveParticipationByThermalGroup // Participation per thermal group
-                                               <ReserveParticipationUnsuppliedSpilled
-                                                  // Links
-                                                 <Variable::Economy::Links // All links
-                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                         <ReserveParticipationCost // Participation cost to the reserves
+                                          <ReserveParticipationByDispatchablePlant // Participation per thermal cluster
+                                           <ReserveParticipationByThermalGroup // Participation per thermal group
+                                            <ReserveParticipationBySTStorage // Participation per Short Term Storage cluster
+                                              <ReserveParticipationUnsuppliedSpilled 
+                                               <Variable::Economy::Links // All links
+                                               >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

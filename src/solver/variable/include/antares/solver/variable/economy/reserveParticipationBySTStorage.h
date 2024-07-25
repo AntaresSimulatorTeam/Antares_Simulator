@@ -24,10 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCost_H__
-#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCost_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorage_H__
+#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorage_H__
 
 #include "../variable.h"
+#include "./vCardReserveParticipationBySTStorage.h"
 
 namespace Antares
 {
@@ -37,86 +38,24 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardReserveParticipationCost
-{
-    //! Caption
-    static std::string Caption()
-    {
-        return "RESERVE PARTICIPATION COST";
-    }
-    //! Unit
-    static std::string Unit()
-    {
-        return "Euro";
-    }
-
-    //! The short description of the variable
-    static std::string Description()
-    {
-        return "Reserve Participation Cost throughout all MC years, of all the thermal dispatchable "
-               "clusters";
-    }
-
-    //! The expecte results
-    typedef Results<R::AllYears::Average<        // The average values throughout all years
-                      R::AllYears::StdDeviation< // The standard deviation values throughout all
-                                                 // years
-                        R::AllYears::Min<        // The minimum values throughout all years
-                          R::AllYears::Max<      // The maximum values throughout all years
-                            >>>>,
-                    R::AllYears::Average // The
-                    >
-      ResultsType;
-
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationCost VCardForSpatialAggregate;
-
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
-
-    typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
-
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
-
-}; // class VCard
 
 /*!
 ** \brief C02 Average value of the overrall OperatingCost emissions expected from all
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class ReserveParticipationCost
- : public Variable::IVariable<ReserveParticipationCost<NextT>, NextT, VCardReserveParticipationCost>
+class ReserveParticipationBySTStorage
+ : public Variable::
+     IVariable<ReserveParticipationBySTStorage<NextT>, NextT, VCardReserveParticipationBySTStorage>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardReserveParticipationCost VCardType;
+    typedef VCardReserveParticipationBySTStorage VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ReserveParticipationCost<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ReserveParticipationBySTStorage<NextT>, NextT, VCardType>
+      AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -143,35 +82,71 @@ public:
     };
 
 public:
-    ~ReserveParticipationCost()
+    ReserveParticipationBySTStorage() : pValuesForTheCurrentYear(NULL), pSize(0)
     {
+    }
+
+    ~ReserveParticipationBySTStorage()
+    {
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            delete[] pValuesForTheCurrentYear[numSpace];
         delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
     {
-        pNbYearsParallel = study.maxNbYearsInParallel;
-
-        InitializeResultsFromStudy(AncestorType::pResults, study);
-
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-
         // Next
         NextType::initializeFromStudy(study);
     }
 
-    template<class R>
-    static void InitializeResultsFromStudy(R& results, Data::Study& study)
-    {
-        VariableAccessorType::InitializeAndReset(results, study);
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
+        // Get the number of years in parallel
+        pNbYearsParallel = study->maxNbYearsInParallel;
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+
+        // Get the area
+        pSize = 0;
+        for (int areaIndex = 0; areaIndex < study->areas.size(); areaIndex++)
+        {
+            if (study->areas[areaIndex]->allCapacityReservations.size() > 0)
+            {
+                pSize = area->shortTermStorage.reserveParticipationsCount();
+                break;
+            }
+        }
+        if (pSize)
+        {
+            AncestorType::pResults.resize(pSize);
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+                pValuesForTheCurrentYear[numSpace]
+                  = new VCardType::IntermediateValuesDeepType[pSize];
+
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+                for (unsigned int i = 0; i != pSize; ++i)
+                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+
+            for (unsigned int i = 0; i != pSize; ++i)
+            {
+                AncestorType::pResults[i].initializeFromStudy(*study);
+                AncestorType::pResults[i].reset();
+            }
+        }
+        else
+        {
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+                pValuesForTheCurrentYear[numSpace] = nullptr;
+
+            AncestorType::pResults.clear();
+        }
+
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    size_t getMaxNumberColumns() const
+    {
+        return pSize * ResultsType::count;
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
@@ -194,7 +169,9 @@ public:
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
-        pValuesForTheCurrentYear[numSpace].reset();
+        for (unsigned int i = 0; i != pSize; ++i)
+            pValuesForTheCurrentYear[numSpace][i].reset();
+
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
@@ -202,13 +179,23 @@ public:
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Get end year calculations
-        for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
-             i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
-             ++i)
+        if (pSize)
         {
-            pValuesForTheCurrentYear[numSpace][i]
-              += state.thermalClusterReserveParticipationCostForYear[i]
-                 + state.STStorageClusterReserveParticipationCostForYear[i];
+            for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
+                 i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
+                 ++i)
+            {
+                for (auto const& [reserveName, reserveParticipation] :
+                     state.reserveParticipationPerClusterForYear[i][state.STStorageCluster->id])
+                {
+                    pValuesForTheCurrentYear
+                      [numSpace]
+                      [state.getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(
+                         reserveName, state.STStorageCluster->id)]
+                        .hour[i]
+                      = reserveParticipation;
+                }
+            }
         }
 
         // Next variable
@@ -223,9 +210,14 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-
+        // Merge all results for all thermal clusters
+        {
+            for (unsigned int i = 0; i < pSize; ++i)
+            {
+                // Compute all statistics for the current year (daily,weekly,monthly)
+                pValuesForTheCurrentYear[numSpace][i].computeStatisticsForTheCurrentYear();
+            }
+        }
         // Next variable
         NextType::yearEnd(year, numSpace);
     }
@@ -235,9 +227,12 @@ public:
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {
-            // Merge all those values with the global results
-            AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/,
-                                         pValuesForTheCurrentYear[numSpace]);
+            for (unsigned int i = 0; i < pSize; ++i)
+            {
+                // Merge all those values with the global results
+                AncestorType::pResults[i].merge(numSpaceToYear[numSpace],
+                                                pValuesForTheCurrentYear[numSpace][i]);
+            }
         }
 
         // Next variable
@@ -260,7 +255,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace].hour;
+        return pValuesForTheCurrentYear[numSpace]->hour;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -273,24 +268,32 @@ public:
 
         if (AncestorType::isPrinted[0])
         {
+            assert(NULL != results.data.area);
+            const auto& stStorage = results.data.area->shortTermStorage;
+
             // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            for (uint i = 0; i < pSize; ++i)
+            {
+                // Write the data for the current year
+                results.variableCaption = stStorage.storagesByIndex[i].id; // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
+                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                  results, fileLevel, precision);
+            }
         }
     }
 
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    size_t pSize;
     unsigned int pNbYearsParallel;
 
-}; // class RampingCost
+}; // class ReserveParticipationBySTStorage
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCost_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorage_H__

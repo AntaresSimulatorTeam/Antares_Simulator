@@ -9,7 +9,7 @@
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
 **
-** There are special exceptions to the terms and conditi96ons of the
+** There are special exceptions to the terms and conditions of the
 ** license as they are applied to this software. View the full text of
 ** the exceptions in file COPYING.txt in the directory of this software
 ** distribution
@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
-#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationBySTStorage_H__
+#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationBySTStorage_H__
 
 #include "../storage/results.h"
 
@@ -37,23 +37,23 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardReserveParticipationUnsuppliedSpilled
+struct VCardReserveParticipationBySTStorage
 {
     //! Caption
     static std::string Caption()
     {
-        return "RESERVE UNSUPPLIED OR SPILLED ENERGY";
+        return "CLUSTER PARTICIPATION TO RESERVE";
     }
     //! Unit
     static std::string Unit()
     {
-        return "MWh";
+        return "Reserve Participation Power - MWh";
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "Reserve unsupplied or spilled Power";
+        return "Reserve Participation from a cluster to a reserve";
     }
 
     //! The expected results
@@ -62,14 +62,14 @@ struct VCardReserveParticipationUnsuppliedSpilled
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationUnsuppliedSpilled VCardForSpatialAggregate;
+    typedef VCardReserveParticipationBySTStorage VCardForSpatialAggregate;
 
     enum
     {
         //! Data Level
         categoryDataLevel = Category::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
+        categoryFileLevel = ResultsType::categoryFile & (Category::de),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
@@ -95,23 +95,9 @@ struct VCardReserveParticipationUnsuppliedSpilled
     // typedef IntermediateValues IntermediateValuesType;
 
 }; // class VCard
-
-static std::string unsuppliedSpilledToString(Data::UnsuppliedSpilled idx)
-{
-    switch (idx)
-    {
-    case 0:
-        return "UNSP.";
-    case 1:
-        return "SPIL."; 
-    default:
-        return "<unknown>";
-    }
-}
-
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationUnsuppliedSpilled_H__
+#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationBySTStorage_H__
