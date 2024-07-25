@@ -210,9 +210,8 @@ uint64_t Study::memoryUsage() const
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-static unsigned getNumberCoresPerLevel(int ncMode)
+unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 {
-    unsigned nbLogicalCores = std::thread::hardware_concurrency();
 
     if (!nbLogicalCores)
     {
@@ -248,7 +247,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
             This number is limited by the smallest refresh span (if at least
             one type of time series is generated)
     */
-    maxNbYearsInParallel = getNumberCoresPerLevel(parameters.nbCores.ncMode);
+    unsigned nbLogicalCores = std::thread::hardware_concurrency();
+    maxNbYearsInParallel = getNumberOfCoresPerMode(nbLogicalCores, parameters.nbCores.ncMode);
 
     // In case solver option '--force-parallel n' is used, previous computation is overridden.
     if (forceParallel)

@@ -400,6 +400,15 @@ public:
     //@{
 
     /*!
+    ** \brief Computes a raw number of cores table.
+    **
+    ** The table associetes a raw number of cores to each level ("min", "low", "med", "high",
+    *"max").
+    **
+    */
+    unsigned getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode);
+
+    /*!
     ** \brief Computes number of cores
     **
     ** From the "Number of Cores" level (in GUI --> Advanced parameters), computes
