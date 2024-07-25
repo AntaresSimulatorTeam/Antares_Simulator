@@ -310,7 +310,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
                         thermalReserveParticipationPerGroupForYear[hourInTheYear][thermalCluster->groupID][res]
                             += participation;
 
-                        thermalReserveParticipationPerClusterForYear[hourInTheYear]
+                        reserveParticipationPerClusterForYear[hourInTheYear]
                                                                     [thermalCluster->name()][res]
                           += participation;
                     }

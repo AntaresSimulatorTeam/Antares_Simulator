@@ -124,7 +124,7 @@ std::pair<Data::ThermalDispatchableGroup, Data::ReserveName>
 }
 
 template<class ClusterT>
-std::pair<Data::ThermalUnsuppliedSpilled, Data::ReserveName>
+std::pair<Data::UnsuppliedSpilled, Data::ReserveName>
 ClusterList<ClusterT>::reserveParticipationUnsuppliedSpilledAt(const Area* area, unsigned int index) const
 {
     int column = 0;
@@ -133,7 +133,7 @@ ClusterList<ClusterT>::reserveParticipationUnsuppliedSpilledAt(const Area* area,
         for (int indexUnsuppliedSpilled = 0; indexUnsuppliedSpilled < Data::unsuppliedSpilledMax; indexUnsuppliedSpilled++)
         {
             if (column == index)
-                return { static_cast<Data::ThermalUnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
+                return { static_cast<Data::UnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
             column++;
         }
     }
@@ -142,7 +142,7 @@ ClusterList<ClusterT>::reserveParticipationUnsuppliedSpilledAt(const Area* area,
         for (int indexUnsuppliedSpilled = 0; indexUnsuppliedSpilled < Data::unsuppliedSpilledMax; indexUnsuppliedSpilled++)
         {
             if (column == index)
-                return { static_cast<Data::ThermalUnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
+                return { static_cast<Data::UnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
             column++;
         }
     }

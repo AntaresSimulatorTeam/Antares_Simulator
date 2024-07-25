@@ -231,11 +231,10 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto& area = state.area;
-        auto& thermal = state.thermal;
         int column = 0;
 
-        auto thermalReserves = state.problemeHebdo->allReserves[area->index];
-        for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
+        auto reserves = state.problemeHebdo->allReserves[area->index];
+        for (const auto& reserveUp : reserves.areaCapacityReservationsUp)
         {
             pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
               += state.hourlyResults->Reserves[state.hourInTheWeek]
@@ -244,7 +243,7 @@ public:
               += state.hourlyResults->Reserves[state.hourInTheWeek]
                    .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex];
         }
-        for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
+        for (const auto& reserveDown : reserves.areaCapacityReservationsDown)
         {
             pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
               += state.hourlyResults->Reserves[state.hourInTheWeek]

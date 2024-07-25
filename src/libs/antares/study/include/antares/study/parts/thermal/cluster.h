@@ -94,12 +94,12 @@ enum ThermalDispatchableGroup
     groupMax
 };
 
-enum ThermalUnsuppliedSpilled
+enum UnsuppliedSpilled
 {
     //! Spilled
-    ThermalUnsuppliedSpilledSpilled = 0,
+    Spilled = 0,
     //! Unsupplied
-    ThermalUnsuppliedSpilledUnsupplied,
+    Unsupplied,
 
     //! The highest value
     unsuppliedSpilledMax

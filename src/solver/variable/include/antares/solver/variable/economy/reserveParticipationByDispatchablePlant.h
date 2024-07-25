@@ -187,8 +187,7 @@ public:
                  ++i)
             {
                 for (auto const& [reserveName, reserveParticipation] :
-                     state.thermalReserveParticipationPerClusterForYear[i][state.thermalCluster
-                                                                             ->name()])
+                     state.reserveParticipationPerClusterForYear[i][state.thermalCluster->name()])
                 {
                     pValuesForTheCurrentYear
                       [numSpace][state.getAreaIndexReserveParticipationFromReserveAndThermalCluster(

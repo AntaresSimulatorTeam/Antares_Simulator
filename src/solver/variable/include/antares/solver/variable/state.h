@@ -207,7 +207,7 @@ public:
 
     //! Reserve Participation for all clusters per reserve
     std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
-      thermalReserveParticipationPerClusterForYear[Variable::maxHoursInAYear];
+      reserveParticipationPerClusterForYear[Variable::maxHoursInAYear];
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)

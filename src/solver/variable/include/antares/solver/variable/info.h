@@ -23,7 +23,7 @@
 
 #include <cmath>
 #include "./economy/vCardReserveParticipationByDispatchablePlant.h"
-#include "./economy/vCardReserveParticipationByGroup.h"
+#include "./economy/vCardReserveParticipationByThermalGroup.h"
 #include "./economy/vCardReserveParticipationUnsuppliedSpilled.h"
 
 namespace Antares
@@ -376,7 +376,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                     auto [clusterName, reserveName]
                       = thermal.list.reserveParticipationClusterAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + clusterName;
-                } else if (typeid(VCardT) == typeid(Economy::VCardReserveParticipationByGroup))
+                } else if (typeid(VCardT) == typeid(Economy::VCardReserveParticipationByThermalGroup))
                 {
                     auto [groupName, reserveName]
                       = thermal.list.reserveParticipationGroupAt(results.data.area, i);
@@ -466,7 +466,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                       = thermal.list.reserveParticipationClusterAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + clusterName;
                     res = true;
-                } else if (typeid(VCardType) == typeid(Economy::VCardReserveParticipationByGroup))
+                } else if (typeid(VCardType) == typeid(Economy::VCardReserveParticipationByThermalGroup))
                 {
                     auto [groupName, reserveName]
                       = thermal.list.reserveParticipationGroupAt(results.data.area, i);
@@ -477,7 +477,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 {
                     auto [unsuppliedOrSpilled, reserveName]
                         = thermal.list.reserveParticipationUnsuppliedSpilledAt(results.data.area, i);
-                    results.variableCaption = reserveName + "_" + Economy::thermalUnsuppliedSpilledToString(unsuppliedOrSpilled);
+                    results.variableCaption = reserveName + "_" + Economy::unsuppliedSpilledToString(unsuppliedOrSpilled);
                     res = true;
                 }
                 else

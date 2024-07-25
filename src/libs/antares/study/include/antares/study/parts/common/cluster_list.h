@@ -124,7 +124,7 @@ public:
 ** @param index Global index of the reserveParicipation
 ** @return the status and reserve names
 */
-    std::pair<Data::ThermalUnsuppliedSpilled, Data::ReserveName> reserveParticipationUnsuppliedSpilledAt(
+    std::pair<Data::UnsuppliedSpilled, Data::ReserveName> reserveParticipationUnsuppliedSpilledAt(
         const Area* area,
         unsigned int index) const;
 
