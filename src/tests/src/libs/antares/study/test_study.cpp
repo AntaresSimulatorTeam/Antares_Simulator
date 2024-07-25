@@ -311,4 +311,17 @@ BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 #endif
 }
 
+BOOST_FIXTURE_TEST_CASE(cpu_count, OneAreaStudy)
+{
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(75, ncMin), 1);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, ncLow), 3);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(6, ncAvg), 3);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(16, ncHigh), 12);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(128, ncMax), 128);
+
+    // error cases
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(0, ncMax), 0);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, 120), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // version
