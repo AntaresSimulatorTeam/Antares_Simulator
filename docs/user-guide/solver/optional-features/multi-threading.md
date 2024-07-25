@@ -44,35 +44,43 @@ The Table indicates either the refresh status (No) or the refresh span (the asso
 
 In 9.2 We changed the formula for the number of cores to simplify. Here's the old values and the new ones.
 
-Previously
-[nbCores] ncMin ncLow ncAvg ncHigh ncMax
-[1] 1 1 1 1 1
-[2] 1 1 1 2 2
-[3] 1 2 2 2 3
-[4] 1 2 2 3 4
-[5] 1 2 3 4 5
-[6] 1 2 3 4 6
-[7] 1 2 3 5 7
-[8] 1 2 4 6 8
-[9] 1 3 5 7 8
-[10] 1 3 5 8 9
-[11] 1 3 6 8 10
-[12] 1 3 6 9 11
+### Previously
 
-Now
-[nbCores] ncMin ncLow ncAvg ncHigh ncMax
-[1] 1 1 1 1 1
-[2] 1 1 1 2 2
-[3] 1 1 2 3 3
-[4] 1 1 2 3 4
-[5] 1 2 3 4 5
-[6] 1 2 3 5 6
-[7] 1 2 4 6 7
-[8] 1 2 4 6 8
-[9] 1 3 5 7 9
-[10] 1 3 5 8 10
-[11] 1 3 6 9 11
-[12] 1 3 6 9 12
+-| _Available CPU Cores_ | _Minimum_ |   _Low_   | _Medium_  |   _High_   | _Maximum_ |
+-|:---------------------:|:---------:|:---------:|:---------:|:----------:|:---------:|
+-|          _1_          |     1     |     1     |     1     |     1      |     1     |
+-|          _2_          |     1     |     1     |     1     |     2      |     2     |
+-|          _3_          |     1     |     2     |     2     |     2      |     3     |
+-|          _4_          |     1     |     2     |     2     |     3      |     4     |
+-|          _5_          |     1     |     2     |     3     |     4      |     5     |
+-|          _6_          |     1     |     2     |     3     |     4      |     6     |
+-|          _7_          |     1     |     2     |     3     |     5      |     7     |
+-|          _8_          |     1     |     2     |     4     |     6      |     8     |
+-|          _9_          |     1     |     3     |     5     |     7      |     8     |
+-|         _10_          |     1     |     3     |     5     |     8      |     9     |
+-|         _11_          |     1     |     3     |     6     |     8      |    10     |
+-|         _12_          |     1     |     3     |     6     |     9      |    11     |
+-|      _S &gt; 12_      |     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |    S-1    |
+
+
+### Since 9.2
+
+-| _Available CPU Cores_ | _Minimum_ |   _Low_   | _Medium_  |   _High_   | _Maximum_ |
+-|:---------------------:|:---------:|:---------:|:---------:|:----------:|:---------:|
+-|          _1_          |     1     |     1     |     1     |     1      |     1     |
+-|          _2_          |     1     |     1     |     1     |     2      |     2     |
+-|          _3_          |     1     |     1     |     2     |     3      |     3     |
+-|          _4_          |     1     |     1     |     2     |     3      |     4     |
+-|          _5_          |     1     |     2     |     3     |     4      |     5     |
+-|          _6_          |     1     |     2     |     3     |     5      |     6     |
+-|          _7_          |     1     |     2     |     4     |     6      |     7     |
+-|          _8_          |     1     |     2     |     4     |     6      |     8     |
+-|          _9_          |     1     |     3     |     5     |     7      |     9     |
+-|         _10_          |     1     |     3     |     5     |     8      |    10     |
+-|         _11_          |     1     |     3     |     6     |     9      |    11     |
+-|         _12_          |     1     |     3     |     6     |     9      |    12     |
+-|      _S &gt; 12_      |     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |     S     |
+
 
 
 [^23]: When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
