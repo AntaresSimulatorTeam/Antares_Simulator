@@ -26,10 +26,10 @@ namespace Antares::Solver::Optim::Api
 
 virtual class MipVariable
 {
-    virtual bool setLb(double lb) = 0;
-    virtual bool setUb(double ub) = 0;
+    virtual void setLb(double lb) = 0;
+    virtual void setUb(double ub) = 0;
 
-    virtual bool setBounds(double lb, double ub) = 0;
+    virtual void setBounds(double lb, double ub) = 0;
 
     virtual double getLb() = 0;
     virtual double getUb() = 0;

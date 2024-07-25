@@ -27,10 +27,10 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 class OrtoolsMipVariable : virtual Api::MipVariable
 {
 public:
-    bool setLb(double lb);
-    bool setUb(double ub);
+    void setLb(double lb);
+    void setUb(double ub);
 
-    bool setBounds(double lb, double ub);
+    void setBounds(double lb, double ub);
 
     double getLb();
     double getUb();

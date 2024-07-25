@@ -28,10 +28,10 @@ namespace Antares::Solver::Optim::Api
 
 virtual class MipObjective
 {
-    virtual bool setCoefficient(MipVariable& var, double coefficient) = 0;
+    virtual void setCoefficient(MipVariable& var, double coefficient) = 0;
 
-    virtual bool setMaximization() = 0;
-    virtual bool setMinimization() = 0;
+    virtual void setMaximization() = 0;
+    virtual void setMinimization() = 0;
 
     virtual double getCoefficient(MipVariable& var) = 0;
 
