@@ -400,15 +400,6 @@ public:
     //@{
 
     /*!
-    ** \brief Computes a raw number of cores table.
-    **
-    ** The table associetes a raw number of cores to each level ("min", "low", "med", "high",
-    *"max").
-    **
-    */
-    std::map<std::string, uint> getRawNumberCoresPerLevel();
-
-    /*!
     ** \brief Computes number of cores
     **
     ** From the "Number of Cores" level (in GUI --> Advanced parameters), computes

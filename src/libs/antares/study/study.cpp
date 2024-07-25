@@ -26,6 +26,7 @@
 #include <cmath> // For use of floor(...) and ceil(...)
 #include <optional>
 #include <sstream> // std::ostringstream
+#include <thread>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -209,23 +210,27 @@ uint64_t Study::memoryUsage() const
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
+static unsigned getNumberCoresPerLevel(int ncMode)
 {
-    std::map<std::string, uint> table;
-
     uint nbLogicalCores = Yuni::System::CPU::Count();
     if (!nbLogicalCores)
     {
         logs.fatal() << "Number of logical cores available is 0.";
     }
 
-    table["min"] = 1;
-    table["low"] = (uint)std::ceil(nbLogicalCores / 4.);
-    table["med"] = (uint)std::ceil(nbLogicalCores / 2.);
-    table["high"] = (uint)std::ceil(3 * nbLogicalCores / 4.);
-    table["max"] = nbLogicalCores;
+    switch (ncMode)
+    {
+    case ncMin: return 1;
+    case ncLow: return std::ceil(nbLogicalCores / 4.);
+    case ncAvg: return std::ceil(nbLogicalCores / 2.);
+    case ncHigh: return std::ceil(3 * nbLogicalCores / 4.);
+    case ncMax: return nbLogicalCores;
+    default:
+        logs.fatal() << "Simulation cores level not correct : " << ncMode;
+        break;
+    }
 
-    return table;
+    return 0;
 }
 
 void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
@@ -236,33 +241,7 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
             This number is limited by the smallest refresh span (if at least
             one type of time series is generated)
     */
-
-    std::map<std::string, uint> table = getRawNumberCoresPerLevel();
-
-    // Getting the number of parallel years based on the number of cores level.
-    switch (parameters.nbCores.ncMode)
-    {
-    case ncMin:
-        nbYearsParallelRaw = table["min"];
-        break;
-    case ncLow:
-        nbYearsParallelRaw = table["low"];
-        break;
-    case ncAvg:
-        nbYearsParallelRaw = table["med"];
-        break;
-    case ncHigh:
-        nbYearsParallelRaw = table["high"];
-        break;
-    case ncMax:
-        nbYearsParallelRaw = table["max"];
-        break;
-    default:
-        logs.fatal() << "Simulation cores level not correct : " << (int)parameters.nbCores.ncMode;
-        break;
-    }
-
-    maxNbYearsInParallel = nbYearsParallelRaw;
+    maxNbYearsInParallel = getNumberCoresPerLevel(parameters.nbCores.ncMode);
 
     // In case solver option '--force-parallel n' is used, previous computation is overridden.
     if (forceParallel)
