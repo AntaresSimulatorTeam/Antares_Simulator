@@ -222,11 +222,16 @@ static unsigned getNumberCoresPerLevel(int ncMode)
 
     switch (ncMode)
     {
-    case ncMin: return 1;
-    case ncLow: return std::ceil(nbLogicalCores / 4.);
-    case ncAvg: return std::ceil(nbLogicalCores / 2.);
-    case ncHigh: return std::ceil(3 * nbLogicalCores / 4.);
-    case ncMax: return nbLogicalCores;
+    case ncMin:
+        return 1;
+    case ncLow:
+        return std::ceil(nbLogicalCores / 4.);
+    case ncAvg:
+        return std::ceil(nbLogicalCores / 2.);
+    case ncHigh:
+        return std::ceil(3 * nbLogicalCores / 4.);
+    case ncMax:
+        return nbLogicalCores;
     default:
         logs.fatal() << "Simulation cores level not correct : " << ncMode;
         break;
