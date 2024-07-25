@@ -212,10 +212,12 @@ uint64_t Study::memoryUsage() const
 
 static unsigned getNumberCoresPerLevel(int ncMode)
 {
-    uint nbLogicalCores = Yuni::System::CPU::Count();
+    unsigned nbLogicalCores = std::thread::hardware_concurrency();
+
     if (!nbLogicalCores)
     {
         logs.fatal() << "Number of logical cores available is 0.";
+        return 0;
     }
 
     switch (ncMode)
