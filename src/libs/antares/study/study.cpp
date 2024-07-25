@@ -212,7 +212,6 @@ uint64_t Study::memoryUsage() const
 
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 {
-
     if (!nbLogicalCores)
     {
         logs.fatal() << "Number of logical cores available is 0.";
