@@ -27,8 +27,6 @@ namespace Data
 {
 template<class T>
 inline Sets<T>::Sets():
-    pByIndex(NULL),
-    pNameByIndex(NULL),
     pModified(false)
 {
 }
@@ -37,20 +35,12 @@ template<class T>
 inline Sets<T>::Sets(const Sets& rhs):
     pMap(rhs.pMap),
     pOptions(rhs.pOptions),
-    pByIndex(NULL),
-    pNameByIndex(NULL),
     pModified(false)
 {
     if (rhs.pByIndex)
     {
         rebuildIndexes();
     }
-}
-
-template<class T>
-inline Sets<T>::~Sets()
-{
-    delete[] pByIndex;
 }
 
 template<class T>
@@ -80,17 +70,8 @@ typename Sets<T>::const_iterator Sets<T>::end() const
 template<class T>
 void Sets<T>::clear()
 {
-    if (pByIndex)
-    {
-        delete[] pByIndex;
-        pByIndex = NULL;
-    }
-    if (pNameByIndex)
-    {
-        delete[] pNameByIndex;
-        pNameByIndex = NULL;
-    }
-
+    pByIndex.clear();
+    pNameByIndex.clear();
     pMap.clear();
     pOptions.clear();
 }
@@ -401,13 +382,13 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
 template<class T>
 void Sets<T>::rebuildIndexes()
 {
-    delete[] pByIndex;
-    delete[] pNameByIndex;
+    pNameByIndex.clear();
+    pByIndex.clear();
 
     if (!pMap.empty())
     {
-        pByIndex = new TypePtr[pMap.size()];
-        pNameByIndex = new IDType[pMap.size()];
+        pByIndex.resize(pMap.size());
+        pNameByIndex.resize(pMap.size());
         const typename MapType::iterator end = pMap.end();
         uint index = 0;
         for (typename MapType::iterator i = pMap.begin(); i != end; ++i)
@@ -416,11 +397,6 @@ void Sets<T>::rebuildIndexes()
             pNameByIndex[index] = i->first;
             ++index;
         }
-    }
-    else
-    {
-        pByIndex = NULL;
-        pNameByIndex = NULL;
     }
 }
 

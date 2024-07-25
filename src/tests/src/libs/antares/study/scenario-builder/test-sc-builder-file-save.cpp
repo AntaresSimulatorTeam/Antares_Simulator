@@ -188,7 +188,7 @@ struct commonFixture
         study->bindingConstraintsGroups.add("group3");
 
         // Scenario builder initialization
-        study->scenarioRules = new ScenarioBuilder::Sets();
+        study->scenarioRules = std::make_unique<ScenarioBuilder::Sets>();
         study->scenarioRules->setStudy(*study);
         my_rule = study->scenarioRules->createNew("my rule name");
         BOOST_CHECK(my_rule->reset());

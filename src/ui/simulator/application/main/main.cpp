@@ -702,7 +702,7 @@ void ApplWnd::onSectionNotebookPageChanging(Component::Notebook::Page& page)
             auto* job = new JobLoadScenarioBuilder(*study);
             wxTheApp->Yield();
             job->run();
-            study->scenarioRules = job->scenarioBuilder();
+            study->scenarioRules.reset(job->scenarioBuilder());
             job->Destroy();
         }
 
