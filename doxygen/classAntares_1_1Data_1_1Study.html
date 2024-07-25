@@ -290,9 +290,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyAllHydroTSGene
 <tr class="memdesc:aa10e1e043ff44c8042267be05450e29e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import all time-series into the input folder.  <br /></td></tr>
 <tr class="separator:aa10e1e043ff44c8042267be05450e29e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Internal Data TS-Generators / Series</div></td></tr>
-<tr class="memitem:ad92c5f09321b38b781219b37f218bf3c" id="r_ad92c5f09321b38b781219b37f218bf3c"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, uint &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ad92c5f09321b38b781219b37f218bf3c">getRawNumberCoresPerLevel</a> ()</td></tr>
-<tr class="memdesc:ad92c5f09321b38b781219b37f218bf3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a raw number of cores table.  <br /></td></tr>
-<tr class="separator:ad92c5f09321b38b781219b37f218bf3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ade1389d5a8c512a7d91c1e2d4d7de9" id="r_a3ade1389d5a8c512a7d91c1e2d4d7de9"><td class="memItemLeft" align="right" valign="top">unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a3ade1389d5a8c512a7d91c1e2d4d7de9">getNumberOfCoresPerMode</a> (unsigned nbLogicalCores, int ncMode)</td></tr>
+<tr class="memdesc:a3ade1389d5a8c512a7d91c1e2d4d7de9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a raw number of cores table.  <br /></td></tr>
+<tr class="separator:a3ade1389d5a8c512a7d91c1e2d4d7de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8ddbddbd409bc9aa2a76b0e92f5dff2" id="r_aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#aa8ddbddbd409bc9aa2a76b0e92f5dff2">getNumberOfCores</a> (const bool forceParallel, const uint nbYearsParallelForced)</td></tr>
 <tr class="memdesc:aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes number of cores.  <br /></td></tr>
 <tr class="separator:aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -897,17 +897,28 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioRulesDestroy<
 
 </div>
 </div>
-<a id="ad92c5f09321b38b781219b37f218bf3c" name="ad92c5f09321b38b781219b37f218bf3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad92c5f09321b38b781219b37f218bf3c">&#9670;&#160;</a></span>getRawNumberCoresPerLevel()</h2>
+<a id="a3ade1389d5a8c512a7d91c1e2d4d7de9" name="a3ade1389d5a8c512a7d91c1e2d4d7de9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ade1389d5a8c512a7d91c1e2d4d7de9">&#9670;&#160;</a></span>getNumberOfCoresPerMode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt; std::string, uint &gt; Antares::Data::Study::getRawNumberCoresPerLevel </td>
+          <td class="memname">unsigned Antares::Data::Study::getNumberOfCoresPerMode </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramname"><em>nbLogicalCores</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ncMode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

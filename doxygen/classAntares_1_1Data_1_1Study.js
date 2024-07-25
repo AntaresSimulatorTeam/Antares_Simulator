@@ -29,7 +29,7 @@ var classAntares_1_1Data_1_1Study =
     [ "ensureDataAreLoadedForAllBindingConstraints", "classAntares_1_1Data_1_1Study.html#a6785c310e70b548bf6e4ad516075e3e2", null ],
     [ "forceReload", "classAntares_1_1Data_1_1Study.html#aa935740485a6a6ea80c02ebf9b8a4df0", null ],
     [ "getNumberOfCores", "classAntares_1_1Data_1_1Study.html#aa8ddbddbd409bc9aa2a76b0e92f5dff2", null ],
-    [ "getRawNumberCoresPerLevel", "classAntares_1_1Data_1_1Study.html#ad92c5f09321b38b781219b37f218bf3c", null ],
+    [ "getNumberOfCoresPerMode", "classAntares_1_1Data_1_1Study.html#a3ade1389d5a8c512a7d91c1e2d4d7de9", null ],
     [ "importLogsToOutputFolder", "classAntares_1_1Data_1_1Study.html#a43e70c63ab3f91b02a55a9a24a81c4a6", null ],
     [ "importTimeseriesIntoInput", "classAntares_1_1Data_1_1Study.html#aa10e1e043ff44c8042267be05450e29e", null ],
     [ "initializeProgressMeter", "classAntares_1_1Data_1_1Study.html#af5262eae0524c8e0cb695eddadd0c3d7", null ],
