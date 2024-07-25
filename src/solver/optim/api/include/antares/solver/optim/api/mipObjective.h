@@ -21,13 +21,17 @@
 
 #pragma once
 
-virtual class MipVariable
+#include "mipVariable.h"
+
+virtual class MipObjective
 {
-    virtual bool setLb(double lb) = 0;
-    virtual bool setUb(double ub) = 0;
+    virtual bool setCoefficient(MipVariable& var, double coefficient) = 0;
 
-    virtual bool setBounds(double lb, double ub) = 0;
+    virtual bool setMaximization() = 0;
+    virtual bool setMinimization() = 0;
 
-    virtual double getLb() = 0;
-    virtual double getUb() = 0;
+    virtual double getCoefficient(MipVariable& var) = 0;
+
+    virtual bool getMaximization() = 0;
+    virtual bool getMinimization() = 0;
 }
