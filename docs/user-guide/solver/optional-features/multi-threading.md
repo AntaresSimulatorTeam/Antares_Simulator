@@ -24,21 +24,9 @@ This parameter can take five different values (Minimum, Low, Medium, High, Maxim
 The number of independent processes resulting from the combination (local hardware + study settings) is given in the
 following table, which shows the CPU allowances granted in the different configurations.
 
-| _Available CPU Cores_ | _Minimum_ |   _Low_   | _Medium_  |  _Large_   | _Maximum_ |
-|:---------------------:|:---------:|:---------:|:---------:|:----------:|:---------:|
-|          _1_          |     1     |     1     |     1     |     1      |     1     |
-|          _2_          |     1     |     1     |     1     |     2      |     2     |
-|          _3_          |     1     |     2     |     2     |     2      |     3     |
-|          _4_          |     1     |     2     |     2     |     3      |     4     |
-|          _5_          |     1     |     2     |     3     |     4      |     5     |
-|          _6_          |     1     |     2     |     3     |     4      |     6     |
-|          _7_          |     1     |     2     |     3     |     5      |     7     |
-|          _8_          |     1     |     2     |     4     |     6      |     8     |
-|          _9_          |     1     |     3     |     5     |     7      |     8     |
-|         _10_          |     1     |     3     |     5     |     8      |     9     |
-|         _11_          |     1     |     3     |     6     |     8      |    10     |
-|         _12_          |     1     |     3     |     6     |     9      |    11     |
-|      _S &gt; 12_      |     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |    S-1    |
+| _Minimum_ |   _Low_   | _Medium_  |   _High_   | _Maximum_ |
+|:---------:|:---------:|:---------:|:----------:|:---------:|
+|     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |     S     |
 
 **Note**: The number of independent threads actually launched by Antares in parallel mode may appear smaller than that shown in the table above. In this case, the resources monitor menu and the dashboard displayed on starting the simulation indicates:
 
@@ -54,6 +42,45 @@ Examples of reduction from an initial allowance of 12 cores are given hereafter.
 
 The Table indicates either the refresh status (No) or the refresh span (the associated refresh status "yes" is implicit).
 
+## Formula for CPU cores
+
+Starting from 9.2 we changed the formula for the number of cores to simplify. Here's the old values and the new ones.
+
+### Starting from 9.2
+
+-| _Available CPU Cores_ | _Minimum_ |   _Low_   | _Medium_  |   _High_   | _Maximum_ |
+-|:---------------------:|:---------:|:---------:|:---------:|:----------:|:---------:|
+-|          _1_          |     1     |     1     |     1     |     1      |     1     |
+-|          _2_          |     1     |     1     |     1     |     2      |     2     |
+-|          _3_          |     1     |     1     |     2     |     3      |     3     |
+-|          _4_          |     1     |     1     |     2     |     3      |     4     |
+-|          _5_          |     1     |     2     |     3     |     4      |     5     |
+-|          _6_          |     1     |     2     |     3     |     5      |     6     |
+-|          _7_          |     1     |     2     |     4     |     6      |     7     |
+-|          _8_          |     1     |     2     |     4     |     6      |     8     |
+-|          _9_          |     1     |     3     |     5     |     7      |     9     |
+-|         _10_          |     1     |     3     |     5     |     8      |    10     |
+-|         _11_          |     1     |     3     |     6     |     9      |    11     |
+-|         _12_          |     1     |     3     |     6     |     9      |    12     |
+-|      _S &gt; 12_      |     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |     S     |
+
+### Before 9.2
+
+-| _Available CPU Cores_ | _Minimum_ |   _Low_   | _Medium_  |   _High_   | _Maximum_ |
+-|:---------------------:|:---------:|:---------:|:---------:|:----------:|:---------:|
+-|          _1_          |     1     |     1     |     1     |     1      |     1     |
+-|          _2_          |     1     |     1     |     1     |     2      |     2     |
+-|          _3_          |     1     |     2     |     2     |     2      |     3     |
+-|          _4_          |     1     |     2     |     2     |     3      |     4     |
+-|          _5_          |     1     |     2     |     3     |     4      |     5     |
+-|          _6_          |     1     |     2     |     3     |     4      |     6     |
+-|          _7_          |     1     |     2     |     3     |     5      |     7     |
+-|          _8_          |     1     |     2     |     4     |     6      |     8     |
+-|          _9_          |     1     |     3     |     5     |     7      |     8     |
+-|         _10_          |     1     |     3     |     5     |     8      |     9     |
+-|         _11_          |     1     |     3     |     6     |     8      |    10     |
+-|         _12_          |     1     |     3     |     6     |     9      |    11     |
+-|      _S &gt; 12_      |     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |    S-1    |
 
 
 [^23]: When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message

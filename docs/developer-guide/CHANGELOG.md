@@ -3,6 +3,12 @@ toc_depth: 2
 ---
 
 # Antares Changelog
+
+## Branch 9.2.x
+### 9.2.0
+
+* Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
+
 ## Branch 9.1.x
 
 ### 9.1.0 (06/2024)
