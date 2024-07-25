@@ -21,6 +21,9 @@
 
 #pragma once
 
+namespace Antares::Solver::Optim::Api
+{
+
 virtual class MipVariable
 {
     virtual bool setLb(double lb) = 0;
@@ -31,3 +34,5 @@ virtual class MipVariable
     virtual double getLb() = 0;
     virtual double getUb() = 0;
 }
+
+} // namespace Antares::Solver::Optim::Api

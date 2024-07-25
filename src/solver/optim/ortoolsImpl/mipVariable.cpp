@@ -21,27 +21,38 @@
 
 #pragma once
 
-#include <vector>
+#include "mipVariable.h"
 
-#include "mipVariable"
-
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-virtual class MipSolution
-{
-    enum class MipStatus
-    {
-        OPTIMAL,
-        FEASIBLE,
-        UNBOUNDED,
-        ERROR
-    };
+OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable& mpVar)
+    : mpVar_(mpVar)
+{}
 
-    virtual MipStatus getStatus() = 0;
-    virtual double getObjectiveValue() = 0;
-    virtual double getOptimalValue(MipVariable& var) = 0;
-    virtual std::vector<double> getOptimalValue(std::vector<MipVariable>& vars) = 0;
+void OrtoolsMipVariable::setLb(double lb)
+{
+    mpVar_.SetLB(lb);
 }
 
-} // namespace Antares::Solver::Optim::Api
+void OrtoolsMipVariable::setUb(double ub)
+{
+    mpVar_.SetUB(ub);
+}
+
+void OrtoolsMipVariable::setBounds(double lb, double ub)
+{
+    mpVar_.SetBounds(lb, ub);
+}
+
+double OrtoolsMipVariable::getLb()
+{
+    return mpVar_.lb();
+}
+
+double OrtoolsMipVariable::getUb()
+{
+    return mpVar_.ub();
+}
+
+} // namespace Antares::Solver::Optim::OrtoolsImpl

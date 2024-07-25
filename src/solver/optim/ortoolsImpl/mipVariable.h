@@ -1,6 +1,4 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
+/*k
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
  * Adequacy and Performance assessment for interconnected energy networks.
@@ -21,27 +19,28 @@
 
 #pragma once
 
-#include <vector>
+#include "antares/solver/optim/api/mipVariable.h"
 
-#include "mipVariable"
-
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-virtual class MipSolution
+class OrtoolsMipVariable : virtual Api::MipVariable
 {
-    enum class MipStatus
-    {
-        OPTIMAL,
-        FEASIBLE,
-        UNBOUNDED,
-        ERROR
-    };
+public:
+    bool setLb(double lb);
+    bool setUb(double ub);
 
-    virtual MipStatus getStatus() = 0;
-    virtual double getObjectiveValue() = 0;
-    virtual double getOptimalValue(MipVariable& var) = 0;
-    virtual std::vector<double> getOptimalValue(std::vector<MipVariable>& vars) = 0;
+    bool setBounds(double lb, double ub);
+
+    double getLb();
+    double getUb();
+
+private:
+    // TODO: add friend class
+    OrtoolsMipVariable(operations_research::MPVariable&);
+    ~OrtoolsMipVariable() = default;
+
+    operations_research::MPVariable mpVar_;
 }
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Optim::OrtoolsImpl

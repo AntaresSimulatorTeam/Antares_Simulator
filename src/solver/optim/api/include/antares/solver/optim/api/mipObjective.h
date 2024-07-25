@@ -23,6 +23,9 @@
 
 #include "mipVariable.h"
 
+namespace Antares::Solver::Optim::Api
+{
+
 virtual class MipObjective
 {
     virtual bool setCoefficient(MipVariable& var, double coefficient) = 0;
@@ -35,3 +38,5 @@ virtual class MipObjective
     virtual bool getMaximization() = 0;
     virtual bool getMinimization() = 0;
 }
+
+} // namespace Antares::Solver::Optim::Api

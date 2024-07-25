@@ -23,6 +23,9 @@
 
 #include "mipVariable"
 
+namespace Antares::Solver::Optim::Api
+{
+
 virtual class MipConstraint
 {
     virtual bool setLb(double lb) = 0;
@@ -36,3 +39,5 @@ virtual class MipConstraint
 
     virtual double getCoefficient(MipVariable& var) = 0;
 }
+
+} // namespace Antares::Solver::Optim::Api
