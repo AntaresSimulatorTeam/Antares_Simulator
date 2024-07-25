@@ -30,20 +30,29 @@
 
 BOOST_AUTO_TEST_SUITE(translations)
 
-BOOST_AUTO_TEST_CASE(test_factory_NullNames)
+BOOST_AUTO_TEST_CASE(ReturnedNullName)
 {
     auto nul_names = NameTranslator::create(false);
     auto* base_ptr = nul_names.get();
     const auto& expected_type_info = typeid(NullName);
-    BOOST_ASSERT(expected_type_info == typeid(base_ptr));
+    BOOST_CHECK(expected_type_info == typeid(*base_ptr));
 }
 
-BOOST_AUTO_TEST_CASE(test_factory_RealNames)
+BOOST_AUTO_TEST_CASE(ReturnedRealName)
 {
     auto real_names = NameTranslator::create(true);
     auto* base_ptr = real_names.get();
     const auto& expected_type_info = typeid(RealName);
 
-    BOOST_ASSERT(expected_type_info == typeid(base_ptr));
+    BOOST_CHECK(expected_type_info == typeid(*base_ptr));
+}
+
+BOOST_AUTO_TEST_CASE(NullNameIsNotRealName)
+{
+    auto real_names = NameTranslator::create(true);
+    auto* base_ptr = real_names.get();
+    const auto& expected_type_info = typeid(NullName);
+
+    BOOST_CHECK(expected_type_info != typeid(*base_ptr));
 }
 BOOST_AUTO_TEST_SUITE_END()
