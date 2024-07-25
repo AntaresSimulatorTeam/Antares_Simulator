@@ -55,4 +55,49 @@ BOOST_AUTO_TEST_CASE(NullNameIsNotRealName)
 
     BOOST_CHECK(expected_type_info != typeid(*base_ptr));
 }
+
+BOOST_AUTO_TEST_CASE(NullNameWithEmptyInput)
+{
+    auto nul_names = NameTranslator::create(false);
+    std::vector<std::string> names;
+    std::vector<char*> names_ptr;
+    BOOST_CHECK(nul_names->translate(names, names_ptr) == names_ptr.data());
+    // size of names_ptr has not changed
+    BOOST_CHECK(0 == names_ptr.size());
+}
+
+BOOST_AUTO_TEST_CASE(NullNameWith2Names)
+{
+    auto nul_names = NameTranslator::create(false);
+    std::vector<std::string> names{"name1", "name2"};
+    std::vector<char*> names_ptr;
+    BOOST_CHECK(nul_names->translate(names, names_ptr) == names_ptr.data());
+    // size of names_ptr should be updated to names.size()
+    BOOST_CHECK(names.size() == names_ptr.size());
+    BOOST_CHECK(names_ptr[0] == nullptr);
+    BOOST_CHECK(names_ptr[1] == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(RealNameWithEmptyInput)
+{
+    auto nul_names = NameTranslator::create(true);
+    std::vector<std::string> names;
+    std::vector<char*> names_ptr;
+    BOOST_CHECK(nul_names->translate(names, names_ptr) == names_ptr.data());
+    // size of names_ptr has not changed
+    BOOST_CHECK(0 == names_ptr.size());
+}
+
+BOOST_AUTO_TEST_CASE(RealNameWith2Names)
+{
+    auto nul_names = NameTranslator::create(true);
+    std::vector<std::string> names{"name1", "name2"};
+    std::vector<char*> names_ptr;
+    BOOST_CHECK(nul_names->translate(names, names_ptr) == names_ptr.data());
+    // size of names_ptr should be updated to names.size()
+    BOOST_CHECK(names.size() == names_ptr.size());
+    BOOST_CHECK(names_ptr[0] == names[0]);
+    BOOST_CHECK(names_ptr[1] == names[1]);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
