@@ -304,9 +304,9 @@ BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 #ifdef YUNI_OS_WINDOWS
     std::string area1name(128, 'a');
     std::string area2name(128, 'b');
-    study->areas[0]->name = area1name;
-    auto areaB = study->areaAdd(area2name);
-    AreaAddLinkBetweenAreas(areaA, areaB);
+    auto areaB = study->areaAdd(area1name);
+    auto areaC = study->areaAdd(area2name);
+    AreaAddLinkBetweenAreas(areaB, areaC);
     BOOST_CHECK(!study->checkForFilenameLimits(true));
 #endif
 }
