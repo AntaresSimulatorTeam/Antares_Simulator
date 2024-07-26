@@ -19,9 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-
-#include "mipVariable.h"
+#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {

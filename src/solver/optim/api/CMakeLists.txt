@@ -1,4 +1,4 @@
-set(PROJ optim-api)
+set(PROJ optim_api)
 
 set(SRC_API
         include/antares/solver/optim/api/mipVariable.h
@@ -8,7 +8,7 @@ set(SRC_API
 )
 
 add_library(${PROJ} ${SRC_API})
-add_library(Antares::optimapi ALIAS ${PROJ})
+add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 

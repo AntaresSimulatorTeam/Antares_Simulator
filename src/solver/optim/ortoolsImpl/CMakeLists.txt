@@ -13,6 +13,11 @@ source_group("solver\\optim\\api" FILES ${SRC_ORTOOLS_IMPL})
 add_library(${PROJ} ${SRC_ORTOOLS_IMPL})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
+target_link_libraries(${PROJ}
+        PUBLIC
+        Antares::optim_api
+)
+
 target_include_directories(${PROJ}
         PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
