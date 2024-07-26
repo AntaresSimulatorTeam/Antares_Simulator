@@ -19,29 +19,15 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
+#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 
-#include <vector>
-
-#include "mipVariable.h"
-
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-enum class MipStatus
+Api::MipStatus OrtoolsMipSolution::getStatus()
 {
-    OPTIMAL,
-    FEASIBLE,
-    UNBOUNDED,
-    ERROR
-};
+    return responseStatus_;
+}
 
-class MipSolution
-{
-    virtual MipStatus getStatus() = 0;
-    virtual double getObjectiveValue() = 0;
-    virtual double getOptimalValue(MipVariable& var) = 0;
-    virtual std::vector<double> getOptimalValue(std::vector<MipVariable>& vars) = 0;
-};
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Optim::OrtoolsImpl

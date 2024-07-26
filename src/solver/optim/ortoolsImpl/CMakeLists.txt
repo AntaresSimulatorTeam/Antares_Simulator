@@ -2,10 +2,12 @@ set(PROJ optim-ortools-impl)
 
 set(HEADERS
         include/antares/solver/optim/ortoolsImpl/mipVariable.h
+        include/antares/solver/optim/ortoolsImpl/mipSolution.h
 )
 set(SRC_ORTOOLS_IMPL
         ${HEADERS}
         mipVariable.cpp
+        mipSolution.cpp
 )
 
 source_group("solver\\optim\\api" FILES ${SRC_ORTOOLS_IMPL})
