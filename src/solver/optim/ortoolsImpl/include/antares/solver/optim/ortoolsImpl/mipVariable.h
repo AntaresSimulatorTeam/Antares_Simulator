@@ -26,7 +26,7 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipVariable : virtual Api::MipVariable
+class OrtoolsMipVariable: virtual Api::MipVariable
 {
 public:
     void setLb(double lb);

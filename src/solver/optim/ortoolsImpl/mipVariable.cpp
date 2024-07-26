@@ -24,9 +24,10 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable& mpVar)
-    : mpVar_(mpVar)
-{}
+OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable& mpVar):
+    mpVar_(mpVar)
+{
+}
 
 void OrtoolsMipVariable::setLb(double lb)
 {
