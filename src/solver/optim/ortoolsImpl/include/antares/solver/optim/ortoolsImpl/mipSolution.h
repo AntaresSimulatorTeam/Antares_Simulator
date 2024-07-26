@@ -23,14 +23,21 @@
 #include <vector>
 #include <map>
 
+#include <ortools/linear_solver/linear_solver.h>
+
 #include <antares/solver/optim/api/mipSolution.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipSolution: virtual Api::MipSolution
+class OrtoolsMipSolution final: virtual Api::MipSolution
 {
 public:
+    OrtoolsMipSolution(operations_research::MPSolver::ResultStatus responseStatus,
+                const std::map<std::string, double>& solution);
+
+    ~OrtoolsMipSolution() = default;
+
     Api::MipStatus getStatus();
     double getObjectiveValue();
     double getOptimalValue(Api::MipVariable& var);

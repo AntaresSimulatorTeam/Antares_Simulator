@@ -24,10 +24,54 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
+using OrMPSolver = operations_research::MPSolver;
+
+OrtoolsMipSolution::OrtoolsMipSolution(OrMPSolver::ResultStatus responseStatus,
+                                       const std::map<std::string, double>& solution)
+{
+    // Only store non-zero values
+    for (const auto& varAndValue : solution)
+    {
+        if (abs(varAndValue.second) > 1e-6) // TODO: is this tolerance OK?
+        {
+            solution_.insert(varAndValue);
+        }
+    }
+
+    switch(responseStatus)
+    {
+    case OrMPSolver::ResultStatus::OPTIMAL:
+        responseStatus_ = Api::MipStatus::OPTIMAL;
+        break;
+    case OrMPSolver::ResultStatus::FEASIBLE:
+        responseStatus_ = Api::MipStatus::FEASIBLE;
+        break;
+    case OrMPSolver::ResultStatus::UNBOUNDED:
+        responseStatus_ = Api::MipStatus::UNBOUNDED;
+        break;
+    default:
+        responseStatus_ = Api::MipStatus::ERROR;
+        break;
+    }
+}
+
 Api::MipStatus OrtoolsMipSolution::getStatus()
 {
     return responseStatus_;
 }
 
+/* double OrtoolsMipSolution::getObjectiveValue() */
+/* { */
+
+/* } */
+
+/* double OrtoolsMipSolution::getOptimalValue(Api::MipVariable& var) */
+/* { */
+
+/* } */
+/* std::vector<double> OrtoolsMipSolution::getOptimalValue(std::vector<Api::MipVariable>& vars) */
+/* { */
+
+/* } */
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
