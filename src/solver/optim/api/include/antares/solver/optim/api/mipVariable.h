@@ -24,7 +24,7 @@
 namespace Antares::Solver::Optim::Api
 {
 
-virtual class MipVariable
+class MipVariable
 {
     virtual void setLb(double lb) = 0;
     virtual void setUb(double ub) = 0;
@@ -33,6 +33,6 @@ virtual class MipVariable
 
     virtual double getLb() = 0;
     virtual double getUb() = 0;
-}
+};
 
 } // namespace Antares::Solver::Optim::Api

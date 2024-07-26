@@ -16,6 +16,7 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 target_link_libraries(${PROJ}
         PUBLIC
         Antares::optim_api
+        ortools::ortools
 )
 
 target_include_directories(${PROJ}

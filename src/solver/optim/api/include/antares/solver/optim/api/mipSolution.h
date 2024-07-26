@@ -42,6 +42,6 @@ virtual class MipSolution
     virtual double getObjectiveValue() = 0;
     virtual double getOptimalValue(MipVariable& var) = 0;
     virtual std::vector<double> getOptimalValue(std::vector<MipVariable>& vars) = 0;
-}
+};
 
 } // namespace Antares::Solver::Optim::Api

@@ -38,6 +38,6 @@ virtual class MipConstraint
     virtual double getUb() = 0;
 
     virtual double getCoefficient(MipVariable& var) = 0;
-}
+};
 
 } // namespace Antares::Solver::Optim::Api

@@ -19,7 +19,9 @@
 
 #pragma once
 
-#include "antares/solver/optim/api/mipVariable.h"
+#include <ortools/linear_solver/linear_solver.h>
+
+#include <antares/solver/optim/api/mipVariable.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
@@ -40,7 +42,7 @@ private:
     OrtoolsMipVariable(operations_research::MPVariable&);
     ~OrtoolsMipVariable() = default;
 
-    operations_research::MPVariable mpVar_;
-}
+    operations_research::MPVariable& mpVar_;
+};
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

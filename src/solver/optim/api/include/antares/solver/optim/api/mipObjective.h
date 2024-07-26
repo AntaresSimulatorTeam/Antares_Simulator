@@ -37,6 +37,6 @@ virtual class MipObjective
 
     virtual bool getMaximization() = 0;
     virtual bool getMinimization() = 0;
-}
+};
 
 } // namespace Antares::Solver::Optim::Api
