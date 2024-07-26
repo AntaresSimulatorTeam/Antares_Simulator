@@ -24,6 +24,7 @@
 #include <cmath>
 #include "./economy/vCardReserveParticipationByDispatchablePlant.h"
 #include "./economy/vCardReserveParticipationBySTStorage.h"
+#include "./economy/vCardReserveParticipationBySTStorageGroup.h"
 #include "./economy/vCardReserveParticipationByThermalGroup.h"
 #include "./economy/vCardReserveParticipationUnsuppliedSpilled.h"
 
@@ -395,15 +396,15 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                       = shortTermStorage.reserveParticipationClusterAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + clusterName;
                 }
-                // else if constexpr (std::is_same_v<
-                //                      VCardT,
-                //                      Economy::VCardReserveParticipationBySTStorageGroup>)
-                // {
-                //     auto [groupName, reserveName]
-                //       = shortTermStorage.reserveParticipationGroupAt(results.data.area, i);
-                //     results.variableCaption
-                //       = reserveName + "_" + Economy::STStorageGroupToString(groupName);
-                // }
+                else if constexpr (std::is_same_v<
+                                     VCardT,
+                                     Economy::VCardReserveParticipationBySTStorageGroup>)
+                {
+                    auto [groupName, reserveName]
+                      = shortTermStorage.reserveParticipationGroupAt(results.data.area, i);
+                    results.variableCaption
+                      = reserveName + "_" + Economy::STStorageGroupToString(groupName);
+                }
                 else if constexpr (std::is_same_v<
                                      VCardT,
                                      Economy::VCardReserveParticipationUnsuppliedSpilled>)
@@ -509,6 +510,16 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                       = thermal.list.reserveParticipationGroupAt(results.data.area, i);
                     results.variableCaption
                       = reserveName + "_" + Economy::thermalDispatchableGroupToString(groupName);
+                    res = true;
+                }
+                else if constexpr (std::is_same_v<
+                                     VCardType,
+                                     Economy::VCardReserveParticipationBySTStorageGroup>)
+                {
+                    auto [groupName, reserveName]
+                      = shortTermStorage.reserveParticipationGroupAt(results.data.area, i);
+                    results.variableCaption
+                      = reserveName + "_" + Economy::STStorageGroupToString(groupName);
                     res = true;
                 }
                  else if constexpr (std::is_same_v<

@@ -136,6 +136,8 @@ set(SRC_VARIABLE_ECONOMY
 	include/antares/solver/variable/economy/vCardReserveParticipationUnsuppliedSpilled.h
 	include/antares/solver/variable/economy/reserveParticipationByThermalGroup.h
         include/antares/solver/variable/economy/vCardReserveParticipationByThermalGroup.h
+        include/antares/solver/variable/economy/reserveParticipationBySTStorageGroup.h
+        include/antares/solver/variable/economy/vCardReserveParticipationBySTStorageGroup.h
 
         # Links
         include/antares/solver/variable/economy/links/flowLinear.h

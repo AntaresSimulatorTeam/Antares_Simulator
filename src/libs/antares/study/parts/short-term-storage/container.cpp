@@ -240,6 +240,31 @@ std::pair<Data::ClusterName, Data::ReserveName> STStorageInput::reserveParticipa
                             "the reserve participations");
 }
 
+std::pair<Data::ShortTermStorage::Group, Data::ReserveName>
+  STStorageInput::reserveParticipationGroupAt(const Area* area, unsigned int index) const
+{
+    int column = 0;
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (int indexGroup = 0; indexGroup < Data::groupMax; indexGroup++)
+        {
+            if (column == index)
+                return {static_cast<Data::ShortTermStorage::Group>(indexGroup), reserveName};
+            column++;
+        }
+    }
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (int indexGroup = 0; indexGroup < Data::groupMax; indexGroup++)
+        {
+            if (column == index)
+                return {static_cast<Data::ShortTermStorage::Group>(indexGroup), reserveName};
+            column++;
+        }
+    }
+    throw std::out_of_range("This group reserve participation index has not been found in all the "
+                            "reserve participations");
+}
 
 std::optional<std::reference_wrapper<STStorageCluster>> STStorageInput::getClusterByName(
   const std::string& name)

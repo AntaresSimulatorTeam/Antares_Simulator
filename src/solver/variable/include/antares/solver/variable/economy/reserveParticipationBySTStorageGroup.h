@@ -24,11 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByThermalGroup_H__
-#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByThermalGroup_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorageGroup_H__
+#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorageGroup_H__
 
 #include "../variable.h"
-#include "./vCardReserveParticipationByThermalGroup.h"
+#include "./vCardReserveParticipationBySTStorageGroup.h"
 
 namespace Antares
 {
@@ -43,17 +43,19 @@ namespace Economy
 ** \brief Reserve participation for all groups for all reserves of the area
 */
 template<class NextT = Container::EndOfList>
-class ReserveParticipationByThermalGroup : public Variable::IVariable<ReserveParticipationByThermalGroup<NextT>,
-                                                               NextT,
-                                                               VCardReserveParticipationByThermalGroup>
+class ReserveParticipationBySTStorageGroup
+ : public Variable::IVariable<ReserveParticipationBySTStorageGroup<NextT>,
+                              NextT,
+                              VCardReserveParticipationBySTStorageGroup>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardReserveParticipationByThermalGroup VCardType;
+    typedef VCardReserveParticipationBySTStorageGroup VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ReserveParticipationByThermalGroup<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ReserveParticipationBySTStorageGroup<NextT>, NextT, VCardType>
+      AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -80,11 +82,11 @@ public:
     };
 
 public:
-    ReserveParticipationByThermalGroup() : pValuesForTheCurrentYear(NULL), pSize(0)
+    ReserveParticipationBySTStorageGroup() : pValuesForTheCurrentYear(NULL), pSize(0)
     {
     }
 
-    ~ReserveParticipationByThermalGroup()
+    ~ReserveParticipationBySTStorageGroup()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             delete[] pValuesForTheCurrentYear[numSpace];
@@ -107,11 +109,11 @@ public:
         pSize = 0;
         for (auto res : area->allCapacityReservations.areaCapacityReservationsUp)
         {
-            pSize += Antares::Data::groupMax;
+            pSize += Antares::Data::ShortTermStorage::Group::groupMax;
         }
         for (auto res : area->allCapacityReservations.areaCapacityReservationsDown)
         {
-            pSize += Antares::Data::groupMax;
+            pSize += Antares::Data::ShortTermStorage::Group::groupMax;
         }
         if (pSize)
         {
@@ -231,27 +233,28 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto& area = state.area;
-        auto& thermal = state.thermal;
         int column = 0;
-        for (auto  [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+        for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
         {
-            for (int indexGroup = 0; indexGroup < Antares::Data::groupMax; indexGroup++)
+            for (int indexGroup = 0; indexGroup < Antares::Data::ShortTermStorage::groupMax;
+                 indexGroup++)
             {
                 pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
                   += state.reserveParticipationPerGroupForYear[state.hourInTheYear]
-                       .thermalGroups[static_cast<Data::ThermalDispatchableGroup>(indexGroup)]
-                                     [reserveName];
+                       .shortTermStorageGroups[static_cast<Antares::Data::ShortTermStorage::Group>(
+                         indexGroup)][reserveName];
                 column++;
             }
         }
         for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsDown)
         {
-            for (int indexGroup = 0; indexGroup < Antares::Data::groupMax; indexGroup++)
+            for (int indexGroup = 0; indexGroup < Antares::Data::ShortTermStorage::groupMax;
+                 indexGroup++)
             {
                 pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
                   += state.reserveParticipationPerGroupForYear[state.hourInTheYear]
-                       .thermalGroups[static_cast<Data::ThermalDispatchableGroup>(indexGroup)]
-                                     [reserveName];
+                       .shortTermStorageGroups[static_cast<Antares::Data::ShortTermStorage::Group>(
+                         indexGroup)][reserveName];
                 column++;
             }
         }
@@ -277,35 +280,43 @@ public:
         if (AncestorType::isPrinted[0])
         {
             assert(NULL != results.data.area);
-            const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
             int column = 0;
-            for (auto res : results.data.area->allCapacityReservations.areaCapacityReservationsUp)
+            for (auto& res : results.data.area->allCapacityReservations.areaCapacityReservationsUp)
             {
-                for (int indexGroup = 0; indexGroup < Antares::Data::groupMax; indexGroup++)
+                for (int indexGroup = 0;
+                     indexGroup < Antares::Data::ShortTermStorage::Group::groupMax;
+                     indexGroup++)
                 {
                     // Write the data for the current year
                     Yuni::String caption = res.first;
-                    caption << "_" << Data::ThermalCluster::GroupName(static_cast<Data::ThermalDispatchableGroup>(indexGroup));
+                    caption << "_"
+                            << Antares::Data::ShortTermStorage::STStorageCluster::GroupName(
+                                 static_cast<Antares::Data::ShortTermStorage::Group>(indexGroup));
                     results.variableCaption = caption; // VCardType::Caption();
                     results.variableUnit = VCardType::Unit();
-                    pValuesForTheCurrentYear[numSpace][column].template buildAnnualSurveyReport<VCardType>(
-                        results, fileLevel, precision);
+                    pValuesForTheCurrentYear[numSpace][column]
+                      .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
                     column++;
                 }
             }
-            for (auto res : results.data.area->allCapacityReservations.areaCapacityReservationsDown)
+            for (auto& res :
+                 results.data.area->allCapacityReservations.areaCapacityReservationsDown)
             {
-                for (int indexGroup = 0; indexGroup < Antares::Data::groupMax; indexGroup++)
+                for (int indexGroup = 0;
+                     indexGroup < Antares::Data::ShortTermStorage::Group::groupMax;
+                     indexGroup++)
                 {
                     // Write the data for the current year
                     Yuni::String caption = res.first;
-                    caption << "_" << Data::ThermalCluster::GroupName(static_cast<Data::ThermalDispatchableGroup>(indexGroup));
+                    caption << "_"
+                            << Antares::Data::ShortTermStorage::STStorageCluster::GroupName(
+                                 static_cast<Antares::Data::ShortTermStorage::Group>(indexGroup));
                     results.variableCaption = caption; // VCardType::Caption();
                     results.variableUnit = VCardType::Unit();
-                    pValuesForTheCurrentYear[numSpace][column].template buildAnnualSurveyReport<VCardType>(
-                        results, fileLevel, precision);
+                    pValuesForTheCurrentYear[numSpace][column]
+                      .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
                     column++;
                 }
             }
@@ -318,11 +329,11 @@ private:
     size_t pSize;
     unsigned int pNbYearsParallel;
 
-}; // class ReserveParticipationByThermalGroup
+}; // class ReserveParticipationBySTStorageGroup
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByThermalGroup_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorageGroup_H__

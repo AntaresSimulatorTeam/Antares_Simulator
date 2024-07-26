@@ -564,8 +564,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].withdrawal.resize(
               nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
-            problem.ResultatsHoraires[k].ShortTermStorage[pdt].reserveParticipationOfCluster.resize(
-              nbThermalReserveParticipations);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].reserveParticipationOfCluster.assign(
               nbSTStorageReserveParticipations, 0.);
         }

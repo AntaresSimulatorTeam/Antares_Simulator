@@ -28,6 +28,35 @@
 namespace Antares::Data::ShortTermStorage
 {
 
+const char* STStorageCluster::GroupName(enum Group grp)
+{
+    using enum Data::ShortTermStorage::Group;
+    switch (grp)
+    {
+    case PSP_open:
+        return "PSP_open";
+    case PSP_closed:
+        return "PSP_closed";
+    case Pondage:
+        return "Pondage";
+    case Battery:
+        return "Battery";
+    case Other1:
+        return "Other1";
+    case Other2:
+        return "Other2";
+    case Other3:
+        return "Other 3";
+    case Other4:
+        return "Other 4";
+    case Other5:
+        return "Other 5";
+    case groupMax:
+        return "";
+    }
+    return "";
+} // namespace Antares::Data::ShortTermStorage
+
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)

@@ -46,6 +46,12 @@ public:
     std::pair<Data::ClusterName, Data::ReserveName> reserveParticipationClusterAt(
       const Area* area,
       unsigned int index) const;
+
+    /// Get the names of the group and reserve of the participation
+    std::pair<Data::ShortTermStorage::Group, Data::ReserveName> reserveParticipationGroupAt(
+      const Area* area,
+      unsigned int index) const;
+
     bool saveToFolder(const std::string& folder) const;
     bool saveDataSeriesToFolder(const std::string& folder) const;
 

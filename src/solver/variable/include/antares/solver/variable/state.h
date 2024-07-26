@@ -67,6 +67,18 @@ private:
     std::vector<StateForAnArea> thermal;
 };
 
+struct ReserveParticipationPerGroupForYear
+{
+    //! Reserve Participation for all thermal group types (nuclear / coal / ...) for the whole
+    //! year per reserve
+    std::map<Data::ThermalDispatchableGroup, std::map<Data::ReserveName, double>> thermalGroups;
+
+    //! Reserve Participation for all thermal Short Term storages types (PSP / Battery / ...)
+    //! for the whole year per reserve
+    std::map<Data::ShortTermStorage::Group, std::map<Data::ReserveName, double>>
+      shortTermStorageGroups;
+};
+
 class State
 {
 public:
@@ -200,15 +212,10 @@ public:
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
-    //! Reserve Participation for all thermal group types (nuclear / coal / ...) for the whole year
-    //! per reserve
-    std::map<Data::ThermalDispatchableGroup, std::map<Data::ReserveName, double>>
-      thermalReserveParticipationPerGroupForYear[Variable::maxHoursInAYear];
 
-    //! Reserve Participation for all thermal SHort Term stoarges types (PSP / Battery / ...) for
-    //! the whole year per reserve
-    // std::map<Data::ShortTermStorage::Group, std::map<Data::ReserveName, double>>
-    //   STStorageReserveParticipationPerGroupForYear[Variable::maxHoursInAYear];
+    //! All type of clusters reserves participations
+    std::vector<ReserveParticipationPerGroupForYear> reserveParticipationPerGroupForYear{
+      Variable::maxHoursInAYear};
 
     //! Reserve Participation for all clusters per reserve
     std::map<Data::ClusterName, std::map<Data::ReserveName, double>>

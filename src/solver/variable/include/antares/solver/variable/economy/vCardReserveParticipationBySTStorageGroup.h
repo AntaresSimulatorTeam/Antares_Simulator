@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByThermalGroup_H__
-#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByThermalGroup_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationBySTStorageGroup_H__
+#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationBySTStorageGroup_H__
 
 #include "../storage/results.h"
 
@@ -37,12 +37,12 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardReserveParticipationByThermalGroup
+struct VCardReserveParticipationBySTStorageGroup
 {
     //! Caption
     static std::string Caption()
     {
-        return "THERMAL GROUP PARTICIPATION TO RESERVE";
+        return "SHORT TERM STORAGE GROUP PARTICIPATION TO RESERVE";
     }
     //! Unit
     static std::string Unit()
@@ -62,7 +62,7 @@ struct VCardReserveParticipationByThermalGroup
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationByThermalGroup VCardForSpatialAggregate;
+    typedef VCardReserveParticipationBySTStorageGroup VCardForSpatialAggregate;
 
     enum
     {
@@ -96,31 +96,29 @@ struct VCardReserveParticipationByThermalGroup
 
 }; // class VCard
 
-static std::string thermalDispatchableGroupToString(Data::ThermalDispatchableGroup idx)
+static std::string STStorageGroupToString(Data::ShortTermStorage::Group idx)
 {
+    using enum Data::ShortTermStorage::Group;
     switch (idx)
     {
-    case 0:
-        return "NUCLEAR";
-    case 1:
-        return "LIGNITE";
-    case 2:
-        return "COAL";
-    case 3:
-        return "GAS";
-    case 4:
-        return "OIL";
-    case 5:
-        return "MIX. FUEL";
-    case 6:
-        return "MISC. DTG";
-    case 7:
-        return "MISC. DTG 2";
-    case 8:
-        return "MISC. DTG 3";
-    case 9:
-        return "MISC. DTG 4";
-
+    case PSP_open:
+        return "PSP_open";
+    case PSP_closed:
+        return "PSP_closed";
+    case Pondage:
+        return "Pondage";
+    case Battery:
+        return "Battery";
+    case Other1:
+        return "Other1";
+    case Other2:
+        return "Other2";
+    case Other3:
+        return "Other 3";
+    case Other4:
+        return "Other 4";
+    case Other5:
+        return "Other 5";
     default:
         return "<unknown>";
     }

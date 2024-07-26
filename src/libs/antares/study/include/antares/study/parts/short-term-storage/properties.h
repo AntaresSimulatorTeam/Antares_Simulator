@@ -28,7 +28,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-enum class Group
+enum Group
 {
     PSP_open,
     PSP_closed,
@@ -38,7 +38,9 @@ enum class Group
     Other2,
     Other3,
     Other4,
-    Other5
+    Other5,
+    //! The highest value
+    groupMax
 };
 
 unsigned int groupIndex(Group group);
