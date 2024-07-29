@@ -1,4 +1,4 @@
-/*k
+/*
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
  * Adequacy and Performance assessment for interconnected energy networks.
@@ -26,7 +26,7 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipVariable: virtual public Api::MipVariable
+class OrtoolsMipVariable : virtual public Api::MipVariable
 {
 public:
     void setLb(double lb) override;

@@ -1,6 +1,4 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
  * Adequacy and Performance assessment for interconnected energy networks.
@@ -21,23 +19,33 @@
 
 #pragma once
 
-#include "mipVariable.h"
+#include <ortools/linear_solver/linear_solver.h>
 
-namespace Antares::Solver::Optim::Api
+#include <antares/solver/optim/api/mipConstraint.h>
+
+namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class MipConstraint
+class OrtoolsMipConstraint: virtual public Api::MipConstraint
 {
-    virtual void setLb(double lb) = 0;
-    virtual void setUb(double ub) = 0;
+public:
+    void setLb(double lb) override;
+    void setUb(double ub) override;
 
-    virtual void setBounds(double lb, double ub) = 0;
-    virtual void setCoefficient(MipVariable* var, double coefficient) = 0;
+    void setBounds(double lb, double ub) override;
+    void setCoefficient(Api::MipVariable* var, double coefficient) override;
 
-    virtual double getLb() = 0;
-    virtual double getUb() = 0;
+    double getLb() override;
+    double getUb() override;
 
-    virtual double getCoefficient(MipVariable* var) = 0;
+    double getCoefficient(Api::MipVariable* var) override;
+
+    ~OrtoolsMipConstraint() = default;
+
+private:
+    OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint);
+
+    operations_research::MPConstraint* mpConstraint_;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Optim::OrtoolsImpl
