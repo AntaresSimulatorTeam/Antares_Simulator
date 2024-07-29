@@ -20,6 +20,7 @@
  */
 
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
+#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
@@ -27,7 +28,9 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 using OrMPSolver = operations_research::MPSolver;
 
 OrtoolsMipSolution::OrtoolsMipSolution(OrMPSolver::ResultStatus responseStatus,
-                                       const std::map<Api::MipVariable*, double>& solution)
+                                       const std::map<Api::MipVariable*, double>& solution,
+                                       operations_research::MPObjective* objective):
+    objective_(objective)
 {
     // Only store non-zero values
     for (const auto& varAndValue : solution)
@@ -60,10 +63,10 @@ Api::MipStatus OrtoolsMipSolution::getStatus()
     return responseStatus_;
 }
 
-/* double OrtoolsMipSolution::getObjectiveValue() */
-/* { */
-
-/* } */
+double OrtoolsMipSolution::getObjectiveValue()
+{
+    return objective_->Value();
+}
 
 double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable& var) const
 {

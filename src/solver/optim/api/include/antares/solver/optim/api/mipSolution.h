@@ -47,7 +47,6 @@ public:
 
 protected:
     MipStatus responseStatus_;
-    std::unique_ptr<MipObjective> objective_;
 
     std::map<const MipVariable*, double> solution_;
 };

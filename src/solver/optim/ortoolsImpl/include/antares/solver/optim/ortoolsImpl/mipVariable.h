@@ -37,12 +37,14 @@ public:
     double getLb() override;
     double getUb() override;
 
+    operations_research::MPVariable* get();
+
+    ~OrtoolsMipVariable() = default;
 private:
     // TODO: add friend class
-    explicit OrtoolsMipVariable(operations_research::MPVariable&);
-    ~OrtoolsMipVariable() = default;
+    explicit OrtoolsMipVariable(operations_research::MPVariable*);
 
-    operations_research::MPVariable& mpVar_;
+    operations_research::MPVariable* mpVar_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

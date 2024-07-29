@@ -19,44 +19,46 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable* mpVar):
-    mpVar_(mpVar)
+OrtoolsMipObjective::OrtoolsMipObjective(operations_research::MPObjective* objective):
+    objective_(objective)
+{}
+
+void OrtoolsMipObjective::setCoefficient(Api::MipVariable* var, double coefficient)
 {
+    auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    objective_->SetCoefficient(mpvar->get(), coefficient);
 }
 
-void OrtoolsMipVariable::setLb(double lb)
+void OrtoolsMipObjective::setMaximization()
 {
-    mpVar_->SetLB(lb);
+    objective_->SetMaximization();
 }
 
-void OrtoolsMipVariable::setUb(double ub)
+void OrtoolsMipObjective::setMinimization()
 {
-    mpVar_->SetUB(ub);
+    objective_->SetMinimization();
 }
 
-void OrtoolsMipVariable::setBounds(double lb, double ub)
+double OrtoolsMipObjective::getCoefficient(Api::MipVariable* var)
 {
-    mpVar_->SetBounds(lb, ub);
+    auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    return objective_->GetCoefficient(mpvar->get());
 }
 
-double OrtoolsMipVariable::getLb()
+bool OrtoolsMipObjective::getMaximization()
 {
-    return mpVar_->lb();
+    return objective_->maximization();
 }
 
-double OrtoolsMipVariable::getUb()
+bool OrtoolsMipObjective::getMinimization()
 {
-    return mpVar_->ub();
-}
-
-operations_research::MPVariable* OrtoolsMipVariable::get()
-{
-    return mpVar_;
+    return objective_->minimization();
 }
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

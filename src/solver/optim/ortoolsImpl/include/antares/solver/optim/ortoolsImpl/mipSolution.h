@@ -29,11 +29,12 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipSolution final: public virtual Api::MipSolution
+class OrtoolsMipSolution : virtual public Api::MipSolution
 {
 public:
-    explicit OrtoolsMipSolution(operations_research::MPSolver::ResultStatus responseStatus,
-                                const std::map<Api::MipVariable*, double>& solution);
+    OrtoolsMipSolution(operations_research::MPSolver::ResultStatus responseStatus,
+                       const std::map<Api::MipVariable*, double>& solution,
+                       operations_research::MPObjective* objective);
 
     ~OrtoolsMipSolution() = default;
 
@@ -41,6 +42,8 @@ public:
     double getObjectiveValue() override;
     double getOptimalValue(const Api::MipVariable& var) const override;
     std::vector<double> getOptimalValue(const std::vector<Api::MipVariable>& vars) const override;
+
+    operations_research::MPObjective* objective_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

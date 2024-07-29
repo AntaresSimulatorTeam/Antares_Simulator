@@ -1,6 +1,4 @@
 /*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
  * Adequacy and Performance assessment for interconnected energy networks.
@@ -21,22 +19,31 @@
 
 #pragma once
 
-#include "mipVariable.h"
+#include <ortools/linear_solver/linear_solver.h>
 
-namespace Antares::Solver::Optim::Api
+#include <antares/solver/optim/api/mipObjective.h>
+#include <antares/solver/optim/api/mipVariable.h>
+
+namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class MipObjective
+class OrtoolsMipObjective final: public virtual Api::MipObjective
 {
-    virtual void setCoefficient(MipVariable* var, double coefficient) = 0;
+public:
+    OrtoolsMipObjective(operations_research::MPObjective* objective);
+    ~OrtoolsMipObjective() = default;
 
-    virtual void setMaximization() = 0;
-    virtual void setMinimization() = 0;
+    void setCoefficient(Api::MipVariable* var, double coefficient) override;
 
-    virtual double getCoefficient(MipVariable* var) = 0;
+    void setMaximization() override;
+    void setMinimization() override;
 
-    virtual bool getMaximization() = 0;
-    virtual bool getMinimization() = 0;
+    double getCoefficient(Api::MipVariable* var) override;
+
+    bool getMaximization() override;
+    bool getMinimization() override;
+
+    operations_research::MPObjective* objective_;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Optim::OrtoolsImpl
