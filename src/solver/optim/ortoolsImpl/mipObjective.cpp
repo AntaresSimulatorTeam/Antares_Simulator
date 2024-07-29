@@ -33,6 +33,11 @@ OrtoolsMipObjective::OrtoolsMipObjective(operations_research::MPObjective* objec
 void OrtoolsMipObjective::setCoefficient(Api::MipVariable* var, double coefficient)
 {
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    if (!mpvar)
+    {
+        throw std::bad_cast();
+    }
+
     objective_->SetCoefficient(mpvar->get(), coefficient);
 }
 
@@ -49,6 +54,11 @@ void OrtoolsMipObjective::setMinimization()
 double OrtoolsMipObjective::getCoefficient(Api::MipVariable* var)
 {
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    if (!mpvar)
+    {
+        throw std::bad_cast();
+    }
+
     return objective_->GetCoefficient(mpvar->get());
 }
 

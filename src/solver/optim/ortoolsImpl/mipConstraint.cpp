@@ -58,12 +58,22 @@ double OrtoolsMipConstraint::getUb()
 void OrtoolsMipConstraint::setCoefficient(Api::MipVariable* var, double coefficient)
 {
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    if (!mpvar)
+    {
+        throw std::bad_cast();
+    }
+
     mpConstraint_->SetCoefficient(mpvar->get(), coefficient);
 }
 
 double OrtoolsMipConstraint::getCoefficient(Api::MipVariable* var)
 {
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    if (!mpvar)
+    {
+        throw std::bad_cast();
+    }
+
     return mpConstraint_->GetCoefficient(mpvar->get());
 }
 
