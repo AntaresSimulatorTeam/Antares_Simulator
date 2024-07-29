@@ -27,7 +27,8 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 
 OrtoolsMipObjective::OrtoolsMipObjective(operations_research::MPObjective* objective):
     objective_(objective)
-{}
+{
+}
 
 void OrtoolsMipObjective::setCoefficient(Api::MipVariable* var, double coefficient)
 {

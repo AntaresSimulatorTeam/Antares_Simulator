@@ -29,7 +29,7 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipSolution : virtual public Api::MipSolution
+class OrtoolsMipSolution: virtual public Api::MipSolution
 {
 public:
     OrtoolsMipSolution(operations_research::MPSolver::ResultStatus responseStatus,

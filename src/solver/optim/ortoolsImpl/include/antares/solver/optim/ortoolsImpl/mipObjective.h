@@ -27,7 +27,7 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipObjective : virtual public Api::MipObjective
+class OrtoolsMipObjective: virtual public Api::MipObjective
 {
 public:
     ~OrtoolsMipObjective() = default;

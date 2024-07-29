@@ -23,8 +23,8 @@
 
 #include <vector>
 
-#include "mipVariable.h"
 #include "mipObjective.h"
+#include "mipVariable.h"
 
 namespace Antares::Solver::Optim::Api
 {

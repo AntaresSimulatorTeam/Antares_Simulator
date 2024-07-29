@@ -26,7 +26,7 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipVariable : virtual public Api::MipVariable
+class OrtoolsMipVariable: virtual public Api::MipVariable
 {
 public:
     void setLb(double lb) override;
@@ -40,6 +40,7 @@ public:
     operations_research::MPVariable* get();
 
     ~OrtoolsMipVariable() = default;
+
 private:
     // TODO: add friend class
     explicit OrtoolsMipVariable(operations_research::MPVariable*);
