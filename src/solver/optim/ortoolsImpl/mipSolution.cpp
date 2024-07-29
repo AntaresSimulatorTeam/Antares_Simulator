@@ -27,10 +27,10 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 using OrMPSolver = operations_research::MPSolver;
 
 OrtoolsMipSolution::OrtoolsMipSolution(OrMPSolver::ResultStatus responseStatus,
-                                       const std::map<std::string, double>& solution)
+                                       const std::map<Api::MipVariable*, double>& solution)
 {
     // Only store non-zero values
-    for (const auto& varAndValue: solution)
+    for (const auto& varAndValue : solution)
     {
         if (abs(varAndValue.second) > 1e-6) // TODO: is this tolerance OK?
         {
@@ -65,13 +65,22 @@ Api::MipStatus OrtoolsMipSolution::getStatus()
 
 /* } */
 
-/* double OrtoolsMipSolution::getOptimalValue(Api::MipVariable& var) */
-/* { */
+double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable& var) const
+{
+    return solution_.contains(&var) ? solution_.at(&var) : 0;
+}
 
-/* } */
-/* std::vector<double> OrtoolsMipSolution::getOptimalValue(std::vector<Api::MipVariable>& vars) */
-/* { */
+std::vector<double> OrtoolsMipSolution::getOptimalValue(const std::vector<Api::MipVariable>& vars) const
+{
+    std::vector<double> solution;
+    solution.reserve(vars.size());
 
-/* } */
+    for (const auto& var : vars)
+    {
+        solution.push_back(getOptimalValue(var));
+    }
+
+    return solution;
+}
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
