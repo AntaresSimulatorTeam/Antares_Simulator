@@ -30,7 +30,6 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 class OrtoolsMipObjective final: public virtual Api::MipObjective
 {
 public:
-    OrtoolsMipObjective(operations_research::MPObjective* objective);
     ~OrtoolsMipObjective() = default;
 
     void setCoefficient(Api::MipVariable* var, double coefficient) override;
@@ -42,6 +41,9 @@ public:
 
     bool getMaximization() override;
     bool getMinimization() override;
+
+private:
+    OrtoolsMipObjective(operations_research::MPObjective* objective);
 
     operations_research::MPObjective* objective_;
 };
