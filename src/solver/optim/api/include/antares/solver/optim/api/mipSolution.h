@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "mipVariable.h"
+#include "mipObjective.h"
 
 namespace Antares::Solver::Optim::Api
 {
@@ -38,10 +39,17 @@ enum class MipStatus
 
 class MipSolution
 {
+public:
     virtual MipStatus getStatus() = 0;
     virtual double getObjectiveValue() = 0;
     virtual double getOptimalValue(const MipVariable& var) const = 0;
     virtual std::vector<double> getOptimalValue(const std::vector<MipVariable>& vars) const = 0;
+
+protected:
+    MipStatus responseStatus_;
+    std::unique_ptr<MipObjective> objective_;
+
+    std::map<const MipVariable*, double> solution_;
 };
 
 } // namespace Antares::Solver::Optim::Api

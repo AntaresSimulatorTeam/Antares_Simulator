@@ -26,7 +26,7 @@
 namespace Antares::Solver::Optim::Api
 {
 
-virtual class MipObjective
+class MipObjective
 {
     virtual void setCoefficient(MipVariable& var, double coefficient) = 0;
 
@@ -37,6 +37,8 @@ virtual class MipObjective
 
     virtual bool getMaximization() = 0;
     virtual bool getMinimization() = 0;
+
+    virtual double getValue() = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

@@ -41,10 +41,6 @@ public:
     double getObjectiveValue() override;
     double getOptimalValue(const Api::MipVariable& var) const override;
     std::vector<double> getOptimalValue(const std::vector<Api::MipVariable>& vars) const override;
-
-private:
-    Api::MipStatus responseStatus_;
-    std::map<const Api::MipVariable*, double> solution_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
