@@ -30,7 +30,7 @@ OrtoolsMipSolution::OrtoolsMipSolution(OrMPSolver::ResultStatus responseStatus,
                                        const std::map<std::string, double>& solution)
 {
     // Only store non-zero values
-    for (const auto& varAndValue : solution)
+    for (const auto& varAndValue: solution)
     {
         if (abs(varAndValue.second) > 1e-6) // TODO: is this tolerance OK?
         {
@@ -38,7 +38,7 @@ OrtoolsMipSolution::OrtoolsMipSolution(OrMPSolver::ResultStatus responseStatus,
         }
     }
 
-    switch(responseStatus)
+    switch (responseStatus)
     {
     case OrMPSolver::ResultStatus::OPTIMAL:
         responseStatus_ = Api::MipStatus::OPTIMAL;
