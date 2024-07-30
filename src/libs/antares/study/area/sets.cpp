@@ -74,20 +74,20 @@ const Sets::SetAreasType& Sets::operator[](uint i) const
 
 bool Sets::hasOutput(const Yuni::ShortString128& s) const
 {
-    MapOptions::const_iterator i = pOptions.find(s);
-    return (i != pOptions.end()) ? i->second.output : false;
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.output : false;
 }
 
 uint Sets::resultSize(const Yuni::ShortString128& s) const
 {
-    MapOptions::const_iterator i = pOptions.find(s);
-    return (i != pOptions.end()) ? i->second.resultSize : 0;
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.resultSize : 0;
 }
 
 Sets::IDType Sets::caption(const Yuni::ShortString128& s) const
 {
-    MapOptions::const_iterator i = pOptions.find(s);
-    return (i != pOptions.end()) ? i->second.caption : IDType();
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.caption : IDType();
 }
 
 void Sets::defaultForAreas()
@@ -116,13 +116,14 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
     using namespace Yuni;
     using namespace Antares;
 
-    MapOptions::iterator i = pOptions.find(id);
-    if (i == pOptions.end())
+    const auto pair = pOptions.find(id);
+    if (pair == pOptions.end())
     {
         return;
     }
+
     // Options
-    Options& opts = i->second;
+    Options& opts = pair->second;
     auto& set = *(pMap[id]);
 
     // Clear the result first
@@ -224,12 +225,11 @@ YString Sets::toString()
     using namespace Yuni;
     using namespace Antares;
     static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
-    const auto end = pOptions.cend();
     YString ret = "";
-    for (auto i = pOptions.cbegin(); i != end; ++i)
+    for (const auto& [setId, options] : pOptions)
     {
-        const Options& opts = i->second;
-        ret << '[' << i->first << "]\n";
+        const Options& opts = options;
+        ret << '[' << setId << "]\n";
         ret << "caption = " << opts.caption << '\n';
         if (not opts.comments.empty())
         {
@@ -350,20 +350,17 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
 void Sets::rebuildIndexes()
 {
     pNameByIndex.clear();
-    pByIndex.clear();
+    pNameByIndex.resize(pMap.size());
 
-    if (!pMap.empty())
+    pByIndex.clear();
+    pByIndex.resize(pMap.size());
+
+    uint index = 0;
+    for (auto& [setId, set] : pMap)
     {
-        pByIndex.resize(pMap.size());
-        pNameByIndex.resize(pMap.size());
-        const MapType::iterator end = pMap.end();
-        uint index = 0;
-        for (MapType::iterator i = pMap.begin(); i != end; ++i)
-        {
-            pByIndex[index] = i->second;
-            pNameByIndex[index] = i->first;
-            ++index;
-        }
+        pByIndex[index] = set;
+        pNameByIndex[index] = setId;
+        ++index;
     }
 }
 
@@ -385,12 +382,11 @@ uint Sets::resultSize(const uint index) const
 void Sets::dumpToLogs() const
 {
     using namespace Yuni;
-    const MapType::const_iterator end = pMap.end();
-    for (MapType::const_iterator i = pMap.begin(); i != end; ++i)
+    for (auto& [setId, set] : pMap)
     {
-        logs.info() << "   found `" << i->first << "` (" << (uint)i->second->size() << ' '
-                    << (i->second->size() < 2 ? "item" : "items")
-                    << ((!hasOutput(i->first)) ? ", no output" : "") << ')';
+        logs.info() << "   found `" << setId << "` (" << set->size() << ' '
+                    << (set->size() < 2 ? "item" : "items")
+                    << ((!hasOutput(setId)) ? ", no output" : "") << ')';
     }
 }
 
@@ -450,10 +446,9 @@ bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string& va
 {
     if (value == "add-all")
     {
-        auto end = areas_.end();
-        for (auto i = areas_.begin(); i != end; ++i)
+        for (const auto& [areaName, area] : areas_)
         {
-            set.insert(i->second);
+            set.insert(area);
         }
         return true;
     }

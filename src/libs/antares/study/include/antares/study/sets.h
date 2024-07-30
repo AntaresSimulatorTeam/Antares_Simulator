@@ -152,9 +152,6 @@ public:
     */
     void clear();
 
-    /*!
-    **
-    */
     TypePtr add(const IDType& name)
     {
         TypePtr p = std::make_shared<SetAreasType>();
@@ -163,9 +160,6 @@ public:
         return p;
     }
 
-    /*!
-    **
-    */
     TypePtr add(const IDType& name, const TypePtr& data)
     {
         pMap[name] = data;
@@ -173,9 +167,6 @@ public:
         return data;
     }
 
-    /*!
-    **
-    */
     TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
     {
         pMap[name] = data;
