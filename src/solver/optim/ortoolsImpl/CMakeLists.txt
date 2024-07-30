@@ -5,6 +5,7 @@ set(HEADERS
         include/antares/solver/optim/ortoolsImpl/mipSolution.h
         include/antares/solver/optim/ortoolsImpl/mipObjective.h
         include/antares/solver/optim/ortoolsImpl/mipConstraint.h
+        include/antares/solver/optim/ortoolsImpl/linearSolver.h
 )
 set(SRC_ORTOOLS_IMPL
         ${HEADERS}
@@ -12,6 +13,7 @@ set(SRC_ORTOOLS_IMPL
         mipSolution.cpp
         mipObjective.cpp
         mipConstraint.cpp
+        linearSolver.cpp
 )
 
 source_group("solver\\optim\\api" FILES ${SRC_ORTOOLS_IMPL})
@@ -23,6 +25,7 @@ target_link_libraries(${PROJ}
         PUBLIC
         Antares::optim_api
         Antares::logs
+        Antares::solverUtils
         ortools::ortools
 )
 

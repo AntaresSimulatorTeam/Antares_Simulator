@@ -21,7 +21,10 @@
 
 #pragma once
 
+#include <vector>
+
 #include "mipConstraint.h"
+#include "mipSolution.h"
 #include "mipVariable.h"
 
 namespace Antares::Solver::Optim::Api
@@ -29,20 +32,27 @@ namespace Antares::Solver::Optim::Api
 
 class LinearSolver
 {
-    virtual MipVariable addNumVariable(std::string_view name, double lb, double ub) = 0;
-    virtual MipVariable addIntVariable(std::string_view name, double lb, double ub) = 0;
-    virtual MipVariable getVariable(std::string_view name) = 0;
+public:
+    virtual MipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
+    virtual MipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
+    virtual MipVariable* getVariable(std::string_view name) = 0;
 
-    virtual MipConstraint addConstraint(std::string_view name, double lb, double ub) = 0;
-    virtual MipConstraint getConstraint(std::string_view name) = 0;
+    virtual MipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
+    virtual MipConstraint* getConstraint(std::string_view name) = 0;
 
     virtual void setObjectiveCoefficient(MipVariable* var, double coefficient) = 0;;
-    virtual double  getObjectiveCoefficient(MipVariable* var) = 0;;
+    virtual double getObjectiveCoefficient(MipVariable* var) = 0;;
 
     virtual void setMinimization() = 0;
     virtual void setMaximization() = 0;
 
-    virtual MipSolution solve() = 0;
+    virtual MipSolution* solve() = 0;
+
+protected:
+    std::vector<std::shared_ptr<MipVariable>> variables_;
+    std::vector<std::shared_ptr<MipConstraint>> constraints_;
+
+    std::unique_ptr<MipSolution> solution_;
 };
 
 } // namespace Antares::Solver::Optim::Api
