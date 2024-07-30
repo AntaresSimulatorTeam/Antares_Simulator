@@ -39,7 +39,7 @@ public:
     double getLb() override;
     double getUb() override;
 
-    operations_research::MPVariable* get();
+    operations_research::MPVariable* getMpVar();
 
     ~OrtoolsMipVariable() = default;
 

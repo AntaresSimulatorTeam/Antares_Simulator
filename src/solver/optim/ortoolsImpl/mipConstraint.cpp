@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <antares/logs/logs.h>
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 
@@ -60,10 +61,11 @@ void OrtoolsMipConstraint::setCoefficient(Api::MipVariable* var, double coeffici
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
+        logs.error() << "Invalid cast, tried from Api::MipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
-    mpConstraint_->SetCoefficient(mpvar->get(), coefficient);
+    mpConstraint_->SetCoefficient(mpvar->getMpVar(), coefficient);
 }
 
 double OrtoolsMipConstraint::getCoefficient(Api::MipVariable* var)
@@ -71,10 +73,11 @@ double OrtoolsMipConstraint::getCoefficient(Api::MipVariable* var)
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
+        logs.error() << "Invalid cast, tried from Api::MipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
-    return mpConstraint_->GetCoefficient(mpvar->get());
+    return mpConstraint_->GetCoefficient(mpvar->getMpVar());
 }
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

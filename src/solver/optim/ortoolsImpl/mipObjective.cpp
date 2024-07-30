@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <antares/logs/logs.h>
 #include <antares/solver/optim/ortoolsImpl/mipObjective.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 
@@ -35,10 +36,11 @@ void OrtoolsMipObjective::setCoefficient(Api::MipVariable* var, double coefficie
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
+        logs.error() << "Invalid cast, tried from Api::MipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
-    objective_->SetCoefficient(mpvar->get(), coefficient);
+    objective_->SetCoefficient(mpvar->getMpVar(), coefficient);
 }
 
 void OrtoolsMipObjective::setMaximization()
@@ -56,10 +58,11 @@ double OrtoolsMipObjective::getCoefficient(Api::MipVariable* var)
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
+        logs.error() << "Invalid cast, tried from Api::MipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
-    return objective_->GetCoefficient(mpvar->get());
+    return objective_->GetCoefficient(mpvar->getMpVar());
 }
 
 bool OrtoolsMipObjective::getMaximization()

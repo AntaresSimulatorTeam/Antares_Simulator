@@ -22,6 +22,7 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 target_link_libraries(${PROJ}
         PUBLIC
         Antares::optim_api
+        Antares::logs
         ortools::ortools
 )
 

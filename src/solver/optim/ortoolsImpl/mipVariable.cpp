@@ -54,7 +54,7 @@ double OrtoolsMipVariable::getUb()
     return mpVar_->ub();
 }
 
-operations_research::MPVariable* OrtoolsMipVariable::get()
+operations_research::MPVariable* OrtoolsMipVariable::getMpVar()
 {
     return mpVar_;
 }

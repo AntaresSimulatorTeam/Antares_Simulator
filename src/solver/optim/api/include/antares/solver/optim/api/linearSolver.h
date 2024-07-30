@@ -29,7 +29,6 @@ namespace Antares::Solver::Optim::Api
 class LinearSolver
 {
 public:
-
 };
 
 } // namespace Antares::Solver::Optim::Api
