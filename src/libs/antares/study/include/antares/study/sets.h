@@ -53,9 +53,9 @@ public:
     //! Map of Item
     using MapType = std::map<IDType, TypePtr>;
     //! Standard iterators from the STL
-    using iterator = typename MapType::iterator;
+    using iterator = MapType::iterator;
     //! Standard iterators from the STL (const)
-    using const_iterator = typename MapType::const_iterator;
+    using const_iterator = MapType::const_iterator;
 
     enum RuleType
     {

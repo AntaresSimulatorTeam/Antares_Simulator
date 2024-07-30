@@ -32,22 +32,22 @@ Sets::Sets(const Sets& rhs):
     }
 }
 
-typename Sets::iterator Sets::begin()
+Sets::iterator Sets::begin()
 {
     return pMap.begin();
 }
 
-typename Sets::const_iterator Sets::begin() const
+Sets::const_iterator Sets::begin() const
 {
     return pMap.begin();
 }
 
-typename Sets::iterator Sets::end()
+Sets::iterator Sets::end()
 {
     return pMap.end();
 }
 
-typename Sets::const_iterator Sets::end() const
+Sets::const_iterator Sets::end() const
 {
     return pMap.end();
 }
@@ -74,19 +74,19 @@ const Sets::SetAreasType& Sets::operator[](uint i) const
 
 bool Sets::hasOutput(const Yuni::ShortString128& s) const
 {
-    typename MapOptions::const_iterator i = pOptions.find(s);
+    MapOptions::const_iterator i = pOptions.find(s);
     return (i != pOptions.end()) ? i->second.output : false;
 }
 
 uint Sets::resultSize(const Yuni::ShortString128& s) const
 {
-    typename MapOptions::const_iterator i = pOptions.find(s);
+    MapOptions::const_iterator i = pOptions.find(s);
     return (i != pOptions.end()) ? i->second.resultSize : 0;
 }
 
 Sets::IDType Sets::caption(const Yuni::ShortString128& s) const
 {
-    typename MapOptions::const_iterator i = pOptions.find(s);
+    MapOptions::const_iterator i = pOptions.find(s);
     return (i != pOptions.end()) ? i->second.caption : IDType();
 }
 
@@ -116,7 +116,7 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
     using namespace Yuni;
     using namespace Antares;
 
-    typename MapOptions::iterator i = pOptions.find(id);
+    MapOptions::iterator i = pOptions.find(id);
     if (i == pOptions.end())
     {
         return;
@@ -141,7 +141,7 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
             {
                 // Failed. Maybe the argument references another group
                 const IDType other = name;
-                typename MapType::iterator i = pMap.find(other);
+                MapType::iterator i = pMap.find(other);
                 if (i != pMap.end())
                 {
                     handler.add(set, *(i->second));
@@ -156,7 +156,7 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
             {
                 // Failed. Maybe the argument references another group
                 const IDType other = name;
-                typename MapType::iterator i = pMap.find(other);
+                MapType::iterator i = pMap.find(other);
                 if (i != pMap.end())
                 {
                     handler.remove(set, *(i->second));
@@ -356,9 +356,9 @@ void Sets::rebuildIndexes()
     {
         pByIndex.resize(pMap.size());
         pNameByIndex.resize(pMap.size());
-        const typename MapType::iterator end = pMap.end();
+        const MapType::iterator end = pMap.end();
         uint index = 0;
-        for (typename MapType::iterator i = pMap.begin(); i != end; ++i)
+        for (MapType::iterator i = pMap.begin(); i != end; ++i)
         {
             pByIndex[index] = i->second;
             pNameByIndex[index] = i->first;
@@ -385,8 +385,8 @@ uint Sets::resultSize(const uint index) const
 void Sets::dumpToLogs() const
 {
     using namespace Yuni;
-    const typename MapType::const_iterator end = pMap.end();
-    for (typename MapType::const_iterator i = pMap.begin(); i != end; ++i)
+    const MapType::const_iterator end = pMap.end();
+    for (MapType::const_iterator i = pMap.begin(); i != end; ++i)
     {
         logs.info() << "   found `" << i->first << "` (" << (uint)i->second->size() << ' '
                     << (i->second->size() < 2 ? "item" : "items")
