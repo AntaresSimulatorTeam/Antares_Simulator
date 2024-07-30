@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "mipConstraint.h"
 #include "mipVariable.h"
 
 namespace Antares::Solver::Optim::Api
@@ -28,7 +29,20 @@ namespace Antares::Solver::Optim::Api
 
 class LinearSolver
 {
-public:
+    virtual MipVariable addNumVariable(std::string_view name, double lb, double ub) = 0;
+    virtual MipVariable addIntVariable(std::string_view name, double lb, double ub) = 0;
+    virtual MipVariable getVariable(std::string_view name) = 0;
+
+    virtual MipConstraint addConstraint(std::string_view name, double lb, double ub) = 0;
+    virtual MipConstraint getConstraint(std::string_view name) = 0;
+
+    virtual void setObjectiveCoefficient(MipVariable* var, double coefficient) = 0;;
+    virtual double  getObjectiveCoefficient(MipVariable* var) = 0;;
+
+    virtual void setMinimization() = 0;
+    virtual void setMaximization() = 0;
+
+    virtual MipSolution solve() = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api
