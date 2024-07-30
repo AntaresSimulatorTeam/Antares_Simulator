@@ -35,30 +35,33 @@ OrtoolsLinearSolver::OrtoolsLinearSolver(bool isMip, const std::string& solverNa
 Api::MipVariable* OrtoolsLinearSolver::addNumVariable(double lb, double ub, const std::string& name)
 {
     auto mpVar = mpSolver_->MakeNumVar(lb, ub, name);
-    variables_.push_back(std::make_shared<Api::MipVariable>(mpVar));
-    return variables_.back().get();
+    variables_.try_emplace(name, std::make_shared<Api::MipVariable>(mpVar));
+
+    return variables_.at(name).get();
 }
 
 Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, const std::string& name)
 {
+    auto mpVar = mpSolver_->MakeIntVar(lb, ub, name);
+    variables_.try_emplace(name, std::make_shared<Api::MipVariable>(mpVar));
 
+    return variables_.at(name).get();
 }
 
-Api::MipVariable* OrtoolsLinearSolver::getVariable(std::string_view name)
-{
+/* Api::MipVariable* OrtoolsLinearSolver::getVariable(const std::string& name) */
+/* { */
+/*      auto it = std::ranges::find_if(variables_, [&name](const auto var) { return var->getName() = }; */
+/* } */
 
-}
+/* Api::MipConstraint* OrtoolsLinearSolver::addConstraint(double lb, double ub, const std::string& name) */
+/* { */
 
+/* } */
 
-Api::MipConstraint* OrtoolsLinearSolver::addConstraint(double lb, double ub, const std::string& name)
-{
+/* Api::MipConstraint* OrtoolsLinearSolver::getConstraint(const std::string& name) */
+/* { */
 
-}
-
-Api::MipConstraint* OrtoolsLinearSolver::getConstraint(std::string_view name)
-{
-
-}
+/* } */
 
 
 void OrtoolsLinearSolver::setObjectiveCoefficient(Api::MipVariable* var, double coefficient)
@@ -66,11 +69,10 @@ void OrtoolsLinearSolver::setObjectiveCoefficient(Api::MipVariable* var, double 
 
 }
 
-double OrtoolsLinearSolver::getObjectiveCoefficient(Api::MipVariable* var)
-{
+/* double OrtoolsLinearSolver::getObjectiveCoefficient(Api::MipVariable* var) */
+/* { */
 
-}
-
+/* } */
 
 void OrtoolsLinearSolver::setMinimization()
 {
@@ -83,11 +85,9 @@ void OrtoolsLinearSolver::setMaximization()
 }
 
 
-Api::MipSolution* OrtoolsLinearSolver::solve()
-{
+/* Api::MipSolution* OrtoolsLinearSolver::solve() */
+/* { */
 
-}
-
-
+/* } */
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

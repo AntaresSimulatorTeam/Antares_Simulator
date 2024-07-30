@@ -37,10 +37,10 @@ public:
 
     Api::MipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     Api::MipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
-    Api::MipVariable* getVariable(std::string_view name) override;
+    Api::MipVariable* getVariable(const std::string& name) override;
 
     Api::MipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
-    Api::MipConstraint* getConstraint(std::string_view name) override;
+    Api::MipConstraint* getConstraint(const std::string& name) override;
 
     void setObjectiveCoefficient(Api::MipVariable* var, double coefficient) override;;
     double getObjectiveCoefficient(Api::MipVariable* var) override;;
