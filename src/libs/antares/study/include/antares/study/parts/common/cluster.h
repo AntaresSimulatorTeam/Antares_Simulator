@@ -21,8 +21,8 @@
 #ifndef __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 #define __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 
-#include <map>
 #include <set>
+#include <map>
 #include <vector>
 
 #include <yuni/yuni.h>
@@ -30,8 +30,11 @@
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
-
 #include "../../fwd.h"
+
+#include <antares/study/area/capacityReservation.h>
+
+
 
 namespace Antares
 {
@@ -107,6 +110,12 @@ public:
     bool saveDataSeriesToFolder(const AnyString& folder) const;
     bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
+    //! @brief Add the reserve participation to the current clusterReservesParticipations map
+    //! @param name the name of the reserve to add
+    //! @param reserveParticipation the reserve participation to add
+    void addReserveParticipation(std::string name,
+                                 ClusterReserveParticipation reserveParticipation);
+
     uint unitCount = 0;
 
     bool isEnabled() const
@@ -141,13 +150,34 @@ public:
     */
     Matrix<> modulation;
 
+    //! \brief Returns true if cluster participates in a reserve with this name
+    bool isParticipatingInReserve(Data::ReserveName name);
+
+    //! \brief Returns an array of all reserves the cluster is participating in
+    std::vector<Data::ReserveName> listOfParticipatingReserves();
+
+    //! \brief Returns max power for a reserve if participating, -1 otherwise
+    float reserveMaxPower(Data::ReserveName name);
+
+    //! \brief Returns participating cost for a reserve if participating, -1 otherwise
+    float reserveCost(Data::ReserveName name);
+
+    //! \brief Returns the number of reserves linked to this cluster
+    unsigned int reserveParticipationsCount();
+
+
 protected:
     Data::ClusterName pName;
     Data::ClusterName pID;
     Data::ClusterName pGroup;
+    //! reserve
+    std::map<Data::ReserveName, ClusterReserveParticipation> clusterReservesParticipations;
 
 private:
     virtual unsigned int precision() const = 0;
+    //! @brief Stores the reserves Participations for each reserve, the key is the name of the
+    
+
 };
 } // namespace Data
 } // namespace Antares

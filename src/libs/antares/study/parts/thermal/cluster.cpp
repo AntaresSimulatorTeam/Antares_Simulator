@@ -216,21 +216,21 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     }
 }
 
-static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
+static Data::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
 {
     using namespace Antares::Data;
-    const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping = {
-      {"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
-      {"lignite", ThermalCluster::thermalDispatchGrpLignite},
-      {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
-      {"gas", ThermalCluster::thermalDispatchGrpGas},
-      {"oil", ThermalCluster::thermalDispatchGrpOil},
-      {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
-      {"other", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 1", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 2", ThermalCluster::thermalDispatchGrpOther2},
-      {"other 3", ThermalCluster::thermalDispatchGrpOther3},
-      {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
+    const static std::map<ClusterName, ThermalDispatchableGroup> mapping = {
+      {"nuclear", thermalDispatchGrpNuclear},
+      {"lignite", thermalDispatchGrpLignite},
+      {"hard coal", thermalDispatchGrpHardCoal},
+      {"gas", thermalDispatchGrpGas},
+      {"oil", thermalDispatchGrpOil},
+      {"mixed fuel", thermalDispatchGrpMixedFuel},
+      {"other", thermalDispatchGrpOther1},
+      {"other 1", thermalDispatchGrpOther1},
+      {"other 2", thermalDispatchGrpOther2},
+      {"other 3", thermalDispatchGrpOther3},
+      {"other 4", thermalDispatchGrpOther4}};
 
     boost::to_lower(newgrp);
     if (auto res = mapping.find(newgrp); res != mapping.end())
@@ -238,7 +238,31 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
         return res->second;
     }
     // assigning a default value
-    return ThermalCluster::thermalDispatchGrpOther1;
+    return thermalDispatchGrpOther1;
+}
+
+static std::string groupToString(Data::ThermalDispatchableGroup group)
+{
+    using namespace Antares::Data;
+    const static std::map<ThermalDispatchableGroup, ClusterName> reverseMapping
+      = {{thermalDispatchGrpNuclear, "nuclear"},
+         {thermalDispatchGrpLignite, "lignite"},
+         {thermalDispatchGrpHardCoal, "hard coal"},
+         {thermalDispatchGrpGas, "gas"},
+         {thermalDispatchGrpOil, "oil"},
+         {thermalDispatchGrpMixedFuel, "mixed fuel"},
+         {thermalDispatchGrpOther1, "other"},
+         {thermalDispatchGrpOther1, "other 1"},
+         {thermalDispatchGrpOther2, "other 2"},
+         {thermalDispatchGrpOther3, "other 3"},
+         {thermalDispatchGrpOther4, "other 4"}};
+
+    if (auto res = reverseMapping.find(group); res != reverseMapping.end())
+    {
+        return res->second;
+    }
+    // Returning a default value or an error indication
+    return "unknown";
 }
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)

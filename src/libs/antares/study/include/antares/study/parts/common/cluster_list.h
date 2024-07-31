@@ -27,9 +27,13 @@
 #include <vector>
 
 #include <antares/logs/logs.h>
-#include <antares/writer/i_writer.h>
-
 #include "../../fwd.h"
+
+#include <antares/writer/i_writer.h>
+#include <antares/study/area/capacityReservation.h>
+#include <antares/study/parts/common/cluster.h>
+#include <antares/study/parts/thermal/cluster.h>
+
 
 namespace Antares
 {
@@ -103,6 +107,37 @@ public:
     }
 
     SharedPtr enabledClusterAt(unsigned int index) const;
+
+    /*!
+    ** @brief Get the cluster and reserve names for a given index of reserveParticipation
+    ** @param area The area where to look for the reserveParticipation
+    ** @param index Global index of the reserveParicipation
+    ** @return the cluster and reserve names
+    */
+    std::pair<Data::ClusterName, Data::ReserveName> reserveParticipationClusterAt(
+      const Area* area,
+      unsigned int index) const;
+    
+    /*!
+    ** @brief Get the group and reserve names for a given index of reserveParticipation
+    ** @param area The area where to look for the reserveParticipation
+    ** @param index Global index of the reserveParicipation
+    ** @return the group and reserve names
+    */
+    std::pair<Data::ThermalDispatchableGroup, Data::ReserveName> reserveParticipationGroupAt(
+      const Area* area,
+      unsigned int index) const;
+
+    /*!
+** @brief Get the reserve and spilled/unsupplied status and names for a given index of reserveParticipation
+** @param area The area where to look for the reserveParticipation
+** @param index Global index of the reserveParicipation
+** @return the status and reserve names
+*/
+    std::pair<Data::ThermalUnsuppliedSpilled, Data::ReserveName> reserveParticipationUnsuppliedSpilledAt(
+        const Area* area,
+        unsigned int index) const;
+
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **
@@ -134,6 +169,14 @@ public:
     /// @{
     bool loadDataSeriesFromFolder(Study& study, const AnyString& folder);
 
+    /// @brief Load the reserve participation. For each entry, it checks if the reserve has been
+    /// added to area.allCapacityReservations, if not then log the name of the reserve that has not been found.
+    /// @tparam ClusterT Type of the Cluster list
+    /// @param area Reference to area
+    /// @param file File to read the reserve participations entries
+    /// @return false if the file opening failed, true otherwise
+    bool loadReserveParticipations(Area& area, const AnyString& folder);
+
     bool saveDataSeriesToFolder(const AnyString& folder) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
@@ -155,6 +198,10 @@ public:
     unsigned int allClustersCount() const;
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
     void sortCompleteList();
+    /// @brief Get the cluster from the vector allClusters_ using it's name
+    /// @param clusterName
+    /// @return nullopt if no clusters found else a pointer to the cluster
+    std::optional<std::shared_ptr<Cluster>> getClusterByName(std::string clusterName);
 
 protected:
     std::vector<std::shared_ptr<ClusterT>> allClusters_;

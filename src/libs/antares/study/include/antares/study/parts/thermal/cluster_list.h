@@ -127,6 +127,12 @@ public:
     unsigned int enabledAndMustRunCount() const;
     unsigned int enabledAndNotMustRunCount() const;
 
+    // returns the number of reserve participations of all clusters
+    unsigned int reserveParticipationsCount() const;
+    // returns the number of capacity reserves that all the clusters are participating to 
+    // (count only capacity resarvations once)
+    unsigned int capacityReservationsCount() const;
+
 private:
     // Give a special index to enbled and not must-run THERMAL clusters
     void rebuildIndex() const;

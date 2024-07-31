@@ -136,7 +136,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     const uint shortTermStorageCount = study.runtime.shortTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
-
+    
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
         problem.ValeursDeNTC[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
@@ -152,11 +152,21 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
-        variablesMapping.NumeroDeVariableDeLInterconnexion.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion.assign(linkCount,
-                                                                                          0);
-        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion.assign(linkCount,
-                                                                                          0);
+        variablesMapping.NumeroDeVariableDeLInterconnexion
+          .assign(linkCount, 0);
+        variablesMapping
+          .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion
+          .assign(linkCount, 0);
+        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
+          .assign(linkCount, 0);
+        variablesMapping.runningClusterReserveParticipationIndex
+          .assign(study.runtime.reserveParticipationCount, 0);
+        variablesMapping.clusterReserveParticipationIndex
+          .assign(study.runtime.reserveParticipationCount, 0);
+        variablesMapping.internalUnsatisfiedReserveIndex
+          .assign(study.runtime.capacityReservationCount, 0);
+        variablesMapping.internalExcessReserveIndex
+          .assign(study.runtime.capacityReservationCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime.thermalPlantTotalCount, 0);
@@ -209,6 +219,16 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDArret
           .assign(study.runtime.thermalPlantTotalCount, 0);
+
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesDeBesoinEnReserves.assign(
+            study.runtime.capacityReservationCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier.assign(
+            study.runtime.thermalPlantTotalCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier.assign(
+            study.runtime.thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
@@ -314,6 +334,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
     for (unsigned k = 0; k < nbPays; k++)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.enabledAndNotMustRunCount();
+        const uint nbReserveParticipations = study.areas.byIndex[k]->thermal.list.reserveParticipationsCount();
+        const uint nbReserves = study.areas.byIndex[k]->allCapacityReservations.size();
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure.assign(nbPaliers,
@@ -385,6 +407,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
+        problem.ResultatsHoraires[k].ReserveThermique.resize(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
@@ -412,21 +435,25 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
-            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier.assign(
-              nbPaliers,
-              0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].ParticipationReservesDuPalier
+              .assign(nbReserveParticipations, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesEnMarcheDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesQuiDemarrentDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].NombreDeGroupesQuiSArretentDuPalier
+              .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j]
+              .NombreDeGroupesQuiTombentEnPanneDuPalier
+              .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesEnMarcheDuPalier.assign(nbPaliers, 0.);
+              .ReserveThermique[j]
+              .ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
             problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiDemarrentDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiSArretentDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiTombentEnPanneDuPalier.assign(nbPaliers, 0.);
+              .ReserveThermique[j]
+              .ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();

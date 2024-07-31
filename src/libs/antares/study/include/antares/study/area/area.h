@@ -38,6 +38,7 @@
 #include "constants.h"
 #include "links.h"
 #include "ui.h"
+#include <antares/study/area/capacityReservation.h>
 
 namespace Antares
 {
@@ -300,6 +301,9 @@ public:
     //! Spread for the spilled energy cost
     double spreadSpilledEnergyCost = 0.;
     //@}
+
+    /// \name AllCapacityReservations structure to keep track of the added capacity reservations
+    AllCapacityReservations allCapacityReservations;
 
     //! \name Output filtering
     //@{

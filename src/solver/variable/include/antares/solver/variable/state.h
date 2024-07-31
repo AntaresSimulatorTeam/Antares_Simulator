@@ -101,6 +101,7 @@ public:
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
+    int getAreaIndexFromReserveAndCluster(Data::ReserveName reserveName, Data::ClusterName clusterName);
 private:
     /*!
     ** \brief Initialize some variable according a thermal cluster index
@@ -116,6 +117,8 @@ private:
       const std::array<uint, HOURS_PER_YEAR>& ON_min,
       const std::array<uint, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
+
+    void yearEndBuildCalculateReserveParticipationCosts(const Data::ThermalCluster* currentCluster);
 
     std::array<uint, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
       const uint& maxDurationON,
@@ -181,6 +184,15 @@ public:
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[HOURS_PER_YEAR];
+    //! Reserve Participation for all thermal group types (nuclear / coal / ...) for the whole year
+    //! per reserve
+    std::map<Data::ThermalDispatchableGroup, std::map<Data::ReserveName, double>>
+      thermalReserveParticipationPerGroupForYear[HOURS_PER_YEAR];
+
+    //! Reserve Participation for all clusters per reserve
+    std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
+      thermalReserveParticipationPerClusterForYear[HOURS_PER_YEAR];
+
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)
     uint thermalClusterDispatchedUnitsCountForYear[HOURS_PER_YEAR];
@@ -191,6 +203,8 @@ public:
     double thermalClusterNonProportionalCostForYear[HOURS_PER_YEAR];
     //! Minimum power of the cluster for the whole year
     double thermalClusterPMinOfTheClusterForYear[HOURS_PER_YEAR];
+    //! Reserves participation cost of the thermal cluster for the whole year
+    double thermalClusterReserveParticipationCostForYear[HOURS_PER_YEAR];
 
     double renewableClusterProduction;
 

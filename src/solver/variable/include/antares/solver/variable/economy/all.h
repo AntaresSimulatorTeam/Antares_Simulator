@@ -44,6 +44,10 @@
 #include "dispatchableGeneration.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "dtgMarginAfterCsr.h"
+#include "spilledEnergy.h"
+#include "reserveParticipationCost.h"
+#include "reserveParticipationByGroup.h"
+#include "reserveParticipationUnsuppliedSpilled.h"
 #include "hydroCost.h"
 #include "hydrostorage.h"
 #include "inflow.h"
@@ -70,6 +74,8 @@
 #include "npCostByDispatchablePlant.h"
 #include "productionByDispatchablePlant.h"
 #include "profitByPlant.h"
+#include "reserveParticipationByDispatchablePlant.h"
+
 
 // By RES plant
 #include "STSbyGroup.h"
@@ -139,9 +145,13 @@ typedef          // Prices
                                        <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
                                                                    // plant
                                         <ProfitByPlant
-                                         // Links
-                                         <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                          <ReserveParticipationCost // Participation cost to the reserves
+                                            <ReserveParticipationByDispatchablePlant // Participation per cluster
+                                              <ReserveParticipationByGroup // Participation per thermal group
+                                               <ReserveParticipationUnsuppliedSpilled
+                                                  // Links
+                                                 <Variable::Economy::Links // All links
+                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -229,12 +239,22 @@ typedef // Prices
 
                                                                     // Number Of Dispatched Units
                                                                     Common::SpatialAggregate<
-                                                                      NbOfDispatchedUnits // MBO
-                                                                                          // 25/02/2016
-                                                                                          // -
-                                                                                          // refs:
-                                                                                          // #55
-                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                      NonProportionalCost, // MBO
+                                                                                           // 13/05/2014
+                                                                                           // -
+                                                                                           // refs:
+                                                                                           // #21
+
+                                                                      // Number Of Dispatched Units
+                                                                      Common::SpatialAggregate<
+                                                                        NbOfDispatchedUnits, // MBO
+                                                                                            // 25/02/2016
+                                                                                            // -
+                                                                                            // refs:
+                                                                                            // #55
+                                                                        Common::
+                                                                          SpatialAggregate<ReserveParticipationCost
+                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

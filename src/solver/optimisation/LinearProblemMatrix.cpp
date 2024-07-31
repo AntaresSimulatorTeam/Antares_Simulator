@@ -22,6 +22,7 @@
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 
 #include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
+#include "antares/solver/optimisation/LinearProblemMatrixReserves.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/utils/filename.h"
@@ -58,9 +59,10 @@ void LinearProblemMatrix::Run()
 
     ProblemMatrixEssential::Run();
 
-    if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo_->OptimisationNotFastMode)
     {
         LinearProblemMatrixStartUpCosts(problemeHebdo_, false, builder_).Run();
+        LinearProblemMatrixReserves(problemeHebdo_, false, builder_).Run();
     }
 
     return;

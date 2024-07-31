@@ -64,38 +64,51 @@ enum class LocalTSGenerationBehavior
     forceNoGen
 };
 
+enum ThermalDispatchableGroup
+{
+    //! Nuclear
+    thermalDispatchGrpNuclear = 0,
+    //! Lignite
+    thermalDispatchGrpLignite,
+    //! Hard Coal
+    thermalDispatchGrpHardCoal,
+    //! Gas
+    thermalDispatchGrpGas,
+    //! Oil
+    thermalDispatchGrpOil,
+    //! Mixed fuel
+    thermalDispatchGrpMixedFuel,
+    //! Other 1
+    thermalDispatchGrpOther1,
+    //! Other 2
+    thermalDispatchGrpOther2,
+    //! Other 3
+    thermalDispatchGrpOther3,
+    //! Other 4
+    thermalDispatchGrpOther4,
+
+    //! The highest value
+    groupMax
+};
+
+enum ThermalUnsuppliedSpilled
+{
+    //! Spilled
+    ThermalUnsuppliedSpilledSpilled = 0,
+    //! Unsupplied
+    ThermalUnsuppliedSpilledUnsupplied,
+
+    //! The highest value
+    unsuppliedSpilledMax
+};
+
 /*!
 ** \brief A single thermal cluster
 */
 class ThermalCluster final: public Cluster, public std::enable_shared_from_this<ThermalCluster>
 {
 public:
-    enum ThermalDispatchableGroup
-    {
-        //! Nuclear
-        thermalDispatchGrpNuclear = 0,
-        //! Lignite
-        thermalDispatchGrpLignite,
-        //! Hard Coal
-        thermalDispatchGrpHardCoal,
-        //! Gas
-        thermalDispatchGrpGas,
-        //! Oil
-        thermalDispatchGrpOil,
-        //! Mixed fuel
-        thermalDispatchGrpMixedFuel,
-        //! Other 1
-        thermalDispatchGrpOther1,
-        //! Other 2
-        thermalDispatchGrpOther2,
-        //! Other 3
-        thermalDispatchGrpOther3,
-        //! Other 4
-        thermalDispatchGrpOther4,
-
-        //! The highest value
-        groupMax
-    };
+    
 
     Pollutant emissions;
 

@@ -64,6 +64,8 @@ using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
 using ClusterName = std::string;
+//! Name of a reserve
+using ReserveName = std::string;
 
 using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 

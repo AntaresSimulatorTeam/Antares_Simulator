@@ -30,12 +30,16 @@ set(RTESOLVER_OPT
 		opt_gestion_des_couts_cas_quadratique.cpp
         opt_construction_variables_couts_demarrages.cpp
         opt_gestion_des_bornes_couts_demarrage.cpp
+        opt_gestion_des_bornes_reserves_thermiques.cpp
         opt_gestion_des_couts_couts_demarrage.cpp
+        opt_gestion_des_couts_reserves.cpp
         opt_gestion_second_membre_couts_demarrage.cpp
-        opt_gestion_second_membre_couts_demarrage.cpp
+        opt_gestion_second_membre_reserves.cpp
         opt_decompte_variables_et_contraintes_couts_demarrage.cpp
+        opt_decompte_variables_et_contraintes_reserves.cpp
         opt_init_minmax_groupes_couts_demarrage.cpp
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
+		opt_construction_variables_reserves_thermiques.cpp
 		include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
 		include/antares/solver/optimisation/base_weekly_optimization.h
@@ -124,11 +128,23 @@ set(RTESOLVER_OPT
 		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
 		include/antares/solver/optimisation/constraints/MinDownTime.h
 		constraints/MinDownTime.cpp
+		include/antares/solver/optimisation/constraints/PMaxReserve.h
+		constraints/PMaxReserve.cpp
+		include/antares/solver/optimisation/constraints/POutCapacityThreasholds.h
+		constraints/POutCapacityThreasholds.cpp
+		include/antares/solver/optimisation/constraints/POutBounds.h
+		constraints/POutBounds.cpp
+		include/antares/solver/optimisation/constraints/PRunningUnits.h
+		constraints/PRunningUnits.cpp
+		include/antares/solver/optimisation/constraints/ReserveSatisfaction.h
+		constraints/ReserveSatisfaction.cpp
 
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp
 		include/antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h
 		LinearProblemMatrixStartUpCosts.cpp
+		include/antares/solver/optimisation/LinearProblemMatrixReserves.h
+		LinearProblemMatrixReserves.cpp
 		include/antares/solver/optimisation/LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
 		include/antares/solver/optimisation/QuadraticProblemMatrix.h
@@ -154,6 +170,8 @@ set(RTESOLVER_OPT
 		constraints/FinalStockGroup.cpp
 		include/antares/solver/optimisation/constraints/AbstractStartUpCostsGroup.h
 		constraints/AbstractStartUpCostsGroup.cpp
+		include/antares/solver/optimisation/constraints/ReserveParticipationGroup.h
+		constraints/ReserveParticipationGroup.cpp
 		include/antares/solver/optimisation/constraints/PMinMaxDispatchableGenerationGroup.h
 		constraints/PMinMaxDispatchableGenerationGroup.cpp
 		include/antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnitsGroup.h

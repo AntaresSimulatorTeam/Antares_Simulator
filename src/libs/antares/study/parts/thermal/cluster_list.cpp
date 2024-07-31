@@ -26,6 +26,7 @@
 #include <antares/utils/utils.h>
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
+#include <numeric>
 
 namespace // anonymous
 {
@@ -92,6 +93,30 @@ unsigned int ThermalClusterList::enabledAndMustRunCount() const
 {
     return std::ranges::count_if(allClusters_,
                                  [](auto c) { return c->isEnabled() && c->isMustRun(); });
+}
+
+unsigned int ThermalClusterList::reserveParticipationsCount() const
+{
+    return std::accumulate(allClusters_.begin(),
+                           allClusters_.end(),
+                           0,
+                           [](int total, const std::shared_ptr<ThermalCluster> cluster)
+                           { return total + cluster->reserveParticipationsCount(); });
+}
+
+unsigned int ThermalClusterList::capacityReservationsCount() const
+{
+    std::set<const CapacityReservation*> uniqueReservations;
+    for (auto& cluster : allClusters_)
+    {
+        for (const auto& [_, reserveParticipation] : cluster->clusterReservesParticipations)
+        {
+            const CapacityReservation* reservationPtr = &(reserveParticipation.capacityReservation.get());
+            uniqueReservations.insert(reservationPtr);
+        }
+    }
+
+    return uniqueReservations.size();
 }
 
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)

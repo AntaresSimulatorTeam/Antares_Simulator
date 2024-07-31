@@ -110,6 +110,42 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 
 #undef SEP
 
+
+void Cluster::addReserveParticipation(
+  Data::ReserveName name,
+  ClusterReserveParticipation reserveParticipation)
+{
+    clusterReservesParticipations.emplace(name, reserveParticipation);
+}
+
+bool Cluster::isParticipatingInReserve(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return true;
+    else
+        return false;
+}
+
+float Cluster::reserveMaxPower(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).maxPower;
+    else
+        return -1;
+}
+
+float Cluster::reserveCost(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).participationCost;
+    else
+        return -1;
+}
+
+unsigned int Cluster::reserveParticipationsCount(){
+    return clusterReservesParticipations.size();
+}
+
 void Cluster::invalidateArea()
 {
     if (parentArea)
@@ -135,6 +171,16 @@ void Cluster::reset()
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 {
     return (s1->getFullName() < s2->getFullName());
+}
+
+std::vector<Data::ReserveName> Cluster::listOfParticipatingReserves()
+{
+    std::vector<Data::ReserveName> reserves;
+    for (auto reserve: clusterReservesParticipations)
+    {
+        reserves.push_back(reserve.first);
+    }
+    return reserves;
 }
 
 } // namespace Antares::Data

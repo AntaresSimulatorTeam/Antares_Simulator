@@ -55,6 +55,7 @@ public:
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;
     uint32_t& NbTermesContraintesPourLesCoutsDeDemarrage;
+    uint32_t& NbTermesContraintesPourLesReserves;
 };
 
 /*! \verbatim
@@ -101,6 +102,26 @@ public:
                                               double coeff,
                                               int offset = 0,
                                               int delta = 0);
+
+    ConstraintBuilder& RunningClusterReserveParticipation(unsigned int index,
+                                                     double coeff,
+                                                     int offset = 0,
+                                                     int delta = 0);
+
+    ConstraintBuilder& ClusterReserveParticipation(unsigned int index,
+                                                     double coeff,
+                                                     int offset = 0,
+                                                     int delta = 0);
+
+    ConstraintBuilder& InternalUnsatisfiedReserve(unsigned int pays,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
+
+    ConstraintBuilder& InternalExcessReserve(unsigned int pays,
+                                             double coeff,
+                                             int offset = 0,
+                                             int delta = 0);
 
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
@@ -287,4 +308,12 @@ struct StartUpCostsData
 {
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     bool Simulation;
+};
+
+struct ReserveData
+{
+    bool Simulation;
+    ALL_AREA_RESERVES& areaReserves;
+    std::vector<PALIERS_THERMIQUES> thermalClusters;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };

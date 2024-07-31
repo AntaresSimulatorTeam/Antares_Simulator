@@ -49,6 +49,102 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 }
 
 template<class ClusterT>
+std::pair<Data::ClusterName, Data::ReserveName>
+  ClusterList<ClusterT>::reserveParticipationClusterAt(const Area* area, unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (auto const& [reserveUpName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (auto& cluster : allClusters_)
+        {
+            if (cluster->isParticipatingInReserve(reserveUpName))
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster->name(), reserveUpName};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    for (auto const& [reserveDownName, _] :
+         area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (auto& cluster : allClusters_)
+        {
+            if (cluster->isParticipatingInReserve(reserveDownName))
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster->name(), reserveDownName};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    throw std::out_of_range("This cluster reserve participation index has not been found in all "
+                            "the reserve participations");
+}
+
+template<class ClusterT>
+std::pair<Data::ThermalDispatchableGroup, Data::ReserveName>
+  ClusterList<ClusterT>::reserveParticipationGroupAt(const Area* area, unsigned int index) const
+{
+    int column = 0;
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (int indexGroup = 0; indexGroup < Data::groupMax; indexGroup++)
+        {
+            if (column == index)
+                return {static_cast<Data::ThermalDispatchableGroup>(indexGroup), reserveName};
+            column++;
+        }
+    }
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (int indexGroup = 0; indexGroup < Data::groupMax; indexGroup++)
+        {
+            if (column == index)
+                return {static_cast<Data::ThermalDispatchableGroup>(indexGroup), reserveName};
+            column++;
+        }
+    }
+    throw std::out_of_range("This group reserve participation index has not been found in all the "
+                            "reserve participations");
+}
+
+template<class ClusterT>
+std::pair<Data::ThermalUnsuppliedSpilled, Data::ReserveName>
+ClusterList<ClusterT>::reserveParticipationUnsuppliedSpilledAt(const Area* area, unsigned int index) const
+{
+    int column = 0;
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsUp)
+    {
+        for (int indexUnsuppliedSpilled = 0; indexUnsuppliedSpilled < Data::unsuppliedSpilledMax; indexUnsuppliedSpilled++)
+        {
+            if (column == index)
+                return { static_cast<Data::ThermalUnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
+            column++;
+        }
+    }
+    for (auto [reserveName, _] : area->allCapacityReservations.areaCapacityReservationsDown)
+    {
+        for (int indexUnsuppliedSpilled = 0; indexUnsuppliedSpilled < Data::unsuppliedSpilledMax; indexUnsuppliedSpilled++)
+        {
+            if (column == index)
+                return { static_cast<Data::ThermalUnsuppliedSpilled>(indexUnsuppliedSpilled), reserveName };
+            column++;
+        }
+    }
+    throw std::out_of_range("This reserve status index has not been found in all the "
+        "reserve participations");
+}
+
+
+template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
 {
     for (auto& cluster: all())
@@ -104,6 +200,18 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
         cluster->series.timeseriesNumbers.saveToBuffer(ts_content);
         writer.addEntryFromBuffer(path.c_str(), ts_content);
     }
+}
+
+template<class ClusterT>
+std::optional<std::shared_ptr<Cluster>> ClusterList<ClusterT>::getClusterByName(
+  std::string clusterName)
+{
+    auto it = std::find_if(allClusters_.begin(),
+                           allClusters_.end(),
+                           [&](const auto& cluster) { return cluster->id() == clusterName; });
+
+    return (it != allClusters_.end()) ? std::optional<std::shared_ptr<ClusterT>>(*it)
+                                      : std::nullopt;
 }
 
 template<class ClusterT>
@@ -266,6 +374,65 @@ bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const AnyString& 
     return std::ranges::all_of(allClusters_,
                                [&s, &folder](auto c)
                                { return c->loadDataSeriesFromFolder(s, folder); });
+}
+
+template<class ClusterT>
+bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyString& file)
+{
+    IniFile ini;
+    if (!ini.open(file, false))
+        return false;
+    ini.each(
+      [&](const IniFile::Section& section)
+      {
+          std::string tmpClusterName;
+          float tmpMaxPower = 0;
+          float tmpParticipationCost = 0;
+          for (auto* p = section.firstProperty; p; p = p->next)
+          {
+              CString<30, false> tmp;
+              tmp = p->key;
+              tmp.toLower();
+
+              if (tmp == "cluster-name")
+              {
+                  TransformNameIntoID(p->value, tmpClusterName);
+              }
+              else if (tmp == "max-power")
+              {
+                  if (!p->value.to<float>(tmpMaxPower))
+                  {
+                      logs.warning()
+                        << area.name << ": invalid max power for reserve " << section.name;
+                  }
+              }
+              else if (tmp == "participation-cost")
+              {
+                  if (!p->value.to<float>(tmpParticipationCost))
+                  {
+                      logs.warning()
+                        << area.name << ": invalid participation cost for reserve " << section.name;
+                  }
+              }
+          }
+          auto reserve = area.allCapacityReservations.getReserveByName(section.name);
+          auto cluster = area.thermal.list.getClusterByName(tmpClusterName);
+          if (reserve && cluster)
+          {
+              ClusterReserveParticipation tmpReserveParticipation{
+                reserve.value(), tmpMaxPower, tmpParticipationCost};
+              cluster.value().get()->addReserveParticipation(section.name, tmpReserveParticipation);
+          }
+          else
+          {
+              if (!reserve)
+                logs.warning() << area.name << ": does not contains this reserve " << section.name;
+              if (!cluster)
+                  logs.warning() << area.name << ": does not contains this cluster "
+                                 << tmpClusterName;
+          }
+      });
+    return true;
 }
 
 template<class ClusterT>

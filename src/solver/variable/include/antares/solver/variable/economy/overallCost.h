@@ -22,6 +22,11 @@
 #define __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
 
 #include "antares/solver/variable/variable.h"
+#include <filesystem>
+#include <yuni/io/file.h>
+#include <iomanip>
+#include <sstream>
+#include <yuni/io/directory.h>
 
 namespace Antares
 {
@@ -209,6 +214,7 @@ public:
 
     void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
+
         // Next variable
         NextType::yearEndBuild(state, year, numSpace);
     }
@@ -244,7 +250,8 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        const double costForSpilledOrUnsuppliedEnergy =
+        auto& area = state.area;
+        double costForSpilledOrUnsuppliedEnergy =
           // Total UnsupliedEnergy emissions
           (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
            * state.area->thermal.unsuppliedEnergyCost)
@@ -255,7 +262,28 @@ public:
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
                 - state.area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
-
+        auto thermalReserves = state.problemeHebdo->allReserves.thermalAreaReserves[area->index];
+        for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
+        {
+            costForSpilledOrUnsuppliedEnergy
+                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalUnsatisfied[reserveUp.areaReserveIndex]
+                    * reserveUp.failureCost
+                    + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalExcessReserve[reserveUp.areaReserveIndex]
+                        * reserveUp.spillageCost;
+        }
+        for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
+        {
+            costForSpilledOrUnsuppliedEnergy
+                += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalUnsatisfied[reserveDown.areaReserveIndex]
+                    * reserveDown.failureCost
+                    + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
+                        .ValeursHorairesInternalExcessReserve[reserveDown.areaReserveIndex]
+                        * reserveDown.spillageCost;
+        }
+        
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;
 
         // Incrementing annual system cost (to be printed in output into a separate file)

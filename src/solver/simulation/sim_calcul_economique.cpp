@@ -113,9 +113,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
-    problem.OptimisationAvecCoutsDeDemarrage = (study.parameters.unitCommitment.ucMode
-                                                != Antares::Data::UnitCommitmentMode::
-                                                  ucHeuristicFast);
+    problem.OptimisationNotFastMode
+      = (study.parameters.unitCommitment.ucMode
+         != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
 
     problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
                                                  == Antares::Data::UnitCommitmentMode::ucMILP);
@@ -276,13 +276,17 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     }
 
     NombrePaliers = 0;
+    int globalReserveIndex = 0;
+    int globalClusterParticipationIndex = 0;
     for (uint i = 0; i < study.areas.size(); ++i)
     {
+        int areaReserveIndex = 0;
+        int areaClusterParticipationIndex = 0;
         const auto& area = *(study.areas.byIndex[i]);
-
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
+        AREA_RESERVES_VECTOR areaReserves;
 
         for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
         {
@@ -312,9 +316,89 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
                   : cluster->minStablePower;
             pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
+            
         }
+        if (study.parameters.unitCommitment.ucMode
+            != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+        {
+            for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsUp)
+            {
+                CAPACITY_RESERVATION areaCapacityReservationsUp;
+                areaCapacityReservationsUp.failureCost = val.failureCost;
+                areaCapacityReservationsUp.spillageCost = val.spillageCost;
+                areaCapacityReservationsUp.reserveName = key;
+                areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
+                areaCapacityReservationsUp.areaReserveIndex = areaReserveIndex;
+                globalReserveIndex++;
+                areaReserveIndex++;
+                if (val.need.timeSeries.width > 0)
+                {
+                    for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                    {
+                        areaCapacityReservationsUp.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
+                    }
+                }
+                for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+                {
+                    RESERVE_PARTICIPATION reserveParticipation;
+                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
+                    reserveParticipation.participationCost = cluster->reserveCost(key);
+                    reserveParticipation.clusterName = cluster->name();
+                    reserveParticipation.clusterIdInArea = cluster->index;
+                    reserveParticipation.globalIndexClusterParticipation
+                        = globalClusterParticipationIndex;
+                    reserveParticipation.areaIndexClusterParticipation
+                        = areaClusterParticipationIndex;
+                    globalClusterParticipationIndex++;
+                   areaClusterParticipationIndex++;
+                    areaCapacityReservationsUp.AllReservesParticipation.push_back(
+                        reserveParticipation);
+                }
+
+                areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
+            }
+            for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsDown)
+            {
+                CAPACITY_RESERVATION areaCapacityReservationsDown;
+                areaCapacityReservationsDown.failureCost = val.failureCost;
+                areaCapacityReservationsDown.spillageCost = val.spillageCost;
+                areaCapacityReservationsDown.reserveName = key;
+                areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
+                areaCapacityReservationsDown.areaReserveIndex = areaReserveIndex;
+                globalReserveIndex++;
+                areaReserveIndex++;
+                if (val.need.timeSeries.width > 0)
+                {
+                    for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                    {
+                        areaCapacityReservationsDown.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
+                    }
+                }
+                for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+                {
+                    RESERVE_PARTICIPATION reserveParticipation;
+                    //if (cluster->isParticipatingInReserve(key))
+                    //{
+                        reserveParticipation.maxPower = cluster->reserveMaxPower(key);
+                        reserveParticipation.participationCost = cluster->reserveCost(key);
+                        reserveParticipation.clusterName = cluster->name();
+                        reserveParticipation.clusterIdInArea = cluster->index;
+                        reserveParticipation.globalIndexClusterParticipation = globalClusterParticipationIndex;
+                        reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                        globalClusterParticipationIndex++;
+                        areaClusterParticipationIndex++;
+                        areaCapacityReservationsDown.AllReservesParticipation.push_back(
+                          reserveParticipation);
+                    //}
+                }
+
+                areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);
+            }
+        }
+        
 
         NombrePaliers += clusterCount;
+        problem.allReserves.thermalAreaReserves.push_back(areaReserves);
     }
 
     problem.NombreDePaliersThermiques = NombrePaliers;

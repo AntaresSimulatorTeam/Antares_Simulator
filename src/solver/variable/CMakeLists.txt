@@ -116,6 +116,13 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/lolp.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
+	include/antares/solver/variable/economy/reserveParticipationCost.h
+	include/antares/solver/variable/economy/reserveParticipationByDispatchablePlant.h
+	include/antares/solver/variable/economy/vCardReserveParticipationByDispatchablePlant.h
+    include/antares/solver/variable/economy/reserveParticipationUnsuppliedSpilled.h
+	include/antares/solver/variable/economy/vCardReserveParticipationUnsuppliedSpilled.h
+	include/antares/solver/variable/economy/reserveParticipationByGroup.h
+    include/antares/solver/variable/economy/vCardReserveParticipationByGroup.h
 
         # Links
         include/antares/solver/variable/economy/links/flowLinear.h
