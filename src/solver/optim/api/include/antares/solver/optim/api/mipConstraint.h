@@ -28,6 +28,7 @@ namespace Antares::Solver::Optim::Api
 
 class MipConstraint
 {
+public:
     virtual void setLb(double lb) = 0;
     virtual void setUb(double ub) = 0;
 

@@ -53,6 +53,7 @@ protected:
     std::map<std::string, std::shared_ptr<MipConstraint>> constraints_;
 
     std::unique_ptr<MipSolution> solution_;
+    std::unique_ptr<MipObjective> objective_;
 };
 
 } // namespace Antares::Solver::Optim::Api

@@ -28,6 +28,7 @@ namespace Antares::Solver::Optim::Api
 
 class MipObjective
 {
+public:
     virtual void setCoefficient(MipVariable* var, double coefficient) = 0;
 
     virtual void setMaximization() = 0;

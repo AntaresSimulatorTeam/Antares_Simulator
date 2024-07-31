@@ -89,24 +89,23 @@ Api::MipConstraint* OrtoolsLinearSolver::getConstraint(const std::string& name)
 
 void OrtoolsLinearSolver::setObjectiveCoefficient(Api::MipVariable* var, double coefficient)
 {
-
+    objective_->setCoefficient(var, coefficient);
 }
 
-/* double OrtoolsLinearSolver::getObjectiveCoefficient(Api::MipVariable* var) */
-/* { */
-
-/* } */
+double OrtoolsLinearSolver::getObjectiveCoefficient(Api::MipVariable* var)
+{
+    return objective_->getCoefficient(var);
+}
 
 void OrtoolsLinearSolver::setMinimization()
 {
-
+    objective_->setMinimization();
 }
 
 void OrtoolsLinearSolver::setMaximization()
 {
-
+    objective_->setMaximization();
 }
-
 
 /* Api::MipSolution* OrtoolsLinearSolver::solve() */
 /* { */
