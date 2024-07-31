@@ -56,10 +56,10 @@ Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, cons
     return mipVar.get();
 }
 
-/* Api::MipVariable* OrtoolsLinearSolver::getVariable(const std::string& name) */
-/* { */
-/*      auto it = std::ranges::find_if(variables_, [&name](const auto var) { return var->getName() = }; */
-/* } */
+Api::MipVariable* OrtoolsLinearSolver::getVariable(const std::string& name)
+{
+    return variables_.at(name).get();
+}
 
 /* Api::MipConstraint* OrtoolsLinearSolver::addConstraint(double lb, double ub, const std::string& name) */
 /* { */
