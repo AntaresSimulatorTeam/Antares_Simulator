@@ -138,21 +138,21 @@ class Clone: public Visitor
         auto* n1 = std::any_cast<Node*>(add.n1->accept(*this));
         Node* n2 = std::any_cast<Node*>(add.n2->accept(*this));
 
-        Add* result = new Add(n1, n2);
-        return dynamic_cast<Node*>(result);
+        Node* result = new Add(n1, n2);
+        return result;
     }
 
     std::any visit(const Negate& neg) override
     {
         Node* n = std::any_cast<Node*>(neg.n->accept(*this));
-        Negate* result = new Negate(n);
-        return dynamic_cast<Node*>(result);
+        Node* result = new Negate(n);
+        return result;
     }
 
     std::any visit(const Parameter& param) override
     {
-        Parameter* result = new Parameter(param.name);
-        return dynamic_cast<Node*>(result);
+        Node* result = new Parameter(param.name);
+        return result;
     }
 };
 
