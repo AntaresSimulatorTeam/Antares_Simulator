@@ -1,4 +1,5 @@
 #include <antares/solver/expressions/CloneVisitor.h>
+#include <antares/solver/expressions/ExpressionsNodes.h>
 
 std::any CloneVisitor::visit(const Add& add)
 {

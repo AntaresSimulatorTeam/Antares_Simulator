@@ -1,5 +1,6 @@
 #include <string>
 
+#include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/StringVisitor.h>
 
 std::any StringVisitor::visit(const Add& add)

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/PrintVisitor.h>
 
 std::any PrintVisitor::visit(const Add& add)
