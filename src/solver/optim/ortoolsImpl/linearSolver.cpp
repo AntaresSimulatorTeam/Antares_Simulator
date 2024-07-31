@@ -20,7 +20,11 @@
  */
 
 #include <antares/solver/optim/ortoolsImpl/linearSolver.h>
+#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
+
 #include <antares/solver/utils/ortools_utils.h>
+
+#include <memory>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
@@ -34,19 +38,22 @@ OrtoolsLinearSolver::OrtoolsLinearSolver(bool isMip, const std::string& solverNa
 
 Api::MipVariable* OrtoolsLinearSolver::addNumVariable(double lb, double ub, const std::string& name)
 {
-    auto mpVar = mpSolver_->MakeNumVar(lb, ub, name);
-    variables_.try_emplace(name, std::make_shared<Api::MipVariable>(mpVar));
+    auto* mpVar = mpSolver_->MakeNumVar(lb, ub, name);
+    auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
+
+    /* variables_.try_emplace(name, mipVar); */
 
     return variables_.at(name).get();
 }
 
-Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, const std::string& name)
-{
-    auto mpVar = mpSolver_->MakeIntVar(lb, ub, name);
-    variables_.try_emplace(name, std::make_shared<Api::MipVariable>(mpVar));
+/* Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, const std::string& name) */
+/* { */
+/*     auto* mpVar = mpSolver_->MakeIntVar(lb, ub, name); */
+/*     auto mipVar = std::make_shared<Api::MipVariable>(mpVar); */
+/*     variables_.try_emplace(name, mipVar); */
 
-    return variables_.at(name).get();
-}
+/*     return variables_.at(name).get(); */
+/* } */
 
 /* Api::MipVariable* OrtoolsLinearSolver::getVariable(const std::string& name) */
 /* { */
