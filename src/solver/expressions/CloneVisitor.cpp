@@ -5,23 +5,20 @@ namespace Antares::Solver::Expressions
 {
 std::any CloneVisitor::visit(const Add& add)
 {
-    auto* n1 = std::any_cast<Node*>(add.n1->accept(*this));
-    Node* n2 = std::any_cast<Node*>(add.n2->accept(*this));
+    auto n1 = std::any_cast<std::shared_ptr<Node>>(add.n1->accept(*this));
+    auto n2 = std::any_cast<std::shared_ptr<Node>>(add.n2->accept(*this));
 
-    Node* result = new Add(n1, n2);
-    return result;
+    return std::static_pointer_cast<Node>(make_shared<Add>(n1, n2));
 }
 
 std::any CloneVisitor::visit(const Negate& neg)
 {
-    Node* n = std::any_cast<Node*>(neg.n->accept(*this));
-    Node* result = new Negate(n);
-    return result;
+    auto n = std::any_cast<std::shared_ptr<Node>>(neg.n->accept(*this));
+    return std::static_pointer_cast<Node>(std::make_shared<Negate>(n));
 }
 
 std::any CloneVisitor::visit(const Parameter& param)
 {
-    Node* result = new Parameter(param.name);
-    return result;
+    return std::static_pointer_cast<Node>((std::make_shared<Parameter>(param.name)));
 }
 } // namespace Antares::Solver::Expressions

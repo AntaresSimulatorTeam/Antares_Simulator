@@ -2,7 +2,7 @@
 
 namespace Antares::Solver::Expressions
 {
-Negate::Negate(Node* n):
+Negate::Negate(std::shared_ptr<Node> n):
     n(n)
 {
 }

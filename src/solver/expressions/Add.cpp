@@ -2,7 +2,7 @@
 
 namespace Antares::Solver::Expressions
 {
-Add::Add(Node* n1, Node* n2):
+Add::Add(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2):
     n1(n1),
     n2(n2)
 {

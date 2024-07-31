@@ -10,11 +10,11 @@ class Negate: public Node
 public:
     virtual ~Negate() = default;
 
-    Negate(Node* n);
+    Negate(std::shared_ptr<Node> n);
 
     std::any accept(Visitor& visitor) override;
 
     // private:
-    std::unique_ptr<Node> n;
+    std::shared_ptr<Node> n;
 };
 } // namespace Antares::Solver::Expressions

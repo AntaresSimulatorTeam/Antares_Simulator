@@ -10,11 +10,11 @@ class Add: public Node
 public:
     virtual ~Add() = default;
 
-    Add(Node* n1, Node* n2);
+    Add(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
 
     std::any accept(Visitor& visitor) override;
 
     // private:
-    std::unique_ptr<Node> n1, n2;
+    std::shared_ptr<Node> n1, n2;
 };
 } // namespace Antares::Solver::Expressions

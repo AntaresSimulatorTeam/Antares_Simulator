@@ -10,19 +10,19 @@
 #include <antares/solver/expressions/StringVisitor.h>
 
 template<class V>
-std::any visit(Antares::Solver::Expressions::Node& node)
+std::any visit(std::shared_ptr<Antares::Solver::Expressions::Node> node)
 {
     V visitor;
-    return node.accept(visitor);
+    return node->accept(visitor);
 }
 
 int main()
 {
     using namespace Antares::Solver::Expressions;
-    auto* p1 = new Parameter("hello");
-    auto* p2 = new Parameter("world");
-    auto* neg = new Negate(p2);
-    Add root(p1, neg);
+    auto p1 = std::make_shared<Parameter>("hello");
+    auto p2 = std::make_shared<Parameter>("world");
+    auto neg = std::make_shared<Negate>(p2);
+    auto root = std::make_shared<Add>(p1, neg);
 
     visit<PrintVisitor>(root);
 
@@ -31,6 +31,6 @@ int main()
     std::cout << std::endl;
 
     std::any clone = visit<CloneVisitor>(root);
-    std::unique_ptr<Node> root2(std::any_cast<Node*>(clone));
-    visit<PrintVisitor>(*root2);
+    auto root2 = std::any_cast<std::shared_ptr<Node>>(clone);
+    visit<PrintVisitor>(root2);
 }
