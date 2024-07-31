@@ -4,11 +4,17 @@ project(Expressions)
 set(SRC_Expressions
         include/antares/solver/expressions/Visitor.h
         include/antares/solver/expressions/Node.h
+        Add.cpp
         include/antares/solver/expressions/Add.h
+        Negate.cpp
         include/antares/solver/expressions/Negate.h
+        Parameter.cpp
         include/antares/solver/expressions/Parameter.h
+        PrintVisitor.cpp
         include/antares/solver/expressions/PrintVisitor.h
+        StringVisitor.cpp
         include/antares/solver/expressions/StringVisitor.h
+        CloneVisitor.cpp
         include/antares/solver/expressions/CloneVisitor.h
 
 )
@@ -28,5 +34,11 @@ install(DIRECTORY include/antares
 )
 
 add_executable(visitor main.cpp
+        Add.cpp
+        CloneVisitor.cpp
+        Negate.cpp
+        Parameter.cpp
+        PrintVisitor.cpp
+        StringVisitor.cpp
 
 )

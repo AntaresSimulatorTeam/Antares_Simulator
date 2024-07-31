@@ -6,15 +6,9 @@ class Parameter: public Node
 public:
     virtual ~Parameter() = default;
 
-    Parameter(const std::string name):
-        name(name)
-    {
-    }
+    Parameter(const std::string name);
 
-    std::any accept(Visitor& visitor) override
-    {
-        return visitor.visit(*this);
-    }
+    std::any accept(Visitor& visitor) override;
 
     // private:
     std::string name;

@@ -8,16 +8,9 @@ class Add: public Node
 public:
     virtual ~Add() = default;
 
-    Add(Node* n1, Node* n2):
-        n1(n1),
-        n2(n2)
-    {
-    }
+    Add(Node* n1, Node* n2);
 
-    std::any accept(Visitor& visitor) override
-    {
-        return visitor.visit(*this);
-    }
+    std::any accept(Visitor& visitor) override;
 
     // private:
     std::unique_ptr<Node> n1, n2;

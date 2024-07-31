@@ -6,15 +6,9 @@ class Negate: public Node
 public:
     virtual ~Negate() = default;
 
-    Negate(Node* n):
-        n(n)
-    {
-    }
+    Negate(Node* n);
 
-    std::any accept(Visitor& visitor) override
-    {
-        return visitor.visit(*this);
-    }
+    std::any accept(Visitor& visitor) override;
 
     // private:
     std::unique_ptr<Node> n;
