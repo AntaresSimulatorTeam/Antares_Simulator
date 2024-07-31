@@ -131,7 +131,33 @@ class String: public Visitor
     }
 };
 
+class Clone: public Visitor
+{
+    std::any visit(const Add& add) override
+    {
+        auto* n1 = std::any_cast<Node*>(add.n1->accept(*this));
+        Node* n2 = std::any_cast<Node*>(add.n2->accept(*this));
+
+        Add* result = new Add(n1, n2);
+        return dynamic_cast<Node*>(result);
+    }
+
+    std::any visit(const Negate& neg) override
+    {
+        Node* n = std::any_cast<Node*>(neg.n->accept(*this));
+        Negate* result = new Negate(n);
+        return dynamic_cast<Node*>(result);
+    }
+
+    std::any visit(const Parameter& param) override
+    {
+        Parameter* result = new Parameter(param.name);
+        return dynamic_cast<Node*>(result);
+    }
+};
+
 int main()
+
 {
     auto* p1 = new Parameter("hello");
     auto* p2 = new Parameter("world");
@@ -146,5 +172,14 @@ int main()
     {
         String stringVisitor;
         std::cout << std::any_cast<std::string>(root.accept(stringVisitor));
+    }
+    std::cout << std::endl;
+    {
+        Clone cloneVisitor;
+        std::any clone = root.accept(cloneVisitor);
+        Print printVisitor;
+        Node* root2 = std::any_cast<Node*>(clone);
+        root2->accept(printVisitor);
+        delete root2; // only memory leak is at the root, use std::unique_ptr everywhere ?
     }
 }
