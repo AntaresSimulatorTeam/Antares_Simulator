@@ -15,6 +15,6 @@ public:
     std::any accept(Visitor& visitor) override;
 
     // private:
-    std::unique_ptr<Node> n;
+    Node* n;
 };
 } // namespace Antares::Solver::Expressions

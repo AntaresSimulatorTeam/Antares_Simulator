@@ -3,6 +3,7 @@
 
 #include <antares/solver/expressions/Add.h>
 #include <antares/solver/expressions/CloneVisitor.h>
+#include <antares/solver/expressions/DeleteVisitor.h>
 #include <antares/solver/expressions/Negate.h>
 #include <antares/solver/expressions/Node.h>
 #include <antares/solver/expressions/Parameter.h>
@@ -22,15 +23,18 @@ int main()
     auto* p1 = new Parameter("hello");
     auto* p2 = new Parameter("world");
     auto* neg = new Negate(p2);
-    Add root(p1, neg);
+    auto* root = new Add(p1, neg);
 
-    visit<PrintVisitor>(root);
+    visit<PrintVisitor>(*root);
 
     std::cout << std::endl;
-    std::cout << std::any_cast<std::string>(visit<StringVisitor>(root));
+    std::cout << std::any_cast<std::string>(visit<StringVisitor>(*root));
     std::cout << std::endl;
 
-    std::any clone = visit<CloneVisitor>(root);
-    std::unique_ptr<Node> root2(std::any_cast<Node*>(clone));
+    std::any clone = visit<CloneVisitor>(*root);
+    Node* root2(std::any_cast<Node*>(clone));
     visit<PrintVisitor>(*root2);
+
+    visit<DeleteVisitor>(*root);
+    visit<DeleteVisitor>(*root2);
 }
