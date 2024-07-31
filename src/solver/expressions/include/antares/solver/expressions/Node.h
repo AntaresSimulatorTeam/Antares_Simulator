@@ -7,6 +7,6 @@ class Node
 {
 public:
     virtual ~Node() = default;
-    virtual std::any accept(Visitor& visitor) = 0;
+    virtual void accept(Visitor& visitor) = 0;
 };
 } // namespace Antares::Solver::Expressions

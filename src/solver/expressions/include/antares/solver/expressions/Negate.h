@@ -12,7 +12,7 @@ public:
 
     Negate(std::shared_ptr<Node> n);
 
-    std::any accept(Visitor& visitor) override;
+    void accept(Visitor& visitor) override;
 
     // private:
     std::shared_ptr<Node> n;

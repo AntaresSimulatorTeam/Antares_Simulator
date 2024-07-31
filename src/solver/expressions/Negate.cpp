@@ -7,7 +7,7 @@ Negate::Negate(std::shared_ptr<Node> n):
 {
 }
 
-std::any Negate::accept(Visitor& visitor)
+void Negate::accept(Visitor& visitor)
 {
     return visitor.visit(*this);
 }
