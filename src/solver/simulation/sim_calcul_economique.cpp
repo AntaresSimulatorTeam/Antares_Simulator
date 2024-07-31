@@ -127,8 +127,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.OptimisationAvecVariablesEntieres
       = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP);
 
-    problem.OptimisationAuPasHebdomadaire
-      = (parameters.simplexOptimizationRange == Data::sorWeek);
+    problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
     switch (parameters.power.fluctuations)
     {
@@ -171,8 +170,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable
           = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
-              && area.hydro.pumpingEfficiency > 0.
-              && problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable;
+            && area.hydro.pumpingEfficiency > 0.
+            && problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable;
 
         problem.CaracteristiquesHydrauliques[i].PumpingRatio = area.hydro.pumpingEfficiency;
 
@@ -182,7 +181,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CaracteristiquesHydrauliques[i].TurbinageEntreBornes
           = area.hydro.reservoirManagement
             && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
-
 
         problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire
           = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
@@ -254,7 +252,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             assert(false && "Invalid constraint");
             break;
         }
-        PtMat.SensDeLaContrainteCouplante = *Antares::Data::BindingConstraint::MathOperatorToCString(bc->operatorType());
+        PtMat.SensDeLaContrainteCouplante
+          = *Antares::Data::BindingConstraint::MathOperatorToCString(bc->operatorType());
 
         BindingConstraintStructures bindingConstraintStructures = bc->initLinkArrays();
         for (uint j = 0; j < bc->linkCount(); ++j)
@@ -271,7 +270,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             PtMat.PaysDuPalierDispatch[j] = bindingConstraintStructures.clustersAreaIndex[j];
             PtMat.PoidsDuPalierDispatch[j] = bindingConstraintStructures.clusterWeight[j];
 
-            PtMat.OffsetTemporelSurLePalierDispatch[j] = bindingConstraintStructures.clusterOffset[j];
+            PtMat.OffsetTemporelSurLePalierDispatch[j]
+              = bindingConstraintStructures.clusterOffset[j];
         }
     }
 
@@ -319,10 +319,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
+static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
                                      int PasDeTempsDebut,
-                                     const BindingConstraintsRepository &bindingConstraints,
-                                     const BindingConstraintGroupRepository &bcgroups,
+                                     const BindingConstraintsRepository& bindingConstraints,
+                                     const BindingConstraintGroupRepository& bcgroups,
                                      const uint weekFirstDay,
                                      int pasDeTemps)
 {
@@ -338,56 +338,56 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
         if (group)
             tsIndexForBc = group->timeseriesNumbers[0][problem.year];
 
-        //If there is only one TS, always select it.
+        // If there is only one TS, always select it.
         const auto ts_number = bc->RHSTimeSeries().width == 1 ? 0 : tsIndexForBc;
 
         auto& timeSeries = bc->RHSTimeSeries();
         double const* column = timeSeries[ts_number];
         switch (bc->type())
         {
-            case BindingConstraint::typeHourly:
-            {
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplante[pasDeTemps]
-                        = column[PasDeTempsDebut + pasDeTemps];
-                break;
-            }
-            case BindingConstraint::typeDaily:
-            {
-                assert(timeSeries.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
+        case BindingConstraint::typeHourly:
+        {
+            problem.MatriceDesContraintesCouplantes[constraintIndex]
+              .SecondMembreDeLaContrainteCouplante[pasDeTemps]
+              = column[PasDeTempsDebut + pasDeTemps];
+            break;
+        }
+        case BindingConstraint::typeDaily:
+        {
+            assert(timeSeries.width && "Invalid constraint data width");
+            assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
 
-                std::vector<double>& sndMember
-                    = problem.MatriceDesContraintesCouplantes[constraintIndex]
-                        .SecondMembreDeLaContrainteCouplante;
+            std::vector<double>& sndMember
+              = problem.MatriceDesContraintesCouplantes[constraintIndex]
+                  .SecondMembreDeLaContrainteCouplante;
 
-                for (unsigned day = 0; day != 7; ++day)
-                    sndMember[day] = column[weekFirstDay + day];
+            for (unsigned day = 0; day != 7; ++day)
+                sndMember[day] = column[weekFirstDay + day];
 
-                break;
-            }
-            case BindingConstraint::typeWeekly:
-            {
-                assert(timeSeries.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
+            break;
+        }
+        case BindingConstraint::typeWeekly:
+        {
+            assert(timeSeries.width && "Invalid constraint data width");
+            assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
 
-                double sum = 0;
-                for (unsigned day = 0; day != 7; ++day)
-                    sum += column[weekFirstDay + day];
+            double sum = 0;
+            for (unsigned day = 0; day != 7; ++day)
+                sum += column[weekFirstDay + day];
 
-                problem.MatriceDesContraintesCouplantes[constraintIndex]
-                    .SecondMembreDeLaContrainteCouplante[0]
-                        = sum;
-                break;
-            }
-            case BindingConstraint::typeUnknown:
-            case BindingConstraint::typeMax:
-            default:
-            {
-                assert(false && "invalid constraint type");
-                logs.error() << "internal error. Please submit a full bug report";
-                break;
-            }
+            problem.MatriceDesContraintesCouplantes[constraintIndex]
+              .SecondMembreDeLaContrainteCouplante[0]
+              = sum;
+            break;
+        }
+        case BindingConstraint::typeUnknown:
+        case BindingConstraint::typeMax:
+        default:
+        {
+            assert(false && "invalid constraint type");
+            logs.error() << "internal error. Please submit a full bug report";
+            break;
+        }
         }
     }
 }
@@ -427,7 +427,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             memcpy(&couts.CoutDeTransportOrigineVersExtremite[0], direct, pasDeTempsSizeDouble);
             memcpy(&couts.CoutDeTransportOrigineVersExtremiteRef[0], direct, pasDeTempsSizeDouble);
             memcpy(&couts.CoutDeTransportExtremiteVersOrigine[0], indirect, pasDeTempsSizeDouble);
-            memcpy(&couts.CoutDeTransportExtremiteVersOrigineRef[0], indirect, pasDeTempsSizeDouble);
+            memcpy(
+              &couts.CoutDeTransportExtremiteVersOrigineRef[0], indirect, pasDeTempsSizeDouble);
         }
         else
             problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
@@ -561,7 +562,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         auto& lnk = *(studyruntime.areaLink[k]);
         const double* directCapacities = lnk.directCapacities.getColumn(year);
         const double* indirectCapacities = lnk.indirectCapacities.getColumn(year);
-        for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
+        for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps;
+             ++hourInWeek, ++hourInYear)
         {
             VALEURS_DE_NTC_ET_RESISTANCES& ntc = problem.ValeursDeNTC[hourInWeek];
 
@@ -572,12 +574,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     }
 
     int hourInYear = PasDeTempsDebut;
-    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
+    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps;
+         ++hourInWeek, ++hourInYear)
     {
-
-        prepareBindingConstraint(problem, PasDeTempsDebut,
-                study.bindingConstraints, study.bindingConstraintsGroups,
-                weekFirstDay, hourInWeek);
+        prepareBindingConstraint(problem,
+                                 PasDeTempsDebut,
+                                 study.bindingConstraints,
+                                 study.bindingConstraintsGroups,
+                                 weekFirstDay,
+                                 hourInWeek);
 
         const uint dayInTheYear = study.calendar.hours[hourInYear].dayYear;
 
@@ -590,13 +595,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
             double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
 
-            double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
+            double& mustRunGen
+              = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = windSeries + solarSeries
-                             + scratchpad.miscGenSum[hourInYear]
-                             + rorSeries
-                             + scratchpad.mustrunSum[hourInYear];
+                mustRunGen = windSeries + solarSeries + scratchpad.miscGenSum[hourInYear]
+                             + rorSeries + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
@@ -605,10 +609,13 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 mustRunGen = scratchpad.miscGenSum[hourInYear] + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
 
-                area.renewable.list.each([&](const RenewableCluster& cluster) {
-                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep(year, hourInYear);
-                });
+                area.renewable.list.each(
+                  [&](const RenewableCluster& cluster)
+                  {
+                      assert(cluster.series.timeSeries.jit == nullptr
+                             && "No JIT data from the solver");
+                      mustRunGen += cluster.valueAtTimeStep(year, hourInYear);
+                  });
             }
 
             assert(
@@ -621,7 +628,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
+                problem.CaracteristiquesHydrauliques[k]
+                  .ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
                   = scratchpad.optimalMaxPower[dayInTheYear]
                     * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
             }
@@ -651,7 +659,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
                     problem.CaracteristiquesHydrauliques[k].MingenHoraire[j]
-                        = srcmingen[PasDeTempsDebut + j];
+                      = srcmingen[PasDeTempsDebut + j];
                 }
 
                 if (area.hydro.reservoirManagement)
@@ -682,16 +690,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 && !problem.OptimisationAuPasHebdomadaire)))
                     {
                         std::vector<double>& DGU = problem.CaracteristiquesHydrauliques[k]
-                                        .MaxEnergieHydrauParIntervalleOptimise;
+                                                     .MaxEnergieHydrauParIntervalleOptimise;
 
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
-                                        .MinEnergieHydrauParIntervalleOptimise;
+                                                     .MinEnergieHydrauParIntervalleOptimise;
 
                         const std::vector<double>& DNT
                           = hydroVentilationResults[k].HydrauliqueModulableQuotidien;
 
-                        double WSL
-                          = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+                        double WSL = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
 
                         double LUB = area.hydro.leewayUpperBound;
                         if (!area.hydro.useLeeway)
@@ -777,18 +784,14 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     for (uint j = 0; j < 7; ++j)
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                        weekTarget_tmp += hydroVentilationResults[k]
-                                            .HydrauliqueModulableQuotidien[day];
+                        weekTarget_tmp
+                          += hydroVentilationResults[k].HydrauliqueModulableQuotidien[day];
                     }
 
                     if (weekTarget_tmp != 0.)
                         weekGenerationTarget = weekTarget_tmp;
 
                     marginGen = weekGenerationTarget;
-
-                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-                        < weekTarget_tmp)
-                        marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
@@ -846,7 +849,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             }
 
                             std::vector<double>& DPU = problem.CaracteristiquesHydrauliques[k]
-                                            .MaxEnergiePompageParIntervalleOptimise;
+                                                         .MaxEnergiePompageParIntervalleOptimise;
 
                             double WSL
                               = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
@@ -913,6 +916,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     for (uint k = 0; k < nbPays; ++k)
     {
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
-            = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
+          = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }
 }
