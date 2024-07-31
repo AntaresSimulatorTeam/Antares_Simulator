@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 #include <antares/solver/expressions/Node.h>
 
 class Negate: public Node
