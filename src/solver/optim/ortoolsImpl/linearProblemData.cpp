@@ -24,10 +24,10 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-/* int OrtoolsLinearProblemData::getTimeResolutionInMin() */
-/* { */
-
-/* } */
+unsigned OrtoolsLinearProblemData::getTimeResolutionInMinutes()
+{
+    return timeResolutionInMinutes_;
+}
 
 /* bool OrtoolsLinearProblemData::hasScalarData(const std::string& key) */
 /* { */
@@ -39,10 +39,10 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 
 /* } */
 
-/* bool OrtoolsLinearProblemData::hasTimedData(const std::string& key) */
-/* { */
-
-/* } */
+bool OrtoolsLinearProblemData::hasTimedData(const std::string& key)
+{
+    return timedData_.contains(key);
+}
 
 /* std::vector<double> OrtoolsLinearProblemData::getTimedData(const std::string& key, unsigned scenario) */
 /* { */

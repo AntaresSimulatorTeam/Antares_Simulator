@@ -23,6 +23,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace Antares::Solver::Optim::Api
 {
@@ -30,11 +31,17 @@ namespace Antares::Solver::Optim::Api
 class LinearProblemData
 {
 public:
-    virtual int getTimeResolutionInMin() = 0;
+    virtual unsigned getTimeResolutionInMinutes() = 0;
     virtual bool hasScalarData(const std::string& key) = 0;
     virtual double getScalarData(const std::string& key, unsigned scenario) = 0;
     virtual bool hasTimedData(const std::string& key) = 0;
     virtual std::vector<double> getTimedData(const std::string& key, unsigned scenario) = 0;
+
+protected:
+    std::vector<int> timeStamps_;
+    unsigned timeResolutionInMinutes_;
+    std::map<std::string, double> scalarData_;
+    std::map<std::string, std::vector<double>> timedData_;
 };
 
 } // namespace Antares::Solver::Optim::Api

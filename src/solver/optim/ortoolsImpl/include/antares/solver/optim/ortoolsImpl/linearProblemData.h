@@ -29,7 +29,7 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 class OrtoolsLinearProblemData: virtual public Api::LinearProblemData
 {
 public:
-    int getTimeResolutionInMin() override;
+    unsigned getTimeResolutionInMinutes() override;
     bool hasScalarData(const std::string& key) override;
     double getScalarData(const std::string& key, unsigned scenario) override;
     bool hasTimedData(const std::string& key) override;
