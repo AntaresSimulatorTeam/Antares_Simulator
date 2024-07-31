@@ -1,24 +1,15 @@
 #pragma once
 
-#include <string>
-
 #include <antares/solver/expressions/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
 class StringVisitor: public Visitor
 {
-public:
-    void visit(const Add& add) override;
-    void visit(const Negate& neg) override;
-    void visit(const Parameter& param) override;
+    std::any visit(const Add& add) override;
 
-    const std::string& str() const
-    {
-        return str_;
-    }
+    std::any visit(const Negate& neg) override;
 
-private:
-    std::string str_;
+    std::any visit(const Parameter& param) override;
 };
 } // namespace Antares::Solver::Expressions

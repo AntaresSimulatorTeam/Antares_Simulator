@@ -13,7 +13,7 @@ public:
 
     Parameter(const std::string name);
 
-    void accept(Visitor& visitor) override;
+    std::any accept(Visitor& visitor) override;
 
     // private:
     std::string name;

@@ -5,22 +5,26 @@
 
 namespace Antares::Solver::Expressions
 {
-void StringVisitor::visit(const Add& add)
+std::any StringVisitor::visit(const Add& add)
 {
-    add.n1->accept(*this);
-    str_ += "+";
-    add.n2->accept(*this);
+    std::string result;
+    result += std::any_cast<std::string>(add.n1->accept(*this));
+    result += "+";
+    result += std::any_cast<std::string>(add.n2->accept(*this));
+    return result;
 }
 
-void StringVisitor::visit(const Negate& neg)
+std::any StringVisitor::visit(const Negate& neg)
 {
-    str_ += "-(";
-    neg.n->accept(*this);
-    str_ += ")";
+    std::string result;
+    result += "-(";
+    result += std::any_cast<std::string>(neg.n->accept(*this));
+    result += ")";
+    return result;
 }
 
-void StringVisitor::visit(const Parameter& param)
+std::any StringVisitor::visit(const Parameter& param)
 {
-    str_ += param.name;
+    return param.name;
 }
 } // namespace Antares::Solver::Expressions

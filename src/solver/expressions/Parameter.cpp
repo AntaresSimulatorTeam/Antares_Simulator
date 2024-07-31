@@ -7,7 +7,7 @@ Parameter::Parameter(const std::string name):
 {
 }
 
-void Parameter::accept(Visitor& visitor)
+std::any Parameter::accept(Visitor& visitor)
 {
     return visitor.visit(*this);
 }

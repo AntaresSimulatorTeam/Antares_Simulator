@@ -1,3 +1,4 @@
+#include <any>
 #include <iostream>
 
 #include <antares/solver/expressions/Add.h>
@@ -9,11 +10,10 @@
 #include <antares/solver/expressions/StringVisitor.h>
 
 template<class V>
-V& visit(std::shared_ptr<Antares::Solver::Expressions::Node> node)
+std::any visit(std::shared_ptr<Antares::Solver::Expressions::Node> node)
 {
-    static V visitor;
-    node->accept(visitor);
-    return visitor;
+    V visitor;
+    return node->accept(visitor);
 }
 
 int main()
@@ -27,9 +27,10 @@ int main()
     visit<PrintVisitor>(root);
 
     std::cout << std::endl;
-    std::cout << visit<StringVisitor>(root).str();
+    std::cout << std::any_cast<std::string>(visit<StringVisitor>(root));
     std::cout << std::endl;
 
-    auto clone = visit<CloneVisitor>(root).ptr();
-    visit<PrintVisitor>(clone);
+    std::any clone = visit<CloneVisitor>(root);
+    auto root2 = std::any_cast<std::shared_ptr<Node>>(clone);
+    visit<PrintVisitor>(root2);
 }

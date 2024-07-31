@@ -5,22 +5,25 @@
 
 namespace Antares::Solver::Expressions
 {
-void PrintVisitor::visit(const Add& add)
+std::any PrintVisitor::visit(const Add& add)
 {
     add.n1->accept(*this);
     std::cout << "+";
     add.n2->accept(*this);
+    return {};
 }
 
-void PrintVisitor::visit(const Negate& neg)
+std::any PrintVisitor::visit(const Negate& neg)
 {
     std::cout << "-(";
     neg.n->accept(*this);
     std::cout << ")";
+    return {};
 }
 
-void PrintVisitor::visit(const Parameter& param)
+std::any PrintVisitor::visit(const Parameter& param)
 {
     std::cout << param.name;
+    return {};
 }
 } // namespace Antares::Solver::Expressions

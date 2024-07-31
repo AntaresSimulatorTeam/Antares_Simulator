@@ -8,7 +8,7 @@ Add::Add(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2):
 {
 }
 
-void Add::accept(Visitor& visitor)
+std::any Add::accept(Visitor& visitor)
 {
     return visitor.visit(*this);
 }
