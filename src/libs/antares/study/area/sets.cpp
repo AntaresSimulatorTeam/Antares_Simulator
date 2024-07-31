@@ -105,9 +105,9 @@ void Sets::defaultForAreas()
 
 void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
 {
-    for (uint i = 0; i != pMap.size(); ++i)
+    for (auto setId: pNameByIndex)
     {
-        rebuildFromRules(pNameByIndex[i], handler);
+        rebuildFromRules(setId, handler);
     }
 }
 
@@ -226,7 +226,7 @@ YString Sets::toString()
     using namespace Antares;
     static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
     YString ret = "";
-    for (const auto& [setId, options] : pOptions)
+    for (const auto& [setId, options]: pOptions)
     {
         const Options& opts = options;
         ret << '[' << setId << "]\n";
@@ -356,7 +356,7 @@ void Sets::rebuildIndexes()
     pByIndex.resize(pMap.size());
 
     uint index = 0;
-    for (auto& [setId, set] : pMap)
+    for (auto& [setId, set]: pMap)
     {
         pByIndex[index] = set;
         pNameByIndex[index] = setId;
@@ -382,7 +382,7 @@ uint Sets::resultSize(const uint index) const
 void Sets::dumpToLogs() const
 {
     using namespace Yuni;
-    for (auto& [setId, set] : pMap)
+    for (auto& [setId, set]: pMap)
     {
         logs.info() << "   found `" << setId << "` (" << set->size() << ' '
                     << (set->size() < 2 ? "item" : "items")
@@ -446,7 +446,7 @@ bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string& va
 {
     if (value == "add-all")
     {
-        for (const auto& [areaName, area] : areas_)
+        for (const auto& [areaName, area]: areas_)
         {
             set.insert(area);
         }

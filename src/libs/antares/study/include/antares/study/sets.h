@@ -152,28 +152,6 @@ public:
     */
     void clear();
 
-    TypePtr add(const IDType& name)
-    {
-        TypePtr p = std::make_shared<SetAreasType>();
-        pMap[name] = p;
-        pOptions[name].reset(name);
-        return p;
-    }
-
-    TypePtr add(const IDType& name, const TypePtr& data)
-    {
-        pMap[name] = data;
-        pOptions[name].reset(name);
-        return data;
-    }
-
-    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
-    {
-        pMap[name] = data;
-        pOptions[name] = opts;
-        return data;
-    }
-
     bool forceReload(bool /*reload*/) const
     {
         pModified = true;
@@ -243,6 +221,28 @@ public:
     const SetAreasType& operator[](uint i) const;
 
 private:
+    TypePtr add(const IDType& name)
+    {
+        TypePtr p = std::make_shared<SetAreasType>();
+        pMap[name] = p;
+        pOptions[name].reset(name);
+        return p;
+    }
+
+    TypePtr add(const IDType& name, const TypePtr& data)
+    {
+        pMap[name] = data;
+        pOptions[name].reset(name);
+        return data;
+    }
+
+    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
+    {
+        pMap[name] = data;
+        pOptions[name] = opts;
+        return data;
+    }
+
     /*!
     ** \brief Rebuild the lists of a group from the rules
     */
