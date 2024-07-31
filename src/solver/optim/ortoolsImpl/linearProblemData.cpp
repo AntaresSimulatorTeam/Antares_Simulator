@@ -24,27 +24,27 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-/* int getTimeResolutionInMin() */
+/* int OrtoolsLinearProblemData::getTimeResolutionInMin() */
 /* { */
 
 /* } */
 
-/* bool hasScalarData(const std::string& key) */
+/* bool OrtoolsLinearProblemData::hasScalarData(const std::string& key) */
 /* { */
 
 /* } */
 
-/* double getScalarData(const std::string& key, unsigned scenario) */
+/* double OrtoolsLinearProblemData::getScalarData(const std::string& key, unsigned scenario) */
 /* { */
 
 /* } */
 
-/* bool hasTimedData(const std::string& key) */
+/* bool OrtoolsLinearProblemData::hasTimedData(const std::string& key) */
 /* { */
 
 /* } */
 
-/* std::vector<double> getTimedData(const std::string& key, unsigned scenario) */
+/* std::vector<double> OrtoolsLinearProblemData::getTimedData(const std::string& key, unsigned scenario) */
 /* { */
 
 /* } */

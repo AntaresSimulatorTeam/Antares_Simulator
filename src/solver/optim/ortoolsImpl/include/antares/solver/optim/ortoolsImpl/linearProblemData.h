@@ -21,10 +21,12 @@
 
 #pragma once
 
+#include <antares/solver/optim/api/linearProblemData.h>
+
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsLinearProblemData: virtual public Api::LinearProblem
+class OrtoolsLinearProblemData: virtual public Api::LinearProblemData
 {
 public:
     int getTimeResolutionInMin() override;
