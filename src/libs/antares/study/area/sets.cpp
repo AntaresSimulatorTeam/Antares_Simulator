@@ -105,7 +105,7 @@ void Sets::defaultForAreas()
 
 void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
 {
-    for (auto setId: pNameByIndex)
+    for (const auto& setId: pNameByIndex)
     {
         rebuildFromRules(setId, handler);
     }
@@ -356,7 +356,7 @@ void Sets::rebuildIndexes()
     pByIndex.resize(pMap.size());
 
     uint index = 0;
-    for (auto& [setId, set]: pMap)
+    for (const auto& [setId, set]: pMap)
     {
         pByIndex[index] = set;
         pNameByIndex[index] = setId;
@@ -382,7 +382,7 @@ uint Sets::resultSize(const uint index) const
 void Sets::dumpToLogs() const
 {
     using namespace Yuni;
-    for (auto& [setId, set]: pMap)
+    for (const auto& [setId, set]: pMap)
     {
         logs.info() << "   found `" << setId << "` (" << set->size() << ' '
                     << (set->size() < 2 ? "item" : "items")
