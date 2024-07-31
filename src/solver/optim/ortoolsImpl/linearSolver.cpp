@@ -41,19 +41,20 @@ Api::MipVariable* OrtoolsLinearSolver::addNumVariable(double lb, double ub, cons
     auto* mpVar = mpSolver_->MakeNumVar(lb, ub, name);
     auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
-    /* variables_.try_emplace(name, mipVar); */
+    variables_.try_emplace(name, mipVar);
 
-    return variables_.at(name).get();
+    return mipVar.get();
 }
 
-/* Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, const std::string& name) */
-/* { */
-/*     auto* mpVar = mpSolver_->MakeIntVar(lb, ub, name); */
-/*     auto mipVar = std::make_shared<Api::MipVariable>(mpVar); */
-/*     variables_.try_emplace(name, mipVar); */
+Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, const std::string& name)
+{
+    auto* mpVar = mpSolver_->MakeIntVar(lb, ub, name);
+    auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
-/*     return variables_.at(name).get(); */
-/* } */
+    variables_.try_emplace(name, mipVar);
+
+    return mipVar.get();
+}
 
 /* Api::MipVariable* OrtoolsLinearSolver::getVariable(const std::string& name) */
 /* { */
