@@ -178,8 +178,7 @@ int main()
         Clone cloneVisitor;
         std::any clone = root.accept(cloneVisitor);
         Print printVisitor;
-        Node* root2 = std::any_cast<Node*>(clone);
+        std::unique_ptr<Node> root2(std::any_cast<Node*>(clone));
         root2->accept(printVisitor);
-        delete root2; // only memory leak is at the root, use std::unique_ptr everywhere ?
     }
 }
