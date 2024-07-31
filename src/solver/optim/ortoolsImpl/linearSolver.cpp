@@ -33,9 +33,11 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 
 OrtoolsLinearSolver::OrtoolsLinearSolver(bool isMip, const std::string& solverName)
 {
-    mpSolver_ = isMip
+    auto* mpSolver = isMip
                   ? MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName)
                   : MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
+
+    mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
 }
 
 Api::MipVariable* OrtoolsLinearSolver::addNumVariable(double lb, double ub, const std::string& name)

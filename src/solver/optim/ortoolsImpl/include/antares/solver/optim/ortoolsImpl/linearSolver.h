@@ -51,7 +51,7 @@ public:
     Api::MipSolution* solve() override;
 
 private:
-    operations_research::MPSolver* mpSolver_;
+    std::unique_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPSolverParameters* param_;
 };
 
