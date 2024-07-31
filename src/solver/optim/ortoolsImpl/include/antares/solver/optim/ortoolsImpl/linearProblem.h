@@ -24,16 +24,16 @@
 #include <ortools/linear_solver/linear_solver.h>
 #include <string>
 
-#include <antares/solver/optim/api/linearSolver.h>
+#include <antares/solver/optim/api/linearProblem.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsLinearSolver: virtual public Api::LinearSolver
+class OrtoolsLinearProblem: virtual public Api::LinearProblem
 {
 public:
-    OrtoolsLinearSolver(bool isMip, const std::string& solverName);
-    ~OrtoolsLinearSolver() = default;
+    OrtoolsLinearProblem(bool isMip, const std::string& solverName);
+    ~OrtoolsLinearProblem() = default;
 
     Api::MipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     Api::MipVariable* addIntVariable(double lb, double ub, const std::string& name) override;

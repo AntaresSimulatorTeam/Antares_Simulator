@@ -30,7 +30,7 @@
 namespace Antares::Solver::Optim::Api
 {
 
-class LinearSolver
+class LinearProblem
 {
 public:
     virtual MipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;

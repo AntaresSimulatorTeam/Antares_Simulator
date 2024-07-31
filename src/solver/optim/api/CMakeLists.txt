@@ -6,7 +6,7 @@ set(SRC_API
         include/antares/solver/optim/api/mipSolution.h
         include/antares/solver/optim/api/mipConstraint.h
 
-        include/antares/solver/optim/api/linearSolver.h
+        include/antares/solver/optim/api/linearProblem.h
 )
 
 add_library(${PROJ} ${SRC_API})
