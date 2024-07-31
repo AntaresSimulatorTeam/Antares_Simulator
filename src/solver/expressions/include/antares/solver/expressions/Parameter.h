@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include <antares/solver/expressions/Node.h>
 
 class Parameter: public Node

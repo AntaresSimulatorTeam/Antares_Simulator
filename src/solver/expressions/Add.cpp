@@ -6,7 +6,7 @@ Add::Add(Node* n1, Node* n2):
 {
 }
 
-std::any Add::accept(Visitor& visitor) override
+std::any Add::accept(Visitor& visitor)
 {
     return visitor.visit(*this);
 }
