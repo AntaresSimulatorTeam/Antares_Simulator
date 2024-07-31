@@ -1,7 +1,7 @@
-#include <memory>
-#include <iostream>
-#include <string>
 #include <any>
+#include <iostream>
+#include <memory>
+#include <string>
 
 class Add;
 class Negate;
@@ -15,97 +15,120 @@ public:
     virtual std::any visit(const Parameter&) = 0;
 };
 
-class Node {
-public:
-  virtual ~Node() = default;
-  virtual std::any accept(Visitor& visitor) = 0;
-};
-
-class Add : public Node
+class Node
 {
 public:
-  virtual ~Add() = default;
-  Add(Node* n1, Node* n2) :
-    n1(n1), n2(n2) {}
+    virtual ~Node() = default;
+    virtual std::any accept(Visitor& visitor) = 0;
+};
+
+class Add: public Node
+{
+public:
+    virtual ~Add() = default;
+
+    Add(Node* n1, Node* n2):
+        n1(n1),
+        n2(n2)
+    {
+    }
+
     std::any accept(Visitor& visitor) override
     {
         return visitor.visit(*this);
     }
-  //private:
-  std::unique_ptr<Node> n1, n2;
+
+    // private:
+    std::unique_ptr<Node> n1, n2;
 };
 
-class Negate : public Node
+class Negate: public Node
 {
 public:
     virtual ~Negate() = default;
-    Negate(Node* n) : n(n) {}
+
+    Negate(Node* n):
+        n(n)
+    {
+    }
+
     std::any accept(Visitor& visitor) override
     {
         return visitor.visit(*this);
     }
-  //private:
-  std::unique_ptr<Node> n;
+
+    // private:
+    std::unique_ptr<Node> n;
 };
 
-class Parameter : public Node
+class Parameter: public Node
 {
 public:
-  virtual ~Parameter() = default;
-  Parameter(const std::string name) : name(name) {}
+    virtual ~Parameter() = default;
+
+    Parameter(const std::string name):
+        name(name)
+    {
+    }
+
     std::any accept(Visitor& visitor) override
     {
         return visitor.visit(*this);
     }
-  //private:
-  std::string name;
+
+    // private:
+    std::string name;
 };
 
-class Print : public Visitor
+class Print: public Visitor
 {
-  std::any visit(const Add& add) override
-  {
-    add.n1->accept(*this);
-    std::cout << "+";
-    add.n2->accept(*this);
-    return {};
-  }
-  std::any visit(const Negate& neg) override
-  {
-    std::cout << "-(";
-    neg.n->accept(*this);
-    std::cout << ")";
-    return {};
-  }
-  std::any visit(const Parameter& param) override
-  {
-    std::cout << param.name;
-    return {};
-  }
+    std::any visit(const Add& add) override
+    {
+        add.n1->accept(*this);
+        std::cout << "+";
+        add.n2->accept(*this);
+        return {};
+    }
+
+    std::any visit(const Negate& neg) override
+    {
+        std::cout << "-(";
+        neg.n->accept(*this);
+        std::cout << ")";
+        return {};
+    }
+
+    std::any visit(const Parameter& param) override
+    {
+        std::cout << param.name;
+        return {};
+    }
 };
 
-class String : public Visitor
+class String: public Visitor
 {
-  std::any visit(const Add& add) override
-  {
-    std::string result;
-    result += std::any_cast<std::string>(add.n1->accept(*this));
-    result += "+";
-    result += std::any_cast<std::string>(add.n2->accept(*this));
-    return result;
-  }
-  std::any visit(const Negate& neg) override
-  {
-    std::string result;
-    result += "-(";
-    result += std::any_cast<std::string>(neg.n->accept(*this));
-    result += ")";
-    return result;
-  }
-  std::any visit(const Parameter& param) override
-  {
-    return param.name;
-  }
+    std::any visit(const Add& add) override
+    {
+        std::string result;
+        result += std::any_cast<std::string>(add.n1->accept(*this));
+        result += "+";
+        result += std::any_cast<std::string>(add.n2->accept(*this));
+        return result;
+    }
+
+    std::any visit(const Negate& neg) override
+    {
+        std::string result;
+        result += "-(";
+        result += std::any_cast<std::string>(neg.n->accept(*this));
+        result += ")";
+        return result;
+    }
+
+    std::any visit(const Parameter& param) override
+    {
+        return param.name;
+    }
 };
 
 int main()
@@ -116,12 +139,12 @@ int main()
     Add root(p1, neg);
 
     {
-      Print printVisitor;
-      root.accept(printVisitor);
+        Print printVisitor;
+        root.accept(printVisitor);
     }
     std::cout << std::endl;
     {
-      String stringVisitor;
-      std::cout << std::any_cast<std::string>(root.accept(stringVisitor));
+        String stringVisitor;
+        std::cout << std::any_cast<std::string>(root.accept(stringVisitor));
     }
 }
