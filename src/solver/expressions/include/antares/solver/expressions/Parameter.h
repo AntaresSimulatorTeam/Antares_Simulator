@@ -4,6 +4,8 @@
 
 #include <antares/solver/expressions/Node.h>
 
+namespace Antares::Solver::Expressions
+{
 class Parameter: public Node
 {
 public:
@@ -16,3 +18,4 @@ public:
     // private:
     std::string name;
 };
+} // namespace Antares::Solver::Expressions

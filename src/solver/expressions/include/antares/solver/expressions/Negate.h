@@ -3,6 +3,8 @@
 
 #include <antares/solver/expressions/Node.h>
 
+namespace Antares::Solver::Expressions
+{
 class Negate: public Node
 {
 public:
@@ -15,3 +17,4 @@ public:
     // private:
     std::unique_ptr<Node> n;
 };
+} // namespace Antares::Solver::Expressions

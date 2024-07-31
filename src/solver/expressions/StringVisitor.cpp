@@ -3,6 +3,8 @@
 #include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/StringVisitor.h>
 
+namespace Antares::Solver::Expressions
+{
 std::any StringVisitor::visit(const Add& add)
 {
     std::string result;
@@ -25,3 +27,4 @@ std::any StringVisitor::visit(const Parameter& param)
 {
     return param.name;
 }
+} // namespace Antares::Solver::Expressions

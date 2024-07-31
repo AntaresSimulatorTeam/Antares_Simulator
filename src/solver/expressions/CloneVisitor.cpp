@@ -1,6 +1,8 @@
 #include <antares/solver/expressions/CloneVisitor.h>
 #include <antares/solver/expressions/ExpressionsNodes.h>
 
+namespace Antares::Solver::Expressions
+{
 std::any CloneVisitor::visit(const Add& add)
 {
     auto* n1 = std::any_cast<Node*>(add.n1->accept(*this));
@@ -22,3 +24,4 @@ std::any CloneVisitor::visit(const Parameter& param)
     Node* result = new Parameter(param.name);
     return result;
 }
+} // namespace Antares::Solver::Expressions

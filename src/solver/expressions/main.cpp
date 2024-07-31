@@ -11,6 +11,7 @@
 int main()
 
 {
+    using namespace Antares::Solver::Expressions;
     auto* p1 = new Parameter("hello");
     auto* p2 = new Parameter("world");
     auto* neg = new Negate(p2);

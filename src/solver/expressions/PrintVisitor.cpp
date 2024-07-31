@@ -3,6 +3,8 @@
 #include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/PrintVisitor.h>
 
+namespace Antares::Solver::Expressions
+{
 std::any PrintVisitor::visit(const Add& add)
 {
     add.n1->accept(*this);
@@ -24,3 +26,4 @@ std::any PrintVisitor::visit(const Parameter& param)
     std::cout << param.name;
     return {};
 }
+} // namespace Antares::Solver::Expressions

@@ -3,6 +3,8 @@
 
 #include <antares/solver/expressions/Node.h>
 
+namespace Antares::Solver::Expressions
+{
 class Add: public Node
 {
 public:
@@ -15,3 +17,4 @@ public:
     // private:
     std::unique_ptr<Node> n1, n2;
 };
+} // namespace Antares::Solver::Expressions
