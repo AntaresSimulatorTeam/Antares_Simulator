@@ -44,8 +44,9 @@ public:
 
     ~OrtoolsMipConstraint() = default;
 
-private:
     OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint);
+private:
+    // TODO private constructor
 
     operations_research::MPConstraint* mpConstraint_;
 };

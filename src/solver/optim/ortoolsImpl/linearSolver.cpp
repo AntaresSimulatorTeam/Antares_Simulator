@@ -21,6 +21,7 @@
 
 #include <antares/solver/optim/ortoolsImpl/linearSolver.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
+#include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
 
 #include <antares/solver/utils/ortools_utils.h>
 
@@ -41,7 +42,12 @@ Api::MipVariable* OrtoolsLinearSolver::addNumVariable(double lb, double ub, cons
     auto* mpVar = mpSolver_->MakeNumVar(lb, ub, name);
     auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
-    variables_.try_emplace(name, mipVar);
+    if (!mpVar || !mipVar)
+        logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
+
+    if (!variables_.try_emplace(name, mipVar).second)
+        logs.error() << "Error adding variable: " << name;
+
 
     return mipVar.get();
 }
@@ -51,7 +57,11 @@ Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, cons
     auto* mpVar = mpSolver_->MakeIntVar(lb, ub, name);
     auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
-    variables_.try_emplace(name, mipVar);
+    if (!mpVar || !mipVar)
+        logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
+
+    if (!variables_.try_emplace(name, mipVar).second)
+        logs.error() << "Error adding variable: " << name;
 
     return mipVar.get();
 }
@@ -61,16 +71,21 @@ Api::MipVariable* OrtoolsLinearSolver::getVariable(const std::string& name)
     return variables_.at(name).get();
 }
 
-/* Api::MipConstraint* OrtoolsLinearSolver::addConstraint(double lb, double ub, const std::string& name) */
-/* { */
+Api::MipConstraint* OrtoolsLinearSolver::addConstraint(double lb, double ub, const std::string& name)
+{
+    auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
+    auto mipConstraint = std::make_shared<OrtoolsMipConstraint>(mpConstraint);
 
-/* } */
+    if (!constraints_.try_emplace(name, mipConstraint).second)
+        logs.error() << "Error adding constraint: " << name;
 
-/* Api::MipConstraint* OrtoolsLinearSolver::getConstraint(const std::string& name) */
-/* { */
+    return mipConstraint.get();
+}
 
-/* } */
-
+Api::MipConstraint* OrtoolsLinearSolver::getConstraint(const std::string& name)
+{
+    return constraints_.at(name).get();
+}
 
 void OrtoolsLinearSolver::setObjectiveCoefficient(Api::MipVariable* var, double coefficient)
 {
