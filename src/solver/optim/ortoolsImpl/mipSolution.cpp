@@ -19,7 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
@@ -27,9 +26,9 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 
 using OrMPSolver = operations_research::MPSolver;
 
-OrtoolsMipSolution::OrtoolsMipSolution(OrMPSolver::ResultStatus responseStatus,
+OrtoolsMipSolution::OrtoolsMipSolution(OrMPSolver::ResultStatus& responseStatus,
                                        const std::map<Api::MipVariable*, double>& solution,
-                                       operations_research::MPObjective* objective):
+                                       OrtoolsMipObjective* objective):
     objective_(objective)
 {
     // Only store non-zero values
@@ -65,7 +64,7 @@ Api::MipStatus OrtoolsMipSolution::getStatus()
 
 double OrtoolsMipSolution::getObjectiveValue()
 {
-    return objective_->Value();
+    return objective_->getMpObjective()->Value();
 }
 
 double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable& var) const

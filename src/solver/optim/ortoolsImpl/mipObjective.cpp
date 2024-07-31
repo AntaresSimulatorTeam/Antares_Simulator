@@ -75,4 +75,9 @@ bool OrtoolsMipObjective::getMinimization()
     return objective_->minimization();
 }
 
+operations_research::MPObjective* OrtoolsMipObjective::getMpObjective()
+{
+    return objective_;
+}
+
 } // namespace Antares::Solver::Optim::OrtoolsImpl

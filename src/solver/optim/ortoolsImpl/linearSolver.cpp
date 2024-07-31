@@ -22,6 +22,8 @@
 #include <antares/solver/optim/ortoolsImpl/linearSolver.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
+#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
+#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
 
 #include <antares/solver/utils/ortools_utils.h>
 
@@ -107,9 +109,21 @@ void OrtoolsLinearSolver::setMaximization()
     objective_->setMaximization();
 }
 
-/* Api::MipSolution* OrtoolsLinearSolver::solve() */
-/* { */
+Api::MipSolution* OrtoolsLinearSolver::solve()
+{
+    mpSolver_->EnableOutput();
+    auto status = mpSolver_->Solve(*param_);
 
-/* } */
+    std::map<Api::MipVariable*, double> solution;
+    for (auto& var : mpSolver_->variables())
+    {
+        solution.try_emplace(variables_.at(var->name()).get(), var->solution_value());
+    }
+
+    auto* mpObjective = dynamic_cast<OrtoolsMipObjective*>(objective_.get());
+
+    solution_ = std::make_unique<OrtoolsMipSolution>(status, solution, mpObjective);
+    return solution_.get();
+}
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

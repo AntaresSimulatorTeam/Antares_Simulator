@@ -44,6 +44,7 @@ public:
     bool getMaximization() override;
     bool getMinimization() override;
 
+    operations_research::MPObjective* getMpObjective();
 private:
     OrtoolsMipObjective(operations_research::MPObjective* objective);
 

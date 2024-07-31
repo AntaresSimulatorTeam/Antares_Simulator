@@ -51,6 +51,7 @@ public:
     Api::MipSolution* solve() override;
 private:
     operations_research::MPSolver* mpSolver_;
+    operations_research::MPSolverParameters* param_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
