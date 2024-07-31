@@ -40,8 +40,10 @@ public:
     virtual MipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
     virtual MipConstraint* getConstraint(const std::string& name) = 0;
 
-    virtual void setObjectiveCoefficient(MipVariable* var, double coefficient) = 0;;
-    virtual double getObjectiveCoefficient(MipVariable* var) = 0;;
+    virtual void setObjectiveCoefficient(MipVariable* var, double coefficient) = 0;
+    ;
+    virtual double getObjectiveCoefficient(MipVariable* var) = 0;
+    ;
 
     virtual void setMinimization() = 0;
     virtual void setMaximization() = 0;

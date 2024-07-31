@@ -44,6 +44,7 @@ public:
     ~OrtoolsMipVariable() = default;
 
     explicit OrtoolsMipVariable(operations_research::MPVariable*);
+
 private:
     // TODO: add friend class
 

@@ -42,13 +42,14 @@ public:
     Api::MipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
     Api::MipConstraint* getConstraint(const std::string& name) override;
 
-    void setObjectiveCoefficient(Api::MipVariable* var, double coefficient) override;;
-    double getObjectiveCoefficient(Api::MipVariable* var) override;;
+    void setObjectiveCoefficient(Api::MipVariable* var, double coefficient) override;
+    double getObjectiveCoefficient(Api::MipVariable* var) override;
 
     void setMinimization() override;
     void setMaximization() override;
 
     Api::MipSolution* solve() override;
+
 private:
     operations_research::MPSolver* mpSolver_;
     operations_research::MPSolverParameters* param_;

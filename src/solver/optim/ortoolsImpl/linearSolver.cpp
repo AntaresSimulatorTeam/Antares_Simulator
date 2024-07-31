@@ -19,24 +19,23 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/solver/optim/ortoolsImpl/linearSolver.h>
-#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
-#include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
-#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
-#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
-
-#include <antares/solver/utils/ortools_utils.h>
-
 #include <memory>
+
+#include <antares/solver/optim/ortoolsImpl/linearSolver.h>
+#include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
+#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
+#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
+#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
+#include <antares/solver/utils/ortools_utils.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
 OrtoolsLinearSolver::OrtoolsLinearSolver(bool isMip, const std::string& solverName)
 {
-    mpSolver_ = isMip ?
-        MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName) :
-        MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
+    mpSolver_ = isMip
+                  ? MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName)
+                  : MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
 }
 
 Api::MipVariable* OrtoolsLinearSolver::addNumVariable(double lb, double ub, const std::string& name)
@@ -45,11 +44,14 @@ Api::MipVariable* OrtoolsLinearSolver::addNumVariable(double lb, double ub, cons
     auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
     if (!mpVar || !mipVar)
+    {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
+    }
 
     if (!variables_.try_emplace(name, mipVar).second)
+    {
         logs.error() << "Error adding variable: " << name;
-
+    }
 
     return mipVar.get();
 }
@@ -60,10 +62,14 @@ Api::MipVariable* OrtoolsLinearSolver::addIntVariable(double lb, double ub, cons
     auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
     if (!mpVar || !mipVar)
+    {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
+    }
 
     if (!variables_.try_emplace(name, mipVar).second)
+    {
         logs.error() << "Error adding variable: " << name;
+    }
 
     return mipVar.get();
 }
@@ -73,13 +79,17 @@ Api::MipVariable* OrtoolsLinearSolver::getVariable(const std::string& name)
     return variables_.at(name).get();
 }
 
-Api::MipConstraint* OrtoolsLinearSolver::addConstraint(double lb, double ub, const std::string& name)
+Api::MipConstraint* OrtoolsLinearSolver::addConstraint(double lb,
+                                                       double ub,
+                                                       const std::string& name)
 {
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
     auto mipConstraint = std::make_shared<OrtoolsMipConstraint>(mpConstraint);
 
     if (!constraints_.try_emplace(name, mipConstraint).second)
+    {
         logs.error() << "Error adding constraint: " << name;
+    }
 
     return mipConstraint.get();
 }
@@ -115,7 +125,7 @@ Api::MipSolution* OrtoolsLinearSolver::solve()
     auto status = mpSolver_->Solve(*param_);
 
     std::map<Api::MipVariable*, double> solution;
-    for (auto& var : mpSolver_->variables())
+    for (auto& var: mpSolver_->variables())
     {
         solution.try_emplace(variables_.at(var->name()).get(), var->solution_value());
     }
