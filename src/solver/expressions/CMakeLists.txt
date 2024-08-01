@@ -8,8 +8,6 @@ set(SRC_Expressions
         include/antares/solver/expressions/Add.h
         Negate.cpp
         include/antares/solver/expressions/Negate.h
-        Parameter.cpp
-        include/antares/solver/expressions/Parameter.h
         PrintVisitor.cpp
         include/antares/solver/expressions/PrintVisitor.h
         CloneVisitor.cpp
