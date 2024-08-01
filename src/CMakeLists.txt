@@ -235,6 +235,8 @@ add_subdirectory(antares-deps)
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)
 
+set(Boost_LIB_PREFIX "lib")
+set(Boost_DEBUG 1)
 #Boost header libraries
 find_package(Boost REQUIRED)
 
