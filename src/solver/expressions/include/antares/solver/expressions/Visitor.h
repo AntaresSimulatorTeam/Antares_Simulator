@@ -58,6 +58,7 @@ public:
         {
             if (auto x = (this->*f)(node))
             {
+                // What is this?
                 return x.value();
             }
         }

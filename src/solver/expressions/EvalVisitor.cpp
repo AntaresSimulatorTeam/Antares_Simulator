@@ -19,4 +19,9 @@ double EvalVisitor::visit(const Literal& lit)
 {
     return lit.value_;
 }
+
+double EvalVisitor::visit(const Negate& neg)
+{
+    return -Base::visit(*neg.n_);
+}
 } // namespace Antares::Solver::Expressions
