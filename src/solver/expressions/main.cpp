@@ -39,4 +39,8 @@ int main()
     Node* q = new Add(new Literal(21), new Literal(2));
     print<PrintVisitor>(*q);
     print<EvalVisitor>(*q);
+
+    CloneVisitor cloneVisitor;
+    Node* clone = cloneVisitor.dispatch(*q);
+    print<PrintVisitor>(*clone);
 }

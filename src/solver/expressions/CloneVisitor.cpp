@@ -23,22 +23,23 @@
 
 namespace Antares::Solver::Expressions
 {
-// std::any CloneVisitor::visit(const Add& add)
-//{
-//     auto n1 = std::any_cast<std::shared_ptr<Node>>(add.n1->accept(*this));
-//     auto n2 = std::any_cast<std::shared_ptr<Node>>(add.n2->accept(*this));
-//
-//     return std::static_pointer_cast<Node>(make_shared<Add>(n1, n2));
-// }
-//
-// std::any CloneVisitor::visit(const Negate& neg)
-//{
-//     auto n = std::any_cast<std::shared_ptr<Node>>(neg.n->accept(*this));
-//     return std::static_pointer_cast<Node>(std::make_shared<Negate>(n));
-// }
-//
-// std::any CloneVisitor::visit(const Parameter& param)
-//{
-//     return std::static_pointer_cast<Node>((std::make_shared<Parameter>(param.name)));
-// }
+Node* CloneVisitor::visit(const Add& add)
+{
+    return new Add(dispatch(*add.n1_), dispatch(*add.n2_));
+}
+
+Node* CloneVisitor::visit(const Negate& neg)
+{
+    return new Negate(dispatch(*neg.n_));
+}
+
+Node* CloneVisitor::visit(const Parameter& param)
+{
+    return new Parameter(param.value_);
+}
+
+Node* CloneVisitor::visit(const Literal& param)
+{
+    return new Literal(param.value_);
+}
 } // namespace Antares::Solver::Expressions
