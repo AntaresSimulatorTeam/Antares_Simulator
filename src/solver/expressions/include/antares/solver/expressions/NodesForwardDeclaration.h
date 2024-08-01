@@ -19,12 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <string>
 
 namespace Antares::Solver::Expressions
 {
 class Node;
 class Add;
 class Negate;
-class Parameter;
-class Literal;
+class Leaf;
+using Literal = Leaf<double>;
+using Parameter = Leaf<std::string>;
 } // namespace Antares::Solver::Expressions

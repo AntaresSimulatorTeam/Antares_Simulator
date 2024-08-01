@@ -40,6 +40,4 @@ public:
     T value_ = 0;
 };
 
-using Literal = Leaf<double>;
-using Parameter = Leaf<std::string>;
 } // namespace Antares::Solver::Expressions
