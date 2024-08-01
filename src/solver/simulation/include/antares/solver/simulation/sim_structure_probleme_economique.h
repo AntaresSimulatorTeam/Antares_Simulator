@@ -362,11 +362,10 @@ public:
     {
         excessDown = 0.;
 
-        level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
+        level = level + inflows[step] - turb[step] + pumpRatio * pump[step] - ovf[step];
 
         if (level > capacity)
         {
-            ovf[step] = level - capacity;
             level = capacity;
         }
 

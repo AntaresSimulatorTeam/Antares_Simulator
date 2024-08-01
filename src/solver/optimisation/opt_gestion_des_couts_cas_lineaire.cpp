@@ -287,7 +287,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 else
                 {
                     ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
-                                                             ->CoutDeDefaillanceNegative[pays];
+                                                             ->CoutDeDefaillanceNegative[pays]
+                                                           * 1.10;
                 }
             }
 
