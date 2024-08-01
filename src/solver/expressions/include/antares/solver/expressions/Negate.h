@@ -20,6 +20,8 @@
 */
 #pragma once
 
+#include <memory>
+
 #include <antares/solver/expressions/Node.h>
 
 namespace Antares::Solver::Expressions
@@ -32,6 +34,6 @@ public:
     Negate(Node* n);
 
     // private:
-    Node* n_;
+    std::unique_ptr<Node> n_;
 };
 } // namespace Antares::Solver::Expressions
