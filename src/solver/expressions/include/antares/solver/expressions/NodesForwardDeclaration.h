@@ -26,6 +26,7 @@ namespace Antares::Solver::Expressions
 class Node;
 class Add;
 class Negate;
+template<class T>
 class Leaf;
 using Literal = Leaf<double>;
 using Parameter = Leaf<std::string>;
