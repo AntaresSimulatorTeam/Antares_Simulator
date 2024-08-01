@@ -35,7 +35,7 @@ public:
     virtual bool hasScalarData(const std::string& key) = 0;
     virtual double getScalarData(const std::string& key, unsigned scenario) = 0;
     virtual bool hasTimedData(const std::string& key) = 0;
-    virtual std::vector<double> getTimedData(const std::string& key, unsigned scenario) = 0;
+    virtual std::vector<double>& getTimedData(const std::string& key, unsigned scenario) = 0;
 
 protected:
     std::vector<int> timeStamps_;

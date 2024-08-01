@@ -33,7 +33,7 @@ public:
     bool hasScalarData(const std::string& key) override;
     double getScalarData(const std::string& key, unsigned scenario) override;
     bool hasTimedData(const std::string& key) override;
-    std::vector<double> getTimedData(const std::string& key, unsigned scenario) override;
+    std::vector<double>& getTimedData(const std::string& key, unsigned scenario) override;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
