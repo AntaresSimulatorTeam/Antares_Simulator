@@ -44,9 +44,9 @@ bool OrtoolsLinearProblemData::hasTimedData(const std::string& key)
     return timedData_.contains(key);
 }
 
-std::vector<double>& OrtoolsLinearProblemData::getTimedData(const std::string& key, unsigned scenario)
-{
-    return timedData_.at(key);
-}
+/* std::vector<double>& OrtoolsLinearProblemData::getTimedData(const std::string& key, unsigned scenario) */
+/* { */
+/*     return timedData_.at(key); */
+/* } */
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
