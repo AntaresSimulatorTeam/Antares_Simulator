@@ -39,7 +39,7 @@ std::string PrintVisitor::visit(const Negate& neg)
 
 std::string PrintVisitor::visit(const Parameter& param)
 {
-    return param.name;
+    return param.value_;
 }
 
 std::string PrintVisitor::visit(const Literal& lit)

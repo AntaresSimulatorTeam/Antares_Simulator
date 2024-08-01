@@ -15,8 +15,11 @@ set(SRC_Expressions
         CloneVisitor.cpp
         include/antares/solver/expressions/CloneVisitor.h
         include/antares/solver/expressions/ExpressionsNodes.h
-        Literal.cpp
-        include/antares/solver/expressions/Literal.h
+        Leaf.cpp
+        include/antares/solver/expressions/Leaf.h
+        include/antares/solver/expressions/NodesForwardDeclaration.h
+        EvalVisitor.cpp
+        include/antares/solver/expressions/EvalVisitor.h
 )
 
 

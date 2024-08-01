@@ -19,12 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/solver/expressions/Literal.h>
+#include <antares/solver/expressions/Leaf.h>
 
 namespace Antares::Solver::Expressions
 {
-Literal::Literal(double value):
-    value_(value)
-{
-}
+
 } // namespace Antares::Solver::Expressions

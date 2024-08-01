@@ -24,11 +24,15 @@
 
 namespace Antares::Solver::Expressions
 {
-// class CloneVisitor: public Visitor
-//{
-//     std::any visit(const Add& add) override;
-//     std::any visit(const Negate& neg) override;
-//
-//     std::any visit(const Parameter& param) override;
-// };
+class EvalVisitor: public Visitor<double>
+{
+public:
+    using Base = Visitor<double>;
+
+private:
+    double visit(const Add& add) override;
+    double visit(const Negate& neg) override;
+    double visit(const Parameter& param) override;
+    double visit(const Literal& lit) override;
+};
 } // namespace Antares::Solver::Expressions
