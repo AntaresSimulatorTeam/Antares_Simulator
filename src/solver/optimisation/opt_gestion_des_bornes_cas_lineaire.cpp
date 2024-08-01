@@ -422,8 +422,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmin[var] = 0.0;
                 Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
                               .ApportNaturelHoraire[pdtHebdo];
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = &problemeHebdo
+                                                                        ->ResultatsHoraires[pays]
+                                                                        .debordementsHoraires
+                                                                          [pdtHebdo];
             }
 
             var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays];
