@@ -18,13 +18,16 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/Negate.h>
+#pragma once
+#include <string>
 
 namespace Antares::Solver::Expressions
 {
-Negate::Negate(Node* n):
-    n_(n)
-{
-}
-
+class Node;
+class Add;
+class Negate;
+template<class T>
+class Leaf;
+using Literal = Leaf<double>;
+using Parameter = Leaf<std::string>;
 } // namespace Antares::Solver::Expressions

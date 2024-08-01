@@ -1,36 +1,42 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include <any>
 #include <iostream>
 
-#include <antares/solver/expressions/Add.h>
 #include <antares/solver/expressions/CloneVisitor.h>
-#include <antares/solver/expressions/Negate.h>
-#include <antares/solver/expressions/Node.h>
-#include <antares/solver/expressions/Parameter.h>
+#include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/PrintVisitor.h>
-#include <antares/solver/expressions/StringVisitor.h>
+#include "antares/solver/expressions/EvalVisitor.h"
 
 template<class V>
-std::any visit(Antares::Solver::Expressions::Node& node)
+void print(const Antares::Solver::Expressions::Node& node)
 {
-    V visitor;
-    return node.accept(visitor);
+    V visit;
+    std::cout << dynamic_cast<typename V::Base*>(&visit)->visit(node) << std::endl;
 }
 
 int main()
 {
     using namespace Antares::Solver::Expressions;
-    auto* p1 = new Parameter("hello");
-    auto* p2 = new Parameter("world");
-    auto* neg = new Negate(p2);
-    Add root(p1, neg);
-
-    visit<PrintVisitor>(root);
-
-    std::cout << std::endl;
-    std::cout << std::any_cast<std::string>(visit<StringVisitor>(root));
-    std::cout << std::endl;
-
-    std::any clone = visit<CloneVisitor>(root);
-    std::unique_ptr<Node> root2(std::any_cast<Node*>(clone));
-    visit<PrintVisitor>(*root2);
+    Node* q = new Add(new Literal(21), new Literal(2));
+    print<PrintVisitor>(*q);
+    print<EvalVisitor>(*q);
 }

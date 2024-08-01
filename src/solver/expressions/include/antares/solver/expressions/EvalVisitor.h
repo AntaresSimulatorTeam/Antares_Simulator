@@ -18,13 +18,21 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/Negate.h>
+#pragma once
+
+#include <antares/solver/expressions/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
-Negate::Negate(Node* n):
-    n_(n)
+class EvalVisitor: public Visitor<double>
 {
-}
+public:
+    using Base = Visitor<double>;
 
+private:
+    double visit(const Add& add) override;
+    double visit(const Negate& neg) override;
+    double visit(const Parameter& param) override;
+    double visit(const Literal& lit) override;
+};
 } // namespace Antares::Solver::Expressions

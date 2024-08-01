@@ -8,15 +8,16 @@ set(SRC_Expressions
         include/antares/solver/expressions/Add.h
         Negate.cpp
         include/antares/solver/expressions/Negate.h
-        Parameter.cpp
-        include/antares/solver/expressions/Parameter.h
         PrintVisitor.cpp
         include/antares/solver/expressions/PrintVisitor.h
-        StringVisitor.cpp
-        include/antares/solver/expressions/StringVisitor.h
         CloneVisitor.cpp
         include/antares/solver/expressions/CloneVisitor.h
         include/antares/solver/expressions/ExpressionsNodes.h
+        Leaf.cpp
+        include/antares/solver/expressions/Leaf.h
+        include/antares/solver/expressions/NodesForwardDeclaration.h
+        EvalVisitor.cpp
+        include/antares/solver/expressions/EvalVisitor.h
 )
 
 
@@ -28,7 +29,10 @@ target_include_directories(antares-solver-expressions
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-
+target_link_libraries(antares-solver-expressions
+        PUBLIC
+        Antares::logs
+)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
