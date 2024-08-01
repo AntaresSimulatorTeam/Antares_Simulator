@@ -43,6 +43,7 @@
 #include <limits>
 #include <variable/state.h>
 #include <array>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
