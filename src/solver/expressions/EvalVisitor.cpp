@@ -7,7 +7,7 @@ namespace Antares::Solver::Expressions
 {
 double EvalVisitor::visit(const Add& add)
 {
-    return Base::visit(*add.n1_) + Base::visit(*add.n2_);
+    return dispatch(*add.n1_) + dispatch(*add.n2_);
 }
 
 double EvalVisitor::visit(const Parameter& param)
@@ -22,6 +22,6 @@ double EvalVisitor::visit(const Literal& lit)
 
 double EvalVisitor::visit(const Negate& neg)
 {
-    return -Base::visit(*neg.n_);
+    return -dispatch(*neg.n_);
 }
 } // namespace Antares::Solver::Expressions

@@ -30,7 +30,7 @@ template<class V>
 void print(const Antares::Solver::Expressions::Node& node)
 {
     V visit;
-    std::cout << dynamic_cast<typename V::Base*>(&visit)->visit(node) << std::endl;
+    std::cout << visit.dispatch(node) << std::endl;
 }
 
 int main()

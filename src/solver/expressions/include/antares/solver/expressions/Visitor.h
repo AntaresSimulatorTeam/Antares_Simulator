@@ -45,7 +45,7 @@ private:
 public:
     virtual ~Visitor() = default;
 
-    R visit(const Node& node)
+    R dispatch(const Node& node)
     {
         static const std::vector<std::function<std::optional<R>(const Node& node)>> tryFunctions{
           &Visitor<R>::tryType<Add>,

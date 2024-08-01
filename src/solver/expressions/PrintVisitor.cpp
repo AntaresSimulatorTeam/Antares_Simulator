@@ -29,12 +29,12 @@ std::string PrintVisitor::visit(const Add& add)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
-    return Base::visit(*add.n1_) + "+" + Base::visit(*add.n2_);
+    return dispatch(*add.n1_) + "+" + dispatch(*add.n2_);
 }
 
 std::string PrintVisitor::visit(const Negate& neg)
 {
-    return "-" + Base::visit(*neg.n_);
+    return "-" + dispatch(*neg.n_);
 }
 
 std::string PrintVisitor::visit(const Parameter& param)
