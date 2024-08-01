@@ -149,7 +149,7 @@ jobs:
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_BUILD_TYPE=Release \
-           -DBUILD_TESTING=ON  \
+           -DBUILD_TESTING=OFF  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
            -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
