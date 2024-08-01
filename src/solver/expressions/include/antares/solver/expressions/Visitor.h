@@ -47,7 +47,7 @@ public:
 
     R visit(const Node& node)
     {
-        static const std::array<std::function<std::optional<R>(const Node& node)>> tryFunctions{
+        static const std::vector<std::function<std::optional<R>(const Node& node)>> tryFunctions{
           &Visitor<R>::tryType<Add>,
           &Visitor<R>::tryType<Negate>,
           &Visitor<R>::tryType<Parameter>,
