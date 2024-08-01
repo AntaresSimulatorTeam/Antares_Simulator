@@ -58,10 +58,10 @@ FatalError fatalError(const std::string& areaName, int year)
     return FatalError(msg.str());
 }
 
-FatalError solutionNotFound(const std::string& areaName, int year)
+FatalError solutionNotFound(const std::string& areaName, int year, int month)
 {
     std::ostringstream msg;
-    msg << "Year : " << year + 1 << " - hydro: " << areaName
+    msg << "Year : " << year + 1 << " - month: " << month << " - hydro: " << areaName
         << " [daily] no solution found";
     return FatalError(msg.str());
 }
@@ -406,7 +406,14 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 }
                 break;
             case NON:
-                throw solutionNotFound(area.name.c_str(), y);
+                dayMonth = 0;
+                for (uint day = firstDay; day != endDay; ++day)
+                {
+                    Antares::logs.notice()
+                      << "Day " << dayMonth << " : " << problem->TurbineCible[dayMonth];
+                    dayMonth++;
+                }
+                throw solutionNotFound(area.name.c_str(), y, month);
                 break;
             case EMERGENCY_SHUT_DOWN:
                 throw fatalError(area.name.c_str(), y);
@@ -521,7 +528,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
                 break;
             case NON:
-                throw solutionNotFound(area.name.c_str(), y);
+                throw solutionNotFound(area.name.c_str(), y, month);
                 break;
             case EMERGENCY_SHUT_DOWN:
                 throw fatalError(area.name.c_str(), y);
