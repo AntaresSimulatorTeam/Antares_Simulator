@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <array>
 #include <optional>
 #include <string>
 
@@ -47,13 +48,12 @@ public:
 
     R dispatch(const Node& node)
     {
-        static const std::vector<std::function<std::optional<R>(const Node& node)>> tryFunctions{
-          &Visitor<R>::tryType<Add>,
-          &Visitor<R>::tryType<Negate>,
-          &Visitor<R>::tryType<Parameter>,
-          &Visitor<R>::tryType<Literal>,
-
-        };
+        using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
+          const Antares::Solver::Expressions::Node&);
+        static const std::array<Function, 4> tryFunctions{&Visitor<R>::tryType<Add>,
+                                                          &Visitor<R>::tryType<Negate>,
+                                                          &Visitor<R>::tryType<Parameter>,
+                                                          &Visitor<R>::tryType<Literal>};
         for (auto f: tryFunctions)
         {
             if (auto x = (this->*f)(node))
