@@ -12,11 +12,11 @@ set(SRC_Expressions
         include/antares/solver/expressions/Parameter.h
         PrintVisitor.cpp
         include/antares/solver/expressions/PrintVisitor.h
-        StringVisitor.cpp
-        include/antares/solver/expressions/StringVisitor.h
         CloneVisitor.cpp
         include/antares/solver/expressions/CloneVisitor.h
         include/antares/solver/expressions/ExpressionsNodes.h
+        Literal.cpp
+        include/antares/solver/expressions/Literal.h
 )
 
 
@@ -28,7 +28,10 @@ target_include_directories(antares-solver-expressions
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-
+target_link_libraries(antares-solver-expressions
+        PUBLIC
+        Antares::logs
+)
 install(DIRECTORY include/antares
         DESTINATION "include"
 )

@@ -18,21 +18,19 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
-#include <string>
-
 #include <antares/solver/expressions/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-class Parameter: public Node
+
+class Literal: public Node
 {
 public:
-    virtual ~Parameter() = default;
+    virtual ~Literal() = default;
 
-    Parameter(const std::string name);
+    Literal(double value);
 
     // private:
-    std::string name;
+    double value_ = 0;
 };
 } // namespace Antares::Solver::Expressions
