@@ -31,11 +31,11 @@ namespace Antares::Solver::Optim::Api
 class LinearProblemData
 {
 public:
-    virtual unsigned getTimeResolutionInMinutes() = 0;
-    virtual bool hasScalarData(const std::string& key) = 0;
-    virtual double getScalarData(const std::string& key, unsigned scenario) = 0;
-    virtual bool hasTimedData(const std::string& key) = 0;
-    virtual std::vector<double>& getTimedData(const std::string& key, unsigned scenario) = 0;
+    unsigned getTimeResolutionInMinutes();
+    bool hasScalarData(const std::string& key);
+    double getScalarData(const std::string& key, unsigned scenario);
+    bool hasTimedData(const std::string& key);
+    std::vector<double>& getTimedData(const std::string& key, unsigned scenario);
 
 protected:
     std::vector<int> timeStamps_;

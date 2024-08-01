@@ -7,7 +7,6 @@ set(HEADERS
         include/antares/solver/optim/ortoolsImpl/mipConstraint.h
 
         include/antares/solver/optim/ortoolsImpl/linearProblem.h
-        include/antares/solver/optim/ortoolsImpl/linearProblemData.h
 )
 set(SRC_ORTOOLS_IMPL
         ${HEADERS}
@@ -17,7 +16,6 @@ set(SRC_ORTOOLS_IMPL
         mipConstraint.cpp
 
         linearProblem.cpp
-        linearProblemData.cpp
 )
 
 source_group("solver\\optim\\api" FILES ${SRC_ORTOOLS_IMPL})

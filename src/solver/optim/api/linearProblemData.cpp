@@ -19,21 +19,34 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-
 #include <antares/solver/optim/api/linearProblemData.h>
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Optim::Api
 {
 
-class OrtoolsLinearProblemData: virtual public Api::LinearProblemData
+unsigned LinearProblemData::getTimeResolutionInMinutes()
 {
-public:
-    unsigned getTimeResolutionInMinutes() override;
-    bool hasScalarData(const std::string& key) override;
-    double getScalarData(const std::string& key, unsigned scenario) override;
-    bool hasTimedData(const std::string& key) override;
-    std::vector<double>& getTimedData(const std::string& key, unsigned scenario) override;
-};
+    return timeResolutionInMinutes_;
+}
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+bool LinearProblemData::hasScalarData(const std::string& key)
+{
+    return scalarData_.contains(key);
+}
+
+/* double LinearProblemData::getScalarData(const std::string& key, unsigned scenario) */
+/* { */
+
+/* } */
+
+bool LinearProblemData::hasTimedData(const std::string& key)
+{
+    return timedData_.contains(key);
+}
+
+/* std::vector<double>& LinearProblemData::getTimedData(const std::string& key, unsigned scenario) */
+/* { */
+/*     return timedData_.at(key); */
+/* } */
+
+} // namespace Antares::Solver::Optim::Api

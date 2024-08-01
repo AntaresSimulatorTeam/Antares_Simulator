@@ -8,6 +8,8 @@ set(SRC_API
 
         include/antares/solver/optim/api/linearProblem.h
         include/antares/solver/optim/api/linearProblemData.h
+
+        linearProblemData.cpp
 )
 
 add_library(${PROJ} ${SRC_API})
