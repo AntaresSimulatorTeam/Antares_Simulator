@@ -21,9 +21,9 @@
 
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 namespace Antares::Solver::Optim::Api
 {

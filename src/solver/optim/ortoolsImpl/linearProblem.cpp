@@ -33,14 +33,17 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
-    auto* mpSolver = isMip
-                  ? MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName)
-                  : MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
+    auto* mpSolver = isMip ? MPSolver::CreateSolver(
+                               (OrtoolsUtils::solverMap.at(solverName)).MIPSolverName)
+                           : MPSolver::CreateSolver(
+                               (OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
 
     mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
 }
 
-Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb, double ub, const std::string& name)
+Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
+                                                       double ub,
+                                                       const std::string& name)
 {
     if (variables_.contains(name))
     {
@@ -63,7 +66,9 @@ Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb, double ub, con
     return mipVar.get();
 }
 
-Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb, double ub, const std::string& name)
+Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
+                                                       double ub,
+                                                       const std::string& name)
 {
     if (variables_.contains(name))
     {
