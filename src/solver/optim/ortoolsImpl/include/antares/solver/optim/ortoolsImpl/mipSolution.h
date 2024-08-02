@@ -47,6 +47,10 @@ public:
     std::vector<double> getOptimalValue(const std::vector<Api::MipVariable>& vars) const override;
 
 private:
+    Api::MipStatus responseStatus_;
+
+    std::map<const Api::MipVariable*, double> solution_;
+
     OrtoolsMipObjective* objective_;
 };
 

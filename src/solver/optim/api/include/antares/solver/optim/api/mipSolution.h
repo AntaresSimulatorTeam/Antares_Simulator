@@ -44,11 +44,6 @@ public:
     virtual double getObjectiveValue() = 0;
     virtual double getOptimalValue(const MipVariable& var) const = 0;
     virtual std::vector<double> getOptimalValue(const std::vector<MipVariable>& vars) const = 0;
-
-protected:
-    MipStatus responseStatus_;
-
-    std::map<const MipVariable*, double> solution_;
 };
 
 } // namespace Antares::Solver::Optim::Api
