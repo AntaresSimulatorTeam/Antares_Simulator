@@ -280,8 +280,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
                 if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
-                    ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
-                                                             ->CoutDeDefaillanceNegative[pays]
+                    ProblemeAResoudre->CoutLineaire[var] = abs(problemeHebdo
+                                                                 ->CoutDeDefaillanceNegative[pays])
                                                            * 1.10;
 
                     ProblemeAResoudre->CoutLineaire[var] += problemeHebdo
@@ -290,8 +290,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 }
                 else
                 {
-                    ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
-                                                             ->CoutDeDefaillanceNegative[pays]
+                    ProblemeAResoudre->CoutLineaire[var] = abs(problemeHebdo
+                                                                 ->CoutDeDefaillanceNegative[pays])
                                                            * 1.10;
                 }
             }
