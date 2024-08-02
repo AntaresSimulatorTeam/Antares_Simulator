@@ -39,6 +39,8 @@ public:
     double getLb() override;
     double getUb() override;
 
+    const std::string& getName() const override;
+
     operations_research::MPVariable* getMpVar();
 
     ~OrtoolsMipVariable() = default;
@@ -49,6 +51,8 @@ private:
     // TODO: add friend class
 
     operations_research::MPVariable* mpVar_;
+
+    std::string name;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

@@ -21,15 +21,13 @@
 
 #pragma once
 
-#include "hasBounds.h"
-#include "hasName.h"
-
 namespace Antares::Solver::Optim::Api
 {
 
-class MipVariable : public virtual HasBounds, public virtual HasName
+class HasName
 {
-
+public:
+    virtual const std::string& getName() const = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api
