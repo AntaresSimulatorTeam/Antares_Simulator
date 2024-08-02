@@ -34,9 +34,9 @@ class Visitor
 {
 private:
     template<class T>
-    std::optional<R> tryType(const Node& node)
+    std::optional<R> tryType(Node& node)
     {
-        if (const T* x = dynamic_cast<const T*>(&node))
+        if (T* x = dynamic_cast<T*>(&node))
         {
             return visit(*x); // on appelle la version 'T' (virtuelle pure)
         }
@@ -46,10 +46,10 @@ private:
 public:
     virtual ~Visitor() = default;
 
-    R dispatch(const Node& node)
+    R dispatch(Node& node)
     {
         using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
-          const Antares::Solver::Expressions::Node&);
+          Antares::Solver::Expressions::Node&);
         static const std::array<Function, 4> tryFunctions{&Visitor<R>::tryType<Add>,
                                                           &Visitor<R>::tryType<Negate>,
                                                           &Visitor<R>::tryType<Parameter>,
@@ -59,7 +59,7 @@ public:
             if (auto x = (this->*f)(node))
             {
                 // What is this?
-                return x.value();
+                return std::move(*x);
             }
         }
         logs.error() << "Antares::Solver::Expressions Visitor: unsupported Node!";
@@ -67,10 +67,10 @@ public:
     }
 
 private:
-    virtual R visit(const Add&) = 0;
-    virtual R visit(const Negate&) = 0;
-    virtual R visit(const Parameter&) = 0;
-    virtual R visit(const Literal&) = 0;
+    virtual R visit(Add&) = 0;
+    virtual R visit(Negate&) = 0;
+    virtual R visit(Parameter&) = 0;
+    virtual R visit(Literal&) = 0;
 };
 
 } // namespace Antares::Solver::Expressions

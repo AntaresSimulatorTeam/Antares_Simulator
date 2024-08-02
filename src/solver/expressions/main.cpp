@@ -27,7 +27,7 @@
 #include "antares/solver/expressions/EvalVisitor.h"
 
 template<class V>
-void print(const Antares::Solver::Expressions::Node& node)
+void print(Antares::Solver::Expressions::Node& node)
 {
     V visit;
     std::cout << visit.dispatch(node) << std::endl;
