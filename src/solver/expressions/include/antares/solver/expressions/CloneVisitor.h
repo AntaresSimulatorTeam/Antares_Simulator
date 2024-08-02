@@ -26,9 +26,9 @@ namespace Antares::Solver::Expressions
 {
 class CloneVisitor: public Visitor<std::unique_ptr<Node>>
 {
-    std::unique_ptr<Node> visit(const Add& add) override;
-    std::unique_ptr<Node> visit(const Negate& neg) override;
-    std::unique_ptr<Node> visit(const Parameter& param) override;
-    std::unique_ptr<Node> visit(const Literal& param) override;
+    std::unique_ptr<Node> visit(Add& add) override;
+    std::unique_ptr<Node> visit(Negate& neg) override;
+    std::unique_ptr<Node> visit(Parameter& param) override;
+    std::unique_ptr<Node> visit(Literal& param) override;
 };
 } // namespace Antares::Solver::Expressions
