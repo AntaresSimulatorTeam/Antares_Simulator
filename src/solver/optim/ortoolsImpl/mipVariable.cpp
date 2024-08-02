@@ -64,5 +64,4 @@ const std::string& OrtoolsMipVariable::getName() const
     return name;
 }
 
-
 } // namespace Antares::Solver::Optim::OrtoolsImpl

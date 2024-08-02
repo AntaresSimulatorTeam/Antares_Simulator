@@ -42,6 +42,8 @@ public:
 
     double getCoefficient(Api::MipVariable* var) override;
 
+    const std::string& getName() const override;
+
     ~OrtoolsMipConstraint() = default;
 
     OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint);
@@ -50,6 +52,8 @@ private:
     // TODO private constructor
 
     operations_research::MPConstraint* mpConstraint_;
+
+    std::string name;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

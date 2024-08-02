@@ -80,4 +80,9 @@ double OrtoolsMipConstraint::getCoefficient(Api::MipVariable* var)
     return mpConstraint_->GetCoefficient(mpvar->getMpVar());
 }
 
+const std::string& OrtoolsMipConstraint::getName() const
+{
+    return name;
+}
+
 } // namespace Antares::Solver::Optim::OrtoolsImpl
