@@ -34,9 +34,9 @@ class Visitor
 {
 private:
     template<class T>
-    std::optional<R> tryType(Node& node)
+    std::optional<R> tryType(const Node& node)
     {
-        if (T* x = dynamic_cast<T*>(&node))
+        if (const T* x = dynamic_cast<const T*>(&node))
         {
             return visit(*x); // on appelle la version 'T' (virtuelle pure)
         }
@@ -46,10 +46,10 @@ private:
 public:
     virtual ~Visitor() = default;
 
-    R dispatch(Node& node)
+    R dispatch(const Node& node)
     {
         using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
-          Antares::Solver::Expressions::Node&);
+          const Antares::Solver::Expressions::Node&);
         static const std::array<Function, 4> tryFunctions{&Visitor<R>::tryType<Add>,
                                                           &Visitor<R>::tryType<Negate>,
                                                           &Visitor<R>::tryType<Parameter>,
