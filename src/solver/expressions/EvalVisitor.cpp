@@ -5,22 +5,22 @@
 
 namespace Antares::Solver::Expressions
 {
-double EvalVisitor::visit(Add& add)
+double EvalVisitor::visit(const Add& add)
 {
     return dispatch(*add.n1_) + dispatch(*add.n2_);
 }
 
-double EvalVisitor::visit(Parameter& param)
+double EvalVisitor::visit(const Parameter& param)
 {
     return 0.;
 }
 
-double EvalVisitor::visit(Literal& lit)
+double EvalVisitor::visit(const Literal& lit)
 {
     return lit.value_;
 }
 
-double EvalVisitor::visit(Negate& neg)
+double EvalVisitor::visit(const Negate& neg)
 {
     return -dispatch(*neg.n_);
 }

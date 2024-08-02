@@ -30,9 +30,9 @@ public:
     using Base = Visitor<double>;
 
 private:
-    double visit(Add& add) override;
-    double visit(Negate& neg) override;
-    double visit(Parameter& param) override;
-    double visit(Literal& lit) override;
+    double visit(const Add& add) override;
+    double visit(const Negate& neg) override;
+    double visit(const Parameter& param) override;
+    double visit(const Literal& lit) override;
 };
 } // namespace Antares::Solver::Expressions

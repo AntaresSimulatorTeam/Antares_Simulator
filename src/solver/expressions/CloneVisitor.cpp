@@ -23,23 +23,23 @@
 
 namespace Antares::Solver::Expressions
 {
-std::unique_ptr<Node> CloneVisitor::visit(Add& add)
+std::unique_ptr<Node> CloneVisitor::visit(const Add& add)
 {
     return std::make_unique<Add>(std::move(dispatch(*add.n1_)), std::move(dispatch(*add.n2_)));
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(Negate& neg)
+std::unique_ptr<Node> CloneVisitor::visit(const Negate& neg)
 {
     //    return std::make_unique<Negate>(dispatch(*neg.n_));
     return std::make_unique<Negate>(std::move(dispatch(*neg.n_)));
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(Parameter& param)
+std::unique_ptr<Node> CloneVisitor::visit(const Parameter& param)
 {
     return std::make_unique<Parameter>(param.value_);
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(Literal& param)
+std::unique_ptr<Node> CloneVisitor::visit(const Literal& param)
 {
     return std::make_unique<Literal>(param.value_);
 }

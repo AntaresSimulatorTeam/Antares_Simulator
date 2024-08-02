@@ -58,7 +58,6 @@ public:
         {
             if (auto x = (this->*f)(node))
             {
-                // What is this?
                 return std::move(*x);
             }
         }
@@ -67,10 +66,10 @@ public:
     }
 
 private:
-    virtual R visit(Add&) = 0;
-    virtual R visit(Negate&) = 0;
-    virtual R visit(Parameter&) = 0;
-    virtual R visit(Literal&) = 0;
+    virtual R visit(const Add&) = 0;
+    virtual R visit(const Negate&) = 0;
+    virtual R visit(const Parameter&) = 0;
+    virtual R visit(const Literal&) = 0;
 };
 
 } // namespace Antares::Solver::Expressions

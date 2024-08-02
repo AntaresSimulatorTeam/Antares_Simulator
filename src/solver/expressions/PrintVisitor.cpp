@@ -25,24 +25,24 @@
 
 namespace Antares::Solver::Expressions
 {
-std::string PrintVisitor::visit(Add& add)
+std::string PrintVisitor::visit(const Add& add)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
     return dispatch(*add.n1_) + "+" + dispatch(*add.n2_);
 }
 
-std::string PrintVisitor::visit(Negate& neg)
+std::string PrintVisitor::visit(const Negate& neg)
 {
     return "-" + dispatch(*neg.n_);
 }
 
-std::string PrintVisitor::visit(Parameter& param)
+std::string PrintVisitor::visit(const Parameter& param)
 {
     return param.value_;
 }
 
-std::string PrintVisitor::visit(Literal& lit)
+std::string PrintVisitor::visit(const Literal& lit)
 {
     return std::to_string(lit.value_);
 }

@@ -30,11 +30,11 @@ public:
     using Base = Visitor<std::string>;
 
 private:
-    std::string visit(Add& add) override;
+    std::string visit(const Add& add) override;
 
-    std::string visit(Negate& neg) override;
+    std::string visit(const Negate& neg) override;
 
-    std::string visit(Parameter& param) override;
-    std::string visit(Literal& param) override;
+    std::string visit(const Parameter& param) override;
+    std::string visit(const Literal& param) override;
 };
 } // namespace Antares::Solver::Expressions
