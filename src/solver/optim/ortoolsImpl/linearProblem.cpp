@@ -42,6 +42,11 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
 
 Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb, double ub, const std::string& name)
 {
+    if (variables_.contains(name))
+    {
+        logs.error() << "This variable already exists: " << name;
+        throw std::bad_function_call();
+    }
     auto* mpVar = mpSolver_->MakeNumVar(lb, ub, name);
     auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
@@ -60,6 +65,12 @@ Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb, double ub, con
 
 Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb, double ub, const std::string& name)
 {
+    if (variables_.contains(name))
+    {
+        logs.error() << "This variable already exists: " << name;
+        throw std::bad_function_call();
+    }
+
     auto* mpVar = mpSolver_->MakeIntVar(lb, ub, name);
     auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
 
@@ -82,9 +93,15 @@ Api::MipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
 }
 
 Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
-                                                       double ub,
-                                                       const std::string& name)
+                                                        double ub,
+                                                        const std::string& name)
 {
+    if (constraints_.contains(name))
+    {
+        logs.error() << "This constraint already exists: " << name;
+        throw std::bad_function_call();
+    }
+
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
     auto mipConstraint = std::make_shared<OrtoolsMipConstraint>(mpConstraint);
 

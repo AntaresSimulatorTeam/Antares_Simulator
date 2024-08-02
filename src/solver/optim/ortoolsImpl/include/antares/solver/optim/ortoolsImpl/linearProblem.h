@@ -53,6 +53,12 @@ public:
 private:
     std::unique_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPSolverParameters* param_;
+
+    std::map<std::string, std::shared_ptr<Api::MipVariable>> variables_;
+    std::map<std::string, std::shared_ptr<Api::MipConstraint>> constraints_;
+
+    std::unique_ptr<Api::MipSolution> solution_;
+    std::unique_ptr<Api::MipObjective> objective_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
