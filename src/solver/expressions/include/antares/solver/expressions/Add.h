@@ -31,7 +31,7 @@ class Add: public Node
 public:
     virtual ~Add() = default;
 
-    Add(Node* n1, Node* n2);
+    Add(std::unique_ptr<Node> n1, std::unique_ptr<Node> n2);
 
     // private:
     std::unique_ptr<Node> n1_;

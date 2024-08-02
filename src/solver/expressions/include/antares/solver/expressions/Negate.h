@@ -31,7 +31,7 @@ class Negate: public Node
 public:
     virtual ~Negate() = default;
 
-    Negate(Node* n);
+    Negate(std::unique_ptr<Node> n);
 
     // private:
     std::unique_ptr<Node> n_;

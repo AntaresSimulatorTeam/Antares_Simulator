@@ -22,9 +22,9 @@
 
 namespace Antares::Solver::Expressions
 {
-Add::Add(Node* n1, Node* n2):
-    n1_(n1),
-    n2_(n2)
+Add::Add(std::unique_ptr<Node> n1, std::unique_ptr<Node> n2):
+    n1_(std::move(n1)),
+    n2_(std::move(n2))
 {
 }
 

@@ -24,11 +24,11 @@
 
 namespace Antares::Solver::Expressions
 {
-class CloneVisitor: public Visitor<Node*>
+class CloneVisitor: public Visitor<std::unique_ptr<Node>>
 {
-    Node* visit(const Add& add) override;
-    Node* visit(const Negate& neg) override;
-    Node* visit(const Parameter& param) override;
-    Node* visit(const Literal& param) override;
+    std::unique_ptr<Node> visit(const Add& add) override;
+    std::unique_ptr<Node> visit(const Negate& neg) override;
+    std::unique_ptr<Node> visit(const Parameter& param) override;
+    std::unique_ptr<Node> visit(const Literal& param) override;
 };
 } // namespace Antares::Solver::Expressions
