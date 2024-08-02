@@ -20,6 +20,8 @@
 */
 #pragma once
 
+#include <memory>
+
 #include <antares/solver/expressions/Node.h>
 
 namespace Antares::Solver::Expressions
@@ -32,7 +34,7 @@ public:
     Add(Node* n1, Node* n2);
 
     // private:
-    Node* n1_;
-    Node* n2_;
+    std::unique_ptr<Node> n1_;
+    std::unique_ptr<Node> n2_;
 };
 } // namespace Antares::Solver::Expressions

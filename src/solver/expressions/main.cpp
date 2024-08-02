@@ -18,8 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <any>
 #include <iostream>
+#include <memory>
 
 #include <antares/solver/expressions/CloneVisitor.h>
 #include <antares/solver/expressions/ExpressionsNodes.h>
@@ -36,11 +36,11 @@ void print(const Antares::Solver::Expressions::Node& node)
 int main()
 {
     using namespace Antares::Solver::Expressions;
-    Node* q = new Add(new Literal(21), new Literal(2));
+    std::unique_ptr<Node> q(new Add(new Literal(21), new Literal(2)));
     print<PrintVisitor>(*q);
     print<EvalVisitor>(*q);
 
     CloneVisitor cloneVisitor;
-    Node* clone = cloneVisitor.dispatch(*q);
+    std::unique_ptr<Node> clone(cloneVisitor.dispatch(*q));
     print<PrintVisitor>(*clone);
 }
