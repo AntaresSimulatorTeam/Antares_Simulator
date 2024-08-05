@@ -241,8 +241,8 @@ bool Series::validateLowerRuleCurve() const
 bool Series::validateCosts() const
 {
     return checkVectBetweenZeroOne(costInjection, "cost injection")
-        && checkVectBetweenZeroOne(costWithdrawal, "cost withdrawal")
-        && checkVectBetweenZeroOne(costLevel, "cost level");
+           && checkVectBetweenZeroOne(costWithdrawal, "cost withdrawal")
+           && checkVectBetweenZeroOne(costLevel, "cost level");
 }
 
 } // namespace Antares::Data::ShortTermStorage
