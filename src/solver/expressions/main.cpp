@@ -36,7 +36,8 @@ void print(Antares::Solver::Expressions::Node& node)
 int main()
 {
     using namespace Antares::Solver::Expressions;
-    std::unique_ptr<Node> q(new AddNode(std::make_unique<LiteralNode>(21), std::make_unique<LiteralNode>(2)));
+    std::unique_ptr<Node> q(
+      new AddNode(std::make_unique<LiteralNode>(21), std::make_unique<LiteralNode>(2)));
     print<PrintVisitor>(*q);
     print<EvalVisitor>(*q);
 
