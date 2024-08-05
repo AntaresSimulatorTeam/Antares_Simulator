@@ -50,20 +50,21 @@ Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
         logs.error() << "This variable already exists: " << name;
         throw std::bad_function_call();
     }
+
     auto* mpVar = mpSolver_->MakeNumVar(lb, ub, name);
-    auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
+    auto mipVar = std::make_unique<OrtoolsMipVariable>(mpVar);
 
     if (!mpVar || !mipVar)
     {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    if (!variables_.try_emplace(name, mipVar).second)
+    if (!variables_.try_emplace(name, std::move(mipVar)).second)
     {
         logs.error() << "Error adding variable: " << name;
     }
 
-    return mipVar.get();
+    return variables_[name].get();
 }
 
 Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
@@ -77,19 +78,20 @@ Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
     }
 
     auto* mpVar = mpSolver_->MakeIntVar(lb, ub, name);
-    auto mipVar = std::make_shared<OrtoolsMipVariable>(mpVar);
+    auto mipVar = std::make_unique<OrtoolsMipVariable>(mpVar);
 
     if (!mpVar || !mipVar)
     {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    if (!variables_.try_emplace(name, mipVar).second)
+    if (!variables_.try_emplace(name, std::move(mipVar)).second)
     {
         logs.error() << "Error adding variable: " << name;
     }
 
-    return mipVar.get();
+    return variables_[name].get();
+
 }
 
 Api::MipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
@@ -108,14 +110,14 @@ Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     }
 
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
-    auto mipConstraint = std::make_shared<OrtoolsMipConstraint>(mpConstraint);
+    auto mipConstraint = std::make_unique<OrtoolsMipConstraint>(mpConstraint);
 
-    if (!constraints_.try_emplace(name, mipConstraint).second)
+    if (!constraints_.try_emplace(name, std::move(mipConstraint)).second)
     {
         logs.error() << "Error adding constraint: " << name;
     }
 
-    return mipConstraint.get();
+    return constraints_[name].get();
 }
 
 Api::MipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
