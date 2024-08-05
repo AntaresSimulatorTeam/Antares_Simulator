@@ -43,6 +43,10 @@ bool Series::loadFromFolder(const std::string& folder)
     ret = loadFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
 
+    ret = loadFile(folder + SEP + "cost-injection.txt", costInjection) && ret;
+    ret = loadFile(folder + SEP + "cost-withdrawal.txt", costWithdrawal) && ret;
+    ret = loadFile(folder + SEP + "cost-level.txt", costLevel) && ret;
+
     return ret;
 }
 

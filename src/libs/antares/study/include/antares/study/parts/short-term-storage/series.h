@@ -42,6 +42,10 @@ public:
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
 
+    std::vector<double> costInjection;
+    std::vector<double> costWithdrawal;
+    std::vector<double> costLevel;
+
 private:
     bool validateSizes() const;
     bool validateMaxInjection() const;
@@ -49,6 +53,7 @@ private:
     bool validateRuleCurves() const;
     bool validateUpperRuleCurve() const;
     bool validateLowerRuleCurve() const;
+    bool validateCosts() const;
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
