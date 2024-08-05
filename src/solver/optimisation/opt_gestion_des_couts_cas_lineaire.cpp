@@ -24,7 +24,6 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/simulation/sim_spread_generator.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/simulation.h"
 
@@ -38,7 +37,6 @@ static void shortTermStorageCost(
   VariableManagement::VariableManager& variableManager,
   std::vector<double>& linearCost)
 {
-    SIM::SpreadGenerator spreadGenerator;
     for (int pays = 0; pays < NombreDePays; ++pays)
     {
         for (const auto& storage: shortTermStorageInput[pays])
@@ -55,7 +53,6 @@ static void shortTermStorageCost(
                     linearCost[varLevel] = storage.series->costLevel[pdtHebdo];
                 }
 
-                const double cost = spreadGenerator.generate();
                 if (const int varInjection = variableManager.ShortTermStorageInjection(
                       clusterGlobalIndex,
                       pdtJour);
