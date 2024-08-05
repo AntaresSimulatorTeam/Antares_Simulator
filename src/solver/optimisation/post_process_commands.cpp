@@ -42,27 +42,29 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     unsigned int year = opt_runtime_data.year;
-    area_list_.each([&](Data::Area& area) {
-        double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
-        for (uint h = 0; h != nbHoursInWeek; ++h)
-            dtgmrg[h] = 0.;
+    area_list_.each(
+      [&](Data::Area& area)
+      {
+          double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
+          for (uint h = 0; h != nbHoursInWeek; ++h)
+              dtgmrg[h] = 0.;
 
-        if (not area.thermal.list.empty())
-        {
-            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
+          if (not area.thermal.list.empty())
+          {
+              auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
 
-            for (const auto& cluster : area.thermal.list)
-            {
-                const auto& availableProduction = cluster->series.getColumn(year);
-                for (uint h = 0; h != nbHoursInWeek; ++h)
-                {
-                    double production = hourlyResults.ProductionThermique[h]
-                                          .ProductionThermiqueDuPalier[cluster->index];
-                    dtgmrg[h] += availableProduction[h + hourInYear] - production;
-                }
-            }
-        }
-    });
+              for (const auto& cluster : area.thermal.list)
+              {
+                  const auto& availableProduction = cluster->series.getColumn(year);
+                  for (uint h = 0; h != nbHoursInWeek; ++h)
+                  {
+                      double production = hourlyResults.ProductionThermique[h]
+                                            .ProductionThermiqueDuPalier[cluster->index];
+                      dtgmrg[h] += availableProduction[h + hourInYear] - production;
+                  }
+              }
+          }
+      });
 }
 
 // -----------------------------
@@ -143,22 +145,27 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
         {
             // define access to the required variables
             const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
-            double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+            const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+            const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
+                                     ->wasCSRTriggeredAtAreaHour(Area, hour);
+            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(triggered, dtgMrg, ens);
+            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = recomputeENS_MRG(
+              triggered,
+              dtgMrg,
+              ens);
 
             auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
             double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
-            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            const double& ensCsr = hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour];
             double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
+
             // calculate DTG MRG CSR and adjust ENS if neccessary
             if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
             {
-                if (adqPatchParams_.curtailmentSharing.recomputeDTGMRG)
-                {
-                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
-                    ens = std::max(0.0, ens - dtgMrg);
-                }
+                dtgMrgCsr = std::max(0.0, dtgMrg - ensCsr);
                 // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
-                if (ens > 0.5)
+                if (ensCsr > 0.5)
                     mrgCost = -area_list_[Area]->thermal.unsuppliedEnergyCost;
             }
             else
@@ -256,9 +263,8 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                 const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 // write down densNew values for all the hours
-                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour] = std::max(
-                  0.0,
-                  densNew);
+                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour]
+                  = std::max(0.0, densNew);
                 // copy spilled Energy values into spilled Energy values after CSR
                 problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesSpilledEnergyAfterCSR[hour]
                   = problemeHebdo_->ResultatsHoraires[Area]

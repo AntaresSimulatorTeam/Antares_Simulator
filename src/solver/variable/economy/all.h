@@ -73,6 +73,7 @@
 
 #include "avail-dispatchable-generation.h"
 #include "dispatchable-generation-margin.h"
+#include "unsupliedEnergyCsr.h"
 
 // By thermal plant
 #include "productionByDispatchablePlant.h"
@@ -164,19 +165,22 @@ typedef                           // Prices
                                <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
                                 <LOLD                 // LOLD
                                  <LOLP                // LOLP
-                                  <AvailableDispatchGen<DispatchableGenMargin<
-                                    DtgMarginCsr // DTG MRG CSR
-                                    <Marge<NonProportionalCost<
-                                      NonProportionalCostByDispatchablePlant // Startup cost + Fixed
-                                                                             // cost per thermal
-                                                                             // plant detail
-                                      <NbOfDispatchedUnits         // Number of Units Dispatched
-                                       <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
-                                                                   // plant
-                                        <ProfitByPlant
-                                         // Links
-                                         <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                  <AvailableDispatchGen<DispatchableGenMargin<DtgMarginCsr< // DTG
+                                                                                            // MRG
+                                                                                            // CSR
+                                    UnsupliedEnergyCSR< // Unsupplied energy after CSR
+                                      Marge<NonProportionalCost<
+                                        NonProportionalCostByDispatchablePlant // Startup cost +
+                                                                               // Fixed cost per
+                                                                               // thermal plant
+                                                                               // detail
+                                        <NbOfDispatchedUnits         // Number of Units Dispatched
+                                         <NbOfDispatchedUnitsByPlant // Number of Units Dispatched
+                                                                     // by plant
+                                          <ProfitByPlant
+                                           // Links
+                                           <Variable::Economy::Links // All links
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
