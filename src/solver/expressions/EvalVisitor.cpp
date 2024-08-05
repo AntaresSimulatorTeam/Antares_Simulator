@@ -29,4 +29,16 @@ double EvalVisitor::visit(const PortFieldNode& port_field_node)
 {
     return 0.;
 }
+
+double EvalVisitor::visit(const ComponentVariableNode& component_variable_node)
+{
+    // TODO
+    return 0.;
+}
+
+double EvalVisitor::visit(const ComponentParameterNode& component_parameter_node)
+{
+    // TODO
+    return 0.;
+}
 } // namespace Antares::Solver::Expressions

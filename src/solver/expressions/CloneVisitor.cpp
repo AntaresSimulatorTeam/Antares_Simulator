@@ -48,4 +48,16 @@ std::unique_ptr<Node> CloneVisitor::visit(const PortFieldNode& port_field_node)
 {
     return std::make_unique<PortFieldNode>(port_field_node.port_name_, port_field_node.field_name_);
 }
+
+std::unique_ptr<Node> CloneVisitor::visit(const ComponentVariableNode& component_variable_node)
+{
+    return std::make_unique<ComponentVariableNode>(component_variable_node.component_id_,
+                                                   component_variable_node.component_name_);
+}
+
+std::unique_ptr<Node> CloneVisitor::visit(const ComponentParameterNode& component_parameter_node)
+{
+    return std::make_unique<ComponentParameterNode>(component_parameter_node.component_id_,
+                                                    component_parameter_node.component_name_);
+}
 } // namespace Antares::Solver::Expressions

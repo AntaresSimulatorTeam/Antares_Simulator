@@ -20,6 +20,8 @@ set(SRC_Expressions
         include/antares/solver/expressions/EvalVisitor.h
         include/antares/solver/expressions/PortFieldNode.h
         PortFieldNode.cpp
+        include/antares/solver/expressions/ComponentNode.h
+        ComponentNode.cpp
 )
 
 

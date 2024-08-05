@@ -18,24 +18,13 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
-
-#include <antares/solver/expressions/Visitor.h>
+#include <antares/solver/expressions/ComponentNode.h>
 
 namespace Antares::Solver::Expressions
 {
-class EvalVisitor: public Visitor<double>
+ComponentNode::ComponentNode(const std::string& component_id, const std::string& component_name):
+    component_id_(component_id),
+    component_name_(component_name)
 {
-public:
-    using Base = Visitor<double>;
-
-private:
-    double visit(const AddNode& add) override;
-    double visit(const NegationNode& neg) override;
-    double visit(const ParameterNode& param) override;
-    double visit(const LiteralNode& lit) override;
-    double visit(const PortFieldNode& port_field_node) override;
-    double visit(const ComponentVariableNode& component_variable_node);
-    double visit(const ComponentParameterNode& component_parameter_node);
-};
+}
 } // namespace Antares::Solver::Expressions

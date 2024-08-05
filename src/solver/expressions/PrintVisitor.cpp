@@ -51,4 +51,14 @@ std::string PrintVisitor::visit(const PortFieldNode& port_field_node)
 {
     return port_field_node.port_name_ + "." + port_field_node.field_name_;
 }
+
+std::string PrintVisitor::visit(const ComponentVariableNode& component_variable_node)
+{
+    return component_variable_node.component_id_ + "." + component_variable_node.component_name_;
+}
+
+std::string PrintVisitor::visit(const ComponentParameterNode& component_parameter_node)
+{
+    return component_parameter_node.component_id_ + "." + component_parameter_node.component_name_;
+}
 } // namespace Antares::Solver::Expressions
