@@ -43,4 +43,7 @@ int main()
     CloneVisitor cloneVisitor;
     std::unique_ptr<Node> clone(cloneVisitor.dispatch(*q));
     print<PrintVisitor>(*clone);
+
+    PortFieldNode pt_fd("august", "2024");
+    print<PrintVisitor>(pt_fd);
 }
