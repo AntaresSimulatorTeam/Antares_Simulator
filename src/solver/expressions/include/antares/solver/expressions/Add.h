@@ -26,12 +26,12 @@
 
 namespace Antares::Solver::Expressions
 {
-class Add: public Node
+class AddNode: public Node
 {
 public:
-    virtual ~Add() = default;
+    virtual ~AddNode() = default;
 
-    Add(std::unique_ptr<Node> n1, std::unique_ptr<Node> n2);
+    AddNode(std::unique_ptr<Node> n1, std::unique_ptr<Node> n2);
 
     // private:
     std::unique_ptr<Node> n1_;

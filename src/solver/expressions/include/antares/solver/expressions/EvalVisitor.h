@@ -30,7 +30,7 @@ public:
     using Base = Visitor<double>;
 
 private:
-    double visit(const Add& add) override;
+    double visit(const AddNode& add) override;
     double visit(const Negate& neg) override;
     double visit(const Parameter& param) override;
     double visit(const Literal& lit) override;

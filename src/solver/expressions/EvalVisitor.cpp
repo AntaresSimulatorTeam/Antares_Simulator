@@ -5,7 +5,7 @@
 
 namespace Antares::Solver::Expressions
 {
-double EvalVisitor::visit(const Add& add)
+double EvalVisitor::visit(const AddNode& add)
 {
     return dispatch(*add.n1_) + dispatch(*add.n2_);
 }

@@ -4,8 +4,8 @@ project(Expressions)
 set(SRC_Expressions
         include/antares/solver/expressions/Visitor.h
         include/antares/solver/expressions/Node.h
-        Add.cpp
-        include/antares/solver/expressions/Add.h
+        AddNode.cpp
+        include/antares/solver/expressions/AddNode.h
         Negate.cpp
         include/antares/solver/expressions/Negate.h
         PrintVisitor.cpp

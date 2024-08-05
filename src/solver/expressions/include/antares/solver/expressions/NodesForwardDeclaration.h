@@ -24,7 +24,7 @@
 namespace Antares::Solver::Expressions
 {
 class Node;
-class Add;
+class AddNode;
 class Negate;
 template<class T>
 class Leaf;

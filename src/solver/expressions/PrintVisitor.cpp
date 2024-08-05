@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::Expressions
 {
-std::string PrintVisitor::visit(const Add& add)
+std::string PrintVisitor::visit(const AddNode& add)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'

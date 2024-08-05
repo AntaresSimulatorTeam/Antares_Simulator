@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <antares/solver/expressions/Add.h>
+#include <antares/solver/expressions/AddNode.h>
 #include <antares/solver/expressions/Leaf.h>
 #include <antares/solver/expressions/Negate.h>
 #include <antares/solver/expressions/PortFieldNode.h>

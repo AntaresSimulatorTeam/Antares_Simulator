@@ -30,7 +30,7 @@ public:
     using Base = Visitor<std::string>;
 
 private:
-    std::string visit(const Add& add) override;
+    std::string visit(const AddNode& add) override;
 
     std::string visit(const Negate& neg) override;
 
