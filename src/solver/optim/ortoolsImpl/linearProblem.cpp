@@ -148,10 +148,11 @@ Api::MipSolution* OrtoolsLinearProblem::solve()
     mpSolver_->EnableOutput();
     auto status = mpSolver_->Solve(*param_);
 
-    std::map<Api::MipVariable*, double> solution;
+    std::map<std::string, std::pair<Api::MipVariable*, double>> solution;
     for (auto& var: mpSolver_->variables())
     {
-        solution.try_emplace(variables_.at(var->name()).get(), var->solution_value());
+        auto pair = std::make_pair(variables_.at(var->name()).get(), var->solution_value());
+        solution.try_emplace(var->name(), pair);
     }
 
     auto* mpObjective = dynamic_cast<OrtoolsMipObjective*>(objective_.get());

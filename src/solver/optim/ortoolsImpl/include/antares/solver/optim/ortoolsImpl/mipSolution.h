@@ -36,7 +36,7 @@ class OrtoolsMipSolution: virtual public Api::MipSolution
 {
 public:
     OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
-                       const std::map<Api::MipVariable*, double>& solution,
+                       const std::map<std::string, std::pair<Api::MipVariable*, double>>& solution,
                        OrtoolsMipObjective* objective);
 
     ~OrtoolsMipSolution() = default;
@@ -49,7 +49,7 @@ public:
 private:
     Api::MipStatus responseStatus_;
 
-    std::map<const Api::MipVariable*, double> solution_;
+    std::map<std::string, std::pair<const Api::MipVariable*, double>> solution_;
 
     OrtoolsMipObjective* objective_;
 };
