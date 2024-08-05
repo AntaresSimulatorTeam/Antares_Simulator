@@ -32,7 +32,7 @@ class LinearProblemFiller
 public:
     virtual void addVariables(LinearProblem* problem, LinearProblemData* data) = 0;
     virtual void addConstraints(LinearProblem* problem, LinearProblemData* data) = 0;
-    virtual void addObjective(LinearProblem* problem, LinearProblemData* data) = 0;
+    virtual void addObjectiveCoefficients(LinearProblem* problem, LinearProblemData* data) = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

@@ -36,8 +36,8 @@ public:
 
     virtual double getCoefficient(MipVariable* var) = 0;
 
-    virtual bool getMaximization() = 0;
-    virtual bool getMinimization() = 0;
+    virtual bool isMaximization() = 0;
+    virtual bool isMinimization() = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

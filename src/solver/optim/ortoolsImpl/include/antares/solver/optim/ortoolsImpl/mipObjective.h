@@ -41,8 +41,8 @@ public:
 
     double getCoefficient(Api::MipVariable* var) override;
 
-    bool getMaximization() override;
-    bool getMinimization() override;
+    bool isMaximization() override;
+    bool isMinimization() override;
 
     operations_research::MPObjective* getMpObjective();
 

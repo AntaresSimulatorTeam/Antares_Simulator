@@ -65,12 +65,12 @@ double OrtoolsMipObjective::getCoefficient(Api::MipVariable* var)
     return objective_->GetCoefficient(mpvar->getMpVar());
 }
 
-bool OrtoolsMipObjective::getMaximization()
+bool OrtoolsMipObjective::isMaximization()
 {
     return objective_->maximization();
 }
 
-bool OrtoolsMipObjective::getMinimization()
+bool OrtoolsMipObjective::isMinimization()
 {
     return objective_->minimization();
 }
