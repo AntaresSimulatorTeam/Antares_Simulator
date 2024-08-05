@@ -29,9 +29,9 @@ class Negate;
 template<class T>
 class Leaf;
 using LiteralNode = Leaf<double>;
-using Parameter = Leaf<std::string>;
-using VariableNode = Parameter;
+using VariableNode = LiteralNode;
 using ComponentVariableNode = LiteralNode;
 using ComponentParameterNode = LiteralNode;
+using Parameter = Leaf<std::string>;
 class PortFieldNode;
 } // namespace Antares::Solver::Expressions
