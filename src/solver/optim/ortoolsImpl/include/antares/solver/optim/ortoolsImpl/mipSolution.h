@@ -37,7 +37,7 @@ class OrtoolsMipSolution: virtual public Api::MipSolution
 public:
     OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
                        const std::map<std::string, std::pair<Api::MipVariable*, double>>& solution,
-                       OrtoolsMipObjective* objective);
+                       double objectiveValue);
 
     ~OrtoolsMipSolution() = default;
 
@@ -51,7 +51,7 @@ private:
 
     std::map<std::string, std::pair<const Api::MipVariable*, double>> solution_;
 
-    OrtoolsMipObjective* objective_;
+    double objectiveValue_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

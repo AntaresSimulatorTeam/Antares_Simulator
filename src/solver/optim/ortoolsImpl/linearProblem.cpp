@@ -158,8 +158,9 @@ Api::MipSolution* OrtoolsLinearProblem::solve()
     }
 
     auto* mpObjective = dynamic_cast<OrtoolsMipObjective*>(objective_.get());
+    double objectiveValue = mpObjective->getMpObjective()->Value();
 
-    solution_ = std::make_unique<OrtoolsMipSolution>(status, solution, mpObjective);
+    solution_ = std::make_unique<OrtoolsMipSolution>(status, solution, objectiveValue);
     return solution_.get();
 }
 
