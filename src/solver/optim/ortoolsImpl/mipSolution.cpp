@@ -67,9 +67,9 @@ double OrtoolsMipSolution::getObjectiveValue()
     return objective_->getMpObjective()->Value();
 }
 
-double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable& var) const
+double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable* var) const
 {
-    return solution_.contains(var.getName()) ? solution_.at(var.getName()).second : 0;
+    return solution_.contains(var->getName()) ? solution_.at(var->getName()).second : 0;
 }
 
 std::vector<double> OrtoolsMipSolution::getOptimalValue(
@@ -80,7 +80,7 @@ std::vector<double> OrtoolsMipSolution::getOptimalValue(
 
     for (const auto& var: vars)
     {
-        solution.push_back(getOptimalValue(var));
+        solution.push_back(getOptimalValue(&var));
     }
 
     return solution;
