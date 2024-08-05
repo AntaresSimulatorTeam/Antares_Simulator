@@ -61,7 +61,7 @@ operations_research::MPVariable* OrtoolsMipVariable::getMpVar()
 
 const std::string& OrtoolsMipVariable::getName() const
 {
-    return name;
+    return mpVar_->name();
 }
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

@@ -52,8 +52,6 @@ private:
     // TODO private constructor
 
     operations_research::MPConstraint* mpConstraint_;
-
-    std::string name;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

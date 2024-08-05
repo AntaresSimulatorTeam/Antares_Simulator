@@ -96,7 +96,7 @@ Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
 
 Api::MipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
 {
-    return variables_.at(name).get();
+    return variables_[name].get();
 }
 
 Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
@@ -122,7 +122,7 @@ Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
 
 Api::MipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
 {
-    return constraints_.at(name).get();
+    return constraints_[name].get();
 }
 
 void OrtoolsLinearProblem::setObjectiveCoefficient(Api::MipVariable* var, double coefficient)

@@ -51,8 +51,6 @@ private:
     // TODO: add friend class
 
     operations_research::MPVariable* mpVar_;
-
-    std::string name;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
