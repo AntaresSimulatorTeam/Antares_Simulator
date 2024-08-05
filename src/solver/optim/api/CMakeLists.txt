@@ -12,6 +12,7 @@ set(SRC_API
         include/antares/solver/optim/api/linearProblem.h
         include/antares/solver/optim/api/linearProblemData.h
         include/antares/solver/optim/api/linearProblemFiller.h
+        include/antares/solver/optim/api/linearProblemBuilder.h
 
         linearProblemData.cpp
 )
