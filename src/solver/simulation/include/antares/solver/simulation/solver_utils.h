@@ -135,14 +135,14 @@ public:
 
     void reset()
     {
-        // General
-        pNbClustersByArea.assign(pNbAreas, 0);
-
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
         {
             pThermalNoisesByArea[a].assign(pNbClustersByArea[a], 0);
         }
+
+        // General
+        pNbClustersByArea.assign(pNbAreas, 0);
 
         // Reservoir levels, spilled and unsupplied energy costs
         pReservoirLevels.assign(pNbAreas, 0);
