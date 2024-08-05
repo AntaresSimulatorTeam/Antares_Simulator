@@ -24,4 +24,9 @@ double EvalVisitor::visit(const Negate& neg)
 {
     return -dispatch(*neg.n_);
 }
+
+double EvalVisitor::visit(const PortFieldNode& port_field_node)
+{
+    return 0.;
+}
 } // namespace Antares::Solver::Expressions

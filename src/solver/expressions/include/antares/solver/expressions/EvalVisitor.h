@@ -34,5 +34,6 @@ private:
     double visit(const Negate& neg) override;
     double visit(const Parameter& param) override;
     double visit(const Literal& lit) override;
+    double visit(const PortFieldNode& port_field_node) override;
 };
 } // namespace Antares::Solver::Expressions

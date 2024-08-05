@@ -29,6 +29,7 @@ class CloneVisitor: public Visitor<std::unique_ptr<Node>>
     std::unique_ptr<Node> visit(const Add& add) override;
     std::unique_ptr<Node> visit(const Negate& neg) override;
     std::unique_ptr<Node> visit(const Parameter& param) override;
-    std::unique_ptr<Node> visit(const Literal& param) override;
+    std::unique_ptr<Node> visit(const Literal& lit) override;
+    std::unique_ptr<Node> visit(const PortFieldNode& port_field_node) override;
 };
 } // namespace Antares::Solver::Expressions

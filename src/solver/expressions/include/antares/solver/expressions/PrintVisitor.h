@@ -35,6 +35,7 @@ private:
     std::string visit(const Negate& neg) override;
 
     std::string visit(const Parameter& param) override;
-    std::string visit(const Literal& param) override;
+    std::string visit(const Literal& lit) override;
+    std::string visit(const PortFieldNode& port_field_node) override;
 };
 } // namespace Antares::Solver::Expressions

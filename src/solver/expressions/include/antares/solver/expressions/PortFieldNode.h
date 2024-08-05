@@ -19,16 +19,20 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <string>
+
+#include <memory>
+
+#include <antares/solver/expressions/Leaf.h>
 
 namespace Antares::Solver::Expressions
 {
-class Node;
-class Add;
-class Negate;
-template<class T>
-class Leaf;
-using Literal = Leaf<double>;
-using Parameter = Leaf<std::string>;
-class PortFieldNode;
+class PortFieldNode: public Node
+{
+public:
+    explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
+    virtual ~PortFieldNode() = default;
+    //   std::string
+    std::string port_name_;
+    std::string field_name_;
+};
 } // namespace Antares::Solver::Expressions

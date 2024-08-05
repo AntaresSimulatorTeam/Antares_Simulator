@@ -43,4 +43,9 @@ std::unique_ptr<Node> CloneVisitor::visit(const Literal& param)
 {
     return std::make_unique<Literal>(param.value_);
 }
+
+std::unique_ptr<Node> CloneVisitor::visit(const PortFieldNode& port_field_node)
+{
+    return std::make_unique<PortFieldNode>(port_field_node.port_name_, port_field_node.field_name_);
+}
 } // namespace Antares::Solver::Expressions
