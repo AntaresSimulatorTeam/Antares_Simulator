@@ -32,7 +32,7 @@ public:
 private:
     std::string visit(const AddNode& add) override;
 
-    std::string visit(const Negate& neg) override;
+    std::string visit(const NegationNode& neg) override;
 
     std::string visit(const Parameter& param) override;
     std::string visit(const LiteralNode& lit) override;

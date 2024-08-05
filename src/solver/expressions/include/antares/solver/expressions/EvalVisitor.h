@@ -31,7 +31,7 @@ public:
 
 private:
     double visit(const AddNode& add) override;
-    double visit(const Negate& neg) override;
+    double visit(const NegationNode& neg) override;
     double visit(const Parameter& param) override;
     double visit(const LiteralNode& lit) override;
     double visit(const PortFieldNode& port_field_node) override;

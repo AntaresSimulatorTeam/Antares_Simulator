@@ -6,8 +6,8 @@ set(SRC_Expressions
         include/antares/solver/expressions/Node.h
         AddNode.cpp
         include/antares/solver/expressions/AddNode.h
-        Negate.cpp
-        include/antares/solver/expressions/Negate.h
+        NegationNode.cpp
+        include/antares/solver/expressions/NegationNode.h
         PrintVisitor.cpp
         include/antares/solver/expressions/PrintVisitor.h
         CloneVisitor.cpp

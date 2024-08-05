@@ -20,7 +20,7 @@ double EvalVisitor::visit(const LiteralNode& lit)
     return lit.value_;
 }
 
-double EvalVisitor::visit(const Negate& neg)
+double EvalVisitor::visit(const NegationNode& neg)
 {
     return -dispatch(*neg.n_);
 }

@@ -18,13 +18,22 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/Negate.h>
+#pragma once
+
+#include <memory>
+
+#include <antares/solver/expressions/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-Negate::Negate(std::unique_ptr<Node> n):
-    n_(std::move(n))
+class NegationNode: public Node
 {
-}
+public:
+    virtual ~NegationNode() = default;
 
+    NegationNode(std::unique_ptr<Node> n);
+
+    // private:
+    std::unique_ptr<Node> n_;
+};
 } // namespace Antares::Solver::Expressions

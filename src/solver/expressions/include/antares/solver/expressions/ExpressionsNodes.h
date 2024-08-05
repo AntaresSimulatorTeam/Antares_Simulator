@@ -21,5 +21,5 @@
 #pragma once
 #include <antares/solver/expressions/AddNode.h>
 #include <antares/solver/expressions/Leaf.h>
-#include <antares/solver/expressions/Negate.h>
+#include <antares/solver/expressions/NegationNode.h>
 #include <antares/solver/expressions/PortFieldNode.h>

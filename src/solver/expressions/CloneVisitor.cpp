@@ -28,10 +28,10 @@ std::unique_ptr<Node> CloneVisitor::visit(const AddNode& add)
     return std::make_unique<AddNode>(std::move(dispatch(*add.n1_)), std::move(dispatch(*add.n2_)));
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const Negate& neg)
+std::unique_ptr<Node> CloneVisitor::visit(const NegationNode& neg)
 {
-    //    return std::make_unique<Negate>(dispatch(*neg.n_));
-    return std::make_unique<Negate>(std::move(dispatch(*neg.n_)));
+    //    return std::make_unique<NegationNode>(dispatch(*neg.n_));
+    return std::make_unique<NegationNode>(std::move(dispatch(*neg.n_)));
 }
 
 std::unique_ptr<Node> CloneVisitor::visit(const Parameter& param)
