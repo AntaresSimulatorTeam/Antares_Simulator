@@ -73,7 +73,7 @@ double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable* var) const
     return solution_.contains(var->getName()) ? solution_.at(var->getName()).second : 0;
 }
 
-std::vector<double> OrtoolsMipSolution::getOptimalValue(
+std::vector<double> OrtoolsMipSolution::getOptimalValues(
   const std::vector<Api::MipVariable>& vars) const
 {
     std::vector<double> solution;
