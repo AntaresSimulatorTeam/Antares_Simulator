@@ -173,7 +173,7 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 bool Series::validate() const
 {
     return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
-           && validateRuleCurves() && validateCosts();
+           && validateRuleCurves();
 }
 
 static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
@@ -236,13 +236,6 @@ bool Series::validateUpperRuleCurve() const
 bool Series::validateLowerRuleCurve() const
 {
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
-}
-
-bool Series::validateCosts() const
-{
-    return checkVectBetweenZeroOne(costInjection, "cost injection")
-           && checkVectBetweenZeroOne(costWithdrawal, "cost withdrawal")
-           && checkVectBetweenZeroOne(costLevel, "cost level");
 }
 
 } // namespace Antares::Data::ShortTermStorage

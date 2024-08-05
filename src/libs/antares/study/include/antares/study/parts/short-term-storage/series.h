@@ -53,7 +53,6 @@ private:
     bool validateRuleCurves() const;
     bool validateUpperRuleCurve() const;
     bool validateLowerRuleCurve() const;
-    bool validateCosts() const;
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
