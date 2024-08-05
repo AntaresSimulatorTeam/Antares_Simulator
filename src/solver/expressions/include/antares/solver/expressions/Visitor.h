@@ -52,7 +52,7 @@ public:
           const Antares::Solver::Expressions::Node&);
         static const std::array<Function, 5> tryFunctions{&Visitor<R>::tryType<AddNode>,
                                                           &Visitor<R>::tryType<NegationNode>,
-                                                          &Visitor<R>::tryType<Parameter>,
+                                                          &Visitor<R>::tryType<ParameterNode>,
                                                           &Visitor<R>::tryType<LiteralNode>,
                                                           &Visitor<R>::tryType<PortFieldNode>};
         for (auto f: tryFunctions)
@@ -70,7 +70,7 @@ private:
     virtual R visit(const AddNode&) = 0;
     virtual R visit(const NegationNode&) = 0;
     virtual R visit(const LiteralNode&) = 0;
-    virtual R visit(const Parameter&) = 0;
+    virtual R visit(const ParameterNode&) = 0;
     virtual R visit(const PortFieldNode&) = 0;
 };
 

@@ -34,7 +34,7 @@ private:
 
     std::string visit(const NegationNode& neg) override;
 
-    std::string visit(const Parameter& param) override;
+    std::string visit(const ParameterNode& param) override;
     std::string visit(const LiteralNode& lit) override;
     std::string visit(const PortFieldNode& port_field_node) override;
 };

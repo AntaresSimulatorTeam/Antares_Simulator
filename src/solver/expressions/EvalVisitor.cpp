@@ -10,7 +10,7 @@ double EvalVisitor::visit(const AddNode& add)
     return dispatch(*add.n1_) + dispatch(*add.n2_);
 }
 
-double EvalVisitor::visit(const Parameter& param)
+double EvalVisitor::visit(const ParameterNode& param)
 {
     return 0.;
 }

@@ -32,12 +32,12 @@ std::string PrintVisitor::visit(const AddNode& add)
     return dispatch(*add.n1_) + "+" + dispatch(*add.n2_);
 }
 
-std::string PrintVisitor::visit(const Negate& neg)
+std::string PrintVisitor::visit(const NegationNode& neg)
 {
     return "-" + dispatch(*neg.n_);
 }
 
-std::string PrintVisitor::visit(const Parameter& param)
+std::string PrintVisitor::visit(const ParameterNode& param)
 {
     return param.value_;
 }
