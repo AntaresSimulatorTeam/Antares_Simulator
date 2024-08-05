@@ -63,6 +63,7 @@
 #include "spilledEnergyAfterCSR.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergy.h"
+#include "unsupliedEnergyCsr.h"
 #include "waterValue.h"
 
 // By thermal plant
@@ -129,19 +130,22 @@ typedef          // Prices
                                <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
                                 <LOLD                 // LOLD
                                  <LOLP                // LOLP
-                                  <AvailableDispatchGen<DispatchableGenMargin<
-                                    DtgMarginCsr // DTG MRG CSR
-                                    <Marge<NonProportionalCost<
-                                      NonProportionalCostByDispatchablePlant // Startup cost + Fixed
-                                                                             // cost per thermal
-                                                                             // plant detail
-                                      <NbOfDispatchedUnits         // Number of Units Dispatched
-                                       <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
-                                                                   // plant
-                                        <ProfitByPlant
-                                         // Links
-                                         <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                  <AvailableDispatchGen<DispatchableGenMargin<DtgMarginCsr< // DTG
+                                                                                            // MRG
+                                                                                            // CSR
+                                    UnsupliedEnergyCSR< // Unsupplied energy after CSR
+                                      Marge<NonProportionalCost<
+                                        NonProportionalCostByDispatchablePlant // Startup cost +
+                                                                               // Fixed cost per
+                                                                               // thermal plant
+                                                                               // detail
+                                        <NbOfDispatchedUnits         // Number of Units Dispatched
+                                         <NbOfDispatchedUnitsByPlant // Number of Units Dispatched
+                                                                     // by plant
+                                          <ProfitByPlant
+                                           // Links
+                                           <Variable::Economy::Links // All links
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

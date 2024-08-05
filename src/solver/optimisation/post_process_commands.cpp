@@ -154,18 +154,15 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 
             auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
             double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
-            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            const double& ensCsr = hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour];
             double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
+
             // calculate DTG MRG CSR and adjust ENS if neccessary
             if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
             {
-                if (adqPatchParams_.curtailmentSharing.recomputeDTGMRG)
-                {
-                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
-                    ens = std::max(0.0, ens - dtgMrg);
-                }
+                dtgMrgCsr = std::max(0.0, dtgMrg - ensCsr);
                 // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
-                if (ens > 0.5)
+                if (ensCsr > 0.5)
                 {
                     mrgCost = -area_list_[Area]->thermal.unsuppliedEnergyCost;
                 }

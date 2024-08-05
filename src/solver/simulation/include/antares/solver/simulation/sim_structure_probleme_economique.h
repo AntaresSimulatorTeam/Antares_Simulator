@@ -412,6 +412,7 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
 struct RESULTATS_HORAIRES
 {
     std::vector<double> ValeursHorairesDeDefaillancePositive;
+    std::vector<double> ValeursHorairesDeDefaillancePositiveCSR;
     std::vector<double> ValeursHorairesDENS;       // adq patch domestic unsupplied energy
     std::vector<int> ValeursHorairesLmrViolations; // adq patch lmr violations
     std::vector<double> ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
