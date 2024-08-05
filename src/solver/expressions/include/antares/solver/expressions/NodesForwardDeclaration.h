@@ -31,6 +31,7 @@ class Leaf;
 using LiteralNode = Leaf<double>;
 using Parameter = Leaf<std::string>;
 using VariableNode = Parameter;
-using ComponentVariableNode = Parameter;
+using ComponentVariableNode = LiteralNode;
+using ComponentParameterNode = LiteralNode;
 class PortFieldNode;
 } // namespace Antares::Solver::Expressions
