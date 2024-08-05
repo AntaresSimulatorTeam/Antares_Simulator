@@ -371,8 +371,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations.assign(NombreDePasDeTemps,
                                                                          0); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR.assign(NombreDePasDeTemps,
-                                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
                                                                      0.); // adq patch
 

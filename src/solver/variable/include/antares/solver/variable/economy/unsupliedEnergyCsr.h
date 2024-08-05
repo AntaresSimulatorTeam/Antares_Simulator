@@ -229,10 +229,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] =
-          // Current Hydro Storage generation
-          state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek];
-
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
