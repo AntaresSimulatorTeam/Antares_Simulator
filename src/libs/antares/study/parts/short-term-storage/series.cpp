@@ -116,6 +116,10 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(inflows, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
+
+    fillIfEmpty(costInjection, 0.0);
+    fillIfEmpty(costWithdrawal, 0.0);
+    fillIfEmpty(costLevel, 0.0);
 }
 
 bool Series::saveToFolder(const std::string& folder) const
@@ -137,6 +141,10 @@ bool Series::saveToFolder(const std::string& folder) const
     checkWrite("inflows.txt", inflows);
     checkWrite("lower-rule-curve.txt", lowerRuleCurve);
     checkWrite("upper-rule-curve.txt", upperRuleCurve);
+
+    checkWrite("cost-injection.txt", costInjection);
+    checkWrite("cost-withdrawal.txt", costWithdrawal);
+    checkWrite("cost-level.txt", costLevel);
 
     return ret;
 }
@@ -165,7 +173,7 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 bool Series::validate() const
 {
     return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
-           && validateRuleCurves();
+           && validateRuleCurves() && validateCosts();
 }
 
 static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
@@ -182,7 +190,9 @@ bool Series::validateSizes() const
 {
     if (maxInjectionModulation.size() != HOURS_PER_YEAR
         || maxWithdrawalModulation.size() != HOURS_PER_YEAR || inflows.size() != HOURS_PER_YEAR
-        || lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR)
+        || lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR
+        || costInjection.size() != HOURS_PER_YEAR || costWithdrawal.size() != HOURS_PER_YEAR
+        || costLevel.size() != HOURS_PER_YEAR)
     {
         logs.warning() << "Size of series for short term storage is wrong";
         return false;
@@ -226,6 +236,13 @@ bool Series::validateUpperRuleCurve() const
 bool Series::validateLowerRuleCurve() const
 {
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
+}
+
+bool Series::validateCosts() const
+{
+    return checkVectBetweenZeroOne(costInjection, "cost injection")
+        && checkVectBetweenZeroOne(costWithdrawal, "cost withdrawal")
+        && checkVectBetweenZeroOne(costLevel, "cost level");
 }
 
 } // namespace Antares::Data::ShortTermStorage
