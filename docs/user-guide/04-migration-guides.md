@@ -193,7 +193,6 @@ In file **settings/generaldata.ini**, in section `adequacy patch`, add propertie
 * `price-taking-order` [string] can take values `DENS` (default value) and `Load`.
 * `include-hurdle-cost-csr` [bool]. Default value = `false`
 * `check-csr-cost-function` [bool]. Default value = `false`
-* `recompute-dtg-mrg` [bool]. Default value = `false`
 * `threshold-initiate-curtailment-sharing-rule` [double]. Default value = `0.0`
 * `threshold-display-local-matching-rule-violations` [double]. Default value = `0.0`
 * `threshold-csr-variable-bounds-relaxation` [int]. Default value = `3`
