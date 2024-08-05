@@ -15,7 +15,7 @@ double EvalVisitor::visit(const Parameter& param)
     return 0.;
 }
 
-double EvalVisitor::visit(const Literal& lit)
+double EvalVisitor::visit(const LiteralNode& lit)
 {
     return lit.value_;
 }

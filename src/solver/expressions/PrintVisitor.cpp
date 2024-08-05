@@ -42,7 +42,7 @@ std::string PrintVisitor::visit(const Parameter& param)
     return param.value_;
 }
 
-std::string PrintVisitor::visit(const Literal& lit)
+std::string PrintVisitor::visit(const LiteralNode& lit)
 {
     return std::to_string(lit.value_);
 }

@@ -28,7 +28,7 @@ class AddNode;
 class Negate;
 template<class T>
 class Leaf;
-using Literal = Leaf<double>;
+using LiteralNode = Leaf<double>;
 using Parameter = Leaf<std::string>;
 using VariableNode = Leaf<std::string>;
 class PortFieldNode;

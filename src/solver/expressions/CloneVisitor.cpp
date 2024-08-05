@@ -39,9 +39,9 @@ std::unique_ptr<Node> CloneVisitor::visit(const Parameter& param)
     return std::make_unique<Parameter>(param.value_);
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const Literal& param)
+std::unique_ptr<Node> CloneVisitor::visit(const LiteralNode& param)
 {
-    return std::make_unique<Literal>(param.value_);
+    return std::make_unique<LiteralNode>(param.value_);
 }
 
 std::unique_ptr<Node> CloneVisitor::visit(const PortFieldNode& port_field_node)
