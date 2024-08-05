@@ -58,7 +58,8 @@ static void shortTermStorageCost(
                       pdtJour);
                     varInjection >= 0)
                 {
-                    linearCost[varInjection] = storage.withdrawalEfficiency * storage.series->costWithdrawal[pdtHebdo];
+                    linearCost[varInjection] = storage.withdrawalEfficiency
+                                               * storage.series->costWithdrawal[pdtHebdo];
                 }
 
                 if (const int varWithdrawal = variableManager.ShortTermStorageWithdrawal(
@@ -66,7 +67,8 @@ static void shortTermStorageCost(
                       pdtJour);
                     varWithdrawal >= 0)
                 {
-                    linearCost[varWithdrawal] = storage.injectionEfficiency * storage.series->costInjection[pdtHebdo];
+                    linearCost[varWithdrawal] = storage.injectionEfficiency
+                                                * storage.series->costInjection[pdtHebdo];
                 }
             }
         }
