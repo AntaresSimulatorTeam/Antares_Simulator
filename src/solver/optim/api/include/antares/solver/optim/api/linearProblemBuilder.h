@@ -32,7 +32,7 @@ namespace Antares::Solver::Optim::Api
 class LinearProblemBuilder
 {
 public:
-    virtual void init(std::vector<LinearProblemFiller*> fillers) = 0;
+    virtual void LinearProblemBuilder(std::vector<LinearProblemFiller*> fillers) = 0;
     virtual void build(LinearProblemData* data) = 0;
     virtual MipSolution* solve() = 0;
 };
