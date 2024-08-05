@@ -52,7 +52,7 @@ static void shortTermStorageCost(
                                                                                pdtJour);
                     varLevel >= 0)
                 {
-                    linearCost[varLevel] = 0;
+                    linearCost[varLevel] = storage.series->costLevel[pdtHebdo];
                 }
 
                 const double cost = spreadGenerator.generate();
@@ -61,7 +61,7 @@ static void shortTermStorageCost(
                       pdtJour);
                     varInjection >= 0)
                 {
-                    linearCost[varInjection] = storage.withdrawalEfficiency * cost;
+                    linearCost[varInjection] = storage.withdrawalEfficiency * storage.series->costWithdrawal[pdtHebdo];
                 }
 
                 if (const int varWithdrawal = variableManager.ShortTermStorageWithdrawal(
@@ -69,7 +69,7 @@ static void shortTermStorageCost(
                       pdtJour);
                     varWithdrawal >= 0)
                 {
-                    linearCost[varWithdrawal] = storage.injectionEfficiency * cost;
+                    linearCost[varWithdrawal] = storage.injectionEfficiency * storage.series->costInjection[pdtHebdo];
                 }
             }
         }
