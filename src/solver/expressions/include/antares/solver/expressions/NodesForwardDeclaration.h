@@ -30,5 +30,6 @@ template<class T>
 class Leaf;
 using Literal = Leaf<double>;
 using Parameter = Leaf<std::string>;
+using VariableNode = Leaf<std::string>;
 class PortFieldNode;
 } // namespace Antares::Solver::Expressions
