@@ -51,6 +51,9 @@ public:
     Api::MipSolution* solve() override;
 
 private:
+
+    Api::MipVariable* addVariable(double lb, double ub, bool integer, const std::string &name);
+
     std::unique_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPSolverParameters* param_;
 

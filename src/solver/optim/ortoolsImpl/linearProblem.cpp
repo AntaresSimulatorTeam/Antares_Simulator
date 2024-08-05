@@ -41,9 +41,10 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
 }
 
-Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
-                                                       double ub,
-                                                       const std::string& name)
+Api::MipVariable* OrtoolsLinearProblem::addVariable(double lb,
+                                                    double ub,
+                                                    bool integer,
+                                                    const std::string& name)
 {
     if (variables_.contains(name))
     {
@@ -51,7 +52,7 @@ Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
         throw std::bad_function_call();
     }
 
-    auto* mpVar = mpSolver_->MakeNumVar(lb, ub, name);
+    auto* mpVar = mpSolver_->MakeVar(lb, ub, integer, name);
     auto mipVar = std::make_unique<OrtoolsMipVariable>(mpVar);
 
     if (!mpVar || !mipVar)
@@ -67,31 +68,18 @@ Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
     return variables_[name].get();
 }
 
+Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
+                                                       double ub,
+                                                       const std::string& name)
+{
+    return addVariable(lb, ub, false, name);
+}
+
 Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
                                                        double ub,
                                                        const std::string& name)
 {
-    if (variables_.contains(name))
-    {
-        logs.error() << "This variable already exists: " << name;
-        throw std::bad_function_call();
-    }
-
-    auto* mpVar = mpSolver_->MakeIntVar(lb, ub, name);
-    auto mipVar = std::make_unique<OrtoolsMipVariable>(mpVar);
-
-    if (!mpVar || !mipVar)
-    {
-        logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
-    }
-
-    if (!variables_.try_emplace(name, std::move(mipVar)).second)
-    {
-        logs.error() << "Error adding variable: " << name;
-    }
-
-    return variables_[name].get();
-
+    return addVariable(lb, ub, true, name);
 }
 
 Api::MipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
