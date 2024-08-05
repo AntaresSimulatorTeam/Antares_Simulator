@@ -34,20 +34,19 @@ bool LinearProblemData::hasScalarData(const std::string& key)
     return scalarData_.contains(key);
 }
 
-/* double LinearProblemData::getScalarData(const std::string& key, unsigned scenario) */
-/* { */
-
-/* } */
+double LinearProblemData::getScalarData(const std::string& key, unsigned scenario)
+{
+    return scalarData_.at(key)[scenario];
+}
 
 bool LinearProblemData::hasTimedData(const std::string& key)
 {
     return timedData_.contains(key);
 }
 
-/* std::vector<double>& LinearProblemData::getTimedData(const std::string& key, unsigned scenario)
- */
-/* { */
-/*     return timedData_.at(key); */
-/* } */
+std::vector<double>& LinearProblemData::getTimedData(const std::string& key, unsigned scenario)
+{
+    return timedData_.at(key)[scenario];
+}
 
 } // namespace Antares::Solver::Optim::Api

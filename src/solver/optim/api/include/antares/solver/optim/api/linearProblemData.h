@@ -40,8 +40,8 @@ public:
 protected:
     std::vector<int> timeStamps_;
     unsigned timeResolutionInMinutes_;
-    std::map<std::string, double> scalarData_;
-    std::map<std::string, std::vector<double>> timedData_;
+    std::map<std::string, std::vector<double>> scalarData_;
+    std::map<std::string, std::vector<std::vector<double>>> timedData_;
 };
 
 } // namespace Antares::Solver::Optim::Api
