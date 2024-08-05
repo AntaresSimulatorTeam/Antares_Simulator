@@ -30,9 +30,9 @@ namespace Antares::Solver::Optim::Api
 class LinearProblemFiller
 {
 public:
-    virtual void addVariable(LinearProblem& problem, LinearProblemData& data) = 0;
-    virtual void addConstraints(LinearProblem& problem, LinearProblemData& data) = 0;
-    virtual void addObjective(LinearProblem& problem, LinearProblemData& data) = 0;
+    virtual void addVariable(LinearProblem* problem, LinearProblemData* data) = 0;
+    virtual void addConstraints(LinearProblem* problem, LinearProblemData* data) = 0;
+    virtual void addObjective(LinearProblem* problem, LinearProblemData* data) = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api
