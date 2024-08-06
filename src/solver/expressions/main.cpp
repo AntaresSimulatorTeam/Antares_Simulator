@@ -25,7 +25,7 @@
 #include <antares/solver/expressions/EvalVisitor.h>
 #include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/PrintVisitor.h>
-#include <antares/solver/expressions/memory-registry.hxx>
+#include <antares/solver/expressions/Registry.hxx>
 
 template<class V>
 void print(const Antares::Solver::Expressions::Node& node)
@@ -38,12 +38,12 @@ void print(const Antares::Solver::Expressions::Node& node)
 int main()
 {
     using namespace Antares::Solver::Expressions;
-    MemoryManager<Node> mem;
+    Registry<Node> mem;
     Node* q = mem.create<Add>(mem.create<Literal>(21), mem.create<Literal>(2));
     print<PrintVisitor>(*q);
     print<EvalVisitor>(*q);
 
-    MemoryManager<Node> mem_clone;
+    Registry<Node> mem_clone;
     CloneVisitor cloneVisitor(mem_clone);
     auto clone(cloneVisitor.dispatch(*q));
     print<PrintVisitor>(*clone);

@@ -28,7 +28,7 @@ namespace Antares::Solver::Expressions
 class CloneVisitor: public Visitor<Node*>
 {
 public:
-    CloneVisitor(MemoryManager<Node>& mem);
+    CloneVisitor(Registry<Node>& mem);
 
     Node* visit(const Add& add) override;
     Node* visit(const Negate& neg) override;
@@ -36,6 +36,6 @@ public:
     Node* visit(const Literal& param) override;
 
 private:
-    MemoryManager<Node>& memoryManager_;
+    Registry<Node>& memoryManager_;
 };
 } // namespace Antares::Solver::Expressions

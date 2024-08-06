@@ -24,7 +24,7 @@
 
 namespace Antares::Solver::Expressions
 {
-CloneVisitor::CloneVisitor(MemoryManager<Node>& mem):
+CloneVisitor::CloneVisitor(Registry<Node>& mem):
     memoryManager_(mem)
 {
 }
