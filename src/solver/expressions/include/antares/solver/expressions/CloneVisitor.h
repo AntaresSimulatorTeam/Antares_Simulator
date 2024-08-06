@@ -20,8 +20,8 @@
 */
 #pragma once
 
+#include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/Visitor.h>
-#include <antares/solver/expressions/memory-registry.hxx>
 
 namespace Antares::Solver::Expressions
 {
