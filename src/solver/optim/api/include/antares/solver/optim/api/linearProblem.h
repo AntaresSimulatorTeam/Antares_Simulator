@@ -52,7 +52,7 @@ public:
     virtual bool isMinimization() = 0;
     virtual bool isMaximization() = 0;
 
-    virtual MipSolution* solve() = 0;
+    virtual MipSolution* solve(bool verboseSolver) = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

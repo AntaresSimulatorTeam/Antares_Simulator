@@ -62,7 +62,7 @@ public:
     bool isMinimization() override;
     bool isMaximization() override;
 
-    Api::MipSolution* solve() override;
+    Api::MipSolution* solve(bool verboseSolver) override;
 
 private:
     std::unique_ptr<operations_research::MPSolver> mpSolver_;

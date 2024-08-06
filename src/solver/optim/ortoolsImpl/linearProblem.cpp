@@ -156,9 +156,11 @@ bool OrtoolsLinearProblem::isMaximization()
     return objective_->maximization();
 }
 
-Api::MipSolution* OrtoolsLinearProblem::solve()
+Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
-    mpSolver_->EnableOutput();
+    if (verboseSolver)
+        mpSolver_->EnableOutput();
+
     auto status = mpSolver_->Solve(*param_);
 
     std::map<std::string, std::pair<Api::MipVariable*, double>> solution;
