@@ -21,10 +21,17 @@
 
 #pragma once
 
-#include <ortools/linear_solver/linear_solver.h>
+#include <antares/solver/optim/api/linearProblem.h>
+
 #include <string>
 
-#include <antares/solver/optim/api/linearProblem.h>
+// forward declaration
+namespace operations_research
+{
+    class MPSolver;
+    class MPSolverParameters;
+    class MPObjective;
+}
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
