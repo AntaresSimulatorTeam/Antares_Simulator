@@ -1,29 +1,7 @@
 #pragma once
 
+#include <mutex>
 #include <vector>
-
-//  Template class to manage a registry of pointers to dynamically allocated objects
-template<class T>
-struct Registry
-{
-    //  Method to add a pointer to the registry
-    void add(T* x)
-    {
-        mem_.push_back(x);
-    }
-
-    //  Destructor to delete all objects in the registry
-    ~Registry()
-    {
-        for (T* x: mem_)
-        {
-            delete x;
-        }
-    }
-
-private:
-    std::vector<T*> mem_; //  Vector to store pointers to dynamically allocated objects
-};
 
 //  Template class to manage the memory allocation and registry for a base class
 template<class Base>
@@ -35,12 +13,14 @@ public:
     requires std::derived_from<Derived, Base>
     Base* create(Args&&... args)
     {
-        Base* x = new Derived(
-          std::forward<Args>(args)...); //  Dynamically allocate a new derived class object
-        registry_.add(x);               //  Add the object to the registry
-        return x;                       //  Return the pointer to the newly created object
+        std::lock_guard<std::mutex> lock(mutex_); //  Add the object to the registry
+
+        registry_.push_back(std::make_unique<Derived>(std::forward<Args>(args)...));
+        return registry_.back().get(); //  Return the pointer to the newly created object
     }
 
 private:
-    Registry<Base> registry_; //  Registry to manage dynamically allocated objects
+    std::vector<std::unique_ptr<Base>>
+      registry_; //  Registry to manage dynamically allocated objects
+    std::mutex mutex_;
 };
