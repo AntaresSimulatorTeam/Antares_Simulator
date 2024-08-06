@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <concept>
 #include <memory>
 #include <mutex>
 #include <vector>
