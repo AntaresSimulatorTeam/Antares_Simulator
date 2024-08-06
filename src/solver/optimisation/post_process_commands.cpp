@@ -153,11 +153,11 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
             const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-            const bool trigerred = problemeHebdo_->adequacyPatchRuntimeData
+            const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
                                      ->wasCSRTriggeredAtAreaHour(Area, hour);
-            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(trigerred, dtgMrg, ens);
+            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(triggered, dtgMrg, ens);
             hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = recomputeENS_MRG(
-              trigerred,
+              triggered,
               dtgMrg,
               ens);
 

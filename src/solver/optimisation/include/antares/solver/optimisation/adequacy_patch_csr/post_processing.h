@@ -23,7 +23,7 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-double recomputeDTG_MRG(bool trigerred, double dtgMrg, double ens);
-double recomputeENS_MRG(bool trigerred, double dtgMrg, double ens);
+double recomputeDTG_MRG(bool triggered, double dtgMrg, double ens);
+double recomputeENS_MRG(bool triggered, double dtgMrg, double ens);
 double recomputeMRGPrice(double ensCsr, double originalCost, double unsuppliedEnergyCost);
 } // namespace Antares::Data::AdequacyPatch
