@@ -21,14 +21,21 @@
 #pragma once
 
 #include <antares/solver/expressions/Visitor.h>
+#include <antares/solver/expressions/memory-registry.hxx>
 
 namespace Antares::Solver::Expressions
 {
 class CloneVisitor: public Visitor<Node*>
 {
+public:
+    CloneVisitor(MemoryManager<Node>& mem);
+
     Node* visit(const Add& add) override;
     Node* visit(const Negate& neg) override;
     Node* visit(const Parameter& param) override;
     Node* visit(const Literal& param) override;
+
+private:
+    MemoryManager<Node>& memoryManager_;
 };
 } // namespace Antares::Solver::Expressions

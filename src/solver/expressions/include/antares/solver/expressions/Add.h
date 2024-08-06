@@ -34,7 +34,7 @@ public:
     Add(Node* n1, Node* n2);
 
     // private:
-    std::unique_ptr<Node> n1_;
-    std::unique_ptr<Node> n2_;
+    Node* n1_;
+    Node* n2_;
 };
 } // namespace Antares::Solver::Expressions
