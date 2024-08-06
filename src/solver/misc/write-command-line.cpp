@@ -18,8 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/logs/logs.h>
 #include <sstream>
+
+#include <antares/logs/logs.h>
 
 namespace Antares::Solver
 {
@@ -30,7 +31,9 @@ void WriteCommandLineIntoLogs(int argc, char** argv)
     {
         buffer << argv[arg];
         if (arg + 1 != argc)
+        {
             buffer << " ";
+        }
     }
     logs.info() << "  :: command: " << buffer.str();
 }

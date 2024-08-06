@@ -28,14 +28,14 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/static/if.h>
+
+#include "categories.h"
 #include "container.h"
-#include "surveyresults.h"
+#include "endoflist.h"
+#include "info.h"
 #include "storage/intermediate.h"
 #include "storage/results.h"
-#include "endoflist.h"
-#include "constants.h"
-#include "categories.h"
-#include "info.h"
+#include "surveyresults.h"
 
 namespace Antares
 {
@@ -47,7 +47,7 @@ namespace Variable
 ** \brief Interface for any variable
 */
 template<class ChildT, class NextT, class VCardT>
-class IVariable : protected NextT
+class IVariable: protected NextT
 {
 public:
     //! Child
@@ -65,22 +65,18 @@ public:
     //! Results
     typedef typename Storage<VCardT>::ResultsType StoredResultType;
 
-    // Default values
-    enum
-    {
-        categoryDataLevel = VCardType::categoryDataLevel,
-        categoryFileLevel = VCardType::categoryFileLevel,
-    };
+    static constexpr uint8_t categoryDataLevel = VCardType::categoryDataLevel;
+    static constexpr uint8_t categoryFileLevel = VCardType::categoryFileLevel;
 
     template<int CDataLevel, int CFile>
     struct Statistics
     {
         enum
         {
-            count
-            = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count + ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -104,7 +100,6 @@ public:
 
     void getPrintStatusFromStudy(Data::Study& study);
     void supplyMaxNumberOfColumns(Data::Study& study);
-
 
 public:
     //! \name Constructor
@@ -221,7 +216,7 @@ public:
     void yearEnd(uint year);
 
     template<class V>
-    void yearEndSpatialAggregates(V& allVars, uint year);
+    void yearEndSpatialAggregates(V& allVars, uint year, unsigned int numSpace);
 
     template<class V, class SetT>
     void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set);

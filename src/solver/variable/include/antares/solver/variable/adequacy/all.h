@@ -21,54 +21,47 @@
 #ifndef __SOLVER_VARIABLE_ADEQUACY_ALL_H__
 #define __SOLVER_VARIABLE_ADEQUACY_ALL_H__
 
-#include "antares/solver/variable/variable.h"
-#include "antares/solver/variable/area.h"
-#include "antares/solver/variable/setofareas.h"
-#include "antares/solver/variable/bindConstraints.h"
-
-#include "antares/solver/variable/economy/thermalAirPollutantEmissions.h"
-#include "antares/solver/variable/economy/price.h"
-#include "antares/solver/variable/economy/balance.h"
-
-#include "antares/solver/variable/commons/load.h"
-#include "antares/solver/variable/commons/wind.h"
-#include "antares/solver/variable/commons/hydro.h"
-#include "antares/solver/variable/commons/rowBalance.h"
-#include "antares/solver/variable/commons/psp.h"
-#include "antares/solver/variable/commons/miscGenMinusRowPSP.h"
-#include "antares/solver/variable/commons/solar.h"
-#include "antares/solver/variable/commons/join.h"
-#include "antares/solver/variable/commons/spatial-aggregate.h"
-
-#include "antares/solver/variable/economy/dispatchableGeneration.h"
-#include "antares/solver/variable/economy/renewableGeneration.h"
+#include "antares/solver/variable/adequacy/links.h"
 #include "antares/solver/variable/adequacy/overallCost.h"
-#include "antares/solver/variable/economy/operatingCost.h"
-#include "antares/solver/variable/economy/hydrostorage.h"
-#include "antares/solver/variable/economy/pumping.h"
-#include "antares/solver/variable/economy/reservoirlevel.h"
-#include "antares/solver/variable/economy/inflow.h"
-#include "antares/solver/variable/economy/overflow.h"
-#include "antares/solver/variable/economy/waterValue.h"
-#include "antares/solver/variable/economy/hydroCost.h"
-
-#include "antares/solver/variable/economy/unsupliedEnergy.h"
 #include "antares/solver/variable/adequacy/spilledEnergy.h"
-#include "antares/solver/variable/economy/productionByDispatchablePlant.h"
-#include "antares/solver/variable/economy/productionByRenewablePlant.h"
-
+#include "antares/solver/variable/area.h"
+#include "antares/solver/variable/bindConstraints.h"
+#include "antares/solver/variable/commons/hydro.h"
+#include "antares/solver/variable/commons/join.h"
+#include "antares/solver/variable/commons/load.h"
+#include "antares/solver/variable/commons/miscGenMinusRowPSP.h"
+#include "antares/solver/variable/commons/psp.h"
+#include "antares/solver/variable/commons/rowBalance.h"
+#include "antares/solver/variable/commons/solar.h"
+#include "antares/solver/variable/commons/spatial-aggregate.h"
+#include "antares/solver/variable/commons/wind.h"
 #include "antares/solver/variable/economy/STSbyGroup.h"
 #include "antares/solver/variable/economy/STStorageInjectionByCluster.h"
-#include "antares/solver/variable/economy/STStorageWithdrawalByCluster.h"
 #include "antares/solver/variable/economy/STStorageLevelsByCluster.h"
+#include "antares/solver/variable/economy/STStorageWithdrawalByCluster.h"
+#include "antares/solver/variable/economy/avail-dispatchable-generation.h"
+#include "antares/solver/variable/economy/balance.h"
+#include "antares/solver/variable/economy/dispatchable-generation-margin.h"
+#include "antares/solver/variable/economy/dispatchableGeneration.h"
+#include "antares/solver/variable/economy/hydroCost.h"
+#include "antares/solver/variable/economy/hydrostorage.h"
+#include "antares/solver/variable/economy/inflow.h"
 #include "antares/solver/variable/economy/lold.h"
 #include "antares/solver/variable/economy/lolp.h"
 #include "antares/solver/variable/economy/max-mrg.h"
-
-#include "antares/solver/variable/economy/avail-dispatchable-generation.h"
-#include "antares/solver/variable/economy/dispatchable-generation-margin.h"
-
-#include "antares/solver/variable/adequacy/links.h"
+#include "antares/solver/variable/economy/operatingCost.h"
+#include "antares/solver/variable/economy/overflow.h"
+#include "antares/solver/variable/economy/price.h"
+#include "antares/solver/variable/economy/productionByDispatchablePlant.h"
+#include "antares/solver/variable/economy/productionByRenewablePlant.h"
+#include "antares/solver/variable/economy/pumping.h"
+#include "antares/solver/variable/economy/renewableGeneration.h"
+#include "antares/solver/variable/economy/reservoirlevel.h"
+#include "antares/solver/variable/economy/thermalAirPollutantEmissions.h"
+#include "antares/solver/variable/economy/unsupliedEnergy.h"
+#include "antares/solver/variable/economy/waterValue.h"
+#include "antares/solver/variable/setofareas.h"
+#include "antares/solver/variable/variable.h"
 
 // Output variables associated to binding constraints
 #include "antares/solver/variable//economy/bindingConstraints/bindingConstraintsMarginalCost.h"
@@ -187,23 +180,23 @@ typedef // Prices
                                           Variable::Economy::WaterValue,
                                           Common::SpatialAggregate<
                                             Variable::Economy::HydroCost,
+                                            Common::SpatialAggregate<
+                                              Variable::Economy::UnsupliedEnergy,
                                               Common::SpatialAggregate<
-                                                Variable::Economy::UnsupliedEnergy,
+                                                Variable::Adequacy::SpilledEnergy,
+                                                // LOLD
                                                 Common::SpatialAggregate<
-                                                  Variable::Adequacy::SpilledEnergy,
-                                                  // LOLD
+                                                  Variable::Economy::LOLD,
                                                   Common::SpatialAggregate<
-                                                    Variable::Economy::LOLD,
-                                                    Common::SpatialAggregate<
-                                                      Variable::Economy::LOLP,
+                                                    Variable::Economy::LOLP,
 
+                                                    Common::SpatialAggregate<
+                                                      Variable::Economy::AvailableDispatchGen,
                                                       Common::SpatialAggregate<
-                                                        Variable::Economy::AvailableDispatchGen,
+                                                        Variable::Economy::DispatchableGenMargin,
                                                         Common::SpatialAggregate<
-                                                          Variable::Economy::DispatchableGenMargin,
-                                                          Common::SpatialAggregate<
-                                                            Variable::Economy::
-                                                              Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                          Variable::Economy::
+                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
@@ -216,9 +209,9 @@ typedef Variable::Join<
   // Variables for each area / links attached to the areas
   Variable::Areas<VariablesPerArea>,
   // Variables for each set of areas
-  Variable::SetsOfAreas<VariablesPerSetOfAreas>,
-  // Variables for each binding constraint
-  Variable::BindingConstraints<VariablesPerBindingConstraints>>
+  Variable::Join<Variable::SetsOfAreas<VariablesPerSetOfAreas>,
+                 // Variables for each binding constraint
+                 Variable::BindingConstraints<VariablesPerBindingConstraints>>>
   ItemList;
 
 /*!

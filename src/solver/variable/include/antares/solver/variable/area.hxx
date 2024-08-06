@@ -22,7 +22,6 @@
 #define __SOLVER_VARIABLE_AREA_HXX__
 
 #include <antares/study/filter.h>
-
 #include "antares/solver/variable/economy/dispatchable-generation-margin.h"
 
 namespace Antares
@@ -65,9 +64,9 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
                                      int precision) const
 {
     int count_int = count;
-    bool linkDataLevel = dataLevel & Category::link;
-    bool areaDataLevel = dataLevel & Category::area;
-    bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
+    bool linkDataLevel = dataLevel & Category::DataLevel::link;
+    bool areaDataLevel = dataLevel & Category::DataLevel::area;
+    bool thermalAggregateDataLevel = dataLevel & Category::DataLevel::thermalAggregate;
     if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
         assert(results.data.area != NULL
@@ -77,29 +76,39 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
         auto& area = *results.data.area;
 
         // Filtering
-        if (0 == (dataLevel & Category::link)) // filter on all but links
+        if (0 == (dataLevel & Category::DataLevel::link)) // filter on all but links
         {
             switch (precision)
             {
             case Category::hourly:
                 if (not(area.filterSynthesis & Data::filterHourly))
+                {
                     return;
+                }
                 break;
             case Category::daily:
                 if (not(area.filterSynthesis & Data::filterDaily))
+                {
                     return;
+                }
                 break;
             case Category::weekly:
                 if (not(area.filterSynthesis & Data::filterWeekly))
+                {
                     return;
+                }
                 break;
             case Category::monthly:
                 if (not(area.filterSynthesis & Data::filterMonthly))
+                {
                     return;
+                }
                 break;
             case Category::annual:
                 if (not(area.filterSynthesis & Data::filterAnnual))
+                {
                     return;
+                }
                 break;
             case Category::all:
                 break;
@@ -117,9 +126,9 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                            uint numSpace) const
 {
     int count_int = count;
-    bool linkDataLevel = dataLevel & Category::link;
-    bool areaDataLevel = dataLevel & Category::area;
-    bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
+    bool linkDataLevel = dataLevel & Category::DataLevel::link;
+    bool areaDataLevel = dataLevel & Category::DataLevel::area;
+    bool thermalAggregateDataLevel = dataLevel & Category::DataLevel::thermalAggregate;
     if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
         assert(results.data.area != NULL
@@ -128,29 +137,39 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
         auto& area = *results.data.area;
 
         // Filtering
-        if (0 == (dataLevel & Category::link)) // filter on all but links
+        if (0 == (dataLevel & Category::DataLevel::link)) // filter on all but links
         {
             switch (precision)
             {
             case Category::hourly:
                 if (!(area.filterYearByYear & Data::filterHourly))
+                {
                     return;
+                }
                 break;
             case Category::daily:
                 if (!(area.filterYearByYear & Data::filterDaily))
+                {
                     return;
+                }
                 break;
             case Category::weekly:
                 if (!(area.filterYearByYear & Data::filterWeekly))
+                {
                     return;
+                }
                 break;
             case Category::monthly:
                 if (!(area.filterYearByYear & Data::filterMonthly))
+                {
                     return;
+                }
                 break;
             case Category::annual:
                 if (!(area.filterYearByYear & Data::filterAnnual))
+                {
                     return;
+                }
                 break;
             case Category::all:
                 break;
@@ -158,8 +177,11 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
         }
 
         // Build the survey results for the given area
-        pAreas[area.index].buildAnnualSurveyReport(
-          results, dataLevel, fileLevel, precision, numSpace);
+        pAreas[area.index].buildAnnualSurveyReport(results,
+                                                   dataLevel,
+                                                   fileLevel,
+                                                   precision,
+                                                   numSpace);
     }
 }
 
@@ -169,7 +191,7 @@ void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int data
     int count_int = count;
     if (count_int)
     {
-        if (dataLevel & Category::area)
+        if (dataLevel & Category::DataLevel::area)
         {
             assert(pAreaCount == results.data.study.areas.size());
 
@@ -259,8 +281,8 @@ inline void Areas<NextT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    pAreas[cluster->parentArea->index].template retrieveResultsForThermalCluster<VCardToFindT>(
-      result, cluster);
+    pAreas[cluster->parentArea->index]
+      .template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
 }
 
 template<class NextT>
@@ -347,14 +369,14 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
-      [&](Data::Area& area)
+      [this, &state, &numSpace](Data::Area& area)
       {
           state.area = &area; // the current area
 
           // Initializing the state for the current area
           state.initFromAreaIndex(area.index, numSpace);
 
-          for (const auto& cluster : area.thermal.list.each_enabled())
+          for (const auto& cluster: area.thermal.list.each_enabled())
           {
               // Intiializing the state for the current thermal cluster
               state.initFromThermalClusterIndex(cluster->areaWideIndex);
@@ -380,7 +402,7 @@ void Areas<NextT>::weekForEachArea(State& state, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
-      [&](Data::Area& area)
+      [this, &state, &numSpace](Data::Area& area)
       {
           state.area = &area; // the current area
 
@@ -390,10 +412,8 @@ void Areas<NextT>::weekForEachArea(State& state, uint numSpace)
           auto& variablesForArea = pAreas[area.index];
 
           // DTG MRG
-          state.dispatchableMargin
-            = variablesForArea
-                .template retrieveHourlyResultsForCurrentYear<Economy::VCardDispatchableGenMargin>(
-                  numSpace);
+          state.dispatchableMargin = variablesForArea.template retrieveHourlyResultsForCurrentYear<
+            Economy::VCardDispatchableGenMargin>(numSpace);
 
           variablesForArea.weekForEachArea(state, numSpace);
 
@@ -407,7 +427,9 @@ template<class NextT>
 void Areas<NextT>::yearBegin(uint year, uint numSpace)
 {
     for (uint i = 0; i != pAreaCount; ++i)
+    {
         pAreas[i].yearBegin(year, numSpace);
+    }
 }
 
 template<class NextT>
@@ -415,7 +437,7 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
-      [&](Data::Area& area)
+      [this, &state, &year, &numSpace](Data::Area& area)
       {
           state.area = &area; // the current area
 
@@ -425,7 +447,7 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
           // Variables
           auto& variablesForArea = pAreas[area.index];
 
-          for (const auto& cluster : area.thermal.list.each_enabled())
+          for (const auto& cluster: area.thermal.list.each_enabled())
           {
               state.thermalCluster = cluster.get();
               state.yearEndResetThermal();
@@ -439,7 +461,7 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
               // Variables
               variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
           } // for each thermal cluster
-      });   // for each area
+      }); // for each area
 }
 
 template<class NextT>
@@ -467,42 +489,54 @@ template<class NextT>
 void Areas<NextT>::weekBegin(State& state)
 {
     for (uint i = 0; i != pAreaCount; ++i)
+    {
         pAreas[i].weekBegin(state);
+    }
 }
 
 template<class NextT>
 void Areas<NextT>::weekEnd(State& state)
 {
     for (uint i = 0; i != pAreaCount; ++i)
+    {
         pAreas[i].weekEnd(state);
+    }
 }
 
 template<class NextT>
 void Areas<NextT>::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pAreaCount; ++i)
+    {
         pAreas[i].hourBegin(hourInTheYear);
+    }
 }
 
 template<class NextT>
 void Areas<NextT>::hourForEachLink(State& state, uint numSpace)
 {
     for (uint i = 0; i != pAreaCount; ++i)
+    {
         pAreas[i].hourForEachLink(state, numSpace);
+    }
 }
 
 template<class NextT>
 void Areas<NextT>::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pAreaCount; ++i)
+    {
         pAreas[i].hourEnd(state, hourInTheYear);
+    }
 }
 
 template<class NextT>
 void Areas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pAreaCount; ++i)
+    {
         pAreas[i].beforeYearByYearExport(year, numSpace);
+    }
 }
 
 template<class NextT>

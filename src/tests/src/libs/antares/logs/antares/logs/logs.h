@@ -20,63 +20,92 @@
 */
 
 #ifndef __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
-# define __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
+#define __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
 
 #include <string>
+
 #include <yuni/core/string/string.h>
 
 namespace Antares
 {
-	namespace UnitTests
-	{
-	
-		class fakeLogger;
+namespace UnitTests
+{
 
-		class Buffer
-		{
-		public:
-			Buffer() = default;
+class fakeLogger;
 
-			template<typename U> 
-			Buffer& operator << (const U& u)
-			{
-				// Appending the piece of message to the buffer
-				buffer_.append(u);
-				return *this;
-			}
+class Buffer
+{
+public:
+    Buffer() = default;
 
-			void clear() { buffer_.clear(); }
-			std::string content() const { return buffer_.to<std::string>(); }
-			bool contains(const std::string sub_string) const { return buffer_.contains(sub_string); }
-			bool empty() { return buffer_.empty(); }
-		private:
-			Yuni::CString<1024> buffer_;
-		};
+    template<typename U>
+    Buffer& operator<<(const U& u)
+    {
+        // Appending the piece of message to the buffer
+        buffer_.append(u);
+        return *this;
+    }
 
+    void clear()
+    {
+        buffer_.clear();
+    }
 
-		class fakeLogger
-		{
-		public:
-			fakeLogger() = default;
+    std::string content() const
+    {
+        return buffer_.to<std::string>();
+    }
 
-			Buffer& error() { return error_buffer_; }
-			Buffer& info() { return info_buffer_; }
-			Buffer& debug() { return debug_buffer_; }
-			Buffer& warning() { return warning_buffer_; }
+    bool contains(const std::string sub_string) const
+    {
+        return buffer_.contains(sub_string);
+    }
 
-		private:
-			Buffer error_buffer_;
-			Buffer info_buffer_;
-			Buffer debug_buffer_;
-			Buffer warning_buffer_;
-		};
+    bool empty()
+    {
+        return buffer_.empty();
+    }
 
+private:
+    Yuni::CString<1024> buffer_;
+};
 
-	}	// UnitTests
+class fakeLogger
+{
+public:
+    fakeLogger() = default;
 
-	extern UnitTests::fakeLogger  logs;
+    Buffer& error()
+    {
+        return error_buffer_;
+    }
 
-}	// Antares
+    Buffer& info()
+    {
+        return info_buffer_;
+    }
 
-#endif	// __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
+    Buffer& debug()
+    {
+        return debug_buffer_;
+    }
 
+    Buffer& warning()
+    {
+        return warning_buffer_;
+    }
+
+private:
+    Buffer error_buffer_;
+    Buffer info_buffer_;
+    Buffer debug_buffer_;
+    Buffer warning_buffer_;
+};
+
+} // namespace UnitTests
+
+extern UnitTests::fakeLogger logs;
+
+} // namespace Antares
+
+#endif // __TESTS_ANTARES_LIBS_LOGS_FAKE_H__

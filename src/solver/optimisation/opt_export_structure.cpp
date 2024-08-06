@@ -19,17 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <sstream>
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
 #include "antares/solver/optimisation/opt_export_structure.h"
+
+#include <sstream>
+
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 ////////////////////////////////////////////////////////////////////
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
 
-void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
-                       PROBLEME_HEBDO* problemeHebdo)
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
     for (uint32_t i(0); i < problemeHebdo->NombreDInterconnexions; ++i)

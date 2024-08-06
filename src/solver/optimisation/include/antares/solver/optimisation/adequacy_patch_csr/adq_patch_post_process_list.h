@@ -21,16 +21,16 @@
 
 #pragma once
 
-
 #include "antares/solver/simulation/base_post_process.h"
 #include "antares/study/parameters/adq-patch-params.h"
 
 namespace Antares::Solver::Simulation
 {
 
-class AdqPatchPostProcessList : public interfacePostProcessList
+class AdqPatchPostProcessList: public interfacePostProcessList
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+
 public:
     AdqPatchPostProcessList(const AdqPatchParams& adqPatchParams,
                             PROBLEME_HEBDO* problemeHebdo,

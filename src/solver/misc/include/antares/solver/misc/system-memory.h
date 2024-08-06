@@ -24,7 +24,7 @@
 #include <yuni/yuni.h>
 #include <yuni/thread/timer.h>
 
-class SystemMemoryLogger : public Yuni::Thread::Timer
+class SystemMemoryLogger: public Yuni::Thread::Timer
 {
 public:
     SystemMemoryLogger();

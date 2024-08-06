@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_OUTPUT_H__
 #define __ANTARES_LIBS_STUDY_OUTPUT_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <functional>
 #include <map>
 #include <memory>
-#include <functional>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
 #include "antares/study/study.h"
 
 namespace Antares
@@ -54,10 +56,6 @@ public:
     ** \brief Retrieve the list of all available outputs
     */
     static void RetrieveListFromStudy(List& out, const Study& study);
-    /*!
-    ** \brief Retrieve the list of all available outputs
-    */
-    static void RetrieveListFromStudy(List& out, const Study::Ptr& study);
 
 public:
     //! \name Constructor

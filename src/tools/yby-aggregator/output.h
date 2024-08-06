@@ -21,10 +21,11 @@
 #ifndef __STUDY_OUTPUT_AGGREGATOR_OUTPUT_H__
 #define __STUDY_OUTPUT_AGGREGATOR_OUTPUT_H__
 
-#include <yuni/core/string.h>
-#include <set>
-#include <memory>
 #include <atomic>
+#include <memory>
+#include <set>
+
+#include <yuni/core/string.h>
 
 #include "result.h"
 
@@ -41,7 +42,9 @@ public:
     using Vector = std::vector<Ptr>;
 
 public:
-    Output(const YString& target, const YString::Vector& cols) : path(target), columns(cols)
+    Output(const YString& target, const YString::Vector& cols):
+        path(target),
+        columns(cols)
     {
     }
 

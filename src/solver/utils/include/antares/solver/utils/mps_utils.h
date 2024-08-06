@@ -24,9 +24,10 @@ extern "C"
 {
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
-
 #include "srs_api.h"
 }
+
+#include "antares/study/fwd.h"
 
 #include "named_problem.h"
 #include "ortools_utils.h"
@@ -43,9 +44,11 @@ using namespace operations_research;
 class I_MPS_writer
 {
 public:
-    explicit I_MPS_writer(uint currentOptimNumber) : current_optim_number_(currentOptimNumber)
+    explicit I_MPS_writer(uint currentOptimNumber):
+        current_optim_number_(currentOptimNumber)
     {
     }
+
     I_MPS_writer() = default;
     virtual ~I_MPS_writer() = default;
     virtual void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) = 0;
@@ -54,7 +57,7 @@ protected:
     uint current_optim_number_ = 0;
 };
 
-class fullMPSwriter final : public I_MPS_writer
+class fullMPSwriter final: public I_MPS_writer
 {
 public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint currentOptimNumber);
@@ -64,7 +67,7 @@ private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
 };
 
-class fullOrToolsMPSwriter : public I_MPS_writer
+class fullOrToolsMPSwriter: public I_MPS_writer
 {
 public:
     virtual ~fullOrToolsMPSwriter() = default;
@@ -75,13 +78,13 @@ private:
     MPSolver* solver_ = nullptr;
 };
 
-class nullMPSwriter : public I_MPS_writer
+class nullMPSwriter: public I_MPS_writer
 {
 public:
     virtual ~nullMPSwriter() = default;
     using I_MPS_writer::I_MPS_writer;
-    void runIfNeeded(Solver::IResultWriter& /*writer*/,
-                     const std::string& /*filename*/) override
+
+    void runIfNeeded(Solver::IResultWriter& /*writer*/, const std::string& /*filename*/) override
     {
         // Does nothing
     }

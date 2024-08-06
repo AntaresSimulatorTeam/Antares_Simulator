@@ -33,10 +33,10 @@ Signal::Signal()
     // Making sure that our pseudo HANDLE type is valid
     assert(sizeof(HANDLE) >= sizeof(void*) and "Invalid type for Signal::pHandle");
 
-    pHandle = (void*)CreateEvent(NULL,  // default security attributes
+    pHandle = (void*)CreateEvent(nullptr,  // default security attributes
                                  TRUE,  // manual-reset event
                                  FALSE, // initial state is nonsignaled
-                                 NULL); // unamed
+                                 nullptr); // unamed
 
 #else
     pSignalled = false;
@@ -53,10 +53,10 @@ Signal::Signal(const Signal&)
     // Making sure that our pseudo HANDLE type is valid
     assert(sizeof(HANDLE) >= sizeof(void*) and "Invalid type for Signal::pHandle");
 
-    pHandle = (void*)CreateEvent(NULL,  // default security attributes
+    pHandle = (void*)CreateEvent(nullptr,  // default security attributes
                                  TRUE,  // manual-reset event
                                  FALSE, // initial state is nonsignaled
-                                 NULL); // unamed
+                                 nullptr); // unamed
 
 #else
     pSignalled = false;
@@ -194,7 +194,7 @@ bool Signal::wait(uint timeout)
 
     // Set the timespec t at [timeout] milliseconds in the future.
     assert(timeout < 2147483648u and "Invalid range for timeout (Signal::wait(timeout))");
-    YUNI_SYSTEM_GETTIMEOFDAY(&now, NULL);
+    YUNI_SYSTEM_GETTIMEOFDAY(&now, nullptr);
     t.tv_nsec = (long)(now.tv_usec * 1000 + (((int)timeout % 1000) * 1000000));
     t.tv_sec = (time_t)(now.tv_sec + timeout / 1000 + (t.tv_nsec / 1000000000L));
     t.tv_nsec %= 1000000000L;

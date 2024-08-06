@@ -23,6 +23,7 @@
 //
 
 #include "antares/study/scenario-builder/solarTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
@@ -61,4 +62,4 @@ bool solarTSNumberData::apply(Study& study)
     }
     return ret;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

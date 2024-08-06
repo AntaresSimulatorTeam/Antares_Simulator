@@ -27,6 +27,7 @@ namespace operations_research
 {
 class MPSolver;
 }
+
 namespace Antares::Optimization
 {
 
@@ -42,10 +43,14 @@ public:
     virtual void run(operations_research::MPSolver* problem) = 0;
     virtual void printReport() const = 0;
     virtual std::string title() const = 0;
-    bool hasDetectedInfeasibilityCause() const { return hasDetectedInfeasibilityCause_; }
+
+    bool hasDetectedInfeasibilityCause() const
+    {
+        return hasDetectedInfeasibilityCause_;
+    }
 
 protected:
     bool hasDetectedInfeasibilityCause_ = false;
 };
 
-}
+} // namespace Antares::Optimization

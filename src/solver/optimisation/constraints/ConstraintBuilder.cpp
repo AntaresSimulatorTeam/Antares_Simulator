@@ -41,9 +41,9 @@ void ConstraintBuilder::AddVariable(int varIndex, double coeff)
 }
 
 ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
-                                                                   double coeff,
-                                                                   int offset,
-                                                                   int delta)
+                                                             double coeff,
+                                                             int offset,
+                                                             int delta)
 {
     AddVariable(variableManager_.DispatchableProduction(index, hourInWeek_, offset, delta), coeff);
     return *this;
@@ -180,8 +180,8 @@ ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area, unsigned layer
 
 void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
 {
-    data.IndicesDebutDeLigne[data.nombreDeContraintes]
-      = data.nombreDeTermesDansLaMatriceDeContrainte;
+    data.IndicesDebutDeLigne[data.nombreDeContraintes] = data
+                                                           .nombreDeTermesDansLaMatriceDeContrainte;
     for (int i = 0; i < nombreDeTermes_; i++)
     {
         data.CoefficientsDeLaMatriceDesContraintes[data.nombreDeTermesDansLaMatriceDeContrainte]

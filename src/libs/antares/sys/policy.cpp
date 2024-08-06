@@ -20,20 +20,23 @@
 */
 
 #include "antares/sys/policy.h"
-#include <mutex>
+
 #include <map>
-#include <yuni/io/file.h>
-#include "antares/sys/appdata.h"
-#include <antares/logs/logs.h>
-#include <antares/inifile/inifile.h>
-#include <antares/logs/hostname.hxx>
-#include "antares/config/config.h"
-#include <antares/antares/fatal-error.h>
+#include <mutex>
+
+#include <yuni/core/system/cpu.h>
 #include <yuni/core/system/environment.h>
+#include <yuni/core/system/memory.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
-#include <yuni/core/system/cpu.h>
-#include <yuni/core/system/memory.h>
+#include <yuni/io/file.h>
+
+#include <antares/antares/fatal-error.h>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/hostname.hxx>
+#include <antares/logs/logs.h>
+#include "antares/config/config.h"
+#include "antares/sys/appdata.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -51,33 +54,37 @@ using PolicyMap = std::map<PolicyKey, String>;
 //! All entries
 static PolicyMap* entries = nullptr;
 
-static std::mutex gsMutex;//!< Mutex for policy entries
+static std::mutex gsMutex; //!< Mutex for policy entries
 
 template<class StringT>
 static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
 {
     IniFile ini;
     if (not ini.open(filename))
+    {
         return;
+    }
 
-    PolicyKey key;
-    ShortString128 hostnameVersion;
-    ShortString128 hostnameAll;
-    hostnameVersion << hostname << ':' << ANTARES_VERSION;
-    hostnameAll << hostname << ":*";
+    std::string hostnameVersion = hostname + ':' + ANTARES_VERSION;
+    std::string hostnameAll = hostname + ":*";
 
-    ini.each([&](const IniFile::Section& section) {
-        // This section is dedicated to another host
-        if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
-            or section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
-        {
-            section.each([&](const IniFile::Property& property) {
-                key = property.key;
-                key.trim(" \t");
-                (*entries)[key] = property.value;
-            });
-        }
-    });
+    ini.each(
+      [&hostnameVersion, &hostnameAll](const IniFile::Section& section)
+      {
+          // This section is dedicated to another host
+          if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
+              or section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
+          {
+              section.each(
+                [](const IniFile::Property& property)
+                {
+                    PolicyKey key;
+                    key = property.key;
+                    key.trim(" \t");
+                    (*entries)[key] = property.value;
+                });
+          }
+      });
 }
 
 class PredicateEnv final
@@ -88,7 +95,9 @@ public:
     {
         PolicyMap::const_iterator i = entries->find(value);
         if (i != entries->end())
+        {
             out += i->second;
+        }
         else
         {
             const ShortString128 zeroT = value;
@@ -106,7 +115,9 @@ static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& p
     // Try to find the first occurence of an expression
     String::Size p = string.find("${", 0);
     if (p == String::npos)
+    {
         return 0;
+    }
 
     // Ok we have found something, let's go deeper...
     uint count = 0;
@@ -131,7 +142,9 @@ static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& p
         // The expression
         expr.adapt(string.c_str() + p + 2, end - p - 2);
         if (not expr.empty())
+        {
             predicate(out, expr);
+        }
 
         // Try to find the next one
         offset = end + 1;
@@ -139,7 +152,9 @@ static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& p
     } while (p != String::npos);
 
     if (offset < string.size())
+    {
         out.append(string.c_str() + offset, string.size() - offset);
+    }
     return count;
 }
 
@@ -153,7 +168,9 @@ static inline void ExpansionWL()
     {
         String& value = i->second;
         if (ExpandWL(out, value, predicate))
+        {
             value = out;
+        }
     }
 }
 
@@ -165,7 +182,9 @@ bool Open(bool expandEntries)
     std::lock_guard locker(gsMutex);
 
     if (localPoliciesOpened)
+    {
         return true;
+    }
 
     String path;
     path.reserve(512);
@@ -185,10 +204,14 @@ bool Open(bool expandEntries)
 
     String localAppData;
     if (not OperatingSystem::FindAntaresLocalAppData(localAppData, false))
+    {
         localAppData.clear();
+    }
     String localAppDataAllUsers;
     if (not OperatingSystem::FindAntaresLocalAppData(localAppDataAllUsers, true))
+    {
         localAppDataAllUsers.clear();
+    }
 
     String pathLocalPolicy;
     pathLocalPolicy << localAppData << SEP << "localpolicy.ini";
@@ -196,9 +219,13 @@ bool Open(bool expandEntries)
     pathLocalPolicyAllUsers << localAppDataAllUsers << SEP << "localpolicy.ini";
 
     if (IO::File::Exists(pathLocalPolicy))
+    {
         OpenFromINIFileWL(pathLocalPolicy, hostname);
+    }
     if (IO::File::Exists(pathLocalPolicyAllUsers))
+    {
         OpenFromINIFileWL(pathLocalPolicyAllUsers, hostname);
+    }
 
     // informations about antares
     // version
@@ -226,7 +253,9 @@ bool Open(bool expandEntries)
     (*entries)[(key = "localpolicy.allusers.path")] = pathLocalPolicyAllUsers;
 
     if (expandEntries)
+    {
         ExpansionWL();
+    }
     return true;
 }
 
@@ -276,7 +305,9 @@ bool ReadAsBool(const PolicyKey& key, bool defval)
         {
             bool v;
             if (i->second.to(v))
+            {
                 return v;
+            }
         }
     }
     return defval;
@@ -288,7 +319,9 @@ void DumpToString(Clob& out)
     std::lock_guard locker(gsMutex);
 
     if (!entries or entries->empty())
+    {
         return;
+    }
 
     // The end of the container
     const PolicyMap::const_iterator end = entries->end();
@@ -300,7 +333,9 @@ void DumpToString(Clob& out)
         {
             uint len = i->first.size();
             if (len > maxlen)
+            {
                 maxlen = len;
+            }
         }
     }
 
@@ -336,27 +371,34 @@ void DumpToLogs()
     }
 }
 
+// TODO VP: delete
 void CheckRootPrefix(const char* argv0)
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);
 
     if (entries == nullptr)
+    {
         return;
+    }
     if (auto i = entries->find("force_root_prefix"); i != entries->end() and not i->second.empty())
     {
         AnyString adapter = argv0;
         if (IO::IsAbsolute(adapter))
         {
             if (0 != adapter.ifind(i->second))
+            {
                 throw FatalError("Invalid root prefix.");
+            }
         }
         else
         {
             String absfilename;
             IO::MakeAbsolute(absfilename, adapter);
             if (0 != absfilename.ifind(i->second))
+            {
                 throw FatalError("Invalid root prefix.");
+            }
         }
     }
 }

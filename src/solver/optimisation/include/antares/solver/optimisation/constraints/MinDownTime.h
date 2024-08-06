@@ -32,13 +32,15 @@ struct MinDownTimeData
 /*!
  * represent 'MinDownTime' Constraint type
  */
-class MinDownTime : private ConstraintFactory
+class MinDownTime: private ConstraintFactory
 {
 public:
-    MinDownTime(ConstraintBuilder& builder, MinDownTimeData& data) :
-     ConstraintFactory(builder), data(data)
+    MinDownTime(ConstraintBuilder& builder, MinDownTimeData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area

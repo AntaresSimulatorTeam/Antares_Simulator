@@ -21,8 +21,9 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__
 #define __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__
 
-#include "../../variable.h"
 #include <antares/study/area/constants.h>
+
+#include "../../variable.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -33,6 +34,7 @@ struct VCardCongestionProbability
     {
         return "CONG. PROB. (+/-)";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -50,29 +52,27 @@ struct VCardCongestionProbability
       >>
       ResultsType;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::link,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 2,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 2,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::link;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 2;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 2;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType[columnCount];
     typedef IntermediateValuesBaseType* IntermediateValuesType;
@@ -105,7 +105,7 @@ struct VCardCongestionProbability
 */
 template<class NextT = Container::EndOfList>
 class CongestionProbability
- : public Variable::IVariable<CongestionProbability<NextT>, NextT, VCardCongestionProbability>
+    : public Variable::IVariable<CongestionProbability<NextT>, NextT, VCardCongestionProbability>
 {
 public:
     //! Type of the next static variable
@@ -131,11 +131,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -162,13 +162,21 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
+        {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+            {
                 pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(study);
+            }
+        }
 
         pValuesForYearLocalReport = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
+        {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+            {
                 pValuesForYearLocalReport[numSpace][i].initializeFromStudy(study);
+            }
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -217,10 +225,10 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(uint year, uint numSpace)
@@ -275,11 +283,15 @@ public:
         // CONG. PROB +
         if (state.ntc.ValeurDuFlux[state.link->index]
             > +linkDirectCapa.getCoefficient(state.year, state.hourInTheYear) - 10e-6)
+        {
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
+        }
         // CONG. PROB -
         if (state.ntc.ValeurDuFlux[state.link->index]
             < -linkIndirectCapa.getCoefficient(state.year, state.hourInTheYear) + 10e-6)
+        {
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
+        }
 
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
@@ -289,24 +301,51 @@ public:
     {
         for (uint i = 0; i != VCardType::columnCount; ++i)
         {
-            for (uint h = 0; h != maxHoursInAYear; ++h)
-                pValuesForYearLocalReport[numSpace][i].hour[h]
-                  = (pValuesForTheCurrentYear[numSpace][i].hour[h] > 0.) ? 100. : 0.;
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
+            {
+                pValuesForYearLocalReport[numSpace][i].hour[h] = (pValuesForTheCurrentYear[numSpace]
+                                                                                          [i]
+                                                                                            .hour[h]
+                                                                  > 0.)
+                                                                   ? 100.
+                                                                   : 0.;
+            }
 
-            for (uint d = 0; d != maxDaysInAYear; ++d)
-                pValuesForYearLocalReport[numSpace][i].day[d]
-                  = (pValuesForTheCurrentYear[numSpace][i].day[d] > 0.) ? 100. : 0.;
+            for (uint d = 0; d != DAYS_PER_YEAR; ++d)
+            {
+                pValuesForYearLocalReport[numSpace][i].day[d] = (pValuesForTheCurrentYear[numSpace]
+                                                                                         [i]
+                                                                                           .day[d]
+                                                                 > 0.)
+                                                                  ? 100.
+                                                                  : 0.;
+            }
 
-            for (uint w = 0; w != maxWeeksInAYear; ++w)
-                pValuesForYearLocalReport[numSpace][i].week[w]
-                  = (pValuesForTheCurrentYear[numSpace][i].week[w] > 0.) ? 100. : 0.;
+            for (uint w = 0; w != WEEKS_PER_YEAR; ++w)
+            {
+                pValuesForYearLocalReport[numSpace][i].week[w] = (pValuesForTheCurrentYear[numSpace]
+                                                                                          [i]
+                                                                                            .week[w]
+                                                                  > 0.)
+                                                                   ? 100.
+                                                                   : 0.;
+            }
 
-            for (uint m = 0; m != maxMonths; ++m)
-                pValuesForYearLocalReport[numSpace][i].month[m]
-                  = (pValuesForTheCurrentYear[numSpace][i].month[m] > 0.) ? 100. : 0.;
+            for (uint m = 0; m != MONTHS_PER_YEAR; ++m)
+            {
+                pValuesForYearLocalReport[numSpace][i].month[m] = (pValuesForTheCurrentYear
+                                                                     [numSpace][i]
+                                                                       .month[m]
+                                                                   > 0.)
+                                                                    ? 100.
+                                                                    : 0.;
+            }
 
-            pValuesForYearLocalReport[numSpace][i].year
-              = (pValuesForTheCurrentYear[numSpace][i].year > 0.) ? 100. : 0.;
+            pValuesForYearLocalReport[numSpace][i].year = (pValuesForTheCurrentYear[numSpace][i]
+                                                             .year
+                                                           > 0.)
+                                                            ? 100.
+                                                            : 0.;
         }
     }
 
@@ -332,8 +371,8 @@ public:
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
                 results.variableUnit = VCardType::Multiple::Unit(i);
-                pValuesForYearLocalReport[numSpace][i].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
+                pValuesForYearLocalReport[numSpace][i]
+                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
             results.isCurrentVarNA++;
         }
@@ -349,6 +388,6 @@ private:
 
 }; // class CongestionProbability
 
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__

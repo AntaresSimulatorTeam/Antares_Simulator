@@ -26,22 +26,21 @@ namespace Antares
 namespace Data
 {
 template<class T>
-inline Sets<T>::Sets() : pByIndex(NULL), pNameByIndex(NULL), pModified(false)
+inline Sets<T>::Sets():
+    pModified(false)
 {
 }
 
 template<class T>
-inline Sets<T>::Sets(const Sets& rhs) :
- pMap(rhs.pMap), pOptions(rhs.pOptions), pByIndex(NULL), pNameByIndex(NULL), pModified(false)
+inline Sets<T>::Sets(const Sets& rhs):
+    pMap(rhs.pMap),
+    pOptions(rhs.pOptions),
+    pModified(false)
 {
     if (rhs.pByIndex)
+    {
         rebuildIndexes();
-}
-
-template<class T>
-inline Sets<T>::~Sets()
-{
-    delete[] pByIndex;
+    }
 }
 
 template<class T>
@@ -71,17 +70,8 @@ typename Sets<T>::const_iterator Sets<T>::end() const
 template<class T>
 void Sets<T>::clear()
 {
-    if (pByIndex)
-    {
-        delete[] pByIndex;
-        pByIndex = NULL;
-    }
-    if (pNameByIndex)
-    {
-        delete[] pNameByIndex;
-        pNameByIndex = NULL;
-    }
-
+    pByIndex.clear();
+    pNameByIndex.clear();
     pMap.clear();
     pOptions.clear();
 }
@@ -142,9 +132,13 @@ YString Sets<T>::toString()
         ret << '[' << i->first << "]\n";
         ret << "caption = " << opts.caption << '\n';
         if (not opts.comments.empty())
+        {
             ret << "comments = " << opts.comments << '\n';
+        }
         if (!opts.output)
+        {
             ret << "output = false\n";
+        }
 
         for (uint r = 0; r != opts.rules.size(); ++r)
         {
@@ -163,8 +157,8 @@ bool Sets<T>::saveToFile(const StringT& filename) const
     using namespace Yuni;
     using namespace Antares;
 
-    IO::File::Stream file;
-    if (!file.open(filename, IO::OpenMode::write | IO::OpenMode::truncate))
+    Yuni::IO::File::Stream file;
+    if (!file.open(filename, Yuni::IO::OpenMode::write | Yuni::IO::OpenMode::truncate))
     {
         logs.error() << "I/O Error: " << filename << ": impossible to write the file";
         return false;
@@ -178,9 +172,13 @@ bool Sets<T>::saveToFile(const StringT& filename) const
         file << '[' << i->first << "]\n";
         file << "caption = " << opts.caption << '\n';
         if (not opts.comments.empty())
+        {
             file << "comments = " << opts.comments << '\n';
+        }
         if (!opts.output)
+        {
             file << "output = false\n";
+        }
 
         for (uint r = 0; r != opts.rules.size(); ++r)
         {
@@ -193,8 +191,7 @@ bool Sets<T>::saveToFile(const StringT& filename) const
 }
 
 template<class T>
-template<class StringT>
-bool Sets<T>::loadFromFile(const StringT& filename)
+bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
 {
     using namespace Yuni;
     using namespace Antares;
@@ -203,9 +200,11 @@ bool Sets<T>::loadFromFile(const StringT& filename)
     clear();
 
     // Loading the INI file
-    if (!IO::File::Exists(filename))
+    if (!std::filesystem::exists(filename))
+    {
         // Error silently ignored
         return true;
+    }
 
     IniFile ini;
     if (ini.open(filename))
@@ -217,7 +216,9 @@ bool Sets<T>::loadFromFile(const StringT& filename)
         {
             // Clearing the name.
             if (!section->name)
+            {
                 continue;
+            }
 
             // Creating a new section
             auto item = std::make_shared<T>();
@@ -229,7 +230,9 @@ bool Sets<T>::loadFromFile(const StringT& filename)
             for (p = section->firstProperty; p != nullptr; p = p->next)
             {
                 if (p->key.empty())
+                {
                     continue;
+                }
 
                 value = p->value;
                 value.toLower();
@@ -290,7 +293,9 @@ template<class HandlerT>
 inline void Sets<T>::rebuildAllFromRules(HandlerT& handler)
 {
     for (uint i = 0; i != pMap.size(); ++i)
+    {
         rebuildFromRules(pNameByIndex[i], handler);
+    }
 }
 
 template<class T>
@@ -302,7 +307,9 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
 
     typename MapOptions::iterator i = pOptions.find(id);
     if (i == pOptions.end())
+    {
         return;
+    }
     // Options
     Options& opts = i->second;
     Type& set = *(pMap[id]);
@@ -327,7 +334,9 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
                 if (i != pMap.end())
                 {
                     if (handler.add(set, *(i->second)))
+                    {
                         break;
+                    }
                 }
             }
             break;
@@ -343,7 +352,9 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
                 if (i != pMap.end())
                 {
                     if (handler.remove(set, *(i->second)))
+                    {
                         break;
+                    }
                 }
             }
             break;
@@ -371,13 +382,13 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
 template<class T>
 void Sets<T>::rebuildIndexes()
 {
-    delete[] pByIndex;
-    delete[] pNameByIndex;
+    pNameByIndex.clear();
+    pByIndex.clear();
 
     if (!pMap.empty())
     {
-        pByIndex = new TypePtr[pMap.size()];
-        pNameByIndex = new IDType[pMap.size()];
+        pByIndex.resize(pMap.size());
+        pNameByIndex.resize(pMap.size());
         const typename MapType::iterator end = pMap.end();
         uint index = 0;
         for (typename MapType::iterator i = pMap.begin(); i != end; ++i)
@@ -386,11 +397,6 @@ void Sets<T>::rebuildIndexes()
             pNameByIndex[index] = i->first;
             ++index;
         }
-    }
-    else
-    {
-        pByIndex = NULL;
-        pNameByIndex = NULL;
     }
 }
 

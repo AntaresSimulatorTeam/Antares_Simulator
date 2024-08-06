@@ -46,6 +46,4 @@ inline void Prepro::resetToDefault()
 
 } // namespace Antares::Data::Load
 
-
-
 #endif // __ANTARES_LIBS_STUDY_PARTS_LOAD_PREPRO_H__

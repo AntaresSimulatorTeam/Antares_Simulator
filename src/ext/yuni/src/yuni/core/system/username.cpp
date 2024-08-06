@@ -37,12 +37,12 @@ uint WindowsUsername(char* cstring, uint size)
             // The variable `unwsize` contains the final zero
             --unwsize;
             // Getting the size of the buffer into UTF8
-            int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, unw, unwsize, NULL, 0, NULL, NULL);
+            int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, unw, unwsize, nullptr, 0, nullptr, nullptr);
             if (sizeRequired > 0)
             {
                 if (static_cast<uint>(sizeRequired) > size)
                     sizeRequired = size;
-                WideCharToMultiByte(CP_UTF8, 0, unw, unwsize, cstring, sizeRequired, NULL, NULL);
+                WideCharToMultiByte(CP_UTF8, 0, unw, unwsize, cstring, sizeRequired, nullptr, nullptr);
                 return static_cast<uint>(sizeRequired);
             }
         }

@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - release/*
+      - feature/*
+      - features/*
+      - fix/*
+      - issue-*
       - doc/*
       - dependabot/*
   workflow_call:
@@ -58,7 +62,7 @@ jobs:
         echo "PDF_PATH_ASSET= [\"docs/pdf-doc-generation-with-sphinx/$PDF_NAME\"]" >> $GITHUB_ENV
 
     - name: user guide upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: pdf-reference-guide
         path: ${{ env.PDF_PATH }}

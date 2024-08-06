@@ -21,13 +21,15 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
+#include <cassert>
+#include <set>
+
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <cassert>
-#include "antares/jit/jit.h"
-#include "antares/antares/antares.h"
-#include <set>
+
 #include <antares/memory/memory.h>
+#include "antares/antares/antares.h"
+#include "antares/jit/jit.h"
 #include "antares/study/fwd.h"
 
 namespace Antares
@@ -216,6 +218,7 @@ public:
                        bool print_dimensions,
                        PredicateT& predicate,
                        bool saveEvenIfAllZero = false) const;
+
     //@}
 
     virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
@@ -335,15 +338,6 @@ public:
     */
     template<class U>
     void pasteToColumn(uint x, const U* data);
-
-    /*!
-    ** \brief Copy values into a given column in the matrix
-    **
-    ** \param x The column index (zero-based)
-    ** \param data The data to copy
-    */
-    template<class U>
-    void pasteToColumn(uint x, const Antares::Memory::Array<U>& data);
 
     /*!
     ** \brief Set a entire column with a given value

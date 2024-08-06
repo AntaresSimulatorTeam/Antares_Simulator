@@ -20,15 +20,15 @@
 */
 
 #include <yuni/yuni.h>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "variables/VariableManagerUtils.h"
-#include "antares/solver/simulation/sim_spread_generator.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_spread_generator.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/simulation.h"
+
+#include "variables/VariableManagerUtils.h"
 
 static void shortTermStorageCost(
   int PremierPdtDeLIntervalle,
@@ -41,33 +41,35 @@ static void shortTermStorageCost(
     SIM::SpreadGenerator spreadGenerator;
     for (int pays = 0; pays < NombreDePays; ++pays)
     {
-        for (const auto& storage : shortTermStorageInput[pays])
+        for (const auto& storage: shortTermStorageInput[pays])
         {
             for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0;
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
-                if (const int varLevel
-                    = variableManager.ShortTermStorageLevel(clusterGlobalIndex, pdtJour);
+                if (const int varLevel = variableManager.ShortTermStorageLevel(clusterGlobalIndex,
+                                                                               pdtJour);
                     varLevel >= 0)
                 {
                     linearCost[varLevel] = 0;
                 }
 
                 const double cost = spreadGenerator.generate();
-                if (const int varInjection
-                    = variableManager.ShortTermStorageInjection(clusterGlobalIndex, pdtJour);
+                if (const int varInjection = variableManager.ShortTermStorageInjection(
+                      clusterGlobalIndex,
+                      pdtJour);
                     varInjection >= 0)
                 {
-                    linearCost[varInjection] = cost;
+                    linearCost[varInjection] = storage.withdrawalEfficiency * cost;
                 }
 
-                if (const int varWithdrawal
-                    = variableManager.ShortTermStorageWithdrawal(clusterGlobalIndex, pdtJour);
+                if (const int varWithdrawal = variableManager.ShortTermStorageWithdrawal(
+                      clusterGlobalIndex,
+                      pdtJour);
                     varWithdrawal >= 0)
                 {
-                    linearCost[varWithdrawal] = storage.efficiency * cost;
+                    linearCost[varWithdrawal] = storage.injectionEfficiency * cost;
                 }
             }
         }
@@ -109,28 +111,30 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 var = variableManager.IntercoDirectCost(interco, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = CoutDeTransport.CoutDeTransportOrigineVersExtremite[pdtHebdo];
+                    ProblemeAResoudre->CoutLineaire[var] = CoutDeTransport
+                                                             .CoutDeTransportOrigineVersExtremite
+                                                               [pdtHebdo];
                 }
                 var = variableManager.IntercoIndirectCost(interco, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = CoutDeTransport.CoutDeTransportExtremiteVersOrigine[pdtHebdo];
+                    ProblemeAResoudre->CoutLineaire[var] = CoutDeTransport
+                                                             .CoutDeTransportExtremiteVersOrigine
+                                                               [pdtHebdo];
                 }
             }
         }
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
             int var;
 
             for (int Index = 0; Index < PaliersThermiquesDuPays.NombreDePaliersThermiques; Index++)
             {
-                int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+                int palier = PaliersThermiquesDuPays
+                               .NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
                 var = variableManager.DispatchableProduction(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
@@ -142,18 +146,22 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
             var = variableManager.HydProd(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+            {
                 ProblemeAResoudre->CoutLineaire[var] = 0.0;
+            }
 
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[var]
-                  = problemeHebdo
-                      ->BruitSurCoutHydraulique[pays][problemeHebdo->HeureDansLAnnee + pdtHebdo];
+                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo->BruitSurCoutHydraulique
+                                                         [pays][problemeHebdo->HeureDansLAnnee
+                                                                + pdtHebdo];
 
                 if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
-                    ProblemeAResoudre->CoutLineaire[var]
-                      += problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           .WeeklyWaterValueStateRegular;
+                {
+                    ProblemeAResoudre->CoutLineaire[var] += problemeHebdo
+                                                              ->CaracteristiquesHydrauliques[pays]
+                                                              .WeeklyWaterValueStateRegular;
+                }
             }
 
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
@@ -167,10 +175,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
                     var = variableManager.HydProdDown(pays, pdtJour);
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    {
                         ProblemeAResoudre->CoutLineaire[var] = P;
+                    }
                     var = variableManager.HydProdUp(pays, pdtJour);
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    {
                         ProblemeAResoudre->CoutLineaire[var] = P;
+                    }
                 }
                 else if (problemeHebdo->TypeDeLissageHydraulique
                            == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
@@ -181,10 +193,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                     var = variableManager.HydProdDown(pays, pdtJour);
 
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    {
                         ProblemeAResoudre->CoutLineaire[var] = P;
+                    }
                     var = variableManager.HydProdUp(pays, pdtJour);
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    {
                         ProblemeAResoudre->CoutLineaire[var] = -P;
+                    }
                 }
             }
 
@@ -215,27 +231,29 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
                 if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                          .WeeklyWaterValueStateRegular;
+                    ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
+                                                             ->CaracteristiquesHydrauliques[pays]
+                                                             .WeeklyWaterValueStateRegular;
 
-                    ProblemeAResoudre->CoutLineaire[var]
-                      *= problemeHebdo->CaracteristiquesHydrauliques[pays].PumpingRatio;
+                    ProblemeAResoudre->CoutLineaire[var] *= problemeHebdo
+                                                              ->CaracteristiquesHydrauliques[pays]
+                                                              .PumpingRatio;
                     ProblemeAResoudre->CoutLineaire[var] *= -1.;
 
-                    ProblemeAResoudre->CoutLineaire[var]
-                      += 2.
-                         * fabs(problemeHebdo
-                                  ->BruitSurCoutHydraulique[pays][problemeHebdo->HeureDansLAnnee
-                                                                  + pdtHebdo]);
+                    ProblemeAResoudre->CoutLineaire[var] += 2.
+                                                            * fabs(
+                                                              problemeHebdo->BruitSurCoutHydraulique
+                                                                [pays]
+                                                                [problemeHebdo->HeureDansLAnnee
+                                                                 + pdtHebdo]);
                 }
                 else
                 {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = 2.
-                        * fabs(problemeHebdo
-                                 ->BruitSurCoutHydraulique[pays][problemeHebdo->HeureDansLAnnee
-                                                                 + pdtHebdo]);
+                    ProblemeAResoudre->CoutLineaire[var] = 2.
+                                                           * fabs(
+                                                             problemeHebdo->BruitSurCoutHydraulique
+                                                               [pays][problemeHebdo->HeureDansLAnnee
+                                                                      + pdtHebdo]);
                 }
             }
 
@@ -262,17 +280,17 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
                 if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = problemeHebdo->CoutDeDefaillanceNegative[pays];
+                    ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
+                                                             ->CoutDeDefaillanceNegative[pays];
 
-                    ProblemeAResoudre->CoutLineaire[var]
-                      += problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           .WeeklyWaterValueStateRegular;
+                    ProblemeAResoudre->CoutLineaire[var] += problemeHebdo
+                                                              ->CaracteristiquesHydrauliques[pays]
+                                                              .WeeklyWaterValueStateRegular;
                 }
                 else
                 {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = problemeHebdo->CoutDeDefaillanceNegative[pays];
+                    ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
+                                                             ->CoutDeDefaillanceNegative[pays];
                 }
             }
 
@@ -285,15 +303,15 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[var]
-                  = problemeHebdo->CoutDeDefaillancePositive[pays];
+                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
+                                                         ->CoutDeDefaillancePositive[pays];
             }
 
             var = variableManager.NegativeUnsuppliedEnergy(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[var]
-                  = problemeHebdo->CoutDeDefaillanceNegative[pays];
+                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
+                                                         ->CoutDeDefaillanceNegative[pays];
             }
         }
 
@@ -315,9 +333,9 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 var = variableManager.LayerStorage(pays, layerindex);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = -problemeHebdo->CaracteristiquesHydrauliques[pays]
-                           .WaterLayerValues[layerindex];
+                    ProblemeAResoudre->CoutLineaire[var] = -problemeHebdo
+                                                              ->CaracteristiquesHydrauliques[pays]
+                                                              .WaterLayerValues[layerindex];
                 }
             }
         }
@@ -325,8 +343,9 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+        OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(problemeHebdo,
+                                                        PremierPdtDeLIntervalle,
+                                                        DernierPdtDeLIntervalle);
     }
 
     return;

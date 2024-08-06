@@ -19,12 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/application/application.h"
 #include <yuni/core/preprocessor/capabilities.h>
 
+#include "antares/application/application.h"
+
 #ifdef YUNI_OS_WINDOWS
-#include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/cpu.h>
+#include <yuni/core/system/windows.hdr.h>
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
@@ -41,7 +43,9 @@ void Application::resetProcessPriority() const
     if (System::CPU::Count() <= 2)
     {
         if (not SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS))
+        {
             logs.info() << "  :: impossible to reset the process priority";
+        }
     }
 #endif
 }

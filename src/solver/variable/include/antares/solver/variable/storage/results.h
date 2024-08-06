@@ -22,9 +22,10 @@
 #define __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 
 #include <antares/study/study.h>
-#include "intermediate.h"
+
 #include "../categories.h"
 #include "fwd.h"
+#include "intermediate.h"
 
 namespace Antares
 {
@@ -43,11 +44,12 @@ class Results;
 **   are `Raw`, `Average`, `Min`, `Max`... This parameter is a static list.
 */
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
-class Results : public FirstDecoratorT
+class Results: public FirstDecoratorT
 {
 public:
     //! Type of the first decorator
     typedef FirstDecoratorT DecoratorType;
+
     enum
     {
         //! The count if item in the list
@@ -106,11 +108,11 @@ public:
 } // namespace Solver
 } // namespace Antares
 
-#include "results.hxx"
-#include "empty.h"
-#include "raw.h"
-#include "minmax.h"
 #include "average.h"
+#include "empty.h"
+#include "minmax.h"
+#include "raw.h"
+#include "results.hxx"
 #include "stdDeviation.h"
 
 #endif // __SOLVER_VARIABLE_STORAGE_RESULTS_H__

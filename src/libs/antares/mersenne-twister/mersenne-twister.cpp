@@ -31,6 +31,7 @@
 */
 
 #include "antares/mersenne-twister/mersenne-twister.h"
+
 #include <cassert>
 
 #define MATRIX_A 0x9908b0dfUL   // constant vector a

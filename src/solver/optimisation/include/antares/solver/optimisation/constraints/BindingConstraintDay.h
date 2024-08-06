@@ -35,12 +35,12 @@ struct BindingConstraintDayData
  * represent 'Daily Binding Constraint' type
  */
 
-class BindingConstraintDay : private ConstraintFactory
+class BindingConstraintDay: private ConstraintFactory
 {
 public:
-    BindingConstraintDay(ConstraintBuilder& builder,
-                         BindingConstraintDayData& data) :
-     ConstraintFactory(builder), data(data)
+    BindingConstraintDay(ConstraintBuilder& builder, BindingConstraintDayData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

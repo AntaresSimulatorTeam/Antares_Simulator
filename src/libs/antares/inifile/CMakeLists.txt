@@ -12,14 +12,16 @@ add_library(inifile
 add_library(Antares::inifile ALIAS inifile)
 
 target_link_libraries(inifile
+        PUBLIC
+        yuni-static-core
         PRIVATE
         io
         logs
-        yuni-static-core
+        Boost::headers
 )
 
 target_include_directories(inifile
-                PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 

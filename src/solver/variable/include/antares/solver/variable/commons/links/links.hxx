@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_INC_LINK_HXX__
 #define __SOLVER_VARIABLE_INC_LINK_HXX__
 
-#include "antares/solver/variable/endoflist.h" // For UNUSED_VARIABLE, should be somewhere else
 #include <antares/study/filter.h>
+#include "antares/solver/variable/endoflist.h" // For UNUSED_VARIABLE, should be somewhere else
 
 namespace Antares
 {
@@ -210,7 +210,7 @@ inline void Links<VariablePerLink>::buildSurveyReport(SurveyResults& results,
                                                       int precision) const
 {
     int count_int = count;
-    bool link_dataLevel = (dataLevel & Category::link);
+    bool link_dataLevel = (dataLevel & Category::DataLevel::link);
     if (count_int && link_dataLevel)
     {
         assert(results.data.link != NULL
@@ -268,7 +268,7 @@ inline void Links<VariablePerLink>::buildAnnualSurveyReport(SurveyResults& resul
                                                             uint numSpace) const
 {
     int count_int = count;
-    bool link_dataLevel = (dataLevel & Category::link);
+    bool link_dataLevel = (dataLevel & Category::DataLevel::link);
     if (count_int && link_dataLevel)
     {
         assert(results.data.link != NULL
@@ -426,8 +426,8 @@ void Links<VariablePerLink>::buildDigest(SurveyResults& results,
                                          int dataLevel) const
 {
     int count_int = count;
-    bool linkDataLevel = dataLevel & Category::link;
-    bool areaDataLevel = dataLevel & Category::area;
+    bool linkDataLevel = dataLevel & Category::DataLevel::link;
+    bool areaDataLevel = dataLevel & Category::DataLevel::area;
     if (count_int && (linkDataLevel || areaDataLevel))
     {
         if (not results.data.area->links.empty())
@@ -438,7 +438,7 @@ void Links<VariablePerLink>::buildDigest(SurveyResults& results,
                 results.data.link = i->second;
                 pLinks[results.data.link->indexForArea].buildDigest(results,
                                                                     digestLevel,
-                                                                    Category::link);
+                                                                    Category::DataLevel::link);
             }
         }
     }

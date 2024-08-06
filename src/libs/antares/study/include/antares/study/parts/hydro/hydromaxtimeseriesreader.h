@@ -28,6 +28,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
 
+#include "antares/study/parts/hydro/container.h"
+
 namespace Antares::Data
 {
 /*!
@@ -67,8 +69,7 @@ private:
      *  This function provides reading from deprecated files which
      *  contains daily maximum generation/pumping power and energy data.
      */
-    bool loadDailyMaxPowersAndEnergies(const AnyString& folder,
-                                       bool usedBySolver);
+    bool loadDailyMaxPowersAndEnergies(const AnyString& folder, bool usedBySolver);
 
     /**
      * \brief Copy energy functions

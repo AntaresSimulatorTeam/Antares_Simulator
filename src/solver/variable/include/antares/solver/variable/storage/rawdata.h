@@ -22,7 +22,9 @@
 #define __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
 
 #include <yuni/yuni.h>
+
 #include <antares/study/study.h>
+
 #include "intermediate.h"
 
 namespace Antares
@@ -54,11 +56,11 @@ public:
     void merge(unsigned int year, const IntermediateValues& rhs);
 
 public:
-    double monthly[maxMonths];
-    double weekly[maxWeeksInAYear];
-    double daily[maxDaysInAYear];
+    double monthly[MONTHS_PER_YEAR];
+    double weekly[WEEKS_PER_YEAR];
+    double daily[DAYS_PER_YEAR];
     Antares::Memory::Stored<double>::Type hourly;
-    double* year;
+    std::vector<double> year;
     mutable double allYears;
     unsigned int nbYearsCapacity;
 

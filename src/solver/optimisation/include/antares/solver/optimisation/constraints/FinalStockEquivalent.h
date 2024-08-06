@@ -31,14 +31,15 @@ struct FinalStockEquivalentData
 /*!
  * represent 'Final Stock Equivalent' constraint type
  */
-class FinalStockEquivalent : private ConstraintFactory
+class FinalStockEquivalent: private ConstraintFactory
 {
 public:
-    FinalStockEquivalent(ConstraintBuilder& builder,
-                         FinalStockEquivalentData& data) :
-     ConstraintFactory(builder), data(data)
+    FinalStockEquivalent(ConstraintBuilder& builder, FinalStockEquivalentData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area

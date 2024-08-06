@@ -1,53 +1,53 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_LIBS_STUDY_STUDY_H__
 #define __ANTARES_LIBS_STUDY_STUDY_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/thread/thread.h>
-#include <yuni/core/noncopyable.h>
-#include <yuni/job/queue/service.h>
-
-#include <antares/writer/i_writer.h>
-
-#include "antares/antares/antares.h"
-#include "fwd.h"
-
-#include "simulation.h"
-#include "parameters.h"
-#include "binding_constraint/BindingConstraint.h"
-#include "header.h"
-#include "version.h"
-#include "sets.h"
-#include "progression/progression.h"
-#include "load-options.h"
-#include <antares/date/date.h>
-#include "layerdata.h"
-#include <antares/correlation/correlation.h>
-#include "area/store-timeseries-numbers.h"
-#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
-#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
-
 #include <memory>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+#include <yuni/job/queue/service.h>
+#include <yuni/thread/thread.h>
+
+#include <antares/correlation/correlation.h>
+#include <antares/date/date.h>
+#include <antares/study/runtime/runtime.h>
+#include <antares/writer/i_writer.h>
+#include "antares/antares/antares.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+
+#include "area/store-timeseries-numbers.h"
+#include "binding_constraint/BindingConstraint.h"
+#include "fwd.h"
+#include "header.h"
+#include "layerdata.h"
+#include "load-options.h"
+#include "parameters.h"
+#include "progression/progression.h"
+#include "sets.h"
+#include "simulation.h"
+#include "version.h"
 
 namespace Antares::Data
 {
@@ -56,6 +56,7 @@ namespace Antares::Data
 */
 
 class UIRuntimeInfo;
+
 class Study: public Yuni::NonCopyable<Study>, public LayerData
 {
 public:
@@ -157,7 +158,7 @@ public:
     ** This method does not have any effect except modifying
     ** internal variables (`folder`, `folderInput`, ...).
     */
-    void relocate(AnyString newFolder);
+    void relocate(const std::string& newFolder);
 
     /*!
     ** \brief Load a study from a folder
@@ -165,7 +166,7 @@ public:
     ** \param path The path where data are located
     ** \return True if succeeded, false otherwise
     */
-    bool loadFromFolder(const AnyString& path, const StudyLoadOptions& options);
+    bool loadFromFolder(const std::string& path, const StudyLoadOptions& options);
 
     /*!
     ** \brief Clear all ressources held by the study
@@ -233,7 +234,8 @@ public:
     ** \param name The name of the new area
     ** \return A pointer to a new area, or NULL if the operation failed
     */
-    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the default value
+    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the
+    // default value
     Area* areaAdd(const AreaName& name, bool update = false);
 
     /*!
@@ -361,8 +363,6 @@ public:
     void destroyAllWindTSGeneratorData();
     //! Destroy all data of the hydro TS generator
     void destroyAllHydroTSGeneratorData();
-    //! Destroy all data of the thermal TS generator
-    void destroyAllThermalTSGeneratorData();
 
     /*!
     ** \brief Import all time-series into the input folder
@@ -389,10 +389,6 @@ public:
     ** \brief Re-Initialize/Re-Load the scenario builder data
     */
     void scenarioRulesCreate();
-    /*!
-    ** \brief Re-Initialize/Re-Load the scenario builder data but consider a single ruleset only
-    */
-    void scenarioRulesCreate(const RulesScenarioName& thisoneonly);
 
     /*!
     ** \brief Release the scenario builder
@@ -410,7 +406,7 @@ public:
     *"max").
     **
     */
-    std::map<std::string, uint> getRawNumberCoresPerLevel();
+    unsigned getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode);
 
     /*!
     ** \brief Computes number of cores
@@ -419,22 +415,6 @@ public:
     ** the real numbers of logical cores to be involved in the MC years parallelisation.
     */
     void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
-
-    /*!
-    ** \brief In case hydro hot start is enabled, checking all conditions are met.
-    **
-    ** If hydro hot start is enabled, check that :
-    ** - For all areas for which reservoir management is enabled :
-    **   + Their starting level is initialized on the same day
-    **   + This day is the first day of the simulation calendar
-    ** - The simulation lasts exactly one year
-    ** - All batches (or sets) of simultaneous years have the same size (obvious if a parallel run
-    *is not required : answer is yes).
-    **
-    ** If these conditions are not met, some error message is raised, when attempting to run the
-    *study.
-    */
-    bool checkHydroHotStart();
 
     /*!
     ** \brief Remove timeseries if ts-generator is enabled
@@ -600,17 +580,18 @@ public:
     //! \name Scenario Builder
     //@{
     //! Rules for building scenarios (can be null)
-    ScenarioBuilder::Sets* scenarioRules = nullptr;
+    std::unique_ptr<ScenarioBuilder::Sets> scenarioRules;
     //@}
 
-    TimeSeries::TS scenarioHydroLevels;
-
+    TimeSeries::TS scenarioInitialHydroLevels;
+    // Hydro Final Levels
+    TimeSeries::TS scenarioFinalHydroLevels;
     /*!
     ** \brief Runtime informations
     **
     ** These informations are only needed when a study is processed.
     */
-    StudyRuntimeInfos* runtime = nullptr;
+    StudyRuntimeInfos runtime;
 
     // Antares::Solver::Variable::State* state;
 
@@ -669,7 +650,7 @@ protected:
     //! \name Loading
     //@{
     //! Load a study from a folder
-    bool internalLoadFromFolder(const YString& path, const StudyLoadOptions& options);
+    bool internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options);
     //! Load the study header
     bool internalLoadHeader(const YString& folder);
     //! Load all correlation matrices
@@ -704,8 +685,6 @@ YString StudyCreateOutputPath(SimulationMode mode,
                               int64_t startTime);
 } // namespace Antares::Data
 
-
 #include "study.hxx"
-#include "runtime.h"
 
 #endif /* __ANTARES_LIBS_STUDY_STUDY_H__ */

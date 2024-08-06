@@ -16,3 +16,7 @@
 [data-md-color-scheme="slate"] .add-padding-and-white-bg {
     background-color: whitesmoke;
 }
+/* De-activate mkdocs' default h5 styling, which puts the h5 header in upper case */
+.md-typeset h5 {
+    text-transform: none;
+}

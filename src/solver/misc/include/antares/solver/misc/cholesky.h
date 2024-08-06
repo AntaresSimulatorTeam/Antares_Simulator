@@ -23,6 +23,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
+
 #include <antares/array/matrix.h>
 
 namespace Antares

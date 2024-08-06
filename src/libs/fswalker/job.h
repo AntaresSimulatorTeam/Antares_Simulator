@@ -21,11 +21,11 @@
 #ifndef __ANTARES_FS_WALKER_JOB_H__
 #define __ANTARES_FS_WALKER_JOB_H__
 
+#include <atomic>
+#include <memory>
+
 #include <yuni/yuni.h>
 #include <yuni/job/job.h>
-
-#include <memory>
-#include <atomic>
 
 namespace FSWalker
 {
@@ -36,7 +36,7 @@ class WalkerThread;
 //! Internal job counter
 using InternalJobCounter = std::shared_ptr<std::atomic<int>>;
 
-class IJob : public Yuni::Job::IJob
+class IJob: public Yuni::Job::IJob
 {
 public:
     //! The most suitable smart pointer for the class
@@ -46,6 +46,7 @@ public:
     IJob()
     {
     }
+
     virtual ~IJob();
 
 protected:

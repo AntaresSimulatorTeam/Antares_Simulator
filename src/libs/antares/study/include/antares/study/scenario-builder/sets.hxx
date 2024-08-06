@@ -67,7 +67,9 @@ inline Rules::Ptr Sets::find(const RulesScenarioName& lname) const
     using namespace Yuni;
     const_iterator i = pMap.find(lname);
     if (i != pMap.end())
+    {
         return i->second;
+    }
     return nullptr;
 }
 
@@ -85,9 +87,13 @@ bool Sets::loadFromINIFile(const StringT& filename)
     const AnyString adapter(filename);
     bool r = internalLoadFromINIFile(adapter);
     if (!r)
+    {
         pMap.clear();
+    }
     if (pMap.empty())
+    {
         createNew("Default Ruleset");
+    }
     return r;
 }
 

@@ -19,9 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <algorithm>
+
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
-#include <algorithm>
 
 void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelles,
                                             int NumeroDeProbleme)
@@ -35,16 +36,17 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
 
     const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
 
-    const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables[NumeroDeProbleme];
+    const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
+                                                                       .CorrespondanceDesVariables
+                                                                         [NumeroDeProbleme];
 
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
+      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
 
     std::vector<double>& Xmin = ProblemeLineairePartieVariable.Xmin;
     std::vector<double>& Xmax = ProblemeLineairePartieVariable.Xmax;
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
-        = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees;
+      = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {

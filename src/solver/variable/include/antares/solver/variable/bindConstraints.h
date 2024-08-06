@@ -35,6 +35,7 @@ struct VCardAllBindingConstraints
     {
         return "Binding constraints";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -50,21 +51,19 @@ struct VCardAllBindingConstraints
     //! The expecte results
     typedef Results<> ResultsType;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::bindingConstraint,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & Category::bc,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +1,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 0,
-        //! The Spatial aggregation
-        spatialAggregate = Category::noSpatialAggregate,
-        //! Intermediate values
-        hasIntermediateValues = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::bindingConstraint;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & Category::FileLevel::bc;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +1;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 0;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCardAllBindingConstraints
 
@@ -91,12 +90,12 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics<CDataLevel, CFile>::count
+            count = NextType::template Statistics < CDataLevel,
+            CFile > ::count
         };
     };
 
 public:
-
     /*!
     ** \brief Retrieve the list of all individual variables
     **
@@ -115,7 +114,7 @@ public:
 
     BindingConstraints(BindingConstraints& other) = delete;
     BindingConstraints(BindingConstraints&& other) = delete;
-    BindingConstraints const& operator=(BindingConstraints&& other) = delete;
+    const BindingConstraints& operator=(BindingConstraints&& other) = delete;
 
     //! Destructor
     ~BindingConstraints() = default;
@@ -126,10 +125,18 @@ public:
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary);
 
+    void simulationBegin();
+    void simulationEnd();
+
     void yearBegin(uint year, uint numSpace);
     void yearEnd(uint year, uint numSpace);
 
+    void yearEndBuild(State& state, uint year, uint numSpace);
+
     void weekBegin(State& state);
+    void weekEnd(State& state);
+    void weekForEachArea(State&, unsigned int numSpace);
+    void hourForEachArea(State&, unsigned int numSpace);
 
     void hourBegin(uint hourInTheYear);
     void hourEnd(State& state, uint hourInTheYear);
@@ -147,8 +154,38 @@ public:
 
     uint64_t memoryUsage() const;
 
+    template<class V>
+    void yearEndSpatialAggregates(V&, uint, uint)
+    {
+        // do nothing
+    }
+
     template<class I>
     static void provideInformations(I& infos);
+
+    template<class VCardToFindT>
+    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::Area* area);
+    void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
+
+    template<class V>
+    void simulationEndSpatialAggregates(V& allVars);
+
+    template<class VCardToFindT>
+    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::AreaLink* link);
+
+    template<class VCardToFindT>
+    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
+                                          const Data::ThermalCluster* cluster);
+    template<class VCardSearchT, class O>
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
+    template<class V>
+    void computeSpatialAggregatesSummary(V& allVars,
+                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                         unsigned int);
+
+    void beforeYearByYearExport(uint year, uint numSpace);
 
 private:
     // For each binding constraint, output variable static list associated.

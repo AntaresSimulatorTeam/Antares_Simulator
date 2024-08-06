@@ -28,7 +28,9 @@ void HydroPowerSmoothingUsingVariationSum::add(int pays,
     {
         int pdt1 = pdt + 1;
         if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
+        {
             pdt1 = 0;
+        }
         ConstraintNamer namer(builder.data.NomDesContraintes);
         namer.UpdateArea(builder.data.NomsDesPays[pays]);
         namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);

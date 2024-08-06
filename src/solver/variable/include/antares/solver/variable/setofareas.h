@@ -21,8 +21,9 @@
 #ifndef __SOLVER_VARIABLE_SET_OF_AREAS_H__
 #define __SOLVER_VARIABLE_SET_OF_AREAS_H__
 
-#include "state.h"
 #include <antares/study/study.h>
+
+#include "state.h"
 
 namespace Antares
 {
@@ -37,6 +38,7 @@ struct VCardAllSetsOfAreas
     {
         return "Sets of Areas";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -52,21 +54,19 @@ struct VCardAllSetsOfAreas
     //! The expecte results
     typedef Results<> ResultsType;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & Category::de,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +1,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 0,
-        //! The Spatial aggregation
-        spatialAggregate = Category::noSpatialAggregate,
-        //! Intermediate values
-        hasIntermediateValues = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & Category::FileLevel::de;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +1;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 0;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCard
 
@@ -95,7 +95,8 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics<CDataLevel, CFile>::count
+            count = NextType::template Statistics < CDataLevel,
+            CFile > ::count
         };
     };
 
@@ -129,7 +130,7 @@ public:
 
     void yearBegin(unsigned int year, unsigned int numSpace);
 
-    void yearEndBuild(State& state, unsigned int year);
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace);
 
     void yearEnd(unsigned int year, unsigned int numSpace);
 
@@ -137,12 +138,12 @@ public:
                         unsigned int nbYearsForCurrentSummary);
 
     void hourBegin(unsigned int hourInTheYear);
-    void hourForEachArea(State& state);
+    void hourForEachArea(State& state, unsigned int numSpace);
     void hourForEachLink(State& state);
     void hourEnd(State& state, unsigned int hourInTheYear);
 
     void weekBegin(State&);
-    void weekForEachArea(State&);
+    void weekForEachArea(State&, unsigned int numSpace);
     void weekEnd(State&);
 
     void buildSurveyReport(SurveyResults& results,
@@ -180,7 +181,7 @@ public:
     void computeSpatialAggregateWith(O& out);
 
     template<class VCardSearchT, class O>
-    void computeSpatialAggregateWith(O& out, const Data::Area* area);
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
 
     template<class VCardToFindT>
     const double* retrieveHourlyResultsForCurrentYear() const;

@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_FWD_H__
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
+#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+
 #include "antares/antares/antares.h"
 #include "antares/antares/constants.h"
-#include <map>
 
 namespace Antares
 {
@@ -198,7 +200,7 @@ std::string styleToString(const StyleType& style);
 **
 ** These values are mainly used for mask bits
 */
-static const unsigned int timeSeriesCount = 8;
+static const unsigned int timeSeriesCount = 7;
 
 enum TimeSeriesType : unsigned int
 {
@@ -216,14 +218,10 @@ enum TimeSeriesType : unsigned int
     timeSeriesRenewable = 32,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 64,
-    //! TimeSeries : Hydro Max Power
-    timeSeriesHydroMaxPower = 128,
     // ***********************************************************************
     // Please update the constant timeSeriesCount if you add / remove an item
     // ***********************************************************************
 }; // enum TimeSeries
-
-
 
 template<int T>
 struct TimeSeriesBitPatternIntoIndex;
@@ -236,6 +234,7 @@ struct TimeSeriesBitPatternIntoIndex<1>
         value = 0
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<2>
 {
@@ -244,6 +243,7 @@ struct TimeSeriesBitPatternIntoIndex<2>
         value = 1
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<4>
 {
@@ -252,6 +252,7 @@ struct TimeSeriesBitPatternIntoIndex<4>
         value = 2
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<8>
 {
@@ -260,6 +261,7 @@ struct TimeSeriesBitPatternIntoIndex<8>
         value = 3
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<16>
 {
@@ -268,6 +270,7 @@ struct TimeSeriesBitPatternIntoIndex<16>
         value = 4
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<32>
 {
@@ -279,6 +282,7 @@ struct TimeSeriesBitPatternIntoIndex<32>
 
 template<int T>
 struct TimeSeriesToCStr;
+
 template<>
 struct TimeSeriesToCStr<1>
 {
@@ -287,6 +291,7 @@ struct TimeSeriesToCStr<1>
         return "load";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<2>
 {
@@ -295,6 +300,7 @@ struct TimeSeriesToCStr<2>
         return "hydro";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<4>
 {
@@ -303,6 +309,7 @@ struct TimeSeriesToCStr<4>
         return "wind";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<8>
 {
@@ -311,6 +318,7 @@ struct TimeSeriesToCStr<8>
         return "thermal";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<16>
 {
@@ -319,6 +327,7 @@ struct TimeSeriesToCStr<16>
         return "solar";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<32>
 {
@@ -356,13 +365,10 @@ enum SeedIndex
     seedMax,
 };
 
-enum
-{
-    //! A default seed for random number generators
-    antaresSeedDefaultValue = 5489,
-    //! Increment for RNG (generators) with a different seed
-    antaresSeedIncrement = 1000000, // arbitrary value
-};
+//! A default seed for random number generators
+constexpr unsigned antaresSeedDefaultValue = 5489;
+//! Increment for RNG (generators) with a different seed
+constexpr unsigned antaresSeedIncrement = 1000000; // arbitrary value
 
 /*!
 ** \brief Convert a seed into a string
@@ -375,24 +381,6 @@ const char* SeedToCString(SeedIndex seed);
 ** Mainly used for saving / loading into generaldata.ini
 */
 const char* SeedToID(SeedIndex seed);
-
-// ... Initial reservoir levels ...
-enum InitialReservoirLevels
-{
-    irlColdStart = 0,
-    irlHotStart,
-    irlUnknown,
-};
-
-/*!
-** \brief Convert an Initial Reservoir Levels strategy into a text
-*/
-const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels);
-
-/*!
-** \brief Convert a text into an Initial Reservoir Levels strategy
-*/
-InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text);
 
 // ... Hydro heuristic policy ...
 enum HydroHeuristicPolicy
@@ -551,11 +539,9 @@ class Sets;
 
 } // namespace Antares::Data::ScenarioBuilder
 
-
-
 namespace Benchmarking
 {
-class IDurationCollector;
+class DurationCollector;
 }
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

@@ -42,7 +42,7 @@ In May 2018, RTE decided to release the project under the GPLv3 license.
 In January 2024, RTE, as the exclusive copyright owner, decided to switch from the GPLv3 to the MPLv2 license, 
 starting with the 9.0 version of Antares Simulator.
 
-The GUI is deprecated in favor of [Antares Web](https://github.com/AntaresSimulatorTeam/AntaREST).
+The GUI is deprecated in favor of [Antares Web](https://antares-web.readthedocs.io).
 
 ### Links
 - Antares ecosystem: [https://antares-doc.readthedocs.io](https://antares-doc.readthedocs.io)

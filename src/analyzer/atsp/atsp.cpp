@@ -32,21 +32,23 @@ const uint ATSP::lonmois[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 const uint ATSP::durmois[12] = {744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744};
 const uint ATSP::posmois[12] = {0, 744, 1416, 2160, 2880, 3624, 4344, 5088, 5832, 6552, 7296, 8016};
 
-ATSP::ATSP() :
- pRoundingCount(),
- pRounding80percentCount(),
- pRoundingCountTotal(),
- HOR(0.92),
- pLimitMemory(200 * 1024 * 1024),
- pCacheMemoryUsed(),
- pAutoClean(false)
+ATSP::ATSP():
+    pRoundingCount(),
+    pRounding80percentCount(),
+    pRoundingCountTotal(),
+    HOR(0.92),
+    pLimitMemory(200 * 1024 * 1024),
+    pCacheMemoryUsed(),
+    pAutoClean(false)
 {
 }
 
 ATSP::~ATSP()
 {
     for (uint i = 0; i != pArea.size(); ++i)
+    {
         delete pArea[i];
+    }
 
     if (pAutoClean)
     {
@@ -82,23 +84,35 @@ void ATSP::printSummary() const
     logs.info() << "  trimming threshold               : " << pRoundOff;
 
     if (pUseUpperBound)
+    {
         logs.info() << "  upper bound  : " << pUpperBound;
+    }
     else
+    {
         logs.info() << "  upper bound  : (none)";
+    }
 
     if (pUseLowerBound)
+    {
         logs.info() << "  lower bound  : " << pLowerBound;
+    }
     else
+    {
         logs.info() << "  lower bound  : (none)";
+    }
 
     logs.info() << "  memory cache size : " << (pLimitMemory / 1024 / 1024) << "Mo";
     logs.info() << "  auto-clean : " << (pAutoClean ? "yes" : "no");
 
     logs.info();
     if (pArea.size() > 1)
+    {
         logs.info() << "  " << pArea.size() << " areas to analyze";
+    }
     else
+    {
         logs.info() << "  1 area to analyze";
+    }
 
     for (uint i = 0; i != pArea.size(); ++i)
     {
@@ -135,19 +149,25 @@ bool ATSP::writeMoments() const
     for (uint j = 0; j < 12; ++j)
     {
         for (uint k = 0; k < 4; ++k)
+        {
             f << "MONTH " << (j + 1) << '\t';
+        }
     }
     f << "\n\t";
 
     for (uint j = 0; j < 12; ++j)
+    {
         f << " EXPEC\t STAND\t SKEWN\t KURTO\t";
+    }
     f << '\n';
 
     for (uint i = 0; i < pArea.size(); ++i)
     {
         const AreaInfo& info = *(pArea[i]);
         if (!info.enabled)
+        {
             continue;
+        }
 
         f << info.name << '\t';
         const MomentCentrSingle& moment = moments_centr_net[i];
@@ -157,7 +177,9 @@ bool ATSP::writeMoments() const
             const double* m = moment.data[j];
 
             for (uint k = 0; k < 4; ++k)
+            {
                 f << m[k] << '\t';
+            }
         }
         f << '\n';
     }
@@ -174,13 +196,16 @@ bool ATSP::cachePreload(unsigned index,
     {
         options = Matrix<>::optImmediate | Matrix<>::optFixedSize,
     };
+
     if (pCacheMatrix[index].loadFromCSVFile(filename, NBS, height, options, &buffer))
     {
         pCacheLastValidIndex = index + 1;
         return true;
     }
     else
+    {
         pCacheMatrix[index].clear();
+    }
 
     return false;
 }

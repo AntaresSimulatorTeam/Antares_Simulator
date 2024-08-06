@@ -21,12 +21,15 @@
 #ifndef __STUDY_RESULT_AGGREGATOR_RESULT_H__
 #define __STUDY_RESULT_AGGREGATOR_RESULT_H__
 
+#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <map>
+
 #include <antares/memory/memory.h>
-#include "datafile.h"
 #include "antares/solver/ts-generator/xcast/studydata.h"
+
+#include "datafile.h"
 #include "studydata.h"
 
 using namespace Yuni;

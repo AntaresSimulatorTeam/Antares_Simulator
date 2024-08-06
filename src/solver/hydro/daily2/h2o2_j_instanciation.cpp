@@ -60,10 +60,10 @@ DONNEES_MENSUELLES_ETENDUES H2O2_J_Instanciation()
     ProblemeHydrauliqueEtendu.ProblemeSpx.assign(NombreDeProblemes, nullptr);
 
     auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu.CorrespondanceDesVariables;
-    auto& ProblemeLineaireEtenduPartieFixe
-        = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieFixe;
-    auto& ProblemeLineaireEtenduPartieVariable
-        = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable;
+    auto& ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu
+                                               .ProblemeLineaireEtenduPartieFixe;
+    auto& ProblemeLineaireEtenduPartieVariable = ProblemeHydrauliqueEtendu
+                                                   .ProblemeLineaireEtenduPartieVariable;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {

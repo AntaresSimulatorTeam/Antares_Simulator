@@ -21,9 +21,8 @@
 
 #include <limits>
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 /*
  pi_define.h doesn't include this header, yet it uses struct jmp_buf.
@@ -72,8 +71,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
-    Probleme.CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
+                                                       ->CoefficientsDeLaMatriceDesContraintes
+                                                       .data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
@@ -104,7 +104,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
         {
             double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
+            {
                 *pt = ProblemeAResoudre->X[i];
+            }
         }
 
         return true;
@@ -117,7 +119,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
         {
             double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
+            {
                 *pt = std::numeric_limits<double>::quiet_NaN();
+            }
         }
 
 #ifndef NDEBUG

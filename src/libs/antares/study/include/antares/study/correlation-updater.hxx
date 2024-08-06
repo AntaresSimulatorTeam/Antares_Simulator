@@ -32,7 +32,8 @@ namespace // anonymous
 class CorrelationUpdater final
 {
 public:
-    CorrelationUpdater(Data::Study& study) : pStudy(study)
+    CorrelationUpdater(Data::Study& study):
+        pStudy(study)
     {
         using namespace Yuni;
         // We can store the INI files in disk because it may not fit in memory

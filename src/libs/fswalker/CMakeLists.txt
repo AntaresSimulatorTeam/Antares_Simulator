@@ -22,5 +22,6 @@ target_include_directories(antares-fswalker
 target_link_libraries(antares-fswalker
 		PRIVATE
 			yuni-static-core
+			antares-core
 			logs
 		)

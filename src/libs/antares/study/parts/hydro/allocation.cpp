@@ -20,12 +20,11 @@
 */
 
 #include "antares/study/parts/hydro/allocation.h"
+
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
-#include <yuni/core/math.h>
-#include <yuni/io/file.h>
 
-using namespace Yuni;
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -37,7 +36,9 @@ static const Area* FindMappedAreaName(const AreaName& id,
 {
     auto i = mapping.find(id);
     if (i != mapping.end())
+    {
         return study.areas.findFromName(i->second);
+    }
     return study.areas.findFromName(id);
 }
 
@@ -57,7 +58,9 @@ void HydroAllocation::remove(const AreaName& areaid)
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     if (i != pValues.end())
+    {
         pValues.erase(i);
+    }
 }
 
 void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
@@ -104,7 +107,9 @@ void HydroAllocation::fromArea(const Area& area, double value)
 void HydroAllocation::fromArea(const Area* area, double value)
 {
     if (area)
+    {
         fromArea(area->id, value);
+    }
 }
 
 double HydroAllocation::fromArea(const AreaName& areaid) const
@@ -121,10 +126,14 @@ void HydroAllocation::fromArea(const AreaName& areaid, double value)
     {
         auto i = pValues.find(areaid);
         if (i != pValues.end())
+        {
             pValues.erase(i);
+        }
     }
     else
+    {
         pValues[areaid] = value;
+    }
 }
 
 void HydroAllocation::prepareForSolver(const AreaList& list)
@@ -135,7 +144,9 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
     {
         auto* targetarea = list.find(i->first);
         if (targetarea)
+        {
             pValuesFromAreaID[targetarea->index] = i->second;
+        }
     }
 
     pValues.clear();
@@ -153,34 +164,36 @@ void HydroAllocation::clear()
 #endif
 }
 
-bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyString& filename)
+bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path& filename)
 {
     clear();
 
     IniFile ini;
-    if (IO::File::Exists(filename) && ini.open(filename))
-    {
-        if (!ini.empty())
-        {
-            AreaName areaname;
-            ini.each([&](const IniFile::Section& section) {
-                for (auto* p = section.firstProperty; p; p = p->next)
-                {
-                    double coeff = p->value.to<double>();
-                    if (!Utils::isZero(coeff))
-                    {
-                        areaname = p->key;
-                        areaname.toLower();
-                        pValues[areaname] = coeff;
-                    }
-                }
-            });
-        }
-    }
-    else
+    if (!fs::exists(filename) || !ini.open(filename))
     {
         pValues[referencearea] = 1.0;
+        return true;
     }
+
+    if (ini.empty())
+    {
+        return true;
+    }
+
+    ini.each(
+      [this](const IniFile::Section& section)
+      {
+          for (auto* p = section.firstProperty; p; p = p->next)
+          {
+              double coeff = p->value.to<double>();
+              if (!Utils::isZero(coeff))
+              {
+                  AreaName areaname = p->key;
+                  areaname.toLower();
+                  pValues[areaname] = coeff;
+              }
+          }
+      });
     return true;
 }
 
@@ -188,7 +201,7 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
 {
     if (pValues.empty())
     {
-        IO::File::CreateEmptyFile(filename);
+        Yuni::IO::File::CreateEmptyFile(filename);
         return true;
     }
     else
@@ -196,7 +209,7 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
         IniFile ini;
         auto* s = ini.addSection("[allocation]");
         auto end = pValues.end();
-        CString<64, false> str;
+        Yuni::CString<64, false> str;
         for (auto i = pValues.begin(); i != end; ++i)
         {
             double v = i->second;
