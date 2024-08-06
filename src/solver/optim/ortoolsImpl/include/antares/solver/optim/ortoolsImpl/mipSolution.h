@@ -27,7 +27,6 @@
 #include <vector>
 
 #include <antares/solver/optim/api/mipSolution.h>
-#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
