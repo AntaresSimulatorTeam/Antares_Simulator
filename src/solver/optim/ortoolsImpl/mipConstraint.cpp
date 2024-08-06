@@ -46,12 +46,12 @@ void OrtoolsMipConstraint::setBounds(double lb, double ub)
     mpConstraint_->SetBounds(lb, ub);
 }
 
-double OrtoolsMipConstraint::getLb()
+double OrtoolsMipConstraint::getLb() const
 {
     return mpConstraint_->lb();
 }
 
-double OrtoolsMipConstraint::getUb()
+double OrtoolsMipConstraint::getUb() const
 {
     return mpConstraint_->ub();
 }

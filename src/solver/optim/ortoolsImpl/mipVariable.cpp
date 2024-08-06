@@ -44,17 +44,17 @@ void OrtoolsMipVariable::setBounds(double lb, double ub)
     mpVar_->SetBounds(lb, ub);
 }
 
-double OrtoolsMipVariable::getLb()
+double OrtoolsMipVariable::getLb() const
 {
     return mpVar_->lb();
 }
 
-double OrtoolsMipVariable::getUb()
+double OrtoolsMipVariable::getUb() const
 {
     return mpVar_->ub();
 }
 
-operations_research::MPVariable* OrtoolsMipVariable::getMpVar()
+const operations_research::MPVariable* OrtoolsMipVariable::getMpVar() const
 {
     return mpVar_;
 }

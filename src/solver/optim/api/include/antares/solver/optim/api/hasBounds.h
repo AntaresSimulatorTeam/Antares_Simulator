@@ -32,8 +32,8 @@ public:
 
     virtual void setBounds(double lb, double ub) = 0;
 
-    virtual double getLb() = 0;
-    virtual double getUb() = 0;
+    virtual double getLb() const = 0;
+    virtual double getUb() const = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

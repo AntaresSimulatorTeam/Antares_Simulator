@@ -39,7 +39,7 @@ public:
                        const std::map<std::string, std::pair<Api::MipVariable*, double>>& solution,
                        double objectiveValue);
 
-    ~OrtoolsMipSolution() = default;
+    virtual ~OrtoolsMipSolution() = default;
 
     Api::MipStatus getStatus() override;
     double getObjectiveValue() override;

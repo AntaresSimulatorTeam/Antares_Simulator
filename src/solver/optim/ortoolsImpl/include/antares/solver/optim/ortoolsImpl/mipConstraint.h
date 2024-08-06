@@ -37,8 +37,8 @@ public:
     void setBounds(double lb, double ub) override;
     void setCoefficient(Api::MipVariable* var, double coefficient) override;
 
-    double getLb() override;
-    double getUb() override;
+    double getLb() const override;
+    double getUb() const override;
 
     double getCoefficient(Api::MipVariable* var) override;
 

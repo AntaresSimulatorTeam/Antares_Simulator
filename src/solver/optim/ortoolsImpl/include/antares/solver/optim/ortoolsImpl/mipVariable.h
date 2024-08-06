@@ -36,12 +36,12 @@ public:
 
     void setBounds(double lb, double ub) override;
 
-    double getLb() override;
-    double getUb() override;
+    double getLb() const override;
+    double getUb() const override;
 
     const std::string& getName() const override;
 
-    operations_research::MPVariable* getMpVar();
+    const operations_research::MPVariable* getMpVar() const;
 
     ~OrtoolsMipVariable() = default;
 
