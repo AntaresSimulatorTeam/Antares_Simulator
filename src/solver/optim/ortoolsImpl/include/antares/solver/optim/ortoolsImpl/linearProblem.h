@@ -37,6 +37,10 @@ public:
 
     Api::MipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     Api::MipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
+    Api::MipVariable* addVariable(double lb,
+                                  double ub,
+                                  bool integer,
+                                  const std::string& name) override;
     Api::MipVariable* getVariable(const std::string& name) override;
 
     Api::MipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
@@ -51,8 +55,7 @@ public:
     Api::MipSolution* solve() override;
 
 private:
-
-    Api::MipVariable* addVariable(double lb, double ub, bool integer, const std::string &name);
+    Api::MipVariable* addVariable(double lb, double ub, bool integer, const std::string& name);
 
     std::unique_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPSolverParameters* param_;

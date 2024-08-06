@@ -35,6 +35,8 @@ class LinearProblem
 public:
     virtual MipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
     virtual MipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
+    virtual MipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
+      = 0;
     virtual MipVariable* getVariable(const std::string& name) = 0;
 
     virtual MipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
