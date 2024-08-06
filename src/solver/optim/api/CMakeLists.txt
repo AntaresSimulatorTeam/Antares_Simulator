@@ -2,7 +2,6 @@ set(PROJ optim_api)
 
 set(SRC_API
         include/antares/solver/optim/api/mipVariable.h
-        include/antares/solver/optim/api/mipObjective.h
         include/antares/solver/optim/api/mipSolution.h
         include/antares/solver/optim/api/mipConstraint.h
 

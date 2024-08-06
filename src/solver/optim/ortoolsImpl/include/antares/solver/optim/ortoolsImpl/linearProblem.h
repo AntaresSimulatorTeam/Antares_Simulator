@@ -52,17 +52,20 @@ public:
     void setMinimization() override;
     void setMaximization() override;
 
+    bool isMinimization() override;
+    bool isMaximization() override;
+
     Api::MipSolution* solve() override;
 
 private:
     std::unique_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPSolverParameters* param_;
+    operations_research::MPObjective* objective_;
 
     std::map<std::string, std::unique_ptr<Api::MipVariable>> variables_;
     std::map<std::string, std::unique_ptr<Api::MipConstraint>> constraints_;
 
     std::unique_ptr<Api::MipSolution> solution_;
-    std::unique_ptr<Api::MipObjective> objective_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

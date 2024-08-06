@@ -3,7 +3,6 @@ set(PROJ optim-ortools-impl)
 set(HEADERS
         include/antares/solver/optim/ortoolsImpl/mipVariable.h
         include/antares/solver/optim/ortoolsImpl/mipSolution.h
-        include/antares/solver/optim/ortoolsImpl/mipObjective.h
         include/antares/solver/optim/ortoolsImpl/mipConstraint.h
 
         include/antares/solver/optim/ortoolsImpl/linearProblem.h
@@ -12,7 +11,6 @@ set(SRC_ORTOOLS_IMPL
         ${HEADERS}
         mipVariable.cpp
         mipSolution.cpp
-        mipObjective.cpp
         mipConstraint.cpp
 
         linearProblem.cpp

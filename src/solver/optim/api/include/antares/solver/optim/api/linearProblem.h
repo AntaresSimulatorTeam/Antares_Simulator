@@ -49,6 +49,9 @@ public:
     virtual void setMinimization() = 0;
     virtual void setMaximization() = 0;
 
+    virtual bool isMinimization() = 0;
+    virtual bool isMaximization() = 0;
+
     virtual MipSolution* solve() = 0;
 };
 

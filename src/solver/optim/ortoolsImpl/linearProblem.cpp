@@ -23,7 +23,6 @@
 
 #include <antares/solver/optim/ortoolsImpl/linearProblem.h>
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
-#include <antares/solver/optim/ortoolsImpl/mipObjective.h>
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 #include <antares/solver/utils/ortools_utils.h>
@@ -115,24 +114,46 @@ Api::MipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
     return constraints_[name].get();
 }
 
+static const operations_research::MPVariable* getMpVar(Api::MipVariable* var)
+
+{
+    auto* orMpVar = dynamic_cast<OrtoolsMipVariable*>(var);
+    if (!orMpVar)
+    {
+        logs.error() << "Invalid cast, tried from Api::MipVariable to OrtoolsMipVariable";
+        throw std::bad_cast();
+    }
+    return orMpVar->getMpVar();
+}
+
 void OrtoolsLinearProblem::setObjectiveCoefficient(Api::MipVariable* var, double coefficient)
 {
-    objective_->setCoefficient(var, coefficient);
+    objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
 double OrtoolsLinearProblem::getObjectiveCoefficient(Api::MipVariable* var)
 {
-    return objective_->getCoefficient(var);
+    return objective_->GetCoefficient(getMpVar(var));
 }
 
 void OrtoolsLinearProblem::setMinimization()
 {
-    objective_->setMinimization();
+    objective_->SetMinimization();
 }
 
 void OrtoolsLinearProblem::setMaximization()
 {
-    objective_->setMaximization();
+    objective_->SetMaximization();
+}
+
+bool OrtoolsLinearProblem::isMinimization()
+{
+    return objective_->minimization();
+}
+
+bool OrtoolsLinearProblem::isMaximization()
+{
+    return objective_->maximization();
 }
 
 Api::MipSolution* OrtoolsLinearProblem::solve()
@@ -147,10 +168,7 @@ Api::MipSolution* OrtoolsLinearProblem::solve()
         solution.try_emplace(var->name(), pair);
     }
 
-    auto* mpObjective = dynamic_cast<OrtoolsMipObjective*>(objective_.get());
-    double objectiveValue = mpObjective->getMpObjective()->Value();
-
-    solution_ = std::make_unique<OrtoolsMipSolution>(status, solution, objectiveValue);
+    solution_ = std::make_unique<OrtoolsMipSolution>(status, solution, objective_->Value());
     return solution_.get();
 }
 
