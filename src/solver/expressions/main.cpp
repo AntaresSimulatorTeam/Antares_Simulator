@@ -19,15 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <iostream>
-#include <memory>
 
 #include <antares/solver/expressions/CloneVisitor.h>
+#include <antares/solver/expressions/EvalVisitor.h>
 #include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/PrintVisitor.h>
-#include "antares/solver/expressions/EvalVisitor.h"
+#include <antares/solver/expressions/Registry.hxx>
 
 template<class V>
 void print(const Antares::Solver::Expressions::Node& node)
+
 {
     V visit;
     std::cout << visit.dispatch(node) << std::endl;
@@ -36,11 +37,13 @@ void print(const Antares::Solver::Expressions::Node& node)
 int main()
 {
     using namespace Antares::Solver::Expressions;
-    std::unique_ptr<Node> q(new Add(new Literal(21), new Literal(2)));
+    Registry<Node> mem;
+    Node* q = mem.create<Add>(mem.create<Literal>(21), mem.create<Literal>(2));
     print<PrintVisitor>(*q);
     print<EvalVisitor>(*q);
 
-    CloneVisitor cloneVisitor;
-    std::unique_ptr<Node> clone(cloneVisitor.dispatch(*q));
+    Registry<Node> mem_clone;
+    CloneVisitor cloneVisitor(mem_clone);
+    auto clone(cloneVisitor.dispatch(*q));
     print<PrintVisitor>(*clone);
 }

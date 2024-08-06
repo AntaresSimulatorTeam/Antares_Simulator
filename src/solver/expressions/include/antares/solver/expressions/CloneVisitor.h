@@ -20,15 +20,22 @@
 */
 #pragma once
 
+#include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
 class CloneVisitor: public Visitor<Node*>
 {
+public:
+    CloneVisitor(Registry<Node>& mem);
+
     Node* visit(const Add& add) override;
     Node* visit(const Negate& neg) override;
     Node* visit(const Parameter& param) override;
     Node* visit(const Literal& param) override;
+
+private:
+    Registry<Node>& registry_;
 };
 } // namespace Antares::Solver::Expressions

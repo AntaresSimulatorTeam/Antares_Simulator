@@ -23,23 +23,28 @@
 
 namespace Antares::Solver::Expressions
 {
+CloneVisitor::CloneVisitor(Registry<Node>& mem):
+    registry_(mem)
+{
+}
+
 Node* CloneVisitor::visit(const Add& add)
 {
-    return new Add(dispatch(*add.n1_), dispatch(*add.n2_));
+    return registry_.create<Add>(dispatch(*add.n1_), dispatch(*add.n2_));
 }
 
 Node* CloneVisitor::visit(const Negate& neg)
 {
-    return new Negate(dispatch(*neg.n_));
+    return registry_.create<Negate>(dispatch(*neg.n_));
 }
 
 Node* CloneVisitor::visit(const Parameter& param)
 {
-    return new Parameter(param.value_);
+    return registry_.create<Parameter>(param.value_);
 }
 
 Node* CloneVisitor::visit(const Literal& param)
 {
-    return new Literal(param.value_);
+    return registry_.create<Literal>(param.value_);
 }
 } // namespace Antares::Solver::Expressions
