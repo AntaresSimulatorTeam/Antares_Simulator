@@ -33,9 +33,10 @@ public:
     //  Method to create a new derived class object and add it to the registry
     template<class Derived, class... Args>
     requires std::derived_from<Derived, Base>
-    Base* create(Args... args)
+    Base* create(Args&&... args)
     {
-        Base* x = new Derived(args...); //  Dynamically allocate a new derived class object
+        Base* x = new Derived(
+          std::forward<Args>(args)...); //  Dynamically allocate a new derived class object
         registry_.add(x);               //  Add the object to the registry
         return x;                       //  Return the pointer to the newly created object
     }
