@@ -20,18 +20,25 @@
 */
 #pragma once
 
+#include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
 class CloneVisitor: public Visitor<std::unique_ptr<Node>>
 {
-    std::unique_ptr<Node> visit(const AddNode& add) override;
-    std::unique_ptr<Node> visit(const NegationNode& neg) override;
-    std::unique_ptr<Node> visit(const ParameterNode& param) override;
-    std::unique_ptr<Node> visit(const LiteralNode& lit) override;
-    std::unique_ptr<Node> visit(const PortFieldNode& port_field_node) override;
-    std::unique_ptr<Node> visit(const ComponentVariableNode& component_node) override;
-    std::unique_ptr<Node> visit(const ComponentParameterNode& component_node) override;
+public:
+    CloneVisitor(Registry<Node>& mem);
+
+    Node* visit(const AddNode& add) override;
+    Node* visit(const NegationNode& neg) override;
+    Node* visit(const ParameterNode& param) override;
+    Node* visit(const LiteralNode& param) override;
+    Node* visit(const PortFieldNode& port_field_node) override;
+    Node* visit(const ComponentVariableNode& component_node) override;
+    Node* visit(const ComponentParameterNode& component_node) override;
+
+private:
+    Registry<Node>& registry_;
 };
 } // namespace Antares::Solver::Expressions

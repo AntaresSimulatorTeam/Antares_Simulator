@@ -20,21 +20,32 @@
 */
 #pragma once
 
+#include <concepts>
 #include <memory>
-
-#include <antares/solver/expressions/Node.h>
+#include <mutex>
+#include <vector>
 
 namespace Antares::Solver::Expressions
 {
-class AddNode: public Node
+//  Template class to manage the memory allocation and registry for a base class
+template<class Base>
+class Registry
 {
 public:
-    virtual ~AddNode() = default;
+    //  Method to create a new derived class object and add it to the registry
+    template<class Derived, class... Args>
+    requires std::derived_from<Derived, Base>
+    Base* create(Args&&... args)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        //  Add the object to the registry
+        registry_.push_back(std::make_unique<Derived>(std::forward<Args>(args)...));
+        return registry_.back().get(); //  Return the pointer to the newly created object
+    }
 
-    AddNode(std::unique_ptr<Node> n1, std::unique_ptr<Node> n2);
-
-    // private:
-    Node* n1_;
-    Node* n2_;
+private:
+    std::vector<std::unique_ptr<Base>>
+      registry_; //  Registry to manage dynamically allocated objects
+    std::mutex mutex_;
 };
 } // namespace Antares::Solver::Expressions

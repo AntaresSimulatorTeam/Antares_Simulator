@@ -23,41 +23,45 @@
 
 namespace Antares::Solver::Expressions
 {
-std::unique_ptr<Node> CloneVisitor::visit(const AddNode& add)
+CloneVisitor::CloneVisitor(Registry<Node>& mem):
+    registry_(mem)
 {
-    return std::make_unique<AddNode>(std::move(dispatch(*add.n1_)), std::move(dispatch(*add.n2_)));
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const NegationNode& neg)
+Node* CloneVisitor::visit(const AddNode& add)
 {
-    //    return std::make_unique<NegationNode>(dispatch(*neg.n_));
-    return std::make_unique<NegationNode>(std::move(dispatch(*neg.n_)));
+    return registry_.create<AddNode>(dispatch(*add.n1_), dispatch(*add.n2_));
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const ParameterNode& param)
+Node* CloneVisitor::visit(const NegationNode& neg)
 {
-    return std::make_unique<ParameterNode>(param.value_);
+    return registry_.create<NegationNode>(dispatch(*neg.n_));
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const LiteralNode& param)
+Node* CloneVisitor::visit(const ParameterNode& param)
 {
-    return std::make_unique<LiteralNode>(param.value_);
+    return registry_.create<ParameterNode>(param.value_);
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const PortFieldNode& port_field_node)
+Node* CloneVisitor::visit(const LiteralNode& param)
 {
-    return std::make_unique<PortFieldNode>(port_field_node.port_name_, port_field_node.field_name_);
+    return registry_.create<LiteralNode>(param.value_);
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const ComponentVariableNode& component_variable_node)
+Node* CloneVisitor::visit(const PortFieldNode& port_field_node)
 {
-    return std::make_unique<ComponentVariableNode>(component_variable_node.component_id_,
+    return registry_.create<PortFieldNode>(port_field_node.port_name_, port_field_node.field_name_);
+}
+
+Node* CloneVisitor::visit(const ComponentVariableNode& component_variable_node)
+{
+    return registry_.create<ComponentVariableNode>(component_variable_node.component_id_,
                                                    component_variable_node.component_name_);
 }
 
-std::unique_ptr<Node> CloneVisitor::visit(const ComponentParameterNode& component_parameter_node)
+Node* CloneVisitor::visit(const ComponentParameterNode& component_parameter_node)
 {
-    return std::make_unique<ComponentParameterNode>(component_parameter_node.component_id_,
+    return registry_.create<ComponentParameterNode>(component_parameter_node.component_id_,
                                                     component_parameter_node.component_name_);
 }
 } // namespace Antares::Solver::Expressions

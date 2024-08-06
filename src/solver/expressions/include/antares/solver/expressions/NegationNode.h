@@ -34,6 +34,6 @@ public:
     NegationNode(std::unique_ptr<Node> n);
 
     // private:
-    std::unique_ptr<Node> n_;
+    Node* n_;
 };
 } // namespace Antares::Solver::Expressions

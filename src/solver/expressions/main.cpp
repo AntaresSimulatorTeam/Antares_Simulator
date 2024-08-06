@@ -19,15 +19,20 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <iostream>
-#include <memory>
 
 #include <antares/solver/expressions/CloneVisitor.h>
+#include <antares/solver/expressions/EvalVisitor.h>
 #include <antares/solver/expressions/ExpressionsNodes.h>
 #include <antares/solver/expressions/PrintVisitor.h>
-#include "antares/solver/expressions/EvalVisitor.h"
+#include <antares/solver/expressions/Registry.hxx>
 
 template<class V>
+<<<<<<< HEAD
 void print(Antares::Solver::Expressions::Node& node)
+=======
+void print(const Antares::Solver::Expressions::Node& node)
+
+>>>>>>> feature/expression-visitors
 {
     V visit;
     std::cout << visit.dispatch(node) << std::endl;
@@ -36,13 +41,15 @@ void print(Antares::Solver::Expressions::Node& node)
 int main()
 {
     using namespace Antares::Solver::Expressions;
-    std::unique_ptr<Node> q(
-      new AddNode(std::make_unique<LiteralNode>(21), std::make_unique<LiteralNode>(2)));
+
+    Registry<Node> mem;
+    Node* q = mem.create<AddNode>(mem.create<Literal>(21), mem.create<Literal>(2));
     print<PrintVisitor>(*q);
     print<EvalVisitor>(*q);
 
-    CloneVisitor cloneVisitor;
-    std::unique_ptr<Node> clone(cloneVisitor.dispatch(*q));
+    Registry<Node> mem_clone;
+    CloneVisitor cloneVisitor(mem_clone);
+    auto clone(cloneVisitor.dispatch(*q));
     print<PrintVisitor>(*clone);
 
     PortFieldNode pt_fd("august", "2024");
