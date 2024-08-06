@@ -27,12 +27,8 @@
 #include <antares/solver/expressions/Registry.hxx>
 
 template<class V>
-<<<<<<< HEAD
-void print(Antares::Solver::Expressions::Node& node)
-=======
 void print(const Antares::Solver::Expressions::Node& node)
 
->>>>>>> feature/expression-visitors
 {
     V visit;
     std::cout << visit.dispatch(node) << std::endl;
@@ -43,7 +39,7 @@ int main()
     using namespace Antares::Solver::Expressions;
 
     Registry<Node> mem;
-    Node* q = mem.create<AddNode>(mem.create<Literal>(21), mem.create<Literal>(2));
+    Node* q = mem.create<AddNode>(mem.create<LiteralNode>(21), mem.create<LiteralNode>(2));
     print<PrintVisitor>(*q);
     print<EvalVisitor>(*q);
 
