@@ -20,32 +20,31 @@
 */
 #include <antares/solver/expressions/CloneVisitor.h>
 #include <antares/solver/expressions/ExpressionsNodes.h>
-#include <antares/solver/expressions/memory-registry.hxx>
 
 namespace Antares::Solver::Expressions
 {
 CloneVisitor::CloneVisitor(Registry<Node>& mem):
-    memoryManager_(mem)
+    registry_(mem)
 {
 }
 
 Node* CloneVisitor::visit(const Add& add)
 {
-    return memoryManager_.create<Add>(dispatch(*add.n1_), dispatch(*add.n2_));
+    return registry_.create<Add>(dispatch(*add.n1_), dispatch(*add.n2_));
 }
 
 Node* CloneVisitor::visit(const Negate& neg)
 {
-    return memoryManager_.create<Negate>(dispatch(*neg.n_));
+    return registry_.create<Negate>(dispatch(*neg.n_));
 }
 
 Node* CloneVisitor::visit(const Parameter& param)
 {
-    return memoryManager_.create<Parameter>(param.value_);
+    return registry_.create<Parameter>(param.value_);
 }
 
 Node* CloneVisitor::visit(const Literal& param)
 {
-    return memoryManager_.create<Literal>(param.value_);
+    return registry_.create<Literal>(param.value_);
 }
 } // namespace Antares::Solver::Expressions

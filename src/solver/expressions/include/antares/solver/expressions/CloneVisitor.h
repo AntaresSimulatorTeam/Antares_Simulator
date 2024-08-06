@@ -36,6 +36,6 @@ public:
     Node* visit(const Literal& param) override;
 
 private:
-    Registry<Node>& memoryManager_;
+    Registry<Node>& registry_;
 };
 } // namespace Antares::Solver::Expressions
