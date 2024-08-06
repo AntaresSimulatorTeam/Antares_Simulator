@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <memory>
 #include <mutex>
 #include <vector>
 
@@ -35,8 +36,8 @@ public:
     requires std::derived_from<Derived, Base>
     Base* create(Args&&... args)
     {
-        std::lock_guard<std::mutex> lock(mutex_); //  Add the object to the registry
-
+        std::lock_guard<std::mutex> lock(mutex_);
+        //  Add the object to the registry
         registry_.push_back(std::make_unique<Derived>(std::forward<Args>(args)...));
         return registry_.back().get(); //  Return the pointer to the newly created object
     }
