@@ -60,12 +60,14 @@ Api::MipVariable* OrtoolsLinearProblem::addVariable(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    if (!variables_.try_emplace(name, std::move(mipVar)).second)
+    const auto& mapIteratorPair = variables_.try_emplace(name, std::move(mipVar));
+
+    if (!mapIteratorPair.second)
     {
         logs.error() << "Error adding variable: " << name;
     }
 
-    return variables_[name].get();
+    return mapIteratorPair.first->second.get(); // <<name, var>, bool>
 }
 
 Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
