@@ -186,18 +186,27 @@ static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::str
     return true;
 }
 
-bool Series::validateSizes() const
+static bool checkSize(const std::string& name, const std::vector<double>& v)
 {
-    if (maxInjectionModulation.size() != HOURS_PER_YEAR
-        || maxWithdrawalModulation.size() != HOURS_PER_YEAR || inflows.size() != HOURS_PER_YEAR
-        || lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR
-        || costInjection.size() != HOURS_PER_YEAR || costWithdrawal.size() != HOURS_PER_YEAR
-        || costLevel.size() != HOURS_PER_YEAR)
+    if (v.size() != HOURS_PER_YEAR)
     {
-        logs.warning() << "Size of series for short term storage is wrong";
+        logs.warning() << "Invalid size for file: " << name;
+        logs.warning() << "Should be 8760, got : " << v.size();
         return false;
     }
+
     return true;
+}
+
+bool Series::validateSizes() const
+{
+    return checkSize("PMAX-injection.txt", maxInjectionModulation)
+           && checkSize("PMAX-withdrawal.txt", maxWithdrawalModulation)
+           && checkSize("inflows.txt", inflows) && checkSize("lower-rule-curve.txt", lowerRuleCurve)
+           && checkSize("upper-rule-curve.txt", upperRuleCurve)
+           && checkSize("cost-injection.txt", costInjection)
+           && checkSize("cost-withdrawal.txt", costWithdrawal)
+           && checkSize("cost-level.txt", costLevel);
 }
 
 bool Series::validateMaxInjection() const
