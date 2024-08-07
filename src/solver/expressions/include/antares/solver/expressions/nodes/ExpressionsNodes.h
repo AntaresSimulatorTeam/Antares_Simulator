@@ -19,21 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
-#include <memory>
-
-#include <antares/solver/expressions/Node.h>
-
-namespace Antares::Solver::Expressions
-{
-class Negate: public Node
-{
-public:
-    virtual ~Negate() = default;
-
-    Negate(Node* n);
-
-    // private:
-    Node* n_;
-};
-} // namespace Antares::Solver::Expressions
+#include <antares/solver/expressions/nodes/AddNode.h>
+#include <antares/solver/expressions/nodes/ComponentNode.h>
+#include <antares/solver/expressions/nodes/Leaf.h>
+#include <antares/solver/expressions/nodes/NegationNode.h>
+#include <antares/solver/expressions/nodes/PortFieldNode.h>

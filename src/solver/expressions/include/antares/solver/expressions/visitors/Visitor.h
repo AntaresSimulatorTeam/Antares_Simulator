@@ -24,7 +24,7 @@
 #include <string>
 
 #include <antares/logs/logs.h>
-#include <antares/solver/expressions/NodesForwardDeclaration.h>
+#include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
 namespace Antares::Solver::Expressions
 {
@@ -50,15 +50,18 @@ public:
     {
         using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
           const Antares::Solver::Expressions::Node&);
-        static const std::array<Function, 4> tryFunctions{&Visitor<R>::tryType<Add>,
-                                                          &Visitor<R>::tryType<Negate>,
-                                                          &Visitor<R>::tryType<Parameter>,
-                                                          &Visitor<R>::tryType<Literal>};
+        static const std::array<Function, 7> tryFunctions{
+          &Visitor<R>::tryType<AddNode>,
+          &Visitor<R>::tryType<NegationNode>,
+          &Visitor<R>::tryType<ParameterNode>,
+          &Visitor<R>::tryType<LiteralNode>,
+          &Visitor<R>::tryType<PortFieldNode>,
+          &Visitor<R>::tryType<ComponentVariableNode>,
+          &Visitor<R>::tryType<ComponentParameterNode>};
         for (auto f: tryFunctions)
         {
             if (auto x = (this->*f)(node))
             {
-                // What is this?
                 return x.value();
             }
         }
@@ -67,10 +70,13 @@ public:
     }
 
 private:
-    virtual R visit(const Add&) = 0;
-    virtual R visit(const Negate&) = 0;
-    virtual R visit(const Parameter&) = 0;
-    virtual R visit(const Literal&) = 0;
+    virtual R visit(const AddNode&) = 0;
+    virtual R visit(const NegationNode&) = 0;
+    virtual R visit(const LiteralNode&) = 0;
+    virtual R visit(const ParameterNode&) = 0;
+    virtual R visit(const PortFieldNode&) = 0;
+    virtual R visit(const ComponentVariableNode&) = 0;
+    virtual R visit(const ComponentParameterNode&) = 0;
 };
 
 } // namespace Antares::Solver::Expressions

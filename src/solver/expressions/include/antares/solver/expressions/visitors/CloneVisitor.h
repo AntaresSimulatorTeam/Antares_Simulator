@@ -18,36 +18,27 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <iostream>
+#pragma once
 
 #include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/CloneVisitor.h>
-#include <antares/solver/expressions/visitors/EvalVisitor.h>
-#include <antares/solver/expressions/visitors/PrintVisitor.h>
+#include <antares/solver/expressions/visitors/Visitor.h>
 
-template<class V>
-void print(const Antares::Solver::Expressions::Node& node)
-
+namespace Antares::Solver::Expressions
 {
-    V visit;
-    std::cout << visit.dispatch(node) << std::endl;
-}
-
-int main()
+class CloneVisitor: public Visitor<Node*>
 {
-    using namespace Antares::Solver::Expressions;
+public:
+    CloneVisitor(Registry<Node>& mem);
 
-    Registry<Node> mem;
-    Node* q = mem.create<AddNode>(mem.create<LiteralNode>(21), mem.create<LiteralNode>(2));
-    print<PrintVisitor>(*q);
-    print<EvalVisitor>(*q);
+    Node* visit(const AddNode& add) override;
+    Node* visit(const NegationNode& neg) override;
+    Node* visit(const ParameterNode& param) override;
+    Node* visit(const LiteralNode& param) override;
+    Node* visit(const PortFieldNode& port_field_node) override;
+    Node* visit(const ComponentVariableNode& component_node) override;
+    Node* visit(const ComponentParameterNode& component_node) override;
 
-    Registry<Node> mem_clone;
-    CloneVisitor cloneVisitor(mem_clone);
-    auto clone(cloneVisitor.dispatch(*q));
-    print<PrintVisitor>(*clone);
-
-    PortFieldNode pt_fd("august", "2024");
-    print<PrintVisitor>(pt_fd);
-}
+private:
+    Registry<Node>& registry_;
+};
+} // namespace Antares::Solver::Expressions

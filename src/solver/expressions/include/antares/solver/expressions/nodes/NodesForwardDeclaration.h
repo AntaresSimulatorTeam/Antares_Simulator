@@ -18,33 +18,25 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/CloneVisitor.h>
-#include <antares/solver/expressions/ExpressionsNodes.h>
+#pragma once
+#include <string>
 
 namespace Antares::Solver::Expressions
 {
-CloneVisitor::CloneVisitor(Registry<Node>& mem):
-    registry_(mem)
-{
-}
-
-Node* CloneVisitor::visit(const Add& add)
-{
-    return registry_.create<Add>(dispatch(*add.n1_), dispatch(*add.n2_));
-}
-
-Node* CloneVisitor::visit(const Negate& neg)
-{
-    return registry_.create<Negate>(dispatch(*neg.n_));
-}
-
-Node* CloneVisitor::visit(const Parameter& param)
-{
-    return registry_.create<Parameter>(param.value_);
-}
-
-Node* CloneVisitor::visit(const Literal& param)
-{
-    return registry_.create<Literal>(param.value_);
-}
+class Node;
+class AddNode;
+class NegationNode;
+template<class T>
+class Leaf;
+using LiteralNode = Leaf<double>;
+using VariableNode = LiteralNode;
+class ComponentNode;
+/*
+using ComponentVariableNode = ComponentNode;
+using ComponentParameterNode = ComponentNode;
+ */
+class ComponentVariableNode;
+class ComponentParameterNode;
+using ParameterNode = Leaf<std::string>;
+class PortFieldNode;
 } // namespace Antares::Solver::Expressions

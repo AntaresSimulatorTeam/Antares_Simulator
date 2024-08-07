@@ -19,26 +19,20 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <string>
 
-#include <antares/solver/expressions/Node.h>
+#include <memory>
+
+#include <antares/solver/expressions/nodes/Leaf.h>
 
 namespace Antares::Solver::Expressions
 {
-// constraint T to arithmetic types?
-template<class T>
-class Leaf: public Node
+class PortFieldNode: public Node
 {
 public:
-    virtual ~Leaf() = default;
-
-    Leaf(const T& value):
-        value_(value)
-    {
-    }
-
-    // private:
-    T value_ = 0;
+    explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
+    virtual ~PortFieldNode() = default;
+    //   std::string
+    std::string port_name_;
+    std::string field_name_;
 };
-
 } // namespace Antares::Solver::Expressions

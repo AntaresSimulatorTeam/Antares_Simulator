@@ -19,15 +19,21 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <string>
+
+#include <memory>
+
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-class Node;
-class Add;
-class Negate;
-template<class T>
-class Leaf;
-using Literal = Leaf<double>;
-using Parameter = Leaf<std::string>;
+class NegationNode: public Node
+{
+public:
+    virtual ~NegationNode() = default;
+
+    NegationNode(Node* n);
+
+    // private:
+    Node* n_;
+};
 } // namespace Antares::Solver::Expressions

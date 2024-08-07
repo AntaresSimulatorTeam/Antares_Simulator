@@ -20,19 +20,21 @@
 */
 #pragma once
 
-#include <antares/solver/expressions/Visitor.h>
+#include <memory>
+
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-class EvalVisitor: public Visitor<double>
+class AddNode: public Node
 {
 public:
-    using Base = Visitor<double>;
+    virtual ~AddNode() = default;
 
-private:
-    double visit(const Add& add) override;
-    double visit(const Negate& neg) override;
-    double visit(const Parameter& param) override;
-    double visit(const Literal& lit) override;
+    AddNode(Node* n1, Node* n2);
+
+    // private:
+    Node* n1_;
+    Node* n2_;
 };
 } // namespace Antares::Solver::Expressions

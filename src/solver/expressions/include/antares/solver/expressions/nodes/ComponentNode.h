@@ -19,22 +19,31 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <string>
 
-#include <antares/solver/expressions/Visitor.h>
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-class PrintVisitor: public Visitor<std::string>
+class ComponentNode: public Node
 {
 public:
-    using Base = Visitor<std::string>;
+    ComponentNode(const std::string& component_id, const std::string& component_name);
+    virtual ~ComponentNode() = default;
 
-private:
-    std::string visit(const Add& add) override;
+    std::string component_id_;
+    std::string component_name_;
+};
 
-    std::string visit(const Negate& neg) override;
+class ComponentVariableNode: public ComponentNode
+{
+public:
+    using ComponentNode::ComponentNode;
+};
 
-    std::string visit(const Parameter& param) override;
-    std::string visit(const Literal& param) override;
+class ComponentParameterNode: public ComponentNode
+{
+public:
+    using ComponentNode::ComponentNode;
 };
 } // namespace Antares::Solver::Expressions

@@ -18,11 +18,11 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/Add.h>
+#include <antares/solver/expressions/nodes/AddNode.h>
 
 namespace Antares::Solver::Expressions
 {
-Add::Add(Node* n1, Node* n2):
+AddNode::AddNode(Node* n1, Node* n2):
     n1_(n1),
     n2_(n2)
 {

@@ -19,23 +19,26 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <string>
 
-#include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/Visitor.h>
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-class CloneVisitor: public Visitor<Node*>
+// constraint T to arithmetic types?
+template<class T>
+class Leaf: public Node
 {
 public:
-    CloneVisitor(Registry<Node>& mem);
+    virtual ~Leaf() = default;
 
-    Node* visit(const Add& add) override;
-    Node* visit(const Negate& neg) override;
-    Node* visit(const Parameter& param) override;
-    Node* visit(const Literal& param) override;
+    Leaf(const T& value):
+        value_(value)
+    {
+    }
 
-private:
-    Registry<Node>& registry_;
+    // private:
+    T value_ = 0;
 };
+
 } // namespace Antares::Solver::Expressions
