@@ -18,14 +18,15 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/AddNode.h>
+#pragma once
+
+#include <antares/solver/expressions/nodes/BinaryNode.h>
 
 namespace Antares::Solver::Expressions
 {
-AddNode::AddNode(Node* n1, Node* n2):
-    n1_(n1),
-    n2_(n2)
+class MultiplicationNode: public BinaryNode
 {
-}
-
+public:
+    using BinaryNode::BinaryNode;
+};
 } // namespace Antares::Solver::Expressions

@@ -24,7 +24,7 @@
 
 namespace Antares::Solver::Expressions
 {
-class AddNode: public BinaryNode
+class SubtractionNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
