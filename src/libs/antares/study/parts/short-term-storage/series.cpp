@@ -59,7 +59,7 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
     std::ifstream file;
     file.open(path);
 
-    if (!file)
+    if (!file.is_open())
     {
         logs.debug() << "File not found: " << path;
         return true;
