@@ -117,10 +117,8 @@ jobs:
       - name: Free up space
         run: |
           rm -rf ${ORTOOLS_DIR}
-          apt-get remove uuid-dev libwxgtk3.0-gtk3-dev
-          apt-get remove libboost-test-dev
-          apt-get remove g++-10 gcc-10
-          apt-get autoremove
+          sudo apt-get remove uuid-dev libwxgtk3.0-gtk3-dev libboost-test-dev g++-10 gcc-10
+          sudo apt-get autoremove
 
       - name: Test and generate coverage
         continue-on-error: true
