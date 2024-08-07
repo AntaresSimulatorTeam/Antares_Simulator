@@ -20,10 +20,17 @@
 */
 #pragma once
 
+#include <stdexcept>
+
 #include <antares/solver/expressions/visitors/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
+struct EvalVisitorException: std::overflow_error
+{
+    using std::overflow_error::overflow_error;
+};
+
 class EvalVisitor: public Visitor<double>
 {
 public:

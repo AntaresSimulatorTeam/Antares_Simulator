@@ -28,7 +28,7 @@ double EvalVisitor::visit(const DivisionNode& add)
     }
     else
     {
-        // TODO throw exception?
+        throw EvalVisitorException("DivisionNode Divide by zero");
     }
 }
 
