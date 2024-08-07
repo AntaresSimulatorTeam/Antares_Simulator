@@ -37,13 +37,13 @@ public:
     {
     }
 
-    T get() const
+    T getValue() const
     {
         return value_;
     }
 
-    // private:
-    T value_ = 0;
+private:
+    T value_;
 };
 
 } // namespace Antares::Solver::Expressions

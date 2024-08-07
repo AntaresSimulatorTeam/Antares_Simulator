@@ -40,12 +40,12 @@ Node* CloneVisitor::visit(const NegationNode& neg)
 
 Node* CloneVisitor::visit(const ParameterNode& param)
 {
-    return registry_.create<ParameterNode>(param.value_);
+    return registry_.create<ParameterNode>(param.getValue());
 }
 
 Node* CloneVisitor::visit(const LiteralNode& param)
 {
-    return registry_.create<LiteralNode>(param.value_);
+    return registry_.create<LiteralNode>(param.getValue());
 }
 
 Node* CloneVisitor::visit(const PortFieldNode& port_field_node)

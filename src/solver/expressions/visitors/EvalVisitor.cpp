@@ -37,12 +37,12 @@ double EvalVisitor::visit(const AddNode& add)
 
 double EvalVisitor::visit(const ParameterNode& param)
 {
-    return context_.getParameterValue(param.get());
+    return context_.getParameterValue(param.getValue());
 }
 
 double EvalVisitor::visit(const LiteralNode& lit)
 {
-    return lit.value_;
+    return lit.getValue();
 }
 
 double EvalVisitor::visit(const NegationNode& neg)
