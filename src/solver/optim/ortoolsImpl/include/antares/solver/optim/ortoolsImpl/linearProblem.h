@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <string>
-
 #include <antares/solver/optim/api/linearProblem.h>
 
 // forward declaration

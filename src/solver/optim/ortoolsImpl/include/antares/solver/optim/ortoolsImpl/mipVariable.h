@@ -21,9 +21,12 @@
 
 #pragma once
 
-#include <ortools/linear_solver/linear_solver.h>
-
 #include <antares/solver/optim/api/mipVariable.h>
+
+namespace operations_research
+{
+class MPVariable; // forward declaration
+}
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {

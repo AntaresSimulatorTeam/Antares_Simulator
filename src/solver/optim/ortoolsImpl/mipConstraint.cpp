@@ -20,6 +20,9 @@
  */
 
 #include <antares/logs/logs.h>
+
+#include <ortools/linear_solver/linear_solver.h>
+
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 

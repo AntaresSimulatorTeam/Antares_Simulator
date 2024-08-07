@@ -22,6 +22,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include "mipConstraint.h"
 #include "mipSolution.h"
