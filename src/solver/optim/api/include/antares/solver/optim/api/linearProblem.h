@@ -45,7 +45,7 @@ public:
 
     virtual void setObjectiveCoefficient(MipVariable* var, double coefficient) = 0;
 
-    virtual double getObjectiveCoefficient(MipVariable* var) const = 0;
+    virtual double getObjectiveCoefficient(const MipVariable* var) const = 0;
 
     virtual void setMinimization() = 0;
     virtual void setMaximization() = 0;

@@ -115,10 +115,10 @@ Api::MipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
     return constraints_[name].get();
 }
 
-static const operations_research::MPVariable* getMpVar(Api::MipVariable* var)
+static const operations_research::MPVariable* getMpVar(const Api::MipVariable* var)
 
 {
-    auto* orMpVar = dynamic_cast<OrtoolsMipVariable*>(var);
+    const auto* orMpVar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!orMpVar)
     {
         logs.error() << "Invalid cast, tried from Api::MipVariable to OrtoolsMipVariable";
@@ -132,7 +132,7 @@ void OrtoolsLinearProblem::setObjectiveCoefficient(Api::MipVariable* var, double
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
-double OrtoolsLinearProblem::getObjectiveCoefficient(Api::MipVariable* var) const
+double OrtoolsLinearProblem::getObjectiveCoefficient(const Api::MipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }
