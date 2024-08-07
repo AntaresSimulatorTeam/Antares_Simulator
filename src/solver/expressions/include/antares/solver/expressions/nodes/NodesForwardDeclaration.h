@@ -26,17 +26,11 @@ namespace Antares::Solver::Expressions
 class Node;
 class AddNode;
 class NegationNode;
-template<class T>
-class Leaf;
-using LiteralNode = Leaf<double>;
-using VariableNode = LiteralNode;
+class LiteralNode;
 class ComponentNode;
-/*
-using ComponentVariableNode = ComponentNode;
-using ComponentParameterNode = ComponentNode;
- */
 class ComponentVariableNode;
 class ComponentParameterNode;
-using ParameterNode = Leaf<std::string>;
+class ParameterNode;
+class VariableNode;
 class PortFieldNode;
 } // namespace Antares::Solver::Expressions
