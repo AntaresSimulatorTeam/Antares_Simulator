@@ -73,7 +73,7 @@ bool STStorageCluster::validate() const
     }
 
     logs.debug() << "Validating properties and series for st storage: " << id;
-    return properties.validate() && series->validate(name);
+    return properties.validate() && series->validate(id);
 }
 
 bool STStorageCluster::loadSeries(const std::string& folder) const

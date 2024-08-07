@@ -176,23 +176,26 @@ bool Series::validate(const std::string& id) const
            && validateRuleCurves(id);
 }
 
-static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
+static bool checkVectBetweenZeroOne(const std::string& name,
+                                    const std::string& id,
+                                    const std::vector<double>& v)
 {
     if (!std::all_of(v.begin(), v.end(), [](double d) { return (d >= 0.0 && d <= 1.0); }))
     {
-        logs.warning() << "Values for " << name << " series should be between 0 and 1";
+        logs.warning() << "Short-term storage " << id << " Values for " << name
+                       << " values should be between 0 and 1";
         return false;
     }
     return true;
 }
 
 static bool checkSize(const std::string& seriesFilename,
-                      const std::string& stsID,
+                      const std::string& id,
                       const std::vector<double>& v)
 {
     if (v.size() != HOURS_PER_YEAR)
     {
-        logs.warning() << "Short-term storage " << stsID
+        logs.warning() << "Short-term storage " << id
                        << " Invalid size for file: " << seriesFilename << ". Got " << v.size()
                        << " lines, expected " << HOURS_PER_YEAR;
         return false;
@@ -213,19 +216,19 @@ bool Series::validateSizes(const std::string& id) const
            && checkSize("cost-level.txt", id, costLevel);
 }
 
-bool Series::validateMaxInjection() const
+bool Series::validateMaxInjection(const std::string& id) const
 {
-    return checkVectBetweenZeroOne(maxInjectionModulation, "PMAX injection");
+    return checkVectBetweenZeroOne("PMAX injection", id, maxInjectionModulation);
 }
 
-bool Series::validateMaxWithdrawal() const
+bool Series::validateMaxWithdrawal(const std::string& id) const
 {
-    return checkVectBetweenZeroOne(maxWithdrawalModulation, "PMAX withdrawal");
+    return checkVectBetweenZeroOne("PMAX withdrawal", id, maxWithdrawalModulation);
 }
 
-bool Series::validateRuleCurves() const
+bool Series::validateRuleCurves(const std::string& id) const
 {
-    if (!validateUpperRuleCurve() || !validateLowerRuleCurve())
+    if (!validateUpperRuleCurve(id) || !validateLowerRuleCurve(id))
     {
         return false;
     }
@@ -234,21 +237,22 @@ bool Series::validateRuleCurves() const
     {
         if (lowerRuleCurve[i] > upperRuleCurve[i])
         {
-            logs.warning() << "Lower rule curve greater than upper at line: " << i + 1;
+            logs.warning() << "Short-term storage " << id
+                           << " Lower rule curve greater than upper at line: " << i + 1;
             return false;
         }
     }
     return true;
 }
 
-bool Series::validateUpperRuleCurve() const
+bool Series::validateUpperRuleCurve(const std::string& id) const
 {
-    return checkVectBetweenZeroOne(upperRuleCurve, "upper rule curve");
+    return checkVectBetweenZeroOne("upper rule curve", id, upperRuleCurve);
 }
 
-bool Series::validateLowerRuleCurve() const
+bool Series::validateLowerRuleCurve(const std::string& id) const
 {
-    return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
+    return checkVectBetweenZeroOne("lower rule curve", id, maxInjectionModulation);
 }
 
 } // namespace Antares::Data::ShortTermStorage

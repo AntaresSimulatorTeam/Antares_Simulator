@@ -48,11 +48,11 @@ public:
 
 private:
     bool validateSizes(const std::string&) const;
-    bool validateMaxInjection() const;
-    bool validateMaxWithdrawal() const;
-    bool validateRuleCurves() const;
-    bool validateUpperRuleCurve() const;
-    bool validateLowerRuleCurve() const;
+    bool validateMaxInjection(const std::string&) const;
+    bool validateMaxWithdrawal(const std::string&) const;
+    bool validateRuleCurves(const std::string&) const;
+    bool validateUpperRuleCurve(const std::string&) const;
+    bool validateLowerRuleCurve(const std::string&) const;
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
