@@ -20,14 +20,13 @@
  */
 
 #include <memory>
+#include <ortools/linear_solver/linear_solver.h>
 
 #include <antares/solver/optim/ortoolsImpl/linearProblem.h>
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 #include <antares/solver/utils/ortools_utils.h>
-
-#include <ortools/linear_solver/linear_solver.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
@@ -161,7 +160,9 @@ bool OrtoolsLinearProblem::isMaximization()
 Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)
+    {
         mpSolver_->EnableOutput();
+    }
 
     auto status = mpSolver_->Solve(*param_);
 

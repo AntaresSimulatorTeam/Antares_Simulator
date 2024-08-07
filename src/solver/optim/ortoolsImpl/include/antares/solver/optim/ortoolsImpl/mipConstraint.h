@@ -25,7 +25,7 @@
 
 namespace operations_research
 {
-    class MPConstraint; // forward declaration
+class MPConstraint; // forward declaration
 }
 
 namespace Antares::Solver::Optim::OrtoolsImpl

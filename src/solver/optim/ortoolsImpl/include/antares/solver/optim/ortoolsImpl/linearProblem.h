@@ -28,10 +28,10 @@
 // forward declaration
 namespace operations_research
 {
-    class MPSolver;
-    class MPSolverParameters;
-    class MPObjective;
-}
+class MPSolver;
+class MPSolverParameters;
+class MPObjective;
+} // namespace operations_research
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
