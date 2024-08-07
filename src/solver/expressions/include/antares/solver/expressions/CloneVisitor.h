@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::Expressions
 {
-class CloneVisitor: public Visitor<std::unique_ptr<Node>>
+class CloneVisitor: public Visitor<Node*>
 {
 public:
     CloneVisitor(Registry<Node>& mem);

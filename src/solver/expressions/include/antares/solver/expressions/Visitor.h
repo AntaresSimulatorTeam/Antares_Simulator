@@ -62,7 +62,7 @@ public:
         {
             if (auto x = (this->*f)(node))
             {
-                return std::move(*x);
+                return x.value();
             }
         }
         logs.error() << "Antares::Solver::Expressions Visitor: unsupported Node!";

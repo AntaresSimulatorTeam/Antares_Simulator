@@ -31,7 +31,7 @@ class NegationNode: public Node
 public:
     virtual ~NegationNode() = default;
 
-    NegationNode(std::unique_ptr<Node> n);
+    NegationNode(Node* n);
 
     // private:
     Node* n_;

@@ -22,8 +22,8 @@
 
 namespace Antares::Solver::Expressions
 {
-NegationNode::NegationNode(std::unique_ptr<Node> n):
-    n_(std::move(n))
+NegationNode::NegationNode(Node* n):
+    n_(n)
 {
 }
 
