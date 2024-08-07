@@ -14,11 +14,14 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/AddNode.h
         include/antares/solver/expressions/nodes/ComponentNode.h
         include/antares/solver/expressions/nodes/ExpressionsNodes.h
+        include/antares/solver/expressions/nodes/LiteralNode.h
         include/antares/solver/expressions/nodes/Leaf.h
         include/antares/solver/expressions/nodes/NegationNode.h
         include/antares/solver/expressions/nodes/Node.h
         include/antares/solver/expressions/nodes/NodesForwardDeclaration.h
+        include/antares/solver/expressions/nodes/ParameterNode.h
         include/antares/solver/expressions/nodes/PortFieldNode.h
+        include/antares/solver/expressions/nodes/VariableNode.h
 
         include/antares/solver/expressions/visitors/CloneVisitor.h
         include/antares/solver/expressions/visitors/EvalVisitor.h
@@ -45,5 +48,3 @@ install(DIRECTORY include/antares
         DESTINATION "include"
 )
 
-add_executable(visitor main.cpp)
-target_link_libraries(visitor PRIVATE antares-solver-expressions)
