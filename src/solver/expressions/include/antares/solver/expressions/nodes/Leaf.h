@@ -41,22 +41,4 @@ public:
     T value_ = 0;
 };
 
-class LiteralNode: public Leaf<double>
-{
-public:
-    using Leaf<double>::Leaf;
-};
-
-class VariableNode: public Leaf<std::string>
-{
-public:
-    using Leaf<std::string>::Leaf;
-};
-
-class ParameterNode: public Leaf<std::string>
-{
-public:
-    using Leaf<std::string>::Leaf;
-};
-
 } // namespace Antares::Solver::Expressions

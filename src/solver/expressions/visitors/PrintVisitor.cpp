@@ -47,11 +47,6 @@ std::string PrintVisitor::visit(const LiteralNode& lit)
     return std::to_string(lit.value_);
 }
 
-std::string PrintVisitor::visit(const VariableNode& var)
-{
-    return var.value_;
-}
-
 std::string PrintVisitor::visit(const PortFieldNode& port_field_node)
 {
     return port_field_node.port_name_ + "." + port_field_node.field_name_;
