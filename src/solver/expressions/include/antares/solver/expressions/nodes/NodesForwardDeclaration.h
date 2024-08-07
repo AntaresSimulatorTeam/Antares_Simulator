@@ -28,15 +28,11 @@ class AddNode;
 class NegationNode;
 template<class T>
 class Leaf;
-using LiteralNode = Leaf<double>;
-using VariableNode = LiteralNode;
+class LiteralNode;
+class VariableNode;
 class ComponentNode;
-/*
-using ComponentVariableNode = ComponentNode;
-using ComponentParameterNode = ComponentNode;
- */
 class ComponentVariableNode;
 class ComponentParameterNode;
-using ParameterNode = Leaf<std::string>;
+class ParameterNode;
 class PortFieldNode;
 } // namespace Antares::Solver::Expressions
