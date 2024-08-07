@@ -48,6 +48,11 @@ Node* CloneVisitor::visit(const LiteralNode& param)
     return registry_.create<LiteralNode>(param.value_);
 }
 
+Node* CloneVisitor::visit(const VariableNode& var)
+{
+    return registry_.create<VariableNode>(var.value_);
+}
+
 Node* CloneVisitor::visit(const PortFieldNode& port_field_node)
 {
     return registry_.create<PortFieldNode>(port_field_node.port_name_, port_field_node.field_name_);

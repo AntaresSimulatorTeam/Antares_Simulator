@@ -33,6 +33,7 @@ private:
     double visit(const AddNode& add) override;
     double visit(const NegationNode& neg) override;
     double visit(const ParameterNode& param) override;
+    double visit(const VariableNode& var) override;
     double visit(const LiteralNode& lit) override;
     double visit(const PortFieldNode& port_field_node) override;
     double visit(const ComponentVariableNode& component_variable_node);

@@ -34,6 +34,7 @@ public:
     Node* visit(const NegationNode& neg) override;
     Node* visit(const ParameterNode& param) override;
     Node* visit(const LiteralNode& param) override;
+    Node* visit(const VariableNode& var) override;
     Node* visit(const PortFieldNode& port_field_node) override;
     Node* visit(const ComponentVariableNode& component_node) override;
     Node* visit(const ComponentParameterNode& component_node) override;
