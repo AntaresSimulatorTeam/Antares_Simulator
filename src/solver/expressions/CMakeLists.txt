@@ -2,26 +2,30 @@ project(Expressions)
 
 
 set(SRC_Expressions
-        include/antares/solver/expressions/Visitor.h
-        include/antares/solver/expressions/Node.h
-        AddNode.cpp
-        include/antares/solver/expressions/AddNode.h
-        NegationNode.cpp
-        include/antares/solver/expressions/NegationNode.h
-        PrintVisitor.cpp
-        include/antares/solver/expressions/PrintVisitor.h
-        CloneVisitor.cpp
-        include/antares/solver/expressions/CloneVisitor.h
-        include/antares/solver/expressions/ExpressionsNodes.h
-        Leaf.cpp
-        include/antares/solver/expressions/Leaf.h
-        include/antares/solver/expressions/NodesForwardDeclaration.h
-        EvalVisitor.cpp
-        include/antares/solver/expressions/EvalVisitor.h
-        include/antares/solver/expressions/PortFieldNode.h
-        PortFieldNode.cpp
-        include/antares/solver/expressions/ComponentNode.h
-        ComponentNode.cpp
+        nodes/NegationNode.cpp
+        nodes/AddNode.cpp
+        nodes/PortFieldNode.cpp
+        nodes/ComponentNode.cpp
+
+        visitors/PrintVisitor.cpp
+        visitors/CloneVisitor.cpp
+        visitors/EvalVisitor.cpp
+
+        include/antares/solver/expressions/nodes/AddNode.h
+        include/antares/solver/expressions/nodes/ComponentNode.h
+        include/antares/solver/expressions/nodes/ExpressionsNodes.h
+        include/antares/solver/expressions/nodes/Leaf.h
+        include/antares/solver/expressions/nodes/NegationNode.h
+        include/antares/solver/expressions/nodes/Node.h
+        include/antares/solver/expressions/nodes/NodesForwardDeclaration.h
+        include/antares/solver/expressions/nodes/PortFieldNode.h
+
+        include/antares/solver/expressions/visitors/CloneVisitor.h
+        include/antares/solver/expressions/visitors/EvalVisitor.h
+        include/antares/solver/expressions/visitors/PrintVisitor.h
+        include/antares/solver/expressions/visitors/Visitor.h
+
+        include/antares/solver/expressions/Registry.hxx
 )
 
 

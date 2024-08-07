@@ -20,11 +20,11 @@
 */
 #include <iostream>
 
-#include <antares/solver/expressions/CloneVisitor.h>
-#include <antares/solver/expressions/EvalVisitor.h>
-#include <antares/solver/expressions/ExpressionsNodes.h>
-#include <antares/solver/expressions/PrintVisitor.h>
 #include <antares/solver/expressions/Registry.hxx>
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/CloneVisitor.h>
+#include <antares/solver/expressions/visitors/EvalVisitor.h>
+#include <antares/solver/expressions/visitors/PrintVisitor.h>
 
 template<class V>
 void print(const Antares::Solver::Expressions::Node& node)

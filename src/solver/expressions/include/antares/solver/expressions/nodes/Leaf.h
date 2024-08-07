@@ -21,29 +21,24 @@
 #pragma once
 #include <string>
 
-#include <antares/solver/expressions/Node.h>
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-class ComponentNode: public Node
+// constraint T to arithmetic types?
+template<class T>
+class Leaf: public Node
 {
 public:
-    ComponentNode(const std::string& component_id, const std::string& component_name);
-    virtual ~ComponentNode() = default;
+    virtual ~Leaf() = default;
 
-    std::string component_id_;
-    std::string component_name_;
+    Leaf(const T& value):
+        value_(value)
+    {
+    }
+
+    // private:
+    T value_ = 0;
 };
 
-class ComponentVariableNode: public ComponentNode
-{
-public:
-    using ComponentNode::ComponentNode;
-};
-
-class ComponentParameterNode: public ComponentNode
-{
-public:
-    using ComponentNode::ComponentNode;
-};
 } // namespace Antares::Solver::Expressions

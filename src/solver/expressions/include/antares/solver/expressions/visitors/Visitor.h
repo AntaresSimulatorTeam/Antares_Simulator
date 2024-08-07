@@ -24,7 +24,7 @@
 #include <string>
 
 #include <antares/logs/logs.h>
-#include <antares/solver/expressions/NodesForwardDeclaration.h>
+#include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
 namespace Antares::Solver::Expressions
 {

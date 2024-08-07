@@ -20,21 +20,25 @@
 */
 #pragma once
 
-#include <memory>
-
-#include <antares/solver/expressions/Node.h>
+#include <antares/solver/expressions/Registry.hxx>
+#include <antares/solver/expressions/visitors/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
-class AddNode: public Node
+class CloneVisitor: public Visitor<Node*>
 {
 public:
-    virtual ~AddNode() = default;
+    CloneVisitor(Registry<Node>& mem);
 
-    AddNode(Node* n1, Node* n2);
+    Node* visit(const AddNode& add) override;
+    Node* visit(const NegationNode& neg) override;
+    Node* visit(const ParameterNode& param) override;
+    Node* visit(const LiteralNode& param) override;
+    Node* visit(const PortFieldNode& port_field_node) override;
+    Node* visit(const ComponentVariableNode& component_node) override;
+    Node* visit(const ComponentParameterNode& component_node) override;
 
-    // private:
-    Node* n1_;
-    Node* n2_;
+private:
+    Registry<Node>& registry_;
 };
 } // namespace Antares::Solver::Expressions

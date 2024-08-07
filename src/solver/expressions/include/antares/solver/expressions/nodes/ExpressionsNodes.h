@@ -18,13 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/ComponentNode.h>
-
-namespace Antares::Solver::Expressions
-{
-ComponentNode::ComponentNode(const std::string& component_id, const std::string& component_name):
-    component_id_(component_id),
-    component_name_(component_name)
-{
-}
-} // namespace Antares::Solver::Expressions
+#pragma once
+#include <antares/solver/expressions/nodes/AddNode.h>
+#include <antares/solver/expressions/nodes/ComponentNode.h>
+#include <antares/solver/expressions/nodes/Leaf.h>
+#include <antares/solver/expressions/nodes/NegationNode.h>
+#include <antares/solver/expressions/nodes/PortFieldNode.h>

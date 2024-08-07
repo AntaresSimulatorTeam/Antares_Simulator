@@ -18,12 +18,13 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/NegationNode.h>
+#include <antares/solver/expressions/nodes/AddNode.h>
 
 namespace Antares::Solver::Expressions
 {
-NegationNode::NegationNode(Node* n):
-    n_(n)
+AddNode::AddNode(Node* n1, Node* n2):
+    n1_(n1),
+    n2_(n2)
 {
 }
 
