@@ -34,7 +34,7 @@ std::string PrintVisitor::visit(const AddNode& add)
 
 std::string PrintVisitor::visit(const NegationNode& neg)
 {
-    return "-" + dispatch(*neg.n_);
+    return "-(" + dispatch(*neg.n_) + ")";
 }
 
 std::string PrintVisitor::visit(const ParameterNode& param)
