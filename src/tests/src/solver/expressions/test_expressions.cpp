@@ -139,6 +139,18 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
     BOOST_CHECK_EQUAL(value, eval);
 }
 
+BOOST_FIXTURE_TEST_CASE(evaluate_variable, Registry<Node>)
+{
+    VariableNode root("my-variable");
+    const double value = 221.3;
+    EvaluationContext context({}, {{"my-variable", value}});
+
+    EvalVisitor evalVisitor(context);
+    const double eval = evalVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(value, eval);
+}
+
 BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registry<Node>)
 {
     std::string cpvar_name("var"), cpvar_id("id1");

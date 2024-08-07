@@ -38,6 +38,11 @@ Node* CloneVisitor::visit(const NegationNode& neg)
     return registry_.create<NegationNode>(dispatch(*neg.n_));
 }
 
+Node* CloneVisitor::visit(const VariableNode& param)
+{
+    return registry_.create<VariableNode>(param.getValue());
+}
+
 Node* CloneVisitor::visit(const ParameterNode& param)
 {
     return registry_.create<ParameterNode>(param.getValue());

@@ -35,6 +35,11 @@ double EvalVisitor::visit(const AddNode& add)
     return dispatch(*add.n1_) + dispatch(*add.n2_);
 }
 
+double EvalVisitor::visit(const VariableNode& param)
+{
+    return context_.getVariableValue(param.getValue());
+}
+
 double EvalVisitor::visit(const ParameterNode& param)
 {
     return context_.getParameterValue(param.getValue());

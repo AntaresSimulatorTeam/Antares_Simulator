@@ -42,6 +42,11 @@ std::string PrintVisitor::visit(const ParameterNode& param)
     return param.getValue();
 }
 
+std::string PrintVisitor::visit(const VariableNode& variable)
+{
+    return variable.getValue();
+}
+
 std::string PrintVisitor::visit(const LiteralNode& lit)
 {
     return std::to_string(lit.getValue());
