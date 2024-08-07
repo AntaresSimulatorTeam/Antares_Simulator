@@ -114,6 +114,9 @@ jobs:
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
 
+      - name: Free up space
+        run:  rm -rf ${ORTOOLS_DIR}
+
       - name: Test and generate coverage
         continue-on-error: true
         run: |
