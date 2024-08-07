@@ -107,6 +107,10 @@ void createFileSeries(unsigned int size)
     createIndividualFileSeries(folder + SEP + "inflows.txt", size);
     createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", size);
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", size);
+
+    createIndividualFileSeries(folder + SEP + "cost-injection.txt", size);
+    createIndividualFileSeries(folder + SEP + "cost-withdrawal.txt", size);
+    createIndividualFileSeries(folder + SEP + "cost-level.txt", size);
 }
 
 void createIniFile(bool enabled)
