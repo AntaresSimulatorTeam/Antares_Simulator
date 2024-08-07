@@ -26,7 +26,7 @@
 
 namespace Antares::Solver::Expressions
 {
-struct EvalVisitorException: std::overflow_error
+struct EvalVisitorDivisionException: std::overflow_error
 {
     using std::overflow_error::overflow_error;
 };
