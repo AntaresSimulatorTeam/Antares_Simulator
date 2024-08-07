@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace Antares::Solver::Optim::Api
 {
 
