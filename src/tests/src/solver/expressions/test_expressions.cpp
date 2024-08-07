@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_CASE(eval_add_two_literals, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(eval_negation_literal, Registry<Node>)
 {
-    int num = 1428.0;
+    const double num = 1428.0;
     Node* root = create<NegationNode>(create<LiteralNode>(num));
     EvalVisitor evalVisitor;
     double eval = evalVisitor.dispatch(*root);
@@ -96,8 +96,8 @@ BOOST_FIXTURE_TEST_CASE(eval_negation_literal, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(eval_Add_And_Negation_Nodes, Registry<Node>)
 {
-    int num1 = 1428.0;
-    int num2 = 8241.0;
+    const double num1 = 1428;
+    const double num2 = 8241;
     Node* negative_num2 = create<NegationNode>(create<LiteralNode>(num2));
     Node* root = create<AddNode>(create<LiteralNode>(num1), negative_num2);
     EvalVisitor evalVisitor;
