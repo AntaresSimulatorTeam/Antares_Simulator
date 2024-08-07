@@ -22,5 +22,8 @@
 #include <antares/solver/expressions/nodes/AddNode.h>
 #include <antares/solver/expressions/nodes/ComponentNode.h>
 #include <antares/solver/expressions/nodes/Leaf.h>
+#include <antares/solver/expressions/nodes/LiteralNode.h>
 #include <antares/solver/expressions/nodes/NegationNode.h>
+#include <antares/solver/expressions/nodes/ParameterNode.h>
 #include <antares/solver/expressions/nodes/PortFieldNode.h>
+#include <antares/solver/expressions/nodes/VariableNode.h>
