@@ -84,6 +84,28 @@ BOOST_FIXTURE_TEST_CASE(eval_add_two_literals, Registry<Node>)
     BOOST_CHECK_EQUAL(eval, 23.);
 }
 
+BOOST_FIXTURE_TEST_CASE(eval_negation_literal, Registry<Node>)
+{
+    int num = 1428.0;
+    Node* root = create<NegationNode>(create<LiteralNode>(num));
+    EvalVisitor evalVisitor;
+    double eval = evalVisitor.dispatch(*root);
+
+    BOOST_CHECK_EQUAL(eval, -num);
+}
+
+BOOST_FIXTURE_TEST_CASE(eval_Add_And_Negation_Nodes, Registry<Node>)
+{
+    int num1 = 1428.0;
+    int num2 = 8241.0;
+    Node* negative_num2 = create<NegationNode>(create<LiteralNode>(num2));
+    Node* root = create<AddNode>(create<LiteralNode>(num1), negative_num2);
+    EvalVisitor evalVisitor;
+    double eval = evalVisitor.dispatch(*root);
+
+    BOOST_CHECK_EQUAL(eval, num1 - num2);
+}
+
 BOOST_FIXTURE_TEST_CASE(print_port_field_node, Registry<Node>)
 {
     PortFieldNode pt_fd("august", "2024");
