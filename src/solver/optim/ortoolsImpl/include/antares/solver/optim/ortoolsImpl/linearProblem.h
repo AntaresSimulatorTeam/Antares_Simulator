@@ -52,13 +52,13 @@ public:
     Api::MipConstraint* getConstraint(const std::string& name) override;
 
     void setObjectiveCoefficient(Api::MipVariable* var, double coefficient) override;
-    double getObjectiveCoefficient(Api::MipVariable* var) override;
+    double getObjectiveCoefficient(Api::MipVariable* var) const override;
 
     void setMinimization() override;
     void setMaximization() override;
 
-    bool isMinimization() override;
-    bool isMaximization() override;
+    bool isMinimization() const override;
+    bool isMaximization() const override;
 
     Api::MipSolution* solve(bool verboseSolver) override;
 

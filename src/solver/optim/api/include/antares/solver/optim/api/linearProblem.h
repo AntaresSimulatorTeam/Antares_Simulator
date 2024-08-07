@@ -45,13 +45,13 @@ public:
 
     virtual void setObjectiveCoefficient(MipVariable* var, double coefficient) = 0;
 
-    virtual double getObjectiveCoefficient(MipVariable* var) = 0;
+    virtual double getObjectiveCoefficient(MipVariable* var) const = 0;
 
     virtual void setMinimization() = 0;
     virtual void setMaximization() = 0;
 
-    virtual bool isMinimization() = 0;
-    virtual bool isMaximization() = 0;
+    virtual bool isMinimization() const = 0;
+    virtual bool isMaximization() const = 0;
 
     virtual MipSolution* solve(bool verboseSolver) = 0;
 };

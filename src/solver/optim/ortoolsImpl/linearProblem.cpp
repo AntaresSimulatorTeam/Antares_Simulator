@@ -132,7 +132,7 @@ void OrtoolsLinearProblem::setObjectiveCoefficient(Api::MipVariable* var, double
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
-double OrtoolsLinearProblem::getObjectiveCoefficient(Api::MipVariable* var)
+double OrtoolsLinearProblem::getObjectiveCoefficient(Api::MipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }
@@ -147,12 +147,12 @@ void OrtoolsLinearProblem::setMaximization()
     objective_->SetMaximization();
 }
 
-bool OrtoolsLinearProblem::isMinimization()
+bool OrtoolsLinearProblem::isMinimization() const
 {
     return objective_->minimization();
 }
 
-bool OrtoolsLinearProblem::isMaximization()
+bool OrtoolsLinearProblem::isMaximization() const
 {
     return objective_->maximization();
 }
