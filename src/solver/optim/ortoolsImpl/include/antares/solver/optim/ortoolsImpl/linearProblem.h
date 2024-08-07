@@ -21,9 +21,9 @@
 
 #pragma once
 
-#include <antares/solver/optim/api/linearProblem.h>
-
 #include <string>
+
+#include <antares/solver/optim/api/linearProblem.h>
 
 // forward declaration
 namespace operations_research
