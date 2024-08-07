@@ -114,11 +114,17 @@ jobs:
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
 
+      - name: df pre-clean
+        run: df -h
+
       - name: Free up space
         run: |
           rm -rf ${ORTOOLS_DIR}
           sudo apt-get remove uuid-dev libwxgtk3.0-gtk3-dev libboost-test-dev g++-10 gcc-10
           sudo apt-get autoremove
+
+      - name: df post-clean
+        run: df -h
 
       - name: Test and generate coverage
         continue-on-error: true
