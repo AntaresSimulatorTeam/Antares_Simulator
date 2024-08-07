@@ -45,5 +45,3 @@ install(DIRECTORY include/antares
         DESTINATION "include"
 )
 
-add_executable(visitor main.cpp)
-target_link_libraries(visitor PRIVATE antares-solver-expressions)
