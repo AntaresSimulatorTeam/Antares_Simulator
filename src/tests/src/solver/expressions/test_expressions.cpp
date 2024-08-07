@@ -138,3 +138,29 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
 
     BOOST_CHECK_EQUAL(value, eval);
 }
+
+BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registry<Node>)
+{
+    std::string cpvar_name("var"), cpvar_id("id1");
+    std::string cp_para_name("par"), cp_para_id("id2");
+    ComponentVariableNode cpv(cpvar_id, cpvar_name);
+    ComponentParameterNode cpp(cp_para_id, cp_para_name);
+    int num1 = 22.0, num2 = 8;
+    // num1+num2
+    Node* edge = create<AddNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
+    // -(num1+num2)
+    Node* negative_edge = create<NegationNode>(edge);
+    // -(num1+num2)+var.id1
+    Node* add_node = create<AddNode>(negative_edge, &cpv);
+    // -(-(num1+num2)+var.id1)+id2.par ==
+    // -(-(22.000000+8.000000)+id1.var)+id2.par
+    Node* root = create<AddNode>(create<NegationNode>(add_node), &cpp);
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(*root);
+
+    BOOST_CHECK_EQUAL(printed, "-(-(22.000000+8.000000)+id1.var)+id2.par");
+    CloneVisitor cloneVisitor(*this);
+    Node* cloned = cloneVisitor.dispatch(*root);
+    BOOST_CHECK_EQUAL(printed, printVisitor.dispatch(*cloned));
+}
