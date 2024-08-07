@@ -279,6 +279,8 @@ if (BUILD_TOOLS)
 add_subdirectory(tools)	#All antares tools
 endif()
 
+add_subdirectory(eigen)
+
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
 # 	To build tests, use -DBUILD_TESTING=ON

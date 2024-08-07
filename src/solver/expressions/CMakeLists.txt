@@ -44,6 +44,7 @@ target_include_directories(antares-solver-expressions
 )
 target_link_libraries(antares-solver-expressions
         PUBLIC
+        Eigen3::Eigen
         Antares::logs
 )
 install(DIRECTORY include/antares

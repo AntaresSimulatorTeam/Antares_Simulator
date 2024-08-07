@@ -43,7 +43,7 @@ public:
     }
 
 private:
-    T value_;
+    T value_ = 0;
 };
 
 } // namespace Antares::Solver::Expressions
