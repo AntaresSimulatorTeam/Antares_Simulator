@@ -20,16 +20,21 @@
 */
 #pragma once
 
+#include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/expressions/visitors/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
+
 class EvalVisitor: public Visitor<double>
 {
 public:
     using Base = Visitor<double>;
+    EvalVisitor() = default; // No context (variables / parameters)
+    EvalVisitor(EvaluationContext context);
 
 private:
+    const EvaluationContext context_;
     double visit(const AddNode& add) override;
     double visit(const NegationNode& neg) override;
     double visit(const ParameterNode& param) override;

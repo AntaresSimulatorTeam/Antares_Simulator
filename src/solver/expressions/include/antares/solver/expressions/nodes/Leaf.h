@@ -37,6 +37,11 @@ public:
     {
     }
 
+    T get() const
+    {
+        return value_;
+    }
+
     // private:
     T value_ = 0;
 };

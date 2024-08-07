@@ -114,3 +114,15 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_node, Registry<Node>)
 
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
+
+BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
+{
+    ParameterNode root("my-param");
+    const double value = 221.3;
+    EvaluationContext context({{"my-param", value}}, {});
+
+    EvalVisitor evalVisitor(context);
+    const double eval = evalVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(value, eval);
+}
