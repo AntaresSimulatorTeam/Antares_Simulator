@@ -19,26 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <string>
+
+#include <antares/solver/expressions/nodes/ComparisonNode.h>
 
 namespace Antares::Solver::Expressions
 {
-class Node;
-class AddNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanNode;
-class LessThanOrEqualNode;
-class GreaterThanNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ComponentNode;
-class ComponentVariableNode;
-class ComponentParameterNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
+class EqualNode: public ComparisonNode
+{
+public:
+    using ComparisonNode::ComparisonNode;
+};
 } // namespace Antares::Solver::Expressions

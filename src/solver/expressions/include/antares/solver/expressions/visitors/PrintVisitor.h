@@ -31,6 +31,14 @@ public:
 
 private:
     std::string visit(const AddNode& add) override;
+    std::string visit(const SubtractionNode& add) override;
+    std::string visit(const MultiplicationNode& add) override;
+    std::string visit(const DivisionNode& add) override;
+    std::string visit(const EqualNode& add) override;
+    std::string visit(const LessThanNode& add) override;
+    std::string visit(const LessThanOrEqualNode& add) override;
+    std::string visit(const GreaterThanNode& add) override;
+    std::string visit(const GreaterThanOrEqualNode& add) override;
 
     std::string visit(const NegationNode& neg) override;
 

@@ -10,6 +10,58 @@ double EvalVisitor::visit(const AddNode& add)
     return dispatch(*add.n1_) + dispatch(*add.n2_);
 }
 
+double EvalVisitor::visit(const SubtractionNode& add)
+{
+    return dispatch(*add.n1_) - dispatch(*add.n2_);
+}
+
+double EvalVisitor::visit(const MultiplicationNode& add)
+{
+    return dispatch(*add.n1_) * dispatch(*add.n2_);
+}
+
+double EvalVisitor::visit(const DivisionNode& add)
+{
+    if (auto divisor = dispatch(*add.n2_); divisor != 0)
+    {
+        return dispatch(*add.n1_) / divisor;
+    }
+    else
+    {
+        // TODO throw exception?
+    }
+}
+
+double EvalVisitor::visit(const EqualNode& add)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
+double EvalVisitor::visit(const LessThanNode& add)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
+double EvalVisitor::visit(const LessThanOrEqualNode& add)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
+double EvalVisitor::visit(const GreaterThanNode& add)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
+double EvalVisitor::visit(const GreaterThanOrEqualNode& add)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
 double EvalVisitor::visit(const ParameterNode& param)
 {
     return 0.;

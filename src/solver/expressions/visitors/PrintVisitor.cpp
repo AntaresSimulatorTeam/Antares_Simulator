@@ -32,6 +32,46 @@ std::string PrintVisitor::visit(const AddNode& add)
     return dispatch(*add.n1_) + "+" + dispatch(*add.n2_);
 }
 
+std::string PrintVisitor::visit(const SubtractionNode& add)
+{
+    return dispatch(*add.n1_) + "-" + dispatch(*add.n2_);
+}
+
+std::string PrintVisitor::visit(const MultiplicationNode& add)
+{
+    return dispatch(*add.n1_) + "*" + dispatch(*add.n2_);
+}
+
+std::string PrintVisitor::visit(const DivisionNode& add)
+{
+    return dispatch(*add.n1_) + "/" + dispatch(*add.n2_);
+}
+
+std::string PrintVisitor::visit(const EqualNode& add)
+{
+    return dispatch(*add.n1_) + "==" + dispatch(*add.n2_);
+}
+
+std::string PrintVisitor::visit(const LessThanNode& add)
+{
+    return dispatch(*add.n1_) + "<" + dispatch(*add.n2_);
+}
+
+std::string PrintVisitor::visit(const LessThanOrEqualNode& add)
+{
+    return dispatch(*add.n1_) + "<=" + dispatch(*add.n2_);
+}
+
+std::string PrintVisitor::visit(const GreaterThanNode& add)
+{
+    return dispatch(*add.n1_) + ">" + dispatch(*add.n2_);
+}
+
+std::string PrintVisitor::visit(const GreaterThanOrEqualNode& add)
+{
+    return dispatch(*add.n1_) + ">=" + dispatch(*add.n2_);
+}
+
 std::string PrintVisitor::visit(const NegationNode& neg)
 {
     return "-(" + dispatch(*neg.n_) + ")";

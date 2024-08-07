@@ -31,6 +31,14 @@ public:
     CloneVisitor(Registry<Node>& mem);
 
     Node* visit(const AddNode& add) override;
+    Node* visit(const SubtractionNode& add) override;
+    Node* visit(const MultiplicationNode& add) override;
+    Node* visit(const DivisionNode& add) override;
+    Node* visit(const EqualNode& add) override;
+    Node* visit(const LessThanNode& add) override;
+    Node* visit(const LessThanOrEqualNode& add) override;
+    Node* visit(const GreaterThanNode& add) override;
+    Node* visit(const GreaterThanOrEqualNode& add) override;
     Node* visit(const NegationNode& neg) override;
     Node* visit(const ParameterNode& param) override;
     Node* visit(const LiteralNode& param) override;
