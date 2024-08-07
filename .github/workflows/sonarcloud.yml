@@ -23,6 +23,13 @@ jobs:
       BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
 
     steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -113,18 +120,6 @@ jobs:
       - name: Build
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
-
-      - name: df pre-clean
-        run: df -h
-
-      - name: Free up space
-        run: |
-          rm -rf ${ORTOOLS_DIR}
-          sudo apt-get remove uuid-dev libwxgtk3.0-gtk3-dev libboost-test-dev g++-10 gcc-10
-          sudo apt-get autoremove
-
-      - name: df post-clean
-        run: df -h
 
       - name: Test and generate coverage
         continue-on-error: true
