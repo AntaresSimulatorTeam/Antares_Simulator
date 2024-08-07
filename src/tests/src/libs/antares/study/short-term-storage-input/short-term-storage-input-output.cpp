@@ -51,6 +51,10 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.inflows.resize(size, value);
     series.lowerRuleCurve.resize(size, value);
     series.upperRuleCurve.resize(size, value);
+
+    series.costInjection.resize(size, value);
+    series.costWithdrawal.resize(size, value);
+    series.costLevel.resize(size, value);
 }
 
 void createIndividualFileSeries(const std::string& path, double value, unsigned int size)
