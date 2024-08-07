@@ -170,10 +170,10 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
     return true;
 }
 
-bool Series::validate() const
+bool Series::validate(const std::string& id) const
 {
-    return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
-           && validateRuleCurves();
+    return validateSizes(id) && validateMaxInjection(id) && validateMaxWithdrawal(id)
+           && validateRuleCurves(id);
 }
 
 static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
@@ -186,27 +186,31 @@ static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::str
     return true;
 }
 
-static bool checkSize(const std::string& name, const std::vector<double>& v)
+static bool checkSize(const std::string& seriesFilename,
+                      const std::string& stsID,
+                      const std::vector<double>& v)
 {
     if (v.size() != HOURS_PER_YEAR)
     {
-        logs.warning() << "Invalid size for file: " << name;
-        logs.warning() << "Should be 8760, got : " << v.size();
+        logs.warning() << "Short-term storage " << stsID
+                       << " Invalid size for file: " << seriesFilename << ". Got " << v.size()
+                       << " lines, expected " << HOURS_PER_YEAR;
         return false;
     }
 
     return true;
 }
 
-bool Series::validateSizes() const
+bool Series::validateSizes(const std::string& id) const
 {
-    return checkSize("PMAX-injection.txt", maxInjectionModulation)
-           && checkSize("PMAX-withdrawal.txt", maxWithdrawalModulation)
-           && checkSize("inflows.txt", inflows) && checkSize("lower-rule-curve.txt", lowerRuleCurve)
-           && checkSize("upper-rule-curve.txt", upperRuleCurve)
-           && checkSize("cost-injection.txt", costInjection)
-           && checkSize("cost-withdrawal.txt", costWithdrawal)
-           && checkSize("cost-level.txt", costLevel);
+    return checkSize("PMAX-injection.txt", id, maxInjectionModulation)
+           && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
+           && checkSize("inflows.txt", id, inflows)
+           && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
+           && checkSize("upper-rule-curve.txt", id, upperRuleCurve)
+           && checkSize("cost-injection.txt", id, costInjection)
+           && checkSize("cost-withdrawal.txt", id, costWithdrawal)
+           && checkSize("cost-level.txt", id, costLevel);
 }
 
 bool Series::validateMaxInjection() const
