@@ -185,15 +185,19 @@ public:
                  i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
                  ++i)
             {
-                for (auto const& [reserveName, reserveParticipation] :
-                     state.reserveParticipationPerClusterForYear[i][state.STStorageCluster->id])
+                for (auto it = state.reserveParticipationPerClusterForYear[i].begin(); it != state.reserveParticipationPerClusterForYear[i].end(); ++it)
                 {
-                    pValuesForTheCurrentYear
-                      [numSpace]
-                      [state.getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(
-                         reserveName, state.STStorageCluster->id)]
+                    auto ClusterId = it->first;
+                    for (auto const& [reserveName, reserveParticipation] :
+                        state.reserveParticipationPerClusterForYear[i][ClusterId])
+                    {
+                        pValuesForTheCurrentYear
+                            [numSpace]
+                        [state.getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(
+                            reserveName, ClusterId)]
                         .hour[i]
-                      = reserveParticipation;
+                            = reserveParticipation;
+                    }
                 }
             }
         }

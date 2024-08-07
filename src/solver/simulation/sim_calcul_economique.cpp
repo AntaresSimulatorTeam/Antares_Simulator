@@ -138,19 +138,22 @@ static void importShortTermStorages(
         {
             for (size_t idx = 0; auto& cluster : area->shortTermStorage.storagesByIndex)
             {
-                RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
-                reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(reserveName);
-                reserveParticipation.maxPumping = cluster.reserveMaxPumping(reserveName);
-                reserveParticipation.participationCost = cluster.reserveCost(reserveName);
-                reserveParticipation.clusterName = cluster.id;
-                reserveParticipation.clusterIdInArea = idx;
-                reserveParticipation.globalIndexClusterParticipation
-                  = globalSTStorageClusterParticipationIndex;
-                reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
-                areaReserves.areaCapacityReservationsUp[areaReserveIdx]
-                  .AllSTStorageReservesParticipation.push_back(reserveParticipation);
-                globalSTStorageClusterParticipationIndex++;
-                areaClusterParticipationIndex++;
+                if (cluster.clusterReservesParticipations.contains(reserveName))
+                {
+                    RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
+                    reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(reserveName);
+                    reserveParticipation.maxPumping = cluster.reserveMaxPumping(reserveName);
+                    reserveParticipation.participationCost = cluster.reserveCost(reserveName);
+                    reserveParticipation.clusterName = cluster.id;
+                    reserveParticipation.clusterIdInArea = idx;
+                    reserveParticipation.globalIndexClusterParticipation
+                        = globalSTStorageClusterParticipationIndex;
+                    reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                    areaReserves.areaCapacityReservationsUp[areaReserveIdx]
+                        .AllSTStorageReservesParticipation.push_back(reserveParticipation);
+                    globalSTStorageClusterParticipationIndex++;
+                    areaClusterParticipationIndex++;
+                }
                 idx++;
             }
             areaReserveIdx++;
@@ -160,19 +163,22 @@ static void importShortTermStorages(
         {
             for (size_t idx = 0; auto& cluster : area->shortTermStorage.storagesByIndex)
             {
-                RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
-                reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(reserveName);
-                reserveParticipation.maxPumping = cluster.reserveMaxPumping(reserveName);
-                reserveParticipation.participationCost = cluster.reserveCost(reserveName);
-                reserveParticipation.clusterName = cluster.id;
-                reserveParticipation.clusterIdInArea = idx;
-                reserveParticipation.globalIndexClusterParticipation
-                  = globalSTStorageClusterParticipationIndex;
-                reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
-                areaReserves.areaCapacityReservationsDown[areaReserveIdx]
-                  .AllSTStorageReservesParticipation.push_back(reserveParticipation);
-                globalSTStorageClusterParticipationIndex++;
-                areaClusterParticipationIndex++;
+                if (cluster.clusterReservesParticipations.contains(reserveName))
+                {
+                    RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
+                    reserveParticipation.maxTurbining = cluster.reserveMaxTurbining(reserveName);
+                    reserveParticipation.maxPumping = cluster.reserveMaxPumping(reserveName);
+                    reserveParticipation.participationCost = cluster.reserveCost(reserveName);
+                    reserveParticipation.clusterName = cluster.id;
+                    reserveParticipation.clusterIdInArea = idx;
+                    reserveParticipation.globalIndexClusterParticipation
+                        = globalSTStorageClusterParticipationIndex;
+                    reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                    areaReserves.areaCapacityReservationsDown[areaReserveIdx]
+                        .AllSTStorageReservesParticipation.push_back(reserveParticipation);
+                    globalSTStorageClusterParticipationIndex++;
+                    areaClusterParticipationIndex++;
+                }
                 idx++;
             }
             areaReserveIdx++;
