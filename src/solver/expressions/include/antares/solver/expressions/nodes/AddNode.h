@@ -19,26 +19,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <string>
 
-#include <antares/solver/expressions/Node.h>
+#include <memory>
+
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-// constraint T to arithmetic types?
-template<class T>
-class Leaf: public Node
+class AddNode: public Node
 {
 public:
-    virtual ~Leaf() = default;
+    virtual ~AddNode() = default;
 
-    Leaf(const T& value):
-        value_(value)
-    {
-    }
+    AddNode(Node* n1, Node* n2);
 
     // private:
-    T value_ = 0;
+    Node* n1_;
+    Node* n2_;
 };
-
 } // namespace Antares::Solver::Expressions

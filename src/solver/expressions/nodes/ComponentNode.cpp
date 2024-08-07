@@ -18,14 +18,13 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/AddNode.h>
+#include <antares/solver/expressions/nodes/ComponentNode.h>
 
 namespace Antares::Solver::Expressions
 {
-AddNode::AddNode(Node* n1, Node* n2):
-    n1_(n1),
-    n2_(n2)
+ComponentNode::ComponentNode(const std::string& component_id, const std::string& component_name):
+    component_id_(component_id),
+    component_name_(component_name)
 {
 }
-
 } // namespace Antares::Solver::Expressions

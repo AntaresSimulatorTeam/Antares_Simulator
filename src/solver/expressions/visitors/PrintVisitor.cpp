@@ -20,8 +20,8 @@
 */
 #include <iostream>
 
-#include <antares/solver/expressions/ExpressionsNodes.h>
-#include <antares/solver/expressions/PrintVisitor.h>
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/PrintVisitor.h>
 
 namespace Antares::Solver::Expressions
 {

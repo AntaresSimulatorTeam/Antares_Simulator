@@ -1,7 +1,7 @@
 
-#include "antares/solver/expressions/EvalVisitor.h"
+#include "antares/solver/expressions/visitors/EvalVisitor.h"
 
-#include <antares/solver/expressions/ExpressionsNodes.h>
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
 namespace Antares::Solver::Expressions
 {

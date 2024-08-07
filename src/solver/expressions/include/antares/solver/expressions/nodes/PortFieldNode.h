@@ -18,10 +18,21 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#pragma once
 
-#include <antares/solver/expressions/Leaf.h>
+#include <memory>
+
+#include <antares/solver/expressions/nodes/Leaf.h>
 
 namespace Antares::Solver::Expressions
 {
-
+class PortFieldNode: public Node
+{
+public:
+    explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
+    virtual ~PortFieldNode() = default;
+    //   std::string
+    std::string port_name_;
+    std::string field_name_;
+};
 } // namespace Antares::Solver::Expressions

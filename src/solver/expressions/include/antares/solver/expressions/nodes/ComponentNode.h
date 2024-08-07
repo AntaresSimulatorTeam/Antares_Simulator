@@ -18,13 +18,32 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/PortFieldNode.h>
+#pragma once
+#include <string>
+
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
-    port_name_(port_name),
-    field_name_(field_name)
+class ComponentNode: public Node
 {
-}
+public:
+    ComponentNode(const std::string& component_id, const std::string& component_name);
+    virtual ~ComponentNode() = default;
+
+    std::string component_id_;
+    std::string component_name_;
+};
+
+class ComponentVariableNode: public ComponentNode
+{
+public:
+    using ComponentNode::ComponentNode;
+};
+
+class ComponentParameterNode: public ComponentNode
+{
+public:
+    using ComponentNode::ComponentNode;
+};
 } // namespace Antares::Solver::Expressions
