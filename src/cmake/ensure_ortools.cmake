@@ -1,3 +1,4 @@
+include(FetchContent)
 find_package(ortools QUIET)
 if (NOT ortools_FOUND OR BUILD_ORTOOLS)
     message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
@@ -23,3 +24,4 @@ if (NOT ortools_FOUND OR BUILD_ORTOOLS)
 
     FetchContent_MakeAvailable(ortools)
 endif ()
+find_package(ortools REQUIRED)
