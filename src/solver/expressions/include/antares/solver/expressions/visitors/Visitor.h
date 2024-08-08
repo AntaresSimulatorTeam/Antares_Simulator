@@ -46,7 +46,7 @@ private:
 public:
     virtual ~Visitor() = default;
 
-    R dispatch(const Node* node)
+    R dispatch(const Node& node)
     {
         using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
           const Antares::Solver::Expressions::Node&);
