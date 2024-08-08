@@ -20,7 +20,6 @@
  */
 
 #include <antares/logs/logs.h>
-
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
@@ -56,7 +55,7 @@ double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable* var) const
     {
         return solution_.at(var->getName()).second;
     }
-    catch(const std::out_of_range& ex)
+    catch (const std::out_of_range& ex)
     {
         logs.warning() << ex.what();
         logs.warning() << "Solution not found for variable: " << var->getName();

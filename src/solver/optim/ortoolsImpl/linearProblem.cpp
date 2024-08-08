@@ -169,7 +169,6 @@ bool OrtoolsLinearProblem::isMaximization() const
 
 static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus& status)
 {
-
     switch (status)
     {
     case operations_research::MPSolver::ResultStatus::OPTIMAL:
