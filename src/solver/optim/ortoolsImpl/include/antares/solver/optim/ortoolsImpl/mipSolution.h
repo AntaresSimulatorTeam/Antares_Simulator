@@ -22,7 +22,6 @@
 #pragma once
 
 #include <map>
-#include <ortools/linear_solver/linear_solver.h>
 #include <string>
 #include <vector>
 
@@ -34,8 +33,8 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 class OrtoolsMipSolution: virtual public Api::MipSolution
 {
 public:
-    OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
-                       const std::map<std::string, std::pair<Api::MipVariable*, double>>& solution,
+    OrtoolsMipSolution(const std::map<std::string, std::pair<Api::MipVariable*, double>>& solution,
+                       Api::MipStatus& responseStatus,
                        double objectiveValue);
 
     virtual ~OrtoolsMipSolution() = default;

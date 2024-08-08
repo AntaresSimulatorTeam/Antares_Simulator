@@ -26,34 +26,17 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-using OrMPSolver = operations_research::MPSolver;
-
 OrtoolsMipSolution::OrtoolsMipSolution(
-  OrMPSolver::ResultStatus& responseStatus,
   const std::map<std::string, std::pair<Api::MipVariable*, double>>& solution,
+  Api::MipStatus& responseStatus,
   double objectiveValue):
+    responseStatus_(responseStatus),
     objectiveValue_(objectiveValue)
 {
     // store all solutions, even zeros
     for (const auto& varAndValue: solution)
     {
         solution_.insert(varAndValue);
-    }
-
-    switch (responseStatus)
-    {
-    case OrMPSolver::ResultStatus::OPTIMAL:
-        responseStatus_ = Api::MipStatus::OPTIMAL;
-        break;
-    case OrMPSolver::ResultStatus::FEASIBLE:
-        responseStatus_ = Api::MipStatus::FEASIBLE;
-        break;
-    case OrMPSolver::ResultStatus::UNBOUNDED:
-        responseStatus_ = Api::MipStatus::UNBOUNDED;
-        break;
-    default:
-        responseStatus_ = Api::MipStatus::ERROR;
-        break;
     }
 }
 

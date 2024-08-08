@@ -167,6 +167,22 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
+static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus& status)
+{
+
+    switch (status)
+    {
+    case operations_research::MPSolver::ResultStatus::OPTIMAL:
+        return Api::MipStatus::OPTIMAL;
+    case operations_research::MPSolver::ResultStatus::FEASIBLE:
+        return Api::MipStatus::FEASIBLE;
+    case operations_research::MPSolver::ResultStatus::UNBOUNDED:
+        return Api::MipStatus::UNBOUNDED;
+    default:
+        return Api::MipStatus::ERROR;
+    }
+}
+
 Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)
@@ -174,7 +190,8 @@ Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
         mpSolver_->EnableOutput();
     }
 
-    auto status = mpSolver_->Solve(*param_);
+    auto mpStatus = mpSolver_->Solve(*param_);
+    Api::MipStatus status = convertStatus(mpStatus);
 
     std::map<std::string, std::pair<Api::MipVariable*, double>> solution;
     for (auto& var: mpSolver_->variables())
@@ -183,7 +200,7 @@ Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
         solution.try_emplace(var->name(), pair);
     }
 
-    solution_ = std::make_unique<OrtoolsMipSolution>(status, solution, objective_->Value());
+    solution_ = std::make_unique<OrtoolsMipSolution>(solution, status, objective_->Value());
     return solution_.get();
 }
 
