@@ -21,13 +21,12 @@
 
 #include <exception>
 #include <memory>
+
 #include <ortools/linear_solver/linear_solver.h>
 
-#include <antares/solver/optim/ortoolsImpl/linearProblem.h>
-#include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
-#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
-#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 #include <antares/solver/utils/ortools_utils.h>
+
+#include <antares/solver/optim/ortoolsImpl/linearProblem.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
@@ -169,6 +168,7 @@ bool OrtoolsLinearProblem::isMaximization() const
 
 static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus& status)
 {
+
     switch (status)
     {
     case operations_research::MPSolver::ResultStatus::OPTIMAL:

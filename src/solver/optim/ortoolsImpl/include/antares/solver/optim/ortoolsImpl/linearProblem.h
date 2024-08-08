@@ -23,6 +23,10 @@
 
 #include <antares/solver/optim/api/linearProblem.h>
 
+#include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
+#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
+#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
+
 // forward declaration
 namespace operations_research
 {
@@ -67,10 +71,10 @@ private:
     operations_research::MPSolverParameters* param_;
     operations_research::MPObjective* objective_;
 
-    std::map<std::string, std::unique_ptr<Api::MipVariable>> variables_;
-    std::map<std::string, std::unique_ptr<Api::MipConstraint>> constraints_;
+    std::map<std::string, std::unique_ptr<OrtoolsMipVariable>> variables_;
+    std::map<std::string, std::unique_ptr<OrtoolsMipConstraint>> constraints_;
 
-    std::unique_ptr<Api::MipSolution> solution_;
+    std::unique_ptr<OrtoolsMipSolution> solution_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
