@@ -10,6 +10,7 @@ set(SRC_Expressions
         visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/EvalVisitor.cpp
+        visitors/EvaluationContext.cpp
 
         include/antares/solver/expressions/nodes/ParentNode.h
         include/antares/solver/expressions/nodes/UnaryNode.h
@@ -37,6 +38,7 @@ set(SRC_Expressions
 
         include/antares/solver/expressions/visitors/CloneVisitor.h
         include/antares/solver/expressions/visitors/EvalVisitor.h
+        include/antares/solver/expressions/visitors/EvaluationContext.h
         include/antares/solver/expressions/visitors/PrintVisitor.h
         include/antares/solver/expressions/visitors/Visitor.h
 

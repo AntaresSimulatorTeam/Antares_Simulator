@@ -79,12 +79,17 @@ std::string PrintVisitor::visit(const NegationNode& neg)
 
 std::string PrintVisitor::visit(const ParameterNode& param)
 {
-    return param.value_;
+    return param.getValue();
+}
+
+std::string PrintVisitor::visit(const VariableNode& variable)
+{
+    return variable.getValue();
 }
 
 std::string PrintVisitor::visit(const LiteralNode& lit)
 {
-    return std::to_string(lit.value_);
+    return std::to_string(lit.getValue());
 }
 
 std::string PrintVisitor::visit(const PortFieldNode& port_field_node)

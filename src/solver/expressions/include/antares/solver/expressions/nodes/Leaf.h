@@ -37,8 +37,13 @@ public:
     {
     }
 
-    // private:
-    T value_ = 0;
+    inline T getValue() const
+    {
+        return value_;
+    }
+
+private:
+    T value_;
 };
 
 } // namespace Antares::Solver::Expressions
