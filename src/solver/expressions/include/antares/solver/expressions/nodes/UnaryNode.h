@@ -27,6 +27,6 @@ namespace Antares::Solver::Expressions
 class UnaryNode: public ParentNode<1>
 {
 public:
-    UnaryNode::UnaryNode(Node* n1);
+    UnaryNode(Node* n1);
 };
 } // namespace Antares::Solver::Expressions
