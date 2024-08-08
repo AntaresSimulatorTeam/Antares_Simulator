@@ -2,8 +2,6 @@ project(Expressions)
 
 
 set(SRC_Expressions
-        nodes/NegationNode.cpp
-        nodes/BinaryNode.cpp
         nodes/PortFieldNode.cpp
         nodes/ComponentNode.cpp
 
@@ -11,6 +9,7 @@ set(SRC_Expressions
         visitors/CloneVisitor.cpp
         visitors/EvalVisitor.cpp
 
+        include/antares/solver/expressions/nodes/ParentNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/AddNode.h
         include/antares/solver/expressions/nodes/MultiplicationNode.h
@@ -39,6 +38,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/Visitor.h
 
         include/antares/solver/expressions/Registry.hxx
+        include/antares/solver/expressions/nodes/UnaryNode.h
 )
 
 

@@ -7,24 +7,24 @@ namespace Antares::Solver::Expressions
 {
 double EvalVisitor::visit(const AddNode& add)
 {
-    return dispatch(*add.n1_) + dispatch(*add.n2_);
+    return dispatch(*add[0]) + dispatch(*add[1]);
 }
 
 double EvalVisitor::visit(const SubtractionNode& add)
 {
-    return dispatch(*add.n1_) - dispatch(*add.n2_);
+    return dispatch(*add[0]) - dispatch(*add[1]);
 }
 
 double EvalVisitor::visit(const MultiplicationNode& add)
 {
-    return dispatch(*add.n1_) * dispatch(*add.n2_);
+    return dispatch(*add[0]) * dispatch(*add[1]);
 }
 
 double EvalVisitor::visit(const DivisionNode& add)
 {
-    if (auto divisor = dispatch(*add.n2_); divisor != 0)
+    if (auto divisor = dispatch(*add[1]); divisor != 0)
     {
-        return dispatch(*add.n1_) / divisor;
+        return dispatch(*add[0]) / divisor;
     }
     else
     {
@@ -74,7 +74,7 @@ double EvalVisitor::visit(const LiteralNode& lit)
 
 double EvalVisitor::visit(const NegationNode& neg)
 {
-    return -dispatch(*neg.n_);
+    return -dispatch(*neg[0]);
 }
 
 double EvalVisitor::visit(const PortFieldNode& port_field_node)

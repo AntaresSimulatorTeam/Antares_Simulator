@@ -29,47 +29,47 @@ std::string PrintVisitor::visit(const AddNode& add)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
-    return dispatch(*add.n1_) + "+" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + "+" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const SubtractionNode& add)
 {
-    return dispatch(*add.n1_) + "-" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + "-" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const MultiplicationNode& add)
 {
-    return dispatch(*add.n1_) + "*" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + "*" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const DivisionNode& add)
 {
-    return dispatch(*add.n1_) + "/" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + "/" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const EqualNode& add)
 {
-    return dispatch(*add.n1_) + "==" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + "==" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const LessThanNode& add)
 {
-    return dispatch(*add.n1_) + "<" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + "<" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const LessThanOrEqualNode& add)
 {
-    return dispatch(*add.n1_) + "<=" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + "<=" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const GreaterThanNode& add)
 {
-    return dispatch(*add.n1_) + ">" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + ">" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const GreaterThanOrEqualNode& add)
 {
-    return dispatch(*add.n1_) + ">=" + dispatch(*add.n2_);
+    return dispatch(*add.children_[0]) + ">=" + dispatch(*add.children_[1]);
 }
 
 std::string PrintVisitor::visit(const NegationNode& neg)

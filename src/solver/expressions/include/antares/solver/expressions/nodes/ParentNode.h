@@ -18,14 +18,44 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/BinaryNode.h>
+#pragma once
+#include <array>
+#include <stdexcept>
+#include <string>
+
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-BinaryNode::BinaryNode(Node* n1, Node* n2):
-    n1_(n1),
-    n2_(n2)
+struct ParentNodeException: std::out_of_range
 {
-}
+    using std::out_of_range::out_of_range;
+};
 
+template<std::size_t N>
+class ParentNode: public Node
+{
+public:
+    explicit ParentNode(const std::array<Node*, N>& children):
+        children_(children)
+    {
+    }
+
+    Node* operator[](std::size_t idx) const
+    {
+        if (children_.empty() || idx >= children_.size())
+        {
+            throw ParentNodeException(
+              "Antares::Solver::Expressions::ParentNode can't get the child node at position"
+              + std::to_string(idx));
+        }
+        else
+        {
+            return children_[idx];
+        }
+    }
+
+private:
+    std::array<Node*, N> children_;
+};
 } // namespace Antares::Solver::Expressions

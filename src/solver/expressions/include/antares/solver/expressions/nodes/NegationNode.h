@@ -22,18 +22,13 @@
 
 #include <memory>
 
-#include <antares/solver/expressions/nodes/Node.h>
+#include <antares/solver/expressions/nodes/UnaryNode.h>
 
 namespace Antares::Solver::Expressions
 {
-class NegationNode: public Node
+class NegationNode: public UnaryNode
 {
 public:
-    virtual ~NegationNode() = default;
-
-    NegationNode(Node* n);
-
-    // private:
-    Node* n_;
+    using UnaryNode::UnaryNode;
 };
 } // namespace Antares::Solver::Expressions
