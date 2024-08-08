@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <antares/logs/logs.h>
+
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
@@ -32,13 +34,10 @@ OrtoolsMipSolution::OrtoolsMipSolution(
   double objectiveValue):
     objectiveValue_(objectiveValue)
 {
-    // Only store non-zero values
+    // store all solutions, even zeros
     for (const auto& varAndValue: solution)
     {
-        if (abs(varAndValue.second.second) > 1e-6) // TODO: is this tolerance OK?
-        {
-            solution_.insert(varAndValue);
-        }
+        solution_.insert(varAndValue);
     }
 
     switch (responseStatus)
@@ -70,7 +69,16 @@ double OrtoolsMipSolution::getObjectiveValue()
 
 double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable* var) const
 {
-    return solution_.contains(var->getName()) ? solution_.at(var->getName()).second : 0;
+    try
+    {
+        return solution_.at(var->getName()).second;
+    }
+    catch(const std::out_of_range& ex)
+    {
+        logs.warning() << ex.what();
+        logs.warning() << "Solution not found for variable: " << var->getName();
+    }
+    return 0;
 }
 
 std::vector<double> OrtoolsMipSolution::getOptimalValues(
