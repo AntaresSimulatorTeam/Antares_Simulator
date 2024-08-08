@@ -5,7 +5,7 @@ if (NOT sirius_solver_FOUND)
     message("SIRIUS not found, fetching it from github")
     FetchContent_Declare(sirius_solver
             GIT_REPOSITORY https://github.com/AntaresSimulatorTeam/sirius-solver.git
-            GIT_TAG feature/fix_include_path
+            GIT_TAG feature/antares_integ_fix_include
             SOURCE_SUBDIR src
             OVERRIDE_FIND_PACKAGE ON
     )
