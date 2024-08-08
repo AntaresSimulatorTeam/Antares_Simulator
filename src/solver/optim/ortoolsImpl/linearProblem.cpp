@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <exception>
 #include <memory>
 #include <ortools/linear_solver/linear_solver.h>
 
@@ -41,6 +42,15 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
 }
 
+class ElemAlreadyExists: public std::exception
+{
+public:
+    const char* what()
+    {
+        return "Element name already exists in linear problem";
+    }
+};
+
 Api::MipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                     double ub,
                                                     bool integer,
@@ -49,7 +59,7 @@ Api::MipVariable* OrtoolsLinearProblem::addVariable(double lb,
     if (variables_.contains(name))
     {
         logs.error() << "This variable already exists: " << name;
-        throw std::bad_function_call();
+        throw ElemAlreadyExists();
     }
 
     auto* mpVar = mpSolver_->MakeVar(lb, ub, integer, name);
@@ -96,7 +106,7 @@ Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     if (constraints_.contains(name))
     {
         logs.error() << "This constraint already exists: " << name;
-        throw std::bad_function_call();
+        throw ElemAlreadyExists();
     }
 
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
