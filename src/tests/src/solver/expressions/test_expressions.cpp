@@ -108,8 +108,8 @@ BOOST_FIXTURE_TEST_CASE(eval_Add_And_Negation_Nodes, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(Negative_of_AddNode, Registry<Node>)
 {
-    int num1 = 1428.0;
-    int num2 = 8241.0;
+    const double num1 = 1428;
+    const double num2 = 8241;
     Node* add_node = create<AddNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
     Node* neg = create<NegationNode>(add_node);
     EvalVisitor evalVisitor;
@@ -125,6 +125,30 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_node, Registry<Node>)
     const auto printed = printVisitor.dispatch(pt_fd);
 
     BOOST_CHECK_EQUAL(printed, "august.2024");
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
+{
+    ParameterNode root("my-param");
+    const double value = 221.3;
+    EvaluationContext context({{"my-param", value}}, {});
+
+    EvalVisitor evalVisitor(context);
+    const double eval = evalVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(value, eval);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_variable, Registry<Node>)
+{
+    VariableNode root("my-variable");
+    const double value = 221.3;
+    EvaluationContext context({}, {{"my-variable", value}});
+
+    EvalVisitor evalVisitor(context);
+    const double eval = evalVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(value, eval);
 }
 
 BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registry<Node>)

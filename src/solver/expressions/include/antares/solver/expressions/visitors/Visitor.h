@@ -50,10 +50,11 @@ public:
     {
         using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
           const Antares::Solver::Expressions::Node&);
-        static const std::array<Function, 7> tryFunctions{
+        static const std::array<Function, 8> tryFunctions{
           &Visitor<R>::tryType<AddNode>,
           &Visitor<R>::tryType<NegationNode>,
           &Visitor<R>::tryType<ParameterNode>,
+          &Visitor<R>::tryType<VariableNode>,
           &Visitor<R>::tryType<LiteralNode>,
           &Visitor<R>::tryType<PortFieldNode>,
           &Visitor<R>::tryType<ComponentVariableNode>,
@@ -73,6 +74,7 @@ private:
     virtual R visit(const AddNode&) = 0;
     virtual R visit(const NegationNode&) = 0;
     virtual R visit(const LiteralNode&) = 0;
+    virtual R visit(const VariableNode&) = 0;
     virtual R visit(const ParameterNode&) = 0;
     virtual R visit(const PortFieldNode&) = 0;
     virtual R visit(const ComponentVariableNode&) = 0;
