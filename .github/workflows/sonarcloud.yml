@@ -23,6 +23,8 @@ jobs:
       BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
 
     steps:
+      # Disk space on / is insufficient, leading to errors
+      # We use this 'hack' to remove unused stuff (android, dotnet, etc.) and change partition layout
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
         with:
