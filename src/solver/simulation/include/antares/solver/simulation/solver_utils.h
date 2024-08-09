@@ -138,7 +138,7 @@ public:
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
         {
-            pThermalNoisesByArea[a].assign(pNbClustersByArea[a], 0);
+            pThermalNoisesByArea[a].assign(pThermalNoisesByArea[a].size(), 0);
         }
 
         // General
