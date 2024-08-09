@@ -111,12 +111,19 @@ Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
     auto mipConstraint = std::make_unique<OrtoolsMipConstraint>(mpConstraint);
 
-    if (!constraints_.try_emplace(name, std::move(mipConstraint)).second)
+    if (!mpConstraint || !mipConstraint)
     {
-        logs.error() << "Error adding constraint: " << name;
+        logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    return constraints_[name].get();
+    const auto& mapIteratorPair = constraints_.try_emplace(name, std::move(mipConstraint));
+
+    if (!mapIteratorPair.second)
+    {
+        logs.error() << "Error adding variable: " << name;
+    }
+
+    return mapIteratorPair.first->second.get(); // <<name, constraint>, bool>
 }
 
 Api::MipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
