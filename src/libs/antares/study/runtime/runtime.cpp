@@ -91,12 +91,14 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         r.thermalPlantTotalCountMustRun += area.thermal.list.enabledAndMustRunCount();
         r.reserveParticipationCount += area.thermal.list.reserveParticipationsCount();
         r.reserveParticipationCount += area.shortTermStorage.reserveParticipationsCount();
+        r.reserveParticipationCount += area.hydro.reserveParticipationsCount();
         r.capacityReservationCount
           += area.allCapacityReservations.areaCapacityReservationsUp.size();
         r.capacityReservationCount
           += area.allCapacityReservations.areaCapacityReservationsDown.size();
 
         r.shortTermStorageCount += area.shortTermStorage.count();
+        r.longTermStorageCount += area.hydro.count();
     }
 }
 
@@ -247,6 +249,8 @@ StudyRuntimeInfos::StudyRuntimeInfos() :
     nbYears(0),
     thermalPlantTotalCount(0),
     thermalPlantTotalCountMustRun(0),
+    shortTermStorageCount(0),
+    longTermStorageCount(0),  
     quadraticOptimizationHasFailed(false)
 {
 }
@@ -338,6 +342,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
+    logs.info() << "     long-term storages: " << longTermStorageCount;
+    logs.info() << "     reserve participations: " << reserveParticipationCount;
     logs.info() << "     binding constraints: " << study.bindingConstraints.activeConstraints().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";

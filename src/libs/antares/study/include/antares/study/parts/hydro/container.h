@@ -100,6 +100,13 @@ public:
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 
+    uint reserveParticipationsCount() const;
+
+    uint count() const;
+
+    bool loadReserveParticipations(Area& area, const AnyString& file);
+
+
 public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
@@ -178,6 +185,8 @@ void getWaterValue(const double& level,
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
                            Matrix<double, double>& creditMod,
                            int modType);
+
+
 
 } // namespace Antares::Data
 

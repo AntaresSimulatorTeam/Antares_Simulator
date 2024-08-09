@@ -24,6 +24,8 @@
 #include <antares/series/series.h>
 #include <antares/array/matrix.h>
 #include <antares/study/version.h>
+#include "antares/study/parts/hydro/lt_storage_reserve_participation.h"
+
 #include "../../fwd.h"
 
 
@@ -31,6 +33,14 @@ namespace Antares
 {
 namespace Data
 {
+
+//    struct ReserveParams
+//{
+//    double maxTurbining;
+//    double maxPumping;
+//    double participationCost;
+//};
+
 
 /*!
 ** \brief Data series (Hydro)
@@ -58,7 +68,6 @@ public:
 
     void resizeGenerationTS(uint nbSeries);
     void resizeMaxPowerTS(uint nbSeries);
-
 
     /*!
     ** \brief Load all data not already loaded
@@ -161,6 +170,18 @@ public:
 
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
+
+    void addReserveParticipation(const std::string& reserveName,
+                                 const LTStorageClusterReserveParticipation& participation);
+
+    struct LTStorageReserves
+    {
+        std::unordered_map<std::string, std::vector<LTStorageClusterReserveParticipation>> reserves;
+    };
+
+    LTStorageReserves ltStorageReserves;
+
+
 
 private:
     

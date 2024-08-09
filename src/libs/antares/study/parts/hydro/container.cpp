@@ -23,6 +23,7 @@
 #include "antares/study/parts/hydro/container.h"
 #include <antares/inifile/inifile.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
+#include "antares/study/parts/hydro/lt_storage_reserve_participation.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -829,6 +830,85 @@ bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
     }
 
     return ret;
+}
+
+bool PartHydro::loadReserveParticipations(Area& area, const AnyString& file)
+{
+    IniFile ini;
+    if (!ini.open(file, false))
+    {
+        logs.error() << "Failed to open file: " << file;
+        return false;
+    }
+
+    bool hasSection = false;
+    ini.each(
+      [&](const IniFile::Section& section)
+      {
+          hasSection = true;
+          logs.info() << "Processing section: " << section.name;
+
+          std::string reserveName = section.name.c_str();
+          float maxTurbining = 0;
+          float maxPumping = 0;
+          float participationCost = 0;
+
+          section.each(
+            [&](const IniFile::Property& property)
+            {
+                CString<30, false> key = property.key;
+                key.toLower();
+                if (key == "max-turbining")
+                    property.value.to<float>(maxTurbining);
+                else if (key == "max-pumping")
+                    property.value.to<float>(maxPumping);
+                else if (key == "participation-cost")
+                    property.value.to<float>(participationCost);
+
+                logs.info() << "  Property: " << key << " = " << property.value;
+            });
+
+          auto reserve = area.allCapacityReservations.getReserveByName(reserveName);
+          if (reserve)
+          {
+              LTStorageClusterReserveParticipation participation(
+                reserveName, maxTurbining, maxPumping, participationCost);
+              series->addReserveParticipation(reserveName, participation);
+              logs.info() << "Added reserve participation for " << reserveName;
+          }
+          else
+          {
+              logs.warning() << area.name << ": does not contain this reserve " << reserveName;
+          }
+      });
+
+    if (!hasSection)
+    {
+        logs.warning() << "No sections found in file: " << file;
+    }
+    else
+    {
+        reservoirManagement = true;
+        logs.info() << "Activated reservoir management for long-term storage reserves";
+    }
+
+    return true;
+}
+
+uint PartHydro::reserveParticipationsCount() const
+{
+    uint count = 0;
+    if (series && reservoirManagement)
+    {
+        count += series->ltStorageReserves.reserves.size();
+    }
+    return count;
+}
+
+uint PartHydro::count() const
+{
+    // Retournez 1 si le stockage long terme est activé, 0 sinon
+    return reservoirManagement ? 1 : 0;
 }
 
 void getWaterValue(const double& level /* format : in % of reservoir capacity */,

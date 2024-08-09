@@ -978,6 +978,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             }
             else
                 hydroSeries->setHydroModulability(area);
+
+            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "common" << SEP
+                           << area.id << SEP << "reserves.ini";
+            ret = area.hydro.loadReserveParticipations(area, buffer) && ret;
         }
 
         hydroSeries->resizeTSinDeratedMode(
