@@ -26,10 +26,19 @@
 
 #include <antares/solver/optim/ortoolsImpl/linearProblem.h>
 
+#include <ortools/linear_solver/linear_solver.h>
+
 BOOST_AUTO_TEST_SUITE(optim_api)
 
-BOOST_AUTO_TEST_CASE(basic_linear_problem)
+using namespace Antares::Solver::Optim;
+
+BOOST_AUTO_TEST_CASE(basicLinearProblem)
 {
+    OrtoolsImpl::OrtoolsLinearProblem pb(false, "Basic Solver");
+    pb.addIntVariable(0, 1, "a");
+    pb.addNumVariable(0, 1, "b");
+
+    pb.addConstraint(0, 1, "c");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
