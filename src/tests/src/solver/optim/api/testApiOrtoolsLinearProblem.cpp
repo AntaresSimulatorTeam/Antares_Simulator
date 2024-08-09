@@ -34,11 +34,11 @@ using namespace Antares::Solver::Optim;
 
 BOOST_AUTO_TEST_CASE(basicLinearProblem)
 {
-    auto pb = std::make_shared<OrtoolsImpl::OrtoolsLinearProblem>(false, "Basic Solver");
+    auto pb = std::make_shared<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     pb->addIntVariable(0, 1, "a");
-    /* pb.addNumVariable(0, 1, "b"); */
+    pb->addNumVariable(0, 1, "b");
 
-    /* pb.addConstraint(0, 1, "c"); */
+    pb->addConstraint(0, 1, "c");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
