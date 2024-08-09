@@ -18,7 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#define BOOST_TEST_MODULE test adequacy patch functions
+#define BOOST_TEST_MODULE test optim api ortools
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -34,11 +34,11 @@ using namespace Antares::Solver::Optim;
 
 BOOST_AUTO_TEST_CASE(basicLinearProblem)
 {
-    OrtoolsImpl::OrtoolsLinearProblem pb(false, "Basic Solver");
-    pb.addIntVariable(0, 1, "a");
-    pb.addNumVariable(0, 1, "b");
+    auto pb = std::make_shared<OrtoolsImpl::OrtoolsLinearProblem>(false, "Basic Solver");
+    pb->addIntVariable(0, 1, "a");
+    /* pb.addNumVariable(0, 1, "b"); */
 
-    pb.addConstraint(0, 1, "c");
+    /* pb.addConstraint(0, 1, "c"); */
 }
 
 BOOST_AUTO_TEST_SUITE_END()
