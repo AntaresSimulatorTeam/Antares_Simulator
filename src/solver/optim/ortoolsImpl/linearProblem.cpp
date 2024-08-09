@@ -178,8 +178,9 @@ static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus&
     case operations_research::MPSolver::ResultStatus::UNBOUNDED:
         return Api::MipStatus::UNBOUNDED;
     default:
-        return Api::MipStatus::ERROR;
+        break;
     }
+    return Api::MipStatus::ERROR;
 }
 
 Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
