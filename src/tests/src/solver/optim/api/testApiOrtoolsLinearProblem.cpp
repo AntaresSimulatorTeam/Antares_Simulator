@@ -32,13 +32,21 @@ BOOST_AUTO_TEST_SUITE(optim_api)
 
 using namespace Antares::Solver::Optim;
 
-BOOST_AUTO_TEST_CASE(basicLinearProblem)
+BOOST_AUTO_TEST_CASE(basicLinearProblemAdd)
 {
     auto pb = std::make_shared<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     pb->addIntVariable(0, 1, "a");
     pb->addNumVariable(0, 1, "b");
 
     pb->addConstraint(0, 1, "c");
+}
+
+BOOST_AUTO_TEST_CASE(basicLinearProblemGet)
+{
+    auto pb = std::make_shared<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
+    pb->addVariable(0, 1, true, "a");
+
+    auto var = pb->getVariable("a");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
