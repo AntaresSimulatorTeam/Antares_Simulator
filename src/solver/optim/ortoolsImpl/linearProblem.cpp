@@ -37,6 +37,7 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
                                (OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
 
     mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
+    objective_ = mpSolver->MutableObjective();
 }
 
 class ElemAlreadyExists: public std::exception

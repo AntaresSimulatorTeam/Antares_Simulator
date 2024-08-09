@@ -32,21 +32,48 @@ BOOST_AUTO_TEST_SUITE(optim_api)
 
 using namespace Antares::Solver::Optim;
 
-BOOST_AUTO_TEST_CASE(basicLinearProblemAdd)
+struct Fixture
 {
-    auto pb = std::make_shared<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
+    Fixture()
+    {
+        pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
+    }
+    std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
+};
+
+BOOST_FIXTURE_TEST_CASE(basicLinearProblemAdd, Fixture)
+{
     pb->addIntVariable(0, 1, "a");
     pb->addNumVariable(0, 1, "b");
 
     pb->addConstraint(0, 1, "c");
 }
 
-BOOST_AUTO_TEST_CASE(basicLinearProblemGet)
+BOOST_FIXTURE_TEST_CASE(basicLinearProblemGet, Fixture)
 {
-    auto pb = std::make_shared<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     pb->addVariable(0, 1, true, "a");
-
     auto var = pb->getVariable("a");
+
+    pb->addConstraint(0, 1, "c");
+    auto cons = pb->getConstraint("c");
+}
+BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
+{
+    pb->setMinimization();
+    BOOST_CHECK(pb->isMinimization());
+
+    pb->setMaximization();
+    BOOST_CHECK(pb->isMaximization());
+}
+
+BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
+{
+    pb->addVariable(0, 1, true, "a");
+    auto var = pb->getVariable("a");
+
+    pb->setObjectiveCoefficient(var, 1);
+
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
