@@ -35,9 +35,7 @@ public:
     Node* visit(const MultiplicationNode& add) override;
     Node* visit(const DivisionNode& add) override;
     Node* visit(const EqualNode& add) override;
-    Node* visit(const LessThanNode& add) override;
     Node* visit(const LessThanOrEqualNode& add) override;
-    Node* visit(const GreaterThanNode& add) override;
     Node* visit(const GreaterThanOrEqualNode& add) override;
     Node* visit(const NegationNode& neg) override;
     Node* visit(const VariableNode& param) override;

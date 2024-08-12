@@ -23,10 +23,8 @@
 #include <antares/solver/expressions/nodes/ComponentNode.h>
 #include <antares/solver/expressions/nodes/DivisionNode.h>
 #include <antares/solver/expressions/nodes/EqualNode.h>
-#include <antares/solver/expressions/nodes/GreaterThanNode.h>
 #include <antares/solver/expressions/nodes/GreaterThanOrEqualNode.h>
 #include <antares/solver/expressions/nodes/Leaf.h>
-#include <antares/solver/expressions/nodes/LessThanNode.h>
 #include <antares/solver/expressions/nodes/LessThanOrEqualNode.h>
 #include <antares/solver/expressions/nodes/LiteralNode.h>
 #include <antares/solver/expressions/nodes/MultiplicationNode.h>

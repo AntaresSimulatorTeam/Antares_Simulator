@@ -47,9 +47,7 @@ private:
     double visit(const MultiplicationNode& add) override;
     double visit(const DivisionNode& add) override;
     double visit(const EqualNode& add) override;
-    double visit(const LessThanNode& add) override;
     double visit(const LessThanOrEqualNode& add) override;
-    double visit(const GreaterThanNode& add) override;
     double visit(const GreaterThanOrEqualNode& add) override;
     double visit(const NegationNode& neg) override;
     double visit(const VariableNode&) override;

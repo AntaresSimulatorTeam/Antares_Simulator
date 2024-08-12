@@ -52,19 +52,9 @@ std::string PrintVisitor::visit(const EqualNode& add)
     return dispatch(*add[0]) + "==" + dispatch(*add[1]);
 }
 
-std::string PrintVisitor::visit(const LessThanNode& add)
-{
-    return dispatch(*add[0]) + "<" + dispatch(*add[1]);
-}
-
 std::string PrintVisitor::visit(const LessThanOrEqualNode& add)
 {
     return dispatch(*add[0]) + "<=" + dispatch(*add[1]);
-}
-
-std::string PrintVisitor::visit(const GreaterThanNode& add)
-{
-    return dispatch(*add[0]) + ">" + dispatch(*add[1]);
 }
 
 std::string PrintVisitor::visit(const GreaterThanOrEqualNode& add)

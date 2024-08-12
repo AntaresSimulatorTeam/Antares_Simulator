@@ -35,17 +35,14 @@ private:
     std::string visit(const MultiplicationNode& add) override;
     std::string visit(const DivisionNode& add) override;
     std::string visit(const EqualNode& add) override;
-    std::string visit(const LessThanNode& add) override;
     std::string visit(const LessThanOrEqualNode& add) override;
-    std::string visit(const GreaterThanNode& add) override;
     std::string visit(const GreaterThanOrEqualNode& add) override;
-
     std::string visit(const NegationNode& neg) override;
     std::string visit(const VariableNode& param) override;
     std::string visit(const ParameterNode& param) override;
     std::string visit(const LiteralNode& lit) override;
     std::string visit(const PortFieldNode& port_field_node) override;
-    std::string visit(const ComponentVariableNode& component_variable_node);
-    std::string visit(const ComponentParameterNode& component_parameter_node);
+    std::string visit(const ComponentVariableNode& component_variable_node) override;
+    std::string visit(const ComponentParameterNode& component_parameter_node) override;
 };
 } // namespace Antares::Solver::Expressions

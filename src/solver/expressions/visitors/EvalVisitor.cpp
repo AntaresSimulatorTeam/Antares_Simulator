@@ -63,19 +63,7 @@ double EvalVisitor::visit(const EqualNode& add)
     return 0.;
 }
 
-double EvalVisitor::visit(const LessThanNode& add)
-{
-    // not implemented for comparison node
-    return 0.;
-}
-
 double EvalVisitor::visit(const LessThanOrEqualNode& add)
-{
-    // not implemented for comparison node
-    return 0.;
-}
-
-double EvalVisitor::visit(const GreaterThanNode& add)
 {
     // not implemented for comparison node
     return 0.;
