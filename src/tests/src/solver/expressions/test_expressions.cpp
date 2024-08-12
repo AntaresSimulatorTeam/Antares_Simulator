@@ -176,3 +176,45 @@ BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registr
     Node* cloned = cloneVisitor.dispatch(*root);
     BOOST_CHECK_EQUAL(printed, printVisitor.dispatch(*cloned));
 }
+
+BOOST_FIXTURE_TEST_CASE(multiplication_node, Registry<Node>)
+{
+    int num1 = 22.0, num2 = 8;
+    // num1+num2
+    Node* mult = create<MultiplicationNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(*mult);
+
+    BOOST_CHECK_EQUAL(printed, "22.000000*8.000000");
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*mult), num1 * num2);
+}
+
+BOOST_FIXTURE_TEST_CASE(division_node, Registry<Node>)
+{
+    int num1 = 22.0, num2 = 8;
+    // num1+num2
+    Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(*div);
+
+    BOOST_CHECK_EQUAL(printed, "22.000000/8.000000");
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*div), num1 / num2);
+}
+
+BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
+{
+    int num1 = 22.0, num2 = 8;
+    // num1+num2
+    Node* sub = create<SubtractionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(*sub);
+
+    BOOST_CHECK_EQUAL(printed, "22.000000-8.000000");
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*sub), num1 - num2);
+}
