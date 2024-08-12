@@ -28,7 +28,7 @@ namespace Antares::Solver::Expressions
 class ComponentNode: public Node
 {
 public:
-    ComponentNode(const std::string& component_id, const std::string& component_name);
+    explicit ComponentNode(const std::string& component_id, const std::string& component_name);
     virtual ~ComponentNode() = default;
 
     std::string component_id_;

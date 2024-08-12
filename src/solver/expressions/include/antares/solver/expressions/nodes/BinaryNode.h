@@ -27,6 +27,6 @@ namespace Antares::Solver::Expressions
 class BinaryNode: public ParentNode<2>
 {
 public:
-    BinaryNode(Node* n1, Node* n2);
+    explicit BinaryNode(Node* n1, Node* n2);
 };
 } // namespace Antares::Solver::Expressions

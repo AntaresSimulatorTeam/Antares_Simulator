@@ -30,7 +30,7 @@ template<class T>
 class Leaf: public Node
 {
 public:
-    Leaf(const T& value):
+    explicit Leaf(const T& value):
         value_(value)
     {
     }
