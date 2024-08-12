@@ -39,7 +39,8 @@ bool LinearVisitor::visit(const SubtractionNode& sub)
 bool LinearVisitor::visit(const MultiplicationNode& mult)
 {
     // TODO The product of a constant and a linear expression is linear
-    return dispatch(*mult[0]) && dispatch(*mult[1]);
+    return (dispatch(*mult[0]) && mult[1]->IsConstant())
+           || (dispatch(*mult[1]) && mult[0]->IsConstant());
 }
 
 bool LinearVisitor::visit(const DivisionNode& div)
@@ -48,26 +49,26 @@ bool LinearVisitor::visit(const DivisionNode& div)
 }
 
 bool LinearVisitor::visit(const EqualNode& equ)
-{
-    // not implemented for comparison node
+{ // TODO
     return 0.;
 }
 
 bool LinearVisitor::visit(const LessThanOrEqualNode& lt)
 {
-    // not implemented for comparison node
+    // TODO
     return 0.;
 }
 
 bool LinearVisitor::visit(const GreaterThanOrEqualNode& gt)
 {
-    // not implemented for comparison node
+    // TODO
     return 0.;
 }
 
 bool LinearVisitor::visit(const VariableNode& var)
 {
-    return true;
+    // TODO
+    return var.getValue() == variable_;
 }
 
 bool LinearVisitor::visit(const ParameterNode& param)

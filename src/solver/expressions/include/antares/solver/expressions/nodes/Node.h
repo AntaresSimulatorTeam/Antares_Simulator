@@ -26,5 +26,6 @@ class Node
 {
 public:
     virtual ~Node() = default;
+    virtual bool IsConstant() = 0;
 };
 } // namespace Antares::Solver::Expressions

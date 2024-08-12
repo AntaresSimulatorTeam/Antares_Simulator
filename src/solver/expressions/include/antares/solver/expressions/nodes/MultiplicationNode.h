@@ -28,5 +28,10 @@ class MultiplicationNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
+
+    bool IsConstant() override
+    {
+        return false;
+    }
 };
 } // namespace Antares::Solver::Expressions

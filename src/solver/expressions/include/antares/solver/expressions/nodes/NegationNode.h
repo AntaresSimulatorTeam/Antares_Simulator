@@ -30,5 +30,10 @@ class NegationNode: public UnaryNode
 {
 public:
     using UnaryNode::UnaryNode;
+
+    bool IsConstant() override
+    {
+        return false;
+    }
 };
 } // namespace Antares::Solver::Expressions
