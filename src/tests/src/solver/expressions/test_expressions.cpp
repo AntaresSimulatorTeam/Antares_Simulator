@@ -180,7 +180,6 @@ BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registr
 BOOST_FIXTURE_TEST_CASE(multiplication_node, Registry<Node>)
 {
     double num1 = 22.0, num2 = 8;
-    // num1+num2
     Node* mult = create<MultiplicationNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
@@ -194,7 +193,6 @@ BOOST_FIXTURE_TEST_CASE(multiplication_node, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(division_node, Registry<Node>)
 {
     double num1 = 22.0, num2 = 8;
-    // num1+num2
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
@@ -208,7 +206,6 @@ BOOST_FIXTURE_TEST_CASE(division_node, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(division_by_zero, Registry<Node>)
 {
     double num1 = 22.0, num2 = 0.;
-    // num1+num2
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
@@ -226,7 +223,6 @@ BOOST_FIXTURE_TEST_CASE(division_by_zero, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
 {
     double num1 = 22.0, num2 = 8;
-    // num1+num2
     Node* sub = create<SubtractionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
@@ -240,7 +236,6 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(Parent_node, Registry<Node>)
 {
     double num1 = 22.0, num2 = 8;
-    // num1+num2
     SubtractionNode sub(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
@@ -260,4 +255,27 @@ BOOST_FIXTURE_TEST_CASE(Parent_node, Registry<Node>)
                                               .c_str())
                                      == 0;
                           });
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
+{
+    double num1 = 22.0, num2 = 8;
+    // (num1-num2) = (22.000000-8.000000)
+    SubtractionNode sub1(create<LiteralNode>(num1), create<LiteralNode>(num2));
+    // (num2-num1) = (8.000000-22.000000)
+    SubtractionNode sub2(create<LiteralNode>(num2), create<LiteralNode>(num1));
+
+    PrintVisitor printVisitor;
+
+    EqualNode equ(&sub1, &sub2);
+    auto printed = printVisitor.dispatch(equ);
+    BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)==(8.000000-22.000000");
+
+    LessThanOrEqualNode lt(&sub1, &sub2);
+    printed = printVisitor.dispatch(lt);
+    BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)<=(8.000000-22.000000");
+
+    GreaterThanOrEqualNode gt(&sub1, &sub2);
+    printed = printVisitor.dispatch(gt);
+    BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000");
 }
