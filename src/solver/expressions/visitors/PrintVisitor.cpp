@@ -34,7 +34,7 @@ std::string PrintVisitor::visit(const AddNode& add)
 
 std::string PrintVisitor::visit(const SubtractionNode& add)
 {
-    return dispatch(*add[0]) + "-" + dispatch(*add[1]);
+    return "(" + dispatch(*add[0]) + "-" + dispatch(*add[1]) + ")";
 }
 
 std::string PrintVisitor::visit(const MultiplicationNode& add)

@@ -214,7 +214,7 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(*sub);
 
-    BOOST_CHECK_EQUAL(printed, "22.000000-8.000000");
+    BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)");
     EvalVisitor evalVisitor;
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(*sub), num1 - num2);
 }
