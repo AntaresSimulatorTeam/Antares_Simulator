@@ -87,18 +87,19 @@ Node* CloneVisitor::visit(const LiteralNode& param)
 
 Node* CloneVisitor::visit(const PortFieldNode& port_field_node)
 {
-    return registry_.create<PortFieldNode>(port_field_node.port_name_, port_field_node.field_name_);
+    return registry_.create<PortFieldNode>(port_field_node.getPortName(),
+                                           port_field_node.getFieldName());
 }
 
 Node* CloneVisitor::visit(const ComponentVariableNode& component_variable_node)
 {
-    return registry_.create<ComponentVariableNode>(component_variable_node.component_id_,
-                                                   component_variable_node.component_name_);
+    return registry_.create<ComponentVariableNode>(component_variable_node.getComponentId(),
+                                                   component_variable_node.getComponentName());
 }
 
 Node* CloneVisitor::visit(const ComponentParameterNode& component_parameter_node)
 {
-    return registry_.create<ComponentParameterNode>(component_parameter_node.component_id_,
-                                                    component_parameter_node.component_name_);
+    return registry_.create<ComponentParameterNode>(component_parameter_node.getComponentId(),
+                                                    component_parameter_node.getComponentName());
 }
 } // namespace Antares::Solver::Expressions
