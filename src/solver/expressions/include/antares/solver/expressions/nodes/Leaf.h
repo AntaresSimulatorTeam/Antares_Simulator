@@ -30,8 +30,6 @@ template<class T>
 class Leaf: public Node
 {
 public:
-    virtual ~Leaf() = default;
-
     Leaf(const T& value):
         value_(value)
     {

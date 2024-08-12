@@ -30,7 +30,6 @@ class PortFieldNode: public Node
 {
 public:
     explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
-    virtual ~PortFieldNode() = default;
     //   std::string
     std::string port_name_;
     std::string field_name_;
