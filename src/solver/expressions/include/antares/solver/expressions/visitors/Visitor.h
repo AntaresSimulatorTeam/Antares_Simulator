@@ -56,9 +56,7 @@ public:
           &Visitor<R>::tryType<MultiplicationNode>,
           &Visitor<R>::tryType<DivisionNode>,
           &Visitor<R>::tryType<EqualNode>,
-          &Visitor<R>::tryType<LessThanNode>,
           &Visitor<R>::tryType<LessThanOrEqualNode>,
-          &Visitor<R>::tryType<GreaterThanNode>,
           &Visitor<R>::tryType<GreaterThanOrEqualNode>,
           &Visitor<R>::tryType<NegationNode>,
           &Visitor<R>::tryType<ParameterNode>,
@@ -84,9 +82,7 @@ private:
     virtual R visit(const MultiplicationNode&) = 0;
     virtual R visit(const DivisionNode&) = 0;
     virtual R visit(const EqualNode&) = 0;
-    virtual R visit(const LessThanNode&) = 0;
     virtual R visit(const LessThanOrEqualNode&) = 0;
-    virtual R visit(const GreaterThanNode&) = 0;
     virtual R visit(const GreaterThanOrEqualNode&) = 0;
     virtual R visit(const NegationNode&) = 0;
     virtual R visit(const LiteralNode&) = 0;

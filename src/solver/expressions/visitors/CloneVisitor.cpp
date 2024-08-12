@@ -53,20 +53,10 @@ Node* CloneVisitor::visit(const EqualNode& input_node)
     return registry_.create<EqualNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const LessThanNode& input_node)
-{
-    return registry_.create<LessThanNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
-}
-
 Node* CloneVisitor::visit(const LessThanOrEqualNode& input_node)
 {
     return registry_.create<LessThanOrEqualNode>(dispatch(*input_node[0]),
                                                  dispatch(*input_node[1]));
-}
-
-Node* CloneVisitor::visit(const GreaterThanNode& input_node)
-{
-    return registry_.create<GreaterThanNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
 }
 
 Node* CloneVisitor::visit(const GreaterThanOrEqualNode& input_node)
