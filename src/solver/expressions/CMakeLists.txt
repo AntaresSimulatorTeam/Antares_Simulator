@@ -38,7 +38,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/EvalVisitor.h
         include/antares/solver/expressions/visitors/EvaluationContext.h
         include/antares/solver/expressions/visitors/PrintVisitor.h
-        include/antares/solver/expressions/visitors/NodeVisitor.h
+        include/antares/solver/expressions/nodes/NodeVisitor.h
 
         include/antares/solver/expressions/Registry.hxx
 )

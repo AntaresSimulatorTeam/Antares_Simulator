@@ -21,7 +21,7 @@
 #pragma once
 
 #include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/visitors/NodeVisitor.h>
+#include "antares/solver/expressions/nodes/NodeVisitor.h"
 
 namespace Antares::Solver::Expressions
 {
