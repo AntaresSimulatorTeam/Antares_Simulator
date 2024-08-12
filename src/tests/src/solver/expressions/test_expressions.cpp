@@ -236,3 +236,28 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
     EvalVisitor evalVisitor;
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(*sub), num1 - num2);
 }
+
+BOOST_FIXTURE_TEST_CASE(Parent_node, Registry<Node>)
+{
+    double num1 = 22.0, num2 = 8;
+    // num1+num2
+    SubtractionNode sub(create<LiteralNode>(num1), create<LiteralNode>(num2));
+
+    PrintVisitor printVisitor;
+    Node* child1 = sub[0];
+    const auto printed = printVisitor.dispatch(*child1);
+
+    // try to get child at pos 1202 from a binary node ...
+    size_t pos = 1202;
+    BOOST_CHECK_EXCEPTION(sub[pos],
+                          ParentNodeException,
+                          [&pos](const ParentNodeException& ex)
+                          {
+                              return strcmp(ex.what(),
+                                            (std::string("Antares::Solver::Expressions::ParentNode "
+                                                         "can't get the child node at position ")
+                                             + std::to_string(pos))
+                                              .c_str())
+                                     == 0;
+                          });
+}

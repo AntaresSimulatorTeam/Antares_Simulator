@@ -35,21 +35,21 @@ double EvalVisitor::visit(const AddNode& add)
     return dispatch(*add[0]) + dispatch(*add[1]);
 }
 
-double EvalVisitor::visit(const SubtractionNode& add)
+double EvalVisitor::visit(const SubtractionNode& sub)
 {
-    return dispatch(*add[0]) - dispatch(*add[1]);
+    return dispatch(*sub[0]) - dispatch(*sub[1]);
 }
 
-double EvalVisitor::visit(const MultiplicationNode& add)
+double EvalVisitor::visit(const MultiplicationNode& mult)
 {
-    return dispatch(*add[0]) * dispatch(*add[1]);
+    return dispatch(*mult[0]) * dispatch(*mult[1]);
 }
 
-double EvalVisitor::visit(const DivisionNode& add)
+double EvalVisitor::visit(const DivisionNode& div)
 {
-    if (auto divisor = dispatch(*add[1]); divisor != 0)
+    if (auto divisor = dispatch(*div[1]); divisor != 0)
     {
-        return dispatch(*add[0]) / divisor;
+        return dispatch(*div[0]) / divisor;
     }
     else
     {
@@ -57,27 +57,27 @@ double EvalVisitor::visit(const DivisionNode& add)
     }
 }
 
-double EvalVisitor::visit(const EqualNode& add)
+double EvalVisitor::visit(const EqualNode& equ)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const LessThanOrEqualNode& add)
+double EvalVisitor::visit(const LessThanOrEqualNode& lt)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const GreaterThanOrEqualNode& add)
+double EvalVisitor::visit(const GreaterThanOrEqualNode& gt)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const VariableNode& param)
+double EvalVisitor::visit(const VariableNode& var)
 {
-    return context_.getVariableValue(param.getValue());
+    return context_.getVariableValue(var.getValue());
 }
 
 double EvalVisitor::visit(const ParameterNode& param)
