@@ -37,9 +37,10 @@ public:
     requires std::derived_from<Derived, Base>
     Base* create(Args&&... args)
     {
+        auto created = std::make_unique<Derived>(std::forward<Args>(args)...);
+
         std::lock_guard<std::mutex> lock(mutex_);
-        //  Add the object to the registry
-        registry_.push_back(std::make_unique<Derived>(std::forward<Args>(args)...));
+        registry_.push_back(std::move(created));
         return registry_.back().get(); //  Return the pointer to the newly created object
     }
 
