@@ -1149,7 +1149,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::SpecifierRemover< T[N]>", "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html", null ],
     [ "Antares::Solver::Variable::Economy::SpillageSelector< WithSimplexT >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpillageSelector.html", null ],
     [ "Antares::Solver::Variable::Economy::SpillageSelector< false >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpillageSelector_3_01false_01_4.html", null ],
-    [ "SIM::SpreadGenerator", "classSIM_1_1SpreadGenerator.html", null ],
     [ "StartUpCostsData", "structStartUpCostsData.html", null ],
     [ "Antares::Solver::Variable::State", "classAntares_1_1Solver_1_1Variable_1_1State.html", null ],
     [ "Antares::State", "classAntares_1_1State.html", null ],

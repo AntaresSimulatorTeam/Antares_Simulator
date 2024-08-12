@@ -1120,9 +1120,6 @@ var annotated_dup =
       [ "PROPERTIES", "structShortTermStorage_1_1PROPERTIES.html", null ],
       [ "RESULTS", "structShortTermStorage_1_1RESULTS.html", null ]
     ] ],
-    [ "SIM", null, [
-      [ "SpreadGenerator", "classSIM_1_1SpreadGenerator.html", null ]
-    ] ],
     [ "sim_return_code", null, [
       [ "simulation_success", "classsim__return__code_1_1simulation__success.html", null ]
     ] ],
