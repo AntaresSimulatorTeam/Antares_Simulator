@@ -23,7 +23,7 @@
 #include <stdexcept>
 
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
-#include <antares/solver/expressions/visitors/Visitor.h>
+#include <antares/solver/expressions/visitors/NodeVisitor.h>
 
 namespace Antares::Solver::Expressions
 {
@@ -33,10 +33,10 @@ struct EvalVisitorDivisionException: std::overflow_error
     using std::overflow_error::overflow_error;
 };
 
-class EvalVisitor: public Visitor<double>
+class EvalVisitor: public NodeVisitor<double>
 {
 public:
-    using Base = Visitor<double>;
+    using Base = NodeVisitor<double>;
     EvalVisitor() = default; // No context (variables / parameters)
     explicit EvalVisitor(EvaluationContext context);
 

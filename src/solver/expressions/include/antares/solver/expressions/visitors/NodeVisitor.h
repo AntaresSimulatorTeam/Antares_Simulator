@@ -30,7 +30,7 @@ namespace Antares::Solver::Expressions
 {
 
 template<class R>
-class Visitor
+class NodeVisitor
 {
 private:
     template<class T>
@@ -44,27 +44,27 @@ private:
     }
 
 public:
-    virtual ~Visitor() = default;
+    virtual ~NodeVisitor() = default;
 
     R dispatch(const Node& node)
     {
-        using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
+        using Function = std::optional<R> (Antares::Solver::Expressions::NodeVisitor<R>::*)(
           const Antares::Solver::Expressions::Node&);
         static const std::array<Function, 16> tryFunctions{
-          &Visitor<R>::tryType<AddNode>,
-          &Visitor<R>::tryType<SubtractionNode>,
-          &Visitor<R>::tryType<MultiplicationNode>,
-          &Visitor<R>::tryType<DivisionNode>,
-          &Visitor<R>::tryType<EqualNode>,
-          &Visitor<R>::tryType<LessThanOrEqualNode>,
-          &Visitor<R>::tryType<GreaterThanOrEqualNode>,
-          &Visitor<R>::tryType<NegationNode>,
-          &Visitor<R>::tryType<ParameterNode>,
-          &Visitor<R>::tryType<VariableNode>,
-          &Visitor<R>::tryType<LiteralNode>,
-          &Visitor<R>::tryType<PortFieldNode>,
-          &Visitor<R>::tryType<ComponentVariableNode>,
-          &Visitor<R>::tryType<ComponentParameterNode>};
+          &NodeVisitor<R>::tryType<AddNode>,
+          &NodeVisitor<R>::tryType<SubtractionNode>,
+          &NodeVisitor<R>::tryType<MultiplicationNode>,
+          &NodeVisitor<R>::tryType<DivisionNode>,
+          &NodeVisitor<R>::tryType<EqualNode>,
+          &NodeVisitor<R>::tryType<LessThanOrEqualNode>,
+          &NodeVisitor<R>::tryType<GreaterThanOrEqualNode>,
+          &NodeVisitor<R>::tryType<NegationNode>,
+          &NodeVisitor<R>::tryType<ParameterNode>,
+          &NodeVisitor<R>::tryType<VariableNode>,
+          &NodeVisitor<R>::tryType<LiteralNode>,
+          &NodeVisitor<R>::tryType<PortFieldNode>,
+          &NodeVisitor<R>::tryType<ComponentVariableNode>,
+          &NodeVisitor<R>::tryType<ComponentParameterNode>};
         for (auto f: tryFunctions)
         {
             if (auto x = (this->*f)(node))

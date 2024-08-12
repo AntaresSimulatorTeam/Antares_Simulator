@@ -21,11 +21,11 @@
 #pragma once
 
 #include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/visitors/Visitor.h>
+#include <antares/solver/expressions/visitors/NodeVisitor.h>
 
 namespace Antares::Solver::Expressions
 {
-class CloneVisitor: public Visitor<Node*>
+class CloneVisitor: public NodeVisitor<Node*>
 {
 public:
     explicit CloneVisitor(Registry<Node>& mem);

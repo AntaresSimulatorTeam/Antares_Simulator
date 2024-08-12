@@ -20,14 +20,14 @@
 */
 #pragma once
 
-#include <antares/solver/expressions/visitors/Visitor.h>
+#include <antares/solver/expressions/visitors/NodeVisitor.h>
 
 namespace Antares::Solver::Expressions
 {
-class PrintVisitor: public Visitor<std::string>
+class PrintVisitor: public NodeVisitor<std::string>
 {
 public:
-    using Base = Visitor<std::string>;
+    using Base = NodeVisitor<std::string>;
 
 private:
     std::string visit(const AddNode& add) override;
