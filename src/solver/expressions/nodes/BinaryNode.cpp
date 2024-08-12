@@ -20,15 +20,12 @@
 */
 #pragma once
 
-#include <memory>
-
-#include <antares/solver/expressions/nodes/UnaryNode.h>
+#include <antares/solver/expressions/nodes/BinaryNode.h>
 
 namespace Antares::Solver::Expressions
 {
-class NegationNode: public UnaryNode
+BinaryNode::BinaryNode(Node* n1, Node* n2):
+    ParentNode<2>({n1, n2})
 {
-public:
-    using UnaryNode::UnaryNode;
-};
+}
 } // namespace Antares::Solver::Expressions

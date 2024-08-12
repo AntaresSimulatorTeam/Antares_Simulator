@@ -20,15 +20,13 @@
 */
 #pragma once
 
-#include <memory>
-
-#include <antares/solver/expressions/nodes/UnaryNode.h>
+#include <antares/solver/expressions/nodes/ComparisonNode.h>
 
 namespace Antares::Solver::Expressions
 {
-class NegationNode: public UnaryNode
+class GreaterThanOrEqualNode: public ComparisonNode
 {
 public:
-    using UnaryNode::UnaryNode;
+    using ComparisonNode::ComparisonNode;
 };
 } // namespace Antares::Solver::Expressions

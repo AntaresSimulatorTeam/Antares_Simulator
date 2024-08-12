@@ -50,8 +50,14 @@ public:
     {
         using Function = std::optional<R> (Antares::Solver::Expressions::Visitor<R>::*)(
           const Antares::Solver::Expressions::Node&);
-        static const std::array<Function, 8> tryFunctions{
+        static const std::array<Function, 16> tryFunctions{
           &Visitor<R>::tryType<AddNode>,
+          &Visitor<R>::tryType<SubtractionNode>,
+          &Visitor<R>::tryType<MultiplicationNode>,
+          &Visitor<R>::tryType<DivisionNode>,
+          &Visitor<R>::tryType<EqualNode>,
+          &Visitor<R>::tryType<LessThanOrEqualNode>,
+          &Visitor<R>::tryType<GreaterThanOrEqualNode>,
           &Visitor<R>::tryType<NegationNode>,
           &Visitor<R>::tryType<ParameterNode>,
           &Visitor<R>::tryType<VariableNode>,
@@ -72,6 +78,12 @@ public:
 
 private:
     virtual R visit(const AddNode&) = 0;
+    virtual R visit(const SubtractionNode&) = 0;
+    virtual R visit(const MultiplicationNode&) = 0;
+    virtual R visit(const DivisionNode&) = 0;
+    virtual R visit(const EqualNode&) = 0;
+    virtual R visit(const LessThanOrEqualNode&) = 0;
+    virtual R visit(const GreaterThanOrEqualNode&) = 0;
     virtual R visit(const NegationNode&) = 0;
     virtual R visit(const LiteralNode&) = 0;
     virtual R visit(const VariableNode&) = 0;

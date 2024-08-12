@@ -2,17 +2,27 @@ project(Expressions)
 
 
 set(SRC_Expressions
-        nodes/NegationNode.cpp
-        nodes/AddNode.cpp
         nodes/PortFieldNode.cpp
         nodes/ComponentNode.cpp
+        nodes/BinaryNode.cpp
+        nodes/UnaryNode.cpp
 
         visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/EvalVisitor.cpp
         visitors/EvaluationContext.cpp
 
+        include/antares/solver/expressions/nodes/ParentNode.h
+        include/antares/solver/expressions/nodes/UnaryNode.h
+        include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/AddNode.h
+        include/antares/solver/expressions/nodes/MultiplicationNode.h
+        include/antares/solver/expressions/nodes/DivisionNode.h
+        include/antares/solver/expressions/nodes/SubtractionNode.h
+        include/antares/solver/expressions/nodes/ComparisonNode.h
+        include/antares/solver/expressions/nodes/EqualNode.h
+        include/antares/solver/expressions/nodes/LessThanOrEqualNode.h
+        include/antares/solver/expressions/nodes/GreaterThanOrEqualNode.h
         include/antares/solver/expressions/nodes/ComponentNode.h
         include/antares/solver/expressions/nodes/ExpressionsNodes.h
         include/antares/solver/expressions/nodes/LiteralNode.h

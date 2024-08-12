@@ -20,11 +20,18 @@
 */
 #pragma once
 
+#include <stdexcept>
+
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/expressions/visitors/Visitor.h>
 
 namespace Antares::Solver::Expressions
 {
+
+struct EvalVisitorDivisionException: std::overflow_error
+{
+    using std::overflow_error::overflow_error;
+};
 
 class EvalVisitor: public Visitor<double>
 {
@@ -36,6 +43,12 @@ public:
 private:
     const EvaluationContext context_;
     double visit(const AddNode& add) override;
+    double visit(const SubtractionNode& add) override;
+    double visit(const MultiplicationNode& add) override;
+    double visit(const DivisionNode& add) override;
+    double visit(const EqualNode& add) override;
+    double visit(const LessThanOrEqualNode& add) override;
+    double visit(const GreaterThanOrEqualNode& add) override;
     double visit(const NegationNode& neg) override;
     double visit(const VariableNode&) override;
     double visit(const ParameterNode& param) override;

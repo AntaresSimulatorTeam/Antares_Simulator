@@ -18,13 +18,15 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/NegationNode.h>
+#pragma once
+
+#include <antares/solver/expressions/nodes/ComparisonNode.h>
 
 namespace Antares::Solver::Expressions
 {
-NegationNode::NegationNode(Node* n):
-    n_(n)
+class EqualNode: public ComparisonNode
 {
-}
-
+public:
+    using ComparisonNode::ComparisonNode;
+};
 } // namespace Antares::Solver::Expressions

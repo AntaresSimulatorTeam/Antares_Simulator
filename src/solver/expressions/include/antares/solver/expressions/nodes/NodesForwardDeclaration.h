@@ -25,6 +25,12 @@ namespace Antares::Solver::Expressions
 {
 class Node;
 class AddNode;
+class SubtractionNode;
+class MultiplicationNode;
+class DivisionNode;
+class EqualNode;
+class LessThanOrEqualNode;
+class GreaterThanOrEqualNode;
 class NegationNode;
 class LiteralNode;
 class ComponentNode;

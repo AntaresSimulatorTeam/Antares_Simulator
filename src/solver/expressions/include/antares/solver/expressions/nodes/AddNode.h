@@ -20,21 +20,13 @@
 */
 #pragma once
 
-#include <memory>
-
-#include <antares/solver/expressions/nodes/Node.h>
+#include <antares/solver/expressions/nodes/BinaryNode.h>
 
 namespace Antares::Solver::Expressions
 {
-class AddNode: public Node
+class AddNode: public BinaryNode
 {
 public:
-    virtual ~AddNode() = default;
-
-    AddNode(Node* n1, Node* n2);
-
-    // private:
-    Node* n1_;
-    Node* n2_;
+    using BinaryNode::BinaryNode;
 };
 } // namespace Antares::Solver::Expressions

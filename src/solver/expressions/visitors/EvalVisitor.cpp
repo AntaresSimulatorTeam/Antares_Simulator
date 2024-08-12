@@ -32,12 +32,52 @@ EvalVisitor::EvalVisitor(EvaluationContext context):
 
 double EvalVisitor::visit(const AddNode& add)
 {
-    return dispatch(*add.n1_) + dispatch(*add.n2_);
+    return dispatch(*add[0]) + dispatch(*add[1]);
 }
 
-double EvalVisitor::visit(const VariableNode& param)
+double EvalVisitor::visit(const SubtractionNode& sub)
 {
-    return context_.getVariableValue(param.getValue());
+    return dispatch(*sub[0]) - dispatch(*sub[1]);
+}
+
+double EvalVisitor::visit(const MultiplicationNode& mult)
+{
+    return dispatch(*mult[0]) * dispatch(*mult[1]);
+}
+
+double EvalVisitor::visit(const DivisionNode& div)
+{
+    if (auto divisor = dispatch(*div[1]); divisor != 0)
+    {
+        return dispatch(*div[0]) / divisor;
+    }
+    else
+    {
+        throw EvalVisitorDivisionException("DivisionNode Division by zero");
+    }
+}
+
+double EvalVisitor::visit(const EqualNode& equ)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
+double EvalVisitor::visit(const LessThanOrEqualNode& lt)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
+double EvalVisitor::visit(const GreaterThanOrEqualNode& gt)
+{
+    // not implemented for comparison node
+    return 0.;
+}
+
+double EvalVisitor::visit(const VariableNode& var)
+{
+    return context_.getVariableValue(var.getValue());
 }
 
 double EvalVisitor::visit(const ParameterNode& param)
@@ -52,7 +92,7 @@ double EvalVisitor::visit(const LiteralNode& lit)
 
 double EvalVisitor::visit(const NegationNode& neg)
 {
-    return -dispatch(*neg.n_);
+    return -dispatch(*neg[0]);
 }
 
 double EvalVisitor::visit(const PortFieldNode& port_field_node)

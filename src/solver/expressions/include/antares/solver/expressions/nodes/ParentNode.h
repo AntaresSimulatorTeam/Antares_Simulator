@@ -19,16 +19,43 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <array>
+#include <stdexcept>
+#include <string>
 
-#include <memory>
-
-#include <antares/solver/expressions/nodes/UnaryNode.h>
+#include <antares/solver/expressions/nodes/Node.h>
 
 namespace Antares::Solver::Expressions
 {
-class NegationNode: public UnaryNode
+struct ParentNodeException: std::out_of_range
+{
+    using std::out_of_range::out_of_range;
+};
+
+template<std::size_t N>
+class ParentNode: public Node
 {
 public:
-    using UnaryNode::UnaryNode;
+    explicit ParentNode(const std::array<Node*, N>& children):
+        children_(children)
+    {
+    }
+
+    Node* operator[](std::size_t idx) const
+    {
+        if (children_.empty() || idx >= children_.size())
+        {
+            throw ParentNodeException(
+              "Antares::Solver::Expressions::ParentNode can't get the child node at position "
+              + std::to_string(idx));
+        }
+        else
+        {
+            return children_[idx];
+        }
+    }
+
+private:
+    std::array<Node*, N> children_;
 };
 } // namespace Antares::Solver::Expressions

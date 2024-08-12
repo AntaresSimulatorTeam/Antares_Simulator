@@ -28,14 +28,46 @@ CloneVisitor::CloneVisitor(Registry<Node>& mem):
 {
 }
 
-Node* CloneVisitor::visit(const AddNode& add)
+Node* CloneVisitor::visit(const AddNode& input_node)
 {
-    return registry_.create<AddNode>(dispatch(*add.n1_), dispatch(*add.n2_));
+    return registry_.create<AddNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
+}
+
+Node* CloneVisitor::visit(const SubtractionNode& input_node)
+{
+    return registry_.create<SubtractionNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
+}
+
+Node* CloneVisitor::visit(const MultiplicationNode& input_node)
+{
+    return registry_.create<MultiplicationNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
+}
+
+Node* CloneVisitor::visit(const DivisionNode& input_node)
+{
+    return registry_.create<DivisionNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
+}
+
+Node* CloneVisitor::visit(const EqualNode& input_node)
+{
+    return registry_.create<EqualNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
+}
+
+Node* CloneVisitor::visit(const LessThanOrEqualNode& input_node)
+{
+    return registry_.create<LessThanOrEqualNode>(dispatch(*input_node[0]),
+                                                 dispatch(*input_node[1]));
+}
+
+Node* CloneVisitor::visit(const GreaterThanOrEqualNode& input_node)
+{
+    return registry_.create<GreaterThanOrEqualNode>(dispatch(*input_node[0]),
+                                                    dispatch(*input_node[1]));
 }
 
 Node* CloneVisitor::visit(const NegationNode& neg)
 {
-    return registry_.create<NegationNode>(dispatch(*neg.n_));
+    return registry_.create<NegationNode>(dispatch(*neg[0]));
 }
 
 Node* CloneVisitor::visit(const VariableNode& param)
