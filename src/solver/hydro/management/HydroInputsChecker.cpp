@@ -40,6 +40,7 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
     scenarioInitialHydroLevels_(study.scenarioInitialHydroLevels),
     scenarioFinalHydroLevels_(study.scenarioFinalHydroLevels)
 {
+    auto a = ERROR;
 }
 
 void HydroInputsChecker::Execute(uint year)
