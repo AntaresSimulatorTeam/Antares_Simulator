@@ -35,7 +35,7 @@ public:
     {
     }
 
-    inline T getValue() const
+    T getValue() const
     {
         return value_;
     }

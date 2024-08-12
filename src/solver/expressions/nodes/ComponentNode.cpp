@@ -27,4 +27,14 @@ ComponentNode::ComponentNode(const std::string& component_id, const std::string&
     component_name_(component_name)
 {
 }
+
+const std::string& ComponentNode::getComponentId() const
+{
+    return component_id_;
+}
+
+const std::string& ComponentNode::getComponentName() const
+{
+    return component_name_;
+}
 } // namespace Antares::Solver::Expressions

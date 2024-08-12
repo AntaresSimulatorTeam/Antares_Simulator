@@ -47,13 +47,13 @@ double EvalVisitor::visit(const MultiplicationNode& mult)
 
 double EvalVisitor::visit(const DivisionNode& div)
 {
-    if (auto divisor = dispatch(*div[1]); divisor != 0)
+    if (auto divisor = dispatch(*div[1]); divisor == 0.0)
     {
-        return dispatch(*div[0]) / divisor;
+        throw EvalVisitorDivisionException("DivisionNode Division by zero");
     }
     else
     {
-        throw EvalVisitorDivisionException("DivisionNode Division by zero");
+        return dispatch(*div[0]) / divisor;
     }
 }
 

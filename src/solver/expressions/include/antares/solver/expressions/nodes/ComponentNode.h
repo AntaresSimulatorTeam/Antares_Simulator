@@ -29,8 +29,10 @@ class ComponentNode: public Node
 {
 public:
     explicit ComponentNode(const std::string& component_id, const std::string& component_name);
-    virtual ~ComponentNode() = default;
+    const std::string& getComponentId() const;
+    const std::string& getComponentName() const;
 
+private:
     std::string component_id_;
     std::string component_name_;
 };

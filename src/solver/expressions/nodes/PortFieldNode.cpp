@@ -27,4 +27,14 @@ PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& fi
     field_name_(field_name)
 {
 }
+
+const std::string& PortFieldNode::getPortName() const
+{
+    return port_name_;
+}
+
+const std::string& PortFieldNode::getFieldName() const
+{
+    return field_name_;
+}
 } // namespace Antares::Solver::Expressions

@@ -30,7 +30,10 @@ class PortFieldNode: public Node
 {
 public:
     explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
-    //   std::string
+    const std::string& getPortName() const;
+    const std::string& getFieldName() const;
+
+private:
     std::string port_name_;
     std::string field_name_;
 };
