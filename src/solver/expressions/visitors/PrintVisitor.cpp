@@ -29,7 +29,7 @@ std::string PrintVisitor::visit(const AddNode& add)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
-    return dispatch(*add[0]) + "+" + dispatch(*add[1]);
+    return "(" + dispatch(*add[0]) + "+" + dispatch(*add[1]) + ")";
 }
 
 std::string PrintVisitor::visit(const SubtractionNode& sub)
@@ -39,12 +39,12 @@ std::string PrintVisitor::visit(const SubtractionNode& sub)
 
 std::string PrintVisitor::visit(const MultiplicationNode& mult)
 {
-    return dispatch(*mult[0]) + "*" + dispatch(*mult[1]);
+    return "(" + dispatch(*mult[0]) + "*" + dispatch(*mult[1]) + ")";
 }
 
 std::string PrintVisitor::visit(const DivisionNode& div)
 {
-    return dispatch(*div[0]) + "/" + dispatch(*div[1]);
+    return "(" + dispatch(*div[0]) + "/" + dispatch(*div[1]) + ")";
 }
 
 std::string PrintVisitor::visit(const EqualNode& equ)
