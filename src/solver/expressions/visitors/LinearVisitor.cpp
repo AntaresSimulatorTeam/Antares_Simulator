@@ -102,4 +102,9 @@ bool LinearVisitor::visit(const ComponentParameterNode& component_parameter_node
     // TODO
     return true;
 }
+
+LinearVisitor::LinearVisitor(const std::string variable):
+    variable_(variable)
+{
+}
 } // namespace Antares::Solver::Expressions

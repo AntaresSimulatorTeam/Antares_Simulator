@@ -27,6 +27,7 @@ namespace Antares::Solver::Expressions
 class LinearVisitor: public NodeVisitor<bool>
 {
 public:
+    explicit LinearVisitor(const std::string variable);
     using Base = NodeVisitor<bool>;
 
 private:
@@ -44,5 +45,6 @@ private:
     bool visit(const PortFieldNode& port_field_node) override;
     bool visit(const ComponentVariableNode& component_variable_node) override;
     bool visit(const ComponentParameterNode& component_parameter_node) override;
+    const std::string variable_;
 };
 } // namespace Antares::Solver::Expressions
