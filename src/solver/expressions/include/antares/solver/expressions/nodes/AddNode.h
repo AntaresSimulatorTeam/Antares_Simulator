@@ -28,5 +28,10 @@ class AddNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
+
+    bool IsConstant()
+    {
+        return false;
+    }
 };
 } // namespace Antares::Solver::Expressions
