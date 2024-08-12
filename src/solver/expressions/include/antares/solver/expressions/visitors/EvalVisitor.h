@@ -38,7 +38,7 @@ class EvalVisitor: public Visitor<double>
 public:
     using Base = Visitor<double>;
     EvalVisitor() = default; // No context (variables / parameters)
-    EvalVisitor(EvaluationContext context);
+    explicit EvalVisitor(EvaluationContext context);
 
 private:
     const EvaluationContext context_;

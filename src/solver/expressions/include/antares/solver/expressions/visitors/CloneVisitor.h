@@ -28,7 +28,7 @@ namespace Antares::Solver::Expressions
 class CloneVisitor: public Visitor<Node*>
 {
 public:
-    CloneVisitor(Registry<Node>& mem);
+    explicit CloneVisitor(Registry<Node>& mem);
 
     Node* visit(const AddNode& add) override;
     Node* visit(const SubtractionNode& add) override;

@@ -9,8 +9,8 @@ class EvaluationContext
 {
 public:
     EvaluationContext() = default;
-    EvaluationContext(std::map<std::string, double> parameters,
-                      std::map<std::string, double> variables);
+    explicit EvaluationContext(std::map<std::string, double> parameters,
+                               std::map<std::string, double> variables);
 
     double getVariableValue(const std::string&) const;
     double getParameterValue(const std::string&) const;
