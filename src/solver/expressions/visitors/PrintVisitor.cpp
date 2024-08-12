@@ -32,34 +32,34 @@ std::string PrintVisitor::visit(const AddNode& add)
     return dispatch(*add[0]) + "+" + dispatch(*add[1]);
 }
 
-std::string PrintVisitor::visit(const SubtractionNode& add)
+std::string PrintVisitor::visit(const SubtractionNode& sub)
 {
-    return "(" + dispatch(*add[0]) + "-" + dispatch(*add[1]) + ")";
+    return "(" + dispatch(*sub[0]) + "-" + dispatch(*sub[1]) + ")";
 }
 
-std::string PrintVisitor::visit(const MultiplicationNode& add)
+std::string PrintVisitor::visit(const MultiplicationNode& mult)
 {
-    return dispatch(*add[0]) + "*" + dispatch(*add[1]);
+    return dispatch(*mult[0]) + "*" + dispatch(*mult[1]);
 }
 
-std::string PrintVisitor::visit(const DivisionNode& add)
+std::string PrintVisitor::visit(const DivisionNode& div)
 {
-    return dispatch(*add[0]) + "/" + dispatch(*add[1]);
+    return dispatch(*div[0]) + "/" + dispatch(*div[1]);
 }
 
-std::string PrintVisitor::visit(const EqualNode& add)
+std::string PrintVisitor::visit(const EqualNode& equ)
 {
-    return dispatch(*add[0]) + "==" + dispatch(*add[1]);
+    return dispatch(*equ[0]) + "==" + dispatch(*equ[1]);
 }
 
-std::string PrintVisitor::visit(const LessThanOrEqualNode& add)
+std::string PrintVisitor::visit(const LessThanOrEqualNode& lt)
 {
-    return dispatch(*add[0]) + "<=" + dispatch(*add[1]);
+    return dispatch(*lt[0]) + "<=" + dispatch(*lt[1]);
 }
 
-std::string PrintVisitor::visit(const GreaterThanOrEqualNode& add)
+std::string PrintVisitor::visit(const GreaterThanOrEqualNode& gt)
 {
-    return dispatch(*add[0]) + ">=" + dispatch(*add[1]);
+    return dispatch(*gt[0]) + ">=" + dispatch(*gt[1]);
 }
 
 std::string PrintVisitor::visit(const NegationNode& neg)
