@@ -30,7 +30,9 @@
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
-using namespace Antares::Solver::Expressions;
+using namespace Antares::Solver;
+using namespace Antares::Solver::Nodes;
+using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
 {

@@ -24,7 +24,7 @@
 
 #include <antares/solver/expressions/nodes/Leaf.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class PortFieldNode: public Node
 {
@@ -37,4 +37,4 @@ private:
     std::string port_name_;
     std::string field_name_;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

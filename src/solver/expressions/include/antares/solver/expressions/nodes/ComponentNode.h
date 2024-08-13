@@ -23,7 +23,7 @@
 
 #include <antares/solver/expressions/nodes/Node.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class ComponentNode: public Node
 {
@@ -48,4 +48,4 @@ class ComponentParameterNode: public ComponentNode
 public:
     using ComponentNode::ComponentNode;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

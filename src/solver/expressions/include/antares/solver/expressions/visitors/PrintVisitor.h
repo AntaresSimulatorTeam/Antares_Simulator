@@ -22,27 +22,27 @@
 
 #include "antares/solver/expressions/nodes/NodeVisitor.h"
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
-class PrintVisitor: public NodeVisitor<std::string>
+class PrintVisitor: public Nodes::NodeVisitor<std::string>
 {
 public:
-    using Base = NodeVisitor<std::string>;
+    using Base = Nodes::NodeVisitor<std::string>;
 
 private:
-    std::string visit(const AddNode& add) override;
-    std::string visit(const SubtractionNode& add) override;
-    std::string visit(const MultiplicationNode& add) override;
-    std::string visit(const DivisionNode& add) override;
-    std::string visit(const EqualNode& add) override;
-    std::string visit(const LessThanOrEqualNode& add) override;
-    std::string visit(const GreaterThanOrEqualNode& add) override;
-    std::string visit(const NegationNode& neg) override;
-    std::string visit(const VariableNode& param) override;
-    std::string visit(const ParameterNode& param) override;
-    std::string visit(const LiteralNode& lit) override;
-    std::string visit(const PortFieldNode& port_field_node) override;
-    std::string visit(const ComponentVariableNode& component_variable_node) override;
-    std::string visit(const ComponentParameterNode& component_parameter_node) override;
+    std::string visit(const Nodes::AddNode& add) override;
+    std::string visit(const Nodes::SubtractionNode& add) override;
+    std::string visit(const Nodes::MultiplicationNode& add) override;
+    std::string visit(const Nodes::DivisionNode& add) override;
+    std::string visit(const Nodes::EqualNode& add) override;
+    std::string visit(const Nodes::LessThanOrEqualNode& add) override;
+    std::string visit(const Nodes::GreaterThanOrEqualNode& add) override;
+    std::string visit(const Nodes::NegationNode& neg) override;
+    std::string visit(const Nodes::VariableNode& param) override;
+    std::string visit(const Nodes::ParameterNode& param) override;
+    std::string visit(const Nodes::LiteralNode& lit) override;
+    std::string visit(const Nodes::PortFieldNode& port_field_node) override;
+    std::string visit(const Nodes::ComponentVariableNode& component_variable_node) override;
+    std::string visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

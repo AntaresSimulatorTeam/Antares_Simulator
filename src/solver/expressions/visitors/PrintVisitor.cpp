@@ -23,51 +23,51 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
-std::string PrintVisitor::visit(const AddNode& add)
+std::string PrintVisitor::visit(const Nodes::AddNode& add)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
     return "(" + dispatch(*add[0]) + "+" + dispatch(*add[1]) + ")";
 }
 
-std::string PrintVisitor::visit(const SubtractionNode& sub)
+std::string PrintVisitor::visit(const Nodes::SubtractionNode& sub)
 {
     return "(" + dispatch(*sub[0]) + "-" + dispatch(*sub[1]) + ")";
 }
 
-std::string PrintVisitor::visit(const MultiplicationNode& mult)
+std::string PrintVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
     return "(" + dispatch(*mult[0]) + "*" + dispatch(*mult[1]) + ")";
 }
 
-std::string PrintVisitor::visit(const DivisionNode& div)
+std::string PrintVisitor::visit(const Nodes::DivisionNode& div)
 {
     return "(" + dispatch(*div[0]) + "/" + dispatch(*div[1]) + ")";
 }
 
-std::string PrintVisitor::visit(const EqualNode& equ)
+std::string PrintVisitor::visit(const Nodes::EqualNode& equ)
 {
     return dispatch(*equ[0]) + "==" + dispatch(*equ[1]);
 }
 
-std::string PrintVisitor::visit(const LessThanOrEqualNode& lt)
+std::string PrintVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     return dispatch(*lt[0]) + "<=" + dispatch(*lt[1]);
 }
 
-std::string PrintVisitor::visit(const GreaterThanOrEqualNode& gt)
+std::string PrintVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     return dispatch(*gt[0]) + ">=" + dispatch(*gt[1]);
 }
 
-std::string PrintVisitor::visit(const NegationNode& neg)
+std::string PrintVisitor::visit(const Nodes::NegationNode& neg)
 {
     return "-(" + dispatch(*neg[0]) + ")";
 }
 
-std::string PrintVisitor::visit(const ParameterNode& param)
+std::string PrintVisitor::visit(const Nodes::ParameterNode& param)
 {
     return param.getValue();
 }
@@ -98,4 +98,4 @@ std::string PrintVisitor::visit(const ComponentParameterNode& component_paramete
     return component_parameter_node.getComponentId() + "."
            + component_parameter_node.getComponentName();
 }
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

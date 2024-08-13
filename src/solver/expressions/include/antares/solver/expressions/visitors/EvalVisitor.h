@@ -25,7 +25,7 @@
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include "antares/solver/expressions/nodes/NodeVisitor.h"
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
 
 struct EvalVisitorDivisionException: std::overflow_error
@@ -33,28 +33,28 @@ struct EvalVisitorDivisionException: std::overflow_error
     using std::overflow_error::overflow_error;
 };
 
-class EvalVisitor: public NodeVisitor<double>
+class EvalVisitor: public Nodes::NodeVisitor<double>
 {
 public:
-    using Base = NodeVisitor<double>;
+    using Base = Nodes::NodeVisitor<double>;
     EvalVisitor() = default; // No context (variables / parameters)
     explicit EvalVisitor(EvaluationContext context);
 
 private:
     const EvaluationContext context_;
-    double visit(const AddNode& add) override;
-    double visit(const SubtractionNode& add) override;
-    double visit(const MultiplicationNode& add) override;
-    double visit(const DivisionNode& add) override;
-    double visit(const EqualNode& add) override;
-    double visit(const LessThanOrEqualNode& add) override;
-    double visit(const GreaterThanOrEqualNode& add) override;
-    double visit(const NegationNode& neg) override;
-    double visit(const VariableNode&) override;
-    double visit(const ParameterNode& param) override;
-    double visit(const LiteralNode& lit) override;
-    double visit(const PortFieldNode& port_field_node) override;
-    double visit(const ComponentVariableNode& component_variable_node) override;
-    double visit(const ComponentParameterNode& component_parameter_node) override;
+    double visit(const Nodes::AddNode& add) override;
+    double visit(const Nodes::SubtractionNode& add) override;
+    double visit(const Nodes::MultiplicationNode& add) override;
+    double visit(const Nodes::DivisionNode& add) override;
+    double visit(const Nodes::EqualNode& add) override;
+    double visit(const Nodes::LessThanOrEqualNode& add) override;
+    double visit(const Nodes::GreaterThanOrEqualNode& add) override;
+    double visit(const Nodes::NegationNode& neg) override;
+    double visit(const Nodes::VariableNode&) override;
+    double visit(const Nodes::ParameterNode& param) override;
+    double visit(const Nodes::LiteralNode& lit) override;
+    double visit(const Nodes::PortFieldNode& port_field_node) override;
+    double visit(const Nodes::ComponentVariableNode& component_variable_node) override;
+    double visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

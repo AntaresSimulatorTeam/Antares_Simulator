@@ -22,11 +22,11 @@
 
 #include <antares/solver/expressions/nodes/BinaryNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class SubtractionNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

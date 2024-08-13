@@ -1,6 +1,6 @@
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
 EvaluationContext::EvaluationContext(std::map<std::string, double> parameters,
                                      std::map<std::string, double> variables):
@@ -18,4 +18,4 @@ double EvaluationContext::getParameterValue(const std::string& key) const
 {
     return parameters_.at(key);
 }
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

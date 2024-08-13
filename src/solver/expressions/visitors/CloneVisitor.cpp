@@ -21,85 +21,90 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
-CloneVisitor::CloneVisitor(Registry<Node>& mem):
+CloneVisitor::CloneVisitor(Registry<Nodes::Node>& mem):
     registry_(mem)
 {
 }
 
-Node* CloneVisitor::visit(const AddNode& input_node)
+Nodes::Node* CloneVisitor::visit(const Nodes::AddNode& input_node)
 {
-    return registry_.create<AddNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
+    return registry_.create<Nodes::AddNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const SubtractionNode& input_node)
+Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode& input_node)
 {
-    return registry_.create<SubtractionNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
-}
-
-Node* CloneVisitor::visit(const MultiplicationNode& input_node)
-{
-    return registry_.create<MultiplicationNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
-}
-
-Node* CloneVisitor::visit(const DivisionNode& input_node)
-{
-    return registry_.create<DivisionNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
-}
-
-Node* CloneVisitor::visit(const EqualNode& input_node)
-{
-    return registry_.create<EqualNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
-}
-
-Node* CloneVisitor::visit(const LessThanOrEqualNode& input_node)
-{
-    return registry_.create<LessThanOrEqualNode>(dispatch(*input_node[0]),
-                                                 dispatch(*input_node[1]));
-}
-
-Node* CloneVisitor::visit(const GreaterThanOrEqualNode& input_node)
-{
-    return registry_.create<GreaterThanOrEqualNode>(dispatch(*input_node[0]),
+    return registry_.create<Nodes::SubtractionNode>(dispatch(*input_node[0]),
                                                     dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const NegationNode& neg)
+Nodes::Node* CloneVisitor::visit(const Nodes::MultiplicationNode& input_node)
 {
-    return registry_.create<NegationNode>(dispatch(*neg[0]));
+    return registry_.create<Nodes::MultiplicationNode>(dispatch(*input_node[0]),
+                                                       dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const VariableNode& param)
+Nodes::Node* CloneVisitor::visit(const Nodes::DivisionNode& input_node)
 {
-    return registry_.create<VariableNode>(param.getValue());
+    return registry_.create<Nodes::DivisionNode>(dispatch(*input_node[0]),
+                                                 dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const ParameterNode& param)
+Nodes::Node* CloneVisitor::visit(const Nodes::EqualNode& input_node)
 {
-    return registry_.create<ParameterNode>(param.getValue());
+    return registry_.create<Nodes::EqualNode>(dispatch(*input_node[0]), dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const LiteralNode& param)
+Nodes::Node* CloneVisitor::visit(const Nodes::LessThanOrEqualNode& input_node)
 {
-    return registry_.create<LiteralNode>(param.getValue());
+    return registry_.create<Nodes::LessThanOrEqualNode>(dispatch(*input_node[0]),
+                                                        dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const PortFieldNode& port_field_node)
+Nodes::Node* CloneVisitor::visit(const Nodes::GreaterThanOrEqualNode& input_node)
 {
-    return registry_.create<PortFieldNode>(port_field_node.getPortName(),
-                                           port_field_node.getFieldName());
+    return registry_.create<Nodes::GreaterThanOrEqualNode>(dispatch(*input_node[0]),
+                                                           dispatch(*input_node[1]));
 }
 
-Node* CloneVisitor::visit(const ComponentVariableNode& component_variable_node)
+Nodes::Node* CloneVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return registry_.create<ComponentVariableNode>(component_variable_node.getComponentId(),
-                                                   component_variable_node.getComponentName());
+    return registry_.create<Nodes::NegationNode>(dispatch(*neg[0]));
 }
 
-Node* CloneVisitor::visit(const ComponentParameterNode& component_parameter_node)
+Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode& param)
 {
-    return registry_.create<ComponentParameterNode>(component_parameter_node.getComponentId(),
-                                                    component_parameter_node.getComponentName());
+    return registry_.create<Nodes::VariableNode>(param.getValue());
 }
-} // namespace Antares::Solver::Expressions
+
+Nodes::Node* CloneVisitor::visit(const Nodes::ParameterNode& param)
+{
+    return registry_.create<Nodes::ParameterNode>(param.getValue());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::LiteralNode& param)
+{
+    return registry_.create<Nodes::LiteralNode>(param.getValue());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode& port_field_node)
+{
+    return registry_.create<Nodes::PortFieldNode>(port_field_node.getPortName(),
+                                                  port_field_node.getFieldName());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
+{
+    return registry_.create<Nodes::ComponentVariableNode>(
+      component_variable_node.getComponentId(),
+      component_variable_node.getComponentName());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
+{
+    return registry_.create<Nodes::ComponentParameterNode>(
+      component_parameter_node.getComponentId(),
+      component_parameter_node.getComponentName());
+}
+} // namespace Antares::Solver::Visitors

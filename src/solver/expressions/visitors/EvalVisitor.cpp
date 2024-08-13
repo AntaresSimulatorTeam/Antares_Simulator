@@ -23,29 +23,29 @@
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
 EvalVisitor::EvalVisitor(EvaluationContext context):
     context_(std::move(context))
 {
 }
 
-double EvalVisitor::visit(const AddNode& add)
+double EvalVisitor::visit(const Nodes::AddNode& add)
 {
     return dispatch(*add[0]) + dispatch(*add[1]);
 }
 
-double EvalVisitor::visit(const SubtractionNode& sub)
+double EvalVisitor::visit(const Nodes::SubtractionNode& sub)
 {
     return dispatch(*sub[0]) - dispatch(*sub[1]);
 }
 
-double EvalVisitor::visit(const MultiplicationNode& mult)
+double EvalVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
     return dispatch(*mult[0]) * dispatch(*mult[1]);
 }
 
-double EvalVisitor::visit(const DivisionNode& div)
+double EvalVisitor::visit(const Nodes::DivisionNode& div)
 {
     if (auto divisor = dispatch(*div[1]); divisor == 0.0)
     {
@@ -57,19 +57,19 @@ double EvalVisitor::visit(const DivisionNode& div)
     }
 }
 
-double EvalVisitor::visit(const EqualNode& equ)
+double EvalVisitor::visit(const Nodes::EqualNode& equ)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const LessThanOrEqualNode& lt)
+double EvalVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const GreaterThanOrEqualNode& gt)
+double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     // not implemented for comparison node
     return 0.;
@@ -110,4 +110,4 @@ double EvalVisitor::visit(const ComponentParameterNode& component_parameter_node
     // TODO
     return 0.;
 }
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

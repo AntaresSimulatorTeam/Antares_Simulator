@@ -23,7 +23,7 @@
 
 #include <antares/solver/expressions/nodes/Node.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 // constraint T to arithmetic types?
 template<class T>
@@ -44,4 +44,4 @@ private:
     T value_;
 };
 
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

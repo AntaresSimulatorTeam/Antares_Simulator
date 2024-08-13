@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
 class EvaluationContext
 {
@@ -20,4 +20,4 @@ private:
     std::map<std::string, double> variables_;
 };
 
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

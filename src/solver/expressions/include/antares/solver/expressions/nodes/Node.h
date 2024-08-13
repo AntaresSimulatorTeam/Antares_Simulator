@@ -20,11 +20,11 @@
 */
 #pragma once
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class Node
 {
 public:
     virtual ~Node() = default;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

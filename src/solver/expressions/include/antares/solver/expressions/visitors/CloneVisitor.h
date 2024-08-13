@@ -23,29 +23,29 @@
 #include <antares/solver/expressions/Registry.hxx>
 #include "antares/solver/expressions/nodes/NodeVisitor.h"
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
-class CloneVisitor: public NodeVisitor<Node*>
+class CloneVisitor: public Nodes::NodeVisitor<Nodes::Node*>
 {
 public:
-    explicit CloneVisitor(Registry<Node>& mem);
+    explicit CloneVisitor(Registry<Nodes::Node>& mem);
 
-    Node* visit(const AddNode& add) override;
-    Node* visit(const SubtractionNode& add) override;
-    Node* visit(const MultiplicationNode& add) override;
-    Node* visit(const DivisionNode& add) override;
-    Node* visit(const EqualNode& add) override;
-    Node* visit(const LessThanOrEqualNode& add) override;
-    Node* visit(const GreaterThanOrEqualNode& add) override;
-    Node* visit(const NegationNode& neg) override;
-    Node* visit(const VariableNode& param) override;
-    Node* visit(const ParameterNode& param) override;
-    Node* visit(const LiteralNode& param) override;
-    Node* visit(const PortFieldNode& port_field_node) override;
-    Node* visit(const ComponentVariableNode& component_node) override;
-    Node* visit(const ComponentParameterNode& component_node) override;
+    Nodes::Node* visit(const Nodes::AddNode& add) override;
+    Nodes::Node* visit(const Nodes::SubtractionNode& add) override;
+    Nodes::Node* visit(const Nodes::MultiplicationNode& add) override;
+    Nodes::Node* visit(const Nodes::DivisionNode& add) override;
+    Nodes::Node* visit(const Nodes::EqualNode& add) override;
+    Nodes::Node* visit(const Nodes::LessThanOrEqualNode& add) override;
+    Nodes::Node* visit(const Nodes::GreaterThanOrEqualNode& add) override;
+    Nodes::Node* visit(const Nodes::NegationNode& neg) override;
+    Nodes::Node* visit(const Nodes::VariableNode& param) override;
+    Nodes::Node* visit(const Nodes::ParameterNode& param) override;
+    Nodes::Node* visit(const Nodes::LiteralNode& param) override;
+    Nodes::Node* visit(const Nodes::PortFieldNode& port_field_node) override;
+    Nodes::Node* visit(const Nodes::ComponentVariableNode& component_node) override;
+    Nodes::Node* visit(const Nodes::ComponentParameterNode& component_node) override;
 
 private:
-    Registry<Node>& registry_;
+    Registry<Nodes::Node>& registry_;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

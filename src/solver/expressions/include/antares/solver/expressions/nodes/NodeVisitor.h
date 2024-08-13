@@ -26,7 +26,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 
 template<class R>
@@ -48,8 +48,8 @@ public:
 
     R dispatch(const Node& node)
     {
-        using Function = std::optional<R> (Antares::Solver::Expressions::NodeVisitor<R>::*)(
-          const Antares::Solver::Expressions::Node&);
+        using Function = std::optional<R> (Antares::Solver::Nodes::NodeVisitor<R>::*)(
+          const Antares::Solver::Nodes::Node&);
         static const std::array<Function, 16> tryFunctions{
           &NodeVisitor<R>::tryType<AddNode>,
           &NodeVisitor<R>::tryType<SubtractionNode>,
@@ -72,7 +72,7 @@ public:
                 return x.value();
             }
         }
-        logs.error() << "Antares::Solver::Expressions Visitor: unsupported Node!";
+        logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
         return R();
     }
 
@@ -93,4 +93,4 @@ private:
     virtual R visit(const ComponentParameterNode&) = 0;
 };
 
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes
