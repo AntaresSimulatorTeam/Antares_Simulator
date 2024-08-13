@@ -24,27 +24,50 @@
 
 namespace Antares::Solver::Visitors
 {
-class LinearVisitor: public Nodes::NodeVisitor<bool>
+
+enum class LinearStatus
+{
+    CONSTANT,
+    LINEAR,
+    NON_LINEAR
+};
+
+class LinearOperations
+{
+public:
+    explicit LinearOperations(const LinearStatus& status);
+    LinearOperations(const LinearOperations& other) = default;
+    LinearOperations operator*(const LinearOperations& other);
+    LinearOperations operator/(const LinearOperations& other);
+    LinearOperations operator+(const LinearOperations& other);
+    LinearOperations operator-(const LinearOperations& other);
+    LinearStatus getStatus() const;
+
+private:
+    LinearStatus status_;
+};
+
+class LinearVisitor: public Nodes::NodeVisitor<LinearOperations>
 {
 public:
     explicit LinearVisitor(const std::string variable);
-    using Base = Nodes::NodeVisitor<bool>;
+    using Base = Nodes::NodeVisitor<LinearOperations>;
 
 private:
-    bool visit(const Nodes::AddNode& add) override;
-    bool visit(const Nodes::SubtractionNode& add) override;
-    bool visit(const Nodes::MultiplicationNode& add) override;
-    bool visit(const Nodes::DivisionNode& add) override;
-    bool visit(const Nodes::EqualNode& add) override;
-    bool visit(const Nodes::LessThanOrEqualNode& add) override;
-    bool visit(const Nodes::GreaterThanOrEqualNode& add) override;
-    bool visit(const Nodes::NegationNode& neg) override;
-    bool visit(const Nodes::VariableNode& param) override;
-    bool visit(const Nodes::ParameterNode& param) override;
-    bool visit(const Nodes::LiteralNode& lit) override;
-    bool visit(const Nodes::PortFieldNode& port_field_node) override;
-    bool visit(const Nodes::ComponentVariableNode& component_variable_node) override;
-    bool visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
+    LinearOperations visit(const Nodes::AddNode& add) override;
+    LinearOperations visit(const Nodes::SubtractionNode& add) override;
+    LinearOperations visit(const Nodes::MultiplicationNode& add) override;
+    LinearOperations visit(const Nodes::DivisionNode& add) override;
+    LinearOperations visit(const Nodes::EqualNode& add) override;
+    LinearOperations visit(const Nodes::LessThanOrEqualNode& add) override;
+    LinearOperations visit(const Nodes::GreaterThanOrEqualNode& add) override;
+    LinearOperations visit(const Nodes::NegationNode& neg) override;
+    LinearOperations visit(const Nodes::VariableNode& param) override;
+    LinearOperations visit(const Nodes::ParameterNode& param) override;
+    LinearOperations visit(const Nodes::LiteralNode& lit) override;
+    LinearOperations visit(const Nodes::PortFieldNode& port_field_node) override;
+    LinearOperations visit(const Nodes::ComponentVariableNode& component_variable_node) override;
+    LinearOperations visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
     const std::string variable_;
 };
 } // namespace Antares::Solver::Visitors
