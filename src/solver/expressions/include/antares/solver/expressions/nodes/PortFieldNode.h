@@ -33,11 +33,6 @@ public:
     const std::string& getPortName() const;
     const std::string& getFieldName() const;
 
-    bool IsConstant() override
-    {
-        return false;
-    }
-
 private:
     std::string port_name_;
     std::string field_name_;

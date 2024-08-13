@@ -10,10 +10,5 @@ class ParameterNode: public Leaf<std::string>
 {
 public:
     using Leaf<std::string>::Leaf;
-
-    bool IsConstant() override
-    {
-        return true;
-    }
 };
 } // namespace Antares::Solver::Expressions

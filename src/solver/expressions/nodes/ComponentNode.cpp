@@ -37,9 +37,4 @@ const std::string& ComponentNode::getComponentName() const
 {
     return component_name_;
 }
-
-bool ComponentNode::IsConstant()
-{
-    return false;
-}
 } // namespace Antares::Solver::Expressions

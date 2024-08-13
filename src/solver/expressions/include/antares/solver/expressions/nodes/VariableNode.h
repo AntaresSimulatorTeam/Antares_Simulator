@@ -10,10 +10,5 @@ class VariableNode: public Leaf<std::string>
 {
 public:
     using Leaf<std::string>::Leaf;
-
-    bool IsConstant()
-    {
-        return false;
-    }
 };
 } // namespace Antares::Solver::Expressions
