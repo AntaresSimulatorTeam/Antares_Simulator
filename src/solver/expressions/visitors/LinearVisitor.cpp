@@ -22,156 +22,81 @@
 #include "antares/solver/expressions/visitors/LinearVisitor.h"
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/LinearStatus.h>
 
 namespace Antares::Solver::Visitors
 {
 
-LinearOperations LinearVisitor::visit(const Nodes::AddNode& add)
+LinearStatus LinearVisitor::visit(const Nodes::AddNode& add)
 {
     return dispatch(*add[0]) + dispatch(*add[1]);
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::SubtractionNode& sub)
+LinearStatus LinearVisitor::visit(const Nodes::SubtractionNode& sub)
 {
     return dispatch(*sub[0]) - dispatch(*sub[1]);
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::MultiplicationNode& mult)
+LinearStatus LinearVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
     return dispatch(*mult[0]) * dispatch(*mult[1]);
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::DivisionNode& div)
+LinearStatus LinearVisitor::visit(const Nodes::DivisionNode& div)
 {
     return dispatch(*div[0]) / dispatch(*div[1]);
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::EqualNode& equ)
+LinearStatus LinearVisitor::visit(const Nodes::EqualNode& equ)
 { // TODO
-    return LinearOperations(LinearStatus::NON_LINEAR);
+    return LinearStatus::NON_LINEAR;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
+LinearStatus LinearVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     // TODO
-    return LinearOperations(LinearStatus::NON_LINEAR);
+    return LinearStatus::NON_LINEAR;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
+LinearStatus LinearVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     // TODO
-    return LinearOperations(LinearStatus::NON_LINEAR);
+    return LinearStatus::NON_LINEAR;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::VariableNode& var)
+LinearStatus LinearVisitor::visit(const Nodes::VariableNode& var)
 {
-    // TODO
-    //    return var.getValue() == variable_;
+    return LinearStatus::LINEAR;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::ParameterNode& param)
+LinearStatus LinearVisitor::visit(const Nodes::ParameterNode& param)
 {
-    return true;
+    return LinearStatus::CONSTANT;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::LiteralNode& lit)
+LinearStatus LinearVisitor::visit(const Nodes::LiteralNode& lit)
 {
-    return true;
+    return LinearStatus::CONSTANT;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::NegationNode& neg)
+LinearStatus LinearVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return dispatch(*neg[0]);
+    return -dispatch(*neg[0]);
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::PortFieldNode& port_field_node)
+LinearStatus LinearVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
-    // TODO
-    return true;
+    return LinearStatus::CONSTANT;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
+LinearStatus LinearVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
-    // TODO
-    return true;
+    return LinearStatus::LINEAR;
 }
 
-LinearOperations LinearVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
+LinearStatus LinearVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
-    // TODO
-    return true;
-}
-
-LinearVisitor::LinearVisitor(const std::string variable):
-    variable_(variable)
-{
-}
-
-LinearOperations::LinearOperations(const LinearStatus& status):
-    status_(status)
-{
-}
-
-LinearOperations LinearOperations::operator*(const LinearOperations& other)
-{
-    switch (other.status_)
-    {
-    case LinearStatus::NON_LINEAR:
-        return LinearOperations(LinearStatus::NON_LINEAR);
-    case LinearStatus::CONSTANT:
-        return LinearOperations(status_);
-    case LinearStatus::LINEAR:
-        if (status_ == LinearStatus::CONSTANT)
-        {
-            return LinearOperations(other.status_);
-        }
-        else
-        {
-            return LinearOperations(LinearStatus::NON_LINEAR);
-        }
-    };
-}
-
-LinearOperations LinearOperations::operator/(const LinearOperations& other)
-{
-    switch (other.status_)
-    {
-    case LinearStatus::NON_LINEAR:
-    case LinearStatus::LINEAR:
-        return LinearOperations(LinearStatus::NON_LINEAR);
-    case LinearStatus::CONSTANT:
-        return LinearOperations(status_);
-    };
-}
-
-LinearStatus LinearOperations::getStatus() const
-{
-    return status_;
-}
-
-LinearOperations LinearOperations::operator+(const LinearOperations& other)
-{
-    switch (other.status_)
-    {
-    case LinearStatus::NON_LINEAR:
-        return LinearOperations(LinearStatus::NON_LINEAR);
-    case LinearStatus::CONSTANT:
-        return LinearOperations(status_);
-    case LinearStatus::LINEAR:
-        if (status_ == LinearStatus::CONSTANT || status_ == LinearStatus::LINEAR)
-        {
-            return LinearOperations(other.status_);
-        }
-        else
-        {
-            return LinearOperations(LinearStatus::NON_LINEAR);
-        }
-    };
-}
-
-LinearOperations LinearOperations::operator-(const LinearOperations& other)
-{
-    return operator+(other);
+    return LinearStatus::CONSTANT;
 }
 
 } // namespace Antares::Solver::Visitors
