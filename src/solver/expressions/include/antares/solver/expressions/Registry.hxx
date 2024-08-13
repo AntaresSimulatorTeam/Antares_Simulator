@@ -25,7 +25,7 @@
 #include <mutex>
 #include <vector>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver
 {
 //  Template class to manage the memory allocation and registry for a base class
 template<class Base>
@@ -49,4 +49,4 @@ private:
       registry_; //  Registry to manage dynamically allocated objects
     std::mutex mutex_;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver

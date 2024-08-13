@@ -4,16 +4,11 @@
 
 #include <antares/solver/expressions/nodes/Leaf.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class ParameterNode: public Leaf<std::string>
 {
 public:
     using Leaf<std::string>::Leaf;
-
-    bool IsConstant() override
-    {
-        return true;
-    }
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

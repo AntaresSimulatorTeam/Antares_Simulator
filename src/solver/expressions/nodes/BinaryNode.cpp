@@ -22,10 +22,10 @@
 
 #include <antares/solver/expressions/nodes/BinaryNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 BinaryNode::BinaryNode(Node* n1, Node* n2):
     ParentNode<2>({n1, n2})
 {
 }
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

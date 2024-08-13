@@ -22,16 +22,11 @@
 
 #include <antares/solver/expressions/nodes/BinaryNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class AddNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
-
-    bool IsConstant()
-    {
-        return false;
-    }
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

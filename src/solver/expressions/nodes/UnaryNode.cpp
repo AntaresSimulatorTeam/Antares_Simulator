@@ -22,10 +22,10 @@
 
 #include <antares/solver/expressions/nodes/UnaryNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 UnaryNode::UnaryNode(Node* n1):
     ParentNode<1>({n1})
 {
 }
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

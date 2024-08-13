@@ -20,7 +20,7 @@
 */
 #include <antares/solver/expressions/nodes/ComponentNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 ComponentNode::ComponentNode(const std::string& component_id, const std::string& component_name):
     component_id_(component_id),
@@ -37,9 +37,4 @@ const std::string& ComponentNode::getComponentName() const
 {
     return component_name_;
 }
-
-bool ComponentNode::IsConstant()
-{
-    return false;
-}
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

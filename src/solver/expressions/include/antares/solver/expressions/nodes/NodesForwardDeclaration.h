@@ -21,7 +21,7 @@
 #pragma once
 #include <string>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class Node;
 class AddNode;
@@ -39,4 +39,4 @@ class ComponentParameterNode;
 class ParameterNode;
 class VariableNode;
 class PortFieldNode;
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

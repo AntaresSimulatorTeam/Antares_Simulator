@@ -22,11 +22,11 @@
 
 #include <antares/solver/expressions/nodes/ComparisonNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class GreaterThanOrEqualNode: public ComparisonNode
 {
 public:
     using ComparisonNode::ComparisonNode;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

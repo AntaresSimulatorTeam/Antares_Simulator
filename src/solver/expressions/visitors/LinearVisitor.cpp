@@ -23,82 +23,83 @@
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
 
-bool LinearVisitor::visit(const AddNode& add)
+bool LinearVisitor::visit(const Nodes::AddNode& add)
 {
     return dispatch(*add[0]) && dispatch(*add[1]);
 }
 
-bool LinearVisitor::visit(const SubtractionNode& sub)
+bool LinearVisitor::visit(const Nodes::SubtractionNode& sub)
 {
     return dispatch(*sub[0]) && dispatch(*sub[1]);
 }
 
-bool LinearVisitor::visit(const MultiplicationNode& mult)
+bool LinearVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
     // TODO The product of a constant and a linear expression is linear
-    return (dispatch(*mult[0]) && mult[1]->IsConstant())
-           || (dispatch(*mult[1]) && mult[0]->IsConstant());
+    //    return (dispatch(*mult[0]) && mult[1]->IsConstant())
+    //           || (dispatch(*mult[1]) && mult[0]->IsConstant());
+    return true;
 }
 
-bool LinearVisitor::visit(const DivisionNode& div)
+bool LinearVisitor::visit(const Nodes::DivisionNode& div)
 {
     return false;
 }
 
-bool LinearVisitor::visit(const EqualNode& equ)
+bool LinearVisitor::visit(const Nodes::EqualNode& equ)
 { // TODO
     return 0.;
 }
 
-bool LinearVisitor::visit(const LessThanOrEqualNode& lt)
+bool LinearVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     // TODO
     return 0.;
 }
 
-bool LinearVisitor::visit(const GreaterThanOrEqualNode& gt)
+bool LinearVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     // TODO
     return 0.;
 }
 
-bool LinearVisitor::visit(const VariableNode& var)
+bool LinearVisitor::visit(const Nodes::VariableNode& var)
 {
     // TODO
     return var.getValue() == variable_;
 }
 
-bool LinearVisitor::visit(const ParameterNode& param)
+bool LinearVisitor::visit(const Nodes::ParameterNode& param)
 {
     return true;
 }
 
-bool LinearVisitor::visit(const LiteralNode& lit)
+bool LinearVisitor::visit(const Nodes::LiteralNode& lit)
 {
     return true;
 }
 
-bool LinearVisitor::visit(const NegationNode& neg)
+bool LinearVisitor::visit(const Nodes::NegationNode& neg)
 {
     return dispatch(*neg[0]);
 }
 
-bool LinearVisitor::visit(const PortFieldNode& port_field_node)
+bool LinearVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
     // TODO
     return true;
 }
 
-bool LinearVisitor::visit(const ComponentVariableNode& component_variable_node)
+bool LinearVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
     // TODO
     return true;
 }
 
-bool LinearVisitor::visit(const ComponentParameterNode& component_parameter_node)
+bool LinearVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
     // TODO
     return true;
@@ -108,4 +109,4 @@ LinearVisitor::LinearVisitor(const std::string variable):
     variable_(variable)
 {
 }
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

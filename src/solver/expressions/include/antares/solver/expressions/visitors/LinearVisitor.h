@@ -22,29 +22,29 @@
 
 #include "antares/solver/expressions/nodes/NodeVisitor.h"
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Visitors
 {
-class LinearVisitor: public NodeVisitor<bool>
+class LinearVisitor: public Nodes::NodeVisitor<bool>
 {
 public:
     explicit LinearVisitor(const std::string variable);
-    using Base = NodeVisitor<bool>;
+    using Base = Nodes::NodeVisitor<bool>;
 
 private:
-    bool visit(const AddNode& add) override;
-    bool visit(const SubtractionNode& add) override;
-    bool visit(const MultiplicationNode& add) override;
-    bool visit(const DivisionNode& add) override;
-    bool visit(const EqualNode& add) override;
-    bool visit(const LessThanOrEqualNode& add) override;
-    bool visit(const GreaterThanOrEqualNode& add) override;
-    bool visit(const NegationNode& neg) override;
-    bool visit(const VariableNode& param) override;
-    bool visit(const ParameterNode& param) override;
-    bool visit(const LiteralNode& lit) override;
-    bool visit(const PortFieldNode& port_field_node) override;
-    bool visit(const ComponentVariableNode& component_variable_node) override;
-    bool visit(const ComponentParameterNode& component_parameter_node) override;
+    bool visit(const Nodes::AddNode& add) override;
+    bool visit(const Nodes::SubtractionNode& add) override;
+    bool visit(const Nodes::MultiplicationNode& add) override;
+    bool visit(const Nodes::DivisionNode& add) override;
+    bool visit(const Nodes::EqualNode& add) override;
+    bool visit(const Nodes::LessThanOrEqualNode& add) override;
+    bool visit(const Nodes::GreaterThanOrEqualNode& add) override;
+    bool visit(const Nodes::NegationNode& neg) override;
+    bool visit(const Nodes::VariableNode& param) override;
+    bool visit(const Nodes::ParameterNode& param) override;
+    bool visit(const Nodes::LiteralNode& lit) override;
+    bool visit(const Nodes::PortFieldNode& port_field_node) override;
+    bool visit(const Nodes::ComponentVariableNode& component_variable_node) override;
+    bool visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
     const std::string variable_;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Visitors

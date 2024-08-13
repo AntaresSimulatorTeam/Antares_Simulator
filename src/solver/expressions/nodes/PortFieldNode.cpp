@@ -20,7 +20,7 @@
 */
 #include <antares/solver/expressions/nodes/PortFieldNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
     port_name_(port_name),
@@ -37,4 +37,4 @@ const std::string& PortFieldNode::getFieldName() const
 {
     return field_name_;
 }
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

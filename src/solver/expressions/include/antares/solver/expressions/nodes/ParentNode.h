@@ -25,7 +25,7 @@
 
 #include <antares/solver/expressions/nodes/Node.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 struct ParentNodeException: std::out_of_range
 {
@@ -46,7 +46,7 @@ public:
         if (children_.empty() || idx >= children_.size())
         {
             throw ParentNodeException(
-              "Antares::Solver::Expressions::ParentNode can't get the child node at position "
+              "Antares::Solver::Nodes::ParentNode can't get the child node at position "
               + std::to_string(idx));
         }
         else
@@ -58,4 +58,4 @@ public:
 private:
     std::array<Node*, N> children_;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

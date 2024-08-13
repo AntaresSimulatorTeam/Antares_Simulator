@@ -30,24 +30,26 @@
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
-using namespace Antares::Solver::Expressions;
+using namespace Antares::Solver;
+using namespace Antares::Solver::Nodes;
+using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
 {
-    LiteralNode lit(21);
+    LiteralNode literal(21);
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(lit);
+    const auto printed = printVisitor.dispatch(literal);
 
     BOOST_CHECK_EQUAL(printed, "21.000000"); // TODO Number of decimals implementation dependent ?
 }
 
 BOOST_AUTO_TEST_CASE(eval_single_literal)
 {
-    LiteralNode lit(21);
+    LiteralNode literal(21);
 
     EvalVisitor evalVisitor;
-    const double eval = evalVisitor.dispatch(lit);
+    const double eval = evalVisitor.dispatch(literal);
 
     BOOST_CHECK_EQUAL(eval, 21.); // TODO Number of decimals implementation dependent ?
 }
@@ -157,7 +159,7 @@ BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registr
     std::string cp_para_name("par"), cp_para_id("id2");
     ComponentVariableNode cpv(cpvar_id, cpvar_name);
     ComponentParameterNode cpp(cp_para_id, cp_para_name);
-    int num1 = 22.0, num2 = 8;
+    double num1 = 22.0, num2 = 8.;
     // (num1+num2)
     Node* edge = create<AddNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
     // -((num1+num2))

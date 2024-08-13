@@ -22,11 +22,11 @@
 
 #include <antares/solver/expressions/nodes/ParentNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class UnaryNode: public ParentNode<1>
 {
 public:
     explicit UnaryNode(Node* n1);
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

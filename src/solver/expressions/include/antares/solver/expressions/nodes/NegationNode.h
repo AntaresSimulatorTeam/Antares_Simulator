@@ -24,16 +24,11 @@
 
 #include <antares/solver/expressions/nodes/UnaryNode.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class NegationNode: public UnaryNode
 {
 public:
     using UnaryNode::UnaryNode;
-
-    bool IsConstant() override
-    {
-        return false;
-    }
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes

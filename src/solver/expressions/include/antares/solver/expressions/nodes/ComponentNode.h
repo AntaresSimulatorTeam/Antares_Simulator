@@ -23,7 +23,7 @@
 
 #include <antares/solver/expressions/nodes/Node.h>
 
-namespace Antares::Solver::Expressions
+namespace Antares::Solver::Nodes
 {
 class ComponentNode: public Node
 {
@@ -31,7 +31,6 @@ public:
     explicit ComponentNode(const std::string& component_id, const std::string& component_name);
     const std::string& getComponentId() const;
     const std::string& getComponentName() const;
-    bool IsConstant() override;
 
 private:
     std::string component_id_;
@@ -49,4 +48,4 @@ class ComponentParameterNode: public ComponentNode
 public:
     using ComponentNode::ComponentNode;
 };
-} // namespace Antares::Solver::Expressions
+} // namespace Antares::Solver::Nodes
