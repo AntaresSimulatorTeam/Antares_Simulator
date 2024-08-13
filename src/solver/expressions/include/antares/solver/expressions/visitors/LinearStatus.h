@@ -59,7 +59,9 @@ public:
             {
                 return LinearStatus::NON_LINEAR;
             }
-        };
+        default:
+            return LinearStatus::NON_LINEAR;
+        }
     }
 
     constexpr LinearStatus operator/(const LinearStatus& other)
@@ -71,7 +73,9 @@ public:
             return LinearStatus::NON_LINEAR;
         case LinearStatus::CONSTANT:
             return *this;
-        };
+        default:
+            return LinearStatus::NON_LINEAR;
+        }
     }
 
     constexpr LinearStatus operator+(const LinearStatus& other)
@@ -91,6 +95,8 @@ public:
             {
                 return LinearStatus::NON_LINEAR;
             }
+        default:
+            return LinearStatus::NON_LINEAR;
         };
     }
 
