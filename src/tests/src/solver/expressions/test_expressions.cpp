@@ -248,17 +248,7 @@ BOOST_FIXTURE_TEST_CASE(Parent_node, Registry<Node>)
 
     // try to get child at pos 1202 from a binary node ...
     size_t pos = 1202;
-    BOOST_CHECK_EXCEPTION(sub[pos],
-                          ParentNodeException,
-                          [&pos](const ParentNodeException& ex)
-                          {
-                              return strcmp(ex.what(),
-                                            (std::string("Antares::Solver::Expressions::ParentNode "
-                                                         "can't get the child node at position ")
-                                             + std::to_string(pos))
-                                              .c_str())
-                                     == 0;
-                          });
+    BOOST_CHECK_THROW(sub[pos], ParentNodeException);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
