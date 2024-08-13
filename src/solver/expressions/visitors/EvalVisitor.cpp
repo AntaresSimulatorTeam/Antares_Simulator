@@ -75,37 +75,37 @@ double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
     return 0.;
 }
 
-double EvalVisitor::visit(const VariableNode& var)
+double EvalVisitor::visit(const Nodes::VariableNode& var)
 {
     return context_.getVariableValue(var.getValue());
 }
 
-double EvalVisitor::visit(const ParameterNode& param)
+double EvalVisitor::visit(const Nodes::ParameterNode& param)
 {
     return context_.getParameterValue(param.getValue());
 }
 
-double EvalVisitor::visit(const LiteralNode& lit)
+double EvalVisitor::visit(const Nodes::LiteralNode& lit)
 {
     return lit.getValue();
 }
 
-double EvalVisitor::visit(const NegationNode& neg)
+double EvalVisitor::visit(const Nodes::NegationNode& neg)
 {
     return -dispatch(*neg[0]);
 }
 
-double EvalVisitor::visit(const PortFieldNode& port_field_node)
+double EvalVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
     return 0.;
 }
 
-double EvalVisitor::visit(const ComponentVariableNode& component_variable_node)
+double EvalVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
     return 0.;
 }
 
-double EvalVisitor::visit(const ComponentParameterNode& component_parameter_node)
+double EvalVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
     // TODO
     return 0.;

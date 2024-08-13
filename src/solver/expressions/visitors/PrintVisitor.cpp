@@ -72,22 +72,22 @@ std::string PrintVisitor::visit(const Nodes::ParameterNode& param)
     return param.getValue();
 }
 
-std::string PrintVisitor::visit(const VariableNode& variable)
+std::string PrintVisitor::visit(const Nodes::VariableNode& variable)
 {
     return variable.getValue();
 }
 
-std::string PrintVisitor::visit(const LiteralNode& lit)
+std::string PrintVisitor::visit(const Nodes::LiteralNode& lit)
 {
     return std::to_string(lit.getValue());
 }
 
-std::string PrintVisitor::visit(const PortFieldNode& port_field_node)
+std::string PrintVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
     return port_field_node.getPortName() + "." + port_field_node.getFieldName();
 }
 
-std::string PrintVisitor::visit(const ComponentVariableNode& component_variable_node)
+std::string PrintVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
     return component_variable_node.getComponentId() + "."
            + component_variable_node.getComponentName();
