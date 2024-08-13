@@ -335,7 +335,7 @@ BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::NON_LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_node_are_not_linear, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_not_linear, Registry<Node>)
 {
     PrintVisitor printVisitor;
     LinearVisitor linearVisitor;
@@ -352,7 +352,26 @@ BOOST_FIXTURE_TEST_CASE(comparison_node_are_not_linear, Registry<Node>)
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*lt), "x<=y");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::NON_LINEAR);
     // x>=y
-    Node* gt = create<LessThanOrEqualNode>(&var1, &var2);
+    Node* gt = create<GreaterThanOrEqualNode>(&var1, &var2);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*gt), "x>=y");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::NON_LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    LinearVisitor linearVisitor;
+    LiteralNode var1(65.);
+    // Parameter
+    ParameterNode par("p1");
+
+    // Port field
+    PortFieldNode portFieldNode("port", "field");
+
+    // 65.*p1
+    Node* mult = create<MultiplicationNode>(&var1, &par);
+    // ((65.*p1)+port.field)
+    Node* expr = create<AddNode>(mult, &portFieldNode);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
