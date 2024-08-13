@@ -25,55 +25,7 @@
 namespace Antares::Solver::Visitors
 {
 
-class LinearStatus
-{
-public:
-    enum Status
-    {
-        CONSTANT,
-        LINEAR,
-        NON_LINEAR
-    };
-
-    constexpr LinearStatus() = default;
-    constexpr LinearStatus(const Status& status);
-    constexpr LinearStatus(const LinearStatus& other) = default;
-    constexpr LinearStatus operator*(const LinearStatus& other);
-    constexpr LinearStatus operator/(const LinearStatus& other);
-    constexpr LinearStatus operator+(const LinearStatus& other);
-    constexpr LinearStatus operator-(const LinearStatus& other);
-    // Conversions
-    constexpr explicit operator bool() const = delete;
-
-    constexpr operator Status() const
-    {
-        return status_;
-    }
-
-    // Comparisons
-    constexpr bool operator==(LinearStatus a) const
-    {
-        return status_ == a.status_;
-    }
-
-    constexpr bool operator==(Status status) const
-    {
-        return status_ == status;
-    }
-
-    constexpr bool operator!=(LinearStatus a) const
-    {
-        return status_ != a.status_;
-    }
-
-    constexpr LinearStatus operator-() const
-    {
-        return *this;
-    }
-
-private:
-    Status status_;
-};
+class LinearStatus;
 
 class LinearVisitor: public Nodes::NodeVisitor<LinearStatus>
 {

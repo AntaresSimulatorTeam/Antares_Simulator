@@ -43,6 +43,10 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/NodeVisitor.h
 
         include/antares/solver/expressions/Registry.hxx
+        include/antares/solver/expressions/visitors/LinearStatus.h
+        include/antares/solver/expressions/visitors/LinearStatus.h
+        visitors/LinearStatus.cpp
+        visitors/LinearStatus.cpp
 )
 
 

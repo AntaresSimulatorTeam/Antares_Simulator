@@ -22,6 +22,7 @@
 #include "antares/solver/expressions/visitors/LinearVisitor.h"
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/LinearStatus.h>
 
 namespace Antares::Solver::Visitors
 {
@@ -80,12 +81,11 @@ LinearStatus LinearVisitor::visit(const Nodes::LiteralNode& lit)
 
 LinearStatus LinearVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return dispatch(*neg[0]);
+    return -dispatch(*neg[0]);
 }
 
 LinearStatus LinearVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
-    // TODO
     return LinearStatus::CONSTANT;
 }
 
@@ -97,68 +97,6 @@ LinearStatus LinearVisitor::visit(const Nodes::ComponentVariableNode& component_
 LinearStatus LinearVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
     return LinearStatus::CONSTANT;
-}
-
-constexpr LinearStatus::LinearStatus(const Status& status):
-    status_(status)
-{
-}
-
-constexpr LinearStatus LinearStatus::operator*(const LinearStatus& other)
-{
-    switch (other)
-    {
-    case LinearStatus::NON_LINEAR:
-        return LinearStatus::NON_LINEAR;
-    case LinearStatus::CONSTANT:
-        return *this;
-    case LinearStatus::LINEAR:
-        if (status_ == LinearStatus::CONSTANT)
-        {
-            return other;
-        }
-        else
-        {
-            return LinearStatus::NON_LINEAR;
-        }
-    };
-}
-
-constexpr LinearStatus LinearStatus::operator/(const LinearStatus& other)
-{
-    switch (other)
-    {
-    case LinearStatus::NON_LINEAR:
-    case LinearStatus::LINEAR:
-        return LinearStatus::NON_LINEAR;
-    case LinearStatus::CONSTANT:
-        return *this;
-    };
-}
-
-constexpr LinearStatus LinearStatus::operator+(const LinearStatus& other)
-{
-    switch (other)
-    {
-    case LinearStatus::NON_LINEAR:
-        return LinearStatus::NON_LINEAR;
-    case LinearStatus::CONSTANT:
-        return *this;
-    case LinearStatus::LINEAR:
-        if (other == LinearStatus::CONSTANT || other == LinearStatus::LINEAR)
-        {
-            return other;
-        }
-        else
-        {
-            return LinearStatus::NON_LINEAR;
-        }
-    };
-}
-
-constexpr LinearStatus LinearStatus::operator-(const LinearStatus& other)
-{
-    return operator+(other);
 }
 
 } // namespace Antares::Solver::Visitors
