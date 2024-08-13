@@ -93,7 +93,7 @@ std::string PrintVisitor::visit(const Nodes::ComponentVariableNode& component_va
            + component_variable_node.getComponentName();
 }
 
-std::string PrintVisitor::visit(const ComponentParameterNode& component_parameter_node)
+std::string PrintVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
     return component_parameter_node.getComponentId() + "."
            + component_parameter_node.getComponentName();
