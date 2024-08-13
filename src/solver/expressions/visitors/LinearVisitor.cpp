@@ -48,19 +48,17 @@ LinearStatus LinearVisitor::visit(const Nodes::DivisionNode& div)
 }
 
 LinearStatus LinearVisitor::visit(const Nodes::EqualNode& equ)
-{ // TODO
+{
     return LinearStatus::NON_LINEAR;
 }
 
 LinearStatus LinearVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
-    // TODO
     return LinearStatus::NON_LINEAR;
 }
 
 LinearStatus LinearVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
-    // TODO
     return LinearStatus::NON_LINEAR;
 }
 

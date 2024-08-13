@@ -28,6 +28,8 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
+#include <antares/solver/expressions/visitors/LinearStatus.h>
+#include <antares/solver/expressions/visitors/LinearVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
 using namespace Antares::Solver;
@@ -280,4 +282,24 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     GreaterThanOrEqualNode gt(&sub1, &sub2);
     printed = printVisitor.dispatch(gt);
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_visitor_simple, Registry<Node>)
+{
+    LiteralNode coeff1(10.);
+    VariableNode var1("x");
+    // 10.*x
+    Node* u = create<MultiplicationNode>(&coeff1, &var1);
+
+    LiteralNode coeff2(20.);
+    ComponentVariableNode var2("id", "y");
+    // 20.*id.y
+    Node* v = create<MultiplicationNode>(&coeff2, &var2);
+    // 10.*x+20.*id.y
+    Node* expr = create<AddNode>(u, v);
+
+    PrintVisitor printVisitor;
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((10.000000*x)+(20.000000*id.y))");
+    LinearVisitor linearVisitor;
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::LINEAR);
 }
