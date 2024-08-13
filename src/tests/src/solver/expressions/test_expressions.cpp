@@ -276,15 +276,15 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 {
-    LiteralNode coeff1(10.);
+    LiteralNode literalNode1(10.);
     VariableNode var1("x");
     // 10.*x
-    Node* u = create<MultiplicationNode>(&coeff1, &var1);
+    Node* u = create<MultiplicationNode>(&literalNode1, &var1);
 
-    LiteralNode coeff2(20.);
+    LiteralNode literalNode2(20.);
     ComponentVariableNode var2("id", "y");
     // 20.*id.y
-    Node* v = create<MultiplicationNode>(&coeff2, &var2);
+    Node* v = create<MultiplicationNode>(&literalNode2, &var2);
     // 10.*x+20.*id.y
     Node* expr = create<AddNode>(u, v);
 
