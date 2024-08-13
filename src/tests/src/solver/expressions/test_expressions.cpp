@@ -36,20 +36,20 @@ using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
 {
-    LiteralNode lit(21);
+    LiteralNode literal(21);
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(lit);
+    const auto printed = printVisitor.dispatch(literal);
 
     BOOST_CHECK_EQUAL(printed, "21.000000"); // TODO Number of decimals implementation dependent ?
 }
 
 BOOST_AUTO_TEST_CASE(eval_single_literal)
 {
-    LiteralNode lit(21);
+    LiteralNode literal(21);
 
     EvalVisitor evalVisitor;
-    const double eval = evalVisitor.dispatch(lit);
+    const double eval = evalVisitor.dispatch(literal);
 
     BOOST_CHECK_EQUAL(eval, 21.); // TODO Number of decimals implementation dependent ?
 }
