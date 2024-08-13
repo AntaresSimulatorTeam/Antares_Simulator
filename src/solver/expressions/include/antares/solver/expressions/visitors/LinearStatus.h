@@ -34,12 +34,71 @@ public:
     };
 
     constexpr LinearStatus() = default;
-    constexpr LinearStatus(const Status& status);
+
+    constexpr LinearStatus(const Status& status):
+        status_(status)
+    {
+    }
+
     constexpr LinearStatus(const LinearStatus& other) = default;
-    constexpr LinearStatus operator*(const LinearStatus& other);
-    constexpr LinearStatus operator/(const LinearStatus& other);
-    constexpr LinearStatus operator+(const LinearStatus& other);
-    constexpr LinearStatus operator-(const LinearStatus& other);
+
+    constexpr LinearStatus operator*(const LinearStatus& other)
+    {
+        switch (other)
+        {
+        case LinearStatus::NON_LINEAR:
+            return LinearStatus::NON_LINEAR;
+        case LinearStatus::CONSTANT:
+            return *this;
+        case LinearStatus::LINEAR:
+            if (status_ == LinearStatus::CONSTANT)
+            {
+                return other;
+            }
+            else
+            {
+                return LinearStatus::NON_LINEAR;
+            }
+        };
+    }
+
+    constexpr LinearStatus operator/(const LinearStatus& other)
+    {
+        switch (other)
+        {
+        case LinearStatus::NON_LINEAR:
+        case LinearStatus::LINEAR:
+            return LinearStatus::NON_LINEAR;
+        case LinearStatus::CONSTANT:
+            return *this;
+        };
+    }
+
+    constexpr LinearStatus operator+(const LinearStatus& other)
+    {
+        switch (other)
+        {
+        case LinearStatus::NON_LINEAR:
+            return LinearStatus::NON_LINEAR;
+        case LinearStatus::CONSTANT:
+            return *this;
+        case LinearStatus::LINEAR:
+            if (other == LinearStatus::CONSTANT || other == LinearStatus::LINEAR)
+            {
+                return other;
+            }
+            else
+            {
+                return LinearStatus::NON_LINEAR;
+            }
+        };
+    }
+
+    constexpr LinearStatus operator-(const LinearStatus& other)
+    {
+        return operator+(other);
+    }
+
     // Conversions
     constexpr explicit operator bool() const = delete;
 
