@@ -132,7 +132,7 @@ constexpr LinearOperations LinearOperations::operator/(const LinearOperations& o
     case LinearOperations::LINEAR:
         return LinearOperations::NON_LINEAR;
     case LinearOperations::CONSTANT:
-        return status_;
+        return *this;
     };
 }
 
