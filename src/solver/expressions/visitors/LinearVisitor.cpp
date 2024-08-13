@@ -48,35 +48,34 @@ LinearOperations LinearVisitor::visit(const Nodes::DivisionNode& div)
 
 LinearOperations LinearVisitor::visit(const Nodes::EqualNode& equ)
 { // TODO
-    return LinearOperations(LinearStatus::NON_LINEAR);
+    return LinearOperations::NON_LINEAR;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     // TODO
-    return LinearOperations(LinearStatus::NON_LINEAR);
+    return LinearOperations::NON_LINEAR;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     // TODO
-    return LinearOperations(LinearStatus::NON_LINEAR);
+    return LinearOperations::NON_LINEAR;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::VariableNode& var)
 {
-    // TODO
-    //    return var.getValue() == variable_;
+    return LinearOperations::LINEAR;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::ParameterNode& param)
 {
-    return true;
+    return LinearOperations::CONSTANT;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::LiteralNode& lit)
 {
-    return true;
+    return LinearOperations::CONSTANT;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::NegationNode& neg)
@@ -87,89 +86,77 @@ LinearOperations LinearVisitor::visit(const Nodes::NegationNode& neg)
 LinearOperations LinearVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
     // TODO
-    return true;
+    return LinearOperations::CONSTANT;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
-    // TODO
-    return true;
+    return LinearOperations::LINEAR;
 }
 
 LinearOperations LinearVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
-    // TODO
-    return true;
+    return LinearOperations::CONSTANT;
 }
 
-LinearVisitor::LinearVisitor(const std::string variable):
-    variable_(variable)
-{
-}
-
-LinearOperations::LinearOperations(const LinearStatus& status):
+constexpr LinearOperations::LinearOperations(const LinearStatus& status):
     status_(status)
 {
 }
 
-LinearOperations LinearOperations::operator*(const LinearOperations& other)
+constexpr LinearOperations LinearOperations::operator*(const LinearOperations& other)
 {
-    switch (other.status_)
+    switch (other)
     {
-    case LinearStatus::NON_LINEAR:
-        return LinearOperations(LinearStatus::NON_LINEAR);
-    case LinearStatus::CONSTANT:
-        return LinearOperations(status_);
-    case LinearStatus::LINEAR:
-        if (status_ == LinearStatus::CONSTANT)
+    case LinearOperations::NON_LINEAR:
+        return LinearOperations::NON_LINEAR;
+    case LinearOperations::CONSTANT:
+        return *this;
+    case LinearOperations::LINEAR:
+        if (status_ == LinearOperations::CONSTANT)
         {
-            return LinearOperations(other.status_);
+            return other;
         }
         else
         {
-            return LinearOperations(LinearStatus::NON_LINEAR);
+            return LinearOperations::NON_LINEAR;
         }
     };
 }
 
-LinearOperations LinearOperations::operator/(const LinearOperations& other)
+constexpr LinearOperations LinearOperations::operator/(const LinearOperations& other)
 {
-    switch (other.status_)
+    switch (other)
     {
-    case LinearStatus::NON_LINEAR:
-    case LinearStatus::LINEAR:
-        return LinearOperations(LinearStatus::NON_LINEAR);
-    case LinearStatus::CONSTANT:
-        return LinearOperations(status_);
+    case LinearOperations::NON_LINEAR:
+    case LinearOperations::LINEAR:
+        return LinearOperations::NON_LINEAR;
+    case LinearOperations::CONSTANT:
+        return status_;
     };
 }
 
-LinearStatus LinearOperations::getStatus() const
+constexpr LinearOperations LinearOperations::operator+(const LinearOperations& other)
 {
-    return status_;
-}
-
-LinearOperations LinearOperations::operator+(const LinearOperations& other)
-{
-    switch (other.status_)
+    switch (other)
     {
-    case LinearStatus::NON_LINEAR:
-        return LinearOperations(LinearStatus::NON_LINEAR);
-    case LinearStatus::CONSTANT:
-        return LinearOperations(status_);
-    case LinearStatus::LINEAR:
-        if (status_ == LinearStatus::CONSTANT || status_ == LinearStatus::LINEAR)
+    case LinearOperations::NON_LINEAR:
+        return LinearOperations::NON_LINEAR;
+    case LinearOperations::CONSTANT:
+        return *this;
+    case LinearOperations::LINEAR:
+        if (other == LinearOperations::CONSTANT || other == LinearOperations::LINEAR)
         {
-            return LinearOperations(other.status_);
+            return other;
         }
         else
         {
-            return LinearOperations(LinearStatus::NON_LINEAR);
+            return LinearOperations::NON_LINEAR;
         }
     };
 }
 
-LinearOperations LinearOperations::operator-(const LinearOperations& other)
+constexpr LinearOperations LinearOperations::operator-(const LinearOperations& other)
 {
     return operator+(other);
 }

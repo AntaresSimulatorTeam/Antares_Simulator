@@ -25,23 +25,46 @@
 namespace Antares::Solver::Visitors
 {
 
-enum class LinearStatus
-{
-    CONSTANT,
-    LINEAR,
-    NON_LINEAR
-};
-
 class LinearOperations
 {
 public:
-    explicit LinearOperations(const LinearStatus& status);
-    LinearOperations(const LinearOperations& other) = default;
-    LinearOperations operator*(const LinearOperations& other);
-    LinearOperations operator/(const LinearOperations& other);
-    LinearOperations operator+(const LinearOperations& other);
-    LinearOperations operator-(const LinearOperations& other);
-    LinearStatus getStatus() const;
+    enum LinearStatus
+    {
+        CONSTANT,
+        LINEAR,
+        NON_LINEAR
+    };
+
+    constexpr LinearOperations() = default;
+    constexpr LinearOperations(const LinearStatus& status);
+    constexpr LinearOperations(const LinearOperations& other) = default;
+    constexpr LinearOperations operator*(const LinearOperations& other);
+    constexpr LinearOperations operator/(const LinearOperations& other);
+    constexpr LinearOperations operator+(const LinearOperations& other);
+    constexpr LinearOperations operator-(const LinearOperations& other);
+    // Conversions
+    constexpr explicit operator bool() const = delete;
+
+    constexpr operator LinearStatus() const
+    {
+        return status_;
+    }
+
+    // Comparisons
+    constexpr bool operator==(LinearOperations a) const
+    {
+        return status_ == a.status_;
+    }
+
+    constexpr bool operator==(LinearStatus status) const
+    {
+        return status_ == status;
+    }
+
+    constexpr bool operator!=(LinearOperations a) const
+    {
+        return status_ != a.status_;
+    }
 
 private:
     LinearStatus status_;
@@ -50,7 +73,6 @@ private:
 class LinearVisitor: public Nodes::NodeVisitor<LinearOperations>
 {
 public:
-    explicit LinearVisitor(const std::string variable);
     using Base = Nodes::NodeVisitor<LinearOperations>;
 
 private:
@@ -68,6 +90,5 @@ private:
     LinearOperations visit(const Nodes::PortFieldNode& port_field_node) override;
     LinearOperations visit(const Nodes::ComponentVariableNode& component_variable_node) override;
     LinearOperations visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
-    const std::string variable_;
 };
 } // namespace Antares::Solver::Visitors
