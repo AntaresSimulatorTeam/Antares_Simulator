@@ -22,8 +22,19 @@
 
 namespace Antares::Solver::Nodes
 {
-BinaryNode::BinaryNode(Node* n1, Node* n2):
-    ParentNode<2>({n1, n2})
+BinaryNode::BinaryNode(Node* left, Node* right):
+        leftOperand_(left), rightOperand_(right)
 {
 }
+
+Node* BinaryNode::right() const
+{
+    return  rightOperand_;
+}
+
+Node* BinaryNode::left() const
+{
+    return leftOperand_;
+}
+
 } // namespace Antares::Solver::Nodes

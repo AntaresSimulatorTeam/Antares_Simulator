@@ -32,28 +32,28 @@ EvalVisitor::EvalVisitor(EvaluationContext context):
 
 double EvalVisitor::visit(const Nodes::AddNode& add)
 {
-    return dispatch(*add[0]) + dispatch(*add[1]);
+    return dispatch(*add.left()) + dispatch(*add.right());
 }
 
 double EvalVisitor::visit(const Nodes::SubtractionNode& sub)
 {
-    return dispatch(*sub[0]) - dispatch(*sub[1]);
+    return dispatch(*sub.left()) - dispatch(*sub.right());
 }
 
 double EvalVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
-    return dispatch(*mult[0]) * dispatch(*mult[1]);
+    return dispatch(*mult.left()) * dispatch(*mult.right());
 }
 
 double EvalVisitor::visit(const Nodes::DivisionNode& div)
 {
-    if (auto divisor = dispatch(*div[1]); divisor == 0.0)
+    if (auto divisor = dispatch(*div.right()); divisor == 0.0)
     {
         throw EvalVisitorDivisionException("DivisionNode Division by zero");
     }
     else
     {
-        return dispatch(*div[0]) / divisor;
+        return dispatch(*div.left()) / divisor;
     }
 }
 

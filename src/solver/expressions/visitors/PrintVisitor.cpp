@@ -29,37 +29,37 @@ std::string PrintVisitor::visit(const Nodes::AddNode& add)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
-    return "(" + dispatch(*add[0]) + "+" + dispatch(*add[1]) + ")";
+    return "(" + dispatch(*add.left()) + "+" + dispatch(*add.right()) + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::SubtractionNode& sub)
 {
-    return "(" + dispatch(*sub[0]) + "-" + dispatch(*sub[1]) + ")";
+    return "(" + dispatch(*sub.left()) + "-" + dispatch(*sub.right()) + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
-    return "(" + dispatch(*mult[0]) + "*" + dispatch(*mult[1]) + ")";
+    return "(" + dispatch(*mult.left()) + "*" + dispatch(*mult.right()) + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::DivisionNode& div)
 {
-    return "(" + dispatch(*div[0]) + "/" + dispatch(*div[1]) + ")";
+    return "(" + dispatch(*div.left()) + "/" + dispatch(*div.right()) + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::EqualNode& equ)
 {
-    return dispatch(*equ[0]) + "==" + dispatch(*equ[1]);
+    return dispatch(*equ.left()) + "==" + dispatch(*equ.right());
 }
 
 std::string PrintVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
-    return dispatch(*lt[0]) + "<=" + dispatch(*lt[1]);
+    return dispatch(*lt.left()) + "<=" + dispatch(*lt.right());
 }
 
 std::string PrintVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
-    return dispatch(*gt[0]) + ">=" + dispatch(*gt[1]);
+    return dispatch(*gt.left()) + ">=" + dispatch(*gt.right());
 }
 
 std::string PrintVisitor::visit(const Nodes::NegationNode& neg)
