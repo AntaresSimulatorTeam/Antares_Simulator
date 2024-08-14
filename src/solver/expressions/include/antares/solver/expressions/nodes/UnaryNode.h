@@ -29,6 +29,7 @@ class UnaryNode: public Node
 public:
     explicit UnaryNode(Node* n1);
     Node* child() const;
+
 private:
     Node* child_ = nullptr;
 };

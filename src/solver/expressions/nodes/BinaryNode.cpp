@@ -23,13 +23,14 @@
 namespace Antares::Solver::Nodes
 {
 BinaryNode::BinaryNode(Node* left, Node* right):
-        leftOperand_(left), rightOperand_(right)
+    leftOperand_(left),
+    rightOperand_(right)
 {
 }
 
 Node* BinaryNode::right() const
 {
-    return  rightOperand_;
+    return rightOperand_;
 }
 
 Node* BinaryNode::left() const

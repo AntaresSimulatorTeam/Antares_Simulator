@@ -30,6 +30,7 @@ public:
     explicit BinaryNode(Node* left, Node* right);
     Node* left() const;
     Node* right() const;
+
 private:
     Node* leftOperand_ = nullptr;
     Node* rightOperand_ = nullptr;
