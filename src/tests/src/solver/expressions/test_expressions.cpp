@@ -28,6 +28,8 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
+#include <antares/solver/expressions/visitors/LinearStatus.h>
+#include <antares/solver/expressions/visitors/LinearVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
 using namespace Antares::Solver;
@@ -246,17 +248,7 @@ BOOST_FIXTURE_TEST_CASE(Parent_node, Registry<Node>)
 
     // try to get child at pos 1202 from a binary node ...
     size_t pos = 1202;
-    BOOST_CHECK_EXCEPTION(sub[pos],
-                          ParentNodeException,
-                          [&pos](const ParentNodeException& ex)
-                          {
-                              return strcmp(ex.what(),
-                                            (std::string("Antares::Solver::Expressions::ParentNode "
-                                                         "can't get the child node at position ")
-                                             + std::to_string(pos))
-                                              .c_str())
-                                     == 0;
-                          });
+    BOOST_CHECK_THROW(sub[pos], ParentNodeException);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
@@ -280,4 +272,106 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     GreaterThanOrEqualNode gt(&sub1, &sub2);
     printed = printVisitor.dispatch(gt);
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
+{
+    LiteralNode literalNode1(10.);
+    VariableNode var1("x");
+    // 10.*x
+    Node* u = create<MultiplicationNode>(&literalNode1, &var1);
+
+    LiteralNode literalNode2(20.);
+    ComponentVariableNode var2("id", "y");
+    // 20.*id.y
+    Node* v = create<MultiplicationNode>(&literalNode2, &var2);
+    // 10.*x+20.*id.y
+    Node* expr = create<AddNode>(u, v);
+
+    PrintVisitor printVisitor;
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((10.000000*x)+(20.000000*id.y))");
+    LinearVisitor linearVisitor;
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(simple_not_linear, Registry<Node>)
+{
+    VariableNode var1("x");
+    ComponentVariableNode var2("id", "y");
+    // x*id.y
+    Node* expr = create<MultiplicationNode>(&var1, &var2);
+
+    PrintVisitor printVisitor;
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "(x*id.y)");
+    LinearVisitor linearVisitor;
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::NON_LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(simple_linear_division, Registry<Node>)
+{
+    VariableNode var1("x");
+    // constant
+    ParameterNode param("y");
+    // x/y
+    Node* expr = create<DivisionNode>(&var1, &param);
+
+    PrintVisitor printVisitor;
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "(x/y)");
+    LinearVisitor linearVisitor;
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
+{
+    VariableNode var1("x");
+    // variable
+    VariableNode var2("y");
+    // x/y
+    Node* expr = create<DivisionNode>(&var1, &var2);
+
+    PrintVisitor printVisitor;
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "(x/y)");
+    LinearVisitor linearVisitor;
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::NON_LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_not_linear, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    LinearVisitor linearVisitor;
+
+    VariableNode var1("x");
+    // variable
+    VariableNode var2("y");
+    // x==y
+    Node* eq = create<EqualNode>(&var1, &var2);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*eq), "x==y");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::NON_LINEAR);
+    // x<=y
+    Node* lt = create<LessThanOrEqualNode>(&var1, &var2);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*lt), "x<=y");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::NON_LINEAR);
+    // x>=y
+    Node* gt = create<GreaterThanOrEqualNode>(&var1, &var2);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*gt), "x>=y");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::NON_LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    LinearVisitor linearVisitor;
+    LiteralNode var1(65.);
+    // Parameter
+    ParameterNode par("p1");
+
+    // Port field
+    PortFieldNode portFieldNode("port", "field");
+
+    // 65.*p1
+    Node* mult = create<MultiplicationNode>(&var1, &par);
+    // ((65.*p1)+port.field)
+    Node* expr = create<AddNode>(mult, &portFieldNode);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }

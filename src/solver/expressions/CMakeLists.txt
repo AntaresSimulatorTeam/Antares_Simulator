@@ -10,6 +10,7 @@ set(SRC_Expressions
         visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/EvalVisitor.cpp
+        visitors/LinearVisitor.cpp
         visitors/EvaluationContext.cpp
 
         include/antares/solver/expressions/nodes/ParentNode.h
@@ -32,13 +33,15 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/NodesForwardDeclaration.h
         include/antares/solver/expressions/nodes/ParameterNode.h
         include/antares/solver/expressions/nodes/PortFieldNode.h
+        include/antares/solver/expressions/nodes/NodeVisitor.h
         include/antares/solver/expressions/nodes/VariableNode.h
 
         include/antares/solver/expressions/visitors/CloneVisitor.h
         include/antares/solver/expressions/visitors/EvalVisitor.h
         include/antares/solver/expressions/visitors/EvaluationContext.h
         include/antares/solver/expressions/visitors/PrintVisitor.h
-        include/antares/solver/expressions/nodes/NodeVisitor.h
+        include/antares/solver/expressions/visitors/LinearStatus.h
+        include/antares/solver/expressions/visitors/LinearVisitor.h
 
         include/antares/solver/expressions/Registry.hxx
 )
