@@ -6,7 +6,7 @@
 
 namespace Antares::Solver::Nodes
 {
-class VariableNode: public Leaf<std::string>
+class VariableNode final: public Leaf<std::string>
 {
 public:
     using Leaf<std::string>::Leaf;

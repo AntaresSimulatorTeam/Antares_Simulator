@@ -6,7 +6,7 @@
 
 namespace Antares::Solver::Nodes
 {
-class ParameterNode: public Leaf<std::string>
+class ParameterNode final: public Leaf<std::string>
 {
 public:
     using Leaf<std::string>::Leaf;
