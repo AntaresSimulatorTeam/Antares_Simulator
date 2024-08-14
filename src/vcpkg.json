@@ -12,8 +12,11 @@
   },
   "dependencies": [
     {
-	"name": "sirius-solver",
-	"version>=": "1.5"
+      "name": "sirius-solver",
+      "version>=": "1.5"
+    },
+    {
+      "name": "ortools-rte"
     },
     {
       "name": "wxwidgets",
