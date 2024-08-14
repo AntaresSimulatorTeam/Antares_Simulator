@@ -27,7 +27,7 @@ namespace Antares::Solver::Visitors
 
 class LinearStatus;
 
-class LinearVisitor: public Nodes::NodeVisitor<LinearStatus>
+class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
 {
 public:
     using Base = Nodes::NodeVisitor<LinearStatus>;

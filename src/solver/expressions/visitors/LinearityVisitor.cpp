@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/expressions/visitors/LinearVisitor.h"
+#include "antares/solver/expressions/visitors/LinearityVisitor.h"
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/LinearStatus.h>
@@ -27,72 +27,72 @@
 namespace Antares::Solver::Visitors
 {
 
-LinearStatus LinearVisitor::visit(const Nodes::AddNode& add)
+LinearStatus LinearityVisitor::visit(const Nodes::AddNode& add)
 {
     return dispatch(*add[0]) + dispatch(*add[1]);
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::SubtractionNode& sub)
+LinearStatus LinearityVisitor::visit(const Nodes::SubtractionNode& sub)
 {
     return dispatch(*sub[0]) - dispatch(*sub[1]);
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::MultiplicationNode& mult)
+LinearStatus LinearityVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
     return dispatch(*mult[0]) * dispatch(*mult[1]);
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::DivisionNode& div)
+LinearStatus LinearityVisitor::visit(const Nodes::DivisionNode& div)
 {
     return dispatch(*div[0]) / dispatch(*div[1]);
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::EqualNode& equ)
+LinearStatus LinearityVisitor::visit(const Nodes::EqualNode& equ)
 {
     return LinearStatus::NON_LINEAR;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
+LinearStatus LinearityVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     return LinearStatus::NON_LINEAR;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
+LinearStatus LinearityVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     return LinearStatus::NON_LINEAR;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::VariableNode& var)
+LinearStatus LinearityVisitor::visit(const Nodes::VariableNode& var)
 {
     return LinearStatus::LINEAR;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::ParameterNode& param)
+LinearStatus LinearityVisitor::visit(const Nodes::ParameterNode& param)
 {
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::LiteralNode& lit)
+LinearStatus LinearityVisitor::visit(const Nodes::LiteralNode& lit)
 {
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::NegationNode& neg)
+LinearStatus LinearityVisitor::visit(const Nodes::NegationNode& neg)
 {
     return -dispatch(*neg[0]);
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::PortFieldNode& port_field_node)
+LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
+LinearStatus LinearityVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
     return LinearStatus::LINEAR;
 }
 
-LinearStatus LinearVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
+LinearStatus LinearityVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
     return LinearStatus::CONSTANT;
 }

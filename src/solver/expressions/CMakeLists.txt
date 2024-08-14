@@ -10,7 +10,7 @@ set(SRC_Expressions
         visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/EvalVisitor.cpp
-        visitors/LinearVisitor.cpp
+        visitors/LinearityVisitor.cpp
         visitors/EvaluationContext.cpp
 
         include/antares/solver/expressions/nodes/ParentNode.h
@@ -41,7 +41,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/EvaluationContext.h
         include/antares/solver/expressions/visitors/PrintVisitor.h
         include/antares/solver/expressions/visitors/LinearStatus.h
-        include/antares/solver/expressions/visitors/LinearVisitor.h
+        include/antares/solver/expressions/visitors/LinearityVisitor.h
 
         include/antares/solver/expressions/Registry.hxx
 )

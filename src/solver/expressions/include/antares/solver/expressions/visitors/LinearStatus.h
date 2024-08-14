@@ -97,7 +97,7 @@ public:
             }
         default:
             return LinearStatus::NON_LINEAR;
-        };
+        }
     }
 
     constexpr LinearStatus operator-(const LinearStatus& other)
