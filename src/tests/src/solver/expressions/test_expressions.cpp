@@ -22,6 +22,8 @@
 #define BOOST_TEST_MODULE test_translator
 #define WIN32_LEAN_AND_MEAN
 
+#include <algorithm>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
@@ -374,4 +376,62 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     Node* expr = create<AddNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
+}
+
+struct ANTLRContext
+{
+    std::vector<Nodes::ComponentVariableNode> variables;
+    // TODO
+    // std::vector<Nodes::ComponentParameterNode> parameters;
+};
+
+class SubstitutionVisitor: public CloneVisitor
+{
+public:
+    SubstitutionVisitor(const ANTLRContext& ctx, Registry<Node>& registry):
+        CloneVisitor(registry),
+        ctx_(ctx),
+        registry_(registry)
+    {
+    }
+
+    const ANTLRContext& ctx_;
+    Registry<Node>& registry_;
+
+private:
+    Node* visit(const Nodes::ComponentVariableNode& component_variable_node) override
+    {
+        if (auto it = std::find(ctx_.variables.begin(),
+                                ctx_.variables.end(),
+                                component_variable_node);
+            it != ctx_.variables.end())
+        {
+            return const_cast<Node*>(dynamic_cast<const Node*>(&(*it)));
+        }
+        else
+        {
+            return CloneVisitor::visit(component_variable_node);
+        }
+    }
+};
+
+void fillContext(ANTLRContext& ctx)
+{
+    ctx.variables.emplace_back("component1", "variable1");
+    ctx.variables.emplace_back("component2", "variable1");
+
+    // ctx.parameters.emplace_back("component1", "parameter1");
+}
+
+BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
+{
+    ANTLRContext ctx;
+    fillContext(ctx);
+
+    Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
+                                 create<ComponentVariableNode>("component1", "notInThere"));
+    SubstitutionVisitor sub(ctx, *this);
+    Node* subsd = sub.dispatch(*root);
+
+    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), &ctx.variables[0]);
 }
