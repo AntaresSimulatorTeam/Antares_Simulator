@@ -64,7 +64,7 @@ std::string PrintVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 
 std::string PrintVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return "-(" + dispatch(*neg[0]) + ")";
+    return "-(" + dispatch(*neg.child()) + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::ParameterNode& param)

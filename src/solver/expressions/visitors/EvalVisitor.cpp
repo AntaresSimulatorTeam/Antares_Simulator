@@ -92,7 +92,7 @@ double EvalVisitor::visit(const Nodes::LiteralNode& lit)
 
 double EvalVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return -dispatch(*neg[0]);
+    return -dispatch(*neg.child());
 }
 
 double EvalVisitor::visit(const Nodes::PortFieldNode& port_field_node)

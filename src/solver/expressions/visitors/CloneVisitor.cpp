@@ -70,7 +70,7 @@ Nodes::Node* CloneVisitor::visit(const Nodes::GreaterThanOrEqualNode& input_node
 
 Nodes::Node* CloneVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return registry_.create<Nodes::NegationNode>(dispatch(*neg[0]));
+    return registry_.create<Nodes::NegationNode>(dispatch(*neg.child()));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode& param)

@@ -79,7 +79,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::LiteralNode& lit)
 
 LinearStatus LinearityVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return -dispatch(*neg[0]);
+    return -dispatch(*neg.child());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode& port_field_node)

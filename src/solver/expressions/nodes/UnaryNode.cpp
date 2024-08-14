@@ -22,8 +22,13 @@
 
 namespace Antares::Solver::Nodes
 {
-UnaryNode::UnaryNode(Node* n1):
-    ParentNode<1>({n1})
+UnaryNode::UnaryNode(Node* n):
+    child_(n)
 {
+}
+
+Node* UnaryNode::child() const
+{
+    return child_;
 }
 } // namespace Antares::Solver::Nodes
