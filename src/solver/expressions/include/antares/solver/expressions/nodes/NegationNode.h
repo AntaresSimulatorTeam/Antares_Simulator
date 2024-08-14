@@ -26,7 +26,7 @@
 
 namespace Antares::Solver::Nodes
 {
-class NegationNode: public UnaryNode
+class NegationNode final: public UnaryNode
 {
 public:
     using UnaryNode::UnaryNode;
