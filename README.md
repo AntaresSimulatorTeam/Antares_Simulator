@@ -1,4 +1,5 @@
 # Antares Simulator
+
 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
 [![Status][windows_ci_svg]][windows_ci_link]
 [![Status][centos_ci_svg]][centos_ci_link]
@@ -42,43 +43,47 @@ The GUI is deprecated in favor of [Antares Web](https://antares-web.readthedocs.
 
 This software suite has been tested under:
 
-*   Ubuntu 20.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
-*   Microsoft Windows with Visual Studio 2022 (64-bit) [![Status][windows_ci_svg]][windows_ci_link]
-*   Centos7 [![Status][centos_ci_svg]][centos_ci_link]
-*   Oracle Linux [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
+* Ubuntu 20.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
+* Microsoft Windows with Visual Studio 2022 (64-bit) [![Status][windows_ci_svg]][windows_ci_link]
+* Centos7 [![Status][centos_ci_svg]][centos_ci_link]
+* Oracle Linux [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
 
 Antares Simulator is built using CMake.
-For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/) 
+For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/)
 or [its sources](docs/developer-guide/0-Introduction.md).
 
 # Source Code Content
 
-* [AUTHORS](AUTHORS.txt)           -    Antares Simulator authors
-* [CERTIFICATE](CERTIFICATE.txt)	 - A standard DCO that has to be signed by every contributor 
-* [CONTRIBUTING](CONTRIBUTING.md)	     - How to submit patches and discuss code evolutions
+* [AUTHORS](AUTHORS.txt)           - Antares Simulator authors
+* [CERTIFICATE](CERTIFICATE.txt)     - A standard DCO that has to be signed by every contributor
+* [CONTRIBUTING](CONTRIBUTING.md)         - How to submit patches and discuss code evolutions
 * [COPYING](COPYING.txt)            - The MPL v2 license.
 * [NEWS](NEWS.md)                 - Important modifications between the releases.
 * [README](README.md)             - This file.
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developments
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.
-* [resources/](resources)	 - Free sample data sets.
+* [resources/](resources)     - Free sample data sets.
 * [src/analyzer/](src/analyzer)      - source code for the statistical analysis of historical time-series.
 * [src/cmake/](src/cmake)        - files for initializing a solution ready for compilation.
-* [src/distrib/](src/distrib)       - system redistributable libraries  Win(x64,x86),unix.
-* [src/ext/](src/ext)     	 - third party libraries used by Antares_Simulator: libYuni, Sirius_Solver.
-* [src/libs/](src/libs)		   - miscellaneous Antares_Simulator libraries.
+* [src/distrib/](src/distrib)       - system redistributable libraries Win(x64,x86),unix.
+* [src/ext/](src/ext)         - third party libraries used by Antares_Simulator: libYuni, Sirius_Solver.
+* [src/libs/](src/libs)           - miscellaneous Antares_Simulator libraries.
 * [src/solver/](src/solver)     - simulation and optimization part.
 * [src/tools/](src/tools)        - miscellaneous tools for dataset management.
 * [src/ui/](src/ui)           - Graphic user interface.
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(push%20and/or%20release)/badge.svg
-[ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(push%20and/or%20release)"
+
+[ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml
 
 [windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG%20and%20pre-compiled)/badge.svg
-[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
+
+[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
 
 [centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(push%20and/or%20release)/badge.svg
-[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(push%20and/or%20release)"
+
+[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml
 
 [oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Oracle%208%20CI%20(push%20and/or%20release)/badge.svg
-[oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Oracle%208%20CI%20(push%20and/or%20release)"
+
+[oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml
