@@ -30,7 +30,8 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& mem):
 
 Nodes::Node* CloneVisitor::visit(const Nodes::AddNode& input_node)
 {
-    return registry_.create<Nodes::AddNode>(dispatch(*input_node.left()), dispatch(*input_node.right()));
+    return registry_.create<Nodes::AddNode>(dispatch(*input_node.left()),
+                                            dispatch(*input_node.right()));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode& input_node)
@@ -53,7 +54,8 @@ Nodes::Node* CloneVisitor::visit(const Nodes::DivisionNode& input_node)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::EqualNode& input_node)
 {
-    return registry_.create<Nodes::EqualNode>(dispatch(*input_node.left()), dispatch(*input_node.right()));
+    return registry_.create<Nodes::EqualNode>(dispatch(*input_node.left()),
+                                              dispatch(*input_node.right()));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::LessThanOrEqualNode& input_node)
