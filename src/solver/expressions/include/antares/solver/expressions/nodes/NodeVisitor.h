@@ -48,8 +48,7 @@ public:
 
     R dispatch(const Node& node)
     {
-        using Function = std::optional<R> (Antares::Solver::Nodes::NodeVisitor<R>::*)(
-          const Antares::Solver::Nodes::Node&);
+        using Function = std::optional<R> (Nodes::NodeVisitor<R>::*)(const Nodes::Node&);
         static const std::array<Function, 16> tryFunctions{
           &NodeVisitor<R>::tryType<AddNode>,
           &NodeVisitor<R>::tryType<SubtractionNode>,
