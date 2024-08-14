@@ -41,6 +41,13 @@ public:
     {
     }
 
+    template<typename... Args>
+    explicit ParentNode(Args... args):
+        children_{{args...}} // Initialize the array with the provided Node* arguments
+    {
+        static_assert(sizeof...(args) == N, "Number of arguments must be equal to N");
+    }
+
     Node* operator[](std::size_t idx) const
     {
         if (children_.empty() || idx >= children_.size())

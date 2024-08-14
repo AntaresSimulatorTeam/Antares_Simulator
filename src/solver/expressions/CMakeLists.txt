@@ -4,8 +4,6 @@ project(Expressions)
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/ComponentNode.cpp
-        nodes/BinaryNode.cpp
-        nodes/UnaryNode.cpp
 
         visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp
@@ -14,8 +12,6 @@ set(SRC_Expressions
         visitors/EvaluationContext.cpp
 
         include/antares/solver/expressions/nodes/ParentNode.h
-        include/antares/solver/expressions/nodes/UnaryNode.h
-        include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/AddNode.h
         include/antares/solver/expressions/nodes/MultiplicationNode.h
         include/antares/solver/expressions/nodes/DivisionNode.h

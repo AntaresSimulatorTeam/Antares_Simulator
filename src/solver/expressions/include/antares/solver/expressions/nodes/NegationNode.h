@@ -22,13 +22,13 @@
 
 #include <memory>
 
-#include <antares/solver/expressions/nodes/UnaryNode.h>
+#include <antares/solver/expressions/nodes/ParentNode.h>
 
 namespace Antares::Solver::Nodes
 {
-class NegationNode: public UnaryNode
+class NegationNode: public ParentNode<1>
 {
 public:
-    using UnaryNode::UnaryNode;
+    using ParentNode<1>::ParentNode;
 };
 } // namespace Antares::Solver::Nodes

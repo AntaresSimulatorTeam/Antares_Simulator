@@ -20,13 +20,13 @@
 */
 #pragma once
 
-#include <antares/solver/expressions/nodes/BinaryNode.h>
+#include <antares/solver/expressions/nodes/ParentNode.h>
 
 namespace Antares::Solver::Nodes
 {
-class DivisionNode: public BinaryNode
+class DivisionNode: public ParentNode<2>
 {
 public:
-    using BinaryNode::BinaryNode;
+  using ParentNode<2>::ParentNode;
 };
 } // namespace Antares::Solver::Nodes
