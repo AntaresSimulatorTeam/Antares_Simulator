@@ -27,6 +27,6 @@ namespace Antares::Solver::Nodes
 class DivisionNode: public ParentNode<2>
 {
 public:
-  using ParentNode<2>::ParentNode;
+    using ParentNode<2>::ParentNode;
 };
 } // namespace Antares::Solver::Nodes
