@@ -29,7 +29,7 @@
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/LinearStatus.h>
-#include <antares/solver/expressions/visitors/LinearVisitor.h>
+#include <antares/solver/expressions/visitors/LinearityVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
 using namespace Antares::Solver;
@@ -290,7 +290,7 @@ BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((10.000000*x)+(20.000000*id.y))");
-    LinearVisitor linearVisitor;
+    LinearityVisitor linearVisitor;
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::LINEAR);
 }
 
@@ -303,7 +303,7 @@ BOOST_FIXTURE_TEST_CASE(simple_not_linear, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "(x*id.y)");
-    LinearVisitor linearVisitor;
+    LinearityVisitor linearVisitor;
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::NON_LINEAR);
 }
 
@@ -317,7 +317,7 @@ BOOST_FIXTURE_TEST_CASE(simple_linear_division, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "(x/y)");
-    LinearVisitor linearVisitor;
+    LinearityVisitor linearVisitor;
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::LINEAR);
 }
 
@@ -331,14 +331,14 @@ BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "(x/y)");
-    LinearVisitor linearVisitor;
+    LinearityVisitor linearVisitor;
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::NON_LINEAR);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_not_linear, Registry<Node>)
 {
     PrintVisitor printVisitor;
-    LinearVisitor linearVisitor;
+    LinearityVisitor linearVisitor;
 
     VariableNode var1("x");
     // variable
@@ -360,7 +360,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_not_linear, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
 {
     PrintVisitor printVisitor;
-    LinearVisitor linearVisitor;
+    LinearityVisitor linearVisitor;
     LiteralNode var1(65.);
     // Parameter
     ParameterNode par("p1");
