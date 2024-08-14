@@ -19,65 +19,66 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <array>
+#include <vector>
 #include <optional>
-#include <string>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
 namespace Antares::Solver::Nodes
 {
+namespace
+{
+template<class RetT, class VisitorT, class NodeT>
+std::optional<RetT> tryType(const Node& node, VisitorT& visitor)
+{
+    if (auto x = dynamic_cast<const NodeT*>(&node))
+    {
+        return visitor.visit(*x);
+    }
+    else
+    {
+        return {};
+    }
+}
+} // namespace
 
 template<class R>
 class NodeVisitor
 {
-private:
-    template<class T>
-    std::optional<R> tryType(const Node& node)
-    {
-        if (const T* x = dynamic_cast<const T*>(&node))
-        {
-            return visit(*x); // on appelle la version 'T' (virtuelle pure)
-        }
-        return {};
-    }
-
 public:
     virtual ~NodeVisitor() = default;
 
     R dispatch(const Node& node)
     {
-        using Function = std::optional<R> (Antares::Solver::Nodes::NodeVisitor<R>::*)(
-          const Antares::Solver::Nodes::Node&);
-        static const std::array<Function, 16> tryFunctions{
-          &NodeVisitor<R>::tryType<AddNode>,
-          &NodeVisitor<R>::tryType<SubtractionNode>,
-          &NodeVisitor<R>::tryType<MultiplicationNode>,
-          &NodeVisitor<R>::tryType<DivisionNode>,
-          &NodeVisitor<R>::tryType<EqualNode>,
-          &NodeVisitor<R>::tryType<LessThanOrEqualNode>,
-          &NodeVisitor<R>::tryType<GreaterThanOrEqualNode>,
-          &NodeVisitor<R>::tryType<NegationNode>,
-          &NodeVisitor<R>::tryType<ParameterNode>,
-          &NodeVisitor<R>::tryType<VariableNode>,
-          &NodeVisitor<R>::tryType<LiteralNode>,
-          &NodeVisitor<R>::tryType<PortFieldNode>,
-          &NodeVisitor<R>::tryType<ComponentVariableNode>,
-          &NodeVisitor<R>::tryType<ComponentParameterNode>};
-        for (auto f: tryFunctions)
+        using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R>&);
+        std::vector<FunctionT> functions{&tryType<R, NodeVisitor<R>, AddNode>,
+                                         &tryType<R, NodeVisitor<R>, SubtractionNode>,
+                                         &tryType<R, NodeVisitor<R>, MultiplicationNode>,
+                                         &tryType<R, NodeVisitor<R>, DivisionNode>,
+                                         &tryType<R, NodeVisitor<R>, EqualNode>,
+                                         &tryType<R, NodeVisitor<R>, LessThanOrEqualNode>,
+                                         &tryType<R, NodeVisitor<R>, GreaterThanOrEqualNode>,
+                                         &tryType<R, NodeVisitor<R>, NegationNode>,
+                                         &tryType<R, NodeVisitor<R>, ParameterNode>,
+                                         &tryType<R, NodeVisitor<R>, VariableNode>,
+                                         &tryType<R, NodeVisitor<R>, LiteralNode>,
+                                         &tryType<R, NodeVisitor<R>, PortFieldNode>,
+                                         &tryType<R, NodeVisitor<R>, ComponentVariableNode>,
+                                         &tryType<R, NodeVisitor<R>, ComponentParameterNode>};
+        for (auto f: functions)
         {
-            if (auto x = (this->*f)(node))
+            if (auto ret = f(node, *this); ret.has_value())
             {
-                return x.value();
+                return ret.value();
             }
         }
         logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
         return R();
     }
 
-private:
     virtual R visit(const AddNode&) = 0;
+
     virtual R visit(const SubtractionNode&) = 0;
     virtual R visit(const MultiplicationNode&) = 0;
     virtual R visit(const DivisionNode&) = 0;

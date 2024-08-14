@@ -375,3 +375,9 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
+
+BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
+{
+    ComponentVariableNode c1("component", "variable");
+    ComponentVariableNode c2("hello", "world");
+}
