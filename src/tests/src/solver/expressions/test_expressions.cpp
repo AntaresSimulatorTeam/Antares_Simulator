@@ -406,7 +406,7 @@ BOOST_FIXTURE_TEST_CASE(equality_test_two_addition_nodes, Registry<Node>)
 
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*add1), printVisitor.dispatch(*add1_clone));
     BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add1, *add2), true);
-    // test depth
+    // TODO test depth
     AddNode random_add(create<LiteralNode>(25.), create<VariableNode>("rand_var"));
     BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add1, random_add), false);
 }
