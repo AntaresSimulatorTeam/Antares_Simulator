@@ -435,5 +435,5 @@ BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
     SubstitutionVisitor sub(ctx, *this);
     Node* subsd = sub.dispatch(*root);
 
-    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), ctx.variables[0]);
+    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), ctx.variables[0].get());
 }
