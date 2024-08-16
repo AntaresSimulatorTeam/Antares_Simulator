@@ -380,7 +380,7 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
 
 struct ANTLRContext
 {
-    std::vector<Nodes::ComponentVariableNode> variables;
+    std::vector<Nodes::Node*> variables;
     // TODO
     // std::vector<Nodes::ComponentParameterNode> parameters;
 };
@@ -403,10 +403,10 @@ private:
     {
         if (auto it = std::find(ctx_.variables.begin(),
                                 ctx_.variables.end(),
-                                component_variable_node);
+                                &component_variable_node);
             it != ctx_.variables.end())
         {
-            return const_cast<Node*>(dynamic_cast<const Node*>(&(*it)));
+            return &component_variable_node;
         }
         else
         {
@@ -417,8 +417,8 @@ private:
 
 void fillContext(ANTLRContext& ctx)
 {
-    ctx.variables.emplace_back("component1", "variable1");
-    ctx.variables.emplace_back("component2", "variable1");
+    ctx.variables.emplace_back(create<Nodes::ComponentVariableNode>("component1", "variable1"));
+    ctx.variables.emplace_back(create<Nodes::ComponentVariableNode>("component2", "variable1"));
 
     // ctx.parameters.emplace_back("component1", "parameter1");
 }
