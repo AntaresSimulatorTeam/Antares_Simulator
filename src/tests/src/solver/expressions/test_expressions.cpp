@@ -27,6 +27,7 @@
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
+#include <antares/solver/expressions/visitors/EqualityVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
@@ -374,4 +375,38 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     Node* expr = create<AddNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
+}
+
+BOOST_FIXTURE_TEST_CASE(equality_test_two_addition_nodes, Registry<Node>)
+{
+    LiteralNode lit1(65.), lit2(65.);
+    // variable
+    VariableNode x1("x"), x2("x");
+
+    // Mult : 65.*x
+    Node* u1 = create<MultiplicationNode>(&lit1, &x1);
+    Node* u2 = create<MultiplicationNode>(&lit2, &x2);
+    LiteralNode lit3(56.);
+    LiteralNode lit4(56.);
+    // variable
+    VariableNode y1("y");
+    VariableNode y2("y");
+    // Mult : 56.*y
+    Node* v1 = create<MultiplicationNode>(&lit3, &y1);
+    Node* v2 = create<MultiplicationNode>(&lit4, &y2);
+
+    Node* add1 = create<AddNode>(u1, v1);
+    CloneVisitor cloneVisitor(*this);
+    Node* add1_clone = cloneVisitor.dispatch(*add1);
+
+    Node* add2 = create<AddNode>(u2, v2);
+
+    PrintVisitor printVisitor;
+    EqualityVisitor equalityVisitor;
+
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*add1), printVisitor.dispatch(*add1_clone));
+    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add1, *add2), true);
+    // test depth
+    AddNode random_add(create<LiteralNode>(25.), create<VariableNode>("rand_var"));
+    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add1, random_add), false);
 }
