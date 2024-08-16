@@ -406,7 +406,7 @@ private:
                                 &component_variable_node);
             it != ctx_.variables.end())
         {
-            return &component_variable_node;
+            return *it;
         }
         else
         {
@@ -415,10 +415,12 @@ private:
     }
 };
 
-void fillContext(ANTLRContext& ctx)
+void fillContext(ANTLRContext& ctx, Registry<Node>& registry)
 {
-    ctx.variables.emplace_back(create<Nodes::ComponentVariableNode>("component1", "variable1"));
-    ctx.variables.emplace_back(create<Nodes::ComponentVariableNode>("component2", "variable1"));
+    ctx.variables.emplace_back(
+      registry.create<Nodes::ComponentVariableNode>("component1", "variable1"));
+    ctx.variables.emplace_back(
+      registry.create<Nodes::ComponentVariableNode>("component2", "variable1"));
 
     // ctx.parameters.emplace_back("component1", "parameter1");
 }
@@ -426,12 +428,12 @@ void fillContext(ANTLRContext& ctx)
 BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
 {
     ANTLRContext ctx;
-    fillContext(ctx);
+    fillContext(ctx, *this);
 
     Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
                                  create<ComponentVariableNode>("component1", "notInThere"));
     SubstitutionVisitor sub(ctx, *this);
     Node* subsd = sub.dispatch(*root);
 
-    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), &ctx.variables[0]);
+    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), ctx.variables[0]);
 }
