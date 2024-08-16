@@ -380,7 +380,7 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
 
 struct ANTLRContext
 {
-    std::vector<Nodes::ComponentVariableNode*> variables;
+    std::vector<Nodes::ComponentVariableNode> variables;
     // TODO
     // std::vector<Nodes::ComponentParameterNode> parameters;
 };
@@ -388,41 +388,38 @@ struct ANTLRContext
 class SubstitutionVisitor: public CloneVisitor
 {
 public:
-    SubstitutionVisitor(const ANTLRContext& ctx, Registry<Node>& registry):
+    SubstitutionVisitor(ANTLRContext& ctx, Registry<Node>& registry):
         CloneVisitor(registry),
         ctx_(ctx),
         registry_(registry)
     {
     }
 
-    const ANTLRContext& ctx_;
+    ANTLRContext& ctx_;
     Registry<Node>& registry_;
 
 private:
     Node* visit(const Nodes::ComponentVariableNode& component_variable_node) override
     {
-        for (const auto& ctx_var: ctx_)
+        if (auto it = std::find(ctx_.variables.begin(),
+                                ctx_.variables.end(),
+                                component_variable_node);
+            it != ctx_.variables.end())
         {
-            if (*ctx_var == component_variable_node)
-            {
-                {
-                    return ctx_var;
-                }
-            }
-            else
-            {
-                return CloneVisitor::visit(component_variable_node);
-            }
+            return &*it;
+        }
+
+        else
+        {
+            return CloneVisitor::visit(component_variable_node);
         }
     }
 };
 
 void fillContext(ANTLRContext& ctx, Registry<Node>& registry)
 {
-    ctx.variables.emplace_back(
-      registry.create<Nodes::ComponentVariableNode>("component1", "variable1"));
-    ctx.variables.emplace_back(
-      registry.create<Nodes::ComponentVariableNode>("component2", "variable1"));
+    ctx.variables.emplace_back("component1", "variable1");
+    ctx.variables.emplace_back("component2", "variable1");
 
     // ctx.parameters.emplace_back("component1", "parameter1");
 }
@@ -437,6 +434,5 @@ BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
     SubstitutionVisitor sub(ctx, *this);
     Node* subsd = sub.dispatch(*root);
 
-    //    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), ctx.variables[0].get());
-    BOOST_CHECK_EQUAL(subsd)->operator[](0), ctx.variables[0].get());
+    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), &ctx.variables[0]);
 }
