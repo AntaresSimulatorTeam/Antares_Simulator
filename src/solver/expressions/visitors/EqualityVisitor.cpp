@@ -78,7 +78,6 @@ bool EqualityVisitor::visit(const Nodes::ComponentParameterNode& component_param
                             const Nodes::ComponentParameterNode& component_parameter_node2)
 {
     return component_parameter_node1 == component_parameter_node2;
-    s
 }
 
 } // namespace Antares::Solver::Visitors
