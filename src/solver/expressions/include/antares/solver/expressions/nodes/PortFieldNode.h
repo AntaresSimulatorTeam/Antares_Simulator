@@ -32,6 +32,7 @@ public:
     explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
     const std::string& getPortName() const;
     const std::string& getFieldName() const;
+    bool operator==(const PortFieldNode& other);
 
 private:
     std::string port_name_;

@@ -37,4 +37,9 @@ const std::string& PortFieldNode::getFieldName() const
 {
     return field_name_;
 }
+
+bool PortFieldNode::operator==(const PortFieldNode& other)
+{
+    return (port_name_ == other.port_name_) && (field_name_ == other.field_name_);
+}
 } // namespace Antares::Solver::Nodes

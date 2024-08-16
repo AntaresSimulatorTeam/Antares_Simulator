@@ -37,4 +37,9 @@ const std::string& ComponentNode::getComponentName() const
 {
     return component_name_;
 }
+
+bool ComponentNode::operator==(const ComponentNode& other)
+{
+    return (component_id_ == other.component_id_) && (component_name_ == other.component_name_);
+}
 } // namespace Antares::Solver::Nodes
