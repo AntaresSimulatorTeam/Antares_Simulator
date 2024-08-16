@@ -28,7 +28,7 @@ namespace Antares::Solver::Visitors
 class EqualityVisitor: public Nodes::TwoNodesVisitor<bool>
 {
 public:
-    using Base = Nodes::NodeVisitor<bool>;
+    using Base = Nodes::TwoNodesVisitor<bool>;
 
 private:
     bool visit(const Nodes::AddNode& add1, const Nodes::AddNode& add2) override;
