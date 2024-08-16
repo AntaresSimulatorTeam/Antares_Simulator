@@ -380,7 +380,7 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
 
 struct ANTLRContext
 {
-    std::vector<Nodes::Node*> variables;
+    std::vector<Nodes::ComponentVariableNode*> variables;
     // TODO
     // std::vector<Nodes::ComponentParameterNode> parameters;
 };
@@ -401,16 +401,18 @@ public:
 private:
     Node* visit(const Nodes::ComponentVariableNode& component_variable_node) override
     {
-        if (auto it = std::find(ctx_.variables.begin(),
-                                ctx_.variables.end(),
-                                &component_variable_node);
-            it != ctx_.variables.end())
+        for (const auto& ctx_var: ctx_)
         {
-            return *it;
-        }
-        else
-        {
-            return CloneVisitor::visit(component_variable_node);
+            if (*ctx_var == component_variable_node)
+            {
+                {
+                    return ctx_var;
+                }
+            }
+            else
+            {
+                return CloneVisitor::visit(component_variable_node);
+            }
         }
     }
 };
@@ -435,5 +437,6 @@ BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
     SubstitutionVisitor sub(ctx, *this);
     Node* subsd = sub.dispatch(*root);
 
-    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), ctx.variables[0].get());
+    //    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->operator[](0), ctx.variables[0].get());
+    BOOST_CHECK_EQUAL(subsd)->operator[](0), ctx.variables[0].get());
 }
