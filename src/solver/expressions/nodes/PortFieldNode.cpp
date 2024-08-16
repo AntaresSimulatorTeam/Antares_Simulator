@@ -38,7 +38,7 @@ const std::string& PortFieldNode::getFieldName() const
     return field_name_;
 }
 
-bool PortFieldNode::operator==(const PortFieldNode& other)
+bool PortFieldNode::operator==(const PortFieldNode& other) const
 {
     return (port_name_ == other.port_name_) && (field_name_ == other.field_name_);
 }

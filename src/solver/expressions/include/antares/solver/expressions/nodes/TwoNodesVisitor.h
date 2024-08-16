@@ -53,7 +53,7 @@ public:
 
     R dispatch(const Node& node1, const Node& node2)
     {
-        using FunctionT = std::optional<R> (*)(const Node&, TwoNodesVisitor<R>&);
+        using FunctionT = std::optional<R> (*)(const Node&, const Node&, TwoNodesVisitor<R>&);
         std::vector<FunctionT> functions{&tryType<R, TwoNodesVisitor<R>, AddNode>,
                                          &tryType<R, TwoNodesVisitor<R>, SubtractionNode>,
                                          &tryType<R, TwoNodesVisitor<R>, MultiplicationNode>,

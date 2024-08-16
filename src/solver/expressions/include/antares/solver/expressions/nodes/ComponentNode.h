@@ -31,7 +31,7 @@ public:
     explicit ComponentNode(const std::string& component_id, const std::string& component_name);
     const std::string& getComponentId() const;
     const std::string& getComponentName() const;
-    bool operator==(const ComponentNode& other);
+    bool operator==(const ComponentNode& other) const;
 
 private:
     std::string component_id_;

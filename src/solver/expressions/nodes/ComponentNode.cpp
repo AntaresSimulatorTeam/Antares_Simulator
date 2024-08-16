@@ -38,7 +38,7 @@ const std::string& ComponentNode::getComponentName() const
     return component_name_;
 }
 
-bool ComponentNode::operator==(const ComponentNode& other)
+bool ComponentNode::operator==(const ComponentNode& other) const
 {
     return (component_id_ == other.component_id_) && (component_name_ == other.component_name_);
 }
