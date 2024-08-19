@@ -6,19 +6,21 @@ namespace Antares::Solver::Visitors
 
 NodeComparisonResult EqualityVisitor::visit(const Nodes::AddNode& add1, const Nodes::AddNode& add2)
 {
-    return dispatch(*add1[0], *add2[0]) && dispatch(*add1[1], *add2[1]);
+    return (dispatch(*add1[0], *add2[0]) && dispatch(*add1[1], *add2[1]))
+           || (dispatch(*add1[0], *add2[1]) && dispatch(*add1[1], *add2[0]));
 }
 
 NodeComparisonResult EqualityVisitor::visit(const Nodes::SubtractionNode& sub1,
                                             const Nodes::SubtractionNode& sub2)
 {
-    return dispatch(*sub1[0], *sub2[0]) && dispatch(*sub1[1], *sub2[1]);
+    return (dispatch(*sub1[0], *sub2[0]) && dispatch(*sub1[1], *sub2[1]));
 }
 
 NodeComparisonResult EqualityVisitor::visit(const Nodes::MultiplicationNode& mult1,
                                             const Nodes::MultiplicationNode& mult2)
 {
-    return dispatch(*mult1[0], *mult2[0]) && dispatch(*mult1[1], *mult2[1]);
+    return (dispatch(*mult1[0], *mult2[0]) && dispatch(*mult1[1], *mult2[1]))
+           || (dispatch(*mult1[0], *mult2[1]) && dispatch(*mult1[1], *mult2[0]));
 }
 
 NodeComparisonResult EqualityVisitor::visit(const Nodes::DivisionNode& div1,
@@ -30,7 +32,8 @@ NodeComparisonResult EqualityVisitor::visit(const Nodes::DivisionNode& div1,
 NodeComparisonResult EqualityVisitor::visit(const Nodes::EqualNode& equ1,
                                             const Nodes::EqualNode& equ2)
 {
-    return dispatch(*equ1[0], *equ2[0]) && dispatch(*equ1[1], *equ2[1]);
+    return (dispatch(*equ1[0], *equ2[0]) && dispatch(*equ1[1], *equ2[1]))
+           || (dispatch(*equ1[0], *equ2[1]) && dispatch(*equ1[1], *equ2[0]));
 }
 
 NodeComparisonResult EqualityVisitor::visit(const Nodes::LessThanOrEqualNode& lt1,
@@ -66,7 +69,7 @@ NodeComparisonResult EqualityVisitor::visit(const Nodes::LiteralNode& lit1,
 NodeComparisonResult EqualityVisitor::visit(const Nodes::NegationNode& neg1,
                                             const Nodes::NegationNode& neg2)
 {
-    return dispatch(*neg1[0], *neg2[0]) && dispatch(*neg1[1], *neg2[1]);
+    return dispatch(*neg1[0], *neg2[0]);
 }
 
 NodeComparisonResult EqualityVisitor::visit(const Nodes::PortFieldNode& port_field_node1,
