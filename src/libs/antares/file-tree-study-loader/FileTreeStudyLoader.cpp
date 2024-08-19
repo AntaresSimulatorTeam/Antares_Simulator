@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -38,9 +37,11 @@ std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
 {
     using namespace std::literals::string_literals;
     Antares::Solver::Application application;
-    constexpr unsigned int argc = 2;
+    constexpr unsigned int argc = 3;
     // On Windows, std::filesystem::path::value_type is wchar_t
-    std::array<const char*, argc> argv{"", reinterpret_cast<const char*>(study_path_.c_str())};
+    std::array<const char*, argc> argv{"",
+                                       reinterpret_cast<const char*>(study_path_.c_str()),
+                                       "--parallel"};
     application.prepare(argc, argv.data());
 
     return application.acquireStudy();
