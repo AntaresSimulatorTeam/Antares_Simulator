@@ -36,10 +36,7 @@ std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor)
     {
         return visitor.visit(*x);
     }
-    else
-    {
-        return {};
-    }
+    return std::nullopt;
 }
 } // namespace
 
