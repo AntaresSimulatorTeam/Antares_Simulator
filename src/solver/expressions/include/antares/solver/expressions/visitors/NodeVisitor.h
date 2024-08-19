@@ -30,9 +30,9 @@ namespace Antares::Solver::Nodes
 namespace
 {
 template<class RetT, class VisitorT, class NodeT>
-std::optional<RetT> tryType(const Node& node, VisitorT& visitor)
+std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor)
 {
-    if (auto x = dynamic_cast<const NodeT*>(&node))
+    if (auto* x = dynamic_cast<const NodeT*>(&node))
     {
         return visitor.visit(*x);
     }
@@ -52,21 +52,22 @@ public:
     R dispatch(const Node& node)
     {
         using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R>&);
-        std::vector<FunctionT> functions{&tryType<R, NodeVisitor<R>, AddNode>,
-                                         &tryType<R, NodeVisitor<R>, SubtractionNode>,
-                                         &tryType<R, NodeVisitor<R>, MultiplicationNode>,
-                                         &tryType<R, NodeVisitor<R>, DivisionNode>,
-                                         &tryType<R, NodeVisitor<R>, EqualNode>,
-                                         &tryType<R, NodeVisitor<R>, LessThanOrEqualNode>,
-                                         &tryType<R, NodeVisitor<R>, GreaterThanOrEqualNode>,
-                                         &tryType<R, NodeVisitor<R>, NegationNode>,
-                                         &tryType<R, NodeVisitor<R>, ParameterNode>,
-                                         &tryType<R, NodeVisitor<R>, VariableNode>,
-                                         &tryType<R, NodeVisitor<R>, LiteralNode>,
-                                         &tryType<R, NodeVisitor<R>, PortFieldNode>,
-                                         &tryType<R, NodeVisitor<R>, ComponentVariableNode>,
-                                         &tryType<R, NodeVisitor<R>, ComponentParameterNode>};
-        for (auto f: functions)
+        static const std::vector<FunctionT> allNodeVisitList{
+          &tryVisit<R, NodeVisitor<R>, AddNode>,
+          &tryVisit<R, NodeVisitor<R>, SubtractionNode>,
+          &tryVisit<R, NodeVisitor<R>, MultiplicationNode>,
+          &tryVisit<R, NodeVisitor<R>, DivisionNode>,
+          &tryVisit<R, NodeVisitor<R>, EqualNode>,
+          &tryVisit<R, NodeVisitor<R>, LessThanOrEqualNode>,
+          &tryVisit<R, NodeVisitor<R>, GreaterThanOrEqualNode>,
+          &tryVisit<R, NodeVisitor<R>, NegationNode>,
+          &tryVisit<R, NodeVisitor<R>, ParameterNode>,
+          &tryVisit<R, NodeVisitor<R>, VariableNode>,
+          &tryVisit<R, NodeVisitor<R>, LiteralNode>,
+          &tryVisit<R, NodeVisitor<R>, PortFieldNode>,
+          &tryVisit<R, NodeVisitor<R>, ComponentVariableNode>,
+          &tryVisit<R, NodeVisitor<R>, ComponentParameterNode>};
+        for (auto f: allNodeVisitList)
         {
             if (auto ret = f(node, *this); ret.has_value())
             {
