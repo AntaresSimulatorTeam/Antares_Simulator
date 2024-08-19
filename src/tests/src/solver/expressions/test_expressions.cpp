@@ -388,14 +388,14 @@ struct ANTLRContext
 class SubstitutionVisitor: public CloneVisitor
 {
 public:
-    SubstitutionVisitor(const ANTLRContext& ctx, Registry<Node>& registry):
+    SubstitutionVisitor(ANTLRContext& ctx, Registry<Node>& registry):
         CloneVisitor(registry),
         ctx_(ctx),
         registry_(registry)
     {
     }
 
-    const ANTLRContext& ctx_;
+    ANTLRContext& ctx_;
     Registry<Node>& registry_;
 
 private:
@@ -406,8 +406,9 @@ private:
                                 component_variable_node);
             it != ctx_.variables.end())
         {
-            return const_cast<Node*>(dynamic_cast<const Node*>(&(*it)));
+            return &*it;
         }
+
         else
         {
             return CloneVisitor::visit(component_variable_node);
