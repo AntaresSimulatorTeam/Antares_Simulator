@@ -33,7 +33,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     logs.applicationName("k-cbuild");
     if (argc < 2)

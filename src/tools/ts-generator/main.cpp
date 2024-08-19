@@ -64,7 +64,7 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     logs.applicationName("ts-generator");
 

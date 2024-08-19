@@ -22,7 +22,7 @@ struct Settings
     std::string linksListToGen;
 };
 
-bool parseOptions(int, char*[], Settings&);
+bool parseOptions(int, const char*[], Settings&);
 std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings&);
 
 bool checkOptions(Settings& options);
