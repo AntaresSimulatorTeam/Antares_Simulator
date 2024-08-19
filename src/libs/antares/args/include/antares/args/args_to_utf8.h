@@ -25,11 +25,11 @@
 class IntoUTF8ArgsTranslator
 {
 public:
-    IntoUTF8ArgsTranslator(int argc, char** argv);
-    std::pair<int, char**> convert();
+    IntoUTF8ArgsTranslator(int argc, const char** argv);
+    std::pair<int, const char**> convert();
     ~IntoUTF8ArgsTranslator();
 
 private:
     int argc_;
-    char** argv_;
+    const char** argv_;
 };

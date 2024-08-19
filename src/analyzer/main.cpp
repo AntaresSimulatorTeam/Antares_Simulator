@@ -101,7 +101,7 @@ static void NotEnoughMemory()
     exit(42);
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     // Dealing with the lack of memory
     std::set_new_handler(&NotEnoughMemory);
