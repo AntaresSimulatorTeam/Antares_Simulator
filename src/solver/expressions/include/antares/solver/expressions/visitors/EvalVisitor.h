@@ -38,10 +38,10 @@ class EvalVisitor: public Nodes::NodeVisitor<double>
 public:
     using Base = Nodes::NodeVisitor<double>;
     EvalVisitor() = default; // No context (variables / parameters)
-    explicit EvalVisitor(EvaluationContext context);
+    explicit EvalVisitor(EvaluationContext<std::string, double> context);
 
 private:
-    const EvaluationContext context_;
+    const EvaluationContext<std::string, double> context_;
     double visit(const Nodes::AddNode& add) override;
     double visit(const Nodes::SubtractionNode& add) override;
     double visit(const Nodes::MultiplicationNode& add) override;

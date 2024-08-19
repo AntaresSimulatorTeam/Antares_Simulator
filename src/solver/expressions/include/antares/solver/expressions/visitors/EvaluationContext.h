@@ -1,19 +1,26 @@
 #pragma once
 
 #include <map>
-#include <string>
 
 namespace Antares::Solver::Visitors
 {
+template<class KeyType, class ValueType>
 class EvaluationContext
 {
 public:
     EvaluationContext() = default;
-    explicit EvaluationContext(std::map<std::string, double> parameters,
-                               std::map<std::string, double> variables);
+    explicit EvaluationContext(std::map<KeyType, ValueType> parameters,
+                               std::map<KeyType, ValueType> variables);
 
-    double getVariableValue(const std::string&) const;
-    double getParameterValue(const std::string&) const;
+    ValueType getVariableValue(const KeyType& key) const
+    {
+        return variables_.at(key);
+    }
+
+    ValueType getParameterValue(const KeyType& key) const
+    {
+        return parameters_.at(key);
+    }
 
 private:
     std::map<std::string, double> parameters_;

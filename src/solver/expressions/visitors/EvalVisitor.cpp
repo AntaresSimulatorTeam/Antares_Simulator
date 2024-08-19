@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::Visitors
 {
-EvalVisitor::EvalVisitor(EvaluationContext context):
+EvalVisitor::EvalVisitor(EvaluationContext<std::string, double> context):
     context_(std::move(context))
 {
 }
