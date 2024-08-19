@@ -37,21 +37,33 @@ void LocalMatching::reset()
     setToZeroOutsideOutsideLinks = true;
 }
 
+static bool legacyLocalMatchingKeys(const Yuni::String& key, const Yuni::String& value)
+{
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
+    {
+        logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step \
+            not supported with this solver version, use a version < 9.2";
+
+        return true;
+    }
+    if (key == "enable-first-step")
+    {
+        logs.warning() << "Parameter enable-first-step not supported with this solver version, \
+            use a version < 9.2";
+
+        return true;
+    }
+    return false;
+}
+
 bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
     {
         return value.to<bool>(setToZeroOutsideInsideLinks);
     }
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
-    {
-        return value.to<bool>(setToZeroOutsideOutsideLinks);
-    }
-    if (key == "enable-first-step")
-    {
-        return value.to<bool>(enabled);
-    }
-    return false;
+
+    return legacyLocalMatchingKeys(key, value);
 }
 
 void LocalMatching::addProperties(IniFile::Section* section) const
