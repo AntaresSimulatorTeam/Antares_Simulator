@@ -99,7 +99,7 @@ int main(int argc, const char* argv[])
     Resources::Initialize(argc, argv, true);
 
     // Running the GUI
-    const int ret = wxEntry(argc, argv);
+    const int ret = wxEntry(argc, const_cast<char**>(argv));
 
     LocalPolicy::Close();
     return ret;
