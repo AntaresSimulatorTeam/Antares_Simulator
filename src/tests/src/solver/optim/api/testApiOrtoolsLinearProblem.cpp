@@ -39,7 +39,23 @@ struct Fixture
     }
 
     std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
+
+    void createProblemMaximize();
 };
+
+void Fixture::createProblemMaximize()
+{
+    auto* a = pb->addIntVariable(0, 1, "a");
+    auto* b = pb->addNumVariable(0, 1, "b");
+    auto* c = pb->addConstraint(1, 1, "c");
+
+    c->setCoefficient(a, 1);
+    c->setCoefficient(b, 1);
+
+    pb->setObjectiveCoefficient(a, 1);
+    pb->setObjectiveCoefficient(b, 1);
+    pb->setMaximization();
+}
 
 BOOST_AUTO_TEST_SUITE(optim_api)
 
@@ -101,6 +117,12 @@ BOOST_FIXTURE_TEST_CASE(infeasibleProblem, Fixture)
 
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
     BOOST_CHECK_EQUAL(solution->getOptimalValue(a), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
+{
+    createProblemMaximize();
+    auto* solution = pb->solve(true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
