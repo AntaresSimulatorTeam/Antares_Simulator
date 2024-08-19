@@ -51,6 +51,10 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.inflows.resize(size, value);
     series.lowerRuleCurve.resize(size, value);
     series.upperRuleCurve.resize(size, value);
+
+    series.costInjection.resize(size, value);
+    series.costWithdrawal.resize(size, value);
+    series.costLevel.resize(size, value);
 }
 
 void createIndividualFileSeries(const std::string& path, double value, unsigned int size)
@@ -88,6 +92,10 @@ void createFileSeries(double value, unsigned int size)
     createIndividualFileSeries(folder + SEP + "inflows.txt", value, size);
     createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", value, size);
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", value, size);
+
+    createIndividualFileSeries(folder + SEP + "cost-injection.txt", value, size);
+    createIndividualFileSeries(folder + SEP + "cost-withdrawal.txt", value, size);
+    createIndividualFileSeries(folder + SEP + "cost-level.txt", value, size);
 }
 
 void createFileSeries(unsigned int size)
@@ -99,6 +107,10 @@ void createFileSeries(unsigned int size)
     createIndividualFileSeries(folder + SEP + "inflows.txt", size);
     createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", size);
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", size);
+
+    createIndividualFileSeries(folder + SEP + "cost-injection.txt", size);
+    createIndividualFileSeries(folder + SEP + "cost-withdrawal.txt", size);
+    createIndividualFileSeries(folder + SEP + "cost-level.txt", size);
 }
 
 void createIniFile(bool enabled)
@@ -176,6 +188,10 @@ struct Fixture
         std::filesystem::remove(folder + SEP + "inflows.txt");
         std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
         std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
+
+        std::filesystem::remove(folder + SEP + "cost-injection.txt");
+        std::filesystem::remove(folder + SEP + "cost-withdrawal.txt");
+        std::filesystem::remove(folder + SEP + "cost-level.txt");
     }
 
     std::string folder = getFolder();
