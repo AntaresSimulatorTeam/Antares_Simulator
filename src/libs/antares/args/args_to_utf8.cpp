@@ -49,7 +49,7 @@ std::pair<int, const char**> IntoUTF8ArgsTranslator::convert()
 {
 #ifdef YUNI_OS_WINDOWS
     wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
-    argv_ = (char**)malloc(argc_ * sizeof(char*));
+    argv_ = (const char**)malloc(argc_ * sizeof(char*));
     for (int i = 0; i != argc_; ++i)
     {
         const uint len = (uint)wcslen(wargv[i]);
@@ -61,9 +61,16 @@ std::pair<int, const char**> IntoUTF8ArgsTranslator::convert()
                                                 0,
                                                 nullptr,
                                                 nullptr);
-        argv_[i] = (char*)malloc((newLen + 1) * sizeof(char));
-        memset(argv_[i], 0, (newLen + 1) * sizeof(char));
-        WideCharToMultiByte(CP_UTF8, 0, wargv[i], len, argv_[i], newLen, nullptr, nullptr);
+        argv_[i] = (const char*)malloc((newLen + 1) * sizeof(char));
+        memset(static_cast<void*>(const_cast<char*>(argv_[i])), 0, (newLen + 1) * sizeof(char));
+        WideCharToMultiByte(CP_UTF8,
+                            0,
+                            wargv[i],
+                            len,
+                            const_cast<char*>(argv_[i]),
+                            newLen,
+                            nullptr,
+                            nullptr);
         argv_[i][newLen] = '\0';
     }
 #endif
