@@ -28,8 +28,6 @@
 
 #include <antares/solver/optim/ortoolsImpl/linearProblem.h>
 
-BOOST_AUTO_TEST_SUITE(optim_api)
-
 using namespace Antares::Solver::Optim;
 
 struct Fixture
@@ -40,7 +38,25 @@ struct Fixture
     }
 
     std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
+
+    void createProblemMaximize();
 };
+
+void Fixture::createProblemMaximize()
+{
+    auto* a = pb->addIntVariable(0, 10, "a");
+    auto* b = pb->addNumVariable(0, 10, "b");
+    auto* c = pb->addConstraint(0, 10, "c");
+
+    c->setCoefficient(a, 2);
+    c->setCoefficient(b, 3);
+
+    pb->setObjectiveCoefficient(a, 5);
+    pb->setObjectiveCoefficient(b, 4);
+    pb->setMaximization();
+}
+
+BOOST_AUTO_TEST_SUITE(optim_api)
 
 BOOST_FIXTURE_TEST_CASE(basicLinearProblemAdd, Fixture)
 {
@@ -76,12 +92,20 @@ BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
 {
-    pb->addVariable(0, 1, true, "a");
-    auto var = pb->getVariable("a");
-
+    auto* var = pb->addVariable(0, 1, true, "a");
     pb->setObjectiveCoefficient(var, 1);
-
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(SolveEmptyProblem, Fixture)
+{
+    auto* solution = pb->solve(true);
+}
+
+BOOST_FIXTURE_TEST_CASE(SolveBasicProblemMax, Fixture)
+{
+    createProblemMaximize();
+    auto* solution = pb->solve(true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
