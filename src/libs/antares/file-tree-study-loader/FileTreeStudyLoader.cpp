@@ -49,7 +49,7 @@ namespace
  * @param study_path A string_view representing the study path.
  * @return std::vector<std::string> A vector of strings containing the prepared arguments.
  */
-void prepareArgs(std::array<char*, 2>& argv, std::span<std::string> data)
+void prepareArgs(std::array<const char*, 2>& argv, std::span<std::string> data)
 {
     argv[0] = data[0].data();
     argv[1] = data[1].data();
@@ -62,7 +62,7 @@ std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
     Antares::Solver::Application application;
     constexpr unsigned int argc = 2;
     std::array<std::string, 2> keep_alive{""s, study_path_.string()};
-    std::array<char*, argc> argv;
+    std::array<const char*, argc> argv; // TODO REMOVE
     prepareArgs(argv, keep_alive);
     application.prepare(argc, argv.data());
 

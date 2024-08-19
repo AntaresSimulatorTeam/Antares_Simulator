@@ -39,13 +39,13 @@
 // clang-format on
 #endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv):
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, const char** argv):
     argc_(argc),
     argv_(argv)
 {
 }
 
-std::pair<int, char**> IntoUTF8ArgsTranslator::convert()
+std::pair<int, const char**> IntoUTF8ArgsTranslator::convert()
 {
 #ifdef YUNI_OS_WINDOWS
     wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);

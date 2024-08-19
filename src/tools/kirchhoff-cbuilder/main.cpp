@@ -121,7 +121,7 @@ static void NotEnoughMemory()
     logs.fatal() << "Not enough memory. aborting.";
 }
 
-bool initResources(int argc, char* argv[])
+bool initResources(int argc, const char* argv[])
 {
     std::set_new_handler(&NotEnoughMemory);
 
