@@ -37,7 +37,7 @@ public:
                        Api::MipStatus& responseStatus,
                        double objectiveValue);
 
-    virtual ~OrtoolsMipSolution() = default;
+    ~OrtoolsMipSolution() final = default;
 
     Api::MipStatus getStatus() override;
     double getObjectiveValue() override;
