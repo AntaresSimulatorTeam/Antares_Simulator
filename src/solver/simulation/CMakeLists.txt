@@ -11,8 +11,6 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/sim_structure_probleme_economique.h
         sim_variables_globales.cpp
         include/antares/solver/simulation/sim_constants.h
-        include/antares/solver/simulation/sim_spread_generator.h
-        sim_spread_generator.cpp
         include/antares/solver/simulation/simulation.h
         include/antares/solver/simulation/solver.h
         include/antares/solver/simulation/solver.hxx
