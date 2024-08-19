@@ -194,7 +194,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                             [globalClusterIdx];
                     if (cnt2 >= 0)
                     {
-                        SecondMembre[cnt1] = cluster.series.get()->maxInjectionModulation[pdtJour] * cluster.injectionNominalCapacity;
+                        SecondMembre[cnt2] = cluster.series.get()->maxInjectionModulation[pdtJour] * cluster.injectionNominalCapacity;
                         AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
                     }
                 }

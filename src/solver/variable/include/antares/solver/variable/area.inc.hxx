@@ -137,7 +137,6 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         {
             // Intiializing the state for the current short term storage cluster
             state.initFromShortTermStorageClusterIndex(i);
-            i++;
         }
 
         // Variables
