@@ -9,8 +9,13 @@ class EvaluationContext
 {
 public:
     EvaluationContext() = default;
+
     explicit EvaluationContext(std::map<KeyType, ValueType> parameters,
-                               std::map<KeyType, ValueType> variables);
+                               std::map<KeyType, ValueType> variables):
+        parameters_(std::move(parameters)),
+        variables_(std::move(variables))
+    {
+    }
 
     ValueType getVariableValue(const KeyType& key) const
     {
