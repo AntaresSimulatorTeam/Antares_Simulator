@@ -33,7 +33,7 @@ not be confused with those of the document "optimization problem formulation"
       The hydro storage energy monthly and weekly profiles of each zone $z$ do not depend at all on the local
       demand and must-run generation in $z$
 - $L_{z.}^+$ Time-series of "net" load for zone $z$, defined as: $L{z.}^+ = L{z.} - M{z.}$
-- $L_{z.}$ Time-series of "weighted" load for zone $z$, defined as:_ $L_{z.} = A^t L_{z.}^+$
+- $L_{z.}$ Time-series of "weighted" load for zone $z$, defined as: $L_{z.} = A^t L_{z.}^+$
 
 <ins>All following parameters are related to the generic zone $z$:</ins>
 
@@ -47,9 +47,9 @@ not be confused with those of the document "optimization problem formulation"
 
 - $S$ Reservoir size
 
-- $\overline{S_d}$ Reservoir maximum level at the end of day d, expressed as a fraction of $S$ (rule curve)
+- $\overline{S_d}$ Reservoir maximum level at the end of day d (rule curve)
 
-- $\underline{S_d}$ Reservoir minimum level at the end of day d, expressed as a fraction of $S$ (rule curve)
+- $\underline{S_d}$ Reservoir minimum level at the end of day d (rule curve)
 
 - $S_0$ Reservoir initial level at the beginning of the first day of the "hydro-year"
 
@@ -72,18 +72,18 @@ not be confused with those of the document "optimization problem formulation"
 - $W_m^k$ Energy to generate on month m, at the end of stage k of pre-allocation
 
 
-Following variables and parameters are local to linear optimization problems $M$ &amp; $D(Tm)$
+Following variables and parameters are local to linear optimization problems $M$ &amp; $D(m)$
 solved within the heuristic. For the sake of clarity, the same generic index is used for all time steps,
-knowing that in $M$ there are 12 monthly time-steps, while in $D(m)t$ there are from 28 to 31 daily
+knowing that in $M$ there are 12 monthly time-steps, while in $D(m)$ there are from 28 to 31 daily
 time-steps. Costs $\gamma_{Var}$ given to these variables are chosen to enforce a logical hierarchy
 of penalties (letting the reservoir overflow is worse than violating rule curves, which is worse than deviating
 from the generation objective assessed in stage 1, etc.)
 
-- $Y$ Generation deficit at the end of the period, as compared to the objective aimed at
+- $W$ Generation deficit at the end of the period, as compared to the objective aimed at (positive varaible)
 
-- $O_t$ Overflow from the reservoir on time step $t$
+- $O_t$ Overflow from the reservoir on time step $t$ (positive varaible)
 
-- $G_t, \overline{G_t}$ Optimal generation and maximum generation on time step $t$
+- $G_t, \overline{G_t}, \underline{G_t}$ Optimal generation, maximum and minimum generation on time step $t$
 
 - $T_t$ Generation objective assessed in the first stage, for time step t ( $W_m^1$ or $W_d^1$)
 
@@ -95,9 +95,9 @@ from the generation objective assessed in stage 1, etc.)
 
 - $\Delta$ Maximum deviation throughout the period
 
-- $V_t^+$ Amplitude of the violation of the upper rule curve at time step $t$
+- $V_t^+$ Amplitude of the violation of the upper rule curve at time step $t$ (positive variable)
 
-- $V_t^-$ Amplitude of the violation of the lower rule curve at time step $t$
+- $V_t^-$ Amplitude of the violation of the lower rule curve at time step $t$ (positive variable)
 
 - $Y$ Maximum violation of lower rule curve throughout the period
 
@@ -117,17 +117,20 @@ $$else: \text{for } m\in [1, 12]: \{W_m^1 \leftarrow I_m\}$$
 
 _M2:_
 
-$$\text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M}$$
+$$if (\mu) : \text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M}$$
+
+$$else : W_m^2 \leftarrow W_m^1$$
 
 _D1:_
 
 $$if (j): \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{L_d^{\beta}. (W_m^2)}{(\sum_{d\in m}{L_d^{\beta}})}$$
 
-$$else: \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{I_d . (W_m^2)} {(\sum_{d\in m}{I_d})}$$
+$$else: \text{for } d\in [1, 31]: W_d^1 \leftarrow I_d $$
 
 _D2:_
 
-$$\text{for } m \in [1, 12]: W_{d\in m}^2 \leftarrow \text{Solution of linear problem D(m)}$$
+$$if(\mu) : \text{for } m \in [1, 12]: W_{d\in m}^2 \leftarrow \text{Solution of linear problem D(m)}$$
+$ else : \text{for } m \in [1, 12]: W_{d\in m}^2 \leftarrow$ Solution of a simplified version of linear problem $D(m)$ without reservoir levels
 
 _End_
 
@@ -146,9 +149,9 @@ $$S_t \geq 0$$
 
 $$S_t \leq S$$
 
-$S_t + G_t - S_{t-1} = I_t$ (see note [^monthly_allocation])
+$G_t \geq \underline{G_t} $ and $G_t \leq \overline{G_t} $
 
-$$\sum_{t}{G_t} = \sum_{t}{T_t}$$
+For $t\in [1,12], S_{t} + G_{t} - S_{t-1} = I_{t}$ (see note [^monthly_allocation]) and $S_{12} = S_{0}.$ 
 
 $$G_t - D_t \leq T_t$$
 
@@ -160,27 +163,28 @@ $$V_t^+ - S_t \geq -\overline{S_t}$$
 
 $$Y - V_t^- \geq 0$$
 
+$$\Delta - D_t \geq 0$$
 
 **Optimization problems $D(m)$**
 
-$$\min_{G_t, S_t, ...}{\gamma_{\Delta}\Delta + \gamma_Y Y + \sum_{t}{(\gamma_D D_t + \gamma_{V-} V_t^- + \gamma_{O} O_t + \gamma_S S_t)}}$$
+$$\min_{G_t, S_t, ...}{\gamma_{\Delta}\Delta + \gamma_Y Y + \gamma_{W}W+ \sum_{t}{(\gamma_D D_t + \gamma_{V-} V_t^- + \gamma_{O} O_t + \gamma_S S_t)}}$$
 s.t
 
 $$S_t \geq 0$$
 
 $$S_t \leq S$$
 
-$$G_t \geq 0$$
+$$G_t \geq \underline{G_t}$$
 
 $$G_t \leq \overline{G_t}$$
 
-$S_t + G_t + O_t - S_{t-1} = I_t$ (see note [^daily_allocation])
+$S_t + G_t + O_t - S_{t-1} = I_t$ (see note [^daily_allocation]) (initial level of the period is either $S_0$ if $m=1$ or the final level found in solving $D(m-1)$)
 
-$\sum_{t}{G_t + Y} = \sum_{t}{T_t} + Y_{m-1}$ (value of Y previously found in solving **$D(m-1)$**)
+$\sum_{t}{G_t + W} = \sum_{t}{T_t} + W_{m-1}$ (0 if $m=1$ else value of $W$ previously found in solving **$D(m-1)$**)
 
-$$G_t - D_t \leq T_t$$
+$$G_t - D_t \leq T_t + \frac{W_{m-1}}{|d \in m|}$$
 
-$$G_t + D_t \geq T_t$$
+$$G_t + D_t \geq T_t + \frac{W_{m-1}}{|d \in m|}$$
 
 $$\Delta - D_t \geq 0$$
 
