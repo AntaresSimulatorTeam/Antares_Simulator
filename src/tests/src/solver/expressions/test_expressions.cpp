@@ -377,36 +377,73 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
 
-BOOST_FIXTURE_TEST_CASE(equality_test_two_addition_nodes, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(test_equality_mult_add, Registry<Node>)
 {
-    LiteralNode lit1(65.), lit2(65.);
+    LiteralNode lit(65.);
     // variable
-    VariableNode x1("x"), x2("x");
+    VariableNode x("x");
 
     // Mult : 65.*x
-    Node* u1 = create<MultiplicationNode>(&lit1, &x1);
-    Node* u2 = create<MultiplicationNode>(&lit2, &x2);
-    LiteralNode lit3(56.);
-    LiteralNode lit4(56.);
+    Node* mult = create<MultiplicationNode>(&lit, &x);
+
+    // Add : 65.+x
+    Node* add = create<AddNode>(&lit, &x);
+
+    EqualityVisitor equalityVisitor;
+
+    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*mult, *add), false);
+}
+
+Node* createLinearBinomial(Registry<Node>& registry)
+{
+    auto lit1 = registry.create<LiteralNode>(65.);
     // variable
-    VariableNode y1("y");
-    VariableNode y2("y");
+    auto x1 = registry.create<VariableNode>("x");
+
+    // Mult : 65.*x
+    Node* u1 = registry.create<MultiplicationNode>(lit1, x1);
+    auto lit3 = registry.create<LiteralNode>(656.);
+    // variable
+    auto y1 = registry.create<VariableNode>("y");
     // Mult : 56.*y
-    Node* v1 = create<MultiplicationNode>(&lit3, &y1);
-    Node* v2 = create<MultiplicationNode>(&lit4, &y2);
+    Node* v1 = registry.create<MultiplicationNode>(lit3, y1);
+    return registry.create<AddNode>(u1, v1);
+}
 
-    Node* add1 = create<AddNode>(u1, v1);
+BOOST_FIXTURE_TEST_CASE(equalityVisitor_two_addition_nodes, Registry<Node>)
+{
+    Node* root1 = createLinearBinomial(*this);
     CloneVisitor cloneVisitor(*this);
-    Node* add1_clone = cloneVisitor.dispatch(*add1);
-
-    Node* add2 = create<AddNode>(u2, v2);
+    Node* root1_clone = cloneVisitor.dispatch(*root1);
+    // same as root1
+    Node* root2 = createLinearBinomial(*this);
 
     PrintVisitor printVisitor;
     EqualityVisitor equalityVisitor;
 
-    BOOST_CHECK_EQUAL(printVisitor.dispatch(*add1), printVisitor.dispatch(*add1_clone));
-    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add1, *add2), true);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*root1), printVisitor.dispatch(*root1_clone));
+    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*root1, *root2), true);
     // TODO test depth
     AddNode random_add(create<LiteralNode>(25.), create<VariableNode>("rand_var"));
-    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add1, random_add), false);
+    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*root1, random_add), false);
+}
+
+BOOST_FIXTURE_TEST_CASE(equalityVisitor_self_comparison, Registry<Node>)
+{
+    LiteralNode lit(65.);
+    // variable
+    VariableNode x("x");
+
+    // Mult : 65.*x
+    Node* u = create<MultiplicationNode>(&lit, &x);
+
+    // variable
+    VariableNode y("y");
+    // Mult : 56.*y
+    Node* v = create<MultiplicationNode>(&lit, &y);
+
+    Node* add = create<AddNode>(u, v);
+    EqualityVisitor equalityVisitor;
+
+    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add, *add), true);
 }
