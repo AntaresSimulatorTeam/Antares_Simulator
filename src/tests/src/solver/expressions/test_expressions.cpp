@@ -398,6 +398,8 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
 
         auto* component = dynamic_cast<ComponentVariableNode*>(right_substituted);
         BOOST_REQUIRE(component);
+        // We don't use BOOST_CHECK_EQUAL because operator<<(..., const ComponentVariableNode&) is
+        // not implemented
         BOOST_CHECK(*component == *component_original);
     }
 }
