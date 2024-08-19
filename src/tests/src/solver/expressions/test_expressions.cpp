@@ -427,7 +427,7 @@ void fillContext(ANTLRContext& ctx)
 BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
 {
     ANTLRContext ctx;
-    fillContext(ctx, *this);
+    fillContext(ctx);
 
     Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
                                  create<ComponentVariableNode>("component1", "notInThere"));
