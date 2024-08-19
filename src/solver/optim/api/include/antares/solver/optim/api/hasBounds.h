@@ -27,6 +27,8 @@ namespace Antares::Solver::Optim::Api
 class HasBounds
 {
 public:
+    virtual ~HasBounds() = default;
+
     virtual void setLb(double lb) = 0;
     virtual void setUb(double ub) = 0;
 

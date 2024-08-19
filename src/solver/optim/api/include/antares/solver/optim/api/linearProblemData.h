@@ -37,7 +37,7 @@ public:
     bool hasTimedData(const std::string& key);
     const std::vector<double>& getTimedData(const std::string& key, unsigned scenario);
 
-protected:
+private:
     std::vector<int> timeStamps_;
     unsigned timeResolutionInMinutes_;
     std::map<std::string, std::vector<double>> scalarData_;

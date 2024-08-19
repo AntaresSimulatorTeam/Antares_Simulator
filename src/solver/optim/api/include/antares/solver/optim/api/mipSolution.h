@@ -39,6 +39,8 @@ enum class MipStatus
 class MipSolution
 {
 public:
+    virtual ~MipSolution() = default;
+
     virtual MipStatus getStatus() = 0;
     virtual double getObjectiveValue() = 0;
     virtual double getOptimalValue(const MipVariable* var) const = 0;

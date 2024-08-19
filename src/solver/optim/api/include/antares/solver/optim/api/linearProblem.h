@@ -34,6 +34,8 @@ namespace Antares::Solver::Optim::Api
 class LinearProblem
 {
 public:
+    virtual ~LinearProblem() = default;
+
     virtual MipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
     virtual MipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
     virtual MipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)

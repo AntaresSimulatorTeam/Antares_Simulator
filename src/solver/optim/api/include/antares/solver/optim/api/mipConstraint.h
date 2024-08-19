@@ -29,6 +29,8 @@ namespace Antares::Solver::Optim::Api
 class MipConstraint: public virtual HasBounds, public virtual HasName
 {
 public:
+    virtual ~MipConstraint() = default;
+
     virtual void setCoefficient(MipVariable* var, double coefficient) = 0;
 
     virtual double getCoefficient(MipVariable* var) = 0;
