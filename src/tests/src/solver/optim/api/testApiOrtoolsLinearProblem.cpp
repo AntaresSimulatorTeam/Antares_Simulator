@@ -39,23 +39,7 @@ struct Fixture
     }
 
     std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
-
-    void createProblemMaximize();
 };
-
-void Fixture::createProblemMaximize()
-{
-    auto* a = pb->addIntVariable(0, 10, "a");
-    auto* b = pb->addNumVariable(0, 10, "b");
-    auto* c = pb->addConstraint(0, 10, "c");
-
-    c->setCoefficient(a, 2);
-    c->setCoefficient(b, 3);
-
-    pb->setObjectiveCoefficient(a, 5);
-    pb->setObjectiveCoefficient(b, 4);
-    pb->setMaximization();
-}
 
 BOOST_AUTO_TEST_SUITE(optim_api)
 
@@ -98,15 +82,25 @@ BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(SolveEmptyProblem, Fixture)
+BOOST_FIXTURE_TEST_CASE(infeasibleProblem, Fixture)
 {
-    auto* solution = pb->solve(true);
-}
+    auto* a = pb->addIntVariable(0, 10, "a");
+    auto* b = pb->addNumVariable(0, 10, "b");
+    auto* c = pb->addConstraint(1, 1, "c");
 
-BOOST_FIXTURE_TEST_CASE(SolveBasicProblemMax, Fixture)
-{
-    createProblemMaximize();
+    c->setCoefficient(a, 1);
+    c->setCoefficient(b, 1);
+
+    pb->setObjectiveCoefficient(a, 1);
+    pb->setObjectiveCoefficient(b, 1);
+    pb->setMinimization();
+
     auto* solution = pb->solve(true);
+
+    BOOST_CHECK(solution->getStatus() == Api::MipStatus::MIP_ERROR);
+
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(a), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
