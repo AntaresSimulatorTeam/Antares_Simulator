@@ -371,15 +371,33 @@ void fillContext(SubstitutionContext& ctx)
     ctx.variables.emplace_back("component2", "variable1");
 }
 
-BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
 {
     SubstitutionContext ctx;
     fillContext(ctx);
 
+    ComponentVariableNode* component_original = dynamic_cast<ComponentVariableNode*>(
+      create<ComponentVariableNode>("component1", "notInThere"));
+
     Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
-                                 create<ComponentVariableNode>("component1", "notInThere"));
+                                 component_original);
     SubstitutionVisitor sub(ctx, *this);
     Node* subsd = sub.dispatch(*root);
 
+    // The root of the new tree should be different
+    BOOST_CHECK_NE(root, subsd);
+
+    // We expect to find a substituted node on the left
     BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->left(), &ctx.variables[0]);
+
+    {
+        // We expect to find an original node on the right
+        auto* right_substituted = dynamic_cast<AddNode*>(subsd)->right();
+        BOOST_CHECK_NE(right_substituted, &ctx.variables[0]);
+        BOOST_CHECK_NE(right_substituted, &ctx.variables[1]);
+
+        auto* component = dynamic_cast<ComponentVariableNode*>(right_substituted);
+        BOOST_REQUIRE(component);
+        BOOST_CHECK(*component == *component_original);
+    }
 }
