@@ -1,33 +1,36 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+#include "application/main.h"
 
 #include <yuni/yuni.h>
-#include "application/application.h"
-#include "application/main.h"
 #include <yuni/core/getopt.h>
+
 #include <antares/args/args_to_utf8.h>
+#include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
-#include <antares/logs/logs.h>
-#include <antares/locale/locale.h>
+
+#include "application/application.h"
 
 #ifdef YUNI_OS_MSVC
 // WxWidgets Stuff
@@ -42,10 +45,12 @@ IMPLEMENT_APP_NO_MAIN(Antares::Application)
 using namespace Yuni;
 using namespace Antares;
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     if (not memory.initializeTemporaryFolder())
+    {
         return EXIT_FAILURE;
+    }
 
     // We have one or several arguments
     IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
