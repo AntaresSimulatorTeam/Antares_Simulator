@@ -389,7 +389,7 @@ public:
     *"max").
     **
     */
-    std::map<std::string, uint> getRawNumberCoresPerLevel();
+    unsigned getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode);
 
     /*!
     ** \brief Computes number of cores

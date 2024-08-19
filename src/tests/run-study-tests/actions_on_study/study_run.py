@@ -39,7 +39,7 @@ class study_run:
         if not self.raise_exception_on_failure:
             return
 
-        check(self.return_code == 0, "Solver returned error")
+        check(self.success(), f"Solver returned error {self.return_code}")
 
 
     def get_return_code(self):

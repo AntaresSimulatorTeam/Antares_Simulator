@@ -147,7 +147,7 @@ jobs:
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
       - name: Run named mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -156,13 +156,13 @@ jobs:
           variant: "named-mps"
 
       - name: Run unfeasibility-related tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         run: |
           cd _build
           ctest -C Release --output-on-failure -R "^unfeasible$"
 
       - name: Run unit and end-to-end tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         run: |
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end"
@@ -175,7 +175,7 @@ jobs:
           path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
       - name: Run tests about infinity on BCs RHS
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -183,7 +183,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run MILP with CBC
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -192,7 +192,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 8.6.0
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -200,7 +200,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 8.7.0
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -208,7 +208,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 9.1.0
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -216,7 +216,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests introduced in 9.2.0
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -224,7 +224,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run short-tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -232,7 +232,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -240,7 +240,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests for adequacy patch (CSR)
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -248,7 +248,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run parallel tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -257,7 +257,7 @@ jobs:
           variant: "parallel"
 
       - name: Run tests for time series generator tool
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -266,7 +266,7 @@ jobs:
           variant: "tsgenerator"
 
       - name: Run medium-tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -274,7 +274,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-1
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -282,7 +282,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-2
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -290,12 +290,16 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-3
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-3
           os: ${{ env.os }}
+
+      - name: Barrier
+        if: ${{ !success() }}
+        run: exit 1
 
       - name: Installer .deb creation
         run: |
