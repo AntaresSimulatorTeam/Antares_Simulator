@@ -33,6 +33,7 @@
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
+#include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -363,44 +364,6 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
-
-struct SubstitutionContext
-{
-    std::vector<Nodes::ComponentVariableNode> variables;
-    // TODO
-    // std::vector<Nodes::ComponentParameterNode> parameters;
-};
-
-class SubstitutionVisitor: public CloneVisitor
-{
-public:
-    SubstitutionVisitor(SubstitutionContext& ctx, Registry<Node>& registry):
-        CloneVisitor(registry),
-        ctx_(ctx),
-        registry_(registry)
-    {
-    }
-
-    SubstitutionContext& ctx_;
-    Registry<Node>& registry_;
-
-private:
-    Node* visit(const Nodes::ComponentVariableNode& component_variable_node) override
-    {
-        if (auto it = std::find(ctx_.variables.begin(),
-                                ctx_.variables.end(),
-                                component_variable_node);
-            it != ctx_.variables.end())
-        {
-            return &*it;
-        }
-
-        else
-        {
-            return CloneVisitor::visit(component_variable_node);
-        }
-    }
-};
 
 void fillContext(SubstitutionContext& ctx)
 {
