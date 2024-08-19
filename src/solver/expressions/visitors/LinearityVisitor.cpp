@@ -29,22 +29,22 @@ namespace Antares::Solver::Visitors
 
 LinearStatus LinearityVisitor::visit(const Nodes::AddNode& add)
 {
-    return dispatch(*add[0]) + dispatch(*add[1]);
+    return dispatch(*add.left()) + dispatch(*add.right());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::SubtractionNode& sub)
 {
-    return dispatch(*sub[0]) - dispatch(*sub[1]);
+    return dispatch(*sub.left()) - dispatch(*sub.right());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
-    return dispatch(*mult[0]) * dispatch(*mult[1]);
+    return dispatch(*mult.left()) * dispatch(*mult.right());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::DivisionNode& div)
 {
-    return dispatch(*div[0]) / dispatch(*div[1]);
+    return dispatch(*div.left()) / dispatch(*div.right());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::EqualNode& equ)
@@ -79,7 +79,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::LiteralNode& lit)
 
 LinearStatus LinearityVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return -dispatch(*neg[0]);
+    return -dispatch(*neg.child());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode& port_field_node)
