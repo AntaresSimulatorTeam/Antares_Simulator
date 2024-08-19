@@ -67,8 +67,8 @@ public:
 
 private:
     std::unique_ptr<operations_research::MPSolver> mpSolver_;
-    operations_research::MPSolverParameters* param_;
     operations_research::MPObjective* objective_;
+    operations_research::MPSolverParameters params_;
 
     std::map<std::string, std::unique_ptr<OrtoolsMipVariable>> variables_;
     std::map<std::string, std::unique_ptr<OrtoolsMipConstraint>> constraints_;

@@ -38,6 +38,9 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
 
     mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
     objective_ = mpSolver->MutableObjective();
+
+    params_.SetIntegerParam(MPSolverParameters::SCALING, 0);
+    params_.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
 }
 
 class ElemAlreadyExists: public std::exception
@@ -195,7 +198,7 @@ Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
         mpSolver_->EnableOutput();
     }
 
-    auto mpStatus = mpSolver_->Solve(*param_);
+    auto mpStatus = mpSolver_->Solve(params_);
     Api::MipStatus status = convertStatus(mpStatus);
 
     std::map<std::string, std::pair<Api::MipVariable*, double>> solution;
