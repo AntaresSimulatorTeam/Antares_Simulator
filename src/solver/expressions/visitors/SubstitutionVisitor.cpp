@@ -33,10 +33,13 @@ SubstitutionVisitor::SubstitutionVisitor(SubstitutionContext& ctx, Registry<Node
 
 Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
-    if (auto it = std::find(ctx_.variables.begin(), ctx_.variables.end(), component_variable_node);
-        it != ctx_.variables.end())
+    auto it = std::find_if(ctx_.variables.begin(),
+                           ctx_.variables.end(),
+                           [&component_variable_node](Nodes::ComponentVariableNode* x)
+                           { return *x == component_variable_node; });
+    if (it != ctx_.variables.end())
     {
-        return &*it;
+        return *it;
     }
 
     else

@@ -28,7 +28,7 @@ namespace Antares::Solver::Visitors
 {
 struct SubstitutionContext
 {
-    std::vector<Nodes::ComponentVariableNode> variables;
+    std::vector<Nodes::ComponentVariableNode*> variables;
     // TODO
     // std::vector<Nodes::ComponentParameterNode> parameters;
 };
