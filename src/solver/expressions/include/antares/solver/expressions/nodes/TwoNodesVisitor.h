@@ -34,7 +34,7 @@ std::optional<RetT> tryType(const Node& node1, const Node& node2, VisitorT& visi
 {
     auto x = dynamic_cast<const NodeT*>(&node1);
     auto y = dynamic_cast<const NodeT*>(&node2);
-    if (x && y)
+    if (x && y && (typeid(*x) == typeid(*y)))
     {
         return visitor.visit(*x, *y);
     }
@@ -44,6 +44,11 @@ std::optional<RetT> tryType(const Node& node1, const Node& node2, VisitorT& visi
     }
 }
 } // namespace
+
+struct TwoNodesVisitorException: std::runtime_error
+{
+    using std::runtime_error::runtime_error;
+};
 
 template<class R>
 class TwoNodesVisitor
@@ -75,8 +80,8 @@ public:
                 return ret.value();
             }
         }
-        logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
-        return R();
+        throw TwoNodesVisitorException(
+          "Antares::Solver::Nodes TwoNodesVisitor: the inputs nodes must be of the same type!");
     }
 
     virtual R visit(const AddNode&, const AddNode&) = 0;
