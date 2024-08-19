@@ -32,7 +32,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings& settings
     return parser;
 }
 
-bool parseOptions(int argc, char* argv[], Settings& options)
+bool parseOptions(int argc, const char* argv[], Settings& options)
 {
     auto parser = createTsGeneratorParser(options);
     switch (auto ret = parser->operator()(argc, argv); ret)
