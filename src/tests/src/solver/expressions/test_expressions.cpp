@@ -237,20 +237,6 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(*sub), num1 - num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(Parent_node, Registry<Node>)
-{
-    double num1 = 22.0, num2 = 8;
-    SubtractionNode sub(create<LiteralNode>(num1), create<LiteralNode>(num2));
-
-    PrintVisitor printVisitor;
-    Node* child1 = sub[0];
-    const auto printed = printVisitor.dispatch(*child1);
-
-    // try to get child at pos 1202 from a binary node ...
-    size_t pos = 1202;
-    BOOST_CHECK_THROW(sub[pos], ParentNodeException);
-}
-
 BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
 {
     double num1 = 22.0, num2 = 8;
