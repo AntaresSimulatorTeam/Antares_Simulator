@@ -32,6 +32,7 @@ using namespace Antares::Solver::Optim;
 
 struct Fixture
 {
+    ~Fixture() = default;
     Fixture()
     {
         pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
