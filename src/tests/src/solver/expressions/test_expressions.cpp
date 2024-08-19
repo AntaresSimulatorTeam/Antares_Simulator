@@ -31,6 +31,7 @@
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
+#include <antares/solver/expressions/visitors/TimeIndexVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -135,7 +136,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
 {
     ParameterNode root("my-param");
     const double value = 221.3;
-    EvaluationContext context({{"my-param", value}}, {});
+    EvaluationContext<std::string, double> context({{"my-param", value}}, {});
 
     EvalVisitor evalVisitor(context);
     const double eval = evalVisitor.dispatch(root);
@@ -147,7 +148,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_variable, Registry<Node>)
 {
     VariableNode root("my-variable");
     const double value = 221.3;
-    EvaluationContext context({}, {{"my-variable", value}});
+    EvaluationContext<std::string, double> context({}, {{"my-variable", value}});
 
     EvalVisitor evalVisitor(context);
     const double eval = evalVisitor.dispatch(root);
