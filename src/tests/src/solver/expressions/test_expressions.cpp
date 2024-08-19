@@ -406,8 +406,6 @@ void fillContext(ANTLRContext& ctx)
 {
     ctx.variables.emplace_back("component1", "variable1");
     ctx.variables.emplace_back("component2", "variable1");
-
-    // ctx.parameters.emplace_back("component1", "parameter1");
 }
 
 BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
