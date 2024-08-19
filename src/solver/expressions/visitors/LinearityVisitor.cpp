@@ -69,12 +69,12 @@ LinearStatus LinearityVisitor::visit(const Nodes::VariableNode& var)
 
 LinearStatus LinearityVisitor::visit(const Nodes::ParameterNode& param)
 {
-    return LinearStatus::CONSTANT;
+    return LinearStatus::CONSTANT_EXPR;
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::LiteralNode& lit)
 {
-    return LinearStatus::CONSTANT;
+    return LinearStatus::CONSTANT_EXPR;
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::NegationNode& neg)
@@ -84,7 +84,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::NegationNode& neg)
 
 LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
-    return LinearStatus::CONSTANT;
+    return LinearStatus::CONSTANT_EXPR;
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
@@ -94,7 +94,7 @@ LinearStatus LinearityVisitor::visit(const Nodes::ComponentVariableNode& compone
 
 LinearStatus LinearityVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
-    return LinearStatus::CONSTANT;
+    return LinearStatus::CONSTANT_EXPR;
 }
 
 } // namespace Antares::Solver::Visitors
