@@ -40,7 +40,9 @@ std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
     Antares::Solver::Application application;
     constexpr unsigned int argc = 3;
     // On Windows, std::filesystem::path::value_type is wchar_t
-    std::array<const char*, argc> argv{"", reinterpret_cast<const char*>(study_path_.c_str()), "--parallel"};
+    std::array<const char*, argc> argv{"",
+                                       reinterpret_cast<const char*>(study_path_.c_str()),
+                                       "--parallel"};
     application.prepare(argc, argv.data());
 
     return application.acquireStudy();
