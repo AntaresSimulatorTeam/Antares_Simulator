@@ -1,6 +1,5 @@
 #pragma once
 
-#include <include/antares/solver/expressions/nodes/TimeType.h>
 #include <string>
 
 #include <antares/solver/expressions/nodes/Leaf.h>
