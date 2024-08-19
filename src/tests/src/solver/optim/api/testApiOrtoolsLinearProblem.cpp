@@ -22,11 +22,11 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <ortools/linear_solver/linear_solver.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/optim/ortoolsImpl/linearProblem.h>
-
-#include <ortools/linear_solver/linear_solver.h>
 
 BOOST_AUTO_TEST_SUITE(optim_api)
 
@@ -38,6 +38,7 @@ struct Fixture
     {
         pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     }
+
     std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
 };
 
@@ -49,14 +50,21 @@ BOOST_FIXTURE_TEST_CASE(basicLinearProblemAdd, Fixture)
     pb->addConstraint(0, 1, "c");
 }
 
-BOOST_FIXTURE_TEST_CASE(basicLinearProblemGet, Fixture)
+BOOST_FIXTURE_TEST_CASE(linearProblemGetAndConstraintSetCoeff, Fixture)
 {
     pb->addVariable(0, 1, true, "a");
-    auto var = pb->getVariable("a");
-
     pb->addConstraint(0, 1, "c");
-    auto cons = pb->getConstraint("c");
+
+    auto* var = pb->getVariable("a");
+    auto* cons = pb->getConstraint("c");
+
+    BOOST_CHECK_EQUAL(var->getName(), "a");
+    BOOST_CHECK_EQUAL(cons->getName(), "c");
+
+    cons->setCoefficient(var, 3.2);
+    BOOST_CHECK_EQUAL(cons->getCoefficient(var), 3.2);
 }
+
 BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
 {
     pb->setMinimization();
