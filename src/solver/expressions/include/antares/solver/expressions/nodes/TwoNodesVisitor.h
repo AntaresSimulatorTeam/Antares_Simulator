@@ -45,11 +45,6 @@ std::optional<RetT> tryType(const Node& node1, const Node& node2, VisitorT& visi
 }
 } // namespace
 
-struct TwoNodesVisitorException: std::runtime_error
-{
-    using std::runtime_error::runtime_error;
-};
-
 template<class R>
 class TwoNodesVisitor
 {
@@ -80,8 +75,8 @@ public:
                 return ret.value();
             }
         }
-        throw TwoNodesVisitorException(
-          "Antares::Solver::Nodes TwoNodesVisitor: the inputs nodes must be of the same type!");
+        logs.error()
+          << "Antares::Solver::Nodes TwoNodesVisitor: the inputs nodes must be of the same type!";
     }
 
     virtual R visit(const AddNode&, const AddNode&) = 0;
