@@ -423,26 +423,13 @@ BOOST_FIXTURE_TEST_CASE(equalityVisitor_two_addition_nodes, Registry<Node>)
 
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*root1), printVisitor.dispatch(*root1_clone));
     BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*root1, *root2), true);
-    // TODO test depth
     AddNode random_add(create<LiteralNode>(25.), create<VariableNode>("rand_var"));
     BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*root1, random_add), false);
 }
 
 BOOST_FIXTURE_TEST_CASE(equalityVisitor_self_comparison, Registry<Node>)
 {
-    LiteralNode lit(65.);
-    // variable
-    VariableNode x("x");
-
-    // Mult : 65.*x
-    Node* u = create<MultiplicationNode>(&lit, &x);
-
-    // variable
-    VariableNode y("y");
-    // Mult : 56.*y
-    Node* v = create<MultiplicationNode>(&lit, &y);
-
-    Node* add = create<AddNode>(u, v);
+    Node* add = createLinearBinomial(*this);
     EqualityVisitor equalityVisitor;
 
     BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add, *add), true);

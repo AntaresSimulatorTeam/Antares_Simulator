@@ -75,7 +75,7 @@ public:
                 return ret.value();
             }
         }
-        logs.error()
+        logs.warning()
           << "Antares::Solver::Nodes TwoNodesVisitor: the inputs nodes must be of the same type!";
         return R{};
     }
