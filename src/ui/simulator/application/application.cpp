@@ -246,7 +246,7 @@ bool Application::OnInit()
     {
         String s;
         wxStringToString(wxString(argv[0]), s);
-        const char* c_argv[] = {s.data(), nullptr};
+        char* c_argv[] = {s.data(), nullptr};
 
         // Load the local policy settings
         LocalPolicy::Open();
