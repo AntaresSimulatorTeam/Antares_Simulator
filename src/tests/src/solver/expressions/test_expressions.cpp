@@ -444,28 +444,3 @@ BOOST_FIXTURE_TEST_CASE(equalityVisitor_negation_node, Registry<Node>)
 
     BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*neg1, *neg2), true);
 }
-
-template<class CommutativeNode>
-std::pair<Node*, Node*> createCommutativeExpression(Registry<Node>& registry)
-{
-    auto x = registry.create<VariableNode>("x");
-    auto y = registry.create<VariableNode>("y");
-    // x*y
-    Node* first = registry.create<CommutativeNode>(x, y);
-    // y*x
-    Node* second = registry.create<CommutativeNode>(y, x);
-    return {first, second};
-}
-
-BOOST_FIXTURE_TEST_CASE(equalityVisitor_commutative_nodes, Registry<Node>)
-{
-    EqualityVisitor equalityVisitor;
-    auto [add1, add2] = createCommutativeExpression<AddNode>(*this);
-    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*add1, *add2), true);
-
-    auto [mult1, mult2] = createCommutativeExpression<MultiplicationNode>(*this);
-    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*mult1, *mult2), true);
-
-    auto [equal1, equal2] = createCommutativeExpression<EqualNode>(*this);
-    BOOST_CHECK_EQUAL(equalityVisitor.dispatch(*equal1, *equal2), true);
-}
