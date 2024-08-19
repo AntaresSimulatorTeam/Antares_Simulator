@@ -13,34 +13,34 @@ set(SRC_Expressions
         visitors/LinearityVisitor.cpp
         visitors/EvaluationContext.cpp
 
-        include/antares/solver/expressions/nodes/UnaryNode.h
-        include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/AddNode.h
-        include/antares/solver/expressions/nodes/MultiplicationNode.h
-        include/antares/solver/expressions/nodes/DivisionNode.h
-        include/antares/solver/expressions/nodes/SubtractionNode.h
+        include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/ComparisonNode.h
-        include/antares/solver/expressions/nodes/EqualNode.h
-        include/antares/solver/expressions/nodes/LessThanOrEqualNode.h
-        include/antares/solver/expressions/nodes/GreaterThanOrEqualNode.h
         include/antares/solver/expressions/nodes/ComponentNode.h
+        include/antares/solver/expressions/nodes/DivisionNode.h
+        include/antares/solver/expressions/nodes/EqualNode.h
         include/antares/solver/expressions/nodes/ExpressionsNodes.h
-        include/antares/solver/expressions/nodes/LiteralNode.h
+        include/antares/solver/expressions/nodes/GreaterThanOrEqualNode.h
         include/antares/solver/expressions/nodes/Leaf.h
+        include/antares/solver/expressions/nodes/LessThanOrEqualNode.h
+        include/antares/solver/expressions/nodes/LiteralNode.h
+        include/antares/solver/expressions/nodes/MultiplicationNode.h
         include/antares/solver/expressions/nodes/NegationNode.h
         include/antares/solver/expressions/nodes/Node.h
         include/antares/solver/expressions/nodes/NodesForwardDeclaration.h
         include/antares/solver/expressions/nodes/ParameterNode.h
         include/antares/solver/expressions/nodes/PortFieldNode.h
-        include/antares/solver/expressions/nodes/NodeVisitor.h
+        include/antares/solver/expressions/nodes/SubtractionNode.h
+        include/antares/solver/expressions/nodes/UnaryNode.h
         include/antares/solver/expressions/nodes/VariableNode.h
 
         include/antares/solver/expressions/visitors/CloneVisitor.h
         include/antares/solver/expressions/visitors/EvalVisitor.h
         include/antares/solver/expressions/visitors/EvaluationContext.h
-        include/antares/solver/expressions/visitors/PrintVisitor.h
         include/antares/solver/expressions/visitors/LinearStatus.h
         include/antares/solver/expressions/visitors/LinearityVisitor.h
+        include/antares/solver/expressions/visitors/NodeVisitor.h
+        include/antares/solver/expressions/visitors/PrintVisitor.h
 
         include/antares/solver/expressions/Registry.hxx
 )

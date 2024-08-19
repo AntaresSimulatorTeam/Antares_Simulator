@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include "antares/solver/expressions/nodes/NodeVisitor.h"
+#include "antares/solver/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Solver::Visitors
 {
