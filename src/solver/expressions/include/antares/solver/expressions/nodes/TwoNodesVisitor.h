@@ -77,6 +77,7 @@ public:
         }
         logs.error()
           << "Antares::Solver::Nodes TwoNodesVisitor: the inputs nodes must be of the same type!";
+        return R{};
     }
 
     virtual R visit(const AddNode&, const AddNode&) = 0;

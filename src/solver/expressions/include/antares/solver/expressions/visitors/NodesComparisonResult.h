@@ -25,8 +25,9 @@ namespace Antares::Solver::Visitors
 
 class NodeComparisonResult
 {
+public:
     NodeComparisonResult() = default;
-    explicit NodeComparisonResult(bool);
+    NodeComparisonResult(bool);
 
     operator bool() const
     {
