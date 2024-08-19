@@ -3,14 +3,12 @@
 #include <string>
 
 #include <antares/solver/expressions/nodes/Leaf.h>
-#include <antares/solver/expressions/nodes/TimeIndex.h>
 
 namespace Antares::Solver::Nodes
 {
-class ParameterNode final: public Leaf<std::string>, public TimeIndex
+class ParameterNode final: public Leaf<std::string>
 {
 public:
-    explicit ParameterNode(const std::string& value);
-    explicit ParameterNode(const std::string& value, TimeType timeType);
+    using Leaf<std::string>::Leaf;
 };
 } // namespace Antares::Solver::Nodes

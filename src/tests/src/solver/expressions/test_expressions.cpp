@@ -359,5 +359,5 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     // ((65.*p1)+port.field)
     Node* expr = create<AddNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT_EXPR);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
