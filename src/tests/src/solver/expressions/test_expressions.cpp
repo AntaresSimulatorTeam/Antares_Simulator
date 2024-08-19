@@ -416,7 +416,7 @@ private:
     }
 };
 
-void fillContext(ANTLRContext& ctx, Registry<Node>& registry)
+void fillContext(ANTLRContext& ctx)
 {
     ctx.variables.emplace_back("component1", "variable1");
     ctx.variables.emplace_back("component2", "variable1");
