@@ -364,7 +364,7 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
 
-struct ANTLRContext
+struct SubstitutionContext
 {
     std::vector<Nodes::ComponentVariableNode> variables;
     // TODO
@@ -374,14 +374,14 @@ struct ANTLRContext
 class SubstitutionVisitor: public CloneVisitor
 {
 public:
-    SubstitutionVisitor(ANTLRContext& ctx, Registry<Node>& registry):
+    SubstitutionVisitor(SubstitutionContext& ctx, Registry<Node>& registry):
         CloneVisitor(registry),
         ctx_(ctx),
         registry_(registry)
     {
     }
 
-    ANTLRContext& ctx_;
+    SubstitutionContext& ctx_;
     Registry<Node>& registry_;
 
 private:
@@ -402,7 +402,7 @@ private:
     }
 };
 
-void fillContext(ANTLRContext& ctx)
+void fillContext(SubstitutionContext& ctx)
 {
     ctx.variables.emplace_back("component1", "variable1");
     ctx.variables.emplace_back("component2", "variable1");
@@ -410,7 +410,7 @@ void fillContext(ANTLRContext& ctx)
 
 BOOST_FIXTURE_TEST_CASE(multiple, Registry<Node>)
 {
-    ANTLRContext ctx;
+    SubstitutionContext ctx;
     fillContext(ctx);
 
     Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
