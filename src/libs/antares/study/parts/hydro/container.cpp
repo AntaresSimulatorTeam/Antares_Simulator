@@ -23,7 +23,7 @@
 #include "antares/study/parts/hydro/container.h"
 #include <antares/inifile/inifile.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
-#include "antares/study/parts/hydro/lt_storage_reserve_participation.h"
+#include <antares/study/area/capacityReservation.h>
 
 using namespace Antares;
 using namespace Yuni;
@@ -872,7 +872,7 @@ bool PartHydro::loadReserveParticipations(Area& area, const AnyString& file)
           if (reserve)
           {
               LTStorageClusterReserveParticipation participation(
-                reserveName, maxTurbining, maxPumping, participationCost);
+                *reserve, maxTurbining, maxPumping, participationCost);
               series->addReserveParticipation(reserveName, participation);
               logs.info() << "Added reserve participation for " << reserveName;
           }
@@ -900,7 +900,7 @@ uint PartHydro::reserveParticipationsCount() const
     uint count = 0;
     if (series && reservoirManagement)
     {
-        count += series->ltStorageReserves.reserves.size();
+        count = series->ltStorageReserves.reserves.size();
     }
     return count;
 }

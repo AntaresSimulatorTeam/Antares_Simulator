@@ -133,6 +133,16 @@ public:
     ** \brief Prepare coefficients ordered by the area ids
     */
     void prepareForSolver(const AreaList& list);
+
+    double fromLTStorage(const std::string& storageName) const;
+
+    void fromLTStorage(const std::string& storageName, double value);
+
+    bool loadLTStorageFromFile(const AnyString& filename);
+
+    bool saveLTStorageToFile(const AnyString& filename) const;
+
+
     //@}
 
     //! \name Operators
@@ -151,6 +161,15 @@ private:
     Coefficients pValues;
     //! Coefficients for other areas, ordered by the area id
     std::unordered_map<uint, double> pValuesFromAreaID;
+
+    std::unordered_map<std::string, double> pLTStorageValues;
+    struct LTStorageParticipationInfo
+    {
+        float maxTurbining;
+        float maxPumping;
+        float participationCost;
+    };
+    std::unordered_map<std::string, LTStorageParticipationInfo> pValuesFromLTStorageID;
 #ifndef NDEBUG
     //! Flag to prevent misuse of the bad container
     // TODO Find a more reliable way...

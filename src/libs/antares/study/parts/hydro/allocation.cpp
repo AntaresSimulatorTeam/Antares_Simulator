@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/parts/hydro/allocation.h"
+#include <antares/study/area/capacityReservation.h>
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 #include <yuni/core/math.h>
@@ -127,30 +128,146 @@ void HydroAllocation::fromArea(const AreaName& areaid, double value)
         pValues[areaid] = value;
 }
 
+double HydroAllocation::fromLTStorage(const std::string& storageName) const
+{
+    assert(!pMustUseValuesFromAreaID);
+    auto i = pLTStorageValues.find(storageName);
+    return (i != pLTStorageValues.end()) ? i->second : 0.;
+}
+
+void HydroAllocation::fromLTStorage(const std::string& storageName, double value)
+{
+    assert(!pMustUseValuesFromAreaID);
+    if (Utils::isZero(value))
+    {
+        auto i = pLTStorageValues.find(storageName);
+        if (i != pLTStorageValues.end())
+            pLTStorageValues.erase(i);
+    }
+    else
+        pLTStorageValues[storageName] = value;
+}
+
 void HydroAllocation::prepareForSolver(const AreaList& list)
 {
     pValuesFromAreaID.clear();
-    auto end = pValues.end();
-    for (auto i = pValues.begin(); i != end; ++i)
+    pValuesFromLTStorageID.clear();
+
+    // Traitement des zones
+    for (const auto& [areaId, value] : pValues)
     {
-        auto* targetarea = list.find(i->first);
+        auto* targetarea = list.find(areaId);
         if (targetarea)
-            pValuesFromAreaID[targetarea->index] = i->second;
+            pValuesFromAreaID[targetarea->index] = value;
     }
 
-    pValues.clear();
+    // Traitement des stockages long terme
+    for (const auto& [storageName, value] : pLTStorageValues)
+    {
+        LTStorageParticipationInfo info;
+        info.maxTurbining = static_cast<float>(value);
+        info.maxPumping = static_cast<float>(value); 
+        info.participationCost = 0.0f;               
+        pValuesFromLTStorageID[storageName] = info;
+    }
+
+    // Ne pas effacer pValues et pLTStorageValues ici, car ils pourraient être utilisés ailleurs
+
 #ifndef NDEBUG
     pMustUseValuesFromAreaID = true;
 #endif
 }
 
+//void HydroAllocation::prepareForSolver(const AreaList& list)
+//{
+//    pValuesFromAreaID.clear();
+//    auto end = pValues.end();
+//    for (auto i = pValues.begin(); i != end; ++i)
+//    {
+//        auto* targetarea = list.find(i->first);
+//        if (targetarea)
+//            pValuesFromAreaID[targetarea->index] = i->second;
+//    }
+//
+//    pValues.clear();
+//#ifndef NDEBUG
+//    pMustUseValuesFromAreaID = true;
+//#endif
+//}
+
 void HydroAllocation::clear()
 {
     pValues.clear();
+    pLTStorageValues.clear();
     pValuesFromAreaID.clear();
+    pValuesFromLTStorageID.clear();
 #ifndef NDEBUG
     pMustUseValuesFromAreaID = false;
 #endif
+}
+
+//void HydroAllocation::clear()
+//{
+//    pValues.clear();
+//    pValuesFromAreaID.clear();
+//#ifndef NDEBUG
+//    pMustUseValuesFromAreaID = false;
+//#endif
+//}
+
+bool HydroAllocation::loadLTStorageFromFile(const AnyString& filename)
+{
+    IniFile ini;
+    if (IO::File::Exists(filename) && ini.open(filename))
+    {
+        if (!ini.empty())
+        {
+            ini.each(
+              [&](const IniFile::Section& section)
+              {
+                  for (auto* p = section.firstProperty; p; p = p->next)
+                  {
+                      double coeff = p->value.to<double>();
+                      if (!Utils::isZero(coeff))
+                      {
+                          pLTStorageValues[p->key] = coeff;
+                      }
+                  }
+              });
+        }
+    }
+    return true;
+}
+
+bool HydroAllocation::saveLTStorageToFile(const AnyString& filename) const
+{
+    if (pLTStorageValues.empty())
+    {
+        IO::File::CreateEmptyFile(filename);
+        return true;
+    }
+    else
+    {
+        IniFile ini;
+        auto* s = ini.addSection("[lt-storage-allocation]");
+        auto end = pLTStorageValues.end();
+        CString<64, false> str;
+        for (auto i = pLTStorageValues.begin(); i != end; ++i)
+        {
+            double v = i->second;
+            if (!Utils::isZero(v))
+            {
+                str = v;
+                if (str.contains('.'))
+                {
+                    str.trimRight('0');
+                    str.trimRight('.');
+                }
+                s->add(i->first, str);
+            }
+        }
+        return ini.save(filename);
+    }
 }
 
 bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyString& filename)

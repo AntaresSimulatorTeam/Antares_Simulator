@@ -22,7 +22,7 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include "antares/study/parts/hydro/series.h"
-#include "antares/study/parts/hydro/lt_storage_reserve_participation.h"
+#include <antares/study/area/capacityReservation.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
@@ -354,21 +354,21 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     }
 }
 
-
-
 void DataSeriesHydro::addReserveParticipation(
   const std::string& reserveName,
   const LTStorageClusterReserveParticipation& participation)
 {
-
+    // Si la réserve n'existe pas encore, on crée une nouvelle entrée
     if (ltStorageReserves.reserves.find(reserveName) == ltStorageReserves.reserves.end())
     {
         ltStorageReserves.reserves[reserveName]
           = std::vector<LTStorageClusterReserveParticipation>();
     }
 
+    // Ajouter la participation à la réserve
     ltStorageReserves.reserves[reserveName].push_back(participation);
 
+    // Log des informations
     logs.info() << "Added reserve participation for " << reserveName
                 << ", Max Turbining: " << participation.maxTurbining
                 << ", Max Pumping: " << participation.maxPumping

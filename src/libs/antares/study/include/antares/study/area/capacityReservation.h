@@ -153,4 +153,37 @@ struct STStorageClusterReserveParticipation
     }
 };
 
+/// @brief Represents the Long Term Storage cluster reserve participation to a given reserve
+struct LTStorageClusterReserveParticipation
+{
+    std::reference_wrapper<CapacityReservation> capacityReservation;
+    float maxTurbining = 0;
+    float maxPumping = 0;
+    float participationCost = 0;
+
+    LTStorageClusterReserveParticipation(std::reference_wrapper<CapacityReservation> reserve,
+                                         float turbining,
+                                         float pumping,
+                                         float cost) :
+     capacityReservation(reserve),
+     maxTurbining(turbining),
+     maxPumping(pumping),
+     participationCost(cost)
+    {
+    }
+
+    LTStorageClusterReserveParticipation& operator=(
+      const LTStorageClusterReserveParticipation& other)
+    {
+        if (this != &other)
+        {
+            capacityReservation = other.capacityReservation;
+            maxTurbining = other.maxTurbining;
+            maxPumping = other.maxPumping;
+            participationCost = other.participationCost;
+        }
+        return *this;
+    }
+};
+
 #endif // __ANTARES_LIBS_STUDY_LINKS_H__

@@ -24,7 +24,7 @@
 #include <antares/series/series.h>
 #include <antares/array/matrix.h>
 #include <antares/study/version.h>
-#include "antares/study/parts/hydro/lt_storage_reserve_participation.h"
+#include <antares/study/area/capacityReservation.h>
 
 #include "../../fwd.h"
 

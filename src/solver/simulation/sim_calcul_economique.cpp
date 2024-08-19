@@ -180,6 +180,77 @@ static void importShortTermStorages(
     }
 }
 
+static void importLongTermStorages(AreaList& areas, PROBLEME_HEBDO& problem)
+{
+    int globalReserveIndex = 0;
+    int globalLTStorageClusterParticipationIndex = 0;
+    for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
+    {
+        int areaReserveIndex = 0;
+        int areaClusterParticipationIndex = 0;
+        auto area = areas[areaIndex];
+        auto& areaReserves = problem.allReserves[areaIndex];
+
+        // Traitement des réserves "up"
+        for (int areaReserveIdx = 0; auto const& [reserveName, _] :
+                                     area->allCapacityReservations.areaCapacityReservationsUp)
+        {
+            if (area->hydro.series
+                && area->hydro.series->ltStorageReserves.reserves.count(reserveName) > 0)
+            {
+                RESERVE_PARTICIPATION_LTSTORAGE reserveParticipation;
+                reserveParticipation.maxTurbining
+                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxTurbining;
+                reserveParticipation.maxPumping
+                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxPumping;
+                reserveParticipation.participationCost
+                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0]
+                      .participationCost;
+                reserveParticipation.clusterName = "LongTermStorage";
+                reserveParticipation.clusterIdInArea = 0;
+                reserveParticipation.globalIndexClusterParticipation
+                  = globalLTStorageClusterParticipationIndex;
+                reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                areaReserves.areaCapacityReservationsUp[areaReserveIdx]
+                  .AllLTStorageReservesParticipation.push_back(reserveParticipation);
+                globalLTStorageClusterParticipationIndex++;
+                areaClusterParticipationIndex++;
+            }
+            areaReserveIdx++;
+        }
+
+        // Traitement des réserves "down"
+        for (int areaReserveIdx = 0; auto const& [reserveName, _] :
+                                     area->allCapacityReservations.areaCapacityReservationsDown)
+        {
+            if (area->hydro.series
+                && area->hydro.series->ltStorageReserves.reserves.count(reserveName) > 0)
+            {
+                RESERVE_PARTICIPATION_LTSTORAGE reserveParticipation;
+                reserveParticipation.maxTurbining
+                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxTurbining;
+                reserveParticipation.maxPumping
+                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxPumping;
+                reserveParticipation.participationCost
+                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0]
+                      .participationCost;
+                reserveParticipation.clusterName = "LongTermStorage";
+                reserveParticipation.clusterIdInArea = 0;
+                reserveParticipation.globalIndexClusterParticipation
+                  = globalLTStorageClusterParticipationIndex;
+                reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
+                areaReserves.areaCapacityReservationsDown[areaReserveIdx]
+                  .AllLTStorageReservesParticipation.push_back(reserveParticipation);
+                globalLTStorageClusterParticipationIndex++;
+                areaClusterParticipationIndex++;
+            }
+            areaReserveIdx++;
+        }
+    }
+}
+
+
+
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
@@ -333,6 +404,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     importCapacityReservations(study.areas, problem);
 
     importShortTermStorages(study.areas, problem.ShortTermStorage, problem);
+    importLongTermStorages(study.areas, problem);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {
