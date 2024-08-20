@@ -371,7 +371,7 @@ static Node* createSimpleExpression(Registry<Node>& registry, double param)
     return expr;
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_self, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, Registry<Node>)
 {
     CompareVisitor cmp;
     Node* expr = createSimpleExpression(*this, 65.);
@@ -393,4 +393,31 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, Registry<Node>)
     Node* expr1 = createSimpleExpression(*this, 64.);
     Node* expr2 = createSimpleExpression(*this, 65.);
     BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+}
+
+static Node* createComplexExpression(Registry<Node>& registry)
+{
+    // NOTE : this expression makes no sense
+    // NOTE2 : Some elements are re-used (e.g simple), this is valid since memory is handled
+    // separately (no double free)
+
+    Node* simple = createSimpleExpression(registry, 42.);
+    Node* neg = registry.create<NegationNode>(simple);
+    Node* mult = registry.create<MultiplicationNode>(simple, neg);
+    Node* comp = registry.create<ComponentParameterNode>("hello", "world");
+    Node* div = registry.create<DivisionNode>(mult, comp);
+    Node* div2 = registry.create<DivisionNode>(div, simple);
+    Node* add = registry.create<AddNode>(div, div2);
+    Node* sub = registry.create<SubtractionNode>(add, neg);
+    Node* cmp = registry.create<GreaterThanOrEqualNode>(sub, add);
+    Node* pf = registry.create<PortFieldNode>("port", "field");
+    Node* addf = registry.create<AddNode>(pf, cmp);
+    return addf;
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr = createComplexExpression(*this);
+    BOOST_CHECK(cmp.dispatch(*expr, *expr));
 }
