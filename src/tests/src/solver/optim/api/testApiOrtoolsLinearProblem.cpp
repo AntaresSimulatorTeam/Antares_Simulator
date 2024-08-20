@@ -45,7 +45,7 @@ struct Fixture
 
 void Fixture::createProblemMaximize()
 {
-    auto* a = pb->addIntVariable(0, 1, "a");
+    auto* a = pb->addNumVariable(0, 1, "a");
     auto* b = pb->addNumVariable(0, 1, "b");
     auto* c = pb->addConstraint(1, 1, "c");
 
@@ -123,6 +123,18 @@ BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
 {
     createProblemMaximize();
     auto* solution = pb->solve(true);
+
+    BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
+
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 1);
+
+    auto* a = pb->getVariable("a");
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(a), 1);
+
+    auto* b = pb->getVariable("b");
+
+    std::vector<Api::MipVariable*> v = {a, b};
+    auto res = solution->getOptimalValues(v);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

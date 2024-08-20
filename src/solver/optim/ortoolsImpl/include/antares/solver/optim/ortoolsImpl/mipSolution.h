@@ -39,10 +39,10 @@ public:
 
     ~OrtoolsMipSolution() final = default;
 
-    Api::MipStatus getStatus() override;
-    double getObjectiveValue() override;
+    Api::MipStatus getStatus() const override;
+    double getObjectiveValue() const override;
     double getOptimalValue(const Api::MipVariable* var) const override;
-    std::vector<double> getOptimalValues(const std::vector<Api::MipVariable>& vars) const override;
+    std::vector<double> getOptimalValues(const std::vector<Api::MipVariable*>& vars) const override;
 
 private:
     Api::MipStatus responseStatus_;

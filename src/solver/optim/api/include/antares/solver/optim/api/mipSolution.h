@@ -41,10 +41,10 @@ class MipSolution
 public:
     virtual ~MipSolution() = default;
 
-    virtual MipStatus getStatus() = 0;
-    virtual double getObjectiveValue() = 0;
+    virtual MipStatus getStatus() const = 0;
+    virtual double getObjectiveValue() const = 0;
     virtual double getOptimalValue(const MipVariable* var) const = 0;
-    virtual std::vector<double> getOptimalValues(const std::vector<MipVariable>& vars) const = 0;
+    virtual std::vector<double> getOptimalValues(const std::vector<MipVariable*>& vars) const = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

@@ -39,12 +39,12 @@ OrtoolsMipSolution::OrtoolsMipSolution(
     }
 }
 
-Api::MipStatus OrtoolsMipSolution::getStatus()
+Api::MipStatus OrtoolsMipSolution::getStatus() const
 {
     return responseStatus_;
 }
 
-double OrtoolsMipSolution::getObjectiveValue()
+double OrtoolsMipSolution::getObjectiveValue() const
 {
     return objectiveValue_;
 }
@@ -64,14 +64,14 @@ double OrtoolsMipSolution::getOptimalValue(const Api::MipVariable* var) const
 }
 
 std::vector<double> OrtoolsMipSolution::getOptimalValues(
-  const std::vector<Api::MipVariable>& vars) const
+  const std::vector<Api::MipVariable*>& vars) const
 {
     std::vector<double> solution;
     solution.reserve(vars.size());
 
     for (const auto& var: vars)
     {
-        solution.push_back(getOptimalValue(&var));
+        solution.push_back(getOptimalValue(var));
     }
 
     return solution;
