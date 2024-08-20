@@ -128,7 +128,4 @@ constexpr LinearStatus operator-(LinearStatus a)
 {
     return a;
 }
-
-std::ostream& operator<<(std::ostream& os, LinearStatus s);
-
 } // namespace Antares::Solver::Visitors

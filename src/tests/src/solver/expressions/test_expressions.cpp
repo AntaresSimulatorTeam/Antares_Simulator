@@ -36,6 +36,25 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
 
+// Only necessary for BOOST_CHECK_EQUAL
+namespace Antares::Solver::Visitors
+{
+static std::ostream& operator<<(std::ostream& os, LinearStatus s)
+{
+    switch (s)
+    {
+    case LinearStatus::CONSTANT:
+        return os << "LinearStatus::CONSTANT";
+    case LinearStatus::LINEAR:
+        return os << "LinearStatus::LINEAR";
+    case LinearStatus::NON_LINEAR:
+        return os << "LinearStatus::NON_LINEAR";
+    default:
+        return os << "<unknown>";
+    }
+}
+} // namespace Antares::Solver::Visitors
+
 BOOST_AUTO_TEST_CASE(print_single_literal)
 {
     LiteralNode literal(21);
