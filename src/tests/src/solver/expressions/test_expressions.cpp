@@ -397,7 +397,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, Registry<Node>)
 
 static Node* createComplexExpression(Registry<Node>& registry)
 {
-    // NOTE : this expression makes no sense
+    // NOTE : this expression makes no sense, only for testing purposes
     // NOTE2 : Some elements are re-used (e.g simple), this is valid since memory is handled
     // separately (no double free)
 
@@ -420,4 +420,20 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, Registry<Node>)
     CompareVisitor cmp;
     Node* expr = createComplexExpression(*this);
     BOOST_CHECK(cmp.dispatch(*expr, *expr));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createComplexExpression(*this);
+    Node* expr2 = createComplexExpression(*this);
+    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createComplexExpression(*this);
+    Node* expr2 = create<NegationNode>(expr1);
+    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
 }
