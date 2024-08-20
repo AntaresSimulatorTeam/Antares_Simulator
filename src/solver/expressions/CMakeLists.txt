@@ -11,6 +11,7 @@ set(SRC_Expressions
         visitors/CloneVisitor.cpp
         visitors/EvalVisitor.cpp
         visitors/LinearityVisitor.cpp
+	visitors/LinearStatus.cpp
         visitors/EvaluationContext.cpp
 
         include/antares/solver/expressions/nodes/AddNode.h
