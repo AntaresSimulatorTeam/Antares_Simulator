@@ -27,6 +27,7 @@
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
+#include <antares/solver/expressions/visitors/CompareVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
@@ -360,4 +361,27 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     Node* expr = create<AddNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
+}
+
+static AddNode* createSimpleExpression(Registry<Node>& registry)
+{
+    Node* var1 = registry.create<LiteralNode>(65.);
+    Node* param1 = registry.create<ParameterNode>("param1");
+    Node* expr = registry.create<AddNode>(var1, param1);
+    return dynamic_cast<AddNode*>(expr);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_self, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr = createSimpleExpression(*this);
+    BOOST_CHECK(cmp.dispatch(*expr, *expr));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createSimpleExpression(*this);
+    Node* expr2 = createSimpleExpression(*this);
+    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
 }
