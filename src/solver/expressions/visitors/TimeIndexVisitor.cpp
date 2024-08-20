@@ -62,17 +62,17 @@ ExpressionTimeType TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode& 
 
 ExpressionTimeType TimeIndexVisitor::visit(const Nodes::VariableNode& var)
 {
-    return var.getTimeType();
+    return {var};
 }
 
 ExpressionTimeType TimeIndexVisitor::visit(const Nodes::ParameterNode& param)
 {
-    return param.getTimeType();
+    return {param};
 }
 
 ExpressionTimeType TimeIndexVisitor::visit(const Nodes::LiteralNode& lit)
 {
-    return Nodes::TimeType::CONSTANT;
+    return Nodes::TimeIndex(false, false);
 }
 
 ExpressionTimeType TimeIndexVisitor::visit(const Nodes::NegationNode& neg)
@@ -83,21 +83,26 @@ ExpressionTimeType TimeIndexVisitor::visit(const Nodes::NegationNode& neg)
 ExpressionTimeType TimeIndexVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
     // TODO must be resolved from the context
-    return Nodes::TimeType::CONSTANT;
+    return Nodes::TimeIndex{false, false};
 }
 
 ExpressionTimeType TimeIndexVisitor::visit(
   const Nodes::ComponentVariableNode& component_variable_node)
 {
     // TODO must be resolved
-    return Nodes::TimeType::CONSTANT;
+    return context_.getVariableValue(&component_variable_node);
 }
 
 ExpressionTimeType TimeIndexVisitor::visit(
   const Nodes::ComponentParameterNode& component_parameter_node)
 {
     // TODO must be resolved
-    return Nodes::TimeType::CONSTANT;
+    return context_.getParameterValue(&component_parameter_node);
+}
+
+TimeIndexVisitor::TimeIndexVisitor(EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context):
+    context_(std::move(context))
+{
 }
 
 } // namespace Antares::Solver::Visitors

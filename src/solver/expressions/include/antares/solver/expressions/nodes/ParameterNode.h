@@ -11,6 +11,6 @@ class ParameterNode final: public Leaf<std::string>, public TimeIndex
 {
 public:
     explicit ParameterNode(const std::string& value);
-    explicit ParameterNode(const std::string& value, TimeType timeType);
+    explicit ParameterNode(const std::string& value, bool time_varying, bool scenario_varying);
 };
 } // namespace Antares::Solver::Nodes

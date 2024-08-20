@@ -31,63 +31,36 @@ public:
     ExpressionTimeType() = default;
     ExpressionTimeType(const ExpressionTimeType& other) = default;
 
-    constexpr ExpressionTimeType(const Nodes::TimeType& timeType):
-        timeType_(timeType)
+    constexpr ExpressionTimeType(const Nodes::TimeIndex& timeIndex):
+        timeIndex_(timeIndex)
     {
     }
 
-    constexpr ExpressionTimeType Connect(const Nodes::TimeType& other)
+    [[nodiscard]] ExpressionTimeType Connect(const Nodes::TimeIndex& other) const
     {
-        switch (other)
-        {
-        case Nodes::TimeType::TIME_DEPENDANT_AND_SCENARIZED:
-            return Nodes::TimeType::TIME_DEPENDANT_AND_SCENARIZED;
-        case Nodes::TimeType::SCENARIZED_ONLY:
-            if (timeType_ == Nodes::TimeType::TIME_DEPENDANT_AND_SCENARIZED
-                || timeType_ == Nodes::TimeType::TIME_DEPENDANT_ONLY)
-            {
-                return Nodes::TimeType::TIME_DEPENDANT_AND_SCENARIZED;
-            }
-            else
-            {
-                return Nodes::TimeType::SCENARIZED_ONLY;
-            }
-        case Nodes::TimeType::TIME_DEPENDANT_ONLY:
-
-            if (timeType_ == Nodes::TimeType::TIME_DEPENDANT_AND_SCENARIZED
-                || timeType_ == Nodes::TimeType::SCENARIZED_ONLY)
-            {
-                return Nodes::TimeType::TIME_DEPENDANT_AND_SCENARIZED;
-            }
-            else
-            {
-                return Nodes::TimeType::TIME_DEPENDANT_ONLY;
-            }
-        case Nodes::TimeType::CONSTANT:
-            return timeType_;
-        default:
-            return Nodes::TimeType::CONSTANT;
-        }
+        bool isTimeVarying = other.IsTimeVarying() || timeIndex_.IsTimeVarying();
+        bool isScenarioVarying = other.IsScenarioVarying() || timeIndex_.IsScenarioVarying();
+        return ExpressionTimeType(Nodes::TimeIndex(isTimeVarying, isScenarioVarying));
     }
 
-    constexpr ExpressionTimeType operator*(const ExpressionTimeType& other)
+    ExpressionTimeType operator*(const ExpressionTimeType& other) const
 
     {
         return Connect(other);
     }
 
-    constexpr ExpressionTimeType operator/(const ExpressionTimeType& other)
+    ExpressionTimeType operator/(const ExpressionTimeType& other) const
 
     {
         return Connect(other);
     }
 
-    constexpr ExpressionTimeType operator+(const ExpressionTimeType& other)
+    ExpressionTimeType operator+(const ExpressionTimeType& other) const
     {
         return Connect(other);
     }
 
-    constexpr ExpressionTimeType operator-(const ExpressionTimeType& other)
+    ExpressionTimeType operator-(const ExpressionTimeType& other) const
     {
         return Connect(other);
     }
@@ -95,33 +68,28 @@ public:
     // Conversions
     constexpr explicit operator bool() const = delete;
 
-    constexpr operator Nodes::TimeType() const
+    operator Nodes::TimeIndex() const
     {
-        return timeType_;
+        return timeIndex_;
     }
 
     // Comparisons
-    constexpr bool operator==(ExpressionTimeType other) const
+    bool operator==(ExpressionTimeType other) const
     {
-        return timeType_ == other.timeType_;
+        return timeIndex_ == other.timeIndex_;
     }
 
-    constexpr bool operator==(Nodes::TimeType timeType) const
+    bool operator==(Nodes::TimeIndex timeIndex) const
     {
-        return timeType_ == timeType;
+        return timeIndex_ == timeIndex;
     }
 
-    constexpr bool operator!=(ExpressionTimeType other) const
-    {
-        return timeType_ != other.timeType_;
-    }
-
-    constexpr ExpressionTimeType operator-() const
+    ExpressionTimeType operator-() const
     {
         return *this;
     }
 
 private:
-    Nodes::TimeType timeType_;
+    Nodes::TimeIndex timeIndex_;
 };
 } // namespace Antares::Solver::Visitors

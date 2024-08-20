@@ -23,13 +23,6 @@
 
 namespace Antares::Solver::Nodes
 {
-enum class TimeType
-{
-    CONSTANT,
-    TIME_DEPENDANT_ONLY,
-    SCENARIZED_ONLY,
-    TIME_DEPENDANT_AND_SCENARIZED
-};
 
 // TODO better name?
 class TimeIndex
@@ -37,17 +30,14 @@ class TimeIndex
 public:
     TimeIndex() = default;
 
-    constexpr explicit TimeIndex(TimeType timeType):
-        timeType_(timeType)
-    {
-    }
-
-    [[nodiscard]] constexpr TimeType getTimeType() const
-    {
-        return timeType_;
-    }
+    explicit TimeIndex(bool time_varying, bool scenario_varying);
+    [[nodiscard]] bool IsTimeVarying() const;
+    [[nodiscard]] bool IsScenarioVarying() const;
+    bool operator==(const TimeIndex& other) const;
 
 private:
-    TimeType timeType_ = TimeType::CONSTANT;
+    bool time_varying_ = false;
+    bool scenario_varying_ = false;
 };
+
 } // namespace Antares::Solver::Nodes

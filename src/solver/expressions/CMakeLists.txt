@@ -8,6 +8,7 @@ set(SRC_Expressions
         nodes/UnaryNode.cpp
         nodes/VariableNode.cpp
         nodes/ParameterNode.cpp
+        nodes/TimeIndex.cpp
 
         visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp

@@ -11,6 +11,6 @@ class VariableNode final: public Leaf<std::string>, public TimeIndex
 {
 public:
     explicit VariableNode(const std::string& value);
-    explicit VariableNode(const std::string& value, TimeType timeType);
+    explicit VariableNode(const std::string& value, bool time_varying, bool scenario_varying);
 };
 } // namespace Antares::Solver::Nodes

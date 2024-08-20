@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <antares/solver/expressions/nodes/VariableNode.h>
+#include "antares/solver/expressions/nodes/TimeIndex.h"
 
 namespace Antares::Solver::Nodes
 {
@@ -29,9 +30,9 @@ VariableNode::VariableNode(const std::string& value):
 {
 }
 
-VariableNode::VariableNode(const std::string& value, TimeType timeType):
+VariableNode::VariableNode(const std::string& value, bool time_varying, bool scenario_varying):
     Leaf(value),
-    TimeIndex(timeType)
+    TimeIndex(time_varying, scenario_varying)
 {
 }
 } // namespace Antares::Solver::Nodes

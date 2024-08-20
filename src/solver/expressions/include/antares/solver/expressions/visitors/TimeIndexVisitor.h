@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include "antares/solver/expressions/visitors/EvaluationContext.h"
 #include "antares/solver/expressions/visitors/ExpressionTimeType.h"
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
 
@@ -30,8 +31,10 @@ class TimeIndexVisitor: public Nodes::NodeVisitor<ExpressionTimeType>
 {
 public:
     using Base = Nodes::NodeVisitor<ExpressionTimeType>;
+    TimeIndexVisitor(EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context);
 
 private:
+    EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context_;
     ExpressionTimeType visit(const Nodes::AddNode& add) override;
     ExpressionTimeType visit(const Nodes::SubtractionNode& add) override;
     ExpressionTimeType visit(const Nodes::MultiplicationNode& add) override;

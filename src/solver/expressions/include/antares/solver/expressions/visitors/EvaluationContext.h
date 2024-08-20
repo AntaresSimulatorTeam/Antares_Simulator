@@ -28,8 +28,8 @@ public:
     }
 
 private:
-    std::map<std::string, double> parameters_;
-    std::map<std::string, double> variables_;
+    std::map<KeyType, ValueType> parameters_;
+    std::map<KeyType, ValueType> variables_;
 };
 
 } // namespace Antares::Solver::Visitors
