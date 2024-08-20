@@ -32,6 +32,8 @@ public:
     const std::string& getComponentId() const;
     const std::string& getComponentName() const;
 
+    bool operator==(const ComponentNode& other) const;
+
 private:
     std::string component_id_;
     std::string component_name_;
