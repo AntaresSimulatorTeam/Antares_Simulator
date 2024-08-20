@@ -73,6 +73,11 @@ public:
         return timeIndex_;
     }
 
+    Nodes::TimeIndex GetTimeIndex() const
+    {
+        return timeIndex_;
+    }
+
     // Comparisons
     bool operator==(ExpressionTimeType other) const
     {

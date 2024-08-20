@@ -32,6 +32,7 @@ class TimeIndexVisitor: public Nodes::NodeVisitor<ExpressionTimeType>
 public:
     using Base = Nodes::NodeVisitor<ExpressionTimeType>;
     TimeIndexVisitor(EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context);
+    TimeIndexVisitor() = default;
 
 private:
     EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context_;

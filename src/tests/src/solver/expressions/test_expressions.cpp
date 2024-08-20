@@ -362,3 +362,31 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT_EXPR);
 }
+
+BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    TimeIndexVisitor timeIndexVisitor;
+    // LiteralNode --> constant in time and for all scenarios
+    LiteralNode literalNode(65.);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode).GetTimeIndex().IsTimeVarying(), false);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode).GetTimeIndex().IsScenarioVarying(),
+                      false);
+    // Parameter --> constant in time and varying scenarios
+    ParameterNode parameterNode1("p1", false, true);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1).GetTimeIndex().IsTimeVarying(),
+                      false);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1).GetTimeIndex().IsScenarioVarying(),
+                      true);
+    // Variable time varying but constant across scenarios
+    VariableNode variableNode1("v1", true, false);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1).GetTimeIndex().IsTimeVarying(),
+                      true);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1).GetTimeIndex().IsScenarioVarying(),
+                      false);
+
+    // addition of parameterNode1 and variableNode1 time and scenario dependent
+    Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr).GetTimeIndex().IsTimeVarying(), true);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr).GetTimeIndex().IsScenarioVarying(), true);
+}
