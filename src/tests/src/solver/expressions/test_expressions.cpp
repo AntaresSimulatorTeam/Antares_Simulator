@@ -260,9 +260,56 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
 }
 
+BOOST_AUTO_TEST_CASE(linear_status_plus)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::LINEAR, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT + LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT + LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR + LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+BOOST_AUTO_TEST_CASE(linear_status_mult)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::LINEAR, LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT * LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT * LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR * LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+BOOST_AUTO_TEST_CASE(linear_status_divide)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::LINEAR, LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT / LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT / LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR / LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
 static const std::vector<LinearStatus> LinearStatus_ALL = {LinearStatus::LINEAR,
                                                            LinearStatus::NON_LINEAR,
                                                            LinearStatus::CONSTANT};
+
+BOOST_AUTO_TEST_CASE(linear_status_minus)
+{
+    for (LinearStatus x: LinearStatus_ALL)
+    {
+        BOOST_CHECK_EQUAL(x, -x);
+    }
+}
 
 BOOST_AUTO_TEST_CASE(linear_plus_commutative)
 {
@@ -270,7 +317,18 @@ BOOST_AUTO_TEST_CASE(linear_plus_commutative)
     {
         for (LinearStatus y: LinearStatus_ALL)
         {
-            BOOST_CHECK(x + y == y + x);
+            BOOST_CHECK_EQUAL(x + y, y + x);
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(linear_subtract_same_as_plus)
+{
+    for (LinearStatus x: LinearStatus_ALL)
+    {
+        for (LinearStatus y: LinearStatus_ALL)
+        {
+            BOOST_CHECK_EQUAL(x - y, x + y);
         }
     }
 }
@@ -281,7 +339,7 @@ BOOST_AUTO_TEST_CASE(linear_multiply_commutative)
     {
         for (LinearStatus y: LinearStatus_ALL)
         {
-            BOOST_CHECK(x * y == y * x);
+            BOOST_CHECK_EQUAL(x * y, y * x);
         }
     }
 }
