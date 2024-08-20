@@ -33,8 +33,8 @@ static bool compareBinaryNode(V& visitor, const T& node, const Antares::Solver::
     return false;
 }
 
-template<class T, class V>
-static bool compareGetValue(V& visitor, const T& node, const Antares::Solver::Nodes::Node& other)
+template<class T>
+static bool compareGetValue(const T& node, const Antares::Solver::Nodes::Node& other)
 {
     if (const T* other_node = dynamic_cast<const T*>(&other))
     {
@@ -43,10 +43,8 @@ static bool compareGetValue(V& visitor, const T& node, const Antares::Solver::No
     return false;
 }
 
-template<class T, class V>
-static bool compareEqualOperator(V& visitor,
-                                 const T& node,
-                                 const Antares::Solver::Nodes::Node& other)
+template<class T>
+static bool compareEqualOperator(const T& node, const Antares::Solver::Nodes::Node& other)
 {
     if (const T* other_node = dynamic_cast<const T*>(&other))
     {
@@ -103,32 +101,32 @@ bool CompareVisitor::visit(const Nodes::NegationNode& node, const Nodes::Node& o
 
 bool CompareVisitor::visit(const Nodes::ParameterNode& node, const Nodes::Node& other)
 {
-    return compareGetValue<Nodes::ParameterNode>(*this, node, other);
+    return compareGetValue<Nodes::ParameterNode>(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::LiteralNode& node, const Nodes::Node& other)
 {
-    return compareGetValue<Nodes::LiteralNode>(*this, node, other);
+    return compareGetValue<Nodes::LiteralNode>(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::VariableNode& node, const Nodes::Node& other)
 {
-    return compareGetValue<Nodes::VariableNode>(*this, node, other);
+    return compareGetValue<Nodes::VariableNode>(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::PortFieldNode& node, const Nodes::Node& other)
 {
-    return compareEqualOperator<Nodes::PortFieldNode>(*this, node, other);
+    return compareEqualOperator<Nodes::PortFieldNode>(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::ComponentVariableNode& node, const Nodes::Node& other)
 {
-    return compareEqualOperator<Nodes::ComponentVariableNode>(*this, node, other);
+    return compareEqualOperator<Nodes::ComponentVariableNode>(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::ComponentParameterNode& node, const Nodes::Node& other)
 {
-    return compareEqualOperator<Nodes::ComponentParameterNode>(*this, node, other);
+    return compareEqualOperator<Nodes::ComponentParameterNode>(node, other);
 }
 
 } // namespace Antares::Solver::Visitors
