@@ -27,9 +27,9 @@ namespace Antares::Solver::Visitors
 
 enum class LinearStatus : char
 {
-    CONSTANT,
-    LINEAR,
-    NON_LINEAR
+    CONSTANT = 0,
+    LINEAR = 1,
+    NON_LINEAR = 2
 };
 
 constexpr char pair(LinearStatus a, LinearStatus b)
