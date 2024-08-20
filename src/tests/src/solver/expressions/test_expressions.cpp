@@ -363,9 +363,9 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
 
-static Node* createSimpleExpression(Registry<Node>& registry)
+static Node* createSimpleExpression(Registry<Node>& registry, double param)
 {
-    Node* var1 = registry.create<LiteralNode>(65.);
+    Node* var1 = registry.create<LiteralNode>(param);
     Node* param1 = registry.create<ParameterNode>("param1");
     Node* expr = registry.create<AddNode>(var1, param1);
     return expr;
@@ -374,14 +374,23 @@ static Node* createSimpleExpression(Registry<Node>& registry)
 BOOST_FIXTURE_TEST_CASE(comparison_to_self, Registry<Node>)
 {
     CompareVisitor cmp;
-    Node* expr = createSimpleExpression(*this);
+    Node* expr = createSimpleExpression(*this, 65.);
     BOOST_CHECK(cmp.dispatch(*expr, *expr));
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_other, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, Registry<Node>)
 {
     CompareVisitor cmp;
-    Node* expr1 = createSimpleExpression(*this);
-    Node* expr2 = createSimpleExpression(*this);
+    auto create = [this] { return createSimpleExpression(*this, 65.); };
+    Node* expr1 = create();
+    Node* expr2 = create();
     BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createSimpleExpression(*this, 64.);
+    Node* expr2 = createSimpleExpression(*this, 65.);
+    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
 }
