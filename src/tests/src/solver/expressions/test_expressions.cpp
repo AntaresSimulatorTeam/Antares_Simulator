@@ -363,12 +363,12 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
 
-static AddNode* createSimpleExpression(Registry<Node>& registry)
+static Node* createSimpleExpression(Registry<Node>& registry)
 {
     Node* var1 = registry.create<LiteralNode>(65.);
     Node* param1 = registry.create<ParameterNode>("param1");
     Node* expr = registry.create<AddNode>(var1, param1);
-    return dynamic_cast<AddNode*>(expr);
+    return expr;
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_self, Registry<Node>)
