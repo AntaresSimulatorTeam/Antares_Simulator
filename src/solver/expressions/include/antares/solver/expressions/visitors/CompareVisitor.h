@@ -36,24 +36,15 @@ public:
     bool visit(const Nodes::DivisionNode& add, const Nodes::Node& other) override;
     bool visit(const Nodes::EqualNode& add, const Nodes::Node& other) override;
     bool visit(const Nodes::LessThanOrEqualNode& add, const Nodes::Node& other) override;
-
     bool visit(const Nodes::GreaterThanOrEqualNode& add, const Nodes::Node& other) override;
-
-    bool visit(const Nodes::NegationNode& neg, const Nodes::Node& other) override
-    {
-        return false;
-    }
-
+    bool visit(const Nodes::NegationNode& neg, const Nodes::Node& other) override;
     bool visit(const Nodes::VariableNode& param, const Nodes::Node& other) override;
 
     bool visit(const Nodes::ParameterNode& param, const Nodes::Node& other) override;
     bool visit(const Nodes::LiteralNode& param, const Nodes::Node& other) override;
-
     bool visit(const Nodes::PortFieldNode& port_field_node, const Nodes::Node& other) override;
-
     bool visit(const Nodes::ComponentVariableNode& component_node,
                const Nodes::Node& other) override;
-
     bool visit(const Nodes::ComponentParameterNode& component_node,
                const Nodes::Node& other) override;
 };

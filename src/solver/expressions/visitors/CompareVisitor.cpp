@@ -92,6 +92,15 @@ bool CompareVisitor::visit(const Nodes::GreaterThanOrEqualNode& node, const Node
     return compareBinaryNode<Nodes::GreaterThanOrEqualNode>(*this, node, other);
 }
 
+bool CompareVisitor::visit(const Nodes::NegationNode& node, const Nodes::Node& other)
+{
+    if (auto other_node = dynamic_cast<const Nodes::NegationNode*>(&other))
+    {
+        return dispatch(*node.child(), *other_node->child());
+    }
+    return false;
+}
+
 bool CompareVisitor::visit(const Nodes::ParameterNode& node, const Nodes::Node& other)
 {
     return compareGetValue<Nodes::ParameterNode>(*this, node, other);
