@@ -81,6 +81,9 @@ BOOST_FIXTURE_TEST_CASE(linearProblemGetAndConstraintSetCoeff, Fixture)
 
     cons->setCoefficient(var, 3.2);
     BOOST_CHECK_EQUAL(cons->getCoefficient(var), 3.2);
+
+    BOOST_CHECK_THROW(cons->setCoefficient(nullptr, 0), std::bad_cast);
+    BOOST_CHECK_THROW(cons->getCoefficient(nullptr), std::bad_cast);
 }
 
 BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
