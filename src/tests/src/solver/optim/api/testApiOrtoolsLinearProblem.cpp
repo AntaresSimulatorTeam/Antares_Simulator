@@ -136,6 +136,9 @@ BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
     auto* var = pb->addVariable(0, 1, true, "a");
     pb->setObjectiveCoefficient(var, 1);
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
+
+    BOOST_CHECK_THROW(pb->getObjectiveCoefficient(nullptr), std::bad_cast);
+    BOOST_CHECK_THROW(pb->setObjectiveCoefficient(nullptr, 0), std::bad_cast);
 }
 
 BOOST_FIXTURE_TEST_CASE(infeasibleProblem, Fixture)
