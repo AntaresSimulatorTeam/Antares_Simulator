@@ -260,6 +260,32 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
 }
 
+static const std::vector<LinearStatus> LinearStatus_ALL = {LinearStatus::LINEAR,
+                                                           LinearStatus::NON_LINEAR,
+                                                           LinearStatus::CONSTANT};
+
+BOOST_AUTO_TEST_CASE(linear_plus_commutative)
+{
+    for (LinearStatus x: LinearStatus_ALL)
+    {
+        for (LinearStatus y: LinearStatus_ALL)
+        {
+            BOOST_CHECK(x + y == y + x);
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(linear_multiply_commutative)
+{
+    for (LinearStatus x: LinearStatus_ALL)
+    {
+        for (LinearStatus y: LinearStatus_ALL)
+        {
+            BOOST_CHECK(x * y == y * x);
+        }
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 {
     LiteralNode literalNode1(10.);

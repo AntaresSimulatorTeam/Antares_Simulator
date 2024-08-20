@@ -77,7 +77,18 @@ constexpr LinearStatus operator+(LinearStatus a, LinearStatus b)
     case LinearStatus::CONSTANT:
         return a;
     case LinearStatus::LINEAR:
-        return b;
+        if (a == LinearStatus::LINEAR)
+        {
+            return LinearStatus::LINEAR;
+        }
+        if (a == LinearStatus::CONSTANT)
+        {
+            return LinearStatus::LINEAR;
+        }
+        if (a == LinearStatus::NON_LINEAR)
+        {
+            return LinearStatus::NON_LINEAR;
+        }
 
     default:
         return LinearStatus::NON_LINEAR;
