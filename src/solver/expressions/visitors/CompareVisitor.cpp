@@ -101,32 +101,32 @@ bool CompareVisitor::visit(const Nodes::NegationNode& node, const Nodes::Node& o
 
 bool CompareVisitor::visit(const Nodes::ParameterNode& node, const Nodes::Node& other)
 {
-    return compareGetValue<Nodes::ParameterNode>(node, other);
+    return compareGetValue(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::LiteralNode& node, const Nodes::Node& other)
 {
-    return compareGetValue<Nodes::LiteralNode>(node, other);
+    return compareGetValue(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::VariableNode& node, const Nodes::Node& other)
 {
-    return compareGetValue<Nodes::VariableNode>(node, other);
+    return compareGetValue(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::PortFieldNode& node, const Nodes::Node& other)
 {
-    return compareEqualOperator<Nodes::PortFieldNode>(node, other);
+    return compareEqualOperator(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::ComponentVariableNode& node, const Nodes::Node& other)
 {
-    return compareEqualOperator<Nodes::ComponentVariableNode>(node, other);
+    return compareEqualOperator(node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::ComponentParameterNode& node, const Nodes::Node& other)
 {
-    return compareEqualOperator<Nodes::ComponentParameterNode>(node, other);
+    return compareEqualOperator(node, other);
 }
 
 } // namespace Antares::Solver::Visitors
