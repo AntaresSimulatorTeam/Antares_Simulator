@@ -22,6 +22,7 @@
 #define BOOST_TEST_MODULE test_translator
 #define WIN32_LEAN_AND_MEAN
 
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
@@ -35,6 +36,8 @@
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
+
+namespace bdata = boost::unit_test::data;
 
 // Only necessary for BOOST_CHECK_EQUAL
 namespace Antares::Solver::Visitors
@@ -322,45 +325,33 @@ static const std::vector<LinearStatus> LinearStatus_ALL = {LinearStatus::LINEAR,
                                                            LinearStatus::NON_LINEAR,
                                                            LinearStatus::CONSTANT};
 
-BOOST_AUTO_TEST_CASE(linear_status_minus)
+BOOST_DATA_TEST_CASE(linear_status_minus, bdata::make(LinearStatus_ALL), x)
 {
-    for (LinearStatus x: LinearStatus_ALL)
-    {
-        BOOST_CHECK_EQUAL(x, -x);
-    }
+    BOOST_CHECK_EQUAL(x, -x);
 }
 
-BOOST_AUTO_TEST_CASE(linear_plus_commutative)
+BOOST_DATA_TEST_CASE(linear_plus_commutative,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
 {
-    for (LinearStatus x: LinearStatus_ALL)
-    {
-        for (LinearStatus y: LinearStatus_ALL)
-        {
-            BOOST_CHECK_EQUAL(x + y, y + x);
-        }
-    }
+    BOOST_CHECK_EQUAL(x + y, y + x);
 }
 
-BOOST_AUTO_TEST_CASE(linear_subtract_same_as_plus)
+BOOST_DATA_TEST_CASE(linear_subtract_same_as_plus,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
 {
-    for (LinearStatus x: LinearStatus_ALL)
-    {
-        for (LinearStatus y: LinearStatus_ALL)
-        {
-            BOOST_CHECK_EQUAL(x - y, x + y);
-        }
-    }
+    BOOST_CHECK_EQUAL(x - y, x + y);
 }
 
-BOOST_AUTO_TEST_CASE(linear_multiply_commutative)
+BOOST_DATA_TEST_CASE(linear_multiply_commutative,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
 {
-    for (LinearStatus x: LinearStatus_ALL)
-    {
-        for (LinearStatus y: LinearStatus_ALL)
-        {
-            BOOST_CHECK_EQUAL(x * y, y * x);
-        }
-    }
+    BOOST_CHECK_EQUAL(x * y, y * x);
 }
 
 BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
