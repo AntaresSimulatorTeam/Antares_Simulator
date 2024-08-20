@@ -33,6 +33,7 @@ using namespace Antares::Solver::Optim;
 struct Fixture
 {
     ~Fixture() = default;
+
     Fixture()
     {
         pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
@@ -135,7 +136,6 @@ BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
 
     std::vector<Api::MipVariable*> v = {a, b};
     auto res = solution->getOptimalValues(v);
-
 
     auto* varNotInSolution = pb->addNumVariable(0, 1, "f");
     BOOST_CHECK_EQUAL(solution->getOptimalValue(varNotInSolution), 0);
