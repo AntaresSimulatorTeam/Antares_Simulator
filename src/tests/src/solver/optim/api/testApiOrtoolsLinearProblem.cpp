@@ -108,6 +108,23 @@ BOOST_FIXTURE_TEST_CASE(mipVariableBounds, Fixture)
     BOOST_CHECK_EQUAL(var->getUb(), 13);
 }
 
+BOOST_FIXTURE_TEST_CASE(mipConstraintBounds, Fixture)
+{
+    auto* constraint = pb->addConstraint(0, 1, "a");
+
+    constraint->setLb(-4);
+    constraint->setUb(7);
+
+    BOOST_CHECK_EQUAL(constraint->getLb(), -4);
+    BOOST_CHECK_EQUAL(constraint->getUb(), 7);
+
+    constraint->setBounds(2, 13);
+
+    BOOST_CHECK_EQUAL(constraint->getLb(), 2);
+    BOOST_CHECK_EQUAL(constraint->getUb(), 13);
+}
+
+
 BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
 {
     auto* var = pb->addVariable(0, 1, true, "a");
