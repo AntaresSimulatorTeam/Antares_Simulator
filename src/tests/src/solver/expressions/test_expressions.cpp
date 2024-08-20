@@ -27,6 +27,7 @@
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
+#include <antares/solver/expressions/visitors/CompareVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
@@ -360,4 +361,79 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     Node* expr = create<AddNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
+}
+
+static Node* createSimpleExpression(Registry<Node>& registry, double param)
+{
+    Node* var1 = registry.create<LiteralNode>(param);
+    Node* param1 = registry.create<ParameterNode>("param1");
+    Node* expr = registry.create<AddNode>(var1, param1);
+    return expr;
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr = createSimpleExpression(*this, 65.);
+    BOOST_CHECK(cmp.dispatch(*expr, *expr));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, Registry<Node>)
+{
+    CompareVisitor cmp;
+    auto create = [this] { return createSimpleExpression(*this, 65.); };
+    Node* expr1 = create();
+    Node* expr2 = create();
+    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createSimpleExpression(*this, 64.);
+    Node* expr2 = createSimpleExpression(*this, 65.);
+    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+}
+
+static Node* createComplexExpression(Registry<Node>& registry)
+{
+    // NOTE : this expression makes no sense, only for testing purposes
+    // NOTE2 : Some elements are re-used (e.g simple), this is valid since memory is handled
+    // separately (no double free)
+
+    Node* simple = createSimpleExpression(registry, 42.);
+    Node* neg = registry.create<NegationNode>(simple);
+    Node* mult = registry.create<MultiplicationNode>(simple, neg);
+    Node* comp = registry.create<ComponentParameterNode>("hello", "world");
+    Node* div = registry.create<DivisionNode>(mult, comp);
+    Node* div2 = registry.create<DivisionNode>(div, simple);
+    Node* add = registry.create<AddNode>(div, div2);
+    Node* sub = registry.create<SubtractionNode>(add, neg);
+    Node* cmp = registry.create<GreaterThanOrEqualNode>(sub, add);
+    Node* pf = registry.create<PortFieldNode>("port", "field");
+    Node* addf = registry.create<AddNode>(pf, cmp);
+    return addf;
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr = createComplexExpression(*this);
+    BOOST_CHECK(cmp.dispatch(*expr, *expr));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createComplexExpression(*this);
+    Node* expr2 = createComplexExpression(*this);
+    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createComplexExpression(*this);
+    Node* expr2 = create<NegationNode>(expr1);
+    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
 }

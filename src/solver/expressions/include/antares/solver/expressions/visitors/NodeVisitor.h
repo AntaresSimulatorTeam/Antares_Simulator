@@ -29,44 +29,44 @@ namespace Antares::Solver::Nodes
 {
 namespace
 {
-template<class RetT, class VisitorT, class NodeT>
-std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor)
+template<class RetT, class VisitorT, class NodeT, class... Args>
+std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
 {
     if (auto* x = dynamic_cast<const NodeT*>(&node))
     {
-        return visitor.visit(*x);
+        return visitor.visit(*x, args...);
     }
     return std::nullopt;
 }
 } // namespace
 
-template<class R>
+template<class R, class... Args>
 class NodeVisitor
 {
 public:
     virtual ~NodeVisitor() = default;
 
-    R dispatch(const Node& node)
+    R dispatch(const Node& node, Args... args)
     {
-        using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R>&);
+        using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
         static const std::vector<FunctionT> allNodeVisitList{
-          &tryVisit<R, NodeVisitor<R>, AddNode>,
-          &tryVisit<R, NodeVisitor<R>, SubtractionNode>,
-          &tryVisit<R, NodeVisitor<R>, MultiplicationNode>,
-          &tryVisit<R, NodeVisitor<R>, DivisionNode>,
-          &tryVisit<R, NodeVisitor<R>, EqualNode>,
-          &tryVisit<R, NodeVisitor<R>, LessThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R>, GreaterThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R>, NegationNode>,
-          &tryVisit<R, NodeVisitor<R>, ParameterNode>,
-          &tryVisit<R, NodeVisitor<R>, VariableNode>,
-          &tryVisit<R, NodeVisitor<R>, LiteralNode>,
-          &tryVisit<R, NodeVisitor<R>, PortFieldNode>,
-          &tryVisit<R, NodeVisitor<R>, ComponentVariableNode>,
-          &tryVisit<R, NodeVisitor<R>, ComponentParameterNode>};
+          &tryVisit<R, NodeVisitor<R, Args...>, AddNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, SubtractionNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, MultiplicationNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, DivisionNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, EqualNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, LessThanOrEqualNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, GreaterThanOrEqualNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, NegationNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, ParameterNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, VariableNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, LiteralNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, PortFieldNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, ComponentVariableNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, ComponentParameterNode>};
         for (auto f: allNodeVisitList)
         {
-            if (auto ret = f(node, *this); ret.has_value())
+            if (auto ret = f(node, *this, args...); ret.has_value())
             {
                 return ret.value();
             }
@@ -75,21 +75,19 @@ public:
         return R();
     }
 
-    virtual R visit(const AddNode&) = 0;
-
-    virtual R visit(const SubtractionNode&) = 0;
-    virtual R visit(const MultiplicationNode&) = 0;
-    virtual R visit(const DivisionNode&) = 0;
-    virtual R visit(const EqualNode&) = 0;
-    virtual R visit(const LessThanOrEqualNode&) = 0;
-    virtual R visit(const GreaterThanOrEqualNode&) = 0;
-    virtual R visit(const NegationNode&) = 0;
-    virtual R visit(const LiteralNode&) = 0;
-    virtual R visit(const VariableNode&) = 0;
-    virtual R visit(const ParameterNode&) = 0;
-    virtual R visit(const PortFieldNode&) = 0;
-    virtual R visit(const ComponentVariableNode&) = 0;
-    virtual R visit(const ComponentParameterNode&) = 0;
+    virtual R visit(const AddNode&, Args... args) = 0;
+    virtual R visit(const SubtractionNode&, Args... args) = 0;
+    virtual R visit(const MultiplicationNode&, Args... args) = 0;
+    virtual R visit(const DivisionNode&, Args... args) = 0;
+    virtual R visit(const EqualNode&, Args... args) = 0;
+    virtual R visit(const LessThanOrEqualNode&, Args... args) = 0;
+    virtual R visit(const GreaterThanOrEqualNode&, Args... args) = 0;
+    virtual R visit(const NegationNode&, Args... args) = 0;
+    virtual R visit(const LiteralNode&, Args... args) = 0;
+    virtual R visit(const VariableNode&, Args... args) = 0;
+    virtual R visit(const ParameterNode&, Args... args) = 0;
+    virtual R visit(const PortFieldNode&, Args... args) = 0;
+    virtual R visit(const ComponentVariableNode&, Args... args) = 0;
+    virtual R visit(const ComponentParameterNode&, Args... args) = 0;
 };
-
 } // namespace Antares::Solver::Nodes
