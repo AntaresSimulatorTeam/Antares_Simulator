@@ -57,37 +57,37 @@ namespace Antares::Solver::Visitors
 {
 bool CompareVisitor::visit(const Nodes::AddNode& node, const Nodes::Node& other)
 {
-    return compareBinaryNode<Nodes::AddNode>(*this, node, other);
+    return compareBinaryNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::SubtractionNode& node, const Nodes::Node& other)
 {
-    return compareBinaryNode<Nodes::SubtractionNode>(*this, node, other);
+    return compareBinaryNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::MultiplicationNode& node, const Nodes::Node& other)
 {
-    return compareBinaryNode<Nodes::MultiplicationNode>(*this, node, other);
+    return compareBinaryNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::DivisionNode& node, const Nodes::Node& other)
 {
-    return compareBinaryNode<Nodes::DivisionNode>(*this, node, other);
+    return compareBinaryNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::EqualNode& node, const Nodes::Node& other)
 {
-    return compareBinaryNode<Nodes::EqualNode>(*this, node, other);
+    return compareBinaryNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::LessThanOrEqualNode& node, const Nodes::Node& other)
 {
-    return compareBinaryNode<Nodes::LessThanOrEqualNode>(*this, node, other);
+    return compareBinaryNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::GreaterThanOrEqualNode& node, const Nodes::Node& other)
 {
-    return compareBinaryNode<Nodes::GreaterThanOrEqualNode>(*this, node, other);
+    return compareBinaryNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::NegationNode& node, const Nodes::Node& other)
