@@ -109,6 +109,10 @@ BOOST_FIXTURE_TEST_CASE(mipVariableBounds, Fixture)
 
     BOOST_CHECK_EQUAL(var->getLb(), 2);
     BOOST_CHECK_EQUAL(var->getUb(), 13);
+
+    auto* sameVar = pb->getVariable("a");
+    BOOST_CHECK_EQUAL(sameVar->getLb(), 2);
+    BOOST_CHECK_EQUAL(sameVar->getUb(), 13);
 }
 
 BOOST_FIXTURE_TEST_CASE(mipConstraintBounds, Fixture)
