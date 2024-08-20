@@ -60,6 +60,11 @@ void Fixture::createProblemMaximize()
 
 BOOST_AUTO_TEST_SUITE(optim_api)
 
+BOOST_AUTO_TEST_CASE(solverMip)
+{
+    auto pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(true, "sirius");
+}
+
 BOOST_FIXTURE_TEST_CASE(basicLinearProblemAdd, Fixture)
 {
     pb->addIntVariable(0, 1, "a");
@@ -84,6 +89,21 @@ BOOST_FIXTURE_TEST_CASE(linearProblemGetAndConstraintSetCoeff, Fixture)
 
     BOOST_CHECK_THROW(cons->setCoefficient(nullptr, 0), std::bad_cast);
     BOOST_CHECK_THROW(cons->getCoefficient(nullptr), std::bad_cast);
+}
+
+bool correctMessage(const std::exception& ex)
+{
+    BOOST_CHECK_EQUAL(ex.what(), std::string("Element name already exists in linear problem"));
+    return true;
+}
+
+BOOST_FIXTURE_TEST_CASE(nameOrConstraintAlreadyExists, Fixture)
+{
+    pb->addNumVariable(0, 1, "a");
+    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "a"), std::exception, correctMessage);
+
+    pb->addConstraint(0, 1, "c");
+    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "c"), std::exception, correctMessage);
 }
 
 BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
