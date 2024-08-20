@@ -46,7 +46,7 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
 class ElemAlreadyExists: public std::exception
 {
 public:
-    const char* what()
+    const char* what() const noexcept override
     {
         return "Element name already exists in linear problem";
     }
@@ -202,7 +202,7 @@ Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
     Api::MipStatus status = convertStatus(mpStatus);
 
     std::map<std::string, std::pair<Api::MipVariable*, double>> solution;
-    for (auto& var: mpSolver_->variables())
+    for (const auto* var: mpSolver_->variables())
     {
         auto pair = std::make_pair(variables_.at(var->name()).get(), var->solution_value());
         solution.try_emplace(var->name(), pair);

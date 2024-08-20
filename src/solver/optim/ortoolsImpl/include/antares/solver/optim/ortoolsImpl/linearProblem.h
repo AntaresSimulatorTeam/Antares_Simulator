@@ -41,7 +41,7 @@ class OrtoolsLinearProblem: virtual public Api::LinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
-    ~OrtoolsLinearProblem() = default;
+    ~OrtoolsLinearProblem() final = default;
 
     Api::MipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     Api::MipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
