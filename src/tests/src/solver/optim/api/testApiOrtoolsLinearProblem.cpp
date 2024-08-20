@@ -92,6 +92,22 @@ BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
     BOOST_CHECK(pb->isMaximization());
 }
 
+BOOST_FIXTURE_TEST_CASE(mipVariableBounds, Fixture)
+{
+    auto* var = pb->addNumVariable(0, 1, "a");
+
+    var->setLb(-4);
+    var->setUb(7);
+
+    BOOST_CHECK_EQUAL(var->getLb(), -4);
+    BOOST_CHECK_EQUAL(var->getUb(), 7);
+
+    var->setBounds(2, 13);
+
+    BOOST_CHECK_EQUAL(var->getLb(), 2);
+    BOOST_CHECK_EQUAL(var->getUb(), 13);
+}
+
 BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
 {
     auto* var = pb->addVariable(0, 1, true, "a");
@@ -128,6 +144,12 @@ BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
     BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
 
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(solutionOpimalValues, Fixture)
+{
+    createProblemMaximize();
+    auto* solution = pb->solve(true);
 
     auto* a = pb->getVariable("a");
     BOOST_CHECK_EQUAL(solution->getOptimalValue(a), 1);
@@ -140,5 +162,6 @@ BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
     auto* varNotInSolution = pb->addNumVariable(0, 1, "f");
     BOOST_CHECK_EQUAL(solution->getOptimalValue(varNotInSolution), 0);
 }
+
 
 BOOST_AUTO_TEST_SUITE_END()
