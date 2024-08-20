@@ -29,7 +29,6 @@ namespace Antares::Solver::Optim::Api
 
 class MipVariable: public virtual HasBounds, public virtual HasName
 {
-public:
 };
 
 } // namespace Antares::Solver::Optim::Api

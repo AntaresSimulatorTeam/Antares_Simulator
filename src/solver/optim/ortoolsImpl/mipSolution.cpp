@@ -69,7 +69,7 @@ std::vector<double> OrtoolsMipSolution::getOptimalValues(
     std::vector<double> solution;
     solution.reserve(vars.size());
 
-    for (const auto& var: vars)
+    for (const auto* var: vars)
     {
         solution.push_back(getOptimalValue(var));
     }
