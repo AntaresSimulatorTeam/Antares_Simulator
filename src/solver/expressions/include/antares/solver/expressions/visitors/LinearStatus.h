@@ -25,30 +25,40 @@
 namespace Antares::Solver::Visitors
 {
 
-enum class LinearStatus
+enum class LinearStatus : char
 {
     CONSTANT,
     LINEAR,
     NON_LINEAR
 };
 
+constexpr char pair(LinearStatus a, LinearStatus b)
+{
+    return static_cast<char>(a) << 4 | static_cast<char>(b);
+}
+
 constexpr LinearStatus operator*(LinearStatus a, LinearStatus b)
 {
-    switch (b)
+    switch (pair(a, b))
     {
-    case LinearStatus::NON_LINEAR:
+    case pair(LinearStatus::CONSTANT, LinearStatus::CONSTANT):
+        return LinearStatus::CONSTANT;
+    case pair(LinearStatus::CONSTANT, LinearStatus::LINEAR):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::CONSTANT, LinearStatus::NON_LINEAR):
         return LinearStatus::NON_LINEAR;
-    case LinearStatus::CONSTANT:
-        return a;
-    case LinearStatus::LINEAR:
-        if (a == LinearStatus::CONSTANT)
-        {
-            return b;
-        }
-        else
-        {
-            return LinearStatus::NON_LINEAR;
-        }
+
+    case pair(LinearStatus::LINEAR, LinearStatus::CONSTANT):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::CONSTANT):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
     default:
         return LinearStatus::NON_LINEAR;
     }
@@ -56,13 +66,26 @@ constexpr LinearStatus operator*(LinearStatus a, LinearStatus b)
 
 constexpr LinearStatus operator/(LinearStatus a, LinearStatus b)
 {
-    switch (b)
+    switch (pair(a, b))
     {
-    case LinearStatus::NON_LINEAR:
-    case LinearStatus::LINEAR:
+    case pair(LinearStatus::CONSTANT, LinearStatus::CONSTANT):
+        return LinearStatus::CONSTANT;
+    case pair(LinearStatus::CONSTANT, LinearStatus::LINEAR):
         return LinearStatus::NON_LINEAR;
-    case LinearStatus::CONSTANT:
-        return a;
+    case pair(LinearStatus::CONSTANT, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::LINEAR, LinearStatus::CONSTANT):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::CONSTANT):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
     default:
         return LinearStatus::NON_LINEAR;
     }
@@ -70,25 +93,26 @@ constexpr LinearStatus operator/(LinearStatus a, LinearStatus b)
 
 constexpr LinearStatus operator+(LinearStatus a, LinearStatus b)
 {
-    switch (b)
+    switch (pair(a, b))
     {
-    case LinearStatus::NON_LINEAR:
+    case pair(LinearStatus::CONSTANT, LinearStatus::CONSTANT):
+        return LinearStatus::CONSTANT;
+    case pair(LinearStatus::CONSTANT, LinearStatus::LINEAR):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::CONSTANT, LinearStatus::NON_LINEAR):
         return LinearStatus::NON_LINEAR;
-    case LinearStatus::CONSTANT:
-        return a;
-    case LinearStatus::LINEAR:
-        if (a == LinearStatus::LINEAR)
-        {
-            return LinearStatus::LINEAR;
-        }
-        if (a == LinearStatus::CONSTANT)
-        {
-            return LinearStatus::LINEAR;
-        }
-        if (a == LinearStatus::NON_LINEAR)
-        {
-            return LinearStatus::NON_LINEAR;
-        }
+
+    case pair(LinearStatus::LINEAR, LinearStatus::CONSTANT):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::LINEAR):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::CONSTANT):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
 
     default:
         return LinearStatus::NON_LINEAR;
