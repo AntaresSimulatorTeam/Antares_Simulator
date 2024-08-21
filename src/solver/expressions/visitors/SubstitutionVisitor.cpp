@@ -35,6 +35,9 @@ SubstitutionVisitor::SubstitutionVisitor(SubstitutionContext& ctx, Registry<Node
 
 Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
+    // This search has linear complexity
+    // To get a search of log complexity, we need to use std::unordered_set::find
+    // But std::unordered_set::find_if does not exist
     auto it = std::find_if(ctx_.variables.begin(),
                            ctx_.variables.end(),
                            [&component_variable_node](auto* x)
