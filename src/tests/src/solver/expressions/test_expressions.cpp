@@ -360,7 +360,7 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     // ((65.*p1)+port.field)
     Node* expr = create<AddNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "((65.000000*p1)+port.field)");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT_EXPR);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
 
 BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
@@ -394,7 +394,7 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(time_index_variableNode1.IsTimeVarying(), true);
     BOOST_CHECK_EQUAL(time_index_variableNode1.IsScenarioVarying(), false);
 
-    // addition of parameterNode1 and variableNode1 time and scenario dependent
+    // addition of parameterNode1 and variableNode1 is time and scenario dependent
     Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
     auto time_index_expr = timeIndexVisitor.dispatch(*expr);
     BOOST_CHECK_EQUAL(time_index_expr.IsTimeVarying(), true);

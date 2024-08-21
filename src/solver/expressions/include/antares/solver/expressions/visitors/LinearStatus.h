@@ -28,7 +28,7 @@ class LinearStatus
 public:
     enum Status
     {
-        CONSTANT_EXPR,
+        CONSTANT,
         LINEAR,
         NON_LINEAR
     };
@@ -48,10 +48,10 @@ public:
         {
         case LinearStatus::NON_LINEAR:
             return LinearStatus::NON_LINEAR;
-        case LinearStatus::CONSTANT_EXPR:
+        case LinearStatus::CONSTANT:
             return *this;
         case LinearStatus::LINEAR:
-            if (status_ == LinearStatus::CONSTANT_EXPR)
+            if (status_ == LinearStatus::CONSTANT)
             {
                 return other;
             }
@@ -71,7 +71,7 @@ public:
         case LinearStatus::NON_LINEAR:
         case LinearStatus::LINEAR:
             return LinearStatus::NON_LINEAR;
-        case LinearStatus::CONSTANT_EXPR:
+        case LinearStatus::CONSTANT:
             return *this;
         default:
             return LinearStatus::NON_LINEAR;
@@ -84,10 +84,10 @@ public:
         {
         case LinearStatus::NON_LINEAR:
             return LinearStatus::NON_LINEAR;
-        case LinearStatus::CONSTANT_EXPR:
+        case LinearStatus::CONSTANT:
             return *this;
         case LinearStatus::LINEAR:
-            if (other == LinearStatus::CONSTANT_EXPR || other == LinearStatus::LINEAR)
+            if (other == LinearStatus::CONSTANT || other == LinearStatus::LINEAR)
             {
                 return other;
             }
@@ -114,9 +114,9 @@ public:
     }
 
     // Comparisons
-    constexpr bool operator==(LinearStatus other) const
+    constexpr bool operator==(LinearStatus a) const
     {
-        return status_ == other.status_;
+        return status_ == a.status_;
     }
 
     constexpr bool operator==(Status status) const
@@ -124,9 +124,9 @@ public:
         return status_ == status;
     }
 
-    constexpr bool operator!=(LinearStatus other) const
+    constexpr bool operator!=(LinearStatus a) const
     {
-        return status_ != other.status_;
+        return status_ != a.status_;
     }
 
     constexpr LinearStatus operator-() const
