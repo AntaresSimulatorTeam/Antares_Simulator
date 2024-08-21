@@ -72,22 +72,15 @@ const Sets::SetAreasType& Sets::operator[](uint i) const
     return *(pByIndex[i]);
 }
 
-bool Sets::hasOutput(const Yuni::ShortString128& s) const
+void Sets::dumpToLogs() const
 {
-    const auto pair = pOptions.find(s);
-    return (pair != pOptions.end()) ? pair->second.output : false;
-}
-
-uint Sets::resultSize(const Yuni::ShortString128& s) const
-{
-    const auto pair = pOptions.find(s);
-    return (pair != pOptions.end()) ? pair->second.resultSize : 0;
-}
-
-Sets::IDType Sets::caption(const Yuni::ShortString128& s) const
-{
-    const auto pair = pOptions.find(s);
-    return (pair != pOptions.end()) ? pair->second.caption : IDType();
+    using namespace Yuni;
+    for (const auto& [setId, set]: pMap)
+    {
+        logs.info() << "   found `" << setId << "` (" << set->size() << ' '
+                    << (set->size() < 2 ? "item" : "items")
+                    << ((!hasOutput(setId)) ? ", no output" : "") << ')';
+    }
 }
 
 void Sets::defaultForAreas()
@@ -103,86 +96,34 @@ void Sets::defaultForAreas()
     add("all areas", district, opts);
 }
 
-void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
-{
-    for (const auto& setId: pNameByIndex)
-    {
-        rebuildFromRules(setId, handler);
-    }
-}
-
-void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
+YString Sets::toString()
 {
     using namespace Yuni;
     using namespace Antares;
-
-    const auto pair = pOptions.find(id);
-    if (pair == pOptions.end())
+    static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
+    YString ret = "";
+    for (const auto& [setId, options]: pOptions)
     {
-        return;
-    }
+        const Options& opts = options;
+        ret << '[' << setId << "]\n";
+        ret << "caption = " << opts.caption << '\n';
+        if (not opts.comments.empty())
+        {
+            ret << "comments = " << opts.comments << '\n';
+        }
+        if (!opts.output)
+        {
+            ret << "output = false\n";
+        }
 
-    // Options
-    Options& opts = pair->second;
-    auto& set = *(pMap[id]);
-
-    // Clear the result first
-    handler.clear(set);
-    // Apply all rules
-    for (uint i = 0; i != opts.rules.size(); ++i)
-    {
-        const Rule& rule = opts.rules[i];
-        const std::string name = rule.second;
-        switch (rule.first) // type
+        for (uint r = 0; r != opts.rules.size(); ++r)
         {
-        case ruleAdd:
-        {
-            // Trying to add a single item
-            if (!handler.add(set, name))
-            {
-                // Failed. Maybe the argument references another group
-                const IDType other = name;
-                MapType::iterator i = pMap.find(other);
-                if (i != pMap.end())
-                {
-                    handler.add(set, *(i->second));
-                }
-            }
-            break;
+            const Rule& rule = opts.rules[r];
+            ret << cmds[rule.first] << " = " << rule.second << '\n';
         }
-        case ruleRemove:
-        {
-            // Trying to remove a single item
-            if (!handler.remove(set, name))
-            {
-                // Failed. Maybe the argument references another group
-                const IDType other = name;
-                MapType::iterator i = pMap.find(other);
-                if (i != pMap.end())
-                {
-                    handler.remove(set, *(i->second));
-                }
-            }
-            break;
-        }
-        case ruleFilter:
-        {
-            handler.applyFilter(set, name);
-            break;
-        }
-        case ruleNone:
-        case ruleMax:
-        {
-            // Huh ??
-            assert(false && "Should not be here !");
-            break;
-        }
-        }
+        ret << '\n';
     }
-    // Retrieving the size of the result set
-    opts.resultSize = handler.size(set);
-    logs.debug() << "  > set :: " << opts.caption << ": applying " << opts.rules.size()
-                 << " rules, got " << opts.resultSize << " items";
+    return ret;
 }
 
 bool Sets::saveToFile(const Yuni::String& filename) const
@@ -218,36 +159,6 @@ bool Sets::saveToFile(const Yuni::String& filename) const
         file << '\n';
     }
     return true;
-}
-
-YString Sets::toString()
-{
-    using namespace Yuni;
-    using namespace Antares;
-    static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
-    YString ret = "";
-    for (const auto& [setId, options]: pOptions)
-    {
-        const Options& opts = options;
-        ret << '[' << setId << "]\n";
-        ret << "caption = " << opts.caption << '\n';
-        if (not opts.comments.empty())
-        {
-            ret << "comments = " << opts.comments << '\n';
-        }
-        if (!opts.output)
-        {
-            ret << "output = false\n";
-        }
-
-        for (uint r = 0; r != opts.rules.size(); ++r)
-        {
-            const Rule& rule = opts.rules[r];
-            ret << cmds[rule.first] << " = " << rule.second << '\n';
-        }
-        ret << '\n';
-    }
-    return ret;
 }
 
 bool Sets::loadFromFile(const std::filesystem::path& filename)
@@ -347,6 +258,88 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
     return false;
 }
 
+void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
+{
+    for (const auto& setId: pNameByIndex)
+    {
+        rebuildFromRules(setId, handler);
+    }
+}
+
+void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
+{
+    using namespace Yuni;
+    using namespace Antares;
+
+    const auto pair = pOptions.find(id);
+    if (pair == pOptions.end())
+    {
+        return;
+    }
+
+    // Options
+    Options& opts = pair->second;
+    auto& set = *(pMap[id]);
+
+    // Clear the result first
+    handler.clear(set);
+    // Apply all rules
+    for (uint i = 0; i != opts.rules.size(); ++i)
+    {
+        const Rule& rule = opts.rules[i];
+        const std::string name = rule.second;
+        switch (rule.first) // type
+        {
+            case ruleAdd:
+            {
+                // Trying to add a single item
+                if (!handler.add(set, name))
+                {
+                    // Failed. Maybe the argument references another group
+                    const IDType other = name;
+                    MapType::iterator i = pMap.find(other);
+                    if (i != pMap.end())
+                    {
+                        handler.add(set, *(i->second));
+                    }
+                }
+                break;
+            }
+            case ruleRemove:
+            {
+                // Trying to remove a single item
+                if (!handler.remove(set, name))
+                {
+                    // Failed. Maybe the argument references another group
+                    const IDType other = name;
+                    MapType::iterator i = pMap.find(other);
+                    if (i != pMap.end())
+                    {
+                        handler.remove(set, *(i->second));
+                    }
+                }
+                break;
+            }
+            case ruleFilter:
+            {
+                handler.applyFilter(set, name);
+                break;
+            }
+            case ruleNone:
+            case ruleMax:
+            {
+                // Huh ??
+                assert(false && "Should not be here !");
+                break;
+            }
+        }
+    }
+    // Retrieving the size of the result set
+    opts.resultSize = handler.size(set);
+    logs.debug() << "  > set :: " << opts.caption << ": applying " << opts.rules.size()
+                 << " rules, got " << opts.resultSize << " items";
+}
+
 void Sets::rebuildIndexes()
 {
     pNameByIndex.clear();
@@ -364,9 +357,27 @@ void Sets::rebuildIndexes()
     }
 }
 
+bool Sets::hasOutput(const Yuni::ShortString128& s) const
+{
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.output : false;
+}
+
 bool Sets::hasOutput(const uint index) const
 {
     return hasOutput(IDType(pNameByIndex[index]));
+}
+
+uint Sets::resultSize(const Yuni::ShortString128& s) const
+{
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.resultSize : 0;
+}
+
+Sets::IDType Sets::caption(const Yuni::ShortString128& s) const
+{
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.caption : IDType();
 }
 
 Sets::IDType Sets::caption(const uint i) const
@@ -377,17 +388,6 @@ Sets::IDType Sets::caption(const uint i) const
 uint Sets::resultSize(const uint index) const
 {
     return resultSize(IDType(pNameByIndex[index]));
-}
-
-void Sets::dumpToLogs() const
-{
-    using namespace Yuni;
-    for (const auto& [setId, set]: pMap)
-    {
-        logs.info() << "   found `" << setId << "` (" << set->size() << ' '
-                    << (set->size() < 2 ? "item" : "items")
-                    << ((!hasOutput(setId)) ? ", no output" : "") << ')';
-    }
 }
 
 uint Sets::size() const
