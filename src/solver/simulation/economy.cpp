@@ -82,14 +82,14 @@ bool Economy::simulationBegin()
                                             numSpace);
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] = Antares::Solver::Optimization::WeeklyOptimization::
-              create(study,
-                     options,
-                     study.parameters.adqPatchParams,
+            weeklyOptProblems_[numSpace] = std::make_unique<Optimization::DefaultWeeklyOptimization>
+                     (options,
                      &pProblemesHebdo[numSpace],
+                     study.parameters.adqPatchParams,
                      numSpace,
                      resultWriter,
                      simulationObserver_.get());
+
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
               &pProblemesHebdo[numSpace],

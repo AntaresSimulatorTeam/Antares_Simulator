@@ -22,7 +22,7 @@
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/solver/optimisation/base_weekly_optimization.h"
+#include "antares/solver/optimisation/weekly_optimization.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/economy/all.h"
@@ -98,7 +98,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
-    std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>>
+    std::vector<std::unique_ptr<Antares::Solver::Optimization::DefaultWeeklyOptimization>>
       weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter;
