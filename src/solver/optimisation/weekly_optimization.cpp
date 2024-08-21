@@ -32,12 +32,12 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(
   uint thread_number,
   IResultWriter& writer,
   Simulation::ISimulationObserver& simulationObserver):
-    WeeklyOptimization(options,
-                       problemeHebdo,
-                       adqPatchParams,
-                       thread_number,
-                       writer,
-                       simulationObserver)
+    options_(options),
+    problemeHebdo_(problemeHebdo),
+    adqPatchParams_(adqPatchParams),
+    thread_number_(thread_number),
+    writer_(writer),
+    simulationObserver_(simulationObserver)
 {
 }
 
