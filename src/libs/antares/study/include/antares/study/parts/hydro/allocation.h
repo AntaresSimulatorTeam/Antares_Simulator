@@ -134,15 +134,6 @@ public:
     */
     void prepareForSolver(const AreaList& list);
 
-    double fromLTStorage(const std::string& storageName) const;
-
-    void fromLTStorage(const std::string& storageName, double value);
-
-    bool loadLTStorageFromFile(const AnyString& filename);
-
-    bool saveLTStorageToFile(const AnyString& filename) const;
-
-
     //@}
 
     //! \name Operators
@@ -163,6 +154,7 @@ private:
     std::unordered_map<uint, double> pValuesFromAreaID;
 
     std::unordered_map<std::string, double> pLTStorageValues;
+
     struct LTStorageParticipationInfo
     {
         float maxTurbining;
