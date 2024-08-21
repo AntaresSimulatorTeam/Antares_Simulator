@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include <set>
+#include <unordered_set>
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
@@ -30,7 +30,7 @@ namespace Antares::Solver::Visitors
 {
 struct SubstitutionContext
 {
-    std::set<Nodes::ComponentVariableNode*> variables;
+    std::unordered_set<Nodes::ComponentVariableNode*> variables;
     // TODO
     // std::vector<Nodes::ComponentParameterNode> parameters;
 };
