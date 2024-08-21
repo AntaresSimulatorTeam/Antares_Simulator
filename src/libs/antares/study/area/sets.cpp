@@ -290,48 +290,48 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
         const std::string name = rule.second;
         switch (rule.first) // type
         {
-            case ruleAdd:
+        case ruleAdd:
+        {
+            // Trying to add a single item
+            if (!handler.add(set, name))
             {
-                // Trying to add a single item
-                if (!handler.add(set, name))
+                // Failed. Maybe the argument references another group
+                const IDType other = name;
+                MapType::iterator i = pMap.find(other);
+                if (i != pMap.end())
                 {
-                    // Failed. Maybe the argument references another group
-                    const IDType other = name;
-                    MapType::iterator i = pMap.find(other);
-                    if (i != pMap.end())
-                    {
-                        handler.add(set, *(i->second));
-                    }
+                    handler.add(set, *(i->second));
                 }
-                break;
             }
-            case ruleRemove:
+            break;
+        }
+        case ruleRemove:
+        {
+            // Trying to remove a single item
+            if (!handler.remove(set, name))
             {
-                // Trying to remove a single item
-                if (!handler.remove(set, name))
+                // Failed. Maybe the argument references another group
+                const IDType other = name;
+                MapType::iterator i = pMap.find(other);
+                if (i != pMap.end())
                 {
-                    // Failed. Maybe the argument references another group
-                    const IDType other = name;
-                    MapType::iterator i = pMap.find(other);
-                    if (i != pMap.end())
-                    {
-                        handler.remove(set, *(i->second));
-                    }
+                    handler.remove(set, *(i->second));
                 }
-                break;
             }
-            case ruleFilter:
-            {
-                handler.applyFilter(set, name);
-                break;
-            }
-            case ruleNone:
-            case ruleMax:
-            {
-                // Huh ??
-                assert(false && "Should not be here !");
-                break;
-            }
+            break;
+        }
+        case ruleFilter:
+        {
+            handler.applyFilter(set, name);
+            break;
+        }
+        case ruleNone:
+        case ruleMax:
+        {
+            // Huh ??
+            assert(false && "Should not be here !");
+            break;
+        }
         }
     }
     // Retrieving the size of the result set
