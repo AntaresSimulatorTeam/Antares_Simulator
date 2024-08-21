@@ -248,6 +248,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             int var = variableManager.NTCDirect(interco, pdtJour);
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
+            Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
+            Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
+
             if (std::isinf(Xmax[var]) && Xmax[var] > 0)
             {
                 if (std::isinf(Xmin[var]) && Xmin[var] < 0)
