@@ -19,8 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/optimisation/base_weekly_optimization.h"
-
 #include <memory>
 
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
@@ -43,36 +41,6 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
     writer_(writer),
     simulationObserver_(simulationObserver)
 {
-}
-
-std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
-  const Antares::Data::Study& study,
-  const OptimizationOptions& options,
-  AdqPatchParams& adqPatchParams,
-  PROBLEME_HEBDO* problemeHebdo,
-  uint thread_number,
-  IResultWriter& writer,
-  Simulation::ISimulationObserver& simulationObserver)
-{
-    if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
-    {
-        return std::make_unique<AdequacyPatchOptimization>(study,
-                                                           options,
-                                                           problemeHebdo,
-                                                           adqPatchParams,
-                                                           thread_number,
-                                                           writer,
-                                                           simulationObserver);
-    }
-    else
-    {
-        return std::make_unique<DefaultWeeklyOptimization>(options,
-                                                           problemeHebdo,
-                                                           adqPatchParams,
-                                                           thread_number,
-                                                           writer,
-                                                           simulationObserver);
-    }
 }
 
 } // namespace Antares::Solver::Optimization
