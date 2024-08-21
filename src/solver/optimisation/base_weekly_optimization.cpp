@@ -21,26 +21,10 @@
 
 #include <memory>
 
-#include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
-#include "antares/solver/optimisation/weekly_optimization.h"
-
-using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+#include <antares/solver/optimisation/base_weekly_optimization.h>
 
 namespace Antares::Solver::Optimization
 {
-WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
-                                       PROBLEME_HEBDO* problemesHebdo,
-                                       AdqPatchParams& adqPatchParams,
-                                       uint thread_number,
-                                       IResultWriter& writer,
-                                       Simulation::ISimulationObserver& simulationObserver):
-    options_(options),
-    problemeHebdo_(problemesHebdo),
-    adqPatchParams_(adqPatchParams),
-    thread_number_(thread_number),
-    writer_(writer),
-    simulationObserver_(simulationObserver)
-{
-}
+
 
 } // namespace Antares::Solver::Optimization

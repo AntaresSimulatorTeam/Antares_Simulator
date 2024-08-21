@@ -33,12 +33,12 @@ namespace Antares::Solver::Optimization
 class WeeklyOptimization
 {
 public:
-    virtual void solve() = 0;
-    virtual ~WeeklyOptimization() = default;
+    void solve();
+    ~WeeklyOptimization() = default;
 
 
 protected:
-    explicit WeeklyOptimization(const OptimizationOptions& options,
+    WeeklyOptimization(const OptimizationOptions& options,
                                 PROBLEME_HEBDO* problemesHebdo,
                                 Antares::Data::AdequacyPatch::AdqPatchParams&,
                                 uint numSpace,

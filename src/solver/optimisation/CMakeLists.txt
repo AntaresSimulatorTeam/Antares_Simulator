@@ -40,8 +40,6 @@ set(RTESOLVER_OPT
         opt_export_structure.cpp
 		include/antares/solver/optimisation/base_weekly_optimization.h
         base_weekly_optimization.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
-        adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
 		include/antares/solver/optimisation/weekly_optimization.h
         weekly_optimization.cpp
 		include/antares/solver/optimisation/optim_post_process_list.h
