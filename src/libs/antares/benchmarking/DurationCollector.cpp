@@ -67,7 +67,7 @@ int64_t DurationCollector::getTime(const std::string& name) const
 {
     const auto& v = duration_items_.at(name);
 
-    return accumulate(v.begin(), v.end(), 0);
+    return accumulate(v.begin(), v.end(), (uint64_t)0);
 }
 
 } // namespace Benchmarking
