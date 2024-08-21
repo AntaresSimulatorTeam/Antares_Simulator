@@ -33,8 +33,8 @@
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
-#include <antares/solver/expressions/visitors/TimeIndexVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/TimeIndexVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -550,6 +550,7 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
                         | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
+
 static Node* createSimpleExpression(Registry<Node>& registry, double param)
 {
     Node* var1 = registry.create<LiteralNode>(param);
