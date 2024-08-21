@@ -136,7 +136,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
 {
     ParameterNode root("my-param");
     const double value = 221.3;
-    EvaluationContext<std::string, double> context({{"my-param", value}}, {});
+    EvaluationContext context({{"my-param", value}}, {});
 
     EvalVisitor evalVisitor(context);
     const double eval = evalVisitor.dispatch(root);
@@ -148,7 +148,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_variable, Registry<Node>)
 {
     VariableNode root("my-variable");
     const double value = 221.3;
-    EvaluationContext<std::string, double> context({}, {{"my-variable", value}});
+    EvaluationContext context({}, {{"my-variable", value}});
 
     EvalVisitor evalVisitor(context);
     const double eval = evalVisitor.dispatch(root);
@@ -366,19 +366,30 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
 {
     PrintVisitor printVisitor;
-    TimeIndexVisitor timeIndexVisitor;
+    std::unordered_map<const Node*, TimeIndex> context;
     // LiteralNode --> constant in time and for all scenarios
     LiteralNode literalNode(65.);
+
+    // Parameter --> constant in time and varying scenarios
+    ParameterNode parameterNode1("p1");
+    context.emplace(std::piecewise_construct,
+                    std::forward_as_tuple(&parameterNode1),
+                    std::forward_as_tuple(false, true));
+
+    // Variable time varying but constant across scenarios
+    VariableNode variableNode1("v1");
+    context.emplace(std::piecewise_construct,
+                    std::forward_as_tuple(&variableNode1),
+                    std::forward_as_tuple(true, false));
+    TimeIndexVisitor timeIndexVisitor(context);
+
     auto time_index_literal_node = timeIndexVisitor.dispatch(literalNode);
     BOOST_CHECK_EQUAL(time_index_literal_node.IsTimeVarying(), false);
     BOOST_CHECK_EQUAL(time_index_literal_node.IsScenarioVarying(), false);
-    // Parameter --> constant in time and varying scenarios
-    ParameterNode parameterNode1("p1", false, true);
     auto time_index_parameterNode1 = timeIndexVisitor.dispatch(parameterNode1);
     BOOST_CHECK_EQUAL(time_index_parameterNode1.IsTimeVarying(), false);
     BOOST_CHECK_EQUAL(time_index_parameterNode1.IsScenarioVarying(), true);
-    // Variable time varying but constant across scenarios
-    VariableNode variableNode1("v1", true, false);
+
     auto time_index_variableNode1 = timeIndexVisitor.dispatch(variableNode1);
     BOOST_CHECK_EQUAL(time_index_variableNode1.IsTimeVarying(), true);
     BOOST_CHECK_EQUAL(time_index_variableNode1.IsScenarioVarying(), false);

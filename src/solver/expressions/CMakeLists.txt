@@ -35,7 +35,6 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/SubtractionNode.h
         include/antares/solver/expressions/nodes/UnaryNode.h
         include/antares/solver/expressions/nodes/VariableNode.h
-        include/antares/solver/expressions/nodes/TimeIndex.h
 
         include/antares/solver/expressions/visitors/CloneVisitor.h
         include/antares/solver/expressions/visitors/EvalVisitor.h
@@ -45,7 +44,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/NodeVisitor.h
         include/antares/solver/expressions/visitors/PrintVisitor.h
         include/antares/solver/expressions/visitors/TimeIndexVisitor.h
-        include/antares/solver/expressions/visitors/ExpressionTimeType.h
+        include/antares/solver/expressions/visitors/TimeIndex.h
 
         include/antares/solver/expressions/Registry.hxx
 )

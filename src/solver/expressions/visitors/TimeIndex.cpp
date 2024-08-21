@@ -19,8 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "TimeIndex.h"
-
 #include <antares/solver/expressions/visitors/TimeIndex.h>
 
 namespace Antares::Solver::Visitors
