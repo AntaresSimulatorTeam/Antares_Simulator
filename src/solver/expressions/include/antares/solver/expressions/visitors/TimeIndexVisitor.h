@@ -21,7 +21,7 @@
 #pragma once
 
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
-#include "antares/solver/expressions/visitors/TimeIndex.h"
+#include "antares/solver/expressions/visitors/TimeStructure.h"
 
 namespace Antares::Solver::Visitors
 {
