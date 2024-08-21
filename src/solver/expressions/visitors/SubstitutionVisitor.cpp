@@ -26,7 +26,7 @@
 
 namespace Antares::Solver::Visitors
 {
-SubstitutionVisitor::SubstitutionVisitor(SubstitutionContext& ctx, Registry<Nodes::Node>& registry):
+SubstitutionVisitor::SubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx):
     CloneVisitor(registry),
     ctx_(ctx),
     registry_(registry)

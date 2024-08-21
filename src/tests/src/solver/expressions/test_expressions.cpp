@@ -557,7 +557,7 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
 
     Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
                                  component_original);
-    SubstitutionVisitor sub(ctx, *this);
+    SubstitutionVisitor sub(*this, ctx);
     Node* subsd = sub.dispatch(*root);
 
     // The root of the new tree should be different

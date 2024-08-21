@@ -38,7 +38,7 @@ struct SubstitutionContext
 class SubstitutionVisitor: public CloneVisitor
 {
 public:
-    SubstitutionVisitor(SubstitutionContext& ctx, Registry<Nodes::Node>& registry);
+    SubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx);
 
     SubstitutionContext& ctx_;
     Registry<Nodes::Node>& registry_;
