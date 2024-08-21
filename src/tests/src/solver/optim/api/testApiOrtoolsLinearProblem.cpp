@@ -106,6 +106,12 @@ BOOST_FIXTURE_TEST_CASE(nameOrConstraintAlreadyExists, Fixture)
     BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "c"), std::exception, correctMessage);
 }
 
+BOOST_FIXTURE_TEST_CASE(getVarOrConstraintDoesntExist, Fixture)
+{
+    BOOST_CHECK_THROW(pb->getVariable(""), std::out_of_range);
+    BOOST_CHECK_THROW(pb->getConstraint(""), std::out_of_range);
+}
+
 BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
 {
     pb->setMinimization();
@@ -185,7 +191,7 @@ BOOST_FIXTURE_TEST_CASE(infeasibleProblem, Fixture)
 BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
 {
     createProblemMaximize();
-    auto* solution = pb->solve(true);
+    auto* solution = pb->solve(false);
 
     BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
 
