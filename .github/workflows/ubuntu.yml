@@ -110,6 +110,13 @@ jobs:
           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
+      - name: Upload logs on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber build log
+          path: ${{ github.workspace }}/vcpkg/buildtrees/cucumber-cpp/install-x64-linux-release-rel-out.log
+
       - name: Build
         run: |
           cmake --build _build -j$(nproc)
