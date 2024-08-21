@@ -26,28 +26,29 @@
 namespace Antares::Solver::Visitors
 {
 
-class TimeIndexVisitor: public Nodes::NodeVisitor<TimeIndex>
+class TimeIndexVisitor: public Nodes::NodeVisitor<TIME_STRUCTURE_TYPE>
 {
 public:
-    using Base = Nodes::NodeVisitor<TimeIndex>;
-    TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
+    using Base = Nodes::NodeVisitor<TIME_STRUCTURE_TYPE>;
+    TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TIME_STRUCTURE_TYPE> context);
     TimeIndexVisitor() = default;
 
 private:
-    std::unordered_map<const Nodes::Node*, TimeIndex> context_;
-    TimeIndex visit(const Nodes::AddNode& add) override;
-    TimeIndex visit(const Nodes::SubtractionNode& add) override;
-    TimeIndex visit(const Nodes::MultiplicationNode& add) override;
-    TimeIndex visit(const Nodes::DivisionNode& add) override;
-    TimeIndex visit(const Nodes::EqualNode& add) override;
-    TimeIndex visit(const Nodes::LessThanOrEqualNode& add) override;
-    TimeIndex visit(const Nodes::GreaterThanOrEqualNode& add) override;
-    TimeIndex visit(const Nodes::NegationNode& neg) override;
-    TimeIndex visit(const Nodes::VariableNode& param) override;
-    TimeIndex visit(const Nodes::ParameterNode& param) override;
-    TimeIndex visit(const Nodes::LiteralNode& lit) override;
-    TimeIndex visit(const Nodes::PortFieldNode& port_field_node) override;
-    TimeIndex visit(const Nodes::ComponentVariableNode& component_variable_node) override;
-    TimeIndex visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
+    std::unordered_map<const Nodes::Node*, TIME_STRUCTURE_TYPE> context_;
+    TIME_STRUCTURE_TYPE visit(const Nodes::AddNode& add) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::SubtractionNode& add) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::MultiplicationNode& add) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::DivisionNode& add) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::EqualNode& add) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::LessThanOrEqualNode& add) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::GreaterThanOrEqualNode& add) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::NegationNode& neg) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::VariableNode& param) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::ParameterNode& param) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::LiteralNode& lit) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::PortFieldNode& port_field_node) override;
+    TIME_STRUCTURE_TYPE visit(const Nodes::ComponentVariableNode& component_variable_node) override;
+    TIME_STRUCTURE_TYPE visit(
+      const Nodes::ComponentParameterNode& component_parameter_node) override;
 };
 } // namespace Antares::Solver::Visitors

@@ -22,20 +22,19 @@
 
 namespace Antares::Solver::Visitors
 {
-class TimeIndex
+enum class TIME_STRUCTURE_TYPE : int
 {
-public:
-    TimeIndex() = default;
-    TimeIndex(bool time_varying, bool scenario_varying);
-    TimeIndex(const TimeIndex& other) = default;
-    bool IsTimeVarying() const;
-    bool IsScenarioVarying() const;
-    TimeIndex Connect(const TimeIndex& other) const;
-
-private:
-    bool time_varying_ = false;
-    bool scenario_varying_ = false;
+    CONSTANT = 0,
+    VARYING_IN_TIME_ONLY = 1,
+    VARYING_IN_SCENARIO_ONLY = 2,
+    BOTH = 3
 };
+
+inline TIME_STRUCTURE_TYPE operator|(const TIME_STRUCTURE_TYPE& left,
+                                     const TIME_STRUCTURE_TYPE& right)
+{
+    return static_cast<TIME_STRUCTURE_TYPE>(static_cast<int>(left) | static_cast<int>(right));
+}
 
 // better name?
 /*class ExpressionTimeType

@@ -363,10 +363,29 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::CONSTANT);
 }
 
+namespace Antares::Solver::Visitors
+{
+static std::ostream& operator<<(std::ostream& os, TIME_STRUCTURE_TYPE s)
+{
+    switch (s)
+    {
+    case TIME_STRUCTURE_TYPE::CONSTANT:
+        return os << "TIME_STRUCTURE_TYPE::CONSTANT";
+    case TIME_STRUCTURE_TYPE::VARYING_IN_TIME_ONLY:
+        return os << "TIME_STRUCTURE_TYPE::VARYING_IN_TIME_ONLY";
+    case TIME_STRUCTURE_TYPE::VARYING_IN_SCENARIO_ONLY:
+        return os << "TIME_STRUCTURE_TYPE::VARYING_IN_SCENARIO_ONLY";
+    case TIME_STRUCTURE_TYPE::BOTH:
+        return os << "TIME_STRUCTURE_TYPE::BOTH";
+    default:
+        return os << "<unknown>";
+    }
+}
+} // namespace Antares::Solver::Visitors
 BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
 {
     PrintVisitor printVisitor;
-    std::unordered_map<const Node*, TimeIndex> context;
+    std::unordered_map<const Node*, TIME_STRUCTURE_TYPE> context;
     // LiteralNode --> constant in time and for all scenarios
     LiteralNode literalNode(65.);
 
@@ -374,29 +393,22 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     ParameterNode parameterNode1("p1");
     context.emplace(std::piecewise_construct,
                     std::forward_as_tuple(&parameterNode1),
-                    std::forward_as_tuple(false, true));
+                    std::forward_as_tuple(TIME_STRUCTURE_TYPE::VARYING_IN_SCENARIO_ONLY));
 
     // Variable time varying but constant across scenarios
     VariableNode variableNode1("v1");
     context.emplace(std::piecewise_construct,
                     std::forward_as_tuple(&variableNode1),
-                    std::forward_as_tuple(true, false));
+                    std::forward_as_tuple(TIME_STRUCTURE_TYPE::VARYING_IN_TIME_ONLY));
     TimeIndexVisitor timeIndexVisitor(context);
 
-    auto time_index_literal_node = timeIndexVisitor.dispatch(literalNode);
-    BOOST_CHECK_EQUAL(time_index_literal_node.IsTimeVarying(), false);
-    BOOST_CHECK_EQUAL(time_index_literal_node.IsScenarioVarying(), false);
-    auto time_index_parameterNode1 = timeIndexVisitor.dispatch(parameterNode1);
-    BOOST_CHECK_EQUAL(time_index_parameterNode1.IsTimeVarying(), false);
-    BOOST_CHECK_EQUAL(time_index_parameterNode1.IsScenarioVarying(), true);
-
-    auto time_index_variableNode1 = timeIndexVisitor.dispatch(variableNode1);
-    BOOST_CHECK_EQUAL(time_index_variableNode1.IsTimeVarying(), true);
-    BOOST_CHECK_EQUAL(time_index_variableNode1.IsScenarioVarying(), false);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode), TIME_STRUCTURE_TYPE::CONSTANT);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1),
+                      TIME_STRUCTURE_TYPE::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1),
+                      TIME_STRUCTURE_TYPE::VARYING_IN_TIME_ONLY);
 
     // addition of parameterNode1 and variableNode1 is time and scenario dependent
     Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
-    auto time_index_expr = timeIndexVisitor.dispatch(*expr);
-    BOOST_CHECK_EQUAL(time_index_expr.IsTimeVarying(), true);
-    BOOST_CHECK_EQUAL(time_index_expr.IsScenarioVarying(), true);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr), TIME_STRUCTURE_TYPE::BOTH);
 }

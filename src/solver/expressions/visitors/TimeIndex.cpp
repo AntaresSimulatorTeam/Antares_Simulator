@@ -21,28 +21,28 @@
 
 #include <antares/solver/expressions/visitors/TimeIndex.h>
 
-namespace Antares::Solver::Visitors
-{
-TimeIndex::TimeIndex(bool time_varying, bool scenario_varying):
-    time_varying_(time_varying),
-    scenario_varying_(scenario_varying)
-{
-}
+// namespace Antares::Solver::Visitors
+// {
+// TimeIndex::TimeIndex(bool time_varying, bool scenario_varying):
+//     time_varying_(time_varying),
+//     scenario_varying_(scenario_varying)
+// {
+// }
 
-bool TimeIndex::IsTimeVarying() const
-{
-    return time_varying_;
-}
+// bool TimeIndex::IsTimeVarying() const
+// {
+//     return time_varying_;
+// }
 
-bool TimeIndex::IsScenarioVarying() const
-{
-    return scenario_varying_;
-}
+// bool TimeIndex::IsScenarioVarying() const
+// {
+//     return scenario_varying_;
+// }
 
-TimeIndex TimeIndex::Connect(const TimeIndex& other) const
-{
-    bool is_time_varying = time_varying_ || other.time_varying_;
-    bool is_scenario_varying = scenario_varying_ || other.scenario_varying_;
-    return TimeIndex(is_time_varying, is_scenario_varying);
-}
-} // namespace Antares::Solver::Visitors
+// TimeIndex TimeIndex::Connect(const TimeIndex& other) const
+// {
+//     bool is_time_varying = time_varying_ || other.time_varying_;
+//     bool is_scenario_varying = scenario_varying_ || other.scenario_varying_;
+//     return TimeIndex(is_time_varying, is_scenario_varying);
+// }
+//} // namespace Antares::Solver::Visitors
