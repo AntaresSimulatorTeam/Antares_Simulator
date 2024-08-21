@@ -31,7 +31,6 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "antares/study/parameters/adq-patch-params.h"
 
 static double origineExtremite = -1;
@@ -70,8 +69,6 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
 
     double Xmin(0.);
     double Xmax(0.);
-
-    setNTCbounds(Xmax, Xmin, ValeursDeNTC, 0, &problem, adqPatchParams);
 
     return std::make_pair(Xmin, Xmax);
 }

@@ -47,8 +47,6 @@ set(RTESOLVER_OPT
 		include/antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h
 		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
         adequacy_patch_csr/adq_patch_post_process_list.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
-        adequacy_patch_local_matching/adq_patch_local_matching.cpp
 		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
         adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
         adequacy_patch_csr/solve_problem.cpp

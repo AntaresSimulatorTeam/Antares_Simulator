@@ -21,7 +21,6 @@
 
 #include <cmath>
 
-#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
@@ -248,13 +247,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         {
             int var = variableManager.NTCDirect(interco, pdtJour);
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-
-            AdequacyPatch::setNTCbounds(Xmax[var],
-                                        Xmin[var],
-                                        ValeursDeNTC,
-                                        interco,
-                                        problemeHebdo,
-                                        adqPatchParams);
 
             if (std::isinf(Xmax[var]) && Xmax[var] > 0)
             {
