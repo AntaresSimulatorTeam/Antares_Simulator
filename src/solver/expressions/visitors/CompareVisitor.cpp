@@ -92,7 +92,7 @@ bool CompareVisitor::visit(const Nodes::GreaterThanOrEqualNode& node, const Node
 
 bool CompareVisitor::visit(const Nodes::NegationNode& node, const Nodes::Node& other)
 {
-    if (auto other_node = dynamic_cast<const Nodes::NegationNode*>(&other))
+    if (auto* other_node = dynamic_cast<const Nodes::NegationNode*>(&other))
     {
         return dispatch(*node.child(), *other_node->child());
     }

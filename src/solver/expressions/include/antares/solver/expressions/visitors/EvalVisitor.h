@@ -36,25 +36,24 @@ struct EvalVisitorDivisionException: std::overflow_error
 class EvalVisitor: public Nodes::NodeVisitor<double>
 {
 public:
-    using Base = Nodes::NodeVisitor<double>;
     EvalVisitor() = default; // No context (variables / parameters)
     explicit EvalVisitor(EvaluationContext context);
 
 private:
     const EvaluationContext context_;
-    double visit(const Nodes::AddNode& add) override;
-    double visit(const Nodes::SubtractionNode& add) override;
-    double visit(const Nodes::MultiplicationNode& add) override;
-    double visit(const Nodes::DivisionNode& add) override;
-    double visit(const Nodes::EqualNode& add) override;
-    double visit(const Nodes::LessThanOrEqualNode& add) override;
-    double visit(const Nodes::GreaterThanOrEqualNode& add) override;
-    double visit(const Nodes::NegationNode& neg) override;
-    double visit(const Nodes::VariableNode&) override;
-    double visit(const Nodes::ParameterNode& param) override;
-    double visit(const Nodes::LiteralNode& lit) override;
-    double visit(const Nodes::PortFieldNode& port_field_node) override;
-    double visit(const Nodes::ComponentVariableNode& component_variable_node) override;
-    double visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
+    double visit(const Nodes::AddNode& node) override;
+    double visit(const Nodes::SubtractionNode& node) override;
+    double visit(const Nodes::MultiplicationNode& node) override;
+    double visit(const Nodes::DivisionNode& node) override;
+    double visit(const Nodes::EqualNode& node) override;
+    double visit(const Nodes::LessThanOrEqualNode& node) override;
+    double visit(const Nodes::GreaterThanOrEqualNode& node) override;
+    double visit(const Nodes::NegationNode& node) override;
+    double visit(const Nodes::VariableNode& node) override;
+    double visit(const Nodes::ParameterNode& node) override;
+    double visit(const Nodes::LiteralNode& node) override;
+    double visit(const Nodes::PortFieldNode& node) override;
+    double visit(const Nodes::ComponentVariableNode& node) override;
+    double visit(const Nodes::ComponentParameterNode& node) override;
 };
 } // namespace Antares::Solver::Visitors

@@ -30,82 +30,82 @@ EvalVisitor::EvalVisitor(EvaluationContext context):
 {
 }
 
-double EvalVisitor::visit(const Nodes::AddNode& add)
+double EvalVisitor::visit(const Nodes::AddNode& node)
 {
-    return dispatch(*add.left()) + dispatch(*add.right());
+    return dispatch(*node.left()) + dispatch(*node.right());
 }
 
-double EvalVisitor::visit(const Nodes::SubtractionNode& sub)
+double EvalVisitor::visit(const Nodes::SubtractionNode& node)
 {
-    return dispatch(*sub.left()) - dispatch(*sub.right());
+    return dispatch(*node.left()) - dispatch(*node.right());
 }
 
-double EvalVisitor::visit(const Nodes::MultiplicationNode& mult)
+double EvalVisitor::visit(const Nodes::MultiplicationNode& node)
 {
-    return dispatch(*mult.left()) * dispatch(*mult.right());
+    return dispatch(*node.left()) * dispatch(*node.right());
 }
 
-double EvalVisitor::visit(const Nodes::DivisionNode& div)
+double EvalVisitor::visit(const Nodes::DivisionNode& node)
 {
-    if (auto divisor = dispatch(*div.right()); divisor == 0.0)
+    if (auto divisor = dispatch(*node.right()); divisor == 0.0)
     {
         throw EvalVisitorDivisionException("DivisionNode Division by zero");
     }
     else
     {
-        return dispatch(*div.left()) / divisor;
+        return dispatch(*node.left()) / divisor;
     }
 }
 
-double EvalVisitor::visit(const Nodes::EqualNode& equ)
+double EvalVisitor::visit(const Nodes::EqualNode& node)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
+double EvalVisitor::visit(const Nodes::LessThanOrEqualNode& node)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
+double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
 {
     // not implemented for comparison node
     return 0.;
 }
 
-double EvalVisitor::visit(const Nodes::VariableNode& var)
+double EvalVisitor::visit(const Nodes::VariableNode& node)
 {
-    return context_.getVariableValue(var.getValue());
+    return context_.getVariableValue(node.getValue());
 }
 
-double EvalVisitor::visit(const Nodes::ParameterNode& param)
+double EvalVisitor::visit(const Nodes::ParameterNode& node)
 {
-    return context_.getParameterValue(param.getValue());
+    return context_.getParameterValue(node.getValue());
 }
 
-double EvalVisitor::visit(const Nodes::LiteralNode& lit)
+double EvalVisitor::visit(const Nodes::LiteralNode& node)
 {
-    return lit.getValue();
+    return node.getValue();
 }
 
-double EvalVisitor::visit(const Nodes::NegationNode& neg)
+double EvalVisitor::visit(const Nodes::NegationNode& node)
 {
-    return -dispatch(*neg.child());
+    return -dispatch(*node.child());
 }
 
-double EvalVisitor::visit(const Nodes::PortFieldNode& port_field_node)
-{
-    return 0.;
-}
-
-double EvalVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
+double EvalVisitor::visit(const Nodes::PortFieldNode& node)
 {
     return 0.;
 }
 
-double EvalVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
+double EvalVisitor::visit(const Nodes::ComponentVariableNode& node)
+{
+    return 0.;
+}
+
+double EvalVisitor::visit(const Nodes::ComponentParameterNode& node)
 {
     // TODO
     return 0.;

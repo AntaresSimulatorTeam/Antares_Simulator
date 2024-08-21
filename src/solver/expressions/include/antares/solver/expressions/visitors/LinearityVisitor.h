@@ -28,9 +28,6 @@ namespace Antares::Solver::Visitors
 
 class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
 {
-public:
-    using Base = Nodes::NodeVisitor<LinearStatus>;
-
 private:
     LinearStatus visit(const Nodes::AddNode& add) override;
     LinearStatus visit(const Nodes::SubtractionNode& add) override;

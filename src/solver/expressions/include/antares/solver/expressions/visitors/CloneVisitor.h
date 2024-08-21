@@ -30,20 +30,20 @@ class CloneVisitor: public Nodes::NodeVisitor<Nodes::Node*>
 public:
     explicit CloneVisitor(Registry<Nodes::Node>& mem);
 
-    Nodes::Node* visit(const Nodes::AddNode& add) override;
-    Nodes::Node* visit(const Nodes::SubtractionNode& add) override;
-    Nodes::Node* visit(const Nodes::MultiplicationNode& add) override;
-    Nodes::Node* visit(const Nodes::DivisionNode& add) override;
-    Nodes::Node* visit(const Nodes::EqualNode& add) override;
-    Nodes::Node* visit(const Nodes::LessThanOrEqualNode& add) override;
-    Nodes::Node* visit(const Nodes::GreaterThanOrEqualNode& add) override;
-    Nodes::Node* visit(const Nodes::NegationNode& neg) override;
-    Nodes::Node* visit(const Nodes::VariableNode& param) override;
-    Nodes::Node* visit(const Nodes::ParameterNode& param) override;
-    Nodes::Node* visit(const Nodes::LiteralNode& param) override;
-    Nodes::Node* visit(const Nodes::PortFieldNode& port_field_node) override;
-    Nodes::Node* visit(const Nodes::ComponentVariableNode& component_node) override;
-    Nodes::Node* visit(const Nodes::ComponentParameterNode& component_node) override;
+    Nodes::Node* visit(const Nodes::AddNode& node) override;
+    Nodes::Node* visit(const Nodes::SubtractionNode& node) override;
+    Nodes::Node* visit(const Nodes::MultiplicationNode& node) override;
+    Nodes::Node* visit(const Nodes::DivisionNode& node) override;
+    Nodes::Node* visit(const Nodes::EqualNode& node) override;
+    Nodes::Node* visit(const Nodes::LessThanOrEqualNode& node) override;
+    Nodes::Node* visit(const Nodes::GreaterThanOrEqualNode& node) override;
+    Nodes::Node* visit(const Nodes::NegationNode& node) override;
+    Nodes::Node* visit(const Nodes::VariableNode& node) override;
+    Nodes::Node* visit(const Nodes::ParameterNode& node) override;
+    Nodes::Node* visit(const Nodes::LiteralNode& node) override;
+    Nodes::Node* visit(const Nodes::PortFieldNode& node) override;
+    Nodes::Node* visit(const Nodes::ComponentVariableNode& node) override;
+    Nodes::Node* visit(const Nodes::ComponentParameterNode& node) override;
 
 private:
     Registry<Nodes::Node>& registry_;

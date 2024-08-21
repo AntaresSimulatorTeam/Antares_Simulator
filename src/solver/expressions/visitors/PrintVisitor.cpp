@@ -25,77 +25,75 @@
 
 namespace Antares::Solver::Visitors
 {
-std::string PrintVisitor::visit(const Nodes::AddNode& add)
+std::string PrintVisitor::visit(const Nodes::AddNode& node)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
-    return "(" + dispatch(*add.left()) + "+" + dispatch(*add.right()) + ")";
+    return "(" + dispatch(*node.left()) + "+" + dispatch(*node.right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::SubtractionNode& sub)
+std::string PrintVisitor::visit(const Nodes::SubtractionNode& node)
 {
-    return "(" + dispatch(*sub.left()) + "-" + dispatch(*sub.right()) + ")";
+    return "(" + dispatch(*node.left()) + "-" + dispatch(*node.right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::MultiplicationNode& mult)
+std::string PrintVisitor::visit(const Nodes::MultiplicationNode& node)
 {
-    return "(" + dispatch(*mult.left()) + "*" + dispatch(*mult.right()) + ")";
+    return "(" + dispatch(*node.left()) + "*" + dispatch(*node.right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::DivisionNode& div)
+std::string PrintVisitor::visit(const Nodes::DivisionNode& node)
 {
-    return "(" + dispatch(*div.left()) + "/" + dispatch(*div.right()) + ")";
+    return "(" + dispatch(*node.left()) + "/" + dispatch(*node.right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::EqualNode& equ)
+std::string PrintVisitor::visit(const Nodes::EqualNode& node)
 {
-    return dispatch(*equ.left()) + "==" + dispatch(*equ.right());
+    return dispatch(*node.left()) + "==" + dispatch(*node.right());
 }
 
-std::string PrintVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
+std::string PrintVisitor::visit(const Nodes::LessThanOrEqualNode& node)
 {
-    return dispatch(*lt.left()) + "<=" + dispatch(*lt.right());
+    return dispatch(*node.left()) + "<=" + dispatch(*node.right());
 }
 
-std::string PrintVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
+std::string PrintVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
 {
-    return dispatch(*gt.left()) + ">=" + dispatch(*gt.right());
+    return dispatch(*node.left()) + ">=" + dispatch(*node.right());
 }
 
-std::string PrintVisitor::visit(const Nodes::NegationNode& neg)
+std::string PrintVisitor::visit(const Nodes::NegationNode& node)
 {
-    return "-(" + dispatch(*neg.child()) + ")";
+    return "-(" + dispatch(*node.child()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::ParameterNode& param)
+std::string PrintVisitor::visit(const Nodes::ParameterNode& node)
 {
-    return param.getValue();
+    return node.getValue();
 }
 
-std::string PrintVisitor::visit(const Nodes::VariableNode& variable)
+std::string PrintVisitor::visit(const Nodes::VariableNode& node)
 {
-    return variable.getValue();
+    return node.getValue();
 }
 
-std::string PrintVisitor::visit(const Nodes::LiteralNode& lit)
+std::string PrintVisitor::visit(const Nodes::LiteralNode& node)
 {
-    return std::to_string(lit.getValue());
+    return std::to_string(node.getValue());
 }
 
-std::string PrintVisitor::visit(const Nodes::PortFieldNode& port_field_node)
+std::string PrintVisitor::visit(const Nodes::PortFieldNode& node)
 {
-    return port_field_node.getPortName() + "." + port_field_node.getFieldName();
+    return node.getPortName() + "." + node.getFieldName();
 }
 
-std::string PrintVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
+std::string PrintVisitor::visit(const Nodes::ComponentVariableNode& node)
 {
-    return component_variable_node.getComponentId() + "."
-           + component_variable_node.getComponentName();
+    return node.getComponentId() + "." + node.getComponentName();
 }
 
-std::string PrintVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
+std::string PrintVisitor::visit(const Nodes::ComponentParameterNode& node)
 {
-    return component_parameter_node.getComponentId() + "."
-           + component_parameter_node.getComponentName();
+    return node.getComponentId() + "." + node.getComponentName();
 }
 } // namespace Antares::Solver::Visitors
