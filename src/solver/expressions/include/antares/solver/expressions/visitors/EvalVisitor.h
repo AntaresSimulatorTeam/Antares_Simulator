@@ -23,7 +23,7 @@
 #include <stdexcept>
 
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
-#include "antares/solver/expressions/nodes/NodeVisitor.h"
+#include "antares/solver/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Solver::Visitors
 {

@@ -22,13 +22,13 @@
 #define BOOST_TEST_MODULE test_translator
 #define WIN32_LEAN_AND_MEAN
 
-#include <algorithm>
-
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
+#include <antares/solver/expressions/visitors/CompareVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
@@ -38,6 +38,27 @@
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
+
+namespace bdata = boost::unit_test::data;
+
+// Only necessary for BOOST_CHECK_EQUAL
+namespace Antares::Solver::Visitors
+{
+static std::ostream& operator<<(std::ostream& os, LinearStatus s)
+{
+    switch (s)
+    {
+    case LinearStatus::CONSTANT:
+        return os << "LinearStatus::CONSTANT";
+    case LinearStatus::LINEAR:
+        return os << "LinearStatus::LINEAR";
+    case LinearStatus::NON_LINEAR:
+        return os << "LinearStatus::NON_LINEAR";
+    default:
+        return os << "<unknown>";
+    }
+}
+} // namespace Antares::Solver::Visitors
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
 {
@@ -263,6 +284,78 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
 }
 
+BOOST_AUTO_TEST_CASE(linear_status_plus)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::LINEAR, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT + LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT + LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR + LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+BOOST_AUTO_TEST_CASE(linear_status_mult)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::LINEAR, LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT * LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT * LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR * LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+BOOST_AUTO_TEST_CASE(linear_status_divide)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::LINEAR, LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT / LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT / LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR / LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+static const std::vector<LinearStatus> LinearStatus_ALL = {LinearStatus::LINEAR,
+                                                           LinearStatus::NON_LINEAR,
+                                                           LinearStatus::CONSTANT};
+
+BOOST_DATA_TEST_CASE(linear_status_minus, bdata::make(LinearStatus_ALL), x)
+{
+    BOOST_CHECK_EQUAL(x, -x);
+}
+
+BOOST_DATA_TEST_CASE(linear_plus_commutative,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
+{
+    BOOST_CHECK_EQUAL(x + y, y + x);
+}
+
+BOOST_DATA_TEST_CASE(linear_subtract_same_as_plus,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
+{
+    BOOST_CHECK_EQUAL(x - y, x + y);
+}
+
+BOOST_DATA_TEST_CASE(linear_multiply_commutative,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
+{
+    BOOST_CHECK_EQUAL(x * y, y * x);
+}
+
 BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 {
     LiteralNode literalNode1(10.);
@@ -407,4 +500,77 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
         // not implemented
         BOOST_CHECK(*component == *component_original);
     }
-}
+    static Node* createSimpleExpression(Registry<Node> & registry, double param)
+    {
+        Node* var1 = registry.create<LiteralNode>(param);
+        Node* param1 = registry.create<ParameterNode>("param1");
+        Node* expr = registry.create<AddNode>(var1, param1);
+        return expr;
+    }
+
+    BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, Registry<Node>)
+    {
+        CompareVisitor cmp;
+        Node* expr = createSimpleExpression(*this, 65.);
+        BOOST_CHECK(cmp.dispatch(*expr, *expr));
+    }
+
+    BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, Registry<Node>)
+    {
+        CompareVisitor cmp;
+        auto create = [this] { return createSimpleExpression(*this, 65.); };
+        Node* expr1 = create();
+        Node* expr2 = create();
+        BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+    }
+
+    BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, Registry<Node>)
+    {
+        CompareVisitor cmp;
+        Node* expr1 = createSimpleExpression(*this, 64.);
+        Node* expr2 = createSimpleExpression(*this, 65.);
+        BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+    }
+
+    static Node* createComplexExpression(Registry<Node> & registry)
+    {
+        // NOTE : this expression makes no sense, only for testing purposes
+        // NOTE2 : Some elements are re-used (e.g simple), this is valid since memory is handled
+        // separately (no double free)
+
+        Node* simple = createSimpleExpression(registry, 42.);
+        Node* neg = registry.create<NegationNode>(simple);
+        Node* mult = registry.create<MultiplicationNode>(simple, neg);
+        Node* comp = registry.create<ComponentParameterNode>("hello", "world");
+        Node* div = registry.create<DivisionNode>(mult, comp);
+        Node* div2 = registry.create<DivisionNode>(div, simple);
+        Node* add = registry.create<AddNode>(div, div2);
+        Node* sub = registry.create<SubtractionNode>(add, neg);
+        Node* cmp = registry.create<GreaterThanOrEqualNode>(sub, add);
+        Node* pf = registry.create<PortFieldNode>("port", "field");
+        Node* addf = registry.create<AddNode>(pf, cmp);
+        return addf;
+    }
+
+    BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, Registry<Node>)
+    {
+        CompareVisitor cmp;
+        Node* expr = createComplexExpression(*this);
+        BOOST_CHECK(cmp.dispatch(*expr, *expr));
+    }
+
+    BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, Registry<Node>)
+    {
+        CompareVisitor cmp;
+        Node* expr1 = createComplexExpression(*this);
+        Node* expr2 = createComplexExpression(*this);
+        BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+    }
+
+    BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, Registry<Node>)
+    {
+        CompareVisitor cmp;
+        Node* expr1 = createComplexExpression(*this);
+        Node* expr2 = create<NegationNode>(expr1);
+        BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+    }

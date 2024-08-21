@@ -28,6 +28,11 @@ ComponentNode::ComponentNode(const std::string& component_id, const std::string&
 {
 }
 
+bool ComponentNode::operator==(const ComponentNode& other) const
+{
+    return component_id_ == other.component_id_ && component_name_ == other.component_name_;
+}
+
 const std::string& ComponentNode::getComponentId() const
 {
     return component_id_;

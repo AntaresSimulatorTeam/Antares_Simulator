@@ -33,6 +33,8 @@ public:
     const std::string& getPortName() const;
     const std::string& getFieldName() const;
 
+    bool operator==(const PortFieldNode& other) const;
+
 private:
     std::string port_name_;
     std::string field_name_;
