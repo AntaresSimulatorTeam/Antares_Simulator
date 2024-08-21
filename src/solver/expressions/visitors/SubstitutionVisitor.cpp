@@ -18,28 +18,37 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+
+#include <algorithm>
+
 #include <antares/solver/expressions/nodes/ComponentNode.h>
+#include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
-namespace Antares::Solver::Nodes
+namespace Antares::Solver::Visitors
 {
-ComponentNode::ComponentNode(const std::string& component_id, const std::string& component_name):
-    component_id_(component_id),
-    component_name_(component_name)
+SubstitutionVisitor::SubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx):
+    CloneVisitor(registry),
+    ctx_(ctx),
+    registry_(registry)
 {
 }
 
-bool ComponentNode::operator==(const ComponentNode& other) const
+Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode& node)
 {
-    return component_id_ == other.component_id_ && component_name_ == other.component_name_;
-}
+    // This search has linear complexity
+    // To get a search of log complexity, we need to use std::unordered_set::find
+    // But std::unordered_set::find_if does not exist
+    auto it = std::find_if(ctx_.variables.begin(),
+                           ctx_.variables.end(),
+                           [&node](auto* x) { return *x == node; });
+    if (it != ctx_.variables.end())
+    {
+        return *it;
+    }
 
-const std::string& ComponentNode::getComponentId() const
-{
-    return component_id_;
+    else
+    {
+        return CloneVisitor::visit(node);
+    }
 }
-
-const std::string& ComponentNode::getComponentName() const
-{
-    return component_name_;
-}
-} // namespace Antares::Solver::Nodes
+} // namespace Antares::Solver::Visitors

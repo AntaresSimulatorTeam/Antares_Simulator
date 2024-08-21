@@ -18,28 +18,33 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/PortFieldNode.h>
+#pragma once
 
-namespace Antares::Solver::Nodes
-{
-PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
-    port_name_(port_name),
-    field_name_(field_name)
-{
-}
+#include <unordered_set>
 
-bool PortFieldNode::operator==(const PortFieldNode& other) const
-{
-    return port_name_ == other.port_name_ && field_name_ == other.field_name_;
-}
+#include <antares/solver/expressions/Registry.hxx>
+#include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
+#include <antares/solver/expressions/visitors/CloneVisitor.h>
 
-const std::string& PortFieldNode::getPortName() const
+namespace Antares::Solver::Visitors
 {
-    return port_name_;
-}
+struct SubstitutionContext
+{
+    std::unordered_set<Nodes::ComponentVariableNode*> variables;
+    // TODO
+    // std::vector<Nodes::ComponentParameterNode> parameters;
+};
 
-const std::string& PortFieldNode::getFieldName() const
+class SubstitutionVisitor: public CloneVisitor
 {
-    return field_name_;
-}
-} // namespace Antares::Solver::Nodes
+public:
+    SubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx);
+
+    SubstitutionContext& ctx_;
+    Registry<Nodes::Node>& registry_;
+
+private:
+    // Only override visit method for ComponentVariableNode, clone the rest
+    Nodes::Node* visit(const Nodes::ComponentVariableNode& node) override;
+};
+} // namespace Antares::Solver::Visitors

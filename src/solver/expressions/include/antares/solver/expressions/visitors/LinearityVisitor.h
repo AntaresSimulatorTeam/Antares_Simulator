@@ -20,18 +20,14 @@
 */
 #pragma once
 
+#include "antares/solver/expressions/visitors/LinearStatus.h"
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Solver::Visitors
 {
 
-class LinearStatus;
-
 class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
 {
-public:
-    using Base = Nodes::NodeVisitor<LinearStatus>;
-
 private:
     LinearStatus visit(const Nodes::AddNode& add) override;
     LinearStatus visit(const Nodes::SubtractionNode& add) override;
