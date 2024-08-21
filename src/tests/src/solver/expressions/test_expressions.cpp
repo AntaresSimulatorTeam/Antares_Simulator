@@ -369,8 +369,8 @@ static std::ostream& operator<<(std::ostream& os, TimeIndex s)
 {
     switch (s)
     {
-    case TimeIndex::CONSTANT:
-        return os << "TimeIndex::CONSTANT";
+    case TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO:
+        return os << "TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO";
     case TimeIndex::VARYING_IN_TIME_ONLY:
         return os << "TimeIndex::VARYING_IN_TIME_ONLY";
     case TimeIndex::VARYING_IN_SCENARIO_ONLY:
@@ -399,7 +399,7 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     context[&variableNode1] = TimeIndex::VARYING_IN_TIME_ONLY;
     TimeIndexVisitor timeIndexVisitor(context);
 
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode), TimeIndex::CONSTANT);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1),
                       TimeIndex::VARYING_IN_SCENARIO_ONLY);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1), TimeIndex::VARYING_IN_TIME_ONLY);
@@ -411,15 +411,15 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
 
 BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
 {
-    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT | TimeIndex::CONSTANT, TimeIndex::CONSTANT);
-    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT | TimeIndex::VARYING_IN_TIME_ONLY,
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO | TimeIndex::VARYING_IN_TIME_ONLY,
                       TimeIndex::VARYING_IN_TIME_ONLY);
-    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT | TimeIndex::VARYING_IN_SCENARIO_ONLY,
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO | TimeIndex::VARYING_IN_SCENARIO_ONLY,
                       TimeIndex::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 
-    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::CONSTANT,
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_ONLY);
     BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::VARYING_IN_TIME_ONLY,
                       TimeIndex::VARYING_IN_TIME_ONLY);
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
     BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 
-    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY | TimeIndex::CONSTANT,
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_SCENARIO_ONLY);
     BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY | TimeIndex::VARYING_IN_TIME_ONLY,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
@@ -437,7 +437,7 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
     BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 
-    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO | TimeIndex::CONSTANT,
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
     BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO | TimeIndex::VARYING_IN_TIME_ONLY,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);

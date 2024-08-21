@@ -72,7 +72,7 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode& param)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::LiteralNode& lit)
 {
-    return TimeIndex::CONSTANT;
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode& neg)
