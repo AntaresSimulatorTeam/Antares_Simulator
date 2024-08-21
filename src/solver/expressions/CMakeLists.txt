@@ -6,14 +6,13 @@ set(SRC_Expressions
         nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
-        nodes/VariableNode.cpp
-        nodes/ParameterNode.cpp
-        nodes/TimeIndex.cpp
 
         visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/EvalVisitor.cpp
+        visitors/EvaluationContext.cpp
         visitors/LinearityVisitor.cpp
+        visitors/TimeIndex.cpp
         visitors/TimeIndexVisitor.cpp
 
         include/antares/solver/expressions/nodes/AddNode.h

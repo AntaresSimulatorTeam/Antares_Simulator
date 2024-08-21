@@ -20,36 +20,34 @@
 */
 #pragma once
 
-#include "antares/solver/expressions/visitors/EvaluationContext.h"
-#include "antares/solver/expressions/visitors/ExpressionTimeType.h"
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
+#include "antares/solver/expressions/visitors/TimeIndex.h"
 
 namespace Antares::Solver::Visitors
 {
 
-class TimeIndexVisitor: public Nodes::NodeVisitor<ExpressionTimeType>
+class TimeIndexVisitor: public Nodes::NodeVisitor<TimeIndex>
 {
 public:
-    using Base = Nodes::NodeVisitor<ExpressionTimeType>;
-    TimeIndexVisitor(EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context);
+    using Base = Nodes::NodeVisitor<TimeIndex>;
+    TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
     TimeIndexVisitor() = default;
 
 private:
-    EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context_;
-    ExpressionTimeType visit(const Nodes::AddNode& add) override;
-    ExpressionTimeType visit(const Nodes::SubtractionNode& add) override;
-    ExpressionTimeType visit(const Nodes::MultiplicationNode& add) override;
-    ExpressionTimeType visit(const Nodes::DivisionNode& add) override;
-    ExpressionTimeType visit(const Nodes::EqualNode& add) override;
-    ExpressionTimeType visit(const Nodes::LessThanOrEqualNode& add) override;
-    ExpressionTimeType visit(const Nodes::GreaterThanOrEqualNode& add) override;
-    ExpressionTimeType visit(const Nodes::NegationNode& neg) override;
-    ExpressionTimeType visit(const Nodes::VariableNode& param) override;
-    ExpressionTimeType visit(const Nodes::ParameterNode& param) override;
-    ExpressionTimeType visit(const Nodes::LiteralNode& lit) override;
-    ExpressionTimeType visit(const Nodes::PortFieldNode& port_field_node) override;
-    ExpressionTimeType visit(const Nodes::ComponentVariableNode& component_variable_node) override;
-    ExpressionTimeType visit(
-      const Nodes::ComponentParameterNode& component_parameter_node) override;
+    std::unordered_map<const Nodes::Node*, TimeIndex> context_;
+    TimeIndex visit(const Nodes::AddNode& add) override;
+    TimeIndex visit(const Nodes::SubtractionNode& add) override;
+    TimeIndex visit(const Nodes::MultiplicationNode& add) override;
+    TimeIndex visit(const Nodes::DivisionNode& add) override;
+    TimeIndex visit(const Nodes::EqualNode& add) override;
+    TimeIndex visit(const Nodes::LessThanOrEqualNode& add) override;
+    TimeIndex visit(const Nodes::GreaterThanOrEqualNode& add) override;
+    TimeIndex visit(const Nodes::NegationNode& neg) override;
+    TimeIndex visit(const Nodes::VariableNode& param) override;
+    TimeIndex visit(const Nodes::ParameterNode& param) override;
+    TimeIndex visit(const Nodes::LiteralNode& lit) override;
+    TimeIndex visit(const Nodes::PortFieldNode& port_field_node) override;
+    TimeIndex visit(const Nodes::ComponentVariableNode& component_variable_node) override;
+    TimeIndex visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
 };
 } // namespace Antares::Solver::Visitors

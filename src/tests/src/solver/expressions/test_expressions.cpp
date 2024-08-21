@@ -369,24 +369,23 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     TimeIndexVisitor timeIndexVisitor;
     // LiteralNode --> constant in time and for all scenarios
     LiteralNode literalNode(65.);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode).GetTimeIndex().IsTimeVarying(), false);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode).GetTimeIndex().IsScenarioVarying(),
-                      false);
+    auto time_index_literal_node = timeIndexVisitor.dispatch(literalNode);
+    BOOST_CHECK_EQUAL(time_index_literal_node.IsTimeVarying(), false);
+    BOOST_CHECK_EQUAL(time_index_literal_node.IsScenarioVarying(), false);
     // Parameter --> constant in time and varying scenarios
     ParameterNode parameterNode1("p1", false, true);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1).GetTimeIndex().IsTimeVarying(),
-                      false);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1).GetTimeIndex().IsScenarioVarying(),
-                      true);
+    auto time_index_parameterNode1 = timeIndexVisitor.dispatch(parameterNode1);
+    BOOST_CHECK_EQUAL(time_index_parameterNode1.IsTimeVarying(), false);
+    BOOST_CHECK_EQUAL(time_index_parameterNode1.IsScenarioVarying(), true);
     // Variable time varying but constant across scenarios
     VariableNode variableNode1("v1", true, false);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1).GetTimeIndex().IsTimeVarying(),
-                      true);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1).GetTimeIndex().IsScenarioVarying(),
-                      false);
+    auto time_index_variableNode1 = timeIndexVisitor.dispatch(variableNode1);
+    BOOST_CHECK_EQUAL(time_index_variableNode1.IsTimeVarying(), true);
+    BOOST_CHECK_EQUAL(time_index_variableNode1.IsScenarioVarying(), false);
 
     // addition of parameterNode1 and variableNode1 time and scenario dependent
     Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr).GetTimeIndex().IsTimeVarying(), true);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr).GetTimeIndex().IsScenarioVarying(), true);
+    auto time_index_expr = timeIndexVisitor.dispatch(*expr);
+    BOOST_CHECK_EQUAL(time_index_expr.IsTimeVarying(), true);
+    BOOST_CHECK_EQUAL(time_index_expr.IsScenarioVarying(), true);
 }

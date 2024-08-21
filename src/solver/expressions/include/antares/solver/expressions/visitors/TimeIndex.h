@@ -19,13 +19,26 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <antares/solver/expressions/nodes/TimeIndex.h>
 
 namespace Antares::Solver::Visitors
 {
+class TimeIndex
+{
+public:
+    TimeIndex() = default;
+    TimeIndex(bool time_varying, bool scenario_varying);
+    TimeIndex(const TimeIndex& other) = default;
+    bool IsTimeVarying() const;
+    bool IsScenarioVarying() const;
+    TimeIndex Connect(const TimeIndex& other) const;
+
+private:
+    bool time_varying_ = false;
+    bool scenario_varying_ = false;
+};
 
 // better name?
-class ExpressionTimeType
+/*class ExpressionTimeType
 {
 public:
     ExpressionTimeType() = default;
@@ -96,5 +109,5 @@ public:
 
 private:
     Nodes::TimeIndex timeIndex_;
-};
+};*/
 } // namespace Antares::Solver::Visitors

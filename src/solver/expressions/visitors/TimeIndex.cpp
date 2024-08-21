@@ -18,11 +18,13 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/solver/expressions/nodes/TimeIndex.h"
 
-namespace Antares::Solver::Nodes
+#include "TimeIndex.h"
+
+#include <antares/solver/expressions/visitors/TimeIndex.h>
+
+namespace Antares::Solver::Visitors
 {
-
 TimeIndex::TimeIndex(bool time_varying, bool scenario_varying):
     time_varying_(time_varying),
     scenario_varying_(scenario_varying)
@@ -39,9 +41,10 @@ bool TimeIndex::IsScenarioVarying() const
     return scenario_varying_;
 }
 
-bool TimeIndex::operator==(const TimeIndex& other) const
+TimeIndex TimeIndex::Connect(const TimeIndex& other) const
 {
-    return (time_varying_ == other.time_varying_) && (scenario_varying_ == other.scenario_varying_);
+    bool is_time_varying = time_varying_ || other.time_varying_;
+    bool is_scenario_varying = scenario_varying_ || other.scenario_varying_;
+    return TimeIndex(is_time_varying, is_scenario_varying);
 }
-
-} // namespace Antares::Solver::Nodes
+} // namespace Antares::Solver::Visitors

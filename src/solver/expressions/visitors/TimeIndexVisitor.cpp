@@ -25,82 +25,77 @@
 namespace Antares::Solver::Visitors
 {
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::AddNode& add)
+TimeIndex TimeIndexVisitor::visit(const Nodes::AddNode& add)
 {
-    return dispatch(*add.left()) + dispatch(*add.right());
+    return dispatch(*add.left()).Connect(dispatch(*add.right()));
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::SubtractionNode& sub)
+TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode& sub)
 {
-    return dispatch(*sub.left()) - dispatch(*sub.right());
+    return dispatch(*sub.left()).Connect(dispatch(*sub.right()));
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::MultiplicationNode& mult)
+TimeIndex TimeIndexVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
-    return dispatch(*mult.left()) * dispatch(*mult.right());
+    return dispatch(*mult.left()).Connect(dispatch(*mult.right()));
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::DivisionNode& div)
+TimeIndex TimeIndexVisitor::visit(const Nodes::DivisionNode& div)
 {
-    return dispatch(*div.left()) / dispatch(*div.right());
+    return dispatch(*div.left()).Connect(dispatch(*div.right()));
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::EqualNode& equ)
+TimeIndex TimeIndexVisitor::visit(const Nodes::EqualNode& equ)
 {
     return dispatch(*equ.left()).Connect(dispatch(*equ.right()));
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
+TimeIndex TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     return dispatch(*lt.left()).Connect(dispatch(*lt.right()));
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
+TimeIndex TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     return dispatch(*gt.left()).Connect(dispatch(*gt.right()));
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::VariableNode& var)
+TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode& var)
 {
-    return {var};
+    return context_.at(&var);
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::ParameterNode& param)
+TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode& param)
 {
-    return {param};
+    return context_.at(&param);
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::LiteralNode& lit)
+TimeIndex TimeIndexVisitor::visit(const Nodes::LiteralNode& lit)
 {
-    return Nodes::TimeIndex(false, false);
+    return {false, false};
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::NegationNode& neg)
+TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode& neg)
 {
-    return -dispatch(*neg.child());
+    return dispatch(*neg.child());
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(const Nodes::PortFieldNode& port_field_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
-    // TODO must be resolved from the context
-    return Nodes::TimeIndex{false, false};
+    return context_.at(&port_field_node);
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(
-  const Nodes::ComponentVariableNode& component_variable_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
-    // TODO must be resolved
-    return context_.getVariableValue(&component_variable_node);
+    return context_.at(&component_variable_node);
 }
 
-ExpressionTimeType TimeIndexVisitor::visit(
-  const Nodes::ComponentParameterNode& component_parameter_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
-    // TODO must be resolved
-    return context_.getParameterValue(&component_parameter_node);
+    return context_.at(&component_parameter_node);
 }
 
-TimeIndexVisitor::TimeIndexVisitor(EvaluationContext<const Nodes::Node*, Nodes::TimeIndex> context):
+TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
     context_(std::move(context))
 {
 }
