@@ -25,80 +25,77 @@
 namespace Antares::Solver::Visitors
 {
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::AddNode& add)
+TimeIndex TimeIndexVisitor::visit(const Nodes::AddNode& add)
 {
     return dispatch(*add.left()) | dispatch(*add.right());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::SubtractionNode& sub)
+TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode& sub)
 {
     return dispatch(*sub.left()) | dispatch(*sub.right());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::MultiplicationNode& mult)
+TimeIndex TimeIndexVisitor::visit(const Nodes::MultiplicationNode& mult)
 {
     return dispatch(*mult.left()) | dispatch(*mult.right());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::DivisionNode& div)
+TimeIndex TimeIndexVisitor::visit(const Nodes::DivisionNode& div)
 {
     return dispatch(*div.left()) | dispatch(*div.right());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::EqualNode& equ)
+TimeIndex TimeIndexVisitor::visit(const Nodes::EqualNode& equ)
 {
     return dispatch(*equ.left()) | dispatch(*equ.right());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
+TimeIndex TimeIndexVisitor::visit(const Nodes::LessThanOrEqualNode& lt)
 {
     return dispatch(*lt.left()) | dispatch(*lt.right());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
+TimeIndex TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode& gt)
 {
     return dispatch(*gt.left()) | dispatch(*gt.right());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::VariableNode& var)
+TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode& var)
 {
     return context_.at(&var);
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::ParameterNode& param)
+TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode& param)
 {
     return context_.at(&param);
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::LiteralNode& lit)
+TimeIndex TimeIndexVisitor::visit(const Nodes::LiteralNode& lit)
 {
-    return TIME_STRUCTURE_TYPE::CONSTANT;
+    return TimeIndex::CONSTANT;
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::NegationNode& neg)
+TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode& neg)
 {
     return dispatch(*neg.child());
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(const Nodes::PortFieldNode& port_field_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode& port_field_node)
 {
     return context_.at(&port_field_node);
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(
-  const Nodes::ComponentVariableNode& component_variable_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
 {
     return context_.at(&component_variable_node);
 }
 
-TIME_STRUCTURE_TYPE TimeIndexVisitor::visit(
-  const Nodes::ComponentParameterNode& component_parameter_node)
+TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode& component_parameter_node)
 {
     return context_.at(&component_parameter_node);
 }
 
-TimeIndexVisitor::TimeIndexVisitor(
-  std::unordered_map<const Nodes::Node*, TIME_STRUCTURE_TYPE> context):
+TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context):
     context_(std::move(context))
 {
 }

@@ -43,7 +43,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/NodeVisitor.h
         include/antares/solver/expressions/visitors/PrintVisitor.h
         include/antares/solver/expressions/visitors/TimeIndexVisitor.h
-        include/antares/solver/expressions/visitors/TimeStructure.h
+        include/antares/solver/expressions/visitors/TimeIndex.h
 
         include/antares/solver/expressions/Registry.hxx
 )
