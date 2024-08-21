@@ -69,7 +69,9 @@ class SimulationInfoCollector
 {
 public:
     SimulationInfoCollector(const OptimizationInfo& optInfo):
-        opt_info_(optInfo){};
+        opt_info_(optInfo)
+    {
+    }
 
     void toFileContent(FileContent& file_content);
 
