@@ -33,15 +33,14 @@ SubstitutionVisitor::SubstitutionVisitor(Registry<Nodes::Node>& registry, Substi
 {
 }
 
-Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode& component_variable_node)
+Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode& node)
 {
     // This search has linear complexity
     // To get a search of log complexity, we need to use std::unordered_set::find
     // But std::unordered_set::find_if does not exist
     auto it = std::find_if(ctx_.variables.begin(),
                            ctx_.variables.end(),
-                           [&component_variable_node](auto* x)
-                           { return *x == component_variable_node; });
+                           [&node](auto* x) { return *x == node; });
     if (it != ctx_.variables.end())
     {
         return *it;
@@ -49,7 +48,7 @@ Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode& comp
 
     else
     {
-        return CloneVisitor::visit(component_variable_node);
+        return CloneVisitor::visit(node);
     }
 }
 } // namespace Antares::Solver::Visitors
