@@ -4,6 +4,7 @@ add_executable(${EXECUTABLE_NAME})
 target_sources(${EXECUTABLE_NAME}
         PRIVATE
         test_expressions.cpp
+	literal.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
