@@ -38,7 +38,7 @@ void DurationCollector::toFileContent(FileContent& file_content)
     {
         const int64_t duration_sum = accumulate(durations.begin(),
                                                 durations.end(),
-                                                static_cast<uint64_t>(0));
+                                                static_cast<int64_t>(0));
 
         file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
     }
@@ -69,7 +69,7 @@ int64_t DurationCollector::getTime(const std::string& name) const
 {
     const auto& v = duration_items_.at(name);
 
-    return accumulate(v.begin(), v.end(), static_cast<uint64_t>(0));
+    return accumulate(v.begin(), v.end(), static_cast<int64_t>(0));
 }
 
 } // namespace Benchmarking
