@@ -31,11 +31,11 @@ class WeeklyOptimization
 {
 public:
     WeeklyOptimization(const OptimizationOptions& options,
-                              PROBLEME_HEBDO* problemeHebdo,
-                              Antares::Data::AdequacyPatch::AdqPatchParams&,
-                              uint numSpace,
-                              IResultWriter& writer,
-                              Simulation::ISimulationObserver& simulationObserver);
+                       PROBLEME_HEBDO* problemeHebdo,
+                       Antares::Data::AdequacyPatch::AdqPatchParams&,
+                       uint numSpace,
+                       IResultWriter& writer,
+                       Simulation::ISimulationObserver& simulationObserver);
     ~WeeklyOptimization() = default;
     void solve();
 
