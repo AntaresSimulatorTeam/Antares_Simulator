@@ -9,8 +9,9 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "parser.h"
-#include <iostream>
+
 #include <cassert>
+#include <iostream>
 
 // The standard error output is not displayed on Windows
 #ifndef YUNI_OS_WINDOWS
@@ -75,7 +76,7 @@ public:
     /*!
     ** \brief parse the command line
     */
-    GetOpt::ReturnCode operator()(int argc, char* argv[]);
+    GetOpt::ReturnCode operator()(int argc, const char* argv[]);
 
 private:
     //! An option has not been found
@@ -83,7 +84,7 @@ private:
     //! A additional parameter is missing for an option
     void parameterIsMissing(const char* name);
     //! Find the additional parameter and add it to the option
-    bool findNextParameter(IOption* option, int argc, char* argv[]);
+    bool findNextParameter(IOption* option, int argc, const char* argv[]);
 
 private:
     //! The public class for the parser, where all options are stored
@@ -111,12 +112,15 @@ inline Context::TokenType Context::GetTokenType(const char* argv)
 #endif
 }
 
-inline Context::Context(Parser& parser) : pParser(parser), pTokenIndex(1), pParameterIndex(1)
+inline Context::Context(Parser& parser):
+    pParser(parser),
+    pTokenIndex(1),
+    pParameterIndex(1)
 {
     pParser.pErrors = 0;
 }
 
-bool Context::findNextParameter(IOption* option, int argc, char* argv[])
+bool Context::findNextParameter(IOption* option, int argc, const char* argv[])
 {
     assert(option);
 
@@ -160,7 +164,7 @@ void Context::parameterIsMissing(const char* name)
     STD_CERR << "Error: The parameter for `" << name << "` is missing" << std::endl;
 }
 
-GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
+GetOpt::ReturnCode Context::operator()(int argc, const char* argv[])
 {
     using namespace GetOpt;
     while (pTokenIndex < argc)
@@ -178,8 +182,10 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
                 if (i != pParser.pShortNames.end())
                 {
                     if (not findNextParameter(i->second, argc, argv))
+                    {
                         std::cerr << "Error: The parameter is missing for `" << arg << "`"
                                   << std::endl;
+                    }
                 }
                 else
                 {
@@ -200,7 +206,9 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
             ++arg;
             ++arg;
             if ('\0' == *arg) // End of options
+            {
                 return (0 == pParser.pErrors) ? ReturnCode::ok : ReturnCode::error;
+            }
 
             if ((sub = strchr(arg, '=')))
             {
@@ -239,7 +247,9 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
                 if (i != pParser.pLongNames.end())
                 {
                     if (not findNextParameter(i->second, argc, argv))
+                    {
                         parameterIsMissing(arg);
+                    }
                 }
                 else
                 {
@@ -261,7 +271,9 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
             {
                 pParameterIndex = pTokenIndex;
                 if (pParser.pRemains)
+                {
                     pParser.pRemains->addValue(arg, static_cast<String::size_type>(::strlen(arg)));
+                }
             }
             break;
         }
@@ -295,7 +307,10 @@ static const char* ExtractFilenameOnly(const char* argv)
     return result;
 }
 
-Parser::Parser() : pRemains(nullptr), pErrors(0), pIgnoreUnknownArgs(false)
+Parser::Parser():
+    pRemains(nullptr),
+    pErrors(0),
+    pIgnoreUnknownArgs(false)
 {
 }
 
@@ -305,7 +320,9 @@ Parser::~Parser()
     {
         OptionList::iterator end = pAllOptions.end();
         for (OptionList::iterator i = pAllOptions.begin(); i != end; ++i)
+        {
             delete *i;
+        }
     }
 
     delete pRemains;
@@ -317,7 +334,9 @@ void Parser::clear()
     {
         OptionList::iterator end = pAllOptions.end();
         for (OptionList::iterator i = pAllOptions.begin(); i != end; ++i)
+        {
             delete *i;
+        }
 
         // clear-and-minimize idiom
         OptionsOrderedByShortName emptyShort;
@@ -335,7 +354,7 @@ void Parser::clear()
     pRemains = nullptr;
 }
 
-GetOpt::ReturnCode Parser::operator()(int argc, char* argv[])
+GetOpt::ReturnCode Parser::operator()(int argc, const char* argv[])
 {
     Private::GetOptImpl::Context context(*this);
     return context(argc, argv);
@@ -350,9 +369,13 @@ void Parser::helpUsage(const char* argv0)
     std::cout.write(" [OPTION]...", 12);
 
     if (pRemains)
+    {
         std::cout.write(" [FILE]...\n", 11);
+    }
     else
+    {
         std::cout << '\n';
+    }
 
     if (not pAllOptions.empty())
     {
@@ -362,21 +385,33 @@ void Parser::helpUsage(const char* argv0)
         // Add a space if the first option is not a paragraph
         // In this case the user would do what he wants
         if (not dynamic_cast<const Private::GetOptImpl::Paragraph*>(*i))
+        {
             std::cout << '\n';
+        }
 
         for (; i != end; ++i)
+        {
             (*i)->helpUsage(std::cout);
+        }
     }
 
     // Help
     if (pLongNames.end() == pLongNames.find("help"))
     {
         if (pShortNames.end() == pShortNames.find('h'))
-            Private::GetOptImpl::DisplayHelpForOption(
-              std::cout, 'h', "help", "Display this help and exit");
+        {
+            Private::GetOptImpl::DisplayHelpForOption(std::cout,
+                                                      'h',
+                                                      "help",
+                                                      "Display this help and exit");
+        }
         else
-            Private::GetOptImpl::DisplayHelpForOption(
-              std::cout, ' ', "help", "Display this help and exit");
+        {
+            Private::GetOptImpl::DisplayHelpForOption(std::cout,
+                                                      ' ',
+                                                      "help",
+                                                      "Display this help and exit");
+        }
     }
 
     std::cout << std::endl; // flush
@@ -388,7 +423,9 @@ void Parser::appendShortOption(IOption* option, char shortname)
     pAllOptions.push_back(option);
     // The short name
     if (shortname != ' ' and shortname != '\0')
+    {
         pShortNames[shortname] = option;
+    }
 }
 
 void Parser::appendOption(IOption* option, char shortname)
@@ -403,7 +440,9 @@ void Parser::appendOption(IOption* option, char shortname)
                and "The long name of an option must be igreater than 1 (ambigous on Windows)");
 #else
         if (longname.size() == 1) // ambigous on Windows, must not continue
+        {
             return;
+        }
 #endif
 
         pLongNames[longname.c_str()] = option;
@@ -414,7 +453,9 @@ void Parser::appendOption(IOption* option, char shortname)
 
     // The short name
     if (shortname != ' ' and shortname != '\0')
+    {
         pShortNames[shortname] = option;
+    }
 }
 
 } // namespace GetOpt

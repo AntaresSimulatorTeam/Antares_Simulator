@@ -313,7 +313,7 @@ void Application::postParametersChecks() const
     checkCO2CostColumnNumber(pStudy->areas);
 }
 
-void Application::prepare(int argc, char* argv[])
+void Application::prepare(int argc, const char* argv[])
 {
     pArgc = argc;
     pArgv = argv;
