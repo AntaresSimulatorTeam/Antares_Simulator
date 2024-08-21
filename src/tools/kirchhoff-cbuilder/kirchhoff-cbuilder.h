@@ -24,7 +24,7 @@
 
 static void NotEnoughMemory();
 
-bool initResources(int argc, char* argv[]);
+bool initResources(int argc, const char* argv[]);
 bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath);
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
                              const std::string& studyPath,

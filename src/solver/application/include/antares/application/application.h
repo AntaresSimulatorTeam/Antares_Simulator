@@ -56,7 +56,7 @@ public:
     **
     ** \return False if the operation failed.
     */
-    void prepare(int argc, char* argv[]);
+    void prepare(int argc, const char* argv[]);
 
     /*!
     ** \brief Execute the simulation
@@ -109,7 +109,7 @@ private:
     uint pWarningCount = 0;
 
     int pArgc = 0;
-    char** pArgv = nullptr;
+    const char** pArgv = nullptr;
 
     // Benchmarking
     Benchmarking::Timer pTotalTimer;
