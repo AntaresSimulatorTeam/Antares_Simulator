@@ -19,6 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <algorithm>
+
 #include <antares/solver/expressions/nodes/ComponentNode.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
@@ -35,7 +37,7 @@ Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode& comp
 {
     auto it = std::find_if(ctx_.variables.begin(),
                            ctx_.variables.end(),
-                           [&component_variable_node](Nodes::ComponentVariableNode* x)
+                           [&component_variable_node](auto* x)
                            { return *x == component_variable_node; });
     if (it != ctx_.variables.end())
     {

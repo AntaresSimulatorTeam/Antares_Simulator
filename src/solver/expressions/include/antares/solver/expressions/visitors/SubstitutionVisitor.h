@@ -20,6 +20,8 @@
 */
 #pragma once
 
+#include <set>
+
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
@@ -28,7 +30,7 @@ namespace Antares::Solver::Visitors
 {
 struct SubstitutionContext
 {
-    std::vector<Nodes::ComponentVariableNode*> variables;
+    std::set<Nodes::ComponentVariableNode*> variables;
     // TODO
     // std::vector<Nodes::ComponentParameterNode> parameters;
 };
