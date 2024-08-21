@@ -36,7 +36,7 @@ void DurationCollector::toFileContent(FileContent& file_content)
 {
     for (const auto& [name, durations]: duration_items_)
     {
-        const int64_t duration_sum = accumulate(durations.begin(), durations.end(), 0);
+        const int64_t duration_sum = accumulate(durations.begin(), durations.end(), (int64_t)0);
 
         file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
     }

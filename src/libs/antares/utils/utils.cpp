@@ -147,7 +147,7 @@ bool isZero(double d)
 
 double round(double d, unsigned precision)
 {
-    unsigned factor = std::pow(10, precision);
+    double factor = std::pow(10, precision);
     return std::round(d * factor) / factor;
 }
 
