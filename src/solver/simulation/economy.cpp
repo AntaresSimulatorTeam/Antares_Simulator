@@ -82,7 +82,7 @@ bool Economy::simulationBegin()
                                             numSpace);
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] = std::make_unique<Optimization::DefaultWeeklyOptimization>
+            weeklyOptProblems_[numSpace] = std::make_unique<Optimization::WeeklyOptimization>
                      (options,
                      &pProblemesHebdo[numSpace],
                      study.parameters.adqPatchParams,

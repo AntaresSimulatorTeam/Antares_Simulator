@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::Optimization
 {
-DefaultWeeklyOptimization::DefaultWeeklyOptimization(
+WeeklyOptimization::WeeklyOptimization(
   const OptimizationOptions& options,
   PROBLEME_HEBDO* problemeHebdo,
   AdqPatchParams& adqPatchParams,
@@ -41,7 +41,7 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(
 {
 }
 
-void DefaultWeeklyOptimization::solve()
+void WeeklyOptimization::solve()
 {
     OPT_OptimisationHebdomadaire(options_,
                                  problemeHebdo_,

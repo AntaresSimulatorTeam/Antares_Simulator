@@ -27,16 +27,16 @@
 namespace Antares::Solver::Optimization
 {
 
-class DefaultWeeklyOptimization
+class WeeklyOptimization
 {
 public:
-    DefaultWeeklyOptimization(const OptimizationOptions& options,
+    WeeklyOptimization(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Antares::Data::AdequacyPatch::AdqPatchParams&,
                               uint numSpace,
                               IResultWriter& writer,
                               Simulation::ISimulationObserver& simulationObserver);
-    ~DefaultWeeklyOptimization() = default;
+    ~WeeklyOptimization() = default;
     void solve();
 
     Antares::Solver::Optimization::OptimizationOptions options_;
