@@ -20,12 +20,11 @@
 */
 #pragma once
 
+#include "antares/solver/expressions/visitors/LinearStatus.h"
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Solver::Visitors
 {
-
-class LinearStatus;
 
 class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
 {

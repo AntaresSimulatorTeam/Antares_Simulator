@@ -20,121 +20,112 @@
 */
 #pragma once
 
+#include <ostream>
+
 namespace Antares::Solver::Visitors
 {
 
-class LinearStatus
+enum class LinearStatus : char
 {
-public:
-    enum Status
-    {
-        CONSTANT,
-        LINEAR,
-        NON_LINEAR
-    };
-
-    constexpr LinearStatus() = default;
-
-    constexpr LinearStatus(const Status& status):
-        status_(status)
-    {
-    }
-
-    constexpr LinearStatus(const LinearStatus& other) = default;
-
-    constexpr LinearStatus operator*(const LinearStatus& other)
-    {
-        switch (other)
-        {
-        case LinearStatus::NON_LINEAR:
-            return LinearStatus::NON_LINEAR;
-        case LinearStatus::CONSTANT:
-            return *this;
-        case LinearStatus::LINEAR:
-            if (status_ == LinearStatus::CONSTANT)
-            {
-                return other;
-            }
-            else
-            {
-                return LinearStatus::NON_LINEAR;
-            }
-        default:
-            return LinearStatus::NON_LINEAR;
-        }
-    }
-
-    constexpr LinearStatus operator/(const LinearStatus& other)
-    {
-        switch (other)
-        {
-        case LinearStatus::NON_LINEAR:
-        case LinearStatus::LINEAR:
-            return LinearStatus::NON_LINEAR;
-        case LinearStatus::CONSTANT:
-            return *this;
-        default:
-            return LinearStatus::NON_LINEAR;
-        }
-    }
-
-    constexpr LinearStatus operator+(const LinearStatus& other)
-    {
-        switch (other)
-        {
-        case LinearStatus::NON_LINEAR:
-            return LinearStatus::NON_LINEAR;
-        case LinearStatus::CONSTANT:
-            return *this;
-        case LinearStatus::LINEAR:
-            if (other == LinearStatus::CONSTANT || other == LinearStatus::LINEAR)
-            {
-                return other;
-            }
-            else
-            {
-                return LinearStatus::NON_LINEAR;
-            }
-        default:
-            return LinearStatus::NON_LINEAR;
-        }
-    }
-
-    constexpr LinearStatus operator-(const LinearStatus& other)
-    {
-        return operator+(other);
-    }
-
-    // Conversions
-    constexpr explicit operator bool() const = delete;
-
-    constexpr operator Status() const
-    {
-        return status_;
-    }
-
-    // Comparisons
-    constexpr bool operator==(LinearStatus a) const
-    {
-        return status_ == a.status_;
-    }
-
-    constexpr bool operator==(Status status) const
-    {
-        return status_ == status;
-    }
-
-    constexpr bool operator!=(LinearStatus a) const
-    {
-        return status_ != a.status_;
-    }
-
-    constexpr LinearStatus operator-() const
-    {
-        return *this;
-    }
-
-private:
-    Status status_;
+    CONSTANT = 0,
+    LINEAR = 1,
+    NON_LINEAR = 2
 };
+
+constexpr char pair(LinearStatus a, LinearStatus b)
+{
+    return static_cast<char>(a) << 4 | static_cast<char>(b);
+}
+
+constexpr LinearStatus operator*(LinearStatus a, LinearStatus b)
+{
+    switch (pair(a, b))
+    {
+    case pair(LinearStatus::CONSTANT, LinearStatus::CONSTANT):
+        return LinearStatus::CONSTANT;
+    case pair(LinearStatus::CONSTANT, LinearStatus::LINEAR):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::CONSTANT, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::LINEAR, LinearStatus::CONSTANT):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::CONSTANT):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    default:
+        return LinearStatus::NON_LINEAR;
+    }
+}
+
+constexpr LinearStatus operator/(LinearStatus a, LinearStatus b)
+{
+    switch (pair(a, b))
+    {
+    case pair(LinearStatus::CONSTANT, LinearStatus::CONSTANT):
+        return LinearStatus::CONSTANT;
+    case pair(LinearStatus::CONSTANT, LinearStatus::LINEAR):
+        return LinearStatus::NON_LINEAR;
+    case pair(LinearStatus::CONSTANT, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::LINEAR, LinearStatus::CONSTANT):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::CONSTANT):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    default:
+        return LinearStatus::NON_LINEAR;
+    }
+}
+
+constexpr LinearStatus operator+(LinearStatus a, LinearStatus b)
+{
+    switch (pair(a, b))
+    {
+    case pair(LinearStatus::CONSTANT, LinearStatus::CONSTANT):
+        return LinearStatus::CONSTANT;
+    case pair(LinearStatus::CONSTANT, LinearStatus::LINEAR):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::CONSTANT, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::LINEAR, LinearStatus::CONSTANT):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::LINEAR):
+        return LinearStatus::LINEAR;
+    case pair(LinearStatus::LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::CONSTANT):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::LINEAR):
+    case pair(LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR):
+        return LinearStatus::NON_LINEAR;
+
+    default:
+        return LinearStatus::NON_LINEAR;
+    }
+}
+
+constexpr LinearStatus operator-(LinearStatus a, LinearStatus b)
+{
+    return operator+(a, b);
+}
+
+constexpr LinearStatus operator-(LinearStatus a)
+{
+    return a;
+}
 } // namespace Antares::Solver::Visitors

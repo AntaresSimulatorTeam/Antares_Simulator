@@ -22,6 +22,7 @@
 #define BOOST_TEST_MODULE test_translator
 #define WIN32_LEAN_AND_MEAN
 
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
@@ -36,6 +37,27 @@
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
+
+namespace bdata = boost::unit_test::data;
+
+// Only necessary for BOOST_CHECK_EQUAL
+namespace Antares::Solver::Visitors
+{
+static std::ostream& operator<<(std::ostream& os, LinearStatus s)
+{
+    switch (s)
+    {
+    case LinearStatus::CONSTANT:
+        return os << "LinearStatus::CONSTANT";
+    case LinearStatus::LINEAR:
+        return os << "LinearStatus::LINEAR";
+    case LinearStatus::NON_LINEAR:
+        return os << "LinearStatus::NON_LINEAR";
+    default:
+        return os << "<unknown>";
+    }
+}
+} // namespace Antares::Solver::Visitors
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
 {
@@ -259,6 +281,78 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     GreaterThanOrEqualNode gt(&sub1, &sub2);
     printed = printVisitor.dispatch(gt);
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
+}
+
+BOOST_AUTO_TEST_CASE(linear_status_plus)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::LINEAR, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR + LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT + LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT + LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR + LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+BOOST_AUTO_TEST_CASE(linear_status_mult)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::LINEAR, LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR * LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT * LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT * LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR * LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+BOOST_AUTO_TEST_CASE(linear_status_divide)
+{
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::LINEAR, LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::CONSTANT, LinearStatus::LINEAR);
+    BOOST_CHECK_EQUAL(LinearStatus::LINEAR / LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT / LinearStatus::CONSTANT, LinearStatus::CONSTANT);
+    BOOST_CHECK_EQUAL(LinearStatus::CONSTANT / LinearStatus::NON_LINEAR, LinearStatus::NON_LINEAR);
+
+    BOOST_CHECK_EQUAL(LinearStatus::NON_LINEAR / LinearStatus::NON_LINEAR,
+                      LinearStatus::NON_LINEAR);
+}
+
+static const std::vector<LinearStatus> LinearStatus_ALL = {LinearStatus::LINEAR,
+                                                           LinearStatus::NON_LINEAR,
+                                                           LinearStatus::CONSTANT};
+
+BOOST_DATA_TEST_CASE(linear_status_minus, bdata::make(LinearStatus_ALL), x)
+{
+    BOOST_CHECK_EQUAL(x, -x);
+}
+
+BOOST_DATA_TEST_CASE(linear_plus_commutative,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
+{
+    BOOST_CHECK_EQUAL(x + y, y + x);
+}
+
+BOOST_DATA_TEST_CASE(linear_subtract_same_as_plus,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
+{
+    BOOST_CHECK_EQUAL(x - y, x + y);
+}
+
+BOOST_DATA_TEST_CASE(linear_multiply_commutative,
+                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     x,
+                     y)
+{
+    BOOST_CHECK_EQUAL(x * y, y * x);
 }
 
 BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
