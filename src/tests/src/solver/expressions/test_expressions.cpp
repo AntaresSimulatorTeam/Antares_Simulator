@@ -549,6 +549,7 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
     BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO
                         | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+}
 static Node* createSimpleExpression(Registry<Node>& registry, double param)
 {
     Node* var1 = registry.create<LiteralNode>(param);
