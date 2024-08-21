@@ -7,12 +7,13 @@ set(SRC_Expressions
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
 
-        visitors/PrintVisitor.cpp
         visitors/CloneVisitor.cpp
-        visitors/EvalVisitor.cpp
-        visitors/LinearityVisitor.cpp
-        visitors/EvaluationContext.cpp
         visitors/CompareVisitor.cpp
+        visitors/EvalVisitor.cpp
+        visitors/EvaluationContext.cpp
+        visitors/LinearityVisitor.cpp
+        visitors/PrintVisitor.cpp
+        visitors/SubstitutionVisitor.cpp
 
         include/antares/solver/expressions/nodes/AddNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
@@ -43,6 +44,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/LinearityVisitor.h
         include/antares/solver/expressions/visitors/NodeVisitor.h
         include/antares/solver/expressions/visitors/PrintVisitor.h
+        include/antares/solver/expressions/visitors/SubstitutionVisitor.h
 
         include/antares/solver/expressions/Registry.hxx
 )

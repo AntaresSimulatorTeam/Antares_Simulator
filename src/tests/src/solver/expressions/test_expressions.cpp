@@ -33,6 +33,7 @@
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
+#include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -530,4 +531,49 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, Registry<Node>)
     Node* expr1 = createComplexExpression(*this);
     Node* expr2 = create<NegationNode>(expr1);
     BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+}
+
+std::pair<Nodes::ComponentVariableNode*, Nodes::ComponentVariableNode*> fillContext(
+  SubstitutionContext& ctx,
+  Registry<Node>& registry)
+{
+    auto add = [&ctx, &registry](const std::string& component, const std::string& variable)
+    {
+        auto in = dynamic_cast<Nodes::ComponentVariableNode*>(
+          registry.create<ComponentVariableNode>(component, variable));
+        ctx.variables.insert(in);
+        return in;
+    };
+    return {add("component1", "variable1"), add("component2", "variable1")};
+}
+
+BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
+{
+    SubstitutionContext ctx;
+    auto variables = fillContext(ctx, *this);
+
+    ComponentVariableNode* component_original = dynamic_cast<ComponentVariableNode*>(
+      create<ComponentVariableNode>("component1", "notInThere"));
+
+    Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
+                                 component_original);
+    SubstitutionVisitor sub(*this, ctx);
+    Node* subsd = sub.dispatch(*root);
+
+    // The root of the new tree should be different
+    BOOST_CHECK_NE(root, subsd);
+
+    // We expect to find a substituted node on the left
+    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->left(), variables.first);
+
+    // We expect to find an original node on the right
+    auto* right_substituted = dynamic_cast<AddNode*>(subsd)->right();
+    BOOST_CHECK_NE(right_substituted, variables.first);
+    BOOST_CHECK_NE(right_substituted, variables.second);
+
+    auto* component = dynamic_cast<ComponentVariableNode*>(right_substituted);
+    BOOST_REQUIRE(component);
+    // We don't use BOOST_CHECK_EQUAL because operator<<(..., const ComponentVariableNode&) is
+    // not implemented
+    BOOST_CHECK(*component == *component_original);
 }
