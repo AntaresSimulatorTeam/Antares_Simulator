@@ -22,7 +22,7 @@
 
 namespace Antares::Solver::Visitors
 {
-enum class TimeIndex : int
+enum class TimeIndex : unsigned int
 {
     CONSTANT = 0,
     VARYING_IN_TIME_ONLY = 1,
