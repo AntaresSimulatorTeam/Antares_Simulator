@@ -38,8 +38,6 @@ set(RTESOLVER_OPT
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
-		include/antares/solver/optimisation/base_weekly_optimization.h
-        base_weekly_optimization.cpp
 		include/antares/solver/optimisation/weekly_optimization.h
         weekly_optimization.cpp
 		include/antares/solver/optimisation/optim_post_process_list.h
