@@ -47,19 +47,19 @@ LinearStatus LinearityVisitor::visit(const Nodes::DivisionNode& node)
     return dispatch(*node.left()) / dispatch(*node.right());
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::EqualNode&)
+LinearStatus LinearityVisitor::visit(const Nodes::EqualNode& node)
 {
-    return LinearStatus::NON_LINEAR;
+    return dispatch(*node.left()) + dispatch(*node.right());
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::LessThanOrEqualNode&)
+LinearStatus LinearityVisitor::visit(const Nodes::LessThanOrEqualNode& node)
 {
-    return LinearStatus::NON_LINEAR;
+    return dispatch(*node.left()) + dispatch(*node.right());
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::GreaterThanOrEqualNode&)
+LinearStatus LinearityVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
 {
-    return LinearStatus::NON_LINEAR;
+    return dispatch(*node.left()) + dispatch(*node.right());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::VariableNode&)
