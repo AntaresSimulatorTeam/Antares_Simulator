@@ -229,7 +229,8 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          = state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
