@@ -266,7 +266,7 @@ BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::NON_LINEAR);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_not_linear, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_linear, Registry<Node>)
 {
     PrintVisitor printVisitor;
     LinearityVisitor linearVisitor;
@@ -277,15 +277,15 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_not_linear, Registry<Node>)
     // x==y
     Node* eq = create<EqualNode>(&var1, &var2);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*eq), "x==y");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::LINEAR);
     // x<=y
     Node* lt = create<LessThanOrEqualNode>(&var1, &var2);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*lt), "x<=y");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::LINEAR);
     // x>=y
     Node* gt = create<GreaterThanOrEqualNode>(&var1, &var2);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*gt), "x>=y");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::NON_LINEAR);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::LINEAR);
 }
 
 BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
