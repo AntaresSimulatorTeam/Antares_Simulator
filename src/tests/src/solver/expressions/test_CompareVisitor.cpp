@@ -26,6 +26,7 @@
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/CloneVisitor.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
@@ -94,6 +95,15 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, Registry<Node>)
     CompareVisitor cmp;
     Node* expr = createComplexExpression(*this);
     BOOST_CHECK(cmp.dispatch(*expr, *expr));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_clone_complex, Registry<Node>)
+{
+    CompareVisitor cmp;
+    Node* expr = createComplexExpression(*this);
+    CloneVisitor cloneVisitor(*this);
+    Node* expr_cloned = cloneVisitor.dispatch(*expr);
+    BOOST_CHECK(cmp.dispatch(*expr, *expr_cloned));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, Registry<Node>)
