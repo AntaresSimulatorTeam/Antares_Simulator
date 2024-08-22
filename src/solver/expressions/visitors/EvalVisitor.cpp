@@ -104,6 +104,6 @@ double EvalVisitor::visit(const Nodes::ComponentVariableNode& node)
 
 double EvalVisitor::visit(const Nodes::ComponentParameterNode& node)
 {
-    throw EvalVisitorNotImplemented("Can not Evaluate Component Parameter ");
+    throw EvalVisitorNotImplemented("Can not Evaluate Component Parameter Node");
 }
 } // namespace Antares::Solver::Visitors

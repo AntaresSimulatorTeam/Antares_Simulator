@@ -84,7 +84,6 @@ LinearStatus LinearityVisitor::visit(const Nodes::NegationNode& node)
 
 LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode&)
 {
-    // TODO
     return LinearStatus::CONSTANT;
 }
 

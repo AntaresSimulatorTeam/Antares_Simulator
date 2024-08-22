@@ -250,4 +250,5 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, Registry<Node>)
         BOOST_CHECK_THROW(evalVisitor.dispatch(*node), EvalVisitorNotImplemented);
     }
 }
+
 BOOST_AUTO_TEST_SUITE_END()
