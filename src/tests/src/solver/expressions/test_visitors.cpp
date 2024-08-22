@@ -32,6 +32,7 @@
 #include <antares/solver/expressions/visitors/LinearityVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/TimeIndexVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -262,6 +263,98 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
 }
 BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE(_CompareVisitor_)
+
+namespace Antares::Solver::Visitors
+{
+static std::ostream& operator<<(std::ostream& os, TimeIndex s)
+{
+    switch (s)
+    {
+    case TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO:
+        return os << "TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO";
+    case TimeIndex::VARYING_IN_TIME_ONLY:
+        return os << "TimeIndex::VARYING_IN_TIME_ONLY";
+    case TimeIndex::VARYING_IN_SCENARIO_ONLY:
+        return os << "TimeIndex::VARYING_IN_SCENARIO_ONLY";
+    case TimeIndex::VARYING_IN_TIME_AND_SCENARIO:
+        return os << "TimeIndex::VARYING_IN_TIME_AND_SCENARIO";
+    default:
+        return os << "<unknown>";
+    }
+}
+} // namespace Antares::Solver::Visitors
+
+BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    std::unordered_map<const Node*, TimeIndex> context;
+    // LiteralNode --> constant in time and for all scenarios
+    LiteralNode literalNode(65.);
+
+    // Parameter --> constant in time and varying scenarios
+    ParameterNode parameterNode1("p1");
+    context[&parameterNode1] = TimeIndex::VARYING_IN_SCENARIO_ONLY;
+
+    // Variable time varying but constant across scenarios
+    VariableNode variableNode1("v1");
+    context[&variableNode1] = TimeIndex::VARYING_IN_TIME_ONLY;
+    TimeIndexVisitor timeIndexVisitor(context);
+
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode),
+                      TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1),
+                      TimeIndex::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1), TimeIndex::VARYING_IN_TIME_ONLY);
+
+    // addition of parameterNode1 and variableNode1 is time and scenario dependent
+    Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr), TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
+{
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+                        | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                      TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO | TimeIndex::VARYING_IN_TIME_ONLY,
+                      TimeIndex::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+                        | TimeIndex::VARYING_IN_SCENARIO_ONLY,
+                      TimeIndex::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO
+                        | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                      TimeIndex::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::VARYING_IN_TIME_ONLY,
+                      TimeIndex::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::VARYING_IN_SCENARIO_ONLY,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_ONLY | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY
+                        | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                      TimeIndex::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY | TimeIndex::VARYING_IN_TIME_ONLY,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY | TimeIndex::VARYING_IN_SCENARIO_ONLY,
+                      TimeIndex::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_SCENARIO_ONLY | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO
+                        | TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO | TimeIndex::VARYING_IN_TIME_ONLY,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO | TimeIndex::VARYING_IN_SCENARIO_ONLY,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(TimeIndex::VARYING_IN_TIME_AND_SCENARIO
+                        | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
+                      TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+}
 
 static Node* createSimpleExpression(Registry<Node>& registry, double param)
 {
