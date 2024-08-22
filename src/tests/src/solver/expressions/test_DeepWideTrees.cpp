@@ -61,7 +61,7 @@ BOOST_FIXTURE_TEST_CASE(deep_tree_odd, Registry<Node>)
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(*node), -42.);
 }
 
-static Node* deepAddTree(Registry<Node>& registry, AddNode** root, size_t depth, size_t depth_max)
+static Node* deepAddTree(Registry<Node>& registry, AddNode* root, size_t depth, size_t depth_max)
 {
     if (depth < depth_max)
     {
@@ -79,7 +79,7 @@ BOOST_FIXTURE_TEST_CASE(binary_tree, Registry<Node>)
 {
     // AddNode's children are not mutable, so we'll replace this empty root with an actual one
     AddNode* root = dynamic_cast<AddNode*>(create<AddNode>(nullptr, nullptr));
-    Node* node = deepAddTree(*this, &root, 0, 10);
+    Node* node = deepAddTree(*this, root, 0, 10);
     EvalVisitor evalVisitor;
     // We expect 1024 = 2^10 literal nodes, each carrying value 42.
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(*node), 42. * 1024);
