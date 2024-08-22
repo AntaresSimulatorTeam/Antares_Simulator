@@ -28,7 +28,6 @@
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
-using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_Nodes_)
 
