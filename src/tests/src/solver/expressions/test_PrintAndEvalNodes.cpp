@@ -33,8 +33,6 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
 
-namespace bdata = boost::unit_test::data;
-
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
