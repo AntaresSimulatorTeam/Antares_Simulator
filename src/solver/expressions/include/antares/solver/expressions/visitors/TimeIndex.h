@@ -32,7 +32,15 @@ enum class TimeIndex : unsigned int
 
 constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
 {
-    return static_cast<TimeIndex>(static_cast<int>(left) | static_cast<int>(right));
+    /*
+     0 | x = x
+     3 | x = 3
+     1 | 1 = 1
+     1 | 2 = 3
+     2 | 2 = 2
+     */
+    return static_cast<TimeIndex>(static_cast<unsigned int>(left)
+                                  | static_cast<unsigned int>(right));
 }
 
 } // namespace Antares::Solver::Visitors
