@@ -23,10 +23,6 @@
     {
       "name": "nlohmann-json",
       "version>=": "3.10.5"
-    },
-    {
-      "name": "nlohmann-json",
-      "version>=": "3.10.5"
     }
   ]
 }
