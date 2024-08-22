@@ -295,7 +295,7 @@ static void PrepareTheWork(const String::Vector& outputs,
     Progress::Total = nbJobs;
 }
 
-static void ReadCommandLineOptions(int argc, char** argv)
+static void ReadCommandLineOptions(int argc, const char** argv)
 {
     String::Vector optOutputs;
     uint optJobs = FindNbProcessors();
@@ -642,7 +642,7 @@ static bool WriteAggregates()
     return true;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     // locale
     InitializeDefaultLocale();
