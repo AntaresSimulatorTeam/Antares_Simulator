@@ -74,17 +74,17 @@ Nodes::Node* CloneVisitor::visit(const Nodes::NegationNode& neg)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode& param)
 {
-    return registry_.create<Nodes::VariableNode>(param.getValue());
+    return registry_.create<Nodes::VariableNode>(param.value());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ParameterNode& param)
 {
-    return registry_.create<Nodes::ParameterNode>(param.getValue());
+    return registry_.create<Nodes::ParameterNode>(param.value());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::LiteralNode& param)
 {
-    return registry_.create<Nodes::LiteralNode>(param.getValue());
+    return registry_.create<Nodes::LiteralNode>(param.value());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode& port_field_node)

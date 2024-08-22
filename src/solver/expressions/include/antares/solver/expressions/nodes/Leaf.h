@@ -35,7 +35,7 @@ public:
     {
     }
 
-    T getValue() const
+    T value() const
     {
         return value_;
     }

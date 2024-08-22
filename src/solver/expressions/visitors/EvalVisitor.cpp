@@ -77,17 +77,17 @@ double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
 
 double EvalVisitor::visit(const Nodes::VariableNode& node)
 {
-    return context_.getVariableValue(node.getValue());
+    return context_.getVariableValue(node.value());
 }
 
 double EvalVisitor::visit(const Nodes::ParameterNode& node)
 {
-    return context_.getParameterValue(node.getValue());
+    return context_.getParameterValue(node.value());
 }
 
 double EvalVisitor::visit(const Nodes::LiteralNode& node)
 {
-    return node.getValue();
+    return node.value();
 }
 
 double EvalVisitor::visit(const Nodes::NegationNode& node)
