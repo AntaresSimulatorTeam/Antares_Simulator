@@ -62,17 +62,17 @@ LinearStatus LinearityVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
     return dispatch(*node.left()) + dispatch(*node.right());
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::VariableNode&)
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::VariableNode&)
 {
     return LinearStatus::LINEAR;
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::ParameterNode&)
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ParameterNode&)
 {
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::LiteralNode&)
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::LiteralNode&)
 {
     return LinearStatus::CONSTANT;
 }
@@ -88,12 +88,12 @@ LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode&)
     return LinearStatus::CONSTANT;
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::ComponentVariableNode&)
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentVariableNode&)
 {
     return LinearStatus::LINEAR;
 }
 
-LinearStatus LinearityVisitor::visit(const Nodes::ComponentParameterNode&)
+LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentParameterNode&)
 {
     return LinearStatus::CONSTANT;
 }
