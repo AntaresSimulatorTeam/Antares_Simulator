@@ -23,8 +23,8 @@
 
 namespace Antares::Solver::Visitors
 {
-CloneVisitor::CloneVisitor(Registry<Nodes::Node>& mem):
-    registry_(mem)
+CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
+    registry_(registry)
 {
 }
 

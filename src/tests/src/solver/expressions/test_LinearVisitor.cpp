@@ -130,6 +130,81 @@ BOOST_DATA_TEST_CASE(linear_multiply_commutative,
     BOOST_CHECK_EQUAL(x * y, y * x);
 }
 
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_variable_is_linear, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    LinearityVisitor linearVisitor;
+
+    VariableNode var1("x");
+    // variable
+    VariableNode var2("y");
+    // x==y
+    Node* eq = create<EqualNode>(&var1, &var2);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*eq), "x==y");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::LINEAR);
+    // x<=y
+    Node* lt = create<LessThanOrEqualNode>(&var1, &var2);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*lt), "x<=y");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::LINEAR);
+    // x>=y
+    Node* gt = create<GreaterThanOrEqualNode>(&var1, &var2);
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(*gt), "x>=y");
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_constant_is_linear, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    LinearityVisitor linearVisitor;
+
+    VariableNode var1("x");
+    // variable
+    LiteralNode literal(21.);
+    // x==21
+    Node* eq = create<EqualNode>(&var1, &literal);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::LINEAR);
+    // x<=21
+    Node* lt = create<LessThanOrEqualNode>(&var1, &literal);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::LINEAR);
+    // x>=21
+    Node* gt = create<GreaterThanOrEqualNode>(&var1, &literal);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::LINEAR);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_constant_constant_is_constant, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    LinearityVisitor linearVisitor;
+
+    LiteralNode literal1(2.);
+    LiteralNode literal2(21.);
+    // 2==21
+    Node* eq = create<EqualNode>(&literal1, &literal2);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::CONSTANT);
+    // 2<=21
+    Node* lt = create<LessThanOrEqualNode>(&literal1, &literal2);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::CONSTANT);
+    // 2>=21
+    Node* gt = create<GreaterThanOrEqualNode>(&literal1, &literal2);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::CONSTANT);
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_nodes_non_lin_constant_is_constant, Registry<Node>)
+{
+    PrintVisitor printVisitor;
+    LinearityVisitor linearVisitor;
+
+    VariableNode var1("x");
+    // variable
+    VariableNode var2("y");
+    MultiplicationNode mult(&var1, &var2);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(mult), LinearStatus::NON_LINEAR);
+
+    AddNode add(&mult, &var1);
+    Node* gt = create<GreaterThanOrEqualNode>(&mult, &var2);
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::NON_LINEAR);
+}
+
 BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
 {
     LiteralNode literalNode1(10.);
@@ -189,28 +264,6 @@ BOOST_FIXTURE_TEST_CASE(simple_non_linear_division, Registry<Node>)
     BOOST_CHECK_EQUAL(printVisitor.dispatch(*expr), "(x/y)");
     LinearityVisitor linearVisitor;
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*expr), LinearStatus::NON_LINEAR);
-}
-
-BOOST_FIXTURE_TEST_CASE(comparison_nodes_are_not_linear, Registry<Node>)
-{
-    PrintVisitor printVisitor;
-    LinearityVisitor linearVisitor;
-
-    VariableNode var1("x");
-    // variable
-    VariableNode var2("y");
-    // x==y
-    Node* eq = create<EqualNode>(&var1, &var2);
-    BOOST_CHECK_EQUAL(printVisitor.dispatch(*eq), "x==y");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::NON_LINEAR);
-    // x<=y
-    Node* lt = create<LessThanOrEqualNode>(&var1, &var2);
-    BOOST_CHECK_EQUAL(printVisitor.dispatch(*lt), "x<=y");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::NON_LINEAR);
-    // x>=y
-    Node* gt = create<GreaterThanOrEqualNode>(&var1, &var2);
-    BOOST_CHECK_EQUAL(printVisitor.dispatch(*gt), "x>=y");
-    BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::NON_LINEAR);
 }
 
 BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
