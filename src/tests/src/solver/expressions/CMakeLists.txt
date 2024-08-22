@@ -3,7 +3,9 @@ add_executable(${EXECUTABLE_NAME})
 
 target_sources(${EXECUTABLE_NAME}
         PRIVATE
-        test_expressions.cpp
+        module_test_declaration.cpp
+        test_nodes.cpp
+        test_visitors.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
