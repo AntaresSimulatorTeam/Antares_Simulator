@@ -26,12 +26,12 @@
 namespace Antares::Solver::Optim::Api
 {
 
-class MipConstraint: public HasBounds, public HasName
+class IMipConstraint: public IHasBounds, public IHasName
 {
 public:
-    virtual void setCoefficient(MipVariable* var, double coefficient) = 0;
+    virtual void setCoefficient(IMipVariable* var, double coefficient) = 0;
 
-    virtual double getCoefficient(MipVariable* var) = 0;
+    virtual double getCoefficient(IMipVariable* var) = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

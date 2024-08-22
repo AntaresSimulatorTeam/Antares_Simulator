@@ -36,15 +36,15 @@ enum class MipStatus
     MIP_ERROR
 };
 
-class MipSolution
+class IMipSolution
 {
 public:
-    virtual ~MipSolution() = default;
+    virtual ~IMipSolution() = default;
 
     virtual MipStatus getStatus() const = 0;
     virtual double getObjectiveValue() const = 0;
-    virtual double getOptimalValue(const MipVariable* var) const = 0;
-    virtual std::vector<double> getOptimalValues(const std::vector<MipVariable*>& vars) const = 0;
+    virtual double getOptimalValue(const IMipVariable* var) const = 0;
+    virtual std::vector<double> getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

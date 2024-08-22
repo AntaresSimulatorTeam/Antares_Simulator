@@ -31,23 +31,23 @@
 namespace Antares::Solver::Optim::Api
 {
 
-class LinearProblem
+class ILinearProblem
 {
 public:
-    virtual ~LinearProblem() = default;
+    virtual ~ILinearProblem() = default;
 
-    virtual MipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
-    virtual MipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
-    virtual MipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
+    virtual IMipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
+    virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
+    virtual IMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
       = 0;
-    virtual MipVariable* getVariable(const std::string& name) = 0;
+    virtual IMipVariable* getVariable(const std::string& name) = 0;
 
-    virtual MipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
-    virtual MipConstraint* getConstraint(const std::string& name) = 0;
+    virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
+    virtual IMipConstraint* getConstraint(const std::string& name) = 0;
 
-    virtual void setObjectiveCoefficient(MipVariable* var, double coefficient) = 0;
+    virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;
 
-    virtual double getObjectiveCoefficient(const MipVariable* var) const = 0;
+    virtual double getObjectiveCoefficient(const IMipVariable* var) const = 0;
 
     virtual void setMinimization() = 0;
     virtual void setMaximization() = 0;
@@ -55,7 +55,7 @@ public:
     virtual bool isMinimization() const = 0;
     virtual bool isMaximization() const = 0;
 
-    virtual MipSolution* solve(bool verboseSolver) = 0;
+    virtual IMipSolution* solve(bool verboseSolver) = 0;
 };
 
 } // namespace Antares::Solver::Optim::Api

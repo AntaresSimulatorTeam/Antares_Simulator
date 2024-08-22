@@ -37,25 +37,25 @@ class MPObjective;
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsLinearProblem: public Api::LinearProblem
+class OrtoolsLinearProblem: public Api::ILinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
     ~OrtoolsLinearProblem() final = default;
 
-    Api::MipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
-    Api::MipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
-    Api::MipVariable* addVariable(double lb,
+    Api::IMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
+    Api::IMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
+    Api::IMipVariable* addVariable(double lb,
                                   double ub,
                                   bool integer,
                                   const std::string& name) override;
-    Api::MipVariable* getVariable(const std::string& name) override;
+    Api::IMipVariable* getVariable(const std::string& name) override;
 
-    Api::MipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
-    Api::MipConstraint* getConstraint(const std::string& name) override;
+    Api::IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
+    Api::IMipConstraint* getConstraint(const std::string& name) override;
 
-    void setObjectiveCoefficient(Api::MipVariable* var, double coefficient) override;
-    double getObjectiveCoefficient(const Api::MipVariable* var) const override;
+    void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;
+    double getObjectiveCoefficient(const Api::IMipVariable* var) const override;
 
     void setMinimization() override;
     void setMaximization() override;
@@ -63,7 +63,7 @@ public:
     bool isMinimization() const override;
     bool isMaximization() const override;
 
-    Api::MipSolution* solve(bool verboseSolver) override;
+    Api::IMipSolution* solve(bool verboseSolver) override;
 
 private:
     std::unique_ptr<operations_research::MPSolver> mpSolver_;

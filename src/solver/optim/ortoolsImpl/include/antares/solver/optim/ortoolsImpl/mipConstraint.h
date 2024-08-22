@@ -31,19 +31,19 @@ class MPConstraint; // forward declaration
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipConstraint: public Api::MipConstraint
+class OrtoolsMipConstraint: public Api::IMipConstraint
 {
 public:
     void setLb(double lb) override;
     void setUb(double ub) override;
 
     void setBounds(double lb, double ub) override;
-    void setCoefficient(Api::MipVariable* var, double coefficient) override;
+    void setCoefficient(Api::IMipVariable* var, double coefficient) override;
 
     double getLb() const override;
     double getUb() const override;
 
-    double getCoefficient(Api::MipVariable* var) override;
+    double getCoefficient(Api::IMipVariable* var) override;
 
     const std::string& getName() const override;
 

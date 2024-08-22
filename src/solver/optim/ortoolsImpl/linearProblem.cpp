@@ -52,7 +52,7 @@ public:
     }
 };
 
-Api::MipVariable* OrtoolsLinearProblem::addVariable(double lb,
+Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                     double ub,
                                                     bool integer,
                                                     const std::string& name)
@@ -81,26 +81,26 @@ Api::MipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return mapIteratorPair.first->second.get(); // <<name, var>, bool>
 }
 
-Api::MipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
+Api::IMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
                                                        double ub,
                                                        const std::string& name)
 {
     return addVariable(lb, ub, false, name);
 }
 
-Api::MipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
+Api::IMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
                                                        double ub,
                                                        const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
 
-Api::MipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
+Api::IMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
 {
     return variables_.at(name).get();
 }
 
-Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
+Api::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
                                                         double ub,
                                                         const std::string& name)
 {
@@ -128,29 +128,29 @@ Api::MipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return mapIteratorPair.first->second.get(); // <<name, constraint>, bool>
 }
 
-Api::MipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
+Api::IMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
 {
     return constraints_.at(name).get();
 }
 
-static const operations_research::MPVariable* getMpVar(const Api::MipVariable* var)
+static const operations_research::MPVariable* getMpVar(const Api::IMipVariable* var)
 
 {
     const auto* orMpVar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!orMpVar)
     {
-        logs.error() << "Invalid cast, tried from Api::MipVariable to OrtoolsMipVariable";
+        logs.error() << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
     return orMpVar->getMpVar();
 }
 
-void OrtoolsLinearProblem::setObjectiveCoefficient(Api::MipVariable* var, double coefficient)
+void OrtoolsLinearProblem::setObjectiveCoefficient(Api::IMipVariable* var, double coefficient)
 {
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
-double OrtoolsLinearProblem::getObjectiveCoefficient(const Api::MipVariable* var) const
+double OrtoolsLinearProblem::getObjectiveCoefficient(const Api::IMipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }
@@ -191,7 +191,7 @@ static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus&
     return Api::MipStatus::MIP_ERROR;
 }
 
-Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
+Api::IMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)
     {
@@ -201,7 +201,7 @@ Api::MipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
     auto mpStatus = mpSolver_->Solve(params_);
     Api::MipStatus status = convertStatus(mpStatus);
 
-    std::map<std::string, std::pair<Api::MipVariable*, double>> solution;
+    std::map<std::string, std::pair<Api::IMipVariable*, double>> solution;
     for (const auto* var: mpSolver_->variables())
     {
         auto pair = std::make_pair(variables_.at(var->name()).get(), var->solution_value());

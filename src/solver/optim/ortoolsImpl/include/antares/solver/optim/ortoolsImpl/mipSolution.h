@@ -30,10 +30,10 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipSolution: public Api::MipSolution
+class OrtoolsMipSolution: public Api::IMipSolution
 {
 public:
-    OrtoolsMipSolution(const std::map<std::string, std::pair<Api::MipVariable*, double>>& solution,
+    OrtoolsMipSolution(const std::map<std::string, std::pair<Api::IMipVariable*, double>>& solution,
                        Api::MipStatus& responseStatus,
                        double objectiveValue);
 
@@ -41,13 +41,13 @@ public:
 
     Api::MipStatus getStatus() const override;
     double getObjectiveValue() const override;
-    double getOptimalValue(const Api::MipVariable* var) const override;
-    std::vector<double> getOptimalValues(const std::vector<Api::MipVariable*>& vars) const override;
+    double getOptimalValue(const Api::IMipVariable* var) const override;
+    std::vector<double> getOptimalValues(const std::vector<Api::IMipVariable*>& vars) const override;
 
 private:
     Api::MipStatus responseStatus_;
 
-    std::map<std::string, std::pair<const Api::MipVariable*, double>> solution_;
+    std::map<std::string, std::pair<const Api::IMipVariable*, double>> solution_;
 
     double objectiveValue_;
 };

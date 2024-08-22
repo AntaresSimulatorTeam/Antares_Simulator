@@ -26,10 +26,10 @@
 namespace Antares::Solver::Optim::Api
 {
 
-class HasName
+class IHasName
 {
 public:
-    virtual ~HasName() = default;
+    virtual ~IHasName() = default;
     virtual const std::string& getName() const = 0;
 };
 

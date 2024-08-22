@@ -24,10 +24,10 @@
 namespace Antares::Solver::Optim::Api
 {
 
-class HasBounds
+class IHasBounds
 {
 public:
-    virtual ~HasBounds() = default;
+    virtual ~IHasBounds() = default;
 
     virtual void setLb(double lb) = 0;
     virtual void setUb(double ub) = 0;
