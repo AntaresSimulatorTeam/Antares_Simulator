@@ -448,13 +448,13 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_variable_constant_is_linear, Registry<N
     VariableNode var1("x");
     // variable
     LiteralNode literal(21.);
-    // x==y
+    // x==21
     Node* eq = create<EqualNode>(&var1, &literal);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::LINEAR);
-    // x<=y
+    // x<=21
     Node* lt = create<LessThanOrEqualNode>(&var1, &literal);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::LINEAR);
-    // x>=y
+    // x>=21
     Node* gt = create<GreaterThanOrEqualNode>(&var1, &literal);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::LINEAR);
 }
@@ -465,15 +465,14 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_constant_constant_is_constant, Registry
     LinearityVisitor linearVisitor;
 
     LiteralNode literal1(2.);
-    // variable
     LiteralNode literal2(21.);
-    // x==y
+    // 2==21
     Node* eq = create<EqualNode>(&literal1, &literal2);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*eq), LinearStatus::CONSTANT);
-    // x<=y
+    // 2<=21
     Node* lt = create<LessThanOrEqualNode>(&literal1, &literal2);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*lt), LinearStatus::CONSTANT);
-    // x>=y
+    // 2>=21
     Node* gt = create<GreaterThanOrEqualNode>(&literal1, &literal2);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(*gt), LinearStatus::CONSTANT);
 }
