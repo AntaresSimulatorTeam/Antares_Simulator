@@ -30,7 +30,7 @@ enum class TimeIndex : unsigned int
     VARYING_IN_TIME_AND_SCENARIO = 3
 };
 
-inline TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
+constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
 {
     return static_cast<TimeIndex>(static_cast<int>(left) | static_cast<int>(right));
 }
