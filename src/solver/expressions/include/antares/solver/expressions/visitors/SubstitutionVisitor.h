@@ -31,8 +31,6 @@ namespace Antares::Solver::Visitors
 struct SubstitutionContext
 {
     std::unordered_set<Nodes::ComponentVariableNode*> variables;
-    // TODO
-    // std::vector<Nodes::ComponentParameterNode> parameters;
 };
 
 class SubstitutionVisitor: public CloneVisitor

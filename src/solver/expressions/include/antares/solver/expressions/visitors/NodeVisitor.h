@@ -27,8 +27,7 @@
 
 namespace Antares::Solver::Nodes
 {
-namespace
-{
+
 template<class RetT, class VisitorT, class NodeT, class... Args>
 std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
 {
@@ -38,7 +37,6 @@ std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
     }
     return std::nullopt;
 }
-} // namespace
 
 template<class R, class... Args>
 class NodeVisitor
