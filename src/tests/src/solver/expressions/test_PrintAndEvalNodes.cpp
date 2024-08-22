@@ -233,4 +233,21 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
 }
 
+BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, Registry<Node>)
+{
+    LiteralNode literalNode(23.);
+    std::string component_id("id");
+    std::string name("name");
+    std::vector<Node*> nodes = {create<EqualNode>(&literalNode, &literalNode),
+                                create<LessThanOrEqualNode>(&literalNode, &literalNode),
+                                create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
+                                create<PortFieldNode>(name, name),
+                                create<ComponentParameterNode>(component_id, name),
+                                create<ComponentVariableNode>(component_id, name)};
+    EvalVisitor evalVisitor;
+    for (auto* node: nodes)
+    {
+        BOOST_CHECK_THROW(evalVisitor.dispatch(*node), EvalVisitorNotImplemented);
+    }
+}
 BOOST_AUTO_TEST_SUITE_END()

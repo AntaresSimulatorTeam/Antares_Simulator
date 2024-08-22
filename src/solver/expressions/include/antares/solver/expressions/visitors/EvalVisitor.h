@@ -33,6 +33,11 @@ struct EvalVisitorDivisionException: std::overflow_error
     using std::overflow_error::overflow_error;
 };
 
+struct EvalVisitorNotImplemented: std::logic_error
+{
+    using std::logic_error::logic_error;
+};
+
 class EvalVisitor: public Nodes::NodeVisitor<double>
 {
 public:

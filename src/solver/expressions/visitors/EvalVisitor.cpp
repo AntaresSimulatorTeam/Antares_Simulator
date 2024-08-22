@@ -59,20 +59,17 @@ double EvalVisitor::visit(const Nodes::DivisionNode& node)
 
 double EvalVisitor::visit(const Nodes::EqualNode& node)
 {
-    // not implemented for comparison node
-    return 0.;
+    throw EvalVisitorNotImplemented("Can not Evaluate Equal Node");
 }
 
 double EvalVisitor::visit(const Nodes::LessThanOrEqualNode& node)
 {
-    // not implemented for comparison node
-    return 0.;
+    throw EvalVisitorNotImplemented("Can not Evaluate Less Than Or Equal Node");
 }
 
 double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
 {
-    // not implemented for comparison node
-    return 0.;
+    throw EvalVisitorNotImplemented("Can not Evaluate Greater Than Or Equal Node");
 }
 
 double EvalVisitor::visit(const Nodes::VariableNode& node)
@@ -97,17 +94,16 @@ double EvalVisitor::visit(const Nodes::NegationNode& node)
 
 double EvalVisitor::visit(const Nodes::PortFieldNode& node)
 {
-    return 0.;
+    throw EvalVisitorNotImplemented("Can not Evaluate Port Field Node");
 }
 
 double EvalVisitor::visit(const Nodes::ComponentVariableNode& node)
 {
-    return 0.;
+    throw EvalVisitorNotImplemented("Can not Evaluate Component Variable Node");
 }
 
 double EvalVisitor::visit(const Nodes::ComponentParameterNode& node)
 {
-    // TODO
-    return 0.;
+    throw EvalVisitorNotImplemented("Can not Evaluate Component Parameter ");
 }
 } // namespace Antares::Solver::Visitors
