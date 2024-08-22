@@ -35,13 +35,14 @@ public:
     //  Method to create a new derived class object and add it to the registry
     template<class Derived, class... Args>
     requires std::derived_from<Derived, Base>
-    Base* create(Args&&... args)
+    Derived* create(Args&&... args)
     {
         auto created = std::make_unique<Derived>(std::forward<Args>(args)...);
 
         std::lock_guard<std::mutex> lock(mutex_);
         registry_.push_back(std::move(created));
-        return registry_.back().get(); //  Return the pointer to the newly created object
+        return dynamic_cast<Derived*>(
+          registry_.back().get()); //  Return the pointer to the newly created object
     }
 
 private:

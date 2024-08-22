@@ -78,7 +78,7 @@ static Node* deepAddTree(Registry<Node>& registry, AddNode* root, size_t depth, 
 BOOST_FIXTURE_TEST_CASE(binary_tree, Registry<Node>)
 {
     // AddNode's children are not mutable, so we'll replace this empty root with an actual one
-    AddNode* root = dynamic_cast<AddNode*>(create<AddNode>(nullptr, nullptr));
+    AddNode* root = create<AddNode>(nullptr, nullptr);
     Node* node = deepAddTree(*this, root, 0, 10);
     EvalVisitor evalVisitor;
     // We expect 1024 = 2^10 literal nodes, each carrying value 42.

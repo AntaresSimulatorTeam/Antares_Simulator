@@ -43,8 +43,7 @@ std::pair<Nodes::ComponentVariableNode*, Nodes::ComponentVariableNode*> fillCont
 {
     auto add = [&ctx, &registry](const std::string& component, const std::string& variable)
     {
-        auto in = dynamic_cast<Nodes::ComponentVariableNode*>(
-          registry.create<ComponentVariableNode>(component, variable));
+        auto* in = registry.create<ComponentVariableNode>(component, variable);
         ctx.variables.insert(in);
         return in;
     };
@@ -56,8 +55,7 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
     SubstitutionContext ctx;
     auto variables = fillContext(ctx, *this);
 
-    ComponentVariableNode* component_original = dynamic_cast<ComponentVariableNode*>(
-      create<ComponentVariableNode>("component1", "notInThere"));
+    auto* component_original = create<ComponentVariableNode>("component1", "notInThere");
 
     Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
                                  component_original);
