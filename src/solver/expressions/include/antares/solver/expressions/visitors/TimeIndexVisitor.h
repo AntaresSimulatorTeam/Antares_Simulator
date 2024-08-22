@@ -29,7 +29,7 @@ namespace Antares::Solver::Visitors
 class TimeIndexVisitor: public Nodes::NodeVisitor<TimeIndex>
 {
 public:
-    TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
+    explicit TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
 
 private:
     std::unordered_map<const Nodes::Node*, TimeIndex> context_;
