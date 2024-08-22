@@ -3,8 +3,8 @@ add_executable(${EXECUTABLE_NAME})
 
 target_sources(${EXECUTABLE_NAME}
         PRIVATE
-        module_test_declaration.cpp
-        test_PrintAndEvalNodes
+        test_main.cpp
+        test_PrintAndEvalNodes.cpp
         test_TimeIndexVisitor.cpp
         test_SubstitutionVisitor.cpp
         test_LinearVisitor.cpp
