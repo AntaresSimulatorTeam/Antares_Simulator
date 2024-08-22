@@ -30,7 +30,6 @@ class TimeIndexVisitor: public Nodes::NodeVisitor<TimeIndex>
 {
 public:
     TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
-    TimeIndexVisitor() = default;
 
 private:
     std::unordered_map<const Nodes::Node*, TimeIndex> context_;
