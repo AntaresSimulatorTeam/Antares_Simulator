@@ -31,7 +31,7 @@ class MPVariable; // forward declaration
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipVariable: virtual public Api::MipVariable
+class OrtoolsMipVariable: public Api::MipVariable
 {
 public:
     void setLb(double lb) override;

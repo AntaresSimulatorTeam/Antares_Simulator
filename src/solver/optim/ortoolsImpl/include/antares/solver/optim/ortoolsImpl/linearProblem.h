@@ -37,7 +37,7 @@ class MPObjective;
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsLinearProblem: virtual public Api::LinearProblem
+class OrtoolsLinearProblem: public Api::LinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
