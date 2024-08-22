@@ -213,6 +213,8 @@ BOOST_FIXTURE_TEST_CASE(solutionOpimalValues, Fixture)
 
     auto* varNotInSolution = pb->addNumVariable(0, 1, "f");
     BOOST_CHECK_EQUAL(solution->getOptimalValue(varNotInSolution), 0);
+
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -51,6 +51,11 @@ double OrtoolsMipSolution::getObjectiveValue() const
 
 double OrtoolsMipSolution::getOptimalValue(const Api::IMipVariable* var) const
 {
+    if (!var)
+    {
+        return 0;
+    }
+
     try
     {
         return solution_.at(var->getName()).second;
