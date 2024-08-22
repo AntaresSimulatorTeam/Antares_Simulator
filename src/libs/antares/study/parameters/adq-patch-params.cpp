@@ -37,7 +37,7 @@ void LocalMatching::reset()
     setToZeroOutsideOutsideLinks = true;
 }
 
-static bool legacyLocalMatchingKeys(const Yuni::String& key, const Yuni::String& value)
+static bool legacyLocalMatchingKeys(const Yuni::String& key)
 {
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
     {
@@ -65,7 +65,7 @@ bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::Stri
         return value.to<bool>(setToZeroOutsideInsideLinks);
     }
 
-    return legacyLocalMatchingKeys(key, value);
+    return legacyLocalMatchingKeys(key);
 }
 
 void LocalMatching::addProperties(IniFile::Section* section) const
