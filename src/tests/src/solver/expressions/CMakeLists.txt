@@ -3,7 +3,13 @@ add_executable(${EXECUTABLE_NAME})
 
 target_sources(${EXECUTABLE_NAME}
         PRIVATE
-        test_expressions.cpp
+        test_main.cpp
+        test_PrintAndEvalNodes.cpp
+        test_TimeIndexVisitor.cpp
+        test_SubstitutionVisitor.cpp
+        test_LinearVisitor.cpp
+        test_CompareVisitor.cpp
+        test_CloneVisitor.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
