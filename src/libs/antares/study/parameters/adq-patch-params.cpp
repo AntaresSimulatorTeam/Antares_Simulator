@@ -41,6 +41,7 @@ static bool legacyLocalMatchingKeys(const Yuni::String& key, const Yuni::String&
 {
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
     {
+        // TODO use warnings
         logs.notice() << "Parameter set-to-null-ntc-between-physical-out-for-first-step \
 not supported with this solver version, use a version < 9.2";
 
@@ -48,6 +49,7 @@ not supported with this solver version, use a version < 9.2";
     }
     if (key == "enable-first-step")
     {
+        // TODO use warnings
         logs.notice() << "Parameter enable-first-step not supported with this solver version, \
 use a version < 9.2";
 
