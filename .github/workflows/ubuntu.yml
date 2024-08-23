@@ -97,7 +97,7 @@ jobs:
 
       - name: Configure
         run: |
-          cmake --trace -B _build -S src \
+          cmake --trace--expand -B _build -S src \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
