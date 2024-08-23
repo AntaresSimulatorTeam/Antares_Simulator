@@ -33,6 +33,8 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
 
+namespace bdata = boost::unit_test::data;
+
 namespace Antares::Solver::Visitors
 {
 static std::ostream& operator<<(std::ostream& os, TimeIndex s)
@@ -79,6 +81,69 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     // addition of parameterNode1 and variableNode1 is time and scenario dependent
     Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr), TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+}
+
+static const std::vector<TimeIndex> TimeIndex_ALL{TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                                                  TimeIndex::VARYING_IN_TIME_ONLY,
+                                                  TimeIndex::VARYING_IN_SCENARIO_ONLY,
+                                                  TimeIndex::VARYING_IN_TIME_AND_SCENARIO};
+
+template<class T>
+static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry)
+{
+    Node* left = registry.create<LiteralNode>(42.);
+    ParameterNode* right = registry.create<ParameterNode>("param");
+    return {registry.create<T>(left, right), right};
+}
+
+static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>& registry)>
+  operator_ALL{&s_<AddNode>,
+               &s_<SubtractionNode>,
+               &s_<MultiplicationNode>,
+               &s_<DivisionNode>,
+               &s_<EqualNode>,
+               &s_<LessThanOrEqualNode>,
+               &s_<GreaterThanOrEqualNode>};
+
+BOOST_DATA_TEST_CASE_F(Registry<Node>,
+                       simple_all,
+                       bdata::make(TimeIndex_ALL) * bdata::make(operator_ALL),
+                       timeIndex,
+                       binaryOperator)
+{
+    auto [root, parameter] = binaryOperator(*this);
+    std::unordered_map<const Node*, TimeIndex> context;
+    context[parameter] = timeIndex;
+    TimeIndexVisitor timeIndexVisitor(context);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*root), timeIndex);
+    Node* neg = create<NegationNode>(root);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*neg), timeIndex);
+}
+
+template<class T>
+static Node* singleNode(Registry<Node>& registry)
+{
+    return registry.create<T>("hello", "world");
+}
+
+static const std::vector<Node* (*)(Registry<Node>& registry)> singleNode_ALL{
+  &singleNode<PortFieldNode>,
+  &singleNode<ComponentVariableNode>,
+  &singleNode<ComponentParameterNode>};
+
+BOOST_DATA_TEST_CASE_F(Registry<Node>,
+                       signe_node,
+                       bdata::make(TimeIndex_ALL) * bdata::make(singleNode_ALL),
+                       timeIndex,
+                       singleNode)
+{
+    Node* root = singleNode(*this);
+    std::unordered_map<const Node*, TimeIndex> context;
+    context[root] = timeIndex;
+    TimeIndexVisitor timeIndexVisitor(context);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*root), timeIndex);
+    Node* neg = create<NegationNode>(root);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*neg), timeIndex);
 }
 
 BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
