@@ -28,5 +28,10 @@ class LessThanOrEqualNode: public ComparisonNode
 {
 public:
     using ComparisonNode::ComparisonNode;
+
+    std::string name() const override
+    {
+        return "LessThanOrEqualNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

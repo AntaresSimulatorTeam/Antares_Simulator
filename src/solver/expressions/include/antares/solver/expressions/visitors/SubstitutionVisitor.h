@@ -40,6 +40,7 @@ public:
 
     SubstitutionContext& ctx_;
     Registry<Nodes::Node>& registry_;
+    std::string name() const override;
 
 private:
     // Only override visit method for ComponentVariableNode, clone the rest

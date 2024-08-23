@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::Visitors
 {
-class CompareVisitor: public Nodes::NodeVisitor<bool, const Nodes::Node&>
+class CompareVisitor: public NodeVisitor<bool, const Nodes::Node&>
 {
 public:
     CompareVisitor() = default;
@@ -47,5 +47,6 @@ public:
                const Nodes::Node& other) override;
     bool visit(const Nodes::ComponentParameterNode& component_node,
                const Nodes::Node& other) override;
+    std::string name() const override;
 };
 } // namespace Antares::Solver::Visitors

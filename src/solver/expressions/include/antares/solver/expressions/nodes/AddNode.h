@@ -28,5 +28,10 @@ class AddNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
+
+    std::string name() const override
+    {
+        return "AddNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

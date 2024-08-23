@@ -97,4 +97,8 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentPara
     return LinearStatus::CONSTANT;
 }
 
+std::string LinearityVisitor::name() const
+{
+    return "LinearityVisitor";
+}
 } // namespace Antares::Solver::Visitors

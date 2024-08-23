@@ -28,5 +28,10 @@ class NegationNode final: public UnaryNode
 {
 public:
     using UnaryNode::UnaryNode;
+
+    std::string name() const override
+    {
+        return "NegationNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

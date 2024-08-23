@@ -96,4 +96,9 @@ std::string PrintVisitor::visit(const Nodes::ComponentParameterNode& node)
 {
     return node.getComponentId() + "." + node.getComponentName();
 }
+
+std::string PrintVisitor::name() const
+{
+    return "PrintVisitor";
+}
 } // namespace Antares::Solver::Visitors

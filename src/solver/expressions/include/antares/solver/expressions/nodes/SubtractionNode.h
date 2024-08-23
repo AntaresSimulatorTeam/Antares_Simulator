@@ -28,5 +28,10 @@ class SubtractionNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
+
+    std::string name() const override
+    {
+        return "SubtractionNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

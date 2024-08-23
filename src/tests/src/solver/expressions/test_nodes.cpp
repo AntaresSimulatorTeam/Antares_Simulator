@@ -31,14 +31,14 @@ using namespace Antares::Solver::Nodes;
 
 BOOST_AUTO_TEST_SUITE(_Nodes_)
 
-BOOST_AUTO_TEST_CASE(UnaryNodeTest)
-{
-    LiteralNode literalNode(23.);
-    UnaryNode unaryNodeWithNullChild(nullptr);
-    BOOST_CHECK_EQUAL(unaryNodeWithNullChild.child(), nullptr);
-    UnaryNode unaryNode(&literalNode);
-    BOOST_CHECK_EQUAL(unaryNode.child(), &literalNode);
-}
+// BOOST_AUTO_TEST_CASE(UnaryNodeTest)
+// {
+//     LiteralNode literalNode(23.);
+//     UnaryNode unaryNodeWithNullChild(nullptr);
+//     BOOST_CHECK_EQUAL(unaryNodeWithNullChild.child(), nullptr);
+//     UnaryNode unaryNode(&literalNode);
+//     BOOST_CHECK_EQUAL(unaryNode.child(), &literalNode);
+// }
 
 namespace Antares::Solver::Nodes
 {

@@ -59,17 +59,17 @@ double EvalVisitor::visit(const Nodes::DivisionNode& node)
 
 double EvalVisitor::visit(const Nodes::EqualNode& node)
 {
-    throw EvalVisitorNotImplemented("Can not Evaluate Equal Node");
+    throw NotImplemented(*this, node);
 }
 
 double EvalVisitor::visit(const Nodes::LessThanOrEqualNode& node)
 {
-    throw EvalVisitorNotImplemented("Can not Evaluate Less Than Or Equal Node");
+    throw NotImplemented(*this, node);
 }
 
 double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
 {
-    throw EvalVisitorNotImplemented("Can not Evaluate Greater Than Or Equal Node");
+    throw NotImplemented(*this, node);
 }
 
 double EvalVisitor::visit(const Nodes::VariableNode& node)
@@ -94,16 +94,21 @@ double EvalVisitor::visit(const Nodes::NegationNode& node)
 
 double EvalVisitor::visit(const Nodes::PortFieldNode& node)
 {
-    throw EvalVisitorNotImplemented("Can not Evaluate Port Field Node");
+    throw NotImplemented(*this, node);
 }
 
 double EvalVisitor::visit(const Nodes::ComponentVariableNode& node)
 {
-    throw EvalVisitorNotImplemented("Can not Evaluate Component Variable Node");
+    throw NotImplemented(*this, node);
 }
 
 double EvalVisitor::visit(const Nodes::ComponentParameterNode& node)
 {
-    throw EvalVisitorNotImplemented("Can not Evaluate Component Parameter Node");
+    throw NotImplemented(*this, node);
+}
+
+std::string EvalVisitor::name() const
+{
+    return "EvalVisitor";
 }
 } // namespace Antares::Solver::Visitors

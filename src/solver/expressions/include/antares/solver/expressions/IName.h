@@ -21,26 +21,12 @@
 #pragma once
 #include <string>
 
-#include <antares/solver/expressions/nodes/Leaf.h>
-
-namespace Antares::Solver::Nodes
+namespace Antares::Solver
 {
-class PortFieldNode: public Node
+class IName
 {
 public:
-    explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
-    const std::string& getPortName() const;
-    const std::string& getFieldName() const;
-
-    bool operator==(const PortFieldNode& other) const;
-
-    std::string name() const override
-    {
-        return "PortFieldNode";
-    }
-
-private:
-    std::string port_name_;
-    std::string field_name_;
+    virtual ~IName() = default;
+    virtual std::string name() const = 0;
 };
-} // namespace Antares::Solver::Nodes
+} // namespace Antares::Solver

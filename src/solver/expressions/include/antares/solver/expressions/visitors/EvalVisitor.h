@@ -38,7 +38,7 @@ struct EvalVisitorNotImplemented: std::logic_error
     using std::logic_error::logic_error;
 };
 
-class EvalVisitor: public Nodes::NodeVisitor<double>
+class EvalVisitor: public NodeVisitor<double>
 {
 public:
     EvalVisitor() = default; // No context (variables / parameters)
@@ -60,5 +60,6 @@ private:
     double visit(const Nodes::PortFieldNode& node) override;
     double visit(const Nodes::ComponentVariableNode& node) override;
     double visit(const Nodes::ComponentParameterNode& node) override;
+    std::string name() const override;
 };
 } // namespace Antares::Solver::Visitors

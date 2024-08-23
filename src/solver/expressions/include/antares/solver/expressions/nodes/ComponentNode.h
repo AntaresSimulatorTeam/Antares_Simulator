@@ -43,11 +43,21 @@ class ComponentVariableNode: public ComponentNode
 {
 public:
     using ComponentNode::ComponentNode;
+
+    std::string name() const override
+    {
+        return "ComponentVariableNode";
+    }
 };
 
 class ComponentParameterNode: public ComponentNode
 {
 public:
     using ComponentNode::ComponentNode;
+
+    std::string name() const override
+    {
+        return "ComponentParameterNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

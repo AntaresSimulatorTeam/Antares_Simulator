@@ -24,13 +24,14 @@
 #include <vector>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/expressions/IName.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
-namespace Antares::Solver::Nodes
+namespace Antares::Solver::Visitors
 {
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
-std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
+std::optional<RetT> tryVisit(const Nodes::Node& node, VisitorT& visitor, Args... args)
 {
     if (auto* x = dynamic_cast<const NodeT*>(&node))
     {
@@ -39,35 +40,46 @@ std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
     return std::nullopt;
 }
 
-struct NodeVistorException: std::runtime_error
+struct InvalidNode: std::invalid_argument
 {
-    using std::runtime_error::runtime_error;
+    using std::invalid_argument::invalid_argument;
+};
+
+struct NotImplemented: std::invalid_argument
+{
+    NotImplemented(const IName& visitor, const IName& node):
+        std::invalid_argument("Visitor" + visitor.name() + " not implemented for node type "
+                              + node.name())
+    {
+    }
 };
 
 template<class R, class... Args>
-class NodeVisitor
+class NodeVisitor: public IName
 {
 public:
     virtual ~NodeVisitor() = default;
 
-    R dispatch(const Node& node, Args... args)
+    R dispatch(const Nodes::Node& node, Args... args)
     {
-        using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
+        using FunctionT = std::optional<R> (*)(const Nodes::Node&,
+                                               NodeVisitor<R, Args...>&,
+                                               Args... args);
         static const std::vector<FunctionT> allNodeVisitList{
-          &tryVisit<R, NodeVisitor<R, Args...>, AddNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, SubtractionNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, MultiplicationNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, DivisionNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, EqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, LessThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, GreaterThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, NegationNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ParameterNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, VariableNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, LiteralNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, PortFieldNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ComponentVariableNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ComponentParameterNode>};
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::AddNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::SubtractionNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::MultiplicationNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::DivisionNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::EqualNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::LessThanOrEqualNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::GreaterThanOrEqualNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::NegationNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::ParameterNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::VariableNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::LiteralNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::PortFieldNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::ComponentVariableNode>,
+          &tryVisit<R, NodeVisitor<R, Args...>, Nodes::ComponentParameterNode>};
         for (auto f: allNodeVisitList)
         {
             if (auto ret = f(node, *this, args...); ret.has_value())
@@ -75,23 +87,24 @@ public:
                 return ret.value();
             }
         }
-        throw NodeVistorException("Antares::Solver::Nodes Visitor: invalid Node!");
+        throw InvalidNode("Antares::Solver::Nodes Visitor: invalid Node!");
         return R();
     }
 
-    virtual R visit(const AddNode&, Args... args) = 0;
-    virtual R visit(const SubtractionNode&, Args... args) = 0;
-    virtual R visit(const MultiplicationNode&, Args... args) = 0;
-    virtual R visit(const DivisionNode&, Args... args) = 0;
-    virtual R visit(const EqualNode&, Args... args) = 0;
-    virtual R visit(const LessThanOrEqualNode&, Args... args) = 0;
-    virtual R visit(const GreaterThanOrEqualNode&, Args... args) = 0;
-    virtual R visit(const NegationNode&, Args... args) = 0;
-    virtual R visit(const LiteralNode&, Args... args) = 0;
-    virtual R visit(const VariableNode&, Args... args) = 0;
-    virtual R visit(const ParameterNode&, Args... args) = 0;
-    virtual R visit(const PortFieldNode&, Args... args) = 0;
-    virtual R visit(const ComponentVariableNode&, Args... args) = 0;
-    virtual R visit(const ComponentParameterNode&, Args... args) = 0;
+    virtual R visit(const Nodes::AddNode&, Args... args) = 0;
+    virtual R visit(const Nodes::SubtractionNode&, Args... args) = 0;
+    virtual R visit(const Nodes::MultiplicationNode&, Args... args) = 0;
+    virtual R visit(const Nodes::DivisionNode&, Args... args) = 0;
+    virtual R visit(const Nodes::EqualNode&, Args... args) = 0;
+    virtual R visit(const Nodes::LessThanOrEqualNode&, Args... args) = 0;
+    virtual R visit(const Nodes::GreaterThanOrEqualNode&, Args... args) = 0;
+    virtual R visit(const Nodes::NegationNode&, Args... args) = 0;
+    virtual R visit(const Nodes::LiteralNode&, Args... args) = 0;
+    virtual R visit(const Nodes::VariableNode&, Args... args) = 0;
+    virtual R visit(const Nodes::ParameterNode&, Args... args) = 0;
+    virtual R visit(const Nodes::PortFieldNode&, Args... args) = 0;
+    virtual R visit(const Nodes::ComponentVariableNode&, Args... args) = 0;
+    virtual R visit(const Nodes::ComponentParameterNode&, Args... args) = 0;
 };
-} // namespace Antares::Solver::Nodes
+
+} // namespace Antares::Solver::Visitors

@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(DivisionNodeFull)
 
     DivisionNode divisionNode3(&literalNode1, literalNull);
 
-    BOOST_CHECK_THROW(evalVisitor.dispatch(divisionNode3), NodeVistorException);
+    BOOST_CHECK_THROW(evalVisitor.dispatch(divisionNode3), InvalidNode);
 
     // truncated to zero
     LiteralNode literalVerySmall(1.e-50000);
@@ -273,7 +273,7 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, Registry<Node>)
     EvalVisitor evalVisitor;
     for (auto* node: nodes)
     {
-        BOOST_CHECK_THROW(evalVisitor.dispatch(*node), EvalVisitorNotImplemented);
+        BOOST_CHECK_THROW(evalVisitor.dispatch(*node), NotImplemented);
     }
 }
 

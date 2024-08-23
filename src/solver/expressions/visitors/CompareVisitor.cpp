@@ -129,4 +129,9 @@ bool CompareVisitor::visit(const Nodes::ComponentParameterNode& node, const Node
     return compareEqualOperator(node, other);
 }
 
+std::string CompareVisitor::name() const
+{
+    return "CompareVisitor";
+}
+
 } // namespace Antares::Solver::Visitors

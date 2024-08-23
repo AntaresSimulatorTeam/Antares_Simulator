@@ -26,7 +26,7 @@
 namespace Antares::Solver::Visitors
 {
 
-class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
+class LinearityVisitor: public NodeVisitor<LinearStatus>
 {
 private:
     LinearStatus visit(const Nodes::AddNode& add) override;
@@ -43,5 +43,6 @@ private:
     LinearStatus visit(const Nodes::PortFieldNode& port_field_node) override;
     LinearStatus visit(const Nodes::ComponentVariableNode& component_variable_node) override;
     LinearStatus visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
+    std::string name() const override;
 };
 } // namespace Antares::Solver::Visitors
