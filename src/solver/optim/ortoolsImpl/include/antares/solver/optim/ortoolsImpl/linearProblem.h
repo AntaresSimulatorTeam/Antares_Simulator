@@ -46,9 +46,9 @@ public:
     Api::IMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     Api::IMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
     Api::IMipVariable* addVariable(double lb,
-                                  double ub,
-                                  bool integer,
-                                  const std::string& name) override;
+                                   double ub,
+                                   bool integer,
+                                   const std::string& name) override;
     Api::IMipVariable* getVariable(const std::string& name) override;
 
     Api::IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;

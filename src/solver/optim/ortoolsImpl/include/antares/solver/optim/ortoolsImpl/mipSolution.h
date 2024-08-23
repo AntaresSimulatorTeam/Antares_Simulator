@@ -42,7 +42,8 @@ public:
     Api::MipStatus getStatus() const override;
     double getObjectiveValue() const override;
     double getOptimalValue(const Api::IMipVariable* var) const override;
-    std::vector<double> getOptimalValues(const std::vector<Api::IMipVariable*>& vars) const override;
+    std::vector<double> getOptimalValues(
+      const std::vector<Api::IMipVariable*>& vars) const override;
 
 private:
     Api::MipStatus responseStatus_;

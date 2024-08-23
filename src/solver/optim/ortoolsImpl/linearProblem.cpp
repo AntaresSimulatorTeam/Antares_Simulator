@@ -53,9 +53,9 @@ public:
 };
 
 Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
-                                                    double ub,
-                                                    bool integer,
-                                                    const std::string& name)
+                                                     double ub,
+                                                     bool integer,
+                                                     const std::string& name)
 {
     if (variables_.contains(name))
     {
@@ -82,15 +82,15 @@ Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
 }
 
 Api::IMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
-                                                       double ub,
-                                                       const std::string& name)
+                                                        double ub,
+                                                        const std::string& name)
 {
     return addVariable(lb, ub, false, name);
 }
 
 Api::IMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
-                                                       double ub,
-                                                       const std::string& name)
+                                                        double ub,
+                                                        const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
@@ -101,8 +101,8 @@ Api::IMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
 }
 
 Api::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
-                                                        double ub,
-                                                        const std::string& name)
+                                                         double ub,
+                                                         const std::string& name)
 {
     if (constraints_.contains(name))
     {
