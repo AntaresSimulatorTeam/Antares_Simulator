@@ -34,7 +34,6 @@ Benchmarking::OptimizationInfo runSimulation(Antares::Data::Study& study,
                                              IResultWriter& resultWriter,
                                              Simulation::ISimulationObserver& simulationObserver)
 {
-    Simulation::NullSimulationObserver observer;
     simulationType simulation(study, settings, durationCollector, resultWriter, simulationObserver);
     simulation.checkWriter();
     simulation.run();
