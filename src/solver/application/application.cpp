@@ -36,11 +36,9 @@
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
-#include "antares/solver/simulation/adequacy_mode.h"
-#include "antares/solver/simulation/economy_mode.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/utils/ortools_utils.h"
-#include "antares/study/simulation.h"
+#include "antares/solver/simulation/simulation-runner.h"
 
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/adequacy.h"
@@ -391,49 +389,20 @@ void Application::execute()
 
     pStudy->computePThetaInfForThermalClusters();
 
-    // Run the simulation
-    switch (pStudy->runtime.mode)
-    {
-    case Data::SimulationMode::Economy:
-    case Data::SimulationMode::Expansion:
-        runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Economy>>();
-        break;
-    case Data::SimulationMode::Adequacy:
-        runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Adequacy>>();
-        break;
-    default:
-        break;
-    }
-    // TODO : make an interface class for ISimulation, check writer & queue before
-    // runSimulationIn<XXX>Mode()
+    Simulation::NullSimulationObserver observer;
+    SimulationRunner simulationRunner(*pStudy,
+                                      pSettings,
+                                      pDurationCollector,
+                                      *resultWriter,
+                                      pOptimizationInfo,
+                                      observer);
+    simulationRunner.run();
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
 
     // Stop the display of the progression
     pStudy->progression.stop();
-}
-
-void Application::runSimulationInEconomicMode()
-{
-    Simulation::NullSimulationObserver observer;
-    Solver::runSimulationInEconomicMode(*pStudy,
-                                        pSettings,
-                                        pDurationCollector,
-                                        *resultWriter,
-                                        pOptimizationInfo,
-                                        observer);
-}
-
-void Application::runSimulationInAdequacyMode()
-{
-    Simulation::NullSimulationObserver observer;
-    Solver::runSimulationInAdequacyMode(*pStudy,
-                                        pSettings,
-                                        pDurationCollector,
-                                        *resultWriter,
-                                        pOptimizationInfo,
-                                        observer);
 }
 
 void Application::resetLogFilename() const

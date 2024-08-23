@@ -19,32 +19,36 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/simulation/economy_mode.h"
+#pragma once
 
+#include "antares/solver/simulation/adequacy.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
 {
-void runSimulationInEconomicMode(Antares::Data::Study& study,
-                                 const Settings& settings,
-                                 Benchmarking::DurationCollector& durationCollector,
-                                 IResultWriter& resultWriter,
-                                 Benchmarking::OptimizationInfo& info,
-                                 Simulation::ISimulationObserver& simulationObserver)
+
+class SimulationRunner
 {
-    // Type of the simulation
-    typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
-    SimulationType simulation(study, settings, durationCollector, resultWriter, simulationObserver);
-    simulation.checkWriter();
-    simulation.run();
+public:
+    SimulationRunner(Antares::Data::Study& study,
+                     const Settings& settings,
+                     Benchmarking::DurationCollector& durationCollector,
+                     IResultWriter& resultWriter,
+                     Benchmarking::OptimizationInfo& info,
+                     Simulation::ISimulationObserver& simulationObserver);
+    void run();
 
-    if (!(settings.noOutput || settings.tsGeneratorsOnly))
-    {
-        durationCollector("synthesis_export")
-          << [&simulation] { simulation.writeResults(/*synthesis:*/ true); };
+private:
+    template<class simulationType>
+    void runSimulation();
 
-        info = simulation.getOptimizationInfo();
-    }
+    Antares::Data::Study& study_;
+    const Settings& settings_;
+    Benchmarking::DurationCollector& durationCollector_;
+    IResultWriter& resultWriter_;
+    Benchmarking::OptimizationInfo& info_;
+    Simulation::ISimulationObserver& simulationObserver_;
+};
+
 }
-} // namespace Antares::Solver

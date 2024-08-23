@@ -93,12 +93,6 @@ private:
      */
     void readDataForTheStudy(Antares::Data::StudyLoadOptions& options);
 
-    void runSimulationInAdequacyMode();
-    void runSimulationInEconomicMode();
-
-    template<class simulationType>
-    void runSimulation();
-
     void onLogMessage(int level, const std::string& message);
 
     //! The settings given from the command line
@@ -136,22 +130,5 @@ private:
     void postParametersChecks() const;
 
 }; // class Application
-
-template<class simulationType>
-void Application::runSimulation()
-{
-    Simulation::NullSimulationObserver observer;
-    simulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter, observer);
-    simulation.checkWriter();
-    simulation.run();
-
-    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
-    {
-        pDurationCollector("synthesis_export")
-                << [&simulation] { simulation.writeResults(/*synthesis:*/ true); };
-
-        pOptimizationInfo = simulation.getOptimizationInfo();
-    }
-};
 
 } // namespace Antares::Solver

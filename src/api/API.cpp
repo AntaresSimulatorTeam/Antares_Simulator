@@ -20,14 +20,13 @@
  */
 
 #include "API.h"
-#include "antares/solver/simulation/economy_mode.h"
-#include "antares/solver/simulation/adequacy_mode.h"
 #include "antares/solver/misc/options.h"
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/exception/LoadingError.hpp"
 #include <antares/writer/writer_factory.h>
 #include <SimulationObserver.h>
+#include "antares/solver/simulation/simulation-runner.h"
 
 namespace Antares::API
 {
@@ -78,29 +77,13 @@ SimulationResults APIInternal::execute() const
 
     study_->computePThetaInfForThermalClusters();
 
-    // Run the simulation
-    switch (study_->runtime.mode)
-    {
-    case Data::SimulationMode::Economy:
-    case Data::SimulationMode::Expansion:
-        Solver::runSimulationInEconomicMode(*study_,
-                                            settings,
-                                            durationCollector,
-                                            *resultWriter,
-                                            optimizationInfo,
-                                            simulationObserver);
-        break;
-    case Data::SimulationMode::Adequacy:
-        Solver::runSimulationInAdequacyMode(*study_,
-                                            settings,
-                                            durationCollector,
-                                            *resultWriter,
-                                            optimizationInfo,
-                                            simulationObserver);
-        break;
-    default:
-        break;
-    }
+    SimulationRunner simulationRunner(*study_,
+                                      settings,
+                                      durationCollector,
+                                      *resultWriter,
+                                      optimizationInfo,
+                                      simulationObserver);
+    simulationRunner.run();
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
