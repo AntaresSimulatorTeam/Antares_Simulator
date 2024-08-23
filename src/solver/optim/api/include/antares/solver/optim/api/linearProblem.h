@@ -44,9 +44,9 @@ public:
     /// Create a variable and specify if it's an integer
     virtual IMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
       = 0;
-    /// Wrapper for addVariable with integer = false
+    /// Create a continuous variable
     virtual IMipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
-    /// Wrapper for addVariable with integer = true
+    /// Create a integer variable
     virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
     virtual IMipVariable* getVariable(const std::string& name) = 0;
 
@@ -54,7 +54,7 @@ public:
     virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
     virtual IMipConstraint* getConstraint(const std::string& name) = 0;
 
-    /// Set the objective for a given variable
+    /// Set the objective coefficient for a given variable
     virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;
     virtual double getObjectiveCoefficient(const IMipVariable* var) const = 0;
 
