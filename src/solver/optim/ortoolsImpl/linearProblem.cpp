@@ -186,6 +186,7 @@ static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus&
     case operations_research::MPSolver::ResultStatus::UNBOUNDED:
         return Api::MipStatus::UNBOUNDED;
     default:
+        logs.warning() << "Solve returned an error status";
         break;
     }
     return Api::MipStatus::MIP_ERROR;
