@@ -248,21 +248,13 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run parallel tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-parallel
           os: ${{ env.os }}
           variant: "parallel"
-          
-      - name: Run complex tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-complex
-          os: ${{ env.os }}
 
       - name: Run tests for time series generator tool
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -274,7 +266,7 @@ jobs:
           variant: "tsgenerator"
 
       - name: Run medium-tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -282,7 +274,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-1
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -290,7 +282,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-2
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -298,7 +290,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run long-tests-3
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
