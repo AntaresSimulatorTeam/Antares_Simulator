@@ -107,7 +107,7 @@ BOOST_DATA_TEST_CASE(linear_status_minus, bdata::make(LinearStatus_ALL), x)
 }
 
 BOOST_DATA_TEST_CASE(linear_plus_commutative,
-                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     bdata::make(LinearStatus_ALL) * bdata::make(LinearStatus_ALL),
                      x,
                      y)
 {
@@ -115,7 +115,7 @@ BOOST_DATA_TEST_CASE(linear_plus_commutative,
 }
 
 BOOST_DATA_TEST_CASE(linear_subtract_same_as_plus,
-                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     bdata::make(LinearStatus_ALL) * bdata::make(LinearStatus_ALL),
                      x,
                      y)
 {
@@ -123,7 +123,7 @@ BOOST_DATA_TEST_CASE(linear_subtract_same_as_plus,
 }
 
 BOOST_DATA_TEST_CASE(linear_multiply_commutative,
-                     bdata::make(LinearStatus_ALL) ^ bdata::make(LinearStatus_ALL),
+                     bdata::make(LinearStatus_ALL) * bdata::make(LinearStatus_ALL),
                      x,
                      y)
 {
