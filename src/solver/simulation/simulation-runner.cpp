@@ -39,6 +39,8 @@ SimulationRunner::SimulationRunner(Antares::Data::Study& study,
 
 Benchmarking::OptimizationInfo SimulationRunner::run()
 {
+    study_.computePThetaInfForThermalClusters();
+
     if (study_.runtime.mode == Data::SimulationMode::Adequacy)
     {
         return runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Adequacy>>();

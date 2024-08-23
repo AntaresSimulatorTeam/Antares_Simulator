@@ -75,8 +75,6 @@ SimulationResults APIInternal::execute() const
       study_->parameters.resultFormat, study_->folderOutput, ioQueueService, durationCollector);
     SimulationObserver simulationObserver;
 
-    study_->computePThetaInfForThermalClusters();
-
     SimulationRunner simulationRunner(*study_,
                                       settings,
                                       durationCollector,
