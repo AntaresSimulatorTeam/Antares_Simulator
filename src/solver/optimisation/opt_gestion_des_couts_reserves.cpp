@@ -53,9 +53,15 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                 {
                     if (clusterReserveParticipation.maxPower > 0)
                     {
-                        var = variableManager.ThermalClusterReserveParticipation(
+                        var = variableManager.RunningThermalClusterReserveParticipation(
                           clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                    if (clusterReserveParticipation.maxPowerOff > 0)
+                    {
+                        var = variableManager.OffThermalClusterReserveParticipation(
+                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCostOff;
                     }
                 }
 
@@ -98,7 +104,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                 {
                     if (clusterReserveParticipation.maxPower > 0)
                     {
-                        var = variableManager.ThermalClusterReserveParticipation(
+                        var = variableManager.RunningThermalClusterReserveParticipation(
                           clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
                     }

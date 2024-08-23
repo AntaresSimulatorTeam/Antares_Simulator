@@ -47,6 +47,7 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> runningThermalClusterReserveParticipationIndex;
     std::vector<int> thermalClusterReserveParticipationIndex;
+    std::vector<int> offThermalClusterReserveParticipationIndex;
     std::vector<int> STStorageClusterReserveUpParticipationIndex;
     std::vector<int> STStorageClusterReserveDownParticipationIndex;
     std::vector<int> STStorageTurbiningClusterReserveParticipationIndex;
@@ -68,7 +69,8 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> NumeroDeVariablesVariationHydALaHausse;
 
-    std::vector<int> NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
+    std::vector<int> nbOnGroupUnitsInThermalClusterIndex;
+    std::vector<int> nbOffGroupUnitsParticipatingToReservesInThermalClusterIndex;
     std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
     std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
@@ -102,6 +104,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
     std::vector<int> NumeroDeContrainteDesContraintesDeBesoinEnReserves;
+    std::vector<int> nbOffGroupUnitsParticipatingToReservesInThermalClusterConstraintIndex;
     std::vector<int> NumeroDeContrainteDesContraintesDePuissanceMinDuPalier;
     std::vector<int> NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier;
 
@@ -291,6 +294,8 @@ struct RESERVE_PARTICIPATION_BASE
 struct RESERVE_PARTICIPATION_THERMAL : public RESERVE_PARTICIPATION_BASE
 {
     float maxPower = CLUSTER_NOT_PARTICIPATING;
+    float maxPowerOff = CLUSTER_NOT_PARTICIPATING;
+    float participationCostOff = CLUSTER_NOT_PARTICIPATING;
 };
 
 struct RESERVE_PARTICIPATION_STSTORAGE : public RESERVE_PARTICIPATION_BASE
@@ -474,11 +479,14 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     std::vector<double> ProductionThermiqueDuPalier;
     std::vector<double> ParticipationReservesDuPalier;
+    std::vector<double> ParticipationReservesDuPalierOn;
+    std::vector<double> ParticipationReservesDuPalierOff;
 
     std::vector<double> ProductionThermiqueDuPalierUp;
     std::vector<double> ProductionThermiqueDuPalierDown;
 
     std::vector<double> NombreDeGroupesEnMarcheDuPalier;
+    std::vector<double> NombreDeGroupesEteintDuPalierQuiParticipentAuxReserves;
     std::vector<double> NombreDeGroupesQuiDemarrentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;

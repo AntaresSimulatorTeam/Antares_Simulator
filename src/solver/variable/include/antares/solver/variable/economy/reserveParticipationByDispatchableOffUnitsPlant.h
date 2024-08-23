@@ -24,11 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorage_H__
-#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorage_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByDispatchableOffUnitsPlant_H__
+#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByDispatchableOffUnitsPlant_H__
 
 #include "../variable.h"
-#include "./vCardReserveParticipationBySTStorage.h"
+#include "./vCardReserveParticipationByDispatchableOffUnitsPlant.h"
 
 namespace Antares
 {
@@ -44,17 +44,18 @@ namespace Economy
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class ReserveParticipationBySTStorage
- : public Variable::
-     IVariable<ReserveParticipationBySTStorage<NextT>, NextT, VCardReserveParticipationBySTStorage>
+class ReserveParticipationByDispatchableOffUnitsPlant
+ : public Variable::IVariable<ReserveParticipationByDispatchableOffUnitsPlant<NextT>,
+                              NextT,
+                              VCardReserveParticipationByDispatchableOffUnitsPlant>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardReserveParticipationBySTStorage VCardType;
+    typedef VCardReserveParticipationByDispatchableOffUnitsPlant VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ReserveParticipationBySTStorage<NextT>, NextT, VCardType>
+    typedef Variable::IVariable<ReserveParticipationByDispatchableOffUnitsPlant<NextT>, NextT, VCardType>
       AncestorType;
 
     //! List of expected results
@@ -82,11 +83,11 @@ public:
     };
 
 public:
-    ReserveParticipationBySTStorage() : pValuesForTheCurrentYear(NULL), pSize(0)
+    ReserveParticipationByDispatchableOffUnitsPlant() : pValuesForTheCurrentYear(NULL), pSize(0)
     {
     }
 
-    ~ReserveParticipationBySTStorage()
+    ~ReserveParticipationByDispatchableOffUnitsPlant()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             delete[] pValuesForTheCurrentYear[numSpace];
@@ -111,7 +112,7 @@ public:
         {
             if (study->areas[areaIndex]->allCapacityReservations.size() > 0)
             {
-                pSize = area->shortTermStorage.reserveParticipationsCount();
+                pSize = area->thermal.list.reserveParticipationsCount();
                 break;
             }
         }
@@ -185,19 +186,14 @@ public:
                  i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
                  ++i)
             {
-                for (auto it = state.reserveParticipationPerClusterForYear[i].begin(); it != state.reserveParticipationPerClusterForYear[i].end(); ++it)
+                for (auto const& [reserveName, reserveParticipation] :
+                     state.reserveParticipationPerClusterForYear[i][state.thermalCluster->name()])
                 {
-                    auto ClusterId = it->first;
-                    for (auto const& [reserveName, reserveParticipation] :
-                        state.reserveParticipationPerClusterForYear[i][ClusterId])
-                    {
-                        pValuesForTheCurrentYear
-                          [numSpace]
-                          [state.getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(
-                             reserveName, ClusterId)]
-                            .hour[i]
-                          = reserveParticipation.totalParticipation;
-                    }
+                    pValuesForTheCurrentYear
+                      [numSpace][state.getAreaIndexReserveParticipationFromReserveAndThermalCluster(
+                                   reserveName, state.thermalCluster->name())]
+                        .hour[i]
+                      = reserveParticipation.offUnitsParticipation;
                 }
             }
         }
@@ -273,13 +269,13 @@ public:
         if (AncestorType::isPrinted[0])
         {
             assert(NULL != results.data.area);
-            const auto& stStorage = results.data.area->shortTermStorage;
+            const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
             for (uint i = 0; i < pSize; ++i)
             {
                 // Write the data for the current year
-                results.variableCaption = stStorage.storagesByIndex[i].id; // VCardType::Caption();
+                results.variableCaption = thermal.list[i]->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
@@ -293,11 +289,11 @@ private:
     size_t pSize;
     unsigned int pNbYearsParallel;
 
-}; // class ReserveParticipationBySTStorage
+}; // class ReserveParticipationByDispatchableOffUnitsPlant
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationBySTStorage_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationByDispatchableOffUnitsPlant_H__

@@ -516,6 +516,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                     RESERVE_PARTICIPATION_THERMAL reserveParticipation;
                     reserveParticipation.maxPower = cluster->reserveMaxPower(reserveName);
                     reserveParticipation.participationCost = cluster->reserveCost(reserveName);
+                    reserveParticipation.maxPowerOff = cluster->reserveMaxPowerOff(reserveName);
+                    reserveParticipation.participationCostOff = cluster->reserveCostOff(reserveName);
                     reserveParticipation.clusterName = cluster->name();
                     reserveParticipation.clusterIdInArea = cluster->index;
                     reserveParticipation.globalIndexClusterParticipation

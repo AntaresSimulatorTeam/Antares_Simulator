@@ -111,9 +111,15 @@ public:
     void ParticipationOfRunningUnitsToReserve(unsigned int variable,
                                               const std::string& clusterName,
                                               const std::string& reserveName);
+    void ParticipationOfOffUnitsToReserve(unsigned int variable,
+                                              const std::string& clusterName,
+                                              const std::string& reserveName);
     void InternalUnsatisfiedReserve(unsigned int variable, const std::string& reserveName);
     void InternalExcessReserve(unsigned int variable, const std::string& reserveName);
     void NODU(unsigned int variable, const std::string& clusterName);
+    void NumberOfOffUnitsParticipatingToReserve(unsigned int variable,
+                                                const std::string& clusterName,
+                                                const std::string& reserveName);
     void NumberStoppingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(unsigned int variable, const std::string& clusterName);
@@ -175,7 +181,12 @@ public:
     void NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint, const std::string& clusterName);
     void MinDownTime(unsigned int constraint, const std::string& clusterName);
     void PMaxReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
-    void ParticipationOfRunningUnitsToReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
+    void NumberOfOffUnitsParticipatingToReserve(unsigned int constraint,
+                                                 const std::string& clusterName,
+                                                 const std::string& reserveName);
+    void ParticipationOfUnitsToReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
+    void POffUnitsLowerBound(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
+    void POffUnitsUpperBound(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
     void POutCapacityThreasholdInf(unsigned int constraint, const std::string& clusterName);
     void POutCapacityThreasholdSup(unsigned int constraint, const std::string& clusterName);
     void POutBoundMin(unsigned int constraint, const std::string& clusterName);

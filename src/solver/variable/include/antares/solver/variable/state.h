@@ -217,8 +217,33 @@ public:
     std::vector<ReserveParticipationPerGroupForYear> reserveParticipationPerGroupForYear{
       Variable::maxHoursInAYear};
 
+
+    struct DetailledParticipation
+    {
+        double totalParticipation = 0;
+        double onUnitsParticipation = 0;
+        double offUnitsParticipation = 0;
+
+        void addParticipation(double participation)
+        {
+            totalParticipation += participation;
+        }
+        
+        void addOffParticipation(double participation)
+        {
+            offUnitsParticipation += participation;
+            totalParticipation += participation;
+        }
+
+        void addOnParticipation(double participation)
+        {
+            onUnitsParticipation += participation;
+            totalParticipation += participation;
+        }
+    };
+
     //! Reserve Participation for all clusters per reserve
-    std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
+    std::map<Data::ClusterName, std::map<Data::ReserveName, DetailledParticipation>>
       reserveParticipationPerClusterForYear[Variable::maxHoursInAYear];
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or

@@ -152,6 +152,12 @@ public:
     //! \brief Returns participating cost for a reserve if participating, -1 otherwise
     float reserveCost(Data::ReserveName name);
 
+    //! \brief Returns max power off for a reserve if participating, -1 otherwise
+    float reserveMaxPowerOff(Data::ReserveName name);
+
+    //! \brief Returns participating cost off for a reserve if participating, -1 otherwise
+    float reserveCostOff(Data::ReserveName name);
+
     //! \brief Returns the number of reserves linked to this cluster
     unsigned int reserveParticipationsCount();
 

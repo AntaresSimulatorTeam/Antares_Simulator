@@ -131,6 +131,22 @@ float Cluster::reserveCost(Data::ReserveName name)
         return -1;
 }
 
+float Cluster::reserveCostOff(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).participationCostOff;
+    else
+        return -1;
+}
+
+float Cluster::reserveMaxPowerOff(Data::ReserveName name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).maxPowerOff;
+    else
+        return -1;
+}
+
 unsigned int Cluster::reserveParticipationsCount(){
     return clusterReservesParticipations.size();
 }

@@ -130,4 +130,4 @@ static std::string thermalDispatchableGroupToString(Data::ThermalDispatchableGro
 } // namespace Solver
 } // namespace Antares
 
-#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__
+#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByThermalGroup_H__

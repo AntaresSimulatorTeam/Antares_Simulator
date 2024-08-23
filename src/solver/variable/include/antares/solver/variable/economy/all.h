@@ -76,7 +76,8 @@
 #include "npCostByDispatchablePlant.h"
 #include "nbOfDispatchedUnitsByPlant.h"
 #include "profitByPlant.h"
-#include "reserveParticipationByDispatchablePlant.h"
+#include "reserveParticipationByDispatchableOnUnitsPlant.h"
+#include "reserveParticipationByDispatchableOffUnitsPlant.h"
 
 
 // By RES plant
@@ -176,13 +177,14 @@ typedef                           // Prices
                                                                    // plant
                                         <ProfitByPlant
                                          <ReserveParticipationCost // Participation cost to the reserves
-                                          <ReserveParticipationByDispatchablePlant // Participation per thermal cluster
-                                           <ReserveParticipationByThermalGroup // Participation per thermal group
-                                            <ReserveParticipationBySTStorage // Participation per Short Term Storage cluster
-                                             <ReserveParticipationBySTStorageGroup // Participation per short term storage group
-                                              <ReserveParticipationUnsuppliedSpilled 
-                                               <Variable::Economy::Links // All links
-                                               >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                          <ReserveParticipationByDispatchableOnUnitsPlant // Participation per thermal cluster for on units
+                                           <ReserveParticipationByDispatchableOffUnitsPlant // Participation per thermal cluster for off units
+                                            <ReserveParticipationByThermalGroup // Participation per thermal group
+                                             <ReserveParticipationBySTStorage // Participation per Short Term Storage cluster
+                                              <ReserveParticipationBySTStorageGroup // Participation per short term storage group
+                                               <ReserveParticipationUnsuppliedSpilled 
+                                                <Variable::Economy::Links // All links
+                                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

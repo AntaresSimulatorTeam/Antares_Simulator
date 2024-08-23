@@ -57,6 +57,14 @@ ConstraintBuilder& ConstraintBuilder::RunningThermalClusterReserveParticipation(
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::OffThermalClusterReserveParticipation(unsigned int index,
+                                                                   double coeff,
+                                                                   int offset,
+                                                                   int delta){
+    AddVariable(variableManager_.OffThermalClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::ThermalClusterReserveParticipation(unsigned int index,
                                                                    double coeff,
                                                                    int offset,
@@ -135,6 +143,12 @@ ConstraintBuilder& ConstraintBuilder::InternalExcessReserve(unsigned int index,
 ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index, double coeff)
 {
     AddVariable(variableManager_.NumberOfDispatchableUnits(index, hourInWeek_), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::NumberOfOffUnitsParticipatingToReserve(unsigned int index, double coeff)
+{
+    AddVariable(variableManager_.NumberOfOffUnitsParticipatingToReserve(index, hourInWeek_), coeff);
     return *this;
 }
 
