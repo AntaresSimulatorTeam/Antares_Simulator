@@ -36,6 +36,11 @@ enum class MipStatus
     MIP_ERROR
 };
 
+/**
+ * MipSolution
+ * Used to get the return status of the solve
+ * Contains the problem's optimal values for each variable
+ */
 class IMipSolution
 {
 public:

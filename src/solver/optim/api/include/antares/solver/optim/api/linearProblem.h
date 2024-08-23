@@ -31,30 +31,42 @@
 namespace Antares::Solver::Optim::Api
 {
 
+/**
+ * Linear Problem
+ * This class is aimed at creating and manipulating variables/constraints
+ * Also used to to control the objective, maximization or minimization
+ */
 class ILinearProblem
 {
 public:
     virtual ~ILinearProblem() = default;
 
-    virtual IMipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
-    virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
+    /// Create a variable and specify if it's an integer
     virtual IMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
       = 0;
+    /// Wrapper for addVariable with integer = false
+    virtual IMipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
+    /// Wrapper for addVariable with integer = true
+    virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
     virtual IMipVariable* getVariable(const std::string& name) = 0;
 
+    /// Add a bounded constraint to the problem
     virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
     virtual IMipConstraint* getConstraint(const std::string& name) = 0;
 
+    /// Set the objective for a given variable
     virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;
-
     virtual double getObjectiveCoefficient(const IMipVariable* var) const = 0;
 
+    /// Sets the optimization direction to minimize
     virtual void setMinimization() = 0;
+    /// Sets the optimization direction to maximize
     virtual void setMaximization() = 0;
 
     virtual bool isMinimization() const = 0;
     virtual bool isMaximization() const = 0;
 
+    /// Solve the problem, returns a IMipSolution
     virtual IMipSolution* solve(bool verboseSolver) = 0;
 };
 

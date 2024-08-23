@@ -24,6 +24,7 @@
 namespace Antares::Solver::Optim::Api
 {
 
+/// Used to handle bounds for variables and constraints
 class IHasBounds
 {
 public:
