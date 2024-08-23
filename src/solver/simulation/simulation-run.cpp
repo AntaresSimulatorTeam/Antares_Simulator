@@ -56,21 +56,25 @@ Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
 {
     study.computePThetaInfForThermalClusters();
 
-    if (study.runtime.mode == Data::SimulationMode::Adequacy)
+    switch (study.runtime.mode)
     {
+    case Data::SimulationMode::Adequacy:
         return runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Adequacy>>(
           study,
           settings,
           durationCollector,
           resultWriter,
           simulationObserver);
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
+    default:
+        return runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Economy>>(
+          study,
+          settings,
+          durationCollector,
+          resultWriter,
+          simulationObserver);
     }
-    return runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Economy>>(
-      study,
-      settings,
-      durationCollector,
-      resultWriter,
-      simulationObserver);
 }
 
 } // namespace Antares::Solver
