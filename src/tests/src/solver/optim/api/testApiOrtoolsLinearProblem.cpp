@@ -208,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE(solutionOpimalValues, Fixture)
 
     auto* b = pb->getVariable("b");
 
-    std::vector<Api::IMipVariable*> v = {a, b, nullptr};
+    std::vector<Api::IMipVariable*> v = {a, b};
     auto res = solution->getOptimalValues(v);
 
     auto* varNotInSolution = pb->addNumVariable(0, 1, "f");
