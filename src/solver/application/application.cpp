@@ -37,7 +37,7 @@
 #include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/adequacy.h"
 #include "antares/solver/simulation/economy.h"
-#include "antares/solver/simulation/simulation-runner.h"
+#include "antares/solver/simulation/simulation-run.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
@@ -386,12 +386,11 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    SimulationRunner simulationRunner(*pStudy,
+    pOptimizationInfo = simulationRun(*pStudy,
                                       pSettings,
                                       pDurationCollector,
                                       *resultWriter,
                                       observer);
-    pOptimizationInfo = simulationRunner.run();
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();

@@ -20,27 +20,28 @@
  */
 
 #include "API.h"
-#include "antares/solver/misc/options.h"
-#include "antares/infoCollection/StudyInfoCollector.h"
+
+#include <SimulationObserver.h>
+
+#include <antares/writer/writer_factory.h>
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/exception/LoadingError.hpp"
-#include <antares/writer/writer_factory.h>
-#include <SimulationObserver.h>
-#include "antares/solver/simulation/simulation-runner.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/solver/misc/options.h"
+#include "antares/solver/simulation/simulation-run.h"
 
 namespace Antares::API
 {
 SimulationResults APIInternal::run(const IStudyLoader& study_loader)
 {
-    try {
+    try
+    {
         study_ = study_loader.load();
-    } catch (const ::Antares::Error::StudyFolderDoesNotExist& e) {
+    }
+    catch (const ::Antares::Error::StudyFolderDoesNotExist& e)
+    {
         Antares::API::Error err{.reason = e.what()};
-        return {
-          .simulationPath = "",
-          .antares_problems = {},
-          .error = err
-        };
+        return {.simulationPath = "", .antares_problems = {}, .error = err};
     }
     return execute();
 }
@@ -49,7 +50,8 @@ SimulationResults APIInternal::run(const IStudyLoader& study_loader)
  * @brief The execute method is used to execute the simulation.
  * @return SimulationResults object which contains the results of the simulation.
  *
- * This method is initialy a copy of Application::execute with some modifications hence the apparent dupllication
+ * This method is initialy a copy of Application::execute with some modifications hence the apparent
+ * dupllication
  */
 SimulationResults APIInternal::execute() const
 {
@@ -71,25 +73,23 @@ SimulationResults APIInternal::execute() const
     auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
-    auto resultWriter = Solver::resultWriterFactory(
-      study_->parameters.resultFormat, study_->folderOutput, ioQueueService, durationCollector);
+    auto resultWriter = Solver::resultWriterFactory(study_->parameters.resultFormat,
+                                                    study_->folderOutput,
+                                                    ioQueueService,
+                                                    durationCollector);
     SimulationObserver simulationObserver;
 
-    SimulationRunner simulationRunner(*study_,
-                                      settings,
-                                      durationCollector,
-                                      *resultWriter,
-                                      simulationObserver);
-    optimizationInfo = simulationRunner.run();
+    optimizationInfo = simulationRun(*study_,
+                                     settings,
+                                     durationCollector,
+                                     *resultWriter,
+                                     simulationObserver);
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
 
-    return
-    {
-        .simulationPath = study_->folderOutput.c_str(),
-        .antares_problems = simulationObserver.acquireLps(),
-        .error{}
-    };
+    return {.simulationPath = study_->folderOutput.c_str(),
+            .antares_problems = simulationObserver.acquireLps(),
+            .error{}};
 }
 } // namespace Antares::API

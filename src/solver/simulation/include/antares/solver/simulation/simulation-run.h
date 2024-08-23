@@ -21,34 +21,16 @@
 
 #pragma once
 
-//#include "antares/solver/simulation/adequacy.h"
-//#include "antares/solver/simulation/economy.h"
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
 {
 
-class SimulationRunner
-{
-public:
-    SimulationRunner(Antares::Data::Study& study,
-                     const Settings& settings,
-                     Benchmarking::DurationCollector& durationCollector,
-                     IResultWriter& resultWriter,
-                     Simulation::ISimulationObserver& simulationObserver);
-
-    Benchmarking::OptimizationInfo run();
-
-private:
-    template<class simulationType>
-    Benchmarking::OptimizationInfo runSimulation();
-
-    Antares::Data::Study& study_;
-    const Settings& settings_;
-    Benchmarking::DurationCollector& durationCollector_;
-    IResultWriter& resultWriter_;
-    Simulation::ISimulationObserver& simulationObserver_;
-};
+Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
+                                             const Settings& settings,
+                                             Benchmarking::DurationCollector& durationCollector,
+                                             IResultWriter& resultWriter,
+                                             Simulation::ISimulationObserver& simulationObserver);
 
 } // namespace Antares::Solver
