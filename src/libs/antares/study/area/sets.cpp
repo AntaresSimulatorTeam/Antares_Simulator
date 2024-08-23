@@ -91,7 +91,7 @@ void Sets::defaultForAreas()
     opts.caption = "All areas";
     opts.comments = "Spatial aggregates on all areas";
     opts.output = false;
-    opts.rules.push_back(Rule(ruleFilter, "add-all"));
+    opts.rules.emplace_back(ruleFilter, "add-all");
     auto district = std::make_shared<SetAreasType>();
     add("all areas", district, opts);
 }
@@ -209,17 +209,17 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
 
                 if (p->key == "+")
                 {
-                    opts.rules.push_back(Rule(ruleAdd, value.to<std::string>()));
+                    opts.rules.emplace_back(ruleAdd, value.to<std::string>());
                     continue;
                 }
                 if (p->key == "-")
                 {
-                    opts.rules.push_back(Rule(ruleRemove, value.to<std::string>()));
+                    opts.rules.emplace_back(ruleRemove, value.to<std::string>());
                     continue;
                 }
                 if (p->key == "apply-filter")
                 {
-                    opts.rules.push_back(Rule(ruleFilter, value.to<std::string>()));
+                    opts.rules.emplace_back(ruleFilter, value.to<std::string>());
                     continue;
                 }
                 if (p->key == "output")
