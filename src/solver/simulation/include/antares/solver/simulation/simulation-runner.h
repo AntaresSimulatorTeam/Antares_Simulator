@@ -51,4 +51,4 @@ private:
     Simulation::ISimulationObserver& simulationObserver_;
 };
 
-}
+} // namespace Antares::Solver
