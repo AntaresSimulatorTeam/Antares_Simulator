@@ -20,8 +20,6 @@
 */
 #pragma once
 
-#include <memory>
-
 #include <antares/solver/expressions/nodes/UnaryNode.h>
 
 namespace Antares::Solver::Nodes
