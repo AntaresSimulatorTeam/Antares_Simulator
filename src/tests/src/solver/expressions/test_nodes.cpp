@@ -69,5 +69,4 @@ BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
     PortFieldNode portFieldNode2(portName2, fieldName2);
     BOOST_CHECK(portFieldNode1 != portFieldNode2);
 }
-
 BOOST_AUTO_TEST_SUITE_END()

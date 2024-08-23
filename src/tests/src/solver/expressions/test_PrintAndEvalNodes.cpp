@@ -197,6 +197,32 @@ BOOST_FIXTURE_TEST_CASE(division_by_zero, Registry<Node>)
                           { return strcmp(ex.what(), "DivisionNode Division by zero") == 0; });
 }
 
+BOOST_AUTO_TEST_CASE(DivisionNodeFull)
+{
+    EvalVisitor evalVisitor;
+    LiteralNode literalNode1(23.);
+    LiteralNode literalNode2(-23.);
+
+    DivisionNode divisionNode1(&literalNode1, &literalNode1);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(divisionNode1), 1.0);
+
+    DivisionNode divisionNode2(&literalNode1, &literalNode2);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(divisionNode2), -1.0);
+
+    LiteralNode* literalNull = nullptr;
+
+    DivisionNode divisionNode3(&literalNode1, literalNull);
+
+    BOOST_CHECK_THROW(evalVisitor.dispatch(divisionNode3), NodeVistorException);
+
+    // truncated to zero
+    LiteralNode literalVerySmall(1.e-50000);
+
+    DivisionNode divisionNode4(&literalNode1, &literalVerySmall);
+
+    BOOST_CHECK_THROW(evalVisitor.dispatch(divisionNode4), EvalVisitorDivisionException);
+}
+
 BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
 {
     double num1 = 22.0, num2 = 8;

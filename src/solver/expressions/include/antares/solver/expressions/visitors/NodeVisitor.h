@@ -20,6 +20,7 @@
 */
 #pragma once
 #include <optional>
+#include <stdexcept>
 #include <vector>
 
 #include <antares/logs/logs.h>
@@ -37,6 +38,11 @@ std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
     }
     return std::nullopt;
 }
+
+struct NodeVistorException: std::runtime_error
+{
+    using std::runtime_error::runtime_error;
+};
 
 template<class R, class... Args>
 class NodeVisitor
@@ -69,7 +75,7 @@ public:
                 return ret.value();
             }
         }
-        logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
+        throw NodeVistorException("Antares::Solver::Nodes Visitor: invalid Node!");
         return R();
     }
 
