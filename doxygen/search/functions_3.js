@@ -1,7 +1,7 @@
 var searchData=
 [
   ['dailypower_0',['Dailypower',['../classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#a4555df4ee23bf95d8fc43ba0814ecd4c',1,'Antares::Window::Hydro::Dailypower']]],
-  ['data_1',['data',['../classAntares_1_1Forms_1_1ApplWnd.html#a9584446978a4772a352e0f8de8451d04',1,'Antares::Forms::ApplWnd::data()'],['../classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Data.html#adb393f59914ad9120d8c25d35044c6c4',1,'Antares::Action::AntaresStudy::Constraint::Data::Data()'],['../classAntares_1_1Forms_1_1ApplWnd.html#adbf46159dd9dffb80d463fb010e556b7',1,'Antares::Forms::ApplWnd::data()']]],
+  ['data_1',['data',['../classAntares_1_1Action_1_1AntaresStudy_1_1Constraint_1_1Data.html#adb393f59914ad9120d8c25d35044c6c4',1,'Antares::Action::AntaresStudy::Constraint::Data::Data()'],['../classAntares_1_1Forms_1_1ApplWnd.html#adbf46159dd9dffb80d463fb010e556b7',1,'Antares::Forms::ApplWnd::data() const'],['../classAntares_1_1Forms_1_1ApplWnd.html#a9584446978a4772a352e0f8de8451d04',1,'Antares::Forms::ApplWnd::data()']]],
   ['datagridprecision_2',['datagridprecision',['../classAntares_1_1Toolbox_1_1Filter_1_1Component.html#a9c5f3f9af44f83d52a5fff4ccc5160b0',1,'Antares::Toolbox::Filter::Component::dataGridPrecision()'],['../classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#ab49c163786bb45eb3867d39b994b3584',1,'Antares::Toolbox::Filter::AFilterBase::dataGridPrecision()']]],
   ['dataserieshydro_3',['DataSeriesHydro',['../classAntares_1_1Data_1_1DataSeriesHydro.html#a3abe93b1e9efea9d7b499e5c72c3f790',1,'Antares::Data::DataSeriesHydro']]],
   ['datasource_4',['datasource',['../classAntares_1_1Component_1_1HTMLListbox_1_1Component.html#a2658fd1ba79fbe7f6d294b038cc913ae',1,'Antares::Component::HTMLListbox::Component']]],
@@ -9,7 +9,7 @@ var searchData=
   ['datatsgenerator_6',['datatsgenerator',['../classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTSGenerator.html#ab8ac532d06a45a2e151513114a471a23',1,'Antares::Action::AntaresStudy::Area::DataTSGenerator::DataTSGenerator(Data::TimeSeriesType ts, const AnyString &amp;areaname)'],['../classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTSGenerator.html#a95cf2ec0df006a9526c4b593969610cc',1,'Antares::Action::AntaresStudy::Area::DataTSGenerator::DataTSGenerator(Data::TimeSeriesType ts, const AnyString &amp;areaname, const AnyString &amp;clustername)']]],
   ['dbgrid_7',['DBGrid',['../classAntares_1_1Component_1_1Datagrid_1_1DBGrid.html#af2ef9f72bcc47916161ab942a47c3918',1,'Antares::Component::Datagrid::DBGrid']]],
   ['decalareaposition_8',['DecalAreaPosition',['../classAntares_1_1Action_1_1Settings_1_1DecalAreaPosition.html#addc794bb28d6696cd9e831ebc2573940',1,'Antares::Action::Settings::DecalAreaPosition']]],
-  ['defaultforareas_9',['defaultForAreas',['../classAntares_1_1Data_1_1Sets.html#aab00664beaeb8ec9c70f5520aec4b9b6',1,'Antares::Data::Sets']]],
+  ['defaultforareas_9',['defaultForAreas',['../classAntares_1_1Data_1_1Sets.html#a44f42c13cff732cd40c4f328d4fadc9a',1,'Antares::Data::Sets']]],
   ['defaulttext_10',['DefaultText',['../classAntares_1_1Forms_1_1CustomStatusBar.html#a8ff4b53db6fd13e7e97dfe2f62bd9579',1,'Antares::Forms::CustomStatusBar']]],
   ['delayapply_11',['delayApply',['../classAntares_1_1Window_1_1Inspector_1_1Frame.html#acdd045bbe778b6e5afcf92b4a853cffb',1,'Antares::Window::Inspector::Frame']]],
   ['delayapplyglobalselection_12',['delayApplyGlobalSelection',['../classAntares_1_1Window_1_1Inspector_1_1Frame.html#a406cba965c4dce65d86bc8f782e12fa0',1,'Antares::Window::Inspector::Frame']]],

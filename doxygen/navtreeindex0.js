@@ -98,7 +98,7 @@ var NAVTREEINDEX0 =
 "StudyInfoCollector_8h_source.html":[8,0,0,3,0,11,0,0,0,0],
 "TSnumberData_8h_source.html":[8,0,0,3,0,25,0,0,0,8,15],
 "ThermalTSNumberData_8h_source.html":[8,0,0,3,0,25,0,0,0,8,14],
-"UnfeasibleProblemBehavior_8hpp_source.html":[8,0,0,3,0,25,0,0,0,29],
+"UnfeasibleProblemBehavior_8hpp_source.html":[8,0,0,3,0,25,0,0,0,28],
 "UnfeasibleProblemError_8hpp_source.html":[8,0,0,3,0,8,0,0,0,3],
 "VariableManagement_8h_source.html":[8,0,0,4,6,1,0],
 "VariableManagerUtils_8h_source.html":[8,0,0,4,6,1,1],

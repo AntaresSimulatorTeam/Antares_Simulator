@@ -24,7 +24,6 @@ var dir_5e4647cf74155fd57847988678b744d8 =
     [ "parameters.h", "parameters_8h_source.html", null ],
     [ "runtime.h", "runtime_8h_source.html", null ],
     [ "sets.h", "libs_2antares_2study_2include_2antares_2study_2sets_8h_source.html", null ],
-    [ "sets.hxx", "sets_8hxx_source.html", null ],
     [ "simulation.h", "libs_2antares_2study_2include_2antares_2study_2simulation_8h_source.html", null ],
     [ "study.h", "libs_2antares_2study_2include_2antares_2study_2study_8h_source.html", null ],
     [ "study.hxx", "study_8hxx_source.html", null ],

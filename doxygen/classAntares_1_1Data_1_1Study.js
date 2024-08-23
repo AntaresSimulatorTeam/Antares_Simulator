@@ -1,15 +1,9 @@
 var classAntares_1_1Data_1_1Study =
 [
-    [ "DisabledAreaLinkList", "classAntares_1_1Data_1_1Study.html#a4b43cf211598fc39851dc6d048acafef", null ],
-    [ "DisabledAreaList", "classAntares_1_1Data_1_1Study.html#a38fcf684b975326a9b022e89f43e1eb7", null ],
-    [ "DisabledThermalClusterList", "classAntares_1_1Data_1_1Study.html#a5ceb7388b1fceabb7bfe12f9664ea559", null ],
     [ "FileExtension", "classAntares_1_1Data_1_1Study.html#a4348caf11338e671372a7732fa475136", null ],
     [ "List", "classAntares_1_1Data_1_1Study.html#afd78b96038f65e1b8c5f53fbd92ca063", null ],
     [ "Set", "classAntares_1_1Data_1_1Study.html#ac84095305b6524e9b8fecda02070e825", null ],
-    [ "SetsOfAreas", "classAntares_1_1Data_1_1Study.html#aefafb3d3540ad2908a14efdf0c312938", null ],
-    [ "SetsOfLinks", "classAntares_1_1Data_1_1Study.html#ad8287f729c370b86fc961ed27331264b", null ],
-    [ "SingleSetOfAreas", "classAntares_1_1Data_1_1Study.html#a77c8a07952c1166bd2b70ec01c13b8f6", null ],
-    [ "SingleSetOfLinks", "classAntares_1_1Data_1_1Study.html#aa9e317691c52998789fccd0d6bf01064", null ],
+    [ "SetsOfAreas", "classAntares_1_1Data_1_1Study.html#aab54ffdf4fbc75b5d4e5461d4f649750", null ],
     [ "Study", "classAntares_1_1Data_1_1Study.html#ac7be7a2a3105799743468871378ad4fd", null ],
     [ "~Study", "classAntares_1_1Data_1_1Study.html#aef6c85631895b8500f68b7df86dd2c28", null ],
     [ "areaAdd", "classAntares_1_1Data_1_1Study.html#ad18ee161ef5942de357d8e1bfc220b79", null ],
@@ -83,7 +77,6 @@ var classAntares_1_1Data_1_1Study =
     [ "runtime", "classAntares_1_1Data_1_1Study.html#acb39944d58dae61bef9ae4ab12d8a3f5", null ],
     [ "scenarioRules", "classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16", null ],
     [ "setsOfAreas", "classAntares_1_1Data_1_1Study.html#ab79f4691a33e445f73d06782389a8a2c", null ],
-    [ "setsOfLinks", "classAntares_1_1Data_1_1Study.html#a9a07d80649349bc703f50e9dbef26c5d", null ],
     [ "simulationComments", "classAntares_1_1Data_1_1Study.html#a83df1f36832cd1cb70ce40c5949f2182", null ],
     [ "uiinfo", "classAntares_1_1Data_1_1Study.html#a635d6801eb4d4113abdcb2ccf0f0bb79", null ],
     [ "usedByTheSolver", "classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55", null ]

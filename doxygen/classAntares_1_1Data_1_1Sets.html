@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Data::Sets&lt; T &gt; Class Template Reference</title>
+<title>Antares Simulator: Antares::Data::Sets Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -135,7 +135,7 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1Sets.html','')
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="classAntares_1_1Data_1_1Sets-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Antares::Data::Sets&lt; T &gt; Class Template Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">Antares::Data::Sets Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -156,163 +156,140 @@ Public Types</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:ac65c51c62f76ee7fc938612620382a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af56b039cb51acdf66af937ea68c95a05" id="r_af56b039cb51acdf66af937ea68c95a05"><td class="memItemLeft" align="right" valign="top"><a id="af56b039cb51acdf66af937ea68c95a05" name="af56b039cb51acdf66af937ea68c95a05"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Type</b> = T</td></tr>
-<tr class="memdesc:af56b039cb51acdf66af937ea68c95a05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type. <br /></td></tr>
-<tr class="separator:af56b039cb51acdf66af937ea68c95a05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a110125c9ead427ce89f0fe638a4ab499" id="r_a110125c9ead427ce89f0fe638a4ab499"><td class="memItemLeft" align="right" valign="top"><a id="a110125c9ead427ce89f0fe638a4ab499" name="a110125c9ead427ce89f0fe638a4ab499"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>IDType</b> = Yuni::CString&lt; 128, false &gt;</td></tr>
-<tr class="separator:a110125c9ead427ce89f0fe638a4ab499"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82f5fa653fadf4be390e9d59f688d687" id="r_a82f5fa653fadf4be390e9d59f688d687"><td class="memItemLeft" align="right" valign="top"><a id="a82f5fa653fadf4be390e9d59f688d687" name="a82f5fa653fadf4be390e9d59f688d687"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>TypePtr</b> = std::shared_ptr&lt; T &gt;</td></tr>
-<tr class="memdesc:a82f5fa653fadf4be390e9d59f688d687"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value. <br /></td></tr>
-<tr class="separator:a82f5fa653fadf4be390e9d59f688d687"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a869038f4e78a324914fbf446325bfd00" id="r_a869038f4e78a324914fbf446325bfd00"><td class="memItemLeft" align="right" valign="top"><a id="a869038f4e78a324914fbf446325bfd00" name="a869038f4e78a324914fbf446325bfd00"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>MapType</b> = std::map&lt; IDType, <a class="el" href="classAntares_1_1Data_1_1Sets.html#a82f5fa653fadf4be390e9d59f688d687">TypePtr</a> &gt;</td></tr>
-<tr class="memdesc:a869038f4e78a324914fbf446325bfd00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of Item. <br /></td></tr>
-<tr class="separator:a869038f4e78a324914fbf446325bfd00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add0407d2819bb0b355fcea03a0df140f" id="r_add0407d2819bb0b355fcea03a0df140f"><td class="memItemLeft" align="right" valign="top"><a id="add0407d2819bb0b355fcea03a0df140f" name="add0407d2819bb0b355fcea03a0df140f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> = typename MapType::iterator</td></tr>
-<tr class="memdesc:add0407d2819bb0b355fcea03a0df140f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard iterators from the STL. <br /></td></tr>
-<tr class="separator:add0407d2819bb0b355fcea03a0df140f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade957da285fbf1eacd15e63204ad3986" id="r_ade957da285fbf1eacd15e63204ad3986"><td class="memItemLeft" align="right" valign="top"><a id="ade957da285fbf1eacd15e63204ad3986" name="ade957da285fbf1eacd15e63204ad3986"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = typename MapType::const_iterator</td></tr>
-<tr class="memdesc:ade957da285fbf1eacd15e63204ad3986"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard iterators from the STL (const) <br /></td></tr>
-<tr class="separator:ade957da285fbf1eacd15e63204ad3986"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a497bcd6d205438893318d8ddfd526ae9" id="r_a497bcd6d205438893318d8ddfd526ae9"><td class="memItemLeft" align="right" valign="top"><a id="a497bcd6d205438893318d8ddfd526ae9" name="a497bcd6d205438893318d8ddfd526ae9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Rule</b> = std::pair&lt; RuleType, Yuni::String::Ptr &gt;</td></tr>
-<tr class="memdesc:a497bcd6d205438893318d8ddfd526ae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of a single rule. <br /></td></tr>
-<tr class="separator:a497bcd6d205438893318d8ddfd526ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bcde13448678981edcc87a199d4060b" id="r_a2bcde13448678981edcc87a199d4060b"><td class="memItemLeft" align="right" valign="top"><a id="a2bcde13448678981edcc87a199d4060b" name="a2bcde13448678981edcc87a199d4060b"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>RuleSet</b> = std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1Sets.html#a497bcd6d205438893318d8ddfd526ae9">Rule</a> &gt;</td></tr>
-<tr class="memdesc:a2bcde13448678981edcc87a199d4060b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rule Set. <br /></td></tr>
-<tr class="separator:a2bcde13448678981edcc87a199d4060b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae233225789ef024f472b08776cc1b48c" id="r_ae233225789ef024f472b08776cc1b48c"><td class="memItemLeft" align="right" valign="top"><a id="ae233225789ef024f472b08776cc1b48c" name="ae233225789ef024f472b08776cc1b48c"></a>
+<tr class="memitem:adc7db1e0aa49574d41815ff32983dfb6" id="r_adc7db1e0aa49574d41815ff32983dfb6"><td class="memItemLeft" align="right" valign="top"><a id="adc7db1e0aa49574d41815ff32983dfb6" name="adc7db1e0aa49574d41815ff32983dfb6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>IDType</b> = Yuni::ShortString128</td></tr>
+<tr class="separator:adc7db1e0aa49574d41815ff32983dfb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23f6aae164b511c18fc8de56150db14c" id="r_a23f6aae164b511c18fc8de56150db14c"><td class="memItemLeft" align="right" valign="top"><a id="a23f6aae164b511c18fc8de56150db14c" name="a23f6aae164b511c18fc8de56150db14c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreasType</b> = std::set&lt; <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *, <a class="el" href="structAntares_1_1Data_1_1CompareAreaName.html">CompareAreaName</a> &gt;</td></tr>
+<tr class="memdesc:a23f6aae164b511c18fc8de56150db14c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single set of areas. <br /></td></tr>
+<tr class="separator:a23f6aae164b511c18fc8de56150db14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9af89c550e05d8be2d2332bf7246556f" id="r_a9af89c550e05d8be2d2332bf7246556f"><td class="memItemLeft" align="right" valign="top"><a id="a9af89c550e05d8be2d2332bf7246556f" name="a9af89c550e05d8be2d2332bf7246556f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>TypePtr</b> = std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Sets.html#a23f6aae164b511c18fc8de56150db14c">SetAreasType</a> &gt;</td></tr>
+<tr class="memdesc:a9af89c550e05d8be2d2332bf7246556f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value. <br /></td></tr>
+<tr class="separator:a9af89c550e05d8be2d2332bf7246556f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab650c122fe89f774a6d21b5962726d92" id="r_ab650c122fe89f774a6d21b5962726d92"><td class="memItemLeft" align="right" valign="top"><a id="ab650c122fe89f774a6d21b5962726d92" name="ab650c122fe89f774a6d21b5962726d92"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>MapType</b> = std::map&lt; IDType, <a class="el" href="classAntares_1_1Data_1_1Sets.html#a9af89c550e05d8be2d2332bf7246556f">TypePtr</a> &gt;</td></tr>
+<tr class="memdesc:ab650c122fe89f774a6d21b5962726d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of Item. <br /></td></tr>
+<tr class="separator:ab650c122fe89f774a6d21b5962726d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1650fbf406293612b2e1d0464368dea7" id="r_a1650fbf406293612b2e1d0464368dea7"><td class="memItemLeft" align="right" valign="top"><a id="a1650fbf406293612b2e1d0464368dea7" name="a1650fbf406293612b2e1d0464368dea7"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> = MapType::iterator</td></tr>
+<tr class="memdesc:a1650fbf406293612b2e1d0464368dea7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard iterators from the STL. <br /></td></tr>
+<tr class="separator:a1650fbf406293612b2e1d0464368dea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39657482c0aeef93cde7965133eaa8a2" id="r_a39657482c0aeef93cde7965133eaa8a2"><td class="memItemLeft" align="right" valign="top"><a id="a39657482c0aeef93cde7965133eaa8a2" name="a39657482c0aeef93cde7965133eaa8a2"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = MapType::const_iterator</td></tr>
+<tr class="memdesc:a39657482c0aeef93cde7965133eaa8a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard iterators from the STL (const) <br /></td></tr>
+<tr class="separator:a39657482c0aeef93cde7965133eaa8a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfbde2601286f1e519949fe8a1cfb0a9" id="r_abfbde2601286f1e519949fe8a1cfb0a9"><td class="memItemLeft" align="right" valign="top"><a id="abfbde2601286f1e519949fe8a1cfb0a9" name="abfbde2601286f1e519949fe8a1cfb0a9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Rule</b> = std::pair&lt; RuleType, std::string &gt;</td></tr>
+<tr class="memdesc:abfbde2601286f1e519949fe8a1cfb0a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of a single rule. <br /></td></tr>
+<tr class="separator:abfbde2601286f1e519949fe8a1cfb0a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb64cdeb7145bfaf447a9293bb4d35f0" id="r_abb64cdeb7145bfaf447a9293bb4d35f0"><td class="memItemLeft" align="right" valign="top"><a id="abb64cdeb7145bfaf447a9293bb4d35f0" name="abb64cdeb7145bfaf447a9293bb4d35f0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>RuleSet</b> = std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1Sets.html#abfbde2601286f1e519949fe8a1cfb0a9">Rule</a> &gt;</td></tr>
+<tr class="memdesc:abb64cdeb7145bfaf447a9293bb4d35f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rule Set. <br /></td></tr>
+<tr class="separator:abb64cdeb7145bfaf447a9293bb4d35f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7915112d11f73a2c8413eccf27952a3" id="r_ac7915112d11f73a2c8413eccf27952a3"><td class="memItemLeft" align="right" valign="top"><a id="ac7915112d11f73a2c8413eccf27952a3" name="ac7915112d11f73a2c8413eccf27952a3"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>MapOptions</b> = std::map&lt; IDType, <a class="el" href="classAntares_1_1Data_1_1Sets_1_1Options.html">Options</a> &gt;</td></tr>
-<tr class="separator:ae233225789ef024f472b08776cc1b48c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ac7915112d11f73a2c8413eccf27952a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Constructor &amp; Destructor</div></td></tr>
-<tr class="memitem:ad7ee4b8bdccccda27622640dd4e4fe3e" id="r_ad7ee4b8bdccccda27622640dd4e4fe3e"><td class="memItemLeft" align="right" valign="top"><a id="ad7ee4b8bdccccda27622640dd4e4fe3e" name="ad7ee4b8bdccccda27622640dd4e4fe3e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Sets</b> ()</td></tr>
-<tr class="memdesc:ad7ee4b8bdccccda27622640dd4e4fe3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
-<tr class="separator:ad7ee4b8bdccccda27622640dd4e4fe3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67398c7ffac68db23016d9e279b0c490" id="r_a67398c7ffac68db23016d9e279b0c490"><td class="memItemLeft" align="right" valign="top"><a id="a67398c7ffac68db23016d9e279b0c490" name="a67398c7ffac68db23016d9e279b0c490"></a>
+<tr class="memitem:abe581f3c3b10e04bfc593c963d65c6b2" id="r_abe581f3c3b10e04bfc593c963d65c6b2"><td class="memItemLeft" align="right" valign="top"><a id="abe581f3c3b10e04bfc593c963d65c6b2" name="abe581f3c3b10e04bfc593c963d65c6b2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Sets</b> ()=default</td></tr>
+<tr class="memdesc:abe581f3c3b10e04bfc593c963d65c6b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
+<tr class="separator:abe581f3c3b10e04bfc593c963d65c6b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae9007948b581a4f05a901d576e61f1c" id="r_aae9007948b581a4f05a901d576e61f1c"><td class="memItemLeft" align="right" valign="top"><a id="aae9007948b581a4f05a901d576e61f1c" name="aae9007948b581a4f05a901d576e61f1c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Sets</b> (const <a class="el" href="classAntares_1_1Data_1_1Sets.html">Sets</a> &amp;rhs)</td></tr>
-<tr class="memdesc:a67398c7ffac68db23016d9e279b0c490"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor. <br /></td></tr>
-<tr class="separator:a67398c7ffac68db23016d9e279b0c490"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab09d445cf0e4fbd6ad053051d802db8d" id="r_ab09d445cf0e4fbd6ad053051d802db8d"><td class="memItemLeft" align="right" valign="top"><a id="ab09d445cf0e4fbd6ad053051d802db8d" name="ab09d445cf0e4fbd6ad053051d802db8d"></a>
+<tr class="memdesc:aae9007948b581a4f05a901d576e61f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor. <br /></td></tr>
+<tr class="separator:aae9007948b581a4f05a901d576e61f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b770b1cb744f305c44435bb325f15b8" id="r_a4b770b1cb744f305c44435bb325f15b8"><td class="memItemLeft" align="right" valign="top"><a id="a4b770b1cb744f305c44435bb325f15b8" name="a4b770b1cb744f305c44435bb325f15b8"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>~Sets</b> ()=default</td></tr>
-<tr class="memdesc:ab09d445cf0e4fbd6ad053051d802db8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
-<tr class="separator:ab09d445cf0e4fbd6ad053051d802db8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:a4b770b1cb744f305c44435bb325f15b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a4b770b1cb744f305c44435bb325f15b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Iterators</h2></td></tr>
-<tr class="memitem:a53ed7b378bc0133bf599c5eb16abfb46" id="r_a53ed7b378bc0133bf599c5eb16abfb46"><td class="memItemLeft" align="right" valign="top"><a id="a53ed7b378bc0133bf599c5eb16abfb46" name="a53ed7b378bc0133bf599c5eb16abfb46"></a>
-<a class="el" href="classAntares_1_1Data_1_1Sets.html#add0407d2819bb0b355fcea03a0df140f">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> ()</td></tr>
-<tr class="separator:a53ed7b378bc0133bf599c5eb16abfb46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b53c13263a9d71124b9a292ff82b50b" id="r_a3b53c13263a9d71124b9a292ff82b50b"><td class="memItemLeft" align="right" valign="top"><a id="a3b53c13263a9d71124b9a292ff82b50b" name="a3b53c13263a9d71124b9a292ff82b50b"></a>
-<a class="el" href="classAntares_1_1Data_1_1Sets.html#ade957da285fbf1eacd15e63204ad3986">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
-<tr class="separator:a3b53c13263a9d71124b9a292ff82b50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a981dd9ae782c08a7ab22dd00e686f30e" id="r_a981dd9ae782c08a7ab22dd00e686f30e"><td class="memItemLeft" align="right" valign="top"><a id="a981dd9ae782c08a7ab22dd00e686f30e" name="a981dd9ae782c08a7ab22dd00e686f30e"></a>
-<a class="el" href="classAntares_1_1Data_1_1Sets.html#add0407d2819bb0b355fcea03a0df140f">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
-<tr class="separator:a981dd9ae782c08a7ab22dd00e686f30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acca343a07c68a88bcfb3ef89031e2bd1" id="r_acca343a07c68a88bcfb3ef89031e2bd1"><td class="memItemLeft" align="right" valign="top"><a id="acca343a07c68a88bcfb3ef89031e2bd1" name="acca343a07c68a88bcfb3ef89031e2bd1"></a>
-<a class="el" href="classAntares_1_1Data_1_1Sets.html#ade957da285fbf1eacd15e63204ad3986">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
-<tr class="separator:acca343a07c68a88bcfb3ef89031e2bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae128b10423385634af8e44c625d29cff" id="r_ae128b10423385634af8e44c625d29cff"><td class="memItemLeft" align="right" valign="top"><a id="ae128b10423385634af8e44c625d29cff" name="ae128b10423385634af8e44c625d29cff"></a>
+<tr class="memitem:ac0ca45ded333416ee9c375c97f96a88a" id="r_ac0ca45ded333416ee9c375c97f96a88a"><td class="memItemLeft" align="right" valign="top"><a id="ac0ca45ded333416ee9c375c97f96a88a" name="ac0ca45ded333416ee9c375c97f96a88a"></a>
+<a class="el" href="classAntares_1_1Data_1_1Sets.html#a1650fbf406293612b2e1d0464368dea7">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> ()</td></tr>
+<tr class="separator:ac0ca45ded333416ee9c375c97f96a88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a840ef5d93aa5ec67cbab515c8e16fa02" id="r_a840ef5d93aa5ec67cbab515c8e16fa02"><td class="memItemLeft" align="right" valign="top"><a id="a840ef5d93aa5ec67cbab515c8e16fa02" name="a840ef5d93aa5ec67cbab515c8e16fa02"></a>
+<a class="el" href="classAntares_1_1Data_1_1Sets.html#a39657482c0aeef93cde7965133eaa8a2">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
+<tr class="separator:a840ef5d93aa5ec67cbab515c8e16fa02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ca4e849fa41f6f84fe18db4708fc857" id="r_a1ca4e849fa41f6f84fe18db4708fc857"><td class="memItemLeft" align="right" valign="top"><a id="a1ca4e849fa41f6f84fe18db4708fc857" name="a1ca4e849fa41f6f84fe18db4708fc857"></a>
+<a class="el" href="classAntares_1_1Data_1_1Sets.html#a1650fbf406293612b2e1d0464368dea7">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
+<tr class="separator:a1ca4e849fa41f6f84fe18db4708fc857"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa2e6c3e915fd980d12a0d9eb284a834" id="r_aaa2e6c3e915fd980d12a0d9eb284a834"><td class="memItemLeft" align="right" valign="top"><a id="aaa2e6c3e915fd980d12a0d9eb284a834" name="aaa2e6c3e915fd980d12a0d9eb284a834"></a>
+<a class="el" href="classAntares_1_1Data_1_1Sets.html#a39657482c0aeef93cde7965133eaa8a2">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
+<tr class="separator:aaa2e6c3e915fd980d12a0d9eb284a834"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89cdb68fcf977228de9eb0218042c7df" id="r_a89cdb68fcf977228de9eb0218042c7df"><td class="memItemLeft" align="right" valign="top"><a id="a89cdb68fcf977228de9eb0218042c7df" name="a89cdb68fcf977228de9eb0218042c7df"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
-<tr class="memdesc:ae128b10423385634af8e44c625d29cff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all groups. <br /></td></tr>
-<tr class="separator:ae128b10423385634af8e44c625d29cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4c89d5eb6ad9f9fa7f7b155b21ab380" id="r_ab4c89d5eb6ad9f9fa7f7b155b21ab380"><td class="memItemLeft" align="right" valign="top"><a id="ab4c89d5eb6ad9f9fa7f7b155b21ab380" name="ab4c89d5eb6ad9f9fa7f7b155b21ab380"></a>
-<a class="el" href="classAntares_1_1Data_1_1Sets.html#a82f5fa653fadf4be390e9d59f688d687">TypePtr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (const IDType &amp;name)</td></tr>
-<tr class="separator:ab4c89d5eb6ad9f9fa7f7b155b21ab380"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fecfb8f65141e2c1f85239f8201f297" id="r_a2fecfb8f65141e2c1f85239f8201f297"><td class="memItemLeft" align="right" valign="top"><a id="a2fecfb8f65141e2c1f85239f8201f297" name="a2fecfb8f65141e2c1f85239f8201f297"></a>
-<a class="el" href="classAntares_1_1Data_1_1Sets.html#a82f5fa653fadf4be390e9d59f688d687">TypePtr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (const IDType &amp;name, const <a class="el" href="classAntares_1_1Data_1_1Sets.html#a82f5fa653fadf4be390e9d59f688d687">TypePtr</a> &amp;data)</td></tr>
-<tr class="separator:a2fecfb8f65141e2c1f85239f8201f297"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e47c80a173fbaf29a22b4e20d31a350" id="r_a3e47c80a173fbaf29a22b4e20d31a350"><td class="memItemLeft" align="right" valign="top"><a id="a3e47c80a173fbaf29a22b4e20d31a350" name="a3e47c80a173fbaf29a22b4e20d31a350"></a>
-<a class="el" href="classAntares_1_1Data_1_1Sets.html#a82f5fa653fadf4be390e9d59f688d687">TypePtr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (const IDType &amp;name, const <a class="el" href="classAntares_1_1Data_1_1Sets.html#a82f5fa653fadf4be390e9d59f688d687">TypePtr</a> &amp;data, <a class="el" href="classAntares_1_1Data_1_1Sets_1_1Options.html">Options</a> &amp;opts)</td></tr>
-<tr class="separator:a3e47c80a173fbaf29a22b4e20d31a350"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23d8d19cbd1640168d49078d3341cbb9" id="r_a23d8d19cbd1640168d49078d3341cbb9"><td class="memItemLeft" align="right" valign="top"><a id="a23d8d19cbd1640168d49078d3341cbb9" name="a23d8d19cbd1640168d49078d3341cbb9"></a>
+<tr class="memdesc:a89cdb68fcf977228de9eb0218042c7df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all groups. <br /></td></tr>
+<tr class="separator:a89cdb68fcf977228de9eb0218042c7df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21f354365e543e4cb9950492f024252a" id="r_a21f354365e543e4cb9950492f024252a"><td class="memItemLeft" align="right" valign="top"><a id="a21f354365e543e4cb9950492f024252a" name="a21f354365e543e4cb9950492f024252a"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>forceReload</b> (bool) const</td></tr>
-<tr class="separator:a23d8d19cbd1640168d49078d3341cbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e865b4d71062242809e070c705b656d" id="r_a3e865b4d71062242809e070c705b656d"><td class="memItemLeft" align="right" valign="top"><a id="a3e865b4d71062242809e070c705b656d" name="a3e865b4d71062242809e070c705b656d"></a>
+<tr class="separator:a21f354365e543e4cb9950492f024252a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8c8db45a755c3abfa30b248fba7a16a" id="r_ac8c8db45a755c3abfa30b248fba7a16a"><td class="memItemLeft" align="right" valign="top"><a id="ac8c8db45a755c3abfa30b248fba7a16a" name="ac8c8db45a755c3abfa30b248fba7a16a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> () const</td></tr>
-<tr class="separator:a3e865b4d71062242809e070c705b656d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae677239be8a043f607ca7e8ec996a904" id="r_ae677239be8a043f607ca7e8ec996a904"><td class="memItemLeft" align="right" valign="top"><a id="ae677239be8a043f607ca7e8ec996a904" name="ae677239be8a043f607ca7e8ec996a904"></a>
+<tr class="separator:ac8c8db45a755c3abfa30b248fba7a16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44268296e2434e430b37b954af841b0f" id="r_a44268296e2434e430b37b954af841b0f"><td class="memItemLeft" align="right" valign="top"><a id="a44268296e2434e430b37b954af841b0f" name="a44268296e2434e430b37b954af841b0f"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
-<tr class="separator:ae677239be8a043f607ca7e8ec996a904"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0ecc60d2a8b19cf16905760e4fad77d" id="r_ac0ecc60d2a8b19cf16905760e4fad77d"><td class="memItemLeft" align="right" valign="top"><a id="ac0ecc60d2a8b19cf16905760e4fad77d" name="ac0ecc60d2a8b19cf16905760e4fad77d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuildIndexes</b> ()</td></tr>
-<tr class="separator:ac0ecc60d2a8b19cf16905760e4fad77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4905d50727c689b363af5f97af85c97b" id="r_a4905d50727c689b363af5f97af85c97b"><td class="memTemplParams" colspan="2"><a id="a4905d50727c689b363af5f97af85c97b" name="a4905d50727c689b363af5f97af85c97b"></a>
-template&lt;class StringT &gt; </td></tr>
-<tr class="memitem:a4905d50727c689b363af5f97af85c97b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>hasOutput</b> (const StringT &amp;s) const</td></tr>
-<tr class="memdesc:a4905d50727c689b363af5f97af85c97b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the results for a given group should be written to the output. <br /></td></tr>
-<tr class="separator:a4905d50727c689b363af5f97af85c97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a002e86d54be7f30c161be7222a2502ed" id="r_a002e86d54be7f30c161be7222a2502ed"><td class="memItemLeft" align="right" valign="top"><a id="a002e86d54be7f30c161be7222a2502ed" name="a002e86d54be7f30c161be7222a2502ed"></a>
+<tr class="separator:a44268296e2434e430b37b954af841b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d84c0fdfab0aa9cf7c5b45aa44f7b88" id="r_a2d84c0fdfab0aa9cf7c5b45aa44f7b88"><td class="memItemLeft" align="right" valign="top"><a id="a2d84c0fdfab0aa9cf7c5b45aa44f7b88" name="a2d84c0fdfab0aa9cf7c5b45aa44f7b88"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasOutput</b> (const Yuni::ShortString128 &amp;s) const</td></tr>
+<tr class="memdesc:a2d84c0fdfab0aa9cf7c5b45aa44f7b88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the results for a given group should be written to the output. <br /></td></tr>
+<tr class="separator:a2d84c0fdfab0aa9cf7c5b45aa44f7b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e714c6c222ae69ff58944e20511fa9e" id="r_a3e714c6c222ae69ff58944e20511fa9e"><td class="memItemLeft" align="right" valign="top"><a id="a3e714c6c222ae69ff58944e20511fa9e" name="a3e714c6c222ae69ff58944e20511fa9e"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasOutput</b> (const uint index) const</td></tr>
-<tr class="memdesc:a002e86d54be7f30c161be7222a2502ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the results for a given group should be written to the output. <br /></td></tr>
-<tr class="separator:a002e86d54be7f30c161be7222a2502ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5920b2698a27b886428d5c3435d7abfe" id="r_a5920b2698a27b886428d5c3435d7abfe"><td class="memTemplParams" colspan="2"><a id="a5920b2698a27b886428d5c3435d7abfe" name="a5920b2698a27b886428d5c3435d7abfe"></a>
-template&lt;class StringT &gt; </td></tr>
-<tr class="memitem:a5920b2698a27b886428d5c3435d7abfe"><td class="memTemplItemLeft" align="right" valign="top">uint&#160;</td><td class="memTemplItemRight" valign="bottom"><b>resultSize</b> (const StringT &amp;s) const</td></tr>
-<tr class="memdesc:a5920b2698a27b886428d5c3435d7abfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of a result set. <br /></td></tr>
-<tr class="separator:a5920b2698a27b886428d5c3435d7abfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50c51e49151dc2f4c7d904f52e0d79a9" id="r_a50c51e49151dc2f4c7d904f52e0d79a9"><td class="memItemLeft" align="right" valign="top"><a id="a50c51e49151dc2f4c7d904f52e0d79a9" name="a50c51e49151dc2f4c7d904f52e0d79a9"></a>
+<tr class="memdesc:a3e714c6c222ae69ff58944e20511fa9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the results for a given group should be written to the output. <br /></td></tr>
+<tr class="separator:a3e714c6c222ae69ff58944e20511fa9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b36d26a585cedb0b55b2b2c9edc745c" id="r_a3b36d26a585cedb0b55b2b2c9edc745c"><td class="memItemLeft" align="right" valign="top"><a id="a3b36d26a585cedb0b55b2b2c9edc745c" name="a3b36d26a585cedb0b55b2b2c9edc745c"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>resultSize</b> (const Yuni::ShortString128 &amp;s) const</td></tr>
+<tr class="memdesc:a3b36d26a585cedb0b55b2b2c9edc745c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of a result set. <br /></td></tr>
+<tr class="separator:a3b36d26a585cedb0b55b2b2c9edc745c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bd190f4d414171806a8df933a1d2adf" id="r_a0bd190f4d414171806a8df933a1d2adf"><td class="memItemLeft" align="right" valign="top"><a id="a0bd190f4d414171806a8df933a1d2adf" name="a0bd190f4d414171806a8df933a1d2adf"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>resultSize</b> (const uint index) const</td></tr>
-<tr class="memdesc:a50c51e49151dc2f4c7d904f52e0d79a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of a result set. <br /></td></tr>
-<tr class="separator:a50c51e49151dc2f4c7d904f52e0d79a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a035ec61ebe59bd963b37a236ba2718e8" id="r_a035ec61ebe59bd963b37a236ba2718e8"><td class="memTemplParams" colspan="2"><a id="a035ec61ebe59bd963b37a236ba2718e8" name="a035ec61ebe59bd963b37a236ba2718e8"></a>
-template&lt;class L &gt; </td></tr>
-<tr class="memitem:a035ec61ebe59bd963b37a236ba2718e8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>dumpToLogs</b> (L &amp;log) const</td></tr>
-<tr class="separator:a035ec61ebe59bd963b37a236ba2718e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ba3d72a7afeefbc3aeeb6df8f612b7e" id="r_a1ba3d72a7afeefbc3aeeb6df8f612b7e"><td class="memItemLeft" align="right" valign="top"><a id="a1ba3d72a7afeefbc3aeeb6df8f612b7e" name="a1ba3d72a7afeefbc3aeeb6df8f612b7e"></a>
+<tr class="memdesc:a0bd190f4d414171806a8df933a1d2adf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of a result set. <br /></td></tr>
+<tr class="separator:a0bd190f4d414171806a8df933a1d2adf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac32606c954a0108d9bc8a43acfd46bde" id="r_ac32606c954a0108d9bc8a43acfd46bde"><td class="memItemLeft" align="right" valign="top"><a id="ac32606c954a0108d9bc8a43acfd46bde" name="ac32606c954a0108d9bc8a43acfd46bde"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>dumpToLogs</b> () const</td></tr>
+<tr class="separator:ac32606c954a0108d9bc8a43acfd46bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dda49c6b3ac5db21ece63b420495280" id="r_a3dda49c6b3ac5db21ece63b420495280"><td class="memItemLeft" align="right" valign="top"><a id="a3dda49c6b3ac5db21ece63b420495280" name="a3dda49c6b3ac5db21ece63b420495280"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadFromFile</b> (const std::filesystem::path &amp;filename)</td></tr>
-<tr class="memdesc:a1ba3d72a7afeefbc3aeeb6df8f612b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a rule set from an INI File. <br /></td></tr>
-<tr class="separator:a1ba3d72a7afeefbc3aeeb6df8f612b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc1c82a40054a3d53a568e479420cd7b" id="r_abc1c82a40054a3d53a568e479420cd7b"><td class="memTemplParams" colspan="2"><a id="abc1c82a40054a3d53a568e479420cd7b" name="abc1c82a40054a3d53a568e479420cd7b"></a>
-template&lt;class StringT &gt; </td></tr>
-<tr class="memitem:abc1c82a40054a3d53a568e479420cd7b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>saveToFile</b> (const StringT &amp;filename) const</td></tr>
-<tr class="separator:abc1c82a40054a3d53a568e479420cd7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4780d1b6c185211bd373b48e5c42628" id="r_ad4780d1b6c185211bd373b48e5c42628"><td class="memItemLeft" align="right" valign="top"><a id="ad4780d1b6c185211bd373b48e5c42628" name="ad4780d1b6c185211bd373b48e5c42628"></a>
+<tr class="memdesc:a3dda49c6b3ac5db21ece63b420495280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a rule set from an INI File. <br /></td></tr>
+<tr class="separator:a3dda49c6b3ac5db21ece63b420495280"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a979a8bde7a08c7fe9003de21a51f43c4" id="r_a979a8bde7a08c7fe9003de21a51f43c4"><td class="memItemLeft" align="right" valign="top"><a id="a979a8bde7a08c7fe9003de21a51f43c4" name="a979a8bde7a08c7fe9003de21a51f43c4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveToFile</b> (const Yuni::String &amp;filename) const</td></tr>
+<tr class="separator:a979a8bde7a08c7fe9003de21a51f43c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af34f7de80b65b61ebc3d8524d1e25397" id="r_af34f7de80b65b61ebc3d8524d1e25397"><td class="memItemLeft" align="right" valign="top"><a id="af34f7de80b65b61ebc3d8524d1e25397" name="af34f7de80b65b61ebc3d8524d1e25397"></a>
 YString&#160;</td><td class="memItemRight" valign="bottom"><b>toString</b> ()</td></tr>
-<tr class="memdesc:ad4780d1b6c185211bd373b48e5c42628"><td class="mdescLeft">&#160;</td><td class="mdescRight">format the string to match the options <br /></td></tr>
-<tr class="separator:ad4780d1b6c185211bd373b48e5c42628"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab00664beaeb8ec9c70f5520aec4b9b6" id="r_aab00664beaeb8ec9c70f5520aec4b9b6"><td class="memItemLeft" align="right" valign="top"><a id="aab00664beaeb8ec9c70f5520aec4b9b6" name="aab00664beaeb8ec9c70f5520aec4b9b6"></a>
+<tr class="memdesc:af34f7de80b65b61ebc3d8524d1e25397"><td class="mdescLeft">&#160;</td><td class="mdescRight">format the string to match the options <br /></td></tr>
+<tr class="separator:af34f7de80b65b61ebc3d8524d1e25397"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44f42c13cff732cd40c4f328d4fadc9a" id="r_a44f42c13cff732cd40c4f328d4fadc9a"><td class="memItemLeft" align="right" valign="top"><a id="a44f42c13cff732cd40c4f328d4fadc9a" name="a44f42c13cff732cd40c4f328d4fadc9a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>defaultForAreas</b> ()</td></tr>
-<tr class="memdesc:aab00664beaeb8ec9c70f5520aec4b9b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create default groups for set of areas. <br /></td></tr>
-<tr class="separator:aab00664beaeb8ec9c70f5520aec4b9b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac39093972a21304980732ceb4e3cc018" id="r_ac39093972a21304980732ceb4e3cc018"><td class="memTemplParams" colspan="2"><a id="ac39093972a21304980732ceb4e3cc018" name="ac39093972a21304980732ceb4e3cc018"></a>
-template&lt;class HandlerT &gt; </td></tr>
-<tr class="memitem:ac39093972a21304980732ceb4e3cc018"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>rebuildFromRules</b> (const IDType &amp;id, HandlerT &amp;handler)</td></tr>
-<tr class="memdesc:ac39093972a21304980732ceb4e3cc018"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuild the lists of a group from the rules. <br /></td></tr>
-<tr class="separator:ac39093972a21304980732ceb4e3cc018"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab63e187c2ca7944a9199842d8f5e50dc" id="r_ab63e187c2ca7944a9199842d8f5e50dc"><td class="memTemplParams" colspan="2"><a id="ab63e187c2ca7944a9199842d8f5e50dc" name="ab63e187c2ca7944a9199842d8f5e50dc"></a>
-template&lt;class HandlerT &gt; </td></tr>
-<tr class="memitem:ab63e187c2ca7944a9199842d8f5e50dc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>rebuildAllFromRules</b> (HandlerT &amp;handler)</td></tr>
-<tr class="memdesc:ab63e187c2ca7944a9199842d8f5e50dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuild the lists of all group from the rules. <br /></td></tr>
-<tr class="separator:ab63e187c2ca7944a9199842d8f5e50dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad059a5806c4f2c3a27b3bc7433987657" id="r_ad059a5806c4f2c3a27b3bc7433987657"><td class="memItemLeft" align="right" valign="top"><a id="ad059a5806c4f2c3a27b3bc7433987657" name="ad059a5806c4f2c3a27b3bc7433987657"></a>
+<tr class="memdesc:a44f42c13cff732cd40c4f328d4fadc9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create default groups for set of areas. <br /></td></tr>
+<tr class="separator:a44f42c13cff732cd40c4f328d4fadc9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a443ccf7f2c98943a09f30302328c70b9" id="r_a443ccf7f2c98943a09f30302328c70b9"><td class="memItemLeft" align="right" valign="top"><a id="a443ccf7f2c98943a09f30302328c70b9" name="a443ccf7f2c98943a09f30302328c70b9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuildAllFromRules</b> (<a class="el" href="classAntares_1_1Data_1_1SetHandlerAreas.html">SetHandlerAreas</a> &amp;handler)</td></tr>
+<tr class="memdesc:a443ccf7f2c98943a09f30302328c70b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuild the lists of all group from the rules. <br /></td></tr>
+<tr class="separator:a443ccf7f2c98943a09f30302328c70b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b02113631e4eeb0c2d11eb42a6c869a" id="r_a0b02113631e4eeb0c2d11eb42a6c869a"><td class="memItemLeft" align="right" valign="top"><a id="a0b02113631e4eeb0c2d11eb42a6c869a" name="a0b02113631e4eeb0c2d11eb42a6c869a"></a>
 const IDType &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>nameByIndex</b> (const uint i) const</td></tr>
-<tr class="separator:ad059a5806c4f2c3a27b3bc7433987657"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9137842f4e21936d6d004d78d7d098f" id="r_aa9137842f4e21936d6d004d78d7d098f"><td class="memTemplParams" colspan="2"><a id="aa9137842f4e21936d6d004d78d7d098f" name="aa9137842f4e21936d6d004d78d7d098f"></a>
-template&lt;class StringT &gt; </td></tr>
-<tr class="memitem:aa9137842f4e21936d6d004d78d7d098f"><td class="memTemplItemLeft" align="right" valign="top">IDType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>caption</b> (const StringT &amp;s) const</td></tr>
-<tr class="separator:aa9137842f4e21936d6d004d78d7d098f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0caea971f8345b2bbfb811ab31607e58" id="r_a0caea971f8345b2bbfb811ab31607e58"><td class="memItemLeft" align="right" valign="top"><a id="a0caea971f8345b2bbfb811ab31607e58" name="a0caea971f8345b2bbfb811ab31607e58"></a>
+<tr class="separator:a0b02113631e4eeb0c2d11eb42a6c869a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2486d1aa3c1cc7bcc40239bf3b87befc" id="r_a2486d1aa3c1cc7bcc40239bf3b87befc"><td class="memItemLeft" align="right" valign="top"><a id="a2486d1aa3c1cc7bcc40239bf3b87befc" name="a2486d1aa3c1cc7bcc40239bf3b87befc"></a>
+IDType&#160;</td><td class="memItemRight" valign="bottom"><b>caption</b> (const Yuni::ShortString128 &amp;s) const</td></tr>
+<tr class="separator:a2486d1aa3c1cc7bcc40239bf3b87befc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22ac99e71cf98c4879db9622df7dbefe" id="r_a22ac99e71cf98c4879db9622df7dbefe"><td class="memItemLeft" align="right" valign="top"><a id="a22ac99e71cf98c4879db9622df7dbefe" name="a22ac99e71cf98c4879db9622df7dbefe"></a>
 IDType&#160;</td><td class="memItemRight" valign="bottom"><b>caption</b> (const uint i) const</td></tr>
-<tr class="separator:a0caea971f8345b2bbfb811ab31607e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03c17f17b0342afcfcdfb7dbfc5d65bc" id="r_a03c17f17b0342afcfcdfb7dbfc5d65bc"><td class="memItemLeft" align="right" valign="top"><a id="a03c17f17b0342afcfcdfb7dbfc5d65bc" name="a03c17f17b0342afcfcdfb7dbfc5d65bc"></a>
-T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (uint i)</td></tr>
-<tr class="separator:a03c17f17b0342afcfcdfb7dbfc5d65bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a300c5663e98f9ce500745c2ddf5d38c6" id="r_a300c5663e98f9ce500745c2ddf5d38c6"><td class="memItemLeft" align="right" valign="top"><a id="a300c5663e98f9ce500745c2ddf5d38c6" name="a300c5663e98f9ce500745c2ddf5d38c6"></a>
-const T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (uint i) const</td></tr>
-<tr class="separator:a300c5663e98f9ce500745c2ddf5d38c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a22ac99e71cf98c4879db9622df7dbefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8149c187a350dc468a1cc8a0caff0751" id="r_a8149c187a350dc468a1cc8a0caff0751"><td class="memItemLeft" align="right" valign="top"><a id="a8149c187a350dc468a1cc8a0caff0751" name="a8149c187a350dc468a1cc8a0caff0751"></a>
+<a class="el" href="classAntares_1_1Data_1_1Sets.html#a23f6aae164b511c18fc8de56150db14c">SetAreasType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (uint i)</td></tr>
+<tr class="separator:a8149c187a350dc468a1cc8a0caff0751"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f6b21c08ba2b99e3b5955a37165206c" id="r_a7f6b21c08ba2b99e3b5955a37165206c"><td class="memItemLeft" align="right" valign="top"><a id="a7f6b21c08ba2b99e3b5955a37165206c" name="a7f6b21c08ba2b99e3b5955a37165206c"></a>
+const <a class="el" href="classAntares_1_1Data_1_1Sets.html#a23f6aae164b511c18fc8de56150db14c">SetAreasType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (uint i) const</td></tr>
+<tr class="separator:a7f6b21c08ba2b99e3b5955a37165206c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/study/include/antares/study/<a class="el" href="libs_2antares_2study_2include_2antares_2study_2sets_8h_source.html">sets.h</a></li>
-<li>src/libs/antares/study/include/antares/study/<a class="el" href="sets_8hxx_source.html">sets.hxx</a></li>
+<li>src/libs/antares/study/area/<b>sets.cpp</b></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
