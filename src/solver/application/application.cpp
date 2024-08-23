@@ -20,7 +20,6 @@
  */
 #include "antares/application/application.h"
 
-
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
 #include <antares/benchmarking/timer.h>
@@ -36,13 +35,12 @@
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/utils/ortools_utils.h"
-#include "antares/solver/simulation/simulation-runner.h"
-
-#include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/adequacy.h"
+#include "antares/solver/simulation/economy.h"
+#include "antares/solver/simulation/simulation-runner.h"
+#include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares::Check;
 
