@@ -1,6 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classAntares_1_1Data_1_1Output.html#acc99b2ddfc30dc5d0cdc99929b83e544":[7,0,0,4,36,13],
 "classAntares_1_1Data_1_1Output.html#adc8bd41ecef24370c8e573869506519d":[7,0,0,4,36,1],
 "classAntares_1_1Data_1_1Output.html#ae8c652bf83c5e1a48f870bb8224e99fe":[7,0,0,4,36,14],
 "classAntares_1_1Data_1_1Output.html#af5a918236106ce96dea92c362fc25e5b":[7,0,0,4,36,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html#a33866cf904fb67824a771a24f6a4632f":[7,0,0,4,2,10,1],
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html#a4810f8c974a62f569e8c8614b1cca6ca":[7,0,0,4,2,10,0],
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1windTSNumberData.html":[7,0,0,4,2,12],
-"classAntares_1_1Data_1_1ScenarioBuilder_1_1windTSNumberData.html#a1f0d8b4935cd7ad839317d283522aac5":[7,0,0,4,2,12,0]
+"classAntares_1_1Data_1_1ScenarioBuilder_1_1windTSNumberData.html#a1f0d8b4935cd7ad839317d283522aac5":[7,0,0,4,2,12,0],
+"classAntares_1_1Data_1_1SetHandlerAreas.html":[7,0,0,4,46]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"classAntares_1_1Data_1_1ThermalCluster.html#a1c269b0f39a7e8f25fef429d655f9a89abcb6dbfab6a6e415e7786c54bb524fab":[7,0,0,4,57,5,3],
 "classAntares_1_1Data_1_1ThermalCluster.html#a1c269b0f39a7e8f25fef429d655f9a89ac87dcbeedd29fca84bb5224c74211485":[7,0,0,4,57,5,2],
 "classAntares_1_1Data_1_1ThermalCluster.html#a1c269b0f39a7e8f25fef429d655f9a89ae1baf5dbe3d9a7a4230d6214689d1fd9":[7,0,0,4,57,5,0],
 "classAntares_1_1Data_1_1ThermalCluster.html#a1c269b0f39a7e8f25fef429d655f9a89aec3b4d91eacab54efc1e7fafcfd569a1":[7,0,0,4,57,5,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Forms_1_1JobLoadScenarioBuilder.html":[7,0,0,8,6],
 "classAntares_1_1Forms_1_1JobLoadScenarioBuilder.html#a563879a763fd245f9a1cca0000b377b6":[7,0,0,8,6,1],
 "classAntares_1_1Forms_1_1JobLoadScenarioBuilder.html#ae2a0e29e376dd901dc08b75eb365a205":[7,0,0,8,6,0],
-"classAntares_1_1Forms_1_1JobLoadScenarioBuilder.html#aed9c796d9b75fd5d24599fc97f89b8c8":[7,0,0,8,6,2]
+"classAntares_1_1Forms_1_1JobLoadScenarioBuilder.html#aed9c796d9b75fd5d24599fc97f89b8c8":[7,0,0,8,6,2],
+"classAntares_1_1Forms_1_1MainFormData.html":[7,0,0,8,7]
 };

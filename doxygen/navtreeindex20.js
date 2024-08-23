@@ -1,6 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"dir_82e68c49439fe91b1c3f7ccd1fcbbabe.html":[8,0,0,7,1,0,2],
 "dir_84c8e4260ed2388ac0d5c9a6bb56a201.html":[8,0,0,3,0,1],
 "dir_86be217869fcdd95f6c781736dd948dd.html":[8,0,0,2,0],
 "dir_87a455bccb09a92130c26a11a880c98a.html":[8,0,0,3],
@@ -187,8 +186,7 @@ var NAVTREEINDEX20 =
 "ecoInput_8h_source.html":[8,0,0,3,0,25,0,0,0,5,6,5],
 "economy_2overallCost_8h_source.html":[8,0,0,4,11,0,0,0,0,2,22],
 "economy_2spilledEnergy_8h_source.html":[8,0,0,4,11,0,0,0,0,2,31],
-"economy_8h_source.html":[8,0,0,4,8,0,0,0,0,7],
-"economy__mode_8h_source.html":[8,0,0,4,8,0,0,0,0,8],
+"economy_8h_source.html":[8,0,0,4,8,0,0,0,0,6],
 "edit_8h_source.html":[8,0,0,7,2,2,2,1],
 "editor-calendar_8h_source.html":[8,0,0,7,2,2,7,4],
 "empty_8h_source.html":[8,0,0,4,11,0,0,0,0,3,2],
@@ -228,8 +226,8 @@ var NAVTREEINDEX20 =
 "functions_enum.html":[7,3,4],
 "functions_eval.html":[7,3,5],
 "functions_f.html":[7,3,0,5],
-"functions_func.html":[7,3,1],
 "functions_func.html":[7,3,1,0],
+"functions_func.html":[7,3,1],
 "functions_func_b.html":[7,3,1,1],
 "functions_func_c.html":[7,3,1,2],
 "functions_func_d.html":[7,3,1,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX20 =
 "functions_func_s.html":[7,3,1,17],
 "functions_func_t.html":[7,3,1,18],
 "functions_func_u.html":[7,3,1,19],
-"functions_func_v.html":[7,3,1,20]
+"functions_func_v.html":[7,3,1,20],
+"functions_func_w.html":[7,3,1,21],
+"functions_func_x.html":[7,3,1,22]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#adbca1497b750785315490d938a62d0f2":[7,0,0,13,4,4,90,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html":[7,0,0,13,4,4,86],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7309dce5ec0dd2134b6e2788294af4a1":[7,0,0,13,4,4,86,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a7949987ce1c23dcd30da757005e09002":[7,0,0,13,4,4,86,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "structDONNEES__MENSUELLES__ETENDUES.html":[7,0,84],
 "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html":[7,0,85],
 "structExchangeBalanceData.html":[7,0,87],
-"structFictitiousLoadData.html":[7,0,95]
+"structFictitiousLoadData.html":[7,0,95],
+"structFinalStockEquivalentData.html":[7,0,97]
 };

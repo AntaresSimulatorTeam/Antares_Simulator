@@ -1,6 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classIItem.html#a2f2d8ce8ff0d8afdf508b6c7abdc12b8":[7,0,123,23],
 "classIItem.html#a38aeaf3d9e267fdfae7283471ae088d9":[7,0,123,14],
 "classIItem.html#a4b4ae41d0c5d82e9819e894eb7ec35aa":[7,0,123,8],
 "classIItem.html#a595a5690a0fd82ec02053285fa493ea7":[7,0,123,19],
@@ -165,8 +164,8 @@ var NAVTREEINDEX18 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[7,0,193,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[7,0,193,4],
 "classPublicStudy.html":[7,0,194],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,194,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,194,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,194,1],
 "classQuadraticProblemMatrix.html":[7,0,195],
 "classRealName.html":[7,0,197],
 "classResultMatrix.html":[7,0,203],
@@ -249,5 +248,6 @@ var NAVTREEINDEX18 =
 "classcheck__mps__existence_1_1check__mps__existence.html":[7,0,6,0],
 "classcheck__no__mps_1_1check__no__mps.html":[7,0,7,0],
 "classcompare__mps__files_1_1compare__mps__files.html":[7,0,8,0],
-"classcomputeTimeStepLevel.html":[7,0,54]
+"classcomputeTimeStepLevel.html":[7,0,54],
+"classes.html":[7,1]
 };
