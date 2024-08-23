@@ -35,19 +35,18 @@ public:
                      const Settings& settings,
                      Benchmarking::DurationCollector& durationCollector,
                      IResultWriter& resultWriter,
-                     Benchmarking::OptimizationInfo& info,
                      Simulation::ISimulationObserver& simulationObserver);
-    void run();
+
+    Benchmarking::OptimizationInfo run();
 
 private:
     template<class simulationType>
-    void runSimulation();
+    Benchmarking::OptimizationInfo runSimulation();
 
     Antares::Data::Study& study_;
     const Settings& settings_;
     Benchmarking::DurationCollector& durationCollector_;
     IResultWriter& resultWriter_;
-    Benchmarking::OptimizationInfo& info_;
     Simulation::ISimulationObserver& simulationObserver_;
 };
 

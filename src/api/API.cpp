@@ -81,9 +81,8 @@ SimulationResults APIInternal::execute() const
                                       settings,
                                       durationCollector,
                                       *resultWriter,
-                                      optimizationInfo,
                                       simulationObserver);
-    simulationRunner.run();
+    optimizationInfo = simulationRunner.run();
 
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();

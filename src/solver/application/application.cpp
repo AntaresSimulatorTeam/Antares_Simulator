@@ -394,9 +394,8 @@ void Application::execute()
                                       pSettings,
                                       pDurationCollector,
                                       *resultWriter,
-                                      pOptimizationInfo,
                                       observer);
-    simulationRunner.run();
+    pOptimizationInfo = simulationRunner.run();
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();

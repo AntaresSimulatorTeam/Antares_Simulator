@@ -28,31 +28,26 @@ SimulationRunner::SimulationRunner(Antares::Data::Study& study,
                                    const Settings& settings,
                                    Benchmarking::DurationCollector& durationCollector,
                                    IResultWriter& resultWriter,
-                                   Benchmarking::OptimizationInfo& info,
                                    Simulation::ISimulationObserver& simulationObserver):
     study_(study),
     settings_(settings),
     durationCollector_(durationCollector),
     resultWriter_(resultWriter),
-    info_(info),
     simulationObserver_(simulationObserver)
 {
 }
 
-void SimulationRunner::run()
+Benchmarking::OptimizationInfo SimulationRunner::run()
 {
     if (study_.runtime.mode == Data::SimulationMode::Adequacy)
     {
-        runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Adequacy>>();
+        return runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Adequacy>>();
     }
-    else
-    {
-        runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Economy>>();
-    }
+    return runSimulation<Solver::Simulation::ISimulation<Solver::Simulation::Economy>>();
 }
 
 template<class simulationType>
-void SimulationRunner::runSimulation()
+Benchmarking::OptimizationInfo SimulationRunner::runSimulation()
 {
     Simulation::NullSimulationObserver observer;
     simulationType simulation(study_,
@@ -68,8 +63,9 @@ void SimulationRunner::runSimulation()
         durationCollector_("synthesis_export")
           << [&simulation] { simulation.writeResults(/*synthesis:*/ true); };
 
-        info_ = simulation.getOptimizationInfo();
+        return simulation.getOptimizationInfo();
     }
+    return {};
 }
 
 } // namespace Antares::Solver
