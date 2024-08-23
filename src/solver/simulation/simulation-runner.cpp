@@ -20,6 +20,8 @@
  */
 
 #include "include/antares/solver/simulation/simulation-runner.h"
+#include "antares/solver/simulation/adequacy.h"
+#include "antares/solver/simulation/economy.h"
 
 namespace Antares::Solver
 {

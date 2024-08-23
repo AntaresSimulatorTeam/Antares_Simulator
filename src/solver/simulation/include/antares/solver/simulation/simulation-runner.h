@@ -21,8 +21,9 @@
 
 #pragma once
 
-#include "antares/solver/simulation/adequacy.h"
-#include "antares/solver/simulation/economy.h"
+//#include "antares/solver/simulation/adequacy.h"
+//#include "antares/solver/simulation/economy.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
