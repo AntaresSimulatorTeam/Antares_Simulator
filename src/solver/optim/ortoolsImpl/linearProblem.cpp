@@ -52,7 +52,7 @@ public:
     }
 };
 
-Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
+OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                      double ub,
                                                      bool integer,
                                                      const std::string& name)
@@ -81,26 +81,26 @@ Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return mapIteratorPair.first->second.get(); // <<name, var>, bool>
 }
 
-Api::IMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
+OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
                                                         double ub,
                                                         const std::string& name)
 {
     return addVariable(lb, ub, false, name);
 }
 
-Api::IMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
+OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
                                                         double ub,
                                                         const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
 
-Api::IMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
+OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
 {
     return variables_.at(name).get();
 }
 
-Api::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
+OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
                                                          double ub,
                                                          const std::string& name)
 {
@@ -128,7 +128,7 @@ Api::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return mapIteratorPair.first->second.get(); // <<name, constraint>, bool>
 }
 
-Api::IMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
+OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
 {
     return constraints_.at(name).get();
 }
@@ -192,7 +192,7 @@ static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus&
     return Api::MipStatus::MIP_ERROR;
 }
 
-Api::IMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
+OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)
     {

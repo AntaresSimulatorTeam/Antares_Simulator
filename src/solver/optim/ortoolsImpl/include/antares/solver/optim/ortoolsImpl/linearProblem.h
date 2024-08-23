@@ -43,16 +43,16 @@ public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
     ~OrtoolsLinearProblem() final = default;
 
-    Api::IMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
-    Api::IMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
-    Api::IMipVariable* addVariable(double lb,
+    OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
+    OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
+    OrtoolsMipVariable* addVariable(double lb,
                                    double ub,
                                    bool integer,
                                    const std::string& name) override;
-    Api::IMipVariable* getVariable(const std::string& name) override;
+    OrtoolsMipVariable* getVariable(const std::string& name) override;
 
-    Api::IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
-    Api::IMipConstraint* getConstraint(const std::string& name) override;
+    OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
+    OrtoolsMipConstraint* getConstraint(const std::string& name) override;
 
     void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;
     double getObjectiveCoefficient(const Api::IMipVariable* var) const override;
@@ -63,7 +63,7 @@ public:
     bool isMinimization() const override;
     bool isMaximization() const override;
 
-    Api::IMipSolution* solve(bool verboseSolver) override;
+    OrtoolsMipSolution* solve(bool verboseSolver) override;
 
 private:
     std::unique_ptr<operations_research::MPSolver> mpSolver_;
