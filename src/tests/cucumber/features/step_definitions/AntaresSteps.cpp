@@ -1,6 +1,9 @@
-#include <cucumber-cpp/autodetect.hpp>
-#include <fstream>
+// Testing framework must be included before cucumber's autodetect
+// clang-format off
 #include <gtest/gtest.h>
+#include <cucumber-cpp/autodetect.hpp>
+// clang-format on
+#include <fstream>
 #include <string>
 
 #include "antares/api/SimulationResults.h"
