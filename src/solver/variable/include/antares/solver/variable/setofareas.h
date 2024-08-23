@@ -204,7 +204,7 @@ public:
     //! Area list
     SetOfAreasVector pSetsOfAreas;
     //! Reference to the origina set
-    std::vector<const Data::Study::SingleSetOfAreas*> pOriginalSets;
+    std::vector<const Data::Sets::SetAreasType*> pOriginalSets;
     //! An iterator for the begining of the list
     typename SetOfAreasVector::iterator pBegin;
     //! An iterator to the end of the list
