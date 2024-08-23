@@ -217,4 +217,26 @@ BOOST_FIXTURE_TEST_CASE(solutionOpimalValues, Fixture)
     BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
 }
 
+BOOST_AUTO_TEST_CASE(simpleProblem)
+{
+    auto problem = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
+
+    auto* P1 = problem->addNumVariable(0, 80, "P1");
+    auto* P2 = problem->addNumVariable(0, 200, "P2");
+
+    auto* EOD = problem->addConstraint(100, 100, "EOD");
+    EOD->setCoefficient(P1, 1);
+    EOD->setCoefficient(P2, 1);
+
+    problem->setObjectiveCoefficient(P1, 10);
+    problem->setObjectiveCoefficient(P2, 20);
+
+    problem->setMinimization();
+
+    auto* solution = problem->solve(true);
+
+    std::cout << "Optimal value for P1: " << solution->getOptimalValue(P1) << std::endl;
+    std::cout << "Optimal value for P2: " << solution->getOptimalValue(P2) << std::endl;
+}
+
 BOOST_AUTO_TEST_SUITE_END()
