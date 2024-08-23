@@ -202,11 +202,10 @@ Api::IMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
     auto mpStatus = mpSolver_->Solve(params_);
     Api::MipStatus status = convertStatus(mpStatus);
 
-    std::map<std::string, std::pair<Api::IMipVariable*, double>> solution;
+    std::map<std::string, double> solution;
     for (const auto* var: mpSolver_->variables())
     {
-        auto pair = std::make_pair(variables_.at(var->name()).get(), var->solution_value());
-        solution.try_emplace(var->name(), pair);
+        solution.try_emplace(var->name(), var->solution_value());
     }
 
     solution_ = std::make_unique<OrtoolsMipSolution>(solution, status, objective_->Value());

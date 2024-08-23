@@ -25,10 +25,9 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-OrtoolsMipSolution::OrtoolsMipSolution(
-  const std::map<std::string, std::pair<Api::IMipVariable*, double>>& solution,
-  Api::MipStatus& responseStatus,
-  double objectiveValue):
+OrtoolsMipSolution::OrtoolsMipSolution(const std::map<std::string, double>& solution,
+                                       Api::MipStatus& responseStatus,
+                                       double objectiveValue):
     responseStatus_(responseStatus),
     objectiveValue_(objectiveValue)
 {
@@ -58,7 +57,7 @@ double OrtoolsMipSolution::getOptimalValue(const Api::IMipVariable* var) const
 
     try
     {
-        return solution_.at(var->getName()).second;
+        return solution_.at(var->getName());
     }
     catch (const std::out_of_range& ex)
     {
