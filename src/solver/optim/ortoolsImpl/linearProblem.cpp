@@ -53,9 +53,9 @@ public:
 };
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
-                                                     double ub,
-                                                     bool integer,
-                                                     const std::string& name)
+                                                      double ub,
+                                                      bool integer,
+                                                      const std::string& name)
 {
     if (variables_.contains(name))
     {
@@ -82,15 +82,15 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
-                                                        double ub,
-                                                        const std::string& name)
+                                                         double ub,
+                                                         const std::string& name)
 {
     return addVariable(lb, ub, false, name);
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
-                                                        double ub,
-                                                        const std::string& name)
+                                                         double ub,
+                                                         const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
@@ -101,8 +101,8 @@ OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
 }
 
 OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
-                                                         double ub,
-                                                         const std::string& name)
+                                                          double ub,
+                                                          const std::string& name)
 {
     if (constraints_.contains(name))
     {

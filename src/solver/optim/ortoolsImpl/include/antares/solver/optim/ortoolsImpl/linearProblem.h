@@ -46,9 +46,9 @@ public:
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
     OrtoolsMipVariable* addVariable(double lb,
-                                   double ub,
-                                   bool integer,
-                                   const std::string& name) override;
+                                    double ub,
+                                    bool integer,
+                                    const std::string& name) override;
     OrtoolsMipVariable* getVariable(const std::string& name) override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
