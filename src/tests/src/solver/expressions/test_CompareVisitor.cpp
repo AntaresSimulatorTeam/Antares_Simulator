@@ -69,7 +69,6 @@ Node* ComparisonFixture::createComplexExpression()
     return addf;
 }
 
-
 BOOST_AUTO_TEST_SUITE(_CompareVisitor_)
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, ComparisonFixture)
