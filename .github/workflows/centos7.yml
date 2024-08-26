@@ -5,6 +5,7 @@ on:
     types: [created]
   push:
     branches:
+      - feature/ramping_model_scalian
       - develop
       - dependabot/*
 
