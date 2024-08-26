@@ -81,9 +81,8 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, ComparisonFixture)
 BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, ComparisonFixture)
 {
     CompareVisitor cmp;
-    auto create = [this] { return createSimpleExpression(65.); };
-    Node* expr1 = create();
-    Node* expr2 = create();
+    Node* expr1 = createSimpleExpression(65.);
+    Node* expr2 = createSimpleExpression(65.);
     BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
 }
 
