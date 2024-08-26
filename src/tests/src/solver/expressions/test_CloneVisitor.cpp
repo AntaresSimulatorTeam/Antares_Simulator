@@ -60,4 +60,11 @@ BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registr
     Node* cloned = cloneVisitor.dispatch(*root);
     BOOST_CHECK_EQUAL(printed, printVisitor.dispatch(*cloned));
 }
+
+BOOST_FIXTURE_TEST_CASE(CloneVisitor_name, Registry<Node>)
+{
+    CloneVisitor cloneVisitor(*this);
+    BOOST_CHECK_EQUAL(cloneVisitor.name(), "CloneVisitor");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

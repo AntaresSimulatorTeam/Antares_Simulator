@@ -30,6 +30,7 @@ class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
     explicit TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
+    std::string name() const override;
 
 private:
     std::unordered_map<const Nodes::Node*, TimeIndex> context_;
@@ -47,6 +48,5 @@ private:
     TimeIndex visit(const Nodes::PortFieldNode& port_field_node) override;
     TimeIndex visit(const Nodes::ComponentVariableNode& component_variable_node) override;
     TimeIndex visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
-    std::string name() const override;
 };
 } // namespace Antares::Solver::Visitors

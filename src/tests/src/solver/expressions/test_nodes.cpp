@@ -89,4 +89,5 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
         BOOST_CHECK_EQUAL(node->name(), name);
     }
 }
+
 BOOST_AUTO_TEST_SUITE_END()

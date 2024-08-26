@@ -43,6 +43,7 @@ class EvalVisitor: public NodeVisitor<double>
 public:
     EvalVisitor() = default; // No context (variables / parameters)
     explicit EvalVisitor(EvaluationContext context);
+    std::string name() const override;
 
 private:
     const EvaluationContext context_;
@@ -60,6 +61,5 @@ private:
     double visit(const Nodes::PortFieldNode& node) override;
     double visit(const Nodes::ComponentVariableNode& node) override;
     double visit(const Nodes::ComponentParameterNode& node) override;
-    std::string name() const override;
 };
 } // namespace Antares::Solver::Visitors

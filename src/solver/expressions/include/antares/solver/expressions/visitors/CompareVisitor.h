@@ -29,7 +29,9 @@ class CompareVisitor: public NodeVisitor<bool, const Nodes::Node&>
 {
 public:
     CompareVisitor() = default;
+    std::string name() const override;
 
+private:
     bool visit(const Nodes::AddNode& add, const Nodes::Node& other) override;
     bool visit(const Nodes::SubtractionNode& add, const Nodes::Node& other) override;
     bool visit(const Nodes::MultiplicationNode& add, const Nodes::Node& other) override;
@@ -47,6 +49,5 @@ public:
                const Nodes::Node& other) override;
     bool visit(const Nodes::ComponentParameterNode& component_node,
                const Nodes::Node& other) override;
-    std::string name() const override;
 };
 } // namespace Antares::Solver::Visitors

@@ -121,4 +121,10 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, Registry<Node>)
     Node* expr2 = create<NegationNode>(expr1);
     BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
 }
+
+BOOST_FIXTURE_TEST_CASE(CompareVisitor_name, Registry<Node>)
+{
+    CompareVisitor compareVisitor;
+    BOOST_CHECK_EQUAL(compareVisitor.name(), "CompareVisitor");
+}
 BOOST_AUTO_TEST_SUITE_END()

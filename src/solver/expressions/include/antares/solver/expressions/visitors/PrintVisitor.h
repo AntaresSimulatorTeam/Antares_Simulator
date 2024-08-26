@@ -26,6 +26,9 @@ namespace Antares::Solver::Visitors
 {
 class PrintVisitor: public NodeVisitor<std::string>
 {
+public:
+    std::string name() const override;
+    
 private:
     std::string visit(const Nodes::AddNode& node) override;
     std::string visit(const Nodes::SubtractionNode& node) override;
@@ -41,6 +44,5 @@ private:
     std::string visit(const Nodes::PortFieldNode& node) override;
     std::string visit(const Nodes::ComponentVariableNode& node) override;
     std::string visit(const Nodes::ComponentParameterNode& node) override;
-    std::string name() const override;
 };
 } // namespace Antares::Solver::Visitors

@@ -125,4 +125,11 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
                         | TimeIndex::VARYING_IN_TIME_AND_SCENARIO,
                       TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
+
+BOOST_FIXTURE_TEST_CASE(TimeIndexVisitor_name, Registry<Node>)
+{
+    std::unordered_map<const Nodes::Node*, TimeIndex> context;
+    TimeIndexVisitor timeIndexVisitor(context);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.name(), "TimeIndexVisitor");
+}
 BOOST_AUTO_TEST_SUITE_END()

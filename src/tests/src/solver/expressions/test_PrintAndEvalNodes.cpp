@@ -277,4 +277,15 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, Registry<Node>)
     }
 }
 
+BOOST_AUTO_TEST_CASE(PrintVisitor_name)
+{
+    PrintVisitor printVisitor;
+    BOOST_CHECK_EQUAL(printVisitor.name(), "PrintVisitor");
+}
+
+BOOST_AUTO_TEST_CASE(EvalVisitor_name)
+{
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_EQUAL(evalVisitor.name(), "EvalVisitor");
+}
 BOOST_AUTO_TEST_SUITE_END()
