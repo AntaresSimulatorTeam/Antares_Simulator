@@ -30,7 +30,7 @@ class LinearityVisitor: public NodeVisitor<LinearStatus>
 {
 public:
     std::string name() const override;
-    
+
 private:
     LinearStatus visit(const Nodes::AddNode& add) override;
     LinearStatus visit(const Nodes::SubtractionNode& add) override;

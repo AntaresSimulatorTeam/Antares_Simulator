@@ -20,6 +20,7 @@
 */
 #pragma once
 #include <antares/solver/expressions/IName.h>
+
 namespace Antares::Solver::Nodes
 {
 class Node: public IName

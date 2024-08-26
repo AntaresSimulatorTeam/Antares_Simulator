@@ -28,7 +28,7 @@ class PrintVisitor: public NodeVisitor<std::string>
 {
 public:
     std::string name() const override;
-    
+
 private:
     std::string visit(const Nodes::AddNode& node) override;
     std::string visit(const Nodes::SubtractionNode& node) override;
