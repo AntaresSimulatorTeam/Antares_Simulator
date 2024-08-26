@@ -28,9 +28,9 @@
 namespace Antares::Solver::Visitors
 {
 
-struct EvalVisitorDivisionException: std::overflow_error
+struct EvalVisitorDivisionException: std::runtime_error
 {
-    using std::overflow_error::overflow_error;
+    EvalVisitorDivisionException(double left, double right, const std::string& message);
 };
 
 struct EvalVisitorNotImplemented: std::logic_error

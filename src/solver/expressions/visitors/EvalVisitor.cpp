@@ -47,14 +47,22 @@ double EvalVisitor::visit(const Nodes::MultiplicationNode& node)
 
 double EvalVisitor::visit(const Nodes::DivisionNode& node)
 {
-    if (auto divisor = dispatch(*node.right()); divisor == 0.0)
+    double left = dispatch(*node.left());
+    double right = dispatch(*node.right());
+    double result = 0.;
+    try
     {
-        throw EvalVisitorDivisionException("DivisionNode Division by zero");
+        result = left / right;
+        if (!std::isfinite(result))
+        {
+            throw EvalVisitorDivisionException(left, right, "is not a finite number");
+        }
     }
-    else
+    catch (const std::exception& ex)
     {
-        return dispatch(*node.left()) / divisor;
+        throw EvalVisitorDivisionException(left, right, ex.what());
     }
+    return result;
 }
 
 double EvalVisitor::visit(const Nodes::EqualNode& node)
@@ -110,5 +118,13 @@ double EvalVisitor::visit(const Nodes::ComponentParameterNode& node)
 std::string EvalVisitor::name() const
 {
     return "EvalVisitor";
+}
+
+EvalVisitorDivisionException::EvalVisitorDivisionException(double left,
+                                                           double right,
+                                                           const std::string& message):
+    std::runtime_error("DivisionNode: Error while evaluating : " + std::to_string(left) + "/"
+                       + std::to_string(right) + " " + message)
+{
 }
 } // namespace Antares::Solver::Visitors
