@@ -31,7 +31,7 @@ class MPConstraint; // forward declaration
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipConstraint: public Api::IMipConstraint
+class OrtoolsMipConstraint final: public Api::IMipConstraint
 {
 public:
     void setLb(double lb) override;

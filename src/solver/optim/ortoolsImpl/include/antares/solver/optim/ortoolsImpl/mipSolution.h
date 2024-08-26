@@ -30,7 +30,7 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipSolution: public Api::IMipSolution
+class OrtoolsMipSolution final: public Api::IMipSolution
 {
 public:
     OrtoolsMipSolution(const std::map<std::string, double>& solution,
