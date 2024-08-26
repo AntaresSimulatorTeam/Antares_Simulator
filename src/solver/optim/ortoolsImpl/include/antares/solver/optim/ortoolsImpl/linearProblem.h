@@ -49,10 +49,10 @@ public:
                                     double ub,
                                     bool integer,
                                     const std::string& name) override;
-    OrtoolsMipVariable* getVariable(const std::string& name) override;
+    OrtoolsMipVariable* getVariable(const std::string& name) const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
-    OrtoolsMipConstraint* getConstraint(const std::string& name) override;
+    OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
 
     void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;
     double getObjectiveCoefficient(const Api::IMipVariable* var) const override;

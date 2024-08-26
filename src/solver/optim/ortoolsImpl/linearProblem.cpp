@@ -95,7 +95,7 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
     return addVariable(lb, ub, true, name);
 }
 
-OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name)
+OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name) const
 {
     return variables_.at(name).get();
 }
@@ -128,7 +128,7 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return mapIteratorPair.first->second.get(); // <<name, constraint>, bool>
 }
 
-OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name)
+OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
 {
     return constraints_.at(name).get();
 }
