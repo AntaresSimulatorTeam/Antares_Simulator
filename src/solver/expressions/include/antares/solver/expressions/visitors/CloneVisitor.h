@@ -28,7 +28,7 @@ namespace Antares::Solver::Visitors
 class CloneVisitor: public NodeVisitor<Nodes::Node*>
 {
 public:
-    explicit CloneVisitor(Registry<Nodes::Node>& mem);
+    explicit CloneVisitor(Registry<Nodes::Node>& registry);
     std::string name() const override;
 
 protected:
@@ -47,6 +47,7 @@ protected:
     Nodes::Node* visit(const Nodes::ComponentVariableNode& node) override;
     Nodes::Node* visit(const Nodes::ComponentParameterNode& node) override;
 
+private:
     Registry<Nodes::Node>& registry_;
 };
 } // namespace Antares::Solver::Visitors

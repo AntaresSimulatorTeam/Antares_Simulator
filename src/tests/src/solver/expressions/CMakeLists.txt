@@ -11,6 +11,7 @@ target_sources(${EXECUTABLE_NAME}
         test_LinearVisitor.cpp
         test_CompareVisitor.cpp
         test_CloneVisitor.cpp
+	test_DeepWideTrees.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}

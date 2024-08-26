@@ -38,7 +38,7 @@ static bool compareGetValue(const T& node, const Antares::Solver::Nodes::Node& o
 {
     if (const T* other_node = dynamic_cast<const T*>(&other))
     {
-        return node.getValue() == other_node->getValue();
+        return node.value() == other_node->value();
     }
     return false;
 }
