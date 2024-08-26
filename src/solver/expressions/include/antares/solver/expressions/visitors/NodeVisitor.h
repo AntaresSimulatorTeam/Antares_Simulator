@@ -41,9 +41,13 @@ std::optional<RetT> tryVisit(const Nodes::Node& node, VisitorT& visitor, Args...
     return std::nullopt;
 }
 
-struct InvalidNode: std::invalid_argument
+class InvalidNode: std::invalid_argument
 {
-    using std::invalid_argument::invalid_argument;
+public:
+    explicit InvalidNode(const std::string& node_name = ""):
+        std::invalid_argument("Antares::Solver::Nodes Visitor: invalid node type " + node_name)
+    {
+    }
 };
 
 struct NotImplemented: std::invalid_argument
@@ -63,6 +67,10 @@ public:
 
     R dispatch(const Nodes::Node& node, Args... args)
     {
+        if (!&node)
+        {
+            throw InvalidNode();
+        }
         using FunctionT = std::optional<R> (*)(const Nodes::Node&,
                                                NodeVisitor<R, Args...>&,
                                                Args... args);
@@ -88,13 +96,7 @@ public:
                 return ret.value();
             }
         }
-        std::string msg = "Antares::Solver::Nodes Visitor: invalid node type ";
-        if (&node)
-        {
-            msg += node.name();
-        }
-        throw InvalidNode(msg);
-        return R();
+        throw InvalidNode(node.name());
     }
 
     virtual R visit(const Nodes::AddNode&, Args... args) = 0;
