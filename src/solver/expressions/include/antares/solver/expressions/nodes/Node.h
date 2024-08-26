@@ -26,5 +26,6 @@ class Node
 {
 public:
     virtual ~Node() = default;
+    bool operator==(const Node& other) const = default;
 };
 } // namespace Antares::Solver::Nodes

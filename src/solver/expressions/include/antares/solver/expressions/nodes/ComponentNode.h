@@ -32,7 +32,7 @@ public:
     const std::string& getComponentId() const;
     const std::string& getComponentName() const;
 
-    bool operator==(const ComponentNode& other) const;
+    bool operator==(const ComponentNode& other) const = default;
 
 private:
     std::string component_id_;
