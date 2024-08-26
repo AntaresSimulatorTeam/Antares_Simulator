@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(DivisionNodeFull)
     BOOST_CHECK_THROW(evalVisitor.dispatch(divisionNode3), InvalidNode);
 
     // truncated to zero
-    LiteralNode literalVerySmall(1.e-50000);
+    LiteralNode literalVerySmall(1.e-324);
 
     DivisionNode divisionNode4(&literalNode1, &literalVerySmall);
 

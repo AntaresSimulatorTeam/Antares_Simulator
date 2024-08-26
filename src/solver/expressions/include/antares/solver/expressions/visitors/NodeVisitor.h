@@ -25,6 +25,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/expressions/IName.h>
+#include <antares/solver/expressions/nodes/Node.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
 namespace Antares::Solver::Visitors
@@ -87,7 +88,12 @@ public:
                 return ret.value();
             }
         }
-        throw InvalidNode("Antares::Solver::Nodes Visitor: invalid Node!");
+        std::string msg = "Antares::Solver::Nodes Visitor: invalid node type ";
+        if (&node)
+        {
+            msg += node.name();
+        }
+        throw InvalidNode(msg);
         return R();
     }
 

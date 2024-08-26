@@ -58,13 +58,13 @@ BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
 
     PortFieldNode portFieldNode1(portName1, fieldName1);
     PortFieldNode portFieldNode1TwinNode(portName1, fieldName1);
-    BOOST_CHECK(portFieldNode1 == portFieldNode1TwinNode);
+    BOOST_CHECK_EQUAL(portFieldNode1 == portFieldNode1TwinNode, true);
 
     PortFieldNode shareNameWithPortField1(portName1, fieldName2);
-    BOOST_CHECK(portFieldNode1 != shareNameWithPortField1);
+    BOOST_CHECK_EQUAL(portFieldNode1 == shareNameWithPortField1, false);
 
     PortFieldNode shareFieldNameWithPortField1(portName2, fieldName1);
-    BOOST_CHECK(portFieldNode1 != shareFieldNameWithPortField1);
+    BOOST_CHECK_EQUAL(portFieldNode1 == shareFieldNameWithPortField1, false);
 
     PortFieldNode portFieldNode2(portName2, fieldName2);
     BOOST_CHECK(portFieldNode1 != portFieldNode2);
