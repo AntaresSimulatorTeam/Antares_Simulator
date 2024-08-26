@@ -24,6 +24,7 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
 using namespace Antares::Solver;
@@ -60,5 +61,32 @@ BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
 
     PortFieldNode portFieldNode2(portName2, fieldName2);
     BOOST_CHECK_EQUAL(portFieldNode1 == portFieldNode2, false);
+}
+
+BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
+{
+    auto literalNode = create<LiteralNode>(2024.2);
+    std::map<Node*, std::string> nodes = {
+      {literalNode, "LiteralNode"},
+      {create<AddNode>(literalNode, literalNode), "AddNode"},
+      {create<SubtractionNode>(literalNode, literalNode), "SubtractionNode"},
+      {create<MultiplicationNode>(literalNode, literalNode), "MultiplicationNode"},
+      {create<DivisionNode>(literalNode, literalNode), "DivisionNode"},
+      {create<EqualNode>(literalNode, literalNode), "EqualNode"},
+      {create<LessThanOrEqualNode>(literalNode, literalNode), "LessThanOrEqualNode"},
+      {create<GreaterThanOrEqualNode>(literalNode, literalNode), "GreaterThanOrEqualNode"},
+      {create<NegationNode>(literalNode), "NegationNode"},
+      {create<ComponentVariableNode>(literalNode->name(), literalNode->name()),
+       "ComponentVariableNode"},
+      {create<ComponentParameterNode>(literalNode->name(), literalNode->name()),
+       "ComponentParameterNode"},
+      {create<ParameterNode>(literalNode->name()), "ParameterNode"},
+      {create<VariableNode>(literalNode->name()), "VariableNode"},
+      {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"}};
+
+    for (auto [node, name]: nodes)
+    {
+        BOOST_CHECK_EQUAL(node->name(), name);
+    }
 }
 BOOST_AUTO_TEST_SUITE_END()
