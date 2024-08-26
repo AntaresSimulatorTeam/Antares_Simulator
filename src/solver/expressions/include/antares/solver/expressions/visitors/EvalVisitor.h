@@ -28,8 +28,9 @@
 namespace Antares::Solver::Visitors
 {
 
-struct EvalVisitorDivisionException: std::runtime_error
+class EvalVisitorDivisionException: std::runtime_error
 {
+public:
     EvalVisitorDivisionException(double left, double right, const std::string& message);
 };
 
