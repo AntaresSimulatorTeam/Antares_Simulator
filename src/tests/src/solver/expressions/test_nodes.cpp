@@ -40,14 +40,6 @@ BOOST_AUTO_TEST_SUITE(_Nodes_)
 //     BOOST_CHECK_EQUAL(unaryNode.child(), &literalNode);
 // }
 
-namespace Antares::Solver::Nodes
-{
-bool operator!=(const PortFieldNode& rhs, const PortFieldNode& lhs)
-{
-    return !(rhs == lhs);
-}
-} // namespace Antares::Solver::Nodes
-
 BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
 {
     LiteralNode literalNode(23.);
@@ -67,6 +59,6 @@ BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
     BOOST_CHECK_EQUAL(portFieldNode1 == shareFieldNameWithPortField1, false);
 
     PortFieldNode portFieldNode2(portName2, fieldName2);
-    BOOST_CHECK(portFieldNode1 != portFieldNode2);
+    BOOST_CHECK_EQUAL(portFieldNode1 == portFieldNode2, false);
 }
 BOOST_AUTO_TEST_SUITE_END()
