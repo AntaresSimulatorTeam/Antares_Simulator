@@ -16,7 +16,6 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
             .DispatchableProduction(cluster, -1.0, -1, builder.data.NombreDePasDeTempsPourUneOptimisation)
             .NumberOfDispatchableUnits(cluster, maxDownwardPowerRampingRate)
             .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
-            .NumberBreakingDownDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
             .greaterThan();
  
         if (builder.NumberOfVariables() > 0)
