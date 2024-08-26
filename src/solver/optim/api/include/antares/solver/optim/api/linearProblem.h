@@ -28,13 +28,14 @@
 #include "mipSolution.h"
 #include "mipVariable.h"
 
+/// Namespace for the classes related to the linear problem API
 namespace Antares::Solver::Optim::Api
 {
 
 /**
  * Linear Problem
  * This class is aimed at creating and manipulating variables/constraints
- * Also used to to control the objective, maximization or minimization
+ * Also used to to control the objective, maximization or minimization, and to solve the problem
  */
 class ILinearProblem
 {

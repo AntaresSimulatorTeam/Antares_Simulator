@@ -26,6 +26,7 @@
 namespace Antares::Solver::Optim::Api
 {
 
+/// Inherited by IMipVariable and IMipConstraint
 class IHasName
 {
 public:
