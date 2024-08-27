@@ -34,14 +34,6 @@
       "features": [
         "zlib"
       ]
-    },
-    {
-      "name": "cucumber-cpp",
-      "version>=": "0.7.0"
-    },
-    {
-      "name": "gtest",
-      "version>=": "1.11.0"
     }
   ]
 }
