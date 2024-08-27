@@ -304,8 +304,15 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-      - name: Run cucumber tests
+      - name: Run fast cucumber tests
         uses: ./.github/workflows/cucumber-tests
+        with:
+          tags: not @slow
+
+      - name: Run slow cucumber tests
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          tags: @slow
 
       - name: Barrier
         if: ${{ !success() }}

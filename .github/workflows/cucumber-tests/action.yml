@@ -3,7 +3,7 @@ description: "Run cucumber tests"
 inputs:
   tags:
     description: 'Tags'
-    required: false
+    required: true
 runs:
   using: "composite"
   steps:
@@ -15,4 +15,4 @@ runs:
       shell: bash
       run: |
         cd src/tests/cucumber_python
-        behave
+        behave --tags ${{ inputs.simtest-tag }}
