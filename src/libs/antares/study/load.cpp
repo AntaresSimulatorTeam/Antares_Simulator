@@ -289,97 +289,6 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     return (!r && options.loadOnlyNeeded) ? false : r;
 }
 
-class SetHandlerAreas
-{
-public:
-    explicit SetHandlerAreas(Study& study):
-        pStudy(study)
-    {
-    }
-
-    void clear(Study::SingleSetOfAreas& set)
-    {
-        set.clear();
-    }
-
-    uint size(Study::SingleSetOfAreas& set)
-    {
-        return (uint)set.size();
-    }
-
-    bool add(Study::SingleSetOfAreas& set, const String& value)
-    {
-        Area* area = AreaListLFind(&pStudy.areas, value.c_str());
-        if (area)
-        {
-            set.insert(area);
-            return true;
-        }
-        return false;
-    }
-
-    bool add(Study::SingleSetOfAreas& set, const Study::SingleSetOfAreas& otherSet)
-    {
-        if (!otherSet.empty())
-        {
-            auto end = otherSet.end();
-            for (auto i = otherSet.begin(); i != end; ++i)
-            {
-                set.insert(*i);
-            }
-        }
-        return true;
-    }
-
-    bool remove(Study::SingleSetOfAreas& set, const String& value)
-    {
-        Area* area = AreaListLFind(&pStudy.areas, value.c_str());
-        if (area)
-        {
-            set.erase(area);
-            return true;
-        }
-        return false;
-    }
-
-    bool remove(Study::SingleSetOfAreas& set, const Study::SingleSetOfAreas& otherSet)
-    {
-        if (!otherSet.empty())
-        {
-            auto end = otherSet.end();
-            for (auto i = otherSet.begin(); i != end; ++i)
-            {
-                set.erase(*i);
-            }
-        }
-        return true;
-    }
-
-    bool applyFilter(Study::SingleSetOfAreas& set, const String& value)
-    {
-        if (value == "add-all")
-        {
-            auto end = pStudy.areas.end();
-            for (auto i = pStudy.areas.begin(); i != end; ++i)
-            {
-                set.insert(i->second);
-            }
-            return true;
-        }
-
-        if (value == "remove-all")
-        {
-            set.clear();
-            return true;
-        }
-        return false;
-    }
-
-private:
-    Study& pStudy;
-
-}; // class SetHandlerAreas
-
 bool Study::internalLoadSets()
 {
     const fs::path path = fs::path(folderInput.c_str()) / "areas" / "sets.ini";
@@ -394,10 +303,10 @@ bool Study::internalLoadSets()
     if (setsOfAreas.loadFromFile(path))
     {
         // Apply the rules
-        SetHandlerAreas handler(*this);
+        SetHandlerAreas handler(areas);
         setsOfAreas.rebuildAllFromRules(handler);
         // Write the results into the logs
-        setsOfAreas.dumpToLogs(logs);
+        setsOfAreas.dumpToLogs();
         return true;
     }
 
@@ -417,7 +326,7 @@ bool Study::reloadXCastData()
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
     bool ret = true;
     areas.each(
-      [this, &ret](Data::Area& area)
+      [this, &ret](Area& area)
       {
           assert(area.load.prepro);
           assert(area.solar.prepro);

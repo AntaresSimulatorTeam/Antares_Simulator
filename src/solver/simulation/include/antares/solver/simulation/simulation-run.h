@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -23,16 +22,15 @@
 #pragma once
 
 #include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/solver/misc/options.h"
-#include "antares/solver/simulation/ISimulationObserver.h"
-#include "antares/writer/i_writer.h"
+#include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
 {
-void runSimulationInAdequacyMode(Antares::Data::Study& study,
-                                 const Settings& settings,
-                                 Benchmarking::DurationCollector& durationCollector,
-                                 IResultWriter& resultWriter,
-                                 Benchmarking::OptimizationInfo& info,
-                                 Simulation::ISimulationObserver& simulationObserver);
-}
+
+Benchmarking::OptimizationInfo simulationRun(Antares::Data::Study& study,
+                                             const Settings& settings,
+                                             Benchmarking::DurationCollector& durationCollector,
+                                             IResultWriter& resultWriter,
+                                             Simulation::ISimulationObserver& simulationObserver);
+
+} // namespace Antares::Solver

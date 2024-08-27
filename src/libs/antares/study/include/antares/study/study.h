@@ -66,25 +66,8 @@ public:
     //! List of studies
     using List = std::list<Ptr>;
 
-    //! A single set of areas
-    // CompareAreaName : to control the order of areas in a set of areas. This order can have an
-    // effect, even if tiny, on the results of aggregations.
-    using SingleSetOfAreas = std::set<Area*, CompareAreaName>;
-
     //! Multiple sets of areas
-    using SetsOfAreas = Antares::Data::Sets<SingleSetOfAreas>;
-
-    //! A single set of links
-    using SingleSetOfLinks = std::set<AreaLink*>;
-    //! Multiple sets of links
-    using SetsOfLinks = Antares::Data::Sets<SingleSetOfLinks>;
-
-    //! List of disabled areas
-    using DisabledAreaList = std::set<AreaName>;
-    //! List of disabled links
-    using DisabledAreaLinkList = std::set<AreaLinkName>;
-    //! List of disabled thermal clusters
-    using DisabledThermalClusterList = std::set<ClusterName>;
+    using SetsOfAreas = Antares::Data::Sets;
 
     //! Extension filename
     using FileExtension = std::string;
@@ -573,8 +556,6 @@ public:
     //@{
     //! Sets of areas
     SetsOfAreas setsOfAreas;
-    //! Sets of links
-    SetsOfLinks setsOfLinks;
     //@}
 
     //! \name Scenario Builder
