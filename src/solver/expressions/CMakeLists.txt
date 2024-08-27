@@ -36,6 +36,8 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/SubtractionNode.h
         include/antares/solver/expressions/nodes/UnaryNode.h
         include/antares/solver/expressions/nodes/VariableNode.h
+        include/antares/solver/expressions/nodes/NodeTypes.h
+        
 
         include/antares/solver/expressions/visitors/CloneVisitor.h
         include/antares/solver/expressions/visitors/CompareVisitor.h

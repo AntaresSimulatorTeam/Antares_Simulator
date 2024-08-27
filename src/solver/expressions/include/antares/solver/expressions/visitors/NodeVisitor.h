@@ -23,6 +23,8 @@
 #include <vector>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/expressions/nodes/Node.h>
+#include <antares/solver/expressions/nodes/NodeTypes.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
 namespace Antares::Solver::Nodes
@@ -49,28 +51,35 @@ public:
     R dispatch(const Node& node, Args... args)
     {
         using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
-        static const std::vector<FunctionT> allNodeVisitList{
-          &tryVisit<R, NodeVisitor<R, Args...>, AddNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, SubtractionNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, MultiplicationNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, DivisionNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, EqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, LessThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, GreaterThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, NegationNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ParameterNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, VariableNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, LiteralNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, PortFieldNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ComponentVariableNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ComponentParameterNode>};
-        for (auto f: allNodeVisitList)
+        static const std::unordered_map<NodeKind, FunctionT> allNodeVisitList{
+          {NodeKind::ADD_NODE, &tryVisit<R, NodeVisitor<R, Args...>, AddNode>},
+          {NodeKind::SUBTRACTION_NODE, &tryVisit<R, NodeVisitor<R, Args...>, SubtractionNode>},
+          {NodeKind::MULTIPLICATION_NODE,
+           &tryVisit<R, NodeVisitor<R, Args...>, MultiplicationNode>},
+          {NodeKind::DIVISION_NODE, &tryVisit<R, NodeVisitor<R, Args...>, DivisionNode>},
+          {NodeKind::EQUAL_NODE, &tryVisit<R, NodeVisitor<R, Args...>, EqualNode>},
+          {NodeKind::LESS_THAN_OR_EQUAL_NODE,
+           &tryVisit<R, NodeVisitor<R, Args...>, LessThanOrEqualNode>},
+          {NodeKind::GREATER_THAN_OR_EQUAL_NODE,
+           &tryVisit<R, NodeVisitor<R, Args...>, GreaterThanOrEqualNode>},
+          {NodeKind::NEGATION_NODE, &tryVisit<R, NodeVisitor<R, Args...>, NegationNode>},
+          {NodeKind::PARAMETER_NODE, &tryVisit<R, NodeVisitor<R, Args...>, ParameterNode>},
+          {NodeKind::VARIABLE_NODE, &tryVisit<R, NodeVisitor<R, Args...>, VariableNode>},
+          {NodeKind::LITERAL_NODE, &tryVisit<R, NodeVisitor<R, Args...>, LiteralNode>},
+          {NodeKind::PORT_FIELD_NODE, &tryVisit<R, NodeVisitor<R, Args...>, PortFieldNode>},
+          {NodeKind::COMPONENT_VARIABLE_NODE,
+           &tryVisit<R, NodeVisitor<R, Args...>, ComponentVariableNode>},
+          {NodeKind::COMPONENT_PARAMETER_NODE,
+           &tryVisit<R, NodeVisitor<R, Args...>, ComponentParameterNode>}};
+
+        //        for (auto f: allNodeVisitList)
+        //        {
+        if (auto ret = allNodeVisitList.at(node.type())(node, *this, args...); ret.has_value())
         {
-            if (auto ret = f(node, *this, args...); ret.has_value())
-            {
-                return ret.value();
-            }
+            return ret.value();
         }
+        //        }
+
         logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
         return R();
     }

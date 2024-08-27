@@ -19,21 +19,29 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
-#include <memory>
-
-#include <antares/solver/expressions/nodes/UnaryNode.h>
-
-namespace Antares::Solver::Nodes
+enum struct NodeKind
 {
-class NegationNode final: public UnaryNode
+    ADD_NODE,
+    SUBTRACTION_NODE,
+    MULTIPLICATION_NODE,
+    DIVISION_NODE,
+    EQUAL_NODE,
+    LESS_THAN_OR_EQUAL_NODE,
+    GREATER_THAN_OR_EQUAL_NODE,
+    NEGATION_NODE,
+    LITERAL_NODE,
+    COMPONENT_VARIABLE_NODE,
+    COMPONENT_PARAMETER_NODE,
+    PARAMETER_NODE,
+    VARIABLE_NODE,
+    PORT_FIELD_NODE
+};
+
+class NodeType
 {
 public:
-    using UnaryNode::UnaryNode;
+    virtual ~NodeType() = default;
 
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::NEGATION_NODE;
-    }
+    virtual constexpr NodeKind type() const = 0;
+    bool operator==(const NodeType& other) const = default;
 };
-} // namespace Antares::Solver::Nodes

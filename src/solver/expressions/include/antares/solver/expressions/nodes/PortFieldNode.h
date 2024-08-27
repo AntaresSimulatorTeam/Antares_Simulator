@@ -33,6 +33,11 @@ public:
     const std::string& getPortName() const;
     const std::string& getFieldName() const;
 
+    constexpr NodeKind type() const override
+    {
+        return NodeKind::PORT_FIELD_NODE;
+    }
+
     bool operator==(const PortFieldNode& other) const = default;
 
 private:

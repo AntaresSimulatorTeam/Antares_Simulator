@@ -28,5 +28,10 @@ class DivisionNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
+
+    constexpr NodeKind type() const override
+    {
+        return NodeKind::DIVISION_NODE;
+    }
 };
 } // namespace Antares::Solver::Nodes
