@@ -1,5 +1,6 @@
 Feature: medium tests
 
+  @fast
   Scenario: 035 Mixed Expansion - Smart grid model 2
     Given the study path is "medium-tests/035 Mixed Expansion - Smart grid model 2"
     When I run antares simulator

@@ -304,6 +304,9 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
+      - name: Run cucumber tests
+        uses: ./.github/workflows/cucumber-tests
+
       - name: Barrier
         if: ${{ !success() }}
         run: exit 1
