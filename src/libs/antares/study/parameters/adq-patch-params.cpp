@@ -54,6 +54,13 @@ static bool legacyLocalMatchingKeys(const Yuni::String& key)
 
         return true;
     }
+    if (key == "include-adq-patch")
+    {
+        // TODO use warnings
+        logs.notice() << "Parameter include-adq-patch not supported with this solver version, "
+                         "use a version < 9.2";
+        return true;
+    }
     return false;
 }
 
@@ -185,35 +192,20 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 // ------------------------
 void AdqPatchParams::reset()
 {
-    enabled = false;
-
     localMatching.reset();
     curtailmentSharing.reset();
 }
 
 void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
 {
-    if (!enabled)
-    {
-        out.emplace_back("DENS");
-        out.emplace_back("LMR VIOL.");
-        out.emplace_back("SPIL. ENRG. CSR");
-        out.emplace_back("DTG MRG CSR");
-    }
-
-    // If the adequacy patch is enabled, but the LMR is disabled, the DENS variable shouldn't exist
-    if (enabled && !localMatching.enabled)
-    {
-        out.emplace_back("DENS");
-    }
+    out.emplace_back("DENS");
+    out.emplace_back("LMR VIOL.");
+    out.emplace_back("SPIL. ENRG. CSR");
+    out.emplace_back("DTG MRG CSR");
 }
 
 bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
-    if (key == "include-adq-patch")
-    {
-        return value.to<bool>(enabled);
-    }
 
     return curtailmentSharing.updateFromKeyValue(key, value)
            != localMatching.updateFromKeyValue(key, value); // XOR
@@ -222,7 +214,6 @@ bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::Str
 void AdqPatchParams::saveToINI(IniFile& ini) const
 {
     auto* section = ini.addSection("adequacy patch");
-    section->add("include-adq-patch", enabled);
 
     localMatching.addProperties(section);
     curtailmentSharing.addProperties(section);

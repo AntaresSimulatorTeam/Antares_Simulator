@@ -133,7 +133,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             }
 
             // adq patch: update ENS <= DENS in 2nd run
-            if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
+            if (adqPatchParams.enabled
                 && !problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep
                 && problemeHebdo->adequacyPatchRuntimeData->areaMode[pays]
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)

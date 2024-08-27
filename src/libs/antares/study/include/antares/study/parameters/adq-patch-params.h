@@ -80,7 +80,6 @@ enum class AdqPatchPTO
 
 struct LocalMatching
 {
-    bool enabled = true;
     //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
     //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
     //! only in the first step of adequacy patch local matching rule.

@@ -105,7 +105,6 @@ AdqPatchParams createParams()
     AdqPatchParams p;
     p.enabled = true;
     p.curtailmentSharing.includeHurdleCost = true;
-    p.localMatching.enabled = true;
     p.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
 
     return p;
