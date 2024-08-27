@@ -14,6 +14,11 @@ class EvaluationContext
 {
 public:
     /**
+     * @brief Default constructor, creates an evaluation context without parameter and variable
+     * values.
+     */
+    EvaluationContext() = default;
+    /**
      * @brief Constructs an evaluation context with the specified parameter and variable
      * values.
      *
