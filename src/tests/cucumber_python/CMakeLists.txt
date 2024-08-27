@@ -1,0 +1,1 @@
+file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/latest_binary_dir.txt" "${CMAKE_BINARY_DIR}")
