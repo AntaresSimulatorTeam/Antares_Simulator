@@ -118,7 +118,7 @@ jobs:
     - name: Run fast cucumber tests
       uses: ./.github/workflows/cucumber-tests
       with:
-        tags: not @slow
+        tags: @fast
 
     - name: Run slow cucumber tests
       uses: ./.github/workflows/cucumber-tests
