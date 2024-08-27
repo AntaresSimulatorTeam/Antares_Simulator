@@ -33,10 +33,22 @@ struct EvalVisitorDivisionException: std::overflow_error
     using std::overflow_error::overflow_error;
 };
 
+/**
+ * @brief Represents a visitor for evaluating expressions within a given context.
+ */
 class EvalVisitor: public Nodes::NodeVisitor<double>
 {
 public:
+    /**
+     * @brief Default constructor, creates an evaluation visitor with no context.
+     */
     EvalVisitor() = default; // No context (variables / parameters)
+
+    /**
+     * @brief Constructs an evaluation visitor with the specified context.
+     *
+     * @param context The evaluation context.
+     */
     explicit EvalVisitor(EvaluationContext context);
 
 private:

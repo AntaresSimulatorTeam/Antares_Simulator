@@ -27,12 +27,37 @@ namespace Antares::Solver::Nodes
 class BinaryNode: public Node
 {
 public:
+    /**
+     * @brief Constructs a binary node with the specified left and right operands.
+     *
+     * @param left The left operand.
+     * @param right The right operand.
+     */
     explicit BinaryNode(Node* left, Node* right);
+
+    /**
+     * @brief Retrieves a pointer to the left operand.
+     *
+     * @return A pointer to the left operand.
+     */
     Node* left() const;
+
+    /**
+     * @brief Retrieves a pointer to the right operand.
+     *
+     * @return A pointer to the right operand.
+     */
     Node* right() const;
 
 private:
+    /**
+     * @brief A pointer to the left operand.
+     */
     Node* leftOperand_ = nullptr;
+
+    /**
+     * @brief A pointer to the right operand.
+     */
     Node* rightOperand_ = nullptr;
 };
 } // namespace Antares::Solver::Nodes
