@@ -194,12 +194,6 @@ public:
     IncompatibleHurdleCostCSR();
 };
 
-class AdqPatchDisabledLMR: public LoadingError
-{
-public:
-    AdqPatchDisabledLMR();
-};
-
 class IncompatibleOutputOptions: public LoadingError
 {
 public:
