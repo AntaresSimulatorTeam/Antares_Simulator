@@ -15,4 +15,4 @@ runs:
       shell: bash
       run: |
         cd src/tests/cucumber_python
-        behave --tags ${{ inputs.simtest-tag }}
+        behave --tags ${{ inputs.tags }}
