@@ -232,4 +232,11 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
 }
 
+BOOST_AUTO_TEST_CASE(invalidNode)
+{
+    AddNode* null_node = nullptr;
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_THROW(evalVisitor.dispatch(null_node), InvalidNode);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

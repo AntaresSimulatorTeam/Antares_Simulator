@@ -40,6 +40,15 @@ std::optional<RetT> tryVisit(const Node* node, VisitorT& visitor, Args... args)
 }
 } // namespace
 
+class InvalidNode: std::invalid_argument
+{
+public:
+    explicit InvalidNode():
+        std::invalid_argument("Antares::Solver::Nodes Visitor: invalid node type")
+    {
+    }
+};
+
 template<class R, class... Args>
 class NodeVisitor
 {
@@ -48,10 +57,10 @@ public:
 
     R dispatch(const Node* node, Args... args)
     {
-        /*
-         * TODO check Node nullity ->
-         * https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2354
-         * */
+        if (!node)
+        {
+            throw InvalidNode();
+        }
         using FunctionT = std::optional<R> (*)(const Node*, NodeVisitor<R, Args...>&, Args... args);
         static const std::vector<FunctionT> allNodeVisitList{
           &tryVisit<R, NodeVisitor<R, Args...>, AddNode>,
