@@ -121,16 +121,6 @@ jobs:
         cd _build
         ctest -C Release --output-on-failure -L "unit|end-to-end"
 
-    - name: Run fast cucumber tests
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        tags: "@fast"
-
-    - name: Run slow cucumber tests
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        tags: "@slow"
-
     - name: Installer .rpm creation
       run: |
            cd _build

@@ -1,15 +1,16 @@
 from behave import *
 from antares_utils import *
 from assertions import *
+import os
 
 @given('the study path is "{string}"')
 def study_path_is(context, string):
-    context.study_path = "../resources/Antares_Simulator_Tests/" + string
+    context.study_path = os.path.join("..", "resources", "Antares_Simulator_Tests" , string)
 
 @when('I run antares simulator')
 def run_antares(context):
     file = open('latest_binary_dir.txt', 'r')
-    context.solver_path = file.readline() + "/solver/antares-solver"
+    context.solver_path = os.path.join(file.readline(), "solver", "antares-solver")
     context.raise_exception_on_failure = True
     context.use_ortools = True
     context.ortools_solver = "sirius"
