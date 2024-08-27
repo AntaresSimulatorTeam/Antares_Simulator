@@ -5,7 +5,7 @@ import os
 
 @given('the study path is "{string}"')
 def study_path_is(context, string):
-    context.study_path = os.path.join("..", "resources", "Antares_Simulator_Tests" , string)
+    context.study_path = os.path.join("..", "resources", "Antares_Simulator_Tests" , string.replace("/", os.sep))
 
 @when('I run antares simulator')
 def run_antares(context):
