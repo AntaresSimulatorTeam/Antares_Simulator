@@ -9,9 +9,6 @@ def study_path_is(context, string):
 
 @when('I run antares simulator')
 def run_antares(context):
-    file = open('latest_binary_dir.txt', 'r')
-    context.solver_path = os.path.join(file.readline(), "solver", "antares-solver")
-    context.raise_exception_on_failure = True
     context.use_ortools = True
     context.ortools_solver = "sirius"
     context.named_mps_problems = False
@@ -31,12 +28,19 @@ def check_annual_cost_expected(context, value):
     assert_double_close(float(value), get_annual_system_cost(context)["EXP"], 0.01)
 
 @then('the minimum annual system cost is {value}')
-def check_annual_cost_expected(context, value):
+def check_annual_cost_min(context, value):
     assert_double_close(float(value), get_annual_system_cost(context)["MIN"], 0.01)
 
 @then('the maximum annual system cost is {value}')
-def check_annual_cost_expected(context, value):
+def check_annual_cost_max(context, value):
     assert_double_close(float(value), get_annual_system_cost(context)["MAX"], 0.01)
+
+@then('the annual system cost is')
+def check_annual_cost(context):
+    for row in context.table:
+        assert_double_close(float(row["EXP"]), get_annual_system_cost(context)["EXP"], 0.01)
+        assert_double_close(float(row["MIN"]), get_annual_system_cost(context)["MIN"], 0.01)
+        assert_double_close(float(row["MAX"]), get_annual_system_cost(context)["MAX"], 0.01)
 
 def get_annual_system_cost(context):
     if context.annual_system_cost is None:
