@@ -307,12 +307,12 @@ jobs:
       - name: Run fast cucumber tests
         uses: ./.github/workflows/cucumber-tests
         with:
-          tags: @fast
+          tags: "@fast"
 
       - name: Run slow cucumber tests
         uses: ./.github/workflows/cucumber-tests
         with:
-          tags: @slow
+          tags: "@slow"
 
       - name: Barrier
         if: ${{ !success() }}
