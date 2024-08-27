@@ -1,6 +1,4 @@
 from behave import *
-import subprocess
-from pathlib import Path
 from antares_utils import *
 from assertions import *
 
