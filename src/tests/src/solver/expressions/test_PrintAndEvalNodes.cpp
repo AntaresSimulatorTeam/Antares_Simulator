@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(print_single_literal)
     LiteralNode literal(21);
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(literal);
+    const auto printed = printVisitor.dispatch(&literal);
 
     BOOST_CHECK_EQUAL(printed, "21.000000"); // TODO Number of decimals implementation dependent ?
 }
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(eval_single_literal)
     LiteralNode literal(21);
 
     EvalVisitor evalVisitor;
-    const double eval = evalVisitor.dispatch(literal);
+    const double eval = evalVisitor.dispatch(&literal);
 
     BOOST_CHECK_EQUAL(eval, 21.); // TODO Number of decimals implementation dependent ?
 }
@@ -71,7 +71,7 @@ BOOST_FIXTURE_TEST_CASE(print_add_two_literals, Registry<Node>)
     Node* root = create<AddNode>(create<LiteralNode>(21), create<LiteralNode>(2));
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(*root);
+    const auto printed = printVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(printed,
                       "(21.000000+2.000000)"); // TODO Number of decimals implementation dependent ?
@@ -81,7 +81,7 @@ BOOST_FIXTURE_TEST_CASE(eval_add_two_literals, Registry<Node>)
 {
     Node* root = create<AddNode>(create<LiteralNode>(21), create<LiteralNode>(2));
     EvalVisitor evalVisitor;
-    double eval = evalVisitor.dispatch(*root);
+    double eval = evalVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(eval, 23.);
 }
@@ -91,7 +91,7 @@ BOOST_FIXTURE_TEST_CASE(eval_negation_literal, Registry<Node>)
     const double num = 1428.0;
     Node* root = create<NegationNode>(create<LiteralNode>(num));
     EvalVisitor evalVisitor;
-    double eval = evalVisitor.dispatch(*root);
+    double eval = evalVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(eval, -num);
 }
@@ -103,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(eval_Add_And_Negation_Nodes, Registry<Node>)
     Node* negative_num2 = create<NegationNode>(create<LiteralNode>(num2));
     Node* root = create<AddNode>(create<LiteralNode>(num1), negative_num2);
     EvalVisitor evalVisitor;
-    double eval = evalVisitor.dispatch(*root);
+    double eval = evalVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(eval, num1 - num2);
 }
@@ -115,7 +115,7 @@ BOOST_FIXTURE_TEST_CASE(Negative_of_AddNode, Registry<Node>)
     Node* add_node = create<AddNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
     Node* neg = create<NegationNode>(add_node);
     EvalVisitor evalVisitor;
-    double eval = evalVisitor.dispatch(*neg);
+    double eval = evalVisitor.dispatch(neg);
 
     BOOST_CHECK_EQUAL(eval, -(num1 + num2));
 }
@@ -124,7 +124,7 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_node, Registry<Node>)
 {
     PortFieldNode pt_fd("august", "2024");
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(pt_fd);
+    const auto printed = printVisitor.dispatch(&pt_fd);
 
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
@@ -136,7 +136,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
     EvaluationContext context({{"my-param", value}}, {});
 
     EvalVisitor evalVisitor(context);
-    const double eval = evalVisitor.dispatch(root);
+    const double eval = evalVisitor.dispatch(&root);
 
     BOOST_CHECK_EQUAL(value, eval);
 }
@@ -148,7 +148,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_variable, Registry<Node>)
     EvaluationContext context({}, {{"my-variable", value}});
 
     EvalVisitor evalVisitor(context);
-    const double eval = evalVisitor.dispatch(root);
+    const double eval = evalVisitor.dispatch(&root);
 
     BOOST_CHECK_EQUAL(value, eval);
 }
@@ -159,11 +159,11 @@ BOOST_FIXTURE_TEST_CASE(multiplication_node, Registry<Node>)
     Node* mult = create<MultiplicationNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(*mult);
+    const auto printed = printVisitor.dispatch(mult);
 
     BOOST_CHECK_EQUAL(printed, "(22.000000*8.000000)");
     EvalVisitor evalVisitor;
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*mult), num1 * num2);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(mult), num1 * num2);
 }
 
 BOOST_FIXTURE_TEST_CASE(division_node, Registry<Node>)
@@ -172,11 +172,11 @@ BOOST_FIXTURE_TEST_CASE(division_node, Registry<Node>)
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(*div);
+    const auto printed = printVisitor.dispatch(div);
 
     BOOST_CHECK_EQUAL(printed, "(22.000000/8.000000)");
     EvalVisitor evalVisitor;
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*div), num1 / num2);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(div), num1 / num2);
 }
 
 BOOST_FIXTURE_TEST_CASE(division_by_zero, Registry<Node>)
@@ -185,12 +185,12 @@ BOOST_FIXTURE_TEST_CASE(division_by_zero, Registry<Node>)
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(*div);
+    const auto printed = printVisitor.dispatch(div);
 
     BOOST_CHECK_EQUAL(printed, "(22.000000/0.000000)");
     EvalVisitor evalVisitor;
 
-    BOOST_CHECK_EXCEPTION(evalVisitor.dispatch(*div),
+    BOOST_CHECK_EXCEPTION(evalVisitor.dispatch(div),
                           EvalVisitorDivisionException,
                           [](const EvalVisitorDivisionException& ex)
                           { return strcmp(ex.what(), "DivisionNode Division by zero") == 0; });
@@ -202,11 +202,11 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
     Node* sub = create<SubtractionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(*sub);
+    const auto printed = printVisitor.dispatch(sub);
 
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)");
     EvalVisitor evalVisitor;
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*sub), num1 - num2);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(sub), num1 - num2);
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
@@ -220,15 +220,15 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
     PrintVisitor printVisitor;
 
     EqualNode equ(&sub1, &sub2);
-    auto printed = printVisitor.dispatch(equ);
+    auto printed = printVisitor.dispatch(&equ);
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)==(8.000000-22.000000)");
 
     LessThanOrEqualNode lt(&sub1, &sub2);
-    printed = printVisitor.dispatch(lt);
+    printed = printVisitor.dispatch(&lt);
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)<=(8.000000-22.000000)");
 
     GreaterThanOrEqualNode gt(&sub1, &sub2);
-    printed = printVisitor.dispatch(gt);
+    printed = printVisitor.dispatch(&gt);
     BOOST_CHECK_EQUAL(printed, "(22.000000-8.000000)>=(8.000000-22.000000)");
 }
 

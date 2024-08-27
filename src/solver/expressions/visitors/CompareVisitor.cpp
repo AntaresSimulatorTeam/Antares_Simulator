@@ -22,109 +22,109 @@
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
 
 template<class T, class V>
-static bool compareBinaryNode(V& visitor, const T& node, const Antares::Solver::Nodes::Node& other)
+static bool compareBinaryNode(V& visitor, const T* node, const Antares::Solver::Nodes::Node* other)
 {
-    if (const T* other_node = dynamic_cast<const T*>(&other))
+    if (const T* other_node = dynamic_cast<const T*>(other))
     {
-        bool left = visitor.dispatch(*node.left(), *other_node->left());
-        bool right = visitor.dispatch(*node.right(), *other_node->right());
+        bool left = visitor.dispatch(node->left(), other_node->left());
+        bool right = visitor.dispatch(node->right(), other_node->right());
         return left && right;
     }
     return false;
 }
 
 template<class T>
-static bool compareGetValue(const T& node, const Antares::Solver::Nodes::Node& other)
+static bool compareGetValue(const T* node, const Antares::Solver::Nodes::Node* other)
 {
-    if (const T* other_node = dynamic_cast<const T*>(&other))
+    if (const T* other_node = dynamic_cast<const T*>(other))
     {
-        return node.value() == other_node->value();
+        return node->value() == other_node->value();
     }
     return false;
 }
 
 template<class T>
-static bool compareEqualOperator(const T& node, const Antares::Solver::Nodes::Node& other)
+static bool compareEqualOperator(const T* node, const Antares::Solver::Nodes::Node* other)
 {
-    if (const T* other_node = dynamic_cast<const T*>(&other))
+    if (const T* other_node = dynamic_cast<const T*>(other))
     {
-        return node == *other_node;
+        return *node == *other_node;
     }
     return false;
 }
 
 namespace Antares::Solver::Visitors
 {
-bool CompareVisitor::visit(const Nodes::AddNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::AddNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::SubtractionNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::SubtractionNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::MultiplicationNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::MultiplicationNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::DivisionNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::DivisionNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::EqualNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::EqualNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::LessThanOrEqualNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::LessThanOrEqualNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::GreaterThanOrEqualNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::NegationNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::NegationNode* node, const Nodes::Node* other)
 {
-    if (auto* other_node = dynamic_cast<const Nodes::NegationNode*>(&other))
+    if (auto* other_node = dynamic_cast<const Nodes::NegationNode*>(other))
     {
-        return dispatch(*node.child(), *other_node->child());
+        return dispatch(node->child(), other_node->child());
     }
     return false;
 }
 
-bool CompareVisitor::visit(const Nodes::ParameterNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::ParameterNode* node, const Nodes::Node* other)
 {
     return compareGetValue(node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::LiteralNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::LiteralNode* node, const Nodes::Node* other)
 {
     return compareGetValue(node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::VariableNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::VariableNode* node, const Nodes::Node* other)
 {
     return compareGetValue(node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::PortFieldNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::PortFieldNode* node, const Nodes::Node* other)
 {
     return compareEqualOperator(node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::ComponentVariableNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::ComponentVariableNode* node, const Nodes::Node* other)
 {
     return compareEqualOperator(node, other);
 }
 
-bool CompareVisitor::visit(const Nodes::ComponentParameterNode& node, const Nodes::Node& other)
+bool CompareVisitor::visit(const Nodes::ComponentParameterNode* node, const Nodes::Node* other)
 {
     return compareEqualOperator(node, other);
 }
