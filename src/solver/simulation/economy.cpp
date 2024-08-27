@@ -71,7 +71,7 @@ bool Economy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
-        weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
+        weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
@@ -82,13 +82,14 @@ bool Economy::simulationBegin()
                                             numSpace);
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] = std::make_unique<Optimization::WeeklyOptimization>(
-              options,
+            Optimization::WeeklyOptimization weekOpt(options,
               &pProblemesHebdo[numSpace],
               study.parameters.adqPatchParams,
               numSpace,
               resultWriter,
               simulationObserver_.get());
+
+            weeklyOptProblems_.push_back(weekOpt);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -163,7 +164,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblems_[numSpace]->solve();
+            weeklyOptProblems_[numSpace].solve();
 
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);

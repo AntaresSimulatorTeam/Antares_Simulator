@@ -98,7 +98,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
-    std::vector<std::unique_ptr<Optimization::WeeklyOptimization>> weeklyOptProblems_;
+    std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
