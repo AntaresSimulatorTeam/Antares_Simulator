@@ -1,6 +1,7 @@
 from behave import *
 import subprocess
 from pathlib import Path
+import os
 
 def run_simulation(context):
     solver_full_path = str(Path(context.solver_path).resolve())
@@ -23,13 +24,17 @@ def run_simulation(context):
             break
             
     context.return_code = process.returncode
+    context.annual_system_cost = None
 
     if not context.raise_exception_on_failure:
         return
-    
-def read_output_file_and_get_value_for(context, output_file, key):
-    file = open(context.output_path + "/" + output_file, 'r')
+
+def parse_annual_system_cost(output_path : str) -> dict:
+    file = open(os.path.join(output_path, "annualSystemCost.txt"), 'r')
+    keys = ["EXP", "MIN", "MAX"]
+    annual_system_cost = {}
     for line in file.readlines():
-        if key in line:
-            return line.split(key + " : ")[1]
-    raise LookupError(f"Key {key} not found in output file {output_file}")
+        for key in keys:
+            if key in line:
+                annual_system_cost[key] = float(line.split(key + " : ")[1])
+    return annual_system_cost

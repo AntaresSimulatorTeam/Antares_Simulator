@@ -27,16 +27,18 @@ def simu_success(context):
     assert context.return_code != 0
 
 @then('the expected value of the annual system cost is {value}')
-def check_annual_cost_expected(context, value : float):
-    actual_value = float(read_output_file_and_get_value_for(context, "annualSystemCost.txt", "EXP"))
-    assert_double_close(float(value), actual_value, 0.01)
+def check_annual_cost_expected(context, value):
+    assert_double_close(float(value), get_annual_system_cost(context)["EXP"], 0.01)
 
 @then('the minimum annual system cost is {value}')
-def check_annual_cost_expected(context, value : float):
-    actual_value = float(read_output_file_and_get_value_for(context, "annualSystemCost.txt", "MIN"))
-    assert_double_close(float(value), actual_value, 0.01)
+def check_annual_cost_expected(context, value):
+    assert_double_close(float(value), get_annual_system_cost(context)["MIN"], 0.01)
 
 @then('the maximum annual system cost is {value}')
-def check_annual_cost_expected(context, value : float):
-    actual_value = float(read_output_file_and_get_value_for(context, "annualSystemCost.txt", "MAX"))
-    assert_double_close(float(value), actual_value, 0.01)
+def check_annual_cost_expected(context, value):
+    assert_double_close(float(value), get_annual_system_cost(context)["MAX"], 0.01)
+
+def get_annual_system_cost(context):
+    if context.annual_system_cost is None:
+        context.annual_system_cost = parse_annual_system_cost(context.output_path)
+    return context.annual_system_cost
