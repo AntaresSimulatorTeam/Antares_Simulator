@@ -165,7 +165,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
+                     PopupInfo(study.parameters.adqPatchParams.setToZeroOutsideInsideLinks,
                                wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -344,7 +344,7 @@ void AdequacyPatchOptions::refresh()
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
     buttonType = "ntc";
     updateButton(pBtnNTCfromOutToInAdqPatch,
-                 study.parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
+                 study.parameters.adqPatchParams.setToZeroOutsideInsideLinks,
                  buttonType);
     // Price taking order (PTO) for adequacy patch
     buttonType = "pto";

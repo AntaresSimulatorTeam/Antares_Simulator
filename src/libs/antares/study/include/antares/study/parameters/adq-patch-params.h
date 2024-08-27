@@ -78,20 +78,6 @@ enum class AdqPatchPTO
 
 }; // enum AdqPatchPTO
 
-struct LocalMatching
-{
-    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
-    //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
-    //! only in the first step of adequacy patch local matching rule.
-    bool setToZeroOutsideInsideLinks = true;
-    /*!
-     ** \brief Reset to default values related to local matching
-     */
-    void reset();
-    bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
-    void addProperties(IniFile::Section* section) const;
-};
-
 class CurtailmentSharing
 {
 public:
@@ -122,7 +108,10 @@ private:
 struct AdqPatchParams
 {
     bool enabled;
-    LocalMatching localMatching;
+    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
+    //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
+    //! only in the first step of adequacy patch local matching rule.
+    bool setToZeroOutsideInsideLinks = true;
     CurtailmentSharing curtailmentSharing;
 
     void reset();

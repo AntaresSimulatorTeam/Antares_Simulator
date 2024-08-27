@@ -31,11 +31,6 @@ namespace Antares::Data::AdequacyPatch
 // Local matching
 // -------------------
 
-void LocalMatching::reset()
-{
-    setToZeroOutsideInsideLinks = true;
-}
-
 static bool legacyLocalMatchingKeys(const Yuni::String& key)
 {
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
@@ -62,22 +57,6 @@ static bool legacyLocalMatchingKeys(const Yuni::String& key)
         return true;
     }
     return false;
-}
-
-bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
-{
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
-    {
-        return value.to<bool>(setToZeroOutsideInsideLinks);
-    }
-
-    return legacyLocalMatchingKeys(key);
-}
-
-void LocalMatching::addProperties(IniFile::Section* section) const
-{
-    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
-                 setToZeroOutsideInsideLinks);
 }
 
 // -----------------------
@@ -158,7 +137,7 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
         return value.to<int>(thresholdVarBoundsRelaxation);
     }
 
-    return false;
+    return legacyLocalMatchingKeys(key);
 }
 
 const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
@@ -192,30 +171,37 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 // ------------------------
 void AdqPatchParams::reset()
 {
-    localMatching.reset();
     curtailmentSharing.reset();
+    setToZeroOutsideInsideLinks = true;
 }
 
 void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
 {
-    out.emplace_back("DENS");
-    out.emplace_back("LMR VIOL.");
-    out.emplace_back("SPIL. ENRG. CSR");
-    out.emplace_back("DTG MRG CSR");
+    if (!enabled)
+    {
+        out.emplace_back("DENS");
+        out.emplace_back("LMR VIOL.");
+        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("DTG MRG CSR");
+    }
 }
 
 bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
-
-    return curtailmentSharing.updateFromKeyValue(key, value)
-           != localMatching.updateFromKeyValue(key, value); // XOR
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
+    {
+        return value.to<bool>(setToZeroOutsideInsideLinks);
+    }
+    return curtailmentSharing.updateFromKeyValue(key, value);
 }
 
 void AdqPatchParams::saveToINI(IniFile& ini) const
 {
     auto* section = ini.addSection("adequacy patch");
 
-    localMatching.addProperties(section);
+    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
+                 setToZeroOutsideInsideLinks);
+
     curtailmentSharing.addProperties(section);
 }
 

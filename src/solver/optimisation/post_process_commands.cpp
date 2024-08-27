@@ -260,7 +260,7 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
             {
                 const auto [netPositionInit, densNew, totalNodeBalance] = calculateAreaFlowBalance(
                   problemeHebdo_,
-                  adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+                  adqPatchParams_.setToZeroOutsideInsideLinks,
                   Area,
                   hour);
                 // adjust densNew according to the new specification/request by ELIA

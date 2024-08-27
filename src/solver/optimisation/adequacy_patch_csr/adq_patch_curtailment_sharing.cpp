@@ -125,7 +125,7 @@ void HourlyCSRProblem::calculateCsrParameters()
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore) = calculateAreaFlowBalance(
               problemeHebdo_,
-              adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+              adqPatchParams_.setToZeroOutsideInsideLinks,
               Area,
               hour);
             double ensInit = problemeHebdo_->ResultatsHoraires[Area]
