@@ -1335,7 +1335,7 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
       {
           if (!area.solar.prepro)
           {
-              area.solar.prepro = new Antares::Data::Solar::Prepro();
+              area.solar.prepro = std::make_unique<Antares::Data::Solar::Prepro>();
           }
       });
 }
