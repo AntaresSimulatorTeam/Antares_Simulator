@@ -1350,7 +1350,7 @@ void AreaListEnsureDataWindPrepro(AreaList* l)
       {
           if (!area.wind.prepro)
           {
-              area.wind.prepro = new Antares::Data::Wind::Prepro();
+              area.wind.prepro = std::make_unique<Antares::Data::Wind::Prepro>();
           }
       });
 }

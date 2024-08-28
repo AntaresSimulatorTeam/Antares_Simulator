@@ -239,7 +239,7 @@ void Area::createMissingPrepros()
     }
     if (!wind.prepro)
     {
-        wind.prepro = new Data::Wind::Prepro();
+        wind.prepro = std::make_unique<Data::Wind::Prepro>();
     }
     if (!hydro.prepro)
     {

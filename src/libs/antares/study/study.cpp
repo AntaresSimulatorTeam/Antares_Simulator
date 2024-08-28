@@ -994,7 +994,7 @@ void Study::destroyAllHydroTSGeneratorData()
 
 void Study::destroyAllWindTSGeneratorData()
 {
-    areas.each([](Data::Area& area) { FreeAndNil(area.wind.prepro); });
+    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
