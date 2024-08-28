@@ -105,7 +105,5 @@ public:
     virtual R visit(const PortFieldNode&, Args... args) = 0;
     virtual R visit(const ComponentVariableNode&, Args... args) = 0;
     virtual R visit(const ComponentParameterNode&, Args... args) = 0;
-
-private:
 };
 } // namespace Antares::Solver::Nodes
