@@ -169,15 +169,7 @@ private:
     public:
         Meter();
 
-        virtual ~Meter()
-        {
-            if (logsContainer)
-            {
-                delete[] logsContainer;
-            }
-        }
-
-        void allocateLogsContainer(uint nb);
+        virtual ~Meter() = default;
 
         /*!
         ** \brief Prepare enough space to allow @n simultaneous tasks
@@ -188,16 +180,12 @@ private:
         virtual bool onInterval(uint) override;
 
     public:
-        //
         Progression::Part::Map parts;
         Part::ListRef inUse;
         std::mutex mutex;
         uint nbParallelYears;
 
-        // Because writing something to the logs might be expensive, we have to
-        // reduce the time spent in locking the mutex.
-        // We will use a temp vector of string to delay the writing into the logs
-        Yuni::CString<256, false>* logsContainer;
+        std::vector<Yuni::CString<256, false>> logsContainer;
 
     }; // class Meter
 

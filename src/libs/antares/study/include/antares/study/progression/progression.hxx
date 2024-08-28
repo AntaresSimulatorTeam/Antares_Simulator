@@ -26,14 +26,8 @@ namespace Antares
 namespace Solver
 {
 inline Progression::Meter::Meter():
-    nbParallelYears(0),
-    logsContainer(nullptr)
+    nbParallelYears(0)
 {
-}
-
-inline void Progression::Meter::allocateLogsContainer(uint nb)
-{
-    logsContainer = new Yuni::CString<256, false>[nb];
 }
 
 inline void Progression::Meter::taskCount(uint n)
@@ -49,7 +43,7 @@ inline void Progression::add(Section section, int nbTicks)
 inline void Progression::setNumberOfParallelYears(uint nb)
 {
     pProgressMeter.nbParallelYears = nb;
-    pProgressMeter.allocateLogsContainer(nb);
+    pProgressMeter.logsContainer.resize(nb);
 }
 
 inline Progression::Part& Progression::begin(uint year, Progression::Section section)
