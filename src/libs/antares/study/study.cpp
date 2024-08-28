@@ -979,7 +979,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
 void Study::destroyAllLoadTSGeneratorData()
 {
-    areas.each([](Data::Area& area) { FreeAndNil(area.load.prepro); });
+    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
 }
 
 void Study::destroyAllSolarTSGeneratorData()

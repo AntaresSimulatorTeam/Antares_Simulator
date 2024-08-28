@@ -231,7 +231,7 @@ void Area::createMissingPrepros()
 {
     if (!load.prepro)
     {
-        load.prepro = new Data::Load::Prepro();
+        load.prepro = std::make_unique<Data::Load::Prepro>();
     }
     if (!solar.prepro)
     {

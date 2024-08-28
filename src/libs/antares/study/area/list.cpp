@@ -1320,7 +1320,7 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
       {
           if (!area.load.prepro)
           {
-              area.load.prepro = new Antares::Data::Load::Prepro();
+              area.load.prepro = std::make_unique<Antares::Data::Load::Prepro>();
           }
       });
 }
