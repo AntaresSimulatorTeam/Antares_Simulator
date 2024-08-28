@@ -32,32 +32,10 @@ namespace Antares::TSGenerator::XCast
 StudyData::StudyData():
     mode(Data::Correlation::modeNone)
 {
-    for (uint realmonth = 0; realmonth != 12; ++realmonth)
-    {
-        correlation[realmonth] = nullptr;
-    }
 }
 
 StudyData::~StudyData()
 {
-    switch (mode)
-    {
-    case Data::Correlation::modeMonthly:
-    {
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
-        {
-            delete correlation[realmonth];
-        }
-        break;
-    }
-    case Data::Correlation::modeAnnual:
-    {
-        delete correlation[0];
-        break;
-    }
-    case Data::Correlation::modeNone:
-        break;
-    }
 }
 
 void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const
@@ -92,8 +70,8 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
         {
         case Data::Correlation::modeAnnual:
         {
-            auto* m = new Matrix<float>();
-            prepareMatrix(*m, originalCorrelation.annual);
+            auto m = Matrix<float>();
+            prepareMatrix(m, originalCorrelation.annual);
 
             for (uint realmonth = 0; realmonth != 12; ++realmonth)
             {
@@ -105,21 +83,14 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
         {
             for (uint realmonth = 0; realmonth != 12; ++realmonth)
             {
-                auto* m = new Matrix<float>();
+                auto m = Matrix<float>();
                 correlation[realmonth] = m;
-                prepareMatrix(*m, originalCorrelation.monthly[realmonth]);
+                prepareMatrix(m, originalCorrelation.monthly[realmonth]);
             }
             break;
         }
         case Data::Correlation::modeNone:
             break;
-        }
-    }
-    else
-    {
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
-        {
-            correlation[realmonth] = nullptr;
         }
     }
 }

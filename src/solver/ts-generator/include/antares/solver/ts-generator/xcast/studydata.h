@@ -77,7 +77,7 @@ public:
     //! List of all areas (sub-set of the complete list)
     Data::Area::Vector localareas;
     //! Correlation coefficients for each month
-    const Matrix<float>* correlation[12];
+    std::array<Matrix<float>, 12> correlation;
     /*!
     ** \brief Correlation mode (monthly / annual)
     **
