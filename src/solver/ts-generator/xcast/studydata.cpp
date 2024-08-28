@@ -34,10 +34,6 @@ StudyData::StudyData():
 {
 }
 
-StudyData::~StudyData()
-{
-}
-
 void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const
 {
     uint areaCount = (uint)localareas.size();

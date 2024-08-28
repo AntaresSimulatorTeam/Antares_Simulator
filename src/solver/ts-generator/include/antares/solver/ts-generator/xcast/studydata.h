@@ -40,7 +40,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~StudyData();
+    ~StudyData() = default;
     //@}
 
     /*!
