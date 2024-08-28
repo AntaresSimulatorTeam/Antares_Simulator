@@ -1380,7 +1380,7 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
       {
           if (!area.hydro.prepro)
           {
-              area.hydro.prepro = new PreproHydro();
+              area.hydro.prepro = std::make_unique<PreproHydro>();
           }
       });
 }

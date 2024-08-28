@@ -185,7 +185,7 @@ uint64_t Area::memoryUsage() const
     ret += wind.memoryUsage();
 
     // Hydro
-    ret += PreproHydroMemoryUsage(hydro.prepro);
+    ret += PreproHydroMemoryUsage(hydro.prepro.get());
     if (hydro.series)
     {
         ret += hydro.series->memoryUsage();
@@ -243,7 +243,7 @@ void Area::createMissingPrepros()
     }
     if (!hydro.prepro)
     {
-        hydro.prepro = new PreproHydro();
+        hydro.prepro = std::make_unique<PreproHydro>();
     }
     thermal.list.ensureDataPrepro();
 }

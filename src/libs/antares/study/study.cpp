@@ -989,7 +989,7 @@ void Study::destroyAllSolarTSGeneratorData()
 
 void Study::destroyAllHydroTSGeneratorData()
 {
-    areas.each([](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
+    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
 
 void Study::destroyAllWindTSGeneratorData()

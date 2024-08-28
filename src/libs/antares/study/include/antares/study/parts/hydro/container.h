@@ -211,7 +211,7 @@ public:
     HydroAllocation allocation;
 
     //! Data for the pre-processor
-    PreproHydro* prepro;
+    std::unique_ptr<PreproHydro> prepro;
 
     //! Data for time-series
     DataSeriesHydro* series;
