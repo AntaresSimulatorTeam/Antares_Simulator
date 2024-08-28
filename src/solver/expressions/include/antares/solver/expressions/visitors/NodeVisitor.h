@@ -50,6 +50,13 @@ public:
     virtual ~NodeVisitor() = default;
     using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
 
+    /**
+     * Creates a map associating node types with corresponding visitor functions.
+     *
+     * @tparam NodeTypes A variadic pack of node types to be included in the map.
+     * @return An `std::unordered_map` containing the associations between node types and their
+     * corresponding visitor functions.
+     */
     template<class... NodeTypes>
     std::unordered_map<std::type_index, FunctionT> NodesVisitList()
     {
