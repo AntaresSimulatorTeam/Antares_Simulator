@@ -46,6 +46,7 @@ public:
     void notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
                             int optimizationNumber,
                             std::string_view name) override;
+    bool shouldTranslateCommonData() const;
 
     /**
      * @brief The acquireLps method is used to take ownership of Antares problems.
@@ -55,7 +56,7 @@ public:
 
 private:
     Solver::LpsFromAntares lps_;
-    std::mutex mutex_;
+    mutable std::mutex lps_mutex_;
 };
 
 } // namespace Antares::API

@@ -31,18 +31,39 @@ namespace
 auto translate(const PROBLEME_HEBDO& problemeHebdo,
                std::string_view name,
                const Solver::HebdoProblemToLpsTranslator& translator,
-               const unsigned int year,
-               const unsigned int week)
+               bool translateCommonData)
 {
     auto weekly_data = translator.translate(problemeHebdo.ProblemeAResoudre.get(), name);
     Solver::ConstantDataFromAntares common_data;
-    if (year == 1 && week == 1)
+    if (translateCommonData)
     {
         common_data = translator.commonProblemData(problemeHebdo.ProblemeAResoudre.get());
     }
     return std::make_pair(common_data, weekly_data);
 }
 } // namespace
+
+/**
+ * @brief Compute whether or not to translate common data.
+ * @details This method is thread-safe.
+ * Common data need to be translated only once.
+ * @return
+ */
+bool SimulationObserver::shouldTranslateCommonData() const
+{
+    /**
+     * Static variable used to share state between threads.
+     */
+    bool translateCommonData = false;
+    static bool mustTranslateCommonData = true;
+    std::lock_guard lock(lps_mutex_);
+    translateCommonData = mustTranslateCommonData;
+    if (mustTranslateCommonData && lps_.empty())
+    {
+        mustTranslateCommonData = false;
+    }
+    return translateCommonData;
+}
 
 void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
                                             int optimizationNumber,
@@ -56,9 +77,13 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
     const unsigned int year = problemeHebdo.year + 1;
     const unsigned int week = problemeHebdo.weekInTheYear + 1;
     // common_data and weekly_data computed before the mutex lock to prevent blocking the thread
-    auto [common_data, weekly_data] = translate(problemeHebdo, name, translator, year, week);
-    std::lock_guard lock(mutex_);
-    if (year == 1 && week == 1)
+    bool translateCommonData = shouldTranslateCommonData();
+    auto [common_data, weekly_data] = translate(problemeHebdo,
+                                                name,
+                                                translator,
+                                                translateCommonData);
+    std::lock_guard lock(lps_mutex_);
+    if (translateCommonData)
     {
         lps_.setConstantData(common_data);
     }
@@ -67,7 +92,7 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
 
 Solver::LpsFromAntares&& SimulationObserver::acquireLps() noexcept
 {
-    std::lock_guard lock(mutex_);
+    std::lock_guard lock(lps_mutex_);
     return std::move(lps_);
 }
 } // namespace Antares::API
