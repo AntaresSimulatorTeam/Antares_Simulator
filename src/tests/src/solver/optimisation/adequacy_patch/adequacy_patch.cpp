@@ -73,8 +73,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.IndexDebutIntercoExtremite = std::vector<int>(1);
 
     // input values
-    adqPatchParams.setToZeroOutsideInsideLinks
-      = !includeFlowsOutsideAdqPatchToDensNew;
+    adqPatchParams.setToZeroOutsideInsideLinks = !includeFlowsOutsideAdqPatchToDensNew;
     problem.ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;

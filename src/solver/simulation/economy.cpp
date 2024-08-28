@@ -83,11 +83,11 @@ bool Economy::simulationBegin()
 
             auto options = createOptimizationOptions(study);
             Optimization::WeeklyOptimization weekOpt(options,
-              &pProblemesHebdo[numSpace],
-              study.parameters.adqPatchParams,
-              numSpace,
-              resultWriter,
-              simulationObserver_.get());
+                                                     &pProblemesHebdo[numSpace],
+                                                     study.parameters.adqPatchParams,
+                                                     numSpace,
+                                                     resultWriter,
+                                                     simulationObserver_.get());
 
             weeklyOptProblems_.push_back(weekOpt);
 
