@@ -58,7 +58,7 @@ public:
      * corresponding visitor functions.
      */
     template<class... NodeTypes>
-    std::unordered_map<std::type_index, FunctionT> NodesVisitList()
+    std::unordered_map<std::type_index, FunctionT> NodesVisitList() const
     {
         std::unordered_map<std::type_index, FunctionT> my_map;
         ([&] { my_map[typeid(NodeTypes)] = &tryVisit<R, NodeVisitor<R, Args...>, NodeTypes>; }(),
