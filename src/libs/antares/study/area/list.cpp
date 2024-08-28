@@ -956,8 +956,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
 
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
-                                           studyVersion,
-                                           study.usedByTheSolver);
+                                                 studyVersion,
+                                                 study.usedByTheSolver);
     }
 
     // Wind
