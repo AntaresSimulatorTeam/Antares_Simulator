@@ -28,10 +28,5 @@ class MultiplicationNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
-
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::MULTIPLICATION_NODE;
-    }
 };
 } // namespace Antares::Solver::Nodes

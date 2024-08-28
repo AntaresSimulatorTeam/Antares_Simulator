@@ -19,11 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <antares/solver/expressions/nodes/NodeTypes.h>
 
 namespace Antares::Solver::Nodes
 {
-class Node: public NodeType
+class Node
 {
 public:
     virtual ~Node() = default;

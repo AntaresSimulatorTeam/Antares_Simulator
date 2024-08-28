@@ -28,10 +28,5 @@ class GreaterThanOrEqualNode: public ComparisonNode
 {
 public:
     using ComparisonNode::ComparisonNode;
-
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::GREATER_THAN_OR_EQUAL_NODE;
-    }
 };
 } // namespace Antares::Solver::Nodes

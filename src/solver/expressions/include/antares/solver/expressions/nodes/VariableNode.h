@@ -10,10 +10,5 @@ class VariableNode final: public Leaf<std::string>
 {
 public:
     using Leaf<std::string>::Leaf;
-
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::VARIABLE_NODE;
-    }
 };
 } // namespace Antares::Solver::Nodes

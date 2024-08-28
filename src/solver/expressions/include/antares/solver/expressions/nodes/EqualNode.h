@@ -28,10 +28,5 @@ class EqualNode: public ComparisonNode
 {
 public:
     using ComparisonNode::ComparisonNode;
-
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::EQUAL_NODE;
-    }
 };
 } // namespace Antares::Solver::Nodes

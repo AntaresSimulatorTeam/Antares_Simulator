@@ -30,10 +30,5 @@ class NegationNode final: public UnaryNode
 {
 public:
     using UnaryNode::UnaryNode;
-
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::NEGATION_NODE;
-    }
 };
 } // namespace Antares::Solver::Nodes

@@ -43,21 +43,11 @@ class ComponentVariableNode: public ComponentNode
 {
 public:
     using ComponentNode::ComponentNode;
-
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::COMPONENT_VARIABLE_NODE;
-    }
 };
 
 class ComponentParameterNode: public ComponentNode
 {
 public:
     using ComponentNode::ComponentNode;
-
-    constexpr NodeKind type() const override
-    {
-        return NodeKind::COMPONENT_PARAMETER_NODE;
-    }
 };
 } // namespace Antares::Solver::Nodes

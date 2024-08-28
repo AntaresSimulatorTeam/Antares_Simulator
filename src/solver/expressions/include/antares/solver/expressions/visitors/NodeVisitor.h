@@ -20,6 +20,7 @@
 */
 #pragma once
 #include <optional>
+#include <typeindex>
 #include <vector>
 
 #include <antares/logs/logs.h>
@@ -47,38 +48,38 @@ class NodeVisitor
 {
 public:
     virtual ~NodeVisitor() = default;
+    using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
+
+    template<class... NodeTypes>
+    std::unordered_map<std::type_index, FunctionT> NodesVisitList()
+    {
+        std::unordered_map<std::type_index, FunctionT> my_map;
+        ([&] { my_map[typeid(NodeTypes)] = &tryVisit<R, NodeVisitor<R, Args...>, NodeTypes>; }(),
+         ...);
+        return my_map;
+    }
 
     R dispatch(const Node& node, Args... args)
     {
-        using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
-        static const std::unordered_map<NodeKind, FunctionT> allNodeVisitList{
-          {NodeKind::ADD_NODE, &tryVisit<R, NodeVisitor<R, Args...>, AddNode>},
-          {NodeKind::SUBTRACTION_NODE, &tryVisit<R, NodeVisitor<R, Args...>, SubtractionNode>},
-          {NodeKind::MULTIPLICATION_NODE,
-           &tryVisit<R, NodeVisitor<R, Args...>, MultiplicationNode>},
-          {NodeKind::DIVISION_NODE, &tryVisit<R, NodeVisitor<R, Args...>, DivisionNode>},
-          {NodeKind::EQUAL_NODE, &tryVisit<R, NodeVisitor<R, Args...>, EqualNode>},
-          {NodeKind::LESS_THAN_OR_EQUAL_NODE,
-           &tryVisit<R, NodeVisitor<R, Args...>, LessThanOrEqualNode>},
-          {NodeKind::GREATER_THAN_OR_EQUAL_NODE,
-           &tryVisit<R, NodeVisitor<R, Args...>, GreaterThanOrEqualNode>},
-          {NodeKind::NEGATION_NODE, &tryVisit<R, NodeVisitor<R, Args...>, NegationNode>},
-          {NodeKind::PARAMETER_NODE, &tryVisit<R, NodeVisitor<R, Args...>, ParameterNode>},
-          {NodeKind::VARIABLE_NODE, &tryVisit<R, NodeVisitor<R, Args...>, VariableNode>},
-          {NodeKind::LITERAL_NODE, &tryVisit<R, NodeVisitor<R, Args...>, LiteralNode>},
-          {NodeKind::PORT_FIELD_NODE, &tryVisit<R, NodeVisitor<R, Args...>, PortFieldNode>},
-          {NodeKind::COMPONENT_VARIABLE_NODE,
-           &tryVisit<R, NodeVisitor<R, Args...>, ComponentVariableNode>},
-          {NodeKind::COMPONENT_PARAMETER_NODE,
-           &tryVisit<R, NodeVisitor<R, Args...>, ComponentParameterNode>}};
-
-        //        for (auto f: allNodeVisitList)
-        //        {
-        if (auto ret = allNodeVisitList.at(node.type())(node, *this, args...); ret.has_value())
+        const static std::unordered_map<std::type_index, FunctionT>
+          my_map = NodesVisitList<AddNode,
+                                  SubtractionNode,
+                                  MultiplicationNode,
+                                  DivisionNode,
+                                  EqualNode,
+                                  LessThanOrEqualNode,
+                                  GreaterThanOrEqualNode,
+                                  NegationNode,
+                                  ParameterNode,
+                                  VariableNode,
+                                  LiteralNode,
+                                  PortFieldNode,
+                                  ComponentVariableNode,
+                                  ComponentParameterNode>();
+        if (auto ret = my_map.at(typeid(node))(node, *this, args...); ret.has_value())
         {
             return ret.value();
         }
-        //        }
 
         logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
         return R();
@@ -98,5 +99,7 @@ public:
     virtual R visit(const PortFieldNode&, Args... args) = 0;
     virtual R visit(const ComponentVariableNode&, Args... args) = 0;
     virtual R visit(const ComponentParameterNode&, Args... args) = 0;
+
+private:
 };
 } // namespace Antares::Solver::Nodes
