@@ -934,11 +934,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
-        auto* hydroSeries = area.hydro.series;
         if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = hydroSeries->loadGenerationTS(area.id, buffer, studyVersion) && ret;
+            ret = area.hydro.series->loadGenerationTS(area.id, buffer, studyVersion) && ret;
         }
 
         if (studyVersion < StudyVersion(9, 1))
@@ -953,10 +952,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         else
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
+            ret = area.hydro.series->LoadMaxPower(area.id, buffer) && ret;
         }
 
-        hydroSeries->resizeTSinDeratedMode(study.parameters.derated,
+        area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                            studyVersion,
                                            study.usedByTheSolver);
     }
@@ -1365,7 +1364,7 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
       {
           if (!area.hydro.series)
           {
-              area.hydro.series = new DataSeriesHydro();
+              area.hydro.series = std::make_unique<DataSeriesHydro>();
           }
       });
 }

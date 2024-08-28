@@ -52,11 +52,6 @@ PartHydro::PartHydro():
 {
 }
 
-PartHydro::~PartHydro()
-{
-    delete series;
-}
-
 void PartHydro::reset()
 {
     intraDailyModulation = 24;

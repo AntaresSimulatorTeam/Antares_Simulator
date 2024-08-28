@@ -223,7 +223,7 @@ void Area::createMissingTimeSeries()
 {
     if (!hydro.series)
     {
-        hydro.series = new DataSeriesHydro();
+        hydro.series = std::make_unique<DataSeriesHydro>();
     }
 }
 
