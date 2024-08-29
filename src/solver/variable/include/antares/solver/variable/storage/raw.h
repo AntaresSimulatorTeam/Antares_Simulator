@@ -206,7 +206,9 @@ private:
         }
         else
         {
-            (void)::memcpy(report.values[report.data.columnIndex].data(), array, sizeof(double) * Size);
+            (void)::memcpy(report.values[report.data.columnIndex].data(),
+                           array,
+                           sizeof(double) * Size);
         }
 
         // Next column index
