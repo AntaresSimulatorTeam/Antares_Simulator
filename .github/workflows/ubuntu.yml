@@ -235,21 +235,10 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
-      - name: Run cucumber on short-tests1
+      - name: Run cucumber on short-tests
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/short_tests.feature"
-
-      - name: Run cucumber on short-tests2
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          feature: "features/short_tests.feature"
-          tags: "@wip"
-
-      - name: Run cucumber on short-tests3
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          tags: "@fast"
 
       - name: Run mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -293,6 +282,11 @@ jobs:
           batch-name: medium-tests
           os: ${{ env.os }}
 
+      - name: Run cucumber on medium-tests
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/medium_tests.feature"
+
       - name: Run long-tests-1
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -316,11 +310,6 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-3
           os: ${{ env.os }}
-
-      - name: Run slow cucumber tests
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          tags: "@slow"
 
       - name: Barrier
         if: ${{ !success() }}
