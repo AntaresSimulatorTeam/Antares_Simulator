@@ -98,13 +98,10 @@ public:
     //! Matrix where to store all results
     double** values;
 
-    enum
-    {
-        captionCount = 3,
-    };
+    static constexpr unsigned captionCount = 3;
 
     //! Array to store all variable names
-    CaptionType* captions[captionCount];
+    std::array<CaptionType*, captionCount> captions;
 
     //! Precision to for each column (in the printf format)
     PrecisionType* precision;
