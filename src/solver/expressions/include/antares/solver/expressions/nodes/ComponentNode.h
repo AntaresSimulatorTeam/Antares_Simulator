@@ -25,11 +25,31 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a component node in a syntax tree.
+ */
 class ComponentNode: public Node
 {
 public:
+    /**
+     * @brief Constructs a component node with the specified ID and name.
+     *
+     * @param component_id The component ID.
+     * @param component_name The component name.
+     */
     explicit ComponentNode(const std::string& component_id, const std::string& component_name);
+    /**
+     * @brief Retrieves the component ID.
+     *
+     * @return The component ID.
+     */
     const std::string& getComponentId() const;
+
+    /**
+     * @brief Retrieves the component name.
+     *
+     * @return The component name.
+     */
     const std::string& getComponentName() const;
 
     bool operator==(const ComponentNode& other) const = default;
@@ -39,12 +59,18 @@ private:
     std::string component_name_;
 };
 
+/**
+ * @brief Represents a component variable node in a syntax tree.
+ */
 class ComponentVariableNode: public ComponentNode
 {
 public:
     using ComponentNode::ComponentNode;
 };
 
+/**
+ * @brief Represents a component parameter node in a syntax tree.
+ */
 class ComponentParameterNode: public ComponentNode
 {
 public:

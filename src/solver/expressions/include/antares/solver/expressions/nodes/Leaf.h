@@ -25,22 +25,39 @@
 
 namespace Antares::Solver::Nodes
 {
-// constraint T to arithmetic types?
+/**
+ * @brief Represents a leaf node in a syntax tree.
+ *
+ * @tparam T The type of the value stored in the leaf node.
+ */
 template<class T>
 class Leaf: public Node
 {
 public:
+    /**
+     * @brief Constructs a leaf node with the specified value.
+     *
+     * @param value The value to store in the leaf node.
+     */
     explicit Leaf(const T& value):
         value_(value)
     {
     }
 
+    /**
+     * @brief Retrieves the value stored in the leaf node.
+     *
+     * @return The value stored in the leaf node.
+     */
     T value() const
     {
         return value_;
     }
 
 private:
+    /**
+     * @brief The value stored in the leaf node.
+     */
     T value_;
 };
 

@@ -25,9 +25,17 @@
 
 namespace Antares::Solver::Visitors
 {
+/**
+ * @brief Represents a visitor for cloning nodes in a syntax tree.
+ */
 class CloneVisitor: public Nodes::NodeVisitor<Nodes::Node*>
 {
 public:
+    /**
+     * @brief Constructs a clone visitor with the specified registry for creating new nodes.
+     *
+     * @param registry The registry used for creating new nodes.
+     */
     explicit CloneVisitor(Registry<Nodes::Node>& registry);
 
     Nodes::Node* visit(const Nodes::AddNode& node) override;
