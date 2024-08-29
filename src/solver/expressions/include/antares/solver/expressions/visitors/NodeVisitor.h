@@ -62,33 +62,39 @@ public:
     template<class... NodeTypes>
     std::unordered_map<std::type_index, FunctionT> NodesVisitList() const
     {
-        std::unordered_map<std::type_index, FunctionT> my_map;
-        ([&] { my_map[typeid(NodeTypes)] = &tryVisit<R, NodeVisitor<R, Args...>, NodeTypes>; }(),
-         ...);
-        return my_map;
+        std::unordered_map<std::type_index, FunctionT> nodeDispatchFunctions;
+        (
+          [&nodeDispatchFunctions] {
+              nodeDispatchFunctions[typeid(NodeTypes)] = &tryVisit<R,
+                                                                   NodeVisitor<R, Args...>,
+                                                                   NodeTypes>;
+          }(),
+          ...);
+        return nodeDispatchFunctions;
     }
 
     R dispatch(const Node& node, Args... args)
     {
         const static std::unordered_map<std::type_index, FunctionT>
-          my_map = NodesVisitList<AddNode,
-                                  SubtractionNode,
-                                  MultiplicationNode,
-                                  DivisionNode,
-                                  EqualNode,
-                                  LessThanOrEqualNode,
-                                  GreaterThanOrEqualNode,
-                                  NegationNode,
-                                  ParameterNode,
-                                  VariableNode,
-                                  LiteralNode,
-                                  PortFieldNode,
-                                  ComponentVariableNode,
-                                  ComponentParameterNode>();
+          nodeDispatchFunctions = NodesVisitList<AddNode,
+                                                 SubtractionNode,
+                                                 MultiplicationNode,
+                                                 DivisionNode,
+                                                 EqualNode,
+                                                 LessThanOrEqualNode,
+                                                 GreaterThanOrEqualNode,
+                                                 NegationNode,
+                                                 ParameterNode,
+                                                 VariableNode,
+                                                 LiteralNode,
+                                                 PortFieldNode,
+                                                 ComponentVariableNode,
+                                                 ComponentParameterNode>();
         try
         {
             const auto& node_type = typeid(node);
-            if (auto ret = my_map.at(node_type)(node, *this, args...); ret.has_value())
+            if (auto ret = nodeDispatchFunctions.at(node_type)(node, *this, args...);
+                ret.has_value())
             {
                 return ret.value();
             }
