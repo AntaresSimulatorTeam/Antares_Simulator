@@ -76,7 +76,7 @@ public:
 
     R dispatch(const Node& node, Args... args)
     {
-        const auto nodeDispatchFunctions = NodeDispatchFunctionsProvider<R, Args...>::
+        const static auto nodeDispatchFunctions = NodeDispatchFunctionsProvider<R, Args...>::
           template NodesVisitList<AddNode,
                                   SubtractionNode,
                                   MultiplicationNode,
