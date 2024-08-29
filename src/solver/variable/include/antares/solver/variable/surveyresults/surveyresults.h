@@ -96,7 +96,7 @@ public:
     std::string variableUnit;
 
     //! Matrix where to store all results
-    std::vector<std::vector<double>> values;
+    double** values;
 
     static constexpr unsigned captionCount = 3;
 

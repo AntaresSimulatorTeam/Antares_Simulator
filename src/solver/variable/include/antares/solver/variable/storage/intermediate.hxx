@@ -106,11 +106,11 @@ void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
     // Values
     if (not annual)
     {
-        (void)::memcpy(report.values[report.data.columnIndex].data(), array, sizeof(double) * Size);
+        (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
     }
     else
     {
-        double& target = report.values[report.data.columnIndex][0];
+        double& target = *(report.values[report.data.columnIndex]);
         target = year;
     }
 

@@ -202,11 +202,11 @@ private:
             {
                 rawdata.allYears += array[i];
             }
-            report.values[report.data.columnIndex][0] = rawdata.allYears;
+            *(report.values[report.data.columnIndex]) = rawdata.allYears;
         }
         else
         {
-            (void)::memcpy(report.values[report.data.columnIndex].data(), array, sizeof(double) * Size);
+            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
         }
 
         // Next column index

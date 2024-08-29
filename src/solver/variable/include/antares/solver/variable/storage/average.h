@@ -202,7 +202,7 @@ private:
         {
         case Category::annual:
         {
-            double& target = report.values[report.data.columnIndex][0];
+            double& target = *(report.values[report.data.columnIndex]);
             target = 0;
             for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
             {
@@ -212,7 +212,7 @@ private:
             break;
         }
         default:
-            (void)::memcpy(report.values[report.data.columnIndex].data(), array, sizeof(double) * Size);
+            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
             break;
         }
 

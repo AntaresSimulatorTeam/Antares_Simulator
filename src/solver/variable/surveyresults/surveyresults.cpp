@@ -526,11 +526,13 @@ SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWrite
     data.initialize(maxVariables);
 
     // values
-    values.assign(maxVariables, std::vector<double>(HOURS_PER_YEAR, 0.));
-    /* for (auto& v : values) */
-    /* { */
-    /*     v.assign(HOURS_PER_YEAR, 0.);; */
-    /* } */
+    typedef double* ValueType;
+    values = new ValueType[maxVariables];
+    for (uint i = 0; i != maxVariables; ++i)
+    {
+        values[i] = new double[HOURS_PER_YEAR];
+        memset(values[i], 0, sizeof(double) * HOURS_PER_YEAR);
+    }
 
     // captions
     for (uint i = 0; i != captionCount; ++i)
@@ -568,6 +570,15 @@ SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWrite
 
 SurveyResults::~SurveyResults()
 {
+    if (values)
+    {
+        for (uint i = 0; i != maxVariables; ++i)
+        {
+            delete[] values[i];
+        }
+        delete[] values;
+    }
+
     delete[] precision;
     delete[] nonApplicableStatus;
     for (uint i = 0; i < digestSize; i++)

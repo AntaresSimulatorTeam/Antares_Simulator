@@ -220,7 +220,7 @@ private:
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
         // Values
-        auto& target = report.values[report.data.columnIndex];
+        double* target = report.values[report.data.columnIndex];
         // A mere copy
 
         auto squareRootChecked = [](double d) { return d >= 0 ? std::sqrt(d) : 0.; };
@@ -266,7 +266,7 @@ private:
         case Category::annual:
         {
             const double d = *array - results.avgdata.allYears * results.avgdata.allYears;
-            target[0] = squareRootChecked(d);
+            *target = squareRootChecked(d);
         }
         break;
         }

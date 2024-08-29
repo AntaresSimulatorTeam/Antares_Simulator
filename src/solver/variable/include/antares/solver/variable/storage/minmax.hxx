@@ -97,7 +97,7 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
                                                     decimalPrec);
 
     // Values
-    auto& v = report.values[report.data.columnIndex];
+    double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
         v[i] = (double)array[i].indice;
@@ -127,7 +127,7 @@ inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& r
     report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
     // Values
-    auto& v = report.values[report.data.columnIndex];
+    double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
         v[i] = array[i].value;
