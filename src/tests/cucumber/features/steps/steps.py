@@ -1,8 +1,10 @@
+# Gherkins test steps definitions
+
+import os
 from behave import *
 from simulator_utils import *
-from output_utils import *
 from assertions import *
-import os
+from context_utils import *
 
 @given('the study path is "{string}"')
 def study_path_is(context, string):
@@ -58,26 +60,8 @@ def check_lold_value(context, area, date, year, lold_value_mw):
     actual_unsp_energ = get_hourly_values_for_specific_hour(context, area.lower(), int(year), date)["UNSP. ENRG"].sum()
     assert_double_close(float(lold_value_mw), actual_unsp_energ, 0.001)
 
-# post-processing a test: remove output files to minimize tests' footprint during CI
 def after_feature(context, feature):
+    # post-processing a test: clean up output files to avoid taking up all the disk space
     if (context.output_path != None):
         pathlib.Path.rmdir(context.output_path)
 
-def get_annual_system_cost(context):
-    if context.annual_system_cost is None:
-        context.annual_system_cost = parse_annual_system_cost(context.output_path)
-    return context.annual_system_cost
-
-def get_hourly_values_for_specific_hour(context, area : str, year : int, date : str):
-    df = get_hourly_values(context, area, year)
-    day, month, hour = date.split(" ")
-    return df.loc[(df['Unnamed: 2'] == int(day)) & (df['Unnamed: 3'] == month) & (df['Unnamed: 4'] == hour)]
-
-def get_hourly_values(context, area : str, year : int):
-    if context.hourly_values is None:
-        context.hourly_values = {}
-    if area not in context.hourly_values:
-        context.hourly_values[area] = {}
-    if year not in context.hourly_values[area]:
-        context.hourly_values[area][year] = parse_hourly_values(context.output_path, area, year)
-    return context.hourly_values[area][year]

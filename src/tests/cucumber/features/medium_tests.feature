@@ -1,6 +1,6 @@
 Feature: medium tests
 
-  @fast @medium
+  @fast @medium @incomplete
   Scenario: 035 Mixed Expansion - Smart grid model 2
     Given the study path is "medium-tests/035 Mixed Expansion - Smart grid model 2"
     When I run antares simulator
@@ -12,3 +12,4 @@ Feature: medium tests
     And the annual system cost is
       | EXP       | STD       | MIN       | MAX       |
       | 3.725e+10 | 1.063e+09 | 3.642e+10 | 4.011e+10 |
+    # TODO : add steps when we understand what this test is supposed to test

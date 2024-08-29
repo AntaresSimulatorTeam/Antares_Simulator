@@ -1,6 +1,8 @@
+# Methods to run Antares simulator
+
 import subprocess
-from pathlib import Path
 import os
+from pathlib import Path
 from study_input_handler import study_input_handler
 from output_utils import parse_output_folder_from_logs
 

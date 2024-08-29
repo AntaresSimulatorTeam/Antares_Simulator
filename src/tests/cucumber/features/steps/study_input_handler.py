@@ -1,3 +1,6 @@
+# Currently used to activate simulation outputs
+# TODO : remove this and update parameters in simulation input files
+
 import os
 
 class study_input_handler:

@@ -2,11 +2,11 @@ name: "Run cucumber tests"
 description: "Run cucumber tests"
 inputs:
   feature:
-    description: 'Feature file to run'
+    description: 'Feature file or folder to run (default runs all features in "features" folder)'
     required: false
     default: 'features'
   tags:
-    description: 'Tags to run'
+    description: 'Tags to run (default skips tests marked @flaky)'
     required: false
     default: '~@flaky'
 runs:
@@ -14,10 +14,10 @@ runs:
   steps:
     - name: Install Python requirements
       shell: bash
-      run: python3 -m pip install -r src/tests/cucumber_python/requirements.txt
+      run: python3 -m pip install -r src/tests/cucumber/requirements.txt
 
     - name: Run tests
       shell: bash
       run: |
-        cd src/tests/cucumber_python
+        cd src/tests/cucumber
         behave --tags ${{ inputs.tags }} ${{ inputs.feature }}
