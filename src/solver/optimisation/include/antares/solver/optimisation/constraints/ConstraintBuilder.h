@@ -131,6 +131,26 @@ public:
                                                                    int offset = 0,
                                                                    int delta = 0);
 
+    ConstraintBuilder& LTStorageClusterReserveUpParticipation(unsigned int index,
+                                                              double coeff,
+                                                              int offset = 0,
+                                                              int delta = 0);
+
+    ConstraintBuilder& LTStorageClusterReserveDownParticipation(unsigned int index,
+                                                                double coeff,
+                                                                int offset = 0,
+                                                                int delta = 0);
+
+    ConstraintBuilder& LTStorageTurbiningClusterReserveParticipation(unsigned int index,
+                                                                     double coeff,
+                                                                     int offset = 0,
+                                                                     int delta = 0);
+
+    ConstraintBuilder& LTStoragePumpingClusterReserveParticipation(unsigned int index,
+                                                                   double coeff,
+                                                                   int offset = 0,
+                                                                   int delta = 0);
+
     ConstraintBuilder& InternalUnsatisfiedReserve(unsigned int pays,
                                                   double coeff,
                                                   int offset = 0,
@@ -328,5 +348,6 @@ struct ReserveData
     std::vector<AREA_RESERVES_VECTOR>& areaReserves;
     std::vector<PALIERS_THERMIQUES>& thermalClusters;
     std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageOfArea;
+    std::vector<::LongTermStorage::AREA_INPUT>& longTermStorageOfArea;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };

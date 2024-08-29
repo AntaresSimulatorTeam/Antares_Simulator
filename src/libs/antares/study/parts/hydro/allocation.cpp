@@ -261,5 +261,32 @@ const HydroAllocation::Coefficients& HydroAllocation::coefficients() const
     return pValues;
 }
 
+void HydroAllocation::addReserveParticipation(const std::string& reserveName,
+                                              float participation,
+                                              bool isUpReserve)
+{
+    auto& info = pValuesFromLTStorageID[reserveName];
+    if (isUpReserve)
+    {
+        info.maxTurbining += participation;
+    }
+    else
+    {
+        info.maxPumping += participation;
+    }
+}
+//
+//float HydroAllocation::getReserveParticipation(const std::string& reserveName,
+//                                               bool isUpReserve) const
+//{
+//    auto it = pValuesFromLTStorageID.find(reserveName);
+//    if (it != pValuesFromLTStorageID.end())
+//    {
+//        return isUpReserve ? it->second.maxTurbining : it->second.maxPumping;
+//    }
+//    return 0.0f;
+//}
+
+
 } // namespace Data
 } // namespace Antares

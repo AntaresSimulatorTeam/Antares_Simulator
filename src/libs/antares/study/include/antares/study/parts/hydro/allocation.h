@@ -147,6 +147,11 @@ public:
     const Coefficients& coefficients() const;
     //@}
 
+    void addReserveParticipation(const std::string& reserveName,
+                                 float participation,
+                                 bool isUpReserve);
+    //float getReserveParticipation(const std::string& reserveName, bool isUpReserve) const;
+
 private:
     //! Coefficients for other areas
     Coefficients pValues;

@@ -153,6 +153,15 @@ set(RTESOLVER_OPT
 		include/antares/solver/optimisation/constraints/STReserveDownParticipation.h
 		constraints/STReserveDownParticipation.cpp
 
+		include/antares/solver/optimisation/constraints/LTTurbiningMaxReserve.h
+		constraints/LTTurbiningMaxReserve.cpp
+		include/antares/solver/optimisation/constraints/LTPumpingMaxReserve.h
+		constraints/LTPumpingMaxReserve.cpp
+		include/antares/solver/optimisation/constraints/LTReserveUpParticipation.h
+		constraints/LTReserveUpParticipation.cpp
+		include/antares/solver/optimisation/constraints/LTReserveDownParticipation.h
+		constraints/LTReserveDownParticipation.cpp
+
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp
 		include/antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h

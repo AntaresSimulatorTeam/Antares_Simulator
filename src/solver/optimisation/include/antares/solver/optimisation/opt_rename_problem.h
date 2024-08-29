@@ -77,6 +77,13 @@ public:
                                                   const std::string& elementType,
                                                   const std::string& clusterName,
                                                   const std::string& reserveName);
+    void SetLTStorageClusterElementName(unsigned int variable,
+                                        const std::string& variableType,
+                                        const std::string& clusterName);
+    void SetLTStorageClusterAndReserveElementName(unsigned int variable,
+                                                  const std::string& elementType,
+                                                  const std::string& clusterName,
+                                                  const std::string& reserveName);
     void SetThermalClusterReserveElementName(unsigned int variable,
                                              const std::string& elementType,
                                              const std::string& reserveName);
@@ -106,6 +113,18 @@ public:
                                              const std::string& clusterName,
                                              const std::string& reserveName);
     void ParticipationOfSTStorageToDownReserve(unsigned int variable,
+                                               const std::string& clusterName,
+                                               const std::string& reserveName);
+    void ParticipationOfLTStorageTurbiningToReserve(unsigned int variable,
+                                                    const std::string& clusterName,
+                                                    const std::string& reserveName);
+    void ParticipationOfLTStoragePumpingToReserve(unsigned int variable,
+                                                  const std::string& clusterName,
+                                                  const std::string& reserveName);
+    void ParticipationOfLTStorageToUpReserve(unsigned int variable,
+                                             const std::string& clusterName,
+                                             const std::string& reserveName);
+    void ParticipationOfLTStorageToDownReserve(unsigned int variable,
                                                const std::string& clusterName,
                                                const std::string& reserveName);
     void ParticipationOfRunningUnitsToReserve(unsigned int variable,
@@ -194,6 +213,19 @@ public:
                              const std::string& reserveName);
     void STTurbiningCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
     void STPumpingCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
+    void LTReserveUpParticipation(unsigned int constraint,
+                                  const std::string& clusterName,
+                                  const std::string& reserveName);
+    void LTReserveDownParticipation(unsigned int constraint,
+                                    const std::string& clusterName,
+                                    const std::string& reserveName);
+    void LTTurbiningMaxReserve(unsigned int constraint,
+                               const std::string& clusterName,
+                               const std::string& reserveName);
+    void LTPumpingMaxReserve(unsigned int constraint,
+                             const std::string& clusterName,
+                             const std::string& reserveName);
+
     void ReserveSatisfaction(unsigned int constraint, const std::string& reserveName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);

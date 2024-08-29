@@ -125,6 +125,30 @@ void Namer::SetSTStorageClusterAndReserveElementName(unsigned int variable,
       BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
 }
 
+void Namer::SetLTStorageClusterElementName(unsigned int variable,
+                                           const std::string& elementType,
+                                           const std::string& clusterName)
+{
+    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "LongTerm Storage Cluster"
+                          + "<" + clusterName + ">";
+
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+}
+
+void Namer::SetLTStorageClusterAndReserveElementName(unsigned int variable,
+                                                     const std::string& elementType,
+                                                     const std::string& clusterName,
+                                                     const std::string& reserveName)
+{
+    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "LongTerm Storage Cluster"
+                          + "<" + clusterName + ">" + SEPARATOR + "Reserve" + "<" + reserveName
+                          + ">";
+
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+}
+
 void Namer::SetThermalClusterReserveElementName(unsigned int variable,
                                                 const std::string& elementType,
                                                 const std::string& reserveName)
@@ -178,6 +202,38 @@ void VariableNamer::ParticipationOfSTStorageToDownReserve(unsigned int variable,
                                                           const std::string& reserveName)
 {
     SetSTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfSTStorageToDownReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfLTStorageTurbiningToReserve(unsigned int variable,
+                                                               const std::string& clusterName,
+                                                               const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfLTStorageTurbiningToReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfLTStoragePumpingToReserve(unsigned int variable,
+                                                             const std::string& clusterName,
+                                                             const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfLTStoragePumpingToReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfLTStorageToUpReserve(unsigned int variable,
+                                                        const std::string& clusterName,
+                                                        const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
+      variable, "ParticipationOfLTStorageToUpReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfLTStorageToDownReserve(unsigned int variable,
+                                                          const std::string& clusterName,
+                                                          const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
       variable, "ParticipationOfSTStorageToDownReserve", clusterName, reserveName);
 }
 
@@ -520,6 +576,38 @@ void ConstraintNamer::STPumpingCapacityThreasholds(unsigned int constraint,
                                                    const std::string& clusterName)
 {
     SetSTStorageClusterElementName(constraint, "STPumpingCapacityThreasholds", clusterName);
+}
+
+void ConstraintNamer::LTReserveUpParticipation(unsigned int constraint,
+                                               const std::string& clusterName,
+                                               const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
+      constraint, "LTReserveUpParticipation", clusterName, reserveName);
+}
+
+void ConstraintNamer::LTReserveDownParticipation(unsigned int constraint,
+                                                 const std::string& clusterName,
+                                                 const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
+      constraint, "LTReserveDownParticipation", clusterName, reserveName);
+}
+
+void ConstraintNamer::LTTurbiningMaxReserve(unsigned int constraint,
+                                            const std::string& clusterName,
+                                            const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
+      constraint, "LTTurbiningMaxReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::LTPumpingMaxReserve(unsigned int constraint,
+                                          const std::string& clusterName,
+                                          const std::string& reserveName)
+{
+    SetLTStorageClusterAndReserveElementName(
+      constraint, "LTPumpingMaxReserve", clusterName, reserveName);
 }
 
 void ConstraintNamer::ReserveSatisfaction(unsigned int constraint, const std::string& reserveName)

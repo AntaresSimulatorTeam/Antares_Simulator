@@ -878,13 +878,13 @@ bool PartHydro::loadReserveParticipations(Area& area, const AnyString& file)
           }
           else
           {
-              logs.warning() << area.name << ": does not contain this reserve " << reserveName;
+              logs.info() << area.name << ": does not contain this reserve " << reserveName;
           }
       });
 
     if (!hasSection)
     {
-        logs.warning() << "No sections found in file: " << file;
+        logs.info() << "No sections found in file: " << file;
     }
     else
     {
@@ -904,6 +904,24 @@ uint PartHydro::reserveParticipationsCount() const
     }
     return count;
 }
+
+//double PartHydro::getReserveParticipation(const Data::ReserveName& reserveName) const
+//{
+//    auto it = reserveParticipations.find(reserveName);
+//    return (it != reserveParticipations.end()) ? it->second : 0.0;
+//}
+//
+//void PartHydro::setReserveParticipation(const Data::ReserveName& reserveName, double participation)
+//{
+//    reserveParticipations[reserveName] = participation;
+//}
+//
+//double PartHydro::reserveCost(const Data::ReserveName& reserveName) const
+//{
+////TO DO
+//
+//    return 1.0;
+//}
 
 uint PartHydro::count() const
 {

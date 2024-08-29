@@ -111,6 +111,53 @@ ConstraintBuilder& ConstraintBuilder::STStoragePumpingClusterReserveParticipatio
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::LTStorageClusterReserveUpParticipation(unsigned int index,
+                                                                             double coeff,
+                                                                             int offset,
+                                                                             int delta)
+{
+    AddVariable(
+      variableManager_.LTStorageClusterReserveUpParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::LTStorageClusterReserveDownParticipation(unsigned int index,
+                                                                               double coeff,
+                                                                               int offset,
+                                                                               int delta)
+{
+    AddVariable(
+      variableManager_.LTStorageClusterReserveDownParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::LTStorageTurbiningClusterReserveParticipation(
+  unsigned int index,
+  double coeff,
+  int offset,
+  int delta)
+{
+    AddVariable(variableManager_.LTStorageTurbiningClusterReserveParticipation(
+                  index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::LTStoragePumpingClusterReserveParticipation(
+  unsigned int index,
+  double coeff,
+  int offset,
+  int delta)
+{
+    AddVariable(variableManager_.LTStoragePumpingClusterReserveParticipation(
+                  index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
+
 ConstraintBuilder& ConstraintBuilder::InternalUnsatisfiedReserve(unsigned int index,
                                                                  double coeff,
                                                                  int offset,

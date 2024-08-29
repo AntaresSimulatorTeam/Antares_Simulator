@@ -77,6 +77,11 @@ struct ReserveParticipationPerGroupForYear
     //! for the whole year per reserve
     std::map<Data::ShortTermStorage::Group, std::map<Data::ReserveName, double>>
       shortTermStorageGroups;
+
+    //std::map<Data::LongTermStorage::Group, std::map<Data::ReserveName, double>>
+    //  longTermStorageGroups;
+
+     std::map<std::string, std::vector<LTStorageClusterReserveParticipation>> ltStorageReserves;
 };
 
 class State
@@ -126,6 +131,24 @@ public:
                                                                      Data::ClusterName clusterName);
     int getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(Data::ReserveName reserveName,
                                                                      Data::ClusterName clusterName);
+
+    void initFromHydroStorage();
+
+    int getAreaIndexReserveParticipationFromReserveAndLTStorage(
+      const Data::ReserveName& reserveName,
+      const Data::AreaName& LTStorageId) const;
+    //std::map<Data::ReserveName, double> hydroReserveParticipationForYear[Variable::maxHoursInAYear];
+    //double hydroReserveParticipationCostForYear[Variable::maxHoursInAYear];
+
+    // void initFromHydroStorage();
+
+    // void processReserve(const CAPACITY_RESERVATION& reserve, bool isUpReserve);
+
+    //int getAreaIndexReserveParticipationFromReserveAndLTStorage(
+    //   Data::ReserveName reserveName,
+    //   Data::ClusterName clusterName);
+
+
 
 private:
     /*!
@@ -189,6 +212,11 @@ public:
     //! The current Short Term Storage cluster
     Data::ShortTermStorage::STStorageCluster* STStorageCluster;
 
+    //std::map<Data::AreaName, std::map<Data::ReserveName, double>>
+    //  reserveParticipationPerLTStorageForYear[Variable::maxHoursInAYear];
+
+
+
     //! The current renewable cluster
     Data::RenewableCluster* renewableCluster;
     //! The Scratchpad for the current area
@@ -221,6 +249,9 @@ public:
     std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
       reserveParticipationPerClusterForYear[Variable::maxHoursInAYear];
 
+    std::map<Data::AreaName, std::map<Data::ReserveName, double>>
+      reserveParticipationPerLTStorageForYear[Variable::maxHoursInAYear];
+
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)
     uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];
@@ -236,6 +267,10 @@ public:
 
     //! Reserves participation cost of the Short Term Storage cluster for the whole year
     double STStorageClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];
+
+    //! Reserves participation cost of the Long Term Storage  for the whole year
+    double LTStorageReserveParticipationCostForYear[Variable::maxHoursInAYear];  
+
 
     double renewableClusterProduction;
 

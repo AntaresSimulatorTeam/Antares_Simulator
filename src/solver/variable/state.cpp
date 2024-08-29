@@ -69,6 +69,9 @@ State::State(Data::Study& s) :
  thermal(s.areas),
  simplexRunNeeded(true)
 {
+    //memset(LTStorageReserveParticipationCostForYear,
+    //       0,
+    //       sizeof(LTStorageReserveParticipationCostForYear));
 }
 
 void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
@@ -182,6 +185,98 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
         }
     }
 }
+
+void State::initFromHydroStorage()
+{
+    // Asserts
+    assert(area);
+    assert(area->hydro.series);
+
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+    {
+        const auto& ltStorageReserves = area->hydro.series->ltStorageReserves.reserves;
+
+        // Traitement des réserves "up"
+        for (const auto& [reserveName, _] :
+             area->allCapacityReservations.areaCapacityReservationsUp)
+        {
+            if (ltStorageReserves.count(reserveName) > 0
+                && !ltStorageReserves.at(reserveName).empty())
+            {
+                const auto& participation = ltStorageReserves.at(reserveName)[0];
+                double participationValue = participation.maxTurbining;
+
+                LTStorageReserveParticipationCostForYear[hourInTheYear]
+                  += participationValue * participation.participationCost;
+
+                reserveParticipationPerLTStorageForYear[hourInTheYear][area->id][reserveName]
+                  = participationValue;
+            }
+        }
+
+        // Traitement des réserves "down"
+        for (const auto& [reserveName, _] :
+             area->allCapacityReservations.areaCapacityReservationsDown)
+        {
+            if (ltStorageReserves.count(reserveName) > 0
+                && !ltStorageReserves.at(reserveName).empty())
+            {
+                const auto& participation = ltStorageReserves.at(reserveName)[0];
+                double participationValue = participation.maxPumping;
+
+                LTStorageReserveParticipationCostForYear[hourInTheYear]
+                  += participationValue * participation.participationCost;
+
+                reserveParticipationPerLTStorageForYear[hourInTheYear][area->id][reserveName]
+                  = participationValue;
+            }
+        }
+    }
+}
+
+int State::getAreaIndexReserveParticipationFromReserveAndLTStorage(
+  const Data::ReserveName& reserveName,
+  const Data::AreaName& LTStorageId) const
+{
+    assert(area);
+    assert(problemeHebdo);
+
+    const auto& areaReserves = problemeHebdo->allReserves[area->index];
+
+    // Recherche dans les réserves "up"
+    for (const auto& reserve : areaReserves.areaCapacityReservationsUp)
+    {
+        if (reserve.reserveName == reserveName)
+        {
+            for (const auto& participation : reserve.AllLTStorageReservesParticipation)
+            {
+                if (participation.clusterName == LTStorageId)
+                {
+                    return participation.areaIndexClusterParticipation;
+                }
+            }
+        }
+    }
+
+    // Recherche dans les réserves "down"
+    for (const auto& reserve : areaReserves.areaCapacityReservationsDown)
+    {
+        if (reserve.reserveName == reserveName)
+        {
+            for (const auto& participation : reserve.AllLTStorageReservesParticipation)
+            {
+                if (participation.clusterName == LTStorageId)
+                {
+                    return participation.areaIndexClusterParticipation;
+                }
+            }
+        }
+    }
+
+    // Si aucune correspondance n'est trouvée
+    return -1;
+}
+
 
 int State::getAreaIndexReserveParticipationFromReserveAndThermalCluster(
   Data::ReserveName reserveName,
@@ -485,7 +580,8 @@ void State::yearEndBuildCalculateReserveParticipationCosts()
         {
             thermalClusterOperatingCostForYear[h]
               += thermalClusterReserveParticipationCostForYear[h]
-                 + STStorageClusterReserveParticipationCostForYear[h];
+                 + STStorageClusterReserveParticipationCostForYear[h]
+                 + LTStorageReserveParticipationCostForYear[h];
         }
     }
 }

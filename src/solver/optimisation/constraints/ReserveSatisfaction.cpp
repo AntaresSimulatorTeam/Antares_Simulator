@@ -58,6 +58,29 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
             }
         }
 
+        // Long Term Storage clusters reserve participation
+        for (size_t cluster = 0;
+             cluster < capacityReservation.AllLTStorageReservesParticipation.size();
+             cluster++)
+        {
+            if ((capacityReservation.AllLTStorageReservesParticipation[cluster].maxTurbining
+                 != CLUSTER_NOT_PARTICIPATING)
+                || (capacityReservation.AllLTStorageReservesParticipation[cluster].maxPumping
+                    != CLUSTER_NOT_PARTICIPATING))
+            {
+                if (isUpReserve)
+                    builder.LTStorageClusterReserveUpParticipation(
+                      capacityReservation.AllLTStorageReservesParticipation[cluster]
+                        .globalIndexClusterParticipation,
+                      1);
+                else
+                    builder.LTStorageClusterReserveDownParticipation(
+                      capacityReservation.AllLTStorageReservesParticipation[cluster]
+                        .globalIndexClusterParticipation,
+                      1);
+            }
+        }
+
         builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1)
           .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
           .equalTo();
@@ -94,6 +117,16 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
                     != CLUSTER_NOT_PARTICIPATING))
                 nbTermes++;
         }
+        //for (size_t cluster = 0;
+        //     cluster < capacityReservation.AllLTStorageReservesParticipation.size();
+        //     cluster++)
+        //{
+        //    if ((capacityReservation.AllLTStorageReservesParticipation[cluster].maxTurbining
+        //         != CLUSTER_NOT_PARTICIPATING)
+        //        || (capacityReservation.AllLTStorageReservesParticipation[cluster].maxPumping
+        //            != CLUSTER_NOT_PARTICIPATING))
+        //        nbTermes++;
+        //}
 
         builder.data.NbTermesContraintesPourLesReserves += 2 + nbTermes;
 

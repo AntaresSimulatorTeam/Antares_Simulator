@@ -51,6 +51,11 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> STStorageClusterReserveDownParticipationIndex;
     std::vector<int> STStorageTurbiningClusterReserveParticipationIndex;
     std::vector<int> STStoragePumpingClusterReserveParticipationIndex;
+    std::vector<int> LTStorageClusterReserveUpParticipationIndex;
+    std::vector<int> LTStorageClusterReserveDownParticipationIndex;
+    std::vector<int> LTStorageTurbiningClusterReserveParticipationIndex;
+    std::vector<int> LTStoragePumpingClusterReserveParticipationIndex;
+
     std::vector<int> internalUnsatisfiedReserveIndex;
     std::vector<int> internalExcessReserveIndex;
 
@@ -109,6 +114,11 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation;
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholds;
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds;
+
+    std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterMaxWithdrawParticipation;
+    std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation;
+    std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds;
+    std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds;
 
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
@@ -178,6 +188,34 @@ struct CONTRAINTES_COUPLANTES
 
     std::shared_ptr<Data::BindingConstraint> bindingConstraint;
 };
+
+namespace LongTermStorage
+{
+struct PROPERTIES
+{
+    double reservoirCapacity;
+    double maxProduction;
+    double maxPumping;
+    double efficiency;
+    double initialLevel;
+
+    std::shared_ptr<Antares::Data::DataSeriesHydro> series;
+
+    int clusterGlobalIndex;
+    std::string name;
+};
+
+using AREA_INPUT = std::vector<::LongTermStorage::PROPERTIES>; 
+
+
+struct RESULTS
+{
+    std::vector<double> level;                         // MWh
+    std::vector<double> production;                    // MWh
+    std::vector<double> pumping;                       // MWh
+    std::vector<double> reserveParticipationOfCluster; // MWh
+};
+} 
 
 namespace ShortTermStorage
 {
@@ -524,6 +562,7 @@ struct RESULTATS_HORAIRES
     std::vector<RESERVES> Reserves;
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
+    std::vector<::LongTermStorage::RESULTS> LongTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -597,6 +636,9 @@ struct PROBLEME_HEBDO
     uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+
+    uint32_t NumberOfLongTermStorages = 0;
+    std::vector<::LongTermStorage::AREA_INPUT> LongTermStorage;
 
     /* Optimization problem */
     uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;

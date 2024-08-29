@@ -49,6 +49,9 @@ inline void State::startANewYear()
         memset(STStorageClusterReserveParticipationCostForYear,
                0,
                sizeof(STStorageClusterReserveParticipationCostForYear));
+        //memset(LTStorageReserveParticipationCostForYear,
+        //       0,
+        //       sizeof(LTStorageReserveParticipationCostForYear));
     }
 
     // Re-initializing annual costs (to be printed in output into separate files)
@@ -67,6 +70,9 @@ inline void State::yearEndResetThermal()
     memset(STStorageClusterReserveParticipationCostForYear,
            0,
            sizeof(STStorageClusterReserveParticipationCostForYear));
+    //memset(LTStorageClusterReserveParticipationCostForYear,
+    //       0,
+    //       sizeof(LTStorageClusterReserveParticipationCostForYear));
     memset(thermalClusterNonProportionalCostForYear,
            0,
            sizeof(thermalClusterNonProportionalCostForYear));

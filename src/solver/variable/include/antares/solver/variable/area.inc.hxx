@@ -139,6 +139,9 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
             state.initFromShortTermStorageClusterIndex(i);
         }
 
+        // Ajout de l'initialisation pour l'hydro (long terme)
+        state.initFromHydroStorage();
+
         // Variables
         auto& variablesForArea = pAreas[area.index];
         variablesForArea.hourForEachArea(state, numSpace);

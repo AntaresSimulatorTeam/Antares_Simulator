@@ -32,6 +32,10 @@
 #include "antares/solver/optimisation/constraints/STPumpingCapacityThreasholds.h"
 #include "antares/solver/optimisation/constraints/STReserveUpParticipation.h"
 #include "antares/solver/optimisation/constraints/STReserveDownParticipation.h"
+#include "antares/solver/optimisation/constraints/LTTurbiningMaxReserve.h"
+#include "antares/solver/optimisation/constraints/LTPumpingMaxReserve.h"
+#include "antares/solver/optimisation/constraints/LTReserveUpParticipation.h"
+#include "antares/solver/optimisation/constraints/LTReserveDownParticipation.h"
 
 ReserveParticipationGroup::ReserveParticipationGroup(PROBLEME_HEBDO* problemeHebdo,
                                                      bool simulation,
@@ -47,6 +51,7 @@ ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
             .areaReserves = problemeHebdo_->allReserves,
             .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays,
             .shortTermStorageOfArea = problemeHebdo_->ShortTermStorage,
+            .longTermStorageOfArea = problemeHebdo_->LongTermStorage,
             .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim};
 }
 
@@ -65,6 +70,10 @@ void ReserveParticipationGroup::BuildConstraints()
         STPumpingMaxReserve STPumpingMaxReserve(builder_, data);
         STReserveUpParticipation STReserveUpParticipation(builder_, data);
         STReserveDownParticipation STReserveDownParticipation(builder_, data);
+        LTTurbiningMaxReserve LTTurbiningMaxReserve(builder_, data);
+        LTPumpingMaxReserve LTPumpingMaxReserve(builder_, data);
+        LTReserveUpParticipation LTReserveUpParticipation(builder_, data);
+        LTReserveDownParticipation LTReserveDownParticipation(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
@@ -180,6 +189,68 @@ void ReserveParticipationGroup::BuildConstraints()
                             {
                                 // 15 (p)
                                 STReserveDownParticipation.add(
+                                  pays, reserve, cluster_participation, pdt);
+                            }
+                            cluster_participation++;
+                        }
+                        reserve++;
+                    }
+                }
+
+                 //LongTerm Storage reserve participations
+                for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+                {
+                    auto& areaReservesUp = data.areaReserves[pays].areaCapacityReservationsUp;
+                    uint32_t reserve = 0;
+                    for (const auto& areaReserveUp : areaReservesUp)
+                    {
+                        uint32_t cluster_participation = 0;
+                        for (const auto& clusterReserveParticipation :
+                             areaReserveUp.AllLTStorageReservesParticipation)
+                        {
+                            if (clusterReserveParticipation.maxTurbining > 0)
+                            {
+                                LTTurbiningMaxReserve.add(
+                                  pays, reserve, cluster_participation, pdt, true);
+                            }
+                            if (clusterReserveParticipation.maxPumping > 0)
+                            {
+                                LTPumpingMaxReserve.add(
+                                  pays, reserve, cluster_participation, pdt, true);
+                            }
+                            if (clusterReserveParticipation.maxTurbining > 0
+                                || clusterReserveParticipation.maxPumping > 0)
+                            {
+                                LTReserveUpParticipation.add(
+                                  pays, reserve, cluster_participation, pdt);
+                            }
+                            cluster_participation++;
+                        }
+                        reserve++;
+                    }
+
+                    auto& areaReservesDown = data.areaReserves[pays].areaCapacityReservationsDown;
+                    reserve = 0;
+                    for (const auto& areaReserveDown : areaReservesDown)
+                    {
+                        uint32_t cluster_participation = 0;
+                        for (const auto& clusterReserveParticipation :
+                             areaReserveDown.AllLTStorageReservesParticipation)
+                        {
+                            if (clusterReserveParticipation.maxTurbining > 0)
+                            {
+                                LTTurbiningMaxReserve.add(
+                                  pays, reserve, cluster_participation, pdt, false);
+                            }
+                            if (clusterReserveParticipation.maxPumping > 0)
+                            {
+                                LTPumpingMaxReserve.add(
+                                  pays, reserve, cluster_participation, pdt, false);
+                            }
+                            if (clusterReserveParticipation.maxTurbining > 0
+                                || clusterReserveParticipation.maxPumping > 0)
+                            {
+                                LTReserveDownParticipation.add(
                                   pays, reserve, cluster_participation, pdt);
                             }
                             cluster_participation++;

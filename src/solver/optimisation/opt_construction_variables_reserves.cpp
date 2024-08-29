@@ -191,6 +191,78 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                             }
                         }
                     }
+
+                    //Long Term Storage Clusters
+                    for (auto& clusterReserveParticipation :
+                         areaReserveUp.AllLTStorageReservesParticipation)
+                    {
+                        if (clusterReserveParticipation.maxTurbining > 0)
+                        {
+                            const auto& clusterName = clusterReserveParticipation.clusterName;
+                            if (Simulation)
+                            {
+                                NombreDeVariables++;
+                            }
+                            else
+                            {
+                                // For Turbining participation to the reserves
+                                variableManager.LTStorageTurbiningClusterReserveParticipation(
+                                  clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                                  = NombreDeVariables;
+                                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                                variableNamer.ParticipationOfLTStorageTurbiningToReserve(
+                                  NombreDeVariables, clusterName, areaReserveUp.reserveName);
+                                NombreDeVariables++;
+
+                                clusterIndex++;
+                            }
+                        }
+                        if (clusterReserveParticipation.maxPumping > 0)
+                        {
+                            const auto& clusterName = clusterReserveParticipation.clusterName;
+                            if (Simulation)
+                            {
+                                NombreDeVariables++;
+                            }
+                            else
+                            {
+                                // For Pumping participation to the reserves
+                                variableManager.LTStoragePumpingClusterReserveParticipation(
+                                  clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                                  = NombreDeVariables;
+                                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                                variableNamer.ParticipationOfLTStoragePumpingToReserve(
+                                  NombreDeVariables, clusterName, areaReserveUp.reserveName);
+                                NombreDeVariables++;
+                                clusterIndex++;
+                            }
+                        }
+                        if (clusterReserveParticipation.maxTurbining > 0
+                            || clusterReserveParticipation.maxPumping > 0)
+                        {
+                            const auto& clusterName = clusterReserveParticipation.clusterName;
+                            if (Simulation)
+                            {
+                                NombreDeVariables++;
+                            }
+                            else
+                            {
+                                // For Long Term Storage participation to the up reserves
+                                variableManager.LTStorageClusterReserveUpParticipation(
+                                  clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                                  = NombreDeVariables;
+                                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                                variableNamer.ParticipationOfLTStorageToUpReserve(
+                                  NombreDeVariables, clusterName, areaReserveUp.reserveName);
+                                NombreDeVariables++;
+
+                                clusterIndex++;
+                            }
+                        }
+                    }
                 }
             }
             for (auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
@@ -324,6 +396,78 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
                             variableNamer.ParticipationOfSTStorageToDownReserve(
+                              NombreDeVariables, clusterName, areaReserveDown.reserveName);
+                            NombreDeVariables++;
+
+                            clusterIndex++;
+                        }
+                    }
+                }
+
+                // Long Term Storage Clusters
+                for (auto& clusterReserveParticipation :
+                     areaReserveDown.AllLTStorageReservesParticipation)
+                {
+                    if (clusterReserveParticipation.maxTurbining > 0)
+                    {
+                        const auto& clusterName = clusterReserveParticipation.clusterName;
+                        if (Simulation)
+                        {
+                            NombreDeVariables++;
+                        }
+                        else
+                        {
+                            // For Turbining participation to the reserves
+                            variableManager.LTStorageTurbiningClusterReserveParticipation(
+                              clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                              = NombreDeVariables;
+                            ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                              = VARIABLE_BORNEE_DES_DEUX_COTES;
+                            variableNamer.ParticipationOfLTStorageTurbiningToReserve(
+                              NombreDeVariables, clusterName, areaReserveDown.reserveName);
+                            NombreDeVariables++;
+
+                            clusterIndex++;
+                        }
+                    }
+                    if (clusterReserveParticipation.maxPumping > 0)
+                    {
+                        const auto& clusterName = clusterReserveParticipation.clusterName;
+                        if (Simulation)
+                        {
+                            NombreDeVariables++;
+                        }
+                        else
+                        {
+                            // For Pumping participation to the reserves
+                            variableManager.LTStoragePumpingClusterReserveParticipation(
+                              clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                              = NombreDeVariables;
+                            ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                              = VARIABLE_BORNEE_DES_DEUX_COTES;
+                            variableNamer.ParticipationOfLTStoragePumpingToReserve(
+                              NombreDeVariables, clusterName, areaReserveDown.reserveName);
+                            NombreDeVariables++;
+                            clusterIndex++;
+                        }
+                    }
+                    if (clusterReserveParticipation.maxTurbining > 0
+                        || clusterReserveParticipation.maxPumping > 0)
+                    {
+                        const auto& clusterName = clusterReserveParticipation.clusterName;
+                        if (Simulation)
+                        {
+                            NombreDeVariables++;
+                        }
+                        else
+                        {
+                            // For Long Term Storage participation to the Down reserves
+                            variableManager.LTStorageClusterReserveDownParticipation(
+                              clusterReserveParticipation.globalIndexClusterParticipation, pdt)
+                              = NombreDeVariables;
+                            ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                              = VARIABLE_BORNEE_DES_DEUX_COTES;
+                            variableNamer.ParticipationOfLTStorageToDownReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
                             NombreDeVariables++;
 

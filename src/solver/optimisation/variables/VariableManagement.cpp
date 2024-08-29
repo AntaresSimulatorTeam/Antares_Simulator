@@ -106,6 +106,53 @@ int& VariableManager::STStoragePumpingClusterReserveParticipation(unsigned int i
       .STStoragePumpingClusterReserveParticipationIndex[index];
 }
 
+int& VariableManager::LTStorageClusterReserveUpParticipation(unsigned int index,
+                                                             unsigned int hourInWeek,
+                                                             int offset,
+                                                             int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    auto& indices
+      = CorrespondanceVarNativesVarOptim_[pdt].LTStorageClusterReserveUpParticipationIndex;
+
+    if (indices.size() <= index)
+    {
+        indices.resize(index + 1, -1); 
+    }
+
+     return indices[index];
+}
+
+int& VariableManager::LTStorageClusterReserveDownParticipation(unsigned int index,
+                                                               unsigned int hourInWeek,
+                                                               int offset,
+                                                               int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .LTStorageClusterReserveDownParticipationIndex[index];
+}
+
+int& VariableManager::LTStorageTurbiningClusterReserveParticipation(unsigned int index,
+                                                                    unsigned int hourInWeek,
+                                                                    int offset,
+                                                                    int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .LTStorageTurbiningClusterReserveParticipationIndex[index];
+}
+
+int& VariableManager::LTStoragePumpingClusterReserveParticipation(unsigned int index,
+                                                                  unsigned int hourInWeek,
+                                                                  int offset,
+                                                                  int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .LTStoragePumpingClusterReserveParticipationIndex[index];
+}
+
 int& VariableManager::InternalUnsatisfiedReserve(unsigned int index,
                                                  unsigned int hourInWeek,
                                                  int offset,

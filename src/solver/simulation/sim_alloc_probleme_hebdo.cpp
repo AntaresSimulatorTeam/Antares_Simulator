@@ -118,6 +118,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
 
     problem.ShortTermStorage.resize(nbPays);
+    problem.LongTermStorage.resize(nbPays);
     problem.allReserves.resize(nbPays);
 
     problem.previousYearFinalLevels.resize(0);
@@ -186,6 +187,16 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, 0);
         variablesMapping.STStoragePumpingClusterReserveParticipationIndex.assign(
           study.runtime->shortTermStorageCount * study.runtime->capacityReservationCount, 0);
+
+        variablesMapping.LTStorageClusterReserveUpParticipationIndex.assign(
+          study.runtime->longTermStorageCount * study.runtime->capacityReservationCount, 0);
+        variablesMapping.LTStorageClusterReserveDownParticipationIndex.assign(
+          study.runtime->longTermStorageCount * study.runtime->capacityReservationCount, 0);
+        variablesMapping.LTStorageTurbiningClusterReserveParticipationIndex.assign(
+          study.runtime->longTermStorageCount * study.runtime->capacityReservationCount, 0);
+        variablesMapping.LTStoragePumpingClusterReserveParticipationIndex.assign(
+          study.runtime->longTermStorageCount * study.runtime->capacityReservationCount, 0);
+
         variablesMapping.internalUnsatisfiedReserveIndex
           .assign(study.runtime->capacityReservationCount, 0);
         variablesMapping.internalExcessReserveIndex
@@ -276,6 +287,19 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds.assign(
             study.runtime->shortTermStorageCount, -1);
+
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesLTStorageClusterMaxWithdrawParticipation.assign(
+            study.runtime->longTermStorageCount * study.runtime->capacityReservationCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation.assign(
+            study.runtime->longTermStorageCount * study.runtime->capacityReservationCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds.assign(
+            study.runtime->longTermStorageCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds.assign(
+            study.runtime->longTermStorageCount, -1);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne.assign(
@@ -389,6 +413,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
           = study.areas.byIndex[k]->thermal.list.reserveParticipationsCount();
         const uint nbSTStorageReserveParticipations
           = study.areas.byIndex[k]->shortTermStorage.reserveParticipationsCount();
+        const uint nbLTStorageReserveParticipations
+          = study.areas.byIndex[k]->hydro.reserveParticipationsCount();
         const uint nbReserves = study.areas.byIndex[k]->allCapacityReservations.size();
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
@@ -566,6 +592,18 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].reserveParticipationOfCluster.assign(
               nbSTStorageReserveParticipations, 0.);
+        }
+
+        // Long term storage results
+        const unsigned long nbLongTermStorage = 1; // Puisqu'un seul stockage long terme par zone
+        problem.ResultatsHoraires[k].LongTermStorage.resize(NombreDePasDeTemps);
+        for (uint pdt = 0; pdt < NombreDePasDeTemps; pdt++)
+        {
+            problem.ResultatsHoraires[k].LongTermStorage[pdt].production.resize(nbLongTermStorage);
+            problem.ResultatsHoraires[k].LongTermStorage[pdt].pumping.resize(nbLongTermStorage);
+            problem.ResultatsHoraires[k].LongTermStorage[pdt].level.resize(nbLongTermStorage);
+            problem.ResultatsHoraires[k].LongTermStorage[pdt].reserveParticipationOfCluster.assign(
+              nbLTStorageReserveParticipations, 0.);
         }
     }
 }
