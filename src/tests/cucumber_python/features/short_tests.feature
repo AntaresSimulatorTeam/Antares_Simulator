@@ -10,15 +10,27 @@ Feature: short tests
       | EXP | STD | MIN | MAX |
       | 0   | 0   | 0   | 0   |
 
-  @fast @short @wip
+  @fast @short
   Scenario: 002 Thermal fleet - Base
     Given the study path is "short-tests/002 Thermal fleet - Base"
     When I run antares simulator
     Then the simulation takes less than 1 seconds
     And the simulation succeeds
     And the annual system cost is
-      | EXP       | STD | MIN       | MAX       |
-      | 2.729e+07 | 0   | 2.729e+07 | 2.729e+07 |
+      | EXP      | STD | MIN      | MAX      |
+      | 2.729e+7 | 0   | 2.729e+7 | 2.729e+7 |
+    And in area "AREA", during year 1, loss of load lasts 1 hours
+    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
+
+  @fast @short
+  Scenario: 003 Thermal fleet - Must-run
+    Given the study path is "short-tests/003 Thermal fleet - Must-run"
+    When I run antares simulator
+    Then the simulation takes less than 1 seconds
+    And the simulation succeeds
+    And the annual system cost is
+      | EXP      | STD | MIN      | MAX      |
+      | 2.751e+7 | 0   | 2.751e+7 | 2.751e+7 |
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
 
