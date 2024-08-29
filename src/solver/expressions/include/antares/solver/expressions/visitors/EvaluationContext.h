@@ -25,8 +25,8 @@ public:
      * @param parameters parameter values.
      * @param variables variable values.
      */
-    EvaluationContext(std::map<std::string, double> parameters,
-                      std::map<std::string, double> variables);
+    explicit EvaluationContext(std::map<std::string, double> parameters,
+                               std::map<std::string, double> variables);
 
     /**
      * @brief Retrieves the value of a variable.
