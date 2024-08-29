@@ -37,23 +37,16 @@ RetT tryVisit(const Node& node, VisitorT& visitor, Args... args)
     return visitor.visit(*x, args...);
 }
 } // namespace
+template<class R, class... Args>
+class NodeVisitor;
 
 template<class R, class... Args>
-class NodeVisitor
+struct NodeDispatchFunctionsProvider
 {
-public:
-    virtual ~NodeVisitor() = default;
     using FunctionT = R (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
 
-    /**
-     * Creates a map associating node types with corresponding visitor functions.
-     *
-     * @tparam NodeTypes A variadic pack of node types to be included in the map.
-     * @return An `std::unordered_map` containing the associations between node types and their
-     * corresponding visitor functions.
-     */
     template<class... NodeTypes>
-    std::unordered_map<std::type_index, FunctionT> NodesVisitList() const
+    static auto NodesVisitList()
     {
         std::unordered_map<std::type_index, FunctionT> nodeDispatchFunctions;
         (
@@ -65,24 +58,39 @@ public:
           ...);
         return nodeDispatchFunctions;
     }
+};
+
+template<class R, class... Args>
+class NodeVisitor
+{
+public:
+    virtual ~NodeVisitor() = default;
+
+    /**
+     * Creates a map associating node types with corresponding visitor functions.
+     *
+     * @tparam NodeTypes A variadic pack of node types to be included in the map.
+     * @return An `std::unordered_map` containing the associations between node types and their
+     * corresponding visitor functions.
+     */
 
     R dispatch(const Node& node, Args... args)
     {
-        const static std::unordered_map<std::type_index, FunctionT>
-          nodeDispatchFunctions = NodesVisitList<AddNode,
-                                                 SubtractionNode,
-                                                 MultiplicationNode,
-                                                 DivisionNode,
-                                                 EqualNode,
-                                                 LessThanOrEqualNode,
-                                                 GreaterThanOrEqualNode,
-                                                 NegationNode,
-                                                 ParameterNode,
-                                                 VariableNode,
-                                                 LiteralNode,
-                                                 PortFieldNode,
-                                                 ComponentVariableNode,
-                                                 ComponentParameterNode>();
+        const auto nodeDispatchFunctions = NodeDispatchFunctionsProvider<R, Args...>::
+          template NodesVisitList<AddNode,
+                                  SubtractionNode,
+                                  MultiplicationNode,
+                                  DivisionNode,
+                                  EqualNode,
+                                  LessThanOrEqualNode,
+                                  GreaterThanOrEqualNode,
+                                  NegationNode,
+                                  ParameterNode,
+                                  VariableNode,
+                                  LiteralNode,
+                                  PortFieldNode,
+                                  ComponentVariableNode,
+                                  ComponentParameterNode>();
         try
         {
             return nodeDispatchFunctions.at(typeid(node))(node, *this, args...);
