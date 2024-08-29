@@ -24,7 +24,7 @@ def activate_simu_outputs(context):
 
 def build_antares_solver_command(context):
     file = open('latest_binary_dir.txt', 'r')
-    if os.name() == 'nt':
+    if os.name == 'nt':
         exec_name = "antares-solver.exe"
     else:
         exec_name = "antares-solver"
