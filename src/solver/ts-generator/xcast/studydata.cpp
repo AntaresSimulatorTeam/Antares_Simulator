@@ -66,12 +66,9 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
         {
         case Data::Correlation::modeAnnual:
         {
-            auto m = Matrix<float>();
-            prepareMatrix(m, originalCorrelation.annual);
-
             for (uint realmonth = 0; realmonth != 12; ++realmonth)
             {
-                correlation[realmonth] = m;
+                prepareMatrix(correlation[realmonth], originalCorrelation.annual);
             }
             break;
         }
@@ -79,9 +76,7 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
         {
             for (uint realmonth = 0; realmonth != 12; ++realmonth)
             {
-                auto m = Matrix<float>();
-                correlation[realmonth] = m;
-                prepareMatrix(m, originalCorrelation.monthly[realmonth]);
+                prepareMatrix(correlation[realmonth], originalCorrelation.monthly[realmonth]);
             }
             break;
         }
