@@ -338,6 +338,7 @@ public:
     template<enum TimeSeriesType TS>
     void destroyTSGeneratorData();
 
+    // TODO VP: related to refresh, will delete with it
     //! Destroy all data of the load TS generator
     void destroyAllLoadTSGeneratorData();
     //! Destroy all data of the solar TS generator

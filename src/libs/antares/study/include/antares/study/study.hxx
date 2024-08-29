@@ -36,6 +36,7 @@ inline void Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) c
     storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
 }
 
+// TODO VP: related to refresh, will delete with it
 template<enum TimeSeriesType TS>
 inline void Study::destroyTSGeneratorData()
 {
