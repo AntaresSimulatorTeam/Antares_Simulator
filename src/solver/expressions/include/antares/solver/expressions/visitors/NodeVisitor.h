@@ -46,6 +46,20 @@ class NodeVisitor
 public:
     virtual ~NodeVisitor() = default;
 
+    /**
+     * Dispatches a node to an appropriate visitor function based on its type.
+     *
+     * Iterates through a list of visitor functions, attempting to call each one until a successful
+     * visit is made.
+     *
+     * @param node A reference to the Node object to be visited.
+     * @param args Variadic template arguments to be passed to the visitor functions.
+     * @return An optional value of type `R` representing the result of the visit.
+     *         If no suitable visitor function is found, an error
+     * message is logged.
+     *
+     * @throws InvalidNode If the provided `node` is null.
+     */
     R dispatch(const Node& node, Args... args)
     {
         using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
@@ -75,19 +89,144 @@ public:
         return R();
     }
 
+    /**
+     * @brief Visits an AddNode and processes its children.
+     *
+     * @param node A reference to the AddNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the AddNode.
+     */
     virtual R visit(const AddNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a SubtractionNode and processes its children.
+     *
+     * @param node A reference to the SubtractionNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the SubtractionNode.
+     */
     virtual R visit(const SubtractionNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a MultiplicationNode and processes its children.
+     *
+     * @param node A reference to the MultiplicationNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the MultiplicationNode.
+     */
     virtual R visit(const MultiplicationNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a DivisionNode and processes its children.
+     *
+     * @param node A reference to the DivisionNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the DivisionNode.
+     */
     virtual R visit(const DivisionNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits an EqualNode and processes its children.
+     *
+     * @param node A reference to the EqualNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the EqualNode.
+     */
     virtual R visit(const EqualNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a LessThanOrEqualNode and processes its children.
+     *
+     * @param node A reference to the LessThanOrEqualNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the LessThanOrEqualNode.
+     */
     virtual R visit(const LessThanOrEqualNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a GreaterThanOrEqualNode and processes its children.
+     *
+     * @param node A reference to the GreaterThanOrEqualNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the GreaterThanOrEqualNode.
+     */
     virtual R visit(const GreaterThanOrEqualNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a NegationNode and processes its child.
+     *
+     * @param node A reference to the NegationNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the NegationNode.
+     */
     virtual R visit(const NegationNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a LiteralNode.
+     *
+     * @param node A reference to the LiteralNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the LiteralNode.
+     */
     virtual R visit(const LiteralNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a VariableNode.
+     *
+     * @param node A reference to the VariableNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the VariableNode.
+     */
     virtual R visit(const VariableNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a ParameterNode.
+     *
+     * @param node A reference to the ParameterNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the ParameterNode.
+     */
     virtual R visit(const ParameterNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a PortFieldNode.
+     *
+     * @param node A reference to the PortFieldNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the PortFieldNode.
+     */
     virtual R visit(const PortFieldNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a ComponentVariableNode.
+     *
+     * @param node A reference to the ComponentVariableNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the ComponentVariableNode.
+     */
     virtual R visit(const ComponentVariableNode&, Args... args) = 0;
+
+    /**
+     * @brief Visits a ComponentParameterNode.
+     *
+     * @param node A reference to the ComponentParameterNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the ComponentParameterNode.
+     */
     virtual R visit(const ComponentParameterNode&, Args... args) = 0;
 };
 } // namespace Antares::Solver::Nodes
