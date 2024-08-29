@@ -10,10 +10,11 @@ defined in a `.feature` file. Features are under the [features](./features) fold
 Every feature has multiple scenarios (every scenario represents a test case).  
 A scenario can be tagged in order to add it to a category, allowing us to run the tests on a filtered subset of the 
 scenarios later. The tags currently used in Antares are:
-- @fast: TODO
-- @slow: TODO
-- @flaky: TODO
-- ... TODO
+- @fast: tests that run fast
+- @slow: tests that run slow
+- @short: tests from the legacy "short-tests" batch
+- @medium: tests from the legacy "medium-tests" batch
+- @flaky: quarantine for flaky tests (i.e. sometimes pass, sometimes fail) that are to be skipped by the CI
 
 ### Steps structure
 Currently, tests are being migrated from the [legacy non-regression testing process](../run-study-tests). Thus, they 
@@ -55,6 +56,8 @@ Refer to the [behave documentation](https://behave.readthedocs.io/en/latest/) fo
 ### In the CI
 Cucumber tests are run in the same way as the legacy tests in the Ubuntu & Windows CIs, except that they don't need the 
 reference values from the SimTest repository, since reference values are stored explicitly in the feature files.
+Note that tests marked as "@flaky" are skipped by default.  
+Workflow file: [here](../../../.github/workflows/cucumber-tests/action.yml)
 
 ## Under the hood
 ### Test files
