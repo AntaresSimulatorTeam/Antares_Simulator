@@ -32,6 +32,7 @@ public:
      *
      * @param left The left operand.
      * @param right The right operand.
+     * @note BinaryNode(n1, n2) and BinaryNode(n2, n1) are not equivalent.
      */
     explicit BinaryNode(Node* left, Node* right);
 
