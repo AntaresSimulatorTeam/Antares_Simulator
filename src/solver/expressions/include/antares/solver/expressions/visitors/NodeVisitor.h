@@ -57,8 +57,6 @@ public:
      * @return An optional value of type `R` representing the result of the visit.
      *         If no suitable visitor function is found, an error
      * message is logged.
-     *
-     * @throws InvalidNode If the provided `node` is null.
      */
     R dispatch(const Node& node, Args... args)
     {
