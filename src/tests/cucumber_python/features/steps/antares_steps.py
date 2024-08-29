@@ -48,14 +48,14 @@ def check_simu_time(context, seconds):
     actual_simu_time = parse_simu_time(context.output_path)
     assert actual_simu_time <= float(seconds)
 
-@then('in area "{area}", during year {year}, loss of load lasts {lodl_hours} hours')
-def check_lodl_duration(context, area, year, lodl_hours):
-    assert int(lodl_hours) == get_hourly_values(context, area.lower(), int(year))["LOLD"].sum()
+@then('in area "{area}", during year {year}, loss of load lasts {lold_hours} hours')
+def check_lold_duration(context, area, year, lold_hours):
+    assert int(lold_hours) == get_hourly_values(context, area.lower(), int(year))["LOLD"].sum()
 
-@then('in area "{area}", unsupplied energy on "{date}" of year {year} is of {lodl_value_mw} MW')
-def check_lodl_value(context, area, date, year, lodl_value_mw):
+@then('in area "{area}", unsupplied energy on "{date}" of year {year} is of {lold_value_mw} MW')
+def check_lold_value(context, area, date, year, lold_value_mw):
     actual_unsp_energ = get_hourly_values_for_specific_hour(context, area.lower(), int(year), date)["UNSP. ENRG"].sum()
-    assert_double_close(float(lodl_value_mw), actual_unsp_energ, 0.001)
+    assert_double_close(float(lold_value_mw), actual_unsp_energ, 0.001)
 
 # post-processing a test: remove output files to minimize tests' footprint during CI
 def after_feature(context, feature):
