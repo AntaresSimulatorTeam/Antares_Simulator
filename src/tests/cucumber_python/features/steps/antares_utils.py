@@ -24,7 +24,11 @@ def activate_simu_outputs(context):
 
 def build_antares_solver_command(context):
     file = open('latest_binary_dir.txt', 'r')
-    solver_path = os.path.join(file.readline(), "solver", "antares-solver")
+    if os.name() == 'nt':
+        exec_name = "antares-solver.exe"
+    else:
+        exec_name = "antares-solver"
+    solver_path = os.path.join(file.readline(), "solver", exec_name)
     solver_full_path = str(Path(solver_path).resolve())
     command = [solver_full_path, "-i", str(context.study_path)]
     if context.use_ortools:

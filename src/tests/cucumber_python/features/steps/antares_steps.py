@@ -25,23 +25,23 @@ def simu_success(context):
 
 @then('the expected value of the annual system cost is {value}')
 def check_annual_cost_expected(context, value):
-    assert_double_close(float(value), get_annual_system_cost(context)["EXP"], 0.01)
+    assert_double_close(float(value), get_annual_system_cost(context)["EXP"], 0.001)
 
 @then('the minimum annual system cost is {value}')
 def check_annual_cost_min(context, value):
-    assert_double_close(float(value), get_annual_system_cost(context)["MIN"], 0.01)
+    assert_double_close(float(value), get_annual_system_cost(context)["MIN"], 0.001)
 
 @then('the maximum annual system cost is {value}')
 def check_annual_cost_max(context, value):
-    assert_double_close(float(value), get_annual_system_cost(context)["MAX"], 0.01)
+    assert_double_close(float(value), get_annual_system_cost(context)["MAX"], 0.001)
 
 @then('the annual system cost is')
 def check_annual_cost(context):
     for row in context.table:
-        assert_double_close(float(row["EXP"]), get_annual_system_cost(context)["EXP"], 0.01)
-        assert_double_close(float(row["STD"]), get_annual_system_cost(context)["STD"], 0.01)
-        assert_double_close(float(row["MIN"]), get_annual_system_cost(context)["MIN"], 0.01)
-        assert_double_close(float(row["MAX"]), get_annual_system_cost(context)["MAX"], 0.01)
+        assert_double_close(float(row["EXP"]), get_annual_system_cost(context)["EXP"], 0.001)
+        assert_double_close(float(row["STD"]), get_annual_system_cost(context)["STD"], 0.001)
+        assert_double_close(float(row["MIN"]), get_annual_system_cost(context)["MIN"], 0.001)
+        assert_double_close(float(row["MAX"]), get_annual_system_cost(context)["MAX"], 0.001)
 
 @then('the simulation takes less than {seconds} seconds')
 def check_simu_time(context, seconds):
@@ -55,7 +55,7 @@ def check_lodl_duration(context, area, year, lodl_hours):
 @then('in area "{area}", unsupplied energy on "{date}" of year {year} is of {lodl_value_mw} MW')
 def check_lodl_value(context, area, date, year, lodl_value_mw):
     actual_unsp_energ = get_hourly_values_for_specific_hour(context, area.lower(), int(year), date)["UNSP. ENRG"].sum()
-    assert_double_close(float(lodl_value_mw), actual_unsp_energ, 0.01)
+    assert_double_close(float(lodl_value_mw), actual_unsp_energ, 0.001)
 
 # post-processing a test: remove output files to minimize tests' footprint during CI
 def after_feature(context, feature):
