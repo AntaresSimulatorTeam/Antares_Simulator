@@ -977,25 +977,21 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     return ret;
 }
 
-// TODO VP: related to refresh, will delete with it
 void Study::destroyAllLoadTSGeneratorData()
 {
     areas.each([](Data::Area& area) { area.load.prepro.reset(); });
 }
 
-// TODO VP: related to refresh, will delete with it
 void Study::destroyAllSolarTSGeneratorData()
 {
     areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
 }
 
-// TODO VP: related to refresh, will delete with it
 void Study::destroyAllHydroTSGeneratorData()
 {
     areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
 
-// TODO VP: related to refresh, will delete with it
 void Study::destroyAllWindTSGeneratorData()
 {
     areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
