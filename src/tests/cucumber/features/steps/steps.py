@@ -1,5 +1,6 @@
 from behave import *
-from antares_utils import *
+from simulator_utils import *
+from output_utils import *
 from assertions import *
 import os
 
