@@ -39,7 +39,7 @@ public:
      * @param field_name The field name.
      */
     explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
-    
+
     /**
      * @brief Retrieves the port name.
      *
