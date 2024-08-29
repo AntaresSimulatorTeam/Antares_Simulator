@@ -24,6 +24,9 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a division node in a syntax tree.
+ */
 class DivisionNode: public BinaryNode
 {
 public:

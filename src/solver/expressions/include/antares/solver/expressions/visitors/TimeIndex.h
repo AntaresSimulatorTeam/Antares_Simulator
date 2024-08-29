@@ -22,6 +22,9 @@
 
 namespace Antares::Solver::Visitors
 {
+/**
+ * @brief Represents the time and scenario variation of a value.
+ */
 enum class TimeIndex : unsigned int
 {
     CONSTANT_IN_TIME_AND_SCENARIO = 0,
@@ -30,6 +33,14 @@ enum class TimeIndex : unsigned int
     VARYING_IN_TIME_AND_SCENARIO = 3
 };
 
+/**
+ * @brief Combines two TimeIndex values.
+ *
+ * @param left The left operand.
+ * @param right The right operand.
+ *
+ * @return The combined TimeIndex value.
+ */
 constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
 {
     /*

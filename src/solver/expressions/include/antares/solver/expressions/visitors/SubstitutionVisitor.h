@@ -28,6 +28,9 @@
 
 namespace Antares::Solver::Visitors
 {
+/**
+ * @brief Represents the context for performing substitutions in a syntax tree.
+ */
 struct SubstitutionContext
 {
     std::unordered_set<Nodes::ComponentVariableNode*> variables;
@@ -35,6 +38,12 @@ struct SubstitutionContext
     // std::vector<Nodes::ComponentParameterNode> parameters;
 };
 
+/**
+ * @brief Represents a visitor for substituting component variables in a syntax tree.
+ *
+ * @param registry The registry used for creating new nodes.
+ * @param ctx The substitution context.
+ */
 class SubstitutionVisitor: public CloneVisitor
 {
 public:

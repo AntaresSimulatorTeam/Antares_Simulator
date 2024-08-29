@@ -22,6 +22,9 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Base class for nodes in a syntax tree.
+ */
 class Node
 {
 public:

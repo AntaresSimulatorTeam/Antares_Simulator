@@ -24,6 +24,9 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a greater than or equal comparison node in a syntax tree.
+ */
 class GreaterThanOrEqualNode: public ComparisonNode
 {
 public:
