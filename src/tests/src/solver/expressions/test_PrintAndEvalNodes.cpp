@@ -190,11 +190,10 @@ BOOST_FIXTURE_TEST_CASE(division_by_zero, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "(22.000000/0.000000)");
     EvalVisitor evalVisitor;
 
-    //    BOOST_CHECK_EXCEPTION(evalVisitor.dispatch(*div),
-    //                          EvalVisitorDivisionException,
-    //                          [](const EvalVisitorDivisionException& ex)
-    //                          { return strcmp(ex.what(), "DivisionNode Division by zero") == 0;
-    //                          });
+    BOOST_CHECK_EXCEPTION(evalVisitor.dispatch(*div),
+                          EvalVisitorDivisionException,
+                          [](const EvalVisitorDivisionException& ex)
+                          { return strcmp(ex.what(), "DivisionNode Division by zero") == 0; });
 }
 
 BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)

@@ -102,7 +102,7 @@ public:
         catch (std::exception&)
         {
             logs.error() << "Antares::Solver::Visitor: could not visit the node!";
-            return R();
+            throw;
         }
     }
 
