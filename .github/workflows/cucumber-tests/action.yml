@@ -2,8 +2,11 @@ name: "Run cucumber tests"
 description: "Run cucumber tests"
 inputs:
   tags:
-    description: 'Tags'
-    required: true
+    description: 'Tags to run'
+    required: false
+  feature:
+    description: 'Feature file to run'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -11,8 +14,23 @@ runs:
       shell: bash
       run: python3 -m pip install -r src/tests/cucumber_python/requirements.txt
 
-    - name: Run tests
+    - name: Run tests on specific tags and specific feature file
+      if : "${{ inputs.tags != '' }}" & "${{ inputs.feature != '' }}"
+      shell: bash
+      run: |
+        cd src/tests/cucumber_python
+        behave --tags ${{ inputs.tags }} ${{ inputs.feature }}
+
+    - name: Run tests on specific tags
+      if : "${{ inputs.tags != '' }}" & "${{ inputs.feature == '' }}"
       shell: bash
       run: |
         cd src/tests/cucumber_python
         behave --tags ${{ inputs.tags }}
+
+    - name: Run tests on specific feature file
+      if : "${{ inputs.tags == '' }}" & "${{ inputs.feature != '' }}"
+      shell: bash
+      run: |
+        cd src/tests/cucumber_python
+        behave ${{ inputs.feature }}

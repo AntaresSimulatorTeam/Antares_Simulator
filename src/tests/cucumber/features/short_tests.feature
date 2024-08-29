@@ -22,7 +22,7 @@ Feature: short tests
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
 
-  @fast @short
+  @fast @short @wip
   Scenario: 003 Thermal fleet - Must-run
     Given the study path is "short-tests/003 Thermal fleet - Must-run"
     When I run antares simulator

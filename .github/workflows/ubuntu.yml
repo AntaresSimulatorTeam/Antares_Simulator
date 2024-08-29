@@ -97,7 +97,7 @@ jobs:
 
       - name: Configure
         run: |
-          cmake --trace-expand -B _build -S src \
+          cmake -B _build -S src \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -109,13 +109,6 @@ jobs:
           -DBUILD_TOOLS=ON \
           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
-
-      - name: Upload logs on failure
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: cucumber build log
-          path: ${{ github.workspace }}/vcpkg/buildtrees/cucumber-cpp/install-x64-linux-release-rel-out.log
 
       - name: Build
         run: |
@@ -242,6 +235,22 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
+      - name: Run cucumber on short-tests1
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/short_tests.feature"
+
+      - name: Run cucumber on short-tests2
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/short_tests.feature"
+          tags: "@wip"
+
+      - name: Run cucumber on short-tests3
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          tags: "@fast"
+
       - name: Run mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -307,11 +316,6 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: long-tests-3
           os: ${{ env.os }}
-
-      - name: Run fast cucumber tests
-        uses: ./.github/workflows/cucumber-tests
-        with:
-          tags: "@fast"
 
       - name: Run slow cucumber tests
         uses: ./.github/workflows/cucumber-tests
