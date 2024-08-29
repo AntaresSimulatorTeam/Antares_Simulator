@@ -149,9 +149,13 @@ jobs:
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-      - name: Init submodule
+      - name: Init submodule Antares_Simulator_Tests
         run: |
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
+
+      - name: Init submodule Antares_Simulator_Tests_NR
+        run: |
+          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
 
       - name: Run named mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
