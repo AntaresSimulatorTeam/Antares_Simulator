@@ -34,13 +34,16 @@ namespace
 template<class RetT, class VisitorT, class NodeT, class... Args>
 std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
 {
-    if (auto* x = dynamic_cast<const NodeT*>(&node))
-    {
-        return visitor.visit(*x, args...);
-    }
-    return std::nullopt;
+    auto* x = dynamic_cast<const NodeT*>(&node);
+    return visitor.visit(*x, args...);
 }
 } // namespace
+
+struct TheVisitorIsNotImplementedForYourNode: std::out_of_range
+{
+    // custom ctor with the visitor and node name will be defined in upcoming branch
+    using std::out_of_range::out_of_range;
+};
 
 template<class R, class... Args>
 class NodeVisitor
@@ -82,13 +85,25 @@ public:
                                   PortFieldNode,
                                   ComponentVariableNode,
                                   ComponentParameterNode>();
-        if (auto ret = my_map.at(typeid(node))(node, *this, args...); ret.has_value())
+        try
         {
-            return ret.value();
-        }
+            const auto& node_type = typeid(node);
+            if (auto ret = my_map.at(node_type)(node, *this, args...); ret.has_value())
+            {
+                return ret.value();
+            }
 
-        logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
-        return R();
+            using namespace std::string_literals;
+            // node type is unknown or not found in the map: Throw an exception
+            throw TheVisitorIsNotImplementedForYourNode("Visitor ("s + typeid(*this).name()
+                                                        + ") cannot handle nodes of type ("
+                                                        + node_type.name() + ").");
+        }
+        catch (std::exception&)
+        {
+            logs.error() << "Antares::Solver::Visitor: could not visit the node!";
+            return R();
+        }
     }
 
     virtual R visit(const AddNode&, Args... args) = 0;
