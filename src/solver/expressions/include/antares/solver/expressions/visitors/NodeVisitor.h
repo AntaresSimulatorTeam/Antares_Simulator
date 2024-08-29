@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <optional>
 #include <typeindex>
 #include <vector>
 
@@ -32,25 +31,19 @@ namespace Antares::Solver::Nodes
 namespace
 {
 template<class RetT, class VisitorT, class NodeT, class... Args>
-std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
+RetT tryVisit(const Node& node, VisitorT& visitor, Args... args)
 {
     auto* x = dynamic_cast<const NodeT*>(&node);
     return visitor.visit(*x, args...);
 }
 } // namespace
 
-struct TheVisitorIsNotImplementedForYourNode: std::out_of_range
-{
-    // custom ctor with the visitor and node name will be defined in upcoming branch
-    using std::out_of_range::out_of_range;
-};
-
 template<class R, class... Args>
 class NodeVisitor
 {
 public:
     virtual ~NodeVisitor() = default;
-    using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
+    using FunctionT = R (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
 
     /**
      * Creates a map associating node types with corresponding visitor functions.
@@ -92,18 +85,7 @@ public:
                                                  ComponentParameterNode>();
         try
         {
-            const auto& node_type = typeid(node);
-            if (auto ret = nodeDispatchFunctions.at(node_type)(node, *this, args...);
-                ret.has_value())
-            {
-                return ret.value();
-            }
-
-            using namespace std::string_literals;
-            // node type is unknown or not found in the map: Throw an exception
-            throw TheVisitorIsNotImplementedForYourNode("Visitor ("s + typeid(*this).name()
-                                                        + ") cannot handle nodes of type ("
-                                                        + node_type.name() + ").");
+            return nodeDispatchFunctions.at(typeid(node))(node, *this, args...);
         }
         catch (std::exception&)
         {
@@ -113,6 +95,7 @@ public:
     }
 
     virtual R visit(const AddNode&, Args... args) = 0;
+
     virtual R visit(const SubtractionNode&, Args... args) = 0;
     virtual R visit(const MultiplicationNode&, Args... args) = 0;
     virtual R visit(const DivisionNode&, Args... args) = 0;
