@@ -48,15 +48,8 @@ PartHydro::PartHydro():
     leewayLowerBound(1.),
     leewayUpperBound(1.),
     pumpingEfficiency(1.),
-    prepro(nullptr),
     series(nullptr)
 {
-}
-
-PartHydro::~PartHydro()
-{
-    delete prepro;
-    delete series;
 }
 
 void PartHydro::reset()
