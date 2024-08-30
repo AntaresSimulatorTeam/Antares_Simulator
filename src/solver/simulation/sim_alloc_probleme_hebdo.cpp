@@ -150,6 +150,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
     const uint linkCount = study.runtime->interconnectionsCount();
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+    const uint longTermStorageCount = study.runtime->longTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
     
@@ -239,6 +240,13 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.LevelVariable
           .assign(shortTermStorageCount, 0);
 
+        variablesMapping.SIM_LongTermStorage.InjectionVariable
+            .assign(longTermStorageCount, 0);
+        variablesMapping.SIM_LongTermStorage.WithdrawalVariable
+            .assign(longTermStorageCount, 0);
+        variablesMapping.SIM_LongTermStorage.LevelVariable
+            .assign(longTermStorageCount, 0);
+
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays
           .assign(nbPays, 0);
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContraintePourEviterLesChargesFictives
@@ -248,6 +256,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k].ShortTermStorageLevelConstraint
           .assign(shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].LongTermStorageLevelConstraint
+            .assign(longTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k].NumeroPremiereContrainteDeReserveParZone
           .assign(nbPays, 0);
@@ -595,7 +605,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
 
         // Long term storage results
-        const unsigned long nbLongTermStorage = 1; // Puisqu'un seul stockage long terme par zone
+        const unsigned long nbLongTermStorage
+          = study.areas.byIndex[k]->longTermStorage.reserveParticipationsCount();
         problem.ResultatsHoraires[k].LongTermStorage.resize(NombreDePasDeTemps);
         for (uint pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {

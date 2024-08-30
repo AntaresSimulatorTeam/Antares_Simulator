@@ -36,6 +36,8 @@
 #include "antares/solver/optimisation/constraints/LTPumpingMaxReserve.h"
 #include "antares/solver/optimisation/constraints/LTReserveUpParticipation.h"
 #include "antares/solver/optimisation/constraints/LTReserveDownParticipation.h"
+#include "antares/solver/optimisation/constraints/LTTurbiningCapacityThreasholds.h"
+#include "antares/solver/optimisation/constraints/LTPumpingCapacityThreasholds.h"
 
 ReserveParticipationGroup::ReserveParticipationGroup(PROBLEME_HEBDO* problemeHebdo,
                                                      bool simulation,
@@ -210,17 +212,20 @@ void ReserveParticipationGroup::BuildConstraints()
                         {
                             if (clusterReserveParticipation.maxTurbining > 0)
                             {
+                                // 15 (a)
                                 LTTurbiningMaxReserve.add(
                                   pays, reserve, cluster_participation, pdt, true);
                             }
                             if (clusterReserveParticipation.maxPumping > 0)
                             {
+                                // 15 (b)
                                 LTPumpingMaxReserve.add(
                                   pays, reserve, cluster_participation, pdt, true);
                             }
                             if (clusterReserveParticipation.maxTurbining > 0
                                 || clusterReserveParticipation.maxPumping > 0)
                             {
+                                // 15 (e)
                                 LTReserveUpParticipation.add(
                                   pays, reserve, cluster_participation, pdt);
                             }
@@ -239,17 +244,20 @@ void ReserveParticipationGroup::BuildConstraints()
                         {
                             if (clusterReserveParticipation.maxTurbining > 0)
                             {
+                                // 15 (a)
                                 LTTurbiningMaxReserve.add(
                                   pays, reserve, cluster_participation, pdt, false);
                             }
                             if (clusterReserveParticipation.maxPumping > 0)
                             {
+                                // 15 (b)
                                 LTPumpingMaxReserve.add(
                                   pays, reserve, cluster_participation, pdt, false);
                             }
                             if (clusterReserveParticipation.maxTurbining > 0
                                 || clusterReserveParticipation.maxPumping > 0)
                             {
+                                // 15 (f)
                                 LTReserveDownParticipation.add(
                                   pays, reserve, cluster_participation, pdt);
                             }
@@ -267,6 +275,8 @@ void ReserveParticipationGroup::BuildConstraints()
         POutBounds pOutBounds(builder_, data);
         STTurbiningCapacityThreasholds STTurbiningCapacityThreasholds(builder_, data);
         STPumpingCapacityThreasholds STPumpingCapacityThreasholds(builder_, data);
+        LTTurbiningCapacityThreasholds LTTurbiningCapacityThreasholds(builder_, data);
+        LTPumpingCapacityThreasholds LTPumpingCapacityThreasholds(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
@@ -293,6 +303,16 @@ void ReserveParticipationGroup::BuildConstraints()
                     STTurbiningCapacityThreasholds.add(pays, cluster, pdt);
                     // 15 (n)
                     STPumpingCapacityThreasholds.add(pays, cluster, pdt);
+                }
+                // Short Term Storage Clusters
+
+                const auto& LTStorageDuPays = problemeHebdo_->LongTermStorage[pays];
+                for (int cluster = 0; cluster < LTStorageDuPays.size(); cluster++)
+                {
+                    // 15 (c)
+                    LTTurbiningCapacityThreasholds.add(pays, cluster, pdt);
+                    // 15 (d)
+                    LTPumpingCapacityThreasholds.add(pays, cluster, pdt);
                 }
             }
         }

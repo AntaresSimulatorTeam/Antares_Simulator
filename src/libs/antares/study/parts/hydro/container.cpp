@@ -905,24 +905,6 @@ uint PartHydro::reserveParticipationsCount() const
     return count;
 }
 
-//double PartHydro::getReserveParticipation(const Data::ReserveName& reserveName) const
-//{
-//    auto it = reserveParticipations.find(reserveName);
-//    return (it != reserveParticipations.end()) ? it->second : 0.0;
-//}
-//
-//void PartHydro::setReserveParticipation(const Data::ReserveName& reserveName, double participation)
-//{
-//    reserveParticipations[reserveName] = participation;
-//}
-//
-//double PartHydro::reserveCost(const Data::ReserveName& reserveName) const
-//{
-////TO DO
-//
-//    return 1.0;
-//}
-
 uint PartHydro::count() const
 {
     // Retournez 1 si le stockage long terme est activé, 0 sinon

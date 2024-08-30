@@ -106,17 +106,6 @@ public:
 
     bool loadReserveParticipations(Area& area, const AnyString& file);
 
-    ////! Reserve Participations for hydro
-    //std::map<Data::ReserveName, double> reserveParticipations;
-
-    ////! Get reserve participation for a specific reserve
-    //double getReserveParticipation(const Data::ReserveName& reserveName) const;
-
-    ////! Set reserve participation for a specific reserve
-    //void setReserveParticipation(const Data::ReserveName& reserveName, double participation);
-
-    //double reserveCost(const Data::ReserveName& reserveName) const;
-
 public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;

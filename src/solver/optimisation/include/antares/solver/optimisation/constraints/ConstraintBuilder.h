@@ -184,6 +184,15 @@ public:
                                              int offset = 0,
                                              int delta = 0);
 
+    ConstraintBuilder& LongTermStorageInjection(unsigned int index, double coeff);
+
+    ConstraintBuilder& LongTermStorageWithdrawal(unsigned int index, double coeff);
+
+    ConstraintBuilder& LongTermStorageLevel(unsigned int index,
+                                             double coeff,
+                                             int offset = 0,
+                                             int delta = 0);
+
     ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
     ConstraintBuilder& HydProdDown(unsigned int index, double coeff);

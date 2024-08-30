@@ -274,6 +274,8 @@ public:
 
     ShortTermStorage::STStorageInput shortTermStorage; 
 
+    PartHydro longTermStorage; 
+
     //! \name Interconnections
     //@{
     //! All connections with this area

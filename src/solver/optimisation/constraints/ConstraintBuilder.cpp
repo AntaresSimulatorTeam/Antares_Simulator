@@ -248,6 +248,28 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::LongTermStorageInjection(unsigned int index, double coeff)
+{
+    AddVariable(variableManager_.LongTermStorageInjection(index, hourInWeek_), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::LongTermStorageWithdrawal(unsigned int index, double coeff)
+{
+    AddVariable(variableManager_.LongTermStorageWithdrawal(index, hourInWeek_), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::LongTermStorageLevel(unsigned int index,
+                                                            double coeff,
+                                                            int offset,
+                                                            int delta)
+{
+    AddVariable(variableManager_.LongTermStorageLevel(index, hourInWeek_, offset, delta), coeff);
+    return *this;
+}
+
+
 ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index, double coeff)
 {
     AddVariable(variableManager_.HydProd(index, hourInWeek_), coeff);
