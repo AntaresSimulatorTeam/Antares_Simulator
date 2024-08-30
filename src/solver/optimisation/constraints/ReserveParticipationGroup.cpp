@@ -22,8 +22,10 @@
 #include "antares/solver/optimisation/constraints/ReserveParticipationGroup.h"
 #include "antares/solver/optimisation/constraints/ConstraintGroup.h"
 #include "antares/solver/optimisation/constraints/PMaxReserve.h"
+#include "antares/solver/optimisation/constraints/OffUnitsThermalParticipatingToReserves.h"
+#include "antares/solver/optimisation/constraints/POffUnits.h"
 #include "antares/solver/optimisation/constraints/POutCapacityThreasholds.h"
-#include "antares/solver/optimisation/constraints/PRunningUnits.h"
+#include "antares/solver/optimisation/constraints/ThermalReserveParticipation.h"
 #include "antares/solver/optimisation/constraints/ReserveSatisfaction.h"
 #include "antares/solver/optimisation/constraints/POutBounds.h"
 #include "antares/solver/optimisation/constraints/STTurbiningMaxReserve.h"
@@ -67,7 +69,9 @@ void ReserveParticipationGroup::BuildConstraints()
     {
         auto data = GetReserveDataFromProblemHebdo();
         PMaxReserve pMaxReserve(builder_, data);
-        PRunningUnits pRunningUnits(builder_, data);
+        OffUnitsThermalParticipatingToReserves offUnitsThermalParticipatingToReserves(builder_, data);
+        POffUnits pOffUnits(builder_, data);
+        ThermalReserveParticipation thermalReserveParticipation(builder_, data);
         ReserveSatisfaction reserveSatisfaction(builder_, data);
         STTurbiningMaxReserve STTurbiningMaxReserve(builder_, data);
         STPumpingMaxReserve STPumpingMaxReserve(builder_, data);
@@ -100,9 +104,15 @@ void ReserveParticipationGroup::BuildConstraints()
                             {
                                 // 16 bis
                                 pMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
+                                
+                                // 16 ter
+                                offUnitsThermalParticipatingToReserves.add(pays, reserve, cluster_participation, pdt);
+                                
+                                // 16 quater
+                                pOffUnits.add(pays, reserve, cluster_participation, pdt);
 
-                                // 17 quater
-                                pRunningUnits.add(pays, reserve, cluster_participation, pdt, true);
+                                // 17 quinquies
+                                thermalReserveParticipation.add(pays, reserve, cluster_participation, pdt, true);
                             }
                             cluster_participation++;
                         }
@@ -125,8 +135,8 @@ void ReserveParticipationGroup::BuildConstraints()
                                 // 16 bis
                                 pMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
 
-                                // 17 quater
-                                pRunningUnits.add(pays, reserve, cluster_participation, pdt, false);
+                                // 17 sexies
+                                thermalReserveParticipation.add(pays, reserve, cluster_participation, pdt, false);
                             }
                             cluster_participation++;
                         }

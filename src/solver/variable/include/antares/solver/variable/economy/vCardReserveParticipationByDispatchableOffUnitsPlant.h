@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__
-#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchableOffUnitsPlant_H__
+#define __SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchableOffUnitsPlant_H__
 
 #include "../storage/results.h"
 
@@ -37,12 +37,12 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardReserveParticipationByDispatchablePlant
+struct VCardReserveParticipationByDispatchableOffUnitsPlant
 {
     //! Caption
     static std::string Caption()
     {
-        return "CLUSTER PARTICIPATION TO RESERVE";
+        return "OFF UNITS CLUSTER PARTICIPATION TO RESERVE";
     }
     //! Unit
     static std::string Unit()
@@ -53,7 +53,7 @@ struct VCardReserveParticipationByDispatchablePlant
     //! The short description of the variable
     static std::string Description()
     {
-        return "Reserve Participation from a cluster to a reserve";
+        return "Reserve Participation from off units in cluster to a reserve";
     }
 
     //! The expected results
@@ -62,7 +62,7 @@ struct VCardReserveParticipationByDispatchablePlant
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardReserveParticipationByDispatchablePlant VCardForSpatialAggregate;
+    typedef VCardReserveParticipationByDispatchableOffUnitsPlant VCardForSpatialAggregate;
 
     enum
     {
@@ -100,4 +100,4 @@ struct VCardReserveParticipationByDispatchablePlant
 } // namespace Solver
 } // namespace Antares
 
-#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchablePlant_H__
+#endif //__SOLVER_VARIABLE_ECONOMY_VCardReserveParticipationByDispatchableOffUnitsPlant_H__

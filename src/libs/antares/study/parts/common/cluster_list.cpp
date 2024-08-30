@@ -375,7 +375,9 @@ bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyStrin
       {
           std::string tmpClusterName;
           float tmpMaxPower = 0;
+          float tmpMaxPowerOff = 0;
           float tmpParticipationCost = 0;
+          float tmpParticipationCostOff = 0;
           for (auto* p = section.firstProperty; p; p = p->next)
           {
               CString<30, false> tmp;
@@ -402,13 +404,32 @@ bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyStrin
                         << area.name << ": invalid participation cost for reserve " << section.name;
                   }
               }
+              else if (tmp == "max-power-off")
+              {
+                  if (!p->value.to<float>(tmpMaxPowerOff))
+                  {
+                      logs.warning()
+                        << area.name << ": invalid max power off for reserve " << section.name;
+                  }
+              }
+              else if (tmp == "participation-cost-off")
+              {
+                  if (!p->value.to<float>(tmpParticipationCostOff))
+                  {
+                      logs.warning() << area.name << ": invalid participation cost off for reserve "
+                                     << section.name;
+                  }
+              }
           }
           auto reserve = area.allCapacityReservations.getReserveByName(section.name);
           auto cluster = area.thermal.list.getClusterByName(tmpClusterName);
           if (reserve && cluster)
           {
-              ThermalClusterReserveParticipation tmpReserveParticipation{
-                reserve.value(), tmpMaxPower, tmpParticipationCost};
+              ThermalClusterReserveParticipation tmpReserveParticipation{reserve.value(),
+                                                                         tmpMaxPower,
+                                                                         tmpParticipationCost,
+                                                                         tmpMaxPowerOff,
+                                                                         tmpParticipationCostOff};
               cluster.value().get()->addReserveParticipation(section.name, tmpReserveParticipation);
           }
           else

@@ -22,7 +22,8 @@
 #define __SOLVER_VARIABLE_INFO_H__
 
 #include <cmath>
-#include "./economy/vCardReserveParticipationByDispatchablePlant.h"
+#include "./economy/vCardReserveParticipationByDispatchableOnUnitsPlant.h"
+#include "./economy/vCardReserveParticipationByDispatchableOffUnitsPlant.h"
 #include "./economy/vCardReserveParticipationBySTStorage.h"
 #include "./economy/vCardReserveParticipationBySTStorageGroup.h"
 #include "./economy/vCardReserveParticipationByThermalGroup.h"
@@ -374,12 +375,21 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             const auto& shortTermStorage = results.data.area->shortTermStorage;
             for (uint i = 0; i != container.size(); ++i)
             {
-                if constexpr (std::is_same_v<VCardT,
-                                             Economy::VCardReserveParticipationByDispatchablePlant>)
+                if constexpr (std::is_same_v<
+                                VCardT,
+                                Economy::VCardReserveParticipationByDispatchableOnUnitsPlant>)
                 {
                     auto [clusterName, reserveName]
                       = thermal.list.reserveParticipationClusterAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + clusterName;
+                }
+                else if constexpr (std::is_same_v<
+                                     VCardT,
+                                     Economy::VCardReserveParticipationByDispatchableOffUnitsPlant>)
+                {
+                    auto [clusterName, reserveName]
+                      = thermal.list.reserveParticipationClusterAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + clusterName + "_off";
                 }
                 else if constexpr (std::is_same_v<VCardT,
                                                   Economy::VCardReserveParticipationByThermalGroup>)
@@ -487,12 +497,22 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             const auto& shortTermStorage = results.data.area->shortTermStorage;
             for (uint i = 0; i != container.size(); ++i)
             {
-                if constexpr (std::is_same_v<VCardType,
-                                             Economy::VCardReserveParticipationByDispatchablePlant>)
+                if constexpr (std::is_same_v<
+                                VCardType,
+                                Economy::VCardReserveParticipationByDispatchableOnUnitsPlant>)
                 {
                     auto [clusterName, reserveName]
                       = thermal.list.reserveParticipationClusterAt(results.data.area, i);
                     results.variableCaption = reserveName + "_" + clusterName;
+                    res = true;
+                }
+                else if constexpr (std::is_same_v<
+                                     VCardType,
+                                     Economy::VCardReserveParticipationByDispatchableOffUnitsPlant>)
+                {
+                    auto [clusterName, reserveName]
+                      = thermal.list.reserveParticipationClusterAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_" + clusterName + "_off";
                     res = true;
                 }
                 else if constexpr (std::is_same_v<VCardType,

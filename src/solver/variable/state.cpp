@@ -181,7 +181,7 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
               += participation;
 
             reserveParticipationPerClusterForYear[hourInTheYear][STStorageCluster->id][resName]
-              += participation;
+              .addParticipation(participation);
         }
     }
 }
@@ -388,42 +388,6 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
           += thermalCluster->fixedCost * newUnitCount;
 
-        // Reserves
-        if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
-        {
-            std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
-            for (auto& res : clusterReserves)
-            {
-                int reserveParticipationIdx
-                  = getAreaIndexReserveParticipationFromReserveAndThermalCluster(
-                    res, thermalCluster->name());
-                if (reserveParticipationIdx != -1)
-                {
-                    thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-                        += hourlyResults->ProductionThermique[hourInTheWeek]
-                        .ParticipationReservesDuPalier[reserveParticipationIdx]
-                        * thermalCluster->reserveCost(res);
-                    double participation = hourlyResults->ProductionThermique[hourInTheWeek]
-                        .ParticipationReservesDuPalier[reserveParticipationIdx];
-                    if (participation)
-                    {
-                        thermalClusterReserveParticipationCostForYear[hourInTheYear]
-                            += participation * thermalCluster->reserveCost(res);
-
-                        reserveParticipationPerGroupForYear[hourInTheYear]
-                          .thermalGroups[thermalCluster->groupID][res]
-                          += participation;
-
-                        reserveParticipationPerClusterForYear[hourInTheYear][thermalCluster->name()]
-                                                             [res]
-                          += participation;
-                    }
-                }
-                else
-                    logs.error() << "No index for cluster " << thermalCluster->name() << " in reserve " << res;
-            }
-        }
-
         // Storing the new unit count for the next hour
         thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = newUnitCount;
         thermal[area->index].productionLastHour[clusterAreaWideIndex] = p;
@@ -434,6 +398,50 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = 0u;
         thermal[area->index].productionLastHour[clusterAreaWideIndex] = 0.;
     }
+
+    // Reserves
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+    {
+        std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
+        for (auto& res : clusterReserves)
+        {
+            int reserveParticipationIdx
+              = getAreaIndexReserveParticipationFromReserveAndThermalCluster(
+                res, thermalCluster->name());
+            if (reserveParticipationIdx != -1)
+            {
+                double participationOn
+                  = hourlyResults->ProductionThermique[hourInTheWeek]
+                      .ParticipationReservesDuPalierOn[reserveParticipationIdx];
+
+                double participationOff
+                  = hourlyResults->ProductionThermique[hourInTheWeek]
+                      .ParticipationReservesDuPalierOff[reserveParticipationIdx];
+
+                thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+                  += participationOn * thermalCluster->reserveCost(res)
+                     + participationOff * thermalCluster->reserveCostOff(res);
+
+                thermalClusterReserveParticipationCostForYear[hourInTheYear]
+                  += participationOn * thermalCluster->reserveCost(res)
+                     + participationOff * thermalCluster->reserveCostOff(res);
+
+                reserveParticipationPerGroupForYear[hourInTheYear]
+                  .thermalGroups[thermalCluster->groupID][res]
+                  += participationOn + participationOff;
+
+                reserveParticipationPerClusterForYear[hourInTheYear][thermalCluster->name()][res]
+                  .addOffParticipation(participationOff);
+
+                reserveParticipationPerClusterForYear[hourInTheYear][thermalCluster->name()][res]
+                  .addOnParticipation(participationOn);
+
+            }
+            else
+                logs.error() << "No index for cluster " << thermalCluster->name() << " in reserve "
+                             << res;
+        }
+        }
 }
 
 void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)

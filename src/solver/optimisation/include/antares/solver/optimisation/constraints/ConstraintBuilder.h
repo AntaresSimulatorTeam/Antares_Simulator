@@ -106,6 +106,11 @@ public:
                                                                  int offset = 0,
                                                                  int delta = 0);
 
+    ConstraintBuilder& OffThermalClusterReserveParticipation(unsigned int index,
+                                                             double coeff,
+                                                             int offset = 0,
+                                                             int delta = 0);
+
     ConstraintBuilder& ThermalClusterReserveParticipation(unsigned int index,
                                                           double coeff,
                                                           int offset = 0,
@@ -162,6 +167,8 @@ public:
                                              int delta = 0);
 
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
+
+    ConstraintBuilder& NumberOfOffUnitsParticipatingToReserve(unsigned int index, double coeff);
 
     ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index, double coeff);
 

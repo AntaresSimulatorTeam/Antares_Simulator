@@ -132,12 +132,16 @@ set(RTESOLVER_OPT
 		constraints/MinDownTime.cpp
 		include/antares/solver/optimisation/constraints/PMaxReserve.h
 		constraints/PMaxReserve.cpp
+		include/antares/solver/optimisation/constraints/OffUnitsThermalParticipatingToReserves.h
+		constraints/OffUnitsThermalParticipatingToReserves.cpp
 		include/antares/solver/optimisation/constraints/POutCapacityThreasholds.h
 		constraints/POutCapacityThreasholds.cpp
 		include/antares/solver/optimisation/constraints/POutBounds.h
 		constraints/POutBounds.cpp
-		include/antares/solver/optimisation/constraints/PRunningUnits.h
-		constraints/PRunningUnits.cpp
+		include/antares/solver/optimisation/constraints/ThermalReserveParticipation.h
+		constraints/ThermalReserveParticipation.cpp
+		include/antares/solver/optimisation/constraints/POffUnits.h
+		constraints/POffUnits.cpp
 		include/antares/solver/optimisation/constraints/ReserveSatisfaction.h
 		constraints/ReserveSatisfaction.cpp
 		include/antares/solver/optimisation/constraints/STTurbiningMaxReserve.h

@@ -245,6 +245,14 @@ void VariableNamer::ParticipationOfRunningUnitsToReserve(unsigned int variable,
       variable, "ParticipationOfRunningUnitsToReserve", clusterName, reserveName);
 }
 
+void VariableNamer::ParticipationOfOffUnitsToReserve(unsigned int variable,
+                                                     const std::string& clusterName,
+                                                     const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(
+      variable, "ParticipationOfOffUnitsToReserve", clusterName, reserveName);
+}
+
 void VariableNamer::InternalUnsatisfiedReserve(unsigned int variable,
                                                const std::string& reserveName)
 {
@@ -259,6 +267,14 @@ void VariableNamer::InternalExcessReserve(unsigned int variable, const std::stri
 void VariableNamer::NODU(unsigned int variable, const std::string& clusterName)
 {
     SetThermalClusterElementName(variable, "NODU", clusterName);
+}
+
+void VariableNamer::NumberOfOffUnitsParticipatingToReserve(unsigned int variable,
+                                                           const std::string& clusterName,
+                                                           const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(
+      variable, "NumberOfOffUnitsParticipatingToReserve", clusterName);
 }
 
 void VariableNamer::NumberStoppingDispatchableUnits(unsigned int variable,
@@ -505,11 +521,35 @@ void ConstraintNamer::PMaxReserve(unsigned int constraint,
     SetThermalClusterAndReserveElementName(constraint, "PMaxReserve", clusterName, reserveName);
 }
 
-void ConstraintNamer::ParticipationOfRunningUnitsToReserve(unsigned int constraint,
-                                  const std::string& clusterName,
-                                  const std::string& reserveName)
+void ConstraintNamer::NumberOfOffUnitsParticipatingToReserve(unsigned int constraint,
+                                                              const std::string& clusterName,
+                                                              const std::string& reserveName)
 {
-    SetThermalClusterAndReserveElementName(constraint, "ParticipationOfRunningUnitsToReserve", clusterName, reserveName);
+    SetThermalClusterAndReserveElementName(constraint, "NumberOfOffUnitsParticipatingToReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::ParticipationOfUnitsToReserve(unsigned int constraint,
+                                                    const std::string& clusterName,
+                                                    const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(
+      constraint, "ParticipationOfUnitsToReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::POffUnitsLowerBound(unsigned int constraint,
+                                          const std::string& clusterName,
+                                          const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(
+      constraint, "POffUnitsLowerBound", clusterName, reserveName);
+}
+
+void ConstraintNamer::POffUnitsUpperBound(unsigned int constraint,
+                                          const std::string& clusterName,
+                                          const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(
+      constraint, "POffUnitsUpperBound", clusterName, reserveName);
 }
 
 void ConstraintNamer::POutCapacityThreasholdInf(unsigned int constraint,

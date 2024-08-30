@@ -96,11 +96,19 @@ struct ThermalClusterReserveParticipation
     std::reference_wrapper<CapacityReservation> capacityReservation;
     float maxPower = 0;
     float participationCost = 0;
+    float maxPowerOff = 0;
+    float participationCostOff = 0;
 
     ThermalClusterReserveParticipation(std::reference_wrapper<CapacityReservation> reserve,
                                        float power,
-                                       float cost) :
-     capacityReservation(reserve), maxPower(power), participationCost(cost)
+                                       float cost,
+                                       float powerOff,
+                                       float costOff) :
+     capacityReservation(reserve),
+     maxPower(power),
+     participationCost(cost),
+     maxPowerOff(powerOff),
+     participationCostOff(costOff)
     {
     }
 
@@ -113,6 +121,8 @@ struct ThermalClusterReserveParticipation
             capacityReservation = other.capacityReservation;
             maxPower = other.maxPower;
             participationCost = other.participationCost;
+            maxPowerOff = other.maxPowerOff;
+            participationCostOff = other.participationCostOff;
         }
         return *this;
     }

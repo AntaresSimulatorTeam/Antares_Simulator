@@ -26,6 +26,11 @@ public:
                                                    unsigned int hourInWeek,
                                                    int offset = 0,
                                                    int delta = 0);
+    
+    int& OffThermalClusterReserveParticipation(unsigned int index,
+                                                   unsigned int hourInWeek,
+                                                   int offset = 0,
+                                                   int delta = 0);
 
     int& ThermalClusterReserveParticipation(unsigned int index,
                                             unsigned int hourInWeek,
@@ -86,6 +91,11 @@ public:
                                    unsigned int hourInWeek,
                                    int offset = 0,
                                    int delta = 0);
+
+    int& NumberOfOffUnitsParticipatingToReserve(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset = 0,
+                                                 int delta = 0);
 
     int& NumberStoppingDispatchableUnits(unsigned int index,
                                          unsigned int hourInWeek,

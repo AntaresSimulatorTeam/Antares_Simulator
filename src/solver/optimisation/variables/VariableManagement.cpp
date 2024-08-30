@@ -54,6 +54,17 @@ int& VariableManager::RunningThermalClusterReserveParticipation(unsigned int ind
       .runningThermalClusterReserveParticipationIndex[index];
 }
 
+int& VariableManager::OffThermalClusterReserveParticipation(unsigned int index,
+                                                                unsigned int hourInWeek,
+                                                                int offset,
+                                                                int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .offThermalClusterReserveParticipationIndex[index];
+}
+
 int& VariableManager::ThermalClusterReserveParticipation(unsigned int index,
                                                          unsigned int hourInWeek,
                                                          int offset,
@@ -179,8 +190,17 @@ int& VariableManager::NumberOfDispatchableUnits(unsigned int index,
                                                 int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt].nbOnGroupUnitsInThermalClusterIndex[index];
+}
+
+int& VariableManager::NumberOfOffUnitsParticipatingToReserve(unsigned int index,
+                                                              unsigned int hourInWeek,
+                                                              int offset,
+                                                              int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt]
-      .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
+      .nbOffGroupUnitsParticipatingToReservesInThermalClusterIndex[index];
 }
 
 int& VariableManager::NumberStoppingDispatchableUnits(unsigned int index,
