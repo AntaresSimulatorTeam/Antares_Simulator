@@ -89,7 +89,7 @@ bool Economy::simulationBegin()
                                                      resultWriter,
                                                      simulationObserver_.get());
 
-            weeklyOptProblems_.push_back(weekOpt);
+            weeklyOptProblems_.emplace_back(weekOpt);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
