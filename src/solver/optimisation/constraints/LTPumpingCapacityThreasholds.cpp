@@ -2,11 +2,11 @@
 
 void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 {
-    int globalClusterIdx = data.longTermStorageOfArea[pays][cluster].clusterGlobalIndex;
+    int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
 
     if (!data.Simulation)
     {
-        // 15 (d)
+        // 15 (c)
         // Pumping power remains within limits set by minimum stable power (0) and maximum capacity threasholds 
         // Sum(Π^on_re+) <= Π <= Πmax - Sum(Π^on_re-) 
         // Π^on_re- : Pumping Participation of cluster to Down reserves 
@@ -14,7 +14,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
         // Π : Pumping Power output from cluster 
         // Πmax : Maximum Pumping Power from cluster
 
-        // 15 (d) (1) : Sum(Π^on_re+) - Π <= 0
+        // 15 (c) (1) : Sum(Π^on_re+) - Π <= 0
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -22,7 +22,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                  data.areaReserves[pays].areaCapacityReservationsUp)
             {
                 for (const auto& reserveParticipations :
-                     capacityReservation.AlLSTStorageReservesParticipation)
+                     capacityReservation.AllLTStorageReservesParticipation)
                 {
                     if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
                         && (data.longTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
@@ -46,7 +46,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             }
         }
 
-        // 15 (d) (2) :  Π + Sum(Π^on_re-) <= Πmax
+        // 15 (c) (2) :  Π + Sum(Π^on_re-) <= Πmax
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -69,7 +69,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             {
                 builder.LongTermStorageInjection(globalClusterIdx, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
+                  .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds
                     [globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);

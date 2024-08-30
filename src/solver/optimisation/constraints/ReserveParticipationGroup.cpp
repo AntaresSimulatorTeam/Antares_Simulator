@@ -38,6 +38,7 @@
 #include "antares/solver/optimisation/constraints/LTReserveDownParticipation.h"
 #include "antares/solver/optimisation/constraints/LTTurbiningCapacityThreasholds.h"
 #include "antares/solver/optimisation/constraints/LTPumpingCapacityThreasholds.h"
+                               
 
 ReserveParticipationGroup::ReserveParticipationGroup(PROBLEME_HEBDO* problemeHebdo,
                                                      bool simulation,
@@ -306,6 +307,7 @@ void ReserveParticipationGroup::BuildConstraints()
                 }
                 // Short Term Storage Clusters
 
+                // Long Term Storage Clusters
                 const auto& LTStorageDuPays = problemeHebdo_->LongTermStorage[pays];
                 for (int cluster = 0; cluster < LTStorageDuPays.size(); cluster++)
                 {
@@ -314,6 +316,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     // 15 (d)
                     LTPumpingCapacityThreasholds.add(pays, cluster, pdt);
                 }
+                // Long Term Storage Clusters
             }
         }
     }
