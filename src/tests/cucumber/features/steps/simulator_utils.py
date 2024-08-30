@@ -8,14 +8,10 @@ from output_utils import parse_output_folder_from_logs
 
 
 def get_solver_path():
-    file = open('latest_binary_dir.txt', 'r')
-    if os.name == 'nt':
-        exec_name = "antares-solver.exe"
-    else:
-        exec_name = "antares-solver"
-    solver_path = os.path.join(file.readline(), "solver", exec_name)
-    solver_full_path = str(Path(solver_path).resolve())
-    return solver_full_path
+  #config_file = path to conf.yaml
+    with open(config_file) as file:
+            content = yaml.full_load(file)
+    return content.get("antares-solver")
 
 SOLVER_PATH = get_solver_path() # we only need to run this once
 
