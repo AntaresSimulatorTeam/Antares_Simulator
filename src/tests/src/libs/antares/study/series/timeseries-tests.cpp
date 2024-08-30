@@ -27,8 +27,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/series/series.h>
 #include <antares/array/matrix.h>
+#include <antares/series/series.h>
 #include <antares/solver/simulation/timeseries-numbers.h>
 
 using namespace Antares::Data;
