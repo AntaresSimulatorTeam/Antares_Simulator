@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <optional>
+#include <typeindex>
 #include <vector>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/expressions/nodes/Node.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
 namespace Antares::Solver::Nodes
@@ -30,15 +31,41 @@ namespace Antares::Solver::Nodes
 namespace
 {
 template<class RetT, class VisitorT, class NodeT, class... Args>
-std::optional<RetT> tryVisit(const Node& node, VisitorT& visitor, Args... args)
+RetT tryVisit(const Node& node, VisitorT& visitor, Args... args)
 {
-    if (auto* x = dynamic_cast<const NodeT*>(&node))
-    {
-        return visitor.visit(*x, args...);
-    }
-    return std::nullopt;
+    auto* x = dynamic_cast<const NodeT*>(&node);
+    return visitor.visit(*x, args...);
 }
 } // namespace
+template<class R, class... Args>
+class NodeVisitor;
+
+template<class R, class... Args>
+struct NodeVisitsProvider
+{
+    using FunctionT = R (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
+
+    /**
+     * Creates a map associating node types with corresponding visitor functions.
+     *
+     * @tparam NodeTypes A variadic pack of node types to be included in the map.
+     * @return An `std::unordered_map` containing the associations between node types and their
+     * corresponding visitor functions.
+     */
+    template<class... NodeTypes>
+    static auto NodesVisitList()
+    {
+        std::unordered_map<std::type_index, FunctionT> nodeDispatchFunctions;
+        (
+          [&nodeDispatchFunctions] {
+              nodeDispatchFunctions[typeid(NodeTypes)] = &tryVisit<R,
+                                                                   NodeVisitor<R, Args...>,
+                                                                   NodeTypes>;
+          }(),
+          ...);
+        return nodeDispatchFunctions;
+    }
+};
 
 template<class R, class... Args>
 class NodeVisitor
@@ -49,42 +76,43 @@ public:
     /**
      * Dispatches a node to an appropriate visitor function based on its type.
      *
-     * Iterates through a list of visitor functions, attempting to call each one until a successful
-     * visit is made.
+     * This method uses a map that associates node types
+     * with their corresponding visitor functions. It attempts to find the visitor function
+     * for the provided `node`. If a match is found, the corresponding
+     * visitor function is called with the node, and any
+     * additional arguments (`args...`).
      *
      * @param node A reference to the Node object to be visited.
      * @param args Variadic template arguments to be passed to the visitor functions.
-     * @return An optional value of type `R` representing the result of the visit.
-     *         If no suitable visitor function is found, an error
-     * message is logged.
+     * @return The return value of the visitor function.
+     *
      */
     R dispatch(const Node& node, Args... args)
     {
-        using FunctionT = std::optional<R> (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
-        static const std::vector<FunctionT> allNodeVisitList{
-          &tryVisit<R, NodeVisitor<R, Args...>, AddNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, SubtractionNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, MultiplicationNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, DivisionNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, EqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, LessThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, GreaterThanOrEqualNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, NegationNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ParameterNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, VariableNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, LiteralNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, PortFieldNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ComponentVariableNode>,
-          &tryVisit<R, NodeVisitor<R, Args...>, ComponentParameterNode>};
-        for (auto f: allNodeVisitList)
+        const static auto nodeVisitList = NodeVisitsProvider<R, Args...>::template NodesVisitList<
+          AddNode,
+          SubtractionNode,
+          MultiplicationNode,
+          DivisionNode,
+          EqualNode,
+          LessThanOrEqualNode,
+          GreaterThanOrEqualNode,
+          NegationNode,
+          ParameterNode,
+          VariableNode,
+          LiteralNode,
+          PortFieldNode,
+          ComponentVariableNode,
+          ComponentParameterNode>();
+        try
         {
-            if (auto ret = f(node, *this, args...); ret.has_value())
-            {
-                return ret.value();
-            }
+            return nodeVisitList.at(typeid(node))(node, *this, args...);
         }
-        logs.error() << "Antares::Solver::Nodes Visitor: unsupported Node!";
-        return R();
+        catch (std::exception&)
+        {
+            logs.error() << "Antares::Solver::Visitor: could not visit the node!";
+            throw;
+        }
     }
 
     /**
