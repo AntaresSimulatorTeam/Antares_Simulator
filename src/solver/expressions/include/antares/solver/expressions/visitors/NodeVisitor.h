@@ -40,7 +40,7 @@ template<class R, class... Args>
 class NodeVisitor;
 
 template<class R, class... Args>
-struct NodeDispatchFunctionsProvider
+struct NodeVisitsProvider
 {
     using FunctionT = R (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
 
@@ -88,24 +88,24 @@ public:
      */
     R dispatch(const Node& node, Args... args)
     {
-        const static auto nodeDispatchFunctions = NodeDispatchFunctionsProvider<R, Args...>::
-          template NodesVisitList<AddNode,
-                                  SubtractionNode,
-                                  MultiplicationNode,
-                                  DivisionNode,
-                                  EqualNode,
-                                  LessThanOrEqualNode,
-                                  GreaterThanOrEqualNode,
-                                  NegationNode,
-                                  ParameterNode,
-                                  VariableNode,
-                                  LiteralNode,
-                                  PortFieldNode,
-                                  ComponentVariableNode,
-                                  ComponentParameterNode>();
+        const static auto nodeVisitList = NodeVisitsProvider<R, Args...>::template NodesVisitList<
+          AddNode,
+          SubtractionNode,
+          MultiplicationNode,
+          DivisionNode,
+          EqualNode,
+          LessThanOrEqualNode,
+          GreaterThanOrEqualNode,
+          NegationNode,
+          ParameterNode,
+          VariableNode,
+          LiteralNode,
+          PortFieldNode,
+          ComponentVariableNode,
+          ComponentParameterNode>();
         try
         {
-            return nodeDispatchFunctions.at(typeid(node))(node, *this, args...);
+            return nodeVisitList.at(typeid(node))(node, *this, args...);
         }
         catch (std::exception&)
         {
