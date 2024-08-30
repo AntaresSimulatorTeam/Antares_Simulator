@@ -23,6 +23,7 @@
 #include <vector>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/expressions/nodes/Node.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
 
 namespace Antares::Solver::Nodes
