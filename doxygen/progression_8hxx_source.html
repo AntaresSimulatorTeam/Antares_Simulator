@@ -167,64 +167,58 @@ $(document).ready(function(){initNavTree('progression_8hxx_source.html',''); ini
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span>Solver</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">inline</span> Progression::Meter::Meter():</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    nbParallelYears(0),</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    logsContainer(nullptr)</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Progression::Meter::allocateLogsContainer(uint nb)</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    logsContainer = <span class="keyword">new</span> Yuni::CString&lt;256, false&gt;[nb];</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Progression::Meter::taskCount(uint n)</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    (void)n;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Progression::add(Section section, <span class="keywordtype">int</span> nbTicks)</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>{</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    add((uint)-1, section, nbTicks);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    nbParallelYears(0)</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Progression::Meter::taskCount(uint n)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    (void)n;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Progression::add(Section section, <span class="keywordtype">int</span> nbTicks)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    add((uint)-1, section, nbTicks);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Progression::setNumberOfParallelYears(uint nb)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    pProgressMeter.nbParallelYears = nb;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    pProgressMeter.logsContainer.resize(nb);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Progression::setNumberOfParallelYears(uint nb)</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">inline</span> Progression::Part&amp; Progression::begin(uint year, Progression::Section section)</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>{</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    pProgressMeter.nbParallelYears = nb;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    pProgressMeter.allocateLogsContainer(nb);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">inline</span> Progression::Part&amp; Progression::begin(uint year, Progression::Section section)</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>{</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Alias</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    Part&amp; part = pProgressMeter.parts[year][section];</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// Reset</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    part.tickCount = 0;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// It is useless to display 0%, so lastTickCount and tickCount can be equals</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    part.lastTickCount = 0;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    pProgressMeter.mutex.lock();</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    pProgressMeter.inUse.push_front(&amp;part);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    pProgressMeter.mutex.unlock();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">return</span> part;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">inline</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* Progression::SectionToCStr(Section section)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>{</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> sectName[sectMax] = {<span class="stringliteral">&quot;mc&quot;</span>,</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                                                  <span class="stringliteral">&quot;output&quot;</span>,</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                                                  <span class="stringliteral">&quot;load&quot;</span>,</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                                                  <span class="stringliteral">&quot;solar&quot;</span>,</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                                                  <span class="stringliteral">&quot;wind&quot;</span>,</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                                                  <span class="stringliteral">&quot;hydro&quot;</span>,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                                                  <span class="stringliteral">&quot;thermal&quot;</span>,</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                                                  <span class="stringliteral">&quot;import timeseries&quot;</span>};</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    assert((uint)section &lt; (uint)sectMax);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">return</span> sectName[section];</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_PROGRESSION_PROGRESSION_HXX__</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Alias</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    Part&amp; part = pProgressMeter.parts[year][section];</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Reset</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    part.tickCount = 0;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// It is useless to display 0%, so lastTickCount and tickCount can be equals</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    part.lastTickCount = 0;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    pProgressMeter.mutex.lock();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    pProgressMeter.inUse.push_front(&amp;part);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    pProgressMeter.mutex.unlock();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> part;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">inline</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* Progression::SectionToCStr(Section section)</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>{</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> sectName[sectMax] = {<span class="stringliteral">&quot;mc&quot;</span>,</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                                                  <span class="stringliteral">&quot;output&quot;</span>,</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                                                  <span class="stringliteral">&quot;load&quot;</span>,</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                                                  <span class="stringliteral">&quot;solar&quot;</span>,</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                                                  <span class="stringliteral">&quot;wind&quot;</span>,</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                                                  <span class="stringliteral">&quot;hydro&quot;</span>,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                                                  <span class="stringliteral">&quot;thermal&quot;</span>,</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                                                  <span class="stringliteral">&quot;import timeseries&quot;</span>};</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    assert((uint)section &lt; (uint)sectMax);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">return</span> sectName[section];</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_PROGRESSION_PROGRESSION_HXX__</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
