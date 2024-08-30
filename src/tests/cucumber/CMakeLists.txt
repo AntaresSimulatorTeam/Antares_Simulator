@@ -1,1 +1,1 @@
-file(GENERATE OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/conf.yaml CONTENT "antares-solver : $<TARGET_FILE:antares-solver>")
+file(GENERATE OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/conf_$<CONFIG>.yaml CONTENT "antares-solver : $<TARGET_FILE:antares-solver>")

@@ -1,7 +1,7 @@
 # Methods to run Antares simulator
 
 import subprocess
-import os
+import glob
 import yaml
 from pathlib import Path
 from study_input_handler import study_input_handler
@@ -9,7 +9,7 @@ from output_utils import parse_output_folder_from_logs
 
 
 def get_solver_path():
-    config_file = "conf.yaml"
+    config_file = glob.glob('conf_*.yaml')[0]
     with open(config_file) as file:
             content = yaml.full_load(file)
     return content.get("antares-solver")
