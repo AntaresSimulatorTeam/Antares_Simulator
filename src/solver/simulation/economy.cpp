@@ -82,14 +82,13 @@ bool Economy::simulationBegin()
                                             numSpace);
 
             auto options = createOptimizationOptions(study);
-            Optimization::WeeklyOptimization weekOpt(options,
-                                                     &pProblemesHebdo[numSpace],
-                                                     study.parameters.adqPatchParams,
-                                                     numSpace,
-                                                     resultWriter,
-                                                     simulationObserver_.get());
 
-            weeklyOptProblems_.emplace_back(weekOpt);
+            weeklyOptProblems_.emplace_back(options,
+                                            &pProblemesHebdo[numSpace],
+                                            study.parameters.adqPatchParams,
+                                            numSpace,
+                                            resultWriter,
+                                            simulationObserver_.get());;
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
