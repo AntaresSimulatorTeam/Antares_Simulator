@@ -31,6 +31,8 @@
 
 using namespace Yuni;
 
+#define HOURS_PER_YEAR 8760
+
 #define SEP IO::Separator
 
 namespace Antares::Data
@@ -129,7 +131,7 @@ bool TimeSeries::loadFromFile(const std::string& path, const bool average)
     return ret;
 }
 
-int TimeSeries::saveToFolder(const AreaName& areaID,
+int TimeSeries::saveToFolder(const std::string& areaID,
                              const std::string& folder,
                              const std::string& prefix) const
 {
