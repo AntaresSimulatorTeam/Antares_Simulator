@@ -96,7 +96,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
     for (uint i = 0; i < DIM; i++)
     {
         uint areaIndexI = i / MONTHS_PER_YEAR;
-        auto* prepro = study.areas.byIndex[areaIndexI]->hydro.prepro;
+        auto* prepro = study.areas.byIndex[areaIndexI]->hydro.prepro.get();
 
         auto& corre = CORRE[i];
 
@@ -105,7 +105,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         for (uint j = 0; j < DIM; j++)
         {
             uint areaIndexJ = j / MONTHS_PER_YEAR;
-            auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro;
+            auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro.get();
 
             x = std::abs(((int)(i % MONTHS_PER_YEAR) - (int)(j % MONTHS_PER_YEAR)) / 2.);
 
