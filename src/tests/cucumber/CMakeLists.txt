@@ -1,1 +1,1 @@
-file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/latest_binary_dir.txt" "${CMAKE_BINARY_DIR}")
+file(GENERATE OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/conf.yaml CONTENT "antares-solver : $<TARGET_FILE:antares-solver>")
