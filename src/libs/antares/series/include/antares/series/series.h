@@ -83,7 +83,7 @@ public:
      ** \param prefix the prefix for the filename
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    int saveToFolder(const AreaName& areaID,
+    int saveToFolder(const std::string& areaID,
                      const std::string& folder,
                      const std::string& prefix) const;
 
