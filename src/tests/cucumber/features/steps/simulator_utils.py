@@ -9,8 +9,7 @@ from output_utils import parse_output_folder_from_logs
 
 
 def get_solver_path():
-    config_file = glob.glob('conf_*.yaml')[0]
-    with open(config_file) as file:
+    with open("conf.yaml") as file:
             content = yaml.full_load(file)
     return content.get("antares-solver")
 
