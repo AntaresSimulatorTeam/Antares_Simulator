@@ -35,24 +35,21 @@ static bool legacyLocalMatchingKeys(const Yuni::String& key)
 {
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
     {
-        // TODO use warnings
-        logs.notice() << "Parameter set-to-null-ntc-between-physical-out-for-first-step not "
+        logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step not "
                          "supported with this solver version, use a version < 9.2";
 
         return true;
     }
     if (key == "enable-first-step")
     {
-        // TODO use warnings
-        logs.notice() << "Parameter enable-first-step not supported with this solver version, use "
+        logs.warning() << "Parameter enable-first-step not supported with this solver version, use "
                          "a version < 9.2";
 
         return true;
     }
     if (key == "include-adq-patch")
     {
-        // TODO use warnings
-        logs.notice() << "Parameter include-adq-patch not supported with this solver version, "
+        logs.warning() << "Parameter include-adq-patch not supported with this solver version, "
                          "use a version < 9.2";
         return true;
     }
