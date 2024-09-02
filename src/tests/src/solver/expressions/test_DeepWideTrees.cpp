@@ -49,7 +49,7 @@ BOOST_FIXTURE_TEST_CASE(deep_tree_even, Registry<Node>)
     Node* node = deepNegationTree(*this, 42., 1000);
     EvalVisitor evalVisitor;
     // (-1)^1000 = 1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*node), 42.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), 42.);
 }
 
 BOOST_FIXTURE_TEST_CASE(deep_tree_odd, Registry<Node>)
@@ -57,7 +57,7 @@ BOOST_FIXTURE_TEST_CASE(deep_tree_odd, Registry<Node>)
     Node* node = deepNegationTree(*this, 42., 1001);
     EvalVisitor evalVisitor;
     // (-1)^1001 = -1
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*node), -42.);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), -42.);
 }
 
 static Node* deepAddTree(Registry<Node>& registry, AddNode* root, int depth)
@@ -81,7 +81,7 @@ BOOST_FIXTURE_TEST_CASE(binary_tree, Registry<Node>)
     Node* node = deepAddTree(*this, root, 10);
     EvalVisitor evalVisitor;
     // We expect 1024 = 2^10 literal nodes, each carrying value 42.
-    BOOST_CHECK_EQUAL(evalVisitor.dispatch(*node), 42. * 1024);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), 42. * 1024);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

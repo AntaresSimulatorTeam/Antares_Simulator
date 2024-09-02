@@ -38,20 +38,20 @@ public:
      */
     explicit CloneVisitor(Registry<Nodes::Node>& registry);
 
-    Nodes::Node* visit(const Nodes::AddNode& node) override;
-    Nodes::Node* visit(const Nodes::SubtractionNode& node) override;
-    Nodes::Node* visit(const Nodes::MultiplicationNode& node) override;
-    Nodes::Node* visit(const Nodes::DivisionNode& node) override;
-    Nodes::Node* visit(const Nodes::EqualNode& node) override;
-    Nodes::Node* visit(const Nodes::LessThanOrEqualNode& node) override;
-    Nodes::Node* visit(const Nodes::GreaterThanOrEqualNode& node) override;
-    Nodes::Node* visit(const Nodes::NegationNode& node) override;
-    Nodes::Node* visit(const Nodes::VariableNode& node) override;
-    Nodes::Node* visit(const Nodes::ParameterNode& node) override;
-    Nodes::Node* visit(const Nodes::LiteralNode& node) override;
-    Nodes::Node* visit(const Nodes::PortFieldNode& node) override;
-    Nodes::Node* visit(const Nodes::ComponentVariableNode& node) override;
-    Nodes::Node* visit(const Nodes::ComponentParameterNode& node) override;
+    Nodes::Node* visit(const Nodes::AddNode* node) override;
+    Nodes::Node* visit(const Nodes::SubtractionNode* node) override;
+    Nodes::Node* visit(const Nodes::MultiplicationNode* node) override;
+    Nodes::Node* visit(const Nodes::DivisionNode* node) override;
+    Nodes::Node* visit(const Nodes::EqualNode* node) override;
+    Nodes::Node* visit(const Nodes::LessThanOrEqualNode* node) override;
+    Nodes::Node* visit(const Nodes::GreaterThanOrEqualNode* node) override;
+    Nodes::Node* visit(const Nodes::NegationNode* node) override;
+    Nodes::Node* visit(const Nodes::VariableNode* node) override;
+    Nodes::Node* visit(const Nodes::ParameterNode* node) override;
+    Nodes::Node* visit(const Nodes::LiteralNode* node) override;
+    Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
+    Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
+    Nodes::Node* visit(const Nodes::ComponentParameterNode* node) override;
 
 private:
     Registry<Nodes::Node>& registry_;

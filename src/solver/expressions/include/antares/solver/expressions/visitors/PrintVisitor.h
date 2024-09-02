@@ -30,19 +30,19 @@ namespace Antares::Solver::Visitors
 class PrintVisitor: public Nodes::NodeVisitor<std::string>
 {
 private:
-    std::string visit(const Nodes::AddNode& node) override;
-    std::string visit(const Nodes::SubtractionNode& node) override;
-    std::string visit(const Nodes::MultiplicationNode& node) override;
-    std::string visit(const Nodes::DivisionNode& node) override;
-    std::string visit(const Nodes::EqualNode& node) override;
-    std::string visit(const Nodes::LessThanOrEqualNode& node) override;
-    std::string visit(const Nodes::GreaterThanOrEqualNode& node) override;
-    std::string visit(const Nodes::NegationNode& node) override;
-    std::string visit(const Nodes::VariableNode& node) override;
-    std::string visit(const Nodes::ParameterNode& node) override;
-    std::string visit(const Nodes::LiteralNode& node) override;
-    std::string visit(const Nodes::PortFieldNode& node) override;
-    std::string visit(const Nodes::ComponentVariableNode& node) override;
-    std::string visit(const Nodes::ComponentParameterNode& node) override;
+    std::string visit(const Nodes::AddNode* node) override;
+    std::string visit(const Nodes::SubtractionNode* node) override;
+    std::string visit(const Nodes::MultiplicationNode* node) override;
+    std::string visit(const Nodes::DivisionNode* node) override;
+    std::string visit(const Nodes::EqualNode* node) override;
+    std::string visit(const Nodes::LessThanOrEqualNode* node) override;
+    std::string visit(const Nodes::GreaterThanOrEqualNode* node) override;
+    std::string visit(const Nodes::NegationNode* node) override;
+    std::string visit(const Nodes::VariableNode* node) override;
+    std::string visit(const Nodes::ParameterNode* node) override;
+    std::string visit(const Nodes::LiteralNode* node) override;
+    std::string visit(const Nodes::PortFieldNode* node) override;
+    std::string visit(const Nodes::ComponentVariableNode* node) override;
+    std::string visit(const Nodes::ComponentParameterNode* node) override;
 };
 } // namespace Antares::Solver::Visitors

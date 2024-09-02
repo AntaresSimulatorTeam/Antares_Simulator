@@ -72,15 +72,15 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     context[&variableNode1] = TimeIndex::VARYING_IN_TIME_ONLY;
     TimeIndexVisitor timeIndexVisitor(context);
 
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(literalNode),
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&literalNode),
                       TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(parameterNode1),
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&parameterNode1),
                       TimeIndex::VARYING_IN_SCENARIO_ONLY);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(variableNode1), TimeIndex::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&variableNode1), TimeIndex::VARYING_IN_TIME_ONLY);
 
     // addition of parameterNode1 and variableNode1 is time and scenario dependent
     Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*expr), TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(expr), TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
 
 static const std::vector<TimeIndex> TimeIndex_ALL{TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
@@ -115,9 +115,9 @@ BOOST_DATA_TEST_CASE_F(Registry<Node>,
     std::unordered_map<const Node*, TimeIndex> context;
     context[parameter] = timeIndex;
     TimeIndexVisitor timeIndexVisitor(context);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*root), timeIndex);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
     Node* neg = create<NegationNode>(root);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*neg), timeIndex);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(neg), timeIndex);
 }
 
 template<class T>
@@ -141,9 +141,9 @@ BOOST_DATA_TEST_CASE_F(Registry<Node>,
     std::unordered_map<const Node*, TimeIndex> context;
     context[root] = timeIndex;
     TimeIndexVisitor timeIndexVisitor(context);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*root), timeIndex);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
     Node* neg = create<NegationNode>(root);
-    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(*neg), timeIndex);
+    BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(neg), timeIndex);
 }
 
 BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)

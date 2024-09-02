@@ -52,11 +52,11 @@ BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registr
     Node* root = create<AddNode>(create<NegationNode>(add_node), &cpp);
 
     PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(*root);
+    const auto printed = printVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(printed, "(-((-((22.000000+8.000000))+id1.var))+id2.par)");
     CloneVisitor cloneVisitor(*this);
-    Node* cloned = cloneVisitor.dispatch(*root);
-    BOOST_CHECK_EQUAL(printed, printVisitor.dispatch(*cloned));
+    Node* cloned = cloneVisitor.dispatch(root);
+    BOOST_CHECK_EQUAL(printed, printVisitor.dispatch(cloned));
 }
 BOOST_AUTO_TEST_SUITE_END()

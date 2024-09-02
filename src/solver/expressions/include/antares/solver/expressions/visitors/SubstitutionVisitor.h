@@ -54,6 +54,6 @@ public:
 
 private:
     // Only override visit method for ComponentVariableNode, clone the rest
-    Nodes::Node* visit(const Nodes::ComponentVariableNode& node) override;
+    Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
 };
 } // namespace Antares::Solver::Visitors

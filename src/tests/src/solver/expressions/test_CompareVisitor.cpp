@@ -74,7 +74,7 @@ BOOST_FIXTURE_TEST_CASE(simple_comparison_to_itself, ComparisonFixture)
 {
     CompareVisitor cmp;
     Node* expr = createSimpleExpression(65.);
-    BOOST_CHECK(cmp.dispatch(*expr, *expr));
+    BOOST_CHECK(cmp.dispatch(expr, expr));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, ComparisonFixture)
@@ -82,7 +82,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, ComparisonFixture)
     CompareVisitor cmp;
     Node* expr1 = createSimpleExpression(65.);
     Node* expr2 = createSimpleExpression(65.);
-    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+    BOOST_CHECK(cmp.dispatch(expr1, expr2));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, ComparisonFixture)
@@ -90,14 +90,14 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, ComparisonFixture)
     CompareVisitor cmp;
     Node* expr1 = createSimpleExpression(64.);
     Node* expr2 = createSimpleExpression(65.);
-    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+    BOOST_CHECK(!cmp.dispatch(expr1, expr2));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, ComparisonFixture)
 {
     CompareVisitor cmp;
     Node* expr = createComplexExpression();
-    BOOST_CHECK(cmp.dispatch(*expr, *expr));
+    BOOST_CHECK(cmp.dispatch(expr, expr));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_clone_complex, ComparisonFixture)
@@ -105,8 +105,8 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_clone_complex, ComparisonFixture)
     CompareVisitor cmp;
     Node* expr = createComplexExpression();
     CloneVisitor cloneVisitor(registry_);
-    Node* expr_cloned = cloneVisitor.dispatch(*expr);
-    BOOST_CHECK(cmp.dispatch(*expr, *expr_cloned));
+    Node* expr_cloned = cloneVisitor.dispatch(expr);
+    BOOST_CHECK(cmp.dispatch(expr, expr_cloned));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, ComparisonFixture)
@@ -114,7 +114,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, ComparisonFixture)
     CompareVisitor cmp;
     Node* expr1 = createComplexExpression();
     Node* expr2 = createComplexExpression();
-    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+    BOOST_CHECK(cmp.dispatch(expr1, expr2));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, ComparisonFixture)
@@ -122,6 +122,6 @@ BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, ComparisonFixture
     CompareVisitor cmp;
     Node* expr1 = createComplexExpression();
     Node* expr2 = registry_.create<NegationNode>(expr1);
-    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+    BOOST_CHECK(!cmp.dispatch(expr1, expr2));
 }
 BOOST_AUTO_TEST_SUITE_END()

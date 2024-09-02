@@ -31,19 +31,19 @@ namespace Antares::Solver::Visitors
 class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
 {
 private:
-    LinearStatus visit(const Nodes::AddNode& add) override;
-    LinearStatus visit(const Nodes::SubtractionNode& add) override;
-    LinearStatus visit(const Nodes::MultiplicationNode& add) override;
-    LinearStatus visit(const Nodes::DivisionNode& add) override;
-    LinearStatus visit(const Nodes::EqualNode& add) override;
-    LinearStatus visit(const Nodes::LessThanOrEqualNode& add) override;
-    LinearStatus visit(const Nodes::GreaterThanOrEqualNode& add) override;
-    LinearStatus visit(const Nodes::NegationNode& neg) override;
-    LinearStatus visit(const Nodes::VariableNode& param) override;
-    LinearStatus visit(const Nodes::ParameterNode& param) override;
-    LinearStatus visit(const Nodes::LiteralNode& lit) override;
-    LinearStatus visit(const Nodes::PortFieldNode& port_field_node) override;
-    LinearStatus visit(const Nodes::ComponentVariableNode& component_variable_node) override;
-    LinearStatus visit(const Nodes::ComponentParameterNode& component_parameter_node) override;
+    LinearStatus visit(const Nodes::AddNode* add) override;
+    LinearStatus visit(const Nodes::SubtractionNode* add) override;
+    LinearStatus visit(const Nodes::MultiplicationNode* add) override;
+    LinearStatus visit(const Nodes::DivisionNode* add) override;
+    LinearStatus visit(const Nodes::EqualNode* add) override;
+    LinearStatus visit(const Nodes::LessThanOrEqualNode* add) override;
+    LinearStatus visit(const Nodes::GreaterThanOrEqualNode* add) override;
+    LinearStatus visit(const Nodes::NegationNode* neg) override;
+    LinearStatus visit(const Nodes::VariableNode* param) override;
+    LinearStatus visit(const Nodes::ParameterNode* param) override;
+    LinearStatus visit(const Nodes::LiteralNode* lit) override;
+    LinearStatus visit(const Nodes::PortFieldNode* port_field_node) override;
+    LinearStatus visit(const Nodes::ComponentVariableNode* component_variable_node) override;
+    LinearStatus visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
 };
 } // namespace Antares::Solver::Visitors
