@@ -2,6 +2,11 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v9.2.0
+### Adequacy Patch LMR
+Removed following properties from **settings/generaldata.ini**.
+- enable-first-step
+- set-to-null-ntc-between-physical-out-for-first-step
+
 ### (TS-generator only) TS generation for link capacities
 In files input/links/<link1>/properties.ini, add the following properties
 - tsgen_direct_XXX,
