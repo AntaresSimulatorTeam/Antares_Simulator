@@ -26,13 +26,13 @@
 namespace Antares::Solver::Visitors
 {
 
-class EvalVisitorDivisionException: std::runtime_error
+class EvalVisitorDivisionException: public std::runtime_error
 {
 public:
     EvalVisitorDivisionException(double left, double right, const std::string& message);
 };
 
-struct EvalVisitorNotImplemented: std::invalid_argument
+class EvalVisitorNotImplemented: public std::invalid_argument
 {
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };

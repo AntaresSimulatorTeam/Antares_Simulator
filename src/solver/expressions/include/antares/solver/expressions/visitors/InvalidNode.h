@@ -24,7 +24,7 @@
 
 namespace Antares::Solver::Visitors
 {
-class InvalidNode: std::invalid_argument
+class InvalidNode: public std::invalid_argument
 {
 public:
     explicit InvalidNode(const std::string& node_name = "");
