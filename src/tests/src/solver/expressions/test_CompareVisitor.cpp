@@ -33,91 +33,96 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
 
-// Only necessary for BOOST_CHECK_EQUAL
-
-BOOST_AUTO_TEST_SUITE(_CompareVisitor_)
-
-static Node* createSimpleExpression(Registry<Node>& registry, double param)
+struct ComparisonFixture
 {
-    Node* var1 = registry.create<LiteralNode>(param);
-    Node* param1 = registry.create<ParameterNode>("param1");
-    Node* expr = registry.create<AddNode>(var1, param1);
+    Node* createSimpleExpression(double param);
+    Node* createComplexExpression();
+
+    Registry<Node> registry_;
+};
+
+Node* ComparisonFixture::createSimpleExpression(double param)
+{
+    Node* var1 = registry_.create<LiteralNode>(param);
+    Node* param1 = registry_.create<ParameterNode>("param1");
+    Node* expr = registry_.create<AddNode>(var1, param1);
     return expr;
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, Registry<Node>)
-{
-    CompareVisitor cmp;
-    Node* expr = createSimpleExpression(*this, 65.);
-    BOOST_CHECK(cmp.dispatch(*expr, *expr));
-}
-
-BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, Registry<Node>)
-{
-    CompareVisitor cmp;
-    auto create = [this] { return createSimpleExpression(*this, 65.); };
-    Node* expr1 = create();
-    Node* expr2 = create();
-    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
-}
-
-BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, Registry<Node>)
-{
-    CompareVisitor cmp;
-    Node* expr1 = createSimpleExpression(*this, 64.);
-    Node* expr2 = createSimpleExpression(*this, 65.);
-    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
-}
-
-static Node* createComplexExpression(Registry<Node>& registry)
+Node* ComparisonFixture::createComplexExpression()
 {
     // NOTE : this expression makes no sense, only for testing purposes
     // NOTE2 : Some elements are re-used (e.g simple), this is valid since memory is handled
     // separately (no double free)
 
-    Node* simple = createSimpleExpression(registry, 42.);
-    Node* neg = registry.create<NegationNode>(simple);
-    Node* mult = registry.create<MultiplicationNode>(simple, neg);
-    Node* comp = registry.create<ComponentParameterNode>("hello", "world");
-    Node* div = registry.create<DivisionNode>(mult, comp);
-    Node* div2 = registry.create<DivisionNode>(div, simple);
-    Node* add = registry.create<AddNode>(div, div2);
-    Node* sub = registry.create<SubtractionNode>(add, neg);
-    Node* cmp = registry.create<GreaterThanOrEqualNode>(sub, add);
-    Node* pf = registry.create<PortFieldNode>("port", "field");
-    Node* addf = registry.create<AddNode>(pf, cmp);
+    Node* simple = createSimpleExpression(42.);
+    Node* neg = registry_.create<NegationNode>(simple);
+    Node* mult = registry_.create<MultiplicationNode>(simple, neg);
+    Node* comp = registry_.create<ComponentParameterNode>("hello", "world");
+    Node* div = registry_.create<DivisionNode>(mult, comp);
+    Node* div2 = registry_.create<DivisionNode>(div, simple);
+    Node* add = registry_.create<AddNode>(div, div2);
+    Node* sub = registry_.create<SubtractionNode>(add, neg);
+    Node* cmp = registry_.create<GreaterThanOrEqualNode>(sub, add);
+    Node* pf = registry_.create<PortFieldNode>("port", "field");
+    Node* addf = registry_.create<AddNode>(pf, cmp);
     return addf;
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, Registry<Node>)
+BOOST_AUTO_TEST_SUITE(_CompareVisitor_)
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, ComparisonFixture)
 {
     CompareVisitor cmp;
-    Node* expr = createComplexExpression(*this);
+    Node* expr = createSimpleExpression(65.);
     BOOST_CHECK(cmp.dispatch(*expr, *expr));
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_clone_complex, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_same, ComparisonFixture)
 {
     CompareVisitor cmp;
-    Node* expr = createComplexExpression(*this);
-    CloneVisitor cloneVisitor(*this);
+    Node* expr1 = createSimpleExpression(65.);
+    Node* expr2 = createSimpleExpression(65.);
+    BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_different, ComparisonFixture)
+{
+    CompareVisitor cmp;
+    Node* expr1 = createSimpleExpression(64.);
+    Node* expr2 = createSimpleExpression(65.);
+    BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_self_complex, ComparisonFixture)
+{
+    CompareVisitor cmp;
+    Node* expr = createComplexExpression();
+    BOOST_CHECK(cmp.dispatch(*expr, *expr));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparison_to_clone_complex, ComparisonFixture)
+{
+    CompareVisitor cmp;
+    Node* expr = createComplexExpression();
+    CloneVisitor cloneVisitor(registry_);
     Node* expr_cloned = cloneVisitor.dispatch(*expr);
     BOOST_CHECK(cmp.dispatch(*expr, *expr_cloned));
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_complex, ComparisonFixture)
 {
     CompareVisitor cmp;
-    Node* expr1 = createComplexExpression(*this);
-    Node* expr2 = createComplexExpression(*this);
+    Node* expr1 = createComplexExpression();
+    Node* expr2 = createComplexExpression();
     BOOST_CHECK(cmp.dispatch(*expr1, *expr2));
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(comparison_to_other_different_complex, ComparisonFixture)
 {
     CompareVisitor cmp;
-    Node* expr1 = createComplexExpression(*this);
-    Node* expr2 = create<NegationNode>(expr1);
+    Node* expr1 = createComplexExpression();
+    Node* expr2 = registry_.create<NegationNode>(expr1);
     BOOST_CHECK(!cmp.dispatch(*expr1, *expr2));
 }
 BOOST_AUTO_TEST_SUITE_END()
