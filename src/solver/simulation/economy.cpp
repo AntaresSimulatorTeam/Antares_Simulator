@@ -88,7 +88,7 @@ bool Economy::simulationBegin()
                                             study.parameters.adqPatchParams,
                                             numSpace,
                                             resultWriter,
-                                            simulationObserver_.get());;
+                                            simulationObserver_.get());
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
