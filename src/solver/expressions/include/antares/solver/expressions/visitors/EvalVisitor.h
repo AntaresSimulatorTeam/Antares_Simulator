@@ -34,6 +34,7 @@ public:
 
 class EvalVisitorNotImplemented: public std::invalid_argument
 {
+public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
 
