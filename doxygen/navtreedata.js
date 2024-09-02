@@ -28,24 +28,38 @@ var NAVTREE =
     [ "Links:", "index.html#autotoc_md1", null ],
     [ "Installation", "index.html#autotoc_md2", null ],
     [ "Source Code Content", "index.html#autotoc_md3", null ],
+    [ "Antares Cucumber Tests", "md_src_2tests_2cucumber_2readme.html", [
+      [ "Tests structure", "md_src_2tests_2cucumber_2readme.html#autotoc_md5", [
+        [ "Features, scenarios and tags", "md_src_2tests_2cucumber_2readme.html#autotoc_md6", null ],
+        [ "Steps structure", "md_src_2tests_2cucumber_2readme.html#autotoc_md7", null ]
+      ] ],
+      [ "Running the tests", "md_src_2tests_2cucumber_2readme.html#autotoc_md8", [
+        [ "On your PC", "md_src_2tests_2cucumber_2readme.html#autotoc_md9", null ],
+        [ "In the CI", "md_src_2tests_2cucumber_2readme.html#autotoc_md10", null ]
+      ] ],
+      [ "Under the hood", "md_src_2tests_2cucumber_2readme.html#autotoc_md11", [
+        [ "Test files", "md_src_2tests_2cucumber_2readme.html#autotoc_md12", null ],
+        [ "Code-behind", "md_src_2tests_2cucumber_2readme.html#autotoc_md13", null ]
+      ] ]
+    ] ],
     [ "How does the automatic testing script system work ?", "md_src_2tests_2run-study-tests_2readme.html", [
-      [ "Introduction", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md5", null ],
-      [ "Entry points to the automatic testing script system", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md6", null ],
-      [ "File test_from_json.py", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md7", null ],
-      [ "Fixtures", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md8", null ],
-      [ "Tests parametrization", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md9", null ],
-      [ "The test's body", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md10", [
-        [ "<ins>Run fixtures</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md11", null ],
-        [ "<ins>Checks creation factory</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md12", null ],
-        [ "<ins>Running the checks</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md13", null ],
-        [ "<ins>End of tests</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md14", null ]
+      [ "Introduction", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md16", null ],
+      [ "Entry points to the automatic testing script system", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md17", null ],
+      [ "File test_from_json.py", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md18", null ],
+      [ "Fixtures", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md19", null ],
+      [ "Tests parametrization", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md20", null ],
+      [ "The test's body", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md21", [
+        [ "<ins>Run fixtures</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md22", null ],
+        [ "<ins>Checks creation factory</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md23", null ],
+        [ "<ins>Running the checks</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md24", null ],
+        [ "<ins>End of tests</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md25", null ]
       ] ],
-      [ "How to add a check on a test ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md15", [
-        [ "What to do ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md16", null ],
-        [ "What NOT to do ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md17", null ]
+      [ "How to add a check on a test ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md26", [
+        [ "What to do ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md27", null ],
+        [ "What NOT to do ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md28", null ]
       ] ],
-      [ "Running the script", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md18", null ],
-      [ "TO DO", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md19", null ]
+      [ "Running the script", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md29", null ],
+      [ "TO DO", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md30", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Topics", "topics.html", "topics" ],
@@ -100,10 +114,10 @@ var NAVTREEINDEX =
 "classjson__collector_1_1checksRetriever.html",
 "dir_8acb0bb0f0e165ff3e061f83060a4d60.html",
 "functions_l.html",
-"minmax-data_8h_source.html",
-"structAntares_1_1Data_1_1MonthlyGenerationTargetData.html#a93325064a31e8aa5ba40d51a88f5dfc2",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html",
-"structLEVEL__FLEX__UP__NODE.html"
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md29",
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aac1c472f1c5822ed2673146d73fa1fb3",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#adbca1497b750785315490d938a62d0f2",
+"structFinalStockEquivalentData.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
