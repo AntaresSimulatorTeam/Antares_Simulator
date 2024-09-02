@@ -37,20 +37,12 @@ static bool legacyLocalMatchingKeys(const Yuni::String& key)
     {
         logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step not "
                          "supported with this solver version, use a version < 9.2";
-
         return true;
     }
     if (key == "enable-first-step")
     {
         logs.warning() << "Parameter enable-first-step not supported with this solver version, use "
                          "a version < 9.2";
-
-        return true;
-    }
-    if (key == "include-adq-patch")
-    {
-        logs.warning() << "Parameter include-adq-patch not supported with this solver version, "
-                         "use a version < 9.2";
         return true;
     }
     return false;
@@ -185,6 +177,10 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
 
 bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
+    if (key == "include-adq-patch")
+    {
+        return value.to<bool>(enabled);
+    }
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
     {
         return value.to<bool>(setToZeroOutsideInsideLinks);
@@ -195,7 +191,7 @@ bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::Str
 void AdqPatchParams::saveToINI(IniFile& ini) const
 {
     auto* section = ini.addSection("adequacy patch");
-
+    section->add("include-adq-patch", enabled);
     section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
                  setToZeroOutsideInsideLinks);
 
