@@ -20,7 +20,6 @@
 */
 #pragma once
 #include <optional>
-#include <stdexcept>
 #include <typeindex>
 #include <vector>
 
@@ -28,6 +27,7 @@
 #include <antares/solver/expressions/IName.h>
 #include <antares/solver/expressions/nodes/Node.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
+#include <antares/solver/expressions/visitors/InvalidNode.h>
 
 namespace Antares::Solver::Visitors
 {
@@ -66,15 +66,6 @@ struct NodeVisitsProvider
           }(),
           ...);
         return nodeDispatchFunctions;
-    }
-};
-
-class InvalidNode: std::invalid_argument
-{
-public:
-    explicit InvalidNode(const std::string& node_name = ""):
-        std::invalid_argument("Antares::Solver::Nodes Visitor: invalid node type " + node_name)
-    {
     }
 };
 

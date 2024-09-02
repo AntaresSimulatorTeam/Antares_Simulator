@@ -15,6 +15,7 @@ set(SRC_Expressions
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
         visitors/SubstitutionVisitor.cpp
+        visitors/InvalidNode.cpp
 
         include/antares/solver/expressions/nodes/AddNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
@@ -48,6 +49,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/TimeIndexVisitor.h
         include/antares/solver/expressions/visitors/TimeIndex.h
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/InvalidNode.h
 
         include/antares/solver/expressions/Registry.hxx
         include/antares/solver/expressions/IName.h

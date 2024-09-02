@@ -20,8 +20,6 @@
 */
 #pragma once
 
-#include <stdexcept>
-
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
 
