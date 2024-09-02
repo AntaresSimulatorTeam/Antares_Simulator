@@ -25,7 +25,9 @@
 
 namespace Antares::Solver::Visitors
 {
-
+/**
+ * @brief Represents a visitor for determining the linearity of nodes (expression).
+ */
 class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
 {
 private:

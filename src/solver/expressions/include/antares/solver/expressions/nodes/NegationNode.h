@@ -26,6 +26,9 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a negation node in a syntax tree.
+ */
 class NegationNode final: public UnaryNode
 {
 public:
