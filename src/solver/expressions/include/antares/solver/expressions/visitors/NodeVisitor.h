@@ -31,10 +31,10 @@ namespace Antares::Solver::Nodes
 namespace
 {
 template<class RetT, class VisitorT, class NodeT, class... Args>
-RetT tryVisit(const Node& node, VisitorT& visitor, Args... args)
+RetT tryVisit(const Node* node, VisitorT& visitor, Args... args)
 {
-    auto* x = dynamic_cast<const NodeT*>(&node);
-    return visitor.visit(*x, args...);
+    auto* x = dynamic_cast<const NodeT*>(node);
+    return visitor.visit(x, args...);
 }
 } // namespace
 template<class R, class... Args>
@@ -43,7 +43,7 @@ class NodeVisitor;
 template<class R, class... Args>
 struct NodeVisitsProvider
 {
-    using FunctionT = R (*)(const Node&, NodeVisitor<R, Args...>&, Args... args);
+    using FunctionT = R (*)(const Node*, NodeVisitor<R, Args...>&, Args... args);
 
     /**
      * Creates a map associating node types with corresponding visitor functions.
@@ -121,7 +121,7 @@ public:
 
         try
         {
-            return nodeVisitList.at(typeid(*node))(*node, *this, args...);
+            return nodeVisitList.at(typeid(*node))(node, *this, args...);
         }
         catch (std::exception&)
         {
