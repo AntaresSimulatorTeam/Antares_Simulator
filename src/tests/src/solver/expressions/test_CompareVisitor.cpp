@@ -27,7 +27,6 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
-#include <antares/solver/expressions/visitors/PrintVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -71,7 +70,7 @@ Node* ComparisonFixture::createComplexExpression()
 
 BOOST_AUTO_TEST_SUITE(_CompareVisitor_)
 
-BOOST_FIXTURE_TEST_CASE(comparison_to_self_simple, ComparisonFixture)
+BOOST_FIXTURE_TEST_CASE(simple_comparison_to_itself, ComparisonFixture)
 {
     CompareVisitor cmp;
     Node* expr = createSimpleExpression(65.);
