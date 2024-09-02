@@ -1,9 +1,8 @@
 # Antares outputs parsing
 
 import os
-import time
-import datetime
 import pandas
+import configparser
 
 def parse_output_folder_from_logs(logs: bytes) -> str:
     for line in logs.splitlines():
@@ -24,11 +23,9 @@ def parse_annual_system_cost(output_path: str) -> dict:
 
 
 def parse_simu_time(output_path: str) -> float:
-    file = open(os.path.join(output_path, "simulation.log"), 'r')
-    for line in file.readlines():
-        if "Total simulation time:" in line:
-            x = time.strptime(line[-10: -1], '%Hh%Mm%Ss')
-            return datetime.timedelta(hours=x.tm_hour, minutes=x.tm_min, seconds=x.tm_sec).total_seconds()
+    execution_info = configparser.ConfigParser()
+    execution_info.read(os.path.join(output_path, "execution_info.ini"))
+    return float(execution_info['durations_ms']['total']) / 1000
 
 
 def parse_hourly_values(output_path: str, area: str, year: int):
