@@ -4,6 +4,7 @@ add_executable(${EXECUTABLE_NAME})
 target_sources(${EXECUTABLE_NAME}
         PRIVATE
         test_main.cpp
+        test_nodes.cpp
         test_PrintAndEvalNodes.cpp
         test_TimeIndexVisitor.cpp
         test_SubstitutionVisitor.cpp

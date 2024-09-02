@@ -19,31 +19,33 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <optional>
 #include <typeindex>
 #include <vector>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/expressions/IName.h>
 #include <antares/solver/expressions/nodes/Node.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
+#include <antares/solver/expressions/visitors/InvalidNode.h>
 
-namespace Antares::Solver::Nodes
+namespace Antares::Solver::Visitors
 {
-namespace
-{
+
 template<class RetT, class VisitorT, class NodeT, class... Args>
-RetT tryVisit(const Node* node, VisitorT& visitor, Args... args)
+RetT tryVisit(const Nodes::Node* node, VisitorT& visitor, Args... args)
 {
     auto* x = dynamic_cast<const NodeT*>(node);
     return visitor.visit(x, args...);
 }
-} // namespace
+
 template<class R, class... Args>
 class NodeVisitor;
 
 template<class R, class... Args>
 struct NodeVisitsProvider
 {
-    using FunctionT = R (*)(const Node*, NodeVisitor<R, Args...>&, Args... args);
+    using FunctionT = R (*)(const Nodes::Node*, NodeVisitor<R, Args...>&, Args... args);
 
     /**
      * Creates a map associating node types with corresponding visitor functions.
@@ -67,17 +69,8 @@ struct NodeVisitsProvider
     }
 };
 
-class InvalidNode: public std::invalid_argument
-{
-public:
-    explicit InvalidNode():
-        std::invalid_argument("Antares::Solver::Nodes Visitor: invalid node type")
-    {
-    }
-};
-
 template<class R, class... Args>
-class NodeVisitor
+class NodeVisitor: public IName
 {
 public:
     virtual ~NodeVisitor() = default;
@@ -96,7 +89,7 @@ public:
      * @return The return value of the visitor function.
      *
      */
-    R dispatch(const Node* node, Args... args)
+    R dispatch(const Nodes::Node* node, Args... args)
     {
         if (!node)
         {
@@ -104,20 +97,20 @@ public:
         }
 
         const static auto nodeVisitList = NodeVisitsProvider<R, Args...>::template NodesVisitList<
-          AddNode,
-          SubtractionNode,
-          MultiplicationNode,
-          DivisionNode,
-          EqualNode,
-          LessThanOrEqualNode,
-          GreaterThanOrEqualNode,
-          NegationNode,
-          ParameterNode,
-          VariableNode,
-          LiteralNode,
-          PortFieldNode,
-          ComponentVariableNode,
-          ComponentParameterNode>();
+          Nodes::AddNode,
+          Nodes::SubtractionNode,
+          Nodes::MultiplicationNode,
+          Nodes::DivisionNode,
+          Nodes::EqualNode,
+          Nodes::LessThanOrEqualNode,
+          Nodes::GreaterThanOrEqualNode,
+          Nodes::NegationNode,
+          Nodes::ParameterNode,
+          Nodes::VariableNode,
+          Nodes::LiteralNode,
+          Nodes::PortFieldNode,
+          Nodes::ComponentVariableNode,
+          Nodes::ComponentParameterNode>();
 
         try
         {
@@ -138,7 +131,7 @@ public:
      *
      * @return The result of processing the AddNode.
      */
-    virtual R visit(const AddNode*, Args... args) = 0;
+    virtual R visit(const Nodes::AddNode*, Args... args) = 0;
     /**
      * @brief Visits a SubtractionNode and processes its children.
      *
@@ -147,7 +140,7 @@ public:
      *
      * @return The result of processing the SubtractionNode.
      */
-    virtual R visit(const SubtractionNode*, Args... args) = 0;
+    virtual R visit(const Nodes::SubtractionNode*, Args... args) = 0;
     /**
      * @brief Visits a MultiplicationNode and processes its children.
      *
@@ -156,7 +149,7 @@ public:
      *
      * @return The result of processing the MultiplicationNode.
      */
-    virtual R visit(const MultiplicationNode*, Args... args) = 0;
+    virtual R visit(const Nodes::MultiplicationNode*, Args... args) = 0;
     /**
      * @brief Visits a DivisionNode and processes its children.
      *
@@ -165,7 +158,7 @@ public:
      *
      * @return The result of processing the DivisionNode.
      */
-    virtual R visit(const DivisionNode*, Args... args) = 0;
+    virtual R visit(const Nodes::DivisionNode*, Args... args) = 0;
     /**
      * @brief Visits an EqualNode and processes its children.
      *
@@ -174,7 +167,7 @@ public:
      *
      * @return The result of processing the EqualNode.
      */
-    virtual R visit(const EqualNode*, Args... args) = 0;
+    virtual R visit(const Nodes::EqualNode*, Args... args) = 0;
 
     /**
      * @brief Visits a LessThanOrEqualNode and processes its children.
@@ -184,7 +177,7 @@ public:
      *
      * @return The result of processing the LessThanOrEqualNode.
      */
-    virtual R visit(const LessThanOrEqualNode*, Args... args) = 0;
+    virtual R visit(const Nodes::LessThanOrEqualNode*, Args... args) = 0;
 
     /**
      * @brief Visits a GreaterThanOrEqualNode and processes its children.
@@ -194,7 +187,7 @@ public:
      *
      * @return The result of processing the GreaterThanOrEqualNode.
      */
-    virtual R visit(const GreaterThanOrEqualNode*, Args... args) = 0;
+    virtual R visit(const Nodes::GreaterThanOrEqualNode*, Args... args) = 0;
 
     /**
      * @brief Visits a NegationNode and processes its child.
@@ -204,7 +197,7 @@ public:
      *
      * @return The result of processing the NegationNode.
      */
-    virtual R visit(const NegationNode*, Args... args) = 0;
+    virtual R visit(const Nodes::NegationNode*, Args... args) = 0;
 
     /**
      * @brief Visits a LiteralNode.
@@ -214,7 +207,7 @@ public:
      *
      * @return The result of processing the LiteralNode.
      */
-    virtual R visit(const LiteralNode*, Args... args) = 0;
+    virtual R visit(const Nodes::LiteralNode*, Args... args) = 0;
 
     /**
      * @brief Visits a VariableNode.
@@ -224,7 +217,7 @@ public:
      *
      * @return The result of processing the VariableNode.
      */
-    virtual R visit(const VariableNode*, Args... args) = 0;
+    virtual R visit(const Nodes::VariableNode*, Args... args) = 0;
 
     /**
      * @brief Visits a ParameterNode.
@@ -234,7 +227,7 @@ public:
      *
      * @return The result of processing the ParameterNode.
      */
-    virtual R visit(const ParameterNode*, Args... args) = 0;
+    virtual R visit(const Nodes::ParameterNode*, Args... args) = 0;
 
     /**
      * @brief Visits a PortFieldNode.
@@ -244,7 +237,7 @@ public:
      *
      * @return The result of processing the PortFieldNode.
      */
-    virtual R visit(const PortFieldNode*, Args... args) = 0;
+    virtual R visit(const Nodes::PortFieldNode*, Args... args) = 0;
 
     /**
      * @brief Visits a ComponentVariableNode.
@@ -254,7 +247,7 @@ public:
      *
      * @return The result of processing the ComponentVariableNode.
      */
-    virtual R visit(const ComponentVariableNode*, Args... args) = 0;
+    virtual R visit(const Nodes::ComponentVariableNode*, Args... args) = 0;
 
     /**
      * @brief Visits a ComponentParameterNode.
@@ -264,6 +257,6 @@ public:
      *
      * @return The result of processing the ComponentParameterNode.
      */
-    virtual R visit(const ComponentParameterNode*, Args... args) = 0;
+    virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
 };
-} // namespace Antares::Solver::Nodes
+} // namespace Antares::Solver::Visitors

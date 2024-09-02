@@ -20,8 +20,6 @@
 */
 #pragma once
 
-#include <ostream>
-
 namespace Antares::Solver::Visitors
 {
 /**

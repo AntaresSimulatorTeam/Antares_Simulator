@@ -28,10 +28,11 @@ namespace Antares::Solver::Visitors
 /**
  * @brief Represents a visitor for comparing nodes in a syntax tree.
  */
-class CompareVisitor: public Nodes::NodeVisitor<bool, const Nodes::Node*>
+class CompareVisitor: public NodeVisitor<bool, const Nodes::Node*>
 {
 public:
     CompareVisitor() = default;
+    std::string name() const override;
 
     bool visit(const Nodes::AddNode* add, const Nodes::Node* other) override;
     bool visit(const Nodes::SubtractionNode* add, const Nodes::Node* other) override;

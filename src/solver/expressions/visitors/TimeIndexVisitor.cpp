@@ -100,4 +100,9 @@ TimeIndexVisitor::TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIn
 {
 }
 
+std::string TimeIndexVisitor::name() const
+{
+    return "TimeIndexVisitor";
+}
+
 } // namespace Antares::Solver::Visitors

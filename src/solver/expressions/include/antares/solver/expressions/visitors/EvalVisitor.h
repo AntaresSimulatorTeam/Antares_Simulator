@@ -20,23 +20,28 @@
 */
 #pragma once
 
-#include <stdexcept>
-
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Solver::Visitors
 {
 
-struct EvalVisitorDivisionException: std::overflow_error
+class EvalVisitorDivisionException: public std::runtime_error
 {
-    using std::overflow_error::overflow_error;
+public:
+    EvalVisitorDivisionException(double left, double right, const std::string& message);
+};
+
+class EvalVisitorNotImplemented: public std::invalid_argument
+{
+public:
+    EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
 
 /**
  * @brief Represents a visitor for evaluating expressions within a given context.
  */
-class EvalVisitor: public Nodes::NodeVisitor<double>
+class EvalVisitor: public NodeVisitor<double>
 {
 public:
     /**
@@ -50,6 +55,7 @@ public:
      * @param context The evaluation context.
      */
     explicit EvalVisitor(EvaluationContext context);
+    std::string name() const override;
 
 private:
     const EvaluationContext context_;

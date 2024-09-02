@@ -1,3 +1,4 @@
+
 /*
 ** Copyright 2007-2024, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
@@ -19,40 +20,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
-#include <unordered_set>
-
-#include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
-#include <antares/solver/expressions/visitors/CloneVisitor.h>
+#include <stdexcept>
 
 namespace Antares::Solver::Visitors
 {
-/**
- * @brief Represents the context for performing substitutions in a syntax tree.
- */
-struct SubstitutionContext
-{
-    std::unordered_set<Nodes::ComponentVariableNode*> variables;
-};
-
-/**
- * @brief Represents a visitor for substituting component variables in a syntax tree.
- *
- * @param registry The registry used for creating new nodes.
- * @param ctx The substitution context.
- */
-class SubstitutionVisitor: public CloneVisitor
+class InvalidNode: public std::invalid_argument
 {
 public:
-    SubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx);
-
-    SubstitutionContext& ctx_;
-    Registry<Nodes::Node>& registry_;
-    std::string name() const override;
-
-private:
-    // Only override visit method for ComponentVariableNode, clone the rest
-    Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
+    explicit InvalidNode(const std::string& node_name = "");
 };
 } // namespace Antares::Solver::Visitors

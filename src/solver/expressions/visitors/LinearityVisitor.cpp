@@ -84,7 +84,6 @@ LinearStatus LinearityVisitor::visit(const Nodes::NegationNode* node)
 
 LinearStatus LinearityVisitor::visit(const Nodes::PortFieldNode*)
 {
-    // TODO
     return LinearStatus::CONSTANT;
 }
 
@@ -98,4 +97,8 @@ LinearStatus LinearityVisitor::visit([[maybe_unused]] const Nodes::ComponentPara
     return LinearStatus::CONSTANT;
 }
 
+std::string LinearityVisitor::name() const
+{
+    return "LinearityVisitor";
+}
 } // namespace Antares::Solver::Visitors

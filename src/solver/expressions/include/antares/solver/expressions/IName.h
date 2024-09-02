@@ -19,22 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <string>
 
-#include <antares/solver/expressions/nodes/ComparisonNode.h>
-
-namespace Antares::Solver::Nodes
+namespace Antares::Solver
 {
-/**
- * @brief Represents a less than or equal comparison node in a syntax tree.
- */
-class LessThanOrEqualNode: public ComparisonNode
+class IName
 {
 public:
-    using ComparisonNode::ComparisonNode;
-
-    std::string name() const override
-    {
-        return "LessThanOrEqualNode";
-    }
+    virtual ~IName() = default;
+    virtual std::string name() const = 0;
+    bool operator==(const IName& other) const = default;
 };
-} // namespace Antares::Solver::Nodes
+} // namespace Antares::Solver

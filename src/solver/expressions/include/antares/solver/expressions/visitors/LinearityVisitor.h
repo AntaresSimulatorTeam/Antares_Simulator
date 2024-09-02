@@ -28,8 +28,11 @@ namespace Antares::Solver::Visitors
 /**
  * @brief Represents a visitor for determining the linearity of nodes (expression).
  */
-class LinearityVisitor: public Nodes::NodeVisitor<LinearStatus>
+class LinearityVisitor: public NodeVisitor<LinearStatus>
 {
+public:
+    std::string name() const override;
+
 private:
     LinearStatus visit(const Nodes::AddNode* add) override;
     LinearStatus visit(const Nodes::SubtractionNode* add) override;

@@ -31,5 +31,10 @@ class MultiplicationNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
+
+    std::string name() const override
+    {
+        return "MultiplicationNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

@@ -27,8 +27,11 @@ namespace Antares::Solver::Visitors
 /**
  * @brief Represents a visitor for printing nodes in a syntax tree as strings.
  */
-class PrintVisitor: public Nodes::NodeVisitor<std::string>
+class PrintVisitor: public NodeVisitor<std::string>
 {
+public:
+    std::string name() const override;
+
 private:
     std::string visit(const Nodes::AddNode* node) override;
     std::string visit(const Nodes::SubtractionNode* node) override;

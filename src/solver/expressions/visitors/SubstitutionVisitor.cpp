@@ -51,4 +51,9 @@ Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode* node
         return CloneVisitor::visit(node);
     }
 }
+
+std::string SubstitutionVisitor::name() const
+{
+    return "SubstitutionVisitor";
+}
 } // namespace Antares::Solver::Visitors

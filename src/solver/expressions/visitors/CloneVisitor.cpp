@@ -106,4 +106,10 @@ Nodes::Node* CloneVisitor::visit(const Nodes::ComponentParameterNode* component_
       component_parameter_node->getComponentId(),
       component_parameter_node->getComponentName());
 }
+
+std::string CloneVisitor::name() const
+{
+    return "CloneVisitor";
+}
+
 } // namespace Antares::Solver::Visitors

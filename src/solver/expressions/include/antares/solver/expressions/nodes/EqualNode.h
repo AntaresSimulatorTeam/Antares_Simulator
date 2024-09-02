@@ -31,5 +31,10 @@ class EqualNode: public ComparisonNode
 {
 public:
     using ComparisonNode::ComparisonNode;
+
+    std::string name() const override
+    {
+        return "EqualNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

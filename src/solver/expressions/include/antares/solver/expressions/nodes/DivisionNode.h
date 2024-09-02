@@ -31,5 +31,10 @@ class DivisionNode: public BinaryNode
 {
 public:
     using BinaryNode::BinaryNode;
+
+    std::string name() const override
+    {
+        return "DivisionNode";
+    }
 };
 } // namespace Antares::Solver::Nodes

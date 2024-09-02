@@ -19,8 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
-#include <memory>
+#include <string>
 
 #include <antares/solver/expressions/nodes/Leaf.h>
 
@@ -55,6 +54,11 @@ public:
     const std::string& getFieldName() const;
 
     bool operator==(const PortFieldNode& other) const = default;
+
+    std::string name() const override
+    {
+        return "PortFieldNode";
+    }
 
 private:
     std::string port_name_;

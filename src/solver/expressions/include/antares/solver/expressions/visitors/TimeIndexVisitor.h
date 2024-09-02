@@ -29,7 +29,7 @@ namespace Antares::Solver::Visitors
  * @brief Represents a visitor for determining the time and scenario dependency of nodes in a syntax
  * tree.
  */
-class TimeIndexVisitor: public Nodes::NodeVisitor<TimeIndex>
+class TimeIndexVisitor: public NodeVisitor<TimeIndex>
 {
 public:
     /**
@@ -38,6 +38,8 @@ public:
      * @param context The context containing the time index for each node.
      */
     explicit TimeIndexVisitor(std::unordered_map<const Nodes::Node*, TimeIndex> context);
+
+    std::string name() const override;
 
 private:
     std::unordered_map<const Nodes::Node*, TimeIndex> context_;

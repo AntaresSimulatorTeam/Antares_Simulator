@@ -78,4 +78,12 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
     // not implemented
     BOOST_CHECK(*component == *component_original);
 }
+
+BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_name, Registry<Node>)
+{
+    SubstitutionContext ctx;
+
+    SubstitutionVisitor substitutionVisitor(*this, ctx);
+    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "SubstitutionVisitor");
+}
 BOOST_AUTO_TEST_SUITE_END()

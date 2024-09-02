@@ -284,4 +284,10 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
 }
+
+BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, Registry<Node>)
+{
+    LinearityVisitor linearityVisitor;
+    BOOST_CHECK_EQUAL(linearityVisitor.name(), "LinearityVisitor");
+}
 BOOST_AUTO_TEST_SUITE_END()

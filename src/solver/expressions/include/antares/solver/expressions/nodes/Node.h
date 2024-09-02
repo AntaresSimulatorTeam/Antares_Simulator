@@ -19,16 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <antares/solver/expressions/IName.h>
 
 namespace Antares::Solver::Nodes
 {
 /**
  * @brief Base class for nodes in a syntax tree.
  */
-class Node
+class Node: public IName
 {
 public:
     virtual ~Node() = default;
-    bool operator==(const Node& other) const = default;
 };
 } // namespace Antares::Solver::Nodes

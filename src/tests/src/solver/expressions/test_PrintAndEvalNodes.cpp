@@ -190,10 +190,33 @@ BOOST_FIXTURE_TEST_CASE(division_by_zero, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "(22.000000/0.000000)");
     EvalVisitor evalVisitor;
 
-    BOOST_CHECK_EXCEPTION(evalVisitor.dispatch(div),
-                          EvalVisitorDivisionException,
-                          [](const EvalVisitorDivisionException& ex)
-                          { return strcmp(ex.what(), "DivisionNode Division by zero") == 0; });
+    BOOST_CHECK_THROW(evalVisitor.dispatch(div), EvalVisitorDivisionException);
+}
+
+BOOST_AUTO_TEST_CASE(DivisionNodeFull)
+{
+    EvalVisitor evalVisitor;
+    LiteralNode literalNode1(23.);
+    LiteralNode literalNode2(-23.);
+
+    DivisionNode divisionNode1(&literalNode1, &literalNode1);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&divisionNode1), 1.0);
+
+    DivisionNode divisionNode2(&literalNode1, &literalNode2);
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&divisionNode2), -1.0);
+
+    LiteralNode* literalNull = nullptr;
+
+    DivisionNode divisionNode3(&literalNode1, literalNull);
+
+    BOOST_CHECK_THROW(evalVisitor.dispatch(&divisionNode3), InvalidNode);
+
+    // truncated to zero
+    LiteralNode literalVerySmall(1.e-324);
+
+    DivisionNode divisionNode4(&literalNode1, &literalVerySmall);
+
+    BOOST_CHECK_THROW(evalVisitor.dispatch(&divisionNode4), EvalVisitorDivisionException);
 }
 
 BOOST_FIXTURE_TEST_CASE(subtraction_node, Registry<Node>)
@@ -239,4 +262,33 @@ BOOST_AUTO_TEST_CASE(invalidNode)
     BOOST_CHECK_THROW(evalVisitor.dispatch(null_node), InvalidNode);
 }
 
+BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, Registry<Node>)
+{
+    LiteralNode literalNode(23.);
+    std::string component_id("id");
+    std::string name("name");
+    std::vector<Node*> nodes = {create<EqualNode>(&literalNode, &literalNode),
+                                create<LessThanOrEqualNode>(&literalNode, &literalNode),
+                                create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
+                                create<PortFieldNode>(name, name),
+                                create<ComponentParameterNode>(component_id, name),
+                                create<ComponentVariableNode>(component_id, name)};
+    EvalVisitor evalVisitor;
+    for (auto* node: nodes)
+    {
+        BOOST_CHECK_THROW(evalVisitor.dispatch(node), EvalVisitorNotImplemented);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(PrintVisitor_name)
+{
+    PrintVisitor printVisitor;
+    BOOST_CHECK_EQUAL(printVisitor.name(), "PrintVisitor");
+}
+
+BOOST_AUTO_TEST_CASE(EvalVisitor_name)
+{
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_EQUAL(evalVisitor.name(), "EvalVisitor");
+}
 BOOST_AUTO_TEST_SUITE_END()
