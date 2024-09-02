@@ -2,6 +2,7 @@ var dir_041db6ad6a3d44280e40e5af409429cb =
 [
     [ "application", "dir_bac1b05bbeb3d17522a3d266590990b3.html", "dir_bac1b05bbeb3d17522a3d266590990b3" ],
     [ "constraints-builder", "dir_e2dcf5f5ac4dde05619987932da1c609.html", "dir_e2dcf5f5ac4dde05619987932da1c609" ],
+    [ "expressions", "dir_0aee2537bb9bfdf74d4f1bc27c62cfd4.html", "dir_0aee2537bb9bfdf74d4f1bc27c62cfd4" ],
     [ "hydro", "dir_12cab7512ff0ffecffb5b6d80fa7bd44.html", "dir_12cab7512ff0ffecffb5b6d80fa7bd44" ],
     [ "infeasible-problem-analysis", "dir_ccb0271c3f5d8205cf5104e2cff46f15.html", "dir_ccb0271c3f5d8205cf5104e2cff46f15" ],
     [ "lps", "dir_95a34b81c2d7722f5d2cb7eb312a7fa8.html", "dir_95a34b81c2d7722f5d2cb7eb312a7fa8" ],

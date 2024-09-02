@@ -172,11 +172,14 @@ var searchData=
   ['studyversion_169',['StudyVersion',['../classAntares_1_1Data_1_1StudyVersion.html',1,'Antares::Data']]],
   ['studywithbconcluster_170',['StudyWithBConCluster',['../structStudyWithBConCluster.html',1,'']]],
   ['studywithbconlink_171',['StudyWithBConLink',['../structStudyWithBConLink.html',1,'']]],
-  ['suffixareaname_172',['SuffixAreaName',['../classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html',1,'Antares::Action::Settings']]],
-  ['suffixconstraintname_173',['SuffixConstraintName',['../classAntares_1_1Action_1_1Settings_1_1SuffixConstraintName.html',1,'Antares::Action::Settings']]],
-  ['suffixplantname_174',['SuffixPlantName',['../classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html',1,'Antares::Action::Settings']]],
-  ['summary_175',['Summary',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html',1,'Antares::Component::Datagrid::Renderer::Links']]],
-  ['surveyresults_176',['SurveyResults',['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html',1,'Antares::Solver::Variable']]],
-  ['surveyresultsdata_177',['SurveyResultsData',['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html',1,'Antares::Solver::Variable::Private']]],
-  ['systemmemorylogger_178',['SystemMemoryLogger',['../classSystemMemoryLogger.html',1,'']]]
+  ['substitutioncontext_172',['SubstitutionContext',['../structAntares_1_1Solver_1_1Visitors_1_1SubstitutionContext.html',1,'Antares::Solver::Visitors']]],
+  ['substitutionvisitor_173',['SubstitutionVisitor',['../classAntares_1_1Solver_1_1Visitors_1_1SubstitutionVisitor.html',1,'Antares::Solver::Visitors']]],
+  ['subtractionnode_174',['SubtractionNode',['../classAntares_1_1Solver_1_1Nodes_1_1SubtractionNode.html',1,'Antares::Solver::Nodes']]],
+  ['suffixareaname_175',['SuffixAreaName',['../classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html',1,'Antares::Action::Settings']]],
+  ['suffixconstraintname_176',['SuffixConstraintName',['../classAntares_1_1Action_1_1Settings_1_1SuffixConstraintName.html',1,'Antares::Action::Settings']]],
+  ['suffixplantname_177',['SuffixPlantName',['../classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html',1,'Antares::Action::Settings']]],
+  ['summary_178',['Summary',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html',1,'Antares::Component::Datagrid::Renderer::Links']]],
+  ['surveyresults_179',['SurveyResults',['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html',1,'Antares::Solver::Variable']]],
+  ['surveyresultsdata_180',['SurveyResultsData',['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html',1,'Antares::Solver::Variable::Private']]],
+  ['systemmemorylogger_181',['SystemMemoryLogger',['../classSystemMemoryLogger.html',1,'']]]
 ];
