@@ -67,7 +67,7 @@ struct NodeVisitsProvider
     }
 };
 
-class InvalidNode: std::invalid_argument
+class InvalidNode: public std::invalid_argument
 {
 public:
     explicit InvalidNode():
