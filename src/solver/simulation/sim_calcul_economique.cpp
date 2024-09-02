@@ -521,7 +521,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                   weekFirstDay);
             }
 
-            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
+            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
             {
                 if (area.hydro.hardBoundsOnRuleCurves
                     && problem.CaracteristiquesHydrauliques[k].SuiviNiveauHoraire)
@@ -648,7 +648,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               = +hourlyLoad
                 - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
-            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
+            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
             {
                 problem.CaracteristiquesHydrauliques[k]
                   .ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
@@ -673,7 +673,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     {
         for (uint k = 0; k < nbPays; ++k)
         {
-            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
+            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
             {
                 auto& area = *study.areas.byIndex[k];
                 const auto& scratchpad = scratchmap.at(&area);

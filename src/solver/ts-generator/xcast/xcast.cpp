@@ -325,7 +325,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
             pNewMonth = true;
 
-            pCorrMonth = pData.correlation[realmonth];
+            pCorrMonth = &pData.correlation[realmonth];
 
             for (uint s = 0; s != processCount; ++s)
             {

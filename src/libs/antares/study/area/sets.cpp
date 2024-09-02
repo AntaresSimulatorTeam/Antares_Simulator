@@ -18,57 +18,41 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIBS_STUDY_SETS_HXX__
-#define __ANTARES_LIBS_STUDY_SETS_HXX__
+#include "antares/study/sets.h"
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-template<class T>
-inline Sets<T>::Sets():
-    pModified(false)
-{
-}
-
-template<class T>
-inline Sets<T>::Sets(const Sets& rhs):
+Sets::Sets(const Sets& rhs):
     pMap(rhs.pMap),
-    pOptions(rhs.pOptions),
-    pModified(false)
+    pOptions(rhs.pOptions)
 {
-    if (rhs.pByIndex)
+    if (rhs.pByIndex.size())
     {
         rebuildIndexes();
     }
 }
 
-template<class T>
-typename Sets<T>::iterator Sets<T>::begin()
+Sets::iterator Sets::begin()
 {
     return pMap.begin();
 }
 
-template<class T>
-typename Sets<T>::const_iterator Sets<T>::begin() const
+Sets::const_iterator Sets::begin() const
 {
     return pMap.begin();
 }
 
-template<class T>
-typename Sets<T>::iterator Sets<T>::end()
+Sets::iterator Sets::end()
 {
     return pMap.end();
 }
 
-template<class T>
-typename Sets<T>::const_iterator Sets<T>::end() const
+Sets::const_iterator Sets::end() const
 {
     return pMap.end();
 }
 
-template<class T>
-void Sets<T>::clear()
+void Sets::clear()
 {
     pByIndex.clear();
     pNameByIndex.clear();
@@ -76,36 +60,30 @@ void Sets<T>::clear()
     pOptions.clear();
 }
 
-template<class T>
-inline T& Sets<T>::operator[](uint i)
+Sets::SetAreasType& Sets::operator[](uint i)
 {
     assert(i < pMap.size() && "Sets: operator[] index out of bounds");
     return *(pByIndex[i]);
 }
 
-template<class T>
-inline const T& Sets<T>::operator[](uint i) const
+const Sets::SetAreasType& Sets::operator[](uint i) const
 {
     assert(i < pMap.size() && "Sets: operator[] index out of bounds");
     return *(pByIndex[i]);
 }
 
-template<class T>
-template<class L>
-void Sets<T>::dumpToLogs(L& log) const
+void Sets::dumpToLogs() const
 {
     using namespace Yuni;
-    const typename MapType::const_iterator end = pMap.end();
-    for (typename MapType::const_iterator i = pMap.begin(); i != end; ++i)
+    for (const auto& [setId, set]: pMap)
     {
-        log.info() << "   found `" << i->first << "` (" << (uint)i->second->size() << ' '
-                   << (i->second->size() < 2 ? "item" : "items")
-                   << ((!hasOutput(i->first)) ? ", no output" : "") << ')';
+        logs.info() << "   found `" << setId << "` (" << set->size() << ' '
+                    << (set->size() < 2 ? "item" : "items")
+                    << ((!hasOutput(setId)) ? ", no output" : "") << ')';
     }
 }
 
-template<class T>
-void Sets<T>::defaultForAreas()
+void Sets::defaultForAreas()
 {
     using namespace Yuni;
     clear();
@@ -113,23 +91,21 @@ void Sets<T>::defaultForAreas()
     opts.caption = "All areas";
     opts.comments = "Spatial aggregates on all areas";
     opts.output = false;
-    opts.rules.push_back(Rule(ruleFilter, new String("add-all")));
-    auto item = std::make_shared<T>();
-    add("all areas", item, opts);
+    opts.rules.emplace_back(ruleFilter, "add-all");
+    auto district = std::make_shared<SetAreasType>();
+    add("all areas", district, opts);
 }
 
-template<class T>
-YString Sets<T>::toString()
+YString Sets::toString()
 {
     using namespace Yuni;
     using namespace Antares;
     static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
-    const auto end = pOptions.cend();
     YString ret = "";
-    for (auto i = pOptions.cbegin(); i != end; ++i)
+    for (const auto& [setId, options]: pOptions)
     {
-        const Options& opts = i->second;
-        ret << '[' << i->first << "]\n";
+        const Options& opts = options;
+        ret << '[' << setId << "]\n";
         ret << "caption = " << opts.caption << '\n';
         if (not opts.comments.empty())
         {
@@ -150,13 +126,8 @@ YString Sets<T>::toString()
     return ret;
 }
 
-template<class T>
-template<class StringT>
-bool Sets<T>::saveToFile(const StringT& filename) const
+bool Sets::saveToFile(const Yuni::String& filename) const
 {
-    using namespace Yuni;
-    using namespace Antares;
-
     Yuni::IO::File::Stream file;
     if (!file.open(filename, Yuni::IO::OpenMode::write | Yuni::IO::OpenMode::truncate))
     {
@@ -190,8 +161,7 @@ bool Sets<T>::saveToFile(const StringT& filename) const
     return true;
 }
 
-template<class T>
-bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
+bool Sets::loadFromFile(const std::filesystem::path& filename)
 {
     using namespace Yuni;
     using namespace Antares;
@@ -221,7 +191,7 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
             }
 
             // Creating a new section
-            auto item = std::make_shared<T>();
+            auto district = std::make_shared<SetAreasType>();
             Options opts;
             opts.caption = section->name;
 
@@ -239,17 +209,17 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
 
                 if (p->key == "+")
                 {
-                    opts.rules.push_back(Rule(ruleAdd, new String(value)));
+                    opts.rules.emplace_back(ruleAdd, value.to<std::string>());
                     continue;
                 }
                 if (p->key == "-")
                 {
-                    opts.rules.push_back(Rule(ruleRemove, new String(value)));
+                    opts.rules.emplace_back(ruleRemove, value.to<std::string>());
                     continue;
                 }
                 if (p->key == "apply-filter")
                 {
-                    opts.rules.push_back(Rule(ruleFilter, new String(value)));
+                    opts.rules.emplace_back(ruleFilter, value.to<std::string>());
                     continue;
                 }
                 if (p->key == "output")
@@ -276,7 +246,7 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
             // Add the new group
             IDType newid = section->name;
             newid.toLower();
-            add(newid, item, opts);
+            add(newid, district, opts);
         }
 
         // Not modified anymore
@@ -288,31 +258,28 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
     return false;
 }
 
-template<class T>
-template<class HandlerT>
-inline void Sets<T>::rebuildAllFromRules(HandlerT& handler)
+void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
 {
-    for (uint i = 0; i != pMap.size(); ++i)
+    for (const auto& setId: pNameByIndex)
     {
-        rebuildFromRules(pNameByIndex[i], handler);
+        rebuildFromRules(setId, handler);
     }
 }
 
-template<class T>
-template<class HandlerT>
-void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
+void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
 {
     using namespace Yuni;
     using namespace Antares;
 
-    typename MapOptions::iterator i = pOptions.find(id);
-    if (i == pOptions.end())
+    const auto pair = pOptions.find(id);
+    if (pair == pOptions.end())
     {
         return;
     }
+
     // Options
-    Options& opts = i->second;
-    Type& set = *(pMap[id]);
+    Options& opts = pair->second;
+    auto& set = *(pMap[id]);
 
     // Clear the result first
     handler.clear(set);
@@ -320,23 +287,20 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
     for (uint i = 0; i != opts.rules.size(); ++i)
     {
         const Rule& rule = opts.rules[i];
-        const Yuni::String& arg = *(rule.second);
+        const std::string name = rule.second;
         switch (rule.first) // type
         {
         case ruleAdd:
         {
             // Trying to add a single item
-            if (!handler.add(set, arg))
+            if (!handler.add(set, name))
             {
                 // Failed. Maybe the argument references another group
-                const IDType other = arg;
-                typename MapType::iterator i = pMap.find(other);
+                const IDType other = name;
+                MapType::iterator i = pMap.find(other);
                 if (i != pMap.end())
                 {
-                    if (handler.add(set, *(i->second)))
-                    {
-                        break;
-                    }
+                    handler.add(set, *(i->second));
                 }
             }
             break;
@@ -344,24 +308,21 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
         case ruleRemove:
         {
             // Trying to remove a single item
-            if (!handler.remove(set, arg))
+            if (!handler.remove(set, name))
             {
                 // Failed. Maybe the argument references another group
-                const IDType other = arg;
-                typename MapType::iterator i = pMap.find(other);
+                const IDType other = name;
+                MapType::iterator i = pMap.find(other);
                 if (i != pMap.end())
                 {
-                    if (handler.remove(set, *(i->second)))
-                    {
-                        break;
-                    }
+                    handler.remove(set, *(i->second));
                 }
             }
             break;
         }
         case ruleFilter:
         {
-            handler.applyFilter(set, arg);
+            handler.applyFilter(set, name);
             break;
         }
         case ruleNone:
@@ -379,85 +340,125 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
                  << " rules, got " << opts.resultSize << " items";
 }
 
-template<class T>
-void Sets<T>::rebuildIndexes()
+void Sets::rebuildIndexes()
 {
     pNameByIndex.clear();
-    pByIndex.clear();
+    pNameByIndex.resize(pMap.size());
 
-    if (!pMap.empty())
+    pByIndex.clear();
+    pByIndex.resize(pMap.size());
+
+    uint index = 0;
+    for (const auto& [setId, set]: pMap)
     {
-        pByIndex.resize(pMap.size());
-        pNameByIndex.resize(pMap.size());
-        const typename MapType::iterator end = pMap.end();
-        uint index = 0;
-        for (typename MapType::iterator i = pMap.begin(); i != end; ++i)
-        {
-            pByIndex[index] = i->second;
-            pNameByIndex[index] = i->first;
-            ++index;
-        }
+        pByIndex[index] = set;
+        pNameByIndex[index] = setId;
+        ++index;
     }
 }
 
-template<class T>
-template<class StringT>
-inline bool Sets<T>::hasOutput(const StringT& s) const
+bool Sets::hasOutput(const Yuni::ShortString128& s) const
 {
-    // Assert, if a C* container can not be found at compile time
-    static_assert(Yuni::Traits::CString<StringT>::valid);
-
-    typename MapOptions::const_iterator i = pOptions.find(s);
-    return (i != pOptions.end()) ? i->second.output : false;
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.output : false;
 }
 
-template<class T>
-inline bool Sets<T>::hasOutput(const uint index) const
+bool Sets::hasOutput(const uint index) const
 {
     return hasOutput(IDType(pNameByIndex[index]));
 }
 
-template<class T>
-template<class StringT>
-inline uint Sets<T>::resultSize(const StringT& s) const
+uint Sets::resultSize(const Yuni::ShortString128& s) const
 {
-    // Assert, if a C* container can not be found at compile time
-    static_assert(Yuni::Traits::CString<StringT>::valid);
-
-    typename MapOptions::const_iterator i = pOptions.find(s);
-    return (i != pOptions.end()) ? i->second.resultSize : 0;
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.resultSize : 0;
 }
 
-template<class T>
-template<class StringT>
-inline typename Sets<T>::IDType Sets<T>::caption(const StringT& s) const
+Sets::IDType Sets::caption(const Yuni::ShortString128& s) const
 {
-    // Assert, if a C* container can not be found at compile time
-    static_assert(Yuni::Traits::CString<StringT>::valid);
-
-    typename MapOptions::const_iterator i = pOptions.find(s);
-    return (i != pOptions.end()) ? i->second.caption : IDType();
+    const auto pair = pOptions.find(s);
+    return (pair != pOptions.end()) ? pair->second.caption : IDType();
 }
 
-template<class T>
-inline typename Sets<T>::IDType Sets<T>::caption(const uint i) const
+Sets::IDType Sets::caption(const uint i) const
 {
     return caption(IDType(pNameByIndex[i]));
 }
 
-template<class T>
-inline uint Sets<T>::resultSize(const uint index) const
+uint Sets::resultSize(const uint index) const
 {
     return resultSize(IDType(pNameByIndex[index]));
 }
 
-template<class T>
-inline uint Sets<T>::size() const
+uint Sets::size() const
 {
     return (uint)pMap.size();
 }
 
-} // namespace Data
-} // namespace Antares
+SetHandlerAreas::SetHandlerAreas(AreaList& areas):
+    areas_(areas)
+{
+}
 
-#endif // __ANTARES_LIBS_STUDY_SETS_HXX__
+void SetHandlerAreas::clear(Sets::SetAreasType& set)
+{
+    set.clear();
+}
+
+uint SetHandlerAreas::size(Sets::SetAreasType& set)
+{
+    return (uint)set.size();
+}
+
+bool SetHandlerAreas::add(Sets::SetAreasType& set, const std::string& value)
+{
+    Area* area = AreaListLFind(&areas_, value.c_str());
+    if (area)
+    {
+        set.insert(area);
+        return true;
+    }
+    return false;
+}
+
+void SetHandlerAreas::add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
+{
+    set.insert(otherSet.begin(), otherSet.end());
+}
+
+bool SetHandlerAreas::remove(Sets::SetAreasType& set, const std::string& value)
+{
+    Area* area = AreaListLFind(&areas_, value.c_str());
+    if (area)
+    {
+        set.erase(area);
+        return true;
+    }
+    return false;
+}
+
+void SetHandlerAreas::remove(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet)
+{
+    std::ranges::for_each(otherSet, [&set](auto* area) { set.erase(area); });
+}
+
+bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string& value)
+{
+    if (value == "add-all")
+    {
+        for (const auto& [areaName, area]: areas_)
+        {
+            set.insert(area);
+        }
+        return true;
+    }
+
+    if (value == "remove-all")
+    {
+        set.clear();
+        return true;
+    }
+    return false;
+}
+
+} // namespace Antares::Data

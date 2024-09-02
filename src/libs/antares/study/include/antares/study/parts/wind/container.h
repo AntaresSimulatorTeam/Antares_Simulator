@@ -41,7 +41,7 @@ public:
     */
     Container();
     //! Destructor
-    ~Container();
+    ~Container() = default;
     //@}
 
     /*!
@@ -64,9 +64,8 @@ public:
     */
     uint64_t memoryUsage() const;
 
-public:
     //! Data for the pre-processor
-    Data::Wind::Prepro* prepro;
+    std::unique_ptr<Data::Wind::Prepro> prepro;
 
     TimeSeriesNumbers tsNumbers;
 

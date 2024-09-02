@@ -33,7 +33,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     logs.applicationName("k-cbuild");
     if (argc < 2)
@@ -121,7 +121,7 @@ static void NotEnoughMemory()
     logs.fatal() << "Not enough memory. aborting.";
 }
 
-bool initResources(int argc, char* argv[])
+bool initResources(int argc, const char* argv[])
 {
     std::set_new_handler(&NotEnoughMemory);
 

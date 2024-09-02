@@ -134,7 +134,7 @@ bool FindExampleFolder(Yuni::String& folder)
     return false;
 }
 
-void Initialize(int argc, char** argv, bool initializeSearchPath)
+void Initialize(int argc, const char** argv, bool initializeSearchPath)
 {
     if (argc < 1 or !argv[0])
     {

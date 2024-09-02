@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -34,36 +33,15 @@ FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path):
 {
 }
 
-namespace
-{
-/**
- * @brief Prepares arguments for the Antares Solver application.
- *
- * This function prepares the arguments required by the Antares Solver application.
- * It takes a span of char pointers and a string_view representing the study path.
- * The function creates copies of the required arguments and stores them in a vector.
- * The original char pointers in the span are updated to point to the newly created copies.
- * Lifetime of values inside argv is determined be the content of the returned vector
- *
- * @param argv A span of char pointers to be filled with the prepared arguments.
- * @param study_path A string_view representing the study path.
- * @return std::vector<std::string> A vector of strings containing the prepared arguments.
- */
-void prepareArgs(std::array<char*, 2>& argv, std::span<std::string> data)
-{
-    argv[0] = data[0].data();
-    argv[1] = data[1].data();
-}
-} // namespace
-
 std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
 {
     using namespace std::literals::string_literals;
     Antares::Solver::Application application;
-    constexpr unsigned int argc = 2;
-    std::array<std::string, 2> keep_alive{""s, study_path_.string()};
-    std::array<char*, argc> argv;
-    prepareArgs(argv, keep_alive);
+    constexpr unsigned int argc = 3;
+    // On Windows, std::filesystem::path::value_type is wchar_t
+    std::array<const char*, argc> argv{"",
+                                       reinterpret_cast<const char*>(study_path_.c_str()),
+                                       "--parallel"};
     application.prepare(argc, argv.data());
 
     return application.acquireStudy();
