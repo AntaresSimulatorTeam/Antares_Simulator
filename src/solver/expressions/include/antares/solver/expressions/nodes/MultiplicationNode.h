@@ -24,6 +24,9 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a multiplication node in a syntax tree.
+ */
 class MultiplicationNode: public BinaryNode
 {
 public:

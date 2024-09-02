@@ -28,5 +28,6 @@ class IName
 public:
     virtual ~IName() = default;
     virtual std::string name() const = 0;
+    bool operator==(const IName& other) const = default;
 };
 } // namespace Antares::Solver

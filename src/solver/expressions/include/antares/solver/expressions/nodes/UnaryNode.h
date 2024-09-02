@@ -24,13 +24,29 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a unary node in a syntax tree.
+ */
 class UnaryNode: public Node
 {
 public:
-    explicit UnaryNode(Node* n1);
+    /**
+     * @brief Constructs a unary node with the specified child.
+     *
+     * @param child The child node.
+     */
+    explicit UnaryNode(Node* child);
+    /**
+     * @brief Retrieves a pointer to the child node.
+     *
+     * @return A pointer to the child node.
+     */
     Node* child() const;
 
 private:
+    /**
+     * @brief A pointer to the child node.
+     */
     Node* child_ = nullptr;
 };
 } // namespace Antares::Solver::Nodes

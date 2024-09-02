@@ -30,25 +30,25 @@ EvalVisitor::EvalVisitor(EvaluationContext context):
 {
 }
 
-double EvalVisitor::visit(const Nodes::AddNode& node)
+double EvalVisitor::visit(const Nodes::AddNode* node)
 {
-    return dispatch(*node.left()) + dispatch(*node.right());
+    return dispatch(node->left()) + dispatch(node->right());
 }
 
-double EvalVisitor::visit(const Nodes::SubtractionNode& node)
+double EvalVisitor::visit(const Nodes::SubtractionNode* node)
 {
-    return dispatch(*node.left()) - dispatch(*node.right());
+    return dispatch(node->left()) - dispatch(node->right());
 }
 
-double EvalVisitor::visit(const Nodes::MultiplicationNode& node)
+double EvalVisitor::visit(const Nodes::MultiplicationNode* node)
 {
-    return dispatch(*node.left()) * dispatch(*node.right());
+    return dispatch(node->left()) * dispatch(node->right());
 }
 
-double EvalVisitor::visit(const Nodes::DivisionNode& node)
+double EvalVisitor::visit(const Nodes::DivisionNode* node)
 {
-    double left = dispatch(*node.left());
-    double right = dispatch(*node.right());
+    double left = dispatch(node->left());
+    double right = dispatch(node->right());
     double result = 0.;
     try
     {
@@ -65,54 +65,54 @@ double EvalVisitor::visit(const Nodes::DivisionNode& node)
     return result;
 }
 
-double EvalVisitor::visit(const Nodes::EqualNode& node)
+double EvalVisitor::visit(const Nodes::EqualNode* node)
 {
-    throw NotImplemented(*this, node);
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::LessThanOrEqualNode& node)
+double EvalVisitor::visit(const Nodes::LessThanOrEqualNode* node)
 {
-    throw NotImplemented(*this, node);
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
+double EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
-    throw NotImplemented(*this, node);
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::VariableNode& node)
+double EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    return context_.getVariableValue(node.value());
+    return context_.getVariableValue(node->value());
 }
 
-double EvalVisitor::visit(const Nodes::ParameterNode& node)
+double EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
-    return context_.getParameterValue(node.value());
+    return context_.getParameterValue(node->value());
 }
 
-double EvalVisitor::visit(const Nodes::LiteralNode& node)
+double EvalVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return node.value();
+    return node->value();
 }
 
-double EvalVisitor::visit(const Nodes::NegationNode& node)
+double EvalVisitor::visit(const Nodes::NegationNode* node)
 {
-    return -dispatch(*node.child());
+    return -dispatch(node->child());
 }
 
-double EvalVisitor::visit(const Nodes::PortFieldNode& node)
+double EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw NotImplemented(*this, node);
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentVariableNode& node)
+double EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
 {
-    throw NotImplemented(*this, node);
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
-double EvalVisitor::visit(const Nodes::ComponentParameterNode& node)
+double EvalVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
-    throw NotImplemented(*this, node);
+    throw EvalVisitorNotImplemented(name(), node->name());
 }
 
 std::string EvalVisitor::name() const
@@ -125,6 +125,12 @@ EvalVisitorDivisionException::EvalVisitorDivisionException(double left,
                                                            const std::string& message):
     std::runtime_error("DivisionNode: Error while evaluating : " + std::to_string(left) + "/"
                        + std::to_string(right) + " " + message)
+{
+}
+
+EvalVisitorNotImplemented::EvalVisitorNotImplemented(const std::string& visitor,
+                                                     const std::string& node):
+    std::invalid_argument("Visitor" + visitor + " not implemented for node type " + node)
 {
 }
 } // namespace Antares::Solver::Visitors

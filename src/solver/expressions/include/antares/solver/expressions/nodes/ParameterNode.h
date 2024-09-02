@@ -6,6 +6,9 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a parameter node in a syntax tree, storing a string value.
+ */
 class ParameterNode final: public Leaf<std::string>
 {
 public:

@@ -25,76 +25,76 @@
 
 namespace Antares::Solver::Visitors
 {
-std::string PrintVisitor::visit(const Nodes::AddNode& node)
+std::string PrintVisitor::visit(const Nodes::AddNode* node)
 {
     // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
     // sinon erreur de compil 'fonction non trouvée'
-    return "(" + dispatch(*node.left()) + "+" + dispatch(*node.right()) + ")";
+    return "(" + dispatch(node->left()) + "+" + dispatch(node->right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::SubtractionNode& node)
+std::string PrintVisitor::visit(const Nodes::SubtractionNode* node)
 {
-    return "(" + dispatch(*node.left()) + "-" + dispatch(*node.right()) + ")";
+    return "(" + dispatch(node->left()) + "-" + dispatch(node->right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::MultiplicationNode& node)
+std::string PrintVisitor::visit(const Nodes::MultiplicationNode* node)
 {
-    return "(" + dispatch(*node.left()) + "*" + dispatch(*node.right()) + ")";
+    return "(" + dispatch(node->left()) + "*" + dispatch(node->right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::DivisionNode& node)
+std::string PrintVisitor::visit(const Nodes::DivisionNode* node)
 {
-    return "(" + dispatch(*node.left()) + "/" + dispatch(*node.right()) + ")";
+    return "(" + dispatch(node->left()) + "/" + dispatch(node->right()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::EqualNode& node)
+std::string PrintVisitor::visit(const Nodes::EqualNode* node)
 {
-    return dispatch(*node.left()) + "==" + dispatch(*node.right());
+    return dispatch(node->left()) + "==" + dispatch(node->right());
 }
 
-std::string PrintVisitor::visit(const Nodes::LessThanOrEqualNode& node)
+std::string PrintVisitor::visit(const Nodes::LessThanOrEqualNode* node)
 {
-    return dispatch(*node.left()) + "<=" + dispatch(*node.right());
+    return dispatch(node->left()) + "<=" + dispatch(node->right());
 }
 
-std::string PrintVisitor::visit(const Nodes::GreaterThanOrEqualNode& node)
+std::string PrintVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 {
-    return dispatch(*node.left()) + ">=" + dispatch(*node.right());
+    return dispatch(node->left()) + ">=" + dispatch(node->right());
 }
 
-std::string PrintVisitor::visit(const Nodes::NegationNode& node)
+std::string PrintVisitor::visit(const Nodes::NegationNode* node)
 {
-    return "-(" + dispatch(*node.child()) + ")";
+    return "-(" + dispatch(node->child()) + ")";
 }
 
-std::string PrintVisitor::visit(const Nodes::ParameterNode& node)
+std::string PrintVisitor::visit(const Nodes::ParameterNode* node)
 {
-    return node.value();
+    return node->value();
 }
 
-std::string PrintVisitor::visit(const Nodes::VariableNode& node)
+std::string PrintVisitor::visit(const Nodes::VariableNode* node)
 {
-    return node.value();
+    return node->value();
 }
 
-std::string PrintVisitor::visit(const Nodes::LiteralNode& node)
+std::string PrintVisitor::visit(const Nodes::LiteralNode* node)
 {
-    return std::to_string(node.value());
+    return std::to_string(node->value());
 }
 
-std::string PrintVisitor::visit(const Nodes::PortFieldNode& node)
+std::string PrintVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    return node.getPortName() + "." + node.getFieldName();
+    return node->getPortName() + "." + node->getFieldName();
 }
 
-std::string PrintVisitor::visit(const Nodes::ComponentVariableNode& node)
+std::string PrintVisitor::visit(const Nodes::ComponentVariableNode* node)
 {
-    return node.getComponentId() + "." + node.getComponentName();
+    return node->getComponentId() + "." + node->getComponentName();
 }
 
-std::string PrintVisitor::visit(const Nodes::ComponentParameterNode& node)
+std::string PrintVisitor::visit(const Nodes::ComponentParameterNode* node)
 {
-    return node.getComponentId() + "." + node.getComponentName();
+    return node->getComponentId() + "." + node->getComponentName();
 }
 
 std::string PrintVisitor::name() const

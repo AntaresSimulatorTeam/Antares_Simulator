@@ -24,6 +24,9 @@
 
 namespace Antares::Solver::Nodes
 {
+/**
+ * @brief Represents a comparison node in a syntax tree.
+ */
 class ComparisonNode: public BinaryNode
 {
 public:
