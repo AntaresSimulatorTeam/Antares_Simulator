@@ -84,6 +84,7 @@ nav:
     - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
     - 'Antares website': 'https://antares-simulator.org'
     - 'RTE website': 'http://www.rte-france.com/'
+  - 'Help': 'https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/new?template=support_request.md'
 
 
 plugins:
