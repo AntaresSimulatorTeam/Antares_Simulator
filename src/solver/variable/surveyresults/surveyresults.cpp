@@ -535,7 +535,7 @@ SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWrite
     // captions
     for (uint i = 0; i != captionCount; ++i)
     {
-        captions[i].resize(maxVariables);
+        captions[i] = new CaptionType[maxVariables];
     }
 
     // precision
@@ -568,6 +568,10 @@ SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWrite
 
 SurveyResults::~SurveyResults()
 {
+    for (uint i = 0; i != captionCount; ++i)
+    {
+        delete[] captions[i];
+    }
     delete[] precision;
     delete[] nonApplicableStatus;
     for (uint i = 0; i < digestSize; i++)

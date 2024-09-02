@@ -101,7 +101,7 @@ public:
     static constexpr unsigned captionCount = 3;
 
     //! Array to store all variable names
-    std::array<std::vector<CaptionType>, captionCount> captions;
+    std::array<CaptionType*, captionCount> captions;
 
     //! Precision to for each column (in the printf format)
     PrecisionType* precision;
