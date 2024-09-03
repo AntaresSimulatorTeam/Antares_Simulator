@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('economy_8h_source.html',''); initResiz
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __SOLVER_SIMULATION_ECONOMY_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;antares/infoCollection/StudyInfoCollector.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;antares/solver/optimisation/base_weekly_optimization.h&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;antares/solver/optimisation/weekly_optimization.h&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;antares/solver/simulation/opt_time_writer.h&quot;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/solver/simulation/solver.h&quot;</span> <span class="comment">// for definition of type yearRandomNumbers</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/all.h&quot;</span></div>
@@ -228,17 +228,16 @@ $(document).ready(function(){initNavTree('economy_8h_source.html',''); initResiz
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    uint pStartTime;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    uint pNbMaxPerformedYearsInParallel;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    std::vector&lt;PROBLEME_HEBDO&gt; pProblemesHebdo;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    std::vector&lt;std::unique_ptr&lt;Antares::Solver::Optimization::WeeklyOptimization&gt;&gt;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      weeklyOptProblems_;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::vector&lt;std::unique_ptr&lt;interfacePostProcessList&gt;&gt; postProcessesList_;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; resultWriter;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::reference_wrapper&lt;Simulation::ISimulationObserver&gt; simulationObserver_;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>}; <span class="comment">// class Economy</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    std::vector&lt;Optimization::WeeklyOptimization&gt; weeklyOptProblems_;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::vector&lt;std::unique_ptr&lt;interfacePostProcessList&gt;&gt; postProcessesList_;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; resultWriter;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    std::reference_wrapper&lt;Simulation::ISimulationObserver&gt; simulationObserver_;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>}; <span class="comment">// class Economy</span></div>
 </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_ECONOMY_H__</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_ECONOMY_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:61</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition</b> i_writer.h:34</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Progression_1_1Task_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Progression_1_1Task.html">Antares::Solver::Progression::Task</a></div><div class="ttdef"><b>Definition</b> progression.h:91</div></div>

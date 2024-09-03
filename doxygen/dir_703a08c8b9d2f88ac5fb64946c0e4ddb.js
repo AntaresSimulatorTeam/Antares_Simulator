@@ -1,9 +1,7 @@
 var dir_703a08c8b9d2f88ac5fb64946c0e4ddb =
 [
     [ "adequacy_patch_csr", "dir_d15e8aa5f3eb877dcfbcbd8563789717.html", "dir_d15e8aa5f3eb877dcfbcbd8563789717" ],
-    [ "adequacy_patch_local_matching", "dir_a59ae219a34974900c884375e57e8686.html", "dir_a59ae219a34974900c884375e57e8686" ],
     [ "constraints", "dir_673a42b4d32adff6df2ecb8198a5dc4a.html", "dir_673a42b4d32adff6df2ecb8198a5dc4a" ],
-    [ "base_weekly_optimization.h", "base__weekly__optimization_8h_source.html", null ],
     [ "HebdoProblemToLpsTranslator.h", "HebdoProblemToLpsTranslator_8h_source.html", null ],
     [ "LinearProblemMatrix.h", "LinearProblemMatrix_8h_source.html", null ],
     [ "LinearProblemMatrixStartUpCosts.h", "LinearProblemMatrixStartUpCosts_8h_source.html", null ],

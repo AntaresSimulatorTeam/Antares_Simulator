@@ -1,11 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html":[8,0,0,13,5,4,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a5bda17079787c4eb9474798450b7631d":[8,0,0,13,5,4,17,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#ab7de65c0c1c4186fe88819ff9deca6cb":[8,0,0,13,5,4,17,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#ae01e6c93433106947c49b9a119ba2b3e":[8,0,0,13,5,4,17,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#ae0ac2f7c692ed8d7cabb6adfe0554482":[8,0,0,13,5,4,17,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html":[8,0,0,13,5,4,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html#a0bdc95e61d44fec5aa6304f5c1670b1d":[8,0,0,13,5,4,18,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html#a70f7bf5476351b86f0019c7ecaa3ffbf":[8,0,0,13,5,4,18,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD.html#a89d74affff52ddde04035ddfe81a47f9":[8,0,0,13,5,4,18,1],
@@ -249,5 +243,11 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1Links.html#afeb8ccbc484446dd48456a49c5e8d46c":[8,0,0,13,5,13,4],
 "classAntares_1_1Solver_1_1Variable_1_1PrintInfosStdCout.html":[8,0,0,13,5,21],
 "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html":[8,0,0,13,5,5,0],
-"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a052b5c276b20b98eaf18696f29206fc1":[8,0,0,13,5,5,0,7]
+"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a052b5c276b20b98eaf18696f29206fc1":[8,0,0,13,5,5,0,7],
+"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a185f4b82c42321f5b2d380231b94804e":[8,0,0,13,5,5,0,0],
+"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a23ebed34c565225ec56100af9d478c61":[8,0,0,13,5,5,0,12],
+"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a52d981e42897202e7482460f92bcc806":[8,0,0,13,5,5,0,2],
+"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a533c429223962e8f113be8b75af9f69c":[8,0,0,13,5,5,0,3],
+"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a5c90e1c367fadea7702b6f188e3ef4ee":[8,0,0,13,5,5,0,11],
+"classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a796dcb713b4d8deb463919fb21e02950":[8,0,0,13,5,5,0,5]
 };

@@ -1,11 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classCsrAreaBalance.html":[8,0,73],
-"classCsrBindingConstraintHour.html":[8,0,75],
-"classCsrFlowDissociation.html":[8,0,77],
-"classDataFile.html":[8,0,79],
-"classDataFile.html#a86284bc40e81f5cbdce3615e7c59d5f9":[8,0,79,1],
-"classDataFile.html#ab2716e0f6049df57a48fe12cb9c9b23c":[8,0,79,5],
 "classDataFile.html#ac5f18dbf86956f0e73afa8634aac37e7":[8,0,79,2],
 "classDataFile.html#ad12b664847b8779728608abb1d1141f4":[8,0,79,4],
 "classDataFile.html#af097c34a61a6f81c04436500e7555c81":[8,0,79,3],
@@ -249,5 +243,11 @@ var NAVTREEINDEX18 =
 "classPMaxDispatchableGeneration.html":[8,0,177],
 "classPMaxDispatchableGeneration.html#a7d04afffc70692626007e0ea81d85c1a":[8,0,177,0],
 "classPMinDispatchableGeneration.html":[8,0,178],
-"classPMinDispatchableGeneration.html#a2d46790c674fec6498eb4a31d948e74a":[8,0,178,0]
+"classPMinDispatchableGeneration.html#a2d46790c674fec6498eb4a31d948e74a":[8,0,178,0],
+"classPMinMaxDispatchableGenerationGroup.html":[8,0,179],
+"classPMinMaxDispatchableGenerationGroup.html#ae2b413b2ff78d8568f20bbe2aafcb763":[8,0,179,0],
+"classPathList.html":[8,0,174],
+"classPathList.html#ac7b6702d14e8450145bd25f2cf06906c":[8,0,174,1],
+"classPathListIterator.html":[8,0,175],
+"classProblemConverter.html":[8,0,182]
 };

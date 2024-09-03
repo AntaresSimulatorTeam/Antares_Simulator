@@ -1,15 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html":[8,0,0,13,5,4,23,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[8,0,0,13,5,4,25,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[8,0,0,13,5,4,24,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[8,0,0,13,5,4,27,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[8,0,0,13,5,4,26,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[8,0,0,13,5,4,28,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[8,0,0,13,5,4,29,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[8,0,0,13,5,4,30,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[8,0,0,13,5,4,35,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html":[8,0,0,13,5,4,31,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics.html":[8,0,0,13,5,4,32,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant_1_1Statistics.html":[8,0,0,13,5,4,33,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant_1_1Statistics.html":[8,0,0,13,5,4,34,0],
@@ -249,5 +239,15 @@ var NAVTREEINDEX24 =
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html":[8,0,0,16,4],
 "structAntares_1_1TSGenerator_1_1Settings.html":[8,0,0,16,5],
 "structAntares_1_1TSGenerator_1_1Settings.html#a6ec5d8d2e2827a019c8ed7d1f3605959":[8,0,0,16,5,0],
-"structAntares_1_1TSGenerator_1_1Settings.html#abdce4e3fac8b79c797fb3a211b14126b":[8,0,0,16,5,1]
+"structAntares_1_1TSGenerator_1_1Settings.html#abdce4e3fac8b79c797fb3a211b14126b":[8,0,0,16,5,1],
+"structAntares_1_1TSGenerator_1_1Settings.html#ac3be8bf0b35454fac9fd90e3d510939f":[8,0,0,16,5,2],
+"structAntares_1_1TSGenerator_1_1Settings.html#aeaebfc4ee66d6615bf628d17129d02ee":[8,0,0,16,5,3],
+"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html":[8,0,0,16,6],
+"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html":[8,0,0,15,1,0,1],
+"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html":[8,0,0,15,1,0,10,0],
+"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html#a642711eb0d42db7674ccb0b2803888f3":[8,0,0,15,1,0,10,0,0],
+"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html#a9be2adf894683adc4969c5ea504d792e":[8,0,0,15,1,0,10,0,2],
+"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html#aa714de0e161dc31acf752ee721435f08":[8,0,0,15,1,0,10,0,1],
+"structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html":[8,0,0,15,1,11],
+"structAntares_1_1Toolbox_1_1Filter_1_1ResultNewInstance.html":[8,0,0,15,1,12]
 };

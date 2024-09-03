@@ -133,44 +133,23 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Optimization
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Antares::Solver::Optimization::WeeklyOptimization Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+  <div class="headertitle"><div class="title">Antares::Solver::Optimization::WeeklyOptimization Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for Antares::Solver::Optimization::WeeklyOptimization:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.png" usemap="#Antares::Solver::Optimization::WeeklyOptimization_map" alt=""/>
-  <map id="Antares::Solver::Optimization::WeeklyOptimization_map" name="Antares::Solver::Optimization::WeeklyOptimization_map">
-<area href="classAntares_1_1Solver_1_1Optimization_1_1AdequacyPatchOptimization.html" alt="Antares::Solver::Optimization::AdequacyPatchOptimization" shape="rect" coords="0,56,336,80"/>
-<area href="classAntares_1_1Solver_1_1Optimization_1_1DefaultWeeklyOptimization.html" alt="Antares::Solver::Optimization::DefaultWeeklyOptimization" shape="rect" coords="346,56,682,80"/>
-  </map>
-</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a45c1cc97d72f947a64cdea85070c38b3" id="r_a45c1cc97d72f947a64cdea85070c38b3"><td class="memItemLeft" align="right" valign="top"><a id="a45c1cc97d72f947a64cdea85070c38b3" name="a45c1cc97d72f947a64cdea85070c38b3"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>solve</b> ()=0</td></tr>
-<tr class="separator:a45c1cc97d72f947a64cdea85070c38b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6a3912ea396988d517909583b69e3e2" id="r_ad6a3912ea396988d517909583b69e3e2"><td class="memItemLeft" align="right" valign="top"><a id="ad6a3912ea396988d517909583b69e3e2" name="ad6a3912ea396988d517909583b69e3e2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>WeeklyOptimization</b> (const <a class="el" href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">OptimizationOptions</a> &amp;options, <a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *problemeHebdo, <a class="el" href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">Antares::Data::AdequacyPatch::AdqPatchParams</a> &amp;, uint numSpace, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;writer, <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html">Simulation::ISimulationObserver</a> &amp;simulationObserver)</td></tr>
+<tr class="separator:ad6a3912ea396988d517909583b69e3e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77174ea68464c964c3521926f2eecb79" id="r_a77174ea68464c964c3521926f2eecb79"><td class="memItemLeft" align="right" valign="top"><a id="a77174ea68464c964c3521926f2eecb79" name="a77174ea68464c964c3521926f2eecb79"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>solve</b> ()</td></tr>
+<tr class="separator:a77174ea68464c964c3521926f2eecb79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:affc35eeb377e2d5fa8de16949483c0e7" id="r_affc35eeb377e2d5fa8de16949483c0e7"><td class="memItemLeft" align="right" valign="top"><a id="affc35eeb377e2d5fa8de16949483c0e7" name="affc35eeb377e2d5fa8de16949483c0e7"></a>
-static std::unique_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html">WeeklyOptimization</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &amp;study, const <a class="el" href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">OptimizationOptions</a> &amp;options, <a class="el" href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">Antares::Data::AdequacyPatch::AdqPatchParams</a> &amp;adqPatchParams, <a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *problemesHebdo, uint numSpace, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;writer, <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html">Simulation::ISimulationObserver</a> &amp;simulationObserver)</td></tr>
-<tr class="separator:affc35eeb377e2d5fa8de16949483c0e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:aa00f9a2ff21e8ea3fb78bda9d411e89f" id="r_aa00f9a2ff21e8ea3fb78bda9d411e89f"><td class="memItemLeft" align="right" valign="top"><a id="aa00f9a2ff21e8ea3fb78bda9d411e89f" name="aa00f9a2ff21e8ea3fb78bda9d411e89f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>WeeklyOptimization</b> (const <a class="el" href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">OptimizationOptions</a> &amp;options, <a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *problemesHebdo, <a class="el" href="structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html">Antares::Data::AdequacyPatch::AdqPatchParams</a> &amp;, uint numSpace, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;writer, <a class="el" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html">Simulation::ISimulationObserver</a> &amp;simulationObserver)</td></tr>
-<tr class="separator:aa00f9a2ff21e8ea3fb78bda9d411e89f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
 <tr class="memitem:a885aecbd44b11a5d8840a3c06d8c2331" id="r_a885aecbd44b11a5d8840a3c06d8c2331"><td class="memItemLeft" align="right" valign="top"><a id="a885aecbd44b11a5d8840a3c06d8c2331" name="a885aecbd44b11a5d8840a3c06d8c2331"></a>
 <a class="el" href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">Antares::Solver::Optimization::OptimizationOptions</a>&#160;</td><td class="memItemRight" valign="bottom"><b>options_</b></td></tr>
 <tr class="separator:a885aecbd44b11a5d8840a3c06d8c2331"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,8 +170,8 @@ std::reference_wrapper&lt; <a class="el" href="classAntares_1_1Solver_1_1Simulat
 <tr class="separator:a4263cec41a0b8901e035b41118316ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/solver/optimisation/include/antares/solver/optimisation/<a class="el" href="base__weekly__optimization_8h_source.html">base_weekly_optimization.h</a></li>
-<li>src/solver/optimisation/<b>base_weekly_optimization.cpp</b></li>
+<li>src/solver/optimisation/include/antares/solver/optimisation/<a class="el" href="weekly__optimization_8h_source.html">weekly_optimization.h</a></li>
+<li>src/solver/optimisation/<b>weekly_optimization.cpp</b></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

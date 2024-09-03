@@ -235,9 +235,8 @@ var annotated_dup =
       ] ],
       [ "Data", null, [
         [ "AdequacyPatch", null, [
-          [ "AdqPatchParams", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html", null ],
-          [ "CurtailmentSharing", "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html", "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing" ],
-          [ "LocalMatching", "structAntares_1_1Data_1_1AdequacyPatch_1_1LocalMatching.html", "structAntares_1_1Data_1_1AdequacyPatch_1_1LocalMatching" ]
+          [ "AdqPatchParams", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams" ],
+          [ "CurtailmentSharing", "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html", "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing" ]
         ] ],
         [ "Load", null, [
           [ "Container", "classAntares_1_1Data_1_1Load_1_1Container.html", "classAntares_1_1Data_1_1Load_1_1Container" ],
@@ -355,7 +354,6 @@ var annotated_dup =
         [ "HourInterval", "structAntares_1_1Date_1_1HourInterval.html", "structAntares_1_1Date_1_1HourInterval" ]
       ] ],
       [ "Error", null, [
-        [ "AdqPatchDisabledLMR", "classAntares_1_1Error_1_1AdqPatchDisabledLMR.html", null ],
         [ "CommandLineArguments", "classAntares_1_1Error_1_1CommandLineArguments.html", null ],
         [ "IncompatibleCO2CostColumns", "classAntares_1_1Error_1_1IncompatibleCO2CostColumns.html", null ],
         [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Error_1_1IncompatibleDailyOptHeuristicForArea.html", null ],
@@ -506,9 +504,7 @@ var annotated_dup =
           [ "VariableNode", "classAntares_1_1Solver_1_1Nodes_1_1VariableNode.html", null ]
         ] ],
         [ "Optimization", null, [
-          [ "AdequacyPatchOptimization", "classAntares_1_1Solver_1_1Optimization_1_1AdequacyPatchOptimization.html", null ],
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
-          [ "DefaultWeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1DefaultWeeklyOptimization.html", null ],
           [ "OptimizationOptions", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
           [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", null ]
         ] ],
