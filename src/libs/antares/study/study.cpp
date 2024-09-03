@@ -979,22 +979,22 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
 void Study::destroyAllLoadTSGeneratorData()
 {
-    areas.each([](Data::Area& area) { FreeAndNil(area.load.prepro); });
+    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
 }
 
 void Study::destroyAllSolarTSGeneratorData()
 {
-    areas.each([](Data::Area& area) { FreeAndNil(area.solar.prepro); });
+    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
 }
 
 void Study::destroyAllHydroTSGeneratorData()
 {
-    areas.each([](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
+    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
 
 void Study::destroyAllWindTSGeneratorData()
 {
-    areas.each([](Data::Area& area) { FreeAndNil(area.wind.prepro); });
+    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
