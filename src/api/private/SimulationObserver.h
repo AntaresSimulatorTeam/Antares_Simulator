@@ -46,7 +46,6 @@ public:
     void notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
                             int optimizationNumber,
                             std::string_view name) override;
-    bool shouldTranslateCommonData() const;
 
     /**
      * @brief The acquireLps method is used to take ownership of Antares problems.
