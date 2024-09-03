@@ -30,11 +30,13 @@ namespace
 {
 auto translate(const PROBLEME_HEBDO& problemeHebdo,
                std::string_view name,
-               const Solver::HebdoProblemToLpsTranslator& translator,
-               bool translateCommonData)
+               const Solver::HebdoProblemToLpsTranslator& translator)
 {
     auto weekly_data = translator.translate(problemeHebdo.ProblemeAResoudre.get(), name);
-    Solver::ConstantDataFromAntares common_data;
+    std::optional<Solver::ConstantDataFromAntares> common_data;
+    bool translateCommonData = false;
+    static std::once_flag flag;
+    std::call_once(flag, [&translateCommonData]() { translateCommonData = true; });
     if (translateCommonData)
     {
         common_data = translator.commonProblemData(problemeHebdo.ProblemeAResoudre.get());
@@ -42,28 +44,6 @@ auto translate(const PROBLEME_HEBDO& problemeHebdo,
     return std::make_pair(common_data, weekly_data);
 }
 } // namespace
-
-/**
- * @brief Compute whether or not to translate common data.
- * @details This method is thread-safe.
- * Common data need to be translated only once.
- * @return
- */
-bool SimulationObserver::shouldTranslateCommonData() const
-{
-    /**
-     * Static variable used to share state between threads.
-     */
-    bool translateCommonData = false;
-    static bool mustTranslateCommonData = true;
-    std::lock_guard lock(lps_mutex_);
-    translateCommonData = mustTranslateCommonData;
-    if (mustTranslateCommonData && lps_.empty())
-    {
-        mustTranslateCommonData = false;
-    }
-    return translateCommonData;
-}
 
 void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
                                             int optimizationNumber,
@@ -77,15 +57,11 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
     const unsigned int year = problemeHebdo.year + 1;
     const unsigned int week = problemeHebdo.weekInTheYear + 1;
     // common_data and weekly_data computed before the mutex lock to prevent blocking the thread
-    bool translateCommonData = shouldTranslateCommonData();
-    auto [common_data, weekly_data] = translate(problemeHebdo,
-                                                name,
-                                                translator,
-                                                translateCommonData);
+    auto [common_data, weekly_data] = translate(problemeHebdo, name, translator);
     std::lock_guard lock(lps_mutex_);
-    if (translateCommonData)
+    if (common_data)
     {
-        lps_.setConstantData(common_data);
+        lps_.setConstantData(common_data.value());
     }
     lps_.addWeeklyData({year, week}, weekly_data);
 }
