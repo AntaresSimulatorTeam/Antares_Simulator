@@ -23,6 +23,10 @@ with XXX in
 #### Short term storage: efficiency for withdrawal
 In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
 
+### Output
+- Remove column SPIL ENRG CSR (adequacy patch)
+- Add DTG MRG CSR and UNSP ENRG CSR variables
+
 ## v9.1.0
 ### Input 
 #### Hydro Maximum Generation/Pumping Power
