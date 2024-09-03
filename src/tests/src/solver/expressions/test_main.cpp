@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -20,19 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
+#define BOOST_TEST_MODULE expressions
+#define WIN32_LEAN_AND_MEAN
 
-#include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/solver/misc/options.h"
-#include "antares/solver/simulation/ISimulationObserver.h"
-#include "antares/writer/i_writer.h"
-
-namespace Antares::Solver
-{
-void runSimulationInEconomicMode(Antares::Data::Study& study,
-                                 const Settings& settings,
-                                 Benchmarking::DurationCollector& durationCollector,
-                                 IResultWriter& resultWriter,
-                                 Benchmarking::OptimizationInfo& info,
-                                 Simulation::ISimulationObserver& simulationObserver);
-}
+#include <boost/test/unit_test.hpp>

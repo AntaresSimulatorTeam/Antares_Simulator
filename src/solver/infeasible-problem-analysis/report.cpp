@@ -49,13 +49,18 @@ void InfeasibleProblemReport::buildConstraintsFromSlackVars(
 bool lessTypeName(const std::shared_ptr<WatchedConstraint> a,
                   const std::shared_ptr<WatchedConstraint> b)
 {
-    return std::type_index(typeid(*a)) < std::type_index(typeid(*b));
+    const WatchedConstraint* a_raw = a.get();
+    const WatchedConstraint* b_raw = b.get();
+    // TODO Compiler-dependent behavior
+    return std::type_index(typeid(*a_raw)) < std::type_index(typeid(*b_raw));
 }
 
 bool sameType(const std::shared_ptr<WatchedConstraint> a,
               const std::shared_ptr<WatchedConstraint> b)
 {
-    return std::type_index(typeid(*a)) == std::type_index(typeid(*b));
+    const WatchedConstraint* a_raw = a.get();
+    const WatchedConstraint* b_raw = b.get();
+    return std::type_index(typeid(*a_raw)) == std::type_index(typeid(*b_raw));
 }
 
 bool greaterValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)

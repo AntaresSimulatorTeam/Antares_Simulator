@@ -19,7 +19,7 @@ add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(variable)
-
+add_subdirectory(expressions)
 #
 # Resource file for Windows
 #
