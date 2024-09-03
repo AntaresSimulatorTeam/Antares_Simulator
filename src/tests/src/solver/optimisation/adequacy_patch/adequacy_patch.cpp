@@ -32,7 +32,6 @@
 #include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/post_processing.h"
-#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "antares/study/parameters/adq-patch-params.h"
 
 static double origineExtremite = -1;
@@ -40,43 +39,6 @@ static double extremiteOrigine = 5;
 
 using namespace Antares::Data::AdequacyPatch;
 namespace tt = boost::test_tools;
-
-// NOTE
-// Xmax limits the flux origin -> extremity (direct)
-// -Xmin limits the flux extremity -> origin (indirect)
-
-std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originType,
-                                                     AdequacyPatchMode extremityType,
-                                                     bool SetNTCOutsideToOutsideToZero,
-                                                     bool SetNTCOutsideToInsideToZero)
-{
-    PROBLEME_HEBDO problem;
-    problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
-    problem.adequacyPatchRuntimeData->originAreaMode.resize(1);
-    problem.adequacyPatchRuntimeData->extremityAreaMode.resize(1);
-
-    problem.adequacyPatchRuntimeData->originAreaMode[0] = originType;
-    problem.adequacyPatchRuntimeData->extremityAreaMode[0] = extremityType;
-    problem.adequacyPatchRuntimeData->AdequacyFirstStep = true;
-
-    AdqPatchParams adqPatchParams;
-    adqPatchParams.enabled = true;
-    adqPatchParams.localMatching.setToZeroOutsideOutsideLinks = SetNTCOutsideToOutsideToZero;
-    adqPatchParams.localMatching.setToZeroOutsideInsideLinks = SetNTCOutsideToInsideToZero;
-
-    VALEURS_DE_NTC_ET_RESISTANCES ValeursDeNTC;
-    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite.assign(1, 0.);
-    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine.assign(1, 0.);
-    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[0] = origineExtremite;
-    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[0] = extremiteOrigine;
-
-    double Xmin(0.);
-    double Xmax(0.);
-
-    setNTCbounds(Xmax, Xmin, ValeursDeNTC, 0, &problem, adqPatchParams);
-
-    return std::make_pair(Xmin, Xmax);
-}
 
 static const double flowArea0toArea1_positive = 10;
 static const double flowArea0toArea1_negative = -10;
@@ -113,8 +75,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.IndexDebutIntercoExtremite = std::vector<int>(1);
 
     // input values
-    adqPatchParams.localMatching.setToZeroOutsideInsideLinks
-      = !includeFlowsOutsideAdqPatchToDensNew;
+    adqPatchParams.setToZeroOutsideInsideLinks = !includeFlowsOutsideAdqPatchToDensNew;
     problem.ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
@@ -133,7 +94,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     double densNew;
     std::tie(netPositionInit, densNew, std::ignore) = calculateAreaFlowBalance(
       &problem,
-      adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
+      adqPatchParams.setToZeroOutsideInsideLinks,
       Area,
       hour);
 
@@ -145,117 +106,9 @@ AdqPatchParams createParams()
     AdqPatchParams p;
     p.enabled = true;
     p.curtailmentSharing.includeHurdleCost = true;
-    p.localMatching.enabled = true;
     p.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
 
     return p;
-}
-
-// Virtual -> Virtual (0 -> 0)
-// No change in bounds is expected
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_virtual_no_change_expected)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(virtualArea,
-                                                      virtualArea,
-                                                      true /*SetNTCOutsideToOutsideToZero*/,
-                                                      false);
-    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
-    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
-}
-
-// Virtual -> physical area inside adq-patch (0 -> 2)
-// No change in bounds is expected
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_inside_no_change_expected)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(virtualArea,
-                                                      physicalAreaInsideAdqPatch,
-                                                      true /*SetNTCOutsideToOutsideToZero*/,
-                                                      false);
-    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
-    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
-}
-
-// Virtual -> physical area outside adq-patch (0 -> 1)
-// No change in bounds is expected
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_outside_no_change_expected)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(virtualArea,
-                                                      physicalAreaOutsideAdqPatch,
-                                                      true /*SetNTCOutsideToOutsideToZero*/,
-                                                      false);
-    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
-    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
-}
-
-// physical area outside adq-patch -> physical area outside adq-patch (1 -> 1)
-// NTC should be set to 0 in both directions
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_outside_zero_expected_both_directions)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(physicalAreaOutsideAdqPatch,
-                                                      physicalAreaOutsideAdqPatch,
-                                                      true /*SetNTCOutsideToOutsideToZero*/,
-                                                      false);
-    BOOST_CHECK_EQUAL(Xmax, 0);
-    BOOST_CHECK_EQUAL(Xmin, 0);
-}
-
-// physical area outside adq-patch -> physical area outside adq-patch (1 -> 1)
-// SetNTCOutsideToOutsideToZero = true
-// NTC should be set to 0 in both directions
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_outside_no_change_expected)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(physicalAreaOutsideAdqPatch,
-                                                      physicalAreaOutsideAdqPatch,
-                                                      false,
-                                                      false);
-
-    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
-    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
-}
-
-// physical area inside adq-patch -> physical area outside adq-patch (2 -> 1)
-// NTC should be set to 0 in both directions
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_inside_outside_zero_expected_both_directions)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(physicalAreaInsideAdqPatch,
-                                                      physicalAreaOutsideAdqPatch,
-                                                      false,
-                                                      false);
-    BOOST_CHECK_EQUAL(Xmax, 0);
-    BOOST_CHECK_EQUAL(Xmin, 0);
-}
-
-// physical area outside adq-patch -> physical area inside adq-patch (1 -> 2)
-// NTC should be set to 0 in both directions
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_inside_zero_expected_both_directions)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(physicalAreaOutsideAdqPatch,
-                                                      physicalAreaInsideAdqPatch,
-                                                      false,
-                                                      true /*SetNTCOutsideToInsideToZero*/);
-    BOOST_CHECK_EQUAL(Xmax, 0);
-    BOOST_CHECK_EQUAL(Xmin, 0);
-}
-
-// physical area outside adq-patch -> physical area inside adq-patch (1 -> 2)
-// NTC should be unchanged in direction origin->extremity (direct)
-// NTC should be set to 0 in direction extremity->origin (indirect)
-BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_inside_change_expected_one_direction)
-{
-    double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(physicalAreaOutsideAdqPatch,
-                                                      physicalAreaInsideAdqPatch,
-                                                      false,
-                                                      false);
-    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
-    BOOST_CHECK_EQUAL(Xmin, 0);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:

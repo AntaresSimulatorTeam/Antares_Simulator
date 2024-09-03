@@ -61,7 +61,7 @@ std::shared_ptr<QueueService> createThreadPool(int size)
 
 std::string removeExtension(const std::string& name, const std::string& ext)
 {
-    int length = name.size();
+    size_t length = name.size();
     if (name.size() > ext.size() && name.substr(length - ext.size()) == ext)
     {
         return name.substr(0, length - ext.size());
