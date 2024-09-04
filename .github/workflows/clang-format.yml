@@ -22,15 +22,17 @@ jobs:
       - name: Check for formatting changes
         id: check_diff
         run: |
-          # Create a diff patch file
-          git diff > diff.patch
-
-          # Check for changes
-          DIFF=$(git status --porcelain)
-          echo "DIFF=$DIFF" >> $GITHUB_ENV
+               # Create a diff patch file
+               git diff > diff.patch
+               
+               # Check for changes
+          #          DIFF=$(git status --porcelain)
+          #          echo "DIFF<<EOF" >> $GITHUB_ENV
+          #          echo $(git status --porcelain) >> $GITHUB_ENV
+          #          echo "EOF" >> $GITHUB_ENV
 
           # Optionally output the diff for debugging
-          cat diff.patch
+               cat diff.patch
 
       - name: Suggest formatting changes in PR
         #if: env.DIFF != ''
