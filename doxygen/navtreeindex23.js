@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"scenario-builder-hydro-levels-renderer_8h_source.html":[9,0,0,7,2,1,1,1,1,18],
 "scenario-builder-hydro-renderer_8h_source.html":[9,0,0,7,2,1,1,1,1,19],
 "scenario-builder-load-renderer_8h_source.html":[9,0,0,7,2,1,1,1,1,20],
 "scenario-builder-ntc-renderer_8h_source.html":[9,0,0,7,2,1,1,1,1,21],
@@ -75,7 +76,6 @@ var NAVTREEINDEX23 =
 "solver_8hxx_source.html":[9,0,0,4,9,0,0,0,0,19],
 "solver__utils_8h_source.html":[9,0,0,4,9,0,0,0,0,20],
 "spatial-aggregate_8h_source.html":[9,0,0,4,12,0,0,0,0,1,8],
-"spilledEnergyAfterCSR_8h_source.html":[9,0,0,4,12,0,0,0,0,2,32],
 "spotlight-provider_8h_source.html":[9,0,0,7,2,2,10,11],
 "spotlight_2spotlight_8h_source.html":[9,0,0,7,1,0,3,9],
 "spotlight_8h_source.html":[9,0,0,7,1,0,5],

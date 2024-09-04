@@ -32,7 +32,6 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "renewableGeneration.h", "renewableGeneration_8h_source.html", null ],
     [ "reservoirlevel.h", "reservoirlevel_8h_source.html", null ],
     [ "spilledEnergy.h", "economy_2spilledEnergy_8h_source.html", null ],
-    [ "spilledEnergyAfterCSR.h", "spilledEnergyAfterCSR_8h_source.html", null ],
     [ "STSbyGroup.h", "STSbyGroup_8h_source.html", null ],
     [ "STStorageCashFlowByCluster.h", "STStorageCashFlowByCluster_8h_source.html", null ],
     [ "STStorageInjectionByCluster.h", "STStorageInjectionByCluster_8h_source.html", null ],
@@ -40,5 +39,6 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "STStorageWithdrawalByCluster.h", "STStorageWithdrawalByCluster_8h_source.html", null ],
     [ "thermalAirPollutantEmissions.h", "thermalAirPollutantEmissions_8h_source.html", null ],
     [ "unsupliedEnergy.h", "unsupliedEnergy_8h_source.html", null ],
+    [ "unsupliedEnergyCsr.h", "unsupliedEnergyCsr_8h_source.html", null ],
     [ "waterValue.h", "waterValue_8h_source.html", null ]
 ];
