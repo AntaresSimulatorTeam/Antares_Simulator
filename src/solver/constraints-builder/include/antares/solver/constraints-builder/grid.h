@@ -21,16 +21,10 @@
 #ifndef CONSTRAINTSBUILDER_BUILDER_GRID_H
 #define CONSTRAINTSBUILDER_BUILDER_GRID_H
 
-#include <numeric>
-
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
 #include <antares/study/study.h>
-
-// #include <map>
-// #include <assert.h>
-// #include <utility>
 
 namespace Antares
 {
