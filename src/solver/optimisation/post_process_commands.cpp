@@ -23,7 +23,6 @@
 
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/post_processing.h"
-#include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 
@@ -253,7 +252,7 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
             {
                 const auto [netPositionInit, densNew, totalNodeBalance] = calculateAreaFlowBalance(
                   problemeHebdo_,
-                  adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+                  adqPatchParams_.setToZeroOutsideInsideLinks,
                   Area,
                   hour);
                 // adjust densNew according to the new specification/request by ELIA

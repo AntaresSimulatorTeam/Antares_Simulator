@@ -504,16 +504,6 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
   NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)
 
 ---
-#### set-to-null-ntc-between-physical-out-for-first-step
-[//]: # (TODO: usage is not clear)
-- **Expected value:** `true` or `false`
-- **Required:** no
-- **Default value:** `true`
-- **Usage:** Transmission capacities between physical areas outside adequacy patch (area type 1).
-  NTC is set to null (if true) only in the first step of adequacy patch local matching rule.  
-  NTC between physical areas outside adequacy patch (set to null / local values)
-
----
 #### price-taking-order
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -542,16 +532,6 @@ _**This section is under construction**_
 - **Required:** **yes**
 - **Default value:**
 - **Usage:** Check CSR cost function value prior and after CSR (false / true)
-
----
-#### enable-first-step
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
-
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
 
 ---
 #### threshold-initiate-curtailment-sharing-rule
