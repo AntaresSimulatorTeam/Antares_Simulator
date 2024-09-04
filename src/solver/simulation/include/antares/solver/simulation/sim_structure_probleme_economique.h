@@ -23,7 +23,6 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include <memory>
-#include <optional>
 #include <vector>
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"

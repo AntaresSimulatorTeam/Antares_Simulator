@@ -23,8 +23,6 @@
 
 #include <vector>
 
-#include <yuni/yuni.h>
-
 #include <antares/study/study.h>
 
 #include "ITimeSeriesNumbersWriter.h"

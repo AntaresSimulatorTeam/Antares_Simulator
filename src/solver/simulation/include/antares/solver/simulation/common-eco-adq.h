@@ -23,9 +23,6 @@
 
 #include <vector>
 
-#include <yuni/yuni.h>
-#include <yuni/core/bind.h>
-
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
