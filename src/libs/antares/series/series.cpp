@@ -20,6 +20,7 @@
 */
 
 #include "antares/series/series.h"
+#include <antares/antares/constants.h>
 
 #include <algorithm>
 #include <sstream>
@@ -30,8 +31,6 @@
 #include <yuni/io/file.h>
 
 using namespace Yuni;
-
-#define HOURS_PER_YEAR 8760
 
 #define SEP IO::Separator
 
