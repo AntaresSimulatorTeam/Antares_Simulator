@@ -40,15 +40,15 @@ Api::MipStatus OrtoolsMipSolution::getStatus() const
 {
     switch (status_)
     {
-        case operations_research::MPSolver::ResultStatus::OPTIMAL:
-            return Api::MipStatus::OPTIMAL;
-        case operations_research::MPSolver::ResultStatus::FEASIBLE:
-            return Api::MipStatus::FEASIBLE;
-        case operations_research::MPSolver::ResultStatus::UNBOUNDED:
-            return Api::MipStatus::UNBOUNDED;
-        default:
-            logs.warning() << "Solve returned an error status";
-            break;
+    case operations_research::MPSolver::ResultStatus::OPTIMAL:
+        return Api::MipStatus::OPTIMAL;
+    case operations_research::MPSolver::ResultStatus::FEASIBLE:
+        return Api::MipStatus::FEASIBLE;
+    case operations_research::MPSolver::ResultStatus::UNBOUNDED:
+        return Api::MipStatus::UNBOUNDED;
+    default:
+        logs.warning() << "Solve returned an error status";
+        break;
     }
     return Api::MipStatus::MIP_ERROR;
 }

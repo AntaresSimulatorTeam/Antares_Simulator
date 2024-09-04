@@ -110,7 +110,8 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& pair = constraints_.emplace(name, std::make_unique<OrtoolsMipConstraint>(mpConstraint));
+    const auto& pair = constraints_.emplace(name,
+                                            std::make_unique<OrtoolsMipConstraint>(mpConstraint));
     return pair.first->second.get(); // <<name, constraint>, bool>
 }
 
