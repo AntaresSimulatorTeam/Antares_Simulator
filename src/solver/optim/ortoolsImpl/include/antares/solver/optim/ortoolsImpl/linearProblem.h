@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <ortools/linear_solver/linear_solver.h>
-
 #include <antares/solver/optim/api/linearProblem.h>
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
