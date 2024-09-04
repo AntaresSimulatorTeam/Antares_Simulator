@@ -20,7 +20,6 @@
 */
 
 #include "antares/series/series.h"
-#include <antares/antares/constants.h>
 
 #include <algorithm>
 #include <sstream>
@@ -29,6 +28,8 @@
 #include <yuni/yuni.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
+
+#include <antares/antares/constants.h>
 
 using namespace Yuni;
 
