@@ -3,7 +3,6 @@ name: Request for support
 about: Ask any question
 title: ''
 labels: help wanted
-assignees: flomnes, guilpier-code, payetvin
 
 ---
 
