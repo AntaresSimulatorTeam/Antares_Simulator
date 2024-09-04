@@ -33,7 +33,7 @@ jobs:
           cat diff.patch
 
       - name: Suggest formatting changes in PR
-        if: env.DIFF != ''
+        #if: env.DIFF != ''
         run: |
           # Install GitHub CLI
           sudo apt-get install -y gh
