@@ -46,10 +46,9 @@ public:
       const std::vector<Api::IMipVariable*>& vars) const override;
 
 private:
-    Api::MipStatus responseStatus_;
+    operations_research::MPSolver::ResultStatus status_;
     std::shared_ptr<operations_research::MPSolver> mpSolver_;
     std::map<std::string, double> solution_;
-    double objectiveValue_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
