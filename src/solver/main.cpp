@@ -96,7 +96,7 @@ void logAbortion()
     }
     else
     {
-        logs.error() << "Aborting now. See logs for more details";
+                             logs.error() << "Aborting now. See logs for more details";
     }
 }
 
@@ -107,9 +107,8 @@ void logAbortion()
 */
 int main(int argc, const char** argv)
 {
-    try
-    {
-        logs.info(ANTARES_LOGO);
+    try{
+                         logs.info(ANTARES_LOGO);
         logs.info(MPL_ANNOUNCEMENT);
         // Name of the running application for the logger
         logs.applicationName("solver");
@@ -128,7 +127,12 @@ int main(int argc, const char** argv)
         Antares::Solver::Application application;
         application.prepare(argc, argv);
         application.execute();
-        application.writeExectutionInfo();
+        
+
+
+
+
+application.writeExectutionInfo();
 
         return EXIT_SUCCESS;
     }
@@ -147,7 +151,6 @@ int main(int argc, const char** argv)
     catch (...)
     {
         logs.fatal() << "An unexpected error occurred.";
-        logAbortion();
-        return EXIT_FAILURE;
+        logAbortion();return EXIT_FAILURE;
     }
 }
