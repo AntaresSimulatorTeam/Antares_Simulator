@@ -288,30 +288,30 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    }</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keywordflow">return</span> (uint)(cVec.size());</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>}</div>
+<div class="foldopen" id="foldopen00142" data-start="{" data-end="}">
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#ad92e0af9b29b8793c588d0bcb872385e">  142</a></span>}</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NodeT&gt;</div>
+<div class="foldopen" id="foldopen00144" data-start="{" data-end="}">
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a81b4bd6ed76dfa7c52cc997bac5c9632">  144</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NodeT&gt;</div>
 <div class="foldopen" id="foldopen00145" data-start="{" data-end="}">
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f">  145</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f">Grid&lt;NodeT&gt;::kruskal</a>()</div>
-<div class="foldopen" id="foldopen00146" data-start="{" data-end="}">
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#ad92e0af9b29b8793c588d0bcb872385e">  146</a></span>{</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>{</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="comment">// clear spanning tree</span></div>
 <div class="foldopen" id="foldopen00148" data-start="{" data-end="}">
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a81b4bd6ed76dfa7c52cc997bac5c9632">  148</a></span>    pMinSpanningTree.clear();</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a186d8796bbf5dc1ab8f3ec6e35a6a0d8">  148</a></span>    pMinSpanningTree.clear();</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="comment">// create union-find set</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    MapNodes uf;</div>
-<div class="foldopen" id="foldopen00152" data-start="{" data-end="}">
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a186d8796bbf5dc1ab8f3ec6e35a6a0d8">  152</a></span> </div>
+<div class="foldopen" id="foldopen00151" data-start="{" data-end="}">
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95">  151</a></span>    MapNodes uf;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = pNodesList.begin(); i != pNodesList.end(); i++)</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    {</div>
 <div class="foldopen" id="foldopen00155" data-start="{" data-end="}">
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95">  155</a></span>        uf.insert(std::make_pair(*i, *i));</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a0f396c947841654d8ce748aa73e478f0">  155</a></span>        uf.insert(std::make_pair(*i, *i));</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    }</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="comment">// create temporary sorted vector of Link</span></div>
-<div class="foldopen" id="foldopen00159" data-start="{" data-end="}">
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a0f396c947841654d8ce748aa73e478f0">  159</a></span>    VectorEdgeP tempEdgesList = pEdgesList;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    VectorEdgeP tempEdgesList = pEdgesList;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    std::stable_sort(tempEdgesList.begin(),</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                     tempEdgesList.end(),</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                     <span class="keyword">typename</span> <a class="code hl_struct" href="structAntares_1_1Graph_1_1Edge_1_1compareWeight.html">Graph::Edge&lt;NodeT&gt;::compareWeight</a>());</div>
@@ -325,7 +325,7 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            pMinSpanningTree.push_back(*i);</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            <span class="comment">// update uf</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <a class="code hl_class" href="classAntares_1_1Graph_1_1Node.html">NodeP</a> cset(uf[(*i)-&gt;getDestination()]);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            NodeP cset(uf[(*i)-&gt;getDestination()]);</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = pNodesList.begin(); j != pNodesList.end(); j++)</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            {</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                <span class="keywordflow">if</span> (uf[*j] == cset)</div>
@@ -406,12 +406,12 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            polarisedDuplicate.<a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95">addEdge</a>(ni1, ni2, ei-&gt;getWeight());</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            polarisedDuplicate.removeEdge(ei);</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            ei = polarisedDuplicate.<a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#abecfec3a6f0b89df92037cea592ca231">findEdgeFromNodeNames</a>(v[j]-&gt;getOrigin()-&gt;getName() + <span class="stringliteral">&quot;-&quot;</span>,</div>
+<div class="foldopen" id="foldopen00254" data-start="{" data-end="}">
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f">  254</a></span>            ei = polarisedDuplicate.<a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#abecfec3a6f0b89df92037cea592ca231">findEdgeFromNodeNames</a>(v[j]-&gt;getOrigin()-&gt;getName() + <span class="stringliteral">&quot;-&quot;</span>,</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                                                          v[j]-&gt;getDestination()-&gt;getName() + <span class="stringliteral">&quot;-&quot;</span>);</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            ni1 = polarisedDuplicate.<a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#a8c78613a5185e59c1abca88c6707a810">findNodeFromName</a>(v[j]-&gt;getOrigin()-&gt;getName() + <span class="stringliteral">&quot;-&quot;</span>);</div>
-<div class="foldopen" id="foldopen00258" data-start="{" data-end="}">
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f">  258</a></span>            ni2 = polarisedDuplicate.<a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#a8c78613a5185e59c1abca88c6707a810">findNodeFromName</a>(v[j]-&gt;getDestination()-&gt;getName() + <span class="stringliteral">&quot;+&quot;</span>);</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            ni2 = polarisedDuplicate.<a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#a8c78613a5185e59c1abca88c6707a810">findNodeFromName</a>(v[j]-&gt;getDestination()-&gt;getName() + <span class="stringliteral">&quot;+&quot;</span>);</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            polarisedDuplicate.<a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95">addEdge</a>(ni1, ni2, ei-&gt;getWeight());</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>            polarisedDuplicate.removeEdge(ei);</div>
@@ -427,12 +427,12 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            name1 = name1.substr(0, name1.length() - 1);</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            <span class="keyword">auto</span> name2 = (*e)-&gt;getDestination()-&gt;getName();</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>            name2 = name2.substr(0, name2.length() - 1);</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>            EdgeP ei = findEdgeFromNodeNames(name1, name2);</div>
+<div class="foldopen" id="foldopen00276" data-start="{" data-end="}">
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#af0bcd0a47cf60f481817641a786ca19f">  276</a></span>            <a class="code hl_class" href="classAntares_1_1Graph_1_1Edge.html">EdgeP</a> ei = findEdgeFromNodeNames(name1, name2);</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>            Ci.push_back(ei);</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            <span class="keyword">auto</span> eIT = std::find(pEdgesList.begin(), pEdgesList.end(), ei);</div>
-<div class="foldopen" id="foldopen00280" data-start="{" data-end="}">
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#af0bcd0a47cf60f481817641a786ca19f">  280</a></span>            <span class="keywordtype">int</span> pos = (int)std::distance(pEdgesList.begin(), eIT);</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            <span class="keywordtype">int</span> pos = (int)std::distance(pEdgesList.begin(), eIT);</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            edgeIndices.push_back(pos);</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        }</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
@@ -446,15 +446,14 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            {</div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>                incidenceMatrix[j] = incidenceXOR(incidenceMatrix[i], incidenceMatrix[j]);</div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            }</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        }</div>
+<div class="foldopen" id="foldopen00294" data-start="{" data-end="}">
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#ab24958f2e08e120a2e6f869be8f3b242">  294</a></span>        }</div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    }</div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#ab24958f2e08e120a2e6f869be8f3b242">  298</a></span>}</div>
-</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>}</div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
-<div class="foldopen" id="foldopen00304" data-start="{" data-end="}">
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#a7004065219923b83a5e2ee13978c4f3f">  304</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NodeT&gt;</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NodeT&gt;</div>
 <div class="foldopen" id="foldopen00305" data-start="{" data-end="}">
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno"><a class="line" href="classAntares_1_1Graph_1_1Grid.html#ab24958f2e08e120a2e6f869be8f3b242">  305</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Graph_1_1Grid.html#ab24958f2e08e120a2e6f869be8f3b242">Grid&lt;NodeT&gt;::getDuplicatedGrid</a>(<a class="code hl_class" href="classAntares_1_1Graph_1_1Grid.html">Grid&lt;NodeT&gt;</a>&amp; grid)</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>{</div>
@@ -512,6 +511,7 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>}</div>
 </div>
+</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NodeT&gt;</div>
 <div class="foldopen" id="foldopen00366" data-start="{" data-end="}">
@@ -548,7 +548,6 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    }</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>}</div>
-</div>
 </div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NodeT&gt;</div>
@@ -671,22 +670,23 @@ $(document).ready(function(){initNavTree('grid_8hxx_source.html',''); initResiza
 </div>
 </div>
 </div>
-<div class="ttc" id="aclassAntares_1_1Graph_1_1Edge_html"><div class="ttname"><a href="classAntares_1_1Graph_1_1Edge.html">Antares::Graph::Edge</a></div><div class="ttdef"><b>Definition</b> grid.h:67</div></div>
-<div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html">Antares::Graph::Grid</a></div><div class="ttdoc">Antares Grid (graph)</div><div class="ttdef"><b>Definition</b> grid.h:133</div></div>
+</div>
+<div class="ttc" id="aclassAntares_1_1Graph_1_1Edge_html"><div class="ttname"><a href="classAntares_1_1Graph_1_1Edge.html">Antares::Graph::Edge</a></div><div class="ttdef"><b>Definition</b> grid.h:63</div></div>
+<div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html">Antares::Graph::Grid</a></div><div class="ttdoc">Antares Grid (graph)</div><div class="ttdef"><b>Definition</b> grid.h:129</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_a048943416e662a22770d96033afe5b95"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95">Antares::Graph::Grid::addEdge</a></div><div class="ttdeci">EdgeP addEdge(NodeP, NodeP, long weight=0)</div><div class="ttdoc">Add one edge to the graph.</div><div class="ttdef"><b>Definition</b> grid.hxx:77</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_a0f396c947841654d8ce748aa73e478f0"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#a0f396c947841654d8ce748aa73e478f0">Antares::Graph::Grid::findShortestPath</a></div><div class="ttdeci">VectorEdgeP findShortestPath(NodeP node1, NodeP node2) const</div><div class="ttdoc">Find shortest path between the two nodes (Djikstra)</div><div class="ttdef"><b>Definition</b> grid.hxx:425</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_a186d8796bbf5dc1ab8f3ec6e35a6a0d8"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#a186d8796bbf5dc1ab8f3ec6e35a6a0d8">Antares::Graph::Grid::addNode</a></div><div class="ttdeci">NodeP addNode(NodeT &amp;, std::string)</div><div class="ttdoc">Add one node to the graph.</div><div class="ttdef"><b>Definition</b> grid.hxx:56</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_a7004065219923b83a5e2ee13978c4f3f"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#a7004065219923b83a5e2ee13978c4f3f">Antares::Graph::Grid::cloneGrid</a></div><div class="ttdeci">bool cloneGrid(Grid &amp;)</div><div class="ttdoc">get a clone of the Grid</div><div class="ttdef"><b>Definition</b> grid.hxx:366</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_a81b4bd6ed76dfa7c52cc997bac5c9632"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#a81b4bd6ed76dfa7c52cc997bac5c9632">Antares::Graph::Grid::~Grid</a></div><div class="ttdeci">~Grid()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> grid.hxx:43</div></div>
-<div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_a8c78613a5185e59c1abca88c6707a810"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#a8c78613a5185e59c1abca88c6707a810">Antares::Graph::Grid::findNodeFromName</a></div><div class="ttdeci">NodeP findNodeFromName(std::string name)</div><div class="ttdoc">find a node from it's name</div><div class="ttdef"><b>Definition</b> grid.h:237</div></div>
+<div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_a8c78613a5185e59c1abca88c6707a810"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#a8c78613a5185e59c1abca88c6707a810">Antares::Graph::Grid::findNodeFromName</a></div><div class="ttdeci">NodeP findNodeFromName(std::string name)</div><div class="ttdoc">find a node from it's name</div><div class="ttdef"><b>Definition</b> grid.h:233</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_aa4238e0a26f7805f5ca49368ace7af3f"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f">Antares::Graph::Grid::kruskal</a></div><div class="ttdeci">void kruskal()</div><div class="ttdoc">Kruskal algorithm.</div><div class="ttdef"><b>Definition</b> grid.hxx:145</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_ab24958f2e08e120a2e6f869be8f3b242"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#ab24958f2e08e120a2e6f869be8f3b242">Antares::Graph::Grid::getDuplicatedGrid</a></div><div class="ttdeci">bool getDuplicatedGrid(Grid &amp;)</div><div class="ttdoc">get a Gid where edges and nodes are duplicated</div><div class="ttdef"><b>Definition</b> grid.hxx:305</div></div>
-<div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_abecfec3a6f0b89df92037cea592ca231"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#abecfec3a6f0b89df92037cea592ca231">Antares::Graph::Grid::findEdgeFromNodeNames</a></div><div class="ttdeci">EdgeP findEdgeFromNodeNames(std::string u, std::string v)</div><div class="ttdoc">find an edge from node names</div><div class="ttdef"><b>Definition</b> grid.h:162</div></div>
+<div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_abecfec3a6f0b89df92037cea592ca231"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#abecfec3a6f0b89df92037cea592ca231">Antares::Graph::Grid::findEdgeFromNodeNames</a></div><div class="ttdeci">EdgeP findEdgeFromNodeNames(std::string u, std::string v)</div><div class="ttdoc">find an edge from node names</div><div class="ttdef"><b>Definition</b> grid.h:158</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_ad92e0af9b29b8793c588d0bcb872385e"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#ad92e0af9b29b8793c588d0bcb872385e">Antares::Graph::Grid::Grid</a></div><div class="ttdeci">Grid()</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> grid.hxx:37</div></div>
 <div class="ttc" id="aclassAntares_1_1Graph_1_1Grid_html_af0bcd0a47cf60f481817641a786ca19f"><div class="ttname"><a href="classAntares_1_1Graph_1_1Grid.html#af0bcd0a47cf60f481817641a786ca19f">Antares::Graph::Grid::buildMesh</a></div><div class="ttdeci">bool buildMesh()</div><div class="ttdoc">Get minimum spanning tree.</div><div class="ttdef"><b>Definition</b> grid.hxx:186</div></div>
-<div class="ttc" id="aclassAntares_1_1Graph_1_1Node_html"><div class="ttname"><a href="classAntares_1_1Graph_1_1Node.html">Antares::Graph::Node</a></div><div class="ttdef"><b>Definition</b> grid.h:41</div></div>
-<div class="ttc" id="astructAntares_1_1Graph_1_1Edge_1_1addpWeight_html"><div class="ttname"><a href="structAntares_1_1Graph_1_1Edge_1_1addpWeight.html">Antares::Graph::Edge::addpWeight</a></div><div class="ttdef"><b>Definition</b> grid.h:112</div></div>
-<div class="ttc" id="astructAntares_1_1Graph_1_1Edge_1_1compareWeight_html"><div class="ttname"><a href="structAntares_1_1Graph_1_1Edge_1_1compareWeight.html">Antares::Graph::Edge::compareWeight</a></div><div class="ttdef"><b>Definition</b> grid.h:120</div></div>
+<div class="ttc" id="aclassAntares_1_1Graph_1_1Node_html"><div class="ttname"><a href="classAntares_1_1Graph_1_1Node.html">Antares::Graph::Node</a></div><div class="ttdef"><b>Definition</b> grid.h:37</div></div>
+<div class="ttc" id="astructAntares_1_1Graph_1_1Edge_1_1addpWeight_html"><div class="ttname"><a href="structAntares_1_1Graph_1_1Edge_1_1addpWeight.html">Antares::Graph::Edge::addpWeight</a></div><div class="ttdef"><b>Definition</b> grid.h:108</div></div>
+<div class="ttc" id="astructAntares_1_1Graph_1_1Edge_1_1compareWeight_html"><div class="ttname"><a href="structAntares_1_1Graph_1_1Edge_1_1compareWeight.html">Antares::Graph::Edge::compareWeight</a></div><div class="ttdef"><b>Definition</b> grid.h:116</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
