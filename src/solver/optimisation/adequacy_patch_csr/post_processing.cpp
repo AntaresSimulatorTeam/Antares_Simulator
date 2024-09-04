@@ -20,6 +20,7 @@
 */
 #include "antares/solver/optimisation/adequacy_patch_csr/post_processing.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace Antares::Data::AdequacyPatch
