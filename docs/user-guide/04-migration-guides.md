@@ -28,6 +28,10 @@ with XXX in
 #### Short term storage: efficiency for withdrawal
 In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
 
+### Output
+- Remove column SPIL ENRG CSR (adequacy patch)
+- Add DTG MRG CSR and UNSP ENRG CSR variables
+
 ## v9.1.0
 ### Input 
 #### Hydro Maximum Generation/Pumping Power
@@ -198,7 +202,6 @@ In file **settings/generaldata.ini**, in section `adequacy patch`, add propertie
 * `price-taking-order` [string] can take values `DENS` (default value) and `Load`.
 * `include-hurdle-cost-csr` [bool]. Default value = `false`
 * `check-csr-cost-function` [bool]. Default value = `false`
-* `recompute-dtg-mrg` [bool]. Default value = `false`
 * `threshold-initiate-curtailment-sharing-rule` [double]. Default value = `0.0`
 * `threshold-display-local-matching-rule-violations` [double]. Default value = `0.0`
 * `threshold-csr-variable-bounds-relaxation` [int]. Default value = `3`

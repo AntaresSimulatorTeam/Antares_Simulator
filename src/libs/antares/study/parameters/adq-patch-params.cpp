@@ -56,7 +56,6 @@ void CurtailmentSharing::reset()
     priceTakingOrder = AdqPatchPTO::isDens;
     includeHurdleCost = false;
     checkCsrCostFunction = false;
-    recomputeDTGMRG = false;
     resetThresholds();
 }
 
@@ -107,11 +106,6 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
     {
         return value.to<bool>(checkCsrCostFunction);
     }
-    if (key == "recompute-dtg-mrg")
-    {
-        return value.to<bool>(recomputeDTGMRG);
-    }
-
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
     {
@@ -147,7 +141,6 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
     section->add("price-taking-order", PriceTakingOrderToString(priceTakingOrder));
     section->add("include-hurdle-cost-csr", includeHurdleCost);
     section->add("check-csr-cost-function", checkCsrCostFunction);
-    section->add("recompute-dtg-mrg", recomputeDTGMRG);
 
     // Thresholds
     section->add("threshold-initiate-curtailment-sharing-rule", thresholdRun);
@@ -170,7 +163,7 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
     {
         out.emplace_back("DENS");
         out.emplace_back("LMR VIOL.");
-        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("UNSP. ENRG CSR");
         out.emplace_back("DTG MRG CSR");
     }
 }

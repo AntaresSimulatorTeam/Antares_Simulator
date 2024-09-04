@@ -94,8 +94,6 @@ public:
     //! Check CSR cost function prior & after CSR optimization
     bool checkCsrCostFunction;
 
-    bool recomputeDTGMRG = false;
-
     bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
     void addProperties(IniFile::Section* section) const;
 

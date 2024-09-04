@@ -98,9 +98,9 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/STStorageLevelsByCluster.h
         include/antares/solver/variable/economy/STStorageCashFlowByCluster.h
         include/antares/solver/variable/economy/unsupliedEnergy.h
+        include/antares/solver/variable/economy/unsupliedEnergyCsr.h
         include/antares/solver/variable/economy/domesticUnsuppliedEnergy.h
         include/antares/solver/variable/economy/localMatchingRuleViolations.h
-        include/antares/solver/variable/economy/spilledEnergyAfterCSR.h
         include/antares/solver/variable/economy/dtgMarginAfterCsr.h
         include/antares/solver/variable/economy/spilledEnergy.h
         include/antares/solver/variable/economy/dispatchableGeneration.h
