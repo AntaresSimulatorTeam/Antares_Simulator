@@ -64,21 +64,14 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     }
 
     auto* mpVar = mpSolver_->MakeVar(lb, ub, integer, name);
-    auto mipVar = std::make_unique<OrtoolsMipVariable>(mpVar);
 
-    if (!mpVar || !mipVar)
+    if (!mpVar)
     {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& mapIteratorPair = variables_.try_emplace(name, std::move(mipVar));
-
-    if (!mapIteratorPair.second)
-    {
-        logs.error() << "Error adding variable: " << name;
-    }
-
-    return mapIteratorPair.first->second.get(); // <<name, var>, bool>
+    const auto& pair = variables_.try_emplace(name, std::make_unique<OrtoolsMipVariable>(mpVar));
+    return pair.first->second.get(); // <<name, var>, bool>
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,

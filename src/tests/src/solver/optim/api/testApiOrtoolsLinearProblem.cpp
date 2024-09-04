@@ -22,8 +22,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <ortools/linear_solver/linear_solver.h>
-
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/optim/ortoolsImpl/linearProblem.h>

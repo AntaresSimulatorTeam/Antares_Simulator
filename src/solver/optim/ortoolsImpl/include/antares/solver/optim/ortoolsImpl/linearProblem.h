@@ -25,14 +25,7 @@
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
-
-// forward declaration
-namespace operations_research
-{
-class MPSolver;
-class MPSolverParameters;
-class MPObjective;
-} // namespace operations_research
+#include <ortools/linear_solver/linear_solver.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
