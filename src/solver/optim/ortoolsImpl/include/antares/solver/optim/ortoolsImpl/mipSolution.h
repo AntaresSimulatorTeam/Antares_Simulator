@@ -26,6 +26,7 @@
 #include <vector>
 
 #include <antares/solver/optim/api/mipSolution.h>
+#include <ortools/linear_solver/linear_solver.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
@@ -33,9 +34,8 @@ namespace Antares::Solver::Optim::OrtoolsImpl
 class OrtoolsMipSolution final: public Api::IMipSolution
 {
 public:
-    OrtoolsMipSolution(const std::map<std::string, double>& solution,
-                       Api::MipStatus& responseStatus,
-                       double objectiveValue);
+    OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
+                       std::shared_ptr<operations_research::MPSolver> solver);
 
     ~OrtoolsMipSolution() final = default;
 
@@ -47,9 +47,8 @@ public:
 
 private:
     Api::MipStatus responseStatus_;
-
+    std::shared_ptr<operations_research::MPSolver> mpSolver_;
     std::map<std::string, double> solution_;
-
     double objectiveValue_;
 };
 
