@@ -13,19 +13,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Print version
+      - name: Print clang-format version
         run: clang-format --version
 
-      - name: clang-format
+      - name: Run clang-format
         run: cd src && ./format-code.sh
 
-      - name: git diff
+      - name: Check for formatting changes
+        id: check_diff
         run: |
+          git diff > diff.patch
           DIFF=`git status --porcelain`
-          if [[ $DIFF ]]; then
-          echo "The following files are not well formatted, please make sure to use clang-format 18.1.3"
-          echo "$DIFF"
-          exit 1
-          else
-          echo "Code is well formatted, congrats !"
-          fi
+          echo "diff=$DIFF" >> $GITHUB_ENV
+
+      - name: Suggest formatting changes in PR
+        if: env.diff != ''
+        run: |
+          # Extract the file differences
+          git diff --unified=0 > changes.diff
+
+          # Parse the diff and make suggestions
+          while IFS= read -r line; do
+            if [[ $line =~ ^@@ ]]; then
+              line_number=$(echo $line | grep -oP '(?<=\+)[0-9]+')
+            elif [[ $line =~ ^\+ ]]; then
+              suggestion=$(echo "$line" | sed 's/^+//')
+              gh pr review ${{ github.event.pull_request.number }} \
+                --comment \
+                --body "```suggestion\n$suggestion\n```" \
+                --start-line $line_number \
+                --path $(echo $line | awk '{print $1}')
+              ((line_number++))
+            fi
+          done < changes.diff

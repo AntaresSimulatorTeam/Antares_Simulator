@@ -35,11 +35,11 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
 {
     int NombreDeContraintes = 0;
     int NombreDeTermes = 0;
-    int il = 0;
+    int                    il = 0;
 
-    IndicesDebutDeLigne[NombreDeContraintes] = il;
+    IndicesDebutDeLigne[NombreDeContraintes]                     = il;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
+                     {
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
         IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt];
         il++;
@@ -54,10 +54,9 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
     NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
 
     CorrespondanceDesContraintes.NumeroDeContrainteDEnergieMensuelle = NombreDeContraintes;
-    NombreDeContraintes++;
+                        NombreDeContraintes++;
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++){
         NombreDeTermes = 0;
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
