@@ -70,7 +70,7 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& pair = variables_.try_emplace(name, std::make_unique<OrtoolsMipVariable>(mpVar));
+    const auto& pair = variables_.emplace(name, std::make_unique<OrtoolsMipVariable>(mpVar));
     return pair.first->second.get(); // <<name, var>, bool>
 }
 
@@ -104,21 +104,14 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     }
 
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
-    auto mipConstraint = std::make_unique<OrtoolsMipConstraint>(mpConstraint);
 
-    if (!mpConstraint || !mipConstraint)
+    if (!mpConstraint)
     {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& mapIteratorPair = constraints_.try_emplace(name, std::move(mipConstraint));
-
-    if (!mapIteratorPair.second)
-    {
-        logs.error() << "Error adding variable: " << name;
-    }
-
-    return mapIteratorPair.first->second.get(); // <<name, constraint>, bool>
+    const auto& pair = constraints_.emplace(name, std::make_unique<OrtoolsMipConstraint>(mpConstraint));
+    return pair.first->second.get(); // <<name, constraint>, bool>
 }
 
 OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
@@ -129,13 +122,13 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& nam
 static const operations_research::MPVariable* getMpVar(const Api::IMipVariable* var)
 
 {
-    const auto* MPVar = dynamic_cast<const OrtoolsMipVariable*>(var);
-    if (!MPVar)
+    const auto* OrtoolsMipVar = dynamic_cast<const OrtoolsMipVariable*>(var);
+    if (!OrtoolsMipVar)
     {
         logs.error() << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
-    return MPVar->getMpVar();
+    return OrtoolsMipVar->getMpVar();
 }
 
 void OrtoolsLinearProblem::setObjectiveCoefficient(Api::IMipVariable* var, double coefficient)
