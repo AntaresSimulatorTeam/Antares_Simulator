@@ -21,12 +21,9 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
-#include <yuni/core/system/suspend.h>
 #include <yuni/io/io.h>
-#include <yuni/job/job.h>
 
 #include <antares/antares/fatal-error.h>
-#include <antares/benchmarking/timer.h>
 #include <antares/date/date.h>
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>

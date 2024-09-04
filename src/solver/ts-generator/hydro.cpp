@@ -22,6 +22,7 @@
 #include <cmath>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/misc/cholesky.h"

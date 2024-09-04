@@ -20,8 +20,6 @@
 */
 #include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 
-#include <yuni/yuni.h>
-
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
