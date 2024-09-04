@@ -41,17 +41,16 @@ jobs:
           sudo apt-get install -y gh
           gh auth login --with-token <<< "$GITHUB_TOKEN"
 
-          # Parse the diff and make suggestions
+          # Create a comment with suggestions
+          COMMENT_BODY="## Formatting Suggestions\n\n"
           while IFS= read -r line; do
             if [[ $line =~ ^@@ ]]; then
               line_number=$(echo $line | grep -oP '(?<=\+)[0-9]+')
             elif [[ $line =~ ^\+ ]]; then
               suggestion=$(echo "$line" | sed 's/^+//')
-              gh pr review ${{ github.event.pull_request.number }} \
-                --comment \
-                --body "```suggestion\n$suggestion\n```" \
-                --start-line $line_number \
-                --path $(echo $line | awk '{print $1}')
-              ((line_number++))
+              COMMENT_BODY+="```suggestion\n$suggestion\n```\n"
             fi
           done < diff.patch
+
+          # Add a comment to the PR
+          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
