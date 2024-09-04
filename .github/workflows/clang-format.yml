@@ -22,15 +22,22 @@ jobs:
       - name: Check for formatting changes
         id: check_diff
         run: |
+          # Create a diff patch file
           git diff > diff.patch
-          DIFF=`git status --porcelain`
-          echo "diff=$DIFF" >> $GITHUB_ENV
+
+          # Check for changes
+          DIFF=$(git status --porcelain)
+          echo "DIFF=$DIFF" >> $GITHUB_ENV
+
+          # Optionally output the diff for debugging
+          cat diff.patch
 
       - name: Suggest formatting changes in PR
-        if: env.diff != ''
+        if: env.DIFF != ''
         run: |
-          # Extract the file differences
-          git diff --unified=0 > changes.diff
+          # Install GitHub CLI
+          sudo apt-get install -y gh
+          gh auth login --with-token <<< "$GITHUB_TOKEN"
 
           # Parse the diff and make suggestions
           while IFS= read -r line; do
@@ -45,4 +52,4 @@ jobs:
                 --path $(echo $line | awk '{print $1}')
               ((line_number++))
             fi
-          done < changes.diff
+          done < diff.patch
