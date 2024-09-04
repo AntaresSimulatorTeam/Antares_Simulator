@@ -26,7 +26,6 @@
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
 
-// forward declaration
 namespace operations_research
 {
 class MPSolver;
@@ -66,7 +65,7 @@ public:
     OrtoolsMipSolution* solve(bool verboseSolver) override;
 
 private:
-    std::unique_ptr<operations_research::MPSolver> mpSolver_;
+    std::shared_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 

@@ -64,21 +64,14 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     }
 
     auto* mpVar = mpSolver_->MakeVar(lb, ub, integer, name);
-    auto mipVar = std::make_unique<OrtoolsMipVariable>(mpVar);
 
-    if (!mpVar || !mipVar)
+    if (!mpVar)
     {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& mapIteratorPair = variables_.try_emplace(name, std::move(mipVar));
-
-    if (!mapIteratorPair.second)
-    {
-        logs.error() << "Error adding variable: " << name;
-    }
-
-    return mapIteratorPair.first->second.get(); // <<name, var>, bool>
+    const auto& pair = variables_.emplace(name, std::make_unique<OrtoolsMipVariable>(mpVar));
+    return pair.first->second.get(); // <<name, var>, bool>
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
@@ -111,21 +104,15 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     }
 
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
-    auto mipConstraint = std::make_unique<OrtoolsMipConstraint>(mpConstraint);
 
-    if (!mpConstraint || !mipConstraint)
+    if (!mpConstraint)
     {
         logs.error() << "Couldn't add variable to Ortools MPSolver: " << name;
     }
 
-    const auto& mapIteratorPair = constraints_.try_emplace(name, std::move(mipConstraint));
-
-    if (!mapIteratorPair.second)
-    {
-        logs.error() << "Error adding variable: " << name;
-    }
-
-    return mapIteratorPair.first->second.get(); // <<name, constraint>, bool>
+    const auto& pair = constraints_.emplace(name,
+                                            std::make_unique<OrtoolsMipConstraint>(mpConstraint));
+    return pair.first->second.get(); // <<name, constraint>, bool>
 }
 
 OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
@@ -136,13 +123,13 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& nam
 static const operations_research::MPVariable* getMpVar(const Api::IMipVariable* var)
 
 {
-    const auto* orMpVar = dynamic_cast<const OrtoolsMipVariable*>(var);
-    if (!orMpVar)
+    const auto* OrtoolsMipVar = dynamic_cast<const OrtoolsMipVariable*>(var);
+    if (!OrtoolsMipVar)
     {
         logs.error() << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
-    return orMpVar->getMpVar();
+    return OrtoolsMipVar->getMpVar();
 }
 
 void OrtoolsLinearProblem::setObjectiveCoefficient(Api::IMipVariable* var, double coefficient)
@@ -175,23 +162,6 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
-static Api::MipStatus convertStatus(operations_research::MPSolver::ResultStatus& status)
-{
-    switch (status)
-    {
-    case operations_research::MPSolver::ResultStatus::OPTIMAL:
-        return Api::MipStatus::OPTIMAL;
-    case operations_research::MPSolver::ResultStatus::FEASIBLE:
-        return Api::MipStatus::FEASIBLE;
-    case operations_research::MPSolver::ResultStatus::UNBOUNDED:
-        return Api::MipStatus::UNBOUNDED;
-    default:
-        logs.warning() << "Solve returned an error status";
-        break;
-    }
-    return Api::MipStatus::MIP_ERROR;
-}
-
 OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)
@@ -200,15 +170,8 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
     }
 
     auto mpStatus = mpSolver_->Solve(params_);
-    Api::MipStatus status = convertStatus(mpStatus);
 
-    std::map<std::string, double> solution;
-    for (const auto* var: mpSolver_->variables())
-    {
-        solution.try_emplace(var->name(), var->solution_value());
-    }
-
-    solution_ = std::make_unique<OrtoolsMipSolution>(solution, status, objective_->Value());
+    solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_);
     return solution_.get();
 }
 

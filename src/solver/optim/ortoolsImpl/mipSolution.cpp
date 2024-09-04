@@ -25,27 +25,37 @@
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-OrtoolsMipSolution::OrtoolsMipSolution(const std::map<std::string, double>& solution,
-                                       Api::MipStatus& responseStatus,
-                                       double objectiveValue):
-    responseStatus_(responseStatus),
-    objectiveValue_(objectiveValue)
+OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& status,
+                                       std::shared_ptr<operations_research::MPSolver> solver):
+    status_(status),
+    mpSolver_(solver)
 {
-    // store all solutions, even zeros
-    for (const auto& varAndValue: solution)
+    for (const auto* var: mpSolver_->variables())
     {
-        solution_.insert(varAndValue);
+        solution_.try_emplace(var->name(), var->solution_value());
     }
 }
 
 Api::MipStatus OrtoolsMipSolution::getStatus() const
 {
-    return responseStatus_;
+    switch (status_)
+    {
+    case operations_research::MPSolver::ResultStatus::OPTIMAL:
+        return Api::MipStatus::OPTIMAL;
+    case operations_research::MPSolver::ResultStatus::FEASIBLE:
+        return Api::MipStatus::FEASIBLE;
+    case operations_research::MPSolver::ResultStatus::UNBOUNDED:
+        return Api::MipStatus::UNBOUNDED;
+    default:
+        logs.warning() << "Solve returned an error status";
+        break;
+    }
+    return Api::MipStatus::MIP_ERROR;
 }
 
 double OrtoolsMipSolution::getObjectiveValue() const
 {
-    return objectiveValue_;
+    return mpSolver_->MutableObjective()->Value();
 }
 
 double OrtoolsMipSolution::getOptimalValue(const Api::IMipVariable* var) const

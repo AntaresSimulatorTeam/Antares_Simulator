@@ -22,8 +22,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <ortools/linear_solver/linear_solver.h>
-
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/optim/ortoolsImpl/linearProblem.h>
@@ -46,15 +44,15 @@ struct Fixture
 
 void Fixture::createProblemMaximize()
 {
-    auto* a = pb->addNumVariable(0, 1, "a");
-    auto* b = pb->addNumVariable(0, 1, "b");
-    auto* c = pb->addConstraint(1, 1, "c");
+    auto* var1 = pb->addNumVariable(0, 1, "var1");
+    auto* var2 = pb->addNumVariable(0, 1, "var2");
+    auto* constraint = pb->addConstraint(1, 1, "constraint");
 
-    c->setCoefficient(a, 1);
-    c->setCoefficient(b, 1);
+    constraint->setCoefficient(var1, 1);
+    constraint->setCoefficient(var2, 1);
 
-    pb->setObjectiveCoefficient(a, 1);
-    pb->setObjectiveCoefficient(b, 1);
+    pb->setObjectiveCoefficient(var1, 1);
+    pb->setObjectiveCoefficient(var1, 1);
     pb->setMaximization();
 }
 
@@ -67,22 +65,22 @@ BOOST_AUTO_TEST_CASE(solverMip)
 
 BOOST_FIXTURE_TEST_CASE(basicLinearProblemAdd, Fixture)
 {
-    pb->addIntVariable(0, 1, "a");
-    pb->addNumVariable(0, 1, "b");
+    pb->addIntVariable(0, 1, "var1");
+    pb->addNumVariable(0, 1, "var2");
 
-    pb->addConstraint(0, 1, "c");
+    pb->addConstraint(0, 1, "constraint");
 }
 
 BOOST_FIXTURE_TEST_CASE(linearProblemGetAndConstraintSetCoeff, Fixture)
 {
-    pb->addVariable(0, 1, true, "a");
-    pb->addConstraint(0, 1, "c");
+    pb->addVariable(0, 1, true, "var");
+    pb->addConstraint(0, 1, "constraint");
 
-    auto* var = pb->getVariable("a");
-    auto* cons = pb->getConstraint("c");
+    auto* var = pb->getVariable("var");
+    auto* cons = pb->getConstraint("constraint");
 
-    BOOST_CHECK_EQUAL(var->getName(), "a");
-    BOOST_CHECK_EQUAL(cons->getName(), "c");
+    BOOST_CHECK_EQUAL(var->getName(), "var");
+    BOOST_CHECK_EQUAL(cons->getName(), "constraint");
 
     cons->setCoefficient(var, 3.2);
     BOOST_CHECK_EQUAL(cons->getCoefficient(var), 3.2);
@@ -99,11 +97,11 @@ bool correctMessage(const std::exception& ex)
 
 BOOST_FIXTURE_TEST_CASE(nameOrConstraintAlreadyExists, Fixture)
 {
-    pb->addNumVariable(0, 1, "a");
-    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "a"), std::exception, correctMessage);
+    pb->addNumVariable(0, 1, "var");
+    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "var"), std::exception, correctMessage);
 
-    pb->addConstraint(0, 1, "c");
-    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "c"), std::exception, correctMessage);
+    pb->addConstraint(0, 1, "constraint");
+    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "constraint"), std::exception, correctMessage);
 }
 
 BOOST_FIXTURE_TEST_CASE(getVarOrConstraintDoesntExist, Fixture)
@@ -123,7 +121,7 @@ BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(mipVariableBounds, Fixture)
 {
-    auto* var = pb->addNumVariable(0, 1, "a");
+    auto* var = pb->addNumVariable(0, 1, "var");
 
     var->setLb(-4);
     var->setUb(7);
@@ -136,14 +134,14 @@ BOOST_FIXTURE_TEST_CASE(mipVariableBounds, Fixture)
     BOOST_CHECK_EQUAL(var->getLb(), 2);
     BOOST_CHECK_EQUAL(var->getUb(), 13);
 
-    auto* sameVar = pb->getVariable("a");
+    auto* sameVar = pb->getVariable("var");
     BOOST_CHECK_EQUAL(sameVar->getLb(), 2);
     BOOST_CHECK_EQUAL(sameVar->getUb(), 13);
 }
 
 BOOST_FIXTURE_TEST_CASE(mipConstraintBounds, Fixture)
 {
-    auto* constraint = pb->addConstraint(0, 1, "a");
+    auto* constraint = pb->addConstraint(0, 1, "var");
 
     constraint->setLb(-4);
     constraint->setUb(7);
@@ -159,7 +157,7 @@ BOOST_FIXTURE_TEST_CASE(mipConstraintBounds, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
 {
-    auto* var = pb->addVariable(0, 1, true, "a");
+    auto* var = pb->addVariable(0, 1, true, "var");
     pb->setObjectiveCoefficient(var, 1);
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
 
@@ -169,15 +167,15 @@ BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(infeasibleProblem, Fixture)
 {
-    auto* a = pb->addIntVariable(0, 10, "a");
-    auto* b = pb->addNumVariable(0, 10, "b");
-    auto* c = pb->addConstraint(1, 1, "c");
+    auto* var1 = pb->addIntVariable(0, 10, "var1");
+    auto* var2 = pb->addNumVariable(0, 10, "var2");
+    auto* constraint = pb->addConstraint(1, 1, "constraint");
 
-    c->setCoefficient(a, 1);
-    c->setCoefficient(b, 1);
+    constraint->setCoefficient(var1, 1);
+    constraint->setCoefficient(var2, 1);
 
-    pb->setObjectiveCoefficient(a, 1);
-    pb->setObjectiveCoefficient(b, 1);
+    pb->setObjectiveCoefficient(var1, 1);
+    pb->setObjectiveCoefficient(var2, 1);
     pb->setMinimization();
 
     auto* solution = pb->solve(true);
@@ -185,7 +183,7 @@ BOOST_FIXTURE_TEST_CASE(infeasibleProblem, Fixture)
     BOOST_CHECK(solution->getStatus() == Api::MipStatus::MIP_ERROR);
 
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(a), 0);
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(var1), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
@@ -203,12 +201,12 @@ BOOST_FIXTURE_TEST_CASE(solutionOpimalValues, Fixture)
     createProblemMaximize();
     auto* solution = pb->solve(true);
 
-    auto* a = pb->getVariable("a");
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(a), 1);
+    auto* var1 = pb->getVariable("var1");
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(var1), 1);
 
-    auto* b = pb->getVariable("b");
+    auto* var2 = pb->getVariable("var2");
 
-    std::vector<Api::IMipVariable*> v = {a, b};
+    std::vector<Api::IMipVariable*> v = {var1, var2};
     auto res = solution->getOptimalValues(v);
 
     auto* varNotInSolution = pb->addNumVariable(0, 1, "f");
