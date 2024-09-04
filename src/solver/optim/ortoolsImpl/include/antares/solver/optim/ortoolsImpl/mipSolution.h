@@ -27,6 +27,7 @@
 #include <vector>
 
 #include <antares/solver/optim/api/mipSolution.h>
+#include <ortools/linear_solver/linear_solver.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
