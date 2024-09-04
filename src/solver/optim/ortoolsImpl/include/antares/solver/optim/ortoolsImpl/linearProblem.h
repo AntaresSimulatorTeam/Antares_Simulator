@@ -21,12 +21,17 @@
 
 #pragma once
 
-#include <ortools/linear_solver/linear_solver.h>
-
 #include <antares/solver/optim/api/linearProblem.h>
 #include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
 #include <antares/solver/optim/ortoolsImpl/mipSolution.h>
 #include <antares/solver/optim/ortoolsImpl/mipVariable.h>
+
+namespace operations_research
+{
+class MPSolver;
+class MPSolverParameters;
+class MPObjective;
+} // namespace operations_research
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
