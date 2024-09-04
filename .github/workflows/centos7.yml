@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - fix/centos-mirror
       - dependabot/*
   schedule:
     - cron: '21 2 * * *'
@@ -43,6 +44,17 @@ jobs:
 
     - name: Install gcc 10
       run: |
+        # update mirrors, official centos7 is deprecated
+        sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo &&\
+        sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo &&\
+        sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo &&\
+        yum update -y
+
+        # not a typo, centos-release-scl is needed to install devtoolset-10 but introduce deprecated mirror
+        sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo &&\
+        sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo &&\
+        sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
+
         yum install -y centos-release-scl
         yum install -y devtoolset-11-gcc*
 
