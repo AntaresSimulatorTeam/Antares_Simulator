@@ -33,6 +33,7 @@ enum class MipStatus
     OPTIMAL,
     FEASIBLE,
     UNBOUNDED,
+    INFEASIBLE,
     MIP_ERROR
 };
 

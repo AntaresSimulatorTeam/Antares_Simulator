@@ -46,6 +46,8 @@ Api::MipStatus OrtoolsMipSolution::getStatus() const
         return Api::MipStatus::FEASIBLE;
     case operations_research::MPSolver::ResultStatus::UNBOUNDED:
         return Api::MipStatus::UNBOUNDED;
+    case operations_research::MPSolver::ResultStatus::INFEASIBLE:
+        return Api::MipStatus::INFEASIBLE;
     default:
         logs.warning() << "Solve returned an error status";
         break;

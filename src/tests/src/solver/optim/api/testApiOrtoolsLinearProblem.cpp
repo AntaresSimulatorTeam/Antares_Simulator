@@ -189,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(give_cost_to_null_variable_leads_to_bad_cast, FixtureEmp
 BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_error_status, FixtureInfeasibleProblem)
 {
     auto* solution = pb->solve(true);
-    BOOST_CHECK(solution->getStatus() == Api::MipStatus::MIP_ERROR);
+    BOOST_CHECK(solution->getStatus() == Api::MipStatus::INFEASIBLE);
 }
 
 BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_null_objective_value,
