@@ -57,7 +57,7 @@ Api::MipStatus OrtoolsMipSolution::getStatus() const
 
 double OrtoolsMipSolution::getObjectiveValue() const
 {
-    return mpSolver_->MutableObjective()->Value();
+    return mpSolver_->Objective().Value();
 }
 
 double OrtoolsMipSolution::getOptimalValue(const Api::IMipVariable* var) const
