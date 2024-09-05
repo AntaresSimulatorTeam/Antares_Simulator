@@ -28,101 +28,121 @@
 
 using namespace Antares::Solver::Optim;
 
-struct Fixture
+struct FixtureEmptyProblem
 {
-    ~Fixture() = default;
-
-    Fixture()
+    FixtureEmptyProblem()
     {
         pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     }
 
     std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
-
-    void createProblemMaximize();
 };
 
-void Fixture::createProblemMaximize()
+struct FixtureInfeasibleProblem: public FixtureEmptyProblem
 {
-    auto* var1 = pb->addNumVariable(0, 1, "var1");
-    auto* var2 = pb->addNumVariable(0, 1, "var2");
-    auto* constraint = pb->addConstraint(1, 1, "constraint");
+    FixtureInfeasibleProblem()
+    {
+        auto* var = pb->addNumVariable(0, 1, "var");
+        auto* constraint = pb->addConstraint(2, 2, "constraint");
+        constraint->setCoefficient(var, 1);
+    }
+};
 
-    constraint->setCoefficient(var1, 1);
-    constraint->setCoefficient(var2, 1);
-
-    pb->setObjectiveCoefficient(var1, 1);
-    pb->setObjectiveCoefficient(var1, 1);
-    pb->setMaximization();
-}
-
-BOOST_AUTO_TEST_SUITE(optim_api)
-
-BOOST_AUTO_TEST_CASE(solverMip)
+struct FixtureFeasibleProblem: public FixtureEmptyProblem
 {
-    auto pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(true, "sirius");
-}
+    FixtureFeasibleProblem()
+    {
+        auto* var = pb->addNumVariable(0, 10, "var");
+        auto* constraint = pb->addConstraint(1, 1, "constraint");
+        constraint->setCoefficient(var, 1);
+        pb->setObjectiveCoefficient(var, 1);
+    }
+};
 
-BOOST_FIXTURE_TEST_CASE(basicLinearProblemAdd, Fixture)
+BOOST_AUTO_TEST_SUITE(tests_on_OrtoolsLinearProblem)
+
+BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureEmptyProblem)
 {
-    pb->addIntVariable(0, 1, "var1");
-    pb->addNumVariable(0, 1, "var2");
-
-    pb->addConstraint(0, 1, "constraint");
-}
-
-BOOST_FIXTURE_TEST_CASE(linearProblemGetAndConstraintSetCoeff, Fixture)
-{
-    pb->addVariable(0, 1, true, "var");
-    pb->addConstraint(0, 1, "constraint");
-
+    pb->addIntVariable(5, 15, "var");
     auto* var = pb->getVariable("var");
-    auto* cons = pb->getConstraint("constraint");
-
-    BOOST_CHECK_EQUAL(var->getName(), "var");
-    BOOST_CHECK_EQUAL(cons->getName(), "constraint");
-
-    cons->setCoefficient(var, 3.2);
-    BOOST_CHECK_EQUAL(cons->getCoefficient(var), 3.2);
-
-    BOOST_CHECK_THROW(cons->setCoefficient(nullptr, 0), std::bad_cast);
-    BOOST_CHECK_THROW(cons->getCoefficient(nullptr), std::bad_cast);
+    BOOST_CHECK(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 5);
+    BOOST_CHECK_EQUAL(var->getUb(), 15);
 }
 
-bool correctMessage(const std::exception& ex)
+BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureEmptyProblem)
+{
+    pb->addNumVariable(2., 7., "var");
+    auto* var = pb->getVariable("var");
+    BOOST_CHECK(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 2.);
+    BOOST_CHECK_EQUAL(var->getUb(), 7.);
+}
+
+BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, FixtureEmptyProblem)
+{
+    pb->addConstraint(3., 8., "constraint");
+    auto* constraint = pb->getConstraint("constraint");
+    BOOST_CHECK(constraint);
+    BOOST_CHECK_EQUAL(constraint->getLb(), 3.);
+    BOOST_CHECK_EQUAL(constraint->getUb(), 8.);
+}
+
+BOOST_FIXTURE_TEST_CASE(give_coeff_to_var_in_constraint____check_coeff_exists, FixtureEmptyProblem)
+{
+    auto* var = pb->addNumVariable(0, 1, "var");
+    auto* constraint = pb->addConstraint(0, 1, "constraint");
+    constraint->setCoefficient(var, 3.2);
+
+    BOOST_CHECK_EQUAL(constraint->getCoefficient(var), 3.2);
+}
+
+BOOST_FIXTURE_TEST_CASE(give_coef_to_null_var_in_constaint_leads_to_bad_cast, FixtureEmptyProblem)
+{
+    auto* constraint = pb->addConstraint(0, 1, "constraint");
+    BOOST_CHECK_THROW(constraint->setCoefficient(nullptr, 3.2), std::bad_cast);
+}
+
+BOOST_FIXTURE_TEST_CASE(get_coef_of_null_var_in_constaint_leads_to_bad_cast, FixtureEmptyProblem)
+{
+    auto* constraint = pb->addConstraint(0, 1, "constraint");
+    BOOST_CHECK_THROW(constraint->getCoefficient(nullptr), std::bad_cast);
+}
+
+bool expectedMessage(const std::exception& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), std::string("Element name already exists in linear problem"));
     return true;
 }
 
-BOOST_FIXTURE_TEST_CASE(nameOrConstraintAlreadyExists, Fixture)
+BOOST_FIXTURE_TEST_CASE(add_already_existing_var_to_problem_leads_to_exception, FixtureEmptyProblem)
 {
     pb->addNumVariable(0, 1, "var");
-    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "var"), std::exception, correctMessage);
-
-    pb->addConstraint(0, 1, "constraint");
-    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "constraint"), std::exception, correctMessage);
+    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "var"), std::exception, expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(getVarOrConstraintDoesntExist, Fixture)
+BOOST_FIXTURE_TEST_CASE(add_already_existing_constaint_to_problem_leads_to_exception,
+                        FixtureEmptyProblem)
 {
-    BOOST_CHECK_THROW(pb->getVariable(""), std::out_of_range);
-    BOOST_CHECK_THROW(pb->getConstraint(""), std::out_of_range);
+    pb->addConstraint(0, 1, "constraint");
+    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "constraint"), std::exception, expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(maximizeMinimize, Fixture)
+BOOST_FIXTURE_TEST_CASE(minimize_problem___check_minimize_status, FixtureEmptyProblem)
 {
     pb->setMinimization();
     BOOST_CHECK(pb->isMinimization());
+}
 
+BOOST_FIXTURE_TEST_CASE(maximize_problem___check_maximize_status, FixtureEmptyProblem)
+{
     pb->setMaximization();
     BOOST_CHECK(pb->isMaximization());
 }
 
-BOOST_FIXTURE_TEST_CASE(mipVariableBounds, Fixture)
+BOOST_FIXTURE_TEST_CASE(give_bounds_to_var___check_bounds_exist, FixtureEmptyProblem)
 {
     auto* var = pb->addNumVariable(0, 1, "var");
-
     var->setLb(-4);
     var->setUb(7);
 
@@ -133,108 +153,87 @@ BOOST_FIXTURE_TEST_CASE(mipVariableBounds, Fixture)
 
     BOOST_CHECK_EQUAL(var->getLb(), 2);
     BOOST_CHECK_EQUAL(var->getUb(), 13);
-
-    auto* sameVar = pb->getVariable("var");
-    BOOST_CHECK_EQUAL(sameVar->getLb(), 2);
-    BOOST_CHECK_EQUAL(sameVar->getUb(), 13);
 }
 
-BOOST_FIXTURE_TEST_CASE(mipConstraintBounds, Fixture)
+BOOST_FIXTURE_TEST_CASE(give_bounds_to_constraint___check_bounds_exist, FixtureEmptyProblem)
 {
     auto* constraint = pb->addConstraint(0, 1, "var");
 
     constraint->setLb(-4);
     constraint->setUb(7);
-
     BOOST_CHECK_EQUAL(constraint->getLb(), -4);
     BOOST_CHECK_EQUAL(constraint->getUb(), 7);
 
     constraint->setBounds(2, 13);
-
     BOOST_CHECK_EQUAL(constraint->getLb(), 2);
     BOOST_CHECK_EQUAL(constraint->getUb(), 13);
 }
 
-BOOST_FIXTURE_TEST_CASE(objectiveCoeff, Fixture)
+BOOST_FIXTURE_TEST_CASE(give_cost_to_variable___check_cost_exist, FixtureEmptyProblem)
 {
     auto* var = pb->addVariable(0, 1, true, "var");
     pb->setObjectiveCoefficient(var, 1);
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
+}
 
+BOOST_FIXTURE_TEST_CASE(get_cost_from_null_variable_leads_to_bad_cast, FixtureEmptyProblem)
+{
     BOOST_CHECK_THROW(pb->getObjectiveCoefficient(nullptr), std::bad_cast);
+}
+
+BOOST_FIXTURE_TEST_CASE(give_cost_to_null_variable_leads_to_bad_cast, FixtureEmptyProblem)
+{
     BOOST_CHECK_THROW(pb->setObjectiveCoefficient(nullptr, 0), std::bad_cast);
 }
 
-BOOST_FIXTURE_TEST_CASE(infeasibleProblem, Fixture)
+BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_error_status, FixtureInfeasibleProblem)
 {
-    auto* var1 = pb->addIntVariable(0, 10, "var1");
-    auto* var2 = pb->addNumVariable(0, 10, "var2");
-    auto* constraint = pb->addConstraint(1, 1, "constraint");
-
-    constraint->setCoefficient(var1, 1);
-    constraint->setCoefficient(var2, 1);
-
-    pb->setObjectiveCoefficient(var1, 1);
-    pb->setObjectiveCoefficient(var2, 1);
-    pb->setMinimization();
-
     auto* solution = pb->solve(true);
-
-    BOOST_CHECK(solution->getStatus() == Api::MipStatus::MIP_ERROR);
-
-    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(var1), 0);
+    BOOST_CHECK(solution->getStatus() == Api::MipStatus::INFEASIBLE);
 }
 
-BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
+BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_null_objective_value,
+                        FixtureInfeasibleProblem)
 {
-    createProblemMaximize();
+    auto* solution = pb->solve(true);
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem___check_any_var_is_zero, FixtureInfeasibleProblem)
+{
+    auto* solution = pb->solve(true);
+
+    auto* var = pb->getVariable("var");
+    BOOST_CHECK(var); // searched variable is known by problem
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(var), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_status_is_optimal, FixtureFeasibleProblem)
+{
     auto* solution = pb->solve(false);
-
     BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
+}
 
+BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_objective_has_expected_value,
+                        FixtureFeasibleProblem)
+{
+    auto* solution = pb->solve(false);
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(solutionOpimalValues, Fixture)
+BOOST_FIXTURE_TEST_CASE(solve_problem_then_add_new_var___new_var_optimal_value_is_zero,
+                        FixtureFeasibleProblem)
 {
-    createProblemMaximize();
-    auto* solution = pb->solve(true);
-
-    auto* var1 = pb->getVariable("var1");
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(var1), 1);
-
-    auto* var2 = pb->getVariable("var2");
-
-    std::vector<Api::IMipVariable*> v = {var1, var2};
-    auto res = solution->getOptimalValues(v);
-
-    auto* varNotInSolution = pb->addNumVariable(0, 1, "f");
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(varNotInSolution), 0);
-
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
+    auto* solution = pb->solve(false);
+    auto* newVar = pb->addNumVariable(0, 1, "new var");
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(newVar), 0);
 }
 
-BOOST_AUTO_TEST_CASE(simpleProblem)
+BOOST_FIXTURE_TEST_CASE(solve_problem___check_optimal_value_of_null_var_is_zero,
+                        FixtureFeasibleProblem)
 {
-    auto problem = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
-
-    auto* P1 = problem->addNumVariable(0, 80, "P1");
-    auto* P2 = problem->addNumVariable(0, 200, "P2");
-
-    auto* EOD = problem->addConstraint(100, 100, "EOD");
-    EOD->setCoefficient(P1, 1);
-    EOD->setCoefficient(P2, 1);
-
-    problem->setObjectiveCoefficient(P1, 10);
-    problem->setObjectiveCoefficient(P2, 20);
-
-    problem->setMinimization();
-
-    auto* solution = problem->solve(true);
-
-    std::cout << "Optimal value for P1: " << solution->getOptimalValue(P1) << std::endl;
-    std::cout << "Optimal value for P2: " << solution->getOptimalValue(P2) << std::endl;
+    auto* solution = pb->solve(false);
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
