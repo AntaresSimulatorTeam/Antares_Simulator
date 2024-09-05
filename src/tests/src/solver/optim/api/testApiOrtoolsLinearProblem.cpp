@@ -40,8 +40,6 @@ struct FixtureEmptyProblem
 
 struct FixtureInfeasibleProblem: public FixtureEmptyProblem
 {
-    using FixtureEmptyProblem::FixtureEmptyProblem;
-
     FixtureInfeasibleProblem()
     {
         auto* var = pb->addNumVariable(0, 1, "var");
@@ -52,8 +50,6 @@ struct FixtureInfeasibleProblem: public FixtureEmptyProblem
 
 struct FixtureFeasibleProblem: public FixtureEmptyProblem
 {
-    using FixtureEmptyProblem::FixtureEmptyProblem;
-
     FixtureFeasibleProblem()
     {
         auto* var = pb->addNumVariable(0, 10, "var");
