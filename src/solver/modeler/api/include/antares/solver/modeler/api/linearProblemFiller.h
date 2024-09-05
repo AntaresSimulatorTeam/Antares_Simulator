@@ -19,35 +19,20 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/solver/optim/api/linearProblemData.h>
+#pragma once
+
+#include <antares/solver/modeler/api/linearProblem.h>
+#include <antares/solver/modeler/api/linearProblemData.h>
 
 namespace Antares::Solver::Optim::Api
 {
 
-unsigned LinearProblemData::getTimeResolutionInMinutes()
+class LinearProblemFiller
 {
-    return timeResolutionInMinutes_;
-}
-
-bool LinearProblemData::hasScalarData(const std::string& key)
-{
-    return scalarData_.contains(key);
-}
-
-double LinearProblemData::getScalarData(const std::string& key, unsigned scenario)
-{
-    return scalarData_.at(key)[scenario];
-}
-
-bool LinearProblemData::hasTimedData(const std::string& key)
-{
-    return timedData_.contains(key);
-}
-
-const std::vector<double>& LinearProblemData::getTimedData(const std::string& key,
-                                                           unsigned scenario)
-{
-    return timedData_.at(key)[scenario];
-}
+public:
+    virtual void addVariables(LinearProblem* problem, LinearProblemData* data) = 0;
+    virtual void addConstraints(LinearProblem* problem, LinearProblemData* data) = 0;
+    virtual void addObjectiveCoefficients(LinearProblem* problem, LinearProblemData* data) = 0;
+};
 
 } // namespace Antares::Solver::Optim::Api

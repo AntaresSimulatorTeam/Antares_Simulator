@@ -23,7 +23,7 @@
 #include <memory>
 #include <ortools/linear_solver/linear_solver.h>
 
-#include <antares/solver/optim/ortoolsImpl/linearProblem.h>
+#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/utils/ortools_utils.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl

@@ -21,34 +21,40 @@
 
 #pragma once
 
-#include <map>
-#include <ortools/linear_solver/linear_solver.h>
-#include <string>
-#include <vector>
+#include <antares/solver/modeler/api/mipConstraint.h>
 
-#include <antares/solver/optim/api/mipSolution.h>
+namespace operations_research
+{
+class MPConstraint; // forward declaration
+}
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipSolution final: public Api::IMipSolution
+class OrtoolsMipConstraint final: public Api::IMipConstraint
 {
 public:
-    OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
-                       std::shared_ptr<operations_research::MPSolver> solver);
+    void setLb(double lb) override;
+    void setUb(double ub) override;
 
-    ~OrtoolsMipSolution() final = default;
+    void setBounds(double lb, double ub) override;
+    void setCoefficient(Api::IMipVariable* var, double coefficient) override;
 
-    Api::MipStatus getStatus() const override;
-    double getObjectiveValue() const override;
-    double getOptimalValue(const Api::IMipVariable* var) const override;
-    std::vector<double> getOptimalValues(
-      const std::vector<Api::IMipVariable*>& vars) const override;
+    double getLb() const override;
+    double getUb() const override;
+
+    double getCoefficient(Api::IMipVariable* var) override;
+
+    const std::string& getName() const override;
+
+    ~OrtoolsMipConstraint() final = default;
+
+    explicit OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint);
 
 private:
-    operations_research::MPSolver::ResultStatus status_;
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
-    std::map<std::string, double> solution_;
+    // TODO private constructor
+
+    operations_research::MPConstraint* mpConstraint_;
 };
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

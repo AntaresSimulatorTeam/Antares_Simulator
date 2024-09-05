@@ -19,51 +19,36 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <ortools/linear_solver/linear_solver.h>
+#pragma once
 
-#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
+#include <map>
+#include <ortools/linear_solver/linear_solver.h>
+#include <string>
+#include <vector>
+
+#include <antares/solver/modeler/api/mipSolution.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable* mpVar):
-    mpVar_(mpVar)
+class OrtoolsMipSolution final: public Api::IMipSolution
 {
-}
+public:
+    OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
+                       std::shared_ptr<operations_research::MPSolver> solver);
 
-void OrtoolsMipVariable::setLb(double lb)
-{
-    mpVar_->SetLB(lb);
-}
+    ~OrtoolsMipSolution() final = default;
 
-void OrtoolsMipVariable::setUb(double ub)
-{
-    mpVar_->SetUB(ub);
-}
+    Api::MipStatus getStatus() const override;
+    double getObjectiveValue() const override;
+    double getOptimalValue(const Api::IMipVariable* var) const override;
+    std::vector<double> getOptimalValues(
+      const std::vector<Api::IMipVariable*>& vars) const override;
 
-void OrtoolsMipVariable::setBounds(double lb, double ub)
-{
-    mpVar_->SetBounds(lb, ub);
-}
-
-double OrtoolsMipVariable::getLb() const
-{
-    return mpVar_->lb();
-}
-
-double OrtoolsMipVariable::getUb() const
-{
-    return mpVar_->ub();
-}
-
-const operations_research::MPVariable* OrtoolsMipVariable::getMpVar() const
-{
-    return mpVar_;
-}
-
-const std::string& OrtoolsMipVariable::getName() const
-{
-    return mpVar_->name();
-}
+private:
+    operations_research::MPSolver::ResultStatus status_;
+    std::shared_ptr<operations_research::MPSolver> mpSolver_;
+    std::map<std::string, double> solution_;
+};
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl

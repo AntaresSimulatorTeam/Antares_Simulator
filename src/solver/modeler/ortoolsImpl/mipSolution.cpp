@@ -20,7 +20,7 @@
  */
 
 #include <antares/logs/logs.h>
-#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
+#include <antares/solver/modeler/ortoolsImpl/mipSolution.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <antares/solver/optim/api/mipVariable.h>
+#include <antares/solver/modeler/api/mipVariable.h>
 
 namespace operations_research
 {

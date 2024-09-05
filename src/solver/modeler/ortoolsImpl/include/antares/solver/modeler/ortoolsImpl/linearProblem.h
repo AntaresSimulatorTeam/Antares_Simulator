@@ -21,10 +21,10 @@
 
 #pragma once
 
-#include <antares/solver/optim/api/linearProblem.h>
-#include <antares/solver/optim/ortoolsImpl/mipConstraint.h>
-#include <antares/solver/optim/ortoolsImpl/mipSolution.h>
-#include <antares/solver/optim/ortoolsImpl/mipVariable.h>
+#include <antares/solver/modeler/api/linearProblem.h>
+#include <antares/solver/modeler/ortoolsImpl/mipConstraint.h>
+#include <antares/solver/modeler/ortoolsImpl/mipSolution.h>
+#include <antares/solver/modeler/ortoolsImpl/mipVariable.h>
 
 namespace operations_research
 {

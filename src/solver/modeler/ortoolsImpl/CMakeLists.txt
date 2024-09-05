@@ -1,11 +1,11 @@
-set(PROJ optim-ortools-impl)
+set(PROJ modeler-ortools-impl)
 
 set(HEADERS
-        include/antares/solver/optim/ortoolsImpl/mipVariable.h
-        include/antares/solver/optim/ortoolsImpl/mipSolution.h
-        include/antares/solver/optim/ortoolsImpl/mipConstraint.h
+        include/antares/solver/modeler/ortoolsImpl/mipVariable.h
+        include/antares/solver/modeler/ortoolsImpl/mipSolution.h
+        include/antares/solver/modeler/ortoolsImpl/mipConstraint.h
 
-        include/antares/solver/optim/ortoolsImpl/linearProblem.h
+        include/antares/solver/modeler/ortoolsImpl/linearProblem.h
 )
 set(SRC_ORTOOLS_IMPL
         ${HEADERS}
@@ -16,7 +16,7 @@ set(SRC_ORTOOLS_IMPL
         linearProblem.cpp
 )
 
-source_group("solver\\optim\\api" FILES ${SRC_ORTOOLS_IMPL})
+source_group("solver\\modeler\\api" FILES ${SRC_ORTOOLS_IMPL})
 
 add_library(${PROJ} ${SRC_ORTOOLS_IMPL})
 add_library(Antares::${PROJ} ALIAS ${PROJ})

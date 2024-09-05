@@ -19,42 +19,51 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
+#include <ortools/linear_solver/linear_solver.h>
 
-#include <antares/solver/optim/api/mipConstraint.h>
-
-namespace operations_research
-{
-class MPConstraint; // forward declaration
-}
+#include <antares/solver/modeler/ortoolsImpl/mipVariable.h>
 
 namespace Antares::Solver::Optim::OrtoolsImpl
 {
 
-class OrtoolsMipConstraint final: public Api::IMipConstraint
+OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable* mpVar):
+    mpVar_(mpVar)
 {
-public:
-    void setLb(double lb) override;
-    void setUb(double ub) override;
+}
 
-    void setBounds(double lb, double ub) override;
-    void setCoefficient(Api::IMipVariable* var, double coefficient) override;
+void OrtoolsMipVariable::setLb(double lb)
+{
+    mpVar_->SetLB(lb);
+}
 
-    double getLb() const override;
-    double getUb() const override;
+void OrtoolsMipVariable::setUb(double ub)
+{
+    mpVar_->SetUB(ub);
+}
 
-    double getCoefficient(Api::IMipVariable* var) override;
+void OrtoolsMipVariable::setBounds(double lb, double ub)
+{
+    mpVar_->SetBounds(lb, ub);
+}
 
-    const std::string& getName() const override;
+double OrtoolsMipVariable::getLb() const
+{
+    return mpVar_->lb();
+}
 
-    ~OrtoolsMipConstraint() final = default;
+double OrtoolsMipVariable::getUb() const
+{
+    return mpVar_->ub();
+}
 
-    explicit OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint);
+const operations_research::MPVariable* OrtoolsMipVariable::getMpVar() const
+{
+    return mpVar_;
+}
 
-private:
-    // TODO private constructor
-
-    operations_research::MPConstraint* mpConstraint_;
-};
+const std::string& OrtoolsMipVariable::getName() const
+{
+    return mpVar_->name();
+}
 
 } // namespace Antares::Solver::Optim::OrtoolsImpl
