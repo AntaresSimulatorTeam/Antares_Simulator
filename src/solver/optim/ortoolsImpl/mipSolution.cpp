@@ -34,18 +34,6 @@ OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStat
     {
         solution_.try_emplace(var->name(), var->solution_value());
     }
-    return Api::MipStatus::MIP_ERROR;
-}
-
-OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& status,
-                                       std::shared_ptr<operations_research::MPSolver> solver):
-    responseStatus_(convertStatus(status)),
-    mpSolver_(solver)
-{
-    for (const auto* var: mpSolver_->variables())
-    {
-        solution_.try_emplace(var->name(), var->solution_value());
-    }
 }
 
 Api::MipStatus OrtoolsMipSolution::getStatus() const
