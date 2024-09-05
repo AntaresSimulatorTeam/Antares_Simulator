@@ -28,20 +28,6 @@
 
 using namespace Antares::Solver::Optim;
 
-struct Fixture
-{
-    ~Fixture() = default;
-
-    Fixture()
-    {
-        pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
-    }
-
-    std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
-
-    void createProblemMaximize();
-};
-
 struct FixtureEmptyProblem
 {
     FixtureEmptyProblem()
@@ -56,34 +42,19 @@ struct FixtureInfeasibleProblem : public FixtureEmptyProblem
     using FixtureEmptyProblem::FixtureEmptyProblem;
     FixtureInfeasibleProblem()
     {
-        auto* var = pb->addIntVariable(0, 1, "var");
+        auto* var = pb->addNumVariable(0, 1, "var");
         auto* constraint = pb->addConstraint(2, 2, "constraint");
         constraint->setCoefficient(var, 1);
-        // constraint->setLb(20);
     }
 };
-
-void Fixture::createProblemMaximize()
-{
-    auto* var1 = pb->addNumVariable(0, 1, "var1");
-    auto* var2 = pb->addNumVariable(0, 1, "var2");
-    auto* constraint = pb->addConstraint(1, 1, "constraint");
-
-    constraint->setCoefficient(var1, 1);
-    constraint->setCoefficient(var2, 1);
-
-    pb->setObjectiveCoefficient(var1, 1);
-    pb->setObjectiveCoefficient(var1, 1);
-    pb->setMaximization();
-}
 
 struct FixtureFeasibleProblem : public FixtureEmptyProblem
 {
     using FixtureEmptyProblem::FixtureEmptyProblem;
     FixtureFeasibleProblem()
     {
-        auto* var = pb->addIntVariable(0, 10, "var");
-        auto* constraint = pb->addConstraint(2, 5, "constraint");
+        auto* var = pb->addNumVariable(0, 10, "var");
+        auto* constraint = pb->addConstraint(1, 1, "constraint");
         constraint->setCoefficient(var, 1);
         pb->setObjectiveCoefficient(var, 1);
     }
@@ -221,7 +192,7 @@ BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_null_objective_value, 
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(after_solving_infeasible_problem_any_var_is_zero, FixtureInfeasibleProblem)
+BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem___check_any_var_is_zero, FixtureInfeasibleProblem)
 {
     auto* solution = pb->solve(true);
 
@@ -230,61 +201,29 @@ BOOST_FIXTURE_TEST_CASE(after_solving_infeasible_problem_any_var_is_zero, Fixtur
     BOOST_CHECK_EQUAL(solution->getOptimalValue(var), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(problemMaximize, Fixture)
+BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_status_is_optimal, FixtureFeasibleProblem)
 {
-    createProblemMaximize();
     auto* solution = pb->solve(false);
-
     BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
+}
 
+BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_objective_has_expected_value, FixtureFeasibleProblem)
+{
+    auto* solution = pb->solve(false);
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 1);
 }
 
-//BOOST_FIXTURE_TEST_CASE(solve_feasible_problem_leads_to_optimal_status, FixtureFeasibleProblem)
-//{
-//    auto* solution = pb->solve(false);
-//    BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
-//}
-
-BOOST_FIXTURE_TEST_CASE(solutionOpimalValues, Fixture)
+BOOST_FIXTURE_TEST_CASE(solve_problem_then_add_new_var___new_var_optimal_value_is_zero, FixtureFeasibleProblem)
 {
-    createProblemMaximize();
-    auto* solution = pb->solve(true);
-
-    auto* var1 = pb->getVariable("var1");
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(var1), 1);
-
-    auto* var2 = pb->getVariable("var2");
-
-    std::vector<Api::IMipVariable*> v = {var1, var2};
-    auto res = solution->getOptimalValues(v);
-
-    auto* varNotInSolution = pb->addNumVariable(0, 1, "f");
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(varNotInSolution), 0);
-
-    BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
+    auto* solution = pb->solve(false);
+    auto* newVar = pb->addNumVariable(0, 1, "new var");
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(newVar), 0);
 }
 
-BOOST_AUTO_TEST_CASE(simpleProblem)
+BOOST_FIXTURE_TEST_CASE(solve_problem___check_optimal_value_of_null_var_is_zero, FixtureFeasibleProblem)
 {
-    auto problem = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
-
-    auto* P1 = problem->addNumVariable(0, 80, "P1");
-    auto* P2 = problem->addNumVariable(0, 200, "P2");
-
-    auto* EOD = problem->addConstraint(100, 100, "EOD");
-    EOD->setCoefficient(P1, 1);
-    EOD->setCoefficient(P2, 1);
-
-    problem->setObjectiveCoefficient(P1, 10);
-    problem->setObjectiveCoefficient(P2, 20);
-
-    problem->setMinimization();
-
-    auto* solution = problem->solve(true);
-
-    std::cout << "Optimal value for P1: " << solution->getOptimalValue(P1) << std::endl;
-    std::cout << "Optimal value for P2: " << solution->getOptimalValue(P2) << std::endl;
+    auto* solution = pb->solve(false);
+    BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
