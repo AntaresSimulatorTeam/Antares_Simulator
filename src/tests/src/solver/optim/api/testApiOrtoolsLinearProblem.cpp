@@ -34,12 +34,14 @@ struct FixtureEmptyProblem
     {
         pb = std::make_unique<OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     }
+
     std::unique_ptr<OrtoolsImpl::OrtoolsLinearProblem> pb;
 };
 
-struct FixtureInfeasibleProblem : public FixtureEmptyProblem
+struct FixtureInfeasibleProblem: public FixtureEmptyProblem
 {
     using FixtureEmptyProblem::FixtureEmptyProblem;
+
     FixtureInfeasibleProblem()
     {
         auto* var = pb->addNumVariable(0, 1, "var");
@@ -48,9 +50,10 @@ struct FixtureInfeasibleProblem : public FixtureEmptyProblem
     }
 };
 
-struct FixtureFeasibleProblem : public FixtureEmptyProblem
+struct FixtureFeasibleProblem: public FixtureEmptyProblem
 {
     using FixtureEmptyProblem::FixtureEmptyProblem;
+
     FixtureFeasibleProblem()
     {
         auto* var = pb->addNumVariable(0, 10, "var");
@@ -116,7 +119,8 @@ BOOST_FIXTURE_TEST_CASE(add_already_existing_var_to_problem_leads_to_exception, 
     BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "var"), std::exception, expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(add_already_existing_constaint_to_problem_leads_to_exception, FixtureEmptyProblem)
+BOOST_FIXTURE_TEST_CASE(add_already_existing_constaint_to_problem_leads_to_exception,
+                        FixtureEmptyProblem)
 {
     pb->addConstraint(0, 1, "constraint");
     BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "constraint"), std::exception, expectedMessage);
@@ -186,7 +190,8 @@ BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_error_status, FixtureI
     BOOST_CHECK(solution->getStatus() == Api::MipStatus::MIP_ERROR);
 }
 
-BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_null_objective_value, FixtureInfeasibleProblem)
+BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_null_objective_value,
+                        FixtureInfeasibleProblem)
 {
     auto* solution = pb->solve(true);
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
@@ -207,20 +212,23 @@ BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_status_is_optimal, Fixtur
     BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
 }
 
-BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_objective_has_expected_value, FixtureFeasibleProblem)
+BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_objective_has_expected_value,
+                        FixtureFeasibleProblem)
 {
     auto* solution = pb->solve(false);
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(solve_problem_then_add_new_var___new_var_optimal_value_is_zero, FixtureFeasibleProblem)
+BOOST_FIXTURE_TEST_CASE(solve_problem_then_add_new_var___new_var_optimal_value_is_zero,
+                        FixtureFeasibleProblem)
 {
     auto* solution = pb->solve(false);
     auto* newVar = pb->addNumVariable(0, 1, "new var");
     BOOST_CHECK_EQUAL(solution->getOptimalValue(newVar), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(solve_problem___check_optimal_value_of_null_var_is_zero, FixtureFeasibleProblem)
+BOOST_FIXTURE_TEST_CASE(solve_problem___check_optimal_value_of_null_var_is_zero,
+                        FixtureFeasibleProblem)
 {
     auto* solution = pb->solve(false);
     BOOST_CHECK_EQUAL(solution->getOptimalValue(nullptr), 0);
