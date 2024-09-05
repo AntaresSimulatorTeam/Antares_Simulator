@@ -63,23 +63,29 @@ BOOST_AUTO_TEST_SUITE(tests_on_OrtoolsLinearProblem)
 
 BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureEmptyProblem)
 {
-    pb->addIntVariable(0, 1, "var");
+    pb->addIntVariable(5, 15, "var");
     auto* var = pb->getVariable("var");
     BOOST_CHECK(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 5);
+    BOOST_CHECK_EQUAL(var->getUb(), 15);
 }
 
 BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureEmptyProblem)
 {
-    pb->addNumVariable(0, 1, "var");
+    pb->addNumVariable(2., 7., "var");
     auto* var = pb->getVariable("var");
     BOOST_CHECK(var);
+    BOOST_CHECK_EQUAL(var->getLb(), 2.);
+    BOOST_CHECK_EQUAL(var->getUb(), 7.);
 }
 
 BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, FixtureEmptyProblem)
 {
-    pb->addConstraint(0, 1, "constraint");
+    pb->addConstraint(3., 8., "constraint");
     auto* constraint = pb->getConstraint("constraint");
     BOOST_CHECK(constraint);
+    BOOST_CHECK_EQUAL(constraint->getLb(), 3.);
+    BOOST_CHECK_EQUAL(constraint->getUb(), 8.);
 }
 
 BOOST_FIXTURE_TEST_CASE(give_coeff_to_var_in_constraint____check_coeff_exists, FixtureEmptyProblem)
