@@ -21,7 +21,7 @@
 
 #pragma once
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 /// Used to handle bounds for IMipVariable and IMipConstraint
@@ -39,4 +39,4 @@ public:
     virtual double getUb() const = 0;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

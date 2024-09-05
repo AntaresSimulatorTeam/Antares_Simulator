@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 class LinearProblemData
@@ -44,4 +44,4 @@ private:
     std::map<std::string, std::vector<std::vector<double>>> timedData_;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

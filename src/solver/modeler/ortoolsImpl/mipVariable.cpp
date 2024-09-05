@@ -23,7 +23,7 @@
 
 #include <antares/solver/modeler/ortoolsImpl/mipVariable.h>
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable* mpVar):
@@ -66,4 +66,4 @@ const std::string& OrtoolsMipVariable::getName() const
     return mpVar_->name();
 }
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+} // namespace Antares::Solver::Modeler::OrtoolsImpl

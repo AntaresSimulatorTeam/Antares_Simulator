@@ -28,7 +28,7 @@
 
 #include <antares/solver/modeler/api/mipSolution.h>
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 class OrtoolsMipSolution final: public Api::IMipSolution
@@ -51,4 +51,4 @@ private:
     std::map<std::string, double> solution_;
 };
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+} // namespace Antares::Solver::Modeler::OrtoolsImpl

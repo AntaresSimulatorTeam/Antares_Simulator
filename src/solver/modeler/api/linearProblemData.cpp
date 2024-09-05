@@ -21,7 +21,7 @@
 
 #include <antares/solver/modeler/api/linearProblemData.h>
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 unsigned LinearProblemData::getTimeResolutionInMinutes()
@@ -50,4 +50,4 @@ const std::vector<double>& LinearProblemData::getTimedData(const std::string& ke
     return timedData_.at(key)[scenario];
 }
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

@@ -28,7 +28,7 @@ namespace operations_research
 class MPConstraint; // forward declaration
 }
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 class OrtoolsMipConstraint final: public Api::IMipConstraint
@@ -57,4 +57,4 @@ private:
     operations_research::MPConstraint* mpConstraint_;
 };
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+} // namespace Antares::Solver::Modeler::OrtoolsImpl

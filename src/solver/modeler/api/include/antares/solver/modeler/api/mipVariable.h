@@ -24,11 +24,11 @@
 #include "hasBounds.h"
 #include "hasName.h"
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 class IMipVariable: public IHasBounds, public IHasName
 {
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

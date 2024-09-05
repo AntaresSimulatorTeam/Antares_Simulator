@@ -26,7 +26,7 @@
 #include "linearProblemFiller.h"
 #include "mipSolution.h"
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 class LinearProblemBuilder
@@ -37,4 +37,4 @@ public:
     virtual MipSolution* solve() = 0;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

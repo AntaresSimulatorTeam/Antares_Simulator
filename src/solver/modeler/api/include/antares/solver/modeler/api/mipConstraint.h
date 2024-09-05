@@ -23,7 +23,7 @@
 
 #include "mipVariable.h"
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 class IMipConstraint: public IHasBounds, public IHasName
@@ -34,4 +34,4 @@ public:
     virtual double getCoefficient(IMipVariable* var) = 0;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

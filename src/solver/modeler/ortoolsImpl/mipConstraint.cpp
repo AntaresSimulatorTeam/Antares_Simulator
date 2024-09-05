@@ -25,7 +25,7 @@
 #include <antares/solver/modeler/ortoolsImpl/mipConstraint.h>
 #include <antares/solver/modeler/ortoolsImpl/mipVariable.h>
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 OrtoolsMipConstraint::OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint):
@@ -87,4 +87,4 @@ const std::string& OrtoolsMipConstraint::getName() const
     return mpConstraint_->name();
 }
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+} // namespace Antares::Solver::Modeler::OrtoolsImpl

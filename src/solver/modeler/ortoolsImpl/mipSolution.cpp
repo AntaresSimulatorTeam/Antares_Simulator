@@ -22,7 +22,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/ortoolsImpl/mipSolution.h>
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& status,
@@ -93,4 +93,4 @@ std::vector<double> OrtoolsMipSolution::getOptimalValues(
     return solution;
 }
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+} // namespace Antares::Solver::Modeler::OrtoolsImpl

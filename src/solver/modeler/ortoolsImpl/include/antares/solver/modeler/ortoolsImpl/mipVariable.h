@@ -28,7 +28,7 @@ namespace operations_research
 class MPVariable; // forward declaration
 }
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 class OrtoolsMipVariable final: public Api::IMipVariable
@@ -56,4 +56,4 @@ private:
     operations_research::MPVariable* mpVar_;
 };
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+} // namespace Antares::Solver::Modeler::OrtoolsImpl

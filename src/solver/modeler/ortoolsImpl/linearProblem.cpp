@@ -26,7 +26,7 @@
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/utils/ortools_utils.h>
 
-namespace Antares::Solver::Optim::OrtoolsImpl
+namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
@@ -175,4 +175,4 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
     return solution_.get();
 }
 
-} // namespace Antares::Solver::Optim::OrtoolsImpl
+} // namespace Antares::Solver::Modeler::OrtoolsImpl

@@ -26,7 +26,7 @@
 
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 
-using namespace Antares::Solver::Optim;
+using namespace Antares::Solver::Modeler;
 
 struct FixtureEmptyProblem
 {

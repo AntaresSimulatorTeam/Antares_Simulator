@@ -29,7 +29,7 @@
 #include "mipVariable.h"
 
 /// Namespace for the classes related to the linear problem API
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 /**
@@ -71,4 +71,4 @@ public:
     virtual IMipSolution* solve(bool verboseSolver) = 0;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

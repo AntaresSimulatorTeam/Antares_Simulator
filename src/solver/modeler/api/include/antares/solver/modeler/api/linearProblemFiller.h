@@ -24,7 +24,7 @@
 #include <antares/solver/modeler/api/linearProblem.h>
 #include <antares/solver/modeler/api/linearProblemData.h>
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 class LinearProblemFiller
@@ -35,4 +35,4 @@ public:
     virtual void addObjectiveCoefficients(LinearProblem* problem, LinearProblemData* data) = 0;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

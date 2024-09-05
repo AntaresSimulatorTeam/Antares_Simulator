@@ -25,7 +25,7 @@
 
 #include "mipVariable.h"
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 enum class MipStatus
@@ -53,4 +53,4 @@ public:
     virtual std::vector<double> getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api

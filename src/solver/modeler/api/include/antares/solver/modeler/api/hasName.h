@@ -23,7 +23,7 @@
 
 #include <string>
 
-namespace Antares::Solver::Optim::Api
+namespace Antares::Solver::Modeler::Api
 {
 
 /// Inherited by IMipVariable and IMipConstraint
@@ -34,4 +34,4 @@ public:
     virtual const std::string& getName() const = 0;
 };
 
-} // namespace Antares::Solver::Optim::Api
+} // namespace Antares::Solver::Modeler::Api
