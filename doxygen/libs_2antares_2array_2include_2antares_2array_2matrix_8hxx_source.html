@@ -238,47 +238,47 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">return</span> str.to(out);</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>};</div>
+<div class="foldopen" id="foldopen00100" data-start="{" data-end="}">
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ad30db71ffe269b640437ba5eb2be5b5c">  100</a></span>};</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="foldopen" id="foldopen00102" data-start="{" data-end="}">
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ad30db71ffe269b640437ba5eb2be5b5c">  102</a></span><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">class </span>MatrixStringConverter&lt;double&gt; final</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>{</div>
+<div class="foldopen" id="foldopen00104" data-start="{" data-end="}">
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a894d34cdffd94941f723d0933e95b049">  104</a></span>{</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00106" data-start="{" data-end="}">
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a894d34cdffd94941f723d0933e95b049">  106</a></span>    <span class="keyword">enum</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keyword">enum</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    {</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        direct = 0</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    };</div>
+<div class="foldopen" id="foldopen00109" data-start="{" data-end="}">
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a5edfad0e6ee60f6f5efe2805131dfe5e">  109</a></span>    };</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="foldopen" id="foldopen00111" data-start="{" data-end="}">
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a5edfad0e6ee60f6f5efe2805131dfe5e">  111</a></span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> Do(<span class="keyword">const</span> AnyString&amp; str, <span class="keywordtype">double</span>&amp; out)</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keywordtype">char</span>* pend;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        out = ::strtod(str.c_str(), &amp;pend);</div>
+<div class="foldopen" id="foldopen00115" data-start="{" data-end="}">
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a6683ae8ab9c35dc3663ec1fb8d688d10">  115</a></span>        out = ::strtod(str.c_str(), &amp;pend);</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">return</span> (NULL != pend and <span class="charliteral">&#39;\0&#39;</span> == *pend);</div>
-<div class="foldopen" id="foldopen00117" data-start="{" data-end="}">
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a6683ae8ab9c35dc3663ec1fb8d688d10">  117</a></span>    }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keyword">template</span>&lt;&gt;</div>
+<div class="foldopen" id="foldopen00120" data-start="{" data-end="}">
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a39223f70956d91bd1619b365590eb222">  120</a></span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="keyword">class </span>MatrixStringConverter&lt;float&gt; final</div>
 <div class="foldopen" id="foldopen00122" data-start="{" data-end="}">
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a39223f70956d91bd1619b365590eb222">  122</a></span>{</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a391c07855c0ed159d5b99ae9f448c5b2">  122</a></span>{</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00124" data-start="{" data-end="}">
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a391c07855c0ed159d5b99ae9f448c5b2">  124</a></span>    <span class="keyword">enum</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">enum</span></div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    {</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        direct = 0</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    };</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> Do(<span class="keyword">const</span> AnyString&amp; str, <span class="keywordtype">float</span>&amp; out)</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    {</div>
+<div class="foldopen" id="foldopen00131" data-start="{" data-end="}">
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ab6c80eb0ddd56ff81963fd2c09689cef">  131</a></span>    {</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keywordtype">char</span>* pend;</div>
-<div class="foldopen" id="foldopen00133" data-start="{" data-end="}">
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ab6c80eb0ddd56ff81963fd2c09689cef">  133</a></span>        out = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(::strtod(str.c_str(), &amp;pend));</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        out = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(::strtod(str.c_str(), &amp;pend));</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keywordflow">return</span> (NULL != pend and <span class="charliteral">&#39;\0&#39;</span> == *pend);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    }</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>};</div>
@@ -286,10 +286,10 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="keyword">template</span>&lt;u<span class="keywordtype">int</span> ChunkSizeT, <span class="keywordtype">bool</span> ExpandableT&gt;</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="keyword">class </span>MatrixStringConverter&lt;Yuni::CString&lt;ChunkSizeT, ExpandableT&gt;&gt; final</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>{</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00141" data-start="{" data-end="}">
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a2b44e31fbab3f1dfc65197887e3e6a0c">  141</a></span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keyword">enum</span></div>
-<div class="foldopen" id="foldopen00143" data-start="{" data-end="}">
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a2b44e31fbab3f1dfc65197887e3e6a0c">  143</a></span>    {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    {</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        direct = 1,</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    };</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
@@ -309,10 +309,10 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keywordflow">return</span> str;</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>}</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="foldopen" id="foldopen00163" data-start="{" data-end="}">
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">  163</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="keyword">static</span> T trunc(T&amp; in)</div>
-<div class="foldopen" id="foldopen00165" data-start="{" data-end="}">
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">  165</a></span>{</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>{</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(std::trunc(in));</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>}</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
@@ -330,10 +330,10 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="keyword">class </span>MatrixRound&lt;T, double&gt; final</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>{</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keyword">static</span> T Value(<span class="keywordtype">double</span> value)</div>
+<div class="foldopen" id="foldopen00183" data-start="{" data-end="}">
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#af62c296aae8af6f8c976e4fbdc2186c6">  183</a></span>    <span class="keyword">static</span> T Value(<span class="keywordtype">double</span> value)</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    {</div>
-<div class="foldopen" id="foldopen00185" data-start="{" data-end="}">
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#af62c296aae8af6f8c976e4fbdc2186c6">  185</a></span>        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value);</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    }</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>};</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
@@ -345,10 +345,10 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    {</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value);</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    }</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>};</div>
+<div class="foldopen" id="foldopen00197" data-start="{" data-end="}">
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a0dcc53fd45d4969b646d87daef5a54a9">  197</a></span>};</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="foldopen" id="foldopen00199" data-start="{" data-end="}">
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a0dcc53fd45d4969b646d87daef5a54a9">  199</a></span>} <span class="comment">// anonymous namespace</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>} <span class="comment">// anonymous namespace</span></div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00202" data-start="{" data-end="}">
@@ -366,21 +366,21 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a39223f70956d91bd1619b365590eb222">  211</a></span><a class="code hl_function" href="classAntares_1_1Matrix.html#ad30db71ffe269b640437ba5eb2be5b5c">Matrix&lt;T, ReadWriteT&gt;::Matrix</a>(uint w, uint h):</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    width(w),</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    height(h),</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    jit(nullptr)</div>
+<div class="foldopen" id="foldopen00214" data-start="{" data-end="}">
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#acf535b158842072fc88825d238c365fd">  214</a></span>    jit(nullptr)</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>{</div>
-<div class="foldopen" id="foldopen00216" data-start="{" data-end="}">
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#acf535b158842072fc88825d238c365fd">  216</a></span>    <span class="keywordflow">if</span> (0 == <a class="code hl_variable" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a> or 0 == <a class="code hl_variable" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>)</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keywordflow">if</span> (0 == width or 0 == height)</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    {</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        <a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a> = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        entry = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    }</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a> = <span class="keyword">new</span> <span class="keyword">typename</span> Antares::Memory::Stored&lt;T&gt;::Type[w + 1];</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[w] = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        entry = <span class="keyword">new</span> <span class="keyword">typename</span> Antares::Memory::Stored&lt;T&gt;::Type[w + 1];</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        entry[w] = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keywordflow">for</span> (uint i = 0; i != w; ++i)</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        {</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            Antares::Memory::Allocate&lt;T&gt;(<a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[i], h);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            Antares::Memory::Allocate&lt;T&gt;(entry[i], h);</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        }</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    }</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>}</div>
@@ -400,28 +400,29 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    }</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    {</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a> = <span class="keyword">new</span> <span class="keyword">typename</span> Antares::Memory::Stored&lt;T&gt;::Type[<a class="code hl_variable" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a> + 1];</div>
+<div class="foldopen" id="foldopen00246" data-start="{" data-end="}">
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ad51c03dd9fc18ecbe0cb5def5d3c8863">  246</a></span>        <a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a> = <span class="keyword">new</span> <span class="keyword">typename</span> Antares::Memory::Stored&lt;T&gt;::Type[<a class="code hl_variable" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a> + 1];</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        <a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[<a class="code hl_variable" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a>] = <span class="keyword">nullptr</span>;</div>
-<div class="foldopen" id="foldopen00248" data-start="{" data-end="}">
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ad51c03dd9fc18ecbe0cb5def5d3c8863">  248</a></span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keywordflow">for</span> (uint i = 0; i != rhs.<a class="code hl_variable" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a>; ++i)</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        {</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            Antares::Memory::Allocate&lt;T&gt;(<a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[i], <a class="code hl_variable" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>);</div>
+<div class="foldopen" id="foldopen00251" data-start="{" data-end="}">
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac9f0d99e025444f9b38623f73de767a9">  251</a></span>            Antares::Memory::Allocate&lt;T&gt;(<a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[i], <a class="code hl_variable" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>);</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            memcpy(<a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[i], rhs.<a class="code hl_variable" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[i], <span class="keyword">sizeof</span>(T) * <a class="code hl_variable" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>);</div>
-<div class="foldopen" id="foldopen00253" data-start="{" data-end="}">
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac9f0d99e025444f9b38623f73de767a9">  253</a></span>        }</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        }</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    }</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>}</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="foldopen" id="foldopen00256" data-start="{" data-end="}">
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ae90675d05388ab780a2a31784ea76f5b">  256</a></span> </div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00258" data-start="{" data-end="}">
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ae90675d05388ab780a2a31784ea76f5b">  258</a></span><a class="code hl_function" href="classAntares_1_1Matrix.html#ad30db71ffe269b640437ba5eb2be5b5c">Matrix&lt;T, ReadWriteT&gt;::Matrix</a>(<a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;</a>&amp;&amp; rhs) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a5edfad0e6ee60f6f5efe2805131dfe5e">  258</a></span><a class="code hl_function" href="classAntares_1_1Matrix.html#ad30db71ffe269b640437ba5eb2be5b5c">Matrix&lt;T, ReadWriteT&gt;::Matrix</a>(<a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;</a>&amp;&amp; rhs) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>{</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="comment">// use Matrix::operator=(Matrix&amp;&amp; rhs)</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    *<span class="keyword">this</span> = std::move(rhs);</div>
+<div class="foldopen" id="foldopen00261" data-start="{" data-end="}">
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a39ef7ff62df2ea41ac18ec775ef8023a">  261</a></span>    *<span class="keyword">this</span> = std::move(rhs);</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>}</div>
-<div class="foldopen" id="foldopen00263" data-start="{" data-end="}">
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a39ef7ff62df2ea41ac18ec775ef8023a">  263</a></span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> U, <span class="keyword">class</span> V&gt;</div>
 <div class="foldopen" id="foldopen00266" data-start="{" data-end="}">
@@ -429,100 +430,101 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    width(0),</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    height(0),</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    entry(nullptr),</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    jit(nullptr)</div>
+<div class="foldopen" id="foldopen00270" data-start="{" data-end="}">
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a770dc2ad824528586de694fe4188d10e">  270</a></span>    jit(nullptr)</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>{</div>
-<div class="foldopen" id="foldopen00272" data-start="{" data-end="}">
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a770dc2ad824528586de694fe4188d10e">  272</a></span>    <a class="code hl_function" href="classAntares_1_1Matrix.html#ab6c80eb0ddd56ff81963fd2c09689cef">copyFrom</a>(rhs);</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>}</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    copyFrom(rhs);</div>
+<div class="foldopen" id="foldopen00273" data-start="{" data-end="}">
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a9ee888e0b467416d5444c8594a539203">  273</a></span>}</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
 <div class="foldopen" id="foldopen00275" data-start="{" data-end="}">
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a9ee888e0b467416d5444c8594a539203">  275</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a1c274d7d896828136d9b0670ba7ac26f">  275</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00276" data-start="{" data-end="}">
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a391c07855c0ed159d5b99ae9f448c5b2">  276</a></span><a class="code hl_function" href="classAntares_1_1Matrix.html#a391c07855c0ed159d5b99ae9f448c5b2">Matrix&lt;T, ReadWriteT&gt;::~Matrix</a>()</div>
-<div class="foldopen" id="foldopen00277" data-start="{" data-end="}">
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a1c274d7d896828136d9b0670ba7ac26f">  277</a></span>{</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>{</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    assert((<a class="code hl_variable" href="classJIT.html#a9d5fa065778342c60cf3098e49dcd8b0">JIT::enabled</a> or (jit == NULL))</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>           and <span class="stringliteral">&quot;Internal variable jit is set but JIT is not globally enabled (overflow?)&quot;</span>);</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="keyword">delete</span> jit;</div>
+<div class="foldopen" id="foldopen00280" data-start="{" data-end="}">
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a89e727e24fa84d8103094221a6303f27">  280</a></span>    <span class="keyword">delete</span> jit;</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
-<div class="foldopen" id="foldopen00282" data-start="{" data-end="}">
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a89e727e24fa84d8103094221a6303f27">  282</a></span>    <span class="keywordflow">if</span> (entry)</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <span class="keywordflow">if</span> (entry)</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    {</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        <span class="keywordflow">for</span> (uint i = 0; i != width; ++i)</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        {</div>
+<div class="foldopen" id="foldopen00285" data-start="{" data-end="}">
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a4fe99caa3f6123bffc44a077296ce11f">  285</a></span>        {</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            <a class="code hl_function" href="classAntares_1_1Memory.html#ace91a50732407f5a133b7e47f5f1c8ac">Antares::Memory::Release</a>(entry[i]);</div>
-<div class="foldopen" id="foldopen00287" data-start="{" data-end="}">
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a4fe99caa3f6123bffc44a077296ce11f">  287</a></span>        }</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        }</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="keyword">delete</span>[] entry;</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    }</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>}</div>
+<div class="foldopen" id="foldopen00290" data-start="{" data-end="}">
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a370e9e318ed6726b6bc05351d94fba1e">  290</a></span>}</div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
-<div class="foldopen" id="foldopen00292" data-start="{" data-end="}">
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a370e9e318ed6726b6bc05351d94fba1e">  292</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00293" data-start="{" data-end="}">
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a89e727e24fa84d8103094221a6303f27">  293</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#a89e727e24fa84d8103094221a6303f27">Matrix&lt;T, ReadWriteT&gt;::zero</a>()</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>{</div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    <span class="keywordflow">for</span> (uint i = 0; i != width; ++i)</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    {</div>
+<div class="foldopen" id="foldopen00296" data-start="{" data-end="}">
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ae4ae5b2722db5f8f67dde900d4105762">  296</a></span>    {</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <a class="code hl_typedef" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a>&amp; column = entry[i];</div>
-<div class="foldopen" id="foldopen00298" data-start="{" data-end="}">
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ae4ae5b2722db5f8f67dde900d4105762">  298</a></span>        (void)::memset((<span class="keywordtype">void</span>*)column, 0, <span class="keyword">sizeof</span>(T) * height);</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        (void)::memset((<span class="keywordtype">void</span>*)column, 0, <span class="keyword">sizeof</span>(T) * height);</div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    }</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>}</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span> </div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="foldopen" id="foldopen00302" data-start="{" data-end="}">
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a2ecba57fab22a927602c054029e978df">  302</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00303" data-start="{" data-end="}">
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ad16b0ab9b35f30e8822cfeeb20b8a77e">  303</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#ad16b0ab9b35f30e8822cfeeb20b8a77e">Matrix&lt;T, ReadWriteT&gt;::averageTimeseries</a>(<span class="keywordtype">bool</span> roundValues)</div>
-<div class="foldopen" id="foldopen00304" data-start="{" data-end="}">
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a2ecba57fab22a927602c054029e978df">  304</a></span>{</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>{</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordflow">if</span> (width &gt; 1)</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    {</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        <a class="code hl_typedef" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a>&amp; first = entry[0];</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span> </div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="comment">// add the values of each timeseries to the first one</span></div>
+<div class="foldopen" id="foldopen00309" data-start="{" data-end="}">
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ad16b0ab9b35f30e8822cfeeb20b8a77e">  309</a></span>        <span class="comment">// add the values of each timeseries to the first one</span></div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        <span class="keywordflow">for</span> (uint i = 1; i != width; ++i)</div>
-<div class="foldopen" id="foldopen00311" data-start="{" data-end="}">
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ad16b0ab9b35f30e8822cfeeb20b8a77e">  311</a></span>        {</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        {</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            <a class="code hl_typedef" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a>&amp; column = entry[i];</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            <span class="keywordflow">for</span> (uint j = 0; j != height; ++j)</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            {</div>
+<div class="foldopen" id="foldopen00314" data-start="{" data-end="}">
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aeb21e0739dddcba33856deff6dfa8080">  314</a></span>            {</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>                first[j] += column[j];</div>
-<div class="foldopen" id="foldopen00316" data-start="{" data-end="}">
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aeb21e0739dddcba33856deff6dfa8080">  316</a></span>            }</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            }</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        }</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="comment">// average</span></div>
+<div class="foldopen" id="foldopen00319" data-start="{" data-end="}">
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a60539285596d7b7e4c718f7bd9e291ea">  319</a></span>        <span class="comment">// average</span></div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordtype">double</span> coeff = 1. / width;</div>
-<div class="foldopen" id="foldopen00321" data-start="{" data-end="}">
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a60539285596d7b7e4c718f7bd9e291ea">  321</a></span>        <span class="keywordflow">if</span> (roundValues)</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        <span class="keywordflow">if</span> (roundValues)</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        {</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            <span class="keywordflow">for</span> (uint j = 0; j != height; ++j)</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            {</div>
+<div class="foldopen" id="foldopen00324" data-start="{" data-end="}">
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a7762e2d5495e13d5c03f0e07c253cfc6">  324</a></span>            {</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                <span class="keyword">const</span> <span class="keywordtype">double</span> d = first[j] * coeff;</div>
-<div class="foldopen" id="foldopen00326" data-start="{" data-end="}">
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a7762e2d5495e13d5c03f0e07c253cfc6">  326</a></span>                first[j] = std::round(d);</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                first[j] = std::round(d);</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            }</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        }</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keywordflow">else</span></div>
+<div class="foldopen" id="foldopen00329" data-start="{" data-end="}">
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac05a2599d757155f2d58d4b6929bbc89">  329</a></span>        <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        {</div>
-<div class="foldopen" id="foldopen00331" data-start="{" data-end="}">
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac05a2599d757155f2d58d4b6929bbc89">  331</a></span>            <span class="keywordflow">for</span> (uint j = 0; j != height; ++j)</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            <span class="keywordflow">for</span> (uint j = 0; j != height; ++j)</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>            {</div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                first[j] *= coeff;</div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            }</div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        }</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        <span class="comment">// Release all timeseries no longer needed</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        <span class="keywordflow">for</span> (uint i = 1; i != width; ++i)</div>
+<div class="foldopen" id="foldopen00338" data-start="{" data-end="}">
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a60cbd7a004cec9fdaa71770aae2180c6">  338</a></span>        <span class="keywordflow">for</span> (uint i = 1; i != width; ++i)</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        {</div>
-<div class="foldopen" id="foldopen00340" data-start="{" data-end="}">
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a60cbd7a004cec9fdaa71770aae2180c6">  340</a></span>            <a class="code hl_function" href="classAntares_1_1Memory.html#ace91a50732407f5a133b7e47f5f1c8ac">Antares::Memory::Release</a>(entry[i]);</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <a class="code hl_function" href="classAntares_1_1Memory.html#ace91a50732407f5a133b7e47f5f1c8ac">Antares::Memory::Release</a>(entry[i]);</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        }</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <span class="comment">// reset the width to 1</span></div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        width = 1;</div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    }</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>}</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
+<div class="foldopen" id="foldopen00346" data-start="{" data-end="}">
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ab2f9d275011f227faf0bc327700ba0b7">  346</a></span> </div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00348" data-start="{" data-end="}">
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a4fe99caa3f6123bffc44a077296ce11f">  348</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#a4fe99caa3f6123bffc44a077296ce11f">Matrix&lt;T, ReadWriteT&gt;::fill</a>(<span class="keyword">const</span> T&amp; v)</div>
@@ -530,39 +532,39 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="keywordflow">for</span> (uint i = 0; i != width; ++i)</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    {</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <a class="code hl_typedef" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a>&amp; column = entry[i];</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
+<div class="foldopen" id="foldopen00353" data-start="{" data-end="}">
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aac01b3a9364017073b41402a84d4f1a6">  353</a></span> </div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordflow">for</span> (uint j = 0; j != height; ++j)</div>
-<div class="foldopen" id="foldopen00355" data-start="{" data-end="}">
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aac01b3a9364017073b41402a84d4f1a6">  355</a></span>        {</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        {</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            column[j] = v;</div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        }</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    }</div>
+<div class="foldopen" id="foldopen00358" data-start="{" data-end="}">
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac16de3366d7c6ce0120182a936f5859e">  358</a></span>    }</div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>}</div>
-<div class="foldopen" id="foldopen00360" data-start="{" data-end="}">
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac16de3366d7c6ce0120182a936f5859e">  360</a></span> </div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00362" data-start="{" data-end="}">
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a370e9e318ed6726b6bc05351d94fba1e">  362</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#a370e9e318ed6726b6bc05351d94fba1e">Matrix&lt;T, ReadWriteT&gt;::fillUnit</a>()</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>{</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    <span class="keywordflow">for</span> (uint i = 0; i != width; ++i)</div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    {</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>        <a class="code hl_typedef" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a>&amp; column = entry[i];</div>
+<div class="foldopen" id="foldopen00366" data-start="{" data-end="}">
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#abdae31656c5a1c46c9b4a6520bf885bd">  366</a></span>        <a class="code hl_typedef" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a>&amp; column = entry[i];</div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span> </div>
-<div class="foldopen" id="foldopen00368" data-start="{" data-end="}">
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#abdae31656c5a1c46c9b4a6520bf885bd">  368</a></span>        (void)::memset((<span class="keywordtype">void</span>*)column, 0, <span class="keyword">sizeof</span>(T) * height);</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        (void)::memset((<span class="keywordtype">void</span>*)column, 0, <span class="keyword">sizeof</span>(T) * height);</div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        column[i] = T(1);</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    }</div>
+<div class="foldopen" id="foldopen00371" data-start="{" data-end="}">
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac19ce4e82c583af47c8aa67f64e8be61">  371</a></span>    }</div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>}</div>
-<div class="foldopen" id="foldopen00373" data-start="{" data-end="}">
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#ac19ce4e82c583af47c8aa67f64e8be61">  373</a></span> </div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00375" data-start="{" data-end="}">
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a5b1459c44b5d36fe06bc35a538dd319d">  375</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#a5b1459c44b5d36fe06bc35a538dd319d">Matrix&lt;T, ReadWriteT&gt;::forceReload</a>(<span class="keywordtype">bool</span> reload)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="keyword"></span>{</div>
+<div class="foldopen" id="foldopen00376" data-start="{" data-end="}">
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#acef0e843b901668f9c8276099c8371c3">  376</a></span><span class="keyword"></span>{</div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <a class="code hl_function" href="classJIT.html#a9d0f0d90199118c164642c14bb1091e5">JIT::Invalidate</a>(jit);</div>
-<div class="foldopen" id="foldopen00378" data-start="{" data-end="}">
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#acef0e843b901668f9c8276099c8371c3">  378</a></span>    <span class="keywordflow">return</span> (reload) ? loadAllJITData() : true;</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="keywordflow">return</span> (reload) ? loadAllJITData() : <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>}</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span> </div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
@@ -576,27 +578,27 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="keywordtype">bool</span> <a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::internalLoadJITData</a>(<span class="keyword">const</span> AnyString&amp; filename,</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>                                                uint minWidth,</div>
+<div class="foldopen" id="foldopen00390" data-start="{" data-end="}">
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a5b1459c44b5d36fe06bc35a538dd319d">  390</a></span>                                                uint minWidth,</div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>                                                uint maxHeight,</div>
-<div class="foldopen" id="foldopen00392" data-start="{" data-end="}">
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a5b1459c44b5d36fe06bc35a538dd319d">  392</a></span>                                                uint options)</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>                                                uint options)</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>{</div>
 <div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="comment">// To avoid undefined behavior when filename is jit-&gt;sourceFilename</span></div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="comment">// we have to make a copy first.</span></div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    jit = <a class="code hl_function" href="classJIT.html#a0132c73a89ae6a597ce7fe472f01db55">JIT::Reset</a>(jit, YString(filename));</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <a class="code hl_function" href="classJIT.html#abaf3744eb4643a1e861b921de308751c">JIT::MarkAsNotLoaded</a>(jit);</div>
+<div class="foldopen" id="foldopen00398" data-start="{" data-end="}">
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a49b9aaaf2f7fcd652198cfc4c6d2bfd0">  398</a></span>    <a class="code hl_function" href="classJIT.html#abaf3744eb4643a1e861b921de308751c">JIT::MarkAsNotLoaded</a>(jit);</div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    clear();</div>
-<div class="foldopen" id="foldopen00400" data-start="{" data-end="}">
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a49b9aaaf2f7fcd652198cfc4c6d2bfd0">  400</a></span>    jit-&gt;minWidth = minWidth;</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    jit-&gt;minWidth = minWidth;</div>
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    jit-&gt;maxHeight = maxHeight;</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    jit-&gt;options = options;</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>}</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
+<div class="foldopen" id="foldopen00405" data-start="{" data-end="}">
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a9b1a6b0cd33aa0686f4f749e70261bb7">  405</a></span> </div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="foldopen" id="foldopen00407" data-start="{" data-end="}">
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a9b1a6b0cd33aa0686f4f749e70261bb7">  407</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">Matrix&lt;T, ReadWriteT&gt;::loadFromCSVFile</a>(<span class="keyword">const</span> AnyString&amp; filename)</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">Matrix&lt;T, ReadWriteT&gt;::loadFromCSVFile</a>(<span class="keyword">const</span> AnyString&amp; filename)</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>{</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <span class="keywordflow">return</span> loadFromCSVFile(filename,</div>
 <div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>                           1,</div>
@@ -605,42 +607,42 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>}</div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span> </div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">Matrix&lt;T, ReadWriteT&gt;::loadFromCSVFile</a>(<span class="keyword">const</span> AnyString&amp; filename,</div>
+<div class="foldopen" id="foldopen00416" data-start="{" data-end="}">
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a7d7aae69baaf90387d3725ea80f1eec4">  416</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">Matrix&lt;T, ReadWriteT&gt;::loadFromCSVFile</a>(<span class="keyword">const</span> AnyString&amp; filename,</div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>                                                   uint minWidth,</div>
-<div class="foldopen" id="foldopen00418" data-start="{" data-end="}">
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a7d7aae69baaf90387d3725ea80f1eec4">  418</a></span>                                                   uint maxHeight,</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                                                   <a class="code hl_typedef" href="classAntares_1_1Matrix.html#ad3e680df09187bc91ea10cccaa319ac0">BufferType</a>* buffer)</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>                                                   uint maxHeight,</div>
+<div class="foldopen" id="foldopen00419" data-start="{" data-end="}">
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#abd0484a5d340f8aa9bae2b9622905db4">  419</a></span>                                                   <a class="code hl_typedef" href="classAntares_1_1Matrix.html#ad3e680df09187bc91ea10cccaa319ac0">BufferType</a>* buffer)</div>
 <div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>{</div>
-<div class="foldopen" id="foldopen00421" data-start="{" data-end="}">
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#abd0484a5d340f8aa9bae2b9622905db4">  421</a></span>    <span class="keywordflow">return</span> loadFromCSVFile(filename, minWidth, maxHeight, optNone, buffer);</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>}</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="keywordflow">return</span> loadFromCSVFile(filename, minWidth, maxHeight, optNone, buffer);</div>
+<div class="foldopen" id="foldopen00422" data-start="{" data-end="}">
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a0c4892d4d66ef9465d88f84a898d701e">  422</a></span>}</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
-<div class="foldopen" id="foldopen00424" data-start="{" data-end="}">
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a0c4892d4d66ef9465d88f84a898d701e">  424</a></span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00425" data-start="{" data-end="}">
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">  425</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">Matrix&lt;T, ReadWriteT&gt;::loadFromCSVFile</a>(<span class="keyword">const</span> AnyString&amp; filename,</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>                                            uint minWidth,</div>
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>                                            uint maxHeight,</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>                                            uint options,</div>
+<div class="foldopen" id="foldopen00428" data-start="{" data-end="}">
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a7b32570dbea83bba50599fee50f45c22">  428</a></span>                                            uint options,</div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>                                            <a class="code hl_typedef" href="classAntares_1_1Matrix.html#ad3e680df09187bc91ea10cccaa319ac0">BufferType</a>* buffer)</div>
-<div class="foldopen" id="foldopen00430" data-start="{" data-end="}">
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a7b32570dbea83bba50599fee50f45c22">  430</a></span>{</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>{</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    assert(not filename.empty() and <span class="stringliteral">&quot;Matrix&lt;&gt;:: loadFromCSVFile: empty filename&quot;</span>);</div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    <span class="comment">// As the loading might be expensive, especially when dealing with</span></div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    <span class="comment">// numerous matrices, we may want to delay this loading (a `lazy` mode)</span></div>
+<div class="foldopen" id="foldopen00433" data-start="{" data-end="}">
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a53c8917d6aa96867db4dc17131d62311">  433</a></span>    <span class="comment">// numerous matrices, we may want to delay this loading (a `lazy` mode)</span></div>
 <div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classJIT.html#a9d5fa065778342c60cf3098e49dcd8b0">JIT::enabled</a> and not(options &amp; optImmediate))</div>
-<div class="foldopen" id="foldopen00435" data-start="{" data-end="}">
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a53c8917d6aa96867db4dc17131d62311">  435</a></span>    {</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>    {</div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        <span class="keywordflow">return</span> internalLoadJITData(filename, minWidth, maxHeight, options);</div>
 <div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>    }</div>
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>    <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>    {</div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        <span class="comment">// Reading data from file</span></div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>        <span class="keywordflow">return</span> internalLoadCSVFile(filename, minWidth, maxHeight, options, buffer);</div>
-<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>    }</div>
+<div class="foldopen" id="foldopen00442" data-start="{" data-end="}">
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a3fbf0ab3853312d666c482c70c4428c0">  442</a></span>    }</div>
 <div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>}</div>
-<div class="foldopen" id="foldopen00444" data-start="{" data-end="}">
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a3fbf0ab3853312d666c482c70c4428c0">  444</a></span> </div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span> </div>
 <div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="foldopen" id="foldopen00446" data-start="{" data-end="}">
 <div class="line"><a id="l00446" name="l00446"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a0dcc53fd45d4969b646d87daef5a54a9">  446</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Matrix.html#a0dcc53fd45d4969b646d87daef5a54a9">Matrix&lt;T, ReadWriteT&gt;::saveToCSVFile</a>(<span class="keyword">const</span> AnyString&amp; filename,</div>
@@ -2099,8 +2101,10 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 </div>
 </div>
 </div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:46</div></div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html_a0299a9df246248542586fb3319c6ad24"><div class="ttname"><a href="classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24">Antares::Matrix::jit</a></div><div class="ttdeci">JIT::Informations * jit</div><div class="ttdoc">Just-in-time informations.</div><div class="ttdef"><b>Definition</b> matrix.h:456</div></div>
+</div>
+</div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:44</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_a0299a9df246248542586fb3319c6ad24"><div class="ttname"><a href="classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24">Antares::Matrix::jit</a></div><div class="ttdeci">JIT::Informations * jit</div><div class="ttdoc">Just-in-time informations.</div><div class="ttdef"><b>Definition</b> matrix.h:454</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a0c4892d4d66ef9465d88f84a898d701e"><div class="ttname"><a href="classAntares_1_1Matrix.html#a0c4892d4d66ef9465d88f84a898d701e">Antares::Matrix::valuesMemoryUsage</a></div><div class="ttdeci">uint64_t valuesMemoryUsage() const</div><div class="ttdoc">Get the amount of memory used by the matrix.</div><div class="ttdef"><b>Definition</b> matrix.hxx:539</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a0dcc53fd45d4969b646d87daef5a54a9"><div class="ttname"><a href="classAntares_1_1Matrix.html#a0dcc53fd45d4969b646d87daef5a54a9">Antares::Matrix::saveToCSVFile</a></div><div class="ttdeci">bool saveToCSVFile(const AnyString &amp;filename, uint precision=6, bool print_dimensions=false, bool saveEvenIfAllZero=false) const</div><div class="ttdoc">Write the content of a matrix into a single file.</div><div class="ttdef"><b>Definition</b> matrix.hxx:446</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a2b44e31fbab3f1dfc65197887e3e6a0c"><div class="ttname"><a href="classAntares_1_1Matrix.html#a2b44e31fbab3f1dfc65197887e3e6a0c">Antares::Matrix::swap</a></div><div class="ttdeci">void swap(MatrixType &amp;rhs) noexcept</div><div class="ttdoc">Swap contents of Matrix with another.</div><div class="ttdef"><b>Definition</b> matrix.hxx:1582</div></div>
@@ -2115,16 +2119,16 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a5b1459c44b5d36fe06bc35a538dd319d"><div class="ttname"><a href="classAntares_1_1Matrix.html#a5b1459c44b5d36fe06bc35a538dd319d">Antares::Matrix::forceReload</a></div><div class="ttdeci">bool forceReload(bool reload=false) const</div><div class="ttdoc">Force the Load of data (if not done) for the next save and mark the matrix as modified.</div><div class="ttdef"><b>Definition</b> matrix.hxx:375</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a60539285596d7b7e4c718f7bd9e291ea"><div class="ttname"><a href="classAntares_1_1Matrix.html#a60539285596d7b7e4c718f7bd9e291ea">Antares::Matrix::findLowerBound</a></div><div class="ttdeci">T findLowerBound() const</div><div class="ttdoc">Find the lower bound.</div><div class="ttdef"><b>Definition</b> matrix.hxx:1481</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a60cbd7a004cec9fdaa71770aae2180c6"><div class="ttname"><a href="classAntares_1_1Matrix.html#a60cbd7a004cec9fdaa71770aae2180c6">Antares::Matrix::pasteToColumn</a></div><div class="ttdeci">void pasteToColumn(uint x, const U *data)</div><div class="ttdoc">Copy values into a given column in the matrix.</div><div class="ttdef"><b>Definition</b> matrix.hxx:468</div></div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html_a6eec615a826a63c0df822f87a4510f1f"><div class="ttname"><a href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">Antares::Matrix::ColumnType</a></div><div class="ttdeci">typename Antares::Memory::Stored&lt; T &gt;::Type ColumnType</div><div class="ttdoc">Column type.</div><div class="ttdef"><b>Definition</b> matrix.h:64</div></div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html_a74c6c7ead4e77284edea439f5eedc230"><div class="ttname"><a href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">Antares::Matrix::entry</a></div><div class="ttdeci">ColumnType * entry</div><div class="ttdoc">All entries of the matrix (bidimensional array)</div><div class="ttdef"><b>Definition</b> matrix.h:454</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_a6eec615a826a63c0df822f87a4510f1f"><div class="ttname"><a href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">Antares::Matrix&lt; double, double &gt;::ColumnType</a></div><div class="ttdeci">typename Antares::Memory::Stored&lt; double &gt;::Type ColumnType</div><div class="ttdoc">Column type.</div><div class="ttdef"><b>Definition</b> matrix.h:62</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_a74c6c7ead4e77284edea439f5eedc230"><div class="ttname"><a href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">Antares::Matrix::entry</a></div><div class="ttdeci">ColumnType * entry</div><div class="ttdoc">All entries of the matrix (bidimensional array)</div><div class="ttdef"><b>Definition</b> matrix.h:452</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a7762e2d5495e13d5c03f0e07c253cfc6"><div class="ttname"><a href="classAntares_1_1Matrix.html#a7762e2d5495e13d5c03f0e07c253cfc6">Antares::Matrix::findUpperBound</a></div><div class="ttdeci">T findUpperBound() const</div><div class="ttdoc">Find the upper bound.</div><div class="ttdef"><b>Definition</b> matrix.hxx:1499</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a7b32570dbea83bba50599fee50f45c22"><div class="ttname"><a href="classAntares_1_1Matrix.html#a7b32570dbea83bba50599fee50f45c22">Antares::Matrix::print</a></div><div class="ttdeci">void print() const</div><div class="ttdoc">Print the matrix to std::cout (debug)</div><div class="ttdef"><b>Definition</b> matrix.hxx:1629</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a7d7aae69baaf90387d3725ea80f1eec4"><div class="ttname"><a href="classAntares_1_1Matrix.html#a7d7aae69baaf90387d3725ea80f1eec4">Antares::Matrix::empty</a></div><div class="ttdeci">bool empty() const</div><div class="ttdoc">Get if the matrix is empty.</div><div class="ttdef"><b>Definition</b> matrix.hxx:526</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a89e727e24fa84d8103094221a6303f27"><div class="ttname"><a href="classAntares_1_1Matrix.html#a89e727e24fa84d8103094221a6303f27">Antares::Matrix::zero</a></div><div class="ttdeci">void zero()</div><div class="ttdoc">Make the matrix a zero matrix.</div><div class="ttdef"><b>Definition</b> matrix.hxx:293</div></div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html_a94b3558d8413485d98daadada6e1aba6"><div class="ttname"><a href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">Antares::Matrix::width</a></div><div class="ttdeci">uint width</div><div class="ttdoc">Width of the matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:450</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_a94b3558d8413485d98daadada6e1aba6"><div class="ttname"><a href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">Antares::Matrix::width</a></div><div class="ttdeci">uint width</div><div class="ttdoc">Width of the matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:448</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a9b1a6b0cd33aa0686f4f749e70261bb7"><div class="ttname"><a href="classAntares_1_1Matrix.html#a9b1a6b0cd33aa0686f4f749e70261bb7">Antares::Matrix::markAsModified</a></div><div class="ttdeci">void markAsModified() const</div><div class="ttdoc">Mark the matrix as modified.</div><div class="ttdef"><b>Definition</b> matrix.hxx:517</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a9ee888e0b467416d5444c8594a539203"><div class="ttname"><a href="classAntares_1_1Matrix.html#a9ee888e0b467416d5444c8594a539203">Antares::Matrix::column</a></div><div class="ttdeci">ColumnType &amp; column(uint n)</div><div class="ttdoc">Get the Nth column.</div><div class="ttdef"><b>Definition</b> matrix.hxx:1775</div></div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html_aa0436d000cfb7438a083eeb9df48e01e"><div class="ttname"><a href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">Antares::Matrix::height</a></div><div class="ttdeci">uint height</div><div class="ttdoc">Height of the matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:452</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_aa0436d000cfb7438a083eeb9df48e01e"><div class="ttname"><a href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">Antares::Matrix::height</a></div><div class="ttdeci">uint height</div><div class="ttdoc">Height of the matrix.</div><div class="ttdef"><b>Definition</b> matrix.h:450</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_aac01b3a9364017073b41402a84d4f1a6"><div class="ttname"><a href="classAntares_1_1Matrix.html#aac01b3a9364017073b41402a84d4f1a6">Antares::Matrix::columnToZero</a></div><div class="ttdeci">void columnToZero(uint x)</div><div class="ttdoc">Set to zero a entire column.</div><div class="ttdef"><b>Definition</b> matrix.hxx:506</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_aada441d7ade4193263c74e70ab4803db"><div class="ttname"><a href="classAntares_1_1Matrix.html#aada441d7ade4193263c74e70ab4803db">Antares::Matrix::loadFromCSVFile</a></div><div class="ttdeci">virtual bool loadFromCSVFile(const AnyString &amp;filename, uint minWidth, uint maxHeight, uint options=optNone, BufferType *buffer=NULL)</div><div class="ttdoc">Load entries from a CSV file.</div><div class="ttdef"><b>Definition</b> matrix.hxx:425</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_ab2f9d275011f227faf0bc327700ba0b7"><div class="ttname"><a href="classAntares_1_1Matrix.html#ab2f9d275011f227faf0bc327700ba0b7">Antares::Matrix::fillColumn</a></div><div class="ttdeci">void fillColumn(uint x, const T &amp;value)</div><div class="ttdoc">Set a entire column with a given value.</div><div class="ttdef"><b>Definition</b> matrix.hxx:492</div></div>
@@ -2136,7 +2140,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="ttc" id="aclassAntares_1_1Matrix_html_ac9f0d99e025444f9b38623f73de767a9"><div class="ttname"><a href="classAntares_1_1Matrix.html#ac9f0d99e025444f9b38623f73de767a9">Antares::Matrix::resizeWithoutDataLost</a></div><div class="ttdeci">void resizeWithoutDataLost(uint x, uint y, const T &amp;defVal=T())</div><div class="ttdoc">Resize the matrix without destroying its content.</div><div class="ttdef"><b>Definition</b> matrix.hxx:1329</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_ad16b0ab9b35f30e8822cfeeb20b8a77e"><div class="ttname"><a href="classAntares_1_1Matrix.html#ad16b0ab9b35f30e8822cfeeb20b8a77e">Antares::Matrix::averageTimeseries</a></div><div class="ttdeci">void averageTimeseries(bool roundValues=true)</div><div class="ttdoc">Compute the average of all timeseries (derated mode)</div><div class="ttdef"><b>Definition</b> matrix.hxx:303</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_ad30db71ffe269b640437ba5eb2be5b5c"><div class="ttname"><a href="classAntares_1_1Matrix.html#ad30db71ffe269b640437ba5eb2be5b5c">Antares::Matrix::Matrix</a></div><div class="ttdeci">Matrix()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition</b> matrix.hxx:202</div></div>
-<div class="ttc" id="aclassAntares_1_1Matrix_html_ad3e680df09187bc91ea10cccaa319ac0"><div class="ttname"><a href="classAntares_1_1Matrix.html#ad3e680df09187bc91ea10cccaa319ac0">Antares::Matrix&lt; double, double &gt;::BufferType</a></div><div class="ttdeci">Yuni::Clob BufferType</div><div class="ttdoc">A buffer, for large amount of data.</div><div class="ttdef"><b>Definition</b> matrix.h:67</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_ad3e680df09187bc91ea10cccaa319ac0"><div class="ttname"><a href="classAntares_1_1Matrix.html#ad3e680df09187bc91ea10cccaa319ac0">Antares::Matrix&lt; double, double &gt;::BufferType</a></div><div class="ttdeci">Yuni::Clob BufferType</div><div class="ttdoc">A buffer, for large amount of data.</div><div class="ttdef"><b>Definition</b> matrix.h:65</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_ad51c03dd9fc18ecbe0cb5def5d3c8863"><div class="ttname"><a href="classAntares_1_1Matrix.html#ad51c03dd9fc18ecbe0cb5def5d3c8863">Antares::Matrix::resize</a></div><div class="ttdeci">void resize(uint w, uint h, bool fixedSize=false)</div><div class="ttdoc">Resize the matrix.</div><div class="ttdef"><b>Definition</b> matrix.hxx:568</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_ae4ae5b2722db5f8f67dde900d4105762"><div class="ttname"><a href="classAntares_1_1Matrix.html#ae4ae5b2722db5f8f67dde900d4105762">Antares::Matrix::multiplyAllEntriesBy</a></div><div class="ttdeci">void multiplyAllEntriesBy(const U &amp;c)</div><div class="ttdoc">Multiply all entries by a given value.</div><div class="ttdef"><b>Definition</b> matrix.hxx:1404</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_ae90675d05388ab780a2a31784ea76f5b"><div class="ttname"><a href="classAntares_1_1Matrix.html#ae90675d05388ab780a2a31784ea76f5b">Antares::Matrix::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Empty the matrix.</div><div class="ttdef"><b>Definition</b> matrix.hxx:545</div></div>
@@ -2153,7 +2157,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2array_2include_2antares
 <div class="ttc" id="aclassJIT_html_a9d0f0d90199118c164642c14bb1091e5"><div class="ttname"><a href="classJIT.html#a9d0f0d90199118c164642c14bb1091e5">JIT::Invalidate</a></div><div class="ttdeci">static void Invalidate(Informations *j)</div><div class="ttdoc">Mark the attached object as modified.</div><div class="ttdef"><b>Definition</b> jit.cpp:110</div></div>
 <div class="ttc" id="aclassJIT_html_a9d5fa065778342c60cf3098e49dcd8b0"><div class="ttname"><a href="classJIT.html#a9d5fa065778342c60cf3098e49dcd8b0">JIT::enabled</a></div><div class="ttdeci">static bool enabled</div><div class="ttdoc">Flag to enable/disable JIT informations.</div><div class="ttdef"><b>Definition</b> jit.h:182</div></div>
 <div class="ttc" id="aclassJIT_html_abaf3744eb4643a1e861b921de308751c"><div class="ttname"><a href="classJIT.html#abaf3744eb4643a1e861b921de308751c">JIT::MarkAsNotLoaded</a></div><div class="ttdeci">static void MarkAsNotLoaded(Informations *j)</div><div class="ttdoc">Mark the attached object as not loaded.</div><div class="ttdef"><b>Definition</b> jit.cpp:101</div></div>
-<div class="ttc" id="astructAntares_1_1Matrix_1_1PredicateIdentity_html"><div class="ttname"><a href="structAntares_1_1Matrix_1_1PredicateIdentity.html">Antares::Matrix::PredicateIdentity</a></div><div class="ttdef"><b>Definition</b> matrix.h:459</div></div>
+<div class="ttc" id="astructAntares_1_1Matrix_1_1PredicateIdentity_html"><div class="ttname"><a href="structAntares_1_1Matrix_1_1PredicateIdentity.html">Antares::Matrix::PredicateIdentity</a></div><div class="ttdef"><b>Definition</b> matrix.h:457</div></div>
 <div class="ttc" id="astructPredicateIdentity_html"><div class="ttname"><a href="structPredicateIdentity.html">PredicateIdentity</a></div><div class="ttdef"><b>Definition</b> tests-matrix-save.h:42</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
