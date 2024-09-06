@@ -10,13 +10,13 @@ Below are our specific (but not all!) exceptions to the Google's coding standard
 - We use `#pragma once` instead of the `#define` Guard in header files.
 - Includes are sorted and grouped by directory, there should be newlines between different directories.
 - Order of directories in includes: "current_dir/current_file.hpp", includes from other dirs sorted by dependencies (e.g. indexer, then coding, then base), "defines.hpp", C++ standard library headers, boost headers, 3party.
-- We ARE using C++ exceptions.
-- We are using all features of C++17 and C++20 except std::filesystem, std::to_chars & std::from_chars which are not fully supported on all platforms.
+- We ARE using C++ exceptions. Feel free to define your own exceptions, derived from `std::exception` or any child class.
+- We are using all features of C++17 and C++20
 - We try to limit the usage of boost libraries which require linking (and prefer C++20 types over their boost counterparts).
 
 Naming and formatting
 
-- We ALWAYS use two spaces indent and don't use tabs.
+- We ALWAYS use 4 spaces indent and don't use tabs.
 - We don't have strict limits on line width, but keep it reasonable to fit on the screen. The advised width is that written in the [src/.clang-format](src/.clang-format) file (currently 100).
 - Doxygen-style comments can be used.
 - Use left-to-right order for variables/params: `const string& s` (reference to the const string).
@@ -36,9 +36,12 @@ Naming and formatting
 
 **We write code without warnings on clang++, g++ and MSVC !**
 
+## Global/static variables
+When using `static` variables, be aware that some of Antares Simulator's functions run on multiple threads. Please avoid introducing global variables.
+
 ## Yuni
 
-Yuni is a C++ framework that fullfiled some of the lacking features pre-C++11. Even though you'll see it use widely through the existing code base, we recommend against using it. It is namespaced under `Yuni`.
+Yuni is a C++ framework that fullfiled some of the lacking features pre-C++11. Even though you'll see it used widely through the existing code base, we recommend against using it for new code. It is namespaced under `Yuni`.
 
 ## ClangFormat
 
@@ -63,9 +66,9 @@ uint16_t constexpr kBufferSize = 255;
 // C-style enums are ALL_CAPS. But remember that C++11 enum classes are preferred.
 enum Type
 {
-  TYPE_INTEGER,
-  TYPE_FLOAT,
-  TYPE_STRING
+    TYPE_INTEGER,
+    TYPE_FLOAT,
+    TYPE_STRING
 };
 
 using TMyTypeStartsWithCapitalTLetter = double;
@@ -73,98 +76,118 @@ using TMyTypeStartsWithCapitalTLetter = double;
 class ComplexClass
 {
 public:
-  Complex(double rePart, double imPart) : m_re(rePart), m_im(imPart) {}
+    Complex(double rePart, double imPart):
+        m_re(rePart),
+        m_im(imPart)
+    {
+    }
 
-  double Modulus() const
-  {
-    double const rere = m_re * m_re;
-    double const imim = m_im * m_im;
-    return sqrt(rere + imim);
-  }
+    double Modulus() const
+    {
+        const double rere = m_re * m_re;
+        const double imim = m_im * m_im;
+        return sqrt(rere + imim);
+    }
 
-  double OneLineMethod() const { return m_re; }
+    double OneLineMethod() const
+    {
+        return m_re;
+    }
 
 private:
-  // We use the "m_" prefix for member variables.
-  double m_re;
-  double m_im;
+    // We use the "m_" prefix for member variables.
+    double m_re;
+    double m_im;
 };
 
 namespace
 {
 void lowerCamelCaseFunctionName(int lowerCamelCaseVar)
 {
-  static int counter = 0;
-  counter += lowerCamelCaseVar;
+    static int counter = 0;
+    counter += lowerCamelCaseVar;
 }
-}  // namespace
+} // namespace
 
 namespace lower_case
 {
-template <typename TypenameWithoutAffixes>
-void SomeFoo(int a, int b,
-             TypenameWithoutAffixes /* We avoid compilation warnings. */)
+template<typename TypenameWithoutAffixes>
+void SomeFoo(int a, int b, TypenameWithoutAffixes /* We avoid compilation warnings. */)
 {
-  for (int i = 0; i < a; ++i)
-  {
-    // IMPORTANT! We DON'T use one-liners for if statements for easier debugging.
-    // The following syntax is invalid: if (i < b) Bar(i);
-    if (i < b)
-      Bar(i);
-    else
+    for (int i = 0; i < a; ++i)
     {
-      Bar(i);
-      Bar(b);
-      // Commented out the call.
-      // Bar(c);
+        // IMPORTANT! We DON'T use one-liners for if statements for easier debugging.
+        // The following syntax is invalid: if (i < b) Bar(i);
+        if (i < b)
+        {
+            Bar(i);
+        }
+        else
+        {
+            Bar(i);
+            Bar(b);
+            // Commented out the call.
+            // Bar(c);
+        }
     }
-  }
 }
-}  // namespace lower_case
+} // namespace lower_case
 
 // Switch formatting.
 int Foo(int a)
 {
-  switch (a)
-  {
-  case 1:
-    Bar(1);
-    break;
-  case 2:
-  {
-    Bar(2);
-    break;
-  }
-  case 3:
-  default:
-    Bar(3);
-    break;
-  }
-  return 0;
+    switch (a)
+    {
+    case 1:
+        Bar(1);
+        break;
+    case 2:
+    {
+        Bar(2);
+        break;
+    }
+    case 3:
+    default:
+        Bar(3);
+        break;
+    }
+    return 0;
 }
 
 // Loops formatting.
 
 if (condition)
-  foo();
-else
-  bar();
-
-if (condition)
 {
-  if (condition)
     foo();
-  else
+}
+else
+{
     bar();
 }
 
+if (condition)
+{
+    if (condition)
+    {
+        foo();
+    }
+    else
+    {
+        bar();
+    }
+}
+
 for (size_t i = 0; i < size; ++i)
-  foo(i);
+{
+    foo(i);
+}
 
 while (true)
 {
-  if (condition)
-    break;
+    if (condition)
+    {
+        break;
+    }
 }
 
 // Space after the keyword.
@@ -195,6 +218,7 @@ if (x && !y)
 }
 v = w * x + y / z;
 v = w * (x + z);
+
 
 // Space after double dash. And full sentences in comments.
 ```
