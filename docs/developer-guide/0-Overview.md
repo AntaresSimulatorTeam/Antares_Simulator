@@ -5,7 +5,7 @@ hide:
 
 # Overview
 
-*ANTARES* is developed mainly in **C++**
+*ANTARES* is developed mainly in **C++20**
 
 This software suite has been tested under:
 
