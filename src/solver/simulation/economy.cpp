@@ -71,7 +71,7 @@ bool Economy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
-        weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
+        weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
@@ -82,14 +82,14 @@ bool Economy::simulationBegin()
                                             numSpace);
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] = Antares::Solver::Optimization::WeeklyOptimization::
-              create(study,
-                     options,
-                     study.parameters.adqPatchParams,
-                     &pProblemesHebdo[numSpace],
-                     numSpace,
-                     resultWriter,
-                     simulationObserver_.get());
+
+            weeklyOptProblems_.emplace_back(options,
+                                            &pProblemesHebdo[numSpace],
+                                            study.parameters.adqPatchParams,
+                                            numSpace,
+                                            resultWriter,
+                                            simulationObserver_.get());
+
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
               &pProblemesHebdo[numSpace],
@@ -163,7 +163,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblems_[numSpace]->solve();
+            weeklyOptProblems_[numSpace].solve();
 
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
@@ -263,7 +263,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Economy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
+    if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);

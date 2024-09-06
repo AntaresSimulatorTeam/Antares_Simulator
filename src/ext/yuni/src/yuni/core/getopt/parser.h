@@ -9,11 +9,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../validator/text/default.h"
-#include "option.h"
-#include "../../yuni.h"
 #include <map>
 #include <string.h>
+
+#include "../../yuni.h"
+#include "../validator/text/default.h"
+#include "option.h"
 
 namespace Yuni
 {
@@ -167,7 +168,7 @@ public:
     ** \param argv The list of arguments
     ** \return False if the program should abort
     */
-    ReturnCode operator()(int argc, char* argv[]);
+    ReturnCode operator()(int argc, const char* argv[]);
     //@}
 
     //! \name Help usage

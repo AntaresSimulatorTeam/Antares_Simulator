@@ -58,16 +58,16 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
     switch (T)
     {
     case Data::timeSeriesLoad:
-        xcast->random = &(study.runtime->random[Data::seedTsGenLoad]);
+        xcast->random = &(study.runtime.random[Data::seedTsGenLoad]);
         break;
     case Data::timeSeriesSolar:
-        xcast->random = &(study.runtime->random[Data::seedTsGenSolar]);
+        xcast->random = &(study.runtime.random[Data::seedTsGenSolar]);
         break;
     case Data::timeSeriesWind:
-        xcast->random = &(study.runtime->random[Data::seedTsGenWind]);
+        xcast->random = &(study.runtime.random[Data::seedTsGenWind]);
         break;
     case Data::timeSeriesHydro:
-        xcast->random = &(study.runtime->random[Data::seedTsGenHydro]);
+        xcast->random = &(study.runtime.random[Data::seedTsGenHydro]);
         break;
     default:
         xcast->random = nullptr;

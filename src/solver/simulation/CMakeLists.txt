@@ -11,8 +11,6 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/sim_structure_probleme_economique.h
         sim_variables_globales.cpp
         include/antares/solver/simulation/sim_constants.h
-        include/antares/solver/simulation/sim_spread_generator.h
-        sim_spread_generator.cpp
         include/antares/solver/simulation/simulation.h
         include/antares/solver/simulation/solver.h
         include/antares/solver/simulation/solver.hxx
@@ -29,6 +27,8 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/solver.hxx
         include/antares/solver/simulation/solver.data.h
         solver.data.cpp
+		include/antares/solver/simulation/simulation-run.h
+        simulation-run.cpp
         include/antares/solver/simulation/common-eco-adq.h
         common-eco-adq.cpp
         common-hydro-remix.cpp
@@ -47,10 +47,6 @@ set(SRC_SIMULATION
         TimeSeriesNumbersWriter.cpp
 		include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
 		include/antares/solver/simulation/ISimulationObserver.h
-        economy_mode.cpp
-        adequacy_mode.cpp
-        include/antares/solver/simulation/economy_mode.h
-        include/antares/solver/simulation/adequacy_mode.h
 )
 source_group("simulation" FILES ${SRC_SIMULATION})
 

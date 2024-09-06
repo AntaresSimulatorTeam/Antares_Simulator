@@ -212,7 +212,7 @@ The schema can be found at : **src/tests/run-study-tests/parse_studies/json_sche
 
 ```bash
 > cd src/tests/run-study-tests
-> python -m pytest -m mps --solver-path=/path/to/the/Antares/solver/antares-x.y-solver.exe
+> python -m pytest -m json --solver-path=/path/to/the/Antares/solver/antares-x.y-solver.exe
 ```
 
 # TO DO

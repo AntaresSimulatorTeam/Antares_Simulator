@@ -44,9 +44,9 @@ IntermediateValues::IntermediateValues():
 
 void IntermediateValues::initializeFromStudy(Data::Study& study)
 {
-    pRange = &study.runtime->rangeLimits;
+    pRange = &study.runtime.rangeLimits;
     calendar = &study.calendarOutput;
-    pRuntimeInfo = study.runtime;
+    pRuntimeInfo = &study.runtime;
 }
 
 void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()

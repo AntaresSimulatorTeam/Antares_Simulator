@@ -33,7 +33,9 @@ class InMemoryStudyLoader: public Antares::IStudyLoader
 {
 public:
     explicit InMemoryStudyLoader(bool success = true):
-        success_(success){};
+        success_(success)
+    {
+    }
 
     [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override
     {
@@ -44,8 +46,8 @@ public:
         StudyBuilder builder;
         builder.addAreaToStudy("area1");
         builder.addAreaToStudy("area2");
-        builder.setNumberMCyears(1);
         builder.study->initializeRuntimeInfos();
+        builder.setNumberMCyears(1);
         builder.study->parameters.resultFormat = ResultFormat::inMemory;
         builder.study->prepareOutput();
         return std::move(builder.study);

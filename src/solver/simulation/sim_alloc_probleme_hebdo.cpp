@@ -20,8 +20,6 @@
 */
 #include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 
-#include <yuni/yuni.h>
-
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
@@ -39,7 +37,7 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
     {
         SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
         SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
-        SIM_AllocationLinks(problem, study.runtime->interconnectionsCount(), NombreDePasDeTemps);
+        SIM_AllocationLinks(problem, study.runtime.interconnectionsCount(), NombreDePasDeTemps);
         SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
         SIM_AllocateAreas(problem, study, NombreDePasDeTemps);
     }
@@ -55,7 +53,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 {
     uint nbPays = study.areas.size();
 
-    const uint linkCount = study.runtime->interconnectionsCount();
+    const uint linkCount = study.runtime.interconnectionsCount();
 
     problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
     problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
@@ -132,8 +130,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 {
     uint nbPays = study.areas.size();
 
-    const uint linkCount = study.runtime->interconnectionsCount();
-    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+    const uint linkCount = study.runtime.interconnectionsCount();
+    const uint shortTermStorageCount = study.runtime.shortTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
 
@@ -159,7 +157,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
                                                                                           0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
@@ -172,13 +170,13 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.NumeroDeVariablesVariationHydALaHausse.assign(nbPays, 0);
 
         variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
 
         variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
@@ -205,14 +203,14 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDArret
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);
@@ -278,7 +276,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         problem.MatriceDesContraintesCouplantes[constraintIndex]
           .PaysDuPalierDispatch.assign(bc->clusterCount(), 0);
 
-        // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
+        // TODO : create a numberOfTimeSteps method in class of runtime.bindingConstraint
         unsigned int nbTimeSteps;
         switch (bc->type())
         {
@@ -365,12 +363,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive.assign(NombreDePasDeTemps,
                                                                                  0.);
+        problem.ResultatsHoraires[k]
+          .ValeursHorairesDeDefaillancePositiveCSR.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDENS.assign(NombreDePasDeTemps,
                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations.assign(NombreDePasDeTemps,
                                                                          0); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR.assign(NombreDePasDeTemps,
-                                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
                                                                      0.); // adq patch
 

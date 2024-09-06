@@ -29,7 +29,6 @@ namespace Antares::Solver::Variable::R::AllYears
 {
 RawData::RawData():
     hourly(nullptr),
-    year(nullptr),
     allYears(0.)
 {
 }
@@ -37,14 +36,13 @@ RawData::RawData():
 RawData::~RawData()
 {
     Antares::Memory::Release(hourly);
-    delete[] year;
 }
 
 void RawData::initializeFromStudy(const Data::Study& study)
 {
     Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
-    nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
-    year = new double[nbYearsCapacity];
+    nbYearsCapacity = study.runtime.rangeLimits.year[Data::rangeEnd] + 1;
+    year.resize(nbYearsCapacity);
 }
 
 void RawData::reset()
@@ -54,7 +52,7 @@ void RawData::reset()
     (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
     (void)::memset(weekly, 0, sizeof(double) * WEEKS_PER_YEAR);
     (void)::memset(daily, 0, sizeof(double) * DAYS_PER_YEAR);
-    (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
+    year.assign(nbYearsCapacity, 0);
 }
 
 void RawData::merge(unsigned int y, const IntermediateValues& rhs)

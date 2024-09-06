@@ -36,8 +36,9 @@ namespace Antares
 */
 template<class StringT>
 void TransformNameIntoID(const AnyString& name, StringT& out);
-
 std::string transformNameIntoID(const std::string& name);
+
+std::string FormattedTime(const std::string& format);
 
 /*!
 ** \brief Beautify a name, for renaming an area for example
@@ -51,11 +52,8 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 
 namespace Utils
 {
-
 bool isZero(double d);
-
 double round(double d, unsigned precision);
-
 } // namespace Utils
 } // namespace Antares
 

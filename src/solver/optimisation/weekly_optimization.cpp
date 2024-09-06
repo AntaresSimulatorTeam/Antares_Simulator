@@ -25,23 +25,22 @@
 
 namespace Antares::Solver::Optimization
 {
-DefaultWeeklyOptimization::DefaultWeeklyOptimization(
-  const OptimizationOptions& options,
-  PROBLEME_HEBDO* problemeHebdo,
-  AdqPatchParams& adqPatchParams,
-  uint thread_number,
-  IResultWriter& writer,
-  Simulation::ISimulationObserver& simulationObserver):
-    WeeklyOptimization(options,
-                       problemeHebdo,
-                       adqPatchParams,
-                       thread_number,
-                       writer,
-                       simulationObserver)
+WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
+                                       PROBLEME_HEBDO* problemeHebdo,
+                                       AdqPatchParams& adqPatchParams,
+                                       uint thread_number,
+                                       IResultWriter& writer,
+                                       Simulation::ISimulationObserver& simulationObserver):
+    options_(options),
+    problemeHebdo_(problemeHebdo),
+    adqPatchParams_(adqPatchParams),
+    thread_number_(thread_number),
+    writer_(writer),
+    simulationObserver_(simulationObserver)
 {
 }
 
-void DefaultWeeklyOptimization::solve()
+void WeeklyOptimization::solve()
 {
     OPT_OptimisationHebdomadaire(options_,
                                  problemeHebdo_,

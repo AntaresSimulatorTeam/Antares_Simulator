@@ -3,6 +3,12 @@ toc_depth: 2
 ---
 
 # Antares Changelog
+
+## Branch 9.2.x
+### 9.2.0
+
+* Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
+
 ## Branch 9.1.x
 
 ### 9.1.0 (06/2024)
@@ -83,6 +89,13 @@ toc_depth: 2
 * Fix invalid index causing segfault in `test-study` test (#1902)
 
 ## Branch 8.8.x (end of support 12/2025)
+### 8.8.7 (07/2024)
+#### Improvements
+- Add OR-Tools solver option for batchrun tool (#1981)
+
+#### Bugfix
+- Adequacy Patch regression [ANT-1845] #2235
+
 ### 8.8.6 (07/2024)
 #### Bugfix
 - Fix missing synthesis results for links (#2115)

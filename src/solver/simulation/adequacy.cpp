@@ -258,7 +258,7 @@ bool Adequacy::year(Progression::Task& progression,
             state.resSpilled.zero();
 
             auto nbAreas = study.areas.size();
-            auto& runtime = *(study.runtime);
+            auto& runtime = study.runtime;
 
             for (uint i = 0; i != nbHoursInAWeek; ++i)
             {
@@ -399,7 +399,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Adequacy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
+    if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);

@@ -29,6 +29,7 @@
 #include <antares/writer/i_writer.h>
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/misc/options.h"
+#include "antares/solver/simulation/ISimulationObserver.h"
 
 namespace Antares::Solver
 {
@@ -56,7 +57,7 @@ public:
     **
     ** \return False if the operation failed.
     */
-    void prepare(int argc, char* argv[]);
+    void prepare(int argc, const char* argv[]);
 
     /*!
     ** \brief Execute the simulation
@@ -92,9 +93,6 @@ private:
      */
     void readDataForTheStudy(Antares::Data::StudyLoadOptions& options);
 
-    void runSimulationInAdequacyMode();
-    void runSimulationInEconomicMode();
-
     void onLogMessage(int level, const std::string& message);
 
     //! The settings given from the command line
@@ -109,7 +107,7 @@ private:
     uint pWarningCount = 0;
 
     int pArgc = 0;
-    char** pArgv = nullptr;
+    const char** pArgv = nullptr;
 
     // Benchmarking
     Benchmarking::Timer pTotalTimer;
@@ -132,4 +130,5 @@ private:
     void postParametersChecks() const;
 
 }; // class Application
+
 } // namespace Antares::Solver

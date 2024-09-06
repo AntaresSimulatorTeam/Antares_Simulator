@@ -40,14 +40,14 @@ FinalLevelValidator::FinalLevelValidator(
   const unsigned int lastSimulationDay,
   const unsigned int firstMonthOfSimulation,
   HydroErrorsCollector& errorCollector):
-    hydro_(hydro),
-    areaName_(areaName),
-    areaIndex_(areaIndex),
-    initialLevel_(initialLevel),
-    finalLevel_(finalLevel),
     year_(year),
     lastSimulationDay_(lastSimulationDay),
     firstMonthOfSimulation_(firstMonthOfSimulation),
+    hydro_(hydro),
+    areaIndex_(areaIndex),
+    areaName_(areaName),
+    initialLevel_(initialLevel),
+    finalLevel_(finalLevel),
     errorCollector_(errorCollector)
 {
 }

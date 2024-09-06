@@ -183,7 +183,7 @@ bool ThermalClusterPrepro::cellValue(int x, int y, const String& value)
 void ThermalClusterPrepro::internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
 {
     pCluster = cluster;
-    pPreproAvailability = (cluster) ? cluster->prepro : nullptr;
+    pPreproAvailability = (cluster) ? cluster->prepro.get() : nullptr;
     MatrixAncestorType::matrix((pPreproAvailability) ? &pPreproAvailability->data : nullptr);
     onRefresh();
 }

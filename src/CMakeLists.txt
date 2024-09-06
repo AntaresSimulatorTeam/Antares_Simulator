@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      9)
-set(ANTARES_VERSION_LO	      1)
+set(ANTARES_VERSION_LO	      2)
 set(ANTARES_VERSION_REVISION  0)
 
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 0)
+set(ANTARES_RC 3)
 
 set(ANTARES_VERSION_YEAR      2024)
 
@@ -208,7 +208,7 @@ find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
-    GIT_REPOSITORY "https://github.com/rte-france/or-tools"
+    GIT_REPOSITORY "https://github.com/rte-france/or-tools-rte"
     GIT_TAG ${ORTOOLS_TAG}
     GIT_SHALLOW TRUE
     )

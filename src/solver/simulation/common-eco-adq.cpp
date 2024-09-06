@@ -60,9 +60,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         std::vector<double> avgDirect;
         std::vector<double> avgIndirect;
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
-            auto* link = study.runtime->areaLink[j];
+            auto* link = study.runtime.areaLink[j];
             int ret = retrieveAverageNTC(study,
                                          link->directCapacities.timeSeries,
                                          link->timeseriesNumbers,
@@ -100,7 +100,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     }
     catch (Data::UnfeasibleProblemError&)
     {
-        study.runtime->quadraticOptimizationHasFailed = true;
+        study.runtime.quadraticOptimizationHasFailed = true;
     }
 
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
@@ -108,7 +108,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         const uint indx = i + PasDeTempsDebut;
         auto& ntcValues = problem.ValeursDeNTC[i];
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
             transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues.ValeurDuFlux[j];
         }
@@ -123,9 +123,9 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
         return false;
     }
 
-    for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+    for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
     {
-        auto& lnk = *(study.runtime->areaLink[j]);
+        auto& lnk = *(study.runtime.areaLink[j]);
         auto& impedances = lnk.parameters[Data::fhlImpedances];
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
@@ -162,7 +162,7 @@ void ComputeFlowQuad(Data::Study& study,
     {
         logs.info() << "  The quadratic optimisation has been skipped";
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
             for (uint w = 0; w != nbWeeks; ++w)
             {
@@ -360,7 +360,7 @@ void SetInitialHydroLevel(Data::Study& study,
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     double** thermalNoises,
+                                     std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year)
 {
     int hourInYear = PasDeTempsDebut;

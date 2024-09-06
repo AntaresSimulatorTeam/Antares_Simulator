@@ -21,12 +21,9 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
-#include <yuni/core/system/suspend.h>
 #include <yuni/io/io.h>
-#include <yuni/job/job.h>
 
 #include <antares/antares/fatal-error.h>
-#include <antares/benchmarking/timer.h>
 #include <antares/date/date.h>
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
@@ -146,10 +143,9 @@ public:
 
             // Getting random tables for this year
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
-            double* randomReservoirLevel = nullptr;
 
             // 1 - Applying random levels for current year
-            randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+            auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
             // removed
@@ -159,7 +155,7 @@ public:
 
             // 4 - Hydraulic ventilation
             pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel]
-            { hydroManagement.makeVentilation(randomReservoirLevel, y, scratchmap); };
+            { hydroManagement.makeVentilation(randomReservoirLevel.data(), y, scratchmap); };
 
             // Updating the state
             state.year = y;
@@ -326,9 +322,9 @@ void ISimulation<ImplementationType>::run()
         logs.info();
 
         // Launching the simulation for all years
-        logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
-                    << " .. " << (1 + study.runtime->rangeLimits.year[Data::rangeEnd])
-                    << "], total: " << study.runtime->rangeLimits.year[Data::rangeCount];
+        logs.info() << "MC-Years : [" << (study.runtime.rangeLimits.year[Data::rangeBegin] + 1)
+                    << " .. " << (1 + study.runtime.rangeLimits.year[Data::rangeEnd])
+                    << "], total: " << study.runtime.rangeLimits.year[Data::rangeCount];
 
         // Current state
         std::vector<Variable::State> state(pNbMaxPerformedYearsInParallel, Variable::State(study));
@@ -338,7 +334,7 @@ void ISimulation<ImplementationType>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
         }
 
-        uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
+        uint finalYear = 1 + study.runtime.rangeLimits.year[Data::rangeEnd];
         {
             pDurationCollector("mc_years")
               << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
@@ -454,15 +450,24 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         if (refreshTSonCurrentYear)
         {
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-#define SEP Yuni::IO::Separator
-            const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP + "mc-"
-                                         + std::to_string(year);
-#undef SEP
-            generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
+            generateThermalTimeSeries(study,
+                                      clusters,
+                                      study.runtime.random[Data::seedTsGenThermal]);
+
+            bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
+            bool doWeWrite = archive && !study.parameters.noOutput;
+            if (doWeWrite)
+            {
+                fs::path savePath = fs::path(study.folderOutput.to<std::string>()) / "ts-generator"
+                                    / "thermal" / "mc-" / std::to_string(year);
+                writeThermalTimeSeries(clusters, savePath);
+            }
 
             // apply the spinning if we generated some in memory clusters
             for (auto* cluster: clusters)
+            {
                 cluster->calculationOfSpinning();
+            }
         }
     };
 }
@@ -503,7 +508,7 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
         // Some thermal clusters may override the global parameter.
         // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
         bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal
-                                      || study.runtime->thermalTSRefresh;
+                                      || study.runtime.thermalTSRefresh;
         refreshing = refreshing
                      || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
 
@@ -597,43 +602,43 @@ void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(
     {
         // General :
         randomForParallelYears.pYears[y].setNbAreas(nbAreas);
-        randomForParallelYears.pYears[y].pNbClustersByArea = new size_t[nbAreas];
+        randomForParallelYears.pYears[y].pNbClustersByArea.resize(nbAreas);
 
         // Thermal noises :
-        randomForParallelYears.pYears[y].pThermalNoisesByArea = new double*[nbAreas];
+        randomForParallelYears.pYears[y].pThermalNoisesByArea.resize(nbAreas);
 
         for (uint a = 0; a != nbAreas; ++a)
         {
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
             size_t nbClusters = area.thermal.list.allClustersCount();
-            randomForParallelYears.pYears[y].pThermalNoisesByArea[a] = new double[nbClusters];
+            randomForParallelYears.pYears[y].pThermalNoisesByArea[a].resize(nbClusters);
             randomForParallelYears.pYears[y].pNbClustersByArea[a] = nbClusters;
         }
 
         // Reservoir levels
-        randomForParallelYears.pYears[y].pReservoirLevels = new double[nbAreas];
+        randomForParallelYears.pYears[y].pReservoirLevels.resize(nbAreas);
 
         // Noises on unsupplied and spilled energy
-        randomForParallelYears.pYears[y].pUnsuppliedEnergy = new double[nbAreas];
-        randomForParallelYears.pYears[y].pSpilledEnergy = new double[nbAreas];
+        randomForParallelYears.pYears[y].pUnsuppliedEnergy.resize(nbAreas);
+        randomForParallelYears.pYears[y].pSpilledEnergy.resize(nbAreas);
 
         // Hydro costs noises
         switch (study.parameters.power.fluctuations)
         {
         case Data::lssFreeModulations:
         {
-            randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod = new double*[nbAreas];
+            randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod.resize(nbAreas);
             for (uint a = 0; a != nbAreas; ++a)
             {
-                randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod[a] = new double[8784];
+                randomForParallelYears.pYears[y].pHydroCostsByArea_freeMod[a].resize(8784);
             }
             break;
         }
         case Data::lssMinimizeRamping:
         case Data::lssMinimizeExcursions:
         {
-            randomForParallelYears.pYears[y].pHydroCosts_rampingOrExcursion = new double[nbAreas];
+            randomForParallelYears.pYears[y].pHydroCosts_rampingOrExcursion.resize(nbAreas);
             break;
         }
         case Data::lssUnknown:
@@ -652,8 +657,6 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
   std::map<unsigned int, bool>& isYearPerformed,
   MersenneTwister& randomHydroGenerator)
 {
-    auto& runtime = *study.runtime;
-
     uint indexYear = 0;
     std::vector<unsigned int>::iterator ity;
 
@@ -678,7 +681,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
             for (auto& cluster: area.thermal.list.all())
             {
                 uint clusterIndex = cluster->areaWideIndex;
-                double thermalNoise = runtime.random[Data::seedThermalCosts].next();
+                double thermalNoise = study.runtime.random[Data::seedThermalCosts].next();
                 if (isPerformed)
                 {
                     randomForYears.pYears[indexYear].pThermalNoisesByArea[a][clusterIndex]
@@ -737,8 +740,8 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
 
         // ... Unsupplied and spilled energy costs noises (french : bruits sur la defaillance
         // positive et negatives) ... references to the random number generators
-        auto& randomUnsupplied = study.runtime->random[Data::seedUnsuppliedEnergyCosts];
-        auto& randomSpilled = study.runtime->random[Data::seedSpilledEnergyCosts];
+        auto& randomUnsupplied = study.runtime.random[Data::seedUnsuppliedEnergyCosts];
+        auto& randomSpilled = study.runtime.random[Data::seedSpilledEnergyCosts];
 
         int currentSpilledEnergySeed = study.parameters.seed[Data::seedSpilledEnergyCosts];
         int defaultSpilledEnergySeed = Data::antaresSeedDefaultValue
@@ -778,7 +781,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
           }); // each area
 
         // ... Hydro costs noises ...
-        auto& randomHydro = study.runtime->random[Data::seedHydroCosts];
+        auto& randomHydro = study.runtime.random[Data::seedHydroCosts];
 
         Data::PowerFluctuations powerFluctuations = study.parameters.power.fluctuations;
         switch (powerFluctuations)
@@ -794,8 +797,8 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
             {
                 for (auto i = study.areas.begin(); i != end; ++i)
                 {
-                    double* noise = randomForYears.pYears[indexYear]
-                                      .pHydroCostsByArea_freeMod[areaIndex];
+                    auto& noise = randomForYears.pYears[indexYear]
+                                    .pHydroCostsByArea_freeMod[areaIndex];
                     std::set<hydroCostNoise, compareHydroCostsNoises> setHydroCostsNoises;
                     for (uint j = 0; j != 8784; ++j)
                     {

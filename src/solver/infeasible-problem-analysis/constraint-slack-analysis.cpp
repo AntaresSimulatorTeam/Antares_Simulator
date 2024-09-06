@@ -31,15 +31,26 @@
 
 using namespace operations_research;
 
+namespace
+{
+bool greaterSlackSolutions(const MPVariable* a, const MPVariable* b)
+{
+    return a->solution_value() > b->solution_value();
+}
+
+constexpr unsigned int nbMaxSlackVarsToKeep = 10;
+} // namespace
+
 namespace Antares::Optimization
 {
 
 void ConstraintSlackAnalysis::run(MPSolver* problem)
 {
-    addSlackVariables(problem);
+    selectConstraintsToWatch(problem);
+    addSlackVariablesToConstraints(problem);
     if (slackVariables_.empty())
     {
-        logs.error() << title() << " : no constraints have been selected";
+        logs.warning() << title() << " : no constraints have been selected";
         return;
     }
 
@@ -52,10 +63,24 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
         return;
     }
 
-    hasDetectedInfeasibilityCause_ = true;
+    sortSlackVariablesByValue();
+    trimSlackVariables();
+    if (hasDetectedInfeasibilityCause_ = anySlackVariableNonZero(); !hasDetectedInfeasibilityCause_)
+    {
+        logs.warning() << title() << " : no violation detected for selected constraints.";
+    }
 }
 
-void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
+void ConstraintSlackAnalysis::selectConstraintsToWatch(MPSolver* problem)
+{
+    ConstraintsFactory factory;
+    std::regex rgx = factory.constraintsFilter();
+    std::ranges::copy_if(problem->constraints(),
+                         std::back_inserter(constraintsToWatch_),
+                         [&rgx](auto* c) { return std::regex_search(c->name(), rgx); });
+}
+
+void ConstraintSlackAnalysis::addSlackVariablesToConstraints(MPSolver* problem)
 {
     /* Optimization:
         We assess that less than 1 every 3 constraint will match
@@ -64,29 +89,21 @@ void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
     */
     const unsigned int selectedConstraintsInverseRatio = 3;
     slackVariables_.reserve(problem->NumConstraints() / selectedConstraintsInverseRatio);
-    std::regex rgx(constraint_name_pattern);
     const double infinity = MPSolver::infinity();
-    for (MPConstraint* constraint: problem->constraints())
+    for (MPConstraint* c: constraintsToWatch_)
     {
-        if (std::regex_search(constraint->name(), rgx))
+        if (c->lb() > -infinity)
         {
-            if (constraint->lb() != -infinity)
-            {
-                const MPVariable* slack = problem->MakeNumVar(0,
-                                                              infinity,
-                                                              constraint->name() + "::low");
-                constraint->SetCoefficient(slack, 1.);
-                slackVariables_.push_back(slack);
-            }
+            const MPVariable* slack = problem->MakeNumVar(0, infinity, c->name() + "::low");
+            c->SetCoefficient(slack, 1.);
+            slackVariables_.push_back(slack);
+        }
 
-            if (constraint->ub() != infinity)
-            {
-                const MPVariable* slack = problem->MakeNumVar(0,
-                                                              infinity,
-                                                              constraint->name() + "::up");
-                constraint->SetCoefficient(slack, -1.);
-                slackVariables_.push_back(slack);
-            }
+        if (c->ub() < infinity)
+        {
+            const MPVariable* slack = problem->MakeNumVar(0, infinity, c->name() + "::up");
+            c->SetCoefficient(slack, -1.);
+            slackVariables_.push_back(slack);
         }
     }
 }
@@ -104,10 +121,35 @@ void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
     objective->SetMinimization();
 }
 
+void ConstraintSlackAnalysis::sortSlackVariablesByValue()
+{
+    std::sort(std::begin(slackVariables_), std::end(slackVariables_), ::greaterSlackSolutions);
+}
+
+void ConstraintSlackAnalysis::trimSlackVariables()
+{
+    unsigned int nbSlackVars = slackVariables_.size();
+    slackVariables_.resize(std::min(nbMaxSlackVarsToKeep, nbSlackVars));
+}
+
+bool ConstraintSlackAnalysis::anySlackVariableNonZero()
+{
+    return std::ranges::any_of(slackVariables_,
+                               [&](auto& v) { return v->solution_value() > thresholdNonZero; });
+}
+
+const std::vector<const operations_research::MPVariable*>&
+ConstraintSlackAnalysis::largestSlackVariables()
+{
+    return slackVariables_;
+}
+
 void ConstraintSlackAnalysis::printReport() const
 {
     InfeasibleProblemReport report(slackVariables_);
-    report.prettyPrint();
+    report.storeSuspiciousConstraints();
+    report.storeInfeasibilityCauses();
+    std::ranges::for_each(report.getLogs(), [](auto& line) { logs.notice() << line; });
 }
 
 } // namespace Antares::Optimization

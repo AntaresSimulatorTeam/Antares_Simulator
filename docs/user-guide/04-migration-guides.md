@@ -2,6 +2,11 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v9.2.0
+### Adequacy Patch LMR
+Removed following properties from **settings/generaldata.ini**.
+- enable-first-step
+- set-to-null-ntc-between-physical-out-for-first-step
+
 ### (TS-generator only) TS generation for link capacities
 In files input/links/<link1>/properties.ini, add the following properties
 - tsgen_direct_XXX,
@@ -22,6 +27,10 @@ with XXX in
 ### Input
 #### Short term storage: efficiency for withdrawal
 In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
+
+### Output
+- Remove column SPIL ENRG CSR (adequacy patch)
+- Add DTG MRG CSR and UNSP ENRG CSR variables
 
 ## v9.1.0
 ### Input 
@@ -193,7 +202,6 @@ In file **settings/generaldata.ini**, in section `adequacy patch`, add propertie
 * `price-taking-order` [string] can take values `DENS` (default value) and `Load`.
 * `include-hurdle-cost-csr` [bool]. Default value = `false`
 * `check-csr-cost-function` [bool]. Default value = `false`
-* `recompute-dtg-mrg` [bool]. Default value = `false`
 * `threshold-initiate-curtailment-sharing-rule` [double]. Default value = `0.0`
 * `threshold-display-local-matching-rule-violations` [double]. Default value = `0.0`
 * `threshold-csr-variable-bounds-relaxation` [int]. Default value = `3`

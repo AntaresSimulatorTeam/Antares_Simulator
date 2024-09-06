@@ -62,7 +62,7 @@ public:
     double weekly[WEEKS_PER_YEAR];
     double daily[DAYS_PER_YEAR];
     Antares::Memory::Stored<double>::Type hourly;
-    double* year;
+    std::vector<double> year;
     unsigned int nbYearsCapacity;
     mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     std::vector<float> yearsWeight;

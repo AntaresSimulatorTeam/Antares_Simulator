@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_LIBS_STUDY_STUDY_H__
 #define __ANTARES_LIBS_STUDY_STUDY_H__
 
@@ -31,6 +31,7 @@
 
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
+#include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/antares.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
@@ -65,25 +66,8 @@ public:
     //! List of studies
     using List = std::list<Ptr>;
 
-    //! A single set of areas
-    // CompareAreaName : to control the order of areas in a set of areas. This order can have an
-    // effect, even if tiny, on the results of aggregations.
-    using SingleSetOfAreas = std::set<Area*, CompareAreaName>;
-
     //! Multiple sets of areas
-    using SetsOfAreas = Antares::Data::Sets<SingleSetOfAreas>;
-
-    //! A single set of links
-    using SingleSetOfLinks = std::set<AreaLink*>;
-    //! Multiple sets of links
-    using SetsOfLinks = Antares::Data::Sets<SingleSetOfLinks>;
-
-    //! List of disabled areas
-    using DisabledAreaList = std::set<AreaName>;
-    //! List of disabled links
-    using DisabledAreaLinkList = std::set<AreaLinkName>;
-    //! List of disabled thermal clusters
-    using DisabledThermalClusterList = std::set<ClusterName>;
+    using SetsOfAreas = Antares::Data::Sets;
 
     //! Extension filename
     using FileExtension = std::string;
@@ -362,8 +346,6 @@ public:
     void destroyAllWindTSGeneratorData();
     //! Destroy all data of the hydro TS generator
     void destroyAllHydroTSGeneratorData();
-    //! Destroy all data of the thermal TS generator
-    void destroyAllThermalTSGeneratorData();
 
     /*!
     ** \brief Import all time-series into the input folder
@@ -390,10 +372,6 @@ public:
     ** \brief Re-Initialize/Re-Load the scenario builder data
     */
     void scenarioRulesCreate();
-    /*!
-    ** \brief Re-Initialize/Re-Load the scenario builder data but consider a single ruleset only
-    */
-    void scenarioRulesCreate(const RulesScenarioName& thisoneonly);
 
     /*!
     ** \brief Release the scenario builder
@@ -411,7 +389,7 @@ public:
     *"max").
     **
     */
-    std::map<std::string, uint> getRawNumberCoresPerLevel();
+    unsigned getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode);
 
     /*!
     ** \brief Computes number of cores
@@ -578,14 +556,12 @@ public:
     //@{
     //! Sets of areas
     SetsOfAreas setsOfAreas;
-    //! Sets of links
-    SetsOfLinks setsOfLinks;
     //@}
 
     //! \name Scenario Builder
     //@{
     //! Rules for building scenarios (can be null)
-    ScenarioBuilder::Sets* scenarioRules = nullptr;
+    std::unique_ptr<ScenarioBuilder::Sets> scenarioRules;
     //@}
 
     TimeSeries::TS scenarioInitialHydroLevels;
@@ -596,7 +572,7 @@ public:
     **
     ** These informations are only needed when a study is processed.
     */
-    StudyRuntimeInfos* runtime = nullptr;
+    StudyRuntimeInfos runtime;
 
     // Antares::Solver::Variable::State* state;
 
@@ -690,7 +666,6 @@ YString StudyCreateOutputPath(SimulationMode mode,
                               int64_t startTime);
 } // namespace Antares::Data
 
-#include "runtime.h"
 #include "study.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_STUDY_H__ */

@@ -31,7 +31,6 @@ namespace Antares::Solver::Variable::R::AllYears
 {
 AverageData::AverageData():
     hourly(nullptr),
-    year(nullptr),
     nbYearsCapacity(0),
     allYears(0.)
 {
@@ -40,7 +39,6 @@ AverageData::AverageData():
 AverageData::~AverageData()
 {
     Antares::Memory::Release(hourly);
-    delete[] year;
 }
 
 void AverageData::reset()
@@ -49,14 +47,14 @@ void AverageData::reset()
     (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
     (void)::memset(weekly, 0, sizeof(double) * WEEKS_PER_YEAR);
     (void)::memset(daily, 0, sizeof(double) * DAYS_PER_YEAR);
-    (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
+    year.assign(nbYearsCapacity, 0);
 }
 
 void AverageData::initializeFromStudy(Data::Study& study)
 {
     Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
-    nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
-    year = new double[nbYearsCapacity];
+    nbYearsCapacity = study.runtime.rangeLimits.year[Data::rangeEnd] + 1;
+    year.resize(nbYearsCapacity);
 
     yearsWeight = study.parameters.getYearsWeight();
     yearsWeightSum = study.parameters.getYearsWeightSum();

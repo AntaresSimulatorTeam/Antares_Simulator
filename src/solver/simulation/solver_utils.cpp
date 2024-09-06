@@ -27,7 +27,6 @@
 #include <limits>
 #include <sstream>
 
-#include <yuni/yuni.h>
 #include <yuni/io/file.h>
 
 #define SEP Yuni::IO::Separator

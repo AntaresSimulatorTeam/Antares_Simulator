@@ -221,7 +221,7 @@ public:
             VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
         }
 
-        auto& limits = study.runtime->rangeLimits;
+        auto& limits = study.runtime.rangeLimits;
 
         pRatioYear = 100. / (double)limits.year[Data::rangeCount];
         pRatioDay = 100. / (double)limits.day[Data::rangeCount];

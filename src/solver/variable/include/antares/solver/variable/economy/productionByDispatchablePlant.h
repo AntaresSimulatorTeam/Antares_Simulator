@@ -255,7 +255,7 @@ public:
                                                       uint year,
                                                       unsigned int numSpace)
     {
-        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
+        for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterProductionForYear[i] += pValuesForTheCurrentYear
                                                           [numSpace]

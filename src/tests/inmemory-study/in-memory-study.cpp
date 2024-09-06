@@ -56,7 +56,7 @@ void addScratchpadToEachArea(Study& study)
     {
         for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i)
         {
-            area->scratchpad.emplace_back(*study.runtime, *area);
+            area->scratchpad.emplace_back(study.runtime, *area);
         }
     }
 }
@@ -172,7 +172,7 @@ averageResults OutputRetriever::thermalNbUnitsON(ThermalCluster* cluster)
 ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 {
     study.scenarioRulesCreate();
-    ScenarioBuilder::Sets* sets = study.scenarioRules;
+    auto sets = study.scenarioRules.get();
     if (sets && !sets->empty())
     {
         rules_ = sets->createNew("Custom");
