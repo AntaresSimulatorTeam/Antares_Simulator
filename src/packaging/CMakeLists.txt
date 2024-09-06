@@ -122,3 +122,6 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfigVersion.cmake"
         DESTINATION lib/cmake/Antares
 )
+
+file(GLOB_RECURSE ensure_files ${CMAKE_SOURCE_DIR}/cmake/ensure*.cmake)
+install(FILES ${ensure_files} DESTINATION lib/cmake/Antares)
