@@ -333,11 +333,9 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.png"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.gif"
 	${SetOutPath} "$INSTDIR\Resources\Help"
-	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "system-map-editor-reference-guide.pdf"
 	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-examples-library.pdf"
 	
 	${SetOutPath} "$INSTDIR\Documentation"
-	CreateShortCut "$INSTDIR\Documentation\System Map Editor reference guide (PDF).lnk" "$INSTDIR\Resources\Help\system-map-editor-reference-guide.pdf" "" ""
 	CreateShortCut "$INSTDIR\\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
 
 	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares" "Antares Study ${CMAKE_SIMPLE_VERSION}"
@@ -385,7 +383,6 @@ ${MementoSection} "Menu Shortcuts" SecMenuShortcuts
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" "$INSTDIR\Resources\Icons\study.ico"
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-reference-guide.pdf" "" ""
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer troubleshooting (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-troubleshooting.pdf" "" ""
-	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\System Map Editor reference guide (PDF).lnk" "$INSTDIR\Resources\Help\system-map-editor-reference-guide.pdf" "" ""
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Software License Agreement (PDF).lnk" "$INSTDIR\Resources\Help\software-license-agreement.pdf" "" ""
 ${Mementosectionend}
