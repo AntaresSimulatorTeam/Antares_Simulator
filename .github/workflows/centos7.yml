@@ -74,7 +74,7 @@ jobs:
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
       # Note: we are stuck with v3, because v4 is not compatible with oracle8 image
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v3
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
