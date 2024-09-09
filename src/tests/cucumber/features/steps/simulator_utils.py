@@ -25,7 +25,8 @@ def run_simulation(context):
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
     context.annual_system_cost = None
-    context.hourly_values = None
+    context.values_hourly = None
+    context.details_hourly = None
 
 
 def activate_simu_outputs(context):

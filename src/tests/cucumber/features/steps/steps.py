@@ -53,12 +53,20 @@ def check_simu_time(context, seconds):
 
 @then('in area "{area}", during year {year}, loss of load lasts {lold_hours} hours')
 def check_lold_duration(context, area, year, lold_hours):
-    assert int(lold_hours) == get_hourly_values(context, area.lower(), int(year))["LOLD"].sum()
+    assert int(lold_hours) == get_values_hourly(context, area.lower(), int(year))["LOLD"].sum()
 
 @then('in area "{area}", unsupplied energy on "{date}" of year {year} is of {lold_value_mw} MW')
 def check_lold_value(context, area, date, year, lold_value_mw):
-    actual_unsp_energ = get_hourly_values_for_specific_hour(context, area.lower(), int(year), date)["UNSP. ENRG"].sum()
+    actual_unsp_energ = get_values_hourly_for_specific_hour(context, area.lower(), int(year), date)["UNSP. ENRG"].sum()
     assert_double_close(float(lold_value_mw), actual_unsp_energ, 0.001)
+
+@then('in area "{area}", during year {year}, hourly production on "{prod_name}" is always {comparator1} {comparator2} {hourly_prod} MWh')
+def check_prod(context, area, year, prod_name, comparator1, comparator2, hourly_prod):
+    actual_prod = get_details_hourly(context, area.lower(), int(year))[prod_name]
+    if comparator1 + " " + comparator2 == "greater than":
+        assert (actual_prod >= float(hourly_prod)).all()
+    elif comparator1 + " " + comparator2 == "equal to":
+        assert (actual_prod == float(hourly_prod)).all()
 
 def after_feature(context, feature):
     # post-processing a test: clean up output files to avoid taking up all the disk space
