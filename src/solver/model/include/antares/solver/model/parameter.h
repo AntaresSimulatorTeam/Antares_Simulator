@@ -28,7 +28,9 @@ namespace Antares::Solver::Model
 {
 
 /**
- * Parameters used in model
+ * A parameter of the model: a parameter is mainly defined by a name and expected type.
+ * When the model is instantiated as a component, a value must be provided for
+ * parameters, either as constant values or timeseries-based values.
  */
 class Parameter
 {

@@ -20,27 +20,21 @@
 */
 #pragma once
 
-#include <map>
+#include <string>
 
-#include "parameter.h"
-#include "variable.h"
+#include "valueType.h"
 
 namespace Antares::Solver::Model
 {
-/**
- * Defines a model that can be referenced by actual components.
- * A model defines the behaviour of those components.
- */
-class Model
+
+/// A decision variable of the model
+class Variable
 {
 public:
-    Model();
-    ~Model() = default;
+    Variable();
+    ~Variable() = default;
 
-    void getAllConstraints();
-
-    std::string id;
-    std::map<std::string, Parameter> parameters_;
-    std::map<std::string, Variable> variables_;
+    std::string name;
+    ValueType type;
 };
 } // namespace Antares::Solver::Model
