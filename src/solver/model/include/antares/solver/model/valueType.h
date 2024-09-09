@@ -20,23 +20,15 @@
 */
 #pragma once
 
-#include <string>
-
-#include "valueType.h"
-
 namespace Antares::Solver::Model
 {
 
-/**
- * Parameters used in model
- */
-class Parameter
+/// Type of value held by variables or parameters
+enum class ValueType
 {
-public:
-    Parameter();
-    ~Parameter() = default;
-
-    std::string name;
-    ValueType type;
+    FLOAT,
+    INTEGER,
+    BOOL
 };
+
 } // namespace Antares::Solver::Model
