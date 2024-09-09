@@ -189,12 +189,11 @@ public:
                 {
                     auto ClusterId = it->first;
                     for (auto const& [reserveName, reserveParticipation] :
-                        state.reserveParticipationPerClusterForYear[i][ClusterId])
+                         state.reserveParticipationPerClusterForYear[i][ClusterId])
                     {
                         pValuesForTheCurrentYear
-                          [numSpace]
-                          [state.getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(
-                             reserveName, ClusterId)]
+                          [numSpace][state.area->reserveParticipationSTStorageClustersIndexMap.get(
+                                       std::make_pair(reserveName, ClusterId))]
                             .hour[i]
                           = reserveParticipation.totalParticipation;
                     }
@@ -273,13 +272,14 @@ public:
         if (AncestorType::isPrinted[0])
         {
             assert(NULL != results.data.area);
-            const auto& stStorage = results.data.area->shortTermStorage;
-
+            
             // Write the data for the current year
             for (uint i = 0; i < pSize; ++i)
             {
+                auto [clusterName, reserveName]
+                  = results.data.area->reserveParticipationSTStorageClustersIndexMap.get(i);
                 // Write the data for the current year
-                results.variableCaption = stStorage.storagesByIndex[i].id; // VCardType::Caption();
+                results.variableCaption = clusterName + "_" + reserveName; // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);

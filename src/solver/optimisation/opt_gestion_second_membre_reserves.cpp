@@ -215,84 +215,84 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
 
             // Long Term Storage clusters
             {
-                //for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-                //{
-                //    auto& areaReservesUp = areaReserves[pays].areaCapacityReservationsUp;
-                //    for (const auto& areaReserveUp : areaReservesUp)
-                //    {
-                //        for (const auto& reserveParticipation :
-                //             areaReserveUp.AllLTStorageReservesParticipation)
-                //        {
-                //            int cnt
-                //              = CorrespondanceCntNativesCntOptim
-                //                  .NumeroDeContrainteDesContraintesLTStorageClusterMaxWithdrawParticipation
-                //                    [reserveParticipation.globalIndexClusterParticipation];
-                //            if (cnt >= 0)
-                //            {
-                //                SecondMembre[cnt] = reserveParticipation.maxTurbining;
-                //                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                //            }
-                //            cnt
-                //              = CorrespondanceCntNativesCntOptim
-                //                  .NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation
-                //                    [reserveParticipation.globalIndexClusterParticipation];
-                //            if (cnt >= 0)
-                //            {
-                //                SecondMembre[cnt] = reserveParticipation.maxPumping;
-                //                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                //            }
-                //        }
-                //    }
-                //    auto& areaReservesDown = areaReserves[pays].areaCapacityReservationsDown;
-                //    for (const auto& areaReserveDown : areaReservesDown)
-                //    {
-                //        for (const auto& reserveParticipation :
-                //             areaReserveDown.AllLTStorageReservesParticipation)
-                //        {
-                //            int cnt
-                //              = CorrespondanceCntNativesCntOptim
-                //                  .NumeroDeContrainteDesContraintesLTStorageClusterMaxWithdrawParticipation
-                //                    [reserveParticipation.globalIndexClusterParticipation];
-                //            if (cnt >= 0)
-                //            {
-                //                SecondMembre[cnt] = reserveParticipation.maxTurbining;
-                //                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                //            }
-                //            cnt
-                //              = CorrespondanceCntNativesCntOptim
-                //                  .NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation
-                //                    [reserveParticipation.globalIndexClusterParticipation];
-                //            if (cnt >= 0)
-                //            {
-                //                SecondMembre[cnt] = reserveParticipation.maxPumping;
-                //                AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
-                //            }
-                //        }
-                //    }
-                //    for (const auto& cluster : problemeHebdo->LongTermStorage[pays])
-                //    {
-                //        int globalClusterIdx = cluster.clusterGlobalIndex;
-                //        int cnt1
-                //          = CorrespondanceCntNativesCntOptim
-                //              .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds
-                //                [globalClusterIdx];
-                //        if (cnt1 >= 0)
-                //        {
-                //            SecondMembre[cnt1] = cluster.maxProduction;
-                //            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
-                //        }
+                for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+                {
+                   auto& areaReservesUp = areaReserves[pays].areaCapacityReservationsUp;
+                   for (const auto& areaReserveUp : areaReservesUp)
+                   {
+                       for (const auto& reserveParticipation :
+                            areaReserveUp.AllLTStorageReservesParticipation)
+                       {
+                           int cnt
+                             = CorrespondanceCntNativesCntOptim
+                                 .NumeroDeContrainteDesContraintesLTStorageClusterMaxWithdrawParticipation
+                                   [reserveParticipation.globalIndexClusterParticipation];
+                           if (cnt >= 0)
+                           {
+                               SecondMembre[cnt] = reserveParticipation.maxTurbining;
+                               AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                           }
+                           cnt
+                             = CorrespondanceCntNativesCntOptim
+                                 .NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation
+                                   [reserveParticipation.globalIndexClusterParticipation];
+                           if (cnt >= 0)
+                           {
+                               SecondMembre[cnt] = reserveParticipation.maxPumping;
+                               AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                           }
+                       }
+                   }
+                   auto& areaReservesDown = areaReserves[pays].areaCapacityReservationsDown;
+                   for (const auto& areaReserveDown : areaReservesDown)
+                   {
+                       for (const auto& reserveParticipation :
+                            areaReserveDown.AllLTStorageReservesParticipation)
+                       {
+                           int cnt
+                             = CorrespondanceCntNativesCntOptim
+                                 .NumeroDeContrainteDesContraintesLTStorageClusterMaxWithdrawParticipation
+                                   [reserveParticipation.globalIndexClusterParticipation];
+                           if (cnt >= 0)
+                           {
+                               SecondMembre[cnt] = reserveParticipation.maxTurbining;
+                               AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                           }
+                           cnt
+                             = CorrespondanceCntNativesCntOptim
+                                 .NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation
+                                   [reserveParticipation.globalIndexClusterParticipation];
+                           if (cnt >= 0)
+                           {
+                               SecondMembre[cnt] = reserveParticipation.maxPumping;
+                               AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                           }
+                       }
+                   }
+                   for (const auto& cluster : problemeHebdo->LongTermStorage[pays])
+                   {
+                       int globalClusterIdx = cluster.clusterGlobalIndex;
+                       int cnt1
+                         = CorrespondanceCntNativesCntOptim
+                             .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds
+                               [globalClusterIdx];
+                       if (cnt1 >= 0)
+                       {
+                           SecondMembre[cnt1] = cluster.maxProduction;
+                           AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
+                       }
 
-                //        int cnt2
-                //          = CorrespondanceCntNativesCntOptim
-                //              .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
-                //                [globalClusterIdx];
-                //        if (cnt2 >= 0)
-                //        {
-                //            SecondMembre[cnt2] = cluster.maxPumping;
-                //            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
-                //        }
-                //    }
-                //}
+                       int cnt2
+                         = CorrespondanceCntNativesCntOptim
+                             .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
+                               [globalClusterIdx];
+                       if (cnt2 >= 0)
+                       {
+                           SecondMembre[cnt2] = cluster.maxPumping;
+                           AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
+                       }
+                   }
+                }
             }
         }
     }

@@ -4,7 +4,7 @@ void LTTurbiningMaxReserve::add(int pays, int reserve, int cluster, int pdt, boo
 {
     if (!data.Simulation)
     {
-        // 15 (k)
+        // 15 (a)
         // Participation to the reserve using turbining is bounded by the max turbining reserve participation of the cluster
         // constraint : H <= H^max
         // H : Turbining power

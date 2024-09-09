@@ -315,7 +315,6 @@ void ReserveParticipationGroup::BuildConstraints()
                     // 15 (n)
                     STPumpingCapacityThreasholds.add(pays, cluster, pdt);
                 }
-                // Short Term Storage Clusters
 
                 // Long Term Storage Clusters
                 const auto& LTStorageDuPays = problemeHebdo_->LongTermStorage[pays];
@@ -326,7 +325,6 @@ void ReserveParticipationGroup::BuildConstraints()
                     // 15 (d)
                     LTPumpingCapacityThreasholds.add(pays, cluster, pdt);
                 }
-                // Long Term Storage Clusters
             }
         }
     }

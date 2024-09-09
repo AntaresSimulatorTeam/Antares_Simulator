@@ -70,12 +70,7 @@ public:
         pSize = 0;
         for (int areaIndex = 0; areaIndex < study->areas.size(); areaIndex++)
         {
-            if (study->areas[areaIndex]->allCapacityReservations.size() > 0)
-            {
-                //pSize = area->longTermStorage.reserveParticipationsCount();
-                pSize = area->hydro.series->ltStorageReserves.reserves.size();
-                break;
-            }
+                pSize += study->areas[areaIndex]->allCapacityReservations.size();
         }
         if (pSize)
         {
@@ -141,17 +136,14 @@ public:
                  i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
                  ++i)
             {
-                for (auto it = state.reserveParticipationPerLTStorageForYear[i].begin();
-                     it != state.reserveParticipationPerLTStorageForYear[i].end();
-                     ++it)
+                if (state.reserveParticipationPerLTStorageForYear[i].size())
                 {
-                    auto LTStorageId = it->first;
                     for (auto const& [reserveName, reserveParticipation] :
-                         state.reserveParticipationPerLTStorageForYear[i][LTStorageId])
+                         state.reserveParticipationPerLTStorageForYear[i]["LongTermStorage"])
                     {
-                        pValuesForTheCurrentYear
-                          [numSpace][state.getAreaIndexReserveParticipationFromReserveAndLTStorage(
-                                       reserveName, LTStorageId)]
+                        pValuesForTheCurrentYear[numSpace]
+                                                [state.area->reserveParticipationLTStorageIndexMap
+                                                   .get(reserveName)]
                             .hour[i]
                           = reserveParticipation;
                     }
@@ -217,14 +209,12 @@ void localBuildAnnualSurveyReport(SurveyResults& results,
         if (AncestorType::isPrinted[0])
         {
             assert(NULL != results.data.area);
-            const auto& ltStorage = results.data.area->hydro.series->ltStorageReserves;
-
-            auto it = ltStorage.reserves.begin();
-            for (uint i = 0; i < pSize && it != ltStorage.reserves.end(); ++i, ++it)
+            for (uint i = 0; i < pSize; ++i)
             {
-                results.variableCaption = results.data.area->id + "_" + it->first;
+                auto reserveName = results.data.area->reserveParticipationLTStorageIndexMap.get(i);
+                results.variableCaption = "LongTermStorage_" + reserveName; // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                pValuesForTheCurrentYear[numSpace][0].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
         }

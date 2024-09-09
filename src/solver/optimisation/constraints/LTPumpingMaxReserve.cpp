@@ -4,7 +4,7 @@ void LTPumpingMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool 
 {
     if (!data.Simulation)
     {
-         //15 (l)
+         //15 (b)
          //Participation to the reserve is bounded by the max pumping reserve participation of the cluster
          //Π <= Π^max 
          //Π : Pumping power 

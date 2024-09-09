@@ -196,21 +196,19 @@ static void importLongTermStorages(AreaList& areas, PROBLEME_HEBDO& problem)
         int areaClusterParticipationIndex = 0;
         auto area = areas[areaIndex];
         auto& areaReserves = problem.allReserves[areaIndex];
+        auto& ltStorage = area->hydro;
 
-        // Traitement des réserves "up"
+        problem.LongTermStorage[areaIndex].resize(area->hydro.count());
+
         for (int areaReserveIdx = 0; auto const& [reserveName, _] :
                                      area->allCapacityReservations.areaCapacityReservationsUp)
         {
-            if (area->hydro.series
-                && area->hydro.series->ltStorageReserves.reserves.count(reserveName) > 0)
+            if (ltStorage.reservesParticipations.contains(reserveName))
             {
                 RESERVE_PARTICIPATION_LTSTORAGE reserveParticipation;
-                reserveParticipation.maxTurbining
-                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxTurbining;
-                reserveParticipation.maxPumping
-                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxPumping;
-                reserveParticipation.participationCost
-                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].participationCost;
+                reserveParticipation.maxTurbining = ltStorage.reserveMaxTurbining(reserveName);
+                reserveParticipation.maxPumping = ltStorage.reserveMaxPumping(reserveName);
+                reserveParticipation.participationCost = ltStorage.reserveCost(reserveName);
                 reserveParticipation.clusterName = "LongTermStorage";
                 reserveParticipation.clusterIdInArea = 0;
                 reserveParticipation.globalIndexClusterParticipation
@@ -218,28 +216,20 @@ static void importLongTermStorages(AreaList& areas, PROBLEME_HEBDO& problem)
                 reserveParticipation.areaIndexClusterParticipation = areaClusterParticipationIndex;
                 areaReserves.areaCapacityReservationsUp[areaReserveIdx]
                   .AllLTStorageReservesParticipation.push_back(reserveParticipation);
-
-
                 globalLTStorageClusterParticipationIndex++;
                 areaClusterParticipationIndex++;
             }
             areaReserveIdx++;
         }
-
-        // Traitement des réserves "down"
         for (int areaReserveIdx = 0; auto const& [reserveName, _] :
                                      area->allCapacityReservations.areaCapacityReservationsDown)
         {
-            if (area->hydro.series
-                && area->hydro.series->ltStorageReserves.reserves.count(reserveName) > 0)
+            if (ltStorage.reservesParticipations.contains(reserveName))
             {
                 RESERVE_PARTICIPATION_LTSTORAGE reserveParticipation;
-                reserveParticipation.maxTurbining
-                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxTurbining;
-                reserveParticipation.maxPumping
-                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].maxPumping;
-                reserveParticipation.participationCost
-                  = area->hydro.series->ltStorageReserves.reserves[reserveName][0].participationCost;
+                reserveParticipation.maxTurbining = ltStorage.reserveMaxTurbining(reserveName);
+                reserveParticipation.maxPumping = ltStorage.reserveMaxPumping(reserveName);
+                reserveParticipation.participationCost = ltStorage.reserveCost(reserveName);
                 reserveParticipation.clusterName = "LongTermStorage";
                 reserveParticipation.clusterIdInArea = 0;
                 reserveParticipation.globalIndexClusterParticipation
@@ -293,6 +283,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDInterconnexions = study.runtime->interconnectionsCount();
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
+    problem.NumberOfLongTermStorages = study.runtime->longTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
     problem.NombreDeContraintesCouplantes = activeConstraints.size();

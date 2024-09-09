@@ -274,15 +274,6 @@ ConstraintBuilder& ConstraintBuilder::LongTermStorageWithdrawal(unsigned int ind
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::LongTermStorageLevel(unsigned int index,
-                                                            double coeff,
-                                                            int offset,
-                                                            int delta)
-{
-    AddVariable(variableManager_.LongTermStorageLevel(index, hourInWeek_, offset, delta), coeff);
-    return *this;
-}
-
 
 ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index, double coeff)
 {

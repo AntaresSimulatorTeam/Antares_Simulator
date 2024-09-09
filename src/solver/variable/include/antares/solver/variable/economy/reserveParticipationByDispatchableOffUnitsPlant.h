@@ -190,8 +190,8 @@ public:
                      state.reserveParticipationPerClusterForYear[i][state.thermalCluster->name()])
                 {
                     pValuesForTheCurrentYear
-                      [numSpace][state.getAreaIndexReserveParticipationFromReserveAndThermalCluster(
-                                   reserveName, state.thermalCluster->name())]
+                      [numSpace][state.area->reserveParticipationThermalClustersIndexMap.get(
+                                   std::make_pair(reserveName, state.thermalCluster->name()))]
                         .hour[i]
                       = reserveParticipation.offUnitsParticipation;
                 }
@@ -274,8 +274,9 @@ public:
             // Write the data for the current year
             for (uint i = 0; i < pSize; ++i)
             {
-                // Write the data for the current year
-                results.variableCaption = thermal.list[i]->name(); // VCardType::Caption();
+                auto [clusterName, reserveName]
+                  = results.data.area->reserveParticipationThermalClustersIndexMap.get(i);
+                results.variableCaption = clusterName + "_" + reserveName; // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);

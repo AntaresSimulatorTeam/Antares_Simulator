@@ -147,26 +147,11 @@ public:
     const Coefficients& coefficients() const;
     //@}
 
-    void addReserveParticipation(const std::string& reserveName,
-                                 float participation,
-                                 bool isUpReserve);
-    //float getReserveParticipation(const std::string& reserveName, bool isUpReserve) const;
-
 private:
     //! Coefficients for other areas
     Coefficients pValues;
     //! Coefficients for other areas, ordered by the area id
     std::unordered_map<uint, double> pValuesFromAreaID;
-
-    std::unordered_map<std::string, double> pLTStorageValues;
-
-    struct LTStorageParticipationInfo
-    {
-        float maxTurbining;
-        float maxPumping;
-        float participationCost;
-    };
-    std::unordered_map<std::string, LTStorageParticipationInfo> pValuesFromLTStorageID;
 #ifndef NDEBUG
     //! Flag to prevent misuse of the bad container
     // TODO Find a more reliable way...

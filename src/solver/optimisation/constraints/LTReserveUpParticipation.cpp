@@ -4,7 +4,7 @@ void LTReserveUpParticipation::add(int pays, int reserve, int cluster, int pdt)
 {
     if (!data.Simulation)
     {
-        // 15 (o)
+        // 15 (e)
         // Participation to the up reserve is the sum of the turbining and pumping participation
         // constraint : P_res = H_res + Π_res
         // H : Turbining participation to reserve

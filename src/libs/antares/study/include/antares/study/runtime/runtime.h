@@ -105,12 +105,10 @@ public:
     //! Total
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
-    uint reserveParticipationCount = 0;  //! Total number of reserve participations
-    uint capacityReservationCount = 0;   //! Total number of capacity reservations
-    uint capacityReservationUpCount = 0; //! Total number of capacity reservations up
+    uint reserveParticipationCount = 0; //! Total number of reserve participations
+    uint capacityReservationCount = 0; //! Total number of capacity reservations
 
     uint shortTermStorageCount = 0;
-    uint longTermStorageCount = 0;
 
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;

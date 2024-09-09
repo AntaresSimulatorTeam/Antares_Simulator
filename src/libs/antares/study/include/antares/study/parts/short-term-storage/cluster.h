@@ -65,6 +65,6 @@ public:
     mutable Properties properties;
 
     //! reserve
-    std::map<Data::ReserveName, STStorageClusterReserveParticipation> clusterReservesParticipations;
+    std::unordered_map<Data::ReserveName, STStorageClusterReserveParticipation> clusterReservesParticipations;
 };
 } // namespace Antares::Data::ShortTermStorage

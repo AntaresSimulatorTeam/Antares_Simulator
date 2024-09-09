@@ -81,13 +81,19 @@ struct ReserveParticipationPerGroupForYear
     //std::map<Data::LongTermStorage::Group, std::map<Data::ReserveName, double>>
     //  longTermStorageGroups;
 
-     std::map<std::string, std::vector<LTStorageClusterReserveParticipation>> ltStorageReserves;
+     std::map<std::string, std::vector<LTStorageClusterReserveParticipation>> reservesParticipations;
 };
+
 
 class State
 {
 public:
     explicit State(Data::Study& s);
+
+    /*!
+     ** \brief Instantiate the BiMaps so that all the data can be accessed afterwards
+     */
+    void initReserveParticipationIndexMaps();
 
     /*!
     ** \brief Initialize some variables according an area index
@@ -126,17 +132,9 @@ public:
     */
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
-
-    int getAreaIndexReserveParticipationFromReserveAndThermalCluster(Data::ReserveName reserveName,
-                                                                     Data::ClusterName clusterName);
-    int getAreaIndexReserveParticipationFromReserveAndSTStorageCluster(Data::ReserveName reserveName,
-                                                                     Data::ClusterName clusterName);
-
+    
     void initFromHydroStorage();
 
-    int getAreaIndexReserveParticipationFromReserveAndLTStorage(
-      const Data::ReserveName& reserveName,
-      const Data::AreaName& LTStorageId) const;
     //std::map<Data::ReserveName, double> hydroReserveParticipationForYear[Variable::maxHoursInAYear];
     //double hydroReserveParticipationCostForYear[Variable::maxHoursInAYear];
 
@@ -274,7 +272,7 @@ public:
     std::map<Data::ClusterName, std::map<Data::ReserveName, DetailledParticipation>>
       reserveParticipationPerClusterForYear[Variable::maxHoursInAYear];
 
-    std::map<Data::AreaName, std::map<Data::ReserveName, double>>
+    std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
       reserveParticipationPerLTStorageForYear[Variable::maxHoursInAYear];
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
@@ -294,7 +292,7 @@ public:
     double STStorageClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];
 
     //! Reserves participation cost of the Long Term Storage  for the whole year
-    double LTStorageReserveParticipationCostForYear[Variable::maxHoursInAYear];  
+    double LTStorageClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];  
 
 
     double renewableClusterProduction;

@@ -236,6 +236,8 @@ public:
     void LTPumpingMaxReserve(unsigned int constraint,
                              const std::string& clusterName,
                              const std::string& reserveName);
+    void LTTurbiningCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
+    void LTPumpingCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
 
     void ReserveSatisfaction(unsigned int constraint, const std::string& reserveName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);

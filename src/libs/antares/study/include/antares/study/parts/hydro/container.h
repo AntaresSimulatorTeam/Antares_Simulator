@@ -106,6 +106,19 @@ public:
 
     bool loadReserveParticipations(Area& area, const AnyString& file);
 
+    void addReserveParticipation(const std::string& reserveName,
+                                 const LTStorageClusterReserveParticipation& participation);
+
+    //! \brief Returns max turbining power for a reserve if participating, -1 otherwise
+    float reserveMaxTurbining(Data::ReserveName name);
+
+    //! \brief Returns max pumping power for a reserve if participating, -1 otherwise
+    float reserveMaxPumping(Data::ReserveName name);
+
+    //! \brief Returns participating cost for a reserve if participating, -1 otherwise
+    float reserveCost(Data::ReserveName name);
+
+
 public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
@@ -168,6 +181,8 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
+
+    std::unordered_map<std::string, LTStorageClusterReserveParticipation> reservesParticipations;
 
 }; // class PartHydro
 

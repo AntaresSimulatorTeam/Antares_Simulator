@@ -158,7 +158,6 @@ void DataSeriesHydro::reset()
 {
     resizeGenerationTS(1);
     resizeMaxPowerTS(1);
-    ltStorageReserves.reserves.clear();
 }
 
 void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
@@ -352,27 +351,6 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
         maxHourlyPumpPower.averageTimeseries();
         maxPowerTScount_ = 1;
     }
-}
-
-void DataSeriesHydro::addReserveParticipation(
-  const std::string& reserveName,
-  const LTStorageClusterReserveParticipation& participation)
-{
-    // Si la réserve n'existe pas encore, on crée une nouvelle entrée
-    if (ltStorageReserves.reserves.find(reserveName) == ltStorageReserves.reserves.end())
-    {
-        ltStorageReserves.reserves[reserveName]
-          = std::vector<LTStorageClusterReserveParticipation>();
-    }
-
-    // Ajouter la participation à la réserve
-    ltStorageReserves.reserves[reserveName].push_back(participation);
-
-    // Log des informations
-    logs.info() << "Added reserve participation for " << reserveName
-                << ", Max Turbining: " << participation.maxTurbining
-                << ", Max Pumping: " << participation.maxPumping
-                << ", Participation Cost: " << participation.participationCost;
 }
 
 } // namespace Antares::Data

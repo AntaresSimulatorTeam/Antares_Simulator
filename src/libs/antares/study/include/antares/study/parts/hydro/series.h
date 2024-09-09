@@ -171,17 +171,6 @@ public:
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
 
-    void addReserveParticipation(const std::string& reserveName,
-                                 const LTStorageClusterReserveParticipation& participation);
-
-    struct LTStorageReserves
-    {
-        std::unordered_map<std::string, std::vector<LTStorageClusterReserveParticipation>> reserves;
-    };
-
-    LTStorageReserves ltStorageReserves;
-
-
 
 private:
     

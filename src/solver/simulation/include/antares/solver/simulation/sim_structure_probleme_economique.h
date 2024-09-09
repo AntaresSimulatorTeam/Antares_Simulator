@@ -133,7 +133,6 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
     std::vector<int> ShortTermStorageLevelConstraint;
-    std::vector<int> LongTermStorageLevelConstraint;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES

@@ -35,7 +35,7 @@ void LTTurbiningCapacityThreasholds::add(int pays, int cluster, int pdt)
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.longTermStorageWithdrawal(globalClusterIdx, -1).lessThan();
+                builder.LongTermStorageWithdrawal(globalClusterIdx, -1).lessThan();
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);

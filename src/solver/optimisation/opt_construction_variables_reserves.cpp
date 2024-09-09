@@ -245,8 +245,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                                 variableNamer.ParticipationOfLTStorageTurbiningToReserve(
                                   NombreDeVariables, clusterName, areaReserveUp.reserveName);
                                 NombreDeVariables++;
-
-                                clusterIndex++;
                             }
                         }
                         if (clusterReserveParticipation.maxPumping > 0)
@@ -267,7 +265,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                                 variableNamer.ParticipationOfLTStoragePumpingToReserve(
                                   NombreDeVariables, clusterName, areaReserveUp.reserveName);
                                 NombreDeVariables++;
-                                clusterIndex++;
                             }
                         }
                         if (clusterReserveParticipation.maxTurbining > 0
@@ -289,8 +286,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                                 variableNamer.ParticipationOfLTStorageToUpReserve(
                                   NombreDeVariables, clusterName, areaReserveUp.reserveName);
                                 NombreDeVariables++;
-
-                                clusterIndex++;
                             }
                         }
                     }
@@ -450,8 +445,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                             variableNamer.ParticipationOfLTStorageTurbiningToReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
                             NombreDeVariables++;
-
-                            clusterIndex++;
                         }
                     }
                     if (clusterReserveParticipation.maxPumping > 0)
@@ -472,7 +465,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                             variableNamer.ParticipationOfLTStoragePumpingToReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
                             NombreDeVariables++;
-                            clusterIndex++;
                         }
                     }
                     if (clusterReserveParticipation.maxTurbining > 0
@@ -494,8 +486,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                             variableNamer.ParticipationOfLTStorageToDownReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
                             NombreDeVariables++;
-
-                            clusterIndex++;
                         }
                     }
                 }

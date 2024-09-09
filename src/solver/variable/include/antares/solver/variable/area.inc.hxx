@@ -127,6 +127,8 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         // Initializing the state for the current area
         state.initFromAreaIndex(area.index, numSpace);
 
+        state.initReserveParticipationIndexMaps();
+
         for (auto cluster : area.thermal.list.all())
         {
             // Intiializing the state for the current thermal cluster

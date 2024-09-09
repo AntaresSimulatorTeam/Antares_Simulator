@@ -841,11 +841,9 @@ bool PartHydro::loadReserveParticipations(Area& area, const AnyString& file)
         return false;
     }
 
-    bool hasSection = false;
     ini.each(
       [&](const IniFile::Section& section)
       {
-          hasSection = true;
           logs.info() << "Processing section: " << section.name;
 
           std::string reserveName = section.name.c_str();
@@ -873,7 +871,7 @@ bool PartHydro::loadReserveParticipations(Area& area, const AnyString& file)
           {
               LTStorageClusterReserveParticipation participation(
                 *reserve, maxTurbining, maxPumping, participationCost);
-              series->addReserveParticipation(reserveName, participation);
+              addReserveParticipation(reserveName, participation);
               logs.info() << "Added reserve participation for " << reserveName;
           }
           else
@@ -881,16 +879,6 @@ bool PartHydro::loadReserveParticipations(Area& area, const AnyString& file)
               logs.info() << area.name << ": does not contain this reserve " << reserveName;
           }
       });
-
-    if (!hasSection)
-    {
-        logs.info() << "No sections found in file: " << file;
-    }
-    else
-    {
-        reservoirManagement = true;
-        logs.info() << "Activated reservoir management for long-term storage reserves";
-    }
 
     return true;
 }
@@ -900,15 +888,45 @@ uint PartHydro::reserveParticipationsCount() const
     uint count = 0;
     if (series && reservoirManagement)
     {
-        count = series->ltStorageReserves.reserves.size();
+        count = reservesParticipations.size();
     }
     return count;
 }
 
+void PartHydro::addReserveParticipation(const std::string& reserveName,
+                                        const LTStorageClusterReserveParticipation& participation)
+{
+    reservesParticipations.emplace(reserveName, participation);
+}
+
+float PartHydro::reserveMaxTurbining(Data::ReserveName name)
+{
+    if (reservesParticipations.contains(name))
+        return reservesParticipations.at(name).maxTurbining;
+    else
+        return -1;
+}
+
+float PartHydro::reserveMaxPumping(Data::ReserveName name)
+{
+    if (reservesParticipations.contains(name))
+        return reservesParticipations.at(name).maxPumping;
+    else
+        return -1;
+}
+
+float PartHydro::reserveCost(Data::ReserveName name)
+{
+    if (reservesParticipations.contains(name))
+        return reservesParticipations.at(name).participationCost;
+    else
+        return -1;
+}
+
 uint PartHydro::count() const
 {
-    // Retournez 1 si le stockage long terme est activé, 0 sinon
-    return reservoirManagement ? 1 : 0;
+    // Retournez 1 si le stockage long terme est activÃ©, 0 sinon
+    return series->TScount() ? 1 : 0;
 }
 
 void getWaterValue(const double& level /* format : in % of reservoir capacity */,

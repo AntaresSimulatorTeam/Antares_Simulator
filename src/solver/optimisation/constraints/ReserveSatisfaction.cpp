@@ -119,16 +119,16 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
                     != CLUSTER_NOT_PARTICIPATING))
                 nbTermes++;
         }
-        //for (size_t cluster = 0;
-        //     cluster < capacityReservation.AllLTStorageReservesParticipation.size();
-        //     cluster++)
-        //{
-        //    if ((capacityReservation.AllLTStorageReservesParticipation[cluster].maxTurbining
-        //         != CLUSTER_NOT_PARTICIPATING)
-        //        || (capacityReservation.AllLTStorageReservesParticipation[cluster].maxPumping
-        //            != CLUSTER_NOT_PARTICIPATING))
-        //        nbTermes++;
-        //}
+        for (size_t cluster = 0;
+             cluster < capacityReservation.AllLTStorageReservesParticipation.size();
+             cluster++)
+        {
+            if ((capacityReservation.AllLTStorageReservesParticipation[cluster].maxTurbining
+                 != CLUSTER_NOT_PARTICIPATING)
+                || (capacityReservation.AllLTStorageReservesParticipation[cluster].maxPumping
+                    != CLUSTER_NOT_PARTICIPATING))
+                nbTermes++;
+        }
 
         builder.data.NbTermesContraintesPourLesReserves += 2 + nbTermes;
 

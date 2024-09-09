@@ -36,6 +36,53 @@
 #include "antares/study/filter.h"
 #include <antares/study/area/capacityReservation.h>
 
+template<typename T>
+class BiMap
+{
+private:
+    // Maps for both directions: key-to-value and value-to-key
+    std::map<int, T> key_to_value; // Map from key (int) to value (T)
+    std::map<T, int> value_to_key; // Map from value (T) to key (int)
+
+public:
+    // Function to insert a key-value pair
+    bool insert(int key, const T& value)
+    {
+        // Ensure uniqueness: check if key or value already exists
+        if (key_to_value.count(key) || value_to_key.count(value))
+        {
+            return false; // Insertion fails if either key or value already exists
+        }
+
+        // Insert into both maps
+        key_to_value[key] = value;
+        value_to_key[value] = key;
+        return true;
+    }
+
+    // Function to get the value from the key
+    T get(int key) const
+    {
+        auto it = key_to_value.find(key);
+        if (it != key_to_value.end())
+        {
+            return it->second; // Return the associated value if the key exists
+        }
+        throw std::out_of_range::exception("This index is not in the BiMap");
+    }
+
+    // Function to get the key from the value
+    int get(const T& value) const
+    {
+        auto it = value_to_key.find(value);
+        if (it != value_to_key.end())
+        {
+            return it->second; // Return the associated key if the value exists
+        }
+        return -1; // Return -1 if value is not found
+    }
+};
+
 namespace Antares
 {
 namespace Data
@@ -274,8 +321,6 @@ public:
 
     ShortTermStorage::STStorageInput shortTermStorage; 
 
-    PartHydro longTermStorage; 
-
     //! \name Interconnections
     //@{
     //! All connections with this area
@@ -298,6 +343,12 @@ public:
 
     /// \name AllCapacityReservations structure to keep track of the added capacity reservations
     AllCapacityReservations allCapacityReservations;
+
+    BiMap<std::pair<Data::ClusterName, Data::ReserveName>>
+      reserveParticipationThermalClustersIndexMap;
+    BiMap<std::pair<Data::ClusterName, Data::ReserveName>>
+      reserveParticipationSTStorageClustersIndexMap;
+    BiMap<Data::ReserveName> reserveParticipationLTStorageIndexMap;
 
     //! \name Output filtering
     //@{

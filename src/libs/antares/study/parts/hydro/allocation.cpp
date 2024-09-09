@@ -131,25 +131,15 @@ void HydroAllocation::fromArea(const AreaName& areaid, double value)
 void HydroAllocation::prepareForSolver(const AreaList& list)
 {
     pValuesFromAreaID.clear();
-    pValuesFromLTStorageID.clear();
-
-    // Traitement des zones
-    for (const auto& [areaId, value] : pValues)
+    auto end = pValues.end();
+    for (auto i = pValues.begin(); i != end; ++i)
     {
-        auto* targetarea = list.find(areaId);
+        auto* targetarea = list.find(i->first);
         if (targetarea)
-            pValuesFromAreaID[targetarea->index] = value;
+            pValuesFromAreaID[targetarea->index] = i->second;
     }
 
-    // Traitement des stockages long terme
-    for (const auto& [storageName, value] : pLTStorageValues)
-    {
-        LTStorageParticipationInfo info;
-        info.maxTurbining = static_cast<float>(value);
-        info.maxPumping = static_cast<float>(value); 
-        info.participationCost = 0.0f;               
-        pValuesFromLTStorageID[storageName] = info;
-    }
+    pValues.clear();
 #ifndef NDEBUG
     pMustUseValuesFromAreaID = true;
 #endif
@@ -158,9 +148,7 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
 void HydroAllocation::clear()
 {
     pValues.clear();
-    pLTStorageValues.clear();
     pValuesFromAreaID.clear();
-    pValuesFromLTStorageID.clear();
 #ifndef NDEBUG
     pMustUseValuesFromAreaID = false;
 #endif
@@ -260,33 +248,6 @@ const HydroAllocation::Coefficients& HydroAllocation::coefficients() const
 {
     return pValues;
 }
-
-void HydroAllocation::addReserveParticipation(const std::string& reserveName,
-                                              float participation,
-                                              bool isUpReserve)
-{
-    auto& info = pValuesFromLTStorageID[reserveName];
-    if (isUpReserve)
-    {
-        info.maxTurbining += participation;
-    }
-    else
-    {
-        info.maxPumping += participation;
-    }
-}
-//
-//float HydroAllocation::getReserveParticipation(const std::string& reserveName,
-//                                               bool isUpReserve) const
-//{
-//    auto it = pValuesFromLTStorageID.find(reserveName);
-//    if (it != pValuesFromLTStorageID.end())
-//    {
-//        return isUpReserve ? it->second.maxTurbining : it->second.maxPumping;
-//    }
-//    return 0.0f;
-//}
-
 
 } // namespace Data
 } // namespace Antares
