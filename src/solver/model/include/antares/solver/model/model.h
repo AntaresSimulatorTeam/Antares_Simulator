@@ -27,6 +27,7 @@
 
 namespace Antares::Solver::Model
 {
+
 /**
  * Defines a model that can be referenced by actual components.
  * A model defines the behaviour of those components.
@@ -43,4 +44,5 @@ public:
     std::map<std::string, Parameter> parameters_;
     std::map<std::string, Variable> variables_;
 };
+
 } // namespace Antares::Solver::Model

@@ -22,6 +22,7 @@
 
 #include <string>
 
+#include "parameter.h"
 #include "valueType.h"
 
 namespace Antares::Solver::Model
@@ -36,5 +37,8 @@ public:
 
     std::string name;
     ValueType type;
+    Parameter lowerBound;
+    Parameter upperBound;
 };
+
 } // namespace Antares::Solver::Model

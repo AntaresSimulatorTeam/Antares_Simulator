@@ -41,4 +41,5 @@ public:
     std::string name;
     ValueType type;
 };
+
 } // namespace Antares::Solver::Model
