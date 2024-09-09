@@ -122,12 +122,12 @@ jobs:
            cpack -G TGZ
 
     - name: Installer TGZ push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: _build/*.tar.gz
 
     - name: Installer RPM push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: _build/*.rpm
 
