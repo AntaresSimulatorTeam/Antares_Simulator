@@ -73,7 +73,7 @@ jobs:
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
       # Note: we are stuck with v3, because v4 is not compatible with oracle8 image
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -100,8 +100,8 @@ jobs:
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
            wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
-           rpm -i gh_2.52.0_linux_amd64.rpm         
-           gh --version   
+           rpm -i gh_2.52.0_linux_amd64.rpm
+           gh --version
 
     - name: Configure
       run: |
@@ -147,12 +147,12 @@ jobs:
            cpack -G TGZ
 
     - name: Installer TGZ push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: _build/*.tar.gz
 
     - name: Installer RPM push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: _build/*.rpm
 
@@ -163,11 +163,11 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
-        
+
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v3
+      uses: actions/cache/save@v4
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
