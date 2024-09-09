@@ -22,6 +22,7 @@
 #define __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
 
 #include <yuni/yuni.h>
+
 #include "rules.h"
 
 namespace Antares
@@ -33,7 +34,7 @@ namespace ScenarioBuilder
 /*!
 ** \brief Sets for TS numbers, for all years and a single timeseries
 */
-class Sets final : private Yuni::NonCopyable<Sets>
+class Sets final: private Yuni::NonCopyable<Sets>
 {
 public:
     //! Iterator

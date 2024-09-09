@@ -195,7 +195,7 @@ protected:
 
     void evtOnClose(wxCloseEvent& evt);
 
-    void onLogMessage(int, const Yuni::String& message);
+    void onLogMessage(int, const std::string& message);
 
 protected:
     /*!

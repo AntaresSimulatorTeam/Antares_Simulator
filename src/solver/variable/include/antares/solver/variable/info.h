@@ -25,9 +25,13 @@
 #include "./economy/vCardReserveParticipationByDispatchableOnUnitsPlant.h"
 #include "./economy/vCardReserveParticipationByDispatchableOffUnitsPlant.h"
 #include "./economy/vCardReserveParticipationBySTStorage.h"
+#include "./economy/vCardReserveParticipationByLTStorage.h"
 #include "./economy/vCardReserveParticipationBySTStorageGroup.h"
 #include "./economy/vCardReserveParticipationByThermalGroup.h"
 #include "./economy/vCardReserveParticipationUnsuppliedSpilled.h"
+
+#include "antares/solver/variable/surveyresults.h"
+#include "antares/study/fwd.h"
 
 namespace Antares
 {
@@ -78,8 +82,10 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+            {
                 array[y] *= v;
+            }
         }
     }
 
@@ -89,7 +95,7 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
             }
@@ -102,8 +108,10 @@ struct VariableAccessor
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+            {
                 array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
+            }
         }
     }
 
@@ -121,7 +129,9 @@ struct VariableAccessor
     static void Reset(U& out)
     {
         for (uint i = 0; i != ColumnCountT; ++i)
+        {
             out[i].reset();
+        }
     }
 
     template<class VCardT, class U>
@@ -138,9 +148,13 @@ struct VariableAccessor
             {
                 if (VCardT::spatialAggregatePostProcessing
                     == (int)Category::spatialAggregatePostProcessingPrice)
+                {
                     intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
+                }
                 else
+                {
                     intermediateValues[i].computeStatisticsForTheCurrentYear();
+                }
             }
         }
     }
@@ -159,7 +173,9 @@ struct VariableAccessor
     {
         uint64_t result = 0;
         for (uint i = 0; i != ColumnCountT; ++i)
+        {
             result += container[i].memoryUsage();
+        }
         return result;
     }
 
@@ -196,8 +212,11 @@ struct VariableAccessor
             {
                 results.variableCaption = VCardType::Multiple::Caption(i);
                 results.variableUnit = VCardType::Multiple::Unit(i);
-                container[i].template buildSurveyReport<ResultsT, VCardType>(
-                  results, container[i], dataLevel, fileLevel, precision);
+                container[i].template buildSurveyReport<ResultsT, VCardType>(results,
+                                                                             container[i],
+                                                                             dataLevel,
+                                                                             fileLevel,
+                                                                             precision);
             }
             // Shift to the next internal variable's non applicable status and print status
             results.isCurrentVarNA++;
@@ -216,8 +235,9 @@ struct VariableAccessor
             if (*results.isPrinted)
             {
                 results.variableCaption = VCardType::Multiple::Caption(i);
-                container[i].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
+                container[i].template buildAnnualSurveyReport<VCardType>(results,
+                                                                         fileLevel,
+                                                                         precision);
             }
             // Shift to the next internal variable's non applicable status and print status
             results.isCurrentVarNA++;
@@ -234,8 +254,10 @@ struct VariableAccessor
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
+            {
                 out[i].hour[h] += src[h];
+            }
         }
     }
 
@@ -248,10 +270,12 @@ struct VariableAccessor
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
             {
                 if (out[i].hour[h] < src[h])
+                {
                     out[i].hour[h] = src[h];
+                }
             }
         }
     }
@@ -272,8 +296,10 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+            {
                 array[y] *= v;
+            }
         }
     }
 
@@ -285,8 +311,10 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+            {
                 array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
+            }
         }
     }
 
@@ -298,8 +326,10 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
             array = (*i).hour;
-            for (uint y = 0; y != maxHoursInAYear; ++y)
+            for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+            {
                 array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
+            }
         }
     }
 
@@ -319,7 +349,9 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         const typename Type::const_iterator end = out.end();
         for (typename Type::const_iterator i = out.begin(); i != end; ++i)
+        {
             (*i).reset();
+        }
     }
 
     template<class VCardT, class U>
@@ -336,10 +368,14 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 // Compute all statistics for the current year (daily,weekly,monthly)
                 if (VCardT::spatialAggregatePostProcessing
                     == (int)Category::spatialAggregatePostProcessingPrice)
+                {
                     // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
                     intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
+                }
                 else
+                {
                     intermediateValues[i].computeStatisticsForTheCurrentYear();
+                }
             }
         }
     }
@@ -359,7 +395,9 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         uint64_t result = 0;
         const typename Type::const_iterator end = container.end();
         for (typename Type::const_iterator i = container.begin(); i != end; ++i)
+        {
             result += sizeof(ResultsT) + (*i).memoryUsage();
+        }
         return result;
     }
 
@@ -373,6 +411,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             const Data::PartThermal& thermal = results.data.area->thermal;
             const auto& shortTermStorage = results.data.area->shortTermStorage;
+            const auto& longTermStorage = results.data.area->hydro;
             for (uint i = 0; i != container.size(); ++i)
             {
                 if constexpr (std::is_same_v<
@@ -415,6 +454,12 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                     results.variableCaption
                       = reserveName + "_" + Economy::STStorageGroupToString(groupName);
                 }
+                else if constexpr (std::is_same_v<VCardT,
+                    Economy::VCardReserveParticipationByLTStorage>)
+                {
+                    auto reserveName = longTermStorage.reserveParticipationAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_LongTermStorage";
+                }
                 else if constexpr (std::is_same_v<
                                      VCardT,
                                      Economy::VCardReserveParticipationUnsuppliedSpilled>)
@@ -446,15 +491,19 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
     {
         assert(results.data.area && "Area is NULL");
-        const bool thermal_details = fileLevel & Category::de;
-        const bool renewable_details = fileLevel & Category::de_res;
-        const bool st_storage_details = fileLevel & Category::de_sts;
+        const bool thermal_details = fileLevel & Category::FileLevel::de;
+        const bool renewable_details = fileLevel & Category::FileLevel::de_res;
+        const bool st_storage_details = fileLevel & Category::FileLevel::de_sts;
 
-        std::array<bool, 3> kind_of_details = { thermal_details, renewable_details , st_storage_details };
+        std::array<bool, 3> kind_of_details = {thermal_details,
+                                               renewable_details,
+                                               st_storage_details};
 
         // The current result file must be a detail file and of one kind only.
         // So the vector above must contain one true. No less, no more.
-        auto how_many_kinds_of_details = std::count(kind_of_details.begin(), kind_of_details.end(), true);
+        auto how_many_kinds_of_details = std::count(kind_of_details.begin(),
+                                                    kind_of_details.end(),
+                                                    true);
 
         if (how_many_kinds_of_details != 1)
         {
@@ -495,6 +544,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             const Data::PartThermal& thermal = results.data.area->thermal;
             const auto& shortTermStorage = results.data.area->shortTermStorage;
+            const auto& longTermStorage = results.data.area->hydro;
             for (uint i = 0; i != container.size(); ++i)
             {
                 if constexpr (std::is_same_v<
@@ -538,29 +588,41 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 {
                     auto [groupName, reserveName]
                       = shortTermStorage.reserveParticipationGroupAt(results.data.area, i);
-                    results.variableCaption
-                      = reserveName + "_" + Economy::STStorageGroupToString(groupName);
+                    results.variableCaption = reserveName + "_"
+                                              + Economy::STStorageGroupToString(groupName);
                     res = true;
                 }
-                 else if constexpr (std::is_same_v<
-                                      VCardType,
-                                      Economy::VCardReserveParticipationUnsuppliedSpilled>)
-                 {
-                     auto [unsuppliedOrSpilled, reserveName]
-                       = thermal.list.reserveParticipationUnsuppliedSpilledAt(results.data.area, i);
-                     results.variableCaption
-                       = reserveName + "_"
-                         + Economy::unsuppliedSpilledToString(unsuppliedOrSpilled);
-                     res = true;
-                 }
+                else if constexpr (std::is_same_v<VCardType,
+                                                  Economy::VCardReserveParticipationByLTStorage>)
+                {
+                    auto reserveName = longTermStorage.reserveParticipationAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_LongTermStorage";
+                    res = true;
+                }
+                else if constexpr (std::is_same_v<
+                                     VCardType,
+                                     Economy::VCardReserveParticipationUnsuppliedSpilled>)
+                {
+                    auto [unsuppliedOrSpilled, reserveName]
+                      = thermal.list.reserveParticipationUnsuppliedSpilledAt(results.data.area, i);
+                    results.variableCaption = reserveName + "_"
+                                              + Economy::unsuppliedSpilledToString(
+                                                unsuppliedOrSpilled);
+                    res = true;
+                }
                 else
                     res = setClusterCaption(results, fileLevel, i);
                 if (!res)
+                {
                     return;
+                }
                 results.variableUnit = VCardType::Unit();
 
-                container[i].template buildSurveyReport<ResultsT, VCardType>(
-                  results, container[i], dataLevel, fileLevel, precision);
+                container[i].template buildSurveyReport<ResultsT, VCardType>(results,
+                                                                             container[i],
+                                                                             dataLevel,
+                                                                             fileLevel,
+                                                                             precision);
             }
         }
     }
@@ -578,9 +640,12 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             {
                 res = setClusterCaption(results, fileLevel, i);
                 if (!res)
+                {
                     return;
-                container[i].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
+                }
+                container[i].template buildAnnualSurveyReport<VCardType>(results,
+                                                                         fileLevel,
+                                                                         precision);
             }
         }
     }
@@ -594,8 +659,10 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
+            {
                 out[i].hour[h] += src[h];
+            }
         }
     }
 
@@ -608,10 +675,12 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
             {
                 if (out[i].hour[h] < src[h])
+                {
                     out[i].hour[h] = src[h];
+                }
             }
         }
     }
@@ -627,23 +696,28 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
         assert(!std::isnan(v));
-        for (uint y = 0; y != maxHoursInAYear; ++y)
+        for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+        {
             intermediateValues.hour[y] *= v;
+        }
     }
 
     template<class U>
     static void SetTo1IfPositive(U& intermediateValues)
     {
-        for (uint y = 0; y != maxHoursInAYear; ++y)
+        for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+        {
             intermediateValues.hour[y] = std::abs(intermediateValues.hour[y]) > 0. ? 1. : 0.;
+        }
     }
 
     template<class U>
     static void Or(U& intermediateValues)
     {
-        for (uint y = 0; y != maxHoursInAYear; ++y)
-            intermediateValues.hour[y]
-              = std::abs(intermediateValues.hour[y]) > 0. ? 100. : 0.;
+        for (uint y = 0; y != HOURS_PER_YEAR; ++y)
+        {
+            intermediateValues.hour[y] = std::abs(intermediateValues.hour[y]) > 0. ? 100. : 0.;
+        }
     }
 
     template<class U>
@@ -671,10 +745,14 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
             // Compute all statistics for the current year (daily,weekly,monthly)
             if (VCardT::spatialAggregatePostProcessing
                 == (int)Category::spatialAggregatePostProcessingPrice)
+            {
                 // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
                 intermediateValues.computeAveragesForCurrentYearFromHourlyResults();
+            }
             else
+            {
                 intermediateValues.computeStatisticsForTheCurrentYear();
+            }
         }
     }
 
@@ -719,8 +797,11 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
                 results.variableCaption = VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
             }
-            container.template buildSurveyReport<ResultsT, VCardType>(
-              results, container, dataLevel, fileLevel, precision);
+            container.template buildSurveyReport<ResultsT, VCardType>(results,
+                                                                      container,
+                                                                      dataLevel,
+                                                                      fileLevel,
+                                                                      precision);
         }
     }
 
@@ -745,8 +826,10 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
 
         assert(src != NULL);
-        for (uint h = 0; h != maxHoursInAYear; ++h)
+        for (uint h = 0; h != HOURS_PER_YEAR; ++h)
+        {
             out.hour[h] += src[h];
+        }
     }
 
     template<class U, class VarT>
@@ -756,10 +839,12 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
 
         assert(src != NULL);
-        for (uint h = 0; h != maxHoursInAYear; ++h)
+        for (uint h = 0; h != HOURS_PER_YEAR; ++h)
         {
             if (out.hour[h] < src[h])
+            {
                 out.hour[h] = src[h];
+            }
         }
     }
 };
@@ -865,8 +950,9 @@ struct SpatialAggregateOperation<true, Category::spatialAggregateSum, VCardT>
     static void Perform(U& intermediateResults, const VarT& var, uint numSpace)
     {
         typedef typename VCardT::ResultsType ResultsType;
-        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(
-          intermediateResults, var, numSpace);
+        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(intermediateResults,
+                                                                       var,
+                                                                       numSpace);
     }
 };
 
@@ -878,8 +964,9 @@ struct SpatialAggregateOperation<true, Category::spatialAggregateOr, VCardT>
     static void Perform(U& intermediateResults, const VarT& var, uint numSpace)
     {
         typedef typename VCardT::ResultsType ResultsType;
-        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(
-          intermediateResults, var, numSpace);
+        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(intermediateResults,
+                                                                       var,
+                                                                       numSpace);
     }
 };
 
@@ -891,8 +978,9 @@ struct SpatialAggregateOperation<true, Category::spatialAggregateSumThen1IfPosit
     static void Perform(U& intermediateResults, const VarT& var, uint numSpace)
     {
         typedef typename VCardT::ResultsType ResultsType;
-        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(
-          intermediateResults, var, numSpace);
+        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(intermediateResults,
+                                                                       var,
+                                                                       numSpace);
     }
 };
 
@@ -904,8 +992,9 @@ struct SpatialAggregateOperation<true, Category::spatialAggregateAverage, VCardT
     static void Perform(U& intermediateResults, const VarT& var, uint numSpace)
     {
         typedef typename VCardT::ResultsType ResultsType;
-        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(
-          intermediateResults, var, numSpace);
+        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeSum(intermediateResults,
+                                                                       var,
+                                                                       numSpace);
     }
 };
 
@@ -917,8 +1006,9 @@ struct SpatialAggregateOperation<true, Category::spatialAggregateMax, VCardT>
     static void Perform(U& intermediateResults, const VarT& var, uint numSpace)
     {
         typedef typename VCardT::ResultsType ResultsType;
-        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeMax(
-          intermediateResults, var, numSpace);
+        VariableAccessor<ResultsType, VCardT::columnCount>::ComputeMax(intermediateResults,
+                                                                       var,
+                                                                       numSpace);
     }
 };
 

@@ -21,8 +21,9 @@
 
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 
-ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(PROBLEME_HEBDO* problemeHebdo,
-                                                                                 PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
+ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+  PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
     return {ProblemeAResoudre.Pi,
             ProblemeAResoudre.Colonne,

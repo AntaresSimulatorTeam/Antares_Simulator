@@ -354,7 +354,7 @@ void TimeSeriesThermalClusterFuelCost::onStudyClosed()
 void TimeSeriesThermalClusterFuelCost::internalThermalClusterChanged(
   Antares::Data::ThermalCluster* cluster)
 {
-    matrix((CurrentStudyIsValid() && cluster) ? &(cluster->ecoInput.fuelcost) : NULL);
+    matrix((CurrentStudyIsValid() && cluster) ? &(cluster->ecoInput.fuelcost) : nullptr);
 }
 
 // ----------------------
@@ -384,7 +384,7 @@ void TimeSeriesThermalClusterCO2Cost::onStudyClosed()
 void TimeSeriesThermalClusterCO2Cost::internalThermalClusterChanged(
   Antares::Data::ThermalCluster* cluster)
 {
-    matrix((CurrentStudyIsValid() && cluster) ? &(cluster->ecoInput.co2cost) : NULL);
+    matrix((CurrentStudyIsValid() && cluster) ? &(cluster->ecoInput.co2cost) : nullptr);
 }
 
 // ----------------------

@@ -172,7 +172,7 @@ void ApplWnd::destroyLogs()
     if (pLogFlusherTimer)
     {
         wxTimer* timer = pLogFlusherTimer;
-        pLogFlusherTimer = NULL;
+        pLogFlusherTimer = nullptr;
         delete timer;
     }
 }
@@ -196,7 +196,7 @@ void ApplWnd::destroyLogsViewer()
     if (pWndLogs)
     {
         pWndLogs->Destroy();
-        pWndLogs = NULL;
+        pWndLogs = nullptr;
     }
 }
 
@@ -206,9 +206,9 @@ void ApplWnd::connectLogCallback()
     logs.callback.connect(this, &ApplWnd::onLogMessageDeferred);
 }
 
-void ApplWnd::onLogMessageDeferred(int level, const String& message)
+void ApplWnd::onLogMessageDeferred(int level, const std::string& message)
 {
-    if (not message.empty() and message.first() != '[')
+    if (not message.empty() && message.front() != '[')
     {
         // wxLogError(), like wxLogWarning(), are routine with
         // variadic parameters, like the standard printf.

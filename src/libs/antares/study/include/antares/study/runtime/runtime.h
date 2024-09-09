@@ -23,11 +23,14 @@
 
 #include <string>
 #include <vector>
-#include "antares/study/study.h"
+
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/parameters.h>
 
 namespace Antares::Data
 {
+
+class Study;
 
 enum RangeLimitsIndex
 {
@@ -107,8 +110,10 @@ public:
     uint thermalPlantTotalCountMustRun;
     uint reserveParticipationCount = 0; //! Total number of reserve participations
     uint capacityReservationCount = 0; //! Total number of capacity reservations
+    uint capacityReservationUpCount = 0; //! Total number of capacity reservations
 
     uint shortTermStorageCount = 0;
+    uint longTermStorageCount = 0;
 
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
@@ -140,8 +145,12 @@ private:
     void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
 
-} // namespace Antares::Data
+#ifdef NDEBUG
+inline void StudyRangeLimits::checkIntegrity() const
+{
+}
+#endif
 
-#include "runtime.hxx"
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__

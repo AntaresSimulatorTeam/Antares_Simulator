@@ -44,8 +44,11 @@ inline void Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::buildSurvey
   int precision) const
 {
     // Ask to fullfil the report to the first decorator
-    DecoratorType::template buildSurveyReport<S, VCardT>(
-      report, results, dataLevel, fileLevel, precision);
+    DecoratorType::template buildSurveyReport<S, VCardT>(report,
+                                                         results,
+                                                         dataLevel,
+                                                         fileLevel,
+                                                         precision);
 }
 
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>

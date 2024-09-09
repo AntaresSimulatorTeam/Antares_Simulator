@@ -19,11 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <sstream>
-#include <iomanip>
-#include <string>
-#include <yuni/core/string/string.h>
 #include "antares/study/scenario-builder/scBuilderUtils.h"
+
+#include <algorithm>
+#include <iomanip>
+#include <sstream>
+#include <string>
+
+#include <yuni/core/string/string.h>
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -38,28 +41,17 @@ std::string fromHydroLevelToString(double d)
 double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
 {
     double result;
-    double result_tmp;
-
     std::string val = value.to<std::string>();
     try
     {
-        result_tmp = stod(val);
+        result = stod(val);
     }
     catch (std::invalid_argument&)
     {
         return std::nan("");
     }
 
-    if (result_tmp < 0.)
-        result = 0.;
-    else
-    {
-        if (result_tmp > maxLevel)
-            result = maxLevel;
-        else
-            result = result_tmp;
-    }
-    return result;
+    return std::clamp(result, 0., maxLevel);
 }
 
 uint fromStringToTSnumber(const Yuni::String& value)
@@ -79,17 +71,21 @@ uint fromStringToTSnumber(const Yuni::String& value)
     }
 
     if (result_dbl < 0.)
+    {
         result = 0;
+    }
     else
     {
         if (result_dbl > maxTSnumber)
+        {
             result = maxTSnumber;
+        }
         else
+        {
             result = (uint)result_dbl;
+        }
     }
     return result;
 }
 
 } // namespace Antares::Data::ScenarioBuilder
-
-

@@ -112,7 +112,7 @@ void Item::internalClearAllLinks()
     if (pLinks && !pLinks->empty())
     {
         Links* lnks = pLinks;
-        pLinks = NULL;
+        pLinks = nullptr;
 
         const Links::const_iterator end = lnks->end();
         for (Links::const_iterator i = lnks->begin(); i != end; ++i)

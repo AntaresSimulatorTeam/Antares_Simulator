@@ -21,15 +21,18 @@
 #ifndef __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 #define __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/noncopyable.h>
-#include "../fwd.h"
-#include <antares/array/matrix.h>
-#include <vector>
-#include <set>
 #include <numeric>
+#include <set>
+#include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+
+#include <antares/array/matrix.h>
 #include <antares/series/series.h>
+
+#include "../fwd.h"
 
 namespace Antares::Data
 {
@@ -63,18 +66,18 @@ public:
 
     //! Sum of all 'must-run' clusters
     // This variable is initialized every MC-year
-    double mustrunSum[HOURS_PER_YEAR];
+    std::array<double, HOURS_PER_YEAR> mustrunSum;
 
     //! Sum of all original 'must-run' clusters (adequacy only)
     // This variable is initialized every MC-year
-    double originalMustrunSum[HOURS_PER_YEAR];
+    std::array<double, HOURS_PER_YEAR> originalMustrunSum;
 
-       /*!
-    ** \brief Dispatchable Generation Margin
-    **
-    ** Those values, written by the output, must be calculated before
-    ** running the hydro remix.
-    */
+    /*!
+     ** \brief Dispatchable Generation Margin
+     **
+     ** Those values, written by the output, must be calculated before
+     ** running the hydro remix.
+     */
     double dispatchableGenerationMargin[168];
 
     /*!
@@ -94,8 +97,7 @@ private:
     ** power matrices meanMaxDailyGenPower/meanMaxDailyPumpPower
     */
     void CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
-                                            const Matrix<double>& hourlyMaxPumpMatrix,
-                                            uint nbOfMaxPowerTimeSeries);
+                                            const Matrix<double>& hourlyMaxPumpMatrix);
 
 }; // class AreaScratchpad
 

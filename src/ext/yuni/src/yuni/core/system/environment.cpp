@@ -45,7 +45,7 @@ inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
                 if (size != 0)
                 {
                     int sizeRequired
-                      = WideCharToMultiByte(CP_UTF8, 0, buffer, (int)size - 1, NULL, 0, NULL, NULL);
+                      = WideCharToMultiByte(CP_UTF8, 0, buffer, (int)size - 1, nullptr, 0, nullptr, nullptr);
                     if (sizeRequired > 0)
                     {
                         out.reserve(out.size() + sizeRequired);
@@ -55,8 +55,8 @@ inline bool ReadImpl(const AnyString& name, StringT& out, bool emptyBefore)
                                                                (int)size - 1,
                                                                out.data() + out.size(),
                                                                size,
-                                                               NULL,
-                                                               NULL);
+                                                               nullptr,
+                                                               nullptr);
                         ::free(buffer);
                         out.resize(out.size() + (uint)sizeRequired);
                         return true;

@@ -25,14 +25,16 @@ void ConsistenceNumberOfDispatchableUnits::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
-        int NombreDePasDeTempsPourUneOptimisation
-          = builder.data.NombreDePasDeTempsPourUneOptimisation;
+        int NombreDePasDeTempsPourUneOptimisation = builder.data
+                                                      .NombreDePasDeTempsPourUneOptimisation;
 
         auto cluster = data.PaliersThermiquesDuPays[pays]
                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         int Pdtmoins1 = pdt - 1;
         if (Pdtmoins1 < 0)
+        {
             Pdtmoins1 = NombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
+        }
 
         builder.updateHourWithinWeek(pdt)
           .NumberOfDispatchableUnits(cluster, 1.0)

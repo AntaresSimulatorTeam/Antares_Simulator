@@ -21,8 +21,9 @@
 #ifndef __SOLVER_SIMULATION_EXTERN_H__
 #define __SOLVER_SIMULATION_EXTERN_H__
 
-#include "sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
+#include "sim_structure_donnees.h"
 
 /* Valeurs generees de maniere aleatoire */
 

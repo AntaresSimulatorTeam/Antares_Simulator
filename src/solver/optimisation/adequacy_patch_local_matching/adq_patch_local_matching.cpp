@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
+
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch
@@ -95,12 +96,14 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* probl
                                                            const AdqPatchParams& adqPatchParams,
                                                            int Interco)
 {
-    AdequacyPatchMode OriginNodeAdequacyPatchType
-      = problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco];
-    AdequacyPatchMode ExtremityNodeAdequacyPatchType
-      = problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco];
-    bool setToZeroNTCfromOutToIn_AdqPatch = adqPatchParams.localMatching.setToZeroOutsideInsideLinks;
-    bool setToZeroNTCfromOutToOut_AdqPatch = adqPatchParams.localMatching.setToZeroOutsideOutsideLinks;
+    AdequacyPatchMode OriginNodeAdequacyPatchType = problemeHebdo->adequacyPatchRuntimeData
+                                                      ->originAreaMode[Interco];
+    AdequacyPatchMode ExtremityNodeAdequacyPatchType = problemeHebdo->adequacyPatchRuntimeData
+                                                         ->extremityAreaMode[Interco];
+    bool setToZeroNTCfromOutToIn_AdqPatch = adqPatchParams.localMatching
+                                              .setToZeroOutsideInsideLinks;
+    bool setToZeroNTCfromOutToOut_AdqPatch = adqPatchParams.localMatching
+                                               .setToZeroOutsideOutsideLinks;
 
     switch (OriginNodeAdequacyPatchType)
     {

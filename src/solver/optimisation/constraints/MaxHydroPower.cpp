@@ -44,5 +44,7 @@ void MaxHydroPower::add(int pays)
         builder.lessThan().build();
     }
     else
+    {
         data.NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
+    }
 }

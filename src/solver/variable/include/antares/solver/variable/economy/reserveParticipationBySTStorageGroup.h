@@ -240,8 +240,8 @@ public:
                  indexGroup++)
             {
                 pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
-                  += state.reserveParticipationPerGroupForYear[state.hourInTheYear]
-                       .shortTermStorageGroups[static_cast<Antares::Data::ShortTermStorage::Group>(
+                  += state.reserveParticipationForYear[state.hourInTheYear]
+                       .shortTermStorageGroupsReserveParticipation[static_cast<Antares::Data::ShortTermStorage::Group>(
                          indexGroup)][reserveName];
                 column++;
             }
@@ -252,8 +252,8 @@ public:
                  indexGroup++)
             {
                 pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
-                  += state.reserveParticipationPerGroupForYear[state.hourInTheYear]
-                       .shortTermStorageGroups[static_cast<Antares::Data::ShortTermStorage::Group>(
+                  += state.reserveParticipationForYear[state.hourInTheYear]
+                       .shortTermStorageGroupsReserveParticipation[static_cast<Antares::Data::ShortTermStorage::Group>(
                          indexGroup)][reserveName];
                 column++;
             }

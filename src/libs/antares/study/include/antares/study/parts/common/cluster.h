@@ -21,22 +21,27 @@
 #ifndef __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 #define __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
-#include <antares/array/matrix.h>
-#include <antares/series/series.h>
-#include "../../fwd.h"
-#include <antares/study/area/capacityReservation.h>
-
 #include <set>
 #include <map>
 #include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+
+#include <antares/array/matrix.h>
+#include <antares/series/series.h>
+#include "../../fwd.h"
+
+#include <antares/study/area/capacityReservation.h>
+
+
 
 namespace Antares
 {
 namespace Data
 {
 class Cluster;
+
 struct CompareClusterName final
 {
     bool operator()(const Cluster* s1, const Cluster* s2) const;
@@ -113,7 +118,11 @@ public:
 
     uint unitCount = 0;
 
-    bool isEnabled() const { return enabled; }
+    bool isEnabled() const
+    {
+        return enabled;
+    }
+
     bool enabled = true;
 
     //! The associate area (alias)
@@ -127,10 +136,11 @@ public:
     // (initialized in the same time that the runtime data)
     uint areaWideIndex = (uint)-1;
 
+    //! tsNumbers must be constructed before series
+    TimeSeriesNumbers tsNumbers;
+
     //! Series
     TimeSeries series;
-
-    TimeSeries::numbers tsNumbers;
 
     /*!
     ** \brief Modulation matrix

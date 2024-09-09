@@ -13,9 +13,10 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
     {
         // 24
 
-        // Sum(P_θ) + Sum(P_B) = S + J^+ -J^-
+        // Sum(P_θ) + Sum(P_B) + Sum(P_H) = S + J^+ -J^-
         // P_θ : Participation power from thermal cluster θ to the reserve res
         // P_B : Participation power from Short Term Storage cluster B to the reserve res
+        // P_H : Participation power from Long Term Storage to the reserve res
         // S : Internal reserve res need for the area (second membre)
         // J^+ : Amount of internal excess reserve for the reserve res
         // J^- : Amount of internal unsatisfied reserve for the reserve res

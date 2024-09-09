@@ -19,17 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "variables/VariableManagerUtils.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <cmath>
 
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/simulation.h"
 
 #include "pi_constantes_externes.h"
-
-#include <cmath>
+#include "variables/VariableManagerUtils.h"
 
 #define ZERO_POUR_LES_VARIABLES_FIXES 1.e-6
 
@@ -42,7 +40,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
+    {
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
+    }
 
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
 
@@ -55,27 +55,36 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
         if (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]
             < ZERO_POUR_LES_VARIABLES_FIXES)
         {
-            ProblemeAResoudre->X[var]
-              = 0.5 * (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]);
+            ProblemeAResoudre->X[var] = 0.5
+                                        * (ProblemeAResoudre->Xmax[var]
+                                           - ProblemeAResoudre->Xmin[var]);
             ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_FIXE;
         }
         else
         {
             const double Xmin = ProblemeAResoudre->Xmin[var];
-            const double Xmax =  ProblemeAResoudre->Xmax[var];
+            const double Xmax = ProblemeAResoudre->Xmax[var];
             if (std::isinf(Xmax) && Xmax > 0)
             {
                 if (std::isinf(Xmin) && Xmin < 0)
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_NON_BORNEE;
+                }
                 else
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                }
             }
             else
             {
                 if (std::isinf(Xmin) && Xmin < 0)
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                }
                 else
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                }
             }
         }
         double* adresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[interco]);

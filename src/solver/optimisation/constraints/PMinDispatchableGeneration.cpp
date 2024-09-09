@@ -25,11 +25,11 @@ void PMinDispatchableGeneration::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
-        double pminDUnGroupeDuPalierThermique
-          = data.PaliersThermiquesDuPays[pays].pminDUnGroupeDuPalierThermique[index];
+        double pminDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
+                                                  .pminDUnGroupeDuPalierThermique[index];
 
         int cluster = data.PaliersThermiquesDuPays[pays]
-          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                        .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
           .NumberOfDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)

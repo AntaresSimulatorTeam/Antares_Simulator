@@ -19,14 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-
-#include "antares/solver/optimisation/opt_fonctions.h"
-
 #include <antares/study/study.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -42,13 +39,13 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
     std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
-    int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                              ->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
@@ -57,8 +54,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                   .NombreMaxDeGroupesEnMarcheDuPalierThermique;
             const int DureeMinimaleDArretDUnGroupeDuPalierThermique
               = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
-            const int palier
-              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+            const int palier = PaliersThermiquesDuPays
+                                 .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
                  pdtHebdo < DernierPdtDeLIntervalle;
@@ -67,12 +64,14 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                 const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
                 int cnt = CorrespondanceCntNativesCntOptim
-                        .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
+                            .NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
                 if (cnt >= 0)
                 {
                     int t1 = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique;
                     if (t1 < 0)
+                    {
                         t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+                    }
                     SecondMembre[cnt] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
                     for (int k = pdtHebdo - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1;
                          k <= pdtHebdo;
@@ -81,20 +80,24 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                         t1 = k;
 
                         if (t1 < 0)
+                        {
                             t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+                        }
 
                         int t1moins1 = t1 - 1;
 
                         if (t1moins1 < 0)
+                        {
                             t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
+                        }
 
                         if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
                               - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                             > 0)
                         {
-                            SecondMembre[cnt]
-                              += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                                 - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
+                            SecondMembre[cnt] += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                                                 - NombreMaxDeGroupesEnMarcheDuPalierThermique
+                                                   [t1moins1];
                         }
                     }
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;

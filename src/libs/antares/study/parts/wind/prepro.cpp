@@ -19,22 +19,23 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/study/parts/wind/prepro.h"
+
+#include <yuni/yuni.h>
 #include <yuni/io/directory.h>
-#include "antares/study/study.h"
+
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;
 
 #define SEP IO::Separator
 
-
-
 namespace Antares::Data::Wind
 {
-Prepro::Prepro() : xcast(timeSeriesWind)
+Prepro::Prepro():
+    xcast(timeSeriesWind)
 {
 }
 
@@ -53,5 +54,3 @@ bool Prepro::saveToFolder(const AnyString& folder) const
 }
 
 } // namespace Antares::Data::Wind
-
-

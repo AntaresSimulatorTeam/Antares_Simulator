@@ -21,15 +21,16 @@
 #ifndef __SOLVER_VARIABLE_STATE_H__
 #define __SOLVER_VARIABLE_STATE_H__
 
-#include <vector>
 #include <array>
+#include <vector>
+
 #include <yuni/yuni.h>
-#include "constants.h"
-#include <antares/study/fwd.h>
+
 #include <antares/study/area/scratchpad.h>
+#include <antares/study/fwd.h>
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 namespace Antares::Solver::Variable
 {
@@ -71,17 +72,12 @@ struct ReserveParticipationPerGroupForYear
 {
     //! Reserve Participation for all thermal group types (nuclear / coal / ...) for the whole
     //! year per reserve
-    std::map<Data::ThermalDispatchableGroup, std::map<Data::ReserveName, double>> thermalGroups;
+    std::map<Data::ThermalDispatchableGroup, std::map<Data::ReserveName, double>> thermalGroupsReserveParticipation;
 
     //! Reserve Participation for all thermal Short Term storages types (PSP / Battery / ...)
     //! for the whole year per reserve
     std::map<Data::ShortTermStorage::Group, std::map<Data::ReserveName, double>>
-      shortTermStorageGroups;
-
-    //std::map<Data::LongTermStorage::Group, std::map<Data::ReserveName, double>>
-    //  longTermStorageGroups;
-
-     std::map<std::string, std::vector<LTStorageClusterReserveParticipation>> reservesParticipations;
+      shortTermStorageGroupsReserveParticipation;
 };
 
 
@@ -160,16 +156,16 @@ private:
 
     void yearEndBuildThermalClusterCalculateStartupCosts(
       const uint& maxDurationON,
-      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
-      const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
+      const std::array<uint, HOURS_PER_YEAR>& ON_min,
+      const std::array<uint, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
     void yearEndBuildCalculateReserveParticipationCosts();
 
-    std::array<uint, Variable::maxHoursInAYear> computeEconomicallyOptimalNbClustersONforEachHour(
+    std::array<uint, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
       const uint& maxDurationON,
-      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
-      const std::array<uint, Variable::maxHoursInAYear>& ON_max) const;
+      const std::array<uint, HOURS_PER_YEAR>& ON_min,
+      const std::array<uint, HOURS_PER_YEAR>& ON_max) const;
 
     /*!
     ** \brief Smooth the thermal units run after resolutions
@@ -237,11 +233,11 @@ public:
     VALEURS_DE_NTC_ET_RESISTANCES ntc;
 
     //! Thermal production for the current thermal cluster for the whole year
-    double thermalClusterProductionForYear[Variable::maxHoursInAYear];
+    double thermalClusterProductionForYear[HOURS_PER_YEAR];
 
     //! All type of clusters reserves participations
-    std::vector<ReserveParticipationPerGroupForYear> reserveParticipationPerGroupForYear{
-      Variable::maxHoursInAYear};
+    std::vector<ReserveParticipationPerGroupForYear> reserveParticipationForYear{
+      HOURS_PER_YEAR};
 
 
     struct DetailledParticipation
@@ -269,30 +265,33 @@ public:
     };
 
     //! Reserve Participation for all clusters per reserve
-    std::map<Data::ClusterName, std::map<Data::ReserveName, DetailledParticipation>>
-      reserveParticipationPerClusterForYear[Variable::maxHoursInAYear];
+    std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, DetailledParticipation>>>
+      reserveParticipationPerClusterForYear{HOURS_PER_YEAR};
 
-    std::map<Data::ClusterName, std::map<Data::ReserveName, double>>
-      reserveParticipationPerLTStorageForYear[Variable::maxHoursInAYear];
+    std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, double>>>
+      reserveParticipationPerLTStorageForYear{HOURS_PER_YEAR};
+
+    std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, double>>>
+      thermalReserveParticipationPerClusterForYear{HOURS_PER_YEAR};
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)
-    uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];
+    uint thermalClusterDispatchedUnitsCountForYear[HOURS_PER_YEAR];
 
     //! Thermal operating cost for the current thermal cluster for the whole year
-    double thermalClusterOperatingCostForYear[Variable::maxHoursInAYear];
+    double thermalClusterOperatingCostForYear[HOURS_PER_YEAR];
     //! Thermal NP Cost for the current thermal cluster for the whole year
-    double thermalClusterNonProportionalCostForYear[Variable::maxHoursInAYear];
+    double thermalClusterNonProportionalCostForYear[HOURS_PER_YEAR];
     //! Minimum power of the cluster for the whole year
-    double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
+    double thermalClusterPMinOfTheClusterForYear[HOURS_PER_YEAR];
     //! Reserves participation cost of the thermal cluster for the whole year
-    double thermalClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];
+    double thermalClusterReserveParticipationCostForYear[HOURS_PER_YEAR];
 
     //! Reserves participation cost of the Short Term Storage cluster for the whole year
-    double STStorageClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];
+    double STStorageClusterReserveParticipationCostForYear[HOURS_PER_YEAR];
 
     //! Reserves participation cost of the Long Term Storage  for the whole year
-    double LTStorageClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];  
+    double LTStorageClusterReserveParticipationCostForYear[HOURS_PER_YEAR];  
 
 
     double renewableClusterProduction;

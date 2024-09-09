@@ -19,15 +19,19 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "antares/study/study.h"
 #include "antares/study/parts/wind/container.h"
+
+#include <yuni/yuni.h>
+
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 namespace Antares::Data::Wind
 {
-Container::Container() : prepro(nullptr), series(tsNumbers)
+Container::Container():
+    prepro(nullptr),
+    series(tsNumbers)
 {
 }
 
@@ -41,7 +45,9 @@ bool Container::forceReload(bool reload) const
     bool ret = true;
     ret = series.forceReload(reload) && ret;
     if (prepro)
+    {
         ret = prepro->forceReload(reload) && ret;
+    }
     return ret;
 }
 
@@ -49,7 +55,9 @@ void Container::markAsModified() const
 {
     series.markAsModified();
     if (prepro)
+    {
         prepro->markAsModified();
+    }
 }
 
 uint64_t Container::memoryUsage() const
@@ -61,9 +69,9 @@ void Container::resetToDefault()
 {
     series.reset();
     if (prepro)
+    {
         prepro->resetToDefault();
+    }
 }
 
 } // namespace Antares::Data::Wind
-
-

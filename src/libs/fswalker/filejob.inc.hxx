@@ -21,16 +21,20 @@
 #ifndef __ANTARES_FS_WALKER_FILEJOB_H__
 #define __ANTARES_FS_WALKER_FILEJOB_H__
 
+#include "registry.inc.hxx"
+
 using namespace Yuni;
 
 namespace FSWalker
 {
-class FileJob : public IJob
+class FileJob: public IJob
 {
 public:
-    FileJob(EventsRegistry& events) : events(events)
+    FileJob(EventsRegistry& events):
+        events(events)
     {
     }
+
     virtual ~FileJob()
     {
     }
@@ -61,7 +65,9 @@ void FileJob::onExecute()
         void* user = events.file.userdata[e];
 
         for (uint i = 0; i != files.size(); ++i)
+        {
             (*access)(files[i], parents[i], modified[i], filessize[i], user);
+        }
     }
 }
 

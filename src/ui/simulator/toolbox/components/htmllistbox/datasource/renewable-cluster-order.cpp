@@ -47,7 +47,7 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
 {
     wxString grp;
 
-    for (auto cluster : area->renewable.list.all())
+    for (auto& cluster : area->renewable.list.all())
     {
         if (search.empty())
         {

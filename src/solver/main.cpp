@@ -20,20 +20,20 @@
 */
 #include <yuni/core/system/suspend.h>
 
-#include <antares/logs/logs.h>
-#include "antares/application/application.h"
-#include <antares/args/args_to_utf8.h>
-
 #include <antares/antares/fatal-error.h>
-#include <antares/memory/memory.h>
+#include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
+#include <antares/memory/memory.h>
+#include "antares/application/application.h"
 
 using namespace Antares;
 using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
 
-namespace {
+namespace
+{
 
 const char* const MPL_ANNOUNCEMENT
   = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
@@ -100,22 +100,24 @@ void logAbortion()
     }
 }
 
-}
+} // namespace
 
 /*!
 ** \brief main
 */
 int main(int argc, char** argv)
 {
-    try {
-
+    try
+    {
         logs.info(ANTARES_LOGO);
         logs.info(MPL_ANNOUNCEMENT);
         // Name of the running application for the logger
         logs.applicationName("solver");
 
         if (not memory.initializeTemporaryFolder())
+        {
             throw FatalError("Could not initialize temporary folder");
+        }
 
         // locale
         InitializeDefaultLocale();
@@ -128,22 +130,22 @@ int main(int argc, char** argv)
         application.execute();
         application.writeExectutionInfo();
 
-        // to avoid a bug from wxExecute, we should wait a little before returning
-        SuspendMilliSeconds(200 /*ms*/);
-
         return EXIT_SUCCESS;
     }
-    catch (const std::bad_alloc& exc) {
+    catch (const std::bad_alloc& exc)
+    {
         logs.fatal() << exc.what();
         logAbortion();
         return ALLOCATION_FAILURE_EXIT_CODE;
     }
-    catch (const std::exception& exc) {
+    catch (const std::exception& exc)
+    {
         logs.fatal() << exc.what();
         logAbortion();
         return EXIT_FAILURE;
     }
-    catch (...) {
+    catch (...)
+    {
         logs.fatal() << "An unexpected error occurred.";
         logAbortion();
         return EXIT_FAILURE;

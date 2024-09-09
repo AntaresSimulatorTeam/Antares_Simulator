@@ -20,7 +20,6 @@ set(RTESOLVER_OPT
         opt_construction_variables_optimisees_quadratique.cpp
         opt_decompte_variables_et_contraintes.cpp
 		opt_decompte_variables_et_contraintes.cpp
-        opt_construction_matrice_des_contraintes_outils.cpp
         opt_gestion_des_bornes_cas_lineaire.cpp
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
@@ -76,7 +75,6 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 
-		include/antares/solver/optimisation/opt_period_string_generator_base.h
 		include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
 
@@ -219,7 +217,8 @@ set(RTESOLVER_OPT
 		variables/VariableManagement.cpp
 		variables/VariableManagerUtils.h
 		variables/VariableManagerUtils.cpp
-
+		include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
+		HebdoProblemToLpsTranslator.cpp
 )
 
 
@@ -237,12 +236,15 @@ else ()
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
 target_link_libraries(model_antares
-        PUBLIC
-        utils
-        sirius_solver
-        infeasible_problem_analysis
-        antares-solver-simulation
-        Antares::benchmarking
+		PUBLIC
+		Antares::solverUtils
+		sirius_solver
+		antares-solver-simulation
+		Antares::benchmarking
+        Antares::optimization-options
+		Antares::lps
+		PRIVATE
+		infeasible_problem_analysis
 )
 
 target_include_directories(model_antares

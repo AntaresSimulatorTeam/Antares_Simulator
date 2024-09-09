@@ -21,17 +21,19 @@
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
+#include <set>
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
-#include "../fwd.h"
+
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
+#include <antares/solver/ts-generator/prepro.h>
+#include <antares/study/version.h>
 #include <antares/writer/i_writer.h>
-#include <set>
 
-//! The minimal allowed value for hurdle costs when not null
-#define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL 0.005
+#include "../fwd.h"
 
 namespace Antares
 {
@@ -44,7 +46,7 @@ struct CompareLinkName;
 **
 ** \ingroup area
 */
-class AreaLink final : public Yuni::NonCopyable<AreaLink>
+class AreaLink final: public Yuni::NonCopyable<AreaLink>
 {
 public:
     //! Vector of links
@@ -67,7 +69,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(const Study& study, const AnyString& folder);
+    bool loadTimeSeries(const StudyVersion& version, const AnyString& folder);
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
@@ -132,6 +134,9 @@ public:
     Area* with;
     //@}
 
+    //! Monte-Carlo
+    TimeSeriesNumbers timeseriesNumbers;
+
     //! \name Data
     //@{
     /*!
@@ -141,9 +146,6 @@ public:
     Matrix<> parameters;
     TimeSeries directCapacities;
     TimeSeries indirectCapacities;
-
-    //! Monte-Carlo
-    Matrix<uint32_t> timeseriesNumbers;
 
     //! Flag for using loop flow
     bool useLoopFlow;

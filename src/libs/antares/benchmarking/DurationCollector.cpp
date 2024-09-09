@@ -18,11 +18,13 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <numeric>
-#include <string>
 #include "antares/benchmarking/DurationCollector.h"
 
-namespace Benchmarking {
+#include <numeric>
+#include <string>
+
+namespace Benchmarking
+{
 
 void DurationCollector::addDuration(const std::string& name, int64_t duration)
 {
@@ -32,11 +34,40 @@ void DurationCollector::addDuration(const std::string& name, int64_t duration)
 
 void DurationCollector::toFileContent(FileContent& file_content)
 {
-    for (const auto& [name, durations] : duration_items_)
+    for (const auto& [name, durations]: duration_items_)
     {
-        const int64_t duration_sum = accumulate(durations.begin(), durations.end(), (int64_t)0);
+        const int64_t duration_sum = accumulate(durations.begin(), durations.end(), 0);
 
         file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
     }
 }
+
+DurationCollector::OperationTimer DurationCollector::operator()(const std::string& key)
+{
+    return OperationTimer(*this, key);
+}
+
+void DurationCollector::OperationTimer::addDuration(int64_t duration_ms) const
+{
+    const std::scoped_lock lock(collector.mutex_);
+    collector.duration_items_[key].push_back(duration_ms);
+}
+
+void operator<<(const DurationCollector::OperationTimer& op, const std::function<void(void)>& f)
+{
+    using clock = std::chrono::steady_clock;
+    auto start_ = clock::now();
+    f();
+    auto end_ = clock::now();
+    auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
+    op.addDuration(duration_ms);
+}
+
+int64_t DurationCollector::getTime(const std::string& name) const
+{
+    const auto& v = duration_items_.at(name);
+
+    return accumulate(v.begin(), v.end(), 0);
+}
+
 } // namespace Benchmarking

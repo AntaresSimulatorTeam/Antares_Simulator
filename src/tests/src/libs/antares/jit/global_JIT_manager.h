@@ -19,19 +19,26 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #ifndef __ANTARES_TEST_LIBS_JIT_H__
-# define __ANTARES_TEST_LIBS_JIT_H__
+#define __ANTARES_TEST_LIBS_JIT_H__
+
+#include "antares/jit/jit.h"
 
 class global_JIT_manager
 {
 public:
-	global_JIT_manager(bool turn_to) : JIT_initial(JIT::enabled)
-	{
-		JIT::enabled = turn_to;
-	}
-	~global_JIT_manager() { JIT::enabled = JIT_initial; }
-private:
-	bool JIT_initial;
-};
+    global_JIT_manager(bool turn_to):
+        JIT_initial(JIT::enabled)
+    {
+        JIT::enabled = turn_to;
+    }
 
+    ~global_JIT_manager()
+    {
+        JIT::enabled = JIT_initial;
+    }
+
+private:
+    bool JIT_initial;
+};
 
 #endif

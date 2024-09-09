@@ -34,7 +34,7 @@ namespace Forms
 {
 void ApplWnd::createNBNodalOptimization()
 {
-    assert(NULL != pNotebook);
+    assert(pNotebook);
 
     // Create a standard page with an input selector
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> page

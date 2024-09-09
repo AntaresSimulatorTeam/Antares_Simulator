@@ -18,59 +18,31 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <filesystem>
 #include <memory>
 #include <string>
 
-#include <antares/solver/ts-generator/generator.h>
-#include <antares/exception/LoadingError.hpp>
-#include <antares/study/header.h>
-#include <antares/study/study.h>
 #include <antares/logs/logs.h>
+#include <antares/solver/ts-generator/generator.h>
+#include <antares/study/study.h>
 #include <antares/utils/utils.h>
-#include <yuni/core/getopt.h>
+#include "antares/tools/ts-generator/linksTSgenerator.h"
+#include "antares/tools/ts-generator/tsGenerationOptions.h"
+using namespace Antares::TSGenerator;
 
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/writer/writer_factory.h>
-#include <antares/writer/result_format.h>
-#include <antares/checks/checkLoadedInputData.h>
+using namespace Antares::TSGenerator;
 
-
-using namespace Antares;
-
-struct TsGeneratorSettings
-{
-    std::string studyFolder;
-
-    /// generate TS for all clusters if activated
-    bool allThermal = false;
-    /// generate TS for a list "area.cluster;area2.cluster2;"
-    std::string thermalListToGen = "";
-};
-
-std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSettings& settings)
-{
-    auto parser = std::make_unique<Yuni::GetOpt::Parser>();
-    parser->addParagraph("Antares Time Series generator\n");
-
-    parser->addFlag(settings.allThermal, ' ', "all-thermal", "Generate TS for all thermal clusters");
-
-    parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of area IDs and thermal clusters IDs, usage:\n\t--thermal=\"areaID.clusterID;area2ID.clusterID\"");
-
-    parser->remainingArguments(settings.studyFolder);
-
-
-    return parser;
-}
+namespace fs = std::filesystem;
 
 std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
                                                     const std::string& clustersToGen)
 {
     std::vector<Data::ThermalCluster*> clusters;
-    const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
+    const auto pairsAreaCluster = splitStringIntoPairs(clustersToGen, ';', '.');
 
-    for (const auto& [areaID, clusterID] : ids)
+    for (const auto& [areaID, clusterID]: pairsAreaCluster)
     {
-        logs.info() << "Generating ts for area: " << areaID << " and cluster: " << clusterID;
+        logs.info() << "Searching for area: " << areaID << " and cluster: " << clusterID;
 
         auto* area = areas.find(areaID);
         if (!area)
@@ -92,65 +64,63 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    TsGeneratorSettings settings;
+    logs.applicationName("ts-generator");
 
-    auto parser = createTsGeneratorParser(settings);
-    switch (auto ret = parser->operator()(argc, argv); ret)
+    Settings settings;
+    if (!parseOptions(argc, argv, settings))
     {
-        using namespace Yuni::GetOpt;
-    case ReturnCode::error:
-        logs.error() << "Unknown arguments, aborting";
-        return parser->errors();
-    case ReturnCode::help:
-        // End the program
-        return 0;
-    default:
-        break;
-    }
-
-    if (settings.allThermal && !settings.thermalListToGen.empty())
-    {
-        logs.error() << "Conflicting options, either choose all thermal clusters or a list";
         return 1;
     }
 
-    auto study = std::make_shared<Data::Study>(true);
-    Data::StudyLoadOptions studyOptions;
-    studyOptions.prepareOutput = true;
-
-    if (!study->loadFromFolder(settings.studyFolder, studyOptions))
+    if (!checkOptions(settings))
     {
-        logs.error() << "Invalid study given to the generator";
         return 1;
     }
 
-    study->initializeRuntimeInfos();
-    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal/mc-0
-    study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
+    bool return_code{true};
 
-    try {
-        Antares::Check::checkMinStablePower(true, study->areas);
-    } catch(Error::InvalidParametersForThermalClusters& ex) {
-        Antares::logs.error() << ex.what();
+    if (thermalTSrequired(settings))
+    {
+        // === Data for TS generation ===
+        auto study = std::make_shared<Data::Study>(true);
+        Data::StudyLoadOptions studyOptions;
+        if (!study->loadFromFolder(settings.studyFolder, studyOptions))
+        {
+            logs.error() << "Invalid study given to the generator";
+            return 1;
+        }
+
+        std::vector<Data::ThermalCluster*> clusters;
+        if (settings.allThermal)
+        {
+            clusters = getAllClustersToGen(study->areas, true);
+        }
+        else if (!settings.thermalListToGen.empty())
+        {
+            clusters = getClustersToGen(study->areas, settings.thermalListToGen);
+        }
+
+        // === TS generation ===
+        MersenneTwister thermalRandom;
+        thermalRandom.reset(study->parameters.seed[Data::seedTsGenThermal]);
+        return_code = TSGenerator::generateThermalTimeSeries(*study, clusters, thermalRandom);
+
+        // === Writing generated TS on disk ===
+        auto thermalSavePath = fs::path(settings.studyFolder) / "output"
+                               / FormattedTime("%Y%m%d-%H%M");
+        thermalSavePath /= "ts-generator";
+        thermalSavePath /= "thermal";
+        writeThermalTimeSeries(clusters, thermalSavePath);
     }
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
+    if (linkTSrequired(settings))
+    {
+        LinksTSgenerator linksTSgenerator(settings);
+        linksTSgenerator.extractData();
+        return_code = linksTSgenerator.generate() && return_code;
+    }
 
-    auto resultWriter = Solver::resultWriterFactory(
-            Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
-
-    std::vector<Data::ThermalCluster*> clusters;
-
-    if (settings.thermalListToGen.empty())
-        clusters = TSGenerator::getAllClustersToGen(study->areas, true);
-    else
-        clusters = getClustersToGen(study->areas, settings.thermalListToGen);
-
-    for (auto& c : clusters)
-        logs.debug() << c->id();
-
-    return !TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
+    return !return_code; // return 0 for success
 }
-

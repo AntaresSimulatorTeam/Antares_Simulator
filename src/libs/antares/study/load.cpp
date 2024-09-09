@@ -19,14 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <fstream>
-#include "antares/study/study.h"
-#include "antares/study/version.h"
+
 #include <antares/benchmarking/DurationCollector.h>
 #include "antares/study/scenario-builder/sets.h"
+#include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
+#include "antares/study/version.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
+
+namespace fs = std::filesystem;
 
 #define SEP IO::Separator
 
@@ -53,10 +56,10 @@ bool Study::internalLoadHeader(const String& path)
     return true;
 }
 
-bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& options)
+bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
-    String normPath;
-    IO::Normalize(normPath, path);
+    fs::path normPath = path;
+    normPath = normPath.lexically_normal();
     return internalLoadFromFolder(normPath, options);
 }
 
@@ -65,21 +68,33 @@ bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
     if (!internalLoadHeader(path))
     {
         if (options.loadOnlyNeeded)
+        {
             return false;
+        }
     }
 
     // The simulation settings
     if (!simulationComments.loadFromFolder(options))
     {
         if (options.loadOnlyNeeded)
+        {
             return false;
+        }
     }
     // Load the general data
     buffer.clear() << folderSettings << SEP << "generaldata.ini";
-    if (!parameters.loadFromFile(buffer, header.version, options))
+    bool errorWhileLoading = !parameters.loadFromFile(buffer, header.version);
+
+    parameters.validateOptions(options);
+
+    parameters.fixBadValues();
+
+    if (errorWhileLoading)
     {
         if (options.loadOnlyNeeded)
+        {
             return false;
+        }
     }
 
     // Load the layer data
@@ -101,19 +116,21 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     }
 
     if (options.loadOnlyNeeded && !parameters.timeSeriesToGenerate)
+    {
         // Nothing to refresh
         parameters.timeSeriesToRefresh = 0;
+    }
 
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
     if (usedByTheSolver)
     {
         // We have time-series to import
-        if (parameters.exportTimeSeriesInInput && header.version == StudyVersion::latest())
+        if (parameters.exportTimeSeriesInInput && header.version != StudyVersion::latest())
         {
             logs.info() << "Stochastic TS stored in input parametrized."
-                           " Disabling Store in input because study is not at latest version"
-                           "Prevents writing data in unsupported format at the study version";
+                           " Disabling Store in input because study is not at latest version."
+                           " This prevents writing data in unsupported format at the study version";
             parameters.exportTimeSeriesInInput = 0;
         }
     }
@@ -136,28 +153,36 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 
     // calendar update
     if (usedByTheSolver)
-        calendar.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, false});
+    {
+        calendar.reset({parameters.dayOfThe1stJanuary,
+                        parameters.firstWeekday,
+                        parameters.firstMonthInYear,
+                        false});
+    }
     else
-        calendar.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, parameters.leapYear});
+    {
+        calendar.reset({parameters.dayOfThe1stJanuary,
+                        parameters.firstWeekday,
+                        parameters.firstMonthInYear,
+                        parameters.leapYear});
+    }
 
-    calendarOutput.reset({parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, parameters.leapYear});
-
-    // In case hydro hot start is enabled, check all conditions are met.
-    // (has to be called after areas load and calendar building)
-    if (usedByTheSolver && !checkHydroHotStart())
-        logs.error() << "hydro hot start is enabled, conditions are not met. Aborting";
+    calendarOutput.reset({parameters.dayOfThe1stJanuary,
+                          parameters.firstWeekday,
+                          parameters.firstMonthInYear,
+                          parameters.leapYear});
 
     // Reducing memory footprint
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
 {
     // IO statistics
     Statistics::LogsDumper statisticsDumper;
 
     // Check if the path is correct
-    if (!IO::Directory::Exists(path))
+    if (!fs::exists(path))
     {
         logs.error()
           << path << ": The directory does not exist (or not enough privileges to read the folder)";
@@ -165,14 +190,14 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     }
 
     // Initialize all internal paths
-    relocate(path);
+    relocate(path.string());
 
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
     this->bufferLoadingTS.reserve(2096);
     assert(this->bufferLoadingTS.capacity() > 0);
 
-    if (!internalLoadIni(path, options))
+    if (!internalLoadIni(path.string(), options))
     {
         return false;
     }
@@ -186,7 +211,9 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
 
     // In case parallel mode was not chosen, only 1 core is allowed
     if (!options.enableParallel && !options.forceParallel)
+    {
         maxNbYearsInParallel = 1;
+    }
 
     // End logical core --------
 
@@ -209,19 +236,19 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
     // Load
     if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
-            || timeSeriesLoad & parameters.timeSeriesToGenerate)
+        || timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
-            << "correlation.ini";
+                       << "correlation.ini";
         preproLoadCorrelation.loadFromFile(*this, buffer);
     }
 
     // Solar
     if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
-            || timeSeriesSolar & parameters.timeSeriesToGenerate)
+        || timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
-            << "correlation.ini";
+                       << "correlation.ini";
         preproSolarCorrelation.loadFromFile(*this, buffer);
     }
 
@@ -255,7 +282,8 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     // (actually internalLoadFromFolder)
     buffer.clear() << folderInput << SEP << "bindingconstraints";
     bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
-    if (r) {
+    if (r)
+    {
         r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
     }
     return (!r && options.loadOnlyNeeded) ? false : r;
@@ -264,7 +292,8 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 class SetHandlerAreas
 {
 public:
-    SetHandlerAreas(Study& study) : pStudy(study)
+    explicit SetHandlerAreas(Study& study):
+        pStudy(study)
     {
     }
 
@@ -295,7 +324,9 @@ public:
         {
             auto end = otherSet.end();
             for (auto i = otherSet.begin(); i != end; ++i)
+            {
                 set.insert(*i);
+            }
         }
         return true;
     }
@@ -330,7 +361,9 @@ public:
         {
             auto end = pStudy.areas.end();
             for (auto i = pStudy.areas.begin(); i != end; ++i)
+            {
                 set.insert(i->second);
+            }
             return true;
         }
 
@@ -349,6 +382,7 @@ private:
 
 bool Study::internalLoadSets()
 {
+    const fs::path path = fs::path(folderInput.c_str()) / "areas" / "sets.ini";
     // Set of areas
     logs.info();
     logs.info() << "Loading sets of areas...";
@@ -357,7 +391,7 @@ bool Study::internalLoadSets()
     buffer.clear() << folderInput << SEP << "areas" << SEP << "sets.ini";
 
     // Load the rules
-    if (setsOfAreas.loadFromFile(buffer))
+    if (setsOfAreas.loadFromFile(path))
     {
         // Apply the rules
         SetHandlerAreas handler(*this);
@@ -382,21 +416,23 @@ bool Study::reloadXCastData()
 {
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
     bool ret = true;
-    areas.each([&](Data::Area& area) {
-        assert(area.load.prepro);
-        assert(area.solar.prepro);
-        assert(area.wind.prepro);
+    areas.each(
+      [this, &ret](Data::Area& area)
+      {
+          assert(area.load.prepro);
+          assert(area.solar.prepro);
+          assert(area.wind.prepro);
 
-        // Load
-        buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
-        ret = area.load.prepro->loadFromFolder(buffer) && ret;
-        // Solar
-        buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
-        ret = area.solar.prepro->loadFromFolder(buffer) && ret;
-        // Wind
-        buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
-        ret = area.wind.prepro->loadFromFolder(buffer) && ret;
-    });
+          // Load
+          buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
+          ret = area.load.prepro->loadFromFolder(buffer) && ret;
+          // Solar
+          buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
+          ret = area.solar.prepro->loadFromFolder(buffer) && ret;
+          // Wind
+          buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
+          ret = area.wind.prepro->loadFromFolder(buffer) && ret;
+      });
     return ret;
 }
 

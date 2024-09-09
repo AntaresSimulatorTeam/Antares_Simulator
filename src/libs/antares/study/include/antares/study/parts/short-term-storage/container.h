@@ -20,8 +20,10 @@
 */
 
 #pragma once
-#include <string>
+#include <filesystem>
 #include <map>
+#include <string>
+
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -31,7 +33,7 @@ class STStorageInput
 public:
     bool validate() const;
     /// 1. Read list.ini
-    bool createSTStorageClustersFromIniFile(const std::string& path);
+    bool createSTStorageClustersFromIniFile(const std::filesystem::path& path);
     /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
 

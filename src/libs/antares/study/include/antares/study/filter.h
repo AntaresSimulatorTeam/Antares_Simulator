@@ -21,9 +21,10 @@
 #ifndef __ANTARES_LIB_STUDY_FILTER_H__
 #define __ANTARES_LIB_STUDY_FILTER_H__
 
+#include <string>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <string>
 
 namespace Antares
 {

@@ -23,12 +23,15 @@
 //
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
+
 #include <memory>
 #include <vector>
-#include "antares/study/binding_constraint/BindingConstraint.h"
+
 #include "yuni/core/string/string.h"
-#include "antares/study/version.h"
+
 #include <antares/utils/utils.h>
+#include "antares/study/binding_constraint/BindingConstraint.h"
+#include "antares/study/version.h"
 
 namespace Antares::Data
 {
@@ -43,7 +46,9 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     for (const IniFile::Property* p = env.section->firstProperty; p; p = p->next)
     {
         if (p->key.empty())
+        {
             continue;
+        }
 
         if (p->key == "name")
         {
@@ -100,7 +105,9 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
         if (auto setKey = p->key.find('%'); setKey != 0 && setKey != String::npos) // It is a link
         {
             if (bool ret = SeparateValue(env, p, w, o); !ret)
+            {
                 continue;
+            }
 
             const AreaLink* lnk = env.areaList.findLinkFromINIKey(p->key);
             if (!lnk)
@@ -110,10 +117,14 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                 continue;
             }
             if (!Utils::isZero(w))
+            {
                 bc->weight(lnk, w);
+            }
 
             if (!Utils::isZero(o))
+            {
                 bc->offset(lnk, o);
+            }
 
             continue;
         }
@@ -129,7 +140,9 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
             }
 
             if (bool ret = SeparateValue(env, p, w, o); !ret)
+            {
                 continue;
+            }
 
             const ThermalCluster* clstr = env.areaList.findClusterFromINIKey(p->key);
             if (!clstr)
@@ -139,10 +152,14 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                 continue;
             }
             if (!Utils::isZero(w))
+            {
                 bc->weight(clstr, w);
+            }
 
             if (!Utils::isZero(o))
+            {
                 bc->offset(clstr, o);
+            }
 
             continue;
         }
@@ -176,7 +193,9 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
 
     // The binding constraint can not be enabled if there is no weight in the table
     if (bc->pLinkWeights.empty() && bc->pClusterWeights.empty())
+    {
         bc->pEnabled = false;
+    }
 
     switch (bc->operatorType())
     {
@@ -185,7 +204,9 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     case BindingConstraint::opGreater:
     {
         if (loadTimeSeries(env, bc.get()))
+        {
             return {bc};
+        }
         break;
     }
     case BindingConstraint::opBoth:
@@ -222,39 +243,41 @@ bool BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
     CString<64> stringWO = p->value;
     String::Size setVal = p->value.find('%');
     uint occurrence = 0;
-    stringWO.words("%", [&occurrence, &setVal, &env, &ret, &p, &w, &o](const CString<64>& part) {
-        if (occurrence == 0)
-        {
-            if (setVal == 0) // weight is null
-            {
-                if (!part.to<int>(o))
-                {
-                    logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
-                                 << p->key << "`: invalid offset";
-                    ret = false;
-                }
-            }
-            else // weight is not null
-            {
-                if (!part.to<double>(w))
-                {
-                    logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
-                                 << p->key << "`: invalid weight";
-                    ret = false;
-                }
-            }
-        }
+    stringWO.words("%",
+                   [&occurrence, &setVal, &env, &ret, &p, &w, &o](const CString<64>& part)
+                   {
+                       if (occurrence == 0)
+                       {
+                           if (setVal == 0) // weight is null
+                           {
+                               if (!part.to<int>(o))
+                               {
+                                   logs.error() << env.iniFilename << ": in [" << env.section->name
+                                                << "]: `" << p->key << "`: invalid offset";
+                                   ret = false;
+                               }
+                           }
+                           else // weight is not null
+                           {
+                               if (!part.to<double>(w))
+                               {
+                                   logs.error() << env.iniFilename << ": in [" << env.section->name
+                                                << "]: `" << p->key << "`: invalid weight";
+                                   ret = false;
+                               }
+                           }
+                       }
 
-        if (occurrence == 1 && setVal != 0 && !part.to<int>(o))
-        {
-            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                         << "`: invalid offset";
-            ret = false;
-        }
+                       if (occurrence == 1 && setVal != 0 && !part.to<int>(o))
+                       {
+                           logs.error() << env.iniFilename << ": in [" << env.section->name
+                                        << "]: `" << p->key << "`: invalid offset";
+                           ret = false;
+                       }
 
-        ++occurrence;
-        return ret; // continue to iterate
-    });
+                       ++occurrence;
+                       return ret; // continue to iterate
+                   });
     return ret;
 }
 
@@ -262,7 +285,9 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint* bindingConstraint)
 {
     if (env.version >= StudyVersion(8, 7))
+    {
         return loadTimeSeries(env, bindingConstraint->operatorType(), bindingConstraint);
+    }
 
     return loadTimeSeriesLegacyStudies(env, bindingConstraint);
 }
@@ -308,24 +333,34 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
                                      &env.matrixBuffer))
     {
         if (bindingConstraint->pComments.empty())
+        {
             logs.info() << " added `" << bindingConstraint->pName << "` ("
                         << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
                         << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator)
                         << ')';
+        }
         else
+        {
             logs.info() << " added `" << bindingConstraint->pName << "` ("
                         << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
                         << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator)
                         << ") " << bindingConstraint->pComments;
+        }
 
         // 0 is BindingConstraint::opLess
         int columnNumber;
         if (bindingConstraint->operatorType() == BindingConstraint::opLess)
+        {
             columnNumber = BindingConstraint::Column::columnInferior;
+        }
         else if (bindingConstraint->operatorType() == BindingConstraint::opGreater)
+        {
             columnNumber = BindingConstraint::Column::columnSuperior;
+        }
         else if (bindingConstraint->operatorType() == BindingConstraint::opEquality)
+        {
             columnNumber = BindingConstraint::Column::columnEquality;
+        }
         else
         {
             logs.error("Cannot load time series of type other that eq/gt/lt");

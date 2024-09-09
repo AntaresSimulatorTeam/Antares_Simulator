@@ -43,7 +43,9 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles)
     {
         auto ProbSpx = ProblemeHydrauliqueEtendu.ProblemeSpx[i];
         if (ProbSpx)
+        {
             SPX_LibererProbleme(ProbSpx);
+        }
     }
 
     return;

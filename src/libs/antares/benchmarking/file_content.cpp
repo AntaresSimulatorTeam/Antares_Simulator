@@ -18,9 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/inifile/inifile.h>
-
 #include <antares/benchmarking/file_content.h>
+#include <antares/inifile/inifile.h>
 
 using namespace std;
 
@@ -58,15 +57,15 @@ void FileContent::addDurationItem(const string& name, unsigned int duration, int
 std::string FileContent::saveToBufferAsIni()
 {
     Antares::IniFile ini;
-    for (const auto& [sectionName, content] : *this)
+    for (const auto& [sectionName, content]: *this)
     {
         // Loop on properties
         auto* section = ini.addSection(sectionName);
-        for (const auto& [key, value] : content)
+        for (const auto& [key, value]: content)
+        {
             section->add(key, value);
+        }
     }
-    std::string buffer;
-    ini.saveToString(buffer);
-    return buffer;
+    return ini.toString();
 }
 } // namespace Benchmarking

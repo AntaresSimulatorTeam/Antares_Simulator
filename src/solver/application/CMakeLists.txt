@@ -1,10 +1,12 @@
 set(HEADERS
         include/antares/application/application.h
+        include/antares/application/ScenarioBuilderOwner.h
 )
 set(SRC_APPLICATION
         ${HEADERS}
         application.cpp
         process-priority.cpp
+        ScenarioBuilderOwner.cpp
 )
 source_group("application" FILES ${SRC_APPLICATION})
 
@@ -25,13 +27,14 @@ target_link_libraries(application
         Antares::solverUtils
         Antares::signal-handling
         Antares::resources
+        Antares::file-tree-study-loader
 )
 
 target_include_directories(application
-                PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-install(DIRECTORY   include/antares
+install(DIRECTORY include/antares
         DESTINATION "include"
 )

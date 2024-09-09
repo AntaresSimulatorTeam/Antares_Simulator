@@ -20,14 +20,15 @@
 */
 #pragma once
 
+#include <utility>
+
 #include <antares/logs/logs.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "../opt_rename_problem.h"
-#include "../opt_fonctions.h"
-#include "../variables/VariableManagement.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-#include <utility>
+#include "../opt_fonctions.h"
+#include "../opt_rename_problem.h"
+#include "../variables/VariableManagement.h"
 
 // TODO God struct should be decomposed
 class ConstraintBuilderData
@@ -73,12 +74,13 @@ class ConstraintBuilder
 {
 public:
     ConstraintBuilder() = delete;
-    explicit ConstraintBuilder(ConstraintBuilderData& data) :
-     data(data),
-     variableManager_(data.CorrespondanceVarNativesVarOptim,
-                      data.NumeroDeVariableStockFinal,
-                      data.NumeroDeVariableDeTrancheDeStock,
-                      data.NombreDePasDeTempsPourUneOptimisation)
+
+    explicit ConstraintBuilder(ConstraintBuilderData& data):
+        data(data),
+        variableManager_(data.CorrespondanceVarNativesVarOptim,
+                         data.NumeroDeVariableStockFinal,
+                         data.NumeroDeVariableDeTrancheDeStock,
+                         data.NombreDePasDeTempsPourUneOptimisation)
     {
     }
 
@@ -219,9 +221,10 @@ public:
     ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index, double coeff);
 
     ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
+
     //@}
 
-    class ConstraintBuilderInvalidOperator : public std::runtime_error
+    class ConstraintBuilderInvalidOperator: public std::runtime_error
     {
     public:
         using std::runtime_error::runtime_error;
@@ -239,7 +242,9 @@ public:
             operator_ = op;
         }
         else
+        {
             throw ConstraintBuilderInvalidOperator(std::string("Invalid operator: ") + op);
+        }
 
         return *this;
     }
@@ -316,9 +321,12 @@ class ConstraintFactory
 {
 public:
     ConstraintFactory() = delete;
-    explicit ConstraintFactory(ConstraintBuilder& builder) : builder(builder)
+
+    explicit ConstraintFactory(ConstraintBuilder& builder):
+        builder(builder)
     {
     }
+
     ConstraintBuilder& builder;
 };
 
@@ -328,8 +336,8 @@ inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
 {
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
-        const int palier
-          = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        const int palier = PaliersThermiquesDuPays
+                             .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         newConstraintBuilder.DispatchableProduction(palier, -1.0);
     }
 }

@@ -29,14 +29,15 @@ struct ShortTermStorageLevelData
     const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };
 
-class ShortTermStorageLevel : private ConstraintFactory
+class ShortTermStorageLevel: private ConstraintFactory
 {
 public:
-    ShortTermStorageLevel(ConstraintBuilder& builder,
-                          ShortTermStorageLevelData& data) :
-     ConstraintFactory(builder), data(data)
+    ShortTermStorageLevel(ConstraintBuilder& builder, ShortTermStorageLevelData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     void add(int pdt, int pays);
 
 private:

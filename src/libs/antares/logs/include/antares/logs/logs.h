@@ -22,7 +22,6 @@
 #define __ANTARES_LIBS_LOGS_LOGS_H__
 
 #include <yuni/yuni.h>
-#include "antares/antares/constants.h"
 #include "yuni/core/logs/decorators/message.h"
 #include "yuni/core/logs/decorators/time.h"
 #include "yuni/core/logs/decorators/verbositylevel.h"
@@ -35,10 +34,10 @@
 ** \ingroup toolbox
 */
 
-#ifndef LOG_APPLICATION_NAME
-/* This value should be defined by CMake */
-#define LOG_APPLICATION_NAME "unknown-app"
-#endif
+/*! Name of the app to use into logs */
+#define LOG_APPLICATION_NAME "antares"
+/*! Vendor */
+#define LOG_APPLICATION_VENDOR "RTE"
 
 /*! Special message to the interface */
 #define LOG_UI "[UI] "
@@ -63,16 +62,6 @@
 #include <yuni/core/logs.h>
 #include <yuni/core/logs/decorators/applicationname.h>
 #include <yuni/core/logs/handler/callback.h>
-
-namespace Antares
-{
-namespace Data
-{
-// Forward declaration
-class Study;
-
-} // namespace Data
-} // namespace Antares
 
 namespace Antares
 {
@@ -101,42 +90,37 @@ extern "C"
 {
 #endif
 
-    /*!
-    ** \brief Levels for logging
-    */
-    enum LogLevel
-    {
-        logUnknown = 0,
-        logProgress, /* not really a real log level */
-        logFatal,
-        logError,
-        logWarning,
-        logNotice,
-        logInfo,
-        logDebug
-    };
+/*!
+** \brief Levels for logging
+*/
+enum LogLevel
+{
+    logUnknown = 0,
+    logProgress, /* not really a real log level */
+    logFatal,
+    logError,
+    logWarning,
+    logNotice,
+    logInfo,
+    logDebug
+};
 
-    /*!
-    ** \brief Generate a compatibility notice
-    ** \ingroup logs
-    **
-    ** \param format The format string
-    ** \return Always 0
-    */
-    int LogCompatibility(const char format[], ...);
+/*!
+** \brief Generate a compatibility notice
+** \ingroup logs
+**
+** \param format The format string
+** \return Always 0
+*/
+int LogCompatibility(const char format[], ...);
 
-    /*!
-    ** \brief Display informations about encountered errors
-    */
-    void LogDisplayErrorInfos(uint errors,
-                              uint warnings,
-                              const char* message,
-                              bool printError = true);
+/*!
+** \brief Display informations about encountered errors
+*/
+void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool printError = true);
 
 #ifdef __cplusplus
 }
 #endif
-
-#include "logs.hxx"
 
 #endif /* __ANTARES_LIBS_LOGS_LOGS_H__ */

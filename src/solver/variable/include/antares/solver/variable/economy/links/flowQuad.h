@@ -38,6 +38,7 @@ struct VCardFlowQuad
     {
         return "FLOW QUAD.";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -55,29 +56,28 @@ struct VCardFlowQuad
       >>
       ResultsType;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::link,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::link;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 1;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesType;
 
@@ -87,7 +87,7 @@ struct VCardFlowQuad
 ** \brief Marginal FlowQuad
 */
 template<class NextT = Container::EndOfList>
-class FlowQuad : public Variable::IVariable<FlowQuad<NextT>, NextT, VCardFlowQuad>
+class FlowQuad: public Variable::IVariable<FlowQuad<NextT>, NextT, VCardFlowQuad>
 {
 public:
     //! Type of the next static variable
@@ -113,11 +113,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -129,7 +129,7 @@ public:
     void initializeFromStudy(Data::Study& study)
     {
         // Average on all years
-        pNbHours = study.runtime->rangeLimits.hour[Data::rangeEnd] + 1;
+        pNbHours = study.runtime.rangeLimits.hour[Data::rangeEnd] + 1;
         AncestorType::pResults.initializeFromStudy(study);
         AncestorType::pResults.reset();
 
@@ -165,10 +165,9 @@ public:
     void simulationEnd()
     {
         // Flow assessed over all MC years (linear)
-        (void)::memcpy(
-          pValuesForTheCurrentYear.hour,
-          transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
-          sizeof(double) * pNbHours);
+        (void)::memcpy(pValuesForTheCurrentYear.hour,
+                       transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
+                       sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
@@ -185,10 +184,10 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(uint year, unsigned int numSpace)
@@ -224,7 +223,7 @@ public:
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
-        if (dataLevel & Category::link)
+        if (dataLevel & Category::DataLevel::link)
         {
             if (digestLevel & Category::digestFlowQuad)
             {
@@ -260,8 +259,9 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(results,
+                                                                                 fileLevel,
+                                                                                 precision);
         }
     }
 

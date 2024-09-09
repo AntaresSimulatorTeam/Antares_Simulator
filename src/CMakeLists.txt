@@ -2,12 +2,13 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      9)
-set(ANTARES_VERSION_LO	      1)
+set(ANTARES_VERSION_LO	      2)
 set(ANTARES_VERSION_REVISION  0)
+
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 0)
+set(ANTARES_RC 1)
 
 set(ANTARES_VERSION_YEAR      2024)
 
@@ -182,81 +183,26 @@ message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 
-option(BUILD_MINIZIP "Build minizip" OFF)
-message(STATUS "Build minizip: ${BUILD_MINIZIP}")
+option(WITH_ANTLR4 "With antlr4" OFF)
+message(STATUS "With antlr4: ${WITH_ANTLR4}")
+
+option(WITH_YAMLCPP "With yaml-cpp" OFF)
+message(STATUS "With yaml-cpp: ${WITH_YAMLCPP}")
 
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif()
 
-#Define install directory
-if (NOT DEPS_INSTALL_DIR)
-    SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
-
-else()
-    if(NOT IS_ABSOLUTE ${DEPS_INSTALL_DIR})
-        SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../${DEPS_INSTALL_DIR})
-    endif()    
-endif()
-
-
-# Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-
-	string(REPLACE ${CMAKE_BUILD_TYPE} Release
-			DEPS_INSTALL_DIR_XPANSION
-			${DEPS_INSTALL_DIR})
-
-	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
-	
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL  "debug")
-
-	string(REPLACE ${CMAKE_BUILD_TYPE} Debug
-			DEPS_INSTALL_DIR_XPANSION
-			${DEPS_INSTALL_DIR})
-	
-	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
-
-endif()
-
-list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
-message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
-
-# Build Needed dependencies
-add_subdirectory(antares-deps)
-
-#Add needed definition in case of external dependencies compilation
-include (antares-deps/cmake/additionnal-definitions.cmake)
-
 #Boost header libraries
 find_package(Boost REQUIRED)
-
-#TODO : Add ZLIB if  VCPKG used why is this needed
-if (VCPKG_TOOLCHAIN) 
-    #zlib
-    find_package(ZLIB REQUIRED)
-endif()
 
 #Sirius solver
 if(POLICY CMP0074)
 	cmake_policy(SET CMP0074 NEW)
 endif()
 
-if (VCPKG_TOOLCHAIN)
-	list(APPEND CMAKE_PREFIX_PATH "${sirius_solver_ROOT}")
-	list(APPEND CMAKE_PREFIX_PATH "${ortools_ROOT}")
-endif()
-
-find_package(sirius_solver)
-
-if (NOT sirius_solver_FOUND)
-	message (FATAL_ERROR "Sirius solver not found. Sirius solver can be compiled with -DBUILD_sirius=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
-endif()
-
-#gflags needed for ortools
-set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
-find_package(gflags)
+find_package(sirius_solver REQUIRED)
 
 find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
@@ -284,36 +230,17 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip QUIET)
-
-if(NOT minizip_FOUND OR BUILD_MINIZIP)
-	if (NOT minizip_FOUND)
-		message("minizip not found, downloading")
+find_package(minizip-ng QUIET)
+if (minizip-ng_FOUND)
+	add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
+else ()
+	find_package(minizip)
+	if (minizip_FOUND)
+		message (STATUS "Found minizip (not minizip-ng).")
+	else ()
+		message (FATAL_ERROR "Minizip not found.")
 	endif ()
-	if (BUILD_MINIZIP)
-		message("BUILD_MINIZIP set, downloading")
-	endif ()
-    # Repository + tag
-    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
-    set(MZ_TAG "4.0.1")
-    # CMake flags
-    set(MZ_LZMA "OFF" CACHE INTERNAL "")
-    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
-    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
-    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
-    set(MZ_WZAES "OFF" CACHE INTERNAL "")
-    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
-    set(MZ_ICONV "OFF" CACHE INTERNAL "")
-
-	FetchContent_Declare(minizip
-		GIT_REPOSITORY ${MZ_REPOSITORY}
-		GIT_TAG ${MZ_TAG}
-		OVERRIDE_FIND_PACKAGE
-	)
-
-	FetchContent_MakeAvailable(minizip)
-endif()
-find_package(minizip REQUIRED)
+endif ()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
@@ -337,6 +264,7 @@ add_subdirectory("ext/yuni/src")
 OMESSAGE("") # empty line
 
 # Sub Directories
+add_subdirectory(api)
 add_subdirectory(libs) 		#antares-core fswalker
 
 if(BUILD_UI)

@@ -6,53 +6,87 @@
 include(GNUInstallDirs)
 # generate and install export file
 set(TARGET_LIBS #No alias
-        solver-lib
-        args_helper
-        date
-        benchmarking
-        result_writer
-        sys
-        infoCollection
-        checks
-        misc
-        yuni-static-uuid
-        yuni-static-core
-        ${CMAKE_THREADS_LIBS_INIT}
-        antares-solver-main-economy
-        antares-solver-main-adequacy
-        antares-solver-hydro
-        antares-solver-variable
-        antares-solver-simulation
-        antares-solver-ts-generator
-        model_antares
-        antares-core
-        locale
-        resources
-        locator
-        #deps of deps
-        exception
-        logs
-        infeasible_problem_analysis
+        #each "block" of dependency describe the dependency for a target
+        #not dependency is present since once a dependency is in the export set
+        #it is available for everything
+
+        solver_api #What we want to export
+
+        #solver_api
         study
+        study-loader
+        file-tree-study-loader
+        antares-solver-simulation
+        #study
+        yuni-static-core
         array
-        utils
-        concurrency
-        mersenne
-        application
-        AntaresMemory
-        jit
-        io
-        series
-        path
-        correlation
-        StudyUtils
-        stdcxx
+        date
         inifile
+        stdcxx
+        StudyUtils
+        utils
+        correlation
+        path
+        mersenne
+        result_writer
+        series
+        antares-core
+        antares-solver-hydro
+        exception
+        benchmarking
+        antares-solver-variable
+        lps
+
+        #study-loader
+        #nothing
+
+        #file-tree-study-loader
+        application
+
+        #run-mode
+        infoCollection
+
+        #antares-solver-simulation
+        concurrency
+        misc
+        model_antares
+        antares-solver-ts-generator
+
+        #lps
+        #nothing
+
+        #array
+        io
+        jit
+        AntaresMemory
+
+        #date
+        logs
+
+        #correlation
+        locator
+
+        #antares-core
         antares-config-lib
-        #
+
+        #application
+        solver-lib
+        sys
         signal-handling
         antares-solver-variable-info
-        minizip
+        optimization-options
+        resources
+
+        #model_antares
+        infeasible_problem_analysis
+
+        #solver-lib
+        args_helper
+        checks
+        locale
+        yuni-static-uuid
+
+        antares-solver #executable
 )
 
 install(TARGETS ${TARGET_LIBS}
@@ -87,10 +121,4 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfigVersion.cmake"
         DESTINATION lib/cmake/Antares
-)
-
-# generate the export targets for the build tree
-export(EXPORT AntaresTargets
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/AntaresTargets.cmake"
-        NAMESPACE Antares::
 )

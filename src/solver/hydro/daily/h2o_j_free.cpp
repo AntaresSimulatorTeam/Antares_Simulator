@@ -42,7 +42,9 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
     {
         PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique.ProblemeSpx[i];
         if (ProbSpx)
+        {
             SPX_LibererProbleme(ProbSpx);
+        }
     }
 
     return;

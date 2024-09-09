@@ -132,8 +132,8 @@ public:
     {
         if (pSize)
         {
-            for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
-                 i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
+            for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
+                 i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
                  ++i)
             {
                 if (state.reserveParticipationPerLTStorageForYear[i].size())

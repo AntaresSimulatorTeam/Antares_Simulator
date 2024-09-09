@@ -24,7 +24,7 @@
 
 namespace Antares::Solver::Simulation
 {
-class DispatchableMarginPostProcessCmd : public basePostProcessCommand
+class DispatchableMarginPostProcessCmd: public basePostProcessCommand
 {
 public:
     DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -37,7 +37,7 @@ private:
     const AreaList& area_list_;
 };
 
-class HydroLevelsUpdatePostProcessCmd : public basePostProcessCommand
+class HydroLevelsUpdatePostProcessCmd: public basePostProcessCommand
 {
 public:
     HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -52,7 +52,7 @@ private:
     bool computeAnyway_ = false;
 };
 
-class RemixHydroPostProcessCmd : public basePostProcessCommand
+class RemixHydroPostProcessCmd: public basePostProcessCommand
 {
 public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -69,7 +69,7 @@ private:
     SimplexOptimization splx_optimization_;
 };
 
-class DTGmarginForAdqPatchPostProcessCmd : public basePostProcessCommand
+class DTGmarginForAdqPatchPostProcessCmd: public basePostProcessCommand
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
@@ -87,7 +87,7 @@ private:
     unsigned int thread_number_ = 0;
 };
 
-class InterpolateWaterValuePostProcessCmd : public basePostProcessCommand
+class InterpolateWaterValuePostProcessCmd: public basePostProcessCommand
 {
 public:
     InterpolateWaterValuePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -101,7 +101,7 @@ private:
     const Date::Calendar& calendar_;
 };
 
-class HydroLevelsFinalUpdatePostProcessCmd : public basePostProcessCommand
+class HydroLevelsFinalUpdatePostProcessCmd: public basePostProcessCommand
 {
 public:
     HydroLevelsFinalUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
@@ -112,7 +112,7 @@ private:
     const AreaList& area_list_;
 };
 
-class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
+class CurtailmentSharingPostProcessCmd: public basePostProcessCommand
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 

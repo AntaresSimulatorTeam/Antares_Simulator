@@ -19,21 +19,24 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <yuni/core/getopt.h>
+
+#include <antares/antares/version.h>
+#include <antares/args/args_to_utf8.h>
+#include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
 #include <antares/study/finder/finder.h>
-#include <yuni/core/getopt.h>
-#include <antares/args/args_to_utf8.h>
 #include <antares/utils/utils.h>
-#include <antares/antares/version.h>
-#include <antares/locale/locale.h>
 
 using namespace Yuni;
 using namespace Antares;
 
-class MyStudyFinder : public Data::StudyFinder
+class MyStudyFinder: public Data::StudyFinder
 {
 public:
-    MyStudyFinder() : extra(false), csv(false)
+    MyStudyFinder():
+        extra(false),
+        csv(false)
     {
     }
 
@@ -47,9 +50,13 @@ public:
         if (extra)
         {
             if (csv)
+            {
                 std::cout << ";" << version.toString();
+            }
             else
+            {
                 std::cout << " (" << version.toString() << ')';
+            }
         }
         std::cout << '\n';
     }
@@ -96,7 +103,9 @@ int main(int argc, char* argv[])
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 1 : 0;
+        }
 
         if (optVersion)
         {

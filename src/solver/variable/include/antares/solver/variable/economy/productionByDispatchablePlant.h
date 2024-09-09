@@ -38,6 +38,7 @@ struct VCardProductionByDispatchablePlant
     {
         return "DTG by plant";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -58,29 +59,27 @@ struct VCardProductionByDispatchablePlant
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardProductionByDispatchablePlant VCardForSpatialAggregate;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::de),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable
-        columnCount = Category::dynamicColumns,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::de);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    //! Number of columns used by the variable
+    static constexpr int columnCount = Category::dynamicColumns;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
     typedef IntermediateValues* IntermediateValuesBaseType;
@@ -93,8 +92,8 @@ struct VCardProductionByDispatchablePlant
 */
 template<class NextT = Container::EndOfList>
 class ProductionByDispatchablePlant
- : public Variable::
-     IVariable<ProductionByDispatchablePlant<NextT>, NextT, VCardProductionByDispatchablePlant>
+    : public Variable::
+        IVariable<ProductionByDispatchablePlant<NextT>, NextT, VCardProductionByDispatchablePlant>
 {
 public:
     //! Type of the next static variable
@@ -121,28 +120,34 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
 public:
-    ProductionByDispatchablePlant() :
-     pValuesForTheCurrentYear(nullptr), pminOfTheClusterForYear(nullptr), pSize(0)
+    ProductionByDispatchablePlant():
+        pValuesForTheCurrentYear(nullptr),
+        pminOfTheClusterForYear(nullptr),
+        pSize(0)
     {
     }
 
     ~ProductionByDispatchablePlant()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             delete[] pValuesForTheCurrentYear[numSpace];
+        }
         delete[] pValuesForTheCurrentYear;
 
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             delete[] pminOfTheClusterForYear[numSpace];
+        }
         delete[] pminOfTheClusterForYear;
     }
 
@@ -166,19 +171,27 @@ public:
             AncestorType::pResults.resize(pSize);
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                pValuesForTheCurrentYear[numSpace]
-                  = new VCardType::IntermediateValuesDeepType[pSize];
+            {
+                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
+                  [pSize];
+            }
 
             // Minimum power values of the cluster for the whole year - from the solver in the
             // accurate mode not to be displayed in the output \todo think of a better place like
             // the DispatchableMarginForAllAreas done at the beginning of the year
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                pminOfTheClusterForYear[numSpace] = new double[pSize * maxHoursInAYear];
+            {
+                pminOfTheClusterForYear[numSpace] = new double[pSize * HOURS_PER_YEAR];
+            }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
                 for (unsigned int i = 0; i != pSize; ++i)
+                {
                     pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+                }
+            }
 
             for (unsigned int i = 0; i != pSize; ++i)
             {
@@ -229,9 +242,9 @@ public:
         {
             pValuesForTheCurrentYear[numSpace][i].reset();
 
-            for (unsigned int j = 0; j != maxHoursInAYear; ++j)
+            for (unsigned int j = 0; j != HOURS_PER_YEAR; ++j)
             {
-                pminOfTheClusterForYear[numSpace][i * maxHoursInAYear + j] = 0;
+                pminOfTheClusterForYear[numSpace][i * HOURS_PER_YEAR + j] = 0;
             }
         }
         // Next variable
@@ -242,24 +255,24 @@ public:
                                                       uint year,
                                                       unsigned int numSpace)
     {
-        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
+        for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
         {
-            state.thermalClusterProductionForYear[i]
-              += pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i];
-            state.thermalClusterPMinOfTheClusterForYear[i]
-              += pminOfTheClusterForYear[numSpace]
-                                        [(state.thermalCluster->areaWideIndex * maxHoursInAYear)
-                                         + i];
+            state.thermalClusterProductionForYear[i] += pValuesForTheCurrentYear
+                                                          [numSpace]
+                                                          [state.thermalCluster->areaWideIndex]
+                                                            .hour[i];
+            state.thermalClusterPMinOfTheClusterForYear[i] += pminOfTheClusterForYear
+              [numSpace][(state.thermalCluster->areaWideIndex * HOURS_PER_YEAR) + i];
         }
 
         // Next variable
         NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -303,15 +316,14 @@ public:
     {
         auto& area = state.area;
         auto& thermal = state.thermal;
-        for (auto cluster : area->thermal.list.each_enabled())
+        for (auto& cluster: area->thermal.list.each_enabled())
         {
             // Production for this hour
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
-              .hour[state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[state.hourInTheYear]
               += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
 
-            pminOfTheClusterForYear[numSpace][(cluster->areaWideIndex * maxHoursInAYear)
-                                              + state.hourInTheYear]
+            pminOfTheClusterForYear[numSpace]
+                                   [(cluster->areaWideIndex * HOURS_PER_YEAR) + state.hourInTheYear]
               = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
         }
 
@@ -335,8 +347,8 @@ public:
     inline uint64_t memoryUsage() const
     {
         uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                         * pNbYearsParallel;
-        r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
+                     * pNbYearsParallel;
+        r += sizeof(double) * pSize * HOURS_PER_YEAR * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
     }
@@ -355,13 +367,13 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            for (auto cluster : thermal.list.each_enabled())
+            for (auto& cluster: thermal.list.each_enabled())
             {
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
     }

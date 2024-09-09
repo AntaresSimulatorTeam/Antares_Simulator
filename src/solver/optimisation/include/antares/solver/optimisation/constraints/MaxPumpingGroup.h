@@ -23,12 +23,11 @@
 #include "ConstraintGroup.h"
 #include "MaxPumping.h"
 
-class MaxPumpingGroup : public ConstraintGroup
+class MaxPumpingGroup: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;
 
-    
     void BuildConstraints() override;
 
 private:

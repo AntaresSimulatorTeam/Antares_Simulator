@@ -21,13 +21,38 @@
 #ifndef __SOLVER_VARIABLE_ADEQUACY_LINK_H__
 #define __SOLVER_VARIABLE_ADEQUACY_LINK_H__
 
-#ifdef LINK_NAMESPACE
-#undef LINK_NAMESPACE
-#endif
-#define LINK_NAMESPACE Adequacy
-
 #include <yuni/yuni.h>
-#include "all.h"
-#include "../commons/links/links.h.inc.hxx"
+
+// TODO SL: should be moved to common
+#include "antares/solver/variable//commons/links/links.h"
+#include "antares/solver/variable/economy/links/congestionFee.h"
+#include "antares/solver/variable/economy/links/congestionFeeAbs.h"
+#include "antares/solver/variable/economy/links/congestionProbability.h"
+#include "antares/solver/variable/economy/links/flowLinear.h"
+#include "antares/solver/variable/economy/links/flowLinearAbs.h"
+#include "antares/solver/variable/economy/links/flowQuad.h"
+#include "antares/solver/variable/economy/links/hurdleCosts.h"
+#include "antares/solver/variable/economy/links/marginalCost.h"
+
+namespace Antares::Solver::Variable::Adequacy
+{
+/*!
+** \brief All variables for a single link.
+*
+* #
+*/
+using VariablePerLink = Economy::FlowLinear // Flow linear
+  <Economy::FlowLinearAbs                   // Flow linear Abs
+   <Economy::FlowQuad                       // Flow Quad
+    <Economy::CongestionFee                 // Congestion Fee
+     <Economy::CongestionFeeAbs             // Congestion Fee (Abs)
+      <Economy::MarginalCost                // Marginal Cost
+       <Economy::CongestionProbability      // Congestion Probability (+/-)
+        <Economy::HurdleCosts               // Hurdle costs
+         <>>>>>>>>;
+
+using Links = Antares::Solver::Variable::Links<VariablePerLink>;
+
+} // namespace Antares::Solver::Variable::Adequacy
 
 #endif // __SOLVER_VARIABLE_ADEQUACY_LINK_H__

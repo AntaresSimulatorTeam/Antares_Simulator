@@ -18,8 +18,8 @@ struct VCardReserveParticipationByLTStorage {
     typedef VCardReserveParticipationByLTStorage VCardForSpatialAggregate;
 
     enum {
-        categoryDataLevel = Category::area,
-        categoryFileLevel = ResultsType::categoryFile & (Category::de),
+        categoryDataLevel = Category::DataLevel::area,
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::de),
         precision = Category::all,
         nodeDepthForGUI = +0,
         decimal = 0,

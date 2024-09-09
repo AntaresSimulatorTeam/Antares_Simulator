@@ -25,7 +25,7 @@
 
 namespace Antares::Solver::Simulation
 {
-class OptPostProcessList : public interfacePostProcessList
+class OptPostProcessList: public interfacePostProcessList
 {
 public:
     OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,

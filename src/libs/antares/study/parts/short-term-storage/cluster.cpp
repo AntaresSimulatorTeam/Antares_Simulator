@@ -18,12 +18,13 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/utils/utils.h>
-#include <antares/logs/logs.h>
+#include "antares/study/parts/short-term-storage/cluster.h"
+
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
 
-#include "antares/study/parts/short-term-storage/cluster.h"
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -60,7 +61,9 @@ const char* STStorageCluster::GroupName(enum Group grp)
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
+    {
         return false;
+    }
 
     for (auto* property = section.firstProperty; property; property = property->next)
     {
@@ -77,11 +80,11 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     }
 
     if (properties.name.empty())
+    {
         return false;
+    }
 
-    Yuni::CString<50, false> tmp;
-    TransformNameIntoID(properties.name, tmp);
-    id = tmp.to<std::string>();
+    id = transformNameIntoID(properties.name);
 
     return true;
 }
@@ -94,7 +97,9 @@ bool STStorageCluster::enabled() const
 bool STStorageCluster::validate() const
 {
     if (!enabled())
+    {
         return true;
+    }
 
     logs.debug() << "Validating properties and series for st storage: " << id;
     return properties.validate() && series->validate();

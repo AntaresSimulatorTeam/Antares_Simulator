@@ -22,9 +22,10 @@
 #pragma once
 
 #include "TSnumberData.h"
+
 namespace Antares::Data::ScenarioBuilder
 {
-class loadTSNumberData : public TSNumberData
+class loadTSNumberData: public TSNumberData
 {
 public:
     bool apply(Study& study) override;
@@ -37,4 +38,4 @@ inline CString<512, false> loadTSNumberData::get_prefix() const
     return "l,";
 }
 
-}
+} // namespace Antares::Data::ScenarioBuilder

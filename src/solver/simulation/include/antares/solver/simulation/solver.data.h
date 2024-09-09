@@ -22,6 +22,7 @@
 #define __SOLVER_SIMULATION_SOLVER_DATA_H__
 
 #include <yuni/yuni.h>
+
 #include <antares/study/fwd.h>
 
 namespace Antares::Solver::Private::Simulation

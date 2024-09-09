@@ -23,10 +23,12 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
+
 #include <antares/array/matrix.h>
-#include "defines.h"
-#include "../common/cluster.h"
+
 #include "../../fwd.h"
+#include "../common/cluster.h"
+#include "defines.h"
 
 namespace Antares
 {
@@ -36,7 +38,7 @@ namespace Data
 /*
 ** \brief A single renewable cluster
 */
-class RenewableCluster final : public Cluster
+class RenewableCluster final: public Cluster
 {
 public:
     enum RenewableGroup
@@ -76,6 +78,7 @@ public:
 
     //! Set of renewable clusters
     using Set = std::set<RenewableCluster*, CompareClusterName>;
+
 public:
     //! \name Constructor & Destructor
     //@{

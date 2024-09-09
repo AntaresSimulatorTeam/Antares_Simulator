@@ -20,14 +20,14 @@
 */
 #include "antares/solver/optimisation/ProblemMatrixEssential.h"
 
-ProblemMatrixEssential::ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo) :
- problemeHebdo_(problemeHebdo)
+ProblemMatrixEssential::ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo):
+    problemeHebdo_(problemeHebdo)
 {
 }
 
 void ProblemMatrixEssential::Run()
 {
-    for (auto& group : constraintgroups_)
+    for (auto& group: constraintgroups_)
     {
         group->BuildConstraints();
     }

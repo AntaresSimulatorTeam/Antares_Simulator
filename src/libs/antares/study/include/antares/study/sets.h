@@ -21,12 +21,14 @@
 #ifndef __ANTARES_LIBS_STUDY_SETS_H__
 #define __ANTARES_LIBS_STUDY_SETS_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <cassert>
 #include <map>
 #include <memory>
 #include <set>
-#include <cassert>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 
@@ -61,6 +63,7 @@ public:
         ruleFilter,
         ruleMax,
     };
+
     //! Definition of a single rule
     using Rule = std::pair<RuleType, Yuni::String::Ptr>;
     //! Rule Set
@@ -69,15 +72,18 @@ public:
     class Options final
     {
     public:
-        Options() : output(true), resultSize(0)
+        Options():
+            output(true),
+            resultSize(0)
         {
         }
-        Options(const Options& rhs) :
-         caption(rhs.caption),
-         comments(rhs.comments),
-         rules(rhs.rules),
-         output(rhs.output),
-         resultSize(rhs.resultSize)
+
+        Options(const Options& rhs):
+            caption(rhs.caption),
+            comments(rhs.comments),
+            rules(rhs.rules),
+            output(rhs.output),
+            resultSize(rhs.resultSize)
         {
         }
 
@@ -218,8 +224,7 @@ public:
     /*!
     ** \brief Load a rule set from an INI File
     */
-    template<class StringT>
-    bool loadFromFile(const StringT& filename);
+    bool loadFromFile(const std::filesystem::path& filename);
 
     template<class StringT>
     bool saveToFile(const StringT& filename) const;
@@ -258,22 +263,7 @@ public:
 
     T& operator[](uint i);
     const T& operator[](uint i) const;
-    /*
-                    void changeTextFile(YString filename) {
-                            if (IO::File::LoadFromFile(pFileContents, filename)) {
-                                    pFileContents = NULL;
-                            }
-                    }
 
-                    YString getFileContents() {
-                            if (pFileContents!=NULL) {
-                                    YString ret;
-                                    ret << pFileContents;
-                                    return ret;
-                            }
-                            else return NULL;
-                    }
-                    */
 private:
     //! All groups
     MapType pMap;

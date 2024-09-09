@@ -303,7 +303,7 @@ void CorrelationPanel::assignMatrices(Data::Correlation* corr)
 {
     if (pData)
     {
-        if (corr == NULL)
+        if (!corr)
         {
             for (uint i = 0; i < 12 + 1; ++i)
             {

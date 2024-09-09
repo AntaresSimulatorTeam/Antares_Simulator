@@ -38,7 +38,7 @@ struct CapacityReservation
     Antares::Data::TimeSeries need;
 
 private:
-    Matrix<uint32_t> timeseriesNumbers;
+    Data::TimeSeriesNumbers timeseriesNumbers;
 };
 
 /// @brief Stores all the Capacity reservations in two vectors for the up and down reserves

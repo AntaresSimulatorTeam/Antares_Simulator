@@ -8,7 +8,6 @@ SET(SRC_APPLICATION
 		application/menus.h application/menus.cpp
 
 		application/main/fwd.h
-		application/main/cleaner.cpp
 		application/main/events.cpp
 		application/main/events.file.cpp
 		application/main/events.edit.cpp
@@ -51,6 +50,8 @@ SET(SRC_APPLICATION
 		# Application
 		application/application.h
 		application/application.cpp
+        application/log_cleaner.h
+        application/log_cleaner.cpp
 		application/study.h
 		application/study.cpp
 

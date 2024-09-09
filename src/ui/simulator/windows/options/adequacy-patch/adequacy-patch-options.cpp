@@ -62,7 +62,7 @@ static void updateButton(Component::Button* button, bool value, std::string_view
         type = (buttonType == "pto") ? 'P' : 'S';
     }
 
-    assert(button != NULL);
+    assert(button);
     if (value)
     {
         switch (type)

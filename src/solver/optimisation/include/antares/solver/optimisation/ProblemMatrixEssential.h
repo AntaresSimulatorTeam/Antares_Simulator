@@ -21,6 +21,7 @@
 #pragma once
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
 #include "constraints/ConstraintGroup.h"
 
 class ProblemMatrixEssential

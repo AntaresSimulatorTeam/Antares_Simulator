@@ -25,7 +25,9 @@ namespace Antares
 {
 namespace Solver
 {
-inline Progression::Meter::Meter() : nbParallelYears(0), logsContainer(nullptr)
+inline Progression::Meter::Meter():
+    nbParallelYears(0),
+    logsContainer(nullptr)
 {
 }
 
@@ -66,8 +68,14 @@ inline Progression::Part& Progression::begin(uint year, Progression::Section sec
 
 inline const char* Progression::SectionToCStr(Section section)
 {
-    static const char* const sectName[sectMax]
-      = {"mc", "output", "load", "solar", "wind", "hydro", "thermal", "import timeseries"};
+    static const char* const sectName[sectMax] = {"mc",
+                                                  "output",
+                                                  "load",
+                                                  "solar",
+                                                  "wind",
+                                                  "hydro",
+                                                  "thermal",
+                                                  "import timeseries"};
     assert((uint)section < (uint)sectMax);
     return sectName[section];
 }

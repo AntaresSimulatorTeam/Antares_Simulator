@@ -18,17 +18,18 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
-
 #include "antares/study/parts/common/cluster.h"
-#include "antares/study/study.h"
+
+#include <yuni/yuni.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 namespace Antares::Data
 {
-Cluster::Cluster(Area* parent) :
+Cluster::Cluster(Area* parent):
     parentArea(parent),
     series(tsNumbers)
 {
@@ -60,19 +61,24 @@ void Cluster::setName(const AnyString& newname)
 {
     pName = newname;
     pID.clear();
-    TransformNameIntoID(pName, pID);
+    pID = transformNameIntoID(pName);
 }
 
 #define SEP Yuni::IO::Separator
+
 bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 {
     if (folder.empty())
+    {
         return true;
+    }
 
     Yuni::Clob buffer;
     buffer.clear() << folder << SEP << parentArea->id << SEP << id();
     if (!Yuni::IO::Directory::Create(buffer))
+    {
         return true;
+    }
 
     buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
     return series.timeSeries.saveToCSVFile(buffer, precision());
@@ -81,22 +87,27 @@ bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
     if (folder.empty())
+    {
         return true;
+    }
 
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
     buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-        << s.inputExtension;
+                   << s.inputExtension;
     ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)
+    {
         series.timeSeries.averageTimeseries();
+    }
 
     series.timeseriesNumbers.clear();
 
     return ret;
 }
+
 #undef SEP
 
 
@@ -154,7 +165,9 @@ unsigned int Cluster::reserveParticipationsCount(){
 void Cluster::invalidateArea()
 {
     if (parentArea)
+    {
         parentArea->forceReload();
+    }
 }
 
 bool Cluster::isVisibleOnLayer(const size_t& layerID) const
@@ -187,4 +200,3 @@ std::vector<Data::ReserveName> Cluster::listOfParticipatingReserves()
 }
 
 } // namespace Antares::Data
-

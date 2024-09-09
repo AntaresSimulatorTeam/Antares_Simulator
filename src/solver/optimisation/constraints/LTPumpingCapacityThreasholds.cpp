@@ -2,7 +2,7 @@
 
 void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 {
-    int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
+    int globalClusterIdx = data.longTermStorageOfArea[pays][cluster].clusterGlobalIndex;
 
     if (!data.Simulation)
     {

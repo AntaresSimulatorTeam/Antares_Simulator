@@ -26,8 +26,9 @@ void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES& DonneesMensue
 {
     auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
-    auto& ProblemeLineairePartieVariable
-        = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
+    auto& ProblemeLineairePartieVariable = ProblemeHydrauliqueEtendu
+                                             .ProblemeLineaireEtenduPartieVariable
+                                               [NumeroDeProbleme];
     auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
     int NbPdt = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[NumeroDeProbleme];

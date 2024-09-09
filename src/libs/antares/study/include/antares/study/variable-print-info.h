@@ -22,9 +22,10 @@
 #ifndef __SOLVER_VARIABLE_PRINT_POLICY_H__
 #define __SOLVER_VARIABLE_PRINT_POLICY_H__
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/fwd.h>
 #include <yuni/core/string.h>
@@ -49,8 +50,15 @@ public:
     uint getMaxColumnsCount();
     void setMaxColumns(uint maxColumnsNumber);
 
-    bool isPrintedOnDataLevel(uint dataLevel) const { return dataLevel_ & dataLevel; };
-    bool isPrintedOnFileLevel(uint fileLevel) const { return fileLevel_ & fileLevel; };
+    bool isPrintedOnDataLevel(uint dataLevel) const
+    {
+        return dataLevel_ & dataLevel;
+    }
+
+    bool isPrintedOnFileLevel(uint fileLevel) const
+    {
+        return fileLevel_ & fileLevel;
+    }
 
 private:
     // Is the variable printed ?
@@ -64,7 +72,8 @@ private:
     // Which reports the output variable has columns in ?
     // Example : areas/values-<time-interval>.txt
     // dataLevel can be : areas, links, bindingConstraint
-    // fileLevel can be : values-<time-interval>.txt, details-<time-interval>.txt, id-<time-interval>.txt, ...
+    // fileLevel can be : values-<time-interval>.txt, details-<time-interval>.txt,
+    // id-<time-interval>.txt, ...
     uint dataLevel_ = 0;
     uint fileLevel_ = 0;
 };
@@ -118,6 +127,7 @@ public:
     {
         return numberSelectedAreaVariables;
     }
+
     uint getNbSelectedLinkVars() const
     {
         return numberSelectedLinkVariables;

@@ -23,6 +23,7 @@
 //
 
 #include "antares/study/scenario-builder/NTCTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
@@ -42,7 +43,9 @@ bool ntcTSNumberData::reset(const Study& study)
 void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     if (!pArea)
+    {
         return;
+    }
 
     // Prefix
     CString<512, false> prefix;
@@ -55,7 +58,7 @@ void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::St
     }
 #endif
 
-    for (const auto& i : pArea->links)
+    for (const auto& i: pArea->links)
     {
         const Data::AreaLink* link = i.second;
         /*
@@ -69,7 +72,9 @@ void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::St
             const uint val = pTSNumberRules[link->indexForArea][y];
             // Equals to zero means 'auto', which is the default mode
             if (!val)
+            {
                 continue;
+            }
             file << prefix << fromID << "," << withID << "," << y << " = " << val << "\n";
         }
     }
@@ -81,7 +86,9 @@ void ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link,
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
+    {
         pTSNumberRules[link->indexForArea][year] = value;
+    }
 }
 
 bool ntcTSNumberData::apply(Study& study)
@@ -98,7 +105,7 @@ bool ntcTSNumberData::apply(Study& study)
 
     const uint ntcGeneratedTScount = get_tsGenCount(study);
 
-    for (const auto& i : pArea->links)
+    for (const auto& i: pArea->links)
     {
         auto* link = i.second;
         uint linkIndex = link->indexForArea;
@@ -114,4 +121,4 @@ uint ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
     return 0;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

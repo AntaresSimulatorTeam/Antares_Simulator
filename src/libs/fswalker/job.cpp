@@ -37,7 +37,9 @@ IJob::~IJob()
 {
     InternalJobCounter counter = pJobCounter;
     if (!(!counter))
+    {
         --(*counter);
+    }
 }
 
 } // namespace FSWalker

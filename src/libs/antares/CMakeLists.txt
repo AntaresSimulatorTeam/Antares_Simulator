@@ -10,6 +10,7 @@ add_subdirectory(concurrency)
 add_subdirectory(correlation)
 add_subdirectory(date)
 add_subdirectory(exception)
+add_subdirectory(file-tree-study-loader)
 add_subdirectory(inifile)
 add_subdirectory(io)
 add_subdirectory(jit)
@@ -23,9 +24,15 @@ add_subdirectory(resources)
 add_subdirectory(series)
 add_subdirectory(stdcxx)
 add_subdirectory(study)
+add_subdirectory(study-loader)
 add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
+if(WITH_ANTLR4)
+  add_subdirectory(antlr-interface)
+endif()
+
+add_subdirectory(optimization-options)
 
 set(HEADERS
         include/antares/antares/antares.h
