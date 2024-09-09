@@ -158,7 +158,7 @@ jobs:
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v3
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
