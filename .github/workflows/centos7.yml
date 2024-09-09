@@ -5,6 +5,7 @@ on:
     types: [created]
   push:
     branches:
+      - fix/ci-deprecated
       - develop
       - dependabot/*
   schedule:
