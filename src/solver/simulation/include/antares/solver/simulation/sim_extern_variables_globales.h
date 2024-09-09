@@ -18,17 +18,8 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef __SOLVER_SIMULATION_EXTERN_H__
-#define __SOLVER_SIMULATION_EXTERN_H__
+#pragma once
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <vector>
 
-#include "sim_structure_donnees.h"
-
-/* Valeurs generees de maniere aleatoire */
-
-/* Resultats */
-/*-Economique-*/
 extern std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
-
-#endif /* __SOLVER_SIMULATION_EXTERN_H__ */

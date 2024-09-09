@@ -22,7 +22,6 @@
 #include <array>
 #include <cassert>
 #include <limits>
-#include <numeric>
 #include <sstream>
 
 #include <yuni/yuni.h>

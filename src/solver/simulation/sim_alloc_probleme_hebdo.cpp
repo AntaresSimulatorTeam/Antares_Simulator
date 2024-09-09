@@ -20,8 +20,6 @@
 */
 #include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 
-#include <yuni/yuni.h>
-
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
@@ -365,12 +363,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive.assign(NombreDePasDeTemps,
                                                                                  0.);
+        problem.ResultatsHoraires[k]
+          .ValeursHorairesDeDefaillancePositiveCSR.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDENS.assign(NombreDePasDeTemps,
                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations.assign(NombreDePasDeTemps,
                                                                          0); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR.assign(NombreDePasDeTemps,
-                                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
                                                                      0.); // adq patch
 

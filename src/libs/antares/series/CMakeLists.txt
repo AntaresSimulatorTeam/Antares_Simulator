@@ -11,7 +11,7 @@ target_sources(series
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/series.cpp>
 )
 
-target_link_libraries(series PUBLIC Antares::array)
+target_link_libraries(series PUBLIC Antares::array antares-core)
 
 target_include_directories(series
         PUBLIC

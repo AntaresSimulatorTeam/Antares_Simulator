@@ -55,7 +55,8 @@ public:
 
 private:
     Solver::LpsFromAntares lps_;
-    std::mutex mutex_;
+    mutable std::mutex lps_mutex_;
+    mutable std::once_flag flag_;
 };
 
 } // namespace Antares::API

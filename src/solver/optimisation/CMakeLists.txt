@@ -38,10 +38,6 @@ set(RTESOLVER_OPT
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
-		include/antares/solver/optimisation/base_weekly_optimization.h
-        base_weekly_optimization.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
-        adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
 		include/antares/solver/optimisation/weekly_optimization.h
         weekly_optimization.cpp
 		include/antares/solver/optimisation/optim_post_process_list.h
@@ -50,9 +46,9 @@ set(RTESOLVER_OPT
         post_process_commands.cpp
 		include/antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h
 		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
+		include/antares/solver/optimisation/adequacy_patch_csr/post_processing.h
         adequacy_patch_csr/adq_patch_post_process_list.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
-        adequacy_patch_local_matching/adq_patch_local_matching.cpp
+        adequacy_patch_csr/post_processing.cpp
 		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
         adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
         adequacy_patch_csr/solve_problem.cpp

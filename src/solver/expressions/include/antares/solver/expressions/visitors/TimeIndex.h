@@ -18,22 +18,40 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-
 #pragma once
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-namespace Antares::Data::AdequacyPatch
+namespace Antares::Solver::Visitors
 {
-/*!
- * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
- * not used.
+/**
+ * @brief Represents the time and scenario variation of a value.
  */
-void setNTCbounds(double& Xmax,
-                  double& Xmin,
-                  const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC,
-                  const int Interco,
-                  PROBLEME_HEBDO* problemeHebdo,
-                  const AdqPatchParams& adqPatchParams);
+enum class TimeIndex : unsigned int
+{
+    CONSTANT_IN_TIME_AND_SCENARIO = 0,
+    VARYING_IN_TIME_ONLY = 1,
+    VARYING_IN_SCENARIO_ONLY = 2,
+    VARYING_IN_TIME_AND_SCENARIO = 3
+};
 
-} // namespace Antares::Data::AdequacyPatch
+/**
+ * @brief Combines two TimeIndex values.
+ *
+ * @param left The left operand.
+ * @param right The right operand.
+ *
+ * @return The combined TimeIndex value.
+ */
+constexpr TimeIndex operator|(const TimeIndex& left, const TimeIndex& right)
+{
+    /*
+     0 | x = x
+     3 | x = 3
+     1 | 1 = 1
+     1 | 2 = 3
+     2 | 2 = 2
+     */
+    return static_cast<TimeIndex>(static_cast<unsigned int>(left)
+                                  | static_cast<unsigned int>(right));
+}
+
+} // namespace Antares::Solver::Visitors

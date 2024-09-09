@@ -9,8 +9,7 @@ if (Boost_FOUND)
     set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)
 endif()
 
-
-
+add_subdirectory(cucumber)
 
 # end to end test require boost 1.6.x because of boost::test_tools::tolerance, BOOST_TEST
 # old versions of Boost don't contain a '.', also ignore them

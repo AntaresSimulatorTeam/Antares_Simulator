@@ -21,7 +21,6 @@
 
 #include <cmath>
 
-#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
@@ -133,17 +132,6 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                 Xmax[var] = 0.;
             }
 
-            // adq patch: update ENS <= DENS in 2nd run
-            if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
-                && !problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep
-                && problemeHebdo->adequacyPatchRuntimeData->areaMode[pays]
-                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            {
-                Xmax[var] = std::min(
-                  Xmax[var],
-                  problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDENS[pdtHebdo]);
-            }
-
             problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive[pdtHebdo]
               = 0.0;
 
@@ -249,12 +237,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             int var = variableManager.NTCDirect(interco, pdtJour);
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
-            AdequacyPatch::setNTCbounds(Xmax[var],
-                                        Xmin[var],
-                                        ValeursDeNTC,
-                                        interco,
-                                        problemeHebdo,
-                                        adqPatchParams);
+            Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
+            Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
 
             if (std::isinf(Xmax[var]) && Xmax[var] > 0)
             {
