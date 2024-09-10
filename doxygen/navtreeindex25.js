@@ -1,5 +1,9 @@
 var NAVTREEINDEX25 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a78db0f8bffc05da1df4366d1b2f25054":[8,0,0,13,6,6,0,0,1],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html":[8,0,0,13,6,6,0,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html":[8,0,0,13,6,6,0,4],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a22867a4b6e6809f5c815050b22a524ca":[8,0,0,13,6,6,0,4,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html":[8,0,0,13,6,6,0,5,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html":[8,0,0,13,6,6,0,6],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html":[8,0,0,13,6,6,0,7],
@@ -245,9 +249,5 @@ var NAVTREEINDEX25 =
 "suffix-for-area-names_8hxx_source.html":[9,0,0,7,0,1,0,1,3],
 "suffix-for-cluster-names_8h_source.html":[9,0,0,7,0,1,0,1,4],
 "suffix-for-cluster-names_8hxx_source.html":[9,0,0,7,0,1,0,1,5],
-"suffix-for-constraint-names_8h_source.html":[9,0,0,7,0,1,0,1,6],
-"suffix-for-constraint-names_8hxx_source.html":[9,0,0,7,0,1,0,1,7],
-"summary_8h_source.html":[9,0,0,7,2,1,1,1,1,4,0],
-"surveyresults_2surveyresults_8h_source.html":[9,0,0,4,13,0,0,0,0,4,2],
-"surveyresults_8h_source.html":[9,0,0,4,13,0,0,0,0,19]
+"suffix-for-constraint-names_8h_source.html":[9,0,0,7,0,1,0,1,6]
 };

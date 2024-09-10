@@ -1,5 +1,9 @@
 var NAVTREEINDEX23 =
 {
+"predicate_8hxx_source.html":[9,0,0,4,11,0,0,0,0,0,2],
+"price_8h_source.html":[9,0,0,4,13,0,0,0,0,2,24],
+"print_8h_source.html":[9,0,0,4,13,0,0,0,0,14],
+"private_8h_source.html":[9,0,0,7,2,2,8,1],
 "productionByDispatchablePlant_8h_source.html":[9,0,0,4,13,0,0,0,0,2,25],
 "productionByRenewablePlant_8h_source.html":[9,0,0,4,13,0,0,0,0,2,26],
 "profitByPlant_8h_source.html":[9,0,0,4,13,0,0,0,0,2,27],
@@ -245,9 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[8,0,0,13,11],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[8,0,0,13,3,1],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1b3d66ae8211fc0a17e451bbfd09d854":[8,0,0,13,3,1,0],
-"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#aa53e538badc0a91056f4378579854d7a":[8,0,0,13,3,1,1],
-"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[8,0,0,13,5,5],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[8,0,0,13,5,21],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[8,0,0,13,5,24],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[8,0,0,13,6,0,0,0]
+"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#aa53e538badc0a91056f4378579854d7a":[8,0,0,13,3,1,1]
 };
