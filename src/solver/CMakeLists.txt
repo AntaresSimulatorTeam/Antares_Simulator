@@ -19,6 +19,7 @@ add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(variable)
+add_subdirectory(modeler)
 add_subdirectory(expressions)
 add_subdirectory(model)
 
