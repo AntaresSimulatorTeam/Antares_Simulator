@@ -46,6 +46,12 @@ BOOST_FIXTURE_TEST_CASE(empty_ast_begin_is_end, Registry<Node>)
     BOOST_CHECK(ast.begin() == ast.end());
 }
 
+BOOST_FIXTURE_TEST_CASE(simple_end_is_end, Registry<Node>)
+{
+    AST ast(create<LiteralNode>(32.));
+    BOOST_CHECK(ast.end() == ast.end());
+}
+
 BOOST_FIXTURE_TEST_CASE(dereference_op, Registry<Node>)
 {
     AST ast(create<LiteralNode>(21.));
@@ -112,6 +118,12 @@ BOOST_FIXTURE_TEST_CASE(find_if_found, Registry<Node>)
 BOOST_FIXTURE_TEST_CASE(distance_is_3, Registry<Node>)
 {
     AST ast(simpleExpression(*this));
+    BOOST_CHECK_EQUAL(std::distance(ast.begin(), ast.end()), 3);
+}
+
+BOOST_FIXTURE_TEST_CASE(distance_unary, Registry<Node>)
+{
+    AST ast(create<NegationNode>(create<NegationNode>(create<LiteralNode>(32.))));
     BOOST_CHECK_EQUAL(std::distance(ast.begin(), ast.end()), 3);
 }
 

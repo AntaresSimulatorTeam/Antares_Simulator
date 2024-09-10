@@ -23,7 +23,7 @@ public:
     using reference = Node&;
 
     // Constructor
-    ASTPreOrderIterator(Node* root = nullptr);
+    explicit ASTPreOrderIterator(Node* root = nullptr);
 
     // Dereference operator
     reference operator*() const;
@@ -47,7 +47,7 @@ class AST
     Node* root;
 
 public:
-    AST(Node* rootNode);
+    explicit AST(Node* rootNode);
 
     // Begin iterator
     ASTPreOrderIterator begin();

@@ -56,7 +56,7 @@ ASTPreOrderIterator& ASTPreOrderIterator::operator++()
 
     const auto children = childrenLeftToRight(current);
     // Push children in reverse order to process them in left-to-right order
-    for (auto it: children | std::views::reverse)
+    for (auto* it: children | std::views::reverse)
     {
         nodeStack.push(it);
     }
