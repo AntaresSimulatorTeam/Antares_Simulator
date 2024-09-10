@@ -39,8 +39,8 @@ public:
 
     std::string name;
     ValueType type;
-    Nodes::Node *lowerBound;
-    Nodes::Node *upperBound;
+    Nodes::Node* lowerBound;
+    Nodes::Node* upperBound;
 };
 
 } // namespace Antares::Solver::Model
