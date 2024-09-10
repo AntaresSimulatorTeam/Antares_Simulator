@@ -62,10 +62,7 @@ public:
     OrtoolsMipSolution* solve(bool verboseSolver) override;
 
 private:
-    OrtoolsMipVariable* addVariable(double lb,
-                                    double ub,
-                                    bool integer,
-                                    const std::string& name);
+    OrtoolsMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name);
 
     std::shared_ptr<operations_research::MPSolver> mpSolver_;
     operations_research::MPObjective* objective_;
