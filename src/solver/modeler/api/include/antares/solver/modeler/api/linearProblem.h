@@ -42,9 +42,6 @@ class ILinearProblem
 public:
     virtual ~ILinearProblem() = default;
 
-    /// Create a variable and specify if it's an integer
-    virtual IMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
-      = 0;
     /// Create a continuous variable
     virtual IMipVariable* addNumVariable(double lb, double ub, const std::string& name) = 0;
     /// Create a integer variable
