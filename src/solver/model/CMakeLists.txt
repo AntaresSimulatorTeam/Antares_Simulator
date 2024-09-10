@@ -6,6 +6,8 @@ set(SRC_model
     include/antares/solver/model/model.h
     include/antares/solver/model/parameter.h
     include/antares/solver/model/valueType.h
+    include/antares/solver/model/variable.h
+    include/antares/solver/model/constraint.h
 )
 
 source_group("model" FILES ${SRC_model})
