@@ -20,6 +20,7 @@ target_include_directories(antares-solver-model
 )
 target_link_libraries(antares-solver-model
         PUBLIC
+        antares-solver-expressions
         Antares::logs
 )
 install(DIRECTORY include/antares

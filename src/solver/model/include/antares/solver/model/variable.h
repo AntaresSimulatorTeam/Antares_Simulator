@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include <antares/solver/expressions/nodes/Node.h>
+
 #include "parameter.h"
 #include "valueType.h"
 
@@ -37,8 +39,8 @@ public:
 
     std::string name;
     ValueType type;
-    Parameter lowerBound;
-    Parameter upperBound;
+    Nodes::Node *lowerBound;
+    Nodes::Node *upperBound;
 };
 
 } // namespace Antares::Solver::Model
