@@ -171,7 +171,7 @@ BOOST_FIXTURE_TEST_CASE(give_bounds_to_constraint___check_bounds_exist, FixtureE
 
 BOOST_FIXTURE_TEST_CASE(give_cost_to_variable___check_cost_exist, FixtureEmptyProblem)
 {
-    auto* var = pb->addVariable(0, 1, true, "var");
+    auto* var = pb->addIntVariable(0, 1, "var");
     pb->setObjectiveCoefficient(var, 1);
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
 }
