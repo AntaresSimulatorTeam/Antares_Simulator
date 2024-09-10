@@ -1,6 +1,31 @@
 Antares Changelog
 =================
 
+8.8.8 (09/2024)
+--------------------
+## Bugfix
+* Timeseries generation stored in input #2180
+
+8.8.7 (07/2024)
+--------------------
+## Batchrun tool improvement
+* Add OR-Tools solver option for batchrun tool #1981
+* Add missing parameter to command built by batchrun for OR-Tools #1984
+## Bugfix
+* Adequacy Patch regression [ANT-1845] #2235
+
+8.8.6 (07/2024)
+--------------------
+## Bugfix
+* BC marginal cost #2121
+
+8.8.5 (05/2024)
+--------------------
+## Bugfix
+* [UI] Fix opening a study from the file browser
+* Fix crash occurring when duplicate thermal clusters are present in a study (same name)
+* Fix formula for "PROFIT BY PLANT"
+
 8.8.4 (03/2024)
 --------------------
 ## Bugfix
