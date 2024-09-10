@@ -37,7 +37,7 @@ public:
     OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
                        std::shared_ptr<operations_research::MPSolver> solver);
 
-    ~OrtoolsMipSolution() final = default;
+    ~OrtoolsMipSolution() = default;
 
     Api::MipStatus getStatus() const override;
     double getObjectiveValue() const override;

@@ -47,13 +47,11 @@ public:
 
     const std::string& getName() const override;
 
-    ~OrtoolsMipConstraint() final = default;
+    ~OrtoolsMipConstraint() = default;
 
     explicit OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint);
 
 private:
-    // TODO private constructor
-
     operations_research::MPConstraint* mpConstraint_;
 };
 
