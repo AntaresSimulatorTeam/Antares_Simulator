@@ -46,13 +46,11 @@ public:
 
     const operations_research::MPVariable* getMpVar() const;
 
-    ~OrtoolsMipVariable() final = default;
+    ~OrtoolsMipVariable() override = default;
 
     explicit OrtoolsMipVariable(operations_research::MPVariable*);
 
 private:
-    // TODO: add friend class
-
     operations_research::MPVariable* mpVar_;
 };
 
