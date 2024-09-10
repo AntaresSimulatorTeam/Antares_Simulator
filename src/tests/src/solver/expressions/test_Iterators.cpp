@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <algorithm>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
@@ -32,9 +34,15 @@ using namespace Antares::Solver::Nodes;
 
 BOOST_AUTO_TEST_SUITE(_Iterator_)
 
-BOOST_FIXTURE_TEST_CASE(deep_tree_even, Registry<Node>)
+static Node* simpleExpression(Registry<Node>& registry)
 {
-    Node* root = create<AddNode>(create<LiteralNode>(2.), create<LiteralNode>(21.));
+    return registry.create<AddNode>(registry.create<LiteralNode>(2.),
+                                    registry.create<LiteralNode>(21.));
+}
+
+BOOST_FIXTURE_TEST_CASE(count_literal_nodes_for_loop, Registry<Node>)
+{
+    Node* root = simpleExpression(*this);
     int count_lit = 0;
     for (auto& node: AST(root))
     {
@@ -44,6 +52,48 @@ BOOST_FIXTURE_TEST_CASE(deep_tree_even, Registry<Node>)
         }
     }
     BOOST_CHECK_EQUAL(count_lit, 2);
+}
+
+BOOST_FIXTURE_TEST_CASE(count_literal_nodes_count_if, Registry<Node>)
+{
+    Node* root = simpleExpression(*this);
+    AST ast(root);
+    int count_lit = std::count_if(ast.begin(),
+                                  ast.end(),
+                                  [](Node& node)
+                                  { return dynamic_cast<LiteralNode*>(&node) != nullptr; });
+
+    BOOST_CHECK_EQUAL(count_lit, 2);
+}
+
+BOOST_FIXTURE_TEST_CASE(find_if_not_found, Registry<Node>)
+{
+    Node* root = simpleExpression(*this);
+    auto* add = dynamic_cast<AddNode*>(root);
+    BOOST_REQUIRE(add);
+
+    AST ast(root);
+    auto it = std::find_if(ast.begin(),
+                           ast.end(),
+                           [](Node& node)
+                           { return dynamic_cast<MultiplicationNode*>(&node) != nullptr; });
+    BOOST_CHECK(it == ast.end());
+}
+
+BOOST_FIXTURE_TEST_CASE(find_if_found, Registry<Node>)
+{
+    Node* root = simpleExpression(*this);
+    auto* add = dynamic_cast<AddNode*>(root);
+    BOOST_REQUIRE(add);
+
+    AST ast(root);
+    auto it = std::find_if(ast.begin(),
+                           ast.end(),
+                           [](Node& node) { return dynamic_cast<LiteralNode*>(&node) != nullptr; });
+    BOOST_CHECK(it != ast.end());
+    auto* res = dynamic_cast<LiteralNode*>(&*it);
+    BOOST_REQUIRE(res);
+    BOOST_CHECK_EQUAL(res->value(), 2.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
