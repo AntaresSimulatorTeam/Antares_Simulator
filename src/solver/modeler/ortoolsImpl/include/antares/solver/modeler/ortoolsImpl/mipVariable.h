@@ -46,7 +46,7 @@ public:
 
     const operations_research::MPVariable* getMpVar() const;
 
-    ~OrtoolsMipVariable() = default;
+    ~OrtoolsMipVariable() override = default;
 
     explicit OrtoolsMipVariable(operations_research::MPVariable*);
 
