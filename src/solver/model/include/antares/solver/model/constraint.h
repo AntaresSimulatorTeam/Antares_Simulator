@@ -35,8 +35,8 @@ public:
     ~Constraint() = default;
 
     std::string name;
-    Parameter lowerBound;
-    Parameter upperBound;
+    Nodes::Node *lowerBound;
+    Nodes::Node *upperBound;
 };
 
 } // namespace Antares::Solver::Model
