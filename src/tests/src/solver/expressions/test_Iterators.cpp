@@ -91,4 +91,11 @@ BOOST_FIXTURE_TEST_CASE(distance_is_3, Registry<Node>)
     AST ast(simpleExpression(*this));
     BOOST_CHECK_EQUAL(std::distance(ast.begin(), ast.end()), 3);
 }
+
+BOOST_FIXTURE_TEST_CASE(distance_nullptr_is_3, Registry<Node>)
+{
+    AST ast(create<AddNode>(nullptr, create<LiteralNode>(2.)));
+    BOOST_CHECK_EQUAL(std::distance(ast.begin(), ast.end()), 3);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

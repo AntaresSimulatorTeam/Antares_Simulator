@@ -1,3 +1,5 @@
+#include <ranges>
+
 #include <antares/solver/expressions/iterators/pre-order.h>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
@@ -54,9 +56,9 @@ ASTPreOrderIterator& ASTPreOrderIterator::operator++()
 
     const auto children = childrenLeftToRight(current);
     // Push children in reverse order to process them in left-to-right order
-    for (auto it = children.rbegin(); it != children.rend(); ++it)
+    for (auto it: children | std::views::reverse)
     {
-        nodeStack.push(*it);
+        nodeStack.push(it);
     }
 
     return *this;
