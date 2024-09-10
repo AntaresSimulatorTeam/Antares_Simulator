@@ -64,8 +64,7 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      # Note: we are stuck with v3, because v4 is not compatible with oracle8 image
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -144,13 +143,13 @@ jobs:
     - name: Installer TGZ push
       uses: actions/upload-artifact@v4
       with:
-        name: targz
+        name: oracle-targz
         path: _build/*.tar.gz
 
     - name: Installer RPM push
       uses: actions/upload-artifact@v4
       with:
-        name: rpm
+        name: oracle-rpm
         path: _build/*.rpm
 
     - name: Publish assets
@@ -164,7 +163,7 @@ jobs:
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v3
+      uses: actions/cache/save@v4
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
