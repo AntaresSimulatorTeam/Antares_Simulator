@@ -42,9 +42,8 @@ static Node* simpleExpression(Registry<Node>& registry)
 
 BOOST_FIXTURE_TEST_CASE(count_literal_nodes_for_loop, Registry<Node>)
 {
-    Node* root = simpleExpression(*this);
     int count_lit = 0;
-    for (auto& node: AST(root))
+    for (auto& node: AST(simpleExpression(*this)))
     {
         if (dynamic_cast<LiteralNode*>(&node))
         {
@@ -56,8 +55,7 @@ BOOST_FIXTURE_TEST_CASE(count_literal_nodes_for_loop, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(count_literal_nodes_count_if, Registry<Node>)
 {
-    Node* root = simpleExpression(*this);
-    AST ast(root);
+    AST ast(simpleExpression(*this));
     int count_lit = std::count_if(ast.begin(),
                                   ast.end(),
                                   [](Node& node)
@@ -68,11 +66,7 @@ BOOST_FIXTURE_TEST_CASE(count_literal_nodes_count_if, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(find_if_not_found, Registry<Node>)
 {
-    Node* root = simpleExpression(*this);
-    auto* add = dynamic_cast<AddNode*>(root);
-    BOOST_REQUIRE(add);
-
-    AST ast(root);
+    AST ast(simpleExpression(*this));
     auto it = std::find_if(ast.begin(),
                            ast.end(),
                            [](Node& node)
@@ -82,11 +76,7 @@ BOOST_FIXTURE_TEST_CASE(find_if_not_found, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(find_if_found, Registry<Node>)
 {
-    Node* root = simpleExpression(*this);
-    auto* add = dynamic_cast<AddNode*>(root);
-    BOOST_REQUIRE(add);
-
-    AST ast(root);
+    AST ast(simpleExpression(*this));
     auto it = std::find_if(ast.begin(),
                            ast.end(),
                            [](Node& node) { return dynamic_cast<LiteralNode*>(&node) != nullptr; });
