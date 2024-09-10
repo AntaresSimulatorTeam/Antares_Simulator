@@ -481,6 +481,26 @@ var annotated_dup =
             [ "NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ]
           ] ]
         ] ],
+        [ "Modeler", null, [
+          [ "Api", "namespaceAntares_1_1Solver_1_1Modeler_1_1Api.html", [
+            [ "IHasBounds", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IHasBounds.html", null ],
+            [ "IHasName", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IHasName.html", null ],
+            [ "ILinearProblem", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem" ],
+            [ "IMipConstraint", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipConstraint.html", null ],
+            [ "IMipSolution", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html", null ],
+            [ "IMipVariable", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html", null ],
+            [ "LinearProblemBuilder", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html", null ],
+            [ "LinearProblemData", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html", null ],
+            [ "LinearProblemFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html", null ]
+          ] ],
+          [ "OrtoolsImpl", null, [
+            [ "ElemAlreadyExists", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1ElemAlreadyExists.html", null ],
+            [ "OrtoolsLinearProblem", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem" ],
+            [ "OrtoolsMipConstraint", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipConstraint.html", null ],
+            [ "OrtoolsMipSolution", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html", null ],
+            [ "OrtoolsMipVariable", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html", null ]
+          ] ]
+        ] ],
         [ "Nodes", null, [
           [ "AddNode", "classAntares_1_1Solver_1_1Nodes_1_1AddNode.html", "classAntares_1_1Solver_1_1Nodes_1_1AddNode" ],
           [ "BinaryNode", "classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html", "classAntares_1_1Solver_1_1Nodes_1_1BinaryNode" ],
@@ -1275,7 +1295,10 @@ var annotated_dup =
     [ "FinalStockExpressionData", "structFinalStockExpressionData.html", null ],
     [ "FinalStockGroup", "classFinalStockGroup.html", null ],
     [ "Fixture", "structFixture.html", null ],
+    [ "FixtureEmptyProblem", "structFixtureEmptyProblem.html", null ],
+    [ "FixtureFeasibleProblem", "structFixtureFeasibleProblem.html", null ],
     [ "FixtureFull", "structFixtureFull.html", null ],
+    [ "FixtureInfeasibleProblem", "structFixtureInfeasibleProblem.html", null ],
     [ "FixtureMultipleTS", "classFixtureMultipleTS.html", null ],
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "FlowDissociation", "classFlowDissociation.html", "classFlowDissociation" ],
