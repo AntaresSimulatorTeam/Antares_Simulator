@@ -22,6 +22,7 @@
 
 #include <map>
 
+#include "constraint.h"
 #include "parameter.h"
 #include "variable.h"
 
@@ -43,6 +44,9 @@ public:
     std::string id;
     std::map<std::string, Parameter> parameters_;
     std::map<std::string, Variable> variables_;
+
+    std::map<std::string, Constraint> constraints_;
+    std::map<std::string, Constraint> bindingConstraints_;
 };
 
 } // namespace Antares::Solver::Model

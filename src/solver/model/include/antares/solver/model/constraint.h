@@ -31,8 +31,8 @@ namespace Antares::Solver::Model
 class Constraint
 {
 public:
-    Constrait();
-    ~Constrait() = default;
+    Constraint();
+    ~Constraint() = default;
 
     std::string name;
     Parameter lowerBound;
