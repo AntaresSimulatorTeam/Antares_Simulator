@@ -40,6 +40,29 @@ static Node* simpleExpression(Registry<Node>& registry)
                                     registry.create<LiteralNode>(21.));
 }
 
+BOOST_FIXTURE_TEST_CASE(empty_ast_begin_is_end, Registry<Node>)
+{
+    AST ast(nullptr);
+    BOOST_CHECK(ast.begin() == ast.end());
+}
+
+BOOST_FIXTURE_TEST_CASE(dereference_op, Registry<Node>)
+{
+    AST ast(create<LiteralNode>(21.));
+    auto it = ast.begin();
+    const std::string expected("LiteralNode");
+    BOOST_CHECK_EQUAL(it->name(), expected);
+    BOOST_CHECK_EQUAL((*it).name(), expected);
+}
+
+BOOST_FIXTURE_TEST_CASE(unary_dereference, Registry<Node>)
+{
+    AST ast(create<NegationNode>(nullptr));
+    auto it = ast.begin();
+    BOOST_CHECK(!it->name().empty());
+    BOOST_CHECK(!(*it).name().empty());
+}
+
 BOOST_FIXTURE_TEST_CASE(count_literal_nodes_for_loop, Registry<Node>)
 {
     int count_lit = 0;
