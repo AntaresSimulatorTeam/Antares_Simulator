@@ -122,12 +122,10 @@ void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 using namespace Antares::Data::AdequacyPatch;
 
 DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
-  const AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
   unsigned int thread_number):
     basePostProcessCommand(problemeHebdo),
-    adqPatchParams_(adqPatchParams),
     area_list_(areas),
     thread_number_(thread_number)
 {
