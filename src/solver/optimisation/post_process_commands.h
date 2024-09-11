@@ -17,22 +17,7 @@ private:
     const AreaList& area_list_;
 };
 
-class HydroLevelsUpdatePostProcessCmd : public basePostProcessCommand
-{
-public:
-    HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                    AreaList& areas,
-                                    bool remixWasRun,
-                                    bool computeAnyway);
-    void execute(const optRuntimeData& opt_runtime_data) override;
-
-private:
-    const AreaList& area_list_;
-    bool remixWasRun_ = false;
-    bool computeAnyway_ = false;
-};
-
-class RemixHydroPostProcessCmd : public basePostProcessCommand
+class RemixHydroPostProcessCmd: public basePostProcessCommand
 {
 public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
