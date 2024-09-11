@@ -7,7 +7,7 @@ You can find all the steps needed to build & install Antares Simulator in the [d
 Below are our specific (but not all!) exceptions to the Google's coding standard:
 
 - All C++ code should conform to the C++20 standard.
-- We use `.cpp` files, not `.cc` and `.h` for headers, in UTF-8 encoding.
+- We use `.cpp` files and `.h` for headers, in UTF-8 encoding.
 - For new files we use CamelCase, like `FileReader.cpp`.
 - We use `#pragma once` instead of the `#define` Guard in header files.
 - Includes are sorted and grouped by directory, there should be newlines between different directories.
