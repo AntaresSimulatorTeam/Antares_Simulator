@@ -8,6 +8,7 @@ set(SRC_model
     include/antares/solver/model/valueType.h
     include/antares/solver/model/variable.h
     include/antares/solver/model/constraint.h
+    include/antares/solver/model/expression.h
 )
 
 source_group("model" FILES ${SRC_model})
@@ -20,7 +21,6 @@ target_include_directories(antares-solver-model
 )
 target_link_libraries(antares-solver-model
         PUBLIC
-        antares-solver-expressions
         Antares::logs
 )
 install(DIRECTORY include/antares

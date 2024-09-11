@@ -22,24 +22,14 @@
 
 #include <string>
 
-#include "expression.h"
-#include "parameter.h"
-#include "valueType.h"
-
 namespace Antares::Solver::Model
 {
 
-/// A decision variable of the model
-class Variable
+class Expression
 {
 public:
-    Variable();
-    ~Variable() = default;
-
-    std::string name;
-    ValueType type;
-    Expression lowerBound;
-    Expression upperBound;
+    Expression();
+    ~Expression() = default;
 };
 
 } // namespace Antares::Solver::Model

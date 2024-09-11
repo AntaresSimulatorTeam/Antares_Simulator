@@ -22,8 +22,7 @@
 
 #include <string>
 
-#include <antares/solver/expressions/nodes/Node.h>
-
+#include "expression.h"
 #include "parameter.h"
 
 namespace Antares::Solver::Model
@@ -37,8 +36,8 @@ public:
     ~Constraint() = default;
 
     std::string name;
-    Nodes::Node* lowerBound;
-    Nodes::Node* upperBound;
+    Expression lowerBound;
+    Expression upperBound;
 };
 
 } // namespace Antares::Solver::Model
