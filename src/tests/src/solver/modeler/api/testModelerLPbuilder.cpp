@@ -22,14 +22,21 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
+#include <antares/solver/modeler/api/linearProblemBuilder.h>
+
+using namespace Antares::Solver::Modeler::Api;
 
 BOOST_AUTO_TEST_SUITE(tests_on_linear_problem_builder)
 
 BOOST_AUTO_TEST_CASE(first_empty_test)
 {
+    std::vector<LinearProblemFiller*> fillers;
+    LinearProblemBuilder lpBuilder(fillers);
+
+    LinearProblemData lpData;
+    lpBuilder.build(&lpData);
+
     BOOST_CHECK(true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
-

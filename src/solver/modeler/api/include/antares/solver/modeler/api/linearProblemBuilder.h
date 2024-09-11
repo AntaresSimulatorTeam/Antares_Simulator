@@ -22,9 +22,7 @@
 #pragma once
 
 #include <vector>
-
 #include "linearProblemFiller.h"
-#include "mipSolution.h"
 
 namespace Antares::Solver::Modeler::Api
 {
@@ -32,9 +30,8 @@ namespace Antares::Solver::Modeler::Api
 class LinearProblemBuilder
 {
 public:
-    virtual void LinearProblemBuilder(std::vector<LinearProblemFiller*> fillers) = 0;
-    virtual void build(LinearProblemData* data) = 0;
-    virtual MipSolution* solve() = 0;
+    LinearProblemBuilder(std::vector<LinearProblemFiller*> fillers);
+    void build(LinearProblemData* data);
 };
 
 } // namespace Antares::Solver::Modeler::Api
