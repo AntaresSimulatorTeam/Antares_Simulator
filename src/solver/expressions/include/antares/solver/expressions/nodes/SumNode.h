@@ -20,18 +20,56 @@
 */
 #pragma once
 
-#include <antares/solver/expressions/nodes/BinaryNode.h>
+#include <vector>
+
+#include "antares/solver/expressions/nodes/Node.h"
 
 namespace Antares::Solver::Nodes
 {
-class AddNode: public BinaryNode
+
+template<typename T>
+concept NodePtr = std::same_as<T, Node*>;
+
+template<typename T, typename... Args>
+std::vector<T> createVector(T first, Args... args)
+{
+    return std::vector<T>{first, args...};
+}
+
+class SumNode: public Node
 {
 public:
-    using BinaryNode::BinaryNode;
+    /**
+     * @brief Constructs a sum node with the specified operands.
+     *
+     * @param operands The list of operands
+     */
+    template<typename... NodePtr>
+    explicit SumNode(NodePtr... operands)
+    {
+        operands_ = createVector((Node*)operands...);
+    }
+
+    /**
+     * @brief Constructs a sum node with the specified operands.
+     *
+     * @param operands The operands, collected in a vector
+     */
+    explicit SumNode(const std::vector<Node*>& operands);
+
+    /**
+     * @brief Retrieves the operands of the sum.
+     *
+     * @return A vector of pointers to the operands of the sum.
+     */
+    std::vector<Node*> getOperands() const;
 
     std::string name() const override
     {
-        return "AddNode";
+        return "SumNode";
     }
+
+private:
+    std::vector<Node*> operands_;
 };
 } // namespace Antares::Solver::Nodes

@@ -27,9 +27,9 @@
 namespace Antares::Solver::Visitors
 {
 
-LinearStatus LinearityVisitor::visit(const Nodes::AddNode* node)
+LinearStatus LinearityVisitor::visit(const Nodes::SumNode* node)
 {
-    return dispatch(node->left()) + dispatch(node->right());
+    return LinearStatus::CONSTANT; //dispatch(node->left()) + dispatch(node->right());
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::SubtractionNode* node)

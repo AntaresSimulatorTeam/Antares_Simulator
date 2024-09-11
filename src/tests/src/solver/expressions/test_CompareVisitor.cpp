@@ -44,7 +44,7 @@ Node* ComparisonFixture::createSimpleExpression(double param)
 {
     Node* var1 = registry_.create<LiteralNode>(param);
     Node* param1 = registry_.create<ParameterNode>("param1");
-    Node* expr = registry_.create<AddNode>(var1, param1);
+    Node* expr = registry_.create<SumNode>(var1, param1);
     return expr;
 }
 
@@ -60,11 +60,11 @@ Node* ComparisonFixture::createComplexExpression()
     Node* comp = registry_.create<ComponentParameterNode>("hello", "world");
     Node* div = registry_.create<DivisionNode>(mult, comp);
     Node* div2 = registry_.create<DivisionNode>(div, simple);
-    Node* add = registry_.create<AddNode>(div, div2);
+    Node* add = registry_.create<SumNode>(div, div2);
     Node* sub = registry_.create<SubtractionNode>(add, neg);
     Node* cmp = registry_.create<GreaterThanOrEqualNode>(sub, add);
     Node* pf = registry_.create<PortFieldNode>("port", "field");
-    Node* addf = registry_.create<AddNode>(pf, cmp);
+    Node* addf = registry_.create<SumNode>(pf, cmp);
     return addf;
 }
 

@@ -25,9 +25,9 @@
 namespace Antares::Solver::Visitors
 {
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::AddNode* add)
+TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* add)
 {
-    return dispatch(add->left()) | dispatch(add->right());
+    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO; // dispatch(add->left()) | dispatch(add->right());
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)

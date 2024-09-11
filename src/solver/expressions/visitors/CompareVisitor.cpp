@@ -24,12 +24,12 @@
 template<class T, class V>
 static bool compareBinaryNode(V& visitor, const T* node, const Antares::Solver::Nodes::Node* other)
 {
-    if (const T* other_node = dynamic_cast<const T*>(other))
+    /*if (const T* other_node = dynamic_cast<const T*>(other))
     {
         bool left = visitor.dispatch(node->left(), other_node->left());
         bool right = visitor.dispatch(node->right(), other_node->right());
         return left && right;
-    }
+    }*/
     return false;
 }
 
@@ -55,7 +55,7 @@ static bool compareEqualOperator(const T* node, const Antares::Solver::Nodes::No
 
 namespace Antares::Solver::Visitors
 {
-bool CompareVisitor::visit(const Nodes::AddNode* node, const Nodes::Node* other)
+bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
 {
     return compareBinaryNode(*this, node, other);
 }

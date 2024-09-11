@@ -18,24 +18,19 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
+#include <antares/solver/expressions/nodes/SumNode.h>
 
 namespace Antares::Solver::Nodes
 {
-class Node;
-class SumNode;
-class SubtractionNode;
-class MultiplicationNode;
-class DivisionNode;
-class EqualNode;
-class LessThanOrEqualNode;
-class GreaterThanOrEqualNode;
-class NegationNode;
-class LiteralNode;
-class ComponentNode;
-class ComponentVariableNode;
-class ComponentParameterNode;
-class ParameterNode;
-class VariableNode;
-class PortFieldNode;
+
+SumNode::SumNode(const std::vector<Node*>& operands):
+    operands_(operands)
+{
+}
+
+std::vector<Node*> SumNode::getOperands() const
+{
+    return operands_;
+}
+
 } // namespace Antares::Solver::Nodes

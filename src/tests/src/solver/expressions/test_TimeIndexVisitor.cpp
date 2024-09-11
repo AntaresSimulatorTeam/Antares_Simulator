@@ -79,7 +79,7 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&variableNode1), TimeIndex::VARYING_IN_TIME_ONLY);
 
     // addition of parameterNode1 and variableNode1 is time and scenario dependent
-    Node* expr = create<AddNode>(&parameterNode1, &variableNode1);
+    Node* expr = create<SumNode>(&parameterNode1, &variableNode1);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(expr), TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
 
@@ -97,7 +97,7 @@ static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry)
 }
 
 static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>& registry)>
-  operator_ALL{&s_<AddNode>,
+  operator_ALL{&s_<SumNode>,
                &s_<SubtractionNode>,
                &s_<MultiplicationNode>,
                &s_<DivisionNode>,

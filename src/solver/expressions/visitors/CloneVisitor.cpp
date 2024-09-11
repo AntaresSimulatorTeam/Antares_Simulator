@@ -28,9 +28,9 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
 {
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::AddNode* node)
+Nodes::Node* CloneVisitor::visit(const Nodes::SumNode* node)
 {
-    return registry_.create<Nodes::AddNode>(dispatch(node->left()), dispatch(node->right()));
+    return nullptr; //registry_.create<Nodes::SumNode>(dispatch(node->left()), dispatch(node->right()));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode* node)

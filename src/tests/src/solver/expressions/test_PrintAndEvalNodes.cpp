@@ -59,16 +59,16 @@ Fixtures are used for the Registry that manages the memory allocations of nodes
 
 So instead of writing
    Registry<Node> mem;
-   Node* root = mem.create<AddNode>(mem.create<LiteralNode>(21), mem.create<LiteralNode>(2));
+   Node* root = mem.create<SumNode>(mem.create<LiteralNode>(21), mem.create<LiteralNode>(2));
 We can just write
-   Node* root = create<AddNode>(create<LiteralNode>(21), create<LiteralNode>(2));
+   Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2));
 
 since create<T> is short for this->create<T>.
 */
 
 BOOST_FIXTURE_TEST_CASE(print_add_two_literals, Registry<Node>)
 {
-    Node* root = create<AddNode>(create<LiteralNode>(21), create<LiteralNode>(2));
+    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2));
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(root);
@@ -77,13 +77,78 @@ BOOST_FIXTURE_TEST_CASE(print_add_two_literals, Registry<Node>)
                       "(21.000000+2.000000)"); // TODO Number of decimals implementation dependent ?
 }
 
+BOOST_FIXTURE_TEST_CASE(print_add_one_literal, Registry<Node>)
+{
+    Node* root = create<SumNode>(create<LiteralNode>(215));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(printed, "(215.000000)"); // TODO Number of decimals implementation dependent ?
+}
+
+BOOST_FIXTURE_TEST_CASE(print_add_zero_literal, Registry<Node>)
+{
+    std::vector<Node*> v = {};
+    Node* root = create<SumNode>(v);
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(printed, "()");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_add_six_literals, Registry<Node>)
+{
+    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2), create<LiteralNode>(34),
+            create<LiteralNode>(56), create<LiteralNode>(12), create<LiteralNode>(86));
+
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(printed,
+                      "(21.000000+2.000000+34.000000+56.000000+12.000000+86.000000)"); // TODO Number of decimals implementation dependent ?
+}
+
 BOOST_FIXTURE_TEST_CASE(eval_add_two_literals, Registry<Node>)
 {
-    Node* root = create<AddNode>(create<LiteralNode>(21), create<LiteralNode>(2));
+    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2));
     EvalVisitor evalVisitor;
     double eval = evalVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(eval, 23.);
+}
+
+BOOST_FIXTURE_TEST_CASE(eval_add_one_literal, Registry<Node>)
+{
+    Node* root = create<SumNode>(create<LiteralNode>(215));
+
+    EvalVisitor evalVisitor;
+    double eval = evalVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(eval, 215.);
+}
+
+BOOST_FIXTURE_TEST_CASE(eval_add_zero_literal, Registry<Node>)
+{
+    std::vector<Node*> v = {};
+    Node* root = create<SumNode>(v);
+
+    EvalVisitor evalVisitor;
+    double eval = evalVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(eval, 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(eval_add_six_literals, Registry<Node>)
+{
+    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2), create<LiteralNode>(34),
+            create<LiteralNode>(56), create<LiteralNode>(12), create<LiteralNode>(86));
+
+    EvalVisitor evalVisitor;
+    double eval = evalVisitor.dispatch(root);
+
+    BOOST_CHECK_EQUAL(eval, 211.);
 }
 
 BOOST_FIXTURE_TEST_CASE(eval_negation_literal, Registry<Node>)
@@ -101,18 +166,18 @@ BOOST_FIXTURE_TEST_CASE(eval_Add_And_Negation_Nodes, Registry<Node>)
     const double num1 = 1428;
     const double num2 = 8241;
     Node* negative_num2 = create<NegationNode>(create<LiteralNode>(num2));
-    Node* root = create<AddNode>(create<LiteralNode>(num1), negative_num2);
+    Node* root = create<SumNode>(create<LiteralNode>(num1), negative_num2);
     EvalVisitor evalVisitor;
     double eval = evalVisitor.dispatch(root);
 
     BOOST_CHECK_EQUAL(eval, num1 - num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(Negative_of_AddNode, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(Negative_of_SumNode, Registry<Node>)
 {
     const double num1 = 1428;
     const double num2 = 8241;
-    Node* add_node = create<AddNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
+    Node* add_node = create<SumNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
     Node* neg = create<NegationNode>(add_node);
     EvalVisitor evalVisitor;
     double eval = evalVisitor.dispatch(neg);
@@ -257,7 +322,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_node, Registry<Node>)
 
 BOOST_AUTO_TEST_CASE(invalidNode)
 {
-    AddNode* null_node = nullptr;
+    SumNode* null_node = nullptr;
     EvalVisitor evalVisitor;
     BOOST_CHECK_THROW(evalVisitor.dispatch(null_node), InvalidNode);
 }
