@@ -4,7 +4,8 @@ Antares Changelog
 8.8.8 (09/2024)
 --------------------
 ## Bugfix
-* Timeseries generation stored in input #2180
+* Timeseries generation stored in input (#2180)
+* Fix bug hydro heuristic with mingen (ANT-1825) (#2258)
 
 8.8.7 (07/2024)
 --------------------
