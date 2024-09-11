@@ -2,14 +2,16 @@
 
 In general, [Google's coding standard](https://google.github.io/styleguide/cppguide.html) is used, and we strongly encourage to read it.
 
+You can find all the steps needed to build & install Antares Simulator in the [documentation website](https://antares-simulator.readthedocs.io/) or [its sources](docs/developer-guide/0-Introduction.md).
+
 Below are our specific (but not all!) exceptions to the Google's coding standard:
 
 - All C++ code should conform to the C++20 standard.
-- We use `.cpp` and `.hpp` files, not `.cc` and `.h` (`.c` and `.h` are used for C code), in UTF-8 encoding.
-- File names are lowercase with underscores, like `file_reader.cpp`.
+- We use `.cpp` files, not `.cc` and `.h` for headers, in UTF-8 encoding.
+- For new files we use CamelCase, like `FileReader.cpp`.
 - We use `#pragma once` instead of the `#define` Guard in header files.
 - Includes are sorted and grouped by directory, there should be newlines between different directories.
-- Order of directories in includes: "current_dir/current_file.hpp", includes from other dirs sorted by dependencies (e.g. indexer, then coding, then base), "defines.hpp", C++ standard library headers, boost headers, 3party.
+- Order of directories in includes: "current_dir/current_file.h", includes from other dirs sorted by dependencies (e.g. indexer, then coding, then base), "defines.h", C++ standard library headers, boost headers.
 - We ARE using C++ exceptions. Feel free to define your own exceptions, derived from `std::exception` or any child class.
 - We are using all features of C++17 and C++20
 - We try to limit the usage of boost libraries which require linking (and prefer C++20 types over their boost counterparts).
@@ -42,6 +44,37 @@ When using `static` variables, be aware that some of Antares Simulator's functio
 ## Yuni
 
 Yuni is a C++ framework that fullfiled some of the lacking features pre-C++11. Even though you'll see it used widely through the existing code base, we recommend against using it for new code. It is namespaced under `Yuni`.
+
+## Branch names
+Currently, CI is run only for specific branch names:
+- `feature/*`
+- `features/*`
+- `fix/*`
+- `release/*`
+- `issue-*`
+- `doc/*`
+
+If you create a branch with a different name, no CI will be run, but you will receive a notification indicating that your branch name is incorrect.
+
+In order to avoid pushing with invalid branch name, a git hook is provided for pre-commit check.
+This hook is available in the `.githooks` directory.
+
+By default, git use hooks in `.git/hooks` directory which is not under version control. You can
+define a new hooks directory with this command in Antares Simulator root directory :
+```
+git config core.hooksPath .githooks
+```
+
+## Pull Requests
+A pull request name must be self-explanatory: this will be the default commit title when merging.
+
+Please provide a description in the head comment of the PR. This description will be the details of the merge commit.
+The description should be short but proportional to the length or complexity of the PR. Try to explain the motivation of the PR (why) and the method employed (how).
+
+When a pull request is opened, please set it to draft if it is still being worked on or not ready for review.
+
+If your Pull Request changes a part of the code that is [documented](https://antares-simulator.readthedocs.io/), 
+please update the documentation also, in the ["docs"](docs) directory.
 
 ## ClangFormat
 
@@ -77,27 +110,26 @@ class ComplexClass
 {
 public:
     Complex(double rePart, double imPart):
-        m_re(rePart),
-        m_im(imPart)
+        re(rePart),
+        im(imPart)
     {
     }
 
     double Modulus() const
     {
-        const double rere = m_re * m_re;
-        const double imim = m_im * m_im;
+        const double rere = re * re;
+        const double imim = im * im;
         return sqrt(rere + imim);
     }
 
     double OneLineMethod() const
     {
-        return m_re;
+        return re;
     }
 
 private:
-    // We use the "m_" prefix for member variables.
-    double m_re;
-    double m_im;
+    double re;
+    double im;
 };
 
 namespace
@@ -235,7 +267,7 @@ v = w * (x + z);
 - Release builds contain debugging information (for profiling), production builds do not
 - If you don't have enough time to make it right, leave a `// TODO(DeveloperName): need to fix it` comment
 
-### Logging functions:
+## Logging functions:
 
 - Use `Antares::logs.[level]() << message` for logging, below is more detailed description for level:
   - `logs.info() << msg` - always prints log message

@@ -5,8 +5,6 @@ hide:
 
 # Overview
 
-*ANTARES* is developed mainly in **C++20**
-
 This software suite has been tested under:
 
 *   Ubuntu 20.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
