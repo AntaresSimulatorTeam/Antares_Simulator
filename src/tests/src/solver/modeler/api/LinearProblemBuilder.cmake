@@ -1,4 +1,4 @@
-add_executable(test-modeler-LP-builder testModelerLPbuilder.cpp)
+add_executable(test-modeler-LP-builder testModelerLPbuilder.cpp mock-fillers/LinearProblemFillerMocks.cpp)
 
 target_include_directories(test-modeler-LP-builder
         PRIVATE
@@ -7,8 +7,8 @@ target_include_directories(test-modeler-LP-builder
 
 target_link_libraries(test-modeler-LP-builder
         PRIVATE
-        Boost::unit_test_framework
-        Antares::modeler-ortools-impl
+            Boost::unit_test_framework
+            Antares::modeler-ortools-impl
 )
 
 set_target_properties(test-modeler-LP-builder PROPERTIES FOLDER Unit-tests)

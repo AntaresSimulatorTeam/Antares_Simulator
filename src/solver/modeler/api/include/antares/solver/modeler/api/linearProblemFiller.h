@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <memory>
 #include <antares/solver/modeler/api/linearProblem.h>
 #include <antares/solver/modeler/api/linearProblemData.h>
 
@@ -30,13 +31,17 @@ namespace Antares::Solver::Modeler::Api
 class LinearProblemFiller
 {
 public:
-    explicit LinearProblemFiller(ILinearProblem* pb, LinearProblemData* data);
+    explicit LinearProblemFiller(std::shared_ptr<ILinearProblem> pb, LinearProblemData& data) :
+            linearProblem_(pb),
+            LPdata_(data)
+    {
+    }
     virtual void addVariables() = 0;
     virtual void addConstraints() = 0;
     virtual void addObjective() = 0;
-private:
-    ILinearProblem* linearProblem_ = nullptr;
-    LinearProblemData* LPdata_= nullptr;
+protected:
+    std::shared_ptr<ILinearProblem> linearProblem_;
+    const LinearProblemData& LPdata_;
 };
 
 } // namespace Antares::Solver::Modeler::Api
