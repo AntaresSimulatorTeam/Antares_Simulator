@@ -1,1 +1,2 @@
 include(LinearProblemWithOrtools.cmake)
+include(LinearProblemBuilder.cmake)
