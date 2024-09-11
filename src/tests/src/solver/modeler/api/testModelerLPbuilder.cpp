@@ -22,6 +22,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
+
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
 
 using namespace Antares::Solver::Modeler::Api;

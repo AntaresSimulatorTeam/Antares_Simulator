@@ -22,6 +22,7 @@
 #pragma once
 
 #include <vector>
+
 #include "linearProblemFiller.h"
 
 namespace Antares::Solver::Modeler::Api
