@@ -224,6 +224,8 @@ public:
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
 
+    double overflowCost = 0.;
+
 private:
     static bool checkReservoirLevels(const Study& study);
     static bool checkProperties(Study& study);
