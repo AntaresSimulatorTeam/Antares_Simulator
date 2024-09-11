@@ -215,16 +215,12 @@ bool Adequacy::year(Progression::Task& progression,
                                              resultWriter,
                                              simulationObserver_.get());
 
-                computingHydroLevels(study.areas, currentProblem, false);
-
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
                                       study.parameters.shedding.policy,
                                       study.parameters.simplexOptimizationRange,
                                       numSpace,
                                       hourInTheYear);
-
-                computingHydroLevels(study.areas, currentProblem, true);
             }
             catch (Data::AssertionError& ex)
             {
@@ -329,8 +325,6 @@ bool Adequacy::year(Progression::Task& progression,
                                                  .ConsommationAbattueDuPays[k];
                 }
             }
-
-            computingHydroLevels(study.areas, currentProblem, false, true);
         }
 
         interpolateWaterValue(study.areas, currentProblem, study.calendar, hourInTheYear);
