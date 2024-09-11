@@ -171,6 +171,7 @@ public:
     PreproHydro* prepro;
     //! Data for time-series
     DataSeriesHydro* series;
+    double overflowCost = 0.;
 
 }; // class PartHydro
 
