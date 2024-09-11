@@ -316,7 +316,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 
     bool TurbinageEntreBornes;
     bool SansHeuristique;
-    bool SuiviNiveauHoraire;
+    const bool SuiviNiveauHoraire = true;
 
     std::vector<double> NiveauHoraireSup;
     std::vector<double> NiveauHoraireInf;
