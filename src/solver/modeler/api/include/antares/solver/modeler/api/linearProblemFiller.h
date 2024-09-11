@@ -30,10 +30,13 @@ namespace Antares::Solver::Modeler::Api
 class LinearProblemFiller
 {
 public:
-    LinearProblemFiller(ILinearProblem* pb);
-    virtual void addVariables(LinearProblemData* data) = 0;
-    virtual void addConstraints(LinearProblemData* data) = 0;
-    virtual void addObjectiveCoefficients(LinearProblemData* data) = 0;
+    explicit LinearProblemFiller(ILinearProblem* pb, LinearProblemData* data);
+    virtual void addVariables() = 0;
+    virtual void addConstraints() = 0;
+    virtual void addObjective() = 0;
+private:
+    ILinearProblem* linearProblem_ = nullptr;
+    LinearProblemData* LPdata_= nullptr;
 };
 
 } // namespace Antares::Solver::Modeler::Api

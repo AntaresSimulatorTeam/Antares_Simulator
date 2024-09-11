@@ -93,6 +93,11 @@ OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name) c
     return variables_.at(name).get();
 }
 
+int OrtoolsLinearProblem::numVariables() const
+{
+    return mpSolver_->NumVariables();
+}
+
 OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
                                                           double ub,
                                                           const std::string& name)
@@ -118,6 +123,11 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
 OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
 {
     return constraints_.at(name).get();
+}
+
+int OrtoolsLinearProblem::numConstraints() const
+{
+    return mpSolver_->NumConstraints();
 }
 
 static const operations_research::MPVariable* getMpVar(const Api::IMipVariable* var)

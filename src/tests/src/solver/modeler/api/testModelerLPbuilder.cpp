@@ -24,20 +24,32 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
+#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 
 using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Solver::Modeler::OrtoolsImpl;
+
+struct Fixture
+{
+    Fixture()
+    {
+        pb = std::make_shared<OrtoolsLinearProblem>(false, "sirius");
+    }
+
+    std::vector<std::shared_ptr<LinearProblemFiller>> fillers;
+    LinearProblemData LP_Data;
+    std::shared_ptr<ILinearProblem> pb;
+};
 
 BOOST_AUTO_TEST_SUITE(tests_on_linear_problem_builder)
 
-BOOST_AUTO_TEST_CASE(first_empty_test)
+BOOST_FIXTURE_TEST_CASE(no_filler___nothing_built, Fixture)
 {
-    std::vector<LinearProblemFiller*> fillers;
     LinearProblemBuilder lpBuilder(fillers);
+    lpBuilder.build();
 
-    LinearProblemData lpData;
-    lpBuilder.build(&lpData);
-
-    BOOST_CHECK(true);
+    BOOST_CHECK_EQUAL(pb->numVariables(), 0);
+    BOOST_CHECK_EQUAL(pb->numVariables(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

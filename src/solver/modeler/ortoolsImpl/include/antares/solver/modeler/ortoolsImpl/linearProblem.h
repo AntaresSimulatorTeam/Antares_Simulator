@@ -44,11 +44,12 @@ public:
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
-
     OrtoolsMipVariable* getVariable(const std::string& name) const override;
+    int numVariables() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
     OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
+    int numConstraints() const override;
 
     void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;
     double getObjectiveCoefficient(const Api::IMipVariable* var) const override;
