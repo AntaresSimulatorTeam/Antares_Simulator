@@ -1,4 +1,4 @@
-set(PROJ optim_api)
+set(PROJ modeler_api)
 
 set(SRC_API
         include/antares/solver/modeler/api/mipVariable.h
