@@ -38,10 +38,11 @@ public:
     Parameter();
     ~Parameter() = default;
 
-    std::string name;
-    ValueType type;
-    bool timeDependent;
-    bool scenarioDependent;
+private:
+    std::string name_;
+    ValueType type_;
+    bool timeDependent_;
+    bool scenarioDependent_;
 };
 
 } // namespace Antares::Solver::Model

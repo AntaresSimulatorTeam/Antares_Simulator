@@ -43,8 +43,8 @@ public:
     void getAllConstraints();
 
 private:
-    std::string id;
-    Expression objective;
+    std::string id_;
+    Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
     std::map<std::string, Variable> variables_;
