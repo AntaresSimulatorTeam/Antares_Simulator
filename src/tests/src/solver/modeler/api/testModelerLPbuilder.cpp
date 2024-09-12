@@ -24,8 +24,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
-#include "mock-fillers/LinearProblemFillerMocks.h"
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
+
+#include "mock-fillers/OneConstraintFiller.h"
+#include "mock-fillers/OneVarFiller.h"
 
 using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Solver::Modeler::OrtoolsImpl;
@@ -53,21 +55,43 @@ BOOST_FIXTURE_TEST_CASE(no_filler___nothing_built, Fixture)
     BOOST_CHECK_EQUAL(pb->numConstraints(), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(one_var_filler___check_this_var_is_built, Fixture)
+BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 {
     fillers.emplace_back(std::make_shared<OneVarFiller>(pb, LP_Data));
+
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
 
     BOOST_CHECK_EQUAL(pb->numVariables(), 1);
-    BOOST_CHECK(pb->getVariable("var"));
     BOOST_CHECK_EQUAL(pb->numConstraints(), 0);
+    auto* var = pb->getVariable("var-by-OneVarFiller");
+    BOOST_CHECK(var);
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(two_fillers_of_one_var___check_vars_are_built, Fixture)
+BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture)
 {
-    // Coming soon...
+    fillers.emplace_back(std::make_shared<OneConstraintFiller>(pb, LP_Data));
+
+    LinearProblemBuilder lpBuilder(fillers);
+    lpBuilder.build();
+
+    BOOST_CHECK_EQUAL(pb->numVariables(), 0);
+    BOOST_CHECK_EQUAL(pb->numConstraints(), 1);
+    BOOST_CHECK(pb->getConstraint("constraint-by-OneConstraintFiller"));
 }
 
+BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
+{
+    fillers.emplace_back(std::make_shared<OneVarFiller>(pb, LP_Data));
+    fillers.emplace_back(std::make_shared<OneConstraintFiller>(pb, LP_Data));
+
+    LinearProblemBuilder lpBuilder(fillers);
+    lpBuilder.build();
+
+    BOOST_CHECK_EQUAL(pb->numConstraints(), 1);
+    BOOST_CHECK(pb->getConstraint("constraint-by-OneConstraintFiller"));
+    BOOST_CHECK_EQUAL(pb->numVariables(), 1);
+}
 
 BOOST_AUTO_TEST_SUITE_END()

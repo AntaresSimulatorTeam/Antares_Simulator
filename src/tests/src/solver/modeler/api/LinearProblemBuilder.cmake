@@ -1,4 +1,8 @@
-add_executable(test-modeler-LP-builder testModelerLPbuilder.cpp mock-fillers/LinearProblemFillerMocks.cpp)
+set(FILES_TO_LINK
+        mock-fillers/OneVarFiller.cpp
+        mock-fillers/OneConstraintFiller.cpp
+)
+add_executable(test-modeler-LP-builder testModelerLPbuilder.cpp ${FILES_TO_LINK})
 
 target_include_directories(test-modeler-LP-builder
         PRIVATE
