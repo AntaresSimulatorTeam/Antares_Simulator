@@ -60,6 +60,7 @@ BOOST_FIXTURE_TEST_CASE(one_var_filler___check_this_var_is_built, Fixture)
     lpBuilder.build();
 
     BOOST_CHECK_EQUAL(pb->numVariables(), 1);
+    BOOST_CHECK(pb->getVariable("var"));
     BOOST_CHECK_EQUAL(pb->numConstraints(), 0);
 }
 
