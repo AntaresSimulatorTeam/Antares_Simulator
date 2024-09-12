@@ -1,6 +1,10 @@
 Antares Changelog
 =================
 
+8.8.9 (09/2024)
+--------------------
+* Revert "Fix bug hydro heuristic with mingen (ANT-1825) (#2258)"
+
 8.8.8 (09/2024)
 --------------------
 ## Bugfix
