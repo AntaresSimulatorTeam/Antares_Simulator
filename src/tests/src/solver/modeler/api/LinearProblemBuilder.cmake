@@ -1,7 +1,8 @@
 set(FILES_TO_LINK
         mock-fillers/OneVarFiller.cpp
         mock-fillers/OneConstraintFiller.cpp
-)
+        mock-fillers/TwoVarsTwoConstraints.cpp)
+
 add_executable(test-modeler-LP-builder testModelerLPbuilder.cpp ${FILES_TO_LINK})
 
 target_include_directories(test-modeler-LP-builder

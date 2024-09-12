@@ -28,6 +28,7 @@
 
 #include "mock-fillers/OneConstraintFiller.h"
 #include "mock-fillers/OneVarFiller.h"
+#include "mock-fillers/TwoVarsTwoConstraints.h"
 
 using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Solver::Modeler::OrtoolsImpl;
@@ -92,6 +93,19 @@ BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
     BOOST_CHECK_EQUAL(pb->numConstraints(), 1);
     BOOST_CHECK(pb->getConstraint("constraint-by-OneConstraintFiller"));
     BOOST_CHECK_EQUAL(pb->numVariables(), 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_built, Fixture)
+{
+    fillers.emplace_back(std::make_shared<OneVarFiller>(pb, LP_Data));
+    fillers.emplace_back(std::make_shared<OneConstraintFiller>(pb, LP_Data));
+    fillers.emplace_back(std::make_shared<TwoVarsTwoConstraints>(pb, LP_Data));
+
+    LinearProblemBuilder lpBuilder(fillers);
+    lpBuilder.build();
+
+    BOOST_CHECK_EQUAL(pb->numVariables(), 3);
+    BOOST_CHECK_EQUAL(pb->numConstraints(), 3);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
