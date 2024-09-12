@@ -302,7 +302,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 
     bool TurbinageEntreBornes;
     bool SansHeuristique;
-    bool SuiviNiveauHoraire;
+    const bool SuiviNiveauHoraire = true;
 
     std::vector<double> NiveauHoraireSup;
     std::vector<double> NiveauHoraireInf;
@@ -322,72 +322,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
                                       dimension set to      100, should be made dynamic)*/
     std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the
                                       bounding constraint on final level*/
-};
-
-class computeTimeStepLevel
-{
-private:
-    int step;
-    double level;
-
-    double capacity;
-    std::vector<double>& inflows;
-    std::vector<double>& ovf;
-    std::vector<double>& turb;
-    double pumpRatio;
-    std::vector<double>& pump;
-    double excessDown;
-
-public:
-    computeTimeStepLevel(const double& startLvl,
-                         std::vector<double>& infl,
-                         std::vector<double>& overfl,
-                         std::vector<double>& H,
-                         double pumpEff,
-                         std::vector<double>& Pump,
-                         double rc):
-        step(0),
-        level(startLvl),
-        capacity(rc),
-        inflows(infl),
-        ovf(overfl),
-        turb(H),
-        pumpRatio(pumpEff),
-        pump(Pump),
-        excessDown(0.)
-    {
-    }
-
-    void run()
-    {
-        excessDown = 0.;
-
-        level = level + inflows[step] - turb[step] + pumpRatio * pump[step] - ovf[step];
-
-        if (level > capacity)
-        {
-            level = capacity;
-        }
-
-        if (level < 0)
-        {
-            excessDown = -level;
-            level = 0.;
-            inflows[step] += excessDown;
-        }
-    }
-
-    void prepareNextStep()
-    {
-        step++;
-
-        inflows[step] -= excessDown;
-    }
-
-    double getLevel()
-    {
-        return level;
-    }
 };
 
 struct RESERVE_JMOINS1
@@ -493,6 +427,8 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
     std::vector<double> CoutDeDefaillanceEnReserve;
+
+    std::vector<double> CoutDeDebordement;
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;

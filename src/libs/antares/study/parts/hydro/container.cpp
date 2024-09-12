@@ -89,6 +89,8 @@ void PartHydro::reset()
     allocation.clear();
     // allocation.fromArea(<current area>, 1.); // Area::reset()
 
+    overflowCost = 0.;
+
     if (prepro)
     {
         prepro->reset();
@@ -330,6 +332,12 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
               && ret;
     }
 
+    if (IniFile::Section* section = ini.find("overflow cost"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::overflowCost)
+              && ret;
+    }
+
     return ret;
 }
 
@@ -500,6 +508,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
         IniFile::Section* sLeewayLow;
         IniFile::Section* sLeewayUp;
         IniFile::Section* spumpingEfficiency;
+        IniFile::Section* sOverflowCost;
 
         AllSections(IniFile& ini):
             s(ini.addSection("inter-daily-breakdown")),
@@ -516,7 +525,8 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
             sPowerToLevel(ini.addSection("power to level")),
             sLeewayLow(ini.addSection("leeway low")),
             sLeewayUp(ini.addSection("leeway up")),
-            spumpingEfficiency(ini.addSection("pumping efficiency"))
+            spumpingEfficiency(ini.addSection("pumping efficiency")),
+            sOverflowCost(ini.addSection("overflow cost"))
         {
         }
     };
@@ -571,6 +581,10 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
           if (area.hydro.powerToLevel)
           {
               allSections.sPowerToLevel->add(area.id, true);
+          }
+          if (area.hydro.overflowCost)
+          {
+              allSections.sOverflowCost->add(area.id, area.hydro.overflowCost);
           }
 
           // max hours gen
