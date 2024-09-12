@@ -3,6 +3,7 @@ project(Model)
 set(SRC_model
     model.cpp
 
+    include/antares/solver/model/library.h
     include/antares/solver/model/model.h
     include/antares/solver/model/parameter.h
     include/antares/solver/model/valueType.h
