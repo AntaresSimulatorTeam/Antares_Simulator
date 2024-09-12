@@ -290,7 +290,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[var] = 0;
+                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo->CoutDeRemplissage[pays];
             }
 
             var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
