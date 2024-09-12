@@ -28,7 +28,7 @@
 namespace Antares::Solver::Model
 {
 
-/// A decision variable of the model
+/// A constraint linking variables and parameters of a model together
 class Constraint
 {
 public:

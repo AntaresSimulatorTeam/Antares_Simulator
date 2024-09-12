@@ -26,6 +26,12 @@
 namespace Antares::Solver::Model
 {
 
+class PortField
+{
+private:
+    std::string name;
+};
+
 class PortType
 {
 public:
@@ -36,7 +42,7 @@ private:
     std::string id_;
     std::string description_;
 
-    std::vector<std::string> fields_;
+    std::vector<PortField> fields_;
 };
 
 } // namespace Antares::Solver::Model

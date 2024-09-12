@@ -38,4 +38,16 @@ private:
     PortType type_;
 };
 
+class PortFieldDefinition
+{
+
+    PortFieldDefinition();
+    ~PortFieldDefinition() = default;
+
+private:
+    Port port_;
+    PortField field_;
+    Expression definition_;
+};
+
 } // namespace Antares::Solver::Model
