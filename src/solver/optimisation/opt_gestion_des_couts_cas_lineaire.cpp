@@ -287,7 +287,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             var = variableManager.HydroLevel(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[var] = 0;
+                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo->CoutDeRemplissage[pays];
             }
 
             var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
