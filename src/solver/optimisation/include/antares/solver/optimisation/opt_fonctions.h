@@ -36,7 +36,6 @@ using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
-                                  const AdqPatchParams& adqPatchParams,
                                   Solver::IResultWriter& writer,
                                   Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
@@ -47,7 +46,6 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
-                                                            const AdqPatchParams&,
                                                             const int,
                                                             const int,
                                                             const int);
@@ -68,7 +66,6 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
-                                      const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
@@ -89,7 +86,6 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const P
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
-                              const AdqPatchParams& adqPatchParams,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);

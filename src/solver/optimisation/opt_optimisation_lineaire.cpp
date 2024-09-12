@@ -80,7 +80,6 @@ void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
 
 bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
-                           const AdqPatchParams& adqPatchParams,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
                            Solver::Simulation::ISimulationObserver& simulationObserver)
@@ -96,7 +95,6 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
         DernierPdtDeLIntervalle = pdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo,
-                                                               adqPatchParams,
                                                                PremierPdtDeLIntervalle,
                                                                DernierPdtDeLIntervalle,
                                                                optimizationNumber);
@@ -190,7 +188,6 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
-                              const AdqPatchParams& adqPatchParams,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver)
 {
@@ -226,7 +223,6 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     bool ret = runWeeklyOptimization(options,
                                      problemeHebdo,
-                                     adqPatchParams,
                                      writer,
                                      PREMIERE_OPTIMISATION,
                                      simulationObserver);
@@ -240,7 +236,6 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
         runThermalHeuristic(problemeHebdo);
         return runWeeklyOptimization(options,
                                      problemeHebdo,
-                                     adqPatchParams,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
                                      simulationObserver);

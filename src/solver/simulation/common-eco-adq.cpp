@@ -94,7 +94,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         NullSimulationObserver simulationObserver;
         OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                      &problem,
-                                     study.parameters.adqPatchParams,
                                      resultWriter,
                                      simulationObserver);
     }

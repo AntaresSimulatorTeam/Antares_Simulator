@@ -74,15 +74,13 @@ class DTGmarginForAdqPatchPostProcessCmd: public basePostProcessCommand
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 public:
-    DTGmarginForAdqPatchPostProcessCmd(const AdqPatchParams& adqPatchParams,
-                                       PROBLEME_HEBDO* problemeHebdo,
+    DTGmarginForAdqPatchPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                        AreaList& areas,
                                        unsigned int thread_number);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const AdqPatchParams& adqPatchParams_;
     const AreaList& area_list_;
     unsigned int thread_number_ = 0;
 };
