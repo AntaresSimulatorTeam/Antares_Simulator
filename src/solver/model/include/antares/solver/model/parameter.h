@@ -40,6 +40,8 @@ public:
 
     std::string name;
     ValueType type;
+    bool timeDependent;
+    bool scenarioDependent;
 };
 
 } // namespace Antares::Solver::Model
