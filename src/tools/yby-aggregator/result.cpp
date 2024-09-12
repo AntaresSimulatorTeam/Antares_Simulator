@@ -61,7 +61,7 @@ ResultMatrix::ResultMatrix():
 }
 
 ResultMatrix::ResultMatrix(const ResultMatrix&):
-    columns(NULL),
+    columns(nullptr),
     width(0),
     heightAfterAggregation(0)
 {

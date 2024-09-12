@@ -3,6 +3,12 @@ toc_depth: 2
 ---
 
 # Antares Changelog
+
+## Branch 9.2.x
+### 9.2.0
+
+* Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
+
 ## Branch 9.1.x
 
 ### 9.1.0 (06/2024)
@@ -10,51 +16,8 @@ toc_depth: 2
 * Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 * Add optimization options from command line in OR-Tools / XPRESS (#1837)
-#### TODO
-
-## Branch 9.0.x
-
-### 9.0.0
-#### License
-* Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
 
 #### Improvements
-* Include overflow variable in HydroPower constraint (#1903)
-* Add total time logging at the end of the simulation (#1908)
-* Add STS level constraint to suspect list for infeasible problem analysis (#1891)
-
-#### For developers
-* Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
-* Change version behavior to allow more flexibility (#1898)
-
-#### Code quality
-* Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
-* Fix a few compilation warnings (#1880)
-* Scratchpad numspace (#1749)
-
-#### Tests
-* Fix invalid index causing segfault in `test-study` test (#1902)
-
-## Branch 8.8.x (end of support 12/2025)
-
-### 8.8.5 (05/2024)
-#### Bugfix
-- [UI] Fix opening a study from the file browser
-- Fix crash occurring when duplicate thermal clusters are present in a study (same name)
-- Fix formula for "PROFIT BY PLANT"
-
-### 8.8.4 (03/2024)
-#### Bugfix
-* Adequacy patch CSR - fix DTG MRG (#1982)
-* Fix ts numbers for no gen clusters (#1969)
-* Remove unitcount limit for time series generation (#1960)
-
-### 8.8.3 (02/2024)
-#### Bugfix
-* Fix an issue where depending on the platform the output archive could contain several entries of the same area and inrco files
-
-#### Improvements
-* Remove sc-builder prefix "hgp", use "h" instead for max hydro pumping & generation timeseries.
 * Rationalize consistency checks on the number of columns (#2073)
 * Documentation reorganization and improvement (#2024) (#2023) (#2022)
 * Add doc for thermal heuristic (#2048)
@@ -101,6 +64,59 @@ toc_depth: 2
 * Remove unnecessary ".inc.hxx" files (#2031)
 * Remove deps-build Actions (#2043)
 * Remove unused logs.hxx (#2026)
+
+## Branch 9.0.x
+
+### 9.0.0
+#### License
+* Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
+
+#### Improvements
+* Include overflow variable in HydroPower constraint (#1903)
+* Add total time logging at the end of the simulation (#1908)
+* Add STS level constraint to suspect list for infeasible problem analysis (#1891)
+
+#### For developers
+* Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
+* Change version behavior to allow more flexibility (#1898)
+
+#### Code quality
+* Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
+* Fix a few compilation warnings (#1880)
+* Scratchpad numspace (#1749)
+
+#### Tests
+* Fix invalid index causing segfault in `test-study` test (#1902)
+
+## Branch 8.8.x (end of support 12/2025)
+### 8.8.7 (07/2024)
+#### Improvements
+- Add OR-Tools solver option for batchrun tool (#1981)
+
+#### Bugfix
+- Adequacy Patch regression [ANT-1845] #2235
+
+### 8.8.6 (07/2024)
+#### Bugfix
+- Fix missing synthesis results for links (#2115)
+#### Dependencies
+- Update vcpkg (fix Boost)
+
+### 8.8.5 (05/2024)
+#### Bugfix
+- [UI] Fix opening a study from the file browser
+- Fix crash occurring when duplicate thermal clusters are present in a study (same name)
+- Fix formula for "PROFIT BY PLANT"
+
+### 8.8.4 (03/2024)
+#### Bugfix
+* Adequacy patch CSR - fix DTG MRG (#1982)
+* Fix ts numbers for no gen clusters (#1969)
+* Remove unitcount limit for time series generation (#1960)
+
+### 8.8.3 (02/2024)
+#### Bugfix
+* Fix an issue where depending on the platform the output archive could contain several entries of the same area and interco files
 
 ### 8.8.2
 #### Bugfix
@@ -320,6 +336,12 @@ toc_depth: 2
 * Array, logs jit and correlation in makefile (#1410)
 
 ## Branch 8.6.x (end of support 06/2025)
+### 8.6.8 (07/2024)
+#### Bugfix
+- [UI] Remove propery storagecycle for short term storage added when saving a study (#2037)
+#### Dependencies
+- Update vcpkg (fix Boost)
+
 ### 8.6.7 (05/2024)
 #### Bugfixes
 * Fix formula use in output var Profit by plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)

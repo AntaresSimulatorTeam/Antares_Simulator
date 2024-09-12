@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/solver/simulation/common-eco-adq.h"
 
@@ -60,9 +60,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         std::vector<double> avgDirect;
         std::vector<double> avgIndirect;
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
-            auto* link = study.runtime->areaLink[j];
+            auto* link = study.runtime.areaLink[j];
             int ret = retrieveAverageNTC(study,
                                          link->directCapacities.timeSeries,
                                          link->timeseriesNumbers,
@@ -91,14 +91,16 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     try
     {
         NullResultWriter resultWriter;
+        NullSimulationObserver simulationObserver;
         OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                      &problem,
                                      study.parameters.adqPatchParams,
-                                     resultWriter);
+                                     resultWriter,
+                                     simulationObserver);
     }
     catch (Data::UnfeasibleProblemError&)
     {
-        study.runtime->quadraticOptimizationHasFailed = true;
+        study.runtime.quadraticOptimizationHasFailed = true;
     }
 
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
@@ -106,68 +108,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         const uint indx = i + PasDeTempsDebut;
         auto& ntcValues = problem.ValeursDeNTC[i];
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
             transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues.ValeurDuFlux[j];
-        }
-    }
-}
-
-void PrepareDataFromClustersInMustrunMode(Data::Study& study,
-                                          Data::Area::ScratchMap& scratchmap,
-                                          uint year)
-{
-    bool inAdequacy = (study.parameters.mode == Data::SimulationMode::Adequacy);
-
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-        if (inAdequacy)
-        {
-            memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-        }
-
-        double* mrs = scratchpad.mustrunSum;
-        double* adq = scratchpad.originalMustrunSum;
-
-        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            if (inAdequacy && cluster->mustrunOrigin)
-            {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    mrs[h] += availableProduction[h];
-                    adq[h] += availableProduction[h];
-                }
-            }
-            else
-            {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    mrs[h] += availableProduction[h];
-                }
-            }
-        }
-
-        if (inAdequacy)
-        {
-            for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-            {
-                if (!cluster->mustrunOrigin)
-                {
-                    continue;
-                }
-
-                const auto& availableProduction = cluster->series.getColumn(year);
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    adq[h] += availableProduction[h];
-                }
-            }
         }
     }
 }
@@ -180,9 +123,9 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
         return false;
     }
 
-    for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+    for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
     {
-        auto& lnk = *(study.runtime->areaLink[j]);
+        auto& lnk = *(study.runtime.areaLink[j]);
         auto& impedances = lnk.parameters[Data::fhlImpedances];
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
@@ -219,7 +162,7 @@ void ComputeFlowQuad(Data::Study& study,
     {
         logs.info() << "  The quadratic optimisation has been skipped";
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
             for (uint w = 0; w != nbWeeks; ++w)
             {
@@ -395,10 +338,29 @@ void PrepareRandomNumbers(Data::Study& study,
       });
 }
 
+void SetInitialHydroLevel(Data::Study& study,
+                          PROBLEME_HEBDO& problem,
+                          const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+{
+    uint firstDaySimu = study.parameters.simulationDays.first;
+    study.areas.each(
+      [&problem, &firstDaySimu, &hydroVentilationResults](const Data::Area& area)
+      {
+          if (area.hydro.reservoirManagement)
+          {
+              double capacity = area.hydro.reservoirCapacity;
+              problem.previousSimulationFinalLevel[area.index] = hydroVentilationResults[area.index]
+                                                                   .NiveauxReservoirsDebutJours
+                                                                     [firstDaySimu]
+                                                                 * capacity;
+          }
+      });
+}
+
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     double** thermalNoises,
+                                     std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year)
 {
     int hourInYear = PasDeTempsDebut;

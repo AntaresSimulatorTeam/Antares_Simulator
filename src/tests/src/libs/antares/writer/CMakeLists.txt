@@ -2,11 +2,11 @@
 add_executable(test-writer test_writer.cpp)
 
 target_link_libraries(test-writer
-	PRIVATE
-		Boost::unit_test_framework
-		Antares::result_writer
-		test_utils_unit
-		MINIZIP::minizip
+        PRIVATE
+        Boost::unit_test_framework
+        Antares::result_writer
+        test_utils_unit
+        MINIZIP::minizip
 )
 
 set_target_properties(test-writer PROPERTIES FOLDER Unit-tests/test-writer)

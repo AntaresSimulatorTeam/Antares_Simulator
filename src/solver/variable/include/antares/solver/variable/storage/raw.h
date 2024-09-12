@@ -104,23 +104,23 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
+                InternalExportValues<Category::hourly, HOURS_PER_YEAR, VCardT>(
                   report,
                   ::Antares::Memory::RawPointer(rawdata.hourly));
                 break;
             case Category::daily:
-                InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
-                                                                              rawdata.daily);
+                InternalExportValues<Category::daily, DAYS_PER_YEAR, VCardT>(report, rawdata.daily);
                 break;
             case Category::weekly:
-                InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report,
-                                                                                rawdata.weekly);
+                InternalExportValues<Category::weekly, WEEKS_PER_YEAR, VCardT>(report,
+                                                                               rawdata.weekly);
                 break;
             case Category::monthly:
-                InternalExportValues<Category::monthly, maxMonths, VCardT>(report, rawdata.monthly);
+                InternalExportValues<Category::monthly, MONTHS_PER_YEAR, VCardT>(report,
+                                                                                 rawdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
+                InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year.data());
                 break;
             }
         }
@@ -161,7 +161,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return +sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return +sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class, int> class DecoratorT>

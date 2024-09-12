@@ -54,7 +54,7 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
 {
     uint hour = 0;
     uint day = 0;
-    
+
     while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
     {
         for (uint i = 0; i < HOURS_PER_DAY; ++i)

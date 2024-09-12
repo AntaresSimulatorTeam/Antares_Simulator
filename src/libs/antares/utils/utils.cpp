@@ -96,6 +96,18 @@ void BeautifyName(std::string& out, const std::string& oldname)
     out = yuniOut.c_str();
 }
 
+std::string FormattedTime(const std::string& format)
+{
+    using namespace std::chrono;
+    auto time = system_clock::to_time_t(system_clock::now());
+    std::tm local_time = *std::localtime(&time);
+
+    char time_buffer[256];
+    std::strftime(time_buffer, sizeof(time_buffer), format.c_str(), &local_time);
+
+    return std::string(time_buffer);
+}
+
 std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
                                                                       char delimiter1,
                                                                       char delimiter2)
@@ -116,6 +128,8 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
         else
         {
             logs.warning() << "Error while parsing: " << token;
+            logs.warning() << "Correct format is: \"object1" << delimiter2 << "object2"
+                           << delimiter1 << "object3" << delimiter2 << "object4\"";
         }
     }
 
@@ -133,7 +147,7 @@ bool isZero(double d)
 
 double round(double d, unsigned precision)
 {
-    unsigned factor = std::pow(10, precision);
+    auto factor = std::pow(10, precision);
     return std::round(d * factor) / factor;
 }
 

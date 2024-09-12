@@ -1,27 +1,28 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <cmath>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/misc/cholesky.h"
@@ -42,7 +43,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     bool derated = study.parameters.derated;
 
     study.areas.each(
-      [&](Data::Area& area)
+      [&derated](Data::Area& area)
       {
           auto& hydroseries = *(area.hydro.series);
 
@@ -63,16 +64,16 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
     Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
 
-    auto& studyRTI = *(study.runtime);
+    auto& studyRTI = study.runtime;
     auto& calendar = study.calendar;
 
-    uint DIM = 12 * study.areas.size();
+    uint DIM = MONTHS_PER_YEAR * study.areas.size();
     uint DEM = DIM / 2;
 
     Matrix<double> CHSKY;
     CHSKY.reset(DIM, DIM);
 
-    double* QCHOLTemp = new double[DIM];
+    std::vector<double> QCHOLTemp(DIM);
 
     Matrix<double> B;
     B.reset(DIM, DIM);
@@ -80,11 +81,11 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
     double** nullmatrx = nullptr;
 
     if (1. > Solver::MatrixDPMake<double>(CHSKY.entry,
-                                          study.preproHydroCorrelation.annual->entry,
+                                          study.preproHydroCorrelation.annual.entry,
                                           B.entry,
                                           nullmatrx,
                                           study.areas.size(),
-                                          QCHOLTemp,
+                                          QCHOLTemp.data(),
                                           true))
     {
         throw FatalError("TS Generator: Hydro: Invalid correlation matrix");
@@ -95,19 +96,19 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
     for (uint i = 0; i < DIM; i++)
     {
-        uint areaIndexI = i / 12;
-        auto* prepro = study.areas.byIndex[areaIndexI]->hydro.prepro;
+        uint areaIndexI = i / MONTHS_PER_YEAR;
+        auto* prepro = study.areas.byIndex[areaIndexI]->hydro.prepro.get();
 
         auto& corre = CORRE[i];
 
-        auto& annualCorrAreaI = (*study.preproHydroCorrelation.annual)[areaIndexI];
+        auto& annualCorrAreaI = study.preproHydroCorrelation.annual[areaIndexI];
 
         for (uint j = 0; j < DIM; j++)
         {
-            uint areaIndexJ = j / 12;
-            auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro;
+            uint areaIndexJ = j / MONTHS_PER_YEAR;
+            auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro.get();
 
-            x = std::abs(((int)(i % 12) - (int)(j % 12)) / 2.);
+            x = std::abs(((int)(i % MONTHS_PER_YEAR) - (int)(j % MONTHS_PER_YEAR)) / 2.);
 
             corre[j] = annualCorrAreaI[areaIndexJ]
                        * pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
@@ -122,7 +123,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                                                 B.entry,
                                                 nullmatrx,
                                                 DIM,
-                                                QCHOLTemp,
+                                                QCHOLTemp.data(),
                                                 true);
         if (r < 1.)
         {
@@ -134,15 +135,13 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         }
     }
 
-    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
+    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp.data());
 
     B.clear();
     CORRE.clear();
+    QCHOLTemp.clear();
 
-    delete[] QCHOLTemp;
-    QCHOLTemp = nullptr;
-
-    double* NORM = new double[DIM];
+    std::vector<double> NORM(DIM);
     for (uint i = 0; i != DIM; ++i)
     {
         NORM[i] = 0.;
@@ -167,7 +166,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         }
         for (uint i = 0; i < DIM; ++i)
         {
-            auto& area = *(study.areas.byIndex[i / 12]);
+            auto& area = *(study.areas.byIndex[i / MONTHS_PER_YEAR]);
             auto& prepro = *area.hydro.prepro;
             auto& series = *area.hydro.series;
             auto ror = series.ror[l];
@@ -178,9 +177,8 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             auto& colMaxEnergy = prepro.data[Data::PreproHydro::maximumEnergy];
             auto& colPOW = prepro.data[Data::PreproHydro::powerOverWater];
 
-            uint month = i % 12;
+            uint month = i % MONTHS_PER_YEAR;
             uint realmonth = calendar.months[month].realmonth;
-            uint daysPerMonth = calendar.months[month].days;
 
             assert(l < series.ror.timeSeries.width);
             assert(not std::isnan(colPOW[realmonth]));
@@ -283,11 +281,11 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         else
         {
             logs.info() << "Archiving the hydro time-series";
-            const int precision = 0;
-            Yuni::String output;
             study.areas.each(
-              [&](const Data::Area& area)
+              [&study, &currentYear, &writer, &progression](const Data::Area& area)
               {
+                  const int precision = 0;
+                  Yuni::String output;
                   study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
                                        << currentYear << SEP << area.id;
 
@@ -308,8 +306,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
               });
         }
     }
-
-    delete[] NORM;
 
     return true;
 }

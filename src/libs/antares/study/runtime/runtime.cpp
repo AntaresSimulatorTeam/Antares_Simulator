@@ -21,6 +21,7 @@
 
 #include "antares/study/runtime/runtime.h"
 
+#include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/antares/fatal-error.h"
 #include "antares/study/area/scratchpad.h"
@@ -103,7 +104,7 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
     uint indx = 0;
 
     study.areas.each(
-      [&](Data::Area& area)
+      [&indx, &r](Data::Area& area)
       {
           area.buildLinksIndexes();
 
@@ -175,6 +176,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     limits.month[rangeCount] = limits.month[rangeEnd] - limits.month[rangeBegin] + 1;
     // year
     limits.year[rangeBegin] = 0;
+    /// reminder to get rangeLimits.year[Data::rangeEnd]
     limits.year[rangeEnd] = study.parameters.nbYears - 1;
     limits.year[rangeCount] = study.parameters.effectiveNbYears;
 
@@ -213,9 +215,8 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
     else
     {
-        simulationDaysPerMonth[(uint)ca.month] = study.calendar.months[(uint)ca.month].days
-                                                 - ca.dayMonth;
-        simulationDaysPerMonth[(uint)cb.month] = cb.dayMonth + 1;
+        simulationDaysPerMonth[ca.month] = study.calendar.months[ca.month].days - ca.dayMonth;
+        simulationDaysPerMonth[cb.month] = cb.dayMonth + 1;
         for (uint i = ca.month + 1; i < cb.month; ++i)
         {
             simulationDaysPerMonth[i] = study.calendar.months[i].days;
@@ -270,9 +271,9 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     thermalTSRefresh = globalThermalTSgeneration;
 
     study.areas.each(
-      [this, globalThermalTSgeneration](Data::Area& area)
+      [this, globalThermalTSgeneration](const Data::Area& area)
       {
-          for (auto& c: area.thermal.list.each_enabled_and_not_mustrun())
+          for (const auto& c: area.thermal.list.each_enabled_and_not_mustrun())
           {
               thermalTSRefresh = thermalTSRefresh || c->doWeGenerateTS(globalThermalTSgeneration);
           }
@@ -442,7 +443,7 @@ void StudyRangeLimits::checkIntegrity() const
 void StudyRuntimeInfos::disableAllFilters(Study& study)
 {
     study.areas.each(
-      [&](Data::Area& area)
+      [](Data::Area& area)
       {
           area.filterSynthesis = filterAll;
           area.filterYearByYear = filterAll;

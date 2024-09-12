@@ -200,7 +200,7 @@ bool Create::performWL(Context& ctx)
         // ctx.constraint->type(pType);
     }
     ctx.autoselectConstraints.push_back(ctx.constraint);
-    return (ctx.constraint != NULL);
+    return (ctx.constraint != nullptr);
 }
 
 void Create::createActionsForAStandardConstraintCopy(Context&)

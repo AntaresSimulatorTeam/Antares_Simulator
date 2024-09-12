@@ -301,7 +301,7 @@ public:
     {
         for (uint i = 0; i != VCardType::columnCount; ++i)
         {
-            for (uint h = 0; h != maxHoursInAYear; ++h)
+            for (uint h = 0; h != HOURS_PER_YEAR; ++h)
             {
                 pValuesForYearLocalReport[numSpace][i].hour[h] = (pValuesForTheCurrentYear[numSpace]
                                                                                           [i]
@@ -311,7 +311,7 @@ public:
                                                                    : 0.;
             }
 
-            for (uint d = 0; d != maxDaysInAYear; ++d)
+            for (uint d = 0; d != DAYS_PER_YEAR; ++d)
             {
                 pValuesForYearLocalReport[numSpace][i].day[d] = (pValuesForTheCurrentYear[numSpace]
                                                                                          [i]
@@ -321,7 +321,7 @@ public:
                                                                   : 0.;
             }
 
-            for (uint w = 0; w != maxWeeksInAYear; ++w)
+            for (uint w = 0; w != WEEKS_PER_YEAR; ++w)
             {
                 pValuesForYearLocalReport[numSpace][i].week[w] = (pValuesForTheCurrentYear[numSpace]
                                                                                           [i]
@@ -331,7 +331,7 @@ public:
                                                                    : 0.;
             }
 
-            for (uint m = 0; m != maxMonths; ++m)
+            for (uint m = 0; m != MONTHS_PER_YEAR; ++m)
             {
                 pValuesForYearLocalReport[numSpace][i].month[m] = (pValuesForTheCurrentYear
                                                                      [numSpace][i]

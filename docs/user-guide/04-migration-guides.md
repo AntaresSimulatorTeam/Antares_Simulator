@@ -1,9 +1,41 @@
 # Migration guides
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
+
+## v9.2.0
+### Adequacy Patch LMR
+Removed following properties from **settings/generaldata.ini**.
+- enable-first-step
+- set-to-null-ntc-between-physical-out-for-first-step
+
+### (TS-generator only) TS generation for link capacities
+In files input/links/<link1>/properties.ini, add the following properties
+- tsgen_direct_XXX,
+- tsgen_indirect_XXX
+with XXX in
+- unitcount (unsigned int, default 1)
+- nominalcapacity (float)
+- law.planned (string "uniform"/"geometric")
+- law.forced (same)
+- volatility.planned (double in [0,1])
+- volatility.forced (same)
+
+- "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in maintenance", "maximum of groups in maintenance".
+- "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
+- number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
+
+
+### Input
+#### Short term storage: efficiency for withdrawal
+In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
+
+### Output
+- Remove column SPIL ENRG CSR (adequacy patch)
+- Add DTG MRG CSR and UNSP ENRG CSR variables
+
 ## v9.1.0
 ### Input 
 #### Hydro Maximum Generation/Pumping Power
-* For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
+* For time series ![Migration diagram](img/migration.png "Migration diagram"), for more details, see [this Python script](img/migration.py)
 
 Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
 - inflows, ROR and minimum generation, max pumping & generation (prefix "h")
@@ -108,6 +140,10 @@ For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;
 * `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior). Unit is Euro / MWh
 
 For each thermal cluster, new files added **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability). The number of rows for these new matrices is 8760.
+
+#### Hydro Final Reservoir Level
+In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if final reservoir level specified, different from `init`):
+* **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
 
 ### Output
 #### Scenarized RHS for binding constraints

@@ -52,7 +52,7 @@ bool FindExampleFolder(YString& folder);
 /*!
 ** \brief Initialize variables about resource handling
 */
-void Initialize(int argc, char* argv[], bool initializeSearchPath = false);
+void Initialize(int argc, const char* argv[], bool initializeSearchPath = false);
 
 /*!
 ** \brief Copy the root folder

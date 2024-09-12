@@ -29,6 +29,8 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
+#include <antares/antares/constants.h>
+
 using namespace Yuni;
 
 #define SEP IO::Separator
@@ -129,7 +131,7 @@ bool TimeSeries::loadFromFile(const std::string& path, const bool average)
     return ret;
 }
 
-int TimeSeries::saveToFolder(const AreaName& areaID,
+int TimeSeries::saveToFolder(const std::string& areaID,
                              const std::string& folder,
                              const std::string& prefix) const
 {

@@ -268,7 +268,7 @@ uint64_t Total()
     int mib[2] = {CTL_HW, HW_MEMSIZE};
     uint64_t memory;
     size_t len = sizeof(uint64_t);
-    return (!sysctl(mib, 2, &memory, &len, NULL, 0)) ? memory : (uint64_t)defaultTotal;
+    return (!sysctl(mib, 2, &memory, &len, nullptr, 0)) ? memory : (uint64_t)defaultTotal;
 }
 
 uint64_t Available()
@@ -298,7 +298,7 @@ bool Usage::update()
     int mib[2] = {CTL_HW, HW_MEMSIZE};
     size_t len = sizeof(uint64_t);
     size_t sttotal;
-    if (sysctl(mib, 2, &sttotal, &len, NULL, 0))
+    if (sysctl(mib, 2, &sttotal, &len, nullptr, 0))
     {
         total = (uint64_t)defaultTotal;
         return false;

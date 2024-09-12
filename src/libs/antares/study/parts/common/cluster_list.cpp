@@ -264,7 +264,8 @@ template<class ClusterT>
 bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
     return std::ranges::all_of(allClusters_,
-                               [&](auto c) { return c->loadDataSeriesFromFolder(s, folder); });
+                               [&s, &folder](auto c)
+                               { return c->loadDataSeriesFromFolder(s, folder); });
 }
 
 template<class ClusterT>

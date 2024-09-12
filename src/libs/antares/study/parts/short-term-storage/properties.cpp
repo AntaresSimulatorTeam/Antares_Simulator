@@ -61,7 +61,12 @@ bool Properties::loadKey(const IniFile::Property* p)
 
     if (p->key == "efficiency")
     {
-        return p->value.to<double>(this->efficiencyFactor);
+        return p->value.to<double>(this->injectionEfficiency);
+    }
+
+    if (p->key == "efficiencywithdrawal")
+    {
+        return p->value.to<double>(this->withdrawalEfficiency);
     }
 
     if (p->key == "name")
@@ -105,7 +110,8 @@ void Properties::save(IniFile& ini) const
     s->add("injectionnominalcapacity", this->injectionNominalCapacity);
     s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
 
-    s->add("efficiency", this->efficiencyFactor);
+    s->add("efficiency", this->injectionEfficiency);
+    s->add("efficiencyWithdrawal", this->withdrawalEfficiency);
     s->add("initialleveloptim", this->initialLevelOptim);
     s->add("enabled", this->enabled);
 }
@@ -157,16 +163,30 @@ bool Properties::validate()
         return false;
     }
 
-    if (efficiencyFactor < 0)
+    if (injectionEfficiency < 0)
     {
         logs.warning() << "Property efficiency must be >= 0 " << "for short term storage " << name;
-        efficiencyFactor = 0;
+        injectionEfficiency = 0;
     }
 
-    if (efficiencyFactor > 1)
+    if (injectionEfficiency > 1)
     {
         logs.warning() << "Property efficiency must be <= 1 " << "for short term storage " << name;
-        efficiencyFactor = 1;
+        injectionEfficiency = 1;
+    }
+
+    if (withdrawalEfficiency < 0)
+    {
+        logs.warning() << "Property efficiencyWithdrawal must be >= 0 " << "for short term storage "
+                       << name;
+        withdrawalEfficiency = 0;
+    }
+
+    if (withdrawalEfficiency > 1)
+    {
+        logs.warning() << "Property efficiencyWithdrawal must be <= 1 " << "for short term storage "
+                       << name;
+        withdrawalEfficiency = 1;
     }
 
     if (initialLevel < 0)

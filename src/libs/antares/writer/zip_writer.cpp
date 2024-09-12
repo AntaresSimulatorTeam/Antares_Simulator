@@ -51,7 +51,6 @@ static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
     throw std::runtime_error(errorMessage);
 }
 
-
 // Class ZipWriteJob
 template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
@@ -100,7 +99,9 @@ void ZipWriteJob<ContentT>::writeEntry()
     {
         logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret) + ")");
     }
-    int32_t bw = mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
+    int32_t bw = mz_zip_writer_entry_write(pZipHandle,
+                                           pContent.data(),
+                                           static_cast<int32_t>(pContent.size()));
     if (static_cast<unsigned int>(bw) != pContent.size())
     {
         logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)

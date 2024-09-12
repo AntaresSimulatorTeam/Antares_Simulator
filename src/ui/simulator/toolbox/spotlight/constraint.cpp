@@ -33,7 +33,7 @@ namespace Spotlight
 {
 ItemConstraint::ItemConstraint(Data::BindingConstraint* a) : constraint(a)
 {
-    assert(a != NULL);
+    assert(a);
 
     caption(a->name());
     group("Constraint");

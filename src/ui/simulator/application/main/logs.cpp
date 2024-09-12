@@ -172,7 +172,7 @@ void ApplWnd::destroyLogs()
     if (pLogFlusherTimer)
     {
         wxTimer* timer = pLogFlusherTimer;
-        pLogFlusherTimer = NULL;
+        pLogFlusherTimer = nullptr;
         delete timer;
     }
 }
@@ -196,7 +196,7 @@ void ApplWnd::destroyLogsViewer()
     if (pWndLogs)
     {
         pWndLogs->Destroy();
-        pWndLogs = NULL;
+        pWndLogs = nullptr;
     }
 }
 

@@ -28,9 +28,7 @@
 #include <yuni/io/file.h>
 
 #include <antares/memory/memory.h>
-#include "antares/antares/antares.h"
 #include "antares/jit/jit.h"
-#include "antares/study/fwd.h"
 
 namespace Antares
 {
@@ -338,15 +336,6 @@ public:
     */
     template<class U>
     void pasteToColumn(uint x, const U* data);
-
-    /*!
-    ** \brief Copy values into a given column in the matrix
-    **
-    ** \param x The column index (zero-based)
-    ** \param data The data to copy
-    */
-    template<class U>
-    void pasteToColumn(uint x, const Antares::Memory::Array<U>& data);
 
     /*!
     ** \brief Set a entire column with a given value

@@ -22,5 +22,5 @@
 
 namespace Antares::Solver
 {
-void WriteCommandLineIntoLogs(int argc, char** argv);
+void WriteCommandLineIntoLogs(int argc, const char** argv);
 }

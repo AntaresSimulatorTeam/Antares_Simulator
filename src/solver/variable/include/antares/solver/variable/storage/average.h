@@ -100,23 +100,23 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(report,
-                                                                                Memory::RawPointer(
-                                                                                  avgdata.hourly));
+                InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
+                                                                               Memory::RawPointer(
+                                                                                 avgdata.hourly));
                 break;
             case Category::daily:
-                InternalExportValues<maxDaysInAYear, VCardT, Category::daily>(report,
-                                                                              avgdata.daily);
+                InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report, avgdata.daily);
                 break;
             case Category::weekly:
-                InternalExportValues<maxWeeksInAYear, VCardT, Category::weekly>(report,
-                                                                                avgdata.weekly);
+                InternalExportValues<WEEKS_PER_YEAR, VCardT, Category::weekly>(report,
+                                                                               avgdata.weekly);
                 break;
             case Category::monthly:
-                InternalExportValues<maxMonths, VCardT, Category::monthly>(report, avgdata.monthly);
+                InternalExportValues<MONTHS_PER_YEAR, VCardT, Category::monthly>(report,
+                                                                                 avgdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
+                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year.data());
                 break;
             }
         }

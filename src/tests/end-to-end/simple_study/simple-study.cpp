@@ -1,30 +1,28 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-#include <list> // Fix for Boost < 1.67
-
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #define BOOST_TEST_MODULE test - end - to - end tests
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "utils.h"
+#include "in-memory-study.h"
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
@@ -80,10 +78,11 @@ struct HydroMaxPowerStudy: public StudyBuilder
 HydroMaxPowerStudy::HydroMaxPowerStudy()
 {
     simulationBetweenDays(0, 14);
-    setNumberMCyears(1);
 
     area = addAreaToStudy("Area");
     area->thermal.unsuppliedEnergyCost = 1;
+
+    setNumberMCyears(1);
 
     TimeSeriesConfigurer loadTSconfig(area->load.series.timeSeries);
     loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
@@ -108,7 +107,6 @@ BOOST_AUTO_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER)
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_fullfills_area_demand, StudyFixture)
 {
     setNumberMCyears(1);
-
     simulation->create();
     simulation->run();
 
@@ -284,13 +282,13 @@ BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
 {
     StudyBuilder builder;
     builder.simulationBetweenDays(0, 7);
-    builder.setNumberMCyears(1);
     Area& area = *builder.addAreaToStudy("A");
     PartHydro& hydro = area.hydro;
     TimeSeriesConfigurer(hydro.series->storage.timeSeries)
       .setColumnCount(1)
       .fillColumnWith(0, -1.0); // Negative inflow will cause a consistency error with mingen
 
+    builder.setNumberMCyears(1);
     auto simulation = builder.simulation;
     simulation->create();
     BOOST_CHECK_THROW(simulation->run(), Antares::FatalError);
@@ -310,7 +308,8 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     props.injectionNominalCapacity = 10;
     props.withdrawalNominalCapacity = 10;
     props.reservoirCapacity = 100;
-    props.efficiencyFactor = .9;
+    props.injectionEfficiency = .9;
+    props.withdrawalEfficiency = .8;
     props.initialLevel = .443;
     props.groupName = std::string("Some STS group");
     // Default values for series
@@ -319,17 +318,16 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
     storages.push_back(sts);
 
     // Fatal gen at h=1
-    {
-        auto& windTS = area->wind.series.timeSeries;
-        TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
-        windTS[0][1] = 100;
-    }
+    auto& windTS = area->wind.series.timeSeries;
+    TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
+    windTS[0][1] = 100;
 
-    // Fatal load at h=2
+    // Fatal load at h=2-10
+    auto& loadTS = area->load.series.timeSeries;
+    TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
+    for (int i = 2; i < 10; i++)
     {
-        auto& loadTS = area->load.series.timeSeries;
-        TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
-        loadTS[0][2] = 100;
+        loadTS[0][i] = 100;
     }
 
     // Usual values, avoid spillage & unsupplied energy
@@ -345,6 +343,51 @@ BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixtu
                  == props.initialLevel * props.reservoirCapacity.value(),
                tt::tolerance(0.001));
 }
+
+BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixture)
+{
+    using namespace Antares::Data::ShortTermStorage;
+    setNumberMCyears(1);
+    auto& storages = area->shortTermStorage.storagesByIndex;
+    STStorageCluster sts;
+    auto& props = sts.properties;
+    props.name = "my-sts";
+    props.injectionNominalCapacity = 10;
+    props.withdrawalNominalCapacity = 10;
+    props.reservoirCapacity = 100;
+    props.injectionEfficiency = .6;
+    props.withdrawalEfficiency = .8;
+    props.initialLevel = .5;
+    props.groupName = std::string("Some STS group");
+    // Default values for series
+    sts.series->fillDefaultSeriesIfEmpty();
+
+    storages.push_back(sts);
+
+    // Fatal gen at h=1
+    auto& windTS = area->wind.series.timeSeries;
+    TimeSeriesConfigurer(windTS).setColumnCount(1).fillColumnWith(0, 0.);
+    windTS[0][1] = 100;
+
+    // Fatal load at h=2
+    auto& loadTS = area->load.series.timeSeries;
+    TimeSeriesConfigurer(loadTS).setColumnCount(1).fillColumnWith(0, 0.);
+    loadTS[0][2] = 100;
+
+    // Usual values, avoid spillage & unsupplied energy
+    area->thermal.unsuppliedEnergyCost = 1.e3;
+    area->thermal.spilledEnergyCost = 1.;
+
+    simulation->create();
+    simulation->run();
+
+    unsigned int groupNb = 0; // Used to reach the first group of STS results
+    OutputRetriever output(simulation->rawSimu());
+
+    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(1), 56); // injection
+    BOOST_CHECK_EQUAL(output.levelForSTSgroup(area, groupNb).hour(2), 48); // withdrawal
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(HYDRO_MAX_POWER)

@@ -31,36 +31,21 @@ namespace Antares::Data::AdequacyPatch
 // Local matching
 // -------------------
 
-void LocalMatching::reset()
+static bool legacyLocalMatchingKeys(const Yuni::String& key)
 {
-    setToZeroOutsideInsideLinks = true;
-    setToZeroOutsideOutsideLinks = true;
-}
-
-bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
-{
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
-    {
-        return value.to<bool>(setToZeroOutsideInsideLinks);
-    }
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
     {
-        return value.to<bool>(setToZeroOutsideOutsideLinks);
+        logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step not "
+                          "supported with this solver version, use a version < 9.2";
+        return true;
     }
     if (key == "enable-first-step")
     {
-        return value.to<bool>(enabled);
+        logs.warning() << "Parameter enable-first-step not supported with this solver version, use "
+                          "a version < 9.2";
+        return true;
     }
     return false;
-}
-
-void LocalMatching::addProperties(IniFile::Section* section) const
-{
-    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
-                 setToZeroOutsideInsideLinks);
-    section->add("set-to-null-ntc-between-physical-out-for-first-step",
-                 setToZeroOutsideOutsideLinks);
-    section->add("enable-first-step", enabled);
 }
 
 // -----------------------
@@ -135,7 +120,7 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
         return value.to<int>(thresholdVarBoundsRelaxation);
     }
 
-    return false;
+    return legacyLocalMatchingKeys(key);
 }
 
 const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
@@ -168,10 +153,8 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 // ------------------------
 void AdqPatchParams::reset()
 {
-    enabled = false;
-
-    localMatching.reset();
     curtailmentSharing.reset();
+    setToZeroOutsideInsideLinks = true;
 }
 
 void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
@@ -180,14 +163,8 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
     {
         out.emplace_back("DENS");
         out.emplace_back("LMR VIOL.");
-        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("UNSP. ENRG CSR");
         out.emplace_back("DTG MRG CSR");
-    }
-
-    // If the adequacy patch is enabled, but the LMR is disabled, the DENS variable shouldn't exist
-    if (enabled && !localMatching.enabled)
-    {
-        out.emplace_back("DENS");
     }
 }
 
@@ -197,17 +174,20 @@ bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::Str
     {
         return value.to<bool>(enabled);
     }
-
-    return curtailmentSharing.updateFromKeyValue(key, value)
-           != localMatching.updateFromKeyValue(key, value); // XOR
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
+    {
+        return value.to<bool>(setToZeroOutsideInsideLinks);
+    }
+    return curtailmentSharing.updateFromKeyValue(key, value);
 }
 
 void AdqPatchParams::saveToINI(IniFile& ini) const
 {
     auto* section = ini.addSection("adequacy patch");
     section->add("include-adq-patch", enabled);
+    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
+                 setToZeroOutsideInsideLinks);
 
-    localMatching.addProperties(section);
     curtailmentSharing.addProperties(section);
 }
 

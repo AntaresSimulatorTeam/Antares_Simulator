@@ -188,6 +188,6 @@ $$V_t^- + S_t \geq \underline{S_t}$$
 
 $$Y - V_t^- \geq 0$$
 
-[^monthly_allocation]: In the first equation, $S_{t-1}$ is either the initial stock $S_0$ or the final stock of the previous year (hydro hot start)
+[^monthly_allocation]: In the first equation, $S_{t-1}$ is equal to initial stock $S_0$
 
 [^daily_allocation]: In the first equation, $S_{t-1}$ is either the initial stock used in M or the final stock of the previous month ($D(m-1)$)

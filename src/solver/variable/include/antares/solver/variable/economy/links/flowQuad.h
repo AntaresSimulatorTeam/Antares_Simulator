@@ -129,7 +129,7 @@ public:
     void initializeFromStudy(Data::Study& study)
     {
         // Average on all years
-        pNbHours = study.runtime->rangeLimits.hour[Data::rangeEnd] + 1;
+        pNbHours = study.runtime.rangeLimits.hour[Data::rangeEnd] + 1;
         AncestorType::pResults.initializeFromStudy(study);
         AncestorType::pResults.reset();
 

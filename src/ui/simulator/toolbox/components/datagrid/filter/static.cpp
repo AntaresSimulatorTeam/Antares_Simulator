@@ -63,7 +63,7 @@ struct ResultNewInstance
     using Type = AFilterBase*;
     static AFilterBase* Default()
     {
-        return NULL;
+        return nullptr;
     }
     static T* Value(Input* parent)
     {

@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <vector>
 
 std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;

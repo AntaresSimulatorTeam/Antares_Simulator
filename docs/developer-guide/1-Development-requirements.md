@@ -11,13 +11,17 @@ The compilation of *Antares Simulator* requires C++17 support.
 === "Centos"
 
     By default, GCC version on Centos is old.
-    Some external repositories must be enabled depedning on your version of the OS:
+    Some external repositories must be enabled depending on your version of the OS:
 
     #### Centos 7
     You must enable the EPEL repository:
     ```
     sudo yum install epel-release
-    sudo yum install centos-release-scl
+    sudo yum install git redhat-lsb-core make wget centos-release-scl scl-utils rpm-build
+    sudo yum install devtoolset-10-gcc*
+    
+    scl enable devtoolset-10 bash
+    source /opt/rh/rh-git227/enable
     ```
     
     #### Centos 8
@@ -25,8 +29,8 @@ The compilation of *Antares Simulator* requires C++17 support.
     ```
     sudo yum install dnf-plugins-core
     sudo yum config-manager --set-enabled PowerTools
-    sudo yum install devtoolset-9
-    scl enable devtoolset-9 bash
+    sudo yum install devtoolset-10
+    scl enable devtoolset-10 bash
     ```
 
 === "Ubuntu/Debian"

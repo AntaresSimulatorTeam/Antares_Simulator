@@ -10,6 +10,8 @@ set(TARGET_LIBS #No alias
         #not dependency is present since once a dependency is in the export set
         #it is available for everything
 
+        solver_api #What we want to export
+
         #solver_api
         study
         study-loader
@@ -33,6 +35,7 @@ set(TARGET_LIBS #No alias
         exception
         benchmarking
         antares-solver-variable
+        lps
 
         #study-loader
         #nothing

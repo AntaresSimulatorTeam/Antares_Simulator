@@ -31,7 +31,7 @@
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    assert(ProblemeAResoudre != NULL);
+    assert(ProblemeAResoudre);
 
     int nombreDeVariables = 0;
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);

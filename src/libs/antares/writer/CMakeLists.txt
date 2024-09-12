@@ -1,5 +1,4 @@
 project(result-writer)
-find_package(minizip)
 
 add_library(result_writer
         # Helper class

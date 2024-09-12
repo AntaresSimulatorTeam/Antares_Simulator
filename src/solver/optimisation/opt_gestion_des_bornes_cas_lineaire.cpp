@@ -21,7 +21,6 @@
 
 #include <cmath>
 
-#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
@@ -133,17 +132,6 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                 Xmax[var] = 0.;
             }
 
-            // adq patch: update ENS <= DENS in 2nd run
-            if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
-                && !problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep
-                && problemeHebdo->adequacyPatchRuntimeData->areaMode[pays]
-                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            {
-                Xmax[var] = std::min(
-                  Xmax[var],
-                  problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDENS[pdtHebdo]);
-            }
-
             problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive[pdtHebdo]
               = 0.0;
 
@@ -249,12 +237,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             int var = variableManager.NTCDirect(interco, pdtJour);
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
-            AdequacyPatch::setNTCbounds(Xmax[var],
-                                        Xmin[var],
-                                        ValeursDeNTC,
-                                        interco,
-                                        problemeHebdo,
-                                        adqPatchParams);
+            Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
+            Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
 
             if (std::isinf(Xmax[var]) && Xmax[var] > 0)
             {
@@ -308,8 +292,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
                 Xmin[var] = 0.0;
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
 
                 var = variableManager.IntercoIndirectCost(interco, pdtJour);
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
@@ -329,8 +313,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
                 Xmin[var] = 0.0;
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
             }
         }
 
@@ -382,16 +366,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     {
                         Xmin[var] = 0.0;
                         Xmax[var] = LINFINI_ANTARES;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
                     var = variableManager.HydProdUp(pays, pdtJour);
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
                         Xmin[var] = 0.0;
                         Xmax[var] = LINFINI_ANTARES;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
                 }
                 else if (problemeHebdo->TypeDeLissageHydraulique
@@ -404,8 +388,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                         Xmin[var] = 0.0;
                         Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                       .MaxDesPmaxHydrauliques;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
 
                     var = variableManager.HydProdUp(pays, pdtJour);
@@ -414,8 +398,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                         Xmin[var] = 0.0;
                         Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
                                       .MaxDesPmaxHydrauliques;
-                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
                     }
                 }
             }
@@ -454,7 +438,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                               .NiveauHoraireSup[pdtHebdo];
                 double* adresseDuResultat = &(
                   problemeHebdo->ResultatsHoraires[pays].niveauxHoraires[pdtHebdo]);
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 
@@ -472,9 +456,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                                                 .ValeursHorairesDeDefaillanceNegative[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
-
-            problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillanceEnReserve[pdtHebdo]
-              = 0.0;
         }
     }
 
@@ -496,14 +477,14 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmin[var] = -(LINFINI_ANTARES);
                 Xmax[var] = LINFINI_ANTARES;
 
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
 
                 //	Note: if there were a single optimization run instead of two; the following
                 // could be used: 	adresseDuResultat =
                 //&(problemeHebdo->CaracteristiquesHydrauliques[pays].LevelForTimeInterval);
                 //	AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-                AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
             }
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
@@ -514,8 +495,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays].TailleReservoir
                                 / double(100);
 
-                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
-                    AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+                    AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
                 }
             }
         }

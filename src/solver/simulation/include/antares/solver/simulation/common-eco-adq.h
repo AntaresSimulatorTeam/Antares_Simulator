@@ -23,9 +23,6 @@
 
 #include <vector>
 
-#include <yuni/yuni.h>
-#include <yuni/core/bind.h>
-
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
@@ -56,18 +53,15 @@ void PrepareRandomNumbers(Data::Study& study,
                           PROBLEME_HEBDO& problem,
                           yearRandomNumbers& randomForYear);
 
+void SetInitialHydroLevel(Data::Study& study,
+                          PROBLEME_HEBDO& problem,
+                          const HYDRO_VENTILATION_RESULTS& hydroVentilationResults);
+
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     double** thermalNoises,
+                                     std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year);
-
-/*!
-** \brief Prepare data from clusters in mustrun mode (eco+adq)
-*/
-void PrepareDataFromClustersInMustrunMode(Data::Study& study,
-                                          Data::Area::ScratchMap& scratchmap,
-                                          uint year);
 
 /*!
 ** \brief Get if the quadratic optimization should be used according
@@ -136,14 +130,6 @@ void interpolateWaterValue(const Data::AreaList& areas,
 ** \param problem The weekly problem, from the solver
 */
 void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
-
-/*
-** \brief Updating the year final reservoir level, to be used as a start for the year.
-**
-** \param areas : the areas of study
-** \param problem The weekly problem, living over the whole simuation.
-*/
-void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
 /*
 ** \brief Compute the weighted average NTC for a link

@@ -28,9 +28,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 #define SEP IO::Separator
@@ -211,7 +209,6 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                     continue;
                 }
 
-                cluster->integrityCheck();
                 addToCompleteList(cluster);
             }
         }
@@ -223,7 +220,17 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
     return false;
 }
 
+bool RenewableClusterList::validateClusters() const
+{
+    bool ret = true;
+    for (const auto& cluster: allClusters_)
+    {
+        ret = cluster->integrityCheck() && ret;
+    }
+
+    return ret;
+}
+
 #undef SEP
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

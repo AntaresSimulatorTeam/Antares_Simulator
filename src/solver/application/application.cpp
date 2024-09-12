@@ -20,29 +20,25 @@
  */
 #include "antares/application/application.h"
 
-#include <yuni/datetime/timestamp.h>
-
 #include <antares/antares/fatal-error.h>
+#include <antares/application/ScenarioBuilderOwner.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/infoCollection/StudyInfoCollector.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
-#include <antares/study/version.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/config/config.h"
-#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
-#include "antares/solver/simulation/adequacy_mode.h"
-#include "antares/solver/simulation/economy_mode.h"
+#include "antares/solver/simulation/simulation-run.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
-#include "antares/study/simulation.h"
 
 using namespace Antares::Check;
 
@@ -63,7 +59,7 @@ Application::Application()
     resetProcessPriority();
 }
 
-void Application::parseCommandLine(Data::StudyLoadOptions& options)
+bool Application::parseCommandLine(Data::StudyLoadOptions& options)
 {
     auto parser = CreateParser(pSettings, options);
     auto ret = parser->operator()(pArgc, pArgv);
@@ -73,27 +69,28 @@ void Application::parseCommandLine(Data::StudyLoadOptions& options)
         throw Error::CommandLineArguments(parser->errors());
     case Yuni::GetOpt::ReturnCode::help:
         pStudy = nullptr;
-        return;
+        return false;
     default:
-        break;
+        return true;
     }
 }
 
-void Application::handleOptions(const Data::StudyLoadOptions& options)
+bool Application::handleOptions(const Data::StudyLoadOptions& options)
 {
     if (options.displayVersion)
     {
         PrintVersionToStdCout();
         pStudy = nullptr;
-        return;
+        return false;
     }
 
     if (options.listSolvers)
     {
         printSolvers();
         pStudy = nullptr;
-        return;
+        return false;
     }
+    return true;
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
@@ -117,7 +114,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        pDurationCollector("study_loading") << [&]
+        pDurationCollector("study_loading") << [this, &study, &options]
         {
             if (study.loadFromFolder(pSettings.studyFolder, options))
             {
@@ -223,7 +220,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         writeComment(study);
     }
 
-    // Runtime data dedicated for the solver
     if (!study.initializeRuntimeInfos())
     {
         throw Error::RuntimeInfoInitialization();
@@ -231,6 +227,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
+
+    ScenarioBuilderOwner(study).callScenarioBuilder();
 
     // alloc global vectors
     SIM_AllocationTableaux(study);
@@ -256,7 +254,6 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
     pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
     pParameters = &(pStudy->parameters);
-
     readDataForTheStudy(options);
 
     postParametersChecks();
@@ -312,7 +309,7 @@ void Application::postParametersChecks() const
     checkCO2CostColumnNumber(pStudy->areas);
 }
 
-void Application::prepare(int argc, char* argv[])
+void Application::prepare(int argc, const char* argv[])
 {
     pArgc = argc;
     pArgv = argv;
@@ -335,9 +332,15 @@ void Application::prepare(int argc, char* argv[])
     // The parser contains references to members of pSettings and options,
     // don't de-allocate these.
 
-    parseCommandLine(options);
+    if (!parseCommandLine(options)) // --help
+    {
+        return;
+    }
 
-    handleOptions(options);
+    if (!handleOptions(options)) // --version, --list-solvers
+    {
+        return;
+    }
 
     // Perform some checks
     checkAndCorrectSettingsAndOptions(pSettings, options);
@@ -380,61 +383,18 @@ void Application::execute()
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();
 
-    pStudy->computePThetaInfForThermalClusters();
-
-    // Run the simulation
-    switch (pStudy->runtime->mode)
-    {
-    case Data::SimulationMode::Economy:
-    case Data::SimulationMode::Expansion:
-        runSimulationInEconomicMode();
-        break;
-    case Data::SimulationMode::Adequacy:
-        runSimulationInAdequacyMode();
-        break;
-    default:
-        break;
-    }
-    // TODO : make an interface class for ISimulation, check writer & queue before
-    // runSimulationIn<XXX>Mode()
+    Simulation::NullSimulationObserver observer;
+    pOptimizationInfo = simulationRun(*pStudy,
+                                      pSettings,
+                                      pDurationCollector,
+                                      *resultWriter,
+                                      observer);
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
 
     // Stop the display of the progression
     pStudy->progression.stop();
-}
-
-void Application::runSimulationInEconomicMode()
-{
-    Solver::runSimulationInEconomicMode(*pStudy,
-                                        pSettings,
-                                        pDurationCollector,
-                                        *resultWriter,
-                                        pOptimizationInfo);
-}
-
-void Application::runSimulationInAdequacyMode()
-{
-    Solver::runSimulationInAdequacyMode(*pStudy,
-                                        pSettings,
-                                        pDurationCollector,
-                                        *resultWriter,
-                                        pOptimizationInfo);
-}
-
-static std::string timeToString()
-{
-    using namespace std::chrono;
-    auto time = system_clock::to_time_t(system_clock::now());
-    std::tm local_time = *std::localtime(&time);
-
-    char time_buffer[256];
-    std::strftime(time_buffer, sizeof(time_buffer), "%Y%m%d-%H%M%S", &local_time);
-
-    std::string currentTime = time_buffer;
-
-    return currentTime;
 }
 
 void Application::resetLogFilename() const
@@ -447,8 +407,9 @@ void Application::resetLogFilename() const
                          + ". Aborting now.");
     }
 
-    logfile /= "solver-";               // append the filename
-    logfile += timeToString() + ".log"; // complete filename with timestamp and extension
+    logfile /= "solver-"; // append the filename
+    logfile += FormattedTime("%Y%m%d-%H%M%S")
+               + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename
     logs.logfile(logfile.string());

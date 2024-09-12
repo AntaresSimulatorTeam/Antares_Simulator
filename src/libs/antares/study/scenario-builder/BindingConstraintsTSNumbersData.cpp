@@ -80,13 +80,12 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
 bool BindingConstraintsTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
-    std::for_each(study.bindingConstraintsGroups.begin(),
-                  study.bindingConstraintsGroups.end(),
-                  [&](const auto& group)
-                  {
-                      auto& ts_numbers = rules_[group->name()];
-                      ts_numbers.reset(1, nbYears);
-                  });
+    std::ranges::for_each(study.bindingConstraintsGroups,
+                          [this, &nbYears](const auto& group)
+                          {
+                              auto& ts_numbers = rules_[group->name()];
+                              ts_numbers.reset(1, nbYears);
+                          });
     return true;
 }
 

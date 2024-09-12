@@ -28,6 +28,13 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
+hydroLevelsData::hydroLevelsData(const std::string& iniFilePrefix,
+                                 std::function<void(Study&, MatrixType&)> applyToTarget):
+    addToPrefix_(iniFilePrefix),
+    applyToTarget_(applyToTarget)
+{
+}
+
 bool hydroLevelsData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
@@ -40,10 +47,6 @@ bool hydroLevelsData::reset(const Study& study)
 
 void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
-    // Prefix
-    CString<512, false> prefix;
-    prefix += "hl,";
-
     // Turning values into strings (precision 4)
     std::ostringstream value_into_string;
     value_into_string << std::setprecision(4);
@@ -65,7 +68,7 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
             }
             assert(index < study.areas.size());
             value_into_string << value;
-            file << prefix << study.areas.byIndex[index]->id << ',' << y << " = "
+            file << addToPrefix_ << study.areas.byIndex[index]->id << ',' << y << " = "
                  << value_into_string.str() << '\n';
             value_into_string.str(std::string()); // Clearing converter
         }
@@ -79,7 +82,7 @@ void hydroLevelsData::set_value(uint x, uint y, double value)
 
 bool hydroLevelsData::apply(Study& study)
 {
-    study.scenarioHydroLevels.copyFrom(pHydroLevelsRules);
+    applyToTarget_(study, pHydroLevelsRules);
     return true;
 }
 

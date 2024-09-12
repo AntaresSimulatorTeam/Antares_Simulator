@@ -12,7 +12,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study mode
 
----
+
 #### mode
 [//]: # (TODO: verify if required, remove default value)
 [//]: # (TODO: add details 'expansion' behavior)
@@ -36,7 +36,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Study horizon
 
----
+
 #### horizon
 [//]: # (TODO: verify if required, remove default value)
 - **Expected value:** year (string)
@@ -48,7 +48,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ### Calendar parameters
 
----
+
 #### nbyears
 [//]: # (TODO: verify if required, verify default value)
 - **Expected value:** unsigned integer
@@ -122,7 +122,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Additional parameters
 
----
+
 #### year-by-year
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -219,7 +219,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Pre-processor parameters
 
----
+
 #### readonly
 [//]: # (TODO: add usage details)
 - **Expected value:** `true` or `false`
@@ -504,16 +504,6 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
   NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)
 
 ---
-#### set-to-null-ntc-between-physical-out-for-first-step
-[//]: # (TODO: usage is not clear)
-- **Expected value:** `true` or `false`
-- **Required:** no
-- **Default value:** `true`
-- **Usage:** Transmission capacities between physical areas outside adequacy patch (area type 1).
-  NTC is set to null (if true) only in the first step of adequacy patch local matching rule.  
-  NTC between physical areas outside adequacy patch (set to null / local values)
-
----
 #### price-taking-order
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -542,16 +532,6 @@ _**This section is under construction**_
 - **Required:** **yes**
 - **Default value:**
 - **Usage:** Check CSR cost function value prior and after CSR (false / true)
-
----
-#### enable-first-step
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
-
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
 
 ---
 #### threshold-initiate-curtailment-sharing-rule
@@ -588,8 +568,7 @@ _**This section is under construction**_
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
 
 ---
-#### initial-reservoir-levels
-[//]: # (TODO: complete the usage paragraph)
+#### initial-reservoir-levels (DEPRECATED since 9.2: cold start is default behavior)
 - **Expected value:** one of the following (case-insensitive):
     - `cold start`
     - `hot start`
@@ -792,12 +771,14 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
 ---
 #### playlist_year
 - **Expected value:** `+ =` or `- =`, followed by a positive integer (example: `playlist_year + = 5`)
-- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`.
+- **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`, ignored otherwise.
 - **Usage:**
     - for every Monte-Carlo year that you want the Antares Simulator to **study**, add the parameter entry
       `playlist_year + = i`, where `i` is the index of the year.
     - for every Monte-Carlo year that you want the Antares Simulator to **skip**, add the parameter entry
       `playlist_year - = i`, where `i` is the index of the year.
+
+_Please note that by convention, the first year has index 0._
 
 ---
 #### playlist_year_weight

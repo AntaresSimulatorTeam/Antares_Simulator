@@ -28,10 +28,6 @@
 
 #include <antares/study/study.h>
 
-// #include <map>
-// #include <assert.h>
-// #include <utility>
-
 namespace Antares
 {
 namespace Graph

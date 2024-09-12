@@ -489,31 +489,6 @@ void Matrix<T, ReadWriteT>::pasteToColumn(uint x, const U* data)
 }
 
 template<class T, class ReadWriteT>
-template<class U>
-void Matrix<T, ReadWriteT>::pasteToColumn(uint x, const Antares::Memory::Array<U>& data)
-{
-    assert(x < width and "Invalid column index (bigger than `this->width`)");
-    ColumnType& column = entry[x];
-
-    // if the two types are strictly equal, we can perform some major
-    // optimisations
-    if (Yuni::Static::Type::StrictlyEqual<T, U>::Yes)
-    {
-        (void)::memcpy(column, data, sizeof(T) * height);
-    }
-    else
-    {
-        // ...otherwise we have to copy each item by hand in any cases
-        for (uint y = 0; y != height; ++y)
-        {
-            column[y] = (T)data[y];
-        }
-    }
-
-    markAsModified();
-}
-
-template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::fillColumn(uint x, const T& value)
 {
     assert(x < width and "Invalid column index (bigger than `this->width`)");
@@ -1069,8 +1044,6 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
                                                 uint options,
                                                 BufferType* buffer)
 {
-    using namespace Yuni;
-
     // Status
     bool result = false;
 
@@ -1082,7 +1055,7 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
 
     switch (loadFromFileToBuffer(*buffer, filename))
     {
-    case IO::errNone:
+    case Yuni::IO::errNone:
     {
         // Empty files
         if (buffer->empty())
@@ -1123,7 +1096,7 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
         }
         break;
     }
-    case IO::errNotFound:
+    case Yuni::IO::errNotFound:
     {
         if (not(options & optQuiet))
         {
@@ -1131,7 +1104,7 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
         }
         break;
     }
-    case IO::errMemoryLimit:
+    case Yuni::IO::errMemoryLimit:
     {
         if (not(options & optQuiet))
         {

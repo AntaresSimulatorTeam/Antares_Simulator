@@ -20,8 +20,6 @@
 */
 #include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 
-#include <yuni/yuni.h>
-
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
@@ -39,7 +37,7 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
     {
         SIM_AllocationProblemeDonneesGenerales(problem, study, NombreDePasDeTemps);
         SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
-        SIM_AllocationLinks(problem, study.runtime->interconnectionsCount(), NombreDePasDeTemps);
+        SIM_AllocationLinks(problem, study.runtime.interconnectionsCount(), NombreDePasDeTemps);
         SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
         SIM_AllocateAreas(problem, study, NombreDePasDeTemps);
     }
@@ -55,7 +53,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 {
     uint nbPays = study.areas.size();
 
-    const uint linkCount = study.runtime->interconnectionsCount();
+    const uint linkCount = study.runtime.interconnectionsCount();
 
     problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
     problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
@@ -119,20 +117,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.ShortTermStorage.resize(nbPays);
 
-    problem.previousYearFinalLevels.resize(0);
-    if (problem.hydroHotStart)
-    {
-        for (uint i = 0; i <= nbPays; i++)
-        {
-            auto& area = *(study.areas[i]);
-            if (area.hydro.reservoirManagement)
-            {
-                problem.previousYearFinalLevels.assign(nbPays, 0.);
-                break;
-            }
-        }
-    }
-
     problem.ReserveJMoins1.resize(nbPays);
     problem.ResultatsHoraires.resize(nbPays);
 
@@ -146,8 +130,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 {
     uint nbPays = study.areas.size();
 
-    const uint linkCount = study.runtime->interconnectionsCount();
-    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+    const uint linkCount = study.runtime.interconnectionsCount();
+    const uint shortTermStorageCount = study.runtime.shortTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
 
@@ -173,7 +157,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
                                                                                           0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
@@ -186,13 +170,13 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.NumeroDeVariablesVariationHydALaHausse.assign(nbPays, 0);
 
         variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
 
         variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
@@ -219,14 +203,14 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDArret
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          .assign(study.runtime->thermalPlantTotalCount, 0);
+          .assign(study.runtime.thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);
@@ -292,7 +276,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         problem.MatriceDesContraintesCouplantes[constraintIndex]
           .PaysDuPalierDispatch.assign(bc->clusterCount(), 0);
 
-        // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
+        // TODO : create a numberOfTimeSteps method in class of runtime.bindingConstraint
         unsigned int nbTimeSteps;
         switch (bc->type())
         {
@@ -379,34 +363,19 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive.assign(NombreDePasDeTemps,
                                                                                  0.);
+        problem.ResultatsHoraires[k]
+          .ValeursHorairesDeDefaillancePositiveCSR.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDENS.assign(NombreDePasDeTemps,
                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations.assign(NombreDePasDeTemps,
                                                                          0); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR.assign(NombreDePasDeTemps,
-                                                                                 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
                                                                      0.); // adq patch
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveDown.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveAny.assign(NombreDePasDeTemps, 0.);
+
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
                                                                                  0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeDown.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeAny.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceEnReserve.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].TurbinageHoraireUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].TurbinageHoraireDown.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].niveauxHoraires.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].valeurH2oHoraire.assign(NombreDePasDeTemps, 0.);
@@ -438,25 +407,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.PaliersThermiquesDuPays[k]
               .PuissanceDisponibleEtCout[j]
               .NombreMinDeGroupesEnMarcheDuPalierThermique.assign(NombreDePasDeTemps, 0);
-
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .CoutHoraireDuPalierThermiqueUp.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .CoutHoraireDuPalierThermiqueDown.assign(NombreDePasDeTemps, 0.);
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier.assign(
               nbPaliers,
               0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .ProductionThermiqueDuPalierUp.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .ProductionThermiqueDuPalierDown.assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k]
               .ProductionThermique[j]
               .NombreDeGroupesEnMarcheDuPalier.assign(nbPaliers, 0.);

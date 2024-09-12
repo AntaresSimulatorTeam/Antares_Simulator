@@ -29,7 +29,6 @@ env:
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages: yaml-cpp antlr4 boost-test
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
 
@@ -40,301 +39,327 @@ jobs:
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: ubuntu-20.04
+      # Caching strategy of VCPKG dependencies
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
     runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ env.REF }}
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REF }}
 
-    - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
-      with:
+      - name: Install VCPKG
+        run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+      - name: Restore vcpkg binary dir from cache
+        id: cache-vcpkg-binary
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+          # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+          restore-keys: vcpkg-cache-ubuntu-
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
           key: ${{ env.os }}
 
+      - name: Install libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+          sudo apt-get install g++-10 gcc-10
 
-    - name : Init VCPKG submodule
-      run: |
-          git submodule update --init vcpkg
+      - name: Config OR-Tools URL
+        run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
-    # Restore both vcpkg and its artifacts from the GitHub cache service.
-    - name: Restore vcpkg and its artifacts.
-      uses: actions/cache@v4
-      with:
-        # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
-        # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
-        path: |
-          ${{ env.VCPKG_ROOT }}
-          !${{ env.VCPKG_ROOT }}/buildtrees
-          !${{ env.VCPKG_ROOT }}/packages
-          !${{ env.VCPKG_ROOT }}/downloads
-        # The key is composed in a way that it gets properly invalidated: this must happen whenever vcpkg's Git commit id changes, or the list of packages changes. In this case a cache miss must happen and a new entry with a new key with be pushed to GitHub the cache service.
-        # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
-        # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
-        key: |
-          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ env.triplet }}
+      - name: Download pre-compiled librairies
+        uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+        with:
+          os: ${{env.os}}
+          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-dir: ${{env.ORTOOLS_DIR}}
 
-    - name: Install libraries
-      run: |
-           sudo apt-get update
-           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-           sudo apt-get install g++-10 gcc-10
+      - name: Set up Python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-    - name: export wxWidgets script
-      shell: bash
-      run: |
-           export WX_CONFIG=${{env.WX_CONFIG}}
-
-    - name : Install deps with VCPKG
-      run: |
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
-          rm -rf buildtrees packages downloads
-      shell: bash
-
-    - name: Read antares-deps version
-      id: antares-deps-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'antares-deps-version.json'
-        prop_path: 'antares_deps_version'
-
-
-    - name: Config OR-Tools URL
-      run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-
-    - name: Download pre-compiled librairies
-      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
-      with:
-        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{env.os}}
-        ortools-url: ${{env.ORTOOLS_URL}}
-        ortools-dir: ${{env.ORTOOLS_DIR}}
-
-    - name: Set up Python
-      id: setup-python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-
-    - name: Install dependencies
-      run: |
+      - name: Install dependencies
+        run: |
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
 
-    - name: Init submodule
-      run: |
-          git submodule update --init src/antares-deps
-          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-    
+      - name: Configure
+        run: |
+          cmake -B _build -S src \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DVCPKG_TARGET_TRIPLET=x64-linux-release \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_TESTING=ON \
+          -DBUILD_TOOLS=ON \
+          -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+          -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
-    
-    - name: Configure
-      run: |
-           cmake -B _build -S src \
+      - name: Build
+        run: |
+          cmake --build _build -j$(nproc)
+
+      - name: Run API tests
+        run: |
+          cmake --install _build --prefix antares_install
+          cd src/api_client_example
+           cmake -B _build -S . \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
-           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
-           -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
            -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
-           -DBUILD_not_system=OFF \
-           -DBUILD_TOOLS=ON \
-           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
-
-    - name: Build
-      run: |
-             cmake --build _build -j$(nproc)
-
-
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'simtest.json'
-        prop_path: 'version'
-
-
-    - name: Run named mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-named-mps
-        os: ${{ env.os }}
-        variant: "named-mps"
-
-    - name: Run unfeasibility-related tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      run: |
+           -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+           -DVCPKG_TARGET_TRIPLET=x64-linux-release \
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/_build/vcpkg_installed/x64-linux-release"
+           cmake --build _build -j$(nproc)
            cd _build
-           ctest -C Release --output-on-failure -R "^unfeasible$"
+           ctest -C Release --output-on-failure
 
-    - name: Run unit and end-to-end tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -L "unit|end-to-end"
+      - name: Read simtest version
+        run: |
+          echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
+          cat ./simtest.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
-    - name: Upload logs for failed tests
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-log
-        path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
+      - name: Export simtest version
+        run: |
+          echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-    - name: Run tests about infinity on BCs RHS
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-v830
-        os: ${{ env.os }}
+      - name: Init submodule Antares_Simulator_Tests
+        run: |
+          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
-    - name: Run MILP with CBC
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-milp
-        variant: "milp-cbc"
-        os: ${{ env.os }}
+      - name: Init submodule Antares_Simulator_Tests_NR
+        run: |
+          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
 
-    - name: Run tests introduced in v860
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-v860
-        os: ${{ env.os }}
+      - name: Run named mps tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-named-mps
+          os: ${{ env.os }}
+          variant: "named-mps"
 
-    - name: Run tests introduced in v870
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-v870
-        os: ${{ env.os }}
+      - name: Run unfeasibility-related tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        run: |
+          cd _build
+          ctest -C Release --output-on-failure -R "^unfeasible$"
 
-    - name: Run tests introduced in v910
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-v910
-        os: ${{ env.os }}
+      - name: Run unit and end-to-end tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        run: |
+          cd _build
+          ctest -C Release --output-on-failure -L "unit|end-to-end"
 
-    - name: Run short-tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: short-tests
-        os: ${{ env.os }}
+      - name: Upload logs for failed tests
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-log
+          path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
-    - name: Run mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-mps
-        os: ${{ env.os }}
+      - name: Run tests about infinity on BCs RHS
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v830
+          os: ${{ env.os }}
 
-    - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: adequacy-patch-CSR
-        os: ${{ env.os }}
+      - name: Run MILP with CBC
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-milp
+          variant: "milp-cbc"
+          os: ${{ env.os }}
 
-    - name: Run parallel tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-parallel
-        os: ${{ env.os }}
-        variant: "parallel"
+      - name: Run tests introduced in 8.6.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v860
+          os: ${{ env.os }}
 
-    - name: Run medium-tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: medium-tests
-        os: ${{ env.os }}
+      - name: Run tests introduced in 8.7.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v870
+          os: ${{ env.os }}
 
-    - name: Run long-tests-1
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: long-tests-1
-        os: ${{ env.os }}
+      - name: Run tests introduced in 9.1.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v910
+          os: ${{ env.os }}
 
-    - name: Run long-tests-2
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: long-tests-2
-        os: ${{ env.os }}
+      - name: Run tests introduced in 9.2.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v920
+          os: ${{ env.os }}
 
-    - name: Run long-tests-3
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: long-tests-3
-        os: ${{ env.os }}
+      - name: Run short-tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: short-tests
+          os: ${{ env.os }}
 
-    - name: Installer .deb creation
-      run: |
-           cd _build
-           cpack -G DEB
+      - name: Run cucumber on short-tests
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/short_tests.feature"
 
-    - name: .tar.gz creation
-      run: |
-           cd _build
-           cpack -G TGZ
+      - name: Run mps tests
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-mps
+          os: ${{ env.os }}
 
-    - name: Solver archive creation
-      run: |
-           cd _build
-           cmake --install . --prefix install
-           pushd .
-           cd install/bin
-           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-solver libsirius_solver.so
-           popd
-           rm -rf install
+      - name: Run tests for adequacy patch (CSR)
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: adequacy-patch-CSR
+          os: ${{ env.os }}
 
-    - name: Installer archive upload push
-      uses: actions/upload-artifact@v4
-      with:
-        name: targz
-        path: _build/*.tar.gz
+      - name: Run parallel tests
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-parallel
+          os: ${{ env.os }}
+          variant: "parallel"
 
-    - name: Installer deb upload push
-      uses: actions/upload-artifact@v4
-      with:
-        name: deb
-        path: _build/*.deb
+      - name: Run tests for time series generator tool
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: ts-generator
+          os: ${{ env.os }}
+          variant: "tsgenerator"
+
+      - name: Run medium-tests
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: medium-tests
+          os: ${{ env.os }}
+
+      - name: Run cucumber on medium-tests
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/medium_tests.feature"
+
+      - name: Run long-tests-1
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: long-tests-1
+          os: ${{ env.os }}
+
+      - name: Run long-tests-2
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: long-tests-2
+          os: ${{ env.os }}
+
+      - name: Run long-tests-3
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: long-tests-3
+          os: ${{ env.os }}
+
+      - name: Barrier
+        if: ${{ !success() }}
+        run: exit 1
+
+      - name: Installer .deb creation
+        run: |
+          cd _build
+          cpack -G DEB
+
+      - name: .tar.gz creation
+        run: |
+          cd _build
+          cpack -G TGZ
+
+      - name: Solver archive creation
+        run: |
+          cd _build
+          cmake --install . --prefix install
+          pushd .
+          cd install/bin
+          tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-solver libsirius_solver.so
+          popd
+          rm -rf install
+
+      - name: Installer archive upload push
+        uses: actions/upload-artifact@v4
+        with:
+          name: targz
+          path: _build/*.tar.gz
+
+      - name: Installer deb upload push
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          path: _build/*.deb
 
 
-    - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-        tag: ${{ github.event.inputs.release_tag }}
-      run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.deb
+      - name: Publish assets
+        if: ${{ env.IS_RELEASE == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          tag: ${{ github.event.inputs.release_tag }}
+        run: |
+          gh release upload "$tag" _build/*.tar.gz _build/*.deb
+
+      - name: Cache vcpkg binary dir
+        if: always()
+        id: save-cache-vcpkg-binary
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}

@@ -31,10 +31,6 @@
 
 using namespace Yuni;
 
-#define SEP \
-    Yuni:;  \
-    IO::Separator
-
 namespace Antares::Solver
 {
 bool FindLocation(String& location)

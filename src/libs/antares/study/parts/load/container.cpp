@@ -31,15 +31,8 @@ using namespace Yuni;
 namespace Antares::Data::Load
 {
 Container::Container():
-    prepro(nullptr),
     series(tsNumbers)
 {
-}
-
-Container::~Container()
-{
-    delete prepro;
-    prepro = nullptr;
 }
 
 bool Container::forceReload(bool reload) const

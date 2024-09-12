@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #define BOOST_TEST_MODULE test solver simulation things
 
 #define WIN32_LEAN_AND_MEAN
@@ -38,9 +38,8 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 {
     study->parameters.derated = false;
 
-    study->runtime = new StudyRuntimeInfos();
-    study->runtime->rangeLimits.year[rangeBegin] = 0;
-    study->runtime->rangeLimits.year[rangeEnd] = nbYears - 1;
+    study->runtime.rangeLimits.year[rangeBegin] = 0;
+    study->runtime.rangeLimits.year[rangeEnd] = nbYears - 1;
 
     study->parameters.renewableGeneration.toAggregated(); // Default
 
@@ -55,7 +54,7 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 {
     Area* area = study->areaAdd(areaName);
-    BOOST_CHECK(area != NULL);
+    BOOST_CHECK(area);
 
     return area;
 }
@@ -130,7 +129,7 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_
 
     Area* area_1 = addAreaToStudy(study, "Area 1");
     Area* area_2 = addAreaToStudy(study, "Area 2");
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     area_1->load.series.timeSeries.resize(5, 1);
     area_2->load.series.timeSeries.resize(5, 1);
@@ -157,7 +156,7 @@ static bool intramodal_load_two_areas(unsigned width_area_1, unsigned width_area
 
     Area* area_1 = addAreaToStudy(study, "Area 1");
     Area* area_2 = addAreaToStudy(study, "Area 2");
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     area_1->load.series.timeSeries.resize(width_area_1, 1);
     area_2->load.series.timeSeries.resize(width_area_2, 1);
@@ -199,7 +198,7 @@ BOOST_AUTO_TEST_CASE(
     auto thCluster_21 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-21");
     thCluster_21->series.timeSeries.resize(4, 1);
 
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(Generate(*study));
 
@@ -231,7 +230,7 @@ BOOST_AUTO_TEST_CASE(
     auto thCluster_21 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-21");
     thCluster_21->series.timeSeries.resize(4, 1);
 
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(Generate(*study));
 
@@ -263,7 +262,7 @@ BOOST_AUTO_TEST_CASE(
     auto thCluster_21 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-21");
     thCluster_21->series.timeSeries.resize(3, 1);
 
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(not Generate(*study));
 }
@@ -291,7 +290,7 @@ BOOST_AUTO_TEST_CASE(
     auto rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
     rnCluster_21->series.timeSeries.resize(4, 1);
 
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(Generate(*study));
 
@@ -323,7 +322,7 @@ BOOST_AUTO_TEST_CASE(
     auto rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
     rnCluster_21->series.timeSeries.resize(4, 1);
 
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(Generate(*study));
 
@@ -357,7 +356,7 @@ BOOST_AUTO_TEST_CASE(
     auto rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
     rnCluster_21->series.timeSeries.resize(4, 1);
 
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(not Generate(*study));
 }
@@ -389,7 +388,7 @@ BOOST_AUTO_TEST_CASE(
     auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
     auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
 
-    area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    area->resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
     BOOST_CHECK(Generate(*study));
@@ -425,7 +424,7 @@ BOOST_AUTO_TEST_CASE(
     auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
     auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
 
-    area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    area->resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
     BOOST_CHECK(Generate(*study));
@@ -461,7 +460,7 @@ BOOST_AUTO_TEST_CASE(
     auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
     auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
 
-    area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    area->resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
     BOOST_CHECK(not Generate(*study));
@@ -486,7 +485,7 @@ BOOST_AUTO_TEST_CASE(
     auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
     rnCluster_1->series.timeSeries.resize(5, 1);
 
-    area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    area->resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(Generate(*study));
 
@@ -515,7 +514,7 @@ BOOST_AUTO_TEST_CASE(
     auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
     rnCluster_1->series.timeSeries.resize(4, 1);
 
-    area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    area->resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(not Generate(*study));
 }
@@ -539,7 +538,7 @@ BOOST_AUTO_TEST_CASE(
     auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
     rnCluster_1->series.timeSeries.resize(1, 1);
 
-    area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    area->resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(Generate(*study));
 }
@@ -581,7 +580,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
     area_2->wind.series.timeSeries.resize(5, 1); // Ready made TS for wind
     auto thCluster_area_2 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-area-2");
 
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
     BOOST_CHECK(Generate(*study));
@@ -629,14 +628,14 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 
     auto thCluster = addClusterToArea<ThermalCluster>(area, "th-cluster");
 
-    area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    area->resizeAllTimeseriesNumbers(1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     auto bc = study->bindingConstraints.add("dummy");
     bc->group("dummy");
     study->bindingConstraintsGroups.add(bc->group());
     bc->RHSTimeSeries().resize(42, 1);
     study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(
-      1 + study->runtime->rangeLimits.year[rangeEnd]);
+      1 + study->runtime.rangeLimits.year[rangeEnd]);
 
     TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
     BOOST_CHECK(Generate(*study));

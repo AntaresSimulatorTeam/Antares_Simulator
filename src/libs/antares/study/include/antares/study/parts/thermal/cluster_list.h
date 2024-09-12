@@ -113,6 +113,9 @@ public:
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     bool loadPreproFromFolder(Study& s, const AnyString& folder);
+    bool validatePrepro(const Study& study);
+
+    bool validateClusters(const Parameters& param) const;
 
     bool loadEconomicCosts(Study& s, const AnyString& folder);
 

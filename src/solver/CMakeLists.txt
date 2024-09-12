@@ -11,6 +11,7 @@ add_subdirectory(application)
 add_subdirectory(constraints-builder)
 add_subdirectory(hydro)
 add_subdirectory(infeasible-problem-analysis)
+add_subdirectory(lps)
 add_subdirectory(misc)
 add_subdirectory(optimisation)
 add_subdirectory(signal-handling)
@@ -18,6 +19,8 @@ add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(variable)
+add_subdirectory(modeler)
+add_subdirectory(expressions)
 
 #
 # Resource file for Windows

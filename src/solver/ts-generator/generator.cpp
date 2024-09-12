@@ -27,7 +27,7 @@ namespace Antares::TSGenerator
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
 {
     areas.each(
-      [&](Data::Area& area)
+      [&params](Data::Area& area)
       {
           // Load
           if (params.timeSeriesToGenerate & Data::timeSeriesLoad)
@@ -50,9 +50,7 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
           // Hydro
           if (params.timeSeriesToGenerate & Data::timeSeriesHydro)
           {
-              Data::DataSeriesHydro* const series = area.hydro.series;
-              const uint nbSeries = params.nbTimeSeriesHydro;
-              series->resizeTS(nbSeries);
+              area.hydro.series->resizeTS(params.nbTimeSeriesHydro);
           }
 
           // Thermal

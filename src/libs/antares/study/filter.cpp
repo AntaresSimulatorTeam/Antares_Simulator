@@ -82,7 +82,7 @@ uint stringIntoDatePrecision(const AnyString& string)
     uint flag = 0;
 
     string.words(",; \r\n\t",
-                 [&](const AnyString& word) -> bool
+                 [&flag](const AnyString& word) -> bool
                  {
                      ShortString16 s = word;
                      s.toLower();

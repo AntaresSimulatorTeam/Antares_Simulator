@@ -329,8 +329,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
-          << area.name << "'"
-          << " are not identical";
+          << area.name << "'" << " are not identical";
 
         return false;
     }
@@ -476,7 +475,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
           if (!isTSintramodal[indexTS])
           {
               area.load.series.timeseriesNumbers[year] = (uint32_t)(floor(
-                study.runtime->random[seedTimeseriesNumbers].next()
+                study.runtime.random[seedTimeseriesNumbers].next()
                 * area.load.series.timeSeries.width));
           }
 
@@ -488,7 +487,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
           if (!isTSintramodal[indexTS])
           {
               area.solar.series.timeseriesNumbers[year] = (uint32_t)(floor(
-                study.runtime->random[seedTimeseriesNumbers].next()
+                study.runtime.random[seedTimeseriesNumbers].next()
                 * area.solar.series.timeSeries.width));
           }
 
@@ -500,7 +499,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
           if (!isTSintramodal[indexTS])
           {
               area.wind.series.timeseriesNumbers[year] = (uint32_t)(floor(
-                study.runtime->random[seedTimeseriesNumbers].next()
+                study.runtime.random[seedTimeseriesNumbers].next()
                 * area.wind.series.timeSeries.width));
           }
 
@@ -512,8 +511,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
           if (!isTSintramodal[indexTS])
           {
               area.hydro.series->timeseriesNumbers[year] = (uint32_t)(floor(
-                study.runtime->random[seedTimeseriesNumbers].next()
-                * area.hydro.series->TScount()));
+                study.runtime.random[seedTimeseriesNumbers].next() * area.hydro.series->TScount()));
           }
 
           // -------------
@@ -525,14 +523,14 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
           {
               if (!cluster->enabled)
               {
-                  study.runtime->random[seedTimeseriesNumbers].next();
+                  study.runtime.random[seedTimeseriesNumbers].next();
               }
               else
               {
                   if (!isTSintramodal[indexTS])
                   {
                       cluster->series.timeseriesNumbers[year] = (uint32_t)(floor(
-                        study.runtime->random[seedTimeseriesNumbers].next()
+                        study.runtime.random[seedTimeseriesNumbers].next()
                         * cluster->series.timeSeries.width));
                   }
               }
@@ -550,7 +548,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                   // There is no TS generation for renewable clusters
                   uint nbTimeSeries = cluster->series.timeSeries.width;
                   cluster->series.timeseriesNumbers[year] = (uint32_t)(floor(
-                    study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                    study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
               }
           }
 
@@ -568,7 +566,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                   if (nbTimeSeries > 1)
                   {
                       link.timeseriesNumbers[year] = (uint32_t)(floor(
-                        study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                        study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
                   }
               }
           }
@@ -580,7 +578,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         auto& groupTsNumber = group->timeseriesNumbers[year];
         if (nbTimeSeries > 1)
         {
-            groupTsNumber = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next()
+            groupTsNumber = (uint32_t)(floor(study.runtime.random[seedTimeseriesNumbers].next()
                                              * nbTimeSeries));
         }
     }
@@ -754,7 +752,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
         return GenerateDeratedMode(study);
     }
 
-    const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
+    const uint years = 1 + study.runtime.rangeLimits.year[rangeEnd];
 
     const array<bool, timeSeriesCount> isTSintramodal = {
       (bool)(timeSeriesLoad & parameters.intraModal),
@@ -784,7 +782,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
         drawTSnumbersForIntraModal(intramodal_draws,
                                    isTSintramodal,
                                    nbTimeseriesByMode,
-                                   study.runtime->random);
+                                   study.runtime.random);
         storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
 
         // NOT intra-modal TS : draw and store TS numbers

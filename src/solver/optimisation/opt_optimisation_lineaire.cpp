@@ -1,29 +1,32 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include <antares/logs/logs.h>
+#include "antares/solver/lps/LpsFromAntares.h"
+#include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 using namespace Antares;
@@ -61,11 +64,26 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
+namespace
+{
+void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
+                        int optimizationNumber,
+                        Solver::Simulation::ISimulationObserver& simulationObserver,
+                        const OptPeriodStringGenerator* optPeriodStringGenerator)
+{
+    simulationObserver.notifyHebdoProblem(*problemeHebdo,
+                                          optimizationNumber,
+                                          createMPSfilename(*optPeriodStringGenerator,
+                                                            optimizationNumber));
+}
+} // namespace
+
 bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            const AdqPatchParams& adqPatchParams,
                            Solver::IResultWriter& writer,
-                           int optimizationNumber)
+                           int optimizationNumber,
+                           Solver::Simulation::ISimulationObserver& simulationObserver)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -102,6 +120,11 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
           problemeHebdo->weekInTheYear,
           problemeHebdo->year);
 
+        notifyProblemHebdo(problemeHebdo,
+                           optimizationNumber,
+                           simulationObserver,
+                           optPeriodStringGenerator.get());
+
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
                                  numeroDeLIntervalle,
@@ -137,12 +160,39 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
         OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
     }
 }
+
+void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                    unsigned nombreDeVariables,
+                    unsigned nombreDeContraintes)
+{
+    ProblemeAResoudre->CoutQuadratique.resize(nombreDeVariables);
+    ProblemeAResoudre->CoutLineaire.resize(nombreDeVariables);
+    ProblemeAResoudre->TypeDeVariable.resize(nombreDeVariables);
+    ProblemeAResoudre->Xmin.resize(nombreDeVariables);
+    ProblemeAResoudre->Xmax.resize(nombreDeVariables);
+    ProblemeAResoudre->X.resize(nombreDeVariables);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees.resize(nombreDeVariables);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.resize(nombreDeVariables);
+    ProblemeAResoudre->PositionDeLaVariable.resize(nombreDeVariables);
+    ProblemeAResoudre->NomDesVariables.resize(nombreDeVariables);
+    ProblemeAResoudre->VariablesEntieres.resize(nombreDeVariables);
+
+    ProblemeAResoudre->Sens.resize(nombreDeContraintes);
+    ProblemeAResoudre->IndicesDebutDeLigne.resize(nombreDeContraintes);
+    ProblemeAResoudre->NombreDeTermesDesLignes.resize(nombreDeContraintes);
+    ProblemeAResoudre->SecondMembre.resize(nombreDeContraintes);
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux.resize(nombreDeContraintes);
+    ProblemeAResoudre->CoutsMarginauxDesContraintes.resize(nombreDeContraintes);
+    ProblemeAResoudre->ComplementDeLaBase.resize(nombreDeContraintes);
+    ProblemeAResoudre->NomDesContraintes.resize(nombreDeContraintes);
+}
 } // namespace
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer)
+                              Solver::IResultWriter& writer,
+                              Solver::Simulation::ISimulationObserver& simulationObserver)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -166,6 +216,9 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
+    resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
+                   problemeHebdo->ProblemeAResoudre->NombreDeVariables,
+                   problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
     if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
     {
         OPT_ExportStructures(problemeHebdo, writer);
@@ -175,7 +228,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      adqPatchParams,
                                      writer,
-                                     PREMIERE_OPTIMISATION);
+                                     PREMIERE_OPTIMISATION,
+                                     simulationObserver);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -188,7 +242,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      adqPatchParams,
                                      writer,
-                                     DEUXIEME_OPTIMISATION);
+                                     DEUXIEME_OPTIMISATION,
+                                     simulationObserver);
     }
     return ret;
 }

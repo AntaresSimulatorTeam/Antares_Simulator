@@ -164,37 +164,36 @@ void HydroAllocation::clear()
 #endif
 }
 
-bool HydroAllocation::loadFromFile(const AreaName& referencearea,
-                                   const fs::path& filename)
+bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path& filename)
 {
     clear();
 
     IniFile ini;
-    if (fs::exists(filename) && ini.open(filename))
-    {
-        if (!ini.empty())
-        {
-            AreaName areaname;
-            ini.each(
-              [&](const IniFile::Section& section)
-              {
-                  for (auto* p = section.firstProperty; p; p = p->next)
-                  {
-                      double coeff = p->value.to<double>();
-                      if (!Utils::isZero(coeff))
-                      {
-                          areaname = p->key;
-                          areaname.toLower();
-                          pValues[areaname] = coeff;
-                      }
-                  }
-              });
-        }
-    }
-    else
+    if (!fs::exists(filename) || !ini.open(filename))
     {
         pValues[referencearea] = 1.0;
+        return true;
     }
+
+    if (ini.empty())
+    {
+        return true;
+    }
+
+    ini.each(
+      [this](const IniFile::Section& section)
+      {
+          for (auto* p = section.firstProperty; p; p = p->next)
+          {
+              double coeff = p->value.to<double>();
+              if (!Utils::isZero(coeff))
+              {
+                  AreaName areaname = p->key;
+                  areaname.toLower();
+                  pValues[areaname] = coeff;
+              }
+          }
+      });
     return true;
 }
 

@@ -19,15 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define BOOST_TEST_MODULE antlr_interface tests
-#include <boost/test/unit_test.hpp>
-#include <boost/test/data/test_case.hpp>
-#include "antlr4-runtime.h"
 #include <iostream>
+
+#include <boost/test/data/test_case.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
+#include "antlr4-runtime.h"
 
 using namespace antlr4;
+
 BOOST_AUTO_TEST_CASE(test_antlr_interface)
 {
     const std::string my_input = "y = b + a*x";

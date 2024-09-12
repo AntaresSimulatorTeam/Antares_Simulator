@@ -53,7 +53,8 @@ static void importShortTermStorages(
 
             // Properties
             toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
-            toInsert.efficiency = st.properties.efficiencyFactor;
+            toInsert.injectionEfficiency = st.properties.injectionEfficiency;
+            toInsert.withdrawalEfficiency = st.properties.withdrawalEfficiency;
             toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st.properties.initialLevel;
@@ -71,7 +72,7 @@ static void importShortTermStorages(
 
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
-                                     int NombreDePasDeTemps,
+                                     unsigned int NombreDePasDeTemps,
                                      uint numspace)
 {
     int NombrePaliers;
@@ -81,15 +82,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;
 
-    problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels
-                             == Antares::Data::irlHotStart);
-
     // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
     {
         problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
           study.areas,
-          study.runtime->areaLink);
+          study.runtime.areaLink);
     }
 
     problem.WaterValueAccurate = (study.parameters.hydroPricing.hpMode
@@ -103,9 +101,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NombreDePays = study.areas.size();
 
-    problem.NombreDInterconnexions = study.runtime->interconnectionsCount();
+    problem.NombreDInterconnexions = study.runtime.interconnectionsCount();
 
-    problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
+    problem.NumberOfShortTermStorages = study.runtime.shortTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
@@ -201,7 +199,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CaracteristiquesHydrauliques[i].TailleReservoir = area.hydro.reservoirCapacity;
 
-        for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
+        for (unsigned pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {
             problem.CaracteristiquesHydrauliques[i].NiveauHoraireInf[pdt] = 0;
             problem.CaracteristiquesHydrauliques[i].NiveauHoraireSup[pdt]
@@ -209,11 +207,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         }
 
         problem.previousSimulationFinalLevel[i] = -1.;
-
-        if (!problem.previousYearFinalLevels.empty())
-        {
-            problem.previousYearFinalLevels[i] = -1.;
-        }
 
         problem.CaracteristiquesHydrauliques[i].WeeklyWaterValueStateRegular = 0.;
 
@@ -226,9 +219,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     importShortTermStorages(study.areas, problem.ShortTermStorage);
 
-    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
+    for (uint i = 0; i < study.runtime.interconnectionsCount(); ++i)
     {
-        auto& link = *(study.runtime->areaLink[i]);
+        auto& link = *(study.runtime.areaLink[i]);
         problem.PaysOrigineDeLInterconnexion[i] = link.from->index;
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
@@ -418,7 +411,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
 {
     const auto& parameters = study.parameters;
-    auto& studyruntime = *study.runtime;
+    auto& studyruntime = study.runtime;
     const uint nbPays = study.areas.size();
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
 
@@ -521,14 +514,14 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (area.hydro.useWaterValue)
             {
-                Antares::Data::getWaterValue(
-                  problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
-                  area.hydro.waterValues,
-                  weekFirstDay,
-                  problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular);
+                problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular
+                  = getWaterValue(problem.previousSimulationFinalLevel[k] * 100
+                                    / area.hydro.reservoirCapacity,
+                                  area.hydro.waterValues,
+                                  weekFirstDay);
             }
 
-            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
+            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
             {
                 if (area.hydro.hardBoundsOnRuleCurves
                     && problem.CaracteristiquesHydrauliques[k].SuiviNiveauHoraire)
@@ -655,7 +648,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               = +hourlyLoad
                 - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
 
-            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
+            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
             {
                 problem.CaracteristiquesHydrauliques[k]
                   .ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
@@ -680,7 +673,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     {
         for (uint k = 0; k < nbPays; ++k)
         {
-            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
+            if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable)
             {
                 auto& area = *study.areas.byIndex[k];
                 const auto& scratchpad = scratchmap.at(&area);

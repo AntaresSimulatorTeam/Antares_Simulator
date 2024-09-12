@@ -23,9 +23,11 @@
 #include <vector>
 
 #include "unfeasibility-analysis.h"
+#include "watched-constraints.h"
 
 namespace operations_research
 {
+class MPConstraint;
 class MPVariable;
 class MPSolver;
 } // namespace operations_research
@@ -40,7 +42,6 @@ namespace Antares::Optimization
 class ConstraintSlackAnalysis: public UnfeasibilityAnalysis
 {
 public:
-    ConstraintSlackAnalysis() = default;
     ~ConstraintSlackAnalysis() override = default;
 
     void run(operations_research::MPSolver* problem) override;
@@ -51,13 +52,19 @@ public:
         return "Slack variables analysis";
     }
 
-private:
-    void buildObjective(operations_research::MPSolver* problem) const;
-    void addSlackVariables(operations_research::MPSolver* problem);
+    const std::vector<const operations_research::MPVariable*>& largestSlackVariables();
 
+private:
+    void selectConstraintsToWatch(operations_research::MPSolver* problem);
+    void addSlackVariablesToConstraints(operations_research::MPSolver* problem);
+    void buildObjective(operations_research::MPSolver* problem) const;
+    void sortSlackVariablesByValue();
+    void trimSlackVariables();
+    bool anySlackVariableNonZero();
+
+    std::vector<operations_research::MPConstraint*> constraintsToWatch_;
     std::vector<const operations_research::MPVariable*> slackVariables_;
-    const std::string constraint_name_pattern = "^AreaHydroLevel::|::hourly::|::daily::|::weekly::|"
-                                                "^FictiveLoads::|^Level::";
+    const double thresholdNonZero = 1e-06;
 };
 
 } // namespace Antares::Optimization

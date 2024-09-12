@@ -182,7 +182,7 @@ public:
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pminOfTheClusterForYear[numSpace] = new double[pSize * maxHoursInAYear];
+                pminOfTheClusterForYear[numSpace] = new double[pSize * HOURS_PER_YEAR];
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -242,9 +242,9 @@ public:
         {
             pValuesForTheCurrentYear[numSpace][i].reset();
 
-            for (unsigned int j = 0; j != maxHoursInAYear; ++j)
+            for (unsigned int j = 0; j != HOURS_PER_YEAR; ++j)
             {
-                pminOfTheClusterForYear[numSpace][i * maxHoursInAYear + j] = 0;
+                pminOfTheClusterForYear[numSpace][i * HOURS_PER_YEAR + j] = 0;
             }
         }
         // Next variable
@@ -255,14 +255,14 @@ public:
                                                       uint year,
                                                       unsigned int numSpace)
     {
-        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
+        for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterProductionForYear[i] += pValuesForTheCurrentYear
                                                           [numSpace]
                                                           [state.thermalCluster->areaWideIndex]
                                                             .hour[i];
             state.thermalClusterPMinOfTheClusterForYear[i] += pminOfTheClusterForYear
-              [numSpace][(state.thermalCluster->areaWideIndex * maxHoursInAYear) + i];
+              [numSpace][(state.thermalCluster->areaWideIndex * HOURS_PER_YEAR) + i];
         }
 
         // Next variable
@@ -322,8 +322,8 @@ public:
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[state.hourInTheYear]
               += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
 
-            pminOfTheClusterForYear[numSpace][(cluster->areaWideIndex * maxHoursInAYear)
-                                              + state.hourInTheYear]
+            pminOfTheClusterForYear[numSpace]
+                                   [(cluster->areaWideIndex * HOURS_PER_YEAR) + state.hourInTheYear]
               = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
         }
 
@@ -348,7 +348,7 @@ public:
     {
         uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
                      * pNbYearsParallel;
-        r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
+        r += sizeof(double) * pSize * HOURS_PER_YEAR * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
     }

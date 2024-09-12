@@ -21,15 +21,9 @@
 #ifndef __SOLVER_VARIABLE_CATEGORIES_H__
 #define __SOLVER_VARIABLE_CATEGORIES_H__
 
-#include "constants.h"
+#include <antares/antares/constants.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Category
+namespace Antares::Solver::Variable::Category
 {
 namespace DataLevel
 {
@@ -266,53 +260,6 @@ inline void PrecisionLevelToStream(StreamT& out, int precisionLevel)
     }
 }
 
-template<int PrecisionLevel>
-struct MaxRowCount
-{
-    enum
-    {
-        value = 0
-    };
-};
-
-template<>
-struct MaxRowCount<hourly>
-{
-    enum
-    {
-        value = maxHoursInAYear
-    };
-};
-
-template<>
-struct MaxRowCount<daily>
-{
-    enum
-    {
-        value = maxDaysInAYear
-    };
-};
-
-template<>
-struct MaxRowCount<weekly>
-{
-    enum
-    {
-        value = maxWeeksInAYear
-    };
-};
-
-template<>
-struct MaxRowCount<monthly>
-{
-    enum
-    {
-        value = maxMonths
-    };
-};
-} // namespace Category
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Category
 
 #endif // __SOLVER_VARIABLE_CATEGORIES_H__

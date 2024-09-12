@@ -195,7 +195,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
     }
 
     ini.each(
-      [&](const IniFile::Section& section)
+      [this](const IniFile::Section& section)
       {
           if (section.name.empty())
           {

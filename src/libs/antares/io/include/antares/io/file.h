@@ -21,9 +21,9 @@
 #ifndef __LIBS_ANTARES_IO_FILE_H__
 #define __LIBS_ANTARES_IO_FILE_H__
 
-#include <yuni/core/string.h>
-
 #include <filesystem>
+
+#include <yuni/core/string.h>
 
 namespace Antares::IO
 {

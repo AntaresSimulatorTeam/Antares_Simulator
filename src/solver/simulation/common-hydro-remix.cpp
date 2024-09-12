@@ -51,7 +51,7 @@ static bool Remix(const Data::AreaList& areas,
     bool status = true;
 
     areas.each(
-      [&](const Data::Area& area)
+      [&HE, &DE, &remix, &G, &status, &problem, &numSpace, &hourInYear](const Data::Area& area)
       {
           auto index = area.index;
 

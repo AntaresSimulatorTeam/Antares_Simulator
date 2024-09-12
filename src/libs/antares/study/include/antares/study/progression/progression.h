@@ -76,11 +76,11 @@ private:
 
     public:
         //! The total number of ticks to achieve
-        int maxTickCount;
+        unsigned maxTickCount;
         //! The current number of ticks
-        std::atomic<int> tickCount;
+        std::atomic<unsigned> tickCount;
         //! The last number of ticks, to reduce the log verbosity
-        int lastTickCount;
+        unsigned lastTickCount;
         // Caption to use when displaying logs
         // Example: 'year: 10000, task: thermal'
         Yuni::CString<40, false> caption;
@@ -104,7 +104,7 @@ public:
             return *this;
         }
 
-        Task& operator+=(int value)
+        Task& operator+=(unsigned value)
         {
             pPart.tickCount += value;
             return *this;
@@ -138,7 +138,7 @@ public:
     ** \internal The number of ticks should remain an `int` because
     **   we can not use unsigned atomic integer
     */
-    void add(uint year, Section section, int nbTicks);
+    void add(uint year, Section section, unsigned nbTicks);
 
     void add(Section section, int nbTicks);
 
@@ -169,15 +169,7 @@ private:
     public:
         Meter();
 
-        virtual ~Meter()
-        {
-            if (logsContainer)
-            {
-                delete[] logsContainer;
-            }
-        }
-
-        void allocateLogsContainer(uint nb);
+        virtual ~Meter() = default;
 
         /*!
         ** \brief Prepare enough space to allow @n simultaneous tasks
@@ -188,16 +180,12 @@ private:
         virtual bool onInterval(uint) override;
 
     public:
-        //
         Progression::Part::Map parts;
         Part::ListRef inUse;
         std::mutex mutex;
         uint nbParallelYears;
 
-        // Because writing something to the logs might be expensive, we have to
-        // reduce the time spent in locking the mutex.
-        // We will use a temp vector of string to delay the writing into the logs
-        Yuni::CString<256, false>* logsContainer;
+        std::vector<Yuni::CString<256, false>> logsContainer;
 
     }; // class Meter
 

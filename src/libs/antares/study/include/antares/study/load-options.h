@@ -52,6 +52,7 @@ public:
     bool loadOnlyNeeded;
     //! Force the year-by-year flag
     bool forceYearByYear;
+
     //! Force the derated mode
     bool forceDerated;
 

@@ -40,9 +40,9 @@ Panel::Panel(wxWindow* parent) :
 {
     assert(parent && "invalid parent");
 
-    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Panel::onInternalMotion), NULL, this);
-    Connect(GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(Panel::onInternalMouseDown), NULL, this);
-    Connect(GetId(), wxEVT_LEFT_UP, wxMouseEventHandler(Panel::onInternalMouseUp), NULL, this);
+    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(Panel::onInternalMotion), nullptr, this);
+    Connect(GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(Panel::onInternalMouseDown), nullptr, this);
+    Connect(GetId(), wxEVT_LEFT_UP, wxMouseEventHandler(Panel::onInternalMouseUp), nullptr, this);
 }
 
 Panel::~Panel()

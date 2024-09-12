@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #define BOOST_TEST_MODULE study
 #define WIN32_LEAN_AND_MEAN
@@ -139,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
     BOOST_CHECK(findDisabledCluster("Cluster2") != sts.end());
 
-    study->initializeRuntimeInfos(); // This should remove all disabled short-term storages
+    study->initializeRuntimeInfos();
 
     // Check that only "Cluster1" is found
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
@@ -291,4 +291,37 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     BOOST_CHECK(!v.fromString("4.5"));
     BOOST_CHECK(v == StudyVersion::unknown());
 }
+
+BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
+{
+    auto s = std::make_unique<Study>();
+    BOOST_CHECK(s->checkForFilenameLimits(true)); // empty areas should return true
+
+    BOOST_CHECK(study->checkForFilenameLimits(true));
+    BOOST_CHECK(study->checkForFilenameLimits(false));
+    BOOST_CHECK(study->checkForFilenameLimits(true, "abc"));
+
+#ifdef YUNI_OS_WINDOWS
+    std::string area1name(128, 'a');
+    std::string area2name(128, 'b');
+    auto areaB = study->areaAdd(area1name);
+    auto areaC = study->areaAdd(area2name);
+    AreaAddLinkBetweenAreas(areaB, areaC);
+    BOOST_CHECK(!study->checkForFilenameLimits(true));
+#endif
+}
+
+BOOST_FIXTURE_TEST_CASE(cpu_count, OneAreaStudy)
+{
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(75, ncMin), 1);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, ncLow), 3);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(6, ncAvg), 3);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(16, ncHigh), 12);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(128, ncMax), 128);
+
+    // error cases
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(0, ncMax), 0);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, 120), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // version

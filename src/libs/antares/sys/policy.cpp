@@ -65,22 +65,20 @@ static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
         return;
     }
 
-    PolicyKey key;
-    ShortString128 hostnameVersion;
-    ShortString128 hostnameAll;
-    hostnameVersion << hostname << ':' << ANTARES_VERSION;
-    hostnameAll << hostname << ":*";
+    std::string hostnameVersion = hostname + ':' + ANTARES_VERSION;
+    std::string hostnameAll = hostname + ":*";
 
     ini.each(
-      [&](const IniFile::Section& section)
+      [&hostnameVersion, &hostnameAll](const IniFile::Section& section)
       {
           // This section is dedicated to another host
           if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
               or section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
           {
               section.each(
-                [&](const IniFile::Property& property)
+                [](const IniFile::Property& property)
                 {
+                    PolicyKey key;
                     key = property.key;
                     key.trim(" \t");
                     (*entries)[key] = property.value;

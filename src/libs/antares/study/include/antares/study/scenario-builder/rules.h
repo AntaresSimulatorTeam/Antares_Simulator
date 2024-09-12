@@ -119,8 +119,10 @@ public:
     //! Renewable (array [0..pAreaCount - 1])
     std::vector<renewableTSNumberData> renewable;
 
-    //! hydro levels
-    hydroLevelsData hydroLevels;
+    //! hydro initial levels
+    hydroLevelsData hydroInitialLevels = {"hl,", initLevelApply};
+    //! hydro final levels
+    hydroLevelsData hydroFinalLevels = {"hfl,", finalLevelApply};
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;
@@ -135,7 +137,8 @@ private:
     bool readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readInitialHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readFinalHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readBindingConstraints(const AreaName::Vector& splitKey, String value);
 

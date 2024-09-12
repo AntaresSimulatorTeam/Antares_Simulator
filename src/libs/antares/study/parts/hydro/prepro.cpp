@@ -145,22 +145,32 @@ bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
     return false;
 }
 
-bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* folder)
+bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::string& folder)
 {
-    /* Asserts */
-    assert(folder);
-    assert('\0' != *folder);
-
     enum
     {
         mtrxOption = Matrix<>::optFixedSize | Matrix<>::optImmediate,
     };
+
+    constexpr int maxNbOfLineToLoad = 12;
 
     data.resize(hydroPreproMax, 12, true);
     String& buffer = s.bufferLoadingTS;
 
     buffer.clear() << folder << SEP << areaID << SEP << "prepro.ini";
     bool ret = PreproHydroLoadSettings(this, buffer);
+
+    buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
+    ret = data.loadFromCSVFile(buffer, hydroPreproMax, maxNbOfLineToLoad, mtrxOption, &s.dataBuffer)
+          && ret;
+
+    return ret;
+}
+
+bool PreproHydro::validate(const std::string& areaID)
+{
+    bool ret = true;
+
     if (intermonthlyCorrelation < 0. || intermonthlyCorrelation > 1.)
     {
         logs.error() << "Hydro: Prepro: `" << areaID
@@ -175,77 +185,58 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
         }
     }
 
-    buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-    ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
-
-    if (JIT::enabled)
+    const auto& col = data[powerOverWater];
+    for (unsigned i = 0; i != data.height; ++i)
     {
-        return ret;
-    }
-
-    // Checks
-    {
-        auto& col = data[powerOverWater];
-        for (uint i = 0; i != data.height; ++i)
+        const double d = col[i];
+        if (d < 0. || d > 1.)
         {
-            const double d = col[i];
-            if (d < 0. || d > 1.)
-            {
-                logs.error() << "Hydro: Prepro: " << areaID
-                             << ": invalid value for ROR (line: " << (i + 1) << ")";
-            }
+            logs.error() << "Hydro: Prepro: " << areaID
+                         << ": invalid value for ROR (line: " << (i + 1) << ")";
         }
     }
 
-    {
-        auto& colMin = data[minimumEnergy];
-        auto& colMax = data[maximumEnergy];
+    const auto& colMin = data[minimumEnergy];
+    const auto& colMax = data[maximumEnergy];
 
-        for (uint i = 0; i != data.height; ++i)
+    for (unsigned i = 0; i != data.height; ++i)
+    {
+        if (colMin[i] < 0.)
         {
-            if (colMin[i] < 0.)
-            {
-                ret = false;
-                logs.error() << "Hydro: Prepro: `" << areaID
-                             << "`: minimum energy: At least one value is negative (line: "
-                             << (i + 1) << ')';
-                continue;
-            }
-            if (colMin[i] > colMax[i])
-            {
-                ret = false;
-                logs.error() << "Hydro: Prepro: `" << areaID
-                             << "`: the minimum energy must be less than the maximum energy (line: "
-                             << (i + 1) << ')';
-            }
+            ret = false;
+            logs.error() << "Hydro: Prepro: `" << areaID
+                         << "`: minimum energy: At least one value is negative (line: " << (i + 1)
+                         << ')';
+            continue;
+        }
+        if (colMin[i] > colMax[i])
+        {
+            ret = false;
+            logs.error() << "Hydro: Prepro: `" << areaID
+                         << "`: the minimum energy must be less than the maximum energy (line: "
+                         << (i + 1) << ')';
         }
     }
 
+    const auto& colExp = data[expectation];
+    for (unsigned i = 0; i != data.height; i++)
     {
-        auto& colExp = data[expectation];
-
-        for (uint i = 0; i != data.height; i++)
+        if (colExp[i] < 0.)
         {
-            if (colExp[i] < 0.)
-            {
-                ret = false;
-                logs.error() << "Hydro: Prepro: `" << areaID
-                             << "`: invalid value for expectation (line: " << (i + 1) << ")";
-            }
+            ret = false;
+            logs.error() << "Hydro: Prepro: `" << areaID
+                         << "`: invalid value for expectation (line: " << (i + 1) << ")";
         }
     }
 
+    const auto& colStdDev = data[stdDeviation];
+    for (unsigned i = 0; i != data.height; i++)
     {
-        auto& colStdDev = data[stdDeviation];
-
-        for (uint i = 0; i != data.height; i++)
+        if (colStdDev[i] < 0.)
         {
-            if (colStdDev[i] < 0.)
-            {
-                ret = false;
-                logs.error() << "Hydro: Prepro: `" << areaID
-                             << "`: invalid value for standard deviation (line: " << (i + 1) << ")";
-            }
+            ret = false;
+            logs.error() << "Hydro: Prepro: `" << areaID
+                         << "`: invalid value for standard deviation (line: " << (i + 1) << ")";
         }
     }
 

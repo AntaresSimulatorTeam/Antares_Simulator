@@ -21,6 +21,8 @@
 
 #include <cassert>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
@@ -32,7 +34,7 @@ using namespace Yuni;
 
 namespace Antares::Date
 {
-static const uint StandardDaysPerMonths[12] = {
+static const uint StandardDaysPerMonths[MONTHS_PER_YEAR] = {
   31, // january
   28, // february
   31, // march
@@ -137,12 +139,13 @@ bool StringToMonth(MonthName& out, AnyString text)
         return false;
     }
     text.trim();
-    CString<12, false> t = text;
-    t.toLower();
+    std::string t = text;
+    boost::algorithm::to_lower(t);
+    /* t.toLower(); */
 
     if (t.size() == 3)
     {
-        for (uint m = 0; m != 12; ++m)
+        for (uint m = 0; m != MONTHS_PER_YEAR; ++m)
         {
             if (monthShortLowerNames[m] == t)
             {
@@ -153,7 +156,7 @@ bool StringToMonth(MonthName& out, AnyString text)
     }
     else
     {
-        for (uint m = 0; m != 12; ++m)
+        for (uint m = 0; m != MONTHS_PER_YEAR; ++m)
         {
             if (monthNamesLower[m] == t)
             {
@@ -168,22 +171,22 @@ bool StringToMonth(MonthName& out, AnyString text)
 
 const char* MonthToString(int m, int offset)
 {
-    return monthNames[(m - offset) % 12];
+    return monthNames[(m - offset) % MONTHS_PER_YEAR];
 }
 
 const char* MonthToLowerString(int m, int offset)
 {
-    return monthNamesLower[(m - offset) % 12];
+    return monthNamesLower[(m - offset) % MONTHS_PER_YEAR];
 }
 
 const char* MonthToShortString(int m, int offset)
 {
-    return monthShortNames[(m - offset) % 12];
+    return monthShortNames[(m - offset) % MONTHS_PER_YEAR];
 }
 
 const char* MonthToUpperShortString(int m, int offset)
 {
-    return monthShortUpperNames[(m - offset) % 12];
+    return monthShortUpperNames[(m - offset) % MONTHS_PER_YEAR];
 }
 
 const char* WeekdayToString(int m)
@@ -424,7 +427,7 @@ bool Calendar::saveToCSVFile(const AnyString& filename) const
         line.clear() << "hour begin\thour end\tdays\tday uear begin\tday year end\tfirst weekday";
         report.months.push_back(line);
 
-        for (uint m = 0; m != 12; ++m)
+        for (uint m = 0; m != MONTHS_PER_YEAR; ++m)
         {
             auto& month = months[m];
             line.clear();
@@ -494,10 +497,10 @@ void Calendar::reset()
     (void)::memset(months, '\0', sizeof(months));
 
     // Reset months relationship
-    for (uint m = 0; m != 12 + 1; ++m)
+    for (uint m = 0; m != MONTHS_PER_YEAR + 1; ++m)
     {
-        uint realmonth = (m + (uint)settings_.firstMonth) % 12;
-        if (m < 12)
+        uint realmonth = (m + (uint)settings_.firstMonth) % MONTHS_PER_YEAR;
+        if (m < MONTHS_PER_YEAR)
         {
             mapping.months[realmonth] = m;
         }

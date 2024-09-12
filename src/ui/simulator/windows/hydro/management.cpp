@@ -956,7 +956,7 @@ void Management::onToggleInitializeReservoirLevelDate(Component::Button&, wxMenu
 
     for (int i = 0; i < 12; i++)
     {
-        it = Menu::CreateItem(&menu, i, Antares::Date::MonthToString(i, 0), NULL, wxEmptyString);
+        it = Menu::CreateItem(&menu, i, Antares::Date::MonthToString(i, 0), nullptr, wxEmptyString);
         menu.Connect(it->GetId(),
                      wxEVT_COMMAND_MENU_SELECTED,
                      wxCommandEventHandler(Management::onChangingInitializeReservoirLevelDate),

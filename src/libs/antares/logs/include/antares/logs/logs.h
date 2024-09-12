@@ -65,16 +65,6 @@
 
 namespace Antares
 {
-namespace Data
-{
-// Forward declaration
-class Study;
-
-} // namespace Data
-} // namespace Antares
-
-namespace Antares
-{
 //! Handlers for logging
 using LoggingHandlers = Yuni::Logs::StdCout< // For writing to the standard output
   Yuni::Logs::File<                          // For writing into a log file

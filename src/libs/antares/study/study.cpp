@@ -26,6 +26,7 @@
 #include <cmath> // For use of floor(...) and ceil(...)
 #include <optional>
 #include <sstream> // std::ostringstream
+#include <thread>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -104,14 +105,11 @@ Study::~Study()
 
 void Study::clear()
 {
-    // Releasing runtime infos
-    FreeAndNil(runtime);
-    FreeAndNil(scenarioRules);
+    scenarioRules.reset();
     FreeAndNil(uiinfo);
 
     // areas
     setsOfAreas.clear();
-    setsOfLinks.clear();
 
     preproLoadCorrelation.clear();
     preproSolarCorrelation.clear();
@@ -151,9 +149,7 @@ void Study::createAsNew()
 
     // Sets
     setsOfAreas.defaultForAreas();
-    setsOfLinks.clear();
     setsOfAreas.markAsModified();
-    setsOfLinks.markAsModified();
 
     // Binding constraints
     bindingConstraints.clear();
@@ -211,112 +207,32 @@ uint64_t Study::memoryUsage() const
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
+unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 {
-    std::map<std::string, uint> table;
-
-    uint nbLogicalCores = Yuni::System::CPU::Count();
     if (!nbLogicalCores)
     {
         logs.fatal() << "Number of logical cores available is 0.";
+        return 0;
     }
 
-    switch (nbLogicalCores)
+    switch (ncMode)
     {
-    case 1:
-        table["min"] = 1;
-        table["low"] = 1;
-        table["med"] = 1;
-        table["high"] = 1;
-        table["max"] = 1;
-        break;
-    case 2:
-        table["min"] = 1;
-        table["low"] = 1;
-        table["med"] = 1;
-        table["high"] = 2;
-        table["max"] = 2;
-        break;
-    case 3:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 2;
-        table["high"] = 2;
-        table["max"] = 3;
-        break;
-    case 4:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 2;
-        table["high"] = 3;
-        table["max"] = 4;
-        break;
-    case 5:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 4;
-        table["max"] = 5;
-        break;
-    case 6:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 4;
-        table["max"] = 6;
-        break;
-    case 7:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 5;
-        table["max"] = 7;
-        break;
-    case 8:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 4;
-        table["high"] = 6;
-        table["max"] = 8;
-        break;
-    case 9:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 5;
-        table["high"] = 7;
-        table["max"] = 8;
-        break;
-    case 10:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 5;
-        table["high"] = 8;
-        table["max"] = 9;
-        break;
-    case 11:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 6;
-        table["high"] = 8;
-        table["max"] = 10;
-        break;
-    case 12:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 6;
-        table["high"] = 9;
-        table["max"] = 11;
-        break;
+    case ncMin:
+        return 1;
+    case ncLow:
+        return std::ceil(nbLogicalCores / 4.);
+    case ncAvg:
+        return std::ceil(nbLogicalCores / 2.);
+    case ncHigh:
+        return std::ceil(3 * nbLogicalCores / 4.);
+    case ncMax:
+        return nbLogicalCores;
     default:
-        table["min"] = 1;
-        table["low"] = (uint)std::ceil(nbLogicalCores / 4.);
-        table["med"] = (uint)std::ceil(nbLogicalCores / 2.);
-        table["high"] = (uint)std::ceil(3 * nbLogicalCores / 4.);
-        table["max"] = nbLogicalCores - 1;
+        logs.fatal() << "Simulation cores level not correct : " << ncMode;
         break;
     }
 
-    return table;
+    return 0;
 }
 
 void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
@@ -327,33 +243,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
             This number is limited by the smallest refresh span (if at least
             one type of time series is generated)
     */
-
-    std::map<std::string, uint> table = getRawNumberCoresPerLevel();
-
-    // Getting the number of parallel years based on the number of cores level.
-    switch (parameters.nbCores.ncMode)
-    {
-    case ncMin:
-        nbYearsParallelRaw = table["min"];
-        break;
-    case ncLow:
-        nbYearsParallelRaw = table["low"];
-        break;
-    case ncAvg:
-        nbYearsParallelRaw = table["med"];
-        break;
-    case ncHigh:
-        nbYearsParallelRaw = table["high"];
-        break;
-    case ncMax:
-        nbYearsParallelRaw = table["max"];
-        break;
-    default:
-        logs.fatal() << "Simulation cores level not correct : " << (int)parameters.nbCores.ncMode;
-        break;
-    }
-
-    maxNbYearsInParallel = nbYearsParallelRaw;
+    unsigned nbLogicalCores = std::thread::hardware_concurrency();
+    maxNbYearsInParallel = getNumberOfCoresPerMode(nbLogicalCores, parameters.nbCores.ncMode);
 
     // In case solver option '--force-parallel n' is used, previous computation is overridden.
     if (forceParallel)
@@ -500,104 +391,11 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // enabled.
     //		 Useful for RAM estimation.
     maxNbYearsInParallel_save = maxNbYearsInParallel;
-
-    // Here we answer the question (useful only if hydro hot start is asked) : do all sets of
-    // parallel years have the same size ?
-    if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
-        && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
-    {
-        uint currentSetSize = (uint)setsOfParallelYears[0].size();
-        if (setsOfParallelYears.size() > 1)
-        {
-            for (uint s = 1; s < setsOfParallelYears.size(); s++)
-            {
-                if (setsOfParallelYears[s].size() != currentSetSize)
-                {
-                    parameters.allSetsHaveSameSize = false;
-                    break;
-                }
-            }
-        }
-    } // End if hot start
-}
-
-bool Study::checkHydroHotStart()
-{
-    bool hydroHotStart = (parameters.initialReservoirLevels.iniLevels == irlHotStart);
-
-    // No need to check further if hydro hot start is not required
-    if (!hydroHotStart)
-    {
-        return true;
-    }
-
-    // Here we answer the question (useful only if hydro hot start is asked) : In case of parallel
-    // run, do all sets of parallel years have the same size ?
-    if (maxNbYearsInParallel != 1 && !parameters.allSetsHaveSameSize)
-    {
-        logs.error() << "Hot Start Hydro option : conflict with parallelization parameters.";
-        logs.error()
-          << "Please update relevant simulation parameters or use Cold Start option.    ";
-        return false;
-    }
-
-    // Checking calendar conditions
-    // ... The simulation lasts one year exactly
-    uint nbDaysInSimulation = parameters.simulationDays.end - parameters.simulationDays.first + 1;
-    if (nbDaysInSimulation < 364)
-    {
-        logs.error()
-          << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
-        logs.error() << "Please update data or use Cold Start option.";
-        return false;
-    }
-
-    // ... For all areas for which reservoir management is enabled :
-    //     - Their starting level is initialized on the same day
-    //     - This day is the first day of the simulation calendar
-    const Area::Map::iterator end = areas.end();
-    for (Area::Map::iterator i = areas.begin(); i != end; ++i)
-    {
-        // Reference to the area
-        Area* area = i->second;
-
-        // No need to make a check on level initialization when reservoir management
-        // is not activated for the current area
-        if (!area->hydro.reservoirManagement)
-        {
-            continue;
-        }
-
-        // Month the reservoir level is initialized according to.
-        // This month number is given in the civil calendar, from january to december (0 is
-        // january).
-        int initLevelOnMonth = area->hydro.initializeReservoirLevelDate;
-
-        // Conversion of the previous month into simulation calendar
-        uint initLevelOnSimMonth = calendar.mapping.months[initLevelOnMonth];
-
-        // Previous month's first day in the year
-        uint initLevelOnSimDay = calendar.months[initLevelOnSimMonth].daysYear.first;
-
-        // Check the day of level initialization is the first day of simulation
-        if (initLevelOnSimDay != parameters.simulationDays.first)
-        {
-            logs.error()
-              << "Hot Start Hydro option : area '" << area->name
-              << "' - hydro level must be initialized on the first simulation month.    ";
-            logs.error() << "Please update data or use Cold Start option.";
-            return false;
-        }
-    } // End loop over areas
-
-    return true;
 }
 
 bool Study::initializeRuntimeInfos()
 {
-    delete runtime;
-    runtime = new StudyRuntimeInfos();
-    return runtime->loadFromStudy(*this);
+    return runtime.loadFromStudy(*this);
 }
 
 void Study::performTransformationsBeforeLaunchingSimulation()
@@ -611,7 +409,7 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
     // ForEach area
     areas.each(
-      [&](Data::Area& area)
+      [this](Data::Area& area)
       {
           if (not parameters.geographicTrimming)
           {
@@ -789,7 +587,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
                     buffer << "@ " << i->first << "\r\n";
                 }
             }
-            areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
+            areas.each([&buffer](const Data::Area& area) { buffer << area.name << "\r\n"; });
             resultWriter.addEntryFromBuffer(path.c_str(), buffer);
         }
 
@@ -880,7 +678,7 @@ bool Study::areaDelete(Area* area)
     // and the scenario builder data *before* reloading uiinfo.
     {
         // Updating all hydro allocation
-        areas.each([&](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
+        areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
 
         // We __must__ update the scenario builder data
         // We may delete an area and re-create a new one with the same
@@ -947,7 +745,8 @@ void Study::areaDelete(Area::Vector& arealist)
                             << area.name;
 
                 // Updating all hydro allocation
-                areas.each([&](Data::Area& areait) { areait.hydro.allocation.remove(area.id); });
+                areas.each([&area](Data::Area& areait)
+                           { areait.hydro.allocation.remove(area.id); });
 
                 // Remove all binding constraints attached to the area
                 bindingConstraints.remove(*i);
@@ -1046,7 +845,8 @@ bool Study::areaRename(Area* area, AreaName newName)
     logs.info() << "renaming area " << area->name << " into " << newName;
 
     // Updating all hydro allocation
-    areas.each([&](Data::Area& areait) { areait.hydro.allocation.rename(oldid, newid); });
+    areas.each([&oldid, &newid](Data::Area& areait)
+               { areait.hydro.allocation.rename(oldid, newid); });
 
     ScenarioBuilderUpdater updaterSB(*this);
     bool ret = true;
@@ -1179,34 +979,22 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
 void Study::destroyAllLoadTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.load.prepro); });
+    areas.each([](Data::Area& area) { area.load.prepro.reset(); });
 }
 
 void Study::destroyAllSolarTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.solar.prepro); });
+    areas.each([](Data::Area& area) { area.solar.prepro.reset(); });
 }
 
 void Study::destroyAllHydroTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
+    areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
 
 void Study::destroyAllWindTSGeneratorData()
 {
-    areas.each([&](Data::Area& area) { FreeAndNil(area.wind.prepro); });
-}
-
-void Study::destroyAllThermalTSGeneratorData()
-{
-    areas.each(
-      [&](Data::Area& area)
-      {
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              FreeAndNil(cluster->prepro);
-          }
-      });
+    areas.each([](Data::Area& area) { area.wind.prepro.reset(); });
 }
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
@@ -1253,25 +1041,24 @@ struct TS final
 
 void Study::initializeProgressMeter(bool tsGeneratorOnly)
 {
-    uint years = tsGeneratorOnly ? 1 : (runtime->rangeLimits.year[rangeEnd] + 1);
-    assert(runtime);
+    uint years = tsGeneratorOnly ? 1 : (runtime.rangeLimits.year[rangeEnd] + 1);
 
-    int ticksPerYear = 0;
-    int ticksPerOutput = 0;
+    unsigned ticksPerYear = 0;
+    unsigned ticksPerOutput = 0;
 
     if (not tsGeneratorOnly)
     {
         // One tick at the begining and 2 at the end of the year
         // Output - Areas
-        ticksPerOutput += (int)areas.size();
+        ticksPerOutput += areas.size();
         // Output - Links
-        ticksPerOutput += (int)runtime->interconnectionsCount();
+        ticksPerOutput += runtime.interconnectionsCount();
         // Output - digest
         ticksPerOutput += 1;
         ticksPerYear = 1;
     }
 
-    int n;
+    unsigned n;
 
     for (uint y = 0; y != years; ++y)
     {
@@ -1280,7 +1067,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesLoad * areas.size() * 365;
             if (0 != (timeSeriesLoad & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGLoad, n);
         }
@@ -1289,7 +1076,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesSolar * areas.size() * 365;
             if (0 != (timeSeriesSolar & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGSolar, n);
         }
@@ -1298,7 +1085,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesWind * areas.size() * 365;
             if (0 != (timeSeriesWind & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGWind, n);
         }
@@ -1308,17 +1095,17 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
             n = parameters.nbTimeSeriesHydro;
             if (0 != (timeSeriesHydro & parameters.timeSeriesToArchive))
             {
-                n += (int)areas.size();
+                n += areas.size();
             }
             progression.add(y, Solver::Progression::sectTSGHydro, n);
         }
         if (TS<timeSeriesThermal>::IsNeeded(*this, y))
         {
-            n = runtime->thermalPlantTotalCount;
+            n = runtime.thermalPlantTotalCount;
             if (0 != (timeSeriesThermal & parameters.timeSeriesToArchive))
             {
-                n += (int)runtime->thermalPlantTotalCount;
-                n += (int)runtime->thermalPlantTotalCountMustRun;
+                n += runtime.thermalPlantTotalCount;
+                n += runtime.thermalPlantTotalCountMustRun;
             }
             progression.add(y, Solver::Progression::sectTSGThermal, n);
         }
@@ -1338,23 +1125,23 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     n = 0;
     if (0 != (timeSeriesLoad & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesSolar & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesWind & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesHydro & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (0 != (timeSeriesThermal & parameters.exportTimeSeriesInInput))
     {
-        n += (int)areas.size();
+        n += areas.size();
     }
     if (n)
     {
@@ -1381,7 +1168,6 @@ bool Study::forceReload(bool reload) const
     ret = preproHydroCorrelation.forceReload(reload) and ret;
 
     ret = setsOfAreas.forceReload(reload) and ret;
-    ret = setsOfLinks.forceReload(reload) and ret;
     return ret;
 }
 
@@ -1397,7 +1183,6 @@ void Study::markAsModified() const
     bindingConstraints.markAsModified();
 
     setsOfAreas.markAsModified();
-    setsOfLinks.markAsModified();
 }
 
 void Study::relocate(const std::string& newFolder)
@@ -1415,6 +1200,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
+// TODO VP: Could be removed with the GUI
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
 {
     enum
@@ -1447,7 +1233,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String areaname;
 
         areas.each(
-          [&](const Area& area)
+          [&output, &linkname, &areaname](const Area& area)
           {
               if (areaname.size() < area.id.size())
               {
@@ -1459,19 +1245,12 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
               {
                   auto& link = *(i->second);
                   uint len = link.from->id.size() + link.with->id.size();
-                  len += output ? 3 : 1;
+                  len += 3;
                   if (len > linkname.size())
                   {
                       linkname.clear();
                       linkname << i->second->from->id;
-                      if (output)
-                      {
-                          linkname << " - "; // 3
-                      }
-                      else
-                      {
-                          linkname << SEP;
-                      }
+                      linkname << " - "; // 3
                       linkname << i->second->with->id;
                   }
               }
@@ -1527,7 +1306,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         // or even constraints
 
         areas.each(
-          [&](const Area& area)
+          [&areaname, &clustername](const Area& area)
           {
               if (areaname.size() < area.id.size())
               {

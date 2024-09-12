@@ -376,7 +376,6 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 }
 
 AreaList::AreaList(Study& study):
-    byIndex(nullptr),
     pStudy(study)
 {
 }
@@ -450,43 +449,31 @@ const AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with) c
 
 void AreaList::clear()
 {
-    delete[] byIndex;
-    byIndex = nullptr;
+    byIndex.clear();
 
-    if (!areas.empty())
+    Area::Map copy;
+    copy.swap(areas);
+
+    auto end = copy.end();
+    for (auto i = copy.begin(); i != end; ++i)
     {
-        Area::Map copy;
-        copy.swap(areas);
-
-        auto end = copy.end();
-        for (auto i = copy.begin(); i != end; ++i)
-        {
-            delete i->second;
-        }
+        delete i->second;
     }
 }
 
 void AreaList::rebuildIndexes()
 {
-    delete[] byIndex;
+    byIndex.clear();
 
-    if (areas.empty())
-    {
-        byIndex = nullptr;
-    }
-    else
-    {
-        using AreaWeakPtr = Area*;
-        byIndex = new AreaWeakPtr[areas.size()];
+    byIndex.resize(areas.size());
 
-        uint indx = 0;
-        auto end = areas.end();
-        for (auto i = areas.begin(); i != end; ++i, ++indx)
-        {
-            Area* area = i->second;
-            byIndex[indx] = area;
-            area->index = indx;
-        }
+    uint indx = 0;
+    auto end = areas.end();
+    for (auto i = areas.begin(); i != end; ++i, ++indx)
+    {
+        Area* area = i->second;
+        byIndex[indx] = area;
+        area->index = indx;
     }
 }
 
@@ -944,13 +931,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             // if changes are required, please update reloadXCastData()
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
+            ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
-        auto* hydroSeries = area.hydro.series;
         if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = hydroSeries->loadGenerationTS(area.id, buffer, studyVersion) && ret;
+            ret = area.hydro.series->loadGenerationTS(area.id, buffer, studyVersion) && ret;
         }
 
         if (studyVersion < StudyVersion(9, 1))
@@ -965,11 +952,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         else
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
+            ret = area.hydro.series->LoadMaxPower(area.id, buffer) && ret;
         }
 
-        hydroSeries->resizeTSinDeratedMode(
-            study.parameters.derated, studyVersion, study.usedByTheSolver);
+        area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
+                                                 studyVersion,
+                                                 study.usedByTheSolver);
     }
 
     // Wind
@@ -993,6 +981,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
         ret = area.thermal.list.loadPreproFromFolder(study, buffer) && ret;
+        ret = area.thermal.list.validatePrepro(study) && ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
@@ -1160,6 +1149,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         logs.info() << "Loading global hydro data...";
         buffer.clear() << pStudy.folderInput << SEP << "hydro";
         ret = PartHydro::LoadFromFolder(pStudy, buffer) && ret;
+        ret = PartHydro::validate(pStudy) && ret;
     }
 
     // Thermal data, specific to areas
@@ -1180,6 +1170,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) && ret;
+            ret = area.thermal.list.validateClusters(pStudy.parameters) && ret;
         }
     }
 
@@ -1219,6 +1210,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
             ret = area.renewable.list.loadFromFolder(buffer.c_str(), &area) && ret;
+            ret = area.renewable.list.validateClusters() && ret;
         }
     }
 
@@ -1273,13 +1265,10 @@ Area* AreaList::findFromPosition(const int x, const int y) const
         for (auto i = this->areas.rbegin(); i != end; ++i)
         {
             auto lastArea = i->second;
-            if (lastArea->ui)
+            if (lastArea->ui && std::abs(lastArea->ui->x - x) < nearestDistance
+                && std::abs(lastArea->ui->y - y) < nearestDistance)
             {
-                if (std::abs(lastArea->ui->x - x) < nearestDistance
-                    && std::abs(lastArea->ui->y - y) < nearestDistance)
-                {
-                    nearestItem = lastArea;
-                }
+                nearestItem = lastArea;
             }
         }
         return nearestItem;
@@ -1326,11 +1315,11 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [&](Data::Area& area)
+      [](Data::Area& area)
       {
           if (!area.load.prepro)
           {
-              area.load.prepro = new Antares::Data::Load::Prepro();
+              area.load.prepro = std::make_unique<Antares::Data::Load::Prepro>();
           }
       });
 }
@@ -1345,7 +1334,7 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
       {
           if (!area.solar.prepro)
           {
-              area.solar.prepro = new Antares::Data::Solar::Prepro();
+              area.solar.prepro = std::make_unique<Antares::Data::Solar::Prepro>();
           }
       });
 }
@@ -1360,7 +1349,7 @@ void AreaListEnsureDataWindPrepro(AreaList* l)
       {
           if (!area.wind.prepro)
           {
-              area.wind.prepro = new Antares::Data::Wind::Prepro();
+              area.wind.prepro = std::make_unique<Antares::Data::Wind::Prepro>();
           }
       });
 }
@@ -1375,7 +1364,7 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
       {
           if (!area.hydro.series)
           {
-              area.hydro.series = new DataSeriesHydro();
+              area.hydro.series = std::make_unique<DataSeriesHydro>();
           }
       });
 }
@@ -1390,7 +1379,7 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
       {
           if (!area.hydro.prepro)
           {
-              area.hydro.prepro = new PreproHydro();
+              area.hydro.prepro = std::make_unique<PreproHydro>();
           }
       });
 }
@@ -1698,9 +1687,9 @@ void AreaList::removeWindTimeseries()
 void AreaList::removeThermalTimeseries()
 {
     each(
-      [](Data::Area& area)
+      [](const Data::Area& area)
       {
-          for (auto& c: area.thermal.list.all())
+          for (const auto& c: area.thermal.list.all())
           {
               c->series.reset();
           }

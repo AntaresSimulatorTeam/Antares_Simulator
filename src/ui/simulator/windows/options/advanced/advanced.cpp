@@ -156,14 +156,12 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
     // Initial reservoir levels
     {
         label = Component::CreateLabel(this, wxT("Initial reservoir levels"));
-        button = new Component::Button(this, wxT("cold start"), "images/16x16/tag.png");
+        button = new Component::Button(this, wxT(""), "images/16x16/tag.png");
         button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        onPopup.bind(this, &AdvancedParameters::onInitialReservoirLevels);
         button->onPopupMenu(onPopup);
+        button->caption("hydro hot start deprecated");
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnInitialReservoirLevels = button;
     }
     // Hydro heuristic policy
     {
@@ -285,7 +283,7 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
 
     // refresh
     Connect(
-      GetId(), wxEVT_MOTION, wxMouseEventHandler(AdvancedParameters::onInternalMotion), NULL, this);
+      GetId(), wxEVT_MOTION, wxMouseEventHandler(AdvancedParameters::onInternalMotion), nullptr, this);
 
     refresh();
     SetSizer(sizer);
@@ -327,7 +325,6 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.timeSeriesAccuracyOnCorrelation &= ~Data::timeSeriesWind;
         parameters.timeSeriesAccuracyOnCorrelation &= ~Data::timeSeriesSolar;
 
-        parameters.initialReservoirLevels.iniLevels = Data::irlColdStart;
         parameters.hydroHeuristicPolicy.hhPolicy = Data::hhpAccommodateRuleCurves;
         parameters.hydroPricing.hpMode = Data::hpHeuristic;
         parameters.power.fluctuations = Data::lssFreeModulations;
@@ -374,10 +371,6 @@ void AdvancedParameters::refresh()
     }
 
     wxString text;
-
-    text = wxStringFromUTF8(
-      InitialReservoirLevelsToCString(study.parameters.initialReservoirLevels.iniLevels));
-    pBtnInitialReservoirLevels->caption(text);
 
     text = wxStringFromUTF8(
       HydroHeuristicPolicyToCString(study.parameters.hydroHeuristicPolicy.hhPolicy));
@@ -503,58 +496,6 @@ void AdvancedParameters::onSelectNumericQualityHigh(wxCommandEvent&)
     study.parameters.timeSeriesAccuracyOnCorrelation |= pCurrentTS;
     if (old != study.parameters.timeSeriesAccuracyOnCorrelation)
     {
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onInitialReservoirLevels(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-    wxString text;
-
-    text = wxStringFromUTF8(InitialReservoirLevelsToCString(Data::irlColdStart));
-    text << wxT("   [default]");
-    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectColdStart),
-                 nullptr,
-                 this);
-
-    text.clear();
-    text << wxStringFromUTF8(InitialReservoirLevelsToCString(Data::irlHotStart));
-    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectHotStart),
-                 nullptr,
-                 this);
-}
-
-void AdvancedParameters::onSelectColdStart(wxCommandEvent&)
-{
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
-
-    if (study.parameters.initialReservoirLevels.iniLevels != Data::irlColdStart)
-    {
-        study.parameters.initialReservoirLevels.iniLevels = Data::irlColdStart;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectHotStart(wxCommandEvent&)
-{
-    if (not CurrentStudyIsValid())
-        return;
-    auto& study = *GetCurrentStudy();
-
-    if (study.parameters.initialReservoirLevels.iniLevels != Data::irlHotStart)
-    {
-        study.parameters.initialReservoirLevels.iniLevels = Data::irlHotStart;
         MarkTheStudyAsModified();
         refresh();
     }

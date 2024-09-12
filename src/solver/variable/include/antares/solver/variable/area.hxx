@@ -369,7 +369,7 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
-      [&](Data::Area& area)
+      [this, &state, &numSpace](Data::Area& area)
       {
           state.area = &area; // the current area
 
@@ -402,7 +402,7 @@ void Areas<NextT>::weekForEachArea(State& state, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
-      [&](Data::Area& area)
+      [this, &state, &numSpace](Data::Area& area)
       {
           state.area = &area; // the current area
 
@@ -437,7 +437,7 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
-      [&](Data::Area& area)
+      [this, &state, &year, &numSpace](Data::Area& area)
       {
           state.area = &area; // the current area
 

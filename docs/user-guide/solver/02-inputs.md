@@ -157,7 +157,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
   - The "local data" tab is used to set the parameters of the stochastic generator.
     These parameters are presented in four sub-tabs whose content is presented in
-    [Time-series analysis and generation](../ts-generator/01-overview.md).
+    [Time-series analysis and generation](../ts-generator/01-overview-tsgenerator.md).
 
   - The "digest" tab displays for all areas a short account of the local data
 
@@ -286,6 +286,7 @@ The user may pick any area appearing in the area list and is then given access t
   - Injection (MW): the maximum injection power for the storage - withdrawal refers to the flow from the power system to the storage
   - Stock (MWh): the capacity of the storage in MWh
   - Efficiency (%): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
+  - Efficiency Withdrawal (%): Same behavior as the previous efficiency, this factor is applied when withdrawing energy from the storage.
   - Initial level (%): the imposed initial filling rate of the storage at the beginning of each optimisation period.
   - Initial level optimal: if the parameter is activated, the "Initial level" parameter is ignored and the initial storage level is optimized by Antares for each optimization period to minimize its objective function.  
     _Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1. However, the final level of week N is always equal to the initial level of the same week N plus/minus the injections/withdrawals occuring at the last hour of week N._

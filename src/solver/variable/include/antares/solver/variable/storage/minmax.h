@@ -83,21 +83,28 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportIndices<maxHoursInAYear, VCardT>(report,
-                                                               Memory::RawPointer(minmax.hourly),
-                                                               fileLevel);
+                InternalExportIndices<HOURS_PER_YEAR, VCardT>(report,
+                                                              Memory::RawPointer(
+                                                                minmax.hourly.data()),
+                                                              fileLevel);
                 break;
             case Category::daily:
-                InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily, fileLevel);
+                InternalExportIndices<DAYS_PER_YEAR, VCardT>(report,
+                                                             minmax.daily.data(),
+                                                             fileLevel);
                 break;
             case Category::weekly:
-                InternalExportIndices<maxWeeksInAYear, VCardT>(report, minmax.weekly, fileLevel);
+                InternalExportIndices<WEEKS_PER_YEAR, VCardT>(report,
+                                                              minmax.weekly.data(),
+                                                              fileLevel);
                 break;
             case Category::monthly:
-                InternalExportIndices<maxMonths, VCardT>(report, minmax.monthly, fileLevel);
+                InternalExportIndices<MONTHS_PER_YEAR, VCardT>(report,
+                                                               minmax.monthly.data(),
+                                                               fileLevel);
                 break;
             case Category::annual:
-                InternalExportIndices<1, VCardT>(report, &minmax.annual, fileLevel);
+                InternalExportIndices<1, VCardT>(report, minmax.annual.data(), fileLevel);
                 break;
             }
         }
@@ -106,20 +113,21 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<maxHoursInAYear, VCardT>(report,
-                                                              Memory::RawPointer(minmax.hourly));
+                InternalExportValues<HOURS_PER_YEAR, VCardT>(report,
+                                                             Memory::RawPointer(
+                                                               minmax.hourly.data()));
                 break;
             case Category::daily:
-                InternalExportValues<maxDaysInAYear, VCardT>(report, minmax.daily);
+                InternalExportValues<DAYS_PER_YEAR, VCardT>(report, minmax.daily.data());
                 break;
             case Category::weekly:
-                InternalExportValues<maxWeeksInAYear, VCardT>(report, minmax.weekly);
+                InternalExportValues<WEEKS_PER_YEAR, VCardT>(report, minmax.weekly.data());
                 break;
             case Category::monthly:
-                InternalExportValues<maxMonths, VCardT>(report, minmax.monthly);
+                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.data());
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT>(report, &minmax.annual);
+                InternalExportValues<1, VCardT>(report, minmax.annual.data());
                 break;
             }
         }
@@ -137,7 +145,7 @@ protected:
 
     uint64_t memoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class> class DecoratorT>

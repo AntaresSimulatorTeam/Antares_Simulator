@@ -114,7 +114,6 @@ public:
     YString id;
     unsigned int unitCount;
 }; // class PreproAvailability
-
 } // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__

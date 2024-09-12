@@ -50,21 +50,6 @@ namespace Antares::Data
 class Parameters final
 {
 public:
-    //! \name Constructor
-    //@{
-    /*!
-    ** \brief Default Constructor
-    **
-    ** \warning None of the variables are initialized. You must explicitly use
-    **   the method `reset()` or the method `loadFromFile()`
-    ** \see reset()
-    ** \see loadFromFile()
-    */
-    Parameters();
-    //! Destructor
-    ~Parameters();
-    //@}
-
     //! \name Simulation mode
     //@{
     //! Get if the simulation is in economy mode
@@ -90,9 +75,7 @@ public:
     ** \param version Current study version
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
-    bool loadFromFile(const AnyString& filename,
-                      StudyVersion& version,
-                      const StudyLoadOptions& options);
+    bool loadFromFile(const AnyString& filename, const StudyVersion& version);
 
     /*!
     ** \brief Prepare all settings for a simulation
@@ -151,6 +134,8 @@ public:
     ** \brief Try to detect then fix any bad value
     */
     void fixBadValues();
+
+    void validateOptions(const StudyLoadOptions&);
 
     /*!
     ** \brief Try to detect then fix refresh intervals
@@ -465,12 +450,6 @@ public:
 
     struct
     {
-        //! Initial reservoir levels
-        InitialReservoirLevels iniLevels;
-    } initialReservoirLevels;
-
-    struct
-    {
         //! Hydro heuristic policy
         HydroHeuristicPolicy hhPolicy;
     } hydroHeuristicPolicy;
@@ -480,11 +459,6 @@ public:
         //! Hydro Pricing Mode
         HydroPricingMode hpMode;
     } hydroPricing;
-
-    // In case of hydro hot start and MC years simultaneous run
-    // ... Answers the question : do all sets of simultaneous years have the same size ?
-    //     (obvious if the parallel mode is not required : answer is yes).
-    bool allSetsHaveSameSize;
 
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
@@ -504,7 +478,7 @@ public:
     //@{
     //! No output
     // This variable is not stored within the study but only used by the solver
-    bool noOutput;
+    bool noOutput = false;
     //@}
 
     bool hydroDebug;
@@ -526,9 +500,7 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini,
-                     const StudyVersion& version,
-                     const StudyLoadOptions& options);
+    bool loadFromINI(const IniFile& ini, const StudyVersion& version);
 
     void resetPlayedYears(uint nbOfYears);
 

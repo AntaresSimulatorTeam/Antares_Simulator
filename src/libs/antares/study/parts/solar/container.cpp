@@ -31,14 +31,8 @@ using namespace Yuni;
 namespace Antares::Data::Solar
 {
 Container::Container():
-    prepro(nullptr),
     series(tsNumbers)
 {
-}
-
-Container::~Container()
-{
-    delete prepro;
 }
 
 bool Container::forceReload(bool reload) const

@@ -24,9 +24,9 @@
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
+#include <antares/io/file.h>
 #include <antares/logs/logs.h>
 #include <antares/writer/in_memory_writer.h>
-#include <antares/io/file.h>
 
 namespace fs = std::filesystem;
 

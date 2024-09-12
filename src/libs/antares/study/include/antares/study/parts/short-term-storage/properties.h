@@ -41,12 +41,17 @@ public:
     std::optional<double> withdrawalNominalCapacity;
     /// Not optional   Reservoir capacity in MWh, >= 0
     std::optional<double> reservoirCapacity;
+
     /// Initial level, <= 1
     double initialLevel = initiallevelDefault;
     /// Bool to optimise or not initial level
     bool initialLevelOptim = false;
-    /// Efficiency factor between 0 and 1
-    double efficiencyFactor = 1;
+
+    /// Efficiency factor for injection between 0 and 1
+    double injectionEfficiency = 1;
+    /// Efficiency factor for withdrawal between 0 and 1
+    double withdrawalEfficiency = 1;
+
     // Used to sort outputs
     std::string groupName = "OTHER1";
     /// cluster name

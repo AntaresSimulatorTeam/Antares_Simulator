@@ -52,8 +52,7 @@ Area::Area():
 }
 
 Area::Area(const AnyString& name):
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+    Area()
 {
     internalInitialize();
     this->name = name;
@@ -61,14 +60,11 @@ Area::Area(const AnyString& name):
 }
 
 Area::Area(const AnyString& name, const AnyString& id):
-
-    reserves(fhrMax, HOURS_PER_YEAR),
-    miscGen(fhhMax, HOURS_PER_YEAR)
+    Area()
 {
     internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(id);
-
 }
 
 Area::~Area()
@@ -189,7 +185,7 @@ uint64_t Area::memoryUsage() const
     ret += wind.memoryUsage();
 
     // Hydro
-    ret += PreproHydroMemoryUsage(hydro.prepro);
+    ret += PreproHydroMemoryUsage(hydro.prepro.get());
     if (hydro.series)
     {
         ret += hydro.series->memoryUsage();
@@ -227,7 +223,7 @@ void Area::createMissingTimeSeries()
 {
     if (!hydro.series)
     {
-        hydro.series = new DataSeriesHydro();
+        hydro.series = std::make_unique<DataSeriesHydro>();
     }
 }
 
@@ -235,19 +231,19 @@ void Area::createMissingPrepros()
 {
     if (!load.prepro)
     {
-        load.prepro = new Data::Load::Prepro();
+        load.prepro = std::make_unique<Data::Load::Prepro>();
     }
     if (!solar.prepro)
     {
-        solar.prepro = new Data::Solar::Prepro();
+        solar.prepro = std::make_unique<Data::Solar::Prepro>();
     }
     if (!wind.prepro)
     {
-        wind.prepro = new Data::Wind::Prepro();
+        wind.prepro = std::make_unique<Data::Wind::Prepro>();
     }
     if (!hydro.prepro)
     {
-        hydro.prepro = new PreproHydro();
+        hydro.prepro = std::make_unique<PreproHydro>();
     }
     thermal.list.ensureDataPrepro();
 }

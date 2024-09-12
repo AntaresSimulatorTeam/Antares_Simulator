@@ -21,9 +21,9 @@
 
 #include "antares/study/area/links.h"
 
+#include <array>
+#include <filesystem>
 #include <limits>
-
-#include <yuni/yuni.h>
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
@@ -305,7 +305,20 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool handleKey(Data::AreaLink& link, const String& key, const String& value)
+
+bool isPropertyUsedForLinkTSgeneration(const std::string& key)
+{
+    std::array<std::string, 7> listKeys = {"unitcount",
+                                           "nominalcapacity",
+                                           "law.planned",
+                                           "law.forced",
+                                           "volatility.planned",
+                                           "volatility.forced",
+                                           "force-no-generation"};
+    return std::find(listKeys.begin(), listKeys.end(), key) != listKeys.end();
+}
+
+bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
     {
@@ -448,13 +461,9 @@ bool handleKey(Data::AreaLink& link, const String& key, const String& value)
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
-
-    return false;
-}
-
-bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
-{
-    return handleKey(link, key, value);
+    // Properties used by TS generator only.
+    // We just skip them (otherwise : reading error)
+    return isPropertyUsedForLinkTSgeneration(key.to<std::string>());
 }
 
 [[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
@@ -475,7 +484,7 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const fs::path& folder)
 {
     // Assert
     assert(area);
@@ -497,16 +506,16 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::pa
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        std::string buffer = transformNameIntoID(s->name);
+        const std::string targetAreaName = transformNameIntoID(s->name);
 
         // Trying to find it
-        Area* linkedWith = AreaListLFind(l, buffer.c_str());
-        if (!linkedWith)
+        Area* targetArea = AreaListLFind(areaList, targetAreaName.c_str());
+        if (!targetArea)
         {
             logs.error() << '`' << s->name << "`: Impossible to find the area";
             continue;
         }
-        AreaLink* lnk = AreaAddLinkBetweenAreas(area, linkedWith);
+        AreaLink* lnk = AreaAddLinkBetweenAreas(area, targetArea);
         if (!lnk)
         {
             logs.error() << "Impossible to create a link between two areas";

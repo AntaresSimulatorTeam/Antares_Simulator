@@ -29,6 +29,7 @@ namespace Data
 {
 class Study;
 }
+
 /**
  * @class IStudyLoader
  * @brief The IStudyLoader class is an interface for loading studies.

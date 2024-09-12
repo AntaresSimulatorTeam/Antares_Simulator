@@ -26,9 +26,7 @@
 #include "../common/cluster_list.h"
 #include "cluster.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief List of renewable clusters
@@ -39,10 +37,12 @@ class RenewableClusterList: public ClusterList<RenewableCluster>
 public:
     std::string typeID() const override;
     uint64_t memoryUsage() const override;
+
     bool loadFromFolder(const AnyString& folder, Area* area);
+    bool validateClusters() const;
+
     bool saveToFolder(const AnyString& folder) const override;
 }; // class RenewableClusterList
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_LIST_H__ */

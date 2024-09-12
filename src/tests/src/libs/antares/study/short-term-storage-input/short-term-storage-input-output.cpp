@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #define BOOST_TEST_MODULE "test short term storage"
 
 #define WIN32_LEAN_AND_MEAN
@@ -51,6 +51,10 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.inflows.resize(size, value);
     series.lowerRuleCurve.resize(size, value);
     series.upperRuleCurve.resize(size, value);
+
+    series.costInjection.resize(size, value);
+    series.costWithdrawal.resize(size, value);
+    series.costLevel.resize(size, value);
 }
 
 void createIndividualFileSeries(const std::string& path, double value, unsigned int size)
@@ -88,6 +92,10 @@ void createFileSeries(double value, unsigned int size)
     createIndividualFileSeries(folder + SEP + "inflows.txt", value, size);
     createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", value, size);
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", value, size);
+
+    createIndividualFileSeries(folder + SEP + "cost-injection.txt", value, size);
+    createIndividualFileSeries(folder + SEP + "cost-withdrawal.txt", value, size);
+    createIndividualFileSeries(folder + SEP + "cost-level.txt", value, size);
 }
 
 void createFileSeries(unsigned int size)
@@ -99,6 +107,10 @@ void createFileSeries(unsigned int size)
     createIndividualFileSeries(folder + SEP + "inflows.txt", size);
     createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", size);
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", size);
+
+    createIndividualFileSeries(folder + SEP + "cost-injection.txt", size);
+    createIndividualFileSeries(folder + SEP + "cost-withdrawal.txt", size);
+    createIndividualFileSeries(folder + SEP + "cost-level.txt", size);
 }
 
 void createIniFile(bool enabled)
@@ -115,6 +127,7 @@ void createIniFile(bool enabled)
     outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
     outfile << "reservoircapacity = 31200.000000" << std::endl;
     outfile << "efficiency = 0.75" << std::endl;
+    outfile << "efficiencywithdrawal = 0.9" << std::endl;
     outfile << "initiallevel = 0.50000" << std::endl;
     outfile << "enabled = " << (enabled ? "true" : "false") << std::endl;
     outfile.close();
@@ -134,6 +147,7 @@ void createIniFileWrongValue()
     outfile << "withdrawalnominalcapacity = -900.000000" << std::endl;
     outfile << "reservoircapacity = -31200.000000" << std::endl;
     outfile << "efficiency = 4" << std::endl;
+    outfile << "efficiencywithdrawal = -2" << std::endl;
     outfile << "initiallevel = -0.50000" << std::endl;
 
     outfile.close();
@@ -174,6 +188,10 @@ struct Fixture
         std::filesystem::remove(folder + SEP + "inflows.txt");
         std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
         std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
+
+        std::filesystem::remove(folder + SEP + "cost-injection.txt");
+        std::filesystem::remove(folder + SEP + "cost-withdrawal.txt");
+        std::filesystem::remove(folder + SEP + "cost-level.txt");
     }
 
     std::string folder = getFolder();

@@ -33,54 +33,50 @@ void computingHydroLevels(const Data::AreaList& areas,
                           bool remixWasRun,
                           bool computeAnyway)
 {
-    areas.each(
-      [&](const Data::Area& area)
-      {
-          if (!area.hydro.reservoirManagement)
-          {
-              return;
-          }
+    for (const auto& [_, area]: areas)
+    {
+        if (!area->hydro.reservoirManagement)
+        {
+            continue;
+        }
 
-          if (not computeAnyway)
-          {
-              if (area.hydro.useHeuristicTarget != remixWasRun)
-              {
-                  return;
-              }
-          }
+        if (!computeAnyway && area->hydro.useHeuristicTarget != remixWasRun)
+        {
+            continue;
+        }
 
-          uint index = area.index;
+        uint index = area->index;
 
-          double reservoirCapacity = area.hydro.reservoirCapacity;
+        double reservoirCapacity = area->hydro.reservoirCapacity;
 
-          std::vector<double>& inflows = problem.CaracteristiquesHydrauliques[index]
-                                           .ApportNaturelHoraire;
+        std::vector<double>& inflows = problem.CaracteristiquesHydrauliques[index]
+                                         .ApportNaturelHoraire;
 
-          RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-          std::vector<double>& turb = weeklyResults.TurbinageHoraire;
+        std::vector<double>& turb = weeklyResults.TurbinageHoraire;
 
-          std::vector<double>& pump = weeklyResults.PompageHoraire;
-          double pumpingRatio = area.hydro.pumpingEfficiency;
+        std::vector<double>& pump = weeklyResults.PompageHoraire;
+        double pumpingRatio = area->hydro.pumpingEfficiency;
 
-          double nivInit = problem.CaracteristiquesHydrauliques[index].NiveauInitialReservoir;
-          std::vector<double>& niv = weeklyResults.niveauxHoraires;
+        double nivInit = problem.CaracteristiquesHydrauliques[index].NiveauInitialReservoir;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-          std::vector<double>& ovf = weeklyResults.debordementsHoraires;
+        std::vector<double>& ovf = weeklyResults.debordementsHoraires;
 
-          computeTimeStepLevel
-            computeLvlObj(nivInit, inflows, ovf, turb, pumpingRatio, pump, reservoirCapacity);
+        computeTimeStepLevel
+          computeLvlObj(nivInit, inflows, ovf, turb, pumpingRatio, pump, reservoirCapacity);
 
-          for (uint h = 0; h < nbHoursInAWeek - 1; h++)
-          {
-              computeLvlObj.run();
-              niv[h] = computeLvlObj.getLevel() * 100 / reservoirCapacity;
-              computeLvlObj.prepareNextStep();
-          }
+        for (uint h = 0; h < nbHoursInAWeek - 1; h++)
+        {
+            computeLvlObj.run();
+            niv[h] = computeLvlObj.getLevel() * 100 / reservoirCapacity;
+            computeLvlObj.prepareNextStep();
+        }
 
-          computeLvlObj.run();
-          niv[nbHoursInAWeek - 1] = computeLvlObj.getLevel() * 100 / reservoirCapacity;
-      });
+        computeLvlObj.run();
+        niv[nbHoursInAWeek - 1] = computeLvlObj.getLevel() * 100 / reservoirCapacity;
+    }
 }
 
 void interpolateWaterValue(const Data::AreaList& areas,
@@ -98,94 +94,63 @@ void interpolateWaterValue(const Data::AreaList& areas,
         daysOfWeek[d] = weekFirstDay + d;
     }
 
-    areas.each(
-      [&](const Data::Area& area)
-      {
-          uint index = area.index;
+    for (const auto& [_, area]: areas)
+    {
+        uint index = area->index;
 
-          RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
-          std::vector<double>& waterVal = weeklyResults.valeurH2oHoraire;
+        auto& waterVal = weeklyResults.valeurH2oHoraire;
+        std::fill(waterVal.begin(), waterVal.end(), 0.);
 
-          for (uint h = 0; h < nbHoursInAWeek; h++)
-          {
-              waterVal[h] = 0.;
-          }
+        if (!area->hydro.reservoirManagement || !area->hydro.useWaterValue)
+        {
+            return;
+        }
 
-          if (!area.hydro.reservoirManagement || !area.hydro.useWaterValue)
-          {
-              return;
-          }
+        if (!area->hydro.useWaterValue)
+        {
+            return;
+        }
 
-          if (!area.hydro.useWaterValue)
-          {
-              return;
-          }
+        double reservoirCapacity = area->hydro.reservoirCapacity;
 
-          double reservoirCapacity = area.hydro.reservoirCapacity;
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-          std::vector<double>& niv = weeklyResults.niveauxHoraires;
+        waterVal[0] = Data::getWaterValue(problem.previousSimulationFinalLevel[index] * 100
+                                            / reservoirCapacity,
+                                          area->hydro.waterValues,
+                                          weekFirstDay);
 
-          Antares::Data::getWaterValue(problem.previousSimulationFinalLevel[index] * 100
-                                         / reservoirCapacity,
-                                       area.hydro.waterValues,
-                                       weekFirstDay,
-                                       waterVal[0]);
-          for (uint h = 1; h < nbHoursInAWeek; h++)
-          {
-              Antares::Data::getWaterValue(niv[h - 1],
-                                           area.hydro.waterValues,
-                                           daysOfWeek[h / 24],
-                                           waterVal[h]);
-          }
-      });
+        for (uint h = 1; h < nbHoursInAWeek; h++)
+        {
+            waterVal[h] = Data::getWaterValue(niv[h - 1],
+                                              area->hydro.waterValues,
+                                              daysOfWeek[h / 24]);
+        }
+    }
 }
 
 void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem)
 {
-    areas.each(
-      [&](const Data::Area& area)
-      {
-          if (!area.hydro.reservoirManagement)
-          {
-              return;
-          }
-
-          uint index = area.index;
-
-          double reservoirCapacity = area.hydro.reservoirCapacity;
-
-          RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
-
-          std::vector<double>& niv = weeklyResults.niveauxHoraires;
-
-          problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1] * reservoirCapacity
-                                                        / 100;
-      });
-}
-
-void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem)
-{
-    if (!problem.hydroHotStart)
+    for (const auto& [_, area]: areas)
     {
-        return;
+        if (!area->hydro.reservoirManagement)
+        {
+            continue;
+        }
+
+        uint index = area->index;
+
+        double reservoirCapacity = area->hydro.reservoirCapacity;
+
+        RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
+
+        std::vector<double>& niv = weeklyResults.niveauxHoraires;
+
+        problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1] * reservoirCapacity
+                                                      / 100;
     }
-
-    areas.each(
-      [&](const Data::Area& area)
-      {
-          if (!area.hydro.reservoirManagement)
-          {
-              return;
-          }
-
-          uint index = area.index;
-
-          double reservoirCapacity = area.hydro.reservoirCapacity;
-
-          problem.previousYearFinalLevels[index] = problem.previousSimulationFinalLevel[index]
-                                                   / reservoirCapacity;
-      });
 }
 
 } // namespace Antares::Solver::Simulation

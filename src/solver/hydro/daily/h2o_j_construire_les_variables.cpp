@@ -57,14 +57,14 @@ void H2O_j_ConstruireLesVariables(
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
     Var++;
 
     CorrespondanceDesVariables.NumeroDeLaVariableXi = Var;
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
     Var++;
 
     return;

@@ -208,7 +208,6 @@ set(SRC_STUDY
         include/antares/study/load-options.h
         load-options.cpp
         include/antares/study/runtime/runtime.h
-        include/antares/study/runtime/runtime.hxx
         runtime/runtime.cpp
         include/antares/study/runtime.h
         include/antares/study/study.h
@@ -250,7 +249,7 @@ set(SRC_STUDY
 
         # Sets
         include/antares/study/sets.h
-        include/antares/study/sets.hxx
+        area/sets.cpp
 
         # variable selection
         include/antares/study/variable-print-info.h
@@ -283,7 +282,6 @@ add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
         PUBLIC
-        Boost::boost
         yuni-static-core
         Antares::date #parameters
         Antares::inifile #parameters
@@ -295,6 +293,7 @@ target_link_libraries(study
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::series
+        Antares::array
         antares-core
         antares-solver-simulation
         Antares::hydro

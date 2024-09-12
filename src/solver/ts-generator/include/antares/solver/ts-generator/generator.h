@@ -24,21 +24,59 @@
 #include <yuni/yuni.h>
 
 #include <antares/series/series.h>
-#include <antares/solver/ts-generator/law.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
 #include <antares/study/study.h>
-#include <antares/writer/i_writer.h>
 
 #include "xcast/xcast.h"
 
+namespace fs = std::filesystem;
+using LinkPair = std::pair<std::string, std::string>;
+using LinkPairs = std::vector<LinkPair>;
+
 namespace Antares::TSGenerator
 {
+
+struct StudyParamsForLinkTS
+{
+    unsigned int nbLinkTStoGenerate = 1;
+    bool derated = false;
+    // gp : we will have a problem with that if seed-tsgen-links not set in
+    // gp : generaldata.ini. In that case, our default value is wrong.
+    MersenneTwister random;
+};
+
+struct LinkTSgenerationParams
+{
+    LinkPair namesPair;
+
+    unsigned unitCount = 1;
+    double nominalCapacity = 0;
+
+    double forcedVolatility = 0.;
+    double plannedVolatility = 0.;
+
+    Data::StatisticalLaw forcedLaw = Data::LawUniform;
+    Data::StatisticalLaw plannedLaw = Data::LawUniform;
+
+    std::unique_ptr<Data::PreproAvailability> prepro;
+
+    Matrix<> modulationCapacityDirect;
+    Matrix<> modulationCapacityIndirect;
+
+    bool forceNoGeneration = false;
+    bool hasValidData = true;
+};
+
 class AvailabilityTSGeneratorData
 {
 public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
+
+    AvailabilityTSGeneratorData(LinkTSgenerationParams&,
+                                Matrix<>& modulation,
+                                const std::string& name);
 
     const unsigned& unitCount;
     const double& nominalCapacity;
@@ -51,12 +89,12 @@ public:
 
     Data::PreproAvailability* prepro;
 
-    Matrix<>& series;
-
     Matrix<>::ColumnType& modulationCapacity;
 
     const std::string& name;
 };
+
+using listOfLinks = std::vector<Data::AreaLink*>;
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
@@ -68,8 +106,14 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
-                               Solver::IResultWriter& writer,
-                               const std::string& savePath);
+                               MersenneTwister& thermalRandom);
+
+void writeThermalTimeSeries(const std::vector<Data::ThermalCluster*>& clusters,
+                            const fs::path& savePath);
+
+bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
+                            StudyParamsForLinkTS&,
+                            const fs::path& savePath);
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);

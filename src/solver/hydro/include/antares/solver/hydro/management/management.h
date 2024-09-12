@@ -47,49 +47,6 @@ double GammaVariable(double a, MersenneTwister& random);
 
 } // namespace Solver
 
-enum
-{
-    //! The maximum number of days in a year
-    dayYearCount = 366
-};
-
-//! Temporary data
-struct TmpDataByArea
-{
-    //! Monthly local effective demand
-    double MLE[12];
-    //! Monthly optimal generation
-    double MOG[12];
-    //! Monthly optimal level
-    double MOL[12];
-    //! Monthly target generations
-    double MTG[12];
-    //! inflows
-    double inflows[12];
-    //! monthly minimal generation
-    std::array<double, 12> mingens;
-
-    //! Net demand, for each day of the year, for each area
-    double DLN[dayYearCount];
-    //! Daily local effective load
-    double DLE[dayYearCount];
-    //! Daily optimized Generation
-    double DOG[dayYearCount];
-    //! daily minimal generation
-    std::array<double, dayYearCount> dailyMinGen;
-
-    // Data for minGen<->inflows preChecks
-    //! monthly total mingen
-    std::array<double, 12> totalMonthMingen;
-    //! monthly total inflows
-    std::array<double, 12> totalMonthInflows;
-    //! yearly total mingen
-    double totalYearMingen;
-    //! yearly total inflows
-    double totalYearInflows;
-
-}; // struct TmpDataByArea
-
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
@@ -100,6 +57,8 @@ typedef struct
 } VENTILATION_HYDRO_RESULTS_BY_AREA;
 
 using HYDRO_VENTILATION_RESULTS = std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>;
+using HydroSpecificMap = std::unordered_map<const Antares::Data::Area*,
+                                            Antares::Data::TimeDependantHydroManagementData>;
 
 class HydroManagement final
 {
@@ -107,12 +66,10 @@ public:
     HydroManagement(const Data::AreaList& areas,
                     const Data::Parameters& params,
                     const Date::Calendar& calendar,
-                    unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
-                         Solver::Variable::State& state,
                          uint y,
                          Antares::Data::Area::ScratchMap& scratchmap);
 
@@ -122,47 +79,37 @@ public:
     }
 
 private:
-    //! Prepare inflows scaling for each area
-    void prepareInflowsScaling(uint year);
-    //! Prepare minimum generation scaling for each area
-    void minGenerationScaling(uint year);
-    //! check Monthly minimum generation is lower than available inflows
-    bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
-    //! check Yearly minimum generation is lower than available inflows
-    bool checkYearlyMinGeneration(uint year, const Data::Area& area) const;
-    //! check Weekly minimum generation is lower than available inflows
-    bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
-    //! check Hourly minimum generation is lower than available inflows
-    bool checkGenerationPowerConsistency(uint year) const;
-    //! return false if checkGenerationPowerConsistency or checkMinGeneration returns false
-    bool checksOnGenerationPowerBounds(uint year) const;
-    //! check minimum generation is lower than available inflows
-    bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area
     void prepareNetDemand(uint year,
                           Data::SimulationMode mode,
-                          const Antares::Data::Area::ScratchMap& scratchmap);
+                          const Antares::Data::Area::ScratchMap& scratchmap,
+                          HydroSpecificMap& hydro_specific_map);
     //! Prepare the effective demand for each area
-    void prepareEffectiveDemand();
+    void prepareEffectiveDemand(uint year, HydroSpecificMap& hydro_specific_map) const;
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
+    void prepareMonthlyOptimalGenerations(const double* random_reservoir_level,
+                                          uint y,
+                                          HydroSpecificMap& hydro_specific_map);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
     // \return The total inflow for the whole year
-    double prepareMonthlyTargetGenerations(Data::Area& area, TmpDataByArea& data);
+    double prepareMonthlyTargetGenerations(
+      Data::Area& area,
+      Antares::Data::AreaDependantHydroManagementData& data,
+      Antares::Data::TimeDependantHydroManagementData& hydro_specific);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        uint y,
-                                        Antares::Data::Area::ScratchMap& scratchmap);
+    void prepareDailyOptimalGenerations(uint y,
+                                        Antares::Data::Area::ScratchMap& scratchmap,
+                                        HydroSpecificMap& hydro_specific_map);
 
-    void prepareDailyOptimalGenerations(Solver::Variable::State& state,
-                                        Data::Area& area,
-                                        uint y,
-                                        Antares::Data::Area::ScratchMap& scratchmap);
+    void prepareDailyOptimalGenerations(
+      Data::Area& area,
+      uint y,
+      Antares::Data::Area::ScratchMap& scratchmap,
+      Antares::Data::TimeDependantHydroManagementData& hydro_specific);
 
 private:
-    std::unordered_map<const Data::Area*, TmpDataByArea> tmpDataByArea_;
     const Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const Data::Parameters& parameters_;

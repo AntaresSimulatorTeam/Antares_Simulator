@@ -27,6 +27,7 @@
 #include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/variable/print.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 
@@ -127,7 +128,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
                   "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\n";
 
     study.areas.each(
-      [&](const Data::Area& area)
+      [&out, &outLinks, &outThermal](const Data::Area& area)
       {
           out << area.id << '\t';
           out << area.name << '\n';
@@ -230,17 +231,16 @@ namespace Variable
 {
 static inline uint GetRangeLimit(const Data::Study& study, int precisionLevel, int index)
 {
-    assert(study.runtime && "invalid runtime data");
     switch (precisionLevel)
     {
     case Category::hourly:
-        return study.runtime->rangeLimits.hour[index];
+        return study.runtime.rangeLimits.hour[index];
     case Category::daily:
-        return study.runtime->rangeLimits.day[index];
+        return study.runtime.rangeLimits.day[index];
     case Category::weekly:
-        return study.runtime->rangeLimits.week[index];
+        return study.runtime.rangeLimits.week[index];
     case Category::monthly:
-        return study.runtime->rangeLimits.month[index];
+        return study.runtime.rangeLimits.month[index];
     case Category::annual:
         return 0;
     default:
@@ -356,13 +356,10 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
         if (std::isnan(v))
         {
             buffer.append("\tNaN", 4);
-            if (++error == 1)
+            // We should disabled errors on NaN if the quadratic optimization has failed
+            if (++error == 1 && !data.study.runtime.quadraticOptimizationHasFailed)
             {
-                // We should disabled errors on NaN if the quadratic optimization has failed
-                if (not data.study.runtime->quadraticOptimizationHasFailed)
-                {
-                    logs.error() << "'NaN' value detected";
-                }
+                logs.error() << "'NaN' value detected";
             }
         }
         else
@@ -533,8 +530,8 @@ SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWrite
     values = new ValueType[maxVariables];
     for (uint i = 0; i != maxVariables; ++i)
     {
-        values[i] = new double[maxHoursInAYear];
-        memset(values[i], 0, sizeof(double) * maxHoursInAYear);
+        values[i] = new double[HOURS_PER_YEAR];
+        memset(values[i], 0, sizeof(double) * HOURS_PER_YEAR);
     }
 
     // captions
@@ -607,7 +604,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
 {
     // Main Header
     {
-        const unsigned int nbLinks = data.study.runtime->interconnectionsCount();
+        const unsigned int nbLinks = data.study.runtime.interconnectionsCount();
         buffer.append("\tdigest\n\tVARIABLES\tAREAS\tLINKS\n")
           .append("\t")
           .append(std::to_string(data.columnIndex))
@@ -638,7 +635,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
     for (auto j = data.rowCaptions.begin(); j != end; ++j, ++y)
     {
         // asserts
-        assert(y < maxHoursInAYear);
+        assert(y < HOURS_PER_YEAR);
 
         buffer.append("\t").append(j->c_str());
 
@@ -646,7 +643,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
         for (uint i = 0; i != data.columnIndex; ++i)
         {
             assert(i < maxVariables && "i greater can not be greater than maxVariables");
-            assert(y < maxHoursInAYear && "y can not be greater than maxHoursInAYear");
+            assert(y < HOURS_PER_YEAR && "y can not be greater than HOURS_PER_YEAR");
 
             if (digestNonApplicableStatus[y][i])
             {
@@ -791,7 +788,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     for (uint y = heightBegin; y < heightEnd; ++y)
     {
         // Asserts
-        assert(y < maxHoursInAYear);
+        assert(y < HOURS_PER_YEAR);
         // Index
         writeDateToFileDescriptor(y + 1, precisionLevel);
 

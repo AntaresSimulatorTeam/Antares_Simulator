@@ -12,7 +12,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ---
 ### Time-series parameters
 
----
+
 #### generate
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `max-power` (ex: `generate = load, hydro, wind`)

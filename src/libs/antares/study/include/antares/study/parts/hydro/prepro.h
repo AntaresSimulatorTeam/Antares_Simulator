@@ -95,8 +95,9 @@ public:
     ** \param folder The source folder (ex: `input/hydro/prepro`)
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& s, const AreaName& areaID, const char folder[]);
+    bool loadFromFolder(Study& s, const AreaName& areaID, const std::string& folder);
 
+    bool validate(const std::string& areaID);
     /*!
     ** \brief Save hydro settings for the prepro into a folder
     **

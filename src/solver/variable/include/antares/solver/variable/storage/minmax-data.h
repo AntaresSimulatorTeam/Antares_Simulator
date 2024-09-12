@@ -21,19 +21,11 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 #define __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 
-#include <antares/memory/memory.h>
-#include <antares/study/study.h>
+#include <vector>
+
 #include "antares/solver/variable/storage/intermediate.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 class MinMaxData
 {
@@ -44,17 +36,8 @@ public:
         uint32_t indice;
     };
 
-public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    MinMaxData();
-    //! Destructor
-    ~MinMaxData();
-
-    void initialize();
+    MinMaxData() = default;
+    ~MinMaxData() = default;
 
     void resetInf();
     void resetSup();
@@ -62,19 +45,14 @@ public:
     void mergeInf(uint year, const IntermediateValues& rhs);
     void mergeSup(uint year, const IntermediateValues& rhs);
 
-public:
-    Data annual;
-    Data monthly[maxMonths];
-    Data weekly[maxWeeksInAYear];
-    Data daily[maxDaysInAYear];
-    Antares::Memory::Stored<Data>::Type hourly;
+    std::vector<Data> annual{1};
+    std::vector<Data> monthly{MONTHS_PER_YEAR};
+    std::vector<Data> weekly{WEEKS_PER_YEAR};
+    std::vector<Data> daily{DAYS_PER_YEAR};
+    std::vector<Data> hourly{HOURS_PER_YEAR};
 
 }; // class MinMaxData
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
 
 #endif // __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__

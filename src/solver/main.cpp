@@ -105,7 +105,7 @@ void logAbortion()
 /*!
 ** \brief main
 */
-int main(int argc, char** argv)
+int main(int argc, const char** argv)
 {
     try
     {
@@ -129,9 +129,6 @@ int main(int argc, char** argv)
         application.prepare(argc, argv);
         application.execute();
         application.writeExectutionInfo();
-
-        // to avoid a bug from wxExecute, we should wait a little before returning
-        SuspendMilliSeconds(200 /*ms*/);
 
         return EXIT_SUCCESS;
     }

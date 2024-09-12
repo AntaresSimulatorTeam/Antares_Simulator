@@ -54,7 +54,7 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     }
 
     value.words(" ,;\t\r\n",
-                [&](const AnyString& element) -> bool
+                [&v](const AnyString& element)
                 {
                     ShortString16 word(element);
                     word.toLower();
@@ -208,13 +208,6 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
-Parameters::Parameters():
-    noOutput(false)
-{
-}
-
-Parameters::~Parameters() = default;
-
 bool Parameters::economy() const
 {
     return mode == SimulationMode::Economy;
@@ -231,8 +224,8 @@ void Parameters::resetSeeds()
     // For retro-compatibility, the wind ts-generator should produce the
     // same results than before 3.8.
     // It must have the same seed than before
-    auto increment = (unsigned)antaresSeedIncrement;
-    auto s = (unsigned)antaresSeedDefaultValue;
+    auto increment = antaresSeedIncrement;
+    auto s = antaresSeedDefaultValue;
 
     seed[seedTsGenWind] = s;
     // The same way for all others
@@ -311,15 +304,11 @@ void Parameters::reset()
     readonly = false;
     synthesis = true;
 
-    // Initial reservoir levels
-    initialReservoirLevels.iniLevels = irlColdStart;
-
     // Hydro heuristic policy
     hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
 
     // Hydro pricing
     hydroPricing.hpMode = hpHeuristic;
-    allSetsHaveSameSize = true;
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
@@ -539,6 +528,12 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     {
         return value.to<uint>(d.nbTimeSeriesSolar);
     }
+    if (key == "nbtimeserieslinks")
+    {
+        // This data is among solver data, but is useless while running a simulation
+        // Only by TS generator. We skip it here (otherwise, we get a reading error).
+        return true;
+    }
     // Interval values
     if (key == "refreshintervalload")
     {
@@ -573,43 +568,11 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     if (key == "simulation.start")
     {
-        uint day;
-        if (not value.to(day))
-        {
-            return false;
-        }
-        if (day == 0)
-        {
-            day = 1;
-        }
-        else
-        {
-            if (day > 365)
-            {
-                day = 365;
-            }
-            --day;
-        }
-        d.simulationDays.first = day;
-        return true;
+        return value.to<uint>(d.simulationDays.first);
     }
     if (key == "simulation.end")
     {
-        uint day;
-        if (not value.to(day))
-        {
-            return false;
-        }
-        if (day == 0)
-        {
-            day = 1;
-        }
-        else if (day > 365)
-        {
-            day = 365;
-        }
-        d.simulationDays.end = day; // not included
-        return true;
+        return value.to<uint>(d.simulationDays.end);
     }
 
     if (key == "thematic-trimming")
@@ -808,19 +771,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         logs.warning() << "parameters: invalid hydro pricing mode. Got '" << value
                        << "'. reset to fast mode";
         d.hydroPricing.hpMode = hpHeuristic;
-        return false;
-    }
-    if (key == "initial-reservoir-levels")
-    {
-        auto iniLevels = StringToInitialReservoirLevels(value);
-        if (iniLevels != irlUnknown)
-        {
-            d.initialReservoirLevels.iniLevels = iniLevels;
-            return true;
-        }
-        logs.warning() << "parameters: invalid initital reservoir levels mode. Got '" << value
-                       << "'. reset to cold start mode.";
-        d.initialReservoirLevels.iniLevels = irlColdStart;
         return false;
     }
 
@@ -1094,6 +1044,10 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                     return value.to<uint>(d.seed[sd]);
                 }
             }
+            if (key == "seed-tsgen-links")
+            {
+                return true; // Useless for solver, belongs to TS generator
+            }
         }
     }
     return false;
@@ -1155,6 +1109,21 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
     }
 
+    if (key == "initial-reservoir-levels") // ignored since 9.2
+    {
+        if (version >= StudyVersion(9, 2))
+        {
+            logs.warning()
+              << "Option initial-reservoir-levels is deprecated, please remove it from the study";
+        }
+        else if (value == "hot start")
+        {
+            logs.warning()
+              << "Hydro hot start not supported with this solver, please use a version < 9.2";
+        }
+        return true;
+    }
+
     return false;
 }
 
@@ -1164,9 +1133,7 @@ bool firstKeyLetterIsValid(const String& name)
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini,
-                             const StudyVersion& version,
-                             const StudyLoadOptions& options)
+bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
 {
     // Reset inner data
     reset();
@@ -1236,61 +1203,9 @@ bool Parameters::loadFromINI(const IniFile& ini,
         }
     }
 
-    // forcing value
-    if (options.nbYears != 0)
-    {
-        if (options.nbYears > nbYears)
-        {
-            // The variable `yearsFilter` must be enlarged
-            yearsFilter.resize(options.nbYears, false);
-        }
-        nbYears = options.nbYears;
-
-        // Resize years weight (add or remove item)
-        if (yearsWeight.size() != nbYears)
-        {
-            yearsWeight.resize(nbYears, 1.f);
-        }
-    }
-
-    // Simulation mode
-    // ... Enforcing simulation mode
-    if (options.forceMode != SimulationMode::Unknown)
-    {
-        mode = options.forceMode;
-        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
-    }
-    else
-    {
-        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
-    }
-
-    if (options.forceDerated)
-    {
-        derated = true;
-    }
-
-    namedProblems = options.namedProblems;
-
-    handleOptimizationOptions(options);
-
-    // Attempt to fix bad values if any
-    fixBadValues();
-
     fixRefreshIntervals();
 
     fixGenRefreshForNTC();
-
-    // Specific action before launching a simulation
-    if (options.usedByTheSolver)
-    {
-        prepareForSimulation(options);
-    }
-
-    if (options.mpsToExport || options.namedProblems)
-    {
-        this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
-    }
 
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
@@ -1382,6 +1297,68 @@ void Parameters::fixBadValues()
     {
         nbTimeSeriesSolar = 1;
     }
+
+    if (simulationDays.first == 0)
+    {
+        simulationDays.first = 1;
+    }
+    else
+    {
+        simulationDays.first = std::clamp(simulationDays.first, 1u, 365u);
+        --simulationDays.first; // value between 0 and 364 for edge cases
+    }
+
+    simulationDays.end = std::clamp(simulationDays.end, 1u, 365u);
+}
+
+void Parameters::validateOptions(const StudyLoadOptions& options)
+{
+    if (options.forceDerated)
+    {
+        derated = true;
+    }
+    // forcing value
+    if (options.nbYears != 0)
+    {
+        if (options.nbYears > nbYears)
+        {
+            // The variable `yearsFilter` must be enlarged
+            yearsFilter.resize(options.nbYears, false);
+        }
+        nbYears = options.nbYears;
+
+        // Resize years weight (add or remove item)
+        if (yearsWeight.size() != nbYears)
+        {
+            yearsWeight.resize(nbYears, 1.f);
+        }
+    }
+
+    // Simulation mode
+    // ... Enforcing simulation mode
+    if (options.forceMode != SimulationMode::Unknown)
+    {
+        mode = options.forceMode;
+        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
+    }
+    else
+    {
+        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
+    }
+    // Specific action before launching a simulation
+    if (options.usedByTheSolver)
+    {
+        prepareForSimulation(options);
+    }
+
+    if (options.mpsToExport || options.namedProblems)
+    {
+        this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    }
+
+    namedProblems = options.namedProblems;
+
+    handleOptimizationOptions(options);
 }
 
 uint64_t Parameters::memoryUsage() const
@@ -1874,8 +1851,6 @@ void Parameters::saveToINI(IniFile& ini) const
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
-        section->add("initial-reservoir-levels",
-                     InitialReservoirLevelsToCString(initialReservoirLevels.iniLevels));
         section->add("hydro-heuristic-policy",
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
@@ -1990,15 +1965,13 @@ void Parameters::saveToINI(IniFile& ini) const
     }
 }
 
-bool Parameters::loadFromFile(const AnyString& filename,
-                              StudyVersion& version,
-                              const StudyLoadOptions& options)
+bool Parameters::loadFromFile(const AnyString& filename, const StudyVersion& version)
 {
     // Loading the INI file
     IniFile ini;
     if (ini.open(filename))
     {
-        return loadFromINI(ini, version, options);
+        return loadFromINI(ini, version);
     }
 
     // Error otherwise

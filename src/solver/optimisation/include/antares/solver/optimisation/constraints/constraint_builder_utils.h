@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "ConstraintBuilder.h"
+struct PROBLEME_HEBDO;
 
 ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
   PROBLEME_HEBDO* problemeHebdo,

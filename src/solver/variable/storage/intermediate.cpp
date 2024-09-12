@@ -35,18 +35,18 @@ IntermediateValues::IntermediateValues():
     calendar(nullptr),
     year(0.)
 {
-    Antares::Memory::Allocate<Type>(hour, maxHoursInAYear);
-    Antares::Memory::Zero(maxHoursInAYear, hour);
-    (void)::memset(month, 0, sizeof(Type) * maxMonths);
-    (void)::memset(week, 0, sizeof(Type) * maxWeeksInAYear);
-    (void)::memset(day, 0, sizeof(Type) * maxDaysInAYear);
+    Antares::Memory::Allocate<Type>(hour, HOURS_PER_YEAR);
+    Antares::Memory::Zero(HOURS_PER_YEAR, hour);
+    (void)::memset(month, 0, sizeof(Type) * MONTHS_PER_YEAR);
+    (void)::memset(week, 0, sizeof(Type) * WEEKS_PER_YEAR);
+    (void)::memset(day, 0, sizeof(Type) * DAYS_PER_YEAR);
 }
 
 void IntermediateValues::initializeFromStudy(Data::Study& study)
 {
-    pRange = &study.runtime->rangeLimits;
+    pRange = &study.runtime.rangeLimits;
     calendar = &study.calendarOutput;
-    pRuntimeInfo = study.runtime;
+    pRuntimeInfo = &study.runtime;
 }
 
 void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
@@ -87,9 +87,9 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
     {
         double d = 0.;
         // One day
-        for (j = 0; j != maxHoursInADay; ++j)
+        for (j = 0; j != HOURS_PER_DAY; ++j)
         {
-            assert(indx < maxHoursInAYear);
+            assert(indx < HOURS_PER_YEAR);
             d += hour[indx];
             ++indx;
         }
@@ -98,7 +98,7 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
     }
 
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
         week[i] = 0.;
     }
@@ -142,9 +142,9 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     {
         day[i] = 0.;
         // One day
-        for (j = 0; j != maxHoursInADay; ++j)
+        for (j = 0; j != HOURS_PER_DAY; ++j)
         {
-            assert(indx < maxHoursInAYear);
+            assert(indx < HOURS_PER_YEAR);
             if (hour[indx] > 0.)
             {
                 day[i] = 100.;
@@ -154,7 +154,7 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     }
 
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
         week[i] = 0.;
     }
@@ -220,19 +220,19 @@ void IntermediateValues::computeDailyAveragesForCurrentYear()
     {
         // Compute sum of hourly values on the current day of year
         day_sum = 0.;
-        for (uint h = 0; h != maxHoursInADay; ++h)
+        for (uint h = 0; h != HOURS_PER_DAY; ++h)
         {
             day_sum += hour[indx];
             ++indx;
         }
-        day[d] = day_sum / maxHoursInADay;
+        day[d] = day_sum / HOURS_PER_DAY;
     }
 }
 
 void IntermediateValues::computeWeeklyAveragesForCurrentYear()
 {
     // Re-initialization (a previous MC year could have left non-nil values)
-    for (int w = 0; w != maxWeeksInAYear; ++w)
+    for (int w = 0; w != WEEKS_PER_YEAR; ++w)
     {
         week[w] = 0.;
     }
@@ -303,7 +303,7 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
     {
         d = 0.;
         // One day
-        for (j = 0; j != maxHoursInADay; ++j)
+        for (j = 0; j != HOURS_PER_DAY; ++j)
         {
             if (hour[indx] > 0.)
             {
@@ -324,7 +324,7 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
     }
 
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
     {
         week[i] = 0.;
     }

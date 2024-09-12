@@ -37,7 +37,7 @@ void ATSP::cacheCreate()
 void ATSP::cacheDestroy()
 {
     delete[] pCacheMatrix;
-    pCacheMatrix = NULL;
+    pCacheMatrix = nullptr;
 }
 
 void ATSP::cacheClear()
