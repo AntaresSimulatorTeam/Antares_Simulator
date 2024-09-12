@@ -79,7 +79,6 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays,
 }
 
 void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
-                                  const AdqPatchParams& adqPatchParams,
                                   const int PremierPdtDeLIntervalle,
                                   const int DernierPdtDeLIntervalle,
                                   const int optimizationNumber)
@@ -205,7 +204,6 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
 }
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
-                                                            const AdqPatchParams& adqPatchParams,
                                                             const int PremierPdtDeLIntervalle,
                                                             const int DernierPdtDeLIntervalle,
                                                             const int optimizationNumber)
@@ -460,7 +458,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     }
 
     setBoundsForUnsuppliedEnergy(problemeHebdo,
-                                 adqPatchParams,
                                  PremierPdtDeLIntervalle,
                                  DernierPdtDeLIntervalle,
                                  optimizationNumber);

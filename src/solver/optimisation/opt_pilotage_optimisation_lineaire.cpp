@@ -29,7 +29,6 @@ using Antares::Solver::Optimization::OptimizationOptions;
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
-                                      const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver)
 {
@@ -77,9 +76,5 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }
 
-    return OPT_OptimisationLineaire(options,
-                                    problemeHebdo,
-                                    adqPatchParams,
-                                    writer,
-                                    simulationObserver);
+    return OPT_OptimisationLineaire(options, problemeHebdo, writer, simulationObserver);
 }

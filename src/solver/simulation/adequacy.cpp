@@ -211,7 +211,6 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                              &currentProblem,
-                                             study.parameters.adqPatchParams,
                                              resultWriter,
                                              simulationObserver_.get());
 
