@@ -18,18 +18,20 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+#include <numeric>
+
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
 
 template<class T, class V>
 static bool compareBinaryNode(V& visitor, const T* node, const Antares::Solver::Nodes::Node* other)
 {
-    /*if (const T* other_node = dynamic_cast<const T*>(other))
+    if (const T* other_node = dynamic_cast<const T*>(other))
     {
         bool left = visitor.dispatch(node->left(), other_node->left());
         bool right = visitor.dispatch(node->right(), other_node->right());
         return left && right;
-    }*/
+    }
     return false;
 }
 
@@ -57,7 +59,22 @@ namespace Antares::Solver::Visitors
 {
 bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    if (const auto* other_node = dynamic_cast<const Nodes::SumNode*>(other))
+    {
+        if (node->getOperands().size() != other_node->getOperands().size())
+        {
+            return false;
+        }
+        for (int i = 0; i < node->getOperands().size(); ++i)
+        {
+            if (!dispatch(node->getOperands()[i], other_node->getOperands()[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 bool CompareVisitor::visit(const Nodes::SubtractionNode* node, const Nodes::Node* other)

@@ -21,13 +21,18 @@
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/TimeIndexVisitor.h>
+#include <numeric>
 
 namespace Antares::Solver::Visitors
 {
 
-TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* add)
+TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
 {
-    return TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO; // dispatch(add->left()) | dispatch(add->right());
+    auto operands = node->getOperands();
+    return std::accumulate(std::begin(operands), std::end(operands), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                [this](TimeIndex sum, Nodes::Node* operand) {
+                    return sum | dispatch(operand);
+                });
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
