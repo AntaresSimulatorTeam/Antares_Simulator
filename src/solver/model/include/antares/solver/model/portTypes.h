@@ -25,15 +25,17 @@
 namespace Antares::Solver::Model
 {
 
-class Port
+class PortTypes
 {
 public:
-    Port();
-    ~Port() = default;
+    PortTypes();
+    ~PortTypes() = default;
 
 private:
     std::string id_;
-    /* PortType type_; */
+    std::string description_;
+
+    std::vector<std::string> fields_;
 };
 
 } // namespace Antares::Solver::Model
