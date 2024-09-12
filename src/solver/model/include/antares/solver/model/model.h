@@ -23,6 +23,7 @@
 #include <map>
 
 #include "constraint.h"
+#include "expression.h"
 #include "parameter.h"
 #include "variable.h"
 
@@ -42,6 +43,8 @@ public:
     void getAllConstraints();
 
     std::string id;
+    Expression objective;
+
     std::map<std::string, Parameter> parameters_;
     std::map<std::string, Variable> variables_;
 
