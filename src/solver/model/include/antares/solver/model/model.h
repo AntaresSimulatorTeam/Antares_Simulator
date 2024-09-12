@@ -42,6 +42,7 @@ public:
 
     void getAllConstraints();
 
+private:
     std::string id;
     Expression objective;
 

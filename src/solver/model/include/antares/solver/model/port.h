@@ -22,22 +22,19 @@
 
 #include <string>
 
-#include "expression.h"
-#include "parameter.h"
-
 namespace Antares::Solver::Model
 {
 
 /// A decision variable of the model
-class Constraint
+class Port
 {
 public:
-    Constraint();
-    ~Constraint() = default;
+    Port();
+    ~Port() = default;
 
 private:
-    std::string name_;
-    Expression expression_;
+    std::string id_;
+    /* PortType type_; */
 };
 
 } // namespace Antares::Solver::Model

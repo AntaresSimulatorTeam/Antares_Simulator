@@ -10,6 +10,7 @@ set(SRC_model
     include/antares/solver/model/variable.h
     include/antares/solver/model/constraint.h
     include/antares/solver/model/expression.h
+    include/antares/solver/model/port.h
 )
 
 source_group("model" FILES ${SRC_model})

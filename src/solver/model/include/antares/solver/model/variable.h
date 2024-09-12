@@ -36,10 +36,11 @@ public:
     Variable();
     ~Variable() = default;
 
-    std::string name;
-    ValueType type;
-    Expression lowerBound;
-    Expression upperBound;
+private:
+    std::string name_;
+    ValueType type_;
+    Expression lowerBound_;
+    Expression upperBound_;
 };
 
 } // namespace Antares::Solver::Model

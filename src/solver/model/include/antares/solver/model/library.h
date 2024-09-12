@@ -27,20 +27,18 @@
 namespace Antares::Solver::Model
 {
 
-/**
- * Defines a model that can be referenced by actual components.
- * A model defines the behaviour of those components.
- */
+/// A library is a collection of models
 class Library
 {
 public:
     Library();
     ~Library() = default;
 
-    std::string id;
-    std::string description;
+private:
+    std::string id_;
+    std::string description_;
 
-    std::vector<Model> models;
+    std::map<std::string, Model> models_;
 };
 
 } // namespace Antares::Solver::Model
