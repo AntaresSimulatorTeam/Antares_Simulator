@@ -152,8 +152,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
-        problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
-
         problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower
                                                                & area.nodalOptimization)
                                                               != 0;
