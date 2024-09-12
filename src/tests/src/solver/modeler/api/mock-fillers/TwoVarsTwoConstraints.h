@@ -5,7 +5,7 @@
 namespace Antares::Solver::Modeler::Api
 {
 
-class TwoVarsTwoConstraints : public LinearProblemFiller
+class TwoVarsTwoConstraints: public LinearProblemFiller
 {
     using LinearProblemFiller::LinearProblemFiller;
 

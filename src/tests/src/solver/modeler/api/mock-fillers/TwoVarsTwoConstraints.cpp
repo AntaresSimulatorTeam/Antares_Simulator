@@ -1,6 +1,5 @@
 #include "TwoVarsTwoConstraints.h"
 
-
 namespace Antares::Solver::Modeler::Api
 {
 

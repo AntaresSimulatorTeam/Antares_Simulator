@@ -33,6 +33,7 @@ class LinearProblemBuilder
 public:
     LinearProblemBuilder(const std::vector<std::shared_ptr<LinearProblemFiller>>& fillers);
     void build();
+
 private:
     const std::vector<std::shared_ptr<LinearProblemFiller>>& fillers_;
 };
