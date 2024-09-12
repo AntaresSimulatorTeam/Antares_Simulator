@@ -158,6 +158,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
         problem.CoutDeDebordement[i] = area.hydro.overflowCost;
+        problem.CoutDeRemplissage[i] = area.hydro.levelCost;
 
         problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
 

@@ -172,6 +172,7 @@ public:
     //! Data for time-series
     DataSeriesHydro* series;
     double overflowCost = 0.;
+    double levelCost = 0.;
 
 }; // class PartHydro
 
