@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include "portType.h"
+
 namespace Antares::Solver::Model
 {
 
@@ -32,8 +34,8 @@ public:
     ~Port() = default;
 
 private:
-    std::string id_;
-    /* PortType type_; */
+    std::string name_;
+    PortType type_;
 };
 
 } // namespace Antares::Solver::Model

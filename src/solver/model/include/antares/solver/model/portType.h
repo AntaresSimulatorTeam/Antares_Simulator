@@ -21,15 +21,16 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace Antares::Solver::Model
 {
 
-class PortTypes
+class PortType
 {
 public:
-    PortTypes();
-    ~PortTypes() = default;
+    PortType();
+    ~PortType() = default;
 
 private:
     std::string id_;

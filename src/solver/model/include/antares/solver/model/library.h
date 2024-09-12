@@ -23,7 +23,7 @@
 #include <map>
 
 #include "model.h"
-#include "portTypes_.h"
+#include "portType.h"
 
 namespace Antares::Solver::Model
 {
@@ -39,7 +39,7 @@ private:
     std::string id_;
     std::string description_;
 
-    std::map<std::string, PortTypes> portTypes_;
+    std::map<std::string, PortType> portTypes_;
     std::map<std::string, Model> models_;
 };
 

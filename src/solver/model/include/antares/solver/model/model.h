@@ -25,6 +25,7 @@
 #include "constraint.h"
 #include "expression.h"
 #include "parameter.h"
+#include "port.h"
 #include "variable.h"
 
 namespace Antares::Solver::Model
@@ -51,6 +52,8 @@ private:
 
     std::map<std::string, Constraint> constraints_;
     std::map<std::string, Constraint> bindingConstraints_;
+
+    std::map<std::string, Port> ports_;
 };
 
 } // namespace Antares::Solver::Model
