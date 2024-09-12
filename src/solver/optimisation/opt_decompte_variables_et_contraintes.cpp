@@ -212,11 +212,6 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                                                            variations (14a in the reference
                                                            document) */
         }
-        if (!Pump && !TurbEntreBornes && MonitorHourlyLev)
-        {
-            const std::string areaName(problemeHebdo->NomsDesPays[pays]);
-            throw FatalError("Level explicit modeling requires flexible generation in area " + areaName);
-        }
     }
 
     // Short term storage

@@ -186,6 +186,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
 
+        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = area.hydro.reservoirManagement;
+
         problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
         if (problem.WaterValueAccurate && area.hydro.useWaterValue)
