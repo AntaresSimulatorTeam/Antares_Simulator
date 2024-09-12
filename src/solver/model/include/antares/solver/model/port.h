@@ -40,7 +40,6 @@ private:
 
 class PortFieldDefinition
 {
-
     PortFieldDefinition();
     ~PortFieldDefinition() = default;
 
