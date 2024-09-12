@@ -38,8 +38,8 @@ public:
 
     std::string name;
     ValueType type;
-    Parameter lowerBound;
-    Parameter upperBound;
+    Expression lowerBound;
+    Expression upperBound;
 };
 
 } // namespace Antares::Solver::Model
