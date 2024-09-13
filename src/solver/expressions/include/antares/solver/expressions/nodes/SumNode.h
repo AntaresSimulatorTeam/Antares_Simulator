@@ -62,7 +62,7 @@ public:
      */
     std::vector<Node*> getOperands() const;
 
-    uint getSize() const;
+    unsigned int getSize() const;
 
     std::string name() const override
     {
