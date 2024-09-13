@@ -778,7 +778,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
           }
           if (area.hydro.levelCost)
           {
-              allSections.sLevelCost->add(area.id, area.hydro.overflowCost);
+              allSections.sLevelCost->add(area.id, area.hydro.levelCost);
           }
 
           // max hours gen
