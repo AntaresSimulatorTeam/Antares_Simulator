@@ -31,11 +31,11 @@ namespace Antares::Solver::Modeler::Api
 class LinearProblemBuilder
 {
 public:
-    LinearProblemBuilder(const std::vector<std::shared_ptr<LinearProblemFiller>>& fillers);
+    LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers);
     void build();
 
 private:
-    const std::vector<std::shared_ptr<LinearProblemFiller>>& fillers_;
+    const std::vector<LinearProblemFiller*>& fillers_;
 };
 
 } // namespace Antares::Solver::Modeler::Api

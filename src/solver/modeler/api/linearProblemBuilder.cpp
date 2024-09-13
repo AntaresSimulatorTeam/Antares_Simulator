@@ -6,8 +6,7 @@
 namespace Antares::Solver::Modeler::Api
 {
 
-LinearProblemBuilder::LinearProblemBuilder(
-  const std::vector<std::shared_ptr<LinearProblemFiller>>& fillers):
+LinearProblemBuilder::LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers):
     fillers_(fillers)
 {
 }
