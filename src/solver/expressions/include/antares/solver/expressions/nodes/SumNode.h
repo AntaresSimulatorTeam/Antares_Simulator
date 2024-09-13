@@ -60,7 +60,8 @@ public:
      *
      * @return A vector of pointers to the operands of the sum.
      */
-    std::vector<Node*> getOperands() const;
+    const std::vector<Node*>& getOperands() const;
+    Node* operator[](std::size_t idx) const;
 
     unsigned int getSize() const;
 
