@@ -304,28 +304,19 @@ jobs:
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
-           cd _build
-           cpack -GNSIS
-           export NSIS_NAME=$(ls *.exe)
-           echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
-
-    - name: Upload NSIS log on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: NSISError.log
-        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: .zip creation
       run: |
            cd _build
            cpack -G ZIP
+           export NSIS_NAME=$(ls *.zip)
+           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
     - name: Installer upload
       uses: actions/upload-artifact@v4
       with:
-        name: installer
-        path: _build/${{env.NSIS_NAME}}
+        name: archive
+        path: _build/${{env.ZIP_NAME}}
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
