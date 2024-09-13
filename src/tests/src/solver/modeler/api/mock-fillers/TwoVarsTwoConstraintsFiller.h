@@ -17,14 +17,14 @@ public:
 
 void TwoVarsTwoConstraintsFiller::addVariables()
 {
-    linearProblem_->addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");
-    linearProblem_->addNumVariable(0, 3, "var-2-by-TwoVarsTwoConstraintsFiller");
+    linearProblem_.addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");
+    linearProblem_.addNumVariable(0, 3, "var-2-by-TwoVarsTwoConstraintsFiller");
 }
 
 void TwoVarsTwoConstraintsFiller::addConstraints()
 {
-    linearProblem_->addConstraint(1, 2, "constr-1-by-TwoVarsTwoConstraintsFiller");
-    linearProblem_->addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
+    linearProblem_.addConstraint(1, 2, "constr-1-by-TwoVarsTwoConstraintsFiller");
+    linearProblem_.addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
 }
 
 void TwoVarsTwoConstraintsFiller::addObjective()

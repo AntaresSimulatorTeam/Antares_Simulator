@@ -32,7 +32,7 @@ namespace Antares::Solver::Modeler::Api
 class LinearProblemFiller
 {
 public:
-    explicit LinearProblemFiller(std::shared_ptr<ILinearProblem> pb, LinearProblemData& data):
+    explicit LinearProblemFiller(ILinearProblem& pb, LinearProblemData& data):
         linearProblem_(pb),
         LPdata_(data)
     {
@@ -43,7 +43,7 @@ public:
     virtual void addObjective() = 0;
 
 protected:
-    std::shared_ptr<ILinearProblem> linearProblem_;
+    ILinearProblem& linearProblem_;
     const LinearProblemData& LPdata_;
 };
 
