@@ -31,12 +31,13 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
 Nodes::Node* CloneVisitor::visit(const Nodes::SumNode* node)
 {
     std::vector<Nodes::Node*> clonedOperands;
-    clonedOperands.reserve(node->getSize());
+    clonedOperands.reserve(node->size());
     for (auto* operand: node->getOperands())
     {
         clonedOperands.push_back(dispatch(operand));
     }
-    return registry_.create<Nodes::SumNode>(clonedOperands);
+    // Give ownership of clonedOperands to the caller
+    return registry_.create<Nodes::SumNode>(std::move(clonedOperands));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode* node)

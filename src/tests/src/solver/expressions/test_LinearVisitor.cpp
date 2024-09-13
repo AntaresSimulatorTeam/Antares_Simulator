@@ -290,4 +290,30 @@ BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, Registry<Node>)
     LinearityVisitor linearityVisitor;
     BOOST_CHECK_EQUAL(linearityVisitor.name(), "LinearityVisitor");
 }
+
+BOOST_FIXTURE_TEST_CASE(sum_node_cases, Registry<Node>)
+{
+    LinearityVisitor linearVisitor;
+
+    Node* expr = create<SumNode>();
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
+
+    expr = create<SumNode>(new LiteralNode(41), new LiteralNode(4));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
+
+    expr = create<SumNode>(new MultiplicationNode(new LiteralNode(5), new VariableNode("y")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
+
+    expr = create<SumNode>(new LiteralNode(41),
+                           new MultiplicationNode(new LiteralNode(5), new VariableNode("y")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
+
+    expr = create<SumNode>(new MultiplicationNode(new VariableNode("x"), new VariableNode("y")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
+
+    expr = create<SumNode>(new LiteralNode(41),
+                           new MultiplicationNode(new LiteralNode(5), new VariableNode("y")),
+                           new MultiplicationNode(new VariableNode("x"), new VariableNode("y")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
+}
 BOOST_AUTO_TEST_SUITE_END()

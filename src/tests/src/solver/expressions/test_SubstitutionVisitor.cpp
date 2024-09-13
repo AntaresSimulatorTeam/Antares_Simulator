@@ -65,10 +65,10 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
     BOOST_CHECK_NE(root, subsd);
 
     // We expect to find a substituted node on the left
-    BOOST_CHECK_EQUAL(dynamic_cast<SumNode*>(subsd)->getOperands()[0], variables.first);
+    BOOST_CHECK_EQUAL((*dynamic_cast<SumNode*>(subsd))[0], variables.first);
 
     // We expect to find an original node on the right
-    auto* right_substituted = dynamic_cast<SumNode*>(subsd)->getOperands()[1];
+    auto* right_substituted = (*dynamic_cast<SumNode*>(subsd))[1];
     BOOST_CHECK_NE(right_substituted, variables.first);
     BOOST_CHECK_NE(right_substituted, variables.second);
 

@@ -56,14 +56,25 @@ public:
     explicit SumNode(const std::vector<Node*>& operands);
 
     /**
+     * @brief Constructs a sum node with the specified operands. Vector is moved.
+     *
+     * @param operands The operands, collected in a vector
+     */
+    explicit SumNode(std::vector<Node*>&& operands):
+        operands_(std::move(operands))
+    {
+    }
+
+    /**
      * @brief Retrieves the operands of the sum.
      *
      * @return A vector of pointers to the operands of the sum.
      */
     const std::vector<Node*>& getOperands() const;
+
     Node* operator[](std::size_t idx) const;
 
-    unsigned int getSize() const;
+    unsigned int size() const;
 
     std::string name() const override
     {

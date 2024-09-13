@@ -59,7 +59,7 @@ bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
 {
     if (const auto* other_node = dynamic_cast<const Nodes::SumNode*>(other))
     {
-        if (node->getSize() != other_node->getSize())
+        if (node->size() != other_node->size())
         {
             return false;
         }

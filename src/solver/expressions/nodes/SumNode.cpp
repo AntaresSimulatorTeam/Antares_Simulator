@@ -28,7 +28,7 @@ SumNode::SumNode(const std::vector<Node*>& operands):
 {
 }
 
-std::vector<Node*> SumNode::getOperands() const
+const std::vector<Node*>& SumNode::getOperands() const
 {
     return operands_;
 }
@@ -36,6 +36,11 @@ std::vector<Node*> SumNode::getOperands() const
 unsigned int SumNode::size() const
 {
     return operands_.size();
+}
+
+Node* SumNode::operator[](std::size_t idx) const
+{
+    return operands_[idx];
 }
 
 } // namespace Antares::Solver::Nodes
