@@ -78,8 +78,8 @@ BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
                       TimeIndex::VARYING_IN_SCENARIO_ONLY);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&variableNode1), TimeIndex::VARYING_IN_TIME_ONLY);
 
-    // addition of parameterNode1 and variableNode1 is time and scenario dependent
-    Node* expr = create<SumNode>(&parameterNode1, &variableNode1);
+    // addition of literalNode, parameterNode1 and variableNode1 is time and scenario dependent
+    Node* expr = create<SumNode>(&literalNode, &parameterNode1, &variableNode1);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(expr), TimeIndex::VARYING_IN_TIME_AND_SCENARIO);
 }
 

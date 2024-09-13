@@ -89,8 +89,7 @@ BOOST_FIXTURE_TEST_CASE(print_add_one_literal, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(print_add_zero_literal, Registry<Node>)
 {
-    std::vector<Node*> v = {};
-    Node* root = create<SumNode>(v);
+    Node* root = create<SumNode>();
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(root);
@@ -131,8 +130,7 @@ BOOST_FIXTURE_TEST_CASE(eval_add_one_literal, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(eval_add_zero_literal, Registry<Node>)
 {
-    std::vector<Node*> v = {};
-    Node* root = create<SumNode>(v);
+    Node* root = create<SumNode>();
 
     EvalVisitor evalVisitor;
     double eval = evalVisitor.dispatch(root);

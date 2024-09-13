@@ -40,6 +40,11 @@ class SumNode: public Node
 {
 public:
     /**
+     * @brief Constructs a sum node with no operand.
+     */
+    SumNode();
+
+    /**
      * @brief Constructs a sum node with the specified operands.
      *
      * @param operands The list of operands

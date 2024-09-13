@@ -33,4 +33,8 @@ std::vector<Node*> SumNode::getOperands() const
     return operands_;
 }
 
+SumNode::SumNode() : operands_({})
+{
+}
+
 } // namespace Antares::Solver::Nodes
