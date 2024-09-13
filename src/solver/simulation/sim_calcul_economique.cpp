@@ -152,10 +152,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
+        // Hydraulic
         problem.CoutDeDebordement[i] = area.hydro.overflowCost;
         problem.CoutDeRemplissage[i] = area.hydro.levelCost;
-
-        problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
 
         problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower
                                                                & area.nodalOptimization)
@@ -836,6 +835,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     }
 
                     marginGen = weekGenerationTarget;
+
+                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
+                        < weekTarget_tmp)
+                    {
+                        marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+                    }
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
