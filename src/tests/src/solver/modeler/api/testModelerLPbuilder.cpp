@@ -89,7 +89,7 @@ BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
     auto oneVarFiller = std::make_unique<OneVarFiller>(*pb, LP_Data);
     auto oneConstrFiller = std::make_unique<OneConstraintFiller>(*pb, LP_Data);
 
-    fillers = { oneVarFiller.get(), oneConstrFiller.get() };
+    fillers = {oneVarFiller.get(), oneConstrFiller.get()};
 
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
@@ -104,7 +104,7 @@ BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_bui
     auto oneVarFiller = std::make_unique<OneVarFiller>(*pb, LP_Data);
     auto oneConstrFiller = std::make_unique<OneConstraintFiller>(*pb, LP_Data);
     auto twoVarsTwoConstrFiller = std::make_unique<TwoVarsTwoConstraintsFiller>(*pb, LP_Data);
-    fillers = { oneVarFiller.get(), oneConstrFiller.get(), twoVarsTwoConstrFiller.get() };
+    fillers = {oneVarFiller.get(), oneConstrFiller.get(), twoVarsTwoConstrFiller.get()};
 
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
