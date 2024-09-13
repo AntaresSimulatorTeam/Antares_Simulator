@@ -32,7 +32,7 @@ Nodes::Node* CloneVisitor::visit(const Nodes::SumNode* node)
 {
     std::vector<Nodes::Node*> clonedOperands;
     clonedOperands.reserve(node->getSize());
-    for (auto operand: node->getOperands())
+    for (auto* operand: node->getOperands())
     {
         clonedOperands.push_back(dispatch(operand));
     }
