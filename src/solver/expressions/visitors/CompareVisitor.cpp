@@ -63,7 +63,7 @@ bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
         {
             return false;
         }
-        for (uint i = 0; i < node->getSize(); ++i)
+        for (std::size_t i = 0; i < node->size(); ++i)
         {
             if (!dispatch(node->getOperands()[i], other_node->getOperands()[i]))
             {
