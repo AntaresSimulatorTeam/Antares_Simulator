@@ -42,7 +42,9 @@ BOOST_FIXTURE_TEST_CASE(cloneVisitor_With_Add_Neg_ComponentVariableNode, Registr
     ComponentParameterNode cpp(cp_para_id, cp_para_name);
     double num1 = 22.0, num2 = 8., num3 = 77.;
     // (num1+num2)
-    Node* edge = create<SumNode>(create<LiteralNode>(num1), create<LiteralNode>(num2), create<LiteralNode>(num3));
+    Node* edge = create<SumNode>(create<LiteralNode>(num1),
+                                 create<LiteralNode>(num2),
+                                 create<LiteralNode>(num3));
     // -((num1+num2+num3))
     Node* negative_edge = create<NegationNode>(edge);
     // (-((num1+num2+num3))+id1.var)

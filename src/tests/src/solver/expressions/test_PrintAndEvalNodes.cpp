@@ -84,7 +84,8 @@ BOOST_FIXTURE_TEST_CASE(print_add_one_literal, Registry<Node>)
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(root);
 
-    BOOST_CHECK_EQUAL(printed, "(215.000000)"); // TODO Number of decimals implementation dependent ?
+    BOOST_CHECK_EQUAL(printed,
+                      "(215.000000)"); // TODO Number of decimals implementation dependent ?
 }
 
 BOOST_FIXTURE_TEST_CASE(print_add_zero_literal, Registry<Node>)
@@ -99,14 +100,20 @@ BOOST_FIXTURE_TEST_CASE(print_add_zero_literal, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(print_add_six_literals, Registry<Node>)
 {
-    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2), create<LiteralNode>(34),
-            create<LiteralNode>(56), create<LiteralNode>(12), create<LiteralNode>(86));
+    Node* root = create<SumNode>(create<LiteralNode>(21),
+                                 create<LiteralNode>(2),
+                                 create<LiteralNode>(34),
+                                 create<LiteralNode>(56),
+                                 create<LiteralNode>(12),
+                                 create<LiteralNode>(86));
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(root);
 
-    BOOST_CHECK_EQUAL(printed,
-                      "(21.000000+2.000000+34.000000+56.000000+12.000000+86.000000)"); // TODO Number of decimals implementation dependent ?
+    BOOST_CHECK_EQUAL(
+      printed,
+      "(21.000000+2.000000+34.000000+56.000000+12.000000+86.000000)"); // TODO Number of decimals
+                                                                       // implementation dependent ?
 }
 
 BOOST_FIXTURE_TEST_CASE(eval_add_two_literals, Registry<Node>)
@@ -140,8 +147,12 @@ BOOST_FIXTURE_TEST_CASE(eval_add_zero_literal, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(eval_add_six_literals, Registry<Node>)
 {
-    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2), create<LiteralNode>(34),
-            create<LiteralNode>(56), create<LiteralNode>(12), create<LiteralNode>(86));
+    Node* root = create<SumNode>(create<LiteralNode>(21),
+                                 create<LiteralNode>(2),
+                                 create<LiteralNode>(34),
+                                 create<LiteralNode>(56),
+                                 create<LiteralNode>(12),
+                                 create<LiteralNode>(86));
 
     EvalVisitor evalVisitor;
     double eval = evalVisitor.dispatch(root);

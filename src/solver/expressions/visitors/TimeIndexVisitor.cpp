@@ -19,9 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <numeric>
+
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/TimeIndexVisitor.h>
-#include <numeric>
 
 namespace Antares::Solver::Visitors
 {
@@ -29,10 +30,11 @@ namespace Antares::Solver::Visitors
 TimeIndex TimeIndexVisitor::visit(const Nodes::SumNode* node)
 {
     auto operands = node->getOperands();
-    return std::accumulate(std::begin(operands), std::end(operands), TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
-                [this](TimeIndex sum, Nodes::Node* operand) {
-                    return sum | dispatch(operand);
-                });
+    return std::accumulate(std::begin(operands),
+                           std::end(operands),
+                           TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO,
+                           [this](TimeIndex sum, Nodes::Node* operand)
+                           { return sum | dispatch(operand); });
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::SubtractionNode* sub)
