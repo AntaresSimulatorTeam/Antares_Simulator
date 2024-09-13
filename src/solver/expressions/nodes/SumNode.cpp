@@ -38,4 +38,9 @@ SumNode::SumNode():
 {
 }
 
+uint SumNode::getSize() const
+{
+    return operands_.size();
+}
+
 } // namespace Antares::Solver::Nodes

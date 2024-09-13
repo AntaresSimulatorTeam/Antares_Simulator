@@ -69,6 +69,8 @@ public:
      */
     std::vector<Node*> getOperands() const;
 
+    uint getSize() const;
+
     std::string name() const override
     {
         return "SumNode";

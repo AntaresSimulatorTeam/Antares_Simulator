@@ -30,7 +30,13 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SumNode* node)
 {
-    return registry_.create<Nodes::SumNode>(node->getOperands());
+    std::vector<Nodes::Node*> clonedOperands;
+    clonedOperands.reserve(node->getSize());
+    for (auto operand: node->getOperands())
+    {
+        clonedOperands.push_back(dispatch(operand));
+    }
+    return registry_.create<Nodes::SumNode>(clonedOperands);
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode* node)

@@ -61,11 +61,11 @@ bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
 {
     if (const auto* other_node = dynamic_cast<const Nodes::SumNode*>(other))
     {
-        if (node->getOperands().size() != other_node->getOperands().size())
+        if (node->getSize() != other_node->getSize())
         {
             return false;
         }
-        for (int i = 0; i < node->getOperands().size(); ++i)
+        for (int i = 0; i < node->getSize(); ++i)
         {
             if (!dispatch(node->getOperands()[i], other_node->getOperands()[i]))
             {
