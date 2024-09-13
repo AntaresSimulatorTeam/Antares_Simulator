@@ -77,6 +77,6 @@ public:
     }
 
 private:
-    std::vector<Node*> operands_;
+    std::vector<Node*> operands_={};
 };
 } // namespace Antares::Solver::Nodes
