@@ -33,7 +33,7 @@ std::vector<Node*> SumNode::getOperands() const
     return operands_;
 }
 
-uint SumNode::getSize() const
+unsigned int SumNode::getSize() const
 {
     return operands_.size();
 }
