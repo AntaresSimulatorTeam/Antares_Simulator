@@ -306,10 +306,11 @@ jobs:
            rm -rf src/tests/resources/Antares_Simulator_Tests
 
     - name: .zip creation
+      shell: bash
       run: |
            cd _build
            cpack -G ZIP
-           export NSIS_NAME=$(ls *.zip)
+           export ZIP_NAME=$(ls *.zip)
            echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
     - name: Installer upload
