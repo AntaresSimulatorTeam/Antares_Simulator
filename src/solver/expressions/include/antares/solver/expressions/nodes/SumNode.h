@@ -39,20 +39,13 @@ std::vector<T> createVector(T first, Args... args)
 class SumNode: public Node
 {
 public:
-    /**
-     * @brief Constructs a sum node with no operand.
-     */
-    SumNode();
-
-    /**
-     * @brief Constructs a sum node with the specified operands.
-     *
-     * @param operands The list of operands
-     */
     template<typename... NodePtr>
     explicit SumNode(NodePtr... operands)
     {
-        operands_ = createVector((Node*)operands...);
+        if constexpr (sizeof...(NodePtr))
+        {
+            operands_ = createVector((Node*)operands...);
+        }
     }
 
     /**
@@ -77,6 +70,6 @@ public:
     }
 
 private:
-    std::vector<Node*> operands_={};
+    std::vector<Node*> operands_ = {};
 };
 } // namespace Antares::Solver::Nodes
