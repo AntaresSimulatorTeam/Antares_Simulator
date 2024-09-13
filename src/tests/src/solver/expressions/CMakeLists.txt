@@ -12,12 +12,14 @@ target_sources(${EXECUTABLE_NAME}
         test_CompareVisitor.cpp
         test_CloneVisitor.cpp
 	test_DeepWideTrees.cpp
+	test_Iterators.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
         PRIVATE
         Boost::unit_test_framework
         antares-solver-expressions
+	antares-solver-expressions-iterators
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE
