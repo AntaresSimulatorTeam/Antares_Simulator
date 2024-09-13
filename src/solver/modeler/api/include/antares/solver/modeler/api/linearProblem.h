@@ -47,12 +47,12 @@ public:
     /// Create a integer variable
     virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
     virtual IMipVariable* getVariable(const std::string& name) const = 0;
-    virtual int numVariables() const = 0;
+    virtual int variableCount() const = 0;
 
     /// Add a bounded constraint to the problem
     virtual IMipConstraint* addConstraint(double lb, double ub, const std::string& name) = 0;
     virtual IMipConstraint* getConstraint(const std::string& name) const = 0;
-    virtual int numConstraints() const = 0;
+    virtual int constraintCount() const = 0;
 
     /// Set the objective coefficient for a given variable
     virtual void setObjectiveCoefficient(IMipVariable* var, double coefficient) = 0;

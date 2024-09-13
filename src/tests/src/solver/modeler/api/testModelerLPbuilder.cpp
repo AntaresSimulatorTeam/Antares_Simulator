@@ -52,8 +52,8 @@ BOOST_FIXTURE_TEST_CASE(no_filler___nothing_built, Fixture)
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
 
-    BOOST_CHECK_EQUAL(pb->numVariables(), 0);
-    BOOST_CHECK_EQUAL(pb->numConstraints(), 0);
+    BOOST_CHECK_EQUAL(pb->variableCount(), 0);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
@@ -63,8 +63,8 @@ BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
 
-    BOOST_CHECK_EQUAL(pb->numVariables(), 1);
-    BOOST_CHECK_EQUAL(pb->numConstraints(), 0);
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     auto* var = pb->getVariable("var-by-OneVarFiller");
     BOOST_CHECK(var);
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 1);
@@ -77,8 +77,8 @@ BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
 
-    BOOST_CHECK_EQUAL(pb->numVariables(), 0);
-    BOOST_CHECK_EQUAL(pb->numConstraints(), 1);
+    BOOST_CHECK_EQUAL(pb->variableCount(), 0);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
     BOOST_CHECK(pb->getConstraint("constraint-by-OneConstraintFiller"));
 }
 
@@ -90,9 +90,9 @@ BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
 
-    BOOST_CHECK_EQUAL(pb->numConstraints(), 1);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
     BOOST_CHECK(pb->getConstraint("constraint-by-OneConstraintFiller"));
-    BOOST_CHECK_EQUAL(pb->numVariables(), 1);
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_built, Fixture)
@@ -104,8 +104,8 @@ BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_bui
     LinearProblemBuilder lpBuilder(fillers);
     lpBuilder.build();
 
-    BOOST_CHECK_EQUAL(pb->numVariables(), 3);
-    BOOST_CHECK_EQUAL(pb->numConstraints(), 3);
+    BOOST_CHECK_EQUAL(pb->variableCount(), 3);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 3);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

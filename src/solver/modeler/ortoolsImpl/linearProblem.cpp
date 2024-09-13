@@ -93,7 +93,7 @@ OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name) c
     return variables_.at(name).get();
 }
 
-int OrtoolsLinearProblem::numVariables() const
+int OrtoolsLinearProblem::variableCount() const
 {
     return mpSolver_->NumVariables();
 }
@@ -125,7 +125,7 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& nam
     return constraints_.at(name).get();
 }
 
-int OrtoolsLinearProblem::numConstraints() const
+int OrtoolsLinearProblem::constraintCount() const
 {
     return mpSolver_->NumConstraints();
 }
