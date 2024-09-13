@@ -33,7 +33,7 @@ std::string PrintVisitor::visit(const Nodes::SumNode* node)
     {
         return "()";
     }
-    return std::accumulate(std::begin(operands) + 1,
+    return std::accumulate(std::next(std::begin(operands)),
                            std::end(operands),
                            "(" + dispatch(operands[0]),
                            [this](std::string sum, Nodes::Node* operand)
