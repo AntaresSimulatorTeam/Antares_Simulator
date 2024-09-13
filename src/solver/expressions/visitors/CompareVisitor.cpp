@@ -18,8 +18,6 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include <numeric>
-
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
 
@@ -65,7 +63,7 @@ bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
         {
             return false;
         }
-        for (int i = 0; i < node->getSize(); ++i)
+        for (uint i = 0; i < node->getSize(); ++i)
         {
             if (!dispatch(node->getOperands()[i], other_node->getOperands()[i]))
             {

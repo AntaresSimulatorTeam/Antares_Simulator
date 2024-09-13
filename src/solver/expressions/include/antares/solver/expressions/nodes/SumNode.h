@@ -44,7 +44,7 @@ public:
     {
         if constexpr (sizeof...(NodePtr))
         {
-            operands_ = createVector((Node*)operands...);
+            operands_ = createVector(static_cast<Node*>(operands)...);
         }
     }
 
