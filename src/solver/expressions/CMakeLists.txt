@@ -15,6 +15,7 @@ set(SRC_Expressions
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
         visitors/SubstitutionVisitor.cpp
+        visitors/AstGraphVisitor.cpp
         visitors/InvalidNode.cpp
 
         include/antares/solver/expressions/nodes/AddNode.h
@@ -49,6 +50,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/TimeIndexVisitor.h
         include/antares/solver/expressions/visitors/TimeIndex.h
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/AstGraphVisitor.h
         include/antares/solver/expressions/visitors/InvalidNode.h
 
         include/antares/solver/expressions/Registry.hxx
@@ -66,13 +68,12 @@ target_include_directories(antares-solver-expressions
 target_link_libraries(antares-solver-expressions
         PUBLIC
         Antares::logs
-	)
-
+)
 
 
 add_library(antares-solver-expressions-iterators
-  iterators/pre-order.cpp
-  include/antares/solver/expressions/iterators/pre-order.h
+        iterators/pre-order.cpp
+        include/antares/solver/expressions/iterators/pre-order.h
 )
 
 target_link_libraries(antares-solver-expressions-iterators PRIVATE antares-solver-expressions)

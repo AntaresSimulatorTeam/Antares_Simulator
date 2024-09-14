@@ -1,0 +1,170 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+
+#include "antares/solver/expressions/visitors/AstGraphVisitor.h"
+
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+
+namespace Antares::Solver::Visitors
+{
+
+std::string AstGraphVisitor::visit(const Nodes::AddNode* node)
+{
+    processBinaryOperation(node, "+");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::SubtractionNode* node)
+{
+    processBinaryOperation(node, "-");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::MultiplicationNode* node)
+{
+    processBinaryOperation(node, "*");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::DivisionNode* node)
+{
+    processBinaryOperation(node, "*");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::EqualNode* node)
+{
+    processBinaryOperation(node, "==");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::LessThanOrEqualNode* node)
+{
+    processBinaryOperation(node, "<=");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
+{
+    processBinaryOperation(node, ">=");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::VariableNode* node)
+{
+    int id = getNodeID(node);
+    emitNode(id, "Var(" + node->value() + ")");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::ParameterNode* node)
+{
+    int id = getNodeID(node);
+    emitNode(id, "Param(" + node->value() + ")");
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::LiteralNode* node)
+{
+    int id = getNodeID(node);
+    emitNode(id, std::to_string(node->value()));
+    return result_.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::NegationNode* node)
+{
+    int id = getNodeID(node);
+    emitNode(id, "-");
+    int childId = getNodeID(node->child());
+    result_ << "  " << id << " -> " << childId << ";\n";
+    dispatch(node->child());
+    return result_.str();
+}
+
+std::string AstGraphVisitor::getDot() const
+{
+    std::stringstream dot;
+    dot << "digraph ExpressionTree {\n";
+    dot << result_.str();
+    dot << "}\n";
+    return dot.str();
+}
+
+std::string AstGraphVisitor::visit(const Nodes::PortFieldNode* node)
+{
+    throw AstGraphVisitorNotImplemented(name(), node->name());
+}
+
+std::string AstGraphVisitor::visit(const Nodes::ComponentVariableNode* node)
+{
+    throw AstGraphVisitorNotImplemented(name(), node->name());
+}
+
+std::string AstGraphVisitor::visit(const Nodes::ComponentParameterNode* node)
+{
+    throw AstGraphVisitorNotImplemented(name(), node->name());
+}
+
+std::string AstGraphVisitor::name() const
+{
+    return "AstGraphVisitor";
+}
+
+int AstGraphVisitor::getNodeID(const Nodes::Node* node)
+{
+    if (nodeIds_.find(node) == nodeIds_.end())
+    {
+        nodeIds_[node] = ++nodeCount_;
+    }
+    return nodeIds_[node];
+}
+
+void AstGraphVisitor::emitNode(int id, const std::string& label)
+{
+    result_ << "  " << id << " [label=\"" << label << "\"];\n";
+}
+
+// Process binary operation nodes like Add, Subtract, etc.
+void AstGraphVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
+                                             const std::string& label)
+{
+    int id = getNodeID(node);
+    emitNode(id, label);
+
+    const Nodes::Node* left = node->left();
+    const Nodes::Node* right = node->right();
+
+    int leftId = getNodeID(left);
+    int rightId = getNodeID(right);
+
+    result_ << "  " << id << " -> " << leftId << ";\n";
+    result_ << "  " << id << " -> " << rightId << ";\n";
+
+    dispatch(left);
+    dispatch(right);
+}
+
+AstGraphVisitorNotImplemented::AstGraphVisitorNotImplemented(const std::string& visitor,
+                                                             const std::string& node):
+    std::invalid_argument("Visitor" + visitor + " not implemented for node type " + node)
+{
+}
+} // namespace Antares::Solver::Visitors
