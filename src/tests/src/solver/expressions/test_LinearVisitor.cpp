@@ -200,7 +200,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes_non_lin_constant_is_constant, Registry<
     MultiplicationNode mult(&var1, &var2);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(&mult), LinearStatus::NON_LINEAR);
 
-    AddNode add(&mult, &var1);
+    SumNode add(&mult, &var1);
     Node* gt = create<GreaterThanOrEqualNode>(&mult, &var2);
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(gt), LinearStatus::NON_LINEAR);
 }
@@ -217,7 +217,7 @@ BOOST_FIXTURE_TEST_CASE(simple_linear, Registry<Node>)
     // 20.*id.y
     Node* v = create<MultiplicationNode>(&literalNode2, &var2);
     // 10.*x+20.*id.y
-    Node* expr = create<AddNode>(u, v);
+    Node* expr = create<SumNode>(u, v);
 
     PrintVisitor printVisitor;
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "((10.000000*x)+(20.000000*id.y))");
@@ -280,7 +280,7 @@ BOOST_FIXTURE_TEST_CASE(simple_constant_expression, Registry<Node>)
     // 65.*p1
     Node* mult = create<MultiplicationNode>(&var1, &par);
     // ((65.*p1)+port.field)
-    Node* expr = create<AddNode>(mult, &portFieldNode);
+    Node* expr = create<SumNode>(mult, &portFieldNode);
     BOOST_CHECK_EQUAL(printVisitor.dispatch(expr), "((65.000000*p1)+port.field)");
     BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
 }
@@ -289,5 +289,36 @@ BOOST_FIXTURE_TEST_CASE(LinearityVisitor_name, Registry<Node>)
 {
     LinearityVisitor linearityVisitor;
     BOOST_CHECK_EQUAL(linearityVisitor.name(), "LinearityVisitor");
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_node_cases, Registry<Node>)
+{
+    LinearityVisitor linearVisitor;
+
+    Node* expr = create<SumNode>();
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
+
+    expr = create<SumNode>(create<LiteralNode>(41), create<LiteralNode>(4));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::CONSTANT);
+
+    expr = create<SumNode>(
+      create<MultiplicationNode>(create<LiteralNode>(5), create<VariableNode>("a")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
+
+    expr = create<SumNode>(create<LiteralNode>(41),
+                           create<MultiplicationNode>(create<LiteralNode>(5),
+                                                      create<VariableNode>("b")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::LINEAR);
+
+    expr = create<SumNode>(
+      create<MultiplicationNode>(create<VariableNode>("c"), create<VariableNode>("d")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
+
+    expr = create<SumNode>(create<LiteralNode>(41),
+                           create<MultiplicationNode>(create<LiteralNode>(5),
+                                                      create<VariableNode>("e")),
+                           create<MultiplicationNode>(create<VariableNode>("f"),
+                                                      create<VariableNode>("g")));
+    BOOST_CHECK_EQUAL(linearVisitor.dispatch(expr), LinearStatus::NON_LINEAR);
 }
 BOOST_AUTO_TEST_SUITE_END()

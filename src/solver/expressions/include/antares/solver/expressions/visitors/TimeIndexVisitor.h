@@ -43,7 +43,7 @@ public:
 
 private:
     std::unordered_map<const Nodes::Node*, TimeIndex> context_;
-    TimeIndex visit(const Nodes::AddNode* add) override;
+    TimeIndex visit(const Nodes::SumNode* add) override;
     TimeIndex visit(const Nodes::SubtractionNode* add) override;
     TimeIndex visit(const Nodes::MultiplicationNode* add) override;
     TimeIndex visit(const Nodes::DivisionNode* add) override;

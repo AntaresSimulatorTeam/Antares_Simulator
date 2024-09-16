@@ -34,7 +34,7 @@ public:
     std::string name() const override;
 
 private:
-    LinearStatus visit(const Nodes::AddNode* add) override;
+    LinearStatus visit(const Nodes::SumNode* add) override;
     LinearStatus visit(const Nodes::SubtractionNode* add) override;
     LinearStatus visit(const Nodes::MultiplicationNode* add) override;
     LinearStatus visit(const Nodes::DivisionNode* add) override;

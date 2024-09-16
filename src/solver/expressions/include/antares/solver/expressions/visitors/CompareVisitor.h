@@ -34,7 +34,7 @@ public:
     CompareVisitor() = default;
     std::string name() const override;
 
-    bool visit(const Nodes::AddNode* add, const Nodes::Node* other) override;
+    bool visit(const Nodes::SumNode* add, const Nodes::Node* other) override;
     bool visit(const Nodes::SubtractionNode* add, const Nodes::Node* other) override;
     bool visit(const Nodes::MultiplicationNode* add, const Nodes::Node* other) override;
     bool visit(const Nodes::DivisionNode* add, const Nodes::Node* other) override;
