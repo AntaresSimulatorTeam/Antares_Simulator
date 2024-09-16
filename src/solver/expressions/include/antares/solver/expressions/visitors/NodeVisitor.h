@@ -97,7 +97,7 @@ public:
         }
 
         const static auto nodeVisitList = NodeVisitsProvider<R, Args...>::template NodesVisitList<
-          Nodes::AddNode,
+          Nodes::SumNode,
           Nodes::SubtractionNode,
           Nodes::MultiplicationNode,
           Nodes::DivisionNode,
@@ -124,14 +124,14 @@ public:
     }
 
     /**
-     * @brief Visits an AddNode and processes its children.
+     * @brief Visits a SumNode and processes its children.
      *
-     * @param node A pointer to the AddNode to be visited.
+     * @param node A pointer to the SumNode to be visited.
      * @param args Additional arguments to be passed to the visitor's methods.
      *
-     * @return The result of processing the AddNode.
+     * @return The result of processing the SumNode.
      */
-    virtual R visit(const Nodes::AddNode*, Args... args) = 0;
+    virtual R visit(const Nodes::SumNode*, Args... args) = 0;
     /**
      * @brief Visits a SubtractionNode and processes its children.
      *

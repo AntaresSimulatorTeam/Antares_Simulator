@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <antares/solver/expressions/nodes/AddNode.h>
 #include <antares/solver/expressions/nodes/ComponentNode.h>
 #include <antares/solver/expressions/nodes/DivisionNode.h>
 #include <antares/solver/expressions/nodes/EqualNode.h>
@@ -32,4 +31,5 @@
 #include <antares/solver/expressions/nodes/ParameterNode.h>
 #include <antares/solver/expressions/nodes/PortFieldNode.h>
 #include <antares/solver/expressions/nodes/SubtractionNode.h>
+#include <antares/solver/expressions/nodes/SumNode.h>
 #include <antares/solver/expressions/nodes/VariableNode.h>

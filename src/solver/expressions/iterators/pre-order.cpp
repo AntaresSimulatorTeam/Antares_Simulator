@@ -18,6 +18,10 @@ std::vector<Node*> childrenLeftToRight(Node* node)
     {
         return {unary->child()};
     }
+    else if (auto* sum = dynamic_cast<SumNode*>(node))
+    {
+        return sum->getOperands();
+    }
     return {};
 }
 } // namespace

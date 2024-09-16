@@ -68,7 +68,7 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
     auto literalNode = create<LiteralNode>(2024.2);
     std::map<Node*, std::string> nodes = {
       {literalNode, "LiteralNode"},
-      {create<AddNode>(literalNode, literalNode), "AddNode"},
+      {create<SumNode>(literalNode, literalNode), "SumNode"},
       {create<SubtractionNode>(literalNode, literalNode), "SubtractionNode"},
       {create<MultiplicationNode>(literalNode, literalNode), "MultiplicationNode"},
       {create<DivisionNode>(literalNode, literalNode), "DivisionNode"},

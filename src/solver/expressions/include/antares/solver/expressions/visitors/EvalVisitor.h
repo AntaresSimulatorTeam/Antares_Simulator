@@ -59,7 +59,7 @@ public:
 
 private:
     const EvaluationContext context_;
-    double visit(const Nodes::AddNode* node) override;
+    double visit(const Nodes::SumNode* node) override;
     double visit(const Nodes::SubtractionNode* node) override;
     double visit(const Nodes::MultiplicationNode* node) override;
     double visit(const Nodes::DivisionNode* node) override;
