@@ -24,13 +24,13 @@
 namespace Antares::Solver::Visitors
 {
 
-Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode* port_field_node)
+Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 {
     return registry_.create<Nodes::PortFieldNode>(port_field_node->getPortName(),
                                                   port_field_node->getFieldName());
 }
 
-std::string CloneVisitor::name() const
+std::string PortfieldSubstitutionVisitor::name() const
 {
     return "PortfieldSubstitutionVisitor";
 }
