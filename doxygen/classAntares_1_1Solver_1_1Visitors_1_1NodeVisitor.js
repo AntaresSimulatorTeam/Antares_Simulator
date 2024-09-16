@@ -1,7 +1,6 @@
 var classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor =
 [
     [ "dispatch", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a805cd22de4d695c752bc4b451c1aff0e", null ],
-    [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#addfa252d6244bc505dafc1ccb24a25b9", null ],
     [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a5d04c4c47454fcd35a9a58dcade1fd43", null ],
     [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a95b2dc3cc8327cf7c651c3779afdce4a", null ],
     [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a1ef1762e215557199f0e229355057e87", null ],
@@ -14,5 +13,6 @@ var classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor =
     [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a201273abab80f92aec4cd3fc281297fd", null ],
     [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a0bc6fafd1592edfaf107e051540a50a7", null ],
     [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#aa3c7e8f5a41f9630231eb7dabe1a69bf", null ],
+    [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a442cd0c739ae72d308ed0e5109e6f7ec", null ],
     [ "visit", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a765d67f9f0f5144b51e5234c92ee1b3a", null ]
 ];

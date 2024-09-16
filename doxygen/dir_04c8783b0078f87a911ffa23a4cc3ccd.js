@@ -1,6 +1,5 @@
 var dir_04c8783b0078f87a911ffa23a4cc3ccd =
 [
-    [ "AddNode.h", "AddNode_8h_source.html", null ],
     [ "BinaryNode.h", "BinaryNode_8h_source.html", null ],
     [ "ComparisonNode.h", "ComparisonNode_8h_source.html", null ],
     [ "ComponentNode.h", "ComponentNode_8h_source.html", null ],
@@ -18,6 +17,7 @@ var dir_04c8783b0078f87a911ffa23a4cc3ccd =
     [ "ParameterNode.h", "ParameterNode_8h_source.html", null ],
     [ "PortFieldNode.h", "PortFieldNode_8h_source.html", null ],
     [ "SubtractionNode.h", "SubtractionNode_8h_source.html", null ],
+    [ "SumNode.h", "SumNode_8h_source.html", null ],
     [ "UnaryNode.h", "UnaryNode_8h_source.html", null ],
     [ "VariableNode.h", "VariableNode_8h_source.html", null ]
 ];

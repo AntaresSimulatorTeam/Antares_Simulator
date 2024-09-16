@@ -71,6 +71,7 @@ var NAVTREE =
         [ "Typedefs", "namespacemembers_type.html", null ]
       ] ]
     ] ],
+    [ "Concepts", "concepts.html", "concepts" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -106,19 +107,19 @@ var NAVTREEINDEX =
 "classAntares_1_1Forms_1_1ApplWnd.html#a925f3498d67415ff229108bce96548dd",
 "classAntares_1_1Map_1_1PanelInfos.html#a3066387ddb479bcf0d3cbaec4b789d34a406538fdbfc82e3af5973edbd906e343",
 "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html#ac568dfd820b1a669b021d872056728c2",
-"classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a3bccbfef726bf4ad2697f352e7341b57",
-"classAntares_1_1Toolbox_1_1Filter_1_1Input.html#aa0200a3211ad606740beccff6f4e2c54",
-"classAntares_1_1Window_1_1Inspector_1_1Frame.html#a406cba965c4dce65d86bc8f782e12fa0",
-"classBindingConstraintDay.html#a2e34353696b4c761e4f3abd6eab832d9",
-"classNullName.html",
-"dir_158d2ddcdf5d27a2eb46fed0a14e6afe.html",
-"dir_c865effb214fcc8eb92d4267f91ac8b4.html",
-"hour_8h_source.html",
-"predicate_8hxx_source.html",
-"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html",
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a78db0f8bffc05da1df4366d1b2f25054",
-"suffix-for-constraint-names_8hxx_source.html"
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbs.html",
+"classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a35be4965da822309d6173e74f1f1bc1d",
+"classAntares_1_1Toolbox_1_1Filter_1_1Input.html#a81269e44eb21ed5370aab0ec5b73d23d",
+"classAntares_1_1Window_1_1Inspector_1_1Frame.html",
+"classBindingConstraintData.html",
+"classNbUnitsOutageLessThanNbUnitsStopGroup.html",
+"dir_1450f295d1814170ca372bd3b98a7d72.html",
+"dir_c4fcd3cb4679be1a502277de90ebe462.html",
+"header_8h_source.html",
+"position_8h_source.html",
+"structAntares_1_1Solver_1_1ConstantDataFromAntares.html",
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html",
+"suffix-for-area-names_8hxx_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

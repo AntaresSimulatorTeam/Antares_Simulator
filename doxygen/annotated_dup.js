@@ -502,7 +502,6 @@ var annotated_dup =
           ] ]
         ] ],
         [ "Nodes", null, [
-          [ "AddNode", "classAntares_1_1Solver_1_1Nodes_1_1AddNode.html", "classAntares_1_1Solver_1_1Nodes_1_1AddNode" ],
           [ "AST", "classAntares_1_1Solver_1_1Nodes_1_1AST.html", null ],
           [ "ASTPreOrderIterator", "classAntares_1_1Solver_1_1Nodes_1_1ASTPreOrderIterator.html", null ],
           [ "BinaryNode", "classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html", "classAntares_1_1Solver_1_1Nodes_1_1BinaryNode" ],
@@ -522,6 +521,7 @@ var annotated_dup =
           [ "ParameterNode", "classAntares_1_1Solver_1_1Nodes_1_1ParameterNode.html", null ],
           [ "PortFieldNode", "classAntares_1_1Solver_1_1Nodes_1_1PortFieldNode.html", "classAntares_1_1Solver_1_1Nodes_1_1PortFieldNode" ],
           [ "SubtractionNode", "classAntares_1_1Solver_1_1Nodes_1_1SubtractionNode.html", "classAntares_1_1Solver_1_1Nodes_1_1SubtractionNode" ],
+          [ "SumNode", "classAntares_1_1Solver_1_1Nodes_1_1SumNode.html", "classAntares_1_1Solver_1_1Nodes_1_1SumNode" ],
           [ "UnaryNode", "classAntares_1_1Solver_1_1Nodes_1_1UnaryNode.html", "classAntares_1_1Solver_1_1Nodes_1_1UnaryNode" ],
           [ "VariableNode", "classAntares_1_1Solver_1_1Nodes_1_1VariableNode.html", null ]
         ] ],

@@ -691,7 +691,6 @@ var hierarchy =
           [ "Antares::Solver::Nodes::VariableNode", "classAntares_1_1Solver_1_1Nodes_1_1VariableNode.html", null ]
         ] ],
         [ "Antares::Solver::Nodes::BinaryNode", "classAntares_1_1Solver_1_1Nodes_1_1BinaryNode.html", [
-          [ "Antares::Solver::Nodes::AddNode", "classAntares_1_1Solver_1_1Nodes_1_1AddNode.html", null ],
           [ "Antares::Solver::Nodes::ComparisonNode", "classAntares_1_1Solver_1_1Nodes_1_1ComparisonNode.html", [
             [ "Antares::Solver::Nodes::EqualNode", "classAntares_1_1Solver_1_1Nodes_1_1EqualNode.html", null ],
             [ "Antares::Solver::Nodes::GreaterThanOrEqualNode", "classAntares_1_1Solver_1_1Nodes_1_1GreaterThanOrEqualNode.html", null ],
@@ -707,6 +706,7 @@ var hierarchy =
         ] ],
         [ "Antares::Solver::Nodes::Leaf< T >", "classAntares_1_1Solver_1_1Nodes_1_1Leaf.html", null ],
         [ "Antares::Solver::Nodes::PortFieldNode", "classAntares_1_1Solver_1_1Nodes_1_1PortFieldNode.html", null ],
+        [ "Antares::Solver::Nodes::SumNode", "classAntares_1_1Solver_1_1Nodes_1_1SumNode.html", null ],
         [ "Antares::Solver::Nodes::UnaryNode", "classAntares_1_1Solver_1_1Nodes_1_1UnaryNode.html", [
           [ "Antares::Solver::Nodes::NegationNode", "classAntares_1_1Solver_1_1Nodes_1_1NegationNode.html", null ]
         ] ]
