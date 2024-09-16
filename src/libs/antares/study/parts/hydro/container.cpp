@@ -338,6 +338,11 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
               && ret;
     }
 
+    if (IniFile::Section* section = ini.find("level cost"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::levelCost) && ret;
+    }
+
     return ret;
 }
 
