@@ -48,7 +48,7 @@ public:
      */
     double getParameterValue(const std::string& key) const;
 
-    Nodes::Node* getNode(Nodes::PortFieldNode*) const;
+    Nodes::Node* getNodeToSubstitute(Nodes::PortFieldNode*) const;
 
 private:
     /**
