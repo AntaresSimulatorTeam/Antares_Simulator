@@ -31,10 +31,13 @@ class PortfieldSubstitutionVisitor: public CloneVisitor
 {
 public:
     PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx);
-    std::string name() const override;
 
     SubstitutionContext& ctx_;
     Registry<Nodes::Node>& registry_;
+    std::string name() const override;
+
+private:
+    // Only override visit method for PortField, clone the rest
     Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
 };
 } // namespace Antares::Solver::Visitors

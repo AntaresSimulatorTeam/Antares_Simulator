@@ -24,7 +24,8 @@
 namespace Antares::Solver::Visitors
 {
 
-PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx):
+PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                                           SubstitutionContext& ctx):
     CloneVisitor(registry),
     ctx_(ctx),
     registry_(registry)
