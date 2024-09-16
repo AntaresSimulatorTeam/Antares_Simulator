@@ -29,7 +29,7 @@ namespace Antares::Solver::Visitors
 void AstGraphVisitor::visit(const Nodes::SumNode* node)
 {
     int id = getNodeID(node);
-    emitNode(id, "-", "aqua", "hexagon", "filled, solid");
+    emitNode(id, "+", "aqua", "hexagon", "filled, solid");
     for (auto child: node->getOperands())
     {
         int childId = getNodeID(child);
