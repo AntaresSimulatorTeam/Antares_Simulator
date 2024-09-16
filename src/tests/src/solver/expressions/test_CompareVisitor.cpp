@@ -21,10 +21,13 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <fstream>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/AstGraphVisitor.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
 
@@ -55,7 +58,8 @@ Node* ComparisonFixture::createComplexExpression()
     // separately (no double free)
 
     Node* simple = createSimpleExpression(42.);
-    Node* neg = registry_.create<NegationNode>(simple);
+    Node* compVariable = registry_.create<ComponentVariableNode>("comp", "variable");
+    Node* neg = registry_.create<NegationNode>(compVariable);
     Node* mult = registry_.create<MultiplicationNode>(simple, neg);
     Node* comp = registry_.create<ComponentParameterNode>("hello", "world");
     Node* div = registry_.create<DivisionNode>(mult, comp);
@@ -69,6 +73,21 @@ Node* ComparisonFixture::createComplexExpression()
 }
 
 BOOST_AUTO_TEST_SUITE(_CompareVisitor_)
+
+BOOST_FIXTURE_TEST_CASE(simple_dot, ComparisonFixture)
+{
+    Node* expr = createComplexExpression();
+
+    AstGraphVisitor astGraphVisitor;
+    const auto printed1 = astGraphVisitor.dispatch(expr);
+    const auto printed2 = astGraphVisitor.getDot();
+    std::ofstream out("out.dot");
+    out << printed2;
+    out.close();
+
+    //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
+    //    ?
+}
 
 BOOST_FIXTURE_TEST_CASE(simple_comparison_to_itself, ComparisonFixture)
 {

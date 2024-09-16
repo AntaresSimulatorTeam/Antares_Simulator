@@ -61,8 +61,17 @@ private:
     std::string visit(const Nodes::ComponentParameterNode* node) override;
 
     int getNodeID(const Nodes::Node* node);
-    void emitNode(int id, const std::string& label);
-    void processBinaryOperation(const Nodes::BinaryNode* node, const std::string& label);
+    void emitNode(int id,
+                  const std::string& label,
+                  const std::string& color = "azure",
+                  const std::string& shape = "box",
+                  const std::string& style = "rounded");
+
+    void processBinaryOperation(const Nodes::BinaryNode* node,
+                                const std::string& label,
+                                const std::string& color = "azure",
+                                const std::string& shape = "box",
+                                const std::string& style = "rounded");
     std::stringstream result_;
     std::unordered_map<const Nodes::Node*, int> nodeIds_; // Mapping to store unique IDs for nodes
     int nodeCount_ = 0;                                   // Counter to assign unique node IDs

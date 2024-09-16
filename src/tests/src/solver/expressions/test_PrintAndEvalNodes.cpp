@@ -21,13 +21,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <fstream>
-
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/AstGraphVisitor.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
@@ -45,29 +42,6 @@ BOOST_AUTO_TEST_CASE(print_single_literal)
     const auto printed = printVisitor.dispatch(&literal);
 
     BOOST_CHECK_EQUAL(printed, "21.000000"); // TODO Number of decimals implementation dependent ?
-}
-
-BOOST_AUTO_TEST_CASE(simple_dot)
-{
-    LiteralNode literal1(1.);
-    VariableNode v("x");
-    MultiplicationNode m1(&literal1, &v);
-
-    LiteralNode literal2(2.);
-    ParameterNode p("p");
-    MultiplicationNode m2(&literal2, &p);
-
-    LessThanOrEqualNode lt(&m1, &m2);
-
-    AstGraphVisitor astGraphVisitor;
-    const auto printed1 = astGraphVisitor.dispatch(&lt);
-    const auto printed2 = astGraphVisitor.getDot();
-    std::ofstream out("out.dot");
-    out << printed2;
-    out.close();
-
-    //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
-    //    ?
 }
 
 BOOST_AUTO_TEST_CASE(eval_single_literal)
