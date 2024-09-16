@@ -209,8 +209,6 @@ bool Adequacy::year(Progression::Task& progression,
                                       study.parameters.simplexOptimizationRange,
                                       numSpace,
                                       hourInTheYear);
-
-                computingHydroLevels(study.areas, pProblemesHebdo[numSpace], true);
             }
             catch (Data::AssertionError& ex)
             {

@@ -22,8 +22,7 @@ OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                                                                            sheddingPolicy,
                                                                            splxOptimization,
                                                                            thread_number));
-    post_process_list.push_back(
-      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
+
     post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
     post_process_list.push_back(
