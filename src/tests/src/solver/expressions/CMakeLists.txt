@@ -1,4 +1,5 @@
 set(EXECUTABLE_NAME test-expressions)
+add_executable(${EXECUTABLE_NAME})
 
 target_sources(${EXECUTABLE_NAME}
         PRIVATE

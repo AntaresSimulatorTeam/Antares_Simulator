@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include <sstream>
+#include <ostream>
 
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
 
@@ -33,32 +33,34 @@ public:
     AstGraphVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
 
-class AstGraphVisitor: public NodeVisitor<std::string>
+class AstGraphVisitor: public NodeVisitor<void>
 {
 public:
     /**
      * @brief Default constructor, creates an evaluation visitor with no context.
      */
-    AstGraphVisitor() = default; // No context (variables / parameters)
+    AstGraphVisitor() = default;
+    AstGraphVisitor(std::ostream& out_stream);
+    void NewTreeGraph(const std::string& tree_name);
+    void EndTreeGraph();
 
     std::string name() const override;
-    std::string getDot() const;
 
 private:
-    std::string visit(const Nodes::AddNode* node) override;
-    std::string visit(const Nodes::SubtractionNode* node) override;
-    std::string visit(const Nodes::MultiplicationNode* node) override;
-    std::string visit(const Nodes::DivisionNode* node) override;
-    std::string visit(const Nodes::EqualNode* node) override;
-    std::string visit(const Nodes::LessThanOrEqualNode* node) override;
-    std::string visit(const Nodes::GreaterThanOrEqualNode* node) override;
-    std::string visit(const Nodes::NegationNode* node) override;
-    std::string visit(const Nodes::VariableNode* node) override;
-    std::string visit(const Nodes::ParameterNode* node) override;
-    std::string visit(const Nodes::LiteralNode* node) override;
-    std::string visit(const Nodes::PortFieldNode* node) override;
-    std::string visit(const Nodes::ComponentVariableNode* node) override;
-    std::string visit(const Nodes::ComponentParameterNode* node) override;
+    void visit(const Nodes::AddNode* node) override;
+    void visit(const Nodes::SubtractionNode* node) override;
+    void visit(const Nodes::MultiplicationNode* node) override;
+    void visit(const Nodes::DivisionNode* node) override;
+    void visit(const Nodes::EqualNode* node) override;
+    void visit(const Nodes::LessThanOrEqualNode* node) override;
+    void visit(const Nodes::GreaterThanOrEqualNode* node) override;
+    void visit(const Nodes::NegationNode* node) override;
+    void visit(const Nodes::VariableNode* node) override;
+    void visit(const Nodes::ParameterNode* node) override;
+    void visit(const Nodes::LiteralNode* node) override;
+    void visit(const Nodes::PortFieldNode* node) override;
+    void visit(const Nodes::ComponentVariableNode* node) override;
+    void visit(const Nodes::ComponentParameterNode* node) override;
 
     int getNodeID(const Nodes::Node* node);
     void emitNode(int id,
@@ -72,7 +74,7 @@ private:
                                 const std::string& color = "azure",
                                 const std::string& shape = "box",
                                 const std::string& style = "rounded");
-    std::stringstream result_;
+    std::ostream& out_stream_ = std::cout;
     std::unordered_map<const Nodes::Node*, int> nodeIds_; // Mapping to store unique IDs for nodes
     int nodeCount_ = 0;                                   // Counter to assign unique node IDs
 };

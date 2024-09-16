@@ -54,12 +54,11 @@ BOOST_FIXTURE_TEST_CASE(simple_dot, Registry<Node>)
     Node* literalNode3 = create<LiteralNode>(54.);
     Node* greaterThanOrEqualNode = create<GreaterThanOrEqualNode>(literalNode3,
                                                                   lessThanOrEqualNode);
-
-    AstGraphVisitor astGraphVisitor;
-    const auto printed1 = astGraphVisitor.dispatch(greaterThanOrEqualNode);
-    const auto printed2 = astGraphVisitor.getDot();
     std::ofstream out("out.dot");
-    out << printed2;
+    AstGraphVisitor astGraphVisitor(out);
+    astGraphVisitor.NewTreeGraph("GasStation");
+    astGraphVisitor.dispatch(greaterThanOrEqualNode);
+    astGraphVisitor.EndTreeGraph();
     out.close();
 
     //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
