@@ -118,9 +118,9 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
         if (!area.hydro.reservoirManagement)
             return;
 
-        uint index = area->index;
+        uint index = area.index;
 
-        double reservoirCapacity = area->hydro.reservoirCapacity;
+        double reservoirCapacity = area.hydro.reservoirCapacity;
 
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
 
@@ -128,7 +128,7 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
 
         problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1] * reservoirCapacity
                                                       / 100;
-    }
+    });
 }
 
 } // namespace Antares::Solver::Simulation
