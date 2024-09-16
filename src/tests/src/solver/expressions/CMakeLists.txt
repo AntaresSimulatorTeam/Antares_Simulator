@@ -1,6 +1,4 @@
 set(EXECUTABLE_NAME test-expressions)
-add_executable(${EXECUTABLE_NAME}
-        test_AstGraphVisitor.cpp)
 
 target_sources(${EXECUTABLE_NAME}
         PRIVATE
@@ -14,6 +12,7 @@ target_sources(${EXECUTABLE_NAME}
         test_CloneVisitor.cpp
         test_DeepWideTrees.cpp
         test_Iterators.cpp
+        test_AstGraphVisitor.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
