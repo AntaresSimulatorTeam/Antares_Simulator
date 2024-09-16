@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include "antares/solver/expressions/visitors/CloneVisitor.h"
+#include "antares/solver/expressions/visitors/SubstitutionVisitor.h"
 
 namespace Antares::Solver::Visitors
 {
@@ -30,11 +30,11 @@ namespace Antares::Solver::Visitors
 class PortfieldSubstitutionVisitor: public CloneVisitor
 {
 public:
+    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx);
     std::string name() const override;
 
-    Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
-
-private:
+    SubstitutionContext& ctx_;
     Registry<Nodes::Node>& registry_;
+    Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
 };
 } // namespace Antares::Solver::Visitors

@@ -24,6 +24,13 @@
 namespace Antares::Solver::Visitors
 {
 
+PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx):
+    CloneVisitor(registry),
+    ctx_(ctx),
+    registry_(registry)
+{
+}
+
 Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 {
     return registry_.create<Nodes::PortFieldNode>(port_field_node->getPortName(),
