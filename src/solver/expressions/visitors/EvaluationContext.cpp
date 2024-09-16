@@ -19,7 +19,7 @@ double EvaluationContext::getParameterValue(const std::string& key) const
     return parameters_.at(key);
 }
 
-Nodes::Node* EvaluationContext::getNode(Nodes::PortFieldNode* key) const
+Nodes::Node* EvaluationContext::getNodeToSubstitute(Nodes::PortFieldNode* key) const
 {
     return nodesToSubstitutes_.at(key);
 }
