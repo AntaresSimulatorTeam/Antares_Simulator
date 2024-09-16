@@ -48,6 +48,8 @@ public:
      */
     double getParameterValue(const std::string& key) const;
 
+    Nodes::Node* getNode(Nodes::PortFieldNode*) const;
+
 private:
     /**
      * @brief A map storing parameter values.
