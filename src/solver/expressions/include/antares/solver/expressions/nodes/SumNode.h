@@ -31,6 +31,7 @@ template<typename T>
 concept NodePtr = std::same_as<T, Node*>;
 
 template<typename T, typename... Args>
+requires(std::convertible_to<Args, T> && ...)
 std::vector<T> createVector(T first, Args... args)
 {
     return std::vector<T>{first, args...};
