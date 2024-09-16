@@ -84,7 +84,7 @@ void AstGraphVisitor::visit(const Nodes::NegationNode* node)
     int id = getNodeID(node);
     emitNode(id, "-", "navajowhite", "square", "filled, solid");
     int childId = getNodeID(node->child());
-    out_stream_ << "  " << id << " -> " << childId << ";\n";
+    *out_stream_ << "  " << id << " -> " << childId << ";\n";
     dispatch(node->child());
 }
 
@@ -138,8 +138,8 @@ void AstGraphVisitor::emitNode(int id,
                                const std::string& shape,
                                const std::string& style)
 {
-    out_stream_ << "  " << id << " [label=\"" << label << "\", shape=\"" << shape << "\", style=\""
-                << style << "\", color=\"" << color << "\"];\n";
+    *out_stream_ << "  " << id << " [label=\"" << label << "\", shape=\"" << shape << "\", style=\""
+                 << style << "\", color=\"" << color << "\"];\n";
 }
 
 // Process binary operation nodes like Add, Subtract, etc.
@@ -158,14 +158,14 @@ void AstGraphVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
     int leftId = getNodeID(left);
     int rightId = getNodeID(right);
 
-    out_stream_ << "  " << id << " -> " << leftId << ";\n";
-    out_stream_ << "  " << id << " -> " << rightId << ";\n";
+    *out_stream_ << "  " << id << " -> " << leftId << ";\n";
+    *out_stream_ << "  " << id << " -> " << rightId << ";\n";
 
     dispatch(left);
     dispatch(right);
 }
 
-AstGraphVisitor::AstGraphVisitor(std::ostream& out_stream):
+AstGraphVisitor::AstGraphVisitor(std::ostream* out_stream):
     out_stream_(out_stream)
 {
 }
@@ -178,12 +178,17 @@ AstGraphVisitorNotImplemented::AstGraphVisitorNotImplemented(const std::string& 
 
 void AstGraphVisitor::NewTreeGraph(const std::string& tree_name)
 {
-    out_stream_ << "digraph " + tree_name + " {\n";
-    out_stream_ << "node[style = filled]\n";
+    *out_stream_ << "digraph " + tree_name + " {\n";
+    *out_stream_ << "node[style = filled]\n";
 }
 
 void AstGraphVisitor::EndTreeGraph()
 {
-    out_stream_ << "}\n";
+    *out_stream_ << "}\n";
+}
+
+void AstGraphVisitor::setOutStream(std::ostream* outStream)
+{
+    out_stream_ = outStream;
 }
 } // namespace Antares::Solver::Visitors

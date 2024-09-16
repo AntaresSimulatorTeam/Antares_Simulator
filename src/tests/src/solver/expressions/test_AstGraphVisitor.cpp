@@ -35,7 +35,7 @@ using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_AstGraphVisitor_)
 
-BOOST_FIXTURE_TEST_CASE(simple_dot, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
 {
     Node* literalNode = create<LiteralNode>(-40.);
     Node* negationNode = create<NegationNode>(literalNode);
@@ -55,11 +55,38 @@ BOOST_FIXTURE_TEST_CASE(simple_dot, Registry<Node>)
     Node* greaterThanOrEqualNode = create<GreaterThanOrEqualNode>(literalNode3,
                                                                   lessThanOrEqualNode);
     std::ofstream out("out.dot");
-    AstGraphVisitor astGraphVisitor(out);
+    AstGraphVisitor astGraphVisitor(&out);
     astGraphVisitor.NewTreeGraph("GasStation");
     astGraphVisitor.dispatch(greaterThanOrEqualNode);
     astGraphVisitor.EndTreeGraph();
     out.close();
+
+    //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
+    //    ?
+}
+
+BOOST_FIXTURE_TEST_CASE(change_outstream, Registry<Node>)
+{
+    Node* literalNode = create<LiteralNode>(-40.);
+    Node* negationNode = create<NegationNode>(literalNode);
+
+    std::ofstream out1("out1.dot");
+    AstGraphVisitor astGraphVisitor(&out1);
+    astGraphVisitor.NewTreeGraph("NegationOperation");
+    astGraphVisitor.dispatch(negationNode);
+    astGraphVisitor.EndTreeGraph();
+    out1.close();
+
+    //-----------------------------------------------//
+
+    Node* parameterNode = create<ParameterNode>("avogadro_constant");
+    Node* multiplicationNode = create<MultiplicationNode>(negationNode, parameterNode);
+    std::ofstream out2("out2.dot");
+    astGraphVisitor.setOutStream(&out2);
+    astGraphVisitor.NewTreeGraph("MultiplicationOperation");
+    astGraphVisitor.dispatch(multiplicationNode);
+    astGraphVisitor.EndTreeGraph();
+    out1.close();
 
     //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
     //    ?

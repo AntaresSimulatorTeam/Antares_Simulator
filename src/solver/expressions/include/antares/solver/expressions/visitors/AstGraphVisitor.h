@@ -40,7 +40,9 @@ public:
      * @brief Default constructor, creates an evaluation visitor with no context.
      */
     AstGraphVisitor() = default;
-    AstGraphVisitor(std::ostream& out_stream);
+    AstGraphVisitor(std::ostream* out_stream);
+    void setOutStream(std::ostream* outStream);
+
     void NewTreeGraph(const std::string& tree_name);
     void EndTreeGraph();
 
@@ -74,7 +76,9 @@ private:
                                 const std::string& color = "azure",
                                 const std::string& shape = "box",
                                 const std::string& style = "rounded");
-    std::ostream& out_stream_ = std::cout;
+    std::ostream* out_stream_ = &std::cout;
+
+private:
     std::unordered_map<const Nodes::Node*, int> nodeIds_; // Mapping to store unique IDs for nodes
     int nodeCount_ = 0;                                   // Counter to assign unique node IDs
 };
