@@ -174,7 +174,7 @@ void AstGraphVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
                                              const std::string& style)
 {
     int id = getNodeID(node);
-    emitNode(id, label, shape, style, color);
+    emitNode(id, label, color, shape, style);
 
     const Nodes::Node* left = node->left();
     const Nodes::Node* right = node->right();

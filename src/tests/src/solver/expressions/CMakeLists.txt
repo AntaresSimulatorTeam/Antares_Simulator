@@ -1,5 +1,6 @@
 set(EXECUTABLE_NAME test-expressions)
-add_executable(${EXECUTABLE_NAME})
+add_executable(${EXECUTABLE_NAME}
+        test_AstGraphVisitor.cpp)
 
 target_sources(${EXECUTABLE_NAME}
         PRIVATE
@@ -11,15 +12,15 @@ target_sources(${EXECUTABLE_NAME}
         test_LinearVisitor.cpp
         test_CompareVisitor.cpp
         test_CloneVisitor.cpp
-	test_DeepWideTrees.cpp
-	test_Iterators.cpp
+        test_DeepWideTrees.cpp
+        test_Iterators.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
         PRIVATE
         Boost::unit_test_framework
         antares-solver-expressions
-	antares-solver-expressions-iterators
+        antares-solver-expressions-iterators
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE

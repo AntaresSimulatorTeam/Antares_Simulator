@@ -74,21 +74,6 @@ Node* ComparisonFixture::createComplexExpression()
 
 BOOST_AUTO_TEST_SUITE(_CompareVisitor_)
 
-BOOST_FIXTURE_TEST_CASE(simple_dot, ComparisonFixture)
-{
-    Node* expr = createComplexExpression();
-
-    AstGraphVisitor astGraphVisitor;
-    const auto printed1 = astGraphVisitor.dispatch(expr);
-    const auto printed2 = astGraphVisitor.getDot();
-    std::ofstream out("out.dot");
-    out << printed2;
-    out.close();
-
-    //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
-    //    ?
-}
-
 BOOST_FIXTURE_TEST_CASE(simple_comparison_to_itself, ComparisonFixture)
 {
     CompareVisitor cmp;
