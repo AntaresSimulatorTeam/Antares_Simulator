@@ -3,6 +3,8 @@
 #include <map>
 #include <string>
 
+#include <antares/solver/expressions/nodes/PortFieldNode.h>
+
 namespace Antares::Solver::Visitors
 {
 /**
@@ -56,6 +58,11 @@ private:
      * @brief A map storing variable values.
      */
     std::map<std::string, double> variables_;
+
+    /**
+     * @brief A map storing nodes to substitute with portfield.
+     */
+    std::map<Nodes::PortFieldNode*, Nodes::Node*> nodesToSubstitutes_;
 };
 
 } // namespace Antares::Solver::Visitors
