@@ -21,13 +21,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <fstream>
-
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/AstGraphVisitor.h>
 #include <antares/solver/expressions/visitors/CloneVisitor.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
 
@@ -47,7 +44,7 @@ Node* ComparisonFixture::createSimpleExpression(double param)
 {
     Node* var1 = registry_.create<LiteralNode>(param);
     Node* param1 = registry_.create<ParameterNode>("param1");
-    Node* expr = registry_.create<AddNode>(var1, param1);
+    Node* expr = registry_.create<SumNode>(var1, param1);
     return expr;
 }
 
@@ -58,17 +55,16 @@ Node* ComparisonFixture::createComplexExpression()
     // separately (no double free)
 
     Node* simple = createSimpleExpression(42.);
-    Node* compVariable = registry_.create<ComponentVariableNode>("comp", "variable");
-    Node* neg = registry_.create<NegationNode>(compVariable);
+    Node* neg = registry_.create<NegationNode>(simple);
     Node* mult = registry_.create<MultiplicationNode>(simple, neg);
     Node* comp = registry_.create<ComponentParameterNode>("hello", "world");
     Node* div = registry_.create<DivisionNode>(mult, comp);
     Node* div2 = registry_.create<DivisionNode>(div, simple);
-    Node* add = registry_.create<AddNode>(div, div2);
+    Node* add = registry_.create<SumNode>(div, div2, neg);
     Node* sub = registry_.create<SubtractionNode>(add, neg);
     Node* cmp = registry_.create<GreaterThanOrEqualNode>(sub, add);
     Node* pf = registry_.create<PortFieldNode>("port", "field");
-    Node* addf = registry_.create<AddNode>(pf, cmp);
+    Node* addf = registry_.create<SumNode>(pf, cmp);
     return addf;
 }
 
@@ -133,5 +129,64 @@ BOOST_FIXTURE_TEST_CASE(CompareVisitor_name, Registry<Node>)
 {
     CompareVisitor compareVisitor;
     BOOST_CHECK_EQUAL(compareVisitor.name(), "CompareVisitor");
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_empty_sums, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* expr1 = registry_.create<SumNode>();
+    Node* expr2 = registry_.create<SumNode>();
+    BOOST_CHECK(compareVisitor.dispatch(expr1, expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_different_size_sums, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* literal1 = registry_.create<LiteralNode>(1.);
+    Node* literal2 = registry_.create<LiteralNode>(2.);
+    Node* expr1 = registry_.create<SumNode>(literal1, literal2);
+    Node* expr2 = registry_.create<SumNode>(literal1);
+    BOOST_CHECK(!compareVisitor.dispatch(expr1, expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_different_sums, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* literal1 = registry_.create<LiteralNode>(1.);
+    Node* literal2 = registry_.create<LiteralNode>(2.);
+    Node* literal3 = registry_.create<LiteralNode>(3.);
+    Node* expr1 = registry_.create<SumNode>(literal1, literal2);
+    Node* expr2 = registry_.create<SumNode>(literal1, literal3);
+    BOOST_CHECK(!compareVisitor.dispatch(expr1, expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_same_sums, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* literal1 = registry_.create<LiteralNode>(1.);
+    Node* literal2 = registry_.create<LiteralNode>(2.);
+    Node* literal3 = registry_.create<LiteralNode>(3.);
+    Node* expr1 = registry_.create<SumNode>(literal1, literal2, literal3);
+    Node* expr2 = registry_.create<SumNode>(literal1, literal2, literal3);
+    BOOST_CHECK(compareVisitor.dispatch(expr1, expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_same_sums_different_nodes, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* literal1 = registry_.create<LiteralNode>(1.);
+    Node* literal2 = registry_.create<LiteralNode>(2.);
+    Node* literal3 = registry_.create<LiteralNode>(2.);
+    Node* expr1 = registry_.create<SumNode>(literal1, literal2);
+    Node* expr2 = registry_.create<SumNode>(literal1, literal3);
+    BOOST_CHECK(compareVisitor.dispatch(expr1, expr2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_sum_to_literal, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* literal1 = registry_.create<LiteralNode>(1.);
+    Node* expr1 = registry_.create<SumNode>(literal1);
+    BOOST_CHECK(!compareVisitor.dispatch(expr1, literal1));
 }
 BOOST_AUTO_TEST_SUITE_END()
