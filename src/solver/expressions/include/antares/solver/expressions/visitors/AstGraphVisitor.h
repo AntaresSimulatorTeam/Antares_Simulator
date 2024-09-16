@@ -21,65 +21,62 @@
 #pragma once
 
 #include <ostream>
+#include <utility>
 
 #include "antares/solver/expressions/visitors/NodeVisitor.h"
 
 namespace Antares::Solver::Visitors
 {
 
-class AstGraphVisitorNotImplemented: public std::invalid_argument
+struct BoxStyle
 {
-public:
-    AstGraphVisitorNotImplemented(const std::string& visitor, const std::string& node);
+    std::string label;
+    std::string color = "azure";
+    std::string shape = "box";
+    std::string style = "rounded";
 };
 
-class AstGraphVisitor: public NodeVisitor<void>
+class AstGraphVisitor: public NodeVisitor<void, std::ostream&>
 {
 public:
     /**
      * @brief Default constructor, creates an evaluation visitor with no context.
      */
     AstGraphVisitor() = default;
-    AstGraphVisitor(std::ostream* out_stream);
-    void setOutStream(std::ostream* outStream);
 
-    void NewTreeGraph(const std::string& tree_name);
-    void EndTreeGraph();
+    void NewTreeGraph(std::ostream& os, const std::string& tree_name = "ExpressionTree");
+    void EndTreeGraph(std::ostream& os);
 
     std::string name() const override;
 
 private:
-    void visit(const Nodes::SumNode* node) override;
-    void visit(const Nodes::SubtractionNode* node) override;
-    void visit(const Nodes::MultiplicationNode* node) override;
-    void visit(const Nodes::DivisionNode* node) override;
-    void visit(const Nodes::EqualNode* node) override;
-    void visit(const Nodes::LessThanOrEqualNode* node) override;
-    void visit(const Nodes::GreaterThanOrEqualNode* node) override;
-    void visit(const Nodes::NegationNode* node) override;
-    void visit(const Nodes::VariableNode* node) override;
-    void visit(const Nodes::ParameterNode* node) override;
-    void visit(const Nodes::LiteralNode* node) override;
-    void visit(const Nodes::PortFieldNode* node) override;
-    void visit(const Nodes::ComponentVariableNode* node) override;
-    void visit(const Nodes::ComponentParameterNode* node) override;
+    void visit(const Nodes::SumNode* node, std::ostream& os) override;
+    void visit(const Nodes::SubtractionNode* node, std::ostream& os) override;
+    void visit(const Nodes::MultiplicationNode* node, std::ostream& os) override;
+    void visit(const Nodes::DivisionNode* node, std::ostream& os) override;
+    void visit(const Nodes::EqualNode* node, std::ostream& os) override;
+    void visit(const Nodes::LessThanOrEqualNode* node, std::ostream& os) override;
+    void visit(const Nodes::GreaterThanOrEqualNode* node, std::ostream& os) override;
+    void visit(const Nodes::NegationNode* node, std::ostream& os) override;
+    void visit(const Nodes::VariableNode* node, std::ostream& os) override;
+    void visit(const Nodes::ParameterNode* node, std::ostream& os) override;
+    void visit(const Nodes::LiteralNode* node, std::ostream& os) override;
+    void visit(const Nodes::PortFieldNode* node, std::ostream& os) override;
+    void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
+    void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
 
     int getNodeID(const Nodes::Node* node);
-    void emitNode(int id,
-                  const std::string& label,
-                  const std::string& color = "azure",
-                  const std::string& shape = "box",
-                  const std::string& style = "rounded");
+    void emitNode(int id, const BoxStyle& box_style, std::ostream& os);
 
     void processBinaryOperation(const Nodes::BinaryNode* node,
-                                const std::string& label,
-                                const std::string& color = "azure",
-                                const std::string& shape = "box",
-                                const std::string& style = "rounded");
-    std::ostream* out_stream_ = &std::cout;
+                                const BoxStyle& box_style,
+                                std::ostream& os);
 
 private:
     std::unordered_map<const Nodes::Node*, int> nodeIds_; // Mapping to store unique IDs for nodes
     int nodeCount_ = 0;                                   // Counter to assign unique node IDs
 };
+
+std::ostream& operator<<(std::ostream& os, std::pair<AstGraphVisitor&, Nodes::Node*>& visitorExpr);
+
 } // namespace Antares::Solver::Visitors

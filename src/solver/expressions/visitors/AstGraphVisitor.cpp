@@ -26,103 +26,106 @@
 namespace Antares::Solver::Visitors
 {
 
-void AstGraphVisitor::visit(const Nodes::SumNode* node)
+void AstGraphVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "+", "aqua", "hexagon", "filled, solid");
+    emitNode(id, {"+", "aqua", "hexagon", "filled, solid"}, os);
     for (auto child: node->getOperands())
     {
         int childId = getNodeID(child);
-        *out_stream_ << "  " << id << " -> " << childId << ";\n";
-        dispatch(child);
+        os << "  " << id << " -> " << childId << ";\n";
+        dispatch(child, os);
     }
 }
 
-void AstGraphVisitor::visit(const Nodes::SubtractionNode* node)
+void AstGraphVisitor::visit(const Nodes::SubtractionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "-", "moccasin", "oval", "filled, rounded");
+    processBinaryOperation(node, {"-", "moccasin", "oval", "filled, rounded"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::MultiplicationNode* node)
+void AstGraphVisitor::visit(const Nodes::MultiplicationNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "*", "moccasin", "oval", "filled, rounded");
+    processBinaryOperation(node, {"*", "moccasin", "oval", "filled, rounded"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::DivisionNode* node)
+void AstGraphVisitor::visit(const Nodes::DivisionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "/", "moccasin", "oval", "filled, rounded");
+    processBinaryOperation(node, {"/", "moccasin", "oval", "filled, rounded"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::EqualNode* node)
+void AstGraphVisitor::visit(const Nodes::EqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "==", "beige", "oval", "filled, rounded");
+    processBinaryOperation(node, {"==", "beige", "oval", "filled, rounded"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::LessThanOrEqualNode* node)
+void AstGraphVisitor::visit(const Nodes::LessThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "<=", "beige", "oval", "filled, rounded");
+    processBinaryOperation(node, {"<=", "beige", "oval", "filled, rounded"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
+void AstGraphVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, ">=", "beige", "oval", "filled, rounded");
+    processBinaryOperation(node, {">=", "beige", "oval", "filled, rounded"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::VariableNode* node)
+void AstGraphVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "Var(" + node->value() + ")", "gold", "box", "filled, solid");
+    emitNode(id, {"Var(" + node->value() + ")", "gold", "box", "filled, solid"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::ParameterNode* node)
+void AstGraphVisitor::visit(const Nodes::ParameterNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "Param(" + node->value() + ")", "palegreen", "box", "filled, solid");
+    emitNode(id, {"Param(" + node->value() + ")", "palegreen", "box", "filled, solid"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::LiteralNode* node)
+void AstGraphVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, std::to_string(node->value()), "lightcyan", "box", "filled, solid");
+    emitNode(id, {std::to_string(node->value()), "lightcyan", "box", "filled, solid"}, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::NegationNode* node)
+void AstGraphVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "-", "navajowhite", "square", "filled, solid");
+    emitNode(id, {"-", "navajowhite", "square", "filled, solid"}, os);
     int childId = getNodeID(node->child());
-    *out_stream_ << "  " << id << " -> " << childId << ";\n";
-    dispatch(node->child());
+    os << "  " << id << " -> " << childId << ";\n";
+    dispatch(node->child(), os);
 }
 
-void AstGraphVisitor::visit(const Nodes::PortFieldNode* node)
+void AstGraphVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id,
-             "PF(" + node->getPortName() + "," + node->getFieldName() + ")",
-             "powderblue",
-             "invtriangle",
-             "filled, solid");
+             {"PF(" + node->getPortName() + "," + node->getFieldName() + ")",
+              "powderblue",
+              "invtriangle",
+              "filled, solid"},
+             os);
 }
 
-void AstGraphVisitor::visit(const Nodes::ComponentVariableNode* node)
+void AstGraphVisitor::visit(const Nodes::ComponentVariableNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id,
-             "CV(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             "goldenrod",
-             "box",
-             "filled, solid");
+             {"CV(" + node->getComponentId() + "," + node->getComponentName() + ")",
+              "goldenrod",
+              "box",
+              "filled, solid"},
+             os);
 }
 
-void AstGraphVisitor::visit(const Nodes::ComponentParameterNode* node)
+void AstGraphVisitor::visit(const Nodes::ComponentParameterNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id,
-             "CP(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             "palegreen",
-             "box",
-             "filled, solid");
+             {"CP(" + node->getComponentId() + "," + node->getComponentName() + ")",
+              "palegreen",
+              "box",
+              "filled, solid"},
+             os);
 }
 
 std::string AstGraphVisitor::name() const
@@ -139,25 +142,19 @@ int AstGraphVisitor::getNodeID(const Nodes::Node* node)
     return nodeIds_[node];
 }
 
-void AstGraphVisitor::emitNode(int id,
-                               const std::string& label,
-                               const std::string& color,
-                               const std::string& shape,
-                               const std::string& style)
+void AstGraphVisitor::emitNode(int id, const BoxStyle& box_style, std::ostream& os)
 {
-    *out_stream_ << "  " << id << " [label=\"" << label << "\", shape=\"" << shape << "\", style=\""
-                 << style << "\", color=\"" << color << "\"];\n";
+    os << "  " << id << " [label=\"" << box_style.label << "\", shape=\"" << box_style.shape
+       << "\", style=\"" << box_style.style << "\", color=\"" << box_style.color << "\"];\n";
 }
 
 // Process binary operation nodes like Add, Subtract, etc.
 void AstGraphVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
-                                             const std::string& label,
-                                             const std::string& color,
-                                             const std::string& shape,
-                                             const std::string& style)
+                                             const BoxStyle& box_style,
+                                             std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, label, color, shape, style);
+    emitNode(id, box_style, os);
 
     const Nodes::Node* left = node->left();
     const Nodes::Node* right = node->right();
@@ -165,37 +162,30 @@ void AstGraphVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
     int leftId = getNodeID(left);
     int rightId = getNodeID(right);
 
-    *out_stream_ << "  " << id << " -> " << leftId << ";\n";
-    *out_stream_ << "  " << id << " -> " << rightId << ";\n";
+    os << "  " << id << " -> " << leftId << ";\n";
+    os << "  " << id << " -> " << rightId << ";\n";
 
-    dispatch(left);
-    dispatch(right);
+    dispatch(left, os);
+    dispatch(right, os);
 }
 
-AstGraphVisitor::AstGraphVisitor(std::ostream* out_stream):
-    out_stream_(out_stream)
+void AstGraphVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_name)
 {
+    os << "digraph " + tree_name + " {\n";
+    os << "node[style = filled]\n";
 }
 
-AstGraphVisitorNotImplemented::AstGraphVisitorNotImplemented(const std::string& visitor,
-                                                             const std::string& node):
-    std::invalid_argument("Visitor" + visitor + " not implemented for node type " + node)
+void AstGraphVisitor::EndTreeGraph(std::ostream& os)
 {
+    os << "}\n";
 }
 
-void AstGraphVisitor::NewTreeGraph(const std::string& tree_name)
+std::ostream& operator<<(std::ostream& os, std::pair<AstGraphVisitor&, Nodes::Node*>& visitorExpr)
 {
-    *out_stream_ << "digraph " + tree_name + " {\n";
-    *out_stream_ << "node[style = filled]\n";
-}
-
-void AstGraphVisitor::EndTreeGraph()
-{
-    *out_stream_ << "}\n";
-}
-
-void AstGraphVisitor::setOutStream(std::ostream* outStream)
-{
-    out_stream_ = outStream;
+    auto& [visitor, root] = visitorExpr;
+    visitor.NewTreeGraph(os);
+    visitor.dispatch(root, os);
+    visitor.EndTreeGraph(os);
+    return os;
 }
 } // namespace Antares::Solver::Visitors
