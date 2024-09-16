@@ -60,9 +60,6 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
     astGraphVisitor.dispatch(greaterThanOrEqualNode);
     astGraphVisitor.EndTreeGraph();
     out.close();
-
-    //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
-    //    ?
 }
 
 BOOST_FIXTURE_TEST_CASE(change_outstream, Registry<Node>)
@@ -87,8 +84,5 @@ BOOST_FIXTURE_TEST_CASE(change_outstream, Registry<Node>)
     astGraphVisitor.dispatch(multiplicationNode);
     astGraphVisitor.EndTreeGraph();
     out1.close();
-
-    //    BOOST_CHECK_EQUAL(printed1, printed2); // TODO Number of decimals implementation dependent
-    //    ?
 }
 BOOST_AUTO_TEST_SUITE_END()
