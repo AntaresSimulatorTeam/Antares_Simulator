@@ -126,8 +126,26 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
 
         std::vector<double>& niv = weeklyResults.niveauxHoraires;
 
-        problem.previousSimulationFinalLevel[index] = niv[nbHoursInAWeek - 1] * reservoirCapacity
-                                                      / 100;
+        problem.previousSimulationFinalLevel[index]
+          = niv[nbHoursInAWeek - 1] * reservoirCapacity / 100;
+    });
+}
+
+void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem)
+{
+    if (!problem.hydroHotStart)
+        return;
+
+    areas.each([&](const Data::Area& area) {
+        if (!area.hydro.reservoirManagement)
+            return;
+
+        uint index = area.index;
+
+        double reservoirCapacity = area.hydro.reservoirCapacity;
+
+        problem.previousYearFinalLevels[index]
+          = problem.previousSimulationFinalLevel[index] / reservoirCapacity;
     });
 }
 
