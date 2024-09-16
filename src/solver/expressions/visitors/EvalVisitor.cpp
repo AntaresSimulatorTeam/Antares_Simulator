@@ -21,6 +21,8 @@
 
 #include "antares/solver/expressions/visitors/EvalVisitor.h"
 
+#include <numeric>
+
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
 namespace Antares::Solver::Visitors
@@ -30,9 +32,14 @@ EvalVisitor::EvalVisitor(EvaluationContext context):
 {
 }
 
-double EvalVisitor::visit(const Nodes::AddNode* node)
+double EvalVisitor::visit(const Nodes::SumNode* node)
 {
-    return dispatch(node->left()) + dispatch(node->right());
+    auto operands = node->getOperands();
+    return std::accumulate(std::begin(operands),
+                           std::end(operands),
+                           0,
+                           [this](double sum, Nodes::Node* operand)
+                           { return sum + dispatch(operand); });
 }
 
 double EvalVisitor::visit(const Nodes::SubtractionNode* node)

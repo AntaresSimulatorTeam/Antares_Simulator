@@ -6,6 +6,7 @@ set(SRC_Expressions
         nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
+        nodes/SumNode.cpp
 
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
@@ -18,7 +19,7 @@ set(SRC_Expressions
         visitors/AstGraphVisitor.cpp
         visitors/InvalidNode.cpp
 
-        include/antares/solver/expressions/nodes/AddNode.h
+        include/antares/solver/expressions/nodes/SumNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/ComparisonNode.h
         include/antares/solver/expressions/nodes/ComponentNode.h

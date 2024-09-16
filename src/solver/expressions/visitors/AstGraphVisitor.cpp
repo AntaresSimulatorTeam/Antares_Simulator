@@ -26,9 +26,16 @@
 namespace Antares::Solver::Visitors
 {
 
-void AstGraphVisitor::visit(const Nodes::AddNode* node)
+void AstGraphVisitor::visit(const Nodes::SumNode* node)
 {
-    processBinaryOperation(node, "+", "aqua", "hexagon", "filled, solid");
+    int id = getNodeID(node);
+    emitNode(id, "-", "aqua", "hexagon", "filled, solid");
+    for (auto child: node->getOperands())
+    {
+        int childId = getNodeID(child);
+        *out_stream_ << "  " << id << " -> " << childId << ";\n";
+        dispatch(child);
+    }
 }
 
 void AstGraphVisitor::visit(const Nodes::SubtractionNode* node)

@@ -44,11 +44,11 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
     Node* variableNode = create<VariableNode>("atoms_count");
     Node* divisionNode = create<DivisionNode>(variableNode, multiplicationNode);
     Node* portFieldNode = create<PortFieldNode>("gasStation", "1149");
-    Node* addNode = create<AddNode>(divisionNode, portFieldNode);
+    Node* sumNode = create<SumNode>(divisionNode, portFieldNode);
     Node* componentVariableNode = create<ComponentVariableNode>("1150", "otherStation");
     Node* componentParameterNode = create<ComponentParameterNode>("1151", "otherConstant");
     Node* subtractionNode = create<SubtractionNode>(componentVariableNode, componentParameterNode);
-    Node* equalNode = create<EqualNode>(subtractionNode, addNode);
+    Node* equalNode = create<EqualNode>(subtractionNode, sumNode);
     Node* literalNode2 = create<LiteralNode>(53.);
     Node* lessThanOrEqualNode = create<LessThanOrEqualNode>(literalNode2, equalNode);
     Node* literalNode3 = create<LiteralNode>(54.);

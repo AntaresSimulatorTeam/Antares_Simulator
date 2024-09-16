@@ -18,20 +18,29 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
-
-#include <antares/solver/expressions/nodes/BinaryNode.h>
+#include <antares/solver/expressions/nodes/SumNode.h>
 
 namespace Antares::Solver::Nodes
 {
-class AddNode: public BinaryNode
-{
-public:
-    using BinaryNode::BinaryNode;
 
-    std::string name() const override
-    {
-        return "AddNode";
-    }
-};
+SumNode::SumNode(const std::vector<Node*>& operands):
+    operands_(operands)
+{
+}
+
+const std::vector<Node*>& SumNode::getOperands() const
+{
+    return operands_;
+}
+
+size_t SumNode::size() const
+{
+    return operands_.size();
+}
+
+Node* SumNode::operator[](std::size_t idx) const
+{
+    return operands_[idx];
+}
+
 } // namespace Antares::Solver::Nodes

@@ -49,7 +49,7 @@ public:
     std::string name() const override;
 
 private:
-    void visit(const Nodes::AddNode* node) override;
+    void visit(const Nodes::SumNode* node) override;
     void visit(const Nodes::SubtractionNode* node) override;
     void visit(const Nodes::MultiplicationNode* node) override;
     void visit(const Nodes::DivisionNode* node) override;

@@ -19,17 +19,26 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <iostream>
+#include <numeric>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 
 namespace Antares::Solver::Visitors
 {
-std::string PrintVisitor::visit(const Nodes::AddNode* node)
+std::string PrintVisitor::visit(const Nodes::SumNode* node)
 {
-    // Ici le compilateur (g++) a besoin de savoir qu'on veut le visit du type de base
-    // sinon erreur de compil 'fonction non trouvée'
-    return "(" + dispatch(node->left()) + "+" + dispatch(node->right()) + ")";
+    auto operands = node->getOperands();
+    if (operands.empty())
+    {
+        return "()";
+    }
+    return std::accumulate(std::next(std::begin(operands)),
+                           std::end(operands),
+                           "(" + dispatch(operands[0]),
+                           [this](std::string sum, Nodes::Node* operand)
+                           { return sum + "+" + dispatch(operand); })
+           + ")";
 }
 
 std::string PrintVisitor::visit(const Nodes::SubtractionNode* node)

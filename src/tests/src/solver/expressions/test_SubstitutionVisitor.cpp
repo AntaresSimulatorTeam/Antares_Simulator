@@ -56,7 +56,7 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
 
     auto* component_original = create<ComponentVariableNode>("component1", "notInThere");
 
-    Node* root = create<AddNode>(create<ComponentVariableNode>("component1", "variable1"),
+    Node* root = create<SumNode>(create<ComponentVariableNode>("component1", "variable1"),
                                  component_original);
     SubstitutionVisitor sub(*this, ctx);
     Node* subsd = sub.dispatch(root);
@@ -65,10 +65,10 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
     BOOST_CHECK_NE(root, subsd);
 
     // We expect to find a substituted node on the left
-    BOOST_CHECK_EQUAL(dynamic_cast<AddNode*>(subsd)->left(), variables.first);
+    BOOST_CHECK_EQUAL((*dynamic_cast<SumNode*>(subsd))[0], variables.first);
 
     // We expect to find an original node on the right
-    auto* right_substituted = dynamic_cast<AddNode*>(subsd)->right();
+    auto* right_substituted = (*dynamic_cast<SumNode*>(subsd))[1];
     BOOST_CHECK_NE(right_substituted, variables.first);
     BOOST_CHECK_NE(right_substituted, variables.second);
 
