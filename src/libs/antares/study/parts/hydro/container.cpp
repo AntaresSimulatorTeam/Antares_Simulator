@@ -641,6 +641,26 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         }
     }
 
+    if ((section = ini.find("level cost")))
+    {
+        if ((property = section->firstProperty))
+        {
+            // Browse all properties
+            for (; property; property = property->next)
+            {
+                AreaName id = property->key;
+                id.toLower();
+
+                auto* area = study.areas.find(id);
+                if (area)
+                {
+                    ret = property->value.to<double>(area->hydro.levelCost) && ret;
+                }
+                else
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
+            }
+        }
+    }
 
 
     study.areas.each([&](Data::Area& area) {
@@ -667,48 +687,6 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
     String buffer;
     buffer.clear() << folder << SEP << "common" << SEP << "capacity";
 
-    struct AllSections
-    {
-        IniFile::Section* s;
-        IniFile::Section* smod;
-        IniFile::Section* sIMB;
-        IniFile::Section* sreservoir;
-        IniFile::Section* sreservoirCapacity;
-        IniFile::Section* sFollowLoad;
-        IniFile::Section* sUseWater;
-        IniFile::Section* sHardBounds;
-        IniFile::Section* sInitializeReservoirDate;
-        IniFile::Section* sUseHeuristic;
-        IniFile::Section* sUseLeeway;
-        IniFile::Section* sPowerToLevel;
-        IniFile::Section* sLeewayLow;
-        IniFile::Section* sLeewayUp;
-        IniFile::Section* spumpingEfficiency;
-        IniFile::Section* sOverflowCost;
-        IniFile::Section* sLevelCost;
-
-        AllSections(IniFile& ini):
-            s(ini.addSection("inter-daily-breakdown")),
-            smod(ini.addSection("intra-daily-modulation")),
-            sIMB(ini.addSection("inter-monthly-breakdown")),
-            sreservoir(ini.addSection("reservoir")),
-            sreservoirCapacity(ini.addSection("reservoir capacity")),
-            sFollowLoad(ini.addSection("follow load")),
-            sUseWater(ini.addSection("use water")),
-            sHardBounds(ini.addSection("hard bounds")),
-            sInitializeReservoirDate(ini.addSection("initialize reservoir date")),
-            sUseHeuristic(ini.addSection("use heuristic")),
-            sUseLeeway(ini.addSection("use leeway")),
-            sPowerToLevel(ini.addSection("power to level")),
-            sLeewayLow(ini.addSection("leeway low")),
-            sLeewayUp(ini.addSection("leeway up")),
-            spumpingEfficiency(ini.addSection("pumping efficiency")),
-            sOverflowCost(ini.addSection("overflow cost")),
-            sLevelCost(ini.addSection("level cost"))
-        {
-        }
-    };
-
     // Init
     IniFile ini;
     auto* s = ini.addSection("inter-daily-breakdown");
@@ -726,87 +704,60 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
     auto* sLeewayLow = ini.addSection("leeway low");
     auto* sLeewayUp = ini.addSection("leeway up");
     auto* spumpingEfficiency = ini.addSection("pumping efficiency");
+    auto* sOverflowCost = ini.addSection("overflow cost");
+    auto* sLevelCost = ini.addSection("level cost");
 
     // return status
     bool ret = true;
 
     // Add all alpha values for each area
-    areas.each(
-      [&allSections, &buffer, &folder, &ret](const Data::Area& area)
-      {
-          allSections.s->add(area.id, area.hydro.interDailyBreakdown);
-          allSections.smod->add(area.id, area.hydro.intraDailyModulation);
-          allSections.sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
-          allSections.sInitializeReservoirDate->add(area.id,
-                                                    area.hydro.initializeReservoirLevelDate);
-          allSections.sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
-          allSections.sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
-          allSections.spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
-          if (area.hydro.reservoirCapacity > 1e-6)
-          {
-              allSections.sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
-          }
-          if (area.hydro.reservoirManagement)
-          {
-              allSections.sreservoir->add(area.id, true);
-          }
-          if (!area.hydro.followLoadModulations)
-          {
-              allSections.sFollowLoad->add(area.id, false);
-          }
-          if (area.hydro.useWaterValue)
-          {
-              allSections.sUseWater->add(area.id, true);
-          }
-          if (area.hydro.hardBoundsOnRuleCurves)
-          {
-              allSections.sHardBounds->add(area.id, true);
-          }
-          if (!area.hydro.useHeuristicTarget)
-          {
-              allSections.sUseHeuristic->add(area.id, false);
-          }
-          if (area.hydro.useLeeway)
-          {
-              allSections.sUseLeeway->add(area.id, true);
-          }
-          if (area.hydro.powerToLevel)
-          {
-              allSections.sPowerToLevel->add(area.id, true);
-          }
-          if (area.hydro.overflowCost)
-          {
-              allSections.sOverflowCost->add(area.id, area.hydro.overflowCost);
-          }
-          if (area.hydro.levelCost)
-          {
-              allSections.sLevelCost->add(area.id, area.hydro.levelCost);
-          }
+    areas.each([&](const Data::Area& area) {
+        s->add(area.id, area.hydro.interDailyBreakdown);
+        smod->add(area.id, area.hydro.intraDailyModulation);
+        sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
+        sInitializeReservoirDate->add(area.id, area.hydro.initializeReservoirLevelDate);
+        sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
+        sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
+        spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
+        if (area.hydro.reservoirCapacity > 1e-6)
+            sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
+        if (area.hydro.reservoirManagement)
+            sreservoir->add(area.id, true);
+        if (!area.hydro.followLoadModulations)
+            sFollowLoad->add(area.id, false);
+        if (area.hydro.useWaterValue)
+            sUseWater->add(area.id, true);
+        if (area.hydro.hardBoundsOnRuleCurves)
+            sHardBounds->add(area.id, true);
+        if (!area.hydro.useHeuristicTarget)
+            sUseHeuristic->add(area.id, false);
+        if (area.hydro.useLeeway)
+            sUseLeeway->add(area.id, true);
+        if (area.hydro.powerToLevel)
+            sPowerToLevel->add(area.id, true);
+	sOverflowCost->add(area.id, area.hydro.overflowCost);
+	sLevelCost->add(area.id, area.hydro.levelCost);
 
-          // max hours gen
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "maxDailyGenEnergy_" << area.id << ".txt";
-          ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-          // max hours pump
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "maxDailyPumpEnergy_" << area.id << ".txt";
-          ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-          // credit modulations
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "creditmodulations_" << area.id << ".txt";
-          ret = area.hydro.creditModulation.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-          // inflow pattern
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "inflowPattern_" << area.id << ".txt";
-          ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-          // reservoir
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                         << area.id << ".txt";
-          ret = area.hydro.reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
-                         << area.id << ".txt";
-          ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-      });
+        // max power
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
+                       << area.id << ".txt";
+        ret = area.hydro.maxPower.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+        // credit modulations
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                       << "creditmodulations_" << area.id << ".txt";
+        ret = area.hydro.creditModulation.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+        // inflow pattern
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "inflowPattern_"
+                       << area.id << ".txt";
+        ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+        // reservoir
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
+                       << area.id << ".txt";
+        ret = area.hydro.reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
+                       << area.id << ".txt";
+        ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+    });
 
     // Write the ini file
     buffer.clear() << folder << SEP << "hydro.ini";
