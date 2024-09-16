@@ -70,6 +70,8 @@ void PartHydro::reset()
     powerToLevel = false;
     leewayLowerBound = 1.;
     leewayUpperBound = 1.;
+    overflowCost = 0.;
+    levelCost = 0.;
 
     inflowPattern.reset(1, DAYS_PER_YEAR, true);
     inflowPattern.fillColumn(0, 1.0);
@@ -88,8 +90,6 @@ void PartHydro::reset()
     // This work is done in Area::reset()
     allocation.clear();
     // allocation.fromArea(<current area>, 1.); // Area::reset()
-
-    overflowCost = 0.;
 
     if (prepro)
     {
