@@ -32,10 +32,20 @@ PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>
 {
 }
 
-Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* port_field_node)
+Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    return registry_.create<Nodes::PortFieldNode>(port_field_node->getPortName(),
-                                                  port_field_node->getFieldName());
+    // This search has linear complexity
+    // To get a search of log complexity, we need to use std::unordered_set::find
+    // But std::unordered_set::find_if does not exist
+    auto it = std::find_if(ctx_.variables.begin(),
+                           ctx_.variables.end(),
+                           [&node](auto* x) { return *x == *node; });
+    if (it != ctx_.variables.end())
+    {
+        return *it;
+    }
+
+    return CloneVisitor::visit(node);
 }
 
 std::string PortfieldSubstitutionVisitor::name() const
