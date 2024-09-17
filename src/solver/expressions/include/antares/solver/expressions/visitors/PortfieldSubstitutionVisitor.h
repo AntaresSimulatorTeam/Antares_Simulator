@@ -40,7 +40,8 @@ struct PortfieldSubstitutionContext
 class PortfieldSubstitutionVisitor: public CloneVisitor
 {
 public:
-    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry, PortfieldSubstitutionContext& ctx);
+    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                 PortfieldSubstitutionContext& ctx);
 
     PortfieldSubstitutionContext& ctx_;
     Registry<Nodes::Node>& registry_;
