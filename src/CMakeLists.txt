@@ -209,8 +209,8 @@ if (NOT ortools_FOUND OR BUILD_ORTOOLS)
     message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
     set(FETCHCONTENT_QUIET FALSE)
     FetchContent_Declare(ortools
-            GIT_REPOSITORY "https://github.com/rte-france/or-tools-rte"
-            GIT_TAG ${ORTOOLS_TAG}
+            GIT_REPOSITORY "https://github.com/JasonMarechal25/or-tools-rte"
+            GIT_TAG main
             GIT_SHALLOW TRUE
             USES_TERMINAL_DOWNLOAD TRUE
             GIT_PROGRESS TRUE
