@@ -41,7 +41,7 @@ void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id, "+", SumStyle, os);
-    for (auto child: node->getOperands())
+    for (auto* child: node->getOperands())
     {
         int childId = getNodeID(child);
         os << "  " << id << " -> " << childId << ";\n";
