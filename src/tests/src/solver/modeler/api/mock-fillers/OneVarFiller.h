@@ -7,30 +7,29 @@ namespace Antares::Solver::Modeler::Api
 
 class OneVarFiller: public LinearProblemFiller
 {
-    using LinearProblemFiller::LinearProblemFiller;
-
 public:
-    void addVariables() override;
-    void addConstraints() override;
-    void addObjective() override;
+    explicit OneVarFiller() = default;
+    void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
+    void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
+    void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
 
 private:
     std::string added_var_name_ = "var-by-OneVarFiller";
 };
 
-void OneVarFiller::addVariables()
+void OneVarFiller::addVariables(ILinearProblem& pb, LinearProblemData& data)
 {
-    linearProblem_.addNumVariable(0, 1, added_var_name_);
+    pb.addNumVariable(0, 1, added_var_name_);
 }
 
-void OneVarFiller::addConstraints()
+void OneVarFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data)
 {
 }
 
-void OneVarFiller::addObjective()
+void OneVarFiller::addObjective(ILinearProblem& pb, LinearProblemData& data)
 {
-    auto* var = linearProblem_.getVariable(added_var_name_);
-    linearProblem_.setObjectiveCoefficient(var, 1);
+    auto* var = pb.getVariable(added_var_name_);
+    pb.setObjectiveCoefficient(var, 1);
 }
 
 } // namespace Antares::Solver::Modeler::Api

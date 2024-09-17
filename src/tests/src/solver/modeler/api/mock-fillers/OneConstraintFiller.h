@@ -7,24 +7,23 @@ namespace Antares::Solver::Modeler::Api
 
 class OneConstraintFiller: public LinearProblemFiller
 {
-    using LinearProblemFiller::LinearProblemFiller;
-
 public:
-    void addVariables() override;
-    void addConstraints() override;
-    void addObjective() override;
+    explicit OneConstraintFiller() = default;
+    void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
+    void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
+    void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
 };
 
-void OneConstraintFiller::addVariables()
+void OneConstraintFiller::addVariables(ILinearProblem& pb, LinearProblemData& data)
 {
 }
 
-void OneConstraintFiller::addConstraints()
+void OneConstraintFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data)
 {
-    linearProblem_.addConstraint(1, 2, "constraint-by-OneConstraintFiller");
+    pb.addConstraint(1, 2, "constraint-by-OneConstraintFiller");
 }
 
-void OneConstraintFiller::addObjective()
+void OneConstraintFiller::addObjective(ILinearProblem& pb, LinearProblemData& data)
 {
 }
 

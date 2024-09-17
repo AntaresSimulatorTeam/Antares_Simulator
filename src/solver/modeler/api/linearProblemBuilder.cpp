@@ -11,11 +11,11 @@ LinearProblemBuilder::LinearProblemBuilder(const std::vector<LinearProblemFiller
 {
 }
 
-void LinearProblemBuilder::build()
+void LinearProblemBuilder::build(ILinearProblem& pb, LinearProblemData& data)
 {
-    std::ranges::for_each(fillers_, [](const auto& filler) { filler->addVariables(); });
-    std::ranges::for_each(fillers_, [](const auto& filler) { filler->addConstraints(); });
-    std::ranges::for_each(fillers_, [](const auto& filler) { filler->addObjective(); });
+    std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addVariables(pb, data); });
+    std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addConstraints(pb, data); });
+    std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addObjective(pb, data); });
 }
 
 } // namespace Antares::Solver::Modeler::Api

@@ -32,7 +32,7 @@ class LinearProblemBuilder
 {
 public:
     LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers);
-    void build();
+    void build(ILinearProblem& pb, LinearProblemData& data);
 
 private:
     const std::vector<LinearProblemFiller*>& fillers_;

@@ -7,27 +7,26 @@ namespace Antares::Solver::Modeler::Api
 
 class TwoVarsTwoConstraintsFiller: public LinearProblemFiller
 {
-    using LinearProblemFiller::LinearProblemFiller;
-
 public:
-    void addVariables() override;
-    void addConstraints() override;
-    void addObjective() override;
+    explicit TwoVarsTwoConstraintsFiller() = default;
+    void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
+    void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
+    void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
 };
 
-void TwoVarsTwoConstraintsFiller::addVariables()
+void TwoVarsTwoConstraintsFiller::addVariables(ILinearProblem& pb, LinearProblemData& data)
 {
-    linearProblem_.addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");
-    linearProblem_.addNumVariable(0, 3, "var-2-by-TwoVarsTwoConstraintsFiller");
+    pb.addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");
+    pb.addNumVariable(0, 3, "var-2-by-TwoVarsTwoConstraintsFiller");
 }
 
-void TwoVarsTwoConstraintsFiller::addConstraints()
+void TwoVarsTwoConstraintsFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data)
 {
-    linearProblem_.addConstraint(1, 2, "constr-1-by-TwoVarsTwoConstraintsFiller");
-    linearProblem_.addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
+    pb.addConstraint(1, 2, "constr-1-by-TwoVarsTwoConstraintsFiller");
+    pb.addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
 }
 
-void TwoVarsTwoConstraintsFiller::addObjective()
+void TwoVarsTwoConstraintsFiller::addObjective(ILinearProblem& pb, LinearProblemData& data)
 {
 }
 

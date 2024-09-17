@@ -32,19 +32,10 @@ namespace Antares::Solver::Modeler::Api
 class LinearProblemFiller
 {
 public:
-    explicit LinearProblemFiller(ILinearProblem& pb, LinearProblemData& data):
-        linearProblem_(pb),
-        LPdata_(data)
-    {
-    }
-
-    virtual void addVariables() = 0;
-    virtual void addConstraints() = 0;
-    virtual void addObjective() = 0;
-
-protected:
-    ILinearProblem& linearProblem_;
-    const LinearProblemData& LPdata_;
+    explicit LinearProblemFiller() = default;
+    virtual void addVariables(ILinearProblem& pb, LinearProblemData& data) = 0;
+    virtual void addConstraints(ILinearProblem& pb, LinearProblemData& data) = 0;
+    virtual void addObjective(ILinearProblem& pb, LinearProblemData& data) = 0;
 };
 
 } // namespace Antares::Solver::Modeler::Api
