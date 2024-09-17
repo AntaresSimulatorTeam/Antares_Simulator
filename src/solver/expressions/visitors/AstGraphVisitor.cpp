@@ -28,7 +28,7 @@ namespace Antares::Solver::Visitors
 
 static constexpr BoxStyle SumStyle{"aqua", "hexagon", "filled, solid"};
 static constexpr BoxStyle BinaryStyle{"aqua", "oval", "filled, rounded"};
-static constexpr BoxStyle ComparisonStyle{"yellow", "diamond", "filled, rounded"};
+static constexpr BoxStyle ComparisonStyle{"yellow", "diamond", "filled"};
 static constexpr BoxStyle NegationStyle{"tomato", "invtriangle", "filled, solid"};
 static constexpr BoxStyle LiteralStyle{"lightgray", "box", "filled, solid"};
 static constexpr BoxStyle VariableStyle{"gold", "box", "filled, solid"};
@@ -186,6 +186,9 @@ void AstGraphVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_nam
 
 void AstGraphVisitor::EndTreeGraph(std::ostream& os)
 {
+    // Graph title showing the total number of nodes
+    os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
+    os << "labelloc = \"t\"\n";
     os << "}\n";
 }
 

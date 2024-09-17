@@ -40,15 +40,15 @@ static auto buildAllTypeNode(Registry<Node>& registry)
 {
     const std::string expected_msg = R"raw(digraph ExpressionTree {
 node[style = filled]
-  1 [label=">=", shape="diamond", style="filled, rounded", color="yellow"];
+  1 [label=">=", shape="diamond", style="filled", color="yellow"];
   1 -> 2;
   1 -> 3;
   2 [label="54.000000", shape="box", style="filled, solid", color="lightgray"];
-  3 [label="<=", shape="diamond", style="filled, rounded", color="yellow"];
+  3 [label="<=", shape="diamond", style="filled", color="yellow"];
   3 -> 4;
   3 -> 5;
   4 [label="53.000000", shape="box", style="filled, solid", color="lightgray"];
-  5 [label="==", shape="diamond", style="filled, rounded", color="yellow"];
+  5 [label="==", shape="diamond", style="filled", color="yellow"];
   5 -> 6;
   5 -> 7;
   6 [label="-", shape="oval", style="filled, rounded", color="aqua"];
@@ -71,6 +71,8 @@ node[style = filled]
   14 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
   7 -> 16;
   16 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
+label="AST Diagram(Total nodes : 16)"
+labelloc = "t"
 }
 )raw";
 
