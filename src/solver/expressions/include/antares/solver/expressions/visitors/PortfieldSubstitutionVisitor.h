@@ -20,19 +20,29 @@
 */
 #pragma once
 
-#include "antares/solver/expressions/visitors/SubstitutionVisitor.h"
+#include <unordered_set>
+
+#include "antares/solver/expressions/visitors/CloneVisitor.h"
 
 namespace Antares::Solver::Visitors
 {
+/**
+ * @brief Represents the context for performing substitutions in a syntax tree.
+ */
+struct PortfieldSubstitutionContext
+{
+    std::unordered_set<Nodes::PortFieldNode*> variables;
+};
+
 /**
  * @brief Represents a visitor for substituting portfield nodes in a syntax tree.
  */
 class PortfieldSubstitutionVisitor: public CloneVisitor
 {
 public:
-    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx);
+    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry, PortfieldSubstitutionContext& ctx);
 
-    SubstitutionContext& ctx_;
+    PortfieldSubstitutionContext& ctx_;
     Registry<Nodes::Node>& registry_;
     std::string name() const override;
 
