@@ -208,7 +208,7 @@ find_package(ortools)
 if (NOT ortools_FOUND OR BUILD_ORTOOLS)
     message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
     set(FETCHCONTENT_QUIET FALSE)
-    FetchContent_Declare(ortools
+    FetchContent_Declare(ortools-rte
             GIT_REPOSITORY "https://github.com/JasonMarechal25/or-tools-rte.git"
             GIT_TAG main
             GIT_SHALLOW TRUE
@@ -233,7 +233,7 @@ if (NOT ortools_FOUND OR BUILD_ORTOOLS)
     string(REGEX MATCH "^[^-]+" OFFICIAL_TAG ${ORTOOLS_TAG})
     set(ortools_REF ${OFFICIAL_TAG})
 
-    FetchContent_MakeAvailable(ortools)
+    FetchContent_MakeAvailable(ortools-rte)
 endif ()
 
 find_package(minizip-ng QUIET)
