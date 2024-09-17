@@ -131,7 +131,7 @@ private:
      * @param node The node for which to get the ID.
      * @return An integer representing the unique ID of the node.
      */
-    int getNodeID(const Nodes::Node* node);
+    unsigned int getNodeID(const Nodes::Node* node);
 
     /**
      * @brief Emits a node to the output stream.
@@ -162,20 +162,19 @@ private:
                                 const BoxStyle& box_style,
                                 std::ostream& os);
 
-private:
     /**
      * @brief A map of nodes to their unique IDs.
      *
      * This map is used to keep track of assigned IDs for each node in the AST.
      */
-    std::unordered_map<const Nodes::Node*, int> nodeIds_;
+    std::unordered_map<const Nodes::Node*, unsigned int> nodeIds_;
 
     /**
      * @brief Counter for generating unique node IDs.
      *
      * This counter is incremented each time a new node ID is needed.
      */
-    int nodeCount_ = 0;
+    unsigned int nodeCount_ = 0;
 };
 
 /**

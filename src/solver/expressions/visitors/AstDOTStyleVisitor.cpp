@@ -140,7 +140,7 @@ std::string AstDOTStyleVisitor::name() const
     return "AstGraphVisitor";
 }
 
-int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
+unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
 {
     if (nodeIds_.find(node) == nodeIds_.end())
     {
