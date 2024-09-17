@@ -1,3 +1,22 @@
+#  Copyright 2007-2024, RTE (https://www.rte-france.com)
+#  See AUTHORS.txt
+#  SPDX-License-Identifier: MPL-2.0
+#  This file is part of Antares-Simulator,
+#  Adequacy and Performance assessment for interconnected energy networks.
+#
+#  Antares_Simulator is free software: you can redistribute it and/or modify
+#  it under the terms of the Mozilla Public Licence 2.0 as published by
+#  the Mozilla Foundation, either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Antares_Simulator is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  Mozilla Public Licence 2.0 for more details.
+#
+#  You should have received a copy of the Mozilla Public Licence 2.0
+#  along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+
 # Methods to run Antares simulator
 
 import subprocess
@@ -10,10 +29,11 @@ from output_utils import parse_output_folder_from_logs
 
 def get_solver_path():
     with open("conf.yaml") as file:
-            content = yaml.full_load(file)
+        content = yaml.full_load(file)
     return content.get("antares-solver")
 
-SOLVER_PATH = get_solver_path() # we only need to run this once
+
+SOLVER_PATH = get_solver_path()  # we only need to run this once
 
 
 def run_simulation(context):
@@ -35,7 +55,7 @@ def activate_simu_outputs(context):
 
 
 def build_antares_solver_command(context):
-    command = [SOLVER_PATH, "-i", str(context.study_path)]
+    command = [SOLVER_PATH, "-i", f'"{context.study_path}"']
     if context.use_ortools:
         command.append('--use-ortools')
         command.append('--ortools-solver=' + context.ortools_solver)
@@ -44,4 +64,3 @@ def build_antares_solver_command(context):
     if context.parallel:
         command.append('--force-parallel=4')
     return command
-
