@@ -55,7 +55,6 @@ color = lightgrey;
 node [shape=plaintext];
 
 )raw";
-    std::ostringstream rank_fit;
     std::vector<std::string> legend_id;
     for (const auto& [node_type, id_map]: nodeIds)
     {
@@ -236,6 +235,9 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     os << "labelloc = \"t\"\n";
     os << GetLegend(nodeIds_);
     os << "}\n";
+    //  TODO
+    //    nodeCount_ = 0;
+    //    nodeIds_.clear();
 }
 
 std::ostream& operator<<(std::ostream& os,
