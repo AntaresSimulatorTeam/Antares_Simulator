@@ -73,6 +73,41 @@ node[style = filled]
   16 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
 label="AST Diagram(Total nodes : 16)"
 labelloc = "t"
+subgraph cluster_legend {
+label = "Legend";
+style = dashed;
+fontsize = 16;
+color = lightgrey;
+node [shape=plaintext];
+
+legend_SubtractionNode [ label =" SubtractionNode: 1"]
+legend_GreaterThanOrEqualNode [ label =" GreaterThanOrEqualNode: 1"]
+legend_LiteralNode [ label =" LiteralNode: 3"]
+legend_LessThanOrEqualNode [ label =" LessThanOrEqualNode: 1"]
+legend_ComponentParameterNode [ label =" ComponentParameterNode: 1"]
+legend_EqualNode [ label =" EqualNode: 1"]
+legend_ComponentVariableNode [ label =" ComponentVariableNode: 1"]
+legend_SumNode [ label =" SumNode: 1"]
+legend_DivisionNode [ label =" DivisionNode: 1"]
+legend_VariableNode [ label =" VariableNode: 1"]
+legend_MultiplicationNode [ label =" MultiplicationNode: 1"]
+legend_NegationNode [ label =" NegationNode: 1"]
+legend_ParameterNode [ label =" ParameterNode: 1"]
+legend_PortFieldNode [ label =" PortFieldNode: 1"]
+legend_SubtractionNode -> legend_GreaterThanOrEqualNode[style=invis];
+legend_GreaterThanOrEqualNode -> legend_LiteralNode[style=invis];
+legend_LiteralNode -> legend_LessThanOrEqualNode[style=invis];
+legend_LessThanOrEqualNode -> legend_ComponentParameterNode[style=invis];
+legend_ComponentParameterNode -> legend_EqualNode[style=invis];
+legend_EqualNode -> legend_ComponentVariableNode[style=invis];
+legend_ComponentVariableNode -> legend_SumNode[style=invis];
+legend_SumNode -> legend_DivisionNode[style=invis];
+legend_DivisionNode -> legend_VariableNode[style=invis];
+legend_VariableNode -> legend_MultiplicationNode[style=invis];
+legend_MultiplicationNode -> legend_NegationNode[style=invis];
+legend_NegationNode -> legend_ParameterNode[style=invis];
+legend_ParameterNode -> legend_PortFieldNode[style=invis];
+}
 }
 )raw";
 
