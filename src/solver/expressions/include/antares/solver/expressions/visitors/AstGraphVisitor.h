@@ -30,10 +30,9 @@ namespace Antares::Solver::Visitors
 
 struct BoxStyle
 {
-    std::string label;
-    std::string color = "azure";
-    std::string shape = "box";
-    std::string style = "rounded";
+    std::string color;
+    std::string shape;
+    std::string style;
 };
 
 class AstGraphVisitor: public NodeVisitor<void, std::ostream&>
@@ -66,9 +65,10 @@ private:
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
 
     int getNodeID(const Nodes::Node* node);
-    void emitNode(int id, const BoxStyle& box_style, std::ostream& os);
+    void emitNode(int id, const std::string& label, const BoxStyle& box_style, std::ostream& os);
 
     void processBinaryOperation(const Nodes::BinaryNode* node,
+                                const std::string& label,
                                 const BoxStyle& box_style,
                                 std::ostream& os);
 
@@ -77,6 +77,7 @@ private:
     int nodeCount_ = 0;                                   // Counter to assign unique node IDs
 };
 
-std::ostream& operator<<(std::ostream& os, std::pair<AstGraphVisitor&, Nodes::Node*>& visitorExpr);
+std::ostream& operator<<(std::ostream& os,
+                         const std::pair<AstGraphVisitor&, Nodes::Node*>& visitorExpr);
 
 } // namespace Antares::Solver::Visitors

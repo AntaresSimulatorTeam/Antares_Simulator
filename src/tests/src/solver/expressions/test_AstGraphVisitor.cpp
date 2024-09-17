@@ -117,6 +117,7 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
     std::cout.rdbuf(initialBufferCout);
     out.close();
 
+    // read was written in stdout
     BOOST_CHECK_EQUAL(expected_msg, redirectedStdout.str());
     // read out.dot content
     std::ifstream infile(filename);
