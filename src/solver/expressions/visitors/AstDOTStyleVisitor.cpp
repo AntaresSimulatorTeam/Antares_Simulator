@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/expressions/visitors/AstGraphVisitor.h"
+#include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
@@ -37,7 +37,7 @@ static constexpr BoxStyle ComponentParameterStyle{"springgreen", "octagon", "fil
 static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled, solid"};
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 
-void AstGraphVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id, "+", SumStyle, os);
@@ -49,55 +49,55 @@ void AstGraphVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
     }
 }
 
-void AstGraphVisitor::visit(const Nodes::SubtractionNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::SubtractionNode* node, std::ostream& os)
 {
     processBinaryOperation(node, "-", BinaryStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::MultiplicationNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::MultiplicationNode* node, std::ostream& os)
 {
     processBinaryOperation(node, "*", BinaryStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::DivisionNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::DivisionNode* node, std::ostream& os)
 {
     processBinaryOperation(node, "/", BinaryStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::EqualNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::EqualNode* node, std::ostream& os)
 {
     processBinaryOperation(node, "==", ComparisonStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::LessThanOrEqualNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::LessThanOrEqualNode* node, std::ostream& os)
 {
     processBinaryOperation(node, "<=", ComparisonStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::ostream& os)
 {
     processBinaryOperation(node, ">=", ComparisonStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id, "Var(" + node->value() + ")", VariableStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::ParameterNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::ParameterNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id, "Param(" + node->value() + ")", ParameterStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id, std::to_string(node->value()), LiteralStyle, os);
 }
 
-void AstGraphVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id, "-", NegationStyle, os);
@@ -106,7 +106,7 @@ void AstGraphVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
     dispatch(node->child(), os);
 }
 
-void AstGraphVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id,
@@ -115,7 +115,7 @@ void AstGraphVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
              os);
 }
 
-void AstGraphVisitor::visit(const Nodes::ComponentVariableNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::ComponentVariableNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id,
@@ -124,7 +124,7 @@ void AstGraphVisitor::visit(const Nodes::ComponentVariableNode* node, std::ostre
              os);
 }
 
-void AstGraphVisitor::visit(const Nodes::ComponentParameterNode* node, std::ostream& os)
+void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id,
@@ -133,12 +133,12 @@ void AstGraphVisitor::visit(const Nodes::ComponentParameterNode* node, std::ostr
              os);
 }
 
-std::string AstGraphVisitor::name() const
+std::string AstDOTStyleVisitor::name() const
 {
     return "AstGraphVisitor";
 }
 
-int AstGraphVisitor::getNodeID(const Nodes::Node* node)
+int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
 {
     if (nodeIds_.find(node) == nodeIds_.end())
     {
@@ -147,20 +147,20 @@ int AstGraphVisitor::getNodeID(const Nodes::Node* node)
     return nodeIds_[node];
 }
 
-void AstGraphVisitor::emitNode(int id,
-                               const std::string& label,
-                               const BoxStyle& box_style,
-                               std::ostream& os)
+void AstDOTStyleVisitor::emitNode(int id,
+                                  const std::string& label,
+                                  const BoxStyle& box_style,
+                                  std::ostream& os)
 {
     os << "  " << id << " [label=\"" << label << "\", shape=\"" << box_style.shape << "\", style=\""
        << box_style.style << "\", color=\"" << box_style.color << "\"];\n";
 }
 
 // Process binary operation nodes like Add, Subtract, etc.
-void AstGraphVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
-                                             const std::string& label,
-                                             const BoxStyle& box_style,
-                                             std::ostream& os)
+void AstDOTStyleVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
+                                                const std::string& label,
+                                                const BoxStyle& box_style,
+                                                std::ostream& os)
 {
     int id = getNodeID(node);
     emitNode(id, label, box_style, os);
@@ -178,13 +178,13 @@ void AstGraphVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
     dispatch(right, os);
 }
 
-void AstGraphVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_name)
+void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_name)
 {
     os << "digraph " + tree_name + " {\n";
     os << "node[style = filled]\n";
 }
 
-void AstGraphVisitor::EndTreeGraph(std::ostream& os)
+void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
 {
     // Graph title showing the total number of nodes
     os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
@@ -193,7 +193,7 @@ void AstGraphVisitor::EndTreeGraph(std::ostream& os)
 }
 
 std::ostream& operator<<(std::ostream& os,
-                         const std::pair<AstGraphVisitor&, Nodes::Node*>& visitorExpr)
+                         const std::pair<AstDOTStyleVisitor&, Nodes::Node*>& visitorExpr)
 {
     auto& [visitor, root] = visitorExpr;
     visitor.NewTreeGraph(os);

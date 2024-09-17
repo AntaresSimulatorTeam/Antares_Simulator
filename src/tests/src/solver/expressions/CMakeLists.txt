@@ -13,7 +13,7 @@ target_sources(${EXECUTABLE_NAME}
         test_CloneVisitor.cpp
         test_DeepWideTrees.cpp
         test_Iterators.cpp
-        test_AstGraphVisitor.cpp
+        test_AstDOTStyleVisitor.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}

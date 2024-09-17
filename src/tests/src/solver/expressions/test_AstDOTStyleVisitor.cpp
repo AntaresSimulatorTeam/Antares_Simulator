@@ -28,7 +28,7 @@
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/AstGraphVisitor.h>
+#include <antares/solver/expressions/visitors/AstDOTStyleVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -109,10 +109,10 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
     std::stringstream redirectedStdout;
     std::streambuf* initialBufferCout = std::cout.rdbuf(redirectedStdout.rdbuf());
 
-    AstGraphVisitor astGraphVisitor;
+    AstDOTStyleVisitor astGraphVisitor;
     for (auto* os: ostreams)
     {
-        std::pair<AstGraphVisitor&, Node*> pair1(astGraphVisitor, expr);
+        std::pair<AstDOTStyleVisitor&, Node*> pair1(astGraphVisitor, expr);
 
         *os << pair1;
     }

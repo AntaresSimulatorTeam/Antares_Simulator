@@ -35,13 +35,13 @@ struct BoxStyle
     std::string_view style;
 };
 
-class AstGraphVisitor: public NodeVisitor<void, std::ostream&>
+class AstDOTStyleVisitor: public NodeVisitor<void, std::ostream&>
 {
 public:
     /**
      * @brief Default constructor, creates an evaluation visitor with no context.
      */
-    AstGraphVisitor() = default;
+    AstDOTStyleVisitor() = default;
 
     void NewTreeGraph(std::ostream& os, const std::string& tree_name = "ExpressionTree");
     void EndTreeGraph(std::ostream& os);
@@ -78,6 +78,6 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os,
-                         const std::pair<AstGraphVisitor&, Nodes::Node*>& visitorExpr);
+                         const std::pair<AstDOTStyleVisitor&, Nodes::Node*>& visitorExpr);
 
 } // namespace Antares::Solver::Visitors
