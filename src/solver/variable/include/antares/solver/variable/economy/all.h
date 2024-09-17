@@ -160,9 +160,9 @@ typedef          // Prices
                                              <ReserveParticipationBySTStorage // Participation per Short Term Storage cluster
                                               <ReserveParticipationBySTStorageGroup // Participation per short term storage group
                                                <ReserveParticipationByLTStorage // Participation per Short Term Storage cluster
-                                               <ReserveParticipationUnsuppliedSpilled 
-                                                <Variable::Economy::Links // All links
-                                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                <ReserveParticipationUnsuppliedSpilled 
+                                                 <Variable::Economy::Links // All links
+                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

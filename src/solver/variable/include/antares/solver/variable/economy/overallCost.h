@@ -261,9 +261,7 @@ public:
           + (state.hourlyResults->HydroUsage[state.hourInTheWeek].valeurH2oHoraire
              * (state.hourlyResults->HydroUsage[state.hourInTheWeek].TurbinageHoraire
                 - state.area->hydro.pumpingEfficiency
-                    * state.hourlyResults->HydroUsage[state.hourInTheWeek].PompageHoraire))
-          // Current hydro reserve participation costs
-                    ;
+                    * state.hourlyResults->HydroUsage[state.hourInTheWeek].PompageHoraire));
 
         auto reserves = state.problemeHebdo->allReserves[area->index];
         for (const auto& reserveUp : reserves.areaCapacityReservationsUp)
@@ -287,10 +285,13 @@ public:
                      * reserveDown.spillageCost;
         }
         
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          += costForSpilledOrUnsuppliedEnergy
+             + state.reserveParticipationCostForYear[state.hourInTheYear];
 
         // Incrementing annual system cost (to be printed in output into a separate file)
-        state.annualSystemCost += costForSpilledOrUnsuppliedEnergy;
+        state.annualSystemCost += costForSpilledOrUnsuppliedEnergy
+                                  + state.reserveParticipationCostForYear[state.hourInTheYear];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

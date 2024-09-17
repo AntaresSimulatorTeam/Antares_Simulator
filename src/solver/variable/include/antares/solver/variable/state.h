@@ -138,6 +138,8 @@ public:
     */
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
+
+    void calculateReserveParticipationCosts();
     
     void initFromHydroStorage();
 
@@ -170,7 +172,6 @@ private:
       const std::array<uint, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
-    void yearEndBuildCalculateReserveParticipationCosts();
 
     std::array<uint, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
       const uint& maxDurationON,
@@ -271,9 +272,20 @@ public:
         }
     };
 
-    //! Reserve Participation for all clusters per reserve
+    //! Reserve Participation for each thermal cluster per reserve
     std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, DetailledParticipation>>>
-      reserveParticipationPerClusterForYear{HOURS_PER_YEAR};
+      reserveParticipationPerThermalClusterForYear{HOURS_PER_YEAR};
+
+    //! Reserve Participation for each STStorage cluster per reserve
+    std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, double>>>
+        reserveParticipationPerSTStorageClusterForYear{ HOURS_PER_YEAR };
+
+    //! Reserve Participation for each LTStorage cluster per reserve
+    std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, double>>>
+        reserveParticipationPerLTStorageClusterForYear{ HOURS_PER_YEAR };
+    
+    //! Reserve Participation cost for the whole year
+    double reserveParticipationCostForYear[HOURS_PER_YEAR];
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)

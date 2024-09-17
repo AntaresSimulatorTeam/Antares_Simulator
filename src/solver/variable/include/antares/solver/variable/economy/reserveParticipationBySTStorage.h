@@ -178,29 +178,6 @@ public:
 
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
-        // Get end year calculations
-        if (pSize)
-        {
-            for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
-                 i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
-                 ++i)
-            {
-                for (auto it = state.reserveParticipationPerClusterForYear[i].begin(); it != state.reserveParticipationPerClusterForYear[i].end(); ++it)
-                {
-                    auto ClusterId = it->first;
-                    for (auto const& [reserveName, reserveParticipation] :
-                         state.reserveParticipationPerClusterForYear[i][ClusterId])
-                    {
-                        pValuesForTheCurrentYear
-                          [numSpace][state.area->reserveParticipationSTStorageClustersIndexMap.get(
-                                       std::make_pair(reserveName, ClusterId))]
-                            .hour[i]
-                          = reserveParticipation.totalParticipation;
-                    }
-                }
-            }
-        }
-
         // Next variable
         NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
@@ -250,6 +227,19 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        for (auto&  [clusterName, _] : state.reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear])
+        {
+            for (const auto& [reserveName, reserveParticipation]:
+                 state.reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear][clusterName])
+            {
+                pValuesForTheCurrentYear[numSpace]
+                                        [state.area->reserveParticipationSTStorageClustersIndexMap
+                                           .get(std::make_pair(reserveName, clusterName))]
+                                          .hour[state.hourInTheYear]
+                  = reserveParticipation;
+            }
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }

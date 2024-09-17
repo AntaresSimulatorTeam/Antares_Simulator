@@ -201,17 +201,6 @@ public:
 
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
-        // Get end year calculations
-        for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
-             i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
-             ++i)
-        {
-            pValuesForTheCurrentYear[numSpace][i]
-              += state.thermalClusterReserveParticipationCostForYear[i]
-                 + state.STStorageClusterReserveParticipationCostForYear[i]
-                 + state.LTStorageClusterReserveParticipationCostForYear[i];
-        }
-
         // Next variable
         NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
@@ -253,6 +242,10 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          += state.thermalClusterReserveParticipationCostForYear[state.hourInTheYear]
+             + state.STStorageClusterReserveParticipationCostForYear[state.hourInTheYear]
+             + state.LTStorageClusterReserveParticipationCostForYear[state.hourInTheYear];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }

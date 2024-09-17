@@ -209,8 +209,9 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
               .shortTermStorageGroupsReserveParticipation[STStorageCluster->properties.getGroup()][resName]
               += participation;
 
-            reserveParticipationPerClusterForYear[hourInTheYear][STStorageCluster->id][resName]
-              .addParticipation(participation);
+            reserveParticipationPerSTStorageClusterForYear[hourInTheYear][STStorageCluster->id]
+                                                          [resName]
+              += participation;
         }
     }
 }
@@ -232,8 +233,9 @@ void State::initFromHydroStorage()
             LTStorageClusterReserveParticipationCostForYear[hourInTheYear]
               += participation * LTStorage.reserveCost(resName);
 
-            reserveParticipationPerClusterForYear[hourInTheYear]["LongTermStorage"][resName]
-              .addParticipation(participation);
+            reserveParticipationPerLTStorageClusterForYear[hourInTheYear]["LongTermStorage"]
+                                                          [resName]
+              += participation;
         }
     }
 }
@@ -342,10 +344,10 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
                   .thermalGroupsReserveParticipation[thermalCluster->groupID][res]
                   += participationOn + participationOff;
 
-                reserveParticipationPerClusterForYear[hourInTheYear][thermalCluster->name()][res]
+                reserveParticipationPerThermalClusterForYear[hourInTheYear][thermalCluster->name()][res]
                   .addOffParticipation(participationOff);
 
-                reserveParticipationPerClusterForYear[hourInTheYear][thermalCluster->name()][res]
+                reserveParticipationPerThermalClusterForYear[hourInTheYear][thermalCluster->name()][res]
                   .addOnParticipation(participationOn);
             }
             else
@@ -499,11 +501,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
     // Calculation of non linear and startup costs
     yearEndBuildThermalClusterCalculateStartupCosts(maxDurationON, ON_min, ON_opt, currentCluster);
-    // Calculation of reserve participation costs
-    yearEndBuildCalculateReserveParticipationCosts();
 }
 
-void State::yearEndBuildCalculateReserveParticipationCosts()
+void State::calculateReserveParticipationCosts()
 {
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
     {
@@ -512,7 +512,7 @@ void State::yearEndBuildCalculateReserveParticipationCosts()
             = startHourForCurrentYear + study.runtime.rangeLimits.hour[Data::rangeCount];
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
-            thermalClusterOperatingCostForYear[h]
+            reserveParticipationCostForYear[h]
               += thermalClusterReserveParticipationCostForYear[h]
                  + STStorageClusterReserveParticipationCostForYear[h]
                  + LTStorageClusterReserveParticipationCostForYear[h];

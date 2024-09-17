@@ -128,35 +128,14 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuildForEachLongTermStorage(State& state, uint year, unsigned int numSpace)
+    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
-        if (pSize)
-        {
-            for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
-                 i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
-                 ++i)
-            {
-                if (state.reserveParticipationPerClusterForYear[i].size())
-                {
-                    for (auto const& [reserveName, reserveParticipation] :
-                         state.reserveParticipationPerClusterForYear[i]["LongTermStorage"])
-                    {
-                        pValuesForTheCurrentYear[numSpace]
-                                                [state.area->reserveParticipationLTStorageIndexMap
-                                                   .get(reserveName)]
-                            .hour[i]
-                          = reserveParticipation;
-                    }
-                }
-            }
-        }
-
-        NextType::yearEndBuildForEachLongTermStorage(state, year, numSpace);
+        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -190,6 +169,18 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        if (state.reserveParticipationPerLTStorageClusterForYear[state.hourInTheYear].size())
+        {
+            for (const auto& [reserveName, reserveParticipation] :
+                state.reserveParticipationPerLTStorageClusterForYear[state.hourInTheYear]["LongTermStorage"])
+            {
+                pValuesForTheCurrentYear[numSpace][state.area->reserveParticipationLTStorageIndexMap
+                    .get(reserveName)]
+                    .hour[state.hourInTheYear]
+                    = reserveParticipation;
+            }
+        }
+
         NextType::hourForEachArea(state, numSpace);
     }
 

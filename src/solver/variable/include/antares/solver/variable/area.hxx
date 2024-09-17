@@ -393,6 +393,8 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
           // Ajout de l'initialisation pour l'hydro (long terme)
           state.initFromHydroStorage();
 
+          // Calculation of reserve participation costs
+          state.calculateReserveParticipationCosts();
 
           // Variables
           auto& variablesForArea = pAreas[area.index];

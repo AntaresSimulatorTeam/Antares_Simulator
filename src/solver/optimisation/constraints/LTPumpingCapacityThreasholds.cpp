@@ -35,7 +35,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.Pumping(globalClusterIdx, -1).lessThan();
+                builder.Pumping(pays, -1).lessThan();
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
@@ -67,7 +67,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.Pumping(globalClusterIdx, 1).lessThan();
+                builder.Pumping(pays, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
                   .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds
                     [globalClusterIdx]
