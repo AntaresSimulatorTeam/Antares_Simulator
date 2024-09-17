@@ -227,6 +227,8 @@ if (NOT ortools_FOUND OR BUILD_ORTOOLS)
     # So we need to activate Sirius in or-tools configuration (OFF by default)
     set(USE_SIRIUS "ON" CACHE INTERNAL "")
     set(ortools_REPO "https://github.com/google/or-tools")
+    string(REGEX MATCH "^[^-]+" OFFICIAL_TAG ${INPUT_STRING})
+    set(ortools_REF ${OFFICIAL_TAG})
 
     FetchContent_MakeAvailable(ortools)
 endif ()
