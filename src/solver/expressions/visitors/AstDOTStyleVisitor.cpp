@@ -43,7 +43,7 @@ static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
 std::string GetLegend(
-  const std::unordered_map<std::string, std::unordered_map<const Nodes::Node*, unsigned int>>
+  const std::unordered_map<std::string, std::unordered_map<const Nodes::Node*, unsigned int>>&
     nodeIds)
 {
     std::ostringstream result;
