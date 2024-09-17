@@ -31,7 +31,7 @@ namespace Antares::Solver::Visitors
  */
 struct PortfieldSubstitutionContext
 {
-    std::unordered_set<Nodes::PortFieldNode*> variables;
+    std::unordered_set<Nodes::PortFieldNode*> portfield;
 };
 
 /**

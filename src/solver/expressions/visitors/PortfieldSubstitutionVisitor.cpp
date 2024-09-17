@@ -37,10 +37,9 @@ Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* nod
     // This search has linear complexity
     // To get a search of log complexity, we need to use std::unordered_set::find
     // But std::unordered_set::find_if does not exist
-    auto it = std::find_if(ctx_.variables.begin(),
-                           ctx_.variables.end(),
-                           [&node](auto* x) { return *x == *node; });
-    if (it != ctx_.variables.end())
+    auto it = std::ranges::find_if(ctx_.portfield,
+                                  [&node](auto* x) { return *x == *node; });
+    if (it != ctx_.portfield.end())
     {
         return *it;
     }
