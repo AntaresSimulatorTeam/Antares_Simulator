@@ -40,37 +40,37 @@ static auto buildAllTypeNode(Registry<Node>& registry)
 {
     const std::string expected_msg = R"raw(digraph ExpressionTree {
 node[style = filled]
-  1 [label=">=", shape="oval", style="filled, rounded", color="beige"];
+  1 [label=">=", shape="diamond", style="filled, rounded", color="yellow"];
   1 -> 2;
   1 -> 3;
-  2 [label="54.000000", shape="box", style="filled, solid", color="lightcyan"];
-  3 [label="<=", shape="oval", style="filled, rounded", color="beige"];
+  2 [label="54.000000", shape="box", style="filled, solid", color="lightgray"];
+  3 [label="<=", shape="diamond", style="filled, rounded", color="yellow"];
   3 -> 4;
   3 -> 5;
-  4 [label="53.000000", shape="box", style="filled, solid", color="lightcyan"];
-  5 [label="==", shape="oval", style="filled, rounded", color="beige"];
+  4 [label="53.000000", shape="box", style="filled, solid", color="lightgray"];
+  5 [label="==", shape="diamond", style="filled, rounded", color="yellow"];
   5 -> 6;
   5 -> 7;
-  6 [label="-", shape="oval", style="filled, rounded", color="moccasin"];
+  6 [label="-", shape="oval", style="filled, rounded", color="aqua"];
   6 -> 8;
   6 -> 9;
-  8 [label="CV(1150,otherStation)", shape="box", style="filled, solid", color="goldenrod"];
-  9 [label="CP(1151,otherConstant)", shape="box", style="filled, solid", color="palegreen"];
+  8 [label="CV(1150,otherStation)", shape="octagon", style="filled, solid", color="goldenrod"];
+  9 [label="CP(1151,otherConstant)", shape="octagon", style="filled, solid", color="springgreen"];
   7 [label="+", shape="hexagon", style="filled, solid", color="aqua"];
   7 -> 10;
-  10 [label="/", shape="oval", style="filled, rounded", color="moccasin"];
+  10 [label="/", shape="oval", style="filled, rounded", color="aqua"];
   10 -> 11;
   10 -> 12;
   11 [label="Var(atoms_count)", shape="box", style="filled, solid", color="gold"];
-  12 [label="*", shape="oval", style="filled, rounded", color="moccasin"];
+  12 [label="*", shape="oval", style="filled, rounded", color="aqua"];
   12 -> 13;
   12 -> 14;
-  13 [label="-", shape="square", style="filled, solid", color="navajowhite"];
+  13 [label="-", shape="invtriangle", style="filled, solid", color="tomato"];
   13 -> 15;
-  15 [label="-40.000000", shape="box", style="filled, solid", color="lightcyan"];
-  14 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="palegreen"];
+  15 [label="-40.000000", shape="box", style="filled, solid", color="lightgray"];
+  14 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
   7 -> 16;
-  16 [label="PF(gasStation,1149)", shape="invtriangle", style="filled, solid", color="powderblue"];
+  16 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
 }
 )raw";
 

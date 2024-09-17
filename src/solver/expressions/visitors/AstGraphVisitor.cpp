@@ -27,15 +27,15 @@ namespace Antares::Solver::Visitors
 {
 
 static constexpr BoxStyle SumStyle{"aqua", "hexagon", "filled, solid"};
-static constexpr BoxStyle BinaryStyle{"moccasin", "oval", "filled, rounded"};
-static constexpr BoxStyle ComparisonStyle{"beige", "oval", "filled, rounded"};
-static constexpr BoxStyle NegationStyle{"navajowhite", "square", "filled, solid"};
-static constexpr BoxStyle LiteralStyle{"lightcyan", "box", "filled, solid"};
+static constexpr BoxStyle BinaryStyle{"aqua", "oval", "filled, rounded"};
+static constexpr BoxStyle ComparisonStyle{"yellow", "diamond", "filled, rounded"};
+static constexpr BoxStyle NegationStyle{"tomato", "invtriangle", "filled, solid"};
+static constexpr BoxStyle LiteralStyle{"lightgray", "box", "filled, solid"};
 static constexpr BoxStyle VariableStyle{"gold", "box", "filled, solid"};
-static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "box", "filled, solid"};
-static constexpr BoxStyle ParameterStyle{"palegreen", "box", "filled, solid"};
-static constexpr BoxStyle ComponentParameterStyle{"palegreen", "box", "filled, solid"};
-static constexpr BoxStyle PortFieldStyle{"powderblue", "invtriangle", "filled, solid"};
+static constexpr BoxStyle ParameterStyle{"wheat", "box", "filled, solid"};
+static constexpr BoxStyle ComponentParameterStyle{"springgreen", "octagon", "filled, solid"};
+static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled, solid"};
+static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 
 void AstGraphVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
