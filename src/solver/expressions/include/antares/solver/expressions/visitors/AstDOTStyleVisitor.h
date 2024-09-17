@@ -167,7 +167,7 @@ private:
      *
      * This map is used to keep track of assigned IDs for each node in the AST.
      */
-    std::unordered_map<const Nodes::Node*, unsigned int> nodeIds_;
+    std::unordered_map<std::string, std::unordered_map<const Nodes::Node*, unsigned int>> nodeIds_;
 
     /**
      * @brief Counter for generating unique node IDs.

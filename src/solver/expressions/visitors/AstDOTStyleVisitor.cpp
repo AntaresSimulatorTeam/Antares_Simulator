@@ -21,6 +21,9 @@
 
 #include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 
+#include <algorithm>
+#include <ranges>
+
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
 namespace Antares::Solver::Visitors
@@ -38,6 +41,38 @@ static constexpr BoxStyle ComponentParameterStyle{"springgreen", "octagon", "fil
 static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled, solid"};
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
+
+std::string GetLegend(
+  const std::unordered_map<std::string, std::unordered_map<const Nodes::Node*, unsigned int>>
+    nodeIds)
+{
+    std::ostringstream result;
+    result << R"raw(subgraph cluster_legend {
+label = "Legend";
+style = dashed;
+fontsize = 16;
+color = lightgrey;
+node [shape=plaintext];
+
+)raw";
+    std::ostringstream rank_fit;
+    std::vector<std::string> legend_id;
+    for (const auto& [node_type, id_map]: nodeIds)
+    {
+        legend_id.push_back("legend_" + node_type);
+
+        result << legend_id.back() << " [ label =\" " << node_type << ": " << id_map.size()
+               << "\"]\n";
+    }
+
+    for (int count(0); count < legend_id.size() - 1; ++count)
+    {
+        result << legend_id[count] << " -> " << legend_id[count + 1] << "[style=invis];\n";
+    }
+
+    result << "}\n";
+    return result.str();
+}
 
 void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
@@ -142,11 +177,17 @@ std::string AstDOTStyleVisitor::name() const
 
 unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
 {
-    if (nodeIds_.find(node) == nodeIds_.end())
+    const auto& node_name = node->name();
+    if (nodeIds_.find(node_name) == nodeIds_.end())
     {
-        nodeIds_[node] = ++nodeCount_;
+        nodeIds_[node->name()][node] = ++nodeCount_;
     }
-    return nodeIds_[node];
+    else if (auto& id_map = nodeIds_[node_name]; id_map.find(node) == id_map.end())
+    {
+        id_map[node] = ++nodeCount_;
+    }
+
+    return nodeIds_[node->name()][node];
 }
 
 void AstDOTStyleVisitor::emitNode(int id,
@@ -191,6 +232,7 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     // Graph title showing the total number of nodes
     os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
     os << "labelloc = \"t\"\n";
+    os << GetLegend(nodeIds_);
     os << "}\n";
 }
 
