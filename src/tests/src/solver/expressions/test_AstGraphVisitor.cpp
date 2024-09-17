@@ -36,41 +36,8 @@ using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_AstGraphVisitor_)
 
-BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
+static auto buildAllTypeNode(Registry<Node>& registry)
 {
-    Node* literalNode = create<LiteralNode>(-40.);
-    Node* negationNode = create<NegationNode>(literalNode);
-    Node* parameterNode = create<ParameterNode>("avogadro_constant");
-    Node* multiplicationNode = create<MultiplicationNode>(negationNode, parameterNode);
-    Node* variableNode = create<VariableNode>("atoms_count");
-    Node* divisionNode = create<DivisionNode>(variableNode, multiplicationNode);
-    Node* portFieldNode = create<PortFieldNode>("gasStation", "1149");
-    Node* sumNode = create<SumNode>(divisionNode, portFieldNode);
-    Node* componentVariableNode = create<ComponentVariableNode>("1150", "otherStation");
-    Node* componentParameterNode = create<ComponentParameterNode>("1151", "otherConstant");
-    Node* subtractionNode = create<SubtractionNode>(componentVariableNode, componentParameterNode);
-    Node* equalNode = create<EqualNode>(subtractionNode, sumNode);
-    Node* literalNode2 = create<LiteralNode>(53.);
-    Node* lessThanOrEqualNode = create<LessThanOrEqualNode>(literalNode2, equalNode);
-    Node* literalNode3 = create<LiteralNode>(54.);
-    Node* greaterThanOrEqualNode = create<GreaterThanOrEqualNode>(literalNode3,
-                                                                  lessThanOrEqualNode);
-
-    std::ofstream out("out.dot");
-    std::vector<std::ostream*> ostreams{&out, &std::cout};
-    std::stringstream redirectedStdout;
-    std::streambuf* initialBufferCout = std::cout.rdbuf(redirectedStdout.rdbuf());
-
-    AstGraphVisitor astGraphVisitor;
-    for (auto* os: ostreams)
-    {
-        std::pair<AstGraphVisitor&, Node*> pair1(astGraphVisitor, greaterThanOrEqualNode);
-
-        *os << pair1;
-    }
-    std::cout.rdbuf(initialBufferCout);
-    out.close();
-
     const std::string expected_msg = R"raw(digraph ExpressionTree {
 node[style = filled]
   1 [label=">=", shape="oval", style="filled, rounded", color="beige"];
@@ -107,12 +74,58 @@ node[style = filled]
 }
 )raw";
 
+    Node* literalNode = registry.create<LiteralNode>(-40.);
+    Node* negationNode = registry.create<NegationNode>(literalNode);
+    Node* parameterNode = registry.create<ParameterNode>("avogadro_constant");
+    Node* multiplicationNode = registry.create<MultiplicationNode>(negationNode, parameterNode);
+    Node* variableNode = registry.create<VariableNode>("atoms_count");
+    Node* divisionNode = registry.create<DivisionNode>(variableNode, multiplicationNode);
+    Node* portFieldNode = registry.create<PortFieldNode>("gasStation", "1149");
+    Node* sumNode = registry.create<SumNode>(divisionNode, portFieldNode);
+    Node* componentVariableNode = registry.create<ComponentVariableNode>("1150", "otherStation");
+    Node* componentParameterNode = registry.create<ComponentParameterNode>("1151", "otherConstant");
+    Node* subtractionNode = registry.create<SubtractionNode>(componentVariableNode,
+                                                             componentParameterNode);
+    Node* equalNode = registry.create<EqualNode>(subtractionNode, sumNode);
+    Node* literalNode2 = registry.create<LiteralNode>(53.);
+    Node* lessThanOrEqualNode = registry.create<LessThanOrEqualNode>(literalNode2, equalNode);
+    Node* literalNode3 = registry.create<LiteralNode>(54.);
+    Node* greaterThanOrEqualNode = registry.create<GreaterThanOrEqualNode>(literalNode3,
+                                                                           lessThanOrEqualNode);
+
+    return std::pair{expected_msg, greaterThanOrEqualNode};
+}
+
+BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
+{
+    auto [expected_msg, expr] = buildAllTypeNode(*this);
+
+    const auto filename = std::filesystem::temp_directory_path() / "out.dot";
+    std::ofstream out(filename);
+    std::ostringstream os3;
+    std::vector<std::ostream*> ostreams{&out, &std::cout, &os3};
+    std::stringstream redirectedStdout;
+    std::streambuf* initialBufferCout = std::cout.rdbuf(redirectedStdout.rdbuf());
+
+    AstGraphVisitor astGraphVisitor;
+    for (auto* os: ostreams)
+    {
+        std::pair<AstGraphVisitor&, Node*> pair1(astGraphVisitor, expr);
+
+        *os << pair1;
+    }
+    std::cout.rdbuf(initialBufferCout);
+    out.close();
+
     BOOST_CHECK_EQUAL(expected_msg, redirectedStdout.str());
     // read out.dot content
-    std::ifstream infile("out.dot");
+    std::ifstream infile(filename);
     std::string out_content((std::istreambuf_iterator<char>(infile)),
                             std::istreambuf_iterator<char>());
     BOOST_CHECK_EQUAL(expected_msg, out_content);
+
+    // read the content of os3
+    BOOST_CHECK_EQUAL(expected_msg, os3.str());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
