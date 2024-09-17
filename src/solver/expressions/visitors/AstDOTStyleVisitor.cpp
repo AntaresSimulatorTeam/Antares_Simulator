@@ -25,7 +25,8 @@
 
 namespace Antares::Solver::Visitors
 {
-
+namespace NodeStyle
+{
 static constexpr BoxStyle SumStyle{"aqua", "hexagon", "filled, solid"};
 static constexpr BoxStyle BinaryStyle{"aqua", "oval", "filled, rounded"};
 static constexpr BoxStyle ComparisonStyle{"yellow", "diamond", "filled"};
@@ -36,11 +37,12 @@ static constexpr BoxStyle ParameterStyle{"wheat", "box", "filled, solid"};
 static constexpr BoxStyle ComponentParameterStyle{"springgreen", "octagon", "filled, solid"};
 static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled, solid"};
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
+} // namespace NodeStyle
 
 void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "+", SumStyle, os);
+    emitNode(id, "+", NodeStyle::SumStyle, os);
     for (auto* child: node->getOperands())
     {
         int childId = getNodeID(child);
@@ -51,56 +53,56 @@ void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 
 void AstDOTStyleVisitor::visit(const Nodes::SubtractionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "-", BinaryStyle, os);
+    processBinaryOperation(node, "-", NodeStyle::BinaryStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::MultiplicationNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "*", BinaryStyle, os);
+    processBinaryOperation(node, "*", NodeStyle::BinaryStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::DivisionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "/", BinaryStyle, os);
+    processBinaryOperation(node, "/", NodeStyle::BinaryStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::EqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "==", ComparisonStyle, os);
+    processBinaryOperation(node, "==", NodeStyle::ComparisonStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::LessThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "<=", ComparisonStyle, os);
+    processBinaryOperation(node, "<=", NodeStyle::ComparisonStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, ">=", ComparisonStyle, os);
+    processBinaryOperation(node, ">=", NodeStyle::ComparisonStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "Var(" + node->value() + ")", VariableStyle, os);
+    emitNode(id, "Var(" + node->value() + ")", NodeStyle::VariableStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::ParameterNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "Param(" + node->value() + ")", ParameterStyle, os);
+    emitNode(id, "Param(" + node->value() + ")", NodeStyle::ParameterStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, std::to_string(node->value()), LiteralStyle, os);
+    emitNode(id, std::to_string(node->value()), NodeStyle::LiteralStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "-", NegationStyle, os);
+    emitNode(id, "-", NodeStyle::NegationStyle, os);
     int childId = getNodeID(node->child());
     os << "  " << id << " -> " << childId << ";\n";
     dispatch(node->child(), os);
@@ -111,7 +113,7 @@ void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& o
     int id = getNodeID(node);
     emitNode(id,
              "PF(" + node->getPortName() + "," + node->getFieldName() + ")",
-             PortFieldStyle,
+             NodeStyle::PortFieldStyle,
              os);
 }
 
@@ -120,7 +122,7 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentVariableNode* node, std::os
     int id = getNodeID(node);
     emitNode(id,
              "CV(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             ComponentVariableStyle,
+             NodeStyle::ComponentVariableStyle,
              os);
 }
 
@@ -129,7 +131,7 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::o
     int id = getNodeID(node);
     emitNode(id,
              "CP(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             ComponentParameterStyle,
+             NodeStyle::ComponentParameterStyle,
              os);
 }
 
