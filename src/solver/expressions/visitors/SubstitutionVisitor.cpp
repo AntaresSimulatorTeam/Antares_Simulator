@@ -33,6 +33,23 @@ SubstitutionVisitor::SubstitutionVisitor(Registry<Nodes::Node>& registry, Substi
 {
 }
 
+Nodes::Node* SubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
+{
+    // This search has linear complexity
+    // To get a search of log complexity, we need to use std::unordered_set::find
+    // But std::unordered_set::find_if doesnot exist
+    auto it = std::ranges::find_if(ctx_.portfield,
+            [&node](auto* x) { return x == node; });
+    if (it != ctx_.portfield.end())
+    {
+        return *it;
+    }
+    else
+    {
+        return CloneVisitor::visit(node);
+    }
+}
+
 Nodes::Node* SubstitutionVisitor::visit(const Nodes::ComponentVariableNode* node)
 {
     // This search has linear complexity

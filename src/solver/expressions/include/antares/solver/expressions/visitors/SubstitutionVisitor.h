@@ -34,6 +34,7 @@ namespace Antares::Solver::Visitors
 struct SubstitutionContext
 {
     std::unordered_set<Nodes::ComponentVariableNode*> variables;
+    std::unordered_set<Nodes::PortFieldNode*> portfield;
 };
 
 /**
@@ -52,7 +53,7 @@ public:
     std::string name() const override;
 
 private:
-    // Only override visit method for ComponentVariableNode, clone the rest
     Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
+    Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
 };
 } // namespace Antares::Solver::Visitors
