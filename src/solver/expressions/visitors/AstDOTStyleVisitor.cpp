@@ -64,10 +64,12 @@ node [shape=plaintext];
         result << legend_id.back() << " [ label =\" " << node_type << ": " << id_map.size()
                << "\"]\n";
     }
-
-    for (int count(0); count < legend_id.size() - 1; ++count)
+    if (auto legend_size = legend_id.size(); legend_size > 0)
     {
-        result << legend_id[count] << " -> " << legend_id[count + 1] << "[style=invis];\n";
+        for (int count(0); count < legend_size - 1; ++count)
+        {
+            result << legend_id[count] << " -> " << legend_id[count + 1] << "[style=invis];\n";
+        }
     }
 
     result << "}\n";
@@ -76,11 +78,11 @@ node [shape=plaintext];
 
 void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, "+", NodeStyle::SumStyle, os);
     for (auto* child: node->getOperands())
     {
-        int childId = getNodeID(child);
+        auto childId = getNodeID(child);
         os << "  " << id << " -> " << childId << ";\n";
         dispatch(child, os);
     }
@@ -118,25 +120,25 @@ void AstDOTStyleVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::o
 
 void AstDOTStyleVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, "Var(" + node->value() + ")", NodeStyle::VariableStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::ParameterNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, "Param(" + node->value() + ")", NodeStyle::ParameterStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, std::to_string(node->value()), NodeStyle::LiteralStyle, os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, "-", NodeStyle::NegationStyle, os);
     int childId = getNodeID(node->child());
     os << "  " << id << " -> " << childId << ";\n";
@@ -145,7 +147,7 @@ void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os
 
 void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id,
              "PF(" + node->getPortName() + "," + node->getFieldName() + ")",
              NodeStyle::PortFieldStyle,
@@ -154,7 +156,7 @@ void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& o
 
 void AstDOTStyleVisitor::visit(const Nodes::ComponentVariableNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id,
              "CV(" + node->getComponentId() + "," + node->getComponentName() + ")",
              NodeStyle::ComponentVariableStyle,
@@ -163,7 +165,7 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentVariableNode* node, std::os
 
 void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id,
              "CP(" + node->getComponentId() + "," + node->getComponentName() + ")",
              NodeStyle::ComponentParameterStyle,
@@ -205,14 +207,14 @@ void AstDOTStyleVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
                                                 const BoxStyle& box_style,
                                                 std::ostream& os)
 {
-    int id = getNodeID(node);
+    auto id = getNodeID(node);
     emitNode(id, label, box_style, os);
 
     const Nodes::Node* left = node->left();
     const Nodes::Node* right = node->right();
 
-    int leftId = getNodeID(left);
-    int rightId = getNodeID(right);
+    auto leftId = getNodeID(left);
+    auto rightId = getNodeID(right);
 
     os << "  " << id << " -> " << leftId << ";\n";
     os << "  " << id << " -> " << rightId << ";\n";
