@@ -119,6 +119,16 @@ public:
     void initFromShortTermStorageClusterIndex(const unsigned int areaWideIndex);
 
     /*!
+     ** \brief Initialize some variable according a long term storage cluster index
+     **
+     ** We assume here that the variables related to an area
+     ** are properly initialized.
+     **
+     ** \param areaWideIndex Index of the long term storage cluster for the current area
+     */
+    void initFromLongTermStorageClusterIndex(const unsigned int areaWideIndex);
+
+    /*!
     ** \brief End the year by smoothing the thermal units run
     ** and computing costs.
     ** We assume here that the variables related to an area
@@ -206,9 +216,6 @@ public:
     //! The current Short Term Storage cluster
     Data::ShortTermStorage::STStorageCluster* STStorageCluster;
 
-    //std::map<Data::AreaName, std::map<Data::ReserveName, double>>
-    //  reserveParticipationPerLTStorageForYear[Variable::maxHoursInAYear];
-
 
 
     //! The current renewable cluster
@@ -236,7 +243,7 @@ public:
     double thermalClusterProductionForYear[HOURS_PER_YEAR];
 
     //! All type of clusters reserves participations
-    std::vector<ReserveParticipationPerGroupForYear> reserveParticipationForYear{
+    std::vector<ReserveParticipationPerGroupForYear> reserveParticipationPerGroupForYear{
       HOURS_PER_YEAR};
 
 
@@ -267,12 +274,6 @@ public:
     //! Reserve Participation for all clusters per reserve
     std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, DetailledParticipation>>>
       reserveParticipationPerClusterForYear{HOURS_PER_YEAR};
-
-    std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, double>>>
-      reserveParticipationPerLTStorageForYear{HOURS_PER_YEAR};
-
-    std::vector<std::map<Data::ClusterName, std::map<Data::ReserveName, double>>>
-      thermalReserveParticipationPerClusterForYear{HOURS_PER_YEAR};
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)

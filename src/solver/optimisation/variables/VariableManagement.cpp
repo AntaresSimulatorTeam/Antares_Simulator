@@ -286,24 +286,6 @@ int& VariableManager::ShortTermStorageLevel(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].SIM_ShortTermStorage.LevelVariable[index];
 }
 
-int& VariableManager::LongTermStorageInjection(unsigned int index,
-                                                unsigned int hourInWeek,
-                                                int offset,
-                                                int delta)
-{
-    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt].SIM_LongTermStorage.InjectionVariable[index];
-}
-
-int& VariableManager::LongTermStorageWithdrawal(unsigned int index,
-                                                 unsigned int hourInWeek,
-                                                 int offset,
-                                                 int delta)
-{
-    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt].SIM_LongTermStorage.WithdrawalVariable[index];
-}
-
 int& VariableManager::HydProd(unsigned int index, unsigned int hourInWeek, int offset, int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);

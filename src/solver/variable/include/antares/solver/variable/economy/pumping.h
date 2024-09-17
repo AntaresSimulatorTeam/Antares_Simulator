@@ -235,8 +235,9 @@ public:
     {
         // Retrieving the hourly pumping energy
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = state.hourlyResults
-                                                                         ->PompageHoraire
-                                                                           [state.hourInTheWeek];
+                                                                         ->HydroUsage
+                                                                           [state.hourInTheWeek]
+                                                                         .PompageHoraire;
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

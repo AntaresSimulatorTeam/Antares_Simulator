@@ -88,11 +88,6 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> LevelVariable;
     } SIM_ShortTermStorage;
 
-    struct
-    {
-        std::vector<int> InjectionVariable;
-        std::vector<int> WithdrawalVariable;
-    } SIM_LongTermStorage;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES
@@ -198,34 +193,6 @@ struct CONTRAINTES_COUPLANTES
 
     std::shared_ptr<Data::BindingConstraint> bindingConstraint;
 };
-
-namespace LongTermStorage
-{
-struct PROPERTIES
-{
-    double reservoirCapacity;
-    double maxProduction;
-    double maxPumping;
-    double efficiency;
-    double initialLevel;
-
-    std::shared_ptr<Antares::Data::DataSeriesHydro> series;
-
-    int clusterGlobalIndex;
-    std::string name;
-};
-
-using AREA_INPUT = std::vector<::LongTermStorage::PROPERTIES>; 
-
-
-struct RESULTS
-{
-    std::vector<double> level;                         // MWh
-    std::vector<double> production;                    // MWh
-    std::vector<double> pumping;                       // MWh
-    std::vector<double> reserveParticipationOfCluster; // MWh
-};
-} 
 
 namespace ShortTermStorage
 {
@@ -396,6 +363,8 @@ struct PALIERS_THERMIQUES
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 {
+    int GlobalHydroIndex;
+
     std::vector<double> MinEnergieHydrauParIntervalleOptimise;
     std::vector<double> MaxEnergieHydrauParIntervalleOptimise;
 
@@ -442,73 +411,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
                                       bounding constraint on final level*/
 };
 
-class computeTimeStepLevel
-{
-private:
-    int step;
-    double level;
-
-    double capacity;
-    std::vector<double>& inflows;
-    std::vector<double>& ovf;
-    std::vector<double>& turb;
-    double pumpRatio;
-    std::vector<double>& pump;
-    double excessDown;
-
-public:
-    computeTimeStepLevel(const double& startLvl,
-                         std::vector<double>& infl,
-                         std::vector<double>& overfl,
-                         std::vector<double>& H,
-                         double pumpEff,
-                         std::vector<double>& Pump,
-                         double rc):
-        step(0),
-        level(startLvl),
-        capacity(rc),
-        inflows(infl),
-        ovf(overfl),
-        turb(H),
-        pumpRatio(pumpEff),
-        pump(Pump),
-        excessDown(0.)
-    {
-    }
-
-    void run()
-    {
-        excessDown = 0.;
-
-        level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
-
-        if (level > capacity)
-        {
-            ovf[step] = level - capacity;
-            level = capacity;
-        }
-
-        if (level < 0)
-        {
-            excessDown = -level;
-            level = 0.;
-            inflows[step] += excessDown;
-        }
-    }
-
-    void prepareNextStep()
-    {
-        step++;
-
-        inflows[step] -= excessDown;
-    }
-
-    double getLevel()
-    {
-        return level;
-    }
-};
-
 struct RESERVE_JMOINS1
 {
     std::vector<double> ReserveHoraireJMoins1;
@@ -530,6 +432,83 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
 };
 
+struct OPTIMAL_HYDRO_USAGE
+{
+    double PompageHoraire;
+    double TurbinageHoraire;
+
+    double niveauxHoraires;
+    double valeurH2oHoraire;
+
+    double debordementsHoraires;
+
+    std::vector<double> reserveParticipationOfCluster; // MWh
+};
+
+class computeTimeStepLevel
+{
+private:
+    int step;
+    double level;
+
+    double capacity;
+    std::vector<double>& inflows;
+    std::vector<OPTIMAL_HYDRO_USAGE>& hydroUsage;
+    double pumpRatio;
+    double excessDown;
+
+public:
+    computeTimeStepLevel(const double& startLvl,
+                         std::vector<double>& infl,
+                         std::vector<OPTIMAL_HYDRO_USAGE>& hydroUsage,
+                         double pumpEff,
+                         double rc):
+        step(0),
+        level(startLvl),
+        inflows(infl),
+        hydroUsage(hydroUsage),
+        capacity(rc),
+        pumpRatio(pumpEff),
+        excessDown(0.)
+    {
+    }
+
+    void run()
+    {
+        excessDown = 0.;
+
+        auto& hydroUsageStep = hydroUsage[step];
+
+        level = level + inflows[step] - hydroUsageStep.TurbinageHoraire
+                + pumpRatio * hydroUsageStep.PompageHoraire;
+
+        if (level > capacity)
+        {
+            hydroUsageStep.debordementsHoraires = level - capacity;
+            level = capacity;
+        }
+
+        if (level < 0)
+        {
+            excessDown = -level;
+            level = 0.;
+            inflows[step] += excessDown;
+        }
+    }
+
+    void prepareNextStep()
+    {
+        step++;
+        inflows[step] -= excessDown;
+    }
+
+    double getLevel()
+    {
+        return level;
+    }
+};
+
+
 struct RESERVES
 {
     std::vector<double> ValeursHorairesInternalUnsatisfied;
@@ -546,20 +525,14 @@ struct RESULTATS_HORAIRES
 
     std::vector<double> ValeursHorairesDeDefaillanceNegative;
 
-    std::vector<double> PompageHoraire;
-    std::vector<double> TurbinageHoraire;
 
-    std::vector<double> niveauxHoraires;
-    std::vector<double> valeurH2oHoraire;
-
-    std::vector<double> debordementsHoraires;
 
     std::vector<double> CoutsMarginauxHoraires;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
+    std::vector<OPTIMAL_HYDRO_USAGE> HydroUsage; // index is pdtHebdo
     std::vector<RESERVES> Reserves;
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
-    std::vector<::LongTermStorage::RESULTS> LongTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -635,7 +608,6 @@ struct PROBLEME_HEBDO
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     uint32_t NumberOfLongTermStorages = 0;
-    std::vector<::LongTermStorage::AREA_INPUT> LongTermStorage;
 
     /* Optimization problem */
     uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;

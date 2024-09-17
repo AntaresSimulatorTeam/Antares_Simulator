@@ -118,7 +118,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.previousSimulationFinalLevel.assign(nbPays, 0.);
 
     problem.ShortTermStorage.resize(nbPays);
-    problem.LongTermStorage.resize(nbPays);
     problem.allReserves.resize(nbPays);
 
     problem.ReserveJMoins1.resize(nbPays);
@@ -218,11 +217,6 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.LevelVariable.assign(shortTermStorageCount, 0);
-
-        variablesMapping.SIM_LongTermStorage.InjectionVariable
-            .assign(longTermStorageCount, 0);
-        variablesMapping.SIM_LongTermStorage.WithdrawalVariable
-            .assign(longTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays
           .assign(nbPays, 0);
@@ -465,15 +459,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
                                                                                  0.);
-        problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
+        
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].niveauxHoraires.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].valeurH2oHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].debordementsHoraires.assign(NombreDePasDeTemps, 0.);
 
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
+        problem.ResultatsHoraires[k].HydroUsage.resize(NombreDePasDeTemps);
         problem.ResultatsHoraires[k].Reserves.resize(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
@@ -528,6 +519,9 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
               nbReserves, 0.);
             problem.ResultatsHoraires[k].Reserves[j].ValeursHorairesInternalExcessReserve.assign(
               nbReserves, 0.);
+            problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster.assign(
+              nbReserves,
+              0.);
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
@@ -540,19 +534,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].reserveParticipationOfCluster.assign(
               nbSTStorageReserveParticipations, 0.);
-        }
-
-        // Long term storage results
-        const unsigned long nbLongTermStorage
-          = study.areas.byIndex[k]->hydro.reserveParticipationsCount();
-        problem.ResultatsHoraires[k].LongTermStorage.resize(NombreDePasDeTemps);
-        for (uint pdt = 0; pdt < NombreDePasDeTemps; pdt++)
-        {
-            problem.ResultatsHoraires[k].LongTermStorage[pdt].production.resize(nbLongTermStorage);
-            problem.ResultatsHoraires[k].LongTermStorage[pdt].pumping.resize(nbLongTermStorage);
-            problem.ResultatsHoraires[k].LongTermStorage[pdt].level.resize(nbLongTermStorage);
-            problem.ResultatsHoraires[k].LongTermStorage[pdt].reserveParticipationOfCluster.assign(
-              nbLTStorageReserveParticipations, 0.);
         }
     }
 }

@@ -197,9 +197,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                         Xmax[var] = LINFINI_ANTARES;
                         double* adresseDuResultat
                           = &(problemeHebdo->ResultatsHoraires[pays]
-                                .LongTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
+                                .HydroUsage[pdtHebdo]
+                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                     }
                     if (clusterReserveParticipation.maxPumping > 0)
@@ -211,9 +210,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                         Xmax[var] = LINFINI_ANTARES;
                         double* adresseDuResultat
                           = &(problemeHebdo->ResultatsHoraires[pays]
-                                .LongTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
+                                .HydroUsage[pdtHebdo]
+                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                     }
                     if ((clusterReserveParticipation.maxPumping > 0)
@@ -226,9 +224,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                         Xmax[var] = LINFINI_ANTARES;
                         double* adresseDuResultat1
                           = &(problemeHebdo->ResultatsHoraires[pays]
-                                .LongTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
+                                .HydroUsage[pdtHebdo]
+                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat1;
                     }
                 }
@@ -349,9 +346,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                         Xmax[var] = LINFINI_ANTARES;
                         double* adresseDuResultat
                           = &(problemeHebdo->ResultatsHoraires[pays]
-                                .LongTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
+                                .HydroUsage[pdtHebdo]
+                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                     }
                     if (clusterReserveParticipation.maxPumping > 0)
@@ -363,9 +359,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                         Xmax[var] = LINFINI_ANTARES;
                         double* adresseDuResultat
                           = &(problemeHebdo->ResultatsHoraires[pays]
-                                .LongTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
+                                .HydroUsage[pdtHebdo]
+                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                     }
                     if ((clusterReserveParticipation.maxPumping > 0)
@@ -378,9 +373,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                         Xmax[var] = LINFINI_ANTARES;
                         double* adresseDuResultat
                           = &(problemeHebdo->ResultatsHoraires[pays]
-                                .LongTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
+                                .HydroUsage[pdtHebdo]
+                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                     }
                 }

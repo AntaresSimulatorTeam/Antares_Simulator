@@ -269,16 +269,18 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                            }
                        }
                    }
-                   for (const auto& cluster : problemeHebdo->LongTermStorage[pays])
+
+                   auto& hydroCluster = problemeHebdo->CaracteristiquesHydrauliques[pays];
+                   if (hydroCluster.PresenceDHydrauliqueModulable)
                    {
-                       int globalClusterIdx = cluster.clusterGlobalIndex;
+                       int globalClusterIdx = hydroCluster.GlobalHydroIndex;
                        int cnt1
                          = CorrespondanceCntNativesCntOptim
                              .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds
                                [globalClusterIdx];
                        if (cnt1 >= 0)
                        {
-                           SecondMembre[cnt1] = cluster.maxProduction;
+                           SecondMembre[cnt1] = hydroCluster.ContrainteDePmaxHydrauliqueHoraire[pdtJour];
                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
                        }
 
@@ -288,7 +290,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                                [globalClusterIdx];
                        if (cnt2 >= 0)
                        {
-                           SecondMembre[cnt2] = cluster.maxPumping;
+                           SecondMembre[cnt2] = hydroCluster.ContrainteDePmaxPompageHoraire[pdtJour];
                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
                        }
                    }

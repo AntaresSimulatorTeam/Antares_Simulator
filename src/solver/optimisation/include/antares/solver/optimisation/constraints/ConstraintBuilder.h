@@ -193,15 +193,6 @@ public:
                                              int offset = 0,
                                              int delta = 0);
 
-    ConstraintBuilder& LongTermStorageInjection(unsigned int index, double coeff);
-
-    ConstraintBuilder& LongTermStorageWithdrawal(unsigned int index, double coeff);
-
-    ConstraintBuilder& LongTermStorageLevel(unsigned int index,
-                                             double coeff,
-                                             int offset = 0,
-                                             int delta = 0);
-
     ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
     ConstraintBuilder& HydProdDown(unsigned int index, double coeff);
@@ -372,6 +363,6 @@ struct ReserveData
     std::vector<AREA_RESERVES_VECTOR>& areaReserves;
     std::vector<PALIERS_THERMIQUES>& thermalClusters;
     std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageOfArea;
-    std::vector<::LongTermStorage::AREA_INPUT>& longTermStorageOfArea;
+    std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& longTermStorageOfArea;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };

@@ -170,7 +170,7 @@ public:
     void addReserveParticipation(const std::string& reserveName,
                                  const LTStorageClusterReserveParticipation& participation);
 
-    Data::ReserveName reserveParticipationAt(const Area* area, unsigned int index) const;
+    std::optional<Data::ReserveName> reserveParticipationAt(const Area* area, unsigned int index) const;
 
     //! \brief Returns max turbining power for a reserve if participating, -1 otherwise
     float reserveMaxTurbining(Data::ReserveName name);

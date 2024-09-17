@@ -835,7 +835,7 @@ void PartHydro::addReserveParticipation(const std::string& reserveName,
     reservesParticipations.emplace(reserveName, participation);
 }
 
-Data::ReserveName PartHydro::reserveParticipationAt(const Area* area, unsigned int index) const
+std::optional<Data::ReserveName> PartHydro::reserveParticipationAt(const Area* area, unsigned int index) const
 {
     int globalReserveParticipationIdx = 0;
 
@@ -864,8 +864,7 @@ Data::ReserveName PartHydro::reserveParticipationAt(const Area* area, unsigned i
         }
     }
 
-    throw std::out_of_range(
-      "This reserve participation index has not been found in all the reserve participations");
+    return std::nullopt;
 }
 
 float PartHydro::reserveMaxTurbining(Data::ReserveName name)

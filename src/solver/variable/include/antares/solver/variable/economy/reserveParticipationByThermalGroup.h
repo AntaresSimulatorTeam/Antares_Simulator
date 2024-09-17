@@ -238,7 +238,7 @@ public:
             for (int indexGroup = 0; indexGroup < Antares::Data::groupMax; indexGroup++)
             {
                 pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
-                  += state.reserveParticipationForYear[state.hourInTheYear]
+                  += state.reserveParticipationPerGroupForYear[state.hourInTheYear]
                        .thermalGroupsReserveParticipation[static_cast<Data::ThermalDispatchableGroup>(indexGroup)]
                                      [reserveName];
                 column++;
@@ -249,7 +249,7 @@ public:
             for (int indexGroup = 0; indexGroup < Antares::Data::groupMax; indexGroup++)
             {
                 pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
-                  += state.reserveParticipationForYear[state.hourInTheYear]
+                  += state.reserveParticipationPerGroupForYear[state.hourInTheYear]
                        .thermalGroupsReserveParticipation[static_cast<Data::ThermalDispatchableGroup>(indexGroup)]
                                      [reserveName];
                 column++;

@@ -254,16 +254,18 @@ public:
         // Hydro costs : water value and pumping
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
           += state.problemeHebdo->CaracteristiquesHydrauliques[state.area->index]
-               .WeeklyWaterValueStateRegular
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - area->hydro.pumpingEfficiency
-                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
+                 .WeeklyWaterValueStateRegular
+               * (state.hourlyResults->HydroUsage[state.hourInTheWeek].TurbinageHoraire
+                  - area->hydro.pumpingEfficiency
+                      * state.hourlyResults->HydroUsage[state.hourInTheWeek].PompageHoraire)
+             + state.STStorageClusterReserveParticipationCostForYear[state.hourInTheYear]
+             + state.LTStorageClusterReserveParticipationCostForYear[state.hourInTheYear];
 
         // Thermal costs
-        for (auto& cluster: area->thermal.list.each_enabled())
+        for (auto& cluster: area->thermal.list.all())
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-              += thermal[area->index].thermalClustersOperatingCost[cluster->areaWideIndex];
+                += thermal[area->index].thermalClustersOperatingCost[cluster->areaWideIndex];
         }
 
         // Next variable

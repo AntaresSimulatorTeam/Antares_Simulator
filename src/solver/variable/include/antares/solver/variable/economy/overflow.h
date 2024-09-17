@@ -233,8 +233,9 @@ public:
     {
         // Retrieving hourly reservoir levels of week simulation
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = state.hourlyResults
-                                                                         ->debordementsHoraires
-                                                                           [state.hourInTheWeek];
+                                                                         ->HydroUsage
+                                                                           [state.hourInTheWeek]
+                                                                         .debordementsHoraires;
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

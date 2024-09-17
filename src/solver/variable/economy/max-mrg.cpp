@@ -82,7 +82,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     double OI[168];
 
     // H.STOR
-    std::vector<double>& H = weeklyResults.TurbinageHoraire;
+    auto H = [&weeklyResults](int i) { return weeklyResults.HydroUsage[i].TurbinageHoraire; };
 
     // energie turbinee de la semaine
     {
@@ -94,7 +94,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
             // H.STOR
             for (uint i = offset; i != endHour; ++i)
             {
-                WH += H[i];
+                WH += H(i);
             }
         }
 
@@ -149,12 +149,12 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
             if (niveau > OI[i])
             {
                 opmrg[i] = std::min(niveau,
-                                    OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
+                                    OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H(i));
                 SM += opmrg[i] - OI[i];
             }
             else
             {
-                opmrg[i] = std::max(niveau, OI[i] - H[i]);
+                opmrg[i] = std::max(niveau, OI[i] - H(i));
                 SP += OI[i] - opmrg[i];
             }
         }

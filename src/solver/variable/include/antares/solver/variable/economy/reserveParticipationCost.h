@@ -208,7 +208,8 @@ public:
         {
             pValuesForTheCurrentYear[numSpace][i]
               += state.thermalClusterReserveParticipationCostForYear[i]
-                 + state.STStorageClusterReserveParticipationCostForYear[i];
+                 + state.STStorageClusterReserveParticipationCostForYear[i]
+                 + state.LTStorageClusterReserveParticipationCostForYear[i];
         }
 
         // Next variable

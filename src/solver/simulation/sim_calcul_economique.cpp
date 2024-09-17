@@ -198,8 +198,6 @@ static void importLongTermStorages(AreaList& areas, PROBLEME_HEBDO& problem)
         auto& areaReserves = problem.allReserves[areaIndex];
         auto& ltStorage = area->hydro;
 
-        problem.LongTermStorage[areaIndex].resize(area->hydro.count());
-
         for (int areaReserveIdx = 0; auto const& [reserveName, _] :
                                      area->allCapacityReservations.areaCapacityReservationsUp)
         {
@@ -703,12 +701,14 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     double levelInterpolEnd;
     double delta;
 
+    int nbHydro = 0;
     for (uint k = 0; k < nbPays; ++k)
     {
         auto& area = *study.areas.byIndex[k];
 
         if (area.hydro.reservoirManagement)
         {
+            problem.CaracteristiquesHydrauliques[k].GlobalHydroIndex = nbHydro++;
             problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
               = problem.previousSimulationFinalLevel[k];
 

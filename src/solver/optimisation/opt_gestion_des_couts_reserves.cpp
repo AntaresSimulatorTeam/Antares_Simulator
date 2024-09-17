@@ -79,6 +79,20 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                     }
                 }
 
+                // Long Term Storage clusters
+                for (const auto& clusterReserveParticipation:
+                     reservesDuPays.areaCapacityReservationsUp[index]
+                       .AllLTStorageReservesParticipation)
+                {
+                    if ((clusterReserveParticipation.maxTurbining > 0)
+                        || (clusterReserveParticipation.maxPumping > 0))
+                    {
+                        var = variableManager.LTStorageClusterReserveUpParticipation(
+                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                }
+
                 var = variableManager.InternalExcessReserve(
                   reservesDuPays.areaCapacityReservationsUp[index].globalReserveIndex, pdtHebdo);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -119,6 +133,20 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                         || (clusterReserveParticipation.maxPumping > 0))
                     {
                         var = variableManager.STStorageClusterReserveDownParticipation(
+                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                }
+
+                // Long Term Storage clusters
+                for (const auto& clusterReserveParticipation:
+                     reservesDuPays.areaCapacityReservationsDown[index]
+                       .AllLTStorageReservesParticipation)
+                {
+                    if ((clusterReserveParticipation.maxTurbining > 0)
+                        || (clusterReserveParticipation.maxPumping > 0))
+                    {
+                        var = variableManager.LTStorageClusterReserveDownParticipation(
                           clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
                         CoutLineaire[var] = clusterReserveParticipation.participationCost;
                     }

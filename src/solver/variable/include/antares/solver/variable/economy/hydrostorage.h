@@ -235,7 +235,7 @@ public:
         // Total HydroStorage emissions
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] =
           // Current Hydro Storage generation
-          state.hourlyResults->TurbinageHoraire[state.hourInTheWeek];
+          state.hourlyResults->HydroUsage[state.hourInTheWeek].TurbinageHoraire;
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

@@ -376,11 +376,23 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
           // Initializing the state for the current area
           state.initFromAreaIndex(area.index, numSpace);
 
-          for (const auto& cluster: area.thermal.list.each_enabled())
+          state.initReserveParticipationIndexMaps();
+
+          for (auto cluster: area.thermal.list.all())
           {
               // Intiializing the state for the current thermal cluster
               state.initFromThermalClusterIndex(cluster->areaWideIndex);
           }
+
+          for (int i = 0; i < area.shortTermStorage.storagesByIndex.size(); i++)
+          {
+              // Intiializing the state for the current short term storage cluster
+              state.initFromShortTermStorageClusterIndex(i);
+          }
+
+          // Ajout de l'initialisation pour l'hydro (long terme)
+          state.initFromHydroStorage();
+
 
           // Variables
           auto& variablesForArea = pAreas[area.index];

@@ -56,7 +56,7 @@ ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
             .areaReserves = problemeHebdo_->allReserves,
             .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays,
             .shortTermStorageOfArea = problemeHebdo_->ShortTermStorage,
-            .longTermStorageOfArea = problemeHebdo_->LongTermStorage,
+            .longTermStorageOfArea = problemeHebdo_->CaracteristiquesHydrauliques,
             .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim};
 }
 
@@ -317,13 +317,11 @@ void ReserveParticipationGroup::BuildConstraints()
                 }
 
                 // Long Term Storage Clusters
-                const auto& LTStorageDuPays = problemeHebdo_->LongTermStorage[pays];
-                for (int cluster = 0; cluster < LTStorageDuPays.size(); cluster++)
-                {
+                if (problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable) {
                     // 15 (c)
-                    LTTurbiningCapacityThreasholds.add(pays, cluster, pdt);
+                    LTTurbiningCapacityThreasholds.add(pays, 0, pdt);
                     // 15 (d)
-                    LTPumpingCapacityThreasholds.add(pays, cluster, pdt);
+                    LTPumpingCapacityThreasholds.add(pays, 0, pdt);
                 }
             }
         }

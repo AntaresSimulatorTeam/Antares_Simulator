@@ -2,7 +2,7 @@
 
 void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 {
-    int globalClusterIdx = data.longTermStorageOfArea[pays][cluster].clusterGlobalIndex;
+    int globalClusterIdx = data.longTermStorageOfArea[pays].GlobalHydroIndex;
 
     if (!data.Simulation)
     {
@@ -24,24 +24,24 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllLTStorageReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                        && (data.longTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
-                              .clusterGlobalIndex
-                            == globalClusterIdx))
+                    if (reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
+                    {
                         builder.LTStoragePumpingClusterReserveParticipation(
-                          reserveParticipations.globalIndexClusterParticipation, 1);
+                          reserveParticipations.globalIndexClusterParticipation,
+                          1);
+                    }
                 }
             }
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.LongTermStorageInjection(globalClusterIdx, -1).lessThan();
+                builder.Pumping(globalClusterIdx, -1).lessThan();
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
                 namer.LTPumpingCapacityThreasholds(builder.data.nombreDeContraintes,
-                                                   data.longTermStorageOfArea[pays][cluster].name);
+                                                   "LongTermStorage");
                 builder.build();
             }
         }
@@ -56,18 +56,18 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllLTStorageReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                        && (data.longTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
-                              .clusterGlobalIndex
-                            == globalClusterIdx))
+                    if (reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
+                    {
                         builder.LTStoragePumpingClusterReserveParticipation(
-                          reserveParticipations.globalIndexClusterParticipation, 1);
+                          reserveParticipations.globalIndexClusterParticipation,
+                          1);
+                    }
                 }
             }
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.LongTermStorageInjection(globalClusterIdx, 1).lessThan();
+                builder.Pumping(globalClusterIdx, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
                   .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds
                     [globalClusterIdx]
@@ -77,7 +77,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
                 namer.LTPumpingCapacityThreasholds(builder.data.nombreDeContraintes,
-                                                   data.longTermStorageOfArea[pays][cluster].name);
+                                                   "LongTermStorage");
                 builder.build();
             }
         }
@@ -97,11 +97,10 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllLTStorageReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                        && (data.longTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
-                              .clusterGlobalIndex
-                            == globalClusterIdx))
+                    if (reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
+                    {
                         counter++;
+                    }
                 }
             }
             return counter;

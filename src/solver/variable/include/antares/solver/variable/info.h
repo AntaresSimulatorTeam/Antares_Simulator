@@ -458,7 +458,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                     Economy::VCardReserveParticipationByLTStorage>)
                 {
                     auto reserveName = longTermStorage.reserveParticipationAt(results.data.area, i);
-                    results.variableCaption = reserveName + "_LongTermStorage";
+                    if (reserveName)
+                        results.variableCaption = reserveName.value() + "_LongTermStorage";
                 }
                 else if constexpr (std::is_same_v<
                                      VCardT,
@@ -596,8 +597,15 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                                                   Economy::VCardReserveParticipationByLTStorage>)
                 {
                     auto reserveName = longTermStorage.reserveParticipationAt(results.data.area, i);
-                    results.variableCaption = reserveName + "_LongTermStorage";
-                    res = true;
+                    if (reserveName)
+                    {
+                        results.variableCaption = reserveName.value() + "_LongTermStorage";
+                        res = true;
+                    }
+                    else
+                    {
+                        res = false;
+                    }
                 }
                 else if constexpr (std::is_same_v<
                                      VCardType,

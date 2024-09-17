@@ -61,7 +61,7 @@ static bool Remix(const Data::AreaList& areas,
 
           auto& S = weeklyResults.ValeursHorairesDeDefaillanceNegative;
 
-          auto& H = weeklyResults.TurbinageHoraire;
+          auto& H = weeklyResults.HydroUsage;
 
           memset(remix, 0, sizeof(remix));
           memset(G, 0, sizeof(G));
@@ -88,7 +88,7 @@ static bool Remix(const Data::AreaList& areas,
               {
                   if (S[i] < EPSILON)
                   {
-                      WH += H[i];
+                      WH += H[i].TurbinageHoraire;
                   }
               }
 
@@ -108,7 +108,7 @@ static bool Remix(const Data::AreaList& areas,
 
               for (uint i = offset; i < endHour; ++i)
               {
-                  double h_d = H[i] + D[i];
+                  double h_d = H[i].TurbinageHoraire + D[i];
                   if (h_d > 0. && Utils::isZero(S[i] + M[i]))
                   {
                       double Li = L[i + hourInYear];
@@ -125,7 +125,7 @@ static bool Remix(const Data::AreaList& areas,
                           top = Li;
                       }
 
-                      WH += H[i];
+                      WH += H[i].TurbinageHoraire;
                   }
               }
 
@@ -147,11 +147,11 @@ static bool Remix(const Data::AreaList& areas,
                           uint iYear = i + hourInYear;
                           if (niveau > L[iYear])
                           {
-                              HEi = H[i] + D[i];
+                              HEi = H[i].TurbinageHoraire + D[i];
                               if (HEi > P[i])
                               {
                                   HEi = P[i];
-                                  DE[i] = H[i] + D[i] - HEi;
+                                  DE[i] = H[i].TurbinageHoraire + D[i] - HEi;
                               }
                               else
                               {
@@ -163,7 +163,7 @@ static bool Remix(const Data::AreaList& areas,
                               if (G[i] > niveau)
                               {
                                   HEi = 0;
-                                  DE[i] = H[i] + D[i];
+                                  DE[i] = H[i].TurbinageHoraire + D[i];
                               }
                               else
                               {
@@ -172,7 +172,7 @@ static bool Remix(const Data::AreaList& areas,
                                   {
                                       HEi = P[i];
                                   }
-                                  DE[i] = H[i] + D[i] - HEi;
+                                  DE[i] = H[i].TurbinageHoraire + D[i] - HEi;
                               }
                           }
                           stock += HEi;
@@ -180,7 +180,7 @@ static bool Remix(const Data::AreaList& areas,
                       }
                       else
                       {
-                          HE[i] = H[i];
+                          HE[i] = H[i].TurbinageHoraire;
                           DE[i] = D[i];
                       }
                   }
@@ -206,7 +206,7 @@ static bool Remix(const Data::AreaList& areas,
 
               for (uint i = offset; i != endHour; ++i)
               {
-                  H[i] = HE[i];
+                  H[i].TurbinageHoraire = HE[i];
                   assert(not std::isnan(HE[i]) && "hydro remix: nan detected");
               }
               for (uint i = offset; i != endHour; ++i)

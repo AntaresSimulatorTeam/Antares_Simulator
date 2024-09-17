@@ -233,9 +233,9 @@ public:
     {
         // Hydro costs : storage and pumping
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          += state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - pPumpRatio * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
+          += state.hourlyResults->HydroUsage[state.hourInTheWeek].valeurH2oHoraire
+             * (state.hourlyResults->HydroUsage[state.hourInTheWeek].TurbinageHoraire
+                - pPumpRatio * state.hourlyResults->HydroUsage[state.hourInTheWeek].PompageHoraire);
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

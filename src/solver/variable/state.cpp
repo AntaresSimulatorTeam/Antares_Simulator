@@ -205,7 +205,7 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
             STStorageClusterReserveParticipationCostForYear[hourInTheYear]
               += participation * STStorageCluster->reserveCost(resName);
 
-            reserveParticipationForYear[hourInTheYear]
+            reserveParticipationPerGroupForYear[hourInTheYear]
               .shortTermStorageGroupsReserveParticipation[STStorageCluster->properties.getGroup()][resName]
               += participation;
 
@@ -226,10 +226,9 @@ void State::initFromHydroStorage()
     {
         for (const auto& [resName, resParticipation] : LTStorage.reservesParticipations)
         {
-            double participation
-              = hourlyResults->LongTermStorage[hourInTheWeek]
-                  .reserveParticipationOfCluster[area->reserveParticipationLTStorageIndexMap.get(
-                    resName)];
+            double participation = hourlyResults->HydroUsage[hourInTheWeek]
+                                     .reserveParticipationOfCluster
+                                       [area->reserveParticipationLTStorageIndexMap.get(resName)];
             LTStorageClusterReserveParticipationCostForYear[hourInTheYear]
               += participation * LTStorage.reserveCost(resName);
 
@@ -339,7 +338,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
                   += participationOn * thermalCluster->reserveCost(res)
                      + participationOff * thermalCluster->reserveCostOff(res);
 
-                reserveParticipationForYear[hourInTheYear]
+                reserveParticipationPerGroupForYear[hourInTheYear]
                   .thermalGroupsReserveParticipation[thermalCluster->groupID][res]
                   += participationOn + participationOff;
 

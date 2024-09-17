@@ -136,10 +136,10 @@ public:
                  i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
                  ++i)
             {
-                if (state.reserveParticipationPerLTStorageForYear[i].size())
+                if (state.reserveParticipationPerClusterForYear[i].size())
                 {
                     for (auto const& [reserveName, reserveParticipation] :
-                         state.reserveParticipationPerLTStorageForYear[i]["LongTermStorage"])
+                         state.reserveParticipationPerClusterForYear[i]["LongTermStorage"])
                     {
                         pValuesForTheCurrentYear[numSpace]
                                                 [state.area->reserveParticipationLTStorageIndexMap
