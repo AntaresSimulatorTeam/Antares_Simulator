@@ -209,7 +209,7 @@ if (NOT ortools_FOUND OR BUILD_ORTOOLS)
     message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
     set(FETCHCONTENT_QUIET FALSE)
     FetchContent_Declare(ortools
-            GIT_REPOSITORY "https://github.com/JasonMarechal25/or-tools-rte"
+            GIT_REPOSITORY "https://github.com/JasonMarechal25/or-tools-rte.git"
             GIT_TAG main
             GIT_SHALLOW TRUE
             USES_TERMINAL_DOWNLOAD TRUE
@@ -229,7 +229,7 @@ if (NOT ortools_FOUND OR BUILD_ORTOOLS)
     # In mode optimization error analysis, we call Sirius through or-tools
     # So we need to activate Sirius in or-tools configuration (OFF by default)
     set(USE_SIRIUS "ON" CACHE INTERNAL "")
-    set(ortools_REPO "https://github.com/google/or-tools")
+    set(ortools_REPO "https://github.com/google/or-tools.git")
     string(REGEX MATCH "^[^-]+" OFFICIAL_TAG ${ORTOOLS_TAG})
     set(ortools_REF ${OFFICIAL_TAG})
 
