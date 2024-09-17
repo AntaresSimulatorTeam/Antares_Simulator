@@ -30,9 +30,9 @@ namespace Antares::Solver::Visitors
 
 struct BoxStyle
 {
-    std::string color;
-    std::string shape;
-    std::string style;
+    std::string_view color;
+    std::string_view shape;
+    std::string_view style;
 };
 
 class AstGraphVisitor: public NodeVisitor<void, std::ostream&>

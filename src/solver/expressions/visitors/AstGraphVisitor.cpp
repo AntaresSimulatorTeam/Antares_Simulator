@@ -26,10 +26,21 @@
 namespace Antares::Solver::Visitors
 {
 
+static constexpr BoxStyle SumStyle{"aqua", "hexagon", "filled, solid"};
+static constexpr BoxStyle BinaryStyle{"moccasin", "oval", "filled, rounded"};
+static constexpr BoxStyle ComparisonStyle{"beige", "oval", "filled, rounded"};
+static constexpr BoxStyle NegationStyle{"navajowhite", "square", "filled, solid"};
+static constexpr BoxStyle LiteralStyle{"lightcyan", "box", "filled, solid"};
+static constexpr BoxStyle VariableStyle{"gold", "box", "filled, solid"};
+static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "box", "filled, solid"};
+static constexpr BoxStyle ParameterStyle{"palegreen", "box", "filled, solid"};
+static constexpr BoxStyle ComponentParameterStyle{"palegreen", "box", "filled, solid"};
+static constexpr BoxStyle PortFieldStyle{"powderblue", "invtriangle", "filled, solid"};
+
 void AstGraphVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "+", {"aqua", "hexagon", "filled, solid"}, os);
+    emitNode(id, "+", SumStyle, os);
     for (auto child: node->getOperands())
     {
         int childId = getNodeID(child);
@@ -40,56 +51,56 @@ void AstGraphVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
 
 void AstGraphVisitor::visit(const Nodes::SubtractionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "-", {"moccasin", "oval", "filled, rounded"}, os);
+    processBinaryOperation(node, "-", BinaryStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::MultiplicationNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "*", {"moccasin", "oval", "filled, rounded"}, os);
+    processBinaryOperation(node, "*", BinaryStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::DivisionNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "/", {"moccasin", "oval", "filled, rounded"}, os);
+    processBinaryOperation(node, "/", BinaryStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::EqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "==", {"beige", "oval", "filled, rounded"}, os);
+    processBinaryOperation(node, "==", ComparisonStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::LessThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, "<=", {"beige", "oval", "filled, rounded"}, os);
+    processBinaryOperation(node, "<=", ComparisonStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::GreaterThanOrEqualNode* node, std::ostream& os)
 {
-    processBinaryOperation(node, ">=", {"beige", "oval", "filled, rounded"}, os);
+    processBinaryOperation(node, ">=", ComparisonStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::VariableNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "Var(" + node->value() + ")", {"gold", "box", "filled, solid"}, os);
+    emitNode(id, "Var(" + node->value() + ")", VariableStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::ParameterNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "Param(" + node->value() + ")", {"palegreen", "box", "filled, solid"}, os);
+    emitNode(id, "Param(" + node->value() + ")", ParameterStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::LiteralNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, std::to_string(node->value()), {"lightcyan", "box", "filled, solid"}, os);
+    emitNode(id, std::to_string(node->value()), LiteralStyle, os);
 }
 
 void AstGraphVisitor::visit(const Nodes::NegationNode* node, std::ostream& os)
 {
     int id = getNodeID(node);
-    emitNode(id, "-", {"navajowhite", "square", "filled, solid"}, os);
+    emitNode(id, "-", NegationStyle, os);
     int childId = getNodeID(node->child());
     os << "  " << id << " -> " << childId << ";\n";
     dispatch(node->child(), os);
@@ -100,7 +111,7 @@ void AstGraphVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& os)
     int id = getNodeID(node);
     emitNode(id,
              "PF(" + node->getPortName() + "," + node->getFieldName() + ")",
-             {"powderblue", "invtriangle", "filled, solid"},
+             PortFieldStyle,
              os);
 }
 
@@ -109,7 +120,7 @@ void AstGraphVisitor::visit(const Nodes::ComponentVariableNode* node, std::ostre
     int id = getNodeID(node);
     emitNode(id,
              "CV(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             {"goldenrod", "box", "filled, solid"},
+             ComponentVariableStyle,
              os);
 }
 
@@ -118,7 +129,7 @@ void AstGraphVisitor::visit(const Nodes::ComponentParameterNode* node, std::ostr
     int id = getNodeID(node);
     emitNode(id,
              "CP(" + node->getComponentId() + "," + node->getComponentName() + ")",
-             {"palegreen", "box", "filled, solid"},
+             ComponentParameterStyle,
              os);
 }
 
