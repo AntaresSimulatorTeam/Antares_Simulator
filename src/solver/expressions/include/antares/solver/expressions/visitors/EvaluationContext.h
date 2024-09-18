@@ -48,8 +48,6 @@ public:
      */
     double getParameterValue(const std::string& key) const;
 
-    Nodes::Node* getNodeToSubstitute(Nodes::PortFieldNode*) const;
-
 private:
     /**
      * @brief A map storing parameter values.
@@ -60,11 +58,6 @@ private:
      * @brief A map storing variable values.
      */
     std::map<std::string, double> variables_;
-
-    /**
-     * @brief A map storing nodes to substitute with portfield.
-     */
-    std::map<Nodes::PortFieldNode*, Nodes::Node*> nodesToSubstitutes_;
 };
 
 } // namespace Antares::Solver::Visitors
