@@ -22,7 +22,7 @@
 #include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 
 #include <algorithm>
-#include <ranges>
+#include <set>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
@@ -55,19 +55,19 @@ color = lightgrey;
 node [shape=plaintext];
 
 )raw";
-    std::vector<std::string> legend_id;
+    std::set<std::string> legend_id;
     for (const auto& [node_type, id_map]: nodeIds)
     {
-        legend_id.push_back("legend_" + node_type);
+        const auto [it, inserted] = legend_id.insert("legend_" + node_type);
 
-        result << legend_id.back() << " [ label =\" " << node_type << ": " << id_map.size()
-               << "\"]\n";
+        result << *it << " [ label =\" " << node_type << ": " << id_map.size() << "\"]\n";
     }
-    if (auto legend_size = legend_id.size(); legend_size > 0)
+    if (legend_id.size() > 1)
     {
-        for (int count(0); count < legend_size - 1; ++count)
+        for (auto it = legend_id.begin(), next_it = std::next(it); next_it != legend_id.end();
+             ++it, ++next_it)
         {
-            result << legend_id[count] << " -> " << legend_id[count + 1] << "[style=invis];\n";
+            result << *it << " -> " << *next_it << " [style=invis];\n";
         }
     }
 

@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_SUITE(_AstGraphVisitor_)
 
 static auto buildAllTypeNode(Registry<Node>& registry)
 {
-    const std::string expected_msg = R"WhenthemuzIsover(digraph ExpressionTree {
+    const std::string expected_msg = R"raw(digraph ExpressionTree {
 node[style = filled]
   1 [label=">=", shape="diamond", style="filled", color="yellow"];
   1 -> 2;
@@ -94,22 +94,22 @@ legend_MultiplicationNode [ label =" MultiplicationNode: 1"]
 legend_NegationNode [ label =" NegationNode: 1"]
 legend_ParameterNode [ label =" ParameterNode: 1"]
 legend_PortFieldNode [ label =" PortFieldNode: 1"]
-legend_SubtractionNode -> legend_GreaterThanOrEqualNode[style=invis];
-legend_GreaterThanOrEqualNode -> legend_LiteralNode[style=invis];
-legend_LiteralNode -> legend_LessThanOrEqualNode[style=invis];
-legend_LessThanOrEqualNode -> legend_ComponentParameterNode[style=invis];
-legend_ComponentParameterNode -> legend_EqualNode[style=invis];
-legend_EqualNode -> legend_ComponentVariableNode[style=invis];
-legend_ComponentVariableNode -> legend_SumNode[style=invis];
-legend_SumNode -> legend_DivisionNode[style=invis];
-legend_DivisionNode -> legend_VariableNode[style=invis];
-legend_VariableNode -> legend_MultiplicationNode[style=invis];
-legend_MultiplicationNode -> legend_NegationNode[style=invis];
-legend_NegationNode -> legend_ParameterNode[style=invis];
-legend_ParameterNode -> legend_PortFieldNode[style=invis];
+legend_ComponentParameterNode -> legend_ComponentVariableNode [style=invis];
+legend_ComponentVariableNode -> legend_DivisionNode [style=invis];
+legend_DivisionNode -> legend_EqualNode [style=invis];
+legend_EqualNode -> legend_GreaterThanOrEqualNode [style=invis];
+legend_GreaterThanOrEqualNode -> legend_LessThanOrEqualNode [style=invis];
+legend_LessThanOrEqualNode -> legend_LiteralNode [style=invis];
+legend_LiteralNode -> legend_MultiplicationNode [style=invis];
+legend_MultiplicationNode -> legend_NegationNode [style=invis];
+legend_NegationNode -> legend_ParameterNode [style=invis];
+legend_ParameterNode -> legend_PortFieldNode [style=invis];
+legend_PortFieldNode -> legend_SubtractionNode [style=invis];
+legend_SubtractionNode -> legend_SumNode [style=invis];
+legend_SumNode -> legend_VariableNode [style=invis];
 }
 }
-)WhenthemuzIsover";
+)raw";
 
     Node* literalNode = registry.create<LiteralNode>(-40.);
     Node* negationNode = registry.create<NegationNode>(literalNode);
@@ -140,8 +140,7 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
     const auto filename = std::filesystem::temp_directory_path() / "out.dot";
     std::ofstream out(filename);
     std::ostringstream os3;
-    //std::vector<std::ostream*> ostreams{&out, &std::cout, &os3};
-   std::vector<std::ostream*> ostreams{&os3};
+    std::vector<std::ostream*> ostreams{&out, &std::cout, &os3};
     std::stringstream redirectedStdout;
     std::streambuf* initialBufferCout = std::cout.rdbuf(redirectedStdout.rdbuf());
 
