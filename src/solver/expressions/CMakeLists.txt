@@ -59,6 +59,7 @@ set(SRC_Expressions
 source_group("expressions" FILES ${SRC_Expressions})
 add_library(antares-solver-expressions
         ${SRC_Expressions})
+add_library(Antares::antares-solver-expressions ALIAS antares-solver-expressions)
 
 target_include_directories(antares-solver-expressions
         PUBLIC
@@ -67,13 +68,12 @@ target_include_directories(antares-solver-expressions
 target_link_libraries(antares-solver-expressions
         PUBLIC
         Antares::logs
-	)
-
+)
 
 
 add_library(antares-solver-expressions-iterators
-  iterators/pre-order.cpp
-  include/antares/solver/expressions/iterators/pre-order.h
+        iterators/pre-order.cpp
+        include/antares/solver/expressions/iterators/pre-order.h
 )
 
 target_link_libraries(antares-solver-expressions-iterators PRIVATE antares-solver-expressions)
