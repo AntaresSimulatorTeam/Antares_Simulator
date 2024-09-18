@@ -33,7 +33,6 @@ PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>
 
 Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    /* std::pair<std::string, std::string> portfieldName = {node->getPortName() ,node->getFieldName()}; */
     if (ctx_.portfield.contains(*node))
     {
         return (ctx_.portfield.at(*node));
