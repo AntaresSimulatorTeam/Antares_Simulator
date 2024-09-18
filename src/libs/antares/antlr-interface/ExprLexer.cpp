@@ -1,26 +1,24 @@
 
 // Generated from Expr.g4 by ANTLR 4.13.1
 
-
-#include "ExprLexer.h"
-
+#include "include/antares/antlr-interface/ExprLexer.h"
 
 using namespace antlr4;
 
+namespace
+{
 
-
-using namespace antlr4;
-
-namespace {
-
-struct ExprLexerStaticData final {
-  ExprLexerStaticData(std::vector<std::string> ruleNames,
-                          std::vector<std::string> channelNames,
-                          std::vector<std::string> modeNames,
-                          std::vector<std::string> literalNames,
-                          std::vector<std::string> symbolicNames)
-      : ruleNames(std::move(ruleNames)), channelNames(std::move(channelNames)),
-        modeNames(std::move(modeNames)), literalNames(std::move(literalNames)),
+struct ExprLexerStaticData final
+{
+    ExprLexerStaticData(std::vector<std::string> ruleNames,
+                        std::vector<std::string> channelNames,
+                        std::vector<std::string> modeNames,
+                        std::vector<std::string> literalNames,
+                        std::vector<std::string> symbolicNames):
+        ruleNames(std::move(ruleNames)),
+        channelNames(std::move(channelNames)),
+        modeNames(std::move(modeNames)),
+        literalNames(std::move(literalNames)),
         symbolicNames(std::move(symbolicNames)),
         vocabulary(this->literalNames, this->symbolicNames) {}
 
