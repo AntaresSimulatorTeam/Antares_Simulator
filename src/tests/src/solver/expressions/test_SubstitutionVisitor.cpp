@@ -21,13 +21,14 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <concepts>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
-
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
 using namespace Antares::Solver::Visitors;
@@ -36,28 +37,37 @@ using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_SubstitutionVisitor_)
 
-std::pair<Nodes::ComponentVariableNode*, Nodes::ComponentVariableNode*>
-fillComponentVariableContext(SubstitutionContext& ctx, Registry<Node>& registry)
+template<typename NodeToSubstitute>
+concept IsComponentVariableorPortField = std::same_as<NodeToSubstitute, ComponentVariableNode>
+                                         || std::same_as<NodeToSubstitute, PortFieldNode>;
+
+template<IsComponentVariableorPortField NodeToSubstitute>
+std::pair<NodeToSubstitute*, NodeToSubstitute*> fillComponentVariableContext(
+  SubstitutionContext<NodeToSubstitute>& ctx,
+  Registry<Node>& registry)
 {
-    auto add = [&ctx, &registry](const std::string& component, const std::string& variable)
+    auto add = [&ctx, &registry](const std::string& first, const std::string& second)
     {
-        auto* in = registry.create<ComponentVariableNode>(component, variable);
+        auto* in = registry.create<NodeToSubstitute>(first, second);
         ctx.variables.insert(in);
         return in;
     };
-    return {add("component1", "variable1"), add("component2", "variable1")};
+    return {add("one", "two"), add("three", "four")};
 }
 
-BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
+// Create a tuple of types
+typedef std::tuple<ComponentVariableNode, PortFieldNode> TestTypes;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(SubstitutionVisitor_substitute_one_node, T, TestTypes)
 {
-    SubstitutionContext ctx;
-    auto variables = fillComponentVariableContext(ctx, *this);
+    auto registry = Registry<Node>();
+    SubstitutionContext<T> ctx;
+    auto variables = fillComponentVariableContext<T>(ctx, registry);
 
-    auto* component_original = create<ComponentVariableNode>("component1", "notInThere");
+    auto* component_original = registry.create<T>("component1", "notInThere");
 
-    Node* root = create<SumNode>(create<ComponentVariableNode>("component1", "variable1"),
-                                 component_original);
-    SubstitutionVisitor<ComponentVariableNode> sub(*this, ctx);
+    Node* root = registry.create<SumNode>(registry.create<T>("one", "two"), component_original);
+    SubstitutionVisitor<T> sub(registry, ctx);
     Node* subsd = sub.dispatch(root);
 
     // The root of the new tree should be different
@@ -71,7 +81,7 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
     BOOST_CHECK_NE(right_substituted, variables.first);
     BOOST_CHECK_NE(right_substituted, variables.second);
 
-    auto* component = dynamic_cast<ComponentVariableNode*>(right_substituted);
+    auto* component = dynamic_cast<T*>(right_substituted);
     BOOST_REQUIRE(component);
     // We don't use BOOST_CHECK_EQUAL because operator<<(..., const ComponentVariableNode&) is
     // not implemented
@@ -80,7 +90,7 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_name, Registry<Node>)
 {
-    SubstitutionContext ctx;
+    SubstitutionContext<ComponentVariableNode> ctx;
 
     SubstitutionVisitor<ComponentVariableNode> substitutionVisitor(*this, ctx);
     BOOST_CHECK_EQUAL(substitutionVisitor.name(), "SubstitutionVisitor");
