@@ -9,7 +9,6 @@ set(SRC_Expressions
         nodes/SumNode.cpp
 
         visitors/CloneVisitor.cpp
-        visitors/PortfieldSubstitutionVisitor.cpp
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
         visitors/EvaluationContext.cpp
@@ -41,7 +40,6 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/VariableNode.h
 
         include/antares/solver/expressions/visitors/CloneVisitor.h
-        include/antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/CompareVisitor.h
         include/antares/solver/expressions/visitors/EvalVisitor.h
         include/antares/solver/expressions/visitors/EvaluationContext.h
