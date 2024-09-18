@@ -21,8 +21,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <algorithm>
-
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
@@ -36,7 +34,7 @@ BOOST_AUTO_TEST_SUITE(_Iterator_)
 
 static Node* simpleExpression(Registry<Node>& registry)
 {
-    return registry.create<AddNode>(registry.create<LiteralNode>(2.),
+    return registry.create<SumNode>(registry.create<LiteralNode>(2.),
                                     registry.create<LiteralNode>(21.));
 }
 
@@ -129,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(distance_unary, Registry<Node>)
 
 BOOST_FIXTURE_TEST_CASE(distance_nullptr_is_3, Registry<Node>)
 {
-    AST ast(create<AddNode>(nullptr, create<LiteralNode>(2.)));
+    AST ast(create<SumNode>(nullptr, create<LiteralNode>(2.)));
     BOOST_CHECK_EQUAL(std::distance(ast.begin(), ast.end()), 3);
 }
 
