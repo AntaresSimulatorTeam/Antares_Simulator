@@ -11,6 +11,7 @@ set(SRC_model
     include/antares/solver/model/constraint.h
     include/antares/solver/model/expression.h
     include/antares/solver/model/port.h
+    include/antares/solver/model/portFieldDefinition.h
     include/antares/solver/model/portType.h
 )
 

@@ -20,22 +20,21 @@
 */
 #pragma once
 
-#include <string>
-
+#include "port.h"
 #include "portType.h"
 
 namespace Antares::Solver::Model
 {
 
-class Port
+class PortFieldDefinition
 {
-public:
-    Port();
-    ~Port() = default;
+    PortFieldDefinition();
+    ~PortFieldDefinition() = default;
 
 private:
-    std::string name_;
-    PortType type_;
+    Port port_;
+    PortField field_;
+    Expression definition_;
 };
 
 } // namespace Antares::Solver::Model
