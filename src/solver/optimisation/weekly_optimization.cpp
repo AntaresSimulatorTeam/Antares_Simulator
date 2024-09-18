@@ -27,12 +27,10 @@ namespace Antares::Solver::Optimization
 {
 WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
-                                       uint thread_number,
                                        IResultWriter& writer,
                                        Simulation::ISimulationObserver& simulationObserver):
     options_(options),
     problemeHebdo_(problemeHebdo),
-    thread_number_(thread_number),
     writer_(writer),
     simulationObserver_(simulationObserver)
 {
