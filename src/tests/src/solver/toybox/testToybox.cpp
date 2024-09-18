@@ -29,6 +29,7 @@
 
 #include "antares/antlr-interface/ExprLexer.h"
 #include "antares/antlr-interface/ExprParser.h"
+#include "antares/antlr-interface/ExprVisitor.h"
 
 #include "../../../../solver/expressions/include/antares/solver/expressions/nodes/VariableNode.h"
 #include "yaml-cpp/yaml.h"
@@ -211,7 +212,7 @@ public:
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
 // Visitor to convert terminal nodes to Antares::Solver::Nodes
-class ConvertorVisitor: public antlr4::tree::ParseTreeVisitor
+class ConvertorVisitor: public ExprVisitor
 {
 public:
     virtual antlrcpp::Any visitChildren(antlr4::tree::ParseTree* node) override
@@ -225,29 +226,92 @@ public:
 
     std::any visit(antlr4::tree::ParseTree* tree) override
     {
-        std::cout << "visit " << tree->getText() << "\n";
-        return std::any();
+        return tree->accept(this);
     }
 
     std::any visitTerminal(antlr4::tree::TerminalNode* node) override
     {
-        auto type = node->getSymbol()->getType();
-        // case literral
-        if (type == ExprParser::IDENTIFIER)
-        {
-            std::cout << "Identifier " << node->getText() << "\n";
-            return std::make_shared<Antares::Solver::Nodes::VariableNode>(node->getText());
-        }
-        if (type == ExprParser::MULDIV)
-        {
-            std::cout << "muldiv " << node->getText() << "\n";
-            return std::make_shared<Antares::Solver::Nodes::MultiplicationNode>(//COMMENT JE FAIS ?);
-        }
-        std::cout << "visitTerminal " << node->getText() << "\n";
         return std::any();
     }
 
     std::any visitErrorNode(antlr4::tree::ErrorNode* node) override
+    {
+        return std::any();
+    }
+
+    std::any visitIdentifier(ExprParser::IdentifierContext* context) override
+    {
+        return Antares::Solver::Nodes::VariableNode(context->getText());
+    }
+
+    std::any visitMuldiv(ExprParser::MuldivContext* context) override
+    {
+        auto left = std::any_cast<Antares::Solver::Nodes::VariableNode>(visit(context->expr(0)));
+        auto right = std::any_cast<Antares::Solver::Nodes::VariableNode>(visit(context->expr(1)));
+        return Antares::Solver::Nodes::MultiplicationNode(&left, &right);
+    }
+
+    std::any visitFullexpr(ExprParser::FullexprContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitShift(ExprParser::ShiftContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitNegation(ExprParser::NegationContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitExpression(ExprParser::ExpressionContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitComparison(ExprParser::ComparisonContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitAddsub(ExprParser::AddsubContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitPortField(ExprParser::PortFieldContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitNumber(ExprParser::NumberContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitTimeShift(ExprParser::TimeShiftContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitFunction(ExprParser::FunctionContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitTimeShiftRange(ExprParser::TimeShiftRangeContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitTimeRange(ExprParser::TimeRangeContext* context) override
     {
         return std::any();
     }
