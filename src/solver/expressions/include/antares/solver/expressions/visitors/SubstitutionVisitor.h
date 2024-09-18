@@ -69,23 +69,16 @@ private:
     // Only override visit method for ComponentVariableNode, clone the rest
     Nodes::Node* visit(const NodeToSubstitute* node) override
     {
+        // This search has linear complexity
+        // To get a search of log complexity, we need to use std::unordered_set::find
+        // But std::unordered_set::find_if does not exist
+        auto it = std::ranges::find_if(ctx_.variables, [&node](auto* x) { return *x == *node; });
+        if (it != ctx_.variables.end())
         {
-            // This search has linear complexity
-            // To get a search of log complexity, we need to use std::unordered_set::find
-            // But std::unordered_set::find_if does not exist
-            auto it = std::find_if(ctx_.variables.begin(),
-                                   ctx_.variables.end(),
-                                   [&node](auto* x) { return *x == *node; });
-            if (it != ctx_.variables.end())
-            {
-                return *it;
-            }
-
-            else
-            {
-                return CloneVisitor::visit(node);
-            }
+            return *it;
         }
+
+        return CloneVisitor::visit(node);
     }
 };
 } // namespace Antares::Solver::Visitors
