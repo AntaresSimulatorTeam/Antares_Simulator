@@ -191,7 +191,7 @@ unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
     return nodeIds_[node->name()][node];
 }
 
-void AstDOTStyleVisitor::emitNode(int id,
+void AstDOTStyleVisitor::emitNode(unsigned int id,
                                   const std::string& label,
                                   const BoxStyle& box_style,
                                   std::ostream& os)
