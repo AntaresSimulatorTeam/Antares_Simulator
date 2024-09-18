@@ -21,7 +21,7 @@ add_subdirectory(utils)
 add_subdirectory(variable)
 add_subdirectory(modeler)
 add_subdirectory(expressions)
-add_subdirectory(model)
+add_subdirectory(libModelObject)
 
 #
 # Resource file for Windows
