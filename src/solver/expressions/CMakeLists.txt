@@ -15,7 +15,6 @@ set(SRC_Expressions
         visitors/LinearityVisitor.cpp
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
-        visitors/SubstitutionVisitor.cpp
         visitors/InvalidNode.cpp
 
         include/antares/solver/expressions/nodes/SumNode.h
@@ -67,13 +66,12 @@ target_include_directories(antares-solver-expressions
 target_link_libraries(antares-solver-expressions
         PUBLIC
         Antares::logs
-	)
-
+)
 
 
 add_library(antares-solver-expressions-iterators
-  iterators/pre-order.cpp
-  include/antares/solver/expressions/iterators/pre-order.h
+        iterators/pre-order.cpp
+        include/antares/solver/expressions/iterators/pre-order.h
 )
 
 target_link_libraries(antares-solver-expressions-iterators PRIVATE antares-solver-expressions)

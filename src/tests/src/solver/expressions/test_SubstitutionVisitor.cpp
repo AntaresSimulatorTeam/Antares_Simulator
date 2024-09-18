@@ -36,9 +36,8 @@ using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_SubstitutionVisitor_)
 
-std::pair<Nodes::ComponentVariableNode*, Nodes::ComponentVariableNode*> fillContext(
-  SubstitutionContext& ctx,
-  Registry<Node>& registry)
+std::pair<Nodes::ComponentVariableNode*, Nodes::ComponentVariableNode*>
+fillComponentVariableContext(SubstitutionContext& ctx, Registry<Node>& registry)
 {
     auto add = [&ctx, &registry](const std::string& component, const std::string& variable)
     {
@@ -52,13 +51,13 @@ std::pair<Nodes::ComponentVariableNode*, Nodes::ComponentVariableNode*> fillCont
 BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
 {
     SubstitutionContext ctx;
-    auto variables = fillContext(ctx, *this);
+    auto variables = fillComponentVariableContext(ctx, *this);
 
     auto* component_original = create<ComponentVariableNode>("component1", "notInThere");
 
     Node* root = create<SumNode>(create<ComponentVariableNode>("component1", "variable1"),
                                  component_original);
-    SubstitutionVisitor sub(*this, ctx);
+    SubstitutionVisitor<ComponentVariableNode> sub(*this, ctx);
     Node* subsd = sub.dispatch(root);
 
     // The root of the new tree should be different
@@ -83,7 +82,7 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_name, Registry<Node>)
 {
     SubstitutionContext ctx;
 
-    SubstitutionVisitor substitutionVisitor(*this, ctx);
+    SubstitutionVisitor<ComponentVariableNode> substitutionVisitor(*this, ctx);
     BOOST_CHECK_EQUAL(substitutionVisitor.name(), "SubstitutionVisitor");
 }
 BOOST_AUTO_TEST_SUITE_END()

@@ -42,17 +42,46 @@ struct SubstitutionContext
  * @param registry The registry used for creating new nodes.
  * @param ctx The substitution context.
  */
+template<class NodeToSubstitute>
 class SubstitutionVisitor: public CloneVisitor
 {
 public:
-    SubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx);
+    SubstitutionVisitor(Registry<Nodes::Node>& registry, SubstitutionContext& ctx):
+        CloneVisitor(registry),
+        ctx_(ctx),
+        registry_(registry)
+    {
+    }
 
     SubstitutionContext& ctx_;
     Registry<Nodes::Node>& registry_;
-    std::string name() const override;
+
+    std::string name() const override
+    {
+        return "SubstitutionVisitor";
+    }
 
 private:
     // Only override visit method for ComponentVariableNode, clone the rest
-    Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
+    Nodes::Node* visit(const NodeToSubstitute* node) override
+    {
+        {
+            // This search has linear complexity
+            // To get a search of log complexity, we need to use std::unordered_set::find
+            // But std::unordered_set::find_if does not exist
+            auto it = std::find_if(ctx_.variables.begin(),
+                                   ctx_.variables.end(),
+                                   [&node](auto* x) { return *x == *node; });
+            if (it != ctx_.variables.end())
+            {
+                return *it;
+            }
+
+            else
+            {
+                return CloneVisitor::visit(node);
+            }
+        }
+    }
 };
 } // namespace Antares::Solver::Visitors
