@@ -144,7 +144,7 @@ private:
      * @param box_style The style to be applied to the node's box.
      * @param os The output stream to which the node representation is written.
      */
-    void emitNode(int id, const std::string& label, const BoxStyle& box_style, std::ostream& os);
+    void emitNode(unsigned int id, const std::string& label, const BoxStyle& box_style, std::ostream& os);
 
     /**
      * @brief Processes a binary operation node.
