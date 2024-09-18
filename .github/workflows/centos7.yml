@@ -119,16 +119,6 @@ jobs:
            cd _build
            cpack -G TGZ
 
-    - name: Installer TGZ push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.tar.gz
-
-    - name: Installer RPM push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.rpm
-
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:

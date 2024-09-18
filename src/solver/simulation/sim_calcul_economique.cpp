@@ -788,7 +788,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                     if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
                         < weekTarget_tmp)
+                    {
                         marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+                    }
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
