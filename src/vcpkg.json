@@ -12,8 +12,8 @@
   },
   "dependencies": [
     {
-	"name": "sirius-solver",
-	"version>=": "1.5"
+      "name": "sirius-solver",
+      "version>=": "1.5"
     },
     {
       "name": "wxwidgets",
@@ -34,6 +34,12 @@
       "features": [
         "zlib"
       ]
+    },
+    {
+      "name": "antlr4"
+    },
+    {
+      "name": "yaml-cpp"
     }
   ]
 }
