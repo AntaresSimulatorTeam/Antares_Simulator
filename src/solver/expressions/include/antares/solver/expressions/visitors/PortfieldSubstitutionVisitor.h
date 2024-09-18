@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include <unordered_set>
+#include <map>
 
 #include "antares/solver/expressions/visitors/CloneVisitor.h"
 
@@ -31,7 +31,7 @@ namespace Antares::Solver::Visitors
  */
 struct PortfieldSubstitutionContext
 {
-    std::unordered_set<Nodes::PortFieldNode*> portfield;
+    std::map<Nodes::PortFieldNode, Nodes::Node*> portfield;
 };
 
 /**
@@ -44,7 +44,6 @@ public:
                                  PortfieldSubstitutionContext& ctx);
 
     PortfieldSubstitutionContext& ctx_;
-    Registry<Nodes::Node>& registry_;
     std::string name() const override;
 
 private:

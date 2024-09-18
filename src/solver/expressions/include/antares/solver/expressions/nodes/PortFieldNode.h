@@ -54,6 +54,10 @@ public:
     const std::string& getFieldName() const;
 
     bool operator==(const PortFieldNode& other) const = default;
+    bool operator<(const PortFieldNode& other) const
+    {
+        return port_name_ < other.port_name_ && field_name_ < other.field_name_;
+    }
 
     std::string name() const override
     {

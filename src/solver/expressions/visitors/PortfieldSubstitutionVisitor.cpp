@@ -27,20 +27,16 @@ namespace Antares::Solver::Visitors
 PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
                                                            PortfieldSubstitutionContext& ctx):
     CloneVisitor(registry),
-    ctx_(ctx),
-    registry_(registry)
+    ctx_(ctx)
 {
 }
 
 Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    // This search has linear complexity
-    // To get a search of log complexity, we need to use std::unordered_set::find
-    // But std::unordered_set::find_if does not exist
-    auto it = std::ranges::find_if(ctx_.portfield, [&node](auto* x) { return *x == *node; });
-    if (it != ctx_.portfield.end())
+    /* std::pair<std::string, std::string> portfieldName = {node->getPortName() ,node->getFieldName()}; */
+    if (ctx_.portfield.contains(*node))
     {
-        return *it;
+        return (ctx_.portfield.at(*node));
     }
 
     return CloneVisitor::visit(node);
