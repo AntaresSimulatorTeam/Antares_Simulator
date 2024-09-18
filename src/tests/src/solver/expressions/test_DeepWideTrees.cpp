@@ -84,4 +84,17 @@ BOOST_FIXTURE_TEST_CASE(binary_tree, Registry<Node>)
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), 42. * 1024);
 }
 
+BOOST_FIXTURE_TEST_CASE(wide_sum_tree, Registry<Node>)
+{
+    const int nb_operands = 1'000;
+    std::vector<Node*> operands(nb_operands);
+    for (auto& op: operands)
+    {
+        op = create<LiteralNode>(1.);
+    }
+    SumNode root(std::move(operands));
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&root), nb_operands * 1.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
