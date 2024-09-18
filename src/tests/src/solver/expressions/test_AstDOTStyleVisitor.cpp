@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_SUITE(_AstGraphVisitor_)
 
 static auto buildAllTypeNode(Registry<Node>& registry)
 {
-    const std::string expected_msg = R"whenThemusicIsOverTurnOuttheLights(digraph ExpressionTree {
+    const std::string expected_msg = R"WhenthemuzIsover(digraph ExpressionTree {
 node[style = filled]
   1 [label=">=", shape="diamond", style="filled", color="yellow"];
   1 -> 2;
@@ -109,7 +109,7 @@ legend_NegationNode -> legend_ParameterNode[style=invis];
 legend_ParameterNode -> legend_PortFieldNode[style=invis];
 }
 }
-)whenThemusicIsOverTurnOuttheLights";
+)WhenthemuzIsover";
 
     Node* literalNode = registry.create<LiteralNode>(-40.);
     Node* negationNode = registry.create<NegationNode>(literalNode);
