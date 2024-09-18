@@ -6,18 +6,14 @@ find_package(antlr4-runtime CONFIG REQUIRED)
 # Add the executable
 add_executable(${EXECUTABLE_NAME} testToybox.cpp)
 
-# Include directories
-target_include_directories(${EXECUTABLE_NAME}
-        PRIVATE
-        "${src_solver_optimisation}"
-)
-
 # Link libraries
 target_link_libraries(${EXECUTABLE_NAME}
         PRIVATE
         Boost::unit_test_framework
         Antares::modeler-ortools-impl
         yaml-cpp
+        Antares::antlr-interface
+        Antares::antares-solver-expressions
 )
 
 # Storing test-toybox under the folder Unit-tests in the IDE
