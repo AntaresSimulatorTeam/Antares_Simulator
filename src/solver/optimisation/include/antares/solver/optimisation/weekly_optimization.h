@@ -36,6 +36,7 @@ public:
                        Simulation::ISimulationObserver& simulationObserver);
     ~WeeklyOptimization() = default;
     void solve();
+
 private:
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
