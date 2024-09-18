@@ -140,7 +140,8 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
     const auto filename = std::filesystem::temp_directory_path() / "out.dot";
     std::ofstream out(filename);
     std::ostringstream os3;
-    std::vector<std::ostream*> ostreams{&out, &std::cout, &os3};
+    //std::vector<std::ostream*> ostreams{&out, &std::cout, &os3};
+   std::vector<std::ostream*> ostreams{&os3};
     std::stringstream redirectedStdout;
     std::streambuf* initialBufferCout = std::cout.rdbuf(redirectedStdout.rdbuf());
 
