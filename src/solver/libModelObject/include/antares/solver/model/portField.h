@@ -21,24 +21,14 @@
 #pragma once
 
 #include <string>
-#include <vector>
-
-#include "portField.h"
 
 namespace Antares::Solver::Model
 {
 
-class PortType
+class PortField
 {
-public:
-    PortType();
-    ~PortType() = default;
-
 private:
-    std::string id_;
-    std::string description_;
-
-    std::vector<PortField> fields_;
+    std::string name;
 };
 
 } // namespace Antares::Solver::Model
