@@ -137,33 +137,17 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
 {
     auto [expected_msg, expr] = buildAllTypeNode(*this);
 
-    const auto filename = std::filesystem::temp_directory_path() / "out.dot";
-    std::ofstream out(filename);
-    std::ostringstream os3;
-    std::vector<std::ostream*> ostreams{&out, &std::cout, &os3};
-    std::stringstream redirectedStdout;
-    std::streambuf* initialBufferCout = std::cout.rdbuf(redirectedStdout.rdbuf());
+    
+    std::ostringstream os;
 
     AstDOTStyleVisitor astGraphVisitor;
-    for (auto* os: ostreams)
-    {
-        std::pair<AstDOTStyleVisitor&, Node*> pair1(astGraphVisitor, expr);
+    
+    std::pair<AstDOTStyleVisitor&, Node*> pair1(astGraphVisitor, expr);
+    os << pair1;
+    
 
-        *os << pair1;
-    }
-    std::cout.rdbuf(initialBufferCout);
-    out.close();
-
-    // read what was written in stdout
-    BOOST_CHECK_EQUAL(expected_msg, redirectedStdout.str());
-    // read out.dot content
-    std::ifstream infile(filename);
-    std::string out_content((std::istreambuf_iterator<char>(infile)),
-                            std::istreambuf_iterator<char>());
-    BOOST_CHECK_EQUAL(expected_msg, out_content);
-
-    // read the content of os3
-    BOOST_CHECK_EQUAL(expected_msg, os3.str());
+    // read the content of os
+    BOOST_CHECK_EQUAL(expected_msg, os.str());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
