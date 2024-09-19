@@ -69,6 +69,7 @@ target_include_directories(antares-solver-expressions
 target_link_libraries(antares-solver-expressions
         PUBLIC
         Antares::logs
+        Boost::headers
 	)
 
 
