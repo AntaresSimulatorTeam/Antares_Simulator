@@ -1,3 +1,2 @@
 behave
 pyyaml
-testresources
