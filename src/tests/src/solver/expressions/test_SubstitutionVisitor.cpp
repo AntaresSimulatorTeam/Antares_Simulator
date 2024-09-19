@@ -27,6 +27,7 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
@@ -86,4 +87,16 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_name, Registry<Node>)
     SubstitutionVisitor substitutionVisitor(*this, ctx);
     BOOST_CHECK_EQUAL(substitutionVisitor.name(), "SubstitutionVisitor");
 }
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(_PortfieldSubstitutionVisitor_)
+
+BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
+{
+    SubstitutionContext ctx;
+
+    auto* port1 = this->create<PortFieldNode>("port", "literal");
+    auto* node1 = this->create<LiteralNode>(10);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
