@@ -30,169 +30,18 @@
 #include <antares/solver/expressions/Registry.hxx>
 #include "antares/antlr-interface/ExprLexer.h"
 #include "antares/antlr-interface/ExprParser.h"
-#include "antares/antlr-interface/ExprVisitor.h"
 #include "antares/solver/expressions/nodes/VariableNode.h"
-#include "antares/solver/expressions/visitors/CloneVisitor.h"
 #include "antares/solver/expressions/visitors/PrintVisitor.h"
 
+#include "ComponentParser.h"
 #include "ConvertorVisitor.h"
+#include "Model.h"
 #include "ModelParser.h"
-#include "yaml-cpp/yaml.h"
-
-struct Model;
-struct Parameter;
+#include "ParameterSubstitution.h"
+#include "PrintVisitor.h"
 
 // struct StructName => DTO
 // struct StructNameInstance => Objet métier/technique/whatever
-
-struct LibraryInstance
-{
-    std::string id;
-    std::string description;
-    std::vector<Model> models;
-};
-
-struct ComponentParameter
-{
-    std::string name;
-    double value;
-};
-
-struct Component
-{
-    std::string id;
-    std::string model;
-    std::vector<ComponentParameter> parameters;
-};
-
-struct ComponentInstance
-{
-    ComponentInstance(const Component& c)
-    {
-        for (auto& p: c.parameters)
-        {
-            parameters[p.name] = p.value;
-        }
-    }
-
-    std::map<std::string, double> parameters;
-};
-
-// Decode and encode structs
-namespace YAML
-{
-// ComponentParameter
-template<>
-struct convert<ComponentParameter>
-{
-    static Node encode(const ComponentParameter& rhs)
-    {
-        Node node;
-        node["name"] = rhs.name;
-        node["value"] = rhs.value;
-        return node;
-    }
-
-    static bool decode(const Node& node, ComponentParameter& rhs)
-    {
-        if (!node.IsMap() || node.size() != 2)
-        {
-            return false;
-        }
-
-        rhs.name = node["name"].as<std::string>();
-        rhs.value = node["value"].as<double>();
-        return true;
-    }
-};
-
-// Component
-template<>
-struct convert<Component>
-{
-    static Node encode(const Component& rhs)
-    {
-        Node node;
-        node["id"] = rhs.id;
-        node["model"] = rhs.model;
-        node["parameters"] = rhs.parameters;
-        return node;
-    }
-
-    static bool decode(const Node& node, Component& rhs)
-    {
-        if (!node.IsMap() || node.size() != 3)
-        {
-            return false;
-        }
-
-        rhs.id = node["id"].as<std::string>();
-        rhs.model = node["model"].as<std::string>();
-        rhs.parameters = node["parameters"].as<std::vector<ComponentParameter>>();
-        return true;
-    }
-};
-} // namespace YAML
-
-// namespace YAML
-
-class PrintVisitor: public antlr4::tree::ParseTreeVisitor
-{
-public:
-    virtual antlrcpp::Any visitChildren(antlr4::tree::ParseTree* node) override
-    {
-        for (auto child: node->children)
-        {
-            child->accept(this);
-        }
-        return antlrcpp::Any();
-    }
-
-    std::any visit(antlr4::tree::ParseTree* tree) override
-    {
-        std::cout << "visit " << tree->getText() << "\n";
-        return std::any();
-    }
-
-    std::any visitTerminal(antlr4::tree::TerminalNode* node) override
-    {
-        std::cout << "visitTerminal " << node->getText() << "\n";
-        return std::any();
-    }
-
-    std::any visitErrorNode(antlr4::tree::ErrorNode* node) override
-    {
-        return std::any();
-    }
-};
-
-class ParameterSubstitutionVisitor: public Antares::Solver::Visitors::CloneVisitor
-{
-public:
-    ParameterSubstitutionVisitor(Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry,
-                                 const ComponentInstance& component):
-        Antares::Solver::Visitors::CloneVisitor(registry),
-        component_(component),
-        registry_(registry)
-    {
-    }
-
-    Antares::Solver::Nodes::Node* visit(const Antares::Solver::Nodes::ParameterNode* node) override
-    {
-        auto it = component_.parameters.find(node->value());
-        if (it != component_.parameters.end())
-        {
-            return registry_.create<Antares::Solver::Nodes::LiteralNode>(it->second);
-        }
-        else
-        {
-            throw std::runtime_error("Parameter not found: " + node->name() + "in component ");
-        }
-    }
-
-    const ComponentInstance& component_;
-    Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry_;
-};
 
 // Simple test case
 BOOST_AUTO_TEST_CASE(test_case1)
@@ -248,7 +97,7 @@ models:
     ExprParser parser(&tokens);
     auto expression_context = parser.expr(); // Now we have our expression parsed following the
                                              // grammar for expression
-    
+
     // Convert expression to Antares::Solver::Nodes expressions
     Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
     ConvertorVisitor expr_visitor(registry);

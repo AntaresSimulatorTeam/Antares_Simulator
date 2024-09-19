@@ -7,6 +7,10 @@ find_package(antlr4-runtime CONFIG REQUIRED)
 add_executable(${EXECUTABLE_NAME} testToybox.cpp
         ConvertorVisitor.h
         ModelParser.h
+        ComponentParser.h
+        PrintVisitor.h
+        Model.h
+        ParameterSubstitution.h
 )
 
 # Link libraries
