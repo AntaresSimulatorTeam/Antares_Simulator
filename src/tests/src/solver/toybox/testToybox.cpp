@@ -213,7 +213,7 @@ public:
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 
-// Visitor to convert terminal nodes to Antares::Solver::Nodes
+// Visitor to convert nodes to Antares::Solver::Nodes
 class ConvertorVisitor: public ExprVisitor
 {
 public:
@@ -255,6 +255,10 @@ public:
 
     std::any visitMuldiv(ExprParser::MuldivContext* context) override
     {
+        // Meh
+        // Having to know the underlying type of the node is not great. We can eitgher return
+        // expression node containing the concrete node to be able to always anycast<Expression> Or
+        // we can return a pair Node/type (difficult to return a type in c++)
         auto left = std::any_cast<Antares::Solver::Nodes::VariableNode*>(visit(context->expr(0)));
         auto right = std::any_cast<Antares::Solver::Nodes::VariableNode*>(visit(context->expr(1)));
         auto mult_node = registry_.create<Antares::Solver::Nodes::MultiplicationNode>(left, right);
@@ -367,6 +371,7 @@ nodes:
     value: 100
 ")";
 
+    // Load model library and components
     YAML::Node library_doc = YAML::Load(library_s);
     YAML::Node component_doc = YAML::Load(component1_s);
     auto models = library_doc["models"].as<std::vector<Model>>();
@@ -375,22 +380,30 @@ nodes:
     BOOST_CHECK_EQUAL(generator.id, "generator");
 
     auto objective_string = generator.objective;
+
+    // Parse fonction objective expression
     antlr4::ANTLRInputStream input(objective_string);
     ExprLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     tokens.fill();
     for (auto t: tokens.getTokens())
     {
+        // Log for debug
         std::cout << t->toString() << std::endl;
     }
     ExprParser parser(&tokens);
-    auto expression_context = parser.expr();
+    auto expression_context = parser.expr(); // Now we have our expression parsed following the
+                                             // grammar for expression
+
     std::cout << "first child " << expression_context->children[0]->getText() << std::endl;
+
+    // Convert expression to Antares::Solver::Nodes expressions
     Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
     ConvertorVisitor expr_visitor(registry);
     auto node = std::any_cast<Antares::Solver::Nodes::MultiplicationNode*>(
       expression_context->accept(&expr_visitor));
 
+    // Use visitor on expression
     Antares::Solver::Visitors::PrintVisitor print_visitor;
     std::cout << "node " << print_visitor.dispatch(node) << std::endl;
 }
