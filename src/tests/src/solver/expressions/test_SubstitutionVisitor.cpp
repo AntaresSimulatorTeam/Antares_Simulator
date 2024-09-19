@@ -25,9 +25,9 @@
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
-#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;
