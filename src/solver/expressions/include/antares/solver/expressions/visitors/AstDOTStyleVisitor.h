@@ -144,7 +144,10 @@ private:
      * @param box_style The style to be applied to the node's box.
      * @param os The output stream to which the node representation is written.
      */
-    void emitNode(unsigned int id, const std::string& label, const BoxStyle& box_style, std::ostream& os);
+    void emitNode(unsigned int id,
+                  const std::string& label,
+                  const BoxStyle& box_style,
+                  std::ostream& os);
 
     /**
      * @brief Processes a binary operation node.
@@ -167,7 +170,7 @@ private:
      *
      * This map is used to keep track of assigned IDs for each node in the AST.
      */
-    std::unordered_map<std::string, std::unordered_map<const Nodes::Node*, unsigned int>> nodeIds_;
+    std::map<std::string, std::map<const Nodes::Node*, unsigned int>> nodeIds_;
 
     /**
      * @brief Counter for generating unique node IDs.
