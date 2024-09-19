@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
-set(ANTARES_VERSION_HI 9)
-set(ANTARES_VERSION_LO 2)
-set(ANTARES_VERSION_REVISION 0)
+set(ANTARES_VERSION_HI	      9)
+set(ANTARES_VERSION_LO	      2)
+set(ANTARES_VERSION_REVISION  0)
 
 
 # Beta release
 set(ANTARES_BETA 0)
 set(ANTARES_RC 4)
 
-set(ANTARES_VERSION_YEAR 2024)
+set(ANTARES_VERSION_YEAR      2024)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -27,7 +27,7 @@ file(READ "../ortools_tag" ORTOOLS_TAG)
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
 set(CMAKE_SKIP_ASSEMBLY_SOURCE_RULES true)
 
-set(CMAKE_INSTALL_RPATH $ORIGIN)
+set(CMAKE_INSTALL_RPATH 		$ORIGIN)
 
 include(CheckCXXSourceCompiles)
 include(CheckIncludeFiles)
@@ -40,7 +40,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
-endif ()
+endif()
 
 
 #CMake function
@@ -51,21 +51,21 @@ include("cmake/messages.cmake")
 
 set(ANTARES_VERSION_TAG "")
 
-if (${ANTARES_BETA})
-    set(ANTARES_VERSION_TAG "-beta${ANTARES_BETA}")
-endif ()
+if(${ANTARES_BETA})
+	set(ANTARES_VERSION_TAG "-beta${ANTARES_BETA}")
+endif()
 
-if (${ANTARES_RC})
-    set(ANTARES_VERSION_TAG "-rc${ANTARES_RC}")
-endif ()
+if(${ANTARES_RC})
+	set (ANTARES_VERSION_TAG "-rc${ANTARES_RC}")
+endif()
 
 # git SHA-1
 find_package(Git QUIET)
 execute_process(COMMAND
-        "${GIT_EXECUTABLE}" describe --match=NeVeRmAtCh --abbrev=7 --always --dirty
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        OUTPUT_VARIABLE GIT_SHA1_SHORT
-        ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+  "${GIT_EXECUTABLE}" describe --match=NeVeRmAtCh --abbrev=7 --always --dirty
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  OUTPUT_VARIABLE GIT_SHA1_SHORT
+  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Build Configuration
 set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
@@ -87,88 +87,88 @@ include("cmake/checks.cmake")
 
 
 if (ANTARES_LICENSE)
-    OMESSAGE("{antares}  License : ${ANTARES_LICENSE}")
-endif ()
+	OMESSAGE("{antares}  License : ${ANTARES_LICENSE}")
+endif()
 
-set(ANTARES_PRG_VERSION "${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}")
+set(ANTARES_PRG_VERSION  "${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}")
 
 #TODO : define if MSVC is used (check if can be removed)
 if ((WIN32 OR WIN64) AND (NOT MINGW AND NOT MSVC AND NOT CYGWIN AND NOT MSYS))
-    set(MSVC 1)
-    set(ICC 1)
-endif ()
+	set(MSVC 1)
+	set(ICC 1)
+endif()
 
 #Define which version is compiled (32bits or 64bits)
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    OMESSAGE(" Enabled 64bits instructions sets")
-    set(ANTARES_x86_64 true)
-    set(ANTARES_INSTALLER_ARCH "64bits")
-    set(ANTARES_INSTALLER_REDIST_ARCH "x64")
-    set(ANTARES_MANIFEST_ARCH "ia64")
-else ()
-    set(ANTARES_INSTALLER_ARCH "32bits")
-    set(ANTARES_INSTALLER_REDIST_ARCH "x86")
-    set(ANTARES_MANIFEST_ARCH "x86")
-endif ()
+	OMESSAGE(" Enabled 64bits instructions sets")
+	set(ANTARES_x86_64 			true)
+	set(ANTARES_INSTALLER_ARCH 		"64bits")
+	set(ANTARES_INSTALLER_REDIST_ARCH 	"x64")
+	set(ANTARES_MANIFEST_ARCH 		"ia64")
+else()
+	set(ANTARES_INSTALLER_ARCH 		"32bits")
+	set(ANTARES_INSTALLER_REDIST_ARCH 	"x86")
+	set(ANTARES_MANIFEST_ARCH 		"x86")
+endif()
 
 
 #TODO : should not defined compiler name with a global variable
 if (WIN32)
-    if (MSVC)
-        set(COMPILER_NAME "vc14")
-        set(COMPILER_LIB_INCLUDE "vc")
-    else (MSVC)
-        set(COMPILER_NAME "gcc4.x")
-        set(COMPILER_LIB_INCLUDE "gcc")
-    endif (MSVC)
-endif (WIN32)
+	if(MSVC)
+		set(COMPILER_NAME "vc14")
+		set(COMPILER_LIB_INCLUDE "vc")
+	else(MSVC)
+		set(COMPILER_NAME "gcc4.x")
+		set(COMPILER_LIB_INCLUDE "gcc")
+	endif(MSVC)
+endif(WIN32)
 
 #
 # Beta
 #
-if (NOT ANTARES_BETA EQUAL 0)
-    set(ANTARES_INSTALLER_BETA "-beta${ANTARES_BETA}")
-else ()
-    set(ANTARES_INSTALLER_BETA "")
-endif ()
+if(NOT ANTARES_BETA EQUAL 0)
+	set(ANTARES_INSTALLER_BETA "-beta${ANTARES_BETA}")
+else()
+	set(ANTARES_INSTALLER_BETA "")
+endif()
 
-if (${ANTARES_RC})
-    set(ANTARES_INSTALLER_RC "-rc${ANTARES_RC}")
-else ()
-    set(ANTARES_INSTALLER_RC "")
-endif ()
+if(${ANTARES_RC})
+	set(ANTARES_INSTALLER_RC "-rc${ANTARES_RC}")
+else()
+	set(ANTARES_INSTALLER_RC "")
+endif()
 
 OMESSAGE("")
 OMESSAGE("")
 
 #Display Build Configuration (debug or release)
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    OMESSAGE("{antares} Build Configuration: RELEASE")
-else ()
-    OMESSAGE("{antares} Build Configuration: DEBUG")
-endif ()
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+	OMESSAGE("{antares} Build Configuration: RELEASE")
+else()
+	OMESSAGE("{antares} Build Configuration: DEBUG")
+endif()
 
 #
 # Yuni Framework
 #
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    set(YUNI_TARGET_MODE "release")
-    set(ANTARES_VERSION_TARGET "release")
-else ()
-    set(YUNI_TARGET_MODE "debug")
-    set(ANTARES_VERSION_TARGET "debug")
-endif ()
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+	set(YUNI_TARGET_MODE "release")
+	set(ANTARES_VERSION_TARGET  "release")
+else()
+	set(YUNI_TARGET_MODE "debug")
+	set(ANTARES_VERSION_TARGET  "debug")
+endif()
 
 
 set(CODE_COVERAGE FALSE CACHE BOOL "Enable code coverage")
 if (CODE_COVERAGE)
-    # if code-coverage is ON, force tests build
-    set(BUILD_TESTING ON)
+	# if code-coverage is ON, force tests build
+	set(BUILD_TESTING ON)
 
-    include("cmake/CodeCoverage.cmake")
-    code_coverage(NAME code-coverage
-            OUTPUT_DIR coverage
-            EXCLUDE_DIRS tests)
+	include("cmake/CodeCoverage.cmake")
+	code_coverage(NAME code-coverage
+			OUTPUT_DIR coverage
+			EXCLUDE_DIRS tests)
 endif ()
 
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
@@ -192,64 +192,64 @@ message(STATUS "With yaml-cpp: ${WITH_YAMLCPP}")
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
-endif ()
+endif()
 
 #Boost header libraries
 find_package(Boost REQUIRED)
 
 #Sirius solver
-if (POLICY CMP0074)
-    cmake_policy(SET CMP0074 NEW)
-endif ()
+if(POLICY CMP0074)
+	cmake_policy(SET CMP0074 NEW)
+endif()
 
 find_package(sirius_solver REQUIRED)
 
 find_package(ortools)
-if (NOT ortools_FOUND OR BUILD_ORTOOLS)
-    message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
+if(NOT ortools_FOUND OR BUILD_ORTOOLS)
+message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
     FetchContent_Declare(ortools-rte
             GIT_REPOSITORY "https://github.com/rte-france/or-tools-rte.git"
-            GIT_TAG ${ORTOOLS_TAG}
-            GIT_SHALLOW TRUE
+    GIT_TAG ${ORTOOLS_TAG}
+    GIT_SHALLOW TRUE
     )
 
-    # Pass options to OR-Tools's CMake
-    set(BUILD_DEPS "ON" CACHE INTERNAL "")
-    set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
-    set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
-    set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
-    set(USE_SCIP "ON" CACHE INTERNAL "")
-    set(USE_GLPK "ON" CACHE INTERNAL "")
-    # We build OR-Tools as a static lib. Cyclic dependencies are detected
-    # without this flag.
-    set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
-    # In mode optimization error analysis, we call Sirius through or-tools
-    # So we need to activate Sirius in or-tools configuration (OFF by default)
-    set(USE_SIRIUS "ON" CACHE INTERNAL "")
+  # Pass options to OR-Tools's CMake
+  set(BUILD_DEPS "ON" CACHE INTERNAL "")
+  set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
+  set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
+  set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "ON" CACHE INTERNAL "")
+  set(USE_GLPK "ON" CACHE INTERNAL "")
+  # We build OR-Tools as a static lib. Cyclic dependencies are detected
+  # without this flag.
+  set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+  # In mode optimization error analysis, we call Sirius through or-tools
+  # So we need to activate Sirius in or-tools configuration (OFF by default)
+  set(USE_SIRIUS "ON" CACHE INTERNAL "")
     set(ortools_REPO "https://github.com/google/or-tools.git")
     string(REGEX MATCH "^[^-]+" OFFICIAL_TAG ${ORTOOLS_TAG})
     set(ortools_REF ${OFFICIAL_TAG})
 
     FetchContent_MakeAvailable(ortools-rte)
-endif ()
+endif()
 
 find_package(minizip-ng QUIET)
 if (minizip-ng_FOUND)
-    add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
+	add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
 else ()
-    find_package(minizip)
-    if (minizip_FOUND)
-        message(STATUS "Found minizip (not minizip-ng).")
-    else ()
-        message(FATAL_ERROR "Minizip not found.")
-    endif ()
+	find_package(minizip)
+	if (minizip_FOUND)
+		message (STATUS "Found minizip (not minizip-ng).")
+	else ()
+		message (FATAL_ERROR "Minizip not found.")
+	endif ()
 endif ()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
-endif ()
+endif()
 
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
@@ -258,7 +258,7 @@ add_subdirectory(config)
 
 # Configure config.h with current ANTARES version
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
-        "${CMAKE_CURRENT_SOURCE_DIR}/config/include/antares/config/config.h")
+		"${CMAKE_CURRENT_SOURCE_DIR}/config/include/antares/config/config.h")
 
 # Yuni Framework
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
@@ -268,126 +268,128 @@ OMESSAGE("") # empty line
 
 # Sub Directories
 add_subdirectory(api)
-add_subdirectory(libs)   #antares-core fswalker
+add_subdirectory(libs) 		#antares-core fswalker
 
-if (BUILD_UI)
-    add_subdirectory(ui)  #all antares ui libs + antares simulator
-endif ()
+if(BUILD_UI)
+	add_subdirectory(ui)		#all antares ui libs + antares simulator
+endif()
 
-add_subdirectory(solver) #antares solver and all associated libs
-add_subdirectory(analyzer) #antares analyser
+add_subdirectory(solver)	#antares solver and all associated libs
+add_subdirectory(analyzer)	#antares analyser
 
 # Tools
 if (BUILD_TOOLS)
-    add_subdirectory(tools) #All antares tools
-endif ()
+add_subdirectory(tools)	#All antares tools
+endif()
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
 # 	To build tests, use -DBUILD_TESTING=ON
 option(BUILD_TESTING "Activates unit tests building" OFF)
-if (BUILD_TESTING)
-    # include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
-    enable_testing()
+if(BUILD_TESTING)
+	# include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
+	enable_testing()
 
-    add_subdirectory(tests)
-endif ()
+	add_subdirectory(tests)
+endif()
 
 OMESSAGE("")
 
 
+
+
 # Informations for NSIS
-if (WIN32 OR WIN64)
-    if (MSVC)
-        if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-            set(NSIS_TARGET "Release")
-        else ()
-            set(NSIS_TARGET "Debug")
-        endif ()
-        set(COMPILER_MARK "v")
-        #set(COMPILER_INCLUDE "vs9")
-    else (MSVC)
-        set(NSIS_TARGET "")
-        set(COMPILER_MARK "m")
-        set(COMPILER_INCLUDE "mingw")
-    endif (MSVC)
+if(WIN32 OR WIN64)
+	if(MSVC)
+		if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+			set(NSIS_TARGET "Release")
+		else()
+			set(NSIS_TARGET "Debug")
+		endif()
+		set(COMPILER_MARK "v")
+		#set(COMPILER_INCLUDE "vs9")
+	else(MSVC)
+		set(NSIS_TARGET "")
+		set(COMPILER_MARK "m")
+		set(COMPILER_INCLUDE "mingw")
+	endif(MSVC)
 
-    set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
+	set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
 
-    # Configure file with custom definitions for NSIS.
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
-    )
+	# Configure file with custom definitions for NSIS.
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
+	)
 
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
-    )
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
+	)
 
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
-    )
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
+	)
 
-    SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
+	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
-    # Define system libraries so NSIS can package these files
-    include(InstallRequiredSystemLibraries)
+	# Define system libraries so NSIS can package these files
+	include (InstallRequiredSystemLibraries)
 
-    #Convert to native and add double quote to be used in NSIS package
-    foreach (SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
-        file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
+	#Convert to native and add double quote to be used in NSIS package
+	foreach(SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
+		file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
 
-        list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
-    endforeach ()
+		list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
+	endforeach()
 
-    #Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
-    string(REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
+	#Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
+	string (REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
 
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
-            @ONLY
-    )
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
+		@ONLY
+	)
 
-    #Define cpack install script to checkout examples
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
-            @ONLY
-    )
+	#Define cpack install script to checkout examples
+	configure_file(
+		${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
+		${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
+		@ONLY
+	)
 
-    set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
+	set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
 
-    #Set package name from CMake and antares variables
-    set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
+	#Set package name from CMake and antares variables
+	set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
 
 
-else ()
+else()
 
-    if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         get_linux_lsb_release_information()
         message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
         set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
-    endif ()
+    endif()
 
-    #For now only test deb, need to define several CPACK variable
-    set(CPACK_PROJECT_NAME "antares-deb-test")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
-    set(CPACK_DEBIAN_PACKAGE_NAME "antares")
-    set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
-    set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
-    set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
+	#For now only test deb, need to define several CPACK variable
+	set(CPACK_PROJECT_NAME "antares-deb-test")
+	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
+	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
+	set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
+	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
+	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
 
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
     set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
-    configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
+	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
 
-endif ()
+endif()
 
 # Load packaging facilities.
 include(CPack)
