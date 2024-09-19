@@ -25,6 +25,7 @@
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/CompareVisitor.h>
 #include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
@@ -91,28 +92,43 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(_PortfieldSubstitutionVisitor_)
 
-BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_simple, Registry<Node>)
+class SubstitutionFixture: public Registry<Node>
+{
+public:
+    Node* originalExpression()
+    {
+        Node* port1 = create<PortFieldNode>("port", "literal");
+        Node* port2 = create<PortFieldNode>("another port", "not a literal");
+        Node* root = create<SumNode>(port1, port2);
+        return root;
+    }
+
+    Node* expectedExpressionAfterSubstitution()
+    {
+        Node* node1 = create<LiteralNode>(10);
+        Node* port2 = create<PortFieldNode>("another port", "not a literal");
+        Node* root = create<SumNode>(node1, port2);
+        return root;
+    }
+
+    Node* substitute(Node* original, PortfieldSubstitutionContext& ctx)
+    {
+        PortfieldSubstitutionVisitor sub(*this, ctx);
+        return sub.dispatch(original);
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_simple, SubstitutionFixture)
+
 {
     PortfieldSubstitutionContext ctx;
+    ctx.portfield.emplace(PortFieldNode("port", "literal"), create<LiteralNode>(10));
+    Node* original = originalExpression();
+    Node* substituted = substitute(original, ctx);
+    Node* expected = expectedExpressionAfterSubstitution();
 
-    auto* port1 = create<PortFieldNode>("port", "literal");
-    auto* node1 = create<LiteralNode>(10);
-
-    ctx.portfield.emplace(*port1, node1);
-
-    auto* port2 = create<PortFieldNode>("another port", "not a literal");
-
-    Node* root = create<SumNode>(port1, port2);
-    PortfieldSubstitutionVisitor sub(*this, ctx);
-
-    Node* subsd = sub.dispatch(root);
-
-    BOOST_CHECK_EQUAL((*dynamic_cast<SumNode*>(subsd))[0], node1);
-    BOOST_CHECK_EQUAL((*dynamic_cast<SumNode*>(subsd))[0]->name(), "LiteralNode");
-
-    auto secondNode = (*dynamic_cast<SumNode*>(subsd))[1];
-    BOOST_CHECK_EQUAL(dynamic_cast<PortFieldNode*>(secondNode)->getPortName(), "another port");
-    BOOST_CHECK_EQUAL(dynamic_cast<PortFieldNode*>(secondNode)->getFieldName(), "not a literal");
+    CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(substituted, expected));
 }
 
 BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_name, Registry<Node>)
