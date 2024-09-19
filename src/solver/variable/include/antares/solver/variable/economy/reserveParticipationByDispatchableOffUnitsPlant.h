@@ -107,15 +107,8 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pSize = 0;
-        for (int areaIndex = 0; areaIndex < study->areas.size(); areaIndex++)
-        {
-            if (study->areas[areaIndex]->allCapacityReservations.size() > 0)
-            {
-                pSize = area->thermal.list.reserveParticipationsCount();
-                break;
-            }
-        }
+        pSize = area->thermal.list.reserveParticipationsCount();
+
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);
@@ -179,6 +172,24 @@ public:
 
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
+        // Get end year calculations
+        if (pSize)
+        {
+            for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
+                i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
+                ++i)
+            {
+                for (auto const& [reserveName, reserveParticipation] :
+                    state.reserveParticipationPerThermalClusterForYear[i][state.thermalCluster->name()])
+                {
+                    pValuesForTheCurrentYear
+                        [numSpace][state.area->reserveParticipationThermalClustersIndexMap.get(
+                            std::make_pair(reserveName, state.thermalCluster->name()))]
+                        .hour[i]
+                        = reserveParticipation.offUnitsParticipation;
+                }
+            }
+        }
         // Next variable
         NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
@@ -228,18 +239,6 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (auto& [clusterName, _] : state.reserveParticipationPerThermalClusterForYear[state.hourInTheYear])
-        {
-            for (const auto& [reserveName, reserveParticipation] :
-                state.reserveParticipationPerThermalClusterForYear[state.hourInTheYear][clusterName])
-            {
-                pValuesForTheCurrentYear[numSpace]
-                    [state.area->reserveParticipationThermalClustersIndexMap.get(
-                        std::make_pair(reserveName, state.thermalCluster->name()))]
-                    .hour[state.hourInTheYear]
-                    = reserveParticipation.offUnitsParticipation;
-            }
-        }
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }

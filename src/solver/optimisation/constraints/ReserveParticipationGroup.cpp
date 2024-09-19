@@ -100,20 +100,25 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveUp.AllThermalReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxPower >= 0)
+                            if (clusterReserveParticipation.maxPower > 0)
                             {
                                 // 16 bis
                                 pMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
-                                
+
+                            }
+                            if (clusterReserveParticipation.maxPowerOff > 0)
+                            {
                                 // 16 ter
-                                offUnitsThermalParticipatingToReserves.add(pays, reserve, cluster_participation, pdt);
-                                
+                                offUnitsThermalParticipatingToReserves.add(pays,
+                                                                           reserve,
+                                                                           cluster_participation,
+                                                                           pdt);
+
                                 // 16 quater
                                 pOffUnits.add(pays, reserve, cluster_participation, pdt);
-
-                                // 17 quinquies
-                                thermalReserveParticipation.add(pays, reserve, cluster_participation, pdt, true);
                             }
+                            // 17 quinquies
+                            thermalReserveParticipation.add(pays, reserve, cluster_participation, pdt, true);
                             cluster_participation++;
                         }
                         reserve++;

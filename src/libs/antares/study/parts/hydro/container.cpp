@@ -773,7 +773,6 @@ bool PartHydro::loadReserveParticipations(Area& area, const AnyString& file)
     IniFile ini;
     if (!ini.open(file, false))
     {
-        logs.error() << "Failed to open file: " << file;
         return false;
     }
 

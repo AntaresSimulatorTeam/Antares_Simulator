@@ -206,7 +206,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.nbOnGroupUnitsInThermalClusterIndex.assign(
           study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.nbOffGroupUnitsParticipatingToReservesInThermalClusterIndex.assign(
-          study.runtime.thermalPlantTotalCount, 0);
+          study.runtime.thermalPlantTotalCount * study.runtime.capacityReservationCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
           .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
@@ -246,13 +246,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeBesoinEnReserves.assign(
-            study.runtime.capacityReservationCount, 0);
+            study.runtime.capacityReservationCount, -1);
         problem.CorrespondanceCntNativesCntOptim[k]
           .nbOffGroupUnitsParticipatingToReservesInThermalClusterConstraintIndex.assign(
-            study.runtime.thermalPlantTotalCount * study.runtime.capacityReservationCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .nbOffGroupUnitsParticipatingToReservesInThermalClusterConstraintIndex.assign(
-            study.runtime.thermalPlantTotalCount * study.runtime.capacityReservationCount, 0);
+            study.runtime.thermalPlantTotalCount * study.runtime.capacityReservationCount, -1);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier.assign(
             study.runtime.thermalPlantTotalCount, 0);
