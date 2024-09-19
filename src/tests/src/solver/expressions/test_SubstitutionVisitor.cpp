@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(_PortfieldSubstitutionVisitor_)
 
-BOOST_FIXTURE_TEST_CASE(PortfieldSubsitutionVisitor, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_simple, Registry<Node>)
 {
     PortfieldSubstitutionContext ctx;
 
@@ -113,6 +113,14 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubsitutionVisitor, Registry<Node>)
     auto secondNode = (*dynamic_cast<SumNode*>(subsd))[1];
     BOOST_CHECK_EQUAL(dynamic_cast<PortFieldNode*>(secondNode)->getPortName(), "another port");
     BOOST_CHECK_EQUAL(dynamic_cast<PortFieldNode*>(secondNode)->getFieldName(), "not a literal");
+}
+
+BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_name, Registry<Node>)
+{
+    PortfieldSubstitutionContext ctx;
+
+    PortfieldSubstitutionVisitor substitutionVisitor(*this, ctx);
+    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortfieldSubstitutionVisitor");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
