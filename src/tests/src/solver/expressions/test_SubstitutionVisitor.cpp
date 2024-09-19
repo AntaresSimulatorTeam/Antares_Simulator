@@ -103,12 +103,16 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubsitutionVisitor, Registry<Node>)
     auto* port2 = create<PortFieldNode>("another port", "not a literal");
 
     Node* root = create<SumNode>(port1, port2);
-
     PortfieldSubstitutionVisitor sub(*this, ctx);
 
     Node* subsd = sub.dispatch(root);
 
     BOOST_CHECK_EQUAL((*dynamic_cast<SumNode*>(subsd))[0], node1);
+    BOOST_CHECK_EQUAL((*dynamic_cast<SumNode*>(subsd))[0]->name(), "LiteralNode");
+
+    auto secondNode = (*dynamic_cast<SumNode*>(subsd))[1];
+    BOOST_CHECK_EQUAL(dynamic_cast<PortFieldNode*>(secondNode)->getPortName(), "another port");
+    BOOST_CHECK_EQUAL(dynamic_cast<PortFieldNode*>(secondNode)->getFieldName(), "not a literal");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
