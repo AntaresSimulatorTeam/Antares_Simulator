@@ -28,17 +28,10 @@
 
 namespace Antares::Solver::Visitors
 {
+
 struct KeyHasher
 {
-    std::size_t operator()(const Nodes::PortFieldNode& n) const
-    {
-        std::size_t seed = 0;
-
-        boost::hash_combine(seed, boost::hash_value(n.getPortName()));
-        boost::hash_combine(seed, boost::hash_value(n.getFieldName()));
-
-        return seed;
-    }
+    std::size_t operator()(const Nodes::PortFieldNode& n) const;
 };
 
 /**
