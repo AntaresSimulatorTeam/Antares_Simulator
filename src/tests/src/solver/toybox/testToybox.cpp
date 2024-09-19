@@ -27,11 +27,12 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/solver/expressions/Registry.hxx>
 #include "antares/antlr-interface/ExprLexer.h"
 #include "antares/antlr-interface/ExprParser.h"
 #include "antares/antlr-interface/ExprVisitor.h"
+#include "antares/solver/expressions/nodes/VariableNode.h"
 
-#include "../../../../solver/expressions/include/antares/solver/expressions/nodes/VariableNode.h"
 #include "yaml-cpp/yaml.h"
 
 struct Model;
@@ -215,6 +216,11 @@ public:
 class ConvertorVisitor: public ExprVisitor
 {
 public:
+    ConvertorVisitor(Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry):
+        registry_(registry)
+    {
+    }
+
     virtual antlrcpp::Any visitChildren(antlr4::tree::ParseTree* node) override
     {
         for (auto child: node->children)
@@ -241,14 +247,17 @@ public:
 
     std::any visitIdentifier(ExprParser::IdentifierContext* context) override
     {
-        return Antares::Solver::Nodes::VariableNode(context->getText());
+        auto variable_node = registry_.create<Antares::Solver::Nodes::VariableNode>(
+          context->getText());
+        return variable_node;
     }
 
     std::any visitMuldiv(ExprParser::MuldivContext* context) override
     {
-        auto left = std::any_cast<Antares::Solver::Nodes::VariableNode>(visit(context->expr(0)));
-        auto right = std::any_cast<Antares::Solver::Nodes::VariableNode>(visit(context->expr(1)));
-        return Antares::Solver::Nodes::MultiplicationNode(&left, &right);
+        auto left = std::any_cast<Antares::Solver::Nodes::VariableNode*>(visit(context->expr(0)));
+        auto right = std::any_cast<Antares::Solver::Nodes::VariableNode*>(visit(context->expr(1)));
+        auto mult_node = registry_.create<Antares::Solver::Nodes::MultiplicationNode>(left, right);
+        return mult_node;
     }
 
     std::any visitFullexpr(ExprParser::FullexprContext* context) override
@@ -315,6 +324,8 @@ public:
     {
         return std::any();
     }
+
+    Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry_;
 };
 
 // Simple test case
@@ -374,6 +385,7 @@ nodes:
     ExprParser parser(&tokens);
     auto expression_context = parser.expr();
     std::cout << "first child " << expression_context->children[0]->getText() << std::endl;
-    ConvertorVisitor expr_visitor;
+    Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
+    ConvertorVisitor expr_visitor(registry);
     expression_context->accept(&expr_visitor);
 }
