@@ -22,8 +22,6 @@
 
 #include <map>
 
-#include <boost/functional/hash.hpp>
-
 #include "antares/solver/expressions/visitors/CloneVisitor.h"
 
 namespace Antares::Solver::Visitors
