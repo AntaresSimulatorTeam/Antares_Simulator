@@ -111,8 +111,11 @@ public:
         return root;
     }
 
-    Node* substitute(Node* original, PortfieldSubstitutionContext& ctx)
+    Node* substitute(Node* original)
     {
+        PortfieldSubstitutionContext ctx;
+        ctx.portfield.emplace(PortFieldNode("port", "literal"), create<LiteralNode>(10));
+
         PortfieldSubstitutionVisitor sub(*this, ctx);
         return sub.dispatch(original);
     }
@@ -121,10 +124,8 @@ public:
 BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_simple, SubstitutionFixture)
 
 {
-    PortfieldSubstitutionContext ctx;
-    ctx.portfield.emplace(PortFieldNode("port", "literal"), create<LiteralNode>(10));
     Node* original = originalExpression();
-    Node* substituted = substitute(original, ctx);
+    Node* substituted = substitute(original);
     Node* expected = expectedExpressionAfterSubstitution();
 
     CompareVisitor cmp;
