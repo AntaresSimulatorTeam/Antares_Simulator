@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"classBenchmarking_1_1StudyInfoCollector.html":[9,0,2,4],
+"classBenchmarking_1_1Timer.html":[9,0,2,5],
 "classBindingConstraintData.html":[9,0,41],
 "classBindingConstraintDay.html":[9,0,42],
 "classBindingConstraintDay.html#a2e34353696b4c761e4f3abd6eab832d9":[9,0,42,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "classNbDispUnitsMinBoundSinceMinUpTime.html":[9,0,157],
 "classNbDispUnitsMinBoundSinceMinUpTime.html#a6c9076b36b6fba52d69c67ca72799e6b":[9,0,157,0],
 "classNbDispUnitsMinBoundSinceMinUpTimeGroup.html":[9,0,159],
-"classNbDispUnitsMinBoundSinceMinUpTimeGroup.html#ae10d38a9e22e00a2fd5e0d392506bf6e":[9,0,159,0],
-"classNbUnitsOutageLessThanNbUnitsStop.html":[9,0,160],
-"classNbUnitsOutageLessThanNbUnitsStop.html#a3744b46a326600cfa20c13008943853e":[9,0,160,0]
+"classNbDispUnitsMinBoundSinceMinUpTimeGroup.html#ae10d38a9e22e00a2fd5e0d392506bf6e":[9,0,159,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterRenewable.html":[9,0,0,18,1,4],
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterThermal.html":[9,0,0,18,1,5],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html":[9,0,0,18,1,6],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html#a1aed621fba7ed90fd9df11a41b1af2ca":[9,0,0,18,1,6,0],
 "classAntares_1_1Window_1_1Inspector_1_1Frame.html#a406cba965c4dce65d86bc8f782e12fa0":[9,0,0,18,1,6,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX17 =
 "classAreaHydroLevelGroup.html":[9,0,39],
 "classBenchmarking_1_1DurationCollector.html":[9,0,2,0],
 "classBenchmarking_1_1FileContent.html":[9,0,2,1],
-"classBenchmarking_1_1SimulationInfoCollector.html":[9,0,2,3],
-"classBenchmarking_1_1StudyInfoCollector.html":[9,0,2,4],
-"classBenchmarking_1_1Timer.html":[9,0,2,5]
+"classBenchmarking_1_1SimulationInfoCollector.html":[9,0,2,3]
 };

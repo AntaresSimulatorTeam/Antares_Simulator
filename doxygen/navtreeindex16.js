@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Toolbox_1_1Filter_1_1Input.html#a7b5b85e05bda5b0bcdf40cc152d1dac5":[9,0,0,15,1,9,5],
+"classAntares_1_1Toolbox_1_1Filter_1_1Input.html#a7d497072694bc36a30a42e4b656e14e3":[9,0,0,15,1,9,4],
 "classAntares_1_1Toolbox_1_1Filter_1_1Input.html#a81269e44eb21ed5370aab0ec5b73d23d":[9,0,0,15,1,9,6],
 "classAntares_1_1Toolbox_1_1Filter_1_1Input.html#a8d53fb8e2840ef12a247b603a5c4b464":[9,0,0,15,1,9,2],
 "classAntares_1_1Toolbox_1_1Filter_1_1Input.html#aa0200a3211ad606740beccff6f4e2c54":[9,0,0,15,1,9,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Window_1_1Hydro_1_1Series.html":[9,0,0,18,0,6],
 "classAntares_1_1Window_1_1Hydro_1_1Series.html#a6a776e9d88d97b1d8da361c05bdb2833":[9,0,0,18,0,6,1],
 "classAntares_1_1Window_1_1Hydro_1_1Series.html#a9765ac461e699b481ce0c57b40954147":[9,0,0,18,0,6,0],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html":[9,0,0,18,1,3],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterRenewable.html":[9,0,0,18,1,4],
-"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdaterThermal.html":[9,0,0,18,1,5]
+"classAntares_1_1Window_1_1Inspector_1_1ClusterUpdater.html":[9,0,0,18,1,3]
 };
