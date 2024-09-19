@@ -35,9 +35,9 @@ PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>
 
 Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    if (ctx_.portfield.contains(*node))
+    if (auto it = ctx_.portfield.find(*node); it != ctx_.portfield.end())
     {
-        return (ctx_.portfield.at(*node));
+        return it->second;
     }
 
     return CloneVisitor::visit(node);
