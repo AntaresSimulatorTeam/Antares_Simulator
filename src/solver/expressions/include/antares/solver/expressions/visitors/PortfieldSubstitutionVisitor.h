@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <boost/functional/hash.hpp>
 #include <map>
 
 #include "antares/solver/expressions/visitors/CloneVisitor.h"
@@ -30,12 +31,12 @@ struct KeyHasher
 {
   std::size_t operator()(const Nodes::PortFieldNode& n) const
   {
-    using std::size_t;
-    using std::hash;
-    using std::string;
+      std::size_t seed = 0;
 
-    return ((hash<string>()(n.getPortName())
-             ^ (hash<string>()(n.getFieldName()) << 1)) >> 1);
+      boost::hash_combine(seed, boost::hash_value(n.getPortName()));
+      boost::hash_combine(seed, boost::hash_value(n.getFieldName()));
+
+      return seed;
   }
 };
 
