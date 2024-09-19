@@ -32,125 +32,78 @@
 #include "antares/antlr-interface/ExprParser.h"
 #include "antares/antlr-interface/ExprVisitor.h"
 #include "antares/solver/expressions/nodes/VariableNode.h"
+#include "antares/solver/expressions/visitors/CloneVisitor.h"
 #include "antares/solver/expressions/visitors/PrintVisitor.h"
 
+#include "ConvertorVisitor.h"
+#include "ModelParser.h"
 #include "yaml-cpp/yaml.h"
 
 struct Model;
 struct Parameter;
 
-struct Library
+// struct StructName => DTO
+// struct StructNameInstance => Objet métier/technique/whatever
+
+struct LibraryInstance
 {
     std::string id;
     std::string description;
     std::vector<Model> models;
 };
 
-struct Model
-{
-    std::string id;
-    std::string description;
-    std::vector<Parameter> parameters;
-    std::string objective;
-};
-
-struct Parameter
+struct ComponentParameter
 {
     std::string name;
-    bool time_dependent;
-    bool scenario_dependent;
-};
-
-// Decode and encode structs
-namespace YAML
-{
-template<>
-struct convert<Library>
-{
-    static Node encode(const Library& rhs)
-    {
-        Node node;
-        node["id"] = rhs.id;
-        node["description"] = rhs.description;
-        node["models"] = rhs.models;
-        return node;
-    }
-
-    static bool decode(const Node& node, Library& rhs)
-    {
-        if (!node.IsMap() || node.size() != 3)
-        {
-            return false;
-        }
-
-        rhs.id = node["id"].as<std::string>();
-        rhs.description = node["description"].as<std::string>();
-        rhs.models = node["models"].as<std::vector<Model>>();
-        return true;
-    }
-};
-
-// Model
-template<>
-struct convert<Model>
-{
-    static Node encode(const Model& rhs)
-    {
-        Node node;
-        node["id"] = rhs.id;
-        node["description"] = rhs.description;
-        node["parameters"] = rhs.parameters;
-        node["objective"] = rhs.objective;
-        return node;
-    }
-
-    static bool decode(const Node& node, Model& rhs)
-    {
-        if (!node.IsMap() || node.size() != 4)
-        {
-            return false;
-        }
-
-        rhs.id = node["id"].as<std::string>();
-        rhs.description = node["description"].as<std::string>();
-        rhs.parameters = node["parameters"].as<std::vector<Parameter>>();
-        rhs.objective = node["objective"].as<std::string>();
-        return true;
-    }
-};
-
-// Parameter
-template<>
-struct convert<Parameter>
-{
-    static Node encode(const Parameter& rhs)
-    {
-        Node node;
-        node["name"] = rhs.name;
-        node["time-dependent"] = rhs.time_dependent;
-        node["scenario-dependent"] = rhs.scenario_dependent;
-        return node;
-    }
-
-    static bool decode(const Node& node, Parameter& rhs)
-    {
-        if (!node.IsMap() || node.size() != 3)
-        {
-            return false;
-        }
-
-        rhs.name = node["name"].as<std::string>();
-        rhs.time_dependent = node["time-dependent"].as<bool>();
-        rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
-        return true;
-    }
+    double value;
 };
 
 struct Component
 {
     std::string id;
     std::string model;
-    std::vector<Parameter> parameters;
+    std::vector<ComponentParameter> parameters;
+};
+
+struct ComponentInstance
+{
+    ComponentInstance(const Component& c)
+    {
+        for (auto& p: c.parameters)
+        {
+            parameters[p.name] = p.value;
+        }
+    }
+
+    std::map<std::string, double> parameters;
+};
+
+// Decode and encode structs
+namespace YAML
+{
+// ComponentParameter
+template<>
+struct convert<ComponentParameter>
+{
+    static Node encode(const ComponentParameter& rhs)
+    {
+        Node node;
+        node["name"] = rhs.name;
+        node["value"] = rhs.value;
+        return node;
+    }
+
+    static bool decode(const Node& node, ComponentParameter& rhs)
+    {
+        if (!node.IsMap() || node.size() != 2)
+        {
+            return false;
+        }
+
+        rhs.name = node["name"].as<std::string>();
+        rhs.value = node["value"].as<double>();
+        return true;
+    }
 };
 
 // Component
@@ -175,11 +128,13 @@ struct convert<Component>
 
         rhs.id = node["id"].as<std::string>();
         rhs.model = node["model"].as<std::string>();
-        rhs.parameters = node["parameters"].as<std::vector<Parameter>>();
+        rhs.parameters = node["parameters"].as<std::vector<ComponentParameter>>();
         return true;
     }
 };
 } // namespace YAML
+
+// namespace YAML
 
 class PrintVisitor: public antlr4::tree::ParseTreeVisitor
 {
@@ -211,125 +166,31 @@ public:
     }
 };
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-
-// Visitor to convert nodes to Antares::Solver::Nodes
-class ConvertorVisitor: public ExprVisitor
+class ParameterSubstitutionVisitor: public Antares::Solver::Visitors::CloneVisitor
 {
 public:
-    ConvertorVisitor(Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry):
+    ParameterSubstitutionVisitor(Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry,
+                                 const ComponentInstance& component):
+        Antares::Solver::Visitors::CloneVisitor(registry),
+        component_(component),
         registry_(registry)
     {
     }
 
-    virtual antlrcpp::Any visitChildren(antlr4::tree::ParseTree* node) override
+    Antares::Solver::Nodes::Node* visit(const Antares::Solver::Nodes::ParameterNode* node) override
     {
-        for (auto child: node->children)
+        auto it = component_.parameters.find(node->value());
+        if (it != component_.parameters.end())
         {
-            child->accept(this);
+            return registry_.create<Antares::Solver::Nodes::LiteralNode>(it->second);
         }
-        return antlrcpp::Any();
+        else
+        {
+            throw std::runtime_error("Parameter not found: " + node->name() + "in component ");
+        }
     }
 
-    std::any visit(antlr4::tree::ParseTree* tree) override
-    {
-        return tree->accept(this);
-    }
-
-    std::any visitTerminal(antlr4::tree::TerminalNode* node) override
-    {
-        return std::any();
-    }
-
-    std::any visitErrorNode(antlr4::tree::ErrorNode* node) override
-    {
-        return std::any();
-    }
-
-    std::any visitIdentifier(ExprParser::IdentifierContext* context) override
-    {
-        auto variable_node = registry_.create<Antares::Solver::Nodes::VariableNode>(
-          context->getText());
-        return variable_node;
-    }
-
-    std::any visitMuldiv(ExprParser::MuldivContext* context) override
-    {
-        // Meh
-        // Having to know the underlying type of the node is not great. We can eitgher return
-        // expression node containing the concrete node to be able to always anycast<Expression> Or
-        // we can return a pair Node/type (difficult to return a type in c++)
-        auto left = std::any_cast<Antares::Solver::Nodes::VariableNode*>(visit(context->expr(0)));
-        auto right = std::any_cast<Antares::Solver::Nodes::VariableNode*>(visit(context->expr(1)));
-        auto mult_node = registry_.create<Antares::Solver::Nodes::MultiplicationNode>(left, right);
-        return mult_node;
-    }
-
-    std::any visitFullexpr(ExprParser::FullexprContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitShift(ExprParser::ShiftContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitNegation(ExprParser::NegationContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitExpression(ExprParser::ExpressionContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitComparison(ExprParser::ComparisonContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitAddsub(ExprParser::AddsubContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitPortField(ExprParser::PortFieldContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitNumber(ExprParser::NumberContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitTimeShift(ExprParser::TimeShiftContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitFunction(ExprParser::FunctionContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitTimeShiftRange(ExprParser::TimeShiftRangeContext* context) override
-    {
-        return std::any();
-    }
-
-    std::any visitTimeRange(ExprParser::TimeRangeContext* context) override
-    {
-        return std::any();
-    }
-
+    const ComponentInstance& component_;
     Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry_;
 };
 
@@ -361,20 +222,13 @@ models:
     objective: "cost * value"
 )";
 
-    std::string component1_s = R"(
-"study:
-nodes:
-- id: small_generator
-  model: generator
-  parameters:
-    cost: 10
-    value: 100
-")";
-
     // Load model library and components
     YAML::Node library_doc = YAML::Load(library_s);
-    YAML::Node component_doc = YAML::Load(component1_s);
     auto models = library_doc["models"].as<std::vector<Model>>();
+    LibraryInstance library;
+
+    library.models = models;
+
     BOOST_CHECK_EQUAL(models.size(), 1);
     auto generator = models[0];
     BOOST_CHECK_EQUAL(generator.id, "generator");
@@ -394,9 +248,7 @@ nodes:
     ExprParser parser(&tokens);
     auto expression_context = parser.expr(); // Now we have our expression parsed following the
                                              // grammar for expression
-
-    std::cout << "first child " << expression_context->children[0]->getText() << std::endl;
-
+    
     // Convert expression to Antares::Solver::Nodes expressions
     Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
     ConvertorVisitor expr_visitor(registry);
@@ -405,5 +257,28 @@ nodes:
 
     // Use visitor on expression
     Antares::Solver::Visitors::PrintVisitor print_visitor;
-    std::cout << "node " << print_visitor.dispatch(node) << std::endl;
+    std::cout << "Converted tree " << print_visitor.dispatch(node) << std::endl;
+
+    // Create component
+    std::string component1_s = R"(
+study:
+nodes:
+  - id: small_generator
+    model: generator
+    parameters:
+        - name: cost
+          value: 10
+        - name: value
+          value: 20
+
+)";
+
+    YAML::Node component_doc = YAML::Load(component1_s);
+
+    auto components = component_doc["nodes"].as<std::vector<Component>>();
+    auto component = components[0];
+    ComponentInstance generator_instance(component);
+    ParameterSubstitutionVisitor substitution_visitor(registry, generator_instance);
+    auto substituedTree = substitution_visitor.dispatch(node);
+    std::cout << "Parameter substitued: " << print_visitor.dispatch(substituedTree) << std::endl;
 }

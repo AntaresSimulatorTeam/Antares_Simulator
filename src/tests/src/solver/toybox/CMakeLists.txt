@@ -4,7 +4,10 @@ find_package(yaml-cpp CONFIG REQUIRED)
 find_package(antlr4-runtime CONFIG REQUIRED)
 
 # Add the executable
-add_executable(${EXECUTABLE_NAME} testToybox.cpp)
+add_executable(${EXECUTABLE_NAME} testToybox.cpp
+        ConvertorVisitor.h
+        ModelParser.h
+)
 
 # Link libraries
 target_link_libraries(${EXECUTABLE_NAME}
