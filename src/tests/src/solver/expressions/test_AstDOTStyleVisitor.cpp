@@ -21,7 +21,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <fstream>
 #include <variant>
 
 #include <boost/test/unit_test.hpp>
@@ -36,9 +35,44 @@ using namespace Antares::Solver::Visitors;
 
 BOOST_AUTO_TEST_SUITE(_AstGraphVisitor_)
 
-static auto buildAllTypeNode(Registry<Node>& registry)
+class Fixture
 {
-    const std::string expected_msg = R"raw(digraph ExpressionTree {
+public:
+    Fixture()
+    {
+    }
+
+    Node* makeExpression()
+    {
+        Node* literalNode = registry_.create<LiteralNode>(-40.);
+        Node* negationNode = registry_.create<NegationNode>(literalNode);
+        Node* parameterNode = registry_.create<ParameterNode>("avogadro_constant");
+        Node* multiplicationNode = registry_.create<MultiplicationNode>(negationNode,
+                                                                        parameterNode);
+        Node* variableNode = registry_.create<VariableNode>("atoms_count");
+        Node* divisionNode = registry_.create<DivisionNode>(variableNode, multiplicationNode);
+        Node* portFieldNode = registry_.create<PortFieldNode>("gasStation", "1149");
+        Node* sumNode = registry_.create<SumNode>(divisionNode, portFieldNode);
+        Node* componentVariableNode = registry_.create<ComponentVariableNode>("1150",
+                                                                              "otherStation");
+        Node* componentParameterNode = registry_.create<ComponentParameterNode>("1151",
+                                                                                "otherConstant");
+        Node* subtractionNode = registry_.create<SubtractionNode>(componentVariableNode,
+                                                                  componentParameterNode);
+        Node* equalNode = registry_.create<EqualNode>(subtractionNode, sumNode);
+        Node* literalNode2 = registry_.create<LiteralNode>(53.);
+        Node* lessThanOrEqualNode = registry_.create<LessThanOrEqualNode>(literalNode2, equalNode);
+        Node* literalNode3 = registry_.create<LiteralNode>(54.);
+        Node* greaterThanOrEqualNode = registry_.create<GreaterThanOrEqualNode>(
+          literalNode3,
+          lessThanOrEqualNode);
+
+        return greaterThanOrEqualNode;
+    }
+
+    static std::string expectedDotContent()
+    {
+        return R"raw(digraph ExpressionTree {
 node[style = filled]
   1 [label=">=", shape="diamond", style="filled", color="yellow"];
   1 -> 2;
@@ -110,44 +144,22 @@ legend_SumNode -> legend_VariableNode [style=invis];
 }
 }
 )raw";
+    }
 
-    Node* literalNode = registry.create<LiteralNode>(-40.);
-    Node* negationNode = registry.create<NegationNode>(literalNode);
-    Node* parameterNode = registry.create<ParameterNode>("avogadro_constant");
-    Node* multiplicationNode = registry.create<MultiplicationNode>(negationNode, parameterNode);
-    Node* variableNode = registry.create<VariableNode>("atoms_count");
-    Node* divisionNode = registry.create<DivisionNode>(variableNode, multiplicationNode);
-    Node* portFieldNode = registry.create<PortFieldNode>("gasStation", "1149");
-    Node* sumNode = registry.create<SumNode>(divisionNode, portFieldNode);
-    Node* componentVariableNode = registry.create<ComponentVariableNode>("1150", "otherStation");
-    Node* componentParameterNode = registry.create<ComponentParameterNode>("1151", "otherConstant");
-    Node* subtractionNode = registry.create<SubtractionNode>(componentVariableNode,
-                                                             componentParameterNode);
-    Node* equalNode = registry.create<EqualNode>(subtractionNode, sumNode);
-    Node* literalNode2 = registry.create<LiteralNode>(53.);
-    Node* lessThanOrEqualNode = registry.create<LessThanOrEqualNode>(literalNode2, equalNode);
-    Node* literalNode3 = registry.create<LiteralNode>(54.);
-    Node* greaterThanOrEqualNode = registry.create<GreaterThanOrEqualNode>(literalNode3,
-                                                                           lessThanOrEqualNode);
+    Registry<Node> registry_;
+};
 
-    return std::pair{expected_msg, greaterThanOrEqualNode};
-}
-
-BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Fixture)
 {
-    auto [expected_msg, expr] = buildAllTypeNode(*this);
-
-    
     std::ostringstream os;
 
     AstDOTStyleVisitor astGraphVisitor;
-    
-    std::pair<AstDOTStyleVisitor&, Node*> pair1(astGraphVisitor, expr);
+
+    std::pair<AstDOTStyleVisitor&, Node*> pair1(astGraphVisitor, makeExpression());
     os << pair1;
-    
 
     // read the content of os
-    BOOST_CHECK_EQUAL(expected_msg, os.str());
+    BOOST_CHECK_EQUAL(expectedDotContent(), os.str());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
