@@ -26,6 +26,19 @@
 
 namespace Antares::Solver::Visitors
 {
+struct KeyHasher
+{
+  std::size_t operator()(const Nodes::PortFieldNode& n) const
+  {
+    using std::size_t;
+    using std::hash;
+    using std::string;
+
+    return ((hash<string>()(n.getPortName())
+             ^ (hash<string>()(n.getFieldName()) << 1)) >> 1);
+  }
+};
+
 /**
  * @brief Represents the context for performing substitutions in a syntax tree.
  */
