@@ -91,12 +91,24 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(_PortfieldSubstitutionVisitor_)
 
-BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_substitute_one_node, Registry<Node>)
+BOOST_FIXTURE_TEST_CASE(PortfieldSubsitutionVisitor, Registry<Node>)
 {
-    SubstitutionContext ctx;
+    PortfieldSubstitutionContext ctx;
 
     auto* port1 = this->create<PortFieldNode>("port", "literal");
     auto* node1 = this->create<LiteralNode>(10);
+
+    ctx.portfield.emplace(*port1, node1);
+
+    auto* port2 = this->create<PortFieldNode>("another port", "not a literal");
+
+    Node* root = create<SumNode>(port1, port2);
+
+    PortfieldSubsitutionVisitor sub(*this, ctx);
+
+    Node* subsd = sub.dispatch(root);
+
+    BOOST_CHECK_EQUAL((*dynamic_cast<SumNode*>(subsd))[0], node1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
