@@ -104,7 +104,7 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubsitutionVisitor, Registry<Node>)
 
     Node* root = create<SumNode>(port1, port2);
 
-    PortfieldSubsitutionVisitor sub(*this, ctx);
+    PortfieldSubstitutionVisitor sub(*this, ctx);
 
     Node* subsd = sub.dispatch(root);
 
