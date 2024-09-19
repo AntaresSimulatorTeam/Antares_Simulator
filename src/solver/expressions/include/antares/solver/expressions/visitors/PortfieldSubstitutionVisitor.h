@@ -45,7 +45,7 @@ struct KeyHasher
  */
 struct PortfieldSubstitutionContext
 {
-    std::map<Nodes::PortFieldNode, Nodes::Node*> portfield;
+    std::unordered_map<Nodes::PortFieldNode, Nodes::Node*, KeyHasher> portfield;
 };
 
 /**
