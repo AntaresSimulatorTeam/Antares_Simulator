@@ -9,16 +9,20 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "stream.h"
-#include "../../core/string.h"
 
+#include "../../core/string.h"
+#include "stream.h"
+#ifndef EOF
+#define EOF (-1)
+#endif
 namespace Yuni
 {
 namespace IO
 {
 namespace File
 {
-inline Stream::Stream() : pFd(nullptr)
+inline Stream::Stream():
+    pFd(nullptr)
 {
     // Do nothing
 }
@@ -27,7 +31,9 @@ inline Stream::~Stream()
 {
     // The check is mandatory to avoid SegV on some platform (Darwin for example)
     if (pFd)
+    {
         (void)::fclose(pFd);
+    }
 }
 
 inline bool Stream::openRW(const AnyString& filename)
@@ -104,7 +110,9 @@ bool Stream::readline(StringT& buffer, bool trim)
         // to perform maintenance (about the internal size and the final zero)
         buffer.resize(static_cast<uint>(::strlen(buffer.c_str())));
         if (trim)
+        {
             buffer.trimRight("\r\n");
+        }
         return true;
     }
     buffer.clear();
@@ -272,9 +280,10 @@ inline uint64_t Stream::write(const U& buffer, uint64_t maxsize)
 {
     String string(buffer);
     return (uint64_t)::fwrite(string.c_str(),
-                            1,
-                            string.size() > maxsize ? static_cast<size_t>(maxsize) : string.size(),
-                            pFd);
+                              1,
+                              string.size() > maxsize ? static_cast<size_t>(maxsize)
+                                                      : string.size(),
+                              pFd);
 }
 
 inline bool Stream::operator!() const
@@ -314,11 +323,15 @@ inline uint64_t Stream::read(CString<CSizeT, ExpT>& buffer, uint64_t size)
     assert(pFd and "File not opened");
     assert(size <= static_cast<uint64_t>(2 * 1024) * 1024u * 1024u);
     if (0 == size)
+    {
         return 0;
+    }
 
     // special case for static strings
     if (not buffer.expandable and size > buffer.chunkSize)
+    {
         size = buffer.chunkSize;
+    }
 
     // Resizing the buffer
     buffer.resize(static_cast<uint>(size));
@@ -330,14 +343,20 @@ inline uint64_t Stream::read(CString<CSizeT, ExpT>& buffer, uint64_t size)
     typedef CString<CSizeT, ExpT> StringType;
     typedef typename StringType::Char C;
     // Reading the file
-    size_t result
-      = ::fread(const_cast<char*>(buffer.data()), 1, static_cast<size_t>(sizeof(C) * size), pFd);
+    size_t result = ::fread(const_cast<char*>(buffer.data()),
+                            1,
+                            static_cast<size_t>(sizeof(C) * size),
+                            pFd);
     // Setting the good size, because we may have read less than asked
     if (result < static_cast<size_t>(buffer.size()))
+    {
         buffer.truncate(static_cast<uint>(result));
+    }
     // Making sure that the buffer is zero-terminated if required
     if (buffer.zeroTerminated)
+    {
         *(reinterpret_cast<C*>(buffer.data() + buffer.size())) = C();
+    }
     return result;
 }
 
@@ -356,10 +375,14 @@ inline uint64_t Stream::chunkRead(CString<ChunkSizeT, ExpandableT>& buffer)
     const uint64_t result = ::fread(buffer.data(), 1, sizeof(C) * buffer.chunkSize, pFd);
     // Setting the good size, because we may have read less than asked
     if (result < buffer.size())
+    {
         buffer.truncate(static_cast<typename StringType::Size>(result));
+    }
     // Making sure that the buffer is zero-terminated if required
     if (buffer.zeroTerminated)
+    {
         *((C*)(buffer.data() + buffer.size())) = C();
+    }
     return result;
 }
 

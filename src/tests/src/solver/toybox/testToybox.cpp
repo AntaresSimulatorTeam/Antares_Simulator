@@ -32,6 +32,7 @@
 #include "antares/antlr-interface/ExprParser.h"
 #include "antares/antlr-interface/ExprVisitor.h"
 #include "antares/solver/expressions/nodes/VariableNode.h"
+#include "antares/solver/expressions/visitors/PrintVisitor.h"
 
 #include "yaml-cpp/yaml.h"
 
@@ -387,5 +388,9 @@ nodes:
     std::cout << "first child " << expression_context->children[0]->getText() << std::endl;
     Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
     ConvertorVisitor expr_visitor(registry);
-    expression_context->accept(&expr_visitor);
+    auto node = std::any_cast<Antares::Solver::Nodes::MultiplicationNode*>(
+      expression_context->accept(&expr_visitor));
+
+    Antares::Solver::Visitors::PrintVisitor print_visitor;
+    std::cout << "node " << print_visitor.dispatch(node) << std::endl;
 }
