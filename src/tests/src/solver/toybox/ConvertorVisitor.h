@@ -26,13 +26,17 @@
 #include "antares/antlr-interface/ExprVisitor.h"
 #include "antares/solver/expressions/Registry.hxx"
 
+#include "Model.h"
+
 // Visitor to convert nodes to Antares::Solver::Nodes
 // TODO add reference to model to be able to resolve names as either parameters or variables
 class ConvertorVisitor: public ExprVisitor
 {
 public:
-    ConvertorVisitor(Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry):
-        registry_(registry)
+    ConvertorVisitor(Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry,
+                     const Model& model):
+        registry_(registry),
+        model_(model)
     {
     }
 
@@ -62,9 +66,23 @@ public:
 
     std::any visitIdentifier(ExprParser::IdentifierContext* context) override
     {
-        auto variable_node = registry_.create<Antares::Solver::Nodes::ParameterNode>(
-          context->getText());
-        return variable_node;
+        bool is_parameter = false;
+        for (const auto& parameter: model_.parameters)
+        {
+            if (parameter.name == context->getText())
+            {
+                is_parameter = true;
+                break;
+            }
+        }
+        if (is_parameter)
+        {
+            return registry_.create<Antares::Solver::Nodes::ParameterNode>(context->getText());
+        }
+        else
+        {
+            return registry_.create<Antares::Solver::Nodes::VariableNode>(context->getText());
+        }
     }
 
     std::any visitMuldiv(ExprParser::MuldivContext* context) override
@@ -74,7 +92,7 @@ public:
         // expression node containing the concrete node to be able to always anycast<Expression> Or
         // we can return a pair Node/type (difficult to return a type in c++)
         auto left = std::any_cast<Antares::Solver::Nodes::ParameterNode*>(visit(context->expr(0)));
-        auto right = std::any_cast<Antares::Solver::Nodes::ParameterNode*>(visit(context->expr(1)));
+        auto right = std::any_cast<Antares::Solver::Nodes::VariableNode*>(visit(context->expr(1)));
         auto mult_node = registry_.create<Antares::Solver::Nodes::MultiplicationNode>(left, right);
         return mult_node;
     }
@@ -145,4 +163,5 @@ public:
     }
 
     Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry_;
+    const Model& model_;
 };

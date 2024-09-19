@@ -68,7 +68,7 @@ models:
       - name: value
         time-dependent: false
         scenario-dependent: false
-    objective: "cost * value"
+    objective: "cost * pMax"
 )";
 
     // Load model library and components
@@ -100,7 +100,7 @@ models:
 
     // Convert expression to Antares::Solver::Nodes expressions
     Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
-    ConvertorVisitor expr_visitor(registry);
+    ConvertorVisitor expr_visitor(registry, generator);
     auto node = std::any_cast<Antares::Solver::Nodes::MultiplicationNode*>(
       expression_context->accept(&expr_visitor));
 
