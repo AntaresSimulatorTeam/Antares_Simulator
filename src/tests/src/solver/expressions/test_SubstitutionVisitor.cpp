@@ -95,12 +95,12 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubsitutionVisitor, Registry<Node>)
 {
     PortfieldSubstitutionContext ctx;
 
-    auto* port1 = this->create<PortFieldNode>("port", "literal");
-    auto* node1 = this->create<LiteralNode>(10);
+    auto* port1 = create<PortFieldNode>("port", "literal");
+    auto* node1 = create<LiteralNode>(10);
 
     ctx.portfield.emplace(*port1, node1);
 
-    auto* port2 = this->create<PortFieldNode>("another port", "not a literal");
+    auto* port2 = create<PortFieldNode>("another port", "not a literal");
 
     Node* root = create<SumNode>(port1, port2);
 
