@@ -1,6 +1,6 @@
 #include "antares/solver/optimisation/constraints/ThermalReserveParticipation.h"
 
-void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pdt, bool isUpReserve)
+void ThermalReserveParticipation::add(int pays, int reserve, int cluster_participation, int pdt, bool isUpReserve)
 {
     if (!data.Simulation)
     {
@@ -15,7 +15,7 @@ void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pd
           = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
                         : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
-        auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
+        auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster_participation];
 
         int globalClusterIdx
           = data.thermalClusters[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques
@@ -27,11 +27,11 @@ void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pd
           .RunningThermalClusterReserveParticipation(
             reserveParticipation.globalIndexClusterParticipation, -1.0);
 
-        if (isUpReserve)
+        if (isUpReserve && reserveParticipation.maxPowerOff > 0)
         {
             builder.OffThermalClusterReserveParticipation(
               reserveParticipation.globalIndexClusterParticipation, -1.0);
-        }
+        } 
 
         builder.equalTo();
 

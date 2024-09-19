@@ -6,9 +6,6 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
       = isUpReserve ? data.areaReserves[pays].areaCapacityReservationsUp[reserve]
                     : data.areaReserves[pays].areaCapacityReservationsDown[reserve];
 
-    data.CorrespondanceCntNativesCntOptim[pdt]
-      .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation.globalReserveIndex]
-      = -1;
     if (!data.Simulation)
     {
         // 24
@@ -24,63 +21,44 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
         builder.updateHourWithinWeek(pdt);
 
         // Thermal clusters reserve participation
-        for (size_t cluster = 0;
-             cluster < capacityReservation.AllThermalReservesParticipation.size();
-             cluster++)
+        for (auto& reserveParticipation: capacityReservation.AllThermalReservesParticipation)
         {
-            if (capacityReservation.AllThermalReservesParticipation[cluster].maxPower
-                  != CLUSTER_NOT_PARTICIPATING
-                || capacityReservation.AllThermalReservesParticipation[cluster].maxPowerOff
-                     != CLUSTER_NOT_PARTICIPATING)
-                builder.ThermalClusterReserveParticipation(
-                  capacityReservation.AllThermalReservesParticipation[cluster]
-                    .globalIndexClusterParticipation,
-                  1);
+            builder.ThermalClusterReserveParticipation(
+              reserveParticipation.globalIndexClusterParticipation,
+              1);
         }
 
         // Short Term Storage clusters reserve participation
-        for (size_t cluster = 0;
-             cluster < capacityReservation.AllSTStorageReservesParticipation.size();
-             cluster++)
+        for (auto& reserveParticipation: capacityReservation.AllSTStorageReservesParticipation)
         {
-            if ((capacityReservation.AllSTStorageReservesParticipation[cluster].maxTurbining
-                 != CLUSTER_NOT_PARTICIPATING)
-                || (capacityReservation.AllSTStorageReservesParticipation[cluster].maxPumping
-                    != CLUSTER_NOT_PARTICIPATING))
+            if (isUpReserve)
             {
-                if (isUpReserve)
-                    builder.STStorageClusterReserveUpParticipation(
-                      capacityReservation.AllSTStorageReservesParticipation[cluster]
-                        .globalIndexClusterParticipation,
-                      1);
-                else
-                    builder.STStorageClusterReserveDownParticipation(
-                      capacityReservation.AllSTStorageReservesParticipation[cluster]
-                        .globalIndexClusterParticipation,
-                      1);
+                builder.STStorageClusterReserveUpParticipation(
+                  reserveParticipation.globalIndexClusterParticipation,
+                  1);
+            }
+            else
+            {
+                builder.STStorageClusterReserveDownParticipation(
+                  reserveParticipation.globalIndexClusterParticipation,
+                  1);
             }
         }
 
         // Long Term Storage clusters reserve participation
-        for (size_t cluster = 0;
-             cluster < capacityReservation.AllLTStorageReservesParticipation.size();
-             cluster++)
+        for (auto& reserveParticipation: capacityReservation.AllLTStorageReservesParticipation)
         {
-            if ((capacityReservation.AllLTStorageReservesParticipation[cluster].maxTurbining
-                 != CLUSTER_NOT_PARTICIPATING)
-                || (capacityReservation.AllLTStorageReservesParticipation[cluster].maxPumping
-                    != CLUSTER_NOT_PARTICIPATING))
+            if (isUpReserve)
             {
-                if (isUpReserve)
-                    builder.LTStorageClusterReserveUpParticipation(
-                      capacityReservation.AllLTStorageReservesParticipation[cluster]
-                        .globalIndexClusterParticipation,
-                      1);
-                else
-                    builder.LTStorageClusterReserveDownParticipation(
-                      capacityReservation.AllLTStorageReservesParticipation[cluster]
-                        .globalIndexClusterParticipation,
-                      1);
+                builder.LTStorageClusterReserveUpParticipation(
+                  reserveParticipation.globalIndexClusterParticipation,
+                  1);
+            }
+            else
+            {
+                builder.LTStorageClusterReserveDownParticipation(
+                  reserveParticipation.globalIndexClusterParticipation,
+                  1);
             }
         }
 
@@ -101,38 +79,13 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
     }
     else
     {
-        int nbTermes = 0;
-        for (size_t cluster = 0;
-             cluster < capacityReservation.AllThermalReservesParticipation.size();
-             cluster++)
+        int nbTermes = capacityReservation.AllThermalReservesParticipation.size()
+                       + capacityReservation.AllSTStorageReservesParticipation.size()
+                       + capacityReservation.AllLTStorageReservesParticipation.size();
+        if (nbTermes)
         {
-            if (capacityReservation.AllThermalReservesParticipation[cluster].maxPower
-                != CLUSTER_NOT_PARTICIPATING)
-                nbTermes++;
+            builder.data.NbTermesContraintesPourLesReserves += 2 + nbTermes;
+            builder.data.nombreDeContraintes += 1;
         }
-        for (size_t cluster = 0;
-             cluster < capacityReservation.AllSTStorageReservesParticipation.size();
-             cluster++)
-        {
-            if ((capacityReservation.AllSTStorageReservesParticipation[cluster].maxTurbining
-                 != CLUSTER_NOT_PARTICIPATING)
-                || (capacityReservation.AllSTStorageReservesParticipation[cluster].maxPumping
-                    != CLUSTER_NOT_PARTICIPATING))
-                nbTermes++;
-        }
-        for (size_t cluster = 0;
-             cluster < capacityReservation.AllLTStorageReservesParticipation.size();
-             cluster++)
-        {
-            if ((capacityReservation.AllLTStorageReservesParticipation[cluster].maxTurbining
-                 != CLUSTER_NOT_PARTICIPATING)
-                || (capacityReservation.AllLTStorageReservesParticipation[cluster].maxPumping
-                    != CLUSTER_NOT_PARTICIPATING))
-                nbTermes++;
-        }
-
-        builder.data.NbTermesContraintesPourLesReserves += 2 + nbTermes;
-
-        builder.data.nombreDeContraintes += 1;
     }
 }

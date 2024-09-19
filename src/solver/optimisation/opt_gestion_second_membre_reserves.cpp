@@ -71,6 +71,24 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                         SecondMembre[cnt] = areaReserveUp.need.at(pdtGlobal);
                         AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                     }
+
+                    for (const auto& reserveParticipation:
+                         areaReserveUp.AllThermalReservesParticipation)
+                    {
+                        int cnt1
+                          = CorrespondanceCntNativesCntOptim
+                              .nbOffGroupUnitsParticipatingToReservesInThermalClusterConstraintIndex
+                                [reserveParticipation.globalIndexClusterParticipation];
+                        if (cnt1 >= 0)
+                        {
+                            SecondMembre[cnt1] = problemeHebdo->PaliersThermiquesDuPays[pays]
+                                                   .PuissanceDisponibleEtCout[reserveParticipation
+                                                                                .clusterIdInArea]
+                                                   .NombreMaxDeGroupesEnMarcheDuPalierThermique
+                                                     [pdtJour];
+                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
+                        }
+                    }
                 }
 
                 auto& areaReservesDown
@@ -116,19 +134,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                                                .PuissanceDisponibleDuPalierThermiqueRef[pdtJour];
                         AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
                     }
-
-                     int cnt3
-                       = CorrespondanceCntNativesCntOptim
-                           .nbOffGroupUnitsParticipatingToReservesInThermalClusterConstraintIndex
-                             [globalClusterIdx];
-                     if (cnt3 >= 0)
-                     {
-                         SecondMembre[cnt3]
-                           = problemeHebdo->PaliersThermiquesDuPays[pays]
-                               .PuissanceDisponibleEtCout[cluster]
-                               .NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtJour];
-                         AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt3] = nullptr;
-                     }
                 }
             }
 
