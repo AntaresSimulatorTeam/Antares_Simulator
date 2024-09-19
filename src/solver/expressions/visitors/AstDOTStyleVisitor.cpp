@@ -138,7 +138,7 @@ void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os
 {
     auto id = getNodeID(node);
     emitNode(id, "-", NodeStyle::NegationStyle, os);
-    int childId = getNodeID(node->child());
+    auto childId = getNodeID(node->child());
     os << "  " << id << " -> " << childId << ";\n";
     dispatch(node->child(), os);
 }
