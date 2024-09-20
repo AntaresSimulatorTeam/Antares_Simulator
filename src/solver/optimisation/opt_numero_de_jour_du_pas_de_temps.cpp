@@ -22,7 +22,6 @@
 #include <math.h>
 
 #include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/simulation.h"
 
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)

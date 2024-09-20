@@ -229,9 +229,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.performTransformationsBeforeLaunchingSimulation();
 
     ScenarioBuilderOwner(study).callScenarioBuilder();
-
-    // alloc global vectors
-    SIM_AllocationTableaux(study);
 }
 
 void Application::startSimulation(Data::StudyLoadOptions& options)

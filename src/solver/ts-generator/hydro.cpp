@@ -27,7 +27,6 @@
 #include <antares/writer/i_writer.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 using namespace Antares;
 
