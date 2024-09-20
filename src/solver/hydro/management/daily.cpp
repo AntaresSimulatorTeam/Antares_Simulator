@@ -21,9 +21,9 @@
 
 #include <array>
 #include <cassert>
+#include <filesystem>
 #include <limits>
 #include <sstream>
-#include <filesystem>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/study/area/scratchpad.h>
@@ -150,7 +150,8 @@ struct DebugData
                              const Data::AreaName& areaName) const
     {
         std::ostringstream buffer;
-        auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / "daily." / areaName.c_str() / ".txt";
+        auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / "daily."
+                    / areaName.c_str() / ".txt";
 
         buffer << "\tNiveau init : " << hydro_specific.monthly[initReservoirLvlMonth].MOL << "\n";
         for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
