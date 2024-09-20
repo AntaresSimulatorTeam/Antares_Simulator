@@ -74,10 +74,10 @@ State::State(Data::Study& s):
 
 void State::initReserveParticipationIndexMaps()
 {
-    for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsUp)
+    auto loadReserveParticipations = [area = this->area](CAPACITY_RESERVATION& reserve)
     {
         // Thermal clusters
-        for (auto& reserveParticipation : reserve.AllThermalReservesParticipation)
+        for (auto& reserveParticipation: reserve.AllThermalReservesParticipation)
         {
             area->reserveParticipationThermalClustersIndexMap.insert(
               reserveParticipation.areaIndexClusterParticipation,
@@ -85,7 +85,7 @@ void State::initReserveParticipationIndexMaps()
         }
 
         // Short Term Storage
-        for (auto& reserveParticipation : reserve.AllSTStorageReservesParticipation)
+        for (auto& reserveParticipation: reserve.AllSTStorageReservesParticipation)
         {
             area->reserveParticipationSTStorageClustersIndexMap.insert(
               reserveParticipation.areaIndexClusterParticipation,
@@ -93,11 +93,23 @@ void State::initReserveParticipationIndexMaps()
         }
 
         // Long Term Storage
-        for (auto& reserveParticipation : reserve.AllLTStorageReservesParticipation)
+        for (auto& reserveParticipation: reserve.AllLTStorageReservesParticipation)
         {
-            area->reserveParticipationLTStorageIndexMap.insert(
-              reserveParticipation.areaIndexClusterParticipation, reserve.reserveName);
+            area->reserveParticipationLTStorageIndexMap
+              .insert(reserveParticipation.areaIndexClusterParticipation, reserve.reserveName);
         }
+    };
+
+    // Reserves up
+    for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsUp)
+    {
+        loadReserveParticipations(reserve);
+    }
+
+    // Reserves down
+    for (auto& reserve : problemeHebdo->allReserves[area->index].areaCapacityReservationsDown)
+    {
+        loadReserveParticipations(reserve);
     }
 }
 
