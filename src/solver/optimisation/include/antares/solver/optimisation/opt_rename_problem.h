@@ -226,8 +226,10 @@ public:
     void STPumpingMaxReserve(unsigned int constraint,
                              const std::string& clusterName,
                              const std::string& reserveName);
-    void STTurbiningCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
-    void STPumpingCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
+    void STTurbiningCapacityThreasholdsUp(unsigned int constraint, const std::string& clusterName);
+    void STTurbiningCapacityThreasholdsDown(unsigned int constraint, const std::string& clusterName);
+    void STPumpingCapacityThreasholdsUp(unsigned int constraint, const std::string& clusterName);
+    void STPumpingCapacityThreasholdsDown(unsigned int constraint, const std::string& clusterName);
     void LTReserveUpParticipation(unsigned int constraint,
                                   const std::string& clusterName,
                                   const std::string& reserveName);
@@ -240,8 +242,10 @@ public:
     void LTPumpingMaxReserve(unsigned int constraint,
                              const std::string& clusterName,
                              const std::string& reserveName);
-    void LTTurbiningCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
-    void LTPumpingCapacityThreasholds(unsigned int constraint, const std::string& clusterName);
+    void LTTurbiningCapacityThreasholdsUp(unsigned int constraint, const std::string& clusterName);
+    void LTTurbiningCapacityThreasholdsDown(unsigned int constraint, const std::string& clusterName);
+    void LTPumpingCapacityThreasholdsUp(unsigned int constraint, const std::string& clusterName);
+    void LTPumpingCapacityThreasholdsDown(unsigned int constraint, const std::string& clusterName);
 
     void ReserveSatisfaction(unsigned int constraint, const std::string& reserveName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);

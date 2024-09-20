@@ -40,7 +40,7 @@ void STTurbiningCapacityThreasholds::add(int pays, int cluster, int pdt)
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
-                namer.STTurbiningCapacityThreasholds(
+                namer.STTurbiningCapacityThreasholdsDown(
                   builder.data.nombreDeContraintes,
                   data.shortTermStorageOfArea[pays][cluster].name);
                 builder.build();
@@ -77,7 +77,7 @@ void STTurbiningCapacityThreasholds::add(int pays, int cluster, int pdt)
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
-                namer.STTurbiningCapacityThreasholds(
+                namer.STTurbiningCapacityThreasholdsUp(
                   builder.data.nombreDeContraintes,
                   data.shortTermStorageOfArea[pays][cluster].name);
                 builder.build();
@@ -86,33 +86,21 @@ void STTurbiningCapacityThreasholds::add(int pays, int cluster, int pdt)
     }
     else
     {
-        // Lambda that count the number of reserves that the cluster is participating to
-        auto countReservesFromCluster
-          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations,
-                      int globalClusterIdx,
-                      int pays,
-                      ReserveData data)
+        // Lambda that count the number of reserveParticipations
+        auto countReservesParticipations = [](const std::vector<CAPACITY_RESERVATION>& reservations)
         {
             int counter = 0;
-            for (const auto& capacityReservation : reservations)
+            for (const auto& capacityReservation: reservations)
             {
-                for (const auto& reserveParticipations :
-                     capacityReservation.AllSTStorageReservesParticipation)
-                {
-                    if ((reserveParticipations.maxTurbining != CLUSTER_NOT_PARTICIPATING)
-                        && (data.shortTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
-                              .clusterGlobalIndex
-                            == globalClusterIdx))
-                        counter++;
-                }
+                counter += capacityReservation.AllLTStorageReservesParticipation.size();
             }
             return counter;
         };
 
-        int nbTermsUp = countReservesFromCluster(
-          data.areaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data);
-        int nbTermsDown = countReservesFromCluster(
-          data.areaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
+        int nbTermsUp = countReservesParticipations(
+          data.areaReserves[pays].areaCapacityReservationsUp);
+        int nbTermsDown = countReservesParticipations(
+          data.areaReserves[pays].areaCapacityReservationsDown);
 
         builder.data.NbTermesContraintesPourLesReserves
           += (nbTermsUp + 1) * (nbTermsUp > 0) + (nbTermsDown + 1) * (nbTermsDown > 0);

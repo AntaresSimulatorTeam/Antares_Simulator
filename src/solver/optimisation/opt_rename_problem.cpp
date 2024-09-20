@@ -615,16 +615,28 @@ void ConstraintNamer::STPumpingMaxReserve(unsigned int constraint,
       constraint, "STPumpingMaxReserve", clusterName, reserveName);
 }
 
-void ConstraintNamer::STTurbiningCapacityThreasholds(unsigned int constraint,
+void ConstraintNamer::STTurbiningCapacityThreasholdsUp(unsigned int constraint,
                                                      const std::string& clusterName)
 {
-    SetSTStorageClusterElementName(constraint, "STTurbiningCapacityThreasholds", clusterName);
+    SetSTStorageClusterElementName(constraint, "STTurbiningCapacityThreasholdsUp", clusterName);
 }
 
-void ConstraintNamer::STPumpingCapacityThreasholds(unsigned int constraint,
+void ConstraintNamer::STPumpingCapacityThreasholdsUp(unsigned int constraint,
                                                    const std::string& clusterName)
 {
-    SetSTStorageClusterElementName(constraint, "STPumpingCapacityThreasholds", clusterName);
+    SetSTStorageClusterElementName(constraint, "STPumpingCapacityThreasholdsUp", clusterName);
+}
+
+void ConstraintNamer::STTurbiningCapacityThreasholdsDown(unsigned int constraint,
+    const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constraint, "STTurbiningCapacityThreasholdsDown", clusterName);
+}
+
+void ConstraintNamer::STPumpingCapacityThreasholdsDown(unsigned int constraint,
+    const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constraint, "STPumpingCapacityThreasholdsDown", clusterName);
 }
 
 void ConstraintNamer::LTReserveUpParticipation(unsigned int constraint,
@@ -659,16 +671,28 @@ void ConstraintNamer::LTPumpingMaxReserve(unsigned int constraint,
       constraint, "LTPumpingMaxReserve", clusterName, reserveName);
 }
 
-void ConstraintNamer::LTTurbiningCapacityThreasholds(unsigned int constraint,
+void ConstraintNamer::LTTurbiningCapacityThreasholdsUp(unsigned int constraint,
                                                      const std::string& clusterName)
 {
-    SetSTStorageClusterElementName(constraint, "LTTurbiningCapacityThreasholds", clusterName);
+    SetSTStorageClusterElementName(constraint, "LTTurbiningCapacityThreasholdsUp", clusterName);
 }
 
-void ConstraintNamer::LTPumpingCapacityThreasholds(unsigned int constraint,
+void ConstraintNamer::LTPumpingCapacityThreasholdsUp(unsigned int constraint,
                                                    const std::string& clusterName)
 {
-    SetSTStorageClusterElementName(constraint, "LTPumpingCapacityThreasholds", clusterName);
+    SetSTStorageClusterElementName(constraint, "LTPumpingCapacityThreasholdsUp", clusterName);
+}
+
+void ConstraintNamer::LTTurbiningCapacityThreasholdsDown(unsigned int constraint,
+                                                     const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constraint, "LTTurbiningCapacityThreasholdsDown", clusterName);
+}
+
+void ConstraintNamer::LTPumpingCapacityThreasholdsDown(unsigned int constraint,
+                                                   const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constraint, "LTPumpingCapacityThreasholdsDown", clusterName);
 }
 
 void ConstraintNamer::ReserveSatisfaction(unsigned int constraint, const std::string& reserveName)

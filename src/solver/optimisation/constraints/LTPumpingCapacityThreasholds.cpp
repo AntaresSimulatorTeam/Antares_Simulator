@@ -6,7 +6,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 
     if (!data.Simulation)
     {
-        // 15 (c)
+        // 15 (d)
         // Pumping power remains within limits set by minimum stable power (0) and maximum capacity threasholds 
         // Sum(Π^on_re+) <= Π <= Πmax - Sum(Π^on_re-) 
         // Π^on_re- : Pumping Participation of cluster to Down reserves 
@@ -14,7 +14,7 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
         // Π : Pumping Power output from cluster 
         // Πmax : Maximum Pumping Power from cluster
 
-        // 15 (c) (1) : Sum(Π^on_re+) - Π <= 0
+        // 15 (d) (1) : Sum(Π^on_re+) - Π <= 0
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -24,12 +24,9 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllLTStorageReservesParticipation)
                 {
-                    if (reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                    {
-                        builder.LTStoragePumpingClusterReserveParticipation(
-                          reserveParticipations.globalIndexClusterParticipation,
-                          1);
-                    }
+                    builder.LTStoragePumpingClusterReserveParticipation(
+                      reserveParticipations.globalIndexClusterParticipation,
+                      1);
                 }
             }
 
@@ -40,13 +37,13 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
-                namer.LTPumpingCapacityThreasholds(builder.data.nombreDeContraintes,
+                namer.LTPumpingCapacityThreasholdsDown(builder.data.nombreDeContraintes,
                                                    "LongTermStorage");
                 builder.build();
             }
         }
 
-        // 15 (c) (2) :  Π + Sum(Π^on_re-) <= Πmax
+        // 15 (d) (2) :  Π + Sum(Π^on_re-) <= Πmax
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -56,12 +53,9 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllLTStorageReservesParticipation)
                 {
-                    if (reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                    {
-                        builder.LTStoragePumpingClusterReserveParticipation(
-                          reserveParticipations.globalIndexClusterParticipation,
-                          1);
-                    }
+                    builder.LTStoragePumpingClusterReserveParticipation(
+                      reserveParticipations.globalIndexClusterParticipation,
+                      1);
                 }
             }
 
@@ -69,14 +63,14 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             {
                 builder.Pumping(pays, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds
+                  .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
                     [globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
-                namer.LTPumpingCapacityThreasholds(builder.data.nombreDeContraintes,
+                namer.LTPumpingCapacityThreasholdsUp(builder.data.nombreDeContraintes,
                                                    "LongTermStorage");
                 builder.build();
             }
@@ -85,31 +79,20 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
     else
     {
         // Lambda that count the number of reserves that the cluster is participating to
-        auto countReservesFromCluster
-          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations,
-                      int globalClusterIdx,
-                      int pays,
-                      ReserveData data)
+        auto countReservesParticipation = [](const std::vector<CAPACITY_RESERVATION>& reservations)
         {
             int counter = 0;
-            for (const auto& capacityReservation : reservations)
+            for (const auto& capacityReservation: reservations)
             {
-                for (const auto& reserveParticipations :
-                     capacityReservation.AllLTStorageReservesParticipation)
-                {
-                    if (reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                    {
-                        counter++;
-                    }
-                }
+                counter += capacityReservation.AllLTStorageReservesParticipation.size();
             }
             return counter;
         };
 
-        int nbTermsUp = countReservesFromCluster(
-          data.areaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data);
-        int nbTermsDown = countReservesFromCluster(
-          data.areaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
+        int nbTermsUp = countReservesParticipation(
+          data.areaReserves[pays].areaCapacityReservationsUp);
+        int nbTermsDown = countReservesParticipation(
+          data.areaReserves[pays].areaCapacityReservationsDown);
 
         builder.data.NbTermesContraintesPourLesReserves
           += (nbTermsUp + 1) * (nbTermsUp > 0) + (nbTermsDown + 1) * (nbTermsDown > 0);
