@@ -229,13 +229,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.performTransformationsBeforeLaunchingSimulation();
 
     ScenarioBuilderOwner(study).callScenarioBuilder();
-
-    auto& transit = study.runtime.transitMoyenInterconnexionsRecalculQuadratique;
-    transit.resize(study.runtime.interconnectionsCount());
-    for (uint i = 0; i != study.runtime.interconnectionsCount(); i++)
-    {
-        transit[i].assign(HOURS_PER_YEAR, 0.);
-    }
 }
 
 void Application::startSimulation(Data::StudyLoadOptions& options)
