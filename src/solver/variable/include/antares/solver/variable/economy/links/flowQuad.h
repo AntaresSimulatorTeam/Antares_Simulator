@@ -130,7 +130,7 @@ public:
     {
         // Average on all years
         pNbHours = study.runtime.rangeLimits.hour[Data::rangeEnd] + 1;
-        transitMoyenInterco = &study.runtime.transitMoyenInterconnexionsRecalculQuadratique;
+        transitMoyenInterco_ = &study.runtime.transitMoyenInterconnexionsRecalculQuadratique;
         AncestorType::pResults.initializeFromStudy(study);
         AncestorType::pResults.reset();
 
@@ -167,7 +167,7 @@ public:
     {
         // Flow assessed over all MC years (linear)
         (void)::memcpy(pValuesForTheCurrentYear.hour,
-                       (*transitMoyenInterco)[pLinkGlobalIndex].data(),
+                       (*transitMoyenInterco_)[pLinkGlobalIndex].data(),
                        sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)
@@ -269,7 +269,7 @@ public:
 private:
     uint pLinkGlobalIndex;
     uint pNbHours;
-    std::vector<std::vector<double>>* transitMoyenInterco;
+    std::vector<std::vector<double>>* transitMoyenInterco_;
 
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
