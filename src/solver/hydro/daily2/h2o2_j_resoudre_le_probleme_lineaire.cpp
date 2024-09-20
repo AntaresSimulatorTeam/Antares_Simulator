@@ -22,12 +22,6 @@
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
-
 void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                        int NumeroDeProbleme)
 {

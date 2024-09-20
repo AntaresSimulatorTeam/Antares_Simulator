@@ -369,11 +369,6 @@ public:
 
     bool contains(const ThermalCluster* clstr) const;
 
-    /*!
-    ** \brief Build a human readable formula for the binding constraint
-    */
-    void buildFormula(YString& s) const;
-
     BindingConstraintStructures initLinkArrays() const;
 
     template<class Env>

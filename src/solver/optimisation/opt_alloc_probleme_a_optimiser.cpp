@@ -26,12 +26,6 @@
 
 using namespace Antares;
 
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
-
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                                  int NbTermes)
 {
