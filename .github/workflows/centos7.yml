@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - develop
-      - fix/csr-remix
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -24,8 +23,6 @@ env:
   IS_PUSH: ${{ github.event_name == 'push' }}
   REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  ACTIONS_RUNNER_FORCE_ACTIONS_NODE_VERSION: node16
-
 
 jobs:
 
@@ -121,12 +118,6 @@ jobs:
       run: |
            cd _build
            cpack -G TGZ
-
-    - name: Installer archive upload push
-      uses: actions/upload-artifact@v4
-      with:
-        name: targz
-        path: _build/*.tar.gz
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
