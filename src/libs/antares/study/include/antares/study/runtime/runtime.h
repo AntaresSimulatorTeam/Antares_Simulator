@@ -131,6 +131,8 @@ public:
     */
     bool quadraticOptimizationHasFailed;
 
+    std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+
 private:
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     //! Prepare all thermal clusters in 'must-run' mode
