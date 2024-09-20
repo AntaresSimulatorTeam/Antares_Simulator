@@ -27,6 +27,9 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
+#include <clocale>
+#include <mutex>
+
 #include "../variable/constants.h"
 #include <antares/logs/logs.h>
 #include <antares/date/date.h>
@@ -48,6 +51,17 @@
 
 namespace Antares::Solver::Simulation
 {
+
+namespace
+{
+template<class Impl>
+void forceCLocale()
+{
+    static std::mutex mut; // One global mutex for each Impl
+    std::lock_guard lock(mut);
+    std::setlocale(LC_ALL, "C"); // std::setlocale is NOT thread-safe
+}
+} // namespace
 
 template<class Impl>
 class yearJob
@@ -438,6 +452,8 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
             newPath.overwriteRight(tmp);
         }
 
+        // OR-Tools/XPRESS changes the locale (bug), force the locale to "C" before writing results
+        forceCLocale<Impl>();
         // Dumping
         ImplementationType::variables.exportSurveyResults(
           synthesis, newPath, numSpace, pResultWriter);
