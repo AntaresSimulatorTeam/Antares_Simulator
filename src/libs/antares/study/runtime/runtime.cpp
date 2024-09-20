@@ -343,8 +343,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
 
-    transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime.interconnectionsCount());
-    for (uint i = 0; i != study.runtime.interconnectionsCount(); i++)
+    transitMoyenInterconnexionsRecalculQuadratique.resize(interconnectionsCount());
+    for (uint i = 0; i != interconnectionsCount(); i++)
     {
         transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
     }
