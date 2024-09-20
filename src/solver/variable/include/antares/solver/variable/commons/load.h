@@ -21,7 +21,6 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesLoad_H__
 #define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesLoad_H__
 
-
 #include "../variable.h"
 
 namespace Antares

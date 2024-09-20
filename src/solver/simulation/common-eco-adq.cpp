@@ -109,7 +109,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
-            study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues.ValeurDuFlux[j];
+            study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues
+                                                                                      .ValeurDuFlux
+                                                                                        [j];
         }
     }
 }
