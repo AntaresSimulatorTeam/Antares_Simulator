@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,13,6,15],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[9,0,0,13,6,16],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[9,0,0,13,6,17],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html":[9,0,0,13,6,18],
@@ -249,5 +248,6 @@ var NAVTREEINDEX25 =
 "structYAML_1_1convert_3_01Monster_01_4.html":[9,0,27,0],
 "structYAML_1_1convert_3_01Power_01_4.html":[9,0,27,1],
 "structYAML_1_1convert_3_01Vec3_01_4.html":[9,0,27,2],
-"structcommonFixture.html":[9,0,53]
+"structcommonFixture.html":[9,0,53],
+"structsaveFixture.html":[9,0,208]
 };

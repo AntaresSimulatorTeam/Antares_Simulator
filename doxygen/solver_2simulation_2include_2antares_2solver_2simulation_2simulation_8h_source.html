@@ -170,27 +170,23 @@ $(document).ready(function(){initNavTree('solver_2simulation_2include_2antares_2
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">struct </span><a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// TODO remove when global variables have been removed (looking at you,</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">// transitMoyenInterconnexionsRecalculQuadratique)</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keywordtype">void</span> SIM_AllocationTableaux(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keywordtype">void</span> SIM_AllocationProblemeHebdo(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                                 <a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                                 uint NombreDePasDeTemps);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keywordtype">void</span> SIM_InitialisationProblemeHebdo(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                                     <a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> NombreDePasDeTemps,</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                                     uint numspace);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keywordtype">void</span> SIM_RenseignementProblemeHebdo(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                                    <a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                                    uint weekInTheYear,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                                    <span class="keyword">const</span> <span class="keywordtype">int</span>,</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                                    <span class="keyword">const</span> Antares::HYDRO_VENTILATION_RESULTS&amp;,</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                    <span class="keyword">const</span> Antares::Data::Area::ScratchMap&amp;);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif </span><span class="comment">/* __SOLVER_SIMULATION_H__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keywordtype">void</span> SIM_AllocationProblemeHebdo(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                                 <a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                                 uint NombreDePasDeTemps);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keywordtype">void</span> SIM_InitialisationProblemeHebdo(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                                     <a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                                     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> NombreDePasDeTemps,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                                     uint numspace);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keywordtype">void</span> SIM_RenseignementProblemeHebdo(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                    <a class="code hl_struct" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                                    uint weekInTheYear,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                                    <span class="keyword">const</span> <span class="keywordtype">int</span>,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                    <span class="keyword">const</span> Antares::HYDRO_VENTILATION_RESULTS&amp;,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                                    <span class="keyword">const</span> Antares::Data::Area::ScratchMap&amp;);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif </span><span class="comment">/* __SOLVER_SIMULATION_H__ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:61</div></div>
 <div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition</b> sim_structure_probleme_economique.h:460</div></div>
 </div><!-- fragment --></div><!-- contents -->

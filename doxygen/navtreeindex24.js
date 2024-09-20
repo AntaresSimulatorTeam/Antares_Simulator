@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Memory_1_1Stored.html":[9,0,0,42,0],
 "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[9,0,0,11,11],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,11,16],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[9,0,0,13,11],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,13,6,11,0],
 "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[9,0,0,13,6,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,13,6,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,13,6,14]
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,13,6,14],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,13,6,15]
 };

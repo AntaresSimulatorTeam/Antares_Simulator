@@ -117,9 +117,9 @@ var NAVTREEINDEX =
 "dir_c1bded216e5956d02c43ab7173839365.html",
 "handler_8h_source.html",
 "playlist_8h_source.html",
-"structAntares_1_1Memory_1_1Stored.html",
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html",
-"structsaveFixture.html"
+"structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html",
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html",
+"study_8hxx_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,6 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"structsaveFixture.html":[9,0,208],
 "study_8hxx_source.html":[10,0,0,3,0,25,0,0,0,26],
 "studydata_8hxx_source.html":[10,0,0,4,11,0,0,0,0,0,4],
 "studylogs_8h_source.html":[10,0,0,7,2,2,31],
@@ -30,7 +29,7 @@ var NAVTREEINDEX26 =
 "thermalmodulation_8h_source.html":[10,0,0,7,2,1,1,1,1,1,12],
 "thermalprepro_8h_source.html":[10,0,0,7,2,1,1,1,1,1,13],
 "timer_8h_source.html":[10,0,0,3,0,3,0,0,0,2],
-"timeseries-numbers_8h_source.html":[10,0,0,4,10,0,0,0,0,21],
+"timeseries-numbers_8h_source.html":[10,0,0,4,10,0,0,0,0,20],
 "todo.html":[5],
 "tool_8h_source.html":[10,0,0,7,2,1,1,3,2,2],
 "toolbox_2components_2datagrid_2filter_2input_8h_source.html":[10,0,0,7,2,1,1,1,0,5],
