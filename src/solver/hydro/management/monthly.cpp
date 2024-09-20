@@ -18,24 +18,17 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <filesystem>
 #include <iomanip>
 #include <limits>
 #include <sstream>
 
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
-
 #include <antares/antares/fatal-error.h>
-#include <antares/study/study.h>
-#include <antares/utils/utils.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-using namespace Yuni;
-
-#define SEP IO::Separator
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -206,7 +199,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               {
               case OUI:
               {
-                  if (Logs::Verbosity::Debug::enabled)
+                  if (false) // Put true to have extra check
                   {
                       CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
                   }
@@ -269,9 +262,9 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
 #endif
           if (parameters_.hydroDebug)
           {
-              std::ostringstream buffer, path;
-              path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "monthly." << area.name
-                   << ".txt";
+              std::ostringstream buffer;
+              auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / "monthly."
+                          / area.name.c_str() / ".txt";
 
               if (area.hydro.reservoirManagement)
                   buffer << "Initial Reservoir Level\t" << lvi << "\n";
@@ -313,7 +306,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                   buffer << '\n';
               }
               auto content = buffer.str();
-              resultWriter_.addEntryFromBuffer(path.str(), content);
+              resultWriter_.addEntryFromBuffer(path.string(), content);
           }
           indexArea++;
       });
