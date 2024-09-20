@@ -32,7 +32,6 @@
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 using namespace Yuni;
 

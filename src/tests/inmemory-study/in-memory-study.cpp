@@ -196,8 +196,6 @@ void SimulationHandler::create()
                                                          resultWriter_,
                                                          observer_);
     Antares::Solver::ScenarioBuilderOwner(study_).callScenarioBuilder();
-
-    SIM_AllocationTableaux(study_);
 }
 
 // =========================
