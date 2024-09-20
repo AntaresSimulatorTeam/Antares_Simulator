@@ -101,7 +101,7 @@ models:
     // Convert expression to Antares::Solver::Nodes expressions
     Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
     ConvertorVisitor expr_visitor(registry, generator);
-    auto node = std::any_cast<Antares::Solver::Nodes::MultiplicationNode*>(
+    auto node = std::any_cast<Antares::Solver::Nodes::Node*>(
       expression_context->accept(&expr_visitor));
 
     // Use visitor on expression
