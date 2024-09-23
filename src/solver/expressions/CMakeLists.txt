@@ -3,6 +3,7 @@ project(Expressions)
 
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
+        nodes/PortFieldSumNode.cpp
         nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
@@ -17,6 +18,7 @@ set(SRC_Expressions
         visitors/PrintVisitor.cpp
         visitors/SubstitutionVisitor.cpp
         visitors/PortfieldSubstitutionVisitor.cpp
+        visitors/PortfieldSumSubstitutionVisitor.cpp
         visitors/InvalidNode.cpp
 
         include/antares/solver/expressions/nodes/SumNode.h
