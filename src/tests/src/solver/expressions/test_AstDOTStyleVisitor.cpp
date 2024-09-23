@@ -140,6 +140,7 @@ legend_SubtractionNode [ label =" SubtractionNode: 1"]
 legend_SubtractionNode -> legend_SumNode [style=invis];
 legend_SumNode [ label =" SumNode: 1"]
 legend_SumNode -> legend_VariableNode [style=invis];
+legend_VariableNode [ label =" VariableNode: 1"]
 }
 }
 )raw";

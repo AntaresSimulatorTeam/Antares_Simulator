@@ -42,6 +42,11 @@ static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
+void process_element_legend(const std::string& element_name, size_t size, std::ostream& os)
+{
+    os << "legend_" << element_name << " [ label =\" " << element_name << ": " << size << "\"]\n";
+}
+
 void GetLegend(const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds,
                std::ostream& os)
 {
@@ -54,8 +59,8 @@ node [shape=plaintext];
 
 )raw";
 
-    auto order = nodeIds.size() <=> 1;
-    if (order == std::strong_ordering::greater)
+    auto order_nb_type = nodeIds.size();
+    if (order_nb_type > 1)
     {
         for (auto it = nodeIds.begin(), next_it = std::next(it); next_it != nodeIds.end();
              ++it, ++next_it)
@@ -66,12 +71,11 @@ node [shape=plaintext];
                << "\"]\n";
             os << current_legend_id << " -> " << next_legend_id << " [style=invis];\n";
         }
+        process_element_legend(nodeIds.rbegin()->first, nodeIds.rbegin()->second.size(), os);
     }
-    else if (order == std::strong_ordering::equal)
+    else if (order_nb_type == 1)
     {
-        auto first_element_key = nodeIds.begin()->first;
-        os << "legend_" << first_element_key << " [ label =\" " << first_element_key << ": "
-           << nodeIds.begin()->second.size() << "\"]\n";
+        process_element_legend(nodeIds.begin()->first, nodeIds.begin()->second.size(), os);
     }
 
     os << "}\n";
