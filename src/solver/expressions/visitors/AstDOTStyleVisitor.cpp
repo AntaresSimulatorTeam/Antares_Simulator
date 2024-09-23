@@ -53,20 +53,25 @@ color = lightgrey;
 node [shape=plaintext];
 
 )raw";
-    std::set<std::string> legend_id;
-    for (const auto& [node_type, id_map]: nodeIds)
-    {
-        const auto [it, inserted] = legend_id.insert("legend_" + node_type);
 
-        os << *it << " [ label =\" " << node_type << ": " << id_map.size() << "\"]\n";
-    }
-    if (legend_id.size() > 1)
+    auto order = nodeIds.size() <=> 1;
+    if (order == std::strong_ordering::greater)
     {
-        for (auto it = legend_id.begin(), next_it = std::next(it); next_it != legend_id.end();
+        for (auto it = nodeIds.begin(), next_it = std::next(it); next_it != nodeIds.end();
              ++it, ++next_it)
         {
-            os << *it << " -> " << *next_it << " [style=invis];\n";
+            auto current_legend_id = std::string("legend_") + it->first;
+            auto next_legend_id = std::string("legend_") + next_it->first;
+            os << current_legend_id << " [ label =\" " << it->first << ": " << it->second.size()
+               << "\"]\n";
+            os << current_legend_id << " -> " << next_legend_id << " [style=invis];\n";
         }
+    }
+    else if (order == std::strong_ordering::equal)
+    {
+        auto first_element_key = nodeIds.begin()->first;
+        os << "legend_" << first_element_key << " [ label =\" " << first_element_key << ": "
+           << nodeIds.begin()->second.size() << "\"]\n";
     }
 
     os << "}\n";
