@@ -21,7 +21,7 @@
 
 #include "antares/optimization-options/options.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 
 using Antares::Solver::Optimization::OptimizationOptions;
