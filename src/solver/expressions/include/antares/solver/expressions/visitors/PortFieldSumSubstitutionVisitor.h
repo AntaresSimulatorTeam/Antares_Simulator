@@ -37,7 +37,7 @@ struct KeyHasher
  */
 struct PortFieldSumSubstitutionContext
 {
-    std::unordered_map<Nodes::PortFieldSumNode, Nodes::Node*, KeyHasher> portfield;
+    std::unordered_map<Nodes::PortFieldSumNode, Nodes::SumNode*, KeyHasher> portfield;
 };
 
 /**
