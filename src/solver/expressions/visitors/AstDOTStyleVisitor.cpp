@@ -182,7 +182,7 @@ void AstDOTStyleVisitor::visit(const Nodes::ComponentParameterNode* node, std::o
 
 std::string AstDOTStyleVisitor::name() const
 {
-    return "AstGraphVisitor";
+    return "AstDOTStyleVisitor";
 }
 
 unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)

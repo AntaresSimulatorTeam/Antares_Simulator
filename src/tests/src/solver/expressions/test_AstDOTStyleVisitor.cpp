@@ -162,4 +162,10 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Fixture)
     BOOST_CHECK_EQUAL(expectedDotContent(), os.str());
 }
 
+BOOST_FIXTURE_TEST_CASE(AstDOTStyleVisitor_name, Registry<Node>)
+{
+    AstDOTStyleVisitor astGraphVisitor;
+    BOOST_CHECK_EQUAL(astGraphVisitor.name(), "AstDOTStyleVisitor");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
