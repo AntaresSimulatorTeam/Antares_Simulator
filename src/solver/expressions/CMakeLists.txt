@@ -53,6 +53,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/TimeIndex.h
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
         include/antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/PortfieldSumSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/InvalidNode.h
 
         include/antares/solver/expressions/Registry.hxx
