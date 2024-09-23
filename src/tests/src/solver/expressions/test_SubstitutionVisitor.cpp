@@ -25,6 +25,8 @@
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/CompareVisitor.h>
+#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
@@ -86,4 +88,56 @@ BOOST_FIXTURE_TEST_CASE(SubstitutionVisitor_name, Registry<Node>)
     SubstitutionVisitor substitutionVisitor(*this, ctx);
     BOOST_CHECK_EQUAL(substitutionVisitor.name(), "SubstitutionVisitor");
 }
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(_PortfieldSubstitutionVisitor_)
+
+class SubstitutionFixture: public Registry<Node>
+{
+public:
+    Node* originalExpression()
+    {
+        Node* port1 = create<PortFieldNode>("port", "literal");
+        Node* port2 = create<PortFieldNode>("another port", "not a literal");
+        Node* root = create<SumNode>(port1, port2);
+        return root;
+    }
+
+    Node* expectedExpressionAfterSubstitution()
+    {
+        Node* node1 = create<LiteralNode>(10);
+        Node* port2 = create<PortFieldNode>("another port", "not a literal");
+        Node* root = create<SumNode>(node1, port2);
+        return root;
+    }
+
+    Node* substitute(Node* original)
+    {
+        PortfieldSubstitutionContext ctx;
+        ctx.portfield.emplace(PortFieldNode("port", "literal"), create<LiteralNode>(10));
+
+        PortfieldSubstitutionVisitor sub(*this, ctx);
+        return sub.dispatch(original);
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_simple, SubstitutionFixture)
+
+{
+    Node* original = originalExpression();
+    Node* substituted = substitute(original);
+    Node* expected = expectedExpressionAfterSubstitution();
+
+    CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(substituted, expected));
+}
+
+BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_name, Registry<Node>)
+{
+    PortfieldSubstitutionContext ctx;
+
+    PortfieldSubstitutionVisitor substitutionVisitor(*this, ctx);
+    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortfieldSubstitutionVisitor");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

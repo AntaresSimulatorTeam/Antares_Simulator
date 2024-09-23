@@ -22,7 +22,6 @@
 #include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/simulation.h"
 
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)

@@ -28,7 +28,6 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/fwd.h"
