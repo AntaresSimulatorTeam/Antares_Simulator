@@ -109,6 +109,7 @@ public:
           Nodes::VariableNode,
           Nodes::LiteralNode,
           Nodes::PortFieldNode,
+          Nodes::PortFieldSumNode,
           Nodes::ComponentVariableNode,
           Nodes::ComponentParameterNode>();
 

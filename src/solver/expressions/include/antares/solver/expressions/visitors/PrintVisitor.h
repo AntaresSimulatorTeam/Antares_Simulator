@@ -45,6 +45,7 @@ private:
     std::string visit(const Nodes::ParameterNode* node) override;
     std::string visit(const Nodes::LiteralNode* node) override;
     std::string visit(const Nodes::PortFieldNode* node) override;
+    std::string visit(const Nodes::PortFieldSumNode* node) override;
     std::string visit(const Nodes::ComponentVariableNode* node) override;
     std::string visit(const Nodes::ComponentParameterNode* node) override;
 };
