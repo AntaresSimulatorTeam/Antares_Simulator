@@ -1124,32 +1124,22 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
     }
 
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step") // ignored since 9.2
     {
-        if (version >= StudyVersion(9, 2))
+        if (value == "false")
         {
             logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step "
                               " is deprecated, please remove it from the study";
         }
-        else if (value == "true")
-        {
-            logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step "
-                              "not supported with this solver version, use a version < 9.2";
-        }
         return true;
     }
 
-    if (key == "enable-first-step")
+    if (key == "enable-first-step") // ignored since 9.2
     {
-        if (version >= StudyVersion(9, 2))
+        if (value == "false")
         {
             logs.warning() << "Parameter enable-first-step is deprecated, please remove it from"
                               " the study";
-        }
-        else if (value == "true")
-        {
-            logs.warning() << "Parameter enable-first-step not supported with this solver version,"
-                              " use a version < 9.2";
         }
         return true;
     }
