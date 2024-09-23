@@ -19,14 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/utils/ortools_utils.h"
+#include <spx_fonctions.h>
+
 #include "antares/optimization-options/options.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-extern "C"
-{
-#include "spx_fonctions.h"
-}
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares::Solver::Optimization;
 
