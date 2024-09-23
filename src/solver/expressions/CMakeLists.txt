@@ -36,6 +36,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/NodesForwardDeclaration.h
         include/antares/solver/expressions/nodes/ParameterNode.h
         include/antares/solver/expressions/nodes/PortFieldNode.h
+        include/antares/solver/expressions/nodes/PortFieldSumNode.h
         include/antares/solver/expressions/nodes/SubtractionNode.h
         include/antares/solver/expressions/nodes/UnaryNode.h
         include/antares/solver/expressions/nodes/VariableNode.h
