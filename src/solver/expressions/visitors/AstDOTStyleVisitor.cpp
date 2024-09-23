@@ -49,8 +49,7 @@ void ProcessElementLegend(const std::string& element_name, size_t size, std::ost
 
 void AddFiliation(std::ostream& os, const std::string& parent_id, const std::string& child_id)
 {
-    os << "legend_" << parent_id << " -> "
-       << "legend_" << child_id << " [style=invis];\n";
+    os << "legend_" << parent_id << " -> " << "legend_" << child_id << " [style=invis];\n";
 }
 
 void GetLegend(const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds,
