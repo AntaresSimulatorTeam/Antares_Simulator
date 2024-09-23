@@ -47,6 +47,12 @@ void process_element_legend(const std::string& element_name, size_t size, std::o
     os << "legend_" << element_name << " [ label =\" " << element_name << ": " << size << "\"]\n";
 }
 
+void addFiliation(std::ostream& os, const std::string& parent_id, const std::string& child_id)
+{
+    os << "legend_" << parent_id << " -> "
+       << "legend_" << child_id << " [style=invis];\n";
+}
+
 void GetLegend(const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds,
                std::ostream& os)
 {
@@ -65,11 +71,8 @@ node [shape=plaintext];
         for (auto it = nodeIds.begin(), next_it = std::next(it); next_it != nodeIds.end();
              ++it, ++next_it)
         {
-            auto current_legend_id = std::string("legend_") + it->first;
-            auto next_legend_id = std::string("legend_") + next_it->first;
-            os << current_legend_id << " [ label =\" " << it->first << ": " << it->second.size()
-               << "\"]\n";
-            os << current_legend_id << " -> " << next_legend_id << " [style=invis];\n";
+            process_element_legend(it->first, it->second.size(), os);
+            addFiliation(os, it->first, next_it->first);
         }
         process_element_legend(nodeIds.rbegin()->first, nodeIds.rbegin()->second.size(), os);
     }
