@@ -42,12 +42,12 @@ static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
-void process_element_legend(const std::string& element_name, size_t size, std::ostream& os)
+void ProcessElementLegend(const std::string& element_name, size_t size, std::ostream& os)
 {
     os << "legend_" << element_name << " [ label =\" " << element_name << ": " << size << "\"]\n";
 }
 
-void addFiliation(std::ostream& os, const std::string& parent_id, const std::string& child_id)
+void AddFiliation(std::ostream& os, const std::string& parent_id, const std::string& child_id)
 {
     os << "legend_" << parent_id << " -> "
        << "legend_" << child_id << " [style=invis];\n";
@@ -71,14 +71,14 @@ node [shape=plaintext];
         for (auto it = nodeIds.begin(), next_it = std::next(it); next_it != nodeIds.end();
              ++it, ++next_it)
         {
-            process_element_legend(it->first, it->second.size(), os);
-            addFiliation(os, it->first, next_it->first);
+            ProcessElementLegend(it->first, it->second.size(), os);
+            AddFiliation(os, it->first, next_it->first);
         }
-        process_element_legend(nodeIds.rbegin()->first, nodeIds.rbegin()->second.size(), os);
+        ProcessElementLegend(nodeIds.rbegin()->first, nodeIds.rbegin()->second.size(), os);
     }
     else if (order_nb_type == 1)
     {
-        process_element_legend(nodeIds.begin()->first, nodeIds.begin()->second.size(), os);
+        ProcessElementLegend(nodeIds.begin()->first, nodeIds.begin()->second.size(), os);
     }
 
     os << "}\n";
@@ -244,9 +244,8 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     os << "labelloc = \"t\"\n";
     GetLegend(nodeIds_, os);
     os << "}\n";
-    //  TODO
-    //    nodeCount_ = 0;
-    //    nodeIds_.clear();
+    nodeCount_ = 0;
+    nodeIds_.clear();
 }
 
 std::ostream& operator<<(std::ostream& os,
