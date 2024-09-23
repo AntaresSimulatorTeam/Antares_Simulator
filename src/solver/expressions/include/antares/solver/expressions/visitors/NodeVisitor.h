@@ -240,6 +240,16 @@ public:
     virtual R visit(const Nodes::PortFieldNode*, Args... args) = 0;
 
     /**
+     * @brief Visits a PortFieldSumNode.
+     *
+     * @param node A pointer to the PortFieldSumNode to be visited.
+     * @param args Additional arguments to be passed to the visitor's methods.
+     *
+     * @return The result of processing the PortFieldSumNode.
+     */
+    virtual R visit(const Nodes::PortFieldSumNode*, Args... args) = 0;
+
+    /**
      * @brief Visits a ComponentVariableNode.
      *
      * @param node A pointer to the ComponentVariableNode to be visited.

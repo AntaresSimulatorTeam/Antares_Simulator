@@ -38,4 +38,5 @@ class ComponentParameterNode;
 class ParameterNode;
 class VariableNode;
 class PortFieldNode;
+class PortFieldSumNode;
 } // namespace Antares::Solver::Nodes

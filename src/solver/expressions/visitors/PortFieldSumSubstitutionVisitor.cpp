@@ -21,19 +21,19 @@
 #include <boost/functional/hash.hpp>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/PortfieldSumSubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h>
 
 namespace Antares::Solver::Visitors
 {
 
-PortfieldSumSubstitutionVisitor::PortfieldSumSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                                           PortfieldSumSubstitutionContext& ctx):
+PortFieldSumSubstitutionVisitor::PortFieldSumSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                                           PortFieldSumSubstitutionContext& ctx):
     CloneVisitor(registry),
     ctx_(ctx)
 {
 }
 
-Nodes::Node* PortfieldSumSubstitutionVisitor::visit(const Nodes::PortfieldSumNode* node)
+Nodes::Node* PortFieldSumSubstitutionVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
     if (auto it = ctx_.portfield.find(*node); it != ctx_.portfield.end())
     {
@@ -43,12 +43,12 @@ Nodes::Node* PortfieldSumSubstitutionVisitor::visit(const Nodes::PortfieldSumNod
     return CloneVisitor::visit(node);
 }
 
-std::string PortfieldSumSubstitutionVisitor::name() const
+std::string PortFieldSumSubstitutionVisitor::name() const
 {
-    return "PortfieldSumSubstitutionVisitor";
+    return "PortFieldSumSubstitutionVisitor";
 }
 
-std::size_t KeyHasher::operator()(const Nodes::PortfieldSumNode& n) const
+std::size_t KeyHasher::operator()(const Nodes::PortFieldSumNode& n) const
 {
     std::size_t seed = 0;
 

@@ -18,7 +18,7 @@ set(SRC_Expressions
         visitors/PrintVisitor.cpp
         visitors/SubstitutionVisitor.cpp
         visitors/PortfieldSubstitutionVisitor.cpp
-        visitors/PortfieldSumSubstitutionVisitor.cpp
+        visitors/PortFieldSumSubstitutionVisitor.cpp
         visitors/InvalidNode.cpp
 
         include/antares/solver/expressions/nodes/SumNode.h
@@ -55,7 +55,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/TimeIndex.h
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
         include/antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h
-        include/antares/solver/expressions/visitors/PortfieldSumSubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/InvalidNode.h
 
         include/antares/solver/expressions/Registry.hxx
@@ -74,7 +74,7 @@ target_link_libraries(antares-solver-expressions
         PUBLIC
         Antares::logs
         Boost::headers
-	)
+)
 
 
 
