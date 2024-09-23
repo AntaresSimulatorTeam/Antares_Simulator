@@ -25,9 +25,8 @@
 
 #include "variables/VariableManagerUtils.h"
 
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
-        PROBLEME_HEBDO* problemeHebdo,
-        bool Simulation);
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
+                                                                                   bool);
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
