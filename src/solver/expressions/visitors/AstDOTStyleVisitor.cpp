@@ -43,10 +43,10 @@ static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
 std::string GetLegend(
-  const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds)
+  const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds,
+  std::ostream& os)
 {
-    std::ostringstream result;
-    result << R"raw(subgraph cluster_legend {
+    os << R"raw(subgraph cluster_legend {
 label = "Legend";
 style = dashed;
 fontsize = 16;
@@ -59,19 +59,18 @@ node [shape=plaintext];
     {
         const auto [it, inserted] = legend_id.insert("legend_" + node_type);
 
-        result << *it << " [ label =\" " << node_type << ": " << id_map.size() << "\"]\n";
+        os << *it << " [ label =\" " << node_type << ": " << id_map.size() << "\"]\n";
     }
     if (legend_id.size() > 1)
     {
         for (auto it = legend_id.begin(), next_it = std::next(it); next_it != legend_id.end();
              ++it, ++next_it)
         {
-            result << *it << " -> " << *next_it << " [style=invis];\n";
+            os << *it << " -> " << *next_it << " [style=invis];\n";
         }
     }
 
-    result << "}\n";
-    return result.str();
+    os << "}\n";
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
@@ -232,7 +231,7 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     // Graph title showing the total number of nodes
     os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
     os << "labelloc = \"t\"\n";
-    os << GetLegend(nodeIds_);
+    GetLegend(nodeIds_, os);
     os << "}\n";
     //  TODO
     //    nodeCount_ = 0;
