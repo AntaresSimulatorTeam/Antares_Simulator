@@ -19,8 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <math.h>
-
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 constexpr double ZERO_PMIN = 1.e-2;
