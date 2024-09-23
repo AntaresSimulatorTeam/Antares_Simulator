@@ -26,8 +26,9 @@
 namespace Antares::Solver::Visitors
 {
 
-PortFieldSumSubstitutionVisitor::PortFieldSumSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                                           PortFieldSumSubstitutionContext& ctx):
+PortFieldSumSubstitutionVisitor::PortFieldSumSubstitutionVisitor(
+  Registry<Nodes::Node>& registry,
+  PortFieldSumSubstitutionContext& ctx):
     CloneVisitor(registry),
     ctx_(ctx)
 {

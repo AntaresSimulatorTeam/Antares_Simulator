@@ -47,7 +47,7 @@ class PortFieldSumSubstitutionVisitor: public CloneVisitor
 {
 public:
     PortFieldSumSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                 PortFieldSumSubstitutionContext& ctx);
+                                    PortFieldSumSubstitutionContext& ctx);
 
     PortFieldSumSubstitutionContext& ctx_;
     std::string name() const override;
