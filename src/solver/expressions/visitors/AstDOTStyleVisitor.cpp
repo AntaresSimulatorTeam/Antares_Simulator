@@ -42,9 +42,8 @@ static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
-std::string GetLegend(
-  const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds,
-  std::ostream& os)
+void GetLegend(const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds,
+               std::ostream& os)
 {
     os << R"raw(subgraph cluster_legend {
 label = "Legend";
