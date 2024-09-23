@@ -1131,7 +1131,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "enable-first-step") // ignored since 9.2
     {
-        if (value == "false")
+        if (value == "true")
         {
             logs.warning() << "Parameter enable-first-step is deprecated, please remove it from"
                               " the study";
