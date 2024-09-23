@@ -34,6 +34,14 @@
 
 using namespace Antares;
 
+#define SEP IO::Separator
+
+#ifdef _MSC_VER
+#define SNPRINTF sprintf_s
+#else
+#define SNPRINTF snprintf
+#endif
+
 namespace Antares::Data
 {
 
@@ -430,6 +438,72 @@ bool BindingConstraint::contains(const Area* area) const
     }
 
     return false;
+}
+
+void BindingConstraint::buildFormula(Yuni::String& s) const
+{
+    char tmp[42];
+    bool first = true;
+    auto end = pLinkWeights.end();
+    for (auto i = pLinkWeights.begin(); i != end; ++i)
+    {
+        if (!first)
+        {
+            s << " + ";
+        }
+        SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+
+        s << '(' << (const char*)tmp << " x " << (i->first)->getName();
+
+        if (auto at = pLinkOffsets.find(i->first); at != pLinkOffsets.end())
+        {
+            int o = at->second;
+            if (o > 0)
+            {
+                s << " x (t + " << pLinkOffsets.find(i->first)->second << ')';
+            }
+            if (o < 0)
+            {
+                s << " x (t - " << std::abs(pLinkOffsets.find(i->first)->second) << ')';
+            }
+        }
+
+        s << ')';
+        first = false;
+    }
+
+    auto tEnd = pClusterWeights.end();
+    for (auto i = pClusterWeights.begin(); i != tEnd; ++i)
+    {
+        if (!first)
+        {
+            s << " + ";
+        }
+        SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+
+        s << '(' << (const char*)tmp << " x " << (i->first)->getFullName();
+
+        if (auto at = pClusterOffsets.find(i->first); at != pClusterOffsets.end())
+        {
+            int o = at->second;
+            if (o > 0)
+            {
+                s << " x (t + " << pClusterOffsets.find(i->first)->second << ')';
+            }
+            if (o < 0)
+            {
+                s << " x (t - " << std::abs(pClusterOffsets.find(i->first)->second) << ')';
+            }
+        }
+
+        if (!i->first->isActive())
+        {
+            s << " x N/A";
+        }
+
+        s << ')';
+        first = false;
+    }
 }
 
 uint64_t BindingConstraint::memoryUsage() const
