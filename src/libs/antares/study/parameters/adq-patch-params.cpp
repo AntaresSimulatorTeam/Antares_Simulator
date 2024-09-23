@@ -27,27 +27,6 @@
 namespace Antares::Data::AdequacyPatch
 {
 
-// -------------------
-// Local matching
-// -------------------
-
-static bool legacyLocalMatchingKeys(const Yuni::String& key)
-{
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
-    {
-        logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step not "
-                          "supported with this solver version, use a version < 9.2";
-        return true;
-    }
-    if (key == "enable-first-step")
-    {
-        logs.warning() << "Parameter enable-first-step not supported with this solver version, use "
-                          "a version < 9.2";
-        return true;
-    }
-    return false;
-}
-
 // -----------------------
 // Curtailment sharing
 // -----------------------
@@ -120,7 +99,7 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
         return value.to<int>(thresholdVarBoundsRelaxation);
     }
 
-    return legacyLocalMatchingKeys(key);
+    return false;
 }
 
 const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
