@@ -264,10 +264,6 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                 // write down densNew values for all the hours
                 problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour]
                   = std::max(0.0, densNew);
-                // copy spilled Energy values into spilled Energy values after CSR
-                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesSpilledEnergyAfterCSR[hour]
-                  = problemeHebdo_->ResultatsHoraires[Area]
-                      .ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
                 totalLmrViolation += LmrViolationAreaHour(
                   problemeHebdo_,
