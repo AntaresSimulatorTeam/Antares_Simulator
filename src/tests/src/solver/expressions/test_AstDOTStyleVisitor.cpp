@@ -155,8 +155,8 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Fixture)
 
     AstDOTStyleVisitor astGraphVisitor;
 
-    std::pair<AstDOTStyleVisitor&, Node*> pair1(astGraphVisitor, makeExpression());
-    os << pair1;
+    std::pair<AstDOTStyleVisitor&, Node*> pair(astGraphVisitor, makeExpression());
+    os << pair;
 
     // read the content of os
     BOOST_CHECK_EQUAL(expectedDotContent(), os.str());
