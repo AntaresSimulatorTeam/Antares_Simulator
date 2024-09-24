@@ -30,6 +30,7 @@ PortFieldSumSubstitutionVisitor::PortFieldSumSubstitutionVisitor(
   Registry<Nodes::Node>& registry,
   PortFieldSumSubstitutionContext& ctx):
     CloneVisitor(registry),
+    registry_(registry),
     ctx_(ctx)
 {
 }
@@ -38,7 +39,7 @@ Nodes::Node* PortFieldSumSubstitutionVisitor::visit(const Nodes::PortFieldSumNod
 {
     if (auto it = ctx_.portfield.find(*node); it != ctx_.portfield.end())
     {
-        return it->second;
+        return registry_.create<Nodes::SumNode>(it->second);
     }
 
     return CloneVisitor::visit(node);

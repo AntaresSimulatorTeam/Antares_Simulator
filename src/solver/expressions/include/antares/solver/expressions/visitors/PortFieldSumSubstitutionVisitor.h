@@ -37,11 +37,11 @@ struct KeyHasher
  */
 struct PortFieldSumSubstitutionContext
 {
-    std::unordered_map<Nodes::PortFieldSumNode, Nodes::SumNode*, KeyHasher> portfield;
+    std::unordered_map<Nodes::PortFieldSumNode, std::vector<Nodes::Node*>, KeyHasher> portfield;
 };
 
 /**
- * @brief Represents a visitor for substituting portfield nodes in a syntax tree.
+ * @brief Represents a visitor for substituting portfield sum nodes in a syntax tree.
  */
 class PortFieldSumSubstitutionVisitor: public CloneVisitor
 {
@@ -49,11 +49,13 @@ public:
     PortFieldSumSubstitutionVisitor(Registry<Nodes::Node>& registry,
                                     PortFieldSumSubstitutionContext& ctx);
 
-    PortFieldSumSubstitutionContext& ctx_;
     std::string name() const override;
 
 private:
     // Only override visit method for PortFieldSum, clone the rest
     Nodes::Node* visit(const Nodes::PortFieldSumNode* node) override;
+
+    Registry<Nodes::Node>& registry_;
+    PortFieldSumSubstitutionContext& ctx_;
 };
 } // namespace Antares::Solver::Visitors
