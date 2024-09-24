@@ -28,7 +28,7 @@ bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::Stri
     {
         if (value == "true")
         {
-            logs.warning() << "Property enable-first-step has been disabled, it is known to cause "
+            logs.info() << "Property enable-first-step has been disabled, it is known to cause "
                               "errors and inconsistent results";
         }
         return true;
