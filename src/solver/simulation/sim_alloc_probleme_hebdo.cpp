@@ -239,19 +239,21 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     }
 }
 
-void SIM_AllocationLinks(PROBLEME_HEBDO& problem, const uint linkCount, unsigned NombreDePasDeTemps)
+void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
+                         const uint linkCount,
+                         unsigned NombreDePasDeTemps)
 {
     for (unsigned k = 0; k < linkCount; ++k)
     {
         problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite.assign(NombreDePasDeTemps,
-                                                                              0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine.assign(NombreDePasDeTemps,
-                                                                              0.);
-        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef.assign(NombreDePasDeTemps,
-                                                                                 0.);
-        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef.assign(NombreDePasDeTemps,
-                                                                                 0.);
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremite
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigine
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportOrigineVersExtremiteRef
+            .assign(NombreDePasDeTemps, 0.);
+        problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef
+            .assign(NombreDePasDeTemps, 0.);
     }
 }
 
