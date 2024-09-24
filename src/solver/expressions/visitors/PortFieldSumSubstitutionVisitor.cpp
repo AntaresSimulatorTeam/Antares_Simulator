@@ -37,7 +37,7 @@ PortFieldSumSubstitutionVisitor::PortFieldSumSubstitutionVisitor(
 
 Nodes::Node* PortFieldSumSubstitutionVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    if (auto it = ctx_.portfield.find(*node); it != ctx_.portfield.end())
+    if (auto it = ctx_.portfieldSum.find(*node); it != ctx_.portfieldSum.end())
     {
         return registry_.create<Nodes::SumNode>(it->second);
     }
@@ -50,7 +50,7 @@ std::string PortFieldSumSubstitutionVisitor::name() const
     return "PortFieldSumSubstitutionVisitor";
 }
 
-std::size_t KeyHasher::operator()(const Nodes::PortFieldSumNode& n) const
+std::size_t PortFieldSumKeyHasher::operator()(const Nodes::PortFieldSumNode& n) const
 {
     std::size_t seed = 0;
 

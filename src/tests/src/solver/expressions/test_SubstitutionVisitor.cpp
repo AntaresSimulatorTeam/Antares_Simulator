@@ -27,6 +27,7 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
 #include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
@@ -138,6 +139,50 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_name, Registry<Node>)
 
     PortfieldSubstitutionVisitor substitutionVisitor(*this, ctx);
     BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortfieldSubstitutionVisitor");
+}
+
+
+class SumSubstitutionFixture: public Registry<Node>
+{
+public:
+    Node* originalExpression()
+    {
+        Node* port1 = create<PortFieldSumNode>("port", "sum of literal");
+        Node* port2 = create<PortFieldNode>("another port", "another field");
+        Node* root = create<SumNode>(port1, port2);
+        return root;
+    }
+
+    Node* expectedExpressionAfterSubstitution()
+    {
+        Node* node1 = create<SumNode>(create<LiteralNode>(12), create<LiteralNode>(7));
+        Node* port2 = create<PortFieldNode>("another port", "not a literal");
+        Node* root = create<SumNode>(node1, port2);
+        return root;
+    }
+
+    Node* substitute(Node* original)
+    {
+        PortFieldSumSubstitutionContext ctx;
+        Node* sum1 = create<LiteralNode>(12);
+        Node* sum2 = create<LiteralNode>(7);
+        std::vector<Node*> v = { sum1, sum2 };
+        ctx.portfieldSum.emplace(PortFieldSumNode("port", "sum of literal"), v);
+
+        PortFieldSumSubstitutionVisitor sub(*this, ctx);
+        return sub.dispatch(original);
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(PortFieldSumSubstitutionVisitor_simple, SumSubstitutionFixture)
+
+{
+    Node* original = originalExpression();
+    Node* substituted = substitute(original);
+    Node* expected = expectedExpressionAfterSubstitution();
+
+    CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(substituted, expected));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

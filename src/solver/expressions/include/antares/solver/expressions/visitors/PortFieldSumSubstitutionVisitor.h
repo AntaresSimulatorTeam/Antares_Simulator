@@ -27,7 +27,7 @@
 namespace Antares::Solver::Visitors
 {
 
-struct KeyHasher
+struct PortFieldSumKeyHasher
 {
     std::size_t operator()(const Nodes::PortFieldSumNode& n) const;
 };
@@ -37,7 +37,7 @@ struct KeyHasher
  */
 struct PortFieldSumSubstitutionContext
 {
-    std::unordered_map<Nodes::PortFieldSumNode, std::vector<Nodes::Node*>, KeyHasher> portfield;
+    std::unordered_map<Nodes::PortFieldSumNode, std::vector<Nodes::Node*>, PortFieldSumKeyHasher> portfieldSum;
 };
 
 /**
