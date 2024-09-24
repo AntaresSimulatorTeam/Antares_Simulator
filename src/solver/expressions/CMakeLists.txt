@@ -17,7 +17,7 @@ set(SRC_Expressions
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
         visitors/SubstitutionVisitor.cpp
-        visitors/PortfieldSubstitutionVisitor.cpp
+        visitors/PortFieldSubstitutionVisitor.cpp
         visitors/PortFieldSumSubstitutionVisitor.cpp
         visitors/InvalidNode.cpp
 
@@ -54,7 +54,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/TimeIndexVisitor.h
         include/antares/solver/expressions/visitors/TimeIndex.h
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
-        include/antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/PortFieldSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/InvalidNode.h
 
