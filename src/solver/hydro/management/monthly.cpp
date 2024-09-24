@@ -198,7 +198,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               {
               case OUI:
               {
-                  if (Logs::Verbosity::Debug::enabled)
+                  if (false)
                   {
                       CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
                   }
