@@ -22,7 +22,7 @@
 #include "antares/solver/optimisation/opt_rename_problem.h"
 
 #include <map>
-#include <sstream>
+#include <string>
 
 const std::string HOUR("hour");
 const std::string DAY("day");

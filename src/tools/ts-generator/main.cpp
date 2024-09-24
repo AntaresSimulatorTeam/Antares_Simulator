@@ -28,7 +28,6 @@
 #include <antares/utils/utils.h>
 #include "antares/tools/ts-generator/linksTSgenerator.h"
 #include "antares/tools/ts-generator/tsGenerationOptions.h"
-using namespace Antares::TSGenerator;
 
 using namespace Antares::TSGenerator;
 
