@@ -224,18 +224,18 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche.assign(
-            study.runtime->thermalPlantTotalCount, 0);
+          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDArret.assign(
-            study.runtime->thermalPlantTotalCount, 0);
+          .NumeroDeContrainteDesContraintesDeDureeMinDArret
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne.assign(
-            study.runtime->thermalPlantTotalCount, 0);
+          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
-        problem.VariablesDualesDesContraintesDeNTC[k].VariableDualeParInterconnexion.assign(
-          linkCount, 0.);
+        problem.VariablesDualesDesContraintesDeNTC[k].VariableDualeParInterconnexion
+          .assign(linkCount, 0.);
     }
 }
 
