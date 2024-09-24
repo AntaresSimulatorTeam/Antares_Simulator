@@ -153,6 +153,8 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 // ------------------------
 void AdqPatchParams::reset()
 {
+    enabled = false;
+
     curtailmentSharing.reset();
     setToZeroOutsideInsideLinks = true;
 }
