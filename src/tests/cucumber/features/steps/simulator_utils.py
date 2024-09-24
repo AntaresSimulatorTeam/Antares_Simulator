@@ -10,10 +10,11 @@ from output_utils import parse_output_folder_from_logs
 
 def get_solver_path():
     with open("conf.yaml") as file:
-            content = yaml.full_load(file)
+        content = yaml.full_load(file)
     return content.get("antares-solver")
 
-SOLVER_PATH = get_solver_path() # we only need to run this once
+
+SOLVER_PATH = get_solver_path()  # we only need to run this once
 
 
 def run_simulation(context):
@@ -35,7 +36,7 @@ def activate_simu_outputs(context):
 
 
 def build_antares_solver_command(context):
-    command = [SOLVER_PATH, "-i", str(context.study_path)]
+    command = [SOLVER_PATH, "-i", f'"{context.study_path}"']
     if context.use_ortools:
         command.append('--use-ortools')
         command.append('--ortools-solver=' + context.ortools_solver)
@@ -44,4 +45,3 @@ def build_antares_solver_command(context):
     if context.parallel:
         command.append('--force-parallel=4')
     return command
-
