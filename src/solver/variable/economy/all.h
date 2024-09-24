@@ -63,7 +63,6 @@
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "localMatchingRuleViolations.h"
-#include "spilledEnergyAfterCSR.h"
 #include "dtgMarginAfterCsr.h"
 #include "spilledEnergy.h"
 
@@ -162,7 +161,6 @@ typedef                           // Prices
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
-                               <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
                                 <LOLD                 // LOLD
                                  <LOLP                // LOLP
                                   <AvailableDispatchGen<DispatchableGenMargin<DtgMarginCsr< // DTG
@@ -180,7 +178,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -244,8 +242,6 @@ typedef // Prices
                                                     LMRViolations,
                                                     Common::SpatialAggregate<
                                                       SpilledEnergy,
-                                                      Common::SpatialAggregate<
-                                                        SpilledEnergyAfterCSR,
                                                         // LOLD
                                                         Common::SpatialAggregate<
                                                           LOLD,
@@ -275,7 +271,7 @@ typedef // Prices
                                                                                             // -
                                                                                             // refs:
                                                                                             // #55
-                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
