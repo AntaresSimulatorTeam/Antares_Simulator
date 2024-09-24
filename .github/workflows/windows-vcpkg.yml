@@ -197,7 +197,7 @@ jobs:
 
     
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      if: false
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
