@@ -136,6 +136,8 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 // ------------------------
 void AdqPatchParams::reset()
 {
+    enabled = false;
+
     localMatching.reset();
     curtailmentSharing.reset();
 }
