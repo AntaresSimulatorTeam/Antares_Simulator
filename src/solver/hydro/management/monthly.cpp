@@ -32,9 +32,8 @@ namespace fs = std::filesystem;
 
 namespace Antares
 {
-template<class ProblemT>
 static void CheckHydroAllocationProblem(Data::Area& area,
-                                        ProblemT& problem,
+                                        DONNEES_ANNUELLES& problem,
                                         int initLevelMonth,
                                         double lvi)
 {
@@ -199,7 +198,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               {
               case OUI:
               {
-                  if (false) // Put true to have extra check
+                  if (Logs::Verbosity::Debug::enabled)
                   {
                       CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
                   }

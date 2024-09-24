@@ -255,11 +255,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
             logs.info() << " Solver: Standard resolution failed";
             logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
+            logs.debug() << " solver: resetting";
 
-            if (false) // To be turned to true if we want to print this
-            {
-                logs.info() << " solver: resetting";
-            }
             return {.success = false,
                     .timeMeasure = timeMeasure,
                     .mps_writer_factory = mps_writer_factory};
