@@ -26,8 +26,8 @@
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/CompareVisitor.h>
-#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
 #include <antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
 #include <antares/solver/expressions/visitors/PrintVisitor.h>
 #include <antares/solver/expressions/visitors/SubstitutionVisitor.h>
 
@@ -141,7 +141,6 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_name, Registry<Node>)
     BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortfieldSubstitutionVisitor");
 }
 
-
 class SumSubstitutionFixture: public Registry<Node>
 {
 public:
@@ -166,7 +165,7 @@ public:
         PortFieldSumSubstitutionContext ctx;
         Node* sum1 = create<LiteralNode>(12);
         Node* sum2 = create<LiteralNode>(7);
-        std::vector<Node*> v = { sum1, sum2 };
+        std::vector<Node*> v = {sum1, sum2};
         ctx.portfieldSum.emplace(PortFieldSumNode("port", "sum of literal"), v);
 
         PortFieldSumSubstitutionVisitor sub(*this, ctx);
