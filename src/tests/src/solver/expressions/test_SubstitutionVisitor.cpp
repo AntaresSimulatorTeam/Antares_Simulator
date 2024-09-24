@@ -156,7 +156,7 @@ public:
     Node* expectedExpressionAfterSubstitution()
     {
         Node* node1 = create<SumNode>(create<LiteralNode>(12), create<LiteralNode>(7));
-        Node* port2 = create<PortFieldNode>("another port", "not a literal");
+        Node* port2 = create<PortFieldNode>("another port", "another field");
         Node* root = create<SumNode>(node1, port2);
         return root;
     }
