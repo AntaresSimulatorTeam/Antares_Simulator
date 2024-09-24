@@ -199,7 +199,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
               case OUI:
               {
 #ifndef NDEBUG
-                      CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
+                  CheckHydroAllocationProblem(area, problem, initReservoirLvlMonth, lvi);
 #endif
 
                   for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
