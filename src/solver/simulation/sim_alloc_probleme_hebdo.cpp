@@ -341,9 +341,10 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
 }
 
 void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
-                       const Antares::Data::Study& study,
-                       unsigned NombreDePasDeTemps)
+                          const Antares::Data::Study& study,
+                          unsigned NombreDePasDeTemps)
 {
+
     uint nbPays = study.areas.size();
 
     for (unsigned k = 0; k < nbPays; k++)
