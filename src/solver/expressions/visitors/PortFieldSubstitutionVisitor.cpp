@@ -26,14 +26,14 @@
 namespace Antares::Solver::Visitors
 {
 
-PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                                           PortfieldSubstitutionContext& ctx):
+PortFieldSubstitutionVisitor::PortFieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                                           PortFieldSubstitutionContext& ctx):
     CloneVisitor(registry),
     ctx_(ctx)
 {
 }
 
-Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
+Nodes::Node* PortFieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
 {
     if (auto it = ctx_.portfield.find(*node); it != ctx_.portfield.end())
     {
@@ -43,9 +43,9 @@ Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* nod
     return CloneVisitor::visit(node);
 }
 
-std::string PortfieldSubstitutionVisitor::name() const
+std::string PortFieldSubstitutionVisitor::name() const
 {
-    return "PortfieldSubstitutionVisitor";
+    return "PortFieldSubstitutionVisitor";
 }
 
 std::size_t KeyHasher::operator()(const Nodes::PortFieldNode& n) const

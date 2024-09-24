@@ -35,7 +35,7 @@ struct KeyHasher
 /**
  * @brief Represents the context for performing substitutions in a syntax tree.
  */
-struct PortfieldSubstitutionContext
+struct PortFieldSubstitutionContext
 {
     std::unordered_map<Nodes::PortFieldNode, Nodes::Node*, KeyHasher> portfield;
 };
@@ -43,13 +43,13 @@ struct PortfieldSubstitutionContext
 /**
  * @brief Represents a visitor for substituting portfield nodes in a syntax tree.
  */
-class PortfieldSubstitutionVisitor: public CloneVisitor
+class PortFieldSubstitutionVisitor: public CloneVisitor
 {
 public:
-    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                 PortfieldSubstitutionContext& ctx);
+    PortFieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                 PortFieldSubstitutionContext& ctx);
 
-    PortfieldSubstitutionContext& ctx_;
+    PortFieldSubstitutionContext& ctx_;
     std::string name() const override;
 
 private:

@@ -114,10 +114,10 @@ public:
 
     Node* substitute(Node* original)
     {
-        PortfieldSubstitutionContext ctx;
+        PortFieldSubstitutionContext ctx;
         ctx.portfield.emplace(PortFieldNode("port", "literal"), create<LiteralNode>(10));
 
-        PortfieldSubstitutionVisitor sub(*this, ctx);
+        PortFieldSubstitutionVisitor sub(*this, ctx);
         return sub.dispatch(original);
     }
 };
@@ -135,10 +135,10 @@ BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_simple, SubstitutionFixture
 
 BOOST_FIXTURE_TEST_CASE(PortfieldSubstitutionVisitor_name, Registry<Node>)
 {
-    PortfieldSubstitutionContext ctx;
+    PortFieldSubstitutionContext ctx;
 
-    PortfieldSubstitutionVisitor substitutionVisitor(*this, ctx);
-    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortfieldSubstitutionVisitor");
+    PortFieldSubstitutionVisitor substitutionVisitor(*this, ctx);
+    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortFieldSubstitutionVisitor");
 }
 
 class SumSubstitutionFixture: public Registry<Node>
