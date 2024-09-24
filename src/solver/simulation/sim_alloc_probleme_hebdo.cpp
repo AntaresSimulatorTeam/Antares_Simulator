@@ -49,7 +49,7 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
         SIM_AllocateAreas(problem, study, NombreDePasDeTemps);
     }
-    catch (const std::bad_alloc& e)
+    catch(const std::bad_alloc& e)
     {
         logs.error() << "Memory allocation failed, aborting (" << e.what() << ")";
     }
@@ -280,11 +280,13 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
     for (uint k = 0; k < 7; k++)
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-          .NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
+          .NumeroDeContrainteDesContraintesCouplantes
+          .assign(activeConstraints.size(), 0);
     }
 
-    problem.CorrespondanceCntNativesCntOptimHebdomadaires.NumeroDeContrainteDesContraintesCouplantes
-      .assign(activeConstraints.size(), 0);
+    problem.CorrespondanceCntNativesCntOptimHebdomadaires
+        .NumeroDeContrainteDesContraintesCouplantes
+        .assign(activeConstraints.size(), 0);
 
     const auto& bindingConstraintCount = activeConstraints.size();
     problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
