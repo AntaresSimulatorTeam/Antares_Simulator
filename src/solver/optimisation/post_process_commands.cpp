@@ -23,6 +23,7 @@
 #include "../simulation/common-eco-adq.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+#include "adequacy_patch_csr/post_processing.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation
@@ -146,6 +147,7 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
             // define access to the required variables
             const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
             const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
                                      ->wasCSRTriggeredAtAreaHour(Area, hour);
@@ -155,7 +157,6 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
               dtgMrg,
               ens);
 
-            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
             double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
             const double& ensCsr = hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour];
             double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];

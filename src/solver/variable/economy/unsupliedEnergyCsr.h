@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include "antares/solver/variable/variable.h"
+#include "../variable.h"
 
 namespace Antares
 {
@@ -60,30 +60,29 @@ struct VCardUnsupliedEnergyCSR
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardUnsupliedEnergyCSR VCardForSpatialAggregate;
-
-    //! Data Level
-    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
-    //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
-                                                 & (Category::FileLevel::id
-                                                    | Category::FileLevel::va);
-    //! Precision (views)
-    static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
-    //! Decimal precision
-    static constexpr uint8_t decimal = 0;
-    //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr int columnCount = 1;
-    //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
-    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
-    //! Can this variable be non applicable (0 : no, 1 : yes)
-    static constexpr uint8_t isPossiblyNonApplicable = 0;
-
+    enum
+    {
+        //! Data Level
+        categoryDataLevel = Category::area,
+        //! File level (provided by the type of the results)
+        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
+        //! Precision (views)
+        precision = Category::all,
+        //! Indentation (GUI)
+        nodeDepthForGUI = +0,
+        //! Decimal precision
+        decimal = 0,
+        //! Number of columns used by the variable (One ResultsType per column)
+        columnCount = 1,
+        //! The Spatial aggregation
+        spatialAggregate = Category::spatialAggregateSum,
+        spatialAggregateMode = Category::spatialAggregateEachYear,
+        spatialAggregatePostProcessing = 0,
+        //! Intermediate values
+        hasIntermediateValues = 1,
+        //! Can this variable be non applicable (0 : no, 1 : yes)
+        isPossiblyNonApplicable = 0
+    };
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
 
