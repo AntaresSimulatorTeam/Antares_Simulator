@@ -21,7 +21,7 @@
 #include <boost/functional/hash.hpp>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
+#include <antares/solver/expressions/visitors/PortFieldSubstitutionVisitor.h>
 
 namespace Antares::Solver::Visitors
 {
