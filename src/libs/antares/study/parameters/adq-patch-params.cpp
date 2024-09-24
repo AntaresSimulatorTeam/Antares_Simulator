@@ -25,7 +25,15 @@ bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::Stri
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(setToZeroOutsideOutsideLinks);
     if (key == "enable-first-step")
-        return value.to<bool>(enabled);
+    {
+        if (value == "true")
+        {
+            logs.warning() << "Property enable-first-step has been disabled, it is known to cause "
+                              "errors and inconsistent results";
+        }
+        return true;
+    }
+
     return false;
 }
 
@@ -128,8 +136,6 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 // ------------------------
 void AdqPatchParams::reset()
 {
-    enabled = false;
-
     localMatching.reset();
     curtailmentSharing.reset();
 }
