@@ -172,56 +172,69 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
-        variablesMapping.NumeroDeVariableDeLInterconnexion.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion.assign(linkCount,
-                                                                                          0);
-        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion.assign(linkCount,
-                                                                                          0);
+        variablesMapping.NumeroDeVariableDeLInterconnexion
+          .assign(linkCount, 0);
+        variablesMapping
+          .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion
+          .assign(linkCount, 0);
+        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
+          .assign(linkCount, 0);
 
-        variablesMapping.NumeroDeVariableDuPalierThermique.assign(
-          study.runtime->thermalPlantTotalCount, 0);
-        variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDeDebordement.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariableDefaillancePositive.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariableDefaillanceNegative.assign(nbPays, 0);
+        variablesMapping.NumeroDeVariableDuPalierThermique
+          .assign(study.runtime->thermalPlantTotalCount, 0);
+        variablesMapping.NumeroDeVariablesDeLaProdHyd
+          .assign(nbPays, 0);
+        variablesMapping.NumeroDeVariablesDePompage
+          .assign(nbPays, 0);
+        variablesMapping.NumeroDeVariablesDeNiveau
+          .assign(nbPays, 0);
+        variablesMapping.NumeroDeVariablesDeDebordement
+          .assign(nbPays, 0);
+        variablesMapping.NumeroDeVariableDefaillancePositive
+          .assign(nbPays, 0);
+        variablesMapping.NumeroDeVariableDefaillanceNegative
+          .assign(nbPays, 0);
 
-        variablesMapping.NumeroDeVariablesVariationHydALaBaisse.assign(nbPays, 0);
+        variablesMapping.NumeroDeVariablesVariationHydALaBaisse
+          .assign(nbPays, 0);
 
-        variablesMapping.NumeroDeVariablesVariationHydALaHausse.assign(nbPays, 0);
+        variablesMapping.NumeroDeVariablesVariationHydALaHausse
+          .assign(nbPays, 0);
 
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique.assign(
-          study.runtime->thermalPlantTotalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique.assign(
-          study.runtime->thermalPlantTotalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique.assign(
-          study.runtime->thermalPlantTotalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique.assign(
-          study.runtime->thermalPlantTotalCount, 0);
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
+          .assign(study.runtime->thermalPlantTotalCount, 0);
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
+          .assign(study.runtime->thermalPlantTotalCount, 0);
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
+          .assign(study.runtime->thermalPlantTotalCount, 0);
+        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
+          .assign(study.runtime->thermalPlantTotalCount, 0);
 
-        variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
-        variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
-        variablesMapping.SIM_ShortTermStorage.LevelVariable.assign(shortTermStorageCount, 0);
+        variablesMapping.SIM_ShortTermStorage.InjectionVariable
+          .assign(shortTermStorageCount, 0);
+        variablesMapping.SIM_ShortTermStorage.WithdrawalVariable
+          .assign(shortTermStorageCount, 0);
+        variablesMapping.SIM_ShortTermStorage.LevelVariable
+          .assign(shortTermStorageCount, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
-                                                                                           0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContraintePourEviterLesChargesFictives.assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays.assign(nbPays,
-                                                                                            0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContraintePourEviterLesChargesFictives
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays
+          .assign(nbPays, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k].ShortTermStorageLevelConstraint.assign(
-          shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].ShortTermStorageLevelConstraint
+          .assign(shortTermStorageCount, 0);
 
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroPremiereContrainteDeReserveParZone.assign(
-          nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeuxiemeContrainteDeReserveParZone.assign(
-          nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux.assign(
-          linkCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroPremiereContrainteDeReserveParZone
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeuxiemeContrainteDeReserveParZone
+          .assign(nbPays, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDeDissociationDeFlux
+          .assign(linkCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesContraintesCouplantes
+          .assign(activeConstraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
@@ -397,6 +410,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
           .assign(NombreDePasDeTemps, 0.);
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
+          .assign(NombreDePasDeTemps, 0.);
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveCSR
           .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDENS
           .assign(NombreDePasDeTemps, 0.); // adq patch
