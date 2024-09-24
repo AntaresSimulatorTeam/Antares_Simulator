@@ -295,24 +295,25 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         assert(activeConstraints[k]->linkCount() < 50000000);
         assert(activeConstraints[k]->clusterCount() < 50000000);
 
-        problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante.assign(
-          NombreDePasDeTemps, 0.);
+        problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante
+          .assign(NombreDePasDeTemps, 0.);
 
-        problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion.assign(
-          activeConstraints[k]->linkCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion.assign(
-          activeConstraints[k]->linkCount(), 0.);
-        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco.assign(
-          activeConstraints[k]->linkCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
+          .assign(activeConstraints[k]->linkCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
+          .assign(activeConstraints[k]->linkCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
+          .assign(activeConstraints[k]->linkCount(), 0);
 
-        problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch.assign(
-          activeConstraints[k]->clusterCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch.assign(
-          activeConstraints[k]->clusterCount(), 0.);
-        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch.assign(
-          activeConstraints[k]->clusterCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch.assign(
-          activeConstraints[k]->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
+          .assign(activeConstraints[k]->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
+          .assign(activeConstraints[k]->clusterCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
+          .assign(activeConstraints[k]->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
+          .assign(activeConstraints[k]->clusterCount(), 0);
+
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
