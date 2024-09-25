@@ -86,6 +86,7 @@ var hierarchy =
     [ "BindingConstraintWeekData", "structBindingConstraintWeekData.html", null ],
     [ "BOUND_FLEX_DOWN_NODE", "structBOUND__FLEX__DOWN__NODE.html", null ],
     [ "BOUND_FLEX_UP_NODE", "structBOUND__FLEX__UP__NODE.html", null ],
+    [ "Antares::Solver::Visitors::BoxStyle", "structAntares_1_1Solver_1_1Visitors_1_1BoxStyle.html", null ],
     [ "Antares::UnitTests::Buffer", "classAntares_1_1UnitTests_1_1Buffer.html", null ],
     [ "Antares::ExtSource::Handler::BuildContext", "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html", null ],
     [ "Antares::Solver::Private::Simulation::CacheData", "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html", null ],
@@ -662,6 +663,9 @@ var hierarchy =
       [ "Antares::Solver::Simulation::ISimulation< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
     ] ],
     [ "Antares::Solver::IName", "classAntares_1_1Solver_1_1IName.html", [
+      [ "Antares::Solver::Visitors::NodeVisitor< void, std::ostream & >", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html", [
+        [ "Antares::Solver::Visitors::AstDOTStyleVisitor", "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html", null ]
+      ] ],
       [ "Antares::Solver::Visitors::NodeVisitor< Nodes::Node * >", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Solver::Visitors::CloneVisitor", "classAntares_1_1Solver_1_1Visitors_1_1CloneVisitor.html", [
           [ "Antares::Solver::Visitors::PortfieldSubstitutionVisitor", "classAntares_1_1Solver_1_1Visitors_1_1PortfieldSubstitutionVisitor.html", null ],

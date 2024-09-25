@@ -1,5 +1,11 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Graph_1_1Edge_1_1addpWeight.html":[9,0,0,9,0,0],
+"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[9,0,0,9,0,1],
+"structAntares_1_1Map_1_1Item_1_1SetCompare.html":[9,0,0,10,7,0],
+"structAntares_1_1Map_1_1MapRenderOptions.html":[9,0,0,10,9],
+"structAntares_1_1Matrix_1_1PredicateIdentity.html":[9,0,0,36,0],
+"structAntares_1_1Memory_1_1Stored.html":[9,0,0,42,0],
 "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[9,0,0,11,11],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,11,16],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html":[9,0,0,13,11],
@@ -243,11 +249,5 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[9,0,0,13,6,4,108,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[9,0,0,13,6,4,108,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[9,0,0,13,6,4,109,0],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,13,6,9],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[9,0,0,13,6,9,0],
-"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,13,6,11,0],
-"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[9,0,0,13,6,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,13,6,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,13,6,14],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,13,6,15]
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,13,6,9]
 };

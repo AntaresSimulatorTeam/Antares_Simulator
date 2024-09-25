@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html":[9,0,0,2,0,0,3,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html#a14336448f2300597e11716c1bb5eb492":[9,0,0,2,0,0,3,0,1],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html#a6f0693448cf94e168e5c95d4f8994b47":[9,0,0,2,0,0,3,0,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html#a7ee03ccc959ae5040b44775977c2d489":[9,0,0,2,0,0,3,0,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterCO2Cost.html":[9,0,0,2,0,0,87],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterFuelCost.html":[9,0,0,2,0,0,88],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesWind.html":[9,0,0,2,0,0,89],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesWind.html#a38e33c5db1603f5b60605639373519cd":[9,0,0,2,0,0,89,1],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesWind.html#a629515c05a34e7bd7207c1c8dc1e620d":[9,0,0,2,0,0,89,2]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesWind.html#a38e33c5db1603f5b60605639373519cd":[9,0,0,2,0,0,89,1]
 };

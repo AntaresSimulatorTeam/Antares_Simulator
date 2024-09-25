@@ -1,5 +1,15 @@
 var NAVTREEINDEX26 =
 {
+"structThermalIniFile.html":[9,0,237],
+"structTimeSeriesFile.html":[9,0,241],
+"structVALEURS__DE__NTC__ET__RESISTANCES.html":[9,0,247],
+"structVARIABLES__DUALES__INTERCONNEXIONS.html":[9,0,250],
+"structVec3.html":[9,0,251],
+"structYAML_1_1convert_3_01Monster_01_4.html":[9,0,27,0],
+"structYAML_1_1convert_3_01Power_01_4.html":[9,0,27,1],
+"structYAML_1_1convert_3_01Vec3_01_4.html":[9,0,27,2],
+"structcommonFixture.html":[9,0,53],
+"structsaveFixture.html":[9,0,208],
 "study_8hxx_source.html":[10,0,0,3,0,25,0,0,0,26],
 "studydata_8hxx_source.html":[10,0,0,4,11,0,0,0,0,0,4],
 "studylogs_8h_source.html":[10,0,0,7,2,2,31],

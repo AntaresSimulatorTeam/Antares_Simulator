@@ -32,7 +32,8 @@ var searchData=
   ['blankcell_29',['blankCell',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1blankCell.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['bound_5fflex_5fdown_5fnode_30',['BOUND_FLEX_DOWN_NODE',['../structBOUND__FLEX__DOWN__NODE.html',1,'']]],
   ['bound_5fflex_5fup_5fnode_31',['BOUND_FLEX_UP_NODE',['../structBOUND__FLEX__UP__NODE.html',1,'']]],
-  ['buffer_32',['Buffer',['../classAntares_1_1UnitTests_1_1Buffer.html',1,'Antares::UnitTests']]],
-  ['buildcontext_33',['BuildContext',['../classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html',1,'Antares::ExtSource::Handler']]],
-  ['button_34',['Button',['../classAntares_1_1Component_1_1Button.html',1,'Antares::Component']]]
+  ['boxstyle_32',['BoxStyle',['../structAntares_1_1Solver_1_1Visitors_1_1BoxStyle.html',1,'Antares::Solver::Visitors']]],
+  ['buffer_33',['Buffer',['../classAntares_1_1UnitTests_1_1Buffer.html',1,'Antares::UnitTests']]],
+  ['buildcontext_34',['BuildContext',['../classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html',1,'Antares::ExtSource::Handler']]],
+  ['button_35',['Button',['../classAntares_1_1Component_1_1Button.html',1,'Antares::Component']]]
 ];

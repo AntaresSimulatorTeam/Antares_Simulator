@@ -1,5 +1,6 @@
 var dir_fc7284888212a3ca3333dab20ff7be8b =
 [
+    [ "AstDOTStyleVisitor.h", "AstDOTStyleVisitor_8h_source.html", null ],
     [ "CloneVisitor.h", "CloneVisitor_8h_source.html", null ],
     [ "CompareVisitor.h", "CompareVisitor_8h_source.html", null ],
     [ "EvaluationContext.h", "EvaluationContext_8h_source.html", null ],

@@ -758,6 +758,8 @@ var annotated_dup =
           [ "VCardJoin", "structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html", "structAntares_1_1Solver_1_1Variable_1_1VCardJoin" ]
         ] ],
         [ "Visitors", null, [
+          [ "AstDOTStyleVisitor", "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html", "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor" ],
+          [ "BoxStyle", "structAntares_1_1Solver_1_1Visitors_1_1BoxStyle.html", "structAntares_1_1Solver_1_1Visitors_1_1BoxStyle" ],
           [ "CloneVisitor", "classAntares_1_1Solver_1_1Visitors_1_1CloneVisitor.html", "classAntares_1_1Solver_1_1Visitors_1_1CloneVisitor" ],
           [ "CompareVisitor", "classAntares_1_1Solver_1_1Visitors_1_1CompareVisitor.html", null ],
           [ "EvaluationContext", "classAntares_1_1Solver_1_1Visitors_1_1EvaluationContext.html", "classAntares_1_1Solver_1_1Visitors_1_1EvaluationContext" ],
