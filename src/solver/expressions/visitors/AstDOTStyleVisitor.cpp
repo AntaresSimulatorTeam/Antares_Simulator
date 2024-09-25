@@ -53,6 +53,7 @@ node [shape=plaintext];
 
 )raw";
 }
+
 void ProcessElementLegend(const std::string& element_name, size_t size, std::ostream& os)
 {
     os << "legend_" << element_name << " [ label =\" " << element_name << ": " << size << "\"]\n";
@@ -63,8 +64,7 @@ void AddFiliation(std::ostream& os, const std::string& parent_id, const std::str
     os << "legend_" << parent_id << " -> " << "legend_" << child_id << " [style=invis];\n";
 }
 
-void GetLegend(std::map<std::string, unsigned int>& nbNodesByType,
-               std::ostream& os)
+void GetLegend(std::map<std::string, unsigned int>& nbNodesByType, std::ostream& os)
 {
     if (nbNodesByType.empty())
     {
@@ -196,7 +196,7 @@ unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
 
 void AstDOTStyleVisitor::computeNumberNodesPerType()
 {
-    for (const auto& [node,_] : nodeIds_)
+    for (const auto& [node, _]: nodeIds_)
     {
         nbNodesPerType_[node->name()]++;
     }
