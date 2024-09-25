@@ -136,6 +136,7 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#ad9882dd4922cf3d6a32167395f7f3a84":[9,0,0,13,6,38,0,1],
 "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html":[9,0,0,13,7,0],
 "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html#a3c267710d6ce38fdbe8e915d7272e95e":[9,0,0,13,7,0,2],
+"classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html#a9bf5b3da34db45926a41f307f2efec76":[9,0,0,13,7,0,4],
 "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html#acca6c07798199f078b1f213ab48d4d94":[9,0,0,13,7,0,0],
 "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html#aefd2029f1bd117ec501f454a1a31bf38":[9,0,0,13,7,0,3],
 "classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html#afcf281c77cd3e60de2c59a33f40a1ac1":[9,0,0,13,7,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html#ac1e39e5774106ec4134b57f6159ec49e":[9,0,0,15,1,6,0],
 "classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html#aeb5b43a64f0d2c2dc36f7db7ab45907b":[9,0,0,15,1,6,1],
 "classAntares_1_1Toolbox_1_1Filter_1_1Hour.html":[9,0,0,15,1,7],
-"classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a37fdcee745828c06dbfb2f1e356eb7ce":[9,0,0,15,1,7,1],
-"classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a6312b32396cf27374db4ebd53a2a5094":[9,0,0,15,1,7,0]
+"classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a37fdcee745828c06dbfb2f1e356eb7ce":[9,0,0,15,1,7,1]
 };

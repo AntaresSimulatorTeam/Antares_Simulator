@@ -1,5 +1,6 @@
 var NAVTREEINDEX25 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,13,6,9],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[9,0,0,13,6,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,13,6,11,0],
 "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[9,0,0,13,6,12,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[9,0,243],
 "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html":[9,0,244],
 "structTSNumbersPredicate.html":[9,0,245],
-"structTestContext.html":[9,0,231],
-"structThermalClusterStudy.html":[9,0,236]
+"structTestContext.html":[9,0,231]
 };

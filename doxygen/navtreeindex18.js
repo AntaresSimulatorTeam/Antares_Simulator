@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"classAreaBalance.html#acac223592c6c4c93365b0786b3a790a0":[9,0,35,0],
 "classAreaHydroLevel.html":[9,0,37],
 "classAreaHydroLevel.html#abbf1c0f06757373ddf69600149f67682":[9,0,37,0],
 "classAreaHydroLevelGroup.html":[9,0,39],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "classModifiedINode.html#ad0840cb4d096056fba4fe5bac78ce0d8":[9,0,151,1],
 "classModifiedINode.html#aef5298e99ca8bc33a33c40e05a3cd6d2":[9,0,151,4],
 "classMyStudyFinder.html":[9,0,154],
-"classMyStudyFinder.html#a003f153d7f4bfabfe207c1d616cf1acd":[9,0,154,0],
-"classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[9,0,154,1]
+"classMyStudyFinder.html#a003f153d7f4bfabfe207c1d616cf1acd":[9,0,154,0]
 };

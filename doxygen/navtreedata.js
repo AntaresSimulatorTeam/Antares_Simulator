@@ -109,17 +109,17 @@ var NAVTREEINDEX =
 "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html",
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#aa3514a8a0b395000bcb148b9874610db",
 "classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a162e38ee1810314d6efe3d0e328204a8",
-"classAntares_1_1Toolbox_1_1Filter_1_1HourYear.html",
-"classAntares_1_1Window_1_1Hydro_1_1Prepro.html#aa7a1b04e0692ecd2228c3ef6a17933e0",
-"classAreaHydroLevel.html",
-"classNameTranslator.html",
-"dir_0e300ef0200bc54708d5e182bb4f700b.html",
-"dir_beff7427979cae89e6df9e0b39a4fa89.html",
-"h2o__j__donnees__optimisation_8h_source.html",
-"panel_8hxx_source.html",
-"structAntares_1_1Graph_1_1Edge_1_1addpWeight.html",
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475",
-"structThermalIniFile.html"
+"classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a6312b32396cf27374db4ebd53a2a5094",
+"classAntares_1_1Window_1_1Hydro_1_1Prepro.html",
+"classAreaBalance.html#acac223592c6c4c93365b0786b3a790a0",
+"classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31",
+"dir_0e26ae5d2579a31dc8587379f400ed71.html",
+"dir_be7d6ff4eb04ff96c849054e504acaf2.html",
+"h2o__j__donnees__mensuelles_8h_source.html",
+"pages.html",
+"structAntares_1_1Forms_1_1CompareByTimestamp.html",
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html",
+"structThermalClusterStudy.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

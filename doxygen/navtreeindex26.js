@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"structThermalClusterStudy.html":[9,0,236],
 "structThermalIniFile.html":[9,0,237],
 "structTimeSeriesFile.html":[9,0,241],
 "structVALEURS__DE__NTC__ET__RESISTANCES.html":[9,0,247],

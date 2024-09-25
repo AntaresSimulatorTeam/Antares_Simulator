@@ -168,6 +168,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c267710d6ce38fdbe8e915d7272e95e" id="r_a3c267710d6ce38fdbe8e915d7272e95e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html#a3c267710d6ce38fdbe8e915d7272e95e">name</a> () const override</td></tr>
 <tr class="memdesc:a3c267710d6ce38fdbe8e915d7272e95e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of this visitor.  <br /></td></tr>
 <tr class="separator:a3c267710d6ce38fdbe8e915d7272e95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bf5b3da34db45926a41f307f2efec76" id="r_a9bf5b3da34db45926a41f307f2efec76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html#a9bf5b3da34db45926a41f307f2efec76">operator()</a> (std::ostream &amp;os, <a class="el" href="classAntares_1_1Solver_1_1Nodes_1_1Node.html">Nodes::Node</a> *root)</td></tr>
+<tr class="memdesc:a9bf5b3da34db45926a41f307f2efec76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outputs the DOT representation of a node to a stream.  <br /></td></tr>
+<tr class="separator:a9bf5b3da34db45926a41f307f2efec76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html">Antares::Solver::Visitors::NodeVisitor&lt; void, std::ostream &amp; &gt;</a></td></tr>
 <tr class="memitem:a805cd22de4d695c752bc4b451c1aff0e inherit pub_methods_classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor" id="r_a805cd22de4d695c752bc4b451c1aff0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a805cd22de4d695c752bc4b451c1aff0e">dispatch</a> (const <a class="el" href="classAntares_1_1Solver_1_1Nodes_1_1Node.html">Nodes::Node</a> *node, Args... args)</td></tr>
 <tr class="separator:a805cd22de4d695c752bc4b451c1aff0e inherit pub_methods_classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -318,6 +321,44 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
   <table class="params">
     <tr><td class="paramname">os</td><td>The output stream to which the DOT representation is written. </td></tr>
     <tr><td class="paramname">tree_name</td><td>The name of the tree graph. Defaults to "ExpressionTree". </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9bf5b3da34db45926a41f307f2efec76" name="a9bf5b3da34db45926a41f307f2efec76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bf5b3da34db45926a41f307f2efec76">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Antares::Solver::Visitors::AstDOTStyleVisitor::operator() </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Solver_1_1Nodes_1_1Node.html">Nodes::Node</a> *&#160;</td>
+          <td class="paramname"><em>root</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Outputs the DOT representation of a node to a stream. </p>
+<p>This operator overload facilitates the use of the <code><a class="el" href="classAntares_1_1Solver_1_1Visitors_1_1AstDOTStyleVisitor.html" title="A visitor class for generating DOT style output for ASTs (Abstract Syntax Trees).">AstDOTStyleVisitor</a></code> with a node for direct streaming of the DOT representation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">os</td><td>The output stream to which the DOT representation is written. </td></tr>
+    <tr><td class="paramname">root</td><td>The root of the expression to be output. </td></tr>
   </table>
   </dd>
 </dl>

@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Forms_1_1CompareByTimestamp.html":[9,0,0,8,2],
 "structAntares_1_1Graph_1_1Edge_1_1addpWeight.html":[9,0,0,9,0,0],
 "structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[9,0,0,9,0,1],
 "structAntares_1_1Map_1_1Item_1_1SetCompare.html":[9,0,0,10,7,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[9,0,0,13,6,4,108],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[9,0,0,13,6,4,108,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[9,0,0,13,6,4,108,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[9,0,0,13,6,4,109,0],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,13,6,9]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[9,0,0,13,6,4,109,0]
 };
