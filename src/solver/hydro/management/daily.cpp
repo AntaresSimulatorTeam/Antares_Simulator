@@ -21,17 +21,12 @@
 
 #include <array>
 #include <cassert>
+#include <filesystem>
 #include <limits>
 #include <sstream>
 
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
-
 #include <antares/antares/fatal-error.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/study/study.h>
-#include <antares/utils/utils.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
@@ -39,9 +34,7 @@
 #include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 #include "antares/solver/hydro/management/management.h"
 
-using namespace Yuni;
-
-#define SEP IO::Separator
+namespace fs = std::filesystem;
 
 namespace
 {
@@ -135,8 +128,8 @@ struct DebugData
 
     void writeTurb(const std::string filename, uint y) const
     {
-        std::ostringstream buffer, path;
-        path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << filename;
+        std::ostringstream buffer;
+        auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / filename;
 
         buffer << "\tTurbine\t\t\tOPP\t\t\t\tTurbine Cible\tDLE\t\t\t\tDLN\n";
         for (uint day = 0; day != 365; ++day)
@@ -148,7 +141,7 @@ struct DebugData
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
-        pWriter.addEntryFromBuffer(path.str(), buffer_str);
+        pWriter.addEntryFromBuffer(path.string(), buffer_str);
     }
 
     void writeDailyDebugData(const Date::Calendar& calendar,
@@ -156,9 +149,9 @@ struct DebugData
                              uint y,
                              const Data::AreaName& areaName) const
     {
-        std::ostringstream buffer, path;
-        path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "daily." << areaName.c_str()
-             << ".txt";
+        std::ostringstream buffer;
+        auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / "daily."
+                    / areaName.c_str() / ".txt";
 
         buffer << "\tNiveau init : " << hydro_specific.monthly[initReservoirLvlMonth].MOL << "\n";
         for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
@@ -217,7 +210,7 @@ struct DebugData
             }
         }
         auto buffer_str = buffer.str();
-        pWriter.addEntryFromBuffer(path.str(), buffer_str);
+        pWriter.addEntryFromBuffer(path.string(), buffer_str);
     }
 };
 

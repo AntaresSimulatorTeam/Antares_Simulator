@@ -19,14 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/study/study.h>
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Yuni;
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo,
                                                                      int PremierPdtDeLIntervalle,
@@ -104,6 +97,4 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
             }
         }
     }
-
-    return;
 }

@@ -19,11 +19,11 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_rename_problem.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include <spx_constantes_externes.h>
 
-#include "spx_constantes_externes.h"
+#include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
 #include "variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(

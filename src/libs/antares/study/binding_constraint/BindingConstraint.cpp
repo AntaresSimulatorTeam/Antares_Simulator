@@ -32,7 +32,6 @@
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 #define SEP IO::Separator
@@ -48,7 +47,7 @@ namespace Antares::Data
 
 BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
 {
-    ShortString16 l(text);
+    Yuni::ShortString16 l(text);
     l.toLower();
 
     if (l == "both" || l == "<>" || l == "><" || l == "< and >")
@@ -74,7 +73,7 @@ BindingConstraint::Type BindingConstraint::StringToType(const AnyString& text)
 {
     if (!text.empty())
     {
-        ShortString16 l(text);
+        Yuni::ShortString16 l(text);
         l.toLower();
         switch (l.first())
         {
@@ -441,7 +440,7 @@ bool BindingConstraint::contains(const Area* area) const
     return false;
 }
 
-void BindingConstraint::buildFormula(String& s) const
+void BindingConstraint::buildFormula(Yuni::String& s) const
 {
     char tmp[42];
     bool first = true;

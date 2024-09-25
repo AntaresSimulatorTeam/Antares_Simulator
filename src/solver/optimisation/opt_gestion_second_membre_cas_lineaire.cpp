@@ -19,12 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Yuni;
+double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
+void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, int, int);
 
 static void shortTermStorageLevelsRHS(
   const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,

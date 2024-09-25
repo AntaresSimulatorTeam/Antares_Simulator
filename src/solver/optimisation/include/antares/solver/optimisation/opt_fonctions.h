@@ -54,7 +54,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
-void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
 
 using namespace Antares::Data::AdequacyPatch;
