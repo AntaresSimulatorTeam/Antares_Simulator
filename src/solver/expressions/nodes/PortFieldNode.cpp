@@ -23,7 +23,7 @@
 namespace Antares::Solver::Nodes
 {
 PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
-    Hashable(port_name, field_name),
+    Hashable(port_name_, field_name_),
     port_name_(port_name),
     field_name_(field_name)
 {
