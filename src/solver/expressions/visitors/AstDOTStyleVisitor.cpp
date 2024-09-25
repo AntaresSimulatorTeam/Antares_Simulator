@@ -184,9 +184,6 @@ std::string AstDOTStyleVisitor::name() const
 
 unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
 {
-    // Initialize the number of nodes per type to zero
-    nbNodesPerType_[node->name()] = 0;
-
     if (nodeIds_.find(node) == nodeIds_.end())
     {
         nodeIds_[node] = ++nodeCount_;
