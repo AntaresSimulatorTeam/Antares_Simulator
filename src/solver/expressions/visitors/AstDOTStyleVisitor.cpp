@@ -18,13 +18,11 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-
 #include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 
 #include <algorithm>
-#include <set>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include "antares/solver/expressions/nodes/ExpressionsNodes.h"
 
 namespace Antares::Solver::Visitors
 {
@@ -42,16 +40,15 @@ static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
-void makeLegendTitle(std::ostream& os)
+std::string makeLegendTitle()
 {
-    os << R"raw(subgraph cluster_legend {
-label = "Legend";
-style = dashed;
-fontsize = 16;
-color = lightgrey;
-node [shape=plaintext];
-
-)raw";
+    std::string to_return = "subgraph cluster_legend {\n";
+    to_return += "label = \"Legend\";\n";
+    to_return += "style = dashed;\n";
+    to_return += "fontsize = 16;\n";
+    to_return += "color = lightgrey;\n";
+    to_return += "node [shape=plaintext];\n\n";
+    return to_return;
 }
 
 void ProcessElementLegend(const std::string& element_name, size_t size, std::ostream& os)
@@ -64,15 +61,15 @@ void AddFiliation(std::ostream& os, const std::string& parent_id, const std::str
     os << "legend_" << parent_id << " -> " << "legend_" << child_id << " [style=invis];\n";
 }
 
-void GetLegend(std::map<std::string, unsigned int>& nbNodesByType, std::ostream& os)
+void AstDOTStyleVisitor::makeLegend(std::ostream& os)
 {
-    if (nbNodesByType.empty())
+    if (nbNodesPerType_.empty())
     {
         return;
     }
 
-    ProcessElementLegend(nbNodesByType.begin()->first, nbNodesByType.begin()->second, os);
-    for (auto it = std::next(nbNodesByType.begin()); it != nbNodesByType.end(); ++it)
+    ProcessElementLegend(nbNodesPerType_.begin()->first, nbNodesPerType_.begin()->second, os);
+    for (auto it = std::next(nbNodesPerType_.begin()); it != nbNodesPerType_.end(); ++it)
     {
         auto prev_it = std::prev(it);
         AddFiliation(os, prev_it->first, it->first);
@@ -244,8 +241,8 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
     os << "labelloc = \"t\"\n";
 
-    makeLegendTitle(os);
-    GetLegend(nbNodesPerType_, os);
+    os << makeLegendTitle();
+    makeLegend(os);
     os << "}\n";
 
     nodeCount_ = 0;

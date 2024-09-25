@@ -124,6 +124,7 @@ private:
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
 
     void computeNumberNodesPerType();
+    void makeLegend(std::ostream& os);
 
     /**
      * @brief Retrieves a unique ID for a given node.
