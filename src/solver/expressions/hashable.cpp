@@ -18,26 +18,26 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#pragma once
-#include <string>
+#include <boost/functional/hash.hpp>
+
+#include <antares/solver/expressions/hashable.h>
 
 namespace Antares::Solver
 {
-class Hashable
+
+Hashable::Hashable(const std::string& s1, const std::string& s2):
+    s1(s1),
+    s2(s2)
+{}
+
+std::size_t PortFieldHash::operator()(const Hashable& n) const
 {
-public:
-    Hashable(const std::string& s1, const std::string& s2);
-    ~Hashable() = default;
+    std::size_t seed = 0;
 
-    bool operator==(const Hashable& other) const = default;
+    boost::hash_combine(seed, boost::hash_value(n.s1));
+    boost::hash_combine(seed, boost::hash_value(n.s2));
 
-    const std::string& s1;
-    const std::string& s2;
-};
-
-struct PortFieldHash
-{
-    std::size_t operator()(const Hashable& n) const;
-};
+    return seed;
+}
 
 } // namespace Antares::Solver

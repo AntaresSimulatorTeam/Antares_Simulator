@@ -27,17 +27,12 @@
 namespace Antares::Solver::Visitors
 {
 
-struct KeyHasher
-{
-    std::size_t operator()(const Nodes::PortFieldNode& n) const;
-};
-
 /**
  * @brief Represents the context for performing substitutions in a syntax tree.
  */
 struct PortFieldSubstitutionContext
 {
-    std::unordered_map<Nodes::PortFieldNode, Nodes::Node*, KeyHasher> portfield;
+    std::unordered_map<Nodes::PortFieldNode, Nodes::Node*, PortFieldHash> portfield;
 };
 
 /**

@@ -21,6 +21,8 @@ set(SRC_Expressions
         visitors/PortFieldSumSubstitutionVisitor.cpp
         visitors/InvalidNode.cpp
 
+        hashable.cpp
+
         include/antares/solver/expressions/nodes/SumNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/ComparisonNode.h

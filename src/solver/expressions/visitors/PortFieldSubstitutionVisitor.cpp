@@ -18,7 +18,6 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <boost/functional/hash.hpp>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/PortFieldSubstitutionVisitor.h>
@@ -46,16 +45,6 @@ Nodes::Node* PortFieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* nod
 std::string PortFieldSubstitutionVisitor::name() const
 {
     return "PortFieldSubstitutionVisitor";
-}
-
-std::size_t KeyHasher::operator()(const Nodes::PortFieldNode& n) const
-{
-    std::size_t seed = 0;
-
-    boost::hash_combine(seed, boost::hash_value(n.getPortName()));
-    boost::hash_combine(seed, boost::hash_value(n.getFieldName()));
-
-    return seed;
 }
 
 } // namespace Antares::Solver::Visitors
