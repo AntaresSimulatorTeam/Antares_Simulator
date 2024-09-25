@@ -154,8 +154,6 @@ BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Fixture)
     std::ostringstream os;
 
     AstDOTStyleVisitor astGraphVisitor;
-
-    // std::pair<AstDOTStyleVisitor&, Node*> pair1(astGraphVisitor, makeExpression());
     astGraphVisitor(os, makeExpression());
 
     // read the content of os
