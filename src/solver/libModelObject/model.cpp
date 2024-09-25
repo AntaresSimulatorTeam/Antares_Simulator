@@ -24,8 +24,9 @@
 namespace Antares::Solver::Model
 {
 
-void Model::getAllConstraints()
+std::vector<Constraint*> getConstraints()
 {
+    return std::vector<Constraint*>();
 }
 
 } // namespace Antares::Solver::Model
