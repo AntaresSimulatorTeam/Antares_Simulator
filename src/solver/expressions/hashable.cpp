@@ -28,12 +28,13 @@ namespace Antares::Solver
 Hashable::Hashable(const std::string& s1, const std::string& s2):
     s1(s1),
     s2(s2)
-{}
+{
+}
 
 bool Hashable::operator==(const Hashable& other) const
 {
     return s1 == other.s1 && s2 == other.s2;
-};
+}
 
 std::size_t PortFieldHash::operator()(const Hashable& n) const
 {
