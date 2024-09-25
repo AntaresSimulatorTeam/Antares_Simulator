@@ -107,6 +107,17 @@ public:
      */
     std::string name() const override;
 
+    /**
+     * @brief Outputs the DOT representation of a node to a stream.
+     *
+     * This operator overload facilitates the use of the `AstDOTStyleVisitor` with a node
+     * for direct streaming of the DOT representation.
+     *
+     * @param os The output stream to which the DOT representation is written.
+     * @param root The root of the expression to be output.
+     */
+    void operator()(std::ostream& os, Nodes::Node* root);
+
 private:
     void visit(const Nodes::SumNode* node, std::ostream& os) override;
     void visit(const Nodes::SubtractionNode* node, std::ostream& os) override;
@@ -189,18 +200,4 @@ private:
      */
     unsigned int nodeCount_ = 0;
 };
-
-/**
- * @brief Outputs the DOT representation of a node to a stream.
- *
- * This operator overload facilitates the use of the `AstDOTStyleVisitor` with a node
- * for direct streaming of the DOT representation.
- *
- * @param os The output stream to which the DOT representation is written.
- * @param visitorExpr A pair consisting of the visitor and the node to be output.
- * @return The output stream.
- */
-std::ostream& operator<<(std::ostream& os,
-                         const std::pair<AstDOTStyleVisitor&, Nodes::Node*>& visitorExpr);
-
 } // namespace Antares::Solver::Visitors

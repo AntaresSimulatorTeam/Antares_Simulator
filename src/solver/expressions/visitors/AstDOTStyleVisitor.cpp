@@ -250,13 +250,10 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     nbNodesPerType_.clear();
 }
 
-std::ostream& operator<<(std::ostream& os,
-                         const std::pair<AstDOTStyleVisitor&, Nodes::Node*>& visitorExpr)
+void AstDOTStyleVisitor::operator()(std::ostream& os, Nodes::Node* root)
 {
-    auto& [visitor, root] = visitorExpr;
-    visitor.NewTreeGraph(os);
-    visitor.dispatch(root, os);
-    visitor.EndTreeGraph(os);
-    return os;
+    NewTreeGraph(os);
+    dispatch(root, os);
+    EndTreeGraph(os);
 }
 } // namespace Antares::Solver::Visitors
