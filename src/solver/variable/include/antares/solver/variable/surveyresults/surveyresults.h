@@ -23,12 +23,14 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "antares/antares/constants.h"
+
 #include <antares/study/study.h>
-#include "../categories.h"
-#include "data.h"
 #include <antares/study/variable-print-info.h>
 #include <antares/writer/i_writer.h>
+#include "antares/antares/constants.h"
+
+#include "../categories.h"
+#include "data.h"
 
 namespace Antares::Solver::Variable
 {
@@ -55,9 +57,7 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(const Data::Study& s,
-                  const Yuni::String& o,
-                  IResultWriter& writer);
+    SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -102,6 +102,7 @@ public:
     {
         captionCount = 3,
     };
+
     //! Array to store all variable names
     CaptionType* captions[captionCount];
 
@@ -148,7 +149,5 @@ private:
 }; // class SurveyResults
 
 } // namespace Antares::Solver::Variable
-
-
 
 #endif // __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__

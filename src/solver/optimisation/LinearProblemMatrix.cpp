@@ -20,27 +20,27 @@
 */
 
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
-#include "antares/solver/optimisation/opt_export_structure.h"
-#include "antares/solver/utils/filename.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
+
 #include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/LinearProblemMatrixRamping.h"
+#include "antares/solver/utils/filename.h"
 
 using namespace Antares::Data;
 
-LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
-                                         ConstraintBuilder& builder) :
- ProblemMatrixEssential(problemeHebdo),
- builder_(builder),
- group1_(problemeHebdo, builder),
- bindingConstraintDayGroup_(problemeHebdo, builder),
- bindingConstraintWeekGroup_(problemeHebdo, builder),
- hydroPowerGroup_(problemeHebdo, builder),
- hydraulicSmoothingGroup_(problemeHebdo, builder),
- minMaxHydroPowerGroup_(problemeHebdo, builder),
- maxPumpingGroup_(problemeHebdo, builder),
- areaHydroLevelGroup_(problemeHebdo, builder),
- finalStockGroup_(problemeHebdo, builder)
+LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder):
+    ProblemMatrixEssential(problemeHebdo),
+    builder_(builder),
+    group1_(problemeHebdo, builder),
+    bindingConstraintDayGroup_(problemeHebdo, builder),
+    bindingConstraintWeekGroup_(problemeHebdo, builder),
+    hydroPowerGroup_(problemeHebdo, builder),
+    hydraulicSmoothingGroup_(problemeHebdo, builder),
+    minMaxHydroPowerGroup_(problemeHebdo, builder),
+    maxPumpingGroup_(problemeHebdo, builder),
+    areaHydroLevelGroup_(problemeHebdo, builder),
+    finalStockGroup_(problemeHebdo, builder)
 {
     constraintgroups_ = {&group1_,
                          &bindingConstraintDayGroup_,

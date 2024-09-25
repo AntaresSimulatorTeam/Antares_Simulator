@@ -21,20 +21,23 @@
 
 #pragma once
 #include "ConstraintBuilder.h"
+
 struct MaxPumpingData
 {
     const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
     std::vector<int>& NumeroDeContrainteMaxPompage;
 };
+
 /*!
  * represent 'Max Pumping' constraint type
  */
 
-class MaxPumping : private ConstraintFactory
+class MaxPumping: private ConstraintFactory
 {
 public:
-    MaxPumping(ConstraintBuilder& builder, MaxPumpingData& data) :
-     ConstraintFactory(builder), data(data)
+    MaxPumping(ConstraintBuilder& builder, MaxPumpingData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

@@ -478,7 +478,8 @@ public:
     MessageFlusherTimer(const wxString& messageBuffer, wxStaticText* label, std::mutex& mutex) :
      wxTimer(), pMessageBuffer(messageBuffer), pLabel(label), pMutex(mutex)
     {
-        assert(pLabel != NULL);
+        assert(pLabel);
+
     }
 
     virtual ~MessageFlusherTimer()
@@ -513,7 +514,8 @@ class ReadWriteStatsFlusherTimer final : public wxTimer
 public:
     ReadWriteStatsFlusherTimer(wxStaticText* label) : wxTimer(), pLabel(label)
     {
-        assert(pLabel != NULL);
+        assert(pLabel);
+
     }
 
     virtual ~ReadWriteStatsFlusherTimer()
@@ -788,7 +790,7 @@ void Job::displayGauge(const bool visible)
     }
 }
 
-void Job::onLogMessage(int level, const String& message)
+void Job::onLogMessage(int level, const std::string& message)
 {
     if (message.empty() or message[0] == ' ')
         return;

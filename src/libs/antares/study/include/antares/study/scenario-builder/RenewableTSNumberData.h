@@ -25,9 +25,10 @@
 #pragma once
 
 #include "TSnumberData.h"
+
 namespace Antares::Data::ScenarioBuilder
 {
-class renewableTSNumberData : public TSNumberData
+class renewableTSNumberData: public TSNumberData
 {
 public:
     renewableTSNumberData() = default;
@@ -71,4 +72,4 @@ inline CString<512, false> renewableTSNumberData::get_prefix() const
 {
     return "r,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

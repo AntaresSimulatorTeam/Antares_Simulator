@@ -19,10 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include <antares/logs/logs.h>
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {
@@ -86,7 +86,9 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
     {
         if (numberOfConstraintCsrHourlyBinding.find(CntCouplante)
             == numberOfConstraintCsrHourlyBinding.end())
+        {
             continue;
+        }
 
         const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
           = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
@@ -94,12 +96,12 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
         int Cnt = numberOfConstraintCsrHourlyBinding[CntCouplante];
 
         // 1. The original RHS of bingding constraint
-        SecondMembre[Cnt]
-          = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[triggeredHour];
+        SecondMembre[Cnt] = MatriceDesContraintesCouplantes
+                              .SecondMembreDeLaContrainteCouplante[triggeredHour];
 
         // 2. RHS part 2: flow other than 2<->2
-        int NbInterco
-          = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+        int NbInterco = MatriceDesContraintesCouplantes
+                          .NombreDInterconnexionsDansLaContrainteCouplante;
         for (int Index = 0; Index < NbInterco; Index++)
         {
             int Interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[Index];
@@ -110,22 +112,22 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
                 || problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                      != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                double ValueOfFlow
-                  = problemeHebdo_->ValeursDeNTC[triggeredHour].ValeurDuFlux[Interco];
+                double ValueOfFlow = problemeHebdo_->ValeursDeNTC[triggeredHour]
+                                       .ValeurDuFlux[Interco];
                 SecondMembre[Cnt] -= ValueOfFlow * Poids;
             }
         }
 
         // 3. RHS part 3: - cluster
-        int NbClusters
-          = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+        int NbClusters = MatriceDesContraintesCouplantes
+                           .NombreDePaliersDispatchDansLaContrainteCouplante;
 
         for (int Index = 0; Index < NbClusters; Index++)
         {
             int Area = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[Index];
 
-            int IndexNumeroDuPalierDispatch
-              = MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[Index];
+            int IndexNumeroDuPalierDispatch = MatriceDesContraintesCouplantes
+                                                .NumeroDuPalierDispatch[Index];
 
             double Poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[Index];
 

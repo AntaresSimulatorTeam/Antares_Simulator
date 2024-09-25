@@ -22,8 +22,9 @@
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__
 
 #include <yuni/yuni.h>
-#include <antares/study/xcast/xcast.h>
+
 #include <antares/correlation/correlation.h>
+#include <antares/study/xcast/xcast.h>
 
 namespace Antares::TSGenerator::XCast
 {
@@ -39,7 +40,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~StudyData();
+    ~StudyData() = default;
     //@}
 
     /*!
@@ -76,7 +77,7 @@ public:
     //! List of all areas (sub-set of the complete list)
     Data::Area::Vector localareas;
     //! Correlation coefficients for each month
-    const Matrix<float>* correlation[12];
+    std::array<Matrix<float>, 12> correlation;
     /*!
     ** \brief Correlation mode (monthly / annual)
     **
@@ -95,9 +96,6 @@ private:
 }; // class StudyData
 
 } // namespace Antares::TSGenerator::XCast
-
-
-
 
 #include "studydata.hxx"
 

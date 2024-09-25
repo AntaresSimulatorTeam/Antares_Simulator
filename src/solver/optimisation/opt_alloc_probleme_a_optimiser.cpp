@@ -19,21 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <antares/logs/logs.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-
-#include <antares/logs/logs.h>
-
 using namespace Antares;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
 
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                                  int NbTermes)
@@ -84,13 +75,15 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
 
     int Sparsity = mxPaliers * problemeHebdo->NombreDePays;
     Sparsity += problemeHebdo->NombreDInterconnexions;
     if (Sparsity > 100)
+    {
         Sparsity = 100;
+    }
 
     int NbTermes = 0;
     NbTermes += ProblemeAResoudre->NombreDeContraintes;

@@ -1,41 +1,45 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/solver/simulation/economy.h"
-#include <antares/exception/UnfeasibleProblemError.hpp>
+
 #include <antares/exception/AssertionError.hpp>
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
+#include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
+Economy::Economy(Data::Study& study,
+                 IResultWriter& resultWriter,
+                 Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
-    resultWriter(resultWriter)
+    resultWriter(resultWriter),
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -67,47 +71,43 @@ bool Economy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
-        weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
+        weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
-            SIM_InitialisationProblemeHebdo(study, pProblemesHebdo[numSpace], 168, numSpace);
-
-            if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace].NombreDePasDeTemps)
-            {
-                logs.fatal() << "internal error";
-                return false;
-            }
+            SIM_InitialisationProblemeHebdo(study,
+                                            pProblemesHebdo[numSpace],
+                                            nbHoursInAWeek,
+                                            numSpace);
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] =
-                Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study,
-                                                    options,
-                                                    study.parameters.adqPatchParams,
-                                                    &pProblemesHebdo[numSpace],
-                                                    numSpace,
-                                                    resultWriter);
-            postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatchParams,
-                                                 &pProblemesHebdo[numSpace],
-                                                 numSpace,
-                                                 study.areas,
-                                                 study.parameters.shedding.policy,
-                                                 study.parameters.simplexOptimizationRange,
-                                                 study.calendar);
+
+            weeklyOptProblems_.emplace_back(options,
+                                            &pProblemesHebdo[numSpace],
+                                            resultWriter,
+                                            simulationObserver_.get());
+
+            postProcessesList_[numSpace] = interfacePostProcessList::create(
+              study.parameters.adqPatchParams,
+              &pProblemesHebdo[numSpace],
+              numSpace,
+              study.areas,
+              study.parameters.shedding.policy,
+              study.parameters.simplexOptimizationRange,
+              study.calendar);
         }
     }
 
-    for (auto& pb : pProblemesHebdo)
+    for (auto& pb: pProblemesHebdo)
+    {
         pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
+    }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
-
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
@@ -125,12 +125,15 @@ bool Economy::year(Progression::Task& progression,
     currentProblem.year = state.year;
 
     PrepareRandomNumbers(study, currentProblem, randomForYear);
+    SetInitialHydroLevel(study, currentProblem, hydroVentilationResults);
 
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
     if (isFirstPerformedYearOfSimulation)
+    {
         currentProblem.firstWeekOfSimulation = true;
+    }
     bool reinitOptim = true;
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -139,11 +142,18 @@ bool Economy::year(Progression::Task& progression,
         currentProblem.weekInTheYear = state.weekInTheYear = w;
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study, currentProblem, state.weekInTheYear,
-                                         hourInTheYear, hydroVentilationResults, scratchmap);
+        ::SIM_RenseignementProblemeHebdo(study,
+                                         currentProblem,
+                                         state.weekInTheYear,
+                                         hourInTheYear,
+                                         hydroVentilationResults,
+                                         scratchmap);
 
-        BuildThermalPartOfWeeklyProblem(study, currentProblem, hourInTheYear,
-                                        randomForYear.pThermalNoisesByArea, state.year);
+        BuildThermalPartOfWeeklyProblem(study,
+                                        currentProblem,
+                                        hourInTheYear,
+                                        randomForYear.pThermalNoisesByArea,
+                                        state.year);
 
         // Reinit optimisation if needed
         currentProblem.ReinitOptimisation = reinitOptim;
@@ -151,7 +161,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblems_[numSpace]->solve();
+            weeklyOptProblems_[numSpace].solve();
 
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
@@ -219,8 +229,6 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study.areas, currentProblem);
-
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
@@ -230,7 +238,9 @@ bool Economy::year(Progression::Task& progression,
 void Economy::incrementProgression(Progression::Task& progression)
 {
     for (uint w = 0; w < pNbWeeks; ++w)
+    {
         ++progression;
+    }
 }
 
 // Retrieve weighted average balance for each area
@@ -251,7 +261,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Economy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
+    if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
@@ -260,7 +270,23 @@ void Economy::simulationEnd()
 
 void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
 {
-    PrepareDataFromClustersInMustrunMode(study, scratchmap, year);
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto& area = *study.areas[i];
+        auto& scratchpad = scratchmap.at(&area);
+
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+
+        auto& mrs = scratchpad.mustrunSum;
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+        }
+    }
 }
 
 } // namespace Antares::Solver::Simulation

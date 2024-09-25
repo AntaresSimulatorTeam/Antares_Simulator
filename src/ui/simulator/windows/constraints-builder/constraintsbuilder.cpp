@@ -337,7 +337,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
     sLinks->AddSpacer(6);
 
     // Constraint builder object
-    pCBuilder = new CBuilder(GetCurrentStudy());
+    pCBuilder = new CBuilder(*GetCurrentStudy());
     pCBuilder->completeFromStudy();
     pCBuilder->completeCBuilderFromFile();
     pIncludeLoopFlow->SetValue(pCBuilder->getLoopFlowInclusion());

@@ -23,8 +23,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/ThermalTSNumberData.h
         include/antares/study/scenario-builder/HydroTSNumberData.h
         scenario-builder/HydroTSNumberData.cpp
-        include/antares/study/scenario-builder/HydroMaxPowerTSNumberData.h
-        scenario-builder/HydroMaxPowerTSNumberData.cpp
         scenario-builder/SolarTSNumberData.cpp
         include/antares/study/scenario-builder/solarTSNumberData.h
         include/antares/study/scenario-builder/WindTSNumberData.h
@@ -70,9 +68,6 @@ source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/container.h
         parts/thermal/container.cpp
-        include/antares/study/parts/thermal/prepro.h
-        include/antares/study/parts/thermal/prepro.hxx
-        parts/thermal/prepro.cpp
         include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
         include/antares/study/parts/thermal/cluster.h
@@ -213,7 +208,6 @@ set(SRC_STUDY
         include/antares/study/load-options.h
         load-options.cpp
         include/antares/study/runtime/runtime.h
-        include/antares/study/runtime/runtime.hxx
         runtime/runtime.cpp
         include/antares/study/runtime.h
         include/antares/study/study.h
@@ -255,7 +249,7 @@ set(SRC_STUDY
 
         # Sets
         include/antares/study/sets.h
-        include/antares/study/sets.hxx
+        area/sets.cpp
 
         # variable selection
         include/antares/study/variable-print-info.h
@@ -288,7 +282,6 @@ add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
         PUBLIC
-        Boost::boost
         yuni-static-core
         Antares::date #parameters
         Antares::inifile #parameters
@@ -300,6 +293,7 @@ target_link_libraries(study
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::series
+        Antares::array
         antares-core
         antares-solver-simulation
         Antares::hydro

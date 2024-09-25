@@ -25,7 +25,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class windTSNumberData : public TSNumberData
+class windTSNumberData: public TSNumberData
 {
 public:
     bool apply(Study& study) override;
@@ -37,4 +37,4 @@ inline CString<512, false> windTSNumberData::get_prefix() const
 {
     return "w,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

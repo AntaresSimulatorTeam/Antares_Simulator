@@ -112,7 +112,7 @@ void Connections::internalBuildSubControls()
     sizer->AddSpacer(1);
     // Layer filter
     pLayerFilter = new wxComboBox(
-      this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
+      this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_READONLY);
     pLayerFilter->SetFont(wxFont(wxFontInfo().Bold()));
     pLayerFilter->AppendString("All");
     pLayerFilter->SetValue("All");

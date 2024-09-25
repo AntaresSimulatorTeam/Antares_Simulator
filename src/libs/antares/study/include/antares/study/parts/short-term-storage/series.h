@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -28,7 +28,7 @@ class Series
 {
 public:
     // check if series values are valid
-    bool validate() const;
+    bool validate(const std::string& id = "") const;
 
     // load all series files with folder path
     bool loadFromFolder(const std::string& folder);
@@ -41,13 +41,18 @@ public:
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
+
+    std::vector<double> costInjection;
+    std::vector<double> costWithdrawal;
+    std::vector<double> costLevel;
+
 private:
-    bool validateSizes() const;
-    bool validateMaxInjection() const;
-    bool validateMaxWithdrawal() const;
-    bool validateRuleCurves() const;
-    bool validateUpperRuleCurve() const;
-    bool validateLowerRuleCurve() const;
+    bool validateSizes(const std::string&) const;
+    bool validateMaxInjection(const std::string&) const;
+    bool validateMaxWithdrawal(const std::string&) const;
+    bool validateRuleCurves(const std::string&) const;
+    bool validateUpperRuleCurve(const std::string&) const;
+    bool validateLowerRuleCurve(const std::string&) const;
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);

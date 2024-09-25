@@ -20,7 +20,6 @@ set(RTESOLVER_OPT
         opt_construction_variables_optimisees_quadratique.cpp
         opt_decompte_variables_et_contraintes.cpp
 		opt_decompte_variables_et_contraintes.cpp
-        opt_construction_matrice_des_contraintes_outils.cpp
         opt_gestion_des_bornes_cas_lineaire.cpp
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
@@ -39,10 +38,6 @@ set(RTESOLVER_OPT
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
-		include/antares/solver/optimisation/base_weekly_optimization.h
-        base_weekly_optimization.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
-        adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
 		include/antares/solver/optimisation/weekly_optimization.h
         weekly_optimization.cpp
 		include/antares/solver/optimisation/optim_post_process_list.h
@@ -51,9 +46,9 @@ set(RTESOLVER_OPT
         post_process_commands.cpp
 		include/antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h
 		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
+		include/antares/solver/optimisation/adequacy_patch_csr/post_processing.h
         adequacy_patch_csr/adq_patch_post_process_list.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
-        adequacy_patch_local_matching/adq_patch_local_matching.cpp
+        adequacy_patch_csr/post_processing.cpp
 		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
         adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
         adequacy_patch_csr/solve_problem.cpp
@@ -76,7 +71,6 @@ set(RTESOLVER_OPT
 		opt_gestion_des_bornes_rampes_thermiques.cpp
 		opt_gestion_des_couts_rampes_thermiques.cpp
 
-		include/antares/solver/optimisation/opt_period_string_generator_base.h
 		include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
 
@@ -193,6 +187,8 @@ set(RTESOLVER_OPT
 		variables/VariableManagement.cpp
 		variables/VariableManagerUtils.h
 		variables/VariableManagerUtils.cpp
+		include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
+		HebdoProblemToLpsTranslator.cpp
 )
 
 
@@ -210,12 +206,15 @@ else ()
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
 target_link_libraries(model_antares
-        PUBLIC
-        utils
-        sirius_solver
-        infeasible_problem_analysis
-        antares-solver-simulation
-        Antares::benchmarking
+		PUBLIC
+		Antares::solverUtils
+		sirius_solver
+		antares-solver-simulation
+		Antares::benchmarking
+        Antares::optimization-options
+		Antares::lps
+		PRIVATE
+		infeasible_problem_analysis
 )
 
 target_include_directories(model_antares

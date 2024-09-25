@@ -24,7 +24,7 @@
 static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
                                     ConstraintBuilder& constraintBuilder)
 {
-    for (const auto& storage : shortTermStorageInput)
+    for (const auto& storage: shortTermStorageInput)
     {
         unsigned index = storage.clusterGlobalIndex;
         constraintBuilder.ShortTermStorageInjection(index, 1.0)

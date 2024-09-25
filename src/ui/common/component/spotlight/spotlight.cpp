@@ -122,7 +122,7 @@ void Spotlight::createComponents(Spotlight* parent, bool input, bool results)
                                       wxDefaultPosition,
                                       wxDefaultSize,
                                       0,
-                                      NULL,
+                                      nullptr,
                                       wxCB_READONLY);
         pLayerFilter->SetFont(wxFont(wxFontInfo().Bold()));
         pLayerFilter->AppendString("All");
@@ -429,9 +429,9 @@ void Spotlight::resizeParentWindow()
         parent->SetSize(parent->GetSize().GetWidth(), idealH);
     }
 
-    assert(parent->GetSizer() != NULL);
+    assert(parent->GetSizer());
     parent->GetSizer()->Layout();
-    assert(GetSizer() != NULL);
+    assert(GetSizer());
     GetSizer()->Layout();
     Dispatcher::GUI::Refresh(parent);
 }

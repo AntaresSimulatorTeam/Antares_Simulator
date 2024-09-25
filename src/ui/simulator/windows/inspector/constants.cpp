@@ -235,8 +235,8 @@ const unsigned int renewableTSModeCount = 2;
 const wxChar* const renewableTSMode[]
   = {wxT("power generation"), wxT("production factor"), nullptr};
 
-const unsigned int thermalLawCount = 2;
-const wxChar* const thermalLaws[] = {wxT("uniform"), wxT("geometric"), nullptr};
+const unsigned int LawCount = 2;
+const wxChar* const Laws[] = {wxT("uniform"), wxT("geometric"), nullptr};
 
 const unsigned int costgenerationCount = 2;
 const wxChar* const costgeneration[] = {wxT("Set manually"), wxT("Use cost timeseries"), nullptr};

@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <vector>
+
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
@@ -32,30 +33,30 @@ constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
-    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
+                                                                  .ProblemeLineairePartieFixe;
+    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
+                                                                 .CorrespondanceDesVariables;
     auto& CoutLineaireBruite = ProblemeLineairePartieFixe.CoutLineaireBruite;
     const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Antares::MersenneTwister noiseGenerator;
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
                                            // the user to change it
-    const std::vector<const std::vector<int>*> monthlyVariables
-      = {&CorrespondanceDesVariables.NumeroDeVariableVolume,
-         &CorrespondanceDesVariables.NumeroDeVariableTurbine,
-         &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
-         &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
-         &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
-         &CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible};
+    const std::vector<const std::vector<int>*> monthlyVariables = {
+      &CorrespondanceDesVariables.NumeroDeVariableVolume,
+      &CorrespondanceDesVariables.NumeroDeVariableTurbine,
+      &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
+      &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
+      &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
+      &CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible};
 
-    for (const auto& variable : monthlyVariables)
+    for (const auto& variable: monthlyVariables)
     {
-        for (int Var : *variable)
+        for (int Var: *variable)
         {
-            CoutLineaireBruite[Var]
-              = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+            CoutLineaireBruite[Var] = CoutLineaire[Var]
+                                      + noiseGenerator() * Constants::noiseAmplitude;
         }
     }
     int Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;

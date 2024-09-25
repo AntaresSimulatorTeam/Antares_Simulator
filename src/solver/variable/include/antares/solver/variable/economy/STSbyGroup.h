@@ -28,8 +28,10 @@ inline std::vector<std::string> sortedUniqueGroups(
   const std::vector<Antares::Data::ShortTermStorage::STStorageCluster>& storages)
 {
     std::set<std::string> names;
-    for (const auto& cluster : storages)
+    for (const auto& cluster: storages)
+    {
         names.insert(cluster.properties.groupName);
+    }
     return {names.begin(), names.end()};
 }
 
@@ -38,7 +40,7 @@ inline std::map<std::string, unsigned int> giveNumbersToGroups(
 {
     unsigned int groupNumber{0};
     std::map<std::string, unsigned int> groupToNumbers;
-    for (const auto& name : groupNames)
+    for (const auto& name: groupNames)
     {
         groupToNumbers[name] = groupNumber++;
     }
@@ -55,6 +57,7 @@ struct VCardSTSbyGroup
     {
         return "STS by group";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -78,29 +81,28 @@ struct VCardSTSbyGroup
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardSTSbyGroup VCardForSpatialAggregate;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        // Nb of columns occupied by this variable in year-by-year results
-        columnCount = Category::dynamicColumns,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    // Nb of columns occupied by this variable in year-by-year results
+    static constexpr int columnCount = Category::dynamicColumns;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
     typedef IntermediateValues* IntermediateValuesBaseType;
@@ -112,7 +114,7 @@ struct VCardSTSbyGroup
 ** \brief Variables related to short term storage groups
 */
 template<class NextT = Container::EndOfList>
-class STSbyGroup : public Variable::IVariable<STSbyGroup<NextT>, NextT, VCardSTSbyGroup>
+class STSbyGroup: public Variable::IVariable<STSbyGroup<NextT>, NextT, VCardSTSbyGroup>
 {
 private:
     enum VariableType
@@ -146,23 +148,26 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
 public:
-    STSbyGroup() : pValuesForTheCurrentYear(nullptr)
+    STSbyGroup():
+        pValuesForTheCurrentYear(nullptr)
     {
     }
 
     ~STSbyGroup()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             delete[] pValuesForTheCurrentYear[numSpace];
+        }
         delete[] pValuesForTheCurrentYear;
     }
 
@@ -183,12 +188,18 @@ public:
             AncestorType::pResults.resize(nbColumns_);
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                pValuesForTheCurrentYear[numSpace]
-                  = new VCardType::IntermediateValuesDeepType[nbColumns_];
+            {
+                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
+                  [nbColumns_];
+            }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
                 for (unsigned int i = 0; i != nbColumns_; ++i)
+                {
                     pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+                }
+            }
 
             for (unsigned int i = 0; i != nbColumns_; ++i)
             {
@@ -267,8 +278,9 @@ public:
         //      - or we compute the average of the results of the n-th day over all MC years
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {
-            VariableAccessorType::ComputeSummary(
-              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
+            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                                 AncestorType::pResults,
+                                                 numSpaceToYear[numSpace]);
         }
 
         // Next variable
@@ -286,7 +298,7 @@ public:
         const auto& shortTermStorage = state.area->shortTermStorage;
 
         uint clusterIndex = 0;
-        for (const auto& cluster : shortTermStorage.storagesByIndex)
+        for (const auto& cluster: shortTermStorage.storagesByIndex)
         {
             unsigned int groupNumber = groupToNumbers_[cluster.properties.groupName];
             const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
@@ -329,15 +341,16 @@ public:
     {
         uint64_t r = (sizeof(IntermediateValues) * nbColumns_ + IntermediateValues::MemoryUsage())
                      * pNbYearsParallel;
-        r += sizeof(double) * nbColumns_ * maxHoursInAYear * pNbYearsParallel;
+        r += sizeof(double) * nbColumns_ * HOURS_PER_YEAR * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
     }
 
     std::string caption(unsigned int column) const
     {
-        static const std::vector<std::string> VAR_POSSIBLE_KINDS
-          = {"INJECTION", "WITHDRAWAL", "LEVEL"};
+        static const std::vector<std::string> VAR_POSSIBLE_KINDS = {"INJECTION",
+                                                                    "WITHDRAWAL",
+                                                                    "LEVEL"};
         const std::string& groupName = groupNames_[column / NB_COLS_PER_GROUP];
         const std::string& variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
         return groupName + "_" + variableKind;
@@ -366,14 +379,16 @@ public:
         results.isCurrentVarNA = AncestorType::isNonApplicable;
 
         if (!AncestorType::isPrinted[0])
+        {
             return;
+        }
 
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
             results.variableCaption = caption(column);
             results.variableUnit = unit(column);
-            pValuesForTheCurrentYear[numSpace][column].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace][column]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 
@@ -382,26 +397,31 @@ public:
                            int fileLevel,
                            int precision) const
     {
-        // Building syntheses results
+        // Building synthesis results
         // ------------------------------
-        if (!AncestorType::isPrinted[0])
-            return;
 
-        // And only if we match the current data level _and_ precision level
-        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-            && (precision & VCardType::precision))
+        if (AncestorType::isPrinted[0])
         {
-            results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
-
-            for (unsigned int column = 0; column < nbColumns_; column++)
+            // And only if we match the current data level _and_ precision level
+            if ((dataLevel & VCardType::categoryDataLevel)
+                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
             {
-                results.variableCaption = caption(column);
-                results.variableUnit = unit(column);
-                AncestorType::pResults[column].template buildSurveyReport<ResultsType, VCardType>(
-                  results, AncestorType::pResults[column], dataLevel, fileLevel, precision);
+                results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
+
+                for (unsigned int column = 0; column < nbColumns_; column++)
+                {
+                    results.variableCaption = caption(column);
+                    results.variableUnit = unit(column);
+                    AncestorType::pResults[column]
+                      .template buildSurveyReport<ResultsType, VCardType>(
+                        results,
+                        AncestorType::pResults[column],
+                        dataLevel,
+                        fileLevel,
+                        precision);
+                }
             }
         }
-
         // Ask to the next item in the static list to export its results as well
         NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }

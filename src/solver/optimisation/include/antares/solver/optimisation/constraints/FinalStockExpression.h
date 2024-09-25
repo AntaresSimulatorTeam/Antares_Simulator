@@ -32,14 +32,15 @@ struct FinalStockExpressionData
 /*!
  * represent 'Final Stock Expression' constraint type
  */
-class FinalStockExpression : private ConstraintFactory
+class FinalStockExpression: private ConstraintFactory
 {
 public:
-    FinalStockExpression(ConstraintBuilder& builder,
-                         FinalStockExpressionData& data) :
-     ConstraintFactory(builder), data(data)
+    FinalStockExpression(ConstraintBuilder& builder, FinalStockExpressionData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area

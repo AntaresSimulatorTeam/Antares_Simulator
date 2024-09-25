@@ -19,12 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/simulation.h"
 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
@@ -33,7 +30,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* probleme
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
         int cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays];
-        ProblemeAResoudre->SecondMembre[cnt]
-          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo].SoldeMoyenDuPays[pays];
+        ProblemeAResoudre->SecondMembre[cnt] = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]
+                                                 .SoldeMoyenDuPays[pays];
     }
 }

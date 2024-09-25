@@ -23,11 +23,14 @@
 
 #include <string>
 #include <vector>
-#include "antares/study/study.h"
+
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/parameters.h>
 
 namespace Antares::Data
 {
+
+class Study;
 
 enum RangeLimitsIndex
 {
@@ -128,18 +131,22 @@ public:
     */
     bool quadraticOptimizationHasFailed;
 
+    std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+
 private:
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
-    //! Prepare all thermal clusters in 'must-run' mode
-    void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledShortTermStorageClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);
     void checkThermalTSGeneration(Study& study);
 }; // struct StudyRuntimeInfos
 
-} // namespace Antares::Data
+#ifdef NDEBUG
+inline void StudyRangeLimits::checkIntegrity() const
+{
+}
+#endif
 
-#include "runtime.hxx"
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__

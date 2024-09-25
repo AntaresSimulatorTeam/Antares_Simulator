@@ -28,17 +28,17 @@ namespace Extension
 namespace CString
 {
 template<class CStringT>
-class Append<CStringT, Antares::Data::ThermalLaw>
+class Append<CStringT, Antares::Data::StatisticalLaw>
 {
 public:
-    static void Perform(CStringT& string, Antares::Data::ThermalLaw law)
+    static void Perform(CStringT& string, Antares::Data::StatisticalLaw law)
     {
         switch (law)
         {
-        case Antares::Data::thermalLawUniform:
+        case Antares::Data::LawUniform:
             string += "uniform";
             break;
-        case Antares::Data::thermalLawGeometric:
+        case Antares::Data::LawGeometric:
             string += "geometric";
             break;
         }
@@ -85,10 +85,11 @@ public:
 };
 
 template<>
-class Into<Antares::Data::ThermalLaw>
+class Into<Antares::Data::StatisticalLaw>
 {
 public:
-    using TargetType = Antares::Data::ThermalLaw;
+    using TargetType = Antares::Data::StatisticalLaw;
+
     enum
     {
         valid = 1
@@ -99,7 +100,7 @@ public:
     template<class StringT>
     static TargetType Perform(const StringT& s)
     {
-        TargetType law = Antares::Data::thermalLawUniform;
+        TargetType law = Antares::Data::LawUniform;
         Perform(s, law);
         return law;
     }
@@ -131,6 +132,7 @@ class Into<Antares::Data::LocalTSGenerationBehavior>
 {
 public:
     using TargetType = Antares::Data::LocalTSGenerationBehavior;
+
     enum
     {
         valid = 1

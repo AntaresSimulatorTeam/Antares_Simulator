@@ -32,7 +32,7 @@ namespace Tool
 Tool::Tool(Manager& manager, const char* icon) :
  pManager(manager), pX(0), pY(0), pWidth(20), pHeight(20)
 {
-    pIcon = (icon && *icon != '\0') ? Resources::BitmapLoadFromFile(icon) : NULL;
+    pIcon = (icon && *icon != '\0') ? Resources::BitmapLoadFromFile(icon) : nullptr;
 }
 
 Tool::~Tool()
@@ -43,7 +43,7 @@ Tool::~Tool()
 void Tool::icon(const char* filename)
 {
     delete pIcon;
-    pIcon = (filename && *filename != '\0') ? Resources::BitmapLoadFromFile(filename) : NULL;
+    pIcon = (filename && *filename != '\0') ? Resources::BitmapLoadFromFile(filename) : nullptr;
 }
 
 void Tool::draw(DrawingContext& dc, const bool mouseDown, const wxPoint&, const wxPoint&) const

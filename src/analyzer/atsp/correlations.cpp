@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "atsp.h"
-#include <antares/utils/utils.h>
 #include <antares/date/date.h>
+#include <antares/utils/utils.h>
 #include "antares/solver/misc/matrix-dp-make.h"
+
+#include "atsp.h"
 
 using namespace Yuni;
 
@@ -70,7 +71,7 @@ bool ATSP::computeMonthlyCorrelations()
     Matrix<> tmpNDP;
     tmpNDP.reset(realAreaCount, realAreaCount);
 
-    double* tmpArray = new double[realAreaCount + 1];
+    std::vector<double> tmpArray(realAreaCount + 1);
 
     // Initialize mapping, to skip areas which has been disabled
     // the real number of items is `realAreaCount`
@@ -111,17 +112,23 @@ bool ATSP::computeMonthlyCorrelations()
             do
             {
                 if (pCacheMemoryUsed + sizePerMatrix > pLimitMemory)
+                {
                     break;
+                }
                 --iZ;
                 const uint i = mapping[iZ];
                 const String& folder = folderPerArea[i];
                 pStr.clear() << folder << SEP << "userfile-m";
                 if (m < 10)
+                {
                     pStr << '0';
+                }
                 pStr << m << ".txt";
 
                 if (!cachePreload(i, pStr, durmois[m], buffer))
+                {
                     break;
+                }
             } while (iZ);
         }
 
@@ -136,7 +143,9 @@ bool ATSP::computeMonthlyCorrelations()
             {
                 pStr.clear() << folder << SEP << "userfile-m";
                 if (m < 10)
+                {
                     pStr << '0';
+                }
                 pStr << m << ".txt";
                 if (!SERIE_N.loadFromCSVFile(pStr,
                                              NBS,
@@ -166,14 +175,18 @@ bool ATSP::computeMonthlyCorrelations()
                 {
                     pStr.clear() << folderJ << SEP << "userfile-m";
                     if (m < 10)
+                    {
                         pStr << '0';
+                    }
                     pStr << m << ".txt";
                     if (!SERIE_P.loadFromCSVFile(pStr,
                                                  NBS,
                                                  durmois[m],
                                                  Matrix<>::optImmediate | Matrix<>::optFixedSize,
                                                  &buffer))
+                    {
                         continue;
+                    }
                 }
 
                 double coeff = 0.;
@@ -242,14 +255,18 @@ bool ATSP::computeMonthlyCorrelations()
             Matrix<>::ColumnType& outcol = CORR_YNP.entry[i];
             const Matrix<>::ColumnType& col = CORR_MNP.entry[i];
             for (uint j = 0; j < realAreaCount; ++j)
+            {
                 outcol[j] += col[j] / 12.;
+            }
         }
         for (uint i = 0; i < realAreaCount; ++i)
         {
             Matrix<>::ColumnType& outcol = CORR_YNPZ.entry[i];
             const Matrix<>::ColumnType& col = CORR_MNPZ.entry[i];
             for (uint j = 0; j < realAreaCount; ++j)
+            {
                 outcol[j] += col[j] / 12.;
+            }
         }
 
         // Rounding monthly correlation coefficients (matrix trimming) -zero -excluded
@@ -303,21 +320,29 @@ bool ATSP::computeMonthlyCorrelations()
 
         pStr.clear() << pTemp << SEP << tsName << SEP << "origin-corr-zero_in-m";
         if (m < 10)
+        {
             pStr << '0';
+        }
         pStr << m << ".txt";
         CORR_MNPZ.saveToCSVFile(pStr);
 
         // Writing the monthly correlation coefficients, excluding zeroes, before sdp check
         pStr.clear() << pTemp << SEP << tsName << SEP << "origin-corr-zero_no-m";
         if (m < 10)
+        {
             pStr << '0';
+        }
         pStr << m << ".txt";
         CORR_MNP.saveToCSVFile(pStr);
 
         // Converting original matrix with zero signal into an admissible matrix
         resultNDP.zero();
-        shrink = Solver::MatrixDPMake<double>(
-          tmpNDP.entry, CORR_MNPZ.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+        shrink = Solver::MatrixDPMake<double>(tmpNDP.entry,
+                                              CORR_MNPZ.entry,
+                                              resultNDP.entry,
+                                              ID.entry,
+                                              ID.width,
+                                              tmpArray.data());
         if (shrink < 1.)
         {
             if (shrink <= -1.)
@@ -336,7 +361,9 @@ bool ATSP::computeMonthlyCorrelations()
         for (uint y = 1; y < resultNDP.height; ++y)
         {
             for (uint x = 0; x < y; ++x)
+            {
                 resultNDP[x][y] = resultNDP[y][x];
+            }
         }
         for (uint i = 1; i < CORR_MNPZ.width; ++i)
         {
@@ -354,15 +381,19 @@ bool ATSP::computeMonthlyCorrelations()
                                               resultNDP.entry,
                                               CORR_MNPZ.entry,
                                               CORR_MNPZ.width,
-                                              tmpArray);
+                                              tmpArray.data());
         if (shrink < 1.)
         {
             if (shrink <= -1.) // CORR_MNPZ is too close to sdp boundary, shrink CORR_MNP instead
                                // Note : this default code should be replaced by proper eigen value
                                // analysis (see Higham 2002 / Strabic 2016)
             {
-                shrink = Solver::MatrixDPMake<double>(
-                  tmpNDP.entry, CORR_MNP.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+                shrink = Solver::MatrixDPMake<double>(tmpNDP.entry,
+                                                      CORR_MNP.entry,
+                                                      resultNDP.entry,
+                                                      ID.entry,
+                                                      ID.width,
+                                                      tmpArray.data());
                 if (shrink <= -1.)
                 {
                     logs.error() << "invalid data, can not be processed";
@@ -387,12 +418,16 @@ bool ATSP::computeMonthlyCorrelations()
         for (uint y = 1; y < resultNDP.height; ++y)
         {
             for (uint x = 0; x < y; ++x)
+            {
                 resultNDP[x][y] = resultNDP[y][x];
+            }
         }
 
         pStr.clear() << pTemp << SEP << tsName << SEP << "correlation-m";
         if (m < 10)
+        {
             pStr << '0';
+        }
         pStr << m << ".txt";
         resultNDP.saveToCSVFile(pStr);
     }
@@ -465,8 +500,12 @@ bool ATSP::computeMonthlyCorrelations()
 
     // Converting original matrix without zero signal into an admissible matrix
 
-    shrink = Solver::MatrixDPMake<double>(
-      tmpNDP.entry, CORR_YNPZ.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+    shrink = Solver::MatrixDPMake<double>(tmpNDP.entry,
+                                          CORR_YNPZ.entry,
+                                          resultNDP.entry,
+                                          ID.entry,
+                                          ID.width,
+                                          tmpArray.data());
     if (shrink < 1.)
     {
         if (shrink <= -1.)
@@ -485,7 +524,9 @@ bool ATSP::computeMonthlyCorrelations()
     for (uint y = 1; y < resultNDP.height; ++y)
     {
         for (uint x = 0; x < y; ++x)
+        {
             resultNDP[x][y] = resultNDP[y][x];
+        }
     }
     for (uint i = 1; i < CORR_YNPZ.width; ++i)
     {
@@ -496,16 +537,24 @@ bool ATSP::computeMonthlyCorrelations()
     }
 
     // Converting original matrix without zero signal into an admissible matrix
-    shrink = Solver::MatrixDPMake<double>(
-      tmpNDP.entry, CORR_YNP.entry, resultNDP.entry, CORR_YNPZ.entry, CORR_YNPZ.width, tmpArray);
+    shrink = Solver::MatrixDPMake<double>(tmpNDP.entry,
+                                          CORR_YNP.entry,
+                                          resultNDP.entry,
+                                          CORR_YNPZ.entry,
+                                          CORR_YNPZ.width,
+                                          tmpArray.data());
     if (shrink < 1.)
     {
         if (shrink <= -1.) // CORR_YNP is too close to sdp boundary, shrink CORR_YNP instead
                            // Note : this default code should be replaced by proper eigen value
                            // analysis (see Higham 2002 / Strabic 2016)
         {
-            shrink = Solver::MatrixDPMake<double>(
-              tmpNDP.entry, CORR_YNP.entry, resultNDP.entry, ID.entry, ID.width, tmpArray);
+            shrink = Solver::MatrixDPMake<double>(tmpNDP.entry,
+                                                  CORR_YNP.entry,
+                                                  resultNDP.entry,
+                                                  ID.entry,
+                                                  ID.width,
+                                                  tmpArray.data());
             if (shrink <= -1.)
             {
                 logs.error() << "invalid data, can not be processed";
@@ -528,7 +577,9 @@ bool ATSP::computeMonthlyCorrelations()
     for (uint y = 1; y < resultNDP.height; ++y)
     {
         for (uint x = 0; x < y; ++x)
+        {
             resultNDP[x][y] = resultNDP[y][x];
+        }
     }
 
     // Annual correlation coefficients
@@ -575,7 +626,9 @@ bool ATSP::computeMonthlyCorrelations()
             {
                 pStr.clear() << pTemp << SEP << tsName << SEP << "correlation-m";
                 if (m < 10)
+                {
                     pStr << '0';
+                }
                 pStr << m << ".txt";
 
                 if (not CORR_MNP.loadFromCSVFile(pStr,
@@ -620,7 +673,9 @@ bool ATSP::computeMonthlyCorrelations()
             }
         }
         else
+        {
             logs.error() << "Impossible to create " << pStr;
+        }
     }
 
     // removing the mapping list

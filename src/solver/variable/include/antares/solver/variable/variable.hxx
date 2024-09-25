@@ -22,6 +22,7 @@
 #define __SOLVER_VARIABLE_VARIABLE_HXX__
 
 #include <yuni/core/static/types.h>
+
 #include <antares/study/variable-print-info.h>
 
 namespace Antares::Solver::Variable
@@ -46,7 +47,9 @@ inline IVariable<ChildT, NextT, VCardT>::IVariable()
 
     // Initializing default print to true
     for (uint i = 0; i < pColumnCount; i++)
+    {
         isPrinted[i] = true;
+    }
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -103,18 +106,20 @@ inline void IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool app
     if (VCardType::isPossiblyNonApplicable != 0 && applyNonApplicable)
     {
         for (uint i = 0; i != pColumnCount; ++i)
+        {
             isNonApplicable[i] = true;
+        }
     }
     else
     {
         for (uint i = 0; i != pColumnCount; ++i)
+        {
             isNonApplicable[i] = false;
+        }
     }
 
     NextType::broadcastNonApplicability(applyNonApplicable);
 }
-
-
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::simulationBegin()
@@ -128,6 +133,7 @@ inline void IVariable<ChildT, NextT, VCardT>::simulationEnd()
 {
     NextType::simulationEnd();
 }
+
 template<class ChildT, class NextT, class VCardT>
 size_t IVariable<ChildT, NextT, VCardT>::getMaxNumberColumns() const
 {
@@ -150,10 +156,12 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEnd(uint year)
 
 template<class ChildT, class NextT, class VCardT>
 template<class V>
-inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars, uint year)
+inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars,
+                                                                       uint year,
+                                                                       unsigned int numSpace)
 {
     // Next variable
-    NextType::template yearEndSpatialAggregates(allVars, year);
+    NextType::template yearEndSpatialAggregates(allVars, year, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -277,8 +285,11 @@ inline void IVariable<ChildT, NextT, VCardT>::buildSurveyReport(SurveyResults& r
             results.isPrinted = isPrinted;
             results.isCurrentVarNA = isNonApplicable;
 
-            VariableAccessorType::template BuildSurveyReport<VCardType>(
-              results, pResults, dataLevel, fileLevel, precision);
+            VariableAccessorType::template BuildSurveyReport<VCardType>(results,
+                                                                        pResults,
+                                                                        dataLevel,
+                                                                        fileLevel,
+                                                                        precision);
         }
     }
 
@@ -303,8 +314,10 @@ inline void IVariable<ChildT, NextT, VCardT>::buildAnnualSurveyReport(SurveyResu
             && (precision & VCardType::precision))
         {
             // Getting its intermediate results
-            static_cast<const ChildT*>(this)->localBuildAnnualSurveyReport(
-              results, fileLevel, precision, numSpace);
+            static_cast<const ChildT*>(this)->localBuildAnnualSurveyReport(results,
+                                                                           fileLevel,
+                                                                           precision,
+                                                                           numSpace);
         }
     }
 
@@ -320,16 +333,18 @@ inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results
 {
     // Generate the Digest for the local results (areas part)
     if (VCardType::columnCount != 0
-        && (VCardType::categoryDataLevel & Category::setOfAreas
-            || VCardType::categoryDataLevel & Category::area
-            || VCardType::categoryDataLevel & Category::link))
+        && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas
+            || VCardType::categoryDataLevel & Category::DataLevel::area
+            || VCardType::categoryDataLevel & Category::DataLevel::link))
     {
         // Initializing pointer on variable non applicable and print stati arrays to beginning
         results.isPrinted = isPrinted;
         results.isCurrentVarNA = isNonApplicable;
 
-        VariableAccessorType::template BuildDigest<VCardT>(
-          results, pResults, digestLevel, dataLevel);
+        VariableAccessorType::template BuildDigest<VCardT>(results,
+                                                           pResults,
+                                                           digestLevel,
+                                                           dataLevel);
     }
     // Ask to build the digest to the next variable
     NextType::buildDigest(results, digestLevel, dataLevel);
@@ -345,13 +360,15 @@ template<class ChildT, class NextT, class VCardT>
 inline uint64_t IVariable<ChildT, NextT, VCardT>::memoryUsage() const
 {
     uint64_t r = VariableAccessorType::Value(pResults);
-    if ((int)VCardT::columnCount != (int)Category::dynamicColumns)
+    if (VCardT::columnCount != (int)Category::dynamicColumns)
     {
         // Intermediate values
         if (VCardT::hasIntermediateValues)
         {
             for (uint i = 0; i != (uint)VCardT::columnCount; ++i)
+            {
                 r += IntermediateValues::MemoryUsage();
+            }
         }
     }
     r += NextType::memoryUsage();
@@ -418,6 +435,7 @@ struct RetrieveResultsAssignment
     {
         Yes = 1
     };
+
     template<class ResultsT, class O>
     static void Do(ResultsT& varResults, O** result)
     {
@@ -432,6 +450,7 @@ struct RetrieveResultsAssignment<0>
     {
         Yes = 0
     };
+
     template<class ResultsT, class O>
     static void Do(ResultsT&, O**)
     {
@@ -446,8 +465,8 @@ template<class VCardToFindT>
 inline const double* IVariable<ChildT, NextT, VCardT>::retrieveHourlyResultsForCurrentYear(
   uint numSpace) const
 {
-    using AssignT
-      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
+    using AssignT = RetrieveResultsAssignment<
+      Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     return (AssignT::Yes)
              ? nullptr
              : NextType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>(numSpace);
@@ -459,11 +478,13 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
-    using AssignT
-      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
+    using AssignT = RetrieveResultsAssignment<
+      Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
+    {
         NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
+    }
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -472,11 +493,13 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    using AssignT
-      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
+    using AssignT = RetrieveResultsAssignment<
+      Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
+    {
         NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+    }
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -485,11 +508,13 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForLink(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::AreaLink* link)
 {
-    using AssignT
-      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
+    using AssignT = RetrieveResultsAssignment<
+      Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
+    {
         NextType::template retrieveResultsForLink<VCardToFindT>(result, link);
+    }
 }
 
 namespace // anonymous
@@ -528,8 +553,8 @@ struct HourlyResultsForCurrentYear<Category::noColumn>
 
 template<class ChildT, class NextT, class VCardT>
 inline Antares::Memory::Stored<double>::ConstReturnType
-  IVariable<ChildT, NextT, VCardT>::retrieveRawHourlyValuesForCurrentYear(uint column,
-                                                                          uint /* numSpace */) const
+IVariable<ChildT, NextT, VCardT>::retrieveRawHourlyValuesForCurrentYear(uint column,
+                                                                        uint /* numSpace */) const
 {
     return HourlyResultsForCurrentYear<VCardType::columnCount>::Get(pResults, column);
 }
@@ -540,7 +565,6 @@ inline const typename Storage<VCardT>::ResultsType& IVariable<ChildT, NextT, VCa
 {
     return pResults;
 }
-
 
 // ===================================================================
 // Each output variable gets registered in the print info collector
@@ -559,7 +583,11 @@ public:
     static void Do(PredicateT& predicate)
     {
         for (int i = 0; i < VCardT::columnCount; ++i)
-            predicate.add(VCardT::Multiple::Caption(i), VCardT::Multiple::Unit(i), VCardT::Description());
+        {
+            predicate.add(VCardT::Multiple::Caption(i),
+                          VCardT::Multiple::Unit(i),
+                          VCardT::Description());
+        }
     }
 
     // Function used to build the collection of variables print info from the static variables list.
@@ -625,8 +653,7 @@ void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicat
     NextType::RetrieveVariableList(predicate);
 }
 
-
-// ============================================================================= 
+// =============================================================================
 // Each output variable gets its print status from the study parameters
 // =============================================================================
 
@@ -634,47 +661,48 @@ void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicat
 // VCardType::columnCount. Recall that a variable can be single, dynamic or multiple.
 namespace // anonymous
 {
-    // Case : the variable is multiple
-    template<int ColumnT, class VCardT>
-    class GetPrintStatusHelper
+// Case : the variable is multiple
+template<int ColumnT, class VCardT>
+class GetPrintStatusHelper
+{
+public:
+    static void Do(Data::Study& study, bool* isPrinted)
     {
-    public:
-        static void Do(Data::Study& study, bool* isPrinted)
-        {
-            for (uint i = 0; i != VCardT::columnCount; ++i)
-            {
-                // Shifting inside the variables print info collection until reaching the print info
-                // associated with the current name, and then getting its print status.
-                isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Multiple::Caption(i));
-            }
-        }
-    };
-
-    // Case : the variable is single
-    template<class VCardT>
-    class GetPrintStatusHelper<Category::singleColumn, VCardT>
-    {
-    public:
-        static void Do(Data::Study& study, bool* isPrinted)
+        for (uint i = 0; i != VCardT::columnCount; ++i)
         {
             // Shifting inside the variables print info collection until reaching the print info
             // associated with the current name, and then getting its print status.
-            isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
+            isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted(
+              VCardT::Multiple::Caption(i));
         }
-    };
+    }
+};
 
-    // Case : the variable is dynamic
-    template<class VCardT>
-    class GetPrintStatusHelper<Category::dynamicColumns, VCardT>
+// Case : the variable is single
+template<class VCardT>
+class GetPrintStatusHelper<Category::singleColumn, VCardT>
+{
+public:
+    static void Do(Data::Study& study, bool* isPrinted)
     {
-    public:
-        static void Do(Data::Study& study, bool* isPrinted)
-        {
-            // Shifting inside the variables print info collection until reaching the print info
-            // associated with the current name, and then getting its print status.
-            isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
-        }
-    };
+        // Shifting inside the variables print info collection until reaching the print info
+        // associated with the current name, and then getting its print status.
+        isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
+    }
+};
+
+// Case : the variable is dynamic
+template<class VCardT>
+class GetPrintStatusHelper<Category::dynamicColumns, VCardT>
+{
+public:
+    static void Do(Data::Study& study, bool* isPrinted)
+    {
+        // Shifting inside the variables print info collection until reaching the print info
+        // associated with the current name, and then getting its print status.
+        isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
+    }
+};
 } // namespace
 
 template<class ChildT, class NextT, class VCardT>
@@ -685,65 +713,63 @@ inline void IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Stud
     NextType::getPrintStatusFromStudy(study);
 }
 
-
-
 // =======================================================================
-// Each output variable supplies the maximum number of columns it takes 
+// Each output variable supplies the maximum number of columns it takes
 // in an ouptut report to the variable print info instance
 // =======================================================================
 
-// The class SupplyMaxNbColumnsHelper is used to make a different Do(...) treatment depending on current
-// VCardType::columnCount : recall that a variable can be single, dynamic or multiple.
+// The class SupplyMaxNbColumnsHelper is used to make a different Do(...) treatment depending on
+// current VCardType::columnCount : recall that a variable can be single, dynamic or multiple.
 namespace // anonymous
 {
-    // Case : the variable is multiple
-    template<int ColumnT, class VCardT>
-    class SupplyMaxNbColumnsHelper
+// Case : the variable is multiple
+template<int ColumnT, class VCardT>
+class SupplyMaxNbColumnsHelper
+{
+public:
+    static void Do(Data::Study& study, uint maxNumberColumns)
     {
-    public:
-        static void Do(Data::Study& study, uint maxNumberColumns)
+        for (uint i = 0; i != VCardT::columnCount; ++i)
         {
-            for (uint i = 0; i != VCardT::columnCount; ++i)
-            {
-                study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Multiple::Caption(i), maxNumberColumns);
-            }
+            study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Multiple::Caption(i),
+                                                              maxNumberColumns);
         }
-    };
+    }
+};
 
-    // Case : the variable is single
-    template<class VCardT>
-    class SupplyMaxNbColumnsHelper<Category::singleColumn, VCardT>
+// Case : the variable is single
+template<class VCardT>
+class SupplyMaxNbColumnsHelper<Category::singleColumn, VCardT>
+{
+public:
+    static void Do(Data::Study& study, uint maxNumberColumns)
     {
-    public:
-        static void Do(Data::Study& study, uint maxNumberColumns)
-        {
-            study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
-        }
-    };
+        study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
+    }
+};
 
-    // Case : the variable is dynamic
-    template<class VCardT>
-    class SupplyMaxNbColumnsHelper<Category::dynamicColumns, VCardT>
+// Case : the variable is dynamic
+template<class VCardT>
+class SupplyMaxNbColumnsHelper<Category::dynamicColumns, VCardT>
+{
+public:
+    static void Do(Data::Study& study, uint maxNumberColumns)
     {
-    public:
-        static void Do(Data::Study& study, uint maxNumberColumns)
-        {
-            study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
-        }
-    };
+        study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
+    }
+};
 } // namespace
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::supplyMaxNumberOfColumns(Data::Study& study)
 {
     auto max_columns = static_cast<const ChildT*>(this)->getMaxNumberColumns();
-    SupplyMaxNbColumnsHelper<VCardType::columnCount, VCardType>::Do(study, static_cast<uint>(max_columns));
+    SupplyMaxNbColumnsHelper<VCardType::columnCount, VCardType>::Do(study,
+                                                                    static_cast<uint>(max_columns));
     // Go to the next variable
     NextType::supplyMaxNumberOfColumns(study);
 }
 
 } // namespace Antares::Solver::Variable
-
-
 
 #endif // __SOLVER_VARIABLE_VARIABLE_HXX__

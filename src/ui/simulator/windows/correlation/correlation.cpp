@@ -1,36 +1,37 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "correlation.h"
+
+#include <wx/stattext.h>
+#include <wx/tglbtn.h>
+
+#include <antares/date/date.h>
+
 #include "../../application/study.h"
-#include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/correlation.h"
+#include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/refresh.h"
-#include <antares/date/date.h>
 #include "../../toolbox/resources.h"
-
-#include <wx/tglbtn.h>
-#include <wx/stattext.h>
-
 #include "datasources.hxx"
 
 using namespace Yuni;
@@ -45,12 +46,17 @@ public:
     using CorrelationMatrixType = Component::Datagrid::Renderer::CorrelationMatrix;
 
 public:
-    CorrelationPanelData() : pCorrelation(nullptr)
+    CorrelationPanelData():
+        pCorrelation(nullptr)
     {
         for (uint i = 0; i != 12; ++i)
+        {
             pGridMonthly[i] = nullptr;
+        }
         for (uint i = 0; i != 12 + 1; ++i)
+        {
             renderer[i] = nullptr;
+        }
     }
 
 public:
@@ -62,7 +68,8 @@ public:
     CorrelationMatrixType::IDatasource::Ptr datasource;
 };
 
-CorrelationPanel::CorrelationPanel(wxWindow* parent, int timeseries) : wxPanel(parent, wxID_ANY)
+CorrelationPanel::CorrelationPanel(wxWindow* parent, int timeseries):
+    wxPanel(parent, wxID_ANY)
 {
     // Init
     pData = new CorrelationPanelData();
@@ -113,8 +120,9 @@ CorrelationPanel::CorrelationPanel(wxWindow* parent, int timeseries) : wxPanel(p
         };
 #endif
 
-        btn
-          = Resources::BitmapButtonLoadFromFile(panel, wxID_ANY, "images/16x16/sort_alphabet.png");
+        btn = Resources::BitmapButtonLoadFromFile(panel,
+                                                  wxID_ANY,
+                                                  "images/16x16/sort_alphabet.png");
         btn->Connect(btn->GetId(),
                      wxEVT_COMMAND_BUTTON_CLICKED,
                      wxCommandEventHandler(CorrelationPanel::onSortAlpha),
@@ -123,8 +131,9 @@ CorrelationPanel::CorrelationPanel(wxWindow* parent, int timeseries) : wxPanel(p
         panel->GetSizer()->Add(btn, 0, wxALL | wxEXPAND, margin);
 
         // Sort - reverse
-        btn = Resources::BitmapButtonLoadFromFile(
-          panel, wxID_ANY, "images/16x16/sort_alphabet_descending.png");
+        btn = Resources::BitmapButtonLoadFromFile(panel,
+                                                  wxID_ANY,
+                                                  "images/16x16/sort_alphabet_descending.png");
         btn->Connect(btn->GetId(),
                      wxEVT_COMMAND_BUTTON_CLICKED,
                      wxCommandEventHandler(CorrelationPanel::onSortAlphaReverse),
@@ -145,8 +154,8 @@ CorrelationPanel::CorrelationPanel(wxWindow* parent, int timeseries) : wxPanel(p
         {
             for (uint i = 0; i != 12; ++i)
             {
-                pData->pGridMonthly[i]
-                  = new Component::Datagrid::Component(notebook, pData->renderer[i]);
+                pData->pGridMonthly[i] = new Component::Datagrid::Component(notebook,
+                                                                            pData->renderer[i]);
                 pData->renderer[i]->control(pData->pGridMonthly[i]);
                 notebook->add(pData->pGridMonthly[i], months[i]);
             }
@@ -192,7 +201,9 @@ CorrelationPanel::~CorrelationPanel()
     // we should destroy all children as soon as possible.
     wxSizer* sizer = GetSizer();
     if (sizer)
+    {
         sizer->Clear(true);
+    }
 }
 
 void CorrelationPanel::onStudyLoaded()
@@ -226,7 +237,9 @@ void CorrelationPanel::reload()
 {
     assignMatrices(nullptr);
     if (not pData)
+    {
         return;
+    }
 
     pData->datasource->reload();
 
@@ -256,12 +269,16 @@ void CorrelationPanel::reload()
     // It is useless to reassign matrices since they are already
     // assigned to null
     if (pData->pCorrelation)
+    {
         assignMatrices(pData->pCorrelation);
+    }
 
     // Force refresh
     RefreshAllControls(pData->pGridAnnual);
     for (uint i = 0; i != 12; ++i)
+    {
         RefreshAllControls(pData->pGridMonthly[i]);
+    }
 }
 
 void CorrelationPanel::updateAllDatasources()
@@ -270,13 +287,17 @@ void CorrelationPanel::updateAllDatasources()
     for (uint i = 0; i != 12 + 1; ++i)
     {
         if (pData->renderer[i])
+        {
             pData->renderer[i]->datasource(pData->datasource);
+        }
     }
 
     for (uint i = 0; i != 12; ++i)
     {
         if (pData->pGridMonthly[i])
+        {
             pData->pGridMonthly[i]->forceRefresh();
+        }
     }
     pData->pGridAnnual->forceRefresh();
 }
@@ -303,12 +324,14 @@ void CorrelationPanel::assignMatrices(Data::Correlation* corr)
 {
     if (pData)
     {
-        if (corr == NULL)
+        if (!corr)
         {
             for (uint i = 0; i < 12 + 1; ++i)
             {
                 if (pData->renderer)
+                {
                     pData->renderer[i]->matrix(nullptr);
+                }
             }
         }
         else
@@ -316,9 +339,11 @@ void CorrelationPanel::assignMatrices(Data::Correlation* corr)
             for (uint i = 0; i < 12; ++i)
             {
                 if (pData->renderer[i])
+                {
                     pData->renderer[i]->matrix(&(corr->monthly[i]));
+                }
             }
-            pData->renderer[12]->matrix(corr->annual);
+            pData->renderer[12]->matrix(&corr->annual);
         }
     }
 }

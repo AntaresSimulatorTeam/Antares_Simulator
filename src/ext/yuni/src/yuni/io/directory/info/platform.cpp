@@ -189,12 +189,12 @@ public:
             }
 
             const int sizeRequired
-              = WideCharToMultiByte(CP_UTF8, 0, data.name, -1, NULL, 0, NULL, NULL);
+              = WideCharToMultiByte(CP_UTF8, 0, data.name, -1, nullptr, 0, nullptr, nullptr);
             if (sizeRequired <= 0)
                 continue;
             name.reserve((uint)sizeRequired);
             WideCharToMultiByte(
-              CP_UTF8, 0, data.name, -1, (char*)name.data(), sizeRequired, NULL, NULL);
+              CP_UTF8, 0, data.name, -1, (char*)name.data(), sizeRequired, nullptr, nullptr);
             name.resize(((uint)sizeRequired) - 1);
 
             filename.clear();
@@ -341,12 +341,12 @@ IteratorData* IteratorDataCreate(const AnyString& folder, uint flags)
         data->push(folder);
         return data;
     }
-    return NULL;
+    return nullptr;
 }
 
 IteratorData* IteratorDataCopy(const IteratorData* data)
 {
-    return (data) ? (new IteratorData(*data)) : NULL;
+    return (data) ? (new IteratorData(*data)) : nullptr;
 }
 
 void IteratorDataFree(const IteratorData* data)
@@ -356,52 +356,52 @@ void IteratorDataFree(const IteratorData* data)
 
 IteratorData* IteratorDataNext(IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     if (data->next())
         return data;
     delete data;
-    return NULL;
+    return nullptr;
 }
 
 const String& IteratorDataFilename(const IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     return data->dirinfo.front().filename;
 }
 
 const String& IteratorDataParentName(const IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     return data->dirinfo.front().parent;
 }
 
 const String& IteratorDataName(const IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     return data->dirinfo.front().name;
 }
 
 uint64_t IteratorDataSize(const IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     return data->dirinfo.front().size;
 }
 
 int64_t IteratorDataModified(const IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     return data->dirinfo.front().modified;
 }
 
 bool IteratorDataIsFolder(const IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     return data->dirinfo.front().isFolder;
 }
 
 bool IteratorDataIsFile(const IteratorData* data)
 {
-    assert(data != NULL);
+    assert(data);
     return !data->dirinfo.front().isFolder;
 }
 

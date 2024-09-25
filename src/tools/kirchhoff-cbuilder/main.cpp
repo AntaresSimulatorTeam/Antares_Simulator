@@ -19,13 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/resources/resources.h>
-#include <antares/sys/policy.h>
-#include <antares/locale/locale.h>
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
 #include <string>
 
+#include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
+#include <antares/resources/resources.h>
+#include <antares/study/study.h>
+#include <antares/sys/policy.h>
 #include "antares/solver/constraints-builder/cbuilder.h"
 
 #include "kirchhoff-cbuilder.h"
@@ -33,7 +33,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     logs.applicationName("k-cbuild");
     if (argc < 2)
@@ -46,7 +46,9 @@ int main(int argc, char* argv[])
     std::string studyPath(argv[1]);
     std::string kirchhoffOptionPath;
     if (argc > 2)
+    {
         kirchhoffOptionPath = argv[2];
+    }
 
     if (!initResources(argc, argv))
     {
@@ -63,7 +65,9 @@ int main(int argc, char* argv[])
     }
 
     if (!runKirchhoffConstraints(study, studyPath, kirchhoffOptionPath))
+    {
         return EXIT_FAILURE;
+    }
 
     return 0;
 }
@@ -74,7 +78,7 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
 {
     study->areas.ensureDataIsInitialized(study->parameters, false);
 
-    CBuilder constraintBuilder(study);
+    CBuilder constraintBuilder(*study);
     logs.info() << "CBuilder created";
 
     if (!constraintBuilder.completeFromStudy())
@@ -100,8 +104,8 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
         return false;
     }
 
-    auto bindingPath
-      = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
+    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator
+                       + "bindingconstraints";
 
     if (!study->bindingConstraints.saveToFolder(bindingPath))
     {
@@ -117,13 +121,15 @@ static void NotEnoughMemory()
     logs.fatal() << "Not enough memory. aborting.";
 }
 
-bool initResources(int argc, char* argv[])
+bool initResources(int argc, const char* argv[])
 {
     std::set_new_handler(&NotEnoughMemory);
 
     InitializeDefaultLocale();
     if (!LocalPolicy::Open())
+    {
         return false;
+    }
 
     LocalPolicy::CheckRootPrefix(argv[0]);
 
@@ -135,7 +141,9 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
 {
     study->header.version = Data::StudyHeader::tryToFindTheVersion(studyPath);
     if (study->header.version == Data::StudyVersion::unknown())
+    {
         return false;
+    }
     study->folder = studyPath;
     study->folderInput = studyPath + Yuni::IO::Separator + "input";
 
@@ -151,8 +159,8 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
     }
     logs.info() << "Areas loaded.";
 
-    auto bindingPath
-      = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
+    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator
+                       + "bindingconstraints";
 
     if (!study->bindingConstraints.loadFromFolder(*study, options, bindingPath))
     {

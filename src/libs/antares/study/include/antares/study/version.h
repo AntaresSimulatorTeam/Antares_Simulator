@@ -39,7 +39,13 @@ public:
     auto operator<=>(const StudyVersion&) const = default;
 
     constexpr StudyVersion() = default;
-    constexpr StudyVersion(unsigned major, unsigned minor) : major_(major), minor_(minor) {}
+
+    constexpr StudyVersion(unsigned major, unsigned minor):
+        major_(major),
+        minor_(minor)
+    {
+    }
+
     ~StudyVersion() = default;
 
     bool isSupported(bool verbose) const;

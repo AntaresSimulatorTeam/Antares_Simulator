@@ -22,7 +22,9 @@
 #define __SOLVER_END_OF_LIST_END_OF_LIST_H__
 
 #include <yuni/yuni.h>
+
 #include <antares/study/study.h>
+
 #include "state.h"
 #include "surveyresults.h"
 
@@ -59,7 +61,6 @@ public:
     };
 
 public:
-
     /*!
     ** \brief Retrieve the list of all individual variables
     **
@@ -76,9 +77,11 @@ public:
     EndOfList()
     {
     }
+
     ~EndOfList()
     {
     }
+
     //@}
 
     static void initializeFromStudy([[maybe_unused]] Data::Study& study)
@@ -88,9 +91,11 @@ public:
     static void initializeFromArea(Data::Study*, Data::Area*)
     {
     }
+
     static void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*)
     {
     }
+
     static void initializeFromAreaLink(Data::Study*, Data::AreaLink*)
     {
     }
@@ -133,9 +138,10 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
-    static void yearEndBuild(State&, unsigned int)
+    static void yearEndBuild(State&, unsigned int, unsigned int)
     {
     }
+
     static void yearEnd(unsigned int, unsigned int)
     {
     }
@@ -145,7 +151,7 @@ public:
     {
         UNUSED_VARIABLE(numSpaceToYear);
         UNUSED_VARIABLE(nbYearsForCurrentSummary);
-    };
+    }
 
     template<class V>
     void yearEndSpatialAggregates(V&, unsigned int, uint)
@@ -159,14 +165,17 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int>&, unsigned int)
+    static void computeSpatialAggregatesSummary(V&,
+                                                std::map<unsigned int, unsigned int>&,
+                                                unsigned int)
     {
     }
 
     template<class V>
-    void simulationEndSpatialAggregates(V&)
+    static void simulationEndSpatialAggregates(V&)
     {
     }
+
     template<class V, class SetT>
     void simulationEndSpatialAggregates(V&, const SetT&)
     {
@@ -234,10 +243,17 @@ public:
     {
         assert(false);
     }
+
     template<class SearchVCardT, class O>
     static void computeSpatialAggregateWith(O&, const Data::Area*)
     {
         assert(false);
+    }
+
+    template<class SearchVCardT, class O>
+    static void computeSpatialAggregateWith(O&, const Data::Area*, uint numSpace)
+    {
+        UNUSED_VARIABLE(numSpace);
     }
 
     template<class VCardToFindT>

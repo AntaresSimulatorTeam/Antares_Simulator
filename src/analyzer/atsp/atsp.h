@@ -21,11 +21,13 @@
 #ifndef __PREPROCESSOR_ATSP_H__
 #define __PREPROCESSOR_ATSP_H__
 
-#include <yuni/yuni.h>
 #include <memory>
+
+#include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <antares/study/xcast/xcast.h>
+
 #include <antares/study/study.h>
+#include <antares/study/xcast/xcast.h>
 
 namespace Antares
 {
@@ -79,12 +81,14 @@ private:
     {
         double data[12][4];
     };
+
     using MomentCentr = std::vector<MomentCentrSingle>;
 
     struct HiddenHoursSingle
     {
         int data[12][24];
     };
+
     using HiddenHours = std::vector<HiddenHoursSingle>;
 
 private:
@@ -253,6 +257,7 @@ private:
     ** Ce seuil n'est pas utilise quand l'analyse porte sur une loi normale
     */
     const double HOR; // 0.92 by default
+
     enum
     {
         //! nombre de valeurs d'autocorrelation calculees (de X0-X0 à X0-X119)
@@ -275,6 +280,7 @@ private:
     static const uint lonmois[12];
     static const uint durmois[12];
     static const uint posmois[12];
+
     enum
     {
         durjour = 24

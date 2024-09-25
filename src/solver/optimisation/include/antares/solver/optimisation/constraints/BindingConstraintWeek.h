@@ -28,16 +28,17 @@ struct BindingConstraintWeekData
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     std::vector<int>& NumeroDeContrainteDesContraintesCouplantes;
 };
+
 /*!
  * represent 'Hourly Binding Constraint' type
  */
 
-class BindingConstraintWeek : private ConstraintFactory
+class BindingConstraintWeek: private ConstraintFactory
 {
 public:
-    BindingConstraintWeek(ConstraintBuilder& builder,
-                          BindingConstraintWeekData& data) :
-     ConstraintFactory(builder), data(data)
+    BindingConstraintWeek(ConstraintBuilder& builder, BindingConstraintWeekData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

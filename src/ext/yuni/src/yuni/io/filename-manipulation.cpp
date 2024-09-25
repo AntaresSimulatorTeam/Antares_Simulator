@@ -283,7 +283,7 @@ bool IsAbsolute(const AnyString& filename)
 }
 
 template<class StringT>
-static inline void parent_path_impl(StringT& out, const AnyString& path, bool systemDependant)
+static inline void parent_path_impl_static(StringT& out, const AnyString& path, bool systemDependant)
 {
     AnyString::size_type pos = (systemDependant)
                                  ? path.find_last_of(IO::Constant<char>::Separator)
@@ -296,16 +296,16 @@ static inline void parent_path_impl(StringT& out, const AnyString& path, bool sy
 
 void parent_path(String& out, const AnyString& path, bool systemDependant)
 {
-    parent_path_impl(out, path, systemDependant);
+    parent_path_impl_static(out, path, systemDependant);
 }
 
 void parent_path_impl(Clob& out, const AnyString& path, bool systemDependant)
 {
-    parent_path_impl(out, path, systemDependant);
+    parent_path_impl_static(out, path, systemDependant);
 }
 
 template<class StringT>
-static inline void parent_path(StringT& out, const AnyString& path, bool systemDependant)
+static inline void ExtractFileNameImpl(StringT& out, const AnyString& path, bool systemDependant)
 {
     AnyString::size_type pos = (systemDependant)
                                  ? path.find_last_of(IO::Constant<char>::Separator)
@@ -318,12 +318,12 @@ static inline void parent_path(StringT& out, const AnyString& path, bool systemD
 
 void ExtractFileName(String& out, const AnyString& path, bool systemDependant)
 {
-    parent_path(out, path, systemDependant);
+    ExtractFileNameImpl(out, path, systemDependant);
 }
 
 void ExtractFileName(Clob& out, const AnyString& path, bool systemDependant)
 {
-    parent_path(out, path, systemDependant);
+    ExtractFileNameImpl(out, path, systemDependant);
 }
 
 template<class StringT>

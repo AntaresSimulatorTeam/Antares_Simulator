@@ -38,7 +38,9 @@ inline SetsOfAreas<NextT>::~SetsOfAreas()
 {
     // Releasing the memory occupied by the areas
     for (typename SetOfAreasVector::iterator i = pBegin; i != pEnd; ++i)
+    {
         delete *i;
+    }
 }
 
 template<class NextT>
@@ -58,7 +60,9 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     for (uint setIndex = 0; setIndex != sets.size(); ++setIndex)
     {
         if (!sets.hasOutput(setIndex))
+        {
             continue;
+        }
         // Name of the set
         const auto& setname = sets.caption(setIndex);
 
@@ -140,7 +144,7 @@ inline void SetsOfAreas<NextT>::yearBegin(uint /*year*/, uint /* numSpace */)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::yearEndBuild(State& /*state*/, uint /*year*/)
+inline void SetsOfAreas<NextT>::yearEndBuild(State& /*state*/, uint /*year*/, uint /*numSpace*/)
 {
     // Nothing to do here
 }
@@ -172,7 +176,7 @@ inline void SetsOfAreas<NextT>::weekBegin(State&)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::weekForEachArea(State&)
+inline void SetsOfAreas<NextT>::weekForEachArea(State&, unsigned int /*numSpace*/)
 {
     // Nothing to do here
 }
@@ -184,7 +188,7 @@ inline void SetsOfAreas<NextT>::weekEnd(State&)
 }
 
 template<class NextT>
-void SetsOfAreas<NextT>::hourForEachArea(State& state)
+void SetsOfAreas<NextT>::hourForEachArea(State& state, unsigned int)
 {
     (void)state;
 }
@@ -209,11 +213,13 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int precision) const
 {
     int count_int = count;
-    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(
-          results, dataLevel, fileLevel, precision);
+        pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(results,
+                                                                      dataLevel,
+                                                                      fileLevel,
+                                                                      precision);
     }
 }
 
@@ -225,11 +231,14 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                                         uint numSpace) const
 {
     int count_int = count;
-    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(
-          results, dataLevel, fileLevel, precision, numSpace);
+        pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(results,
+                                                                            dataLevel,
+                                                                            fileLevel,
+                                                                            precision,
+                                                                            numSpace);
     }
 }
 
@@ -237,7 +246,7 @@ template<class NextT>
 void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
     int count_int = count;
-    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
         // Reset
@@ -262,7 +271,9 @@ inline uint64_t SetsOfAreas<NextT>::memoryUsage() const
 {
     uint64_t result = sizeof(NextType) * pSetsOfAreas.size();
     for (auto i = pBegin; i != pEnd; ++i)
+    {
         result += (*i)->memoryUsage();
+    }
     return result;
 }
 
@@ -295,8 +306,10 @@ void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint nu
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
         assert(setindex < pOriginalSets.size());
-        pSetsOfAreas[setindex]->yearEndSpatialAggregates(
-          allVars, year, *(pOriginalSets[setindex]), numSpace);
+        pSetsOfAreas[setindex]->yearEndSpatialAggregates(allVars,
+                                                         year,
+                                                         *(pOriginalSets[setindex]),
+                                                         numSpace);
     }
 }
 
@@ -310,8 +323,9 @@ void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
         assert(setindex < pOriginalSets.size());
-        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(
-          allVars, numSpaceToYear, nbYearsForCurrentSummary);
+        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(allVars,
+                                                                numSpaceToYear,
+                                                                nbYearsForCurrentSummary);
     }
 }
 
@@ -343,10 +357,13 @@ inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O&)
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area)
+inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out,
+                                                            const Data::Area* area,
+                                                            uint numSpace)
 {
     (void)out;
     (void)area;
+    (void)numSpace;
     // pSetsOfAreas[area->index]->computeSpatialAggregateWith<SearchVCardT,O>(out);
 }
 

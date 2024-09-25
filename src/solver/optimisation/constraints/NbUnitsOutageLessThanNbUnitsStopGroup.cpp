@@ -22,7 +22,7 @@
 #include "antares/solver/optimisation/constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h"
 
 NbUnitsOutageLessThanNbUnitsStopData
-  NbUnitsOutageLessThanNbUnitsStopGroup::GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo()
+NbUnitsOutageLessThanNbUnitsStopGroup::GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo()
 {
     return {.PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
             .Simulation = simulation_,
@@ -39,8 +39,8 @@ void NbUnitsOutageLessThanNbUnitsStopGroup::BuildConstraints()
     NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo_->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
+                                                              ->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {

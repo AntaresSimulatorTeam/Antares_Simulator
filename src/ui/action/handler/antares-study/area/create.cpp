@@ -221,7 +221,7 @@ bool Create::performWL(Context& ctx)
         }
     }
     ctx.autoselectAreas.push_back(ctx.area);
-    return (ctx.area != NULL);
+    return (ctx.area);
 }
 
 void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
@@ -278,9 +278,6 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
     *prepro += new Correlation(Data::timeSeriesHydro, pOriginalAreaName);
     *tsNode += prepro;
     *tsNode += new Action::AntaresStudy::Area::AllocationHydro(pOriginalAreaName);
-
-    //Hydro Max Power
-    *tsNode += new DataTimeseries(Data::timeSeriesHydroMaxPower, pOriginalAreaName);
 
     // Thermal
     auto* area = ctx.extStudy->areas.findFromName(pOriginalAreaName);

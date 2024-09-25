@@ -32,7 +32,7 @@ MainFormData::MainFormData(ApplWnd& form) : wipEnabled(false), wipPanel(nullptr)
 
 void MainFormData::editCurrentLocation(const wxString& string)
 {
-    assert(pEditCurrentLocation != NULL);
+    assert(pEditCurrentLocation);
     pEditCurrentLocation->SetItemLabel(wxString(wxT("Current tab : ")) << string);
 }
 

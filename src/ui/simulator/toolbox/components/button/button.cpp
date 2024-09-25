@@ -158,7 +158,7 @@ void Button::loadIconFromResource(const char* filename)
 void Button::precalculateCoordinates()
 {
     // Assert
-    assert(this != NULL && "Button: this must not be null");
+    assert(this != nullptr && "Button: this must not be null");
     assert(iconMargin <= 128 && "Button: The margin seems suspicious");
 
     if (pCaption.empty())

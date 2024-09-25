@@ -1,115 +1,107 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-#include "report.h"
-#include "constraint.h"
-#include <antares/logs/logs.h>
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+#include "antares/solver/infeasible-problem-analysis/report.h"
+
 #include <algorithm>
-
-using namespace operations_research;
-
-static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
-                                  const Antares::Optimization::Constraint& b)
-{
-    return a.getSlackValue() > b.getSlackValue();
-}
+#include <regex>
+#include <typeindex>
 
 namespace Antares::Optimization
 {
-InfeasibleProblemReport::InfeasibleProblemReport(const std::vector<const MPVariable*>& slackVariables)
+InfeasibleProblemReport::InfeasibleProblemReport(
+  const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
-    turnSlackVarsIntoConstraints(slackVariables);
-    sortConstraints();
-    trimConstraints();
+    buildConstraintsFromSlackVars(slackVariables);
 }
 
-void InfeasibleProblemReport::turnSlackVarsIntoConstraints(const std::vector<const MPVariable*>& slackVariables)
+void InfeasibleProblemReport::buildConstraintsFromSlackVars(
+  const std::vector<const operations_research::MPVariable*>& slackVariables)
 {
-    for (const MPVariable* slack : slackVariables)
+    const ConstraintsFactory constraintsFactory;
+    for (const auto* slackVar: slackVariables)
     {
-        mConstraints.emplace_back(slack->name(), slack->solution_value());
-    }
-}
-
-void InfeasibleProblemReport::sortConstraints()
-{
-    std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
-}
-
-void InfeasibleProblemReport::trimConstraints()
-{
-    if (nbVariables <= mConstraints.size())
-    {
-        mConstraints.resize(nbVariables);
-    }
-}
-
-void InfeasibleProblemReport::extractItems()
-{
-    for (auto& c : mConstraints)
-    {
-        if (c.extractItems() == 0)
+        auto constraint = constraintsFactory.create(slackVar->name(), slackVar->solution_value());
+        if (constraint)
         {
-            return;
+            constraints_.push_back(std::move(constraint));
         }
-        mTypes[c.getType()]++;
     }
 }
 
-void InfeasibleProblemReport::logSuspiciousConstraints()
+bool lessTypeName(const std::shared_ptr<WatchedConstraint> a,
+                  const std::shared_ptr<WatchedConstraint> b)
 {
-    Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
-    for (const auto& c : mConstraints)
-    {
-        Antares::logs.error() << c.prettyPrint();
-    }
-    Antares::logs.error() << "Possible causes of infeasibility:";
-    if (mTypes[ConstraintType::hydro_reservoir_level] > 0)
-    {
-        Antares::logs.error() << "* Hydro reservoir impossible to manage with cumulative options "
-                                 "\"hard bounds without heuristic\"";
-    }
-    if (mTypes[ConstraintType::fictitious_load] > 0)
-    {
-        Antares::logs.error() << "* Last resort shedding status,";
-    }
-    if (mTypes[ConstraintType::short_term_storage_level] > 0)
-    {
-        Antares::logs.error() << "* Short-term storage reservoir level impossible to manage. Please check inflows, lower & upper curves and initial level (if prescribed),";
-    }
-
-    const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]
-                                 + mTypes[ConstraintType::binding_constraint_daily]
-                                 + mTypes[ConstraintType::binding_constraint_weekly];
-    if (bcCount > 0)
-    {
-        Antares::logs.error() << "* Binding constraints,";
-    }
-
-    Antares::logs.error() << "* Negative hurdle costs on lines with infinite capacity (rare).";
+    const WatchedConstraint* a_raw = a.get();
+    const WatchedConstraint* b_raw = b.get();
+    // TODO Compiler-dependent behavior
+    return std::type_index(typeid(*a_raw)) < std::type_index(typeid(*b_raw));
 }
 
-void InfeasibleProblemReport::prettyPrint()
+bool sameType(const std::shared_ptr<WatchedConstraint> a,
+              const std::shared_ptr<WatchedConstraint> b)
 {
-    extractItems();
-    logSuspiciousConstraints();
+    const WatchedConstraint* a_raw = a.get();
+    const WatchedConstraint* b_raw = b.get();
+    return std::type_index(typeid(*a_raw)) == std::type_index(typeid(*b_raw));
+}
+
+bool greaterValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)
+{
+    return a->slackValue() > b->slackValue();
+}
+
+void InfeasibleProblemReport::filterConstraintsToOneByType()
+{
+    // 1. Grouping constraints by C++ type (inside a group, order of instances remains unchanged)
+    std::ranges::stable_sort(constraints_, lessTypeName);
+    // 2. Keeping the first instances of each group, and rejecting others (= duplicates) to the end.
+    auto duplicates = std::ranges::unique(constraints_, sameType);
+    // 3. Removing trailing duplicates
+    constraints_.erase(duplicates.begin(), duplicates.end());
+    // 4. Sorting remaining constraints by slack value (in descending order)
+    std::ranges::sort(constraints_, greaterValue);
+}
+
+void InfeasibleProblemReport::storeSuspiciousConstraints()
+{
+    report_.push_back("Violated constraints:");
+    for (const auto& c: constraints_)
+    {
+        report_.push_back(c->infeasibility());
+    }
+}
+
+void InfeasibleProblemReport::storeInfeasibilityCauses()
+{
+    filterConstraintsToOneByType();
+    report_.push_back("Possible causes of infeasibility:");
+    for (const auto& c: constraints_)
+    {
+        report_.push_back(c->infeasibilityCause());
+    }
+}
+
+std::vector<std::string> InfeasibleProblemReport::getLogs()
+{
+    return report_;
 }
 
 } // namespace Antares::Optimization

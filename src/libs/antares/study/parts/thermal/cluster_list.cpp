@@ -1,29 +1,31 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/study/parts/thermal/cluster_list.h"
+
+#include <ranges>
+
+#include <antares/utils/utils.h>
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
-#include <antares/utils/utils.h>
-#include <ranges>
 
 namespace // anonymous
 {
@@ -62,7 +64,8 @@ std::string ThermalClusterList::typeID() const
 uint64_t ThermalClusterList::memoryUsage() const
 {
     uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * enabledAndMustRunCount();
-    std::ranges::for_each(each_enabled_and_not_mustrun(), [&ret](const auto c) { ret += c->memoryUsage(); });
+    std::ranges::for_each(each_enabled_and_not_mustrun(),
+                          [&ret](const auto c) { ret += c->memoryUsage(); });
     return ret;
 }
 
@@ -73,18 +76,22 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
 void ThermalClusterList::rebuildIndex() const
 {
     uint indx = 0;
-    for (auto& c : each_enabled_and_not_mustrun())
+    for (auto& c: each_enabled_and_not_mustrun())
+    {
         c->index = indx++;
+    }
 }
 
 unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
 {
-    return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && !c->isMustRun(); });
+    return std::ranges::count_if(allClusters_,
+                                 [](auto c) { return c->isEnabled() && !c->isMustRun(); });
 }
 
 unsigned int ThermalClusterList::enabledAndMustRunCount() const
 {
-    return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && c->isMustRun(); });
+    return std::ranges::count_if(allClusters_,
+                                 [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
 
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
@@ -98,19 +105,25 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     study.buffer.clear() << folder << SEP << "list.ini";
     IniFile ini;
     if (!ini.open(study.buffer))
+    {
         return false;
+    }
 
     bool ret = true;
 
     if (!ini.firstSection)
+    {
         return ret;
+    }
 
     String modulationFile;
 
     for (auto* section = ini.firstSection; section; section = section->next)
     {
         if (section->name.empty())
+        {
             continue;
+        }
 
         auto cluster = std::make_shared<ThermalCluster>(area);
 
@@ -137,48 +150,22 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
 
         // Modulation
-        modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro"
-                               << SEP << cluster->parentArea->id << SEP << cluster->id()
-                               << SEP << "modulation." << study.inputExtension;
-
+        modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                               << cluster->parentArea->id << SEP << cluster->id() << SEP
+                               << "modulation." << study.inputExtension;
 
         enum
         {
             options = Matrix<>::optFixedSize,
         };
-        bool r = cluster->modulation.loadFromCSVFile(
-                modulationFile, thermalModulationMax, HOURS_PER_YEAR, options);
-        if (!r && study.usedByTheSolver)
-        {
-            cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
-            cluster->modulation.fill(1.);
-            cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
-        }
-        ret = ret && r;
 
-        // Special operations when not ran from the interface (aka solver)
-        if (study.usedByTheSolver)
-        {
-            if (!study.parameters.include.thermal.minStablePower)
-                cluster->minStablePower = 0.;
-            if (!study.parameters.include.thermal.minUPTime)
-            {
-                cluster->minUpDownTime = 1;
-                cluster->minUpTime = 1;
-                cluster->minDownTime = 1;
-            }
-            else
-                cluster->minUpDownTime
-                  = std::max(cluster->minUpTime, cluster->minDownTime);
-
-            if (!study.parameters.include.reserve.spinning)
-                cluster->spinning = 0;
-
-            cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
-        }
+        ret = cluster->modulation.loadFromCSVFile(modulationFile,
+                                                  thermalModulationMax,
+                                                  HOURS_PER_YEAR,
+                                                  options)
+              && ret;
 
         // Check the data integrity of the cluster
-        cluster->integrityCheck();
         addToCompleteList(cluster);
     }
 
@@ -188,18 +175,64 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     return ret;
 }
 
+bool ThermalClusterList::validateClusters(const Parameters& parameters) const
+{
+    bool ret = true;
+
+    for (const auto& cluster: allClusters_)
+    {
+        cluster->minUpTime = std::clamp(cluster->minUpTime, 1u, 168u);
+        cluster->minDownTime = std::clamp(cluster->minDownTime, 1u, 168u);
+
+        // update the minUpDownTime
+        cluster->minUpDownTime = std::max(cluster->minUpTime, cluster->minDownTime);
+
+        if (!parameters.include.thermal.minStablePower)
+        {
+            cluster->minStablePower = 0.;
+        }
+        if (!parameters.include.thermal.minUPTime)
+        {
+            cluster->minUpDownTime = 1;
+            cluster->minUpTime = 1;
+            cluster->minDownTime = 1;
+        }
+
+        if (!parameters.include.reserve.spinning)
+        {
+            cluster->spinning = 0;
+        }
+
+        cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
+
+        ret = cluster->integrityCheck() && ret;
+    }
+
+    return ret;
+}
+
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
+    {
         return false;
+    }
     if (p->key == "costgeneration")
+    {
         return p->value.to(cluster.costgeneration);
+    }
     if (p->key == "enabled")
+    {
         return p->value.to<bool>(cluster.enabled);
+    }
     if (p->key == "efficiency")
+    {
         return p->value.to<double>(cluster.fuelEfficiency);
+    }
     if (p->key == "fixed-cost")
+    {
         return p->value.to<double>(cluster.fixedCost);
+    }
 
     if (p->key == "group")
     {
@@ -211,54 +244,60 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to(cluster.tsGenBehavior);
     }
     if (p->key == "law.planned")
+    {
         return p->value.to(cluster.plannedLaw);
+    }
     if (p->key == "law.forced")
+    {
         return p->value.to(cluster.forcedLaw);
+    }
     if (p->key == "market-bid-cost")
+    {
         return p->value.to<double>(cluster.marketBidCost);
+    }
     if (p->key == "marginal-cost")
+    {
         return p->value.to<double>(cluster.marginalCost);
+    }
     if (p->key == "must-run")
+    {
         // mustrunOrigin will be initialized later, after LoadFromSection
         return p->value.to<bool>(cluster.mustrun);
+    }
     if (p->key == "min-stable-power")
+    {
         return p->value.to<double>(cluster.minStablePower);
+    }
 
     if (p->key == "min-up-time")
     {
-        if (p->value.to<uint>(cluster.minUpTime))
-        {
-            if (cluster.minUpTime < 1)
-                cluster.minUpTime = 1;
-            if (cluster.minUpTime > 168)
-                cluster.minUpTime = 168;
-            return true;
-        }
-        return false;
+        return p->value.to<uint>(cluster.minUpTime);
     }
     if (p->key == "min-down-time")
     {
-        if (p->value.to<uint>(cluster.minDownTime))
-        {
-            if (cluster.minDownTime < 1)
-                cluster.minDownTime = 1;
-            if (cluster.minDownTime > 168)
-                cluster.minDownTime = 168;
-            return true;
-        }
-        return false;
+        return p->value.to<uint>(cluster.minDownTime);
     }
     if (p->key == "name")
+    {
         return true; // silently ignore it
+    }
     if (p->key == "nominalcapacity")
+    {
         return p->value.to<double>(cluster.nominalCapacity);
+    }
 
     if (p->key == "spread-cost")
+    {
         return p->value.to<double>(cluster.spreadCost);
+    }
     if (p->key == "spinning")
+    {
         return p->value.to<double>(cluster.spinning);
+    }
     if (p->key == "startup-cost")
+    {
         return p->value.to<double>(cluster.startupCost);
+    }
 
     // initialize the ramping attributes only if ramping is enabled, else ignore these properties
     if (p->key == "power-increase-cost")
@@ -278,17 +317,27 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return true;
 
     if (p->key == "unitcount")
+    {
         return p->value.to<uint>(cluster.unitCount);
+    }
     if (p->key == "volatility.planned")
+    {
         return p->value.to(cluster.plannedVolatility);
+    }
     if (p->key == "volatility.forced")
+    {
         return p->value.to(cluster.forcedVolatility);
+    }
     if (p->key == "variableomcost")
+    {
         return p->value.to<double>(cluster.variableomcost);
+    }
 
-    //pollutant
+    // pollutant
     if (auto it = Pollutant::namesToEnum.find(p->key.c_str()); it != Pollutant::namesToEnum.end())
-        return p->value.to<double> (cluster.emissions.factors[it->second]);
+    {
+        return p->value.to<double>(cluster.emissions.factors[it->second]);
+    }
 
     // The property is unknown
     return false;
@@ -299,7 +348,9 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                    const IniFile::Section& section)
 {
     if (section.name.empty())
+    {
         return false;
+    }
 
     cluster.setName(section.name);
 
@@ -330,35 +381,43 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << property->key << "`: The property is unknown and ignored";
             }
         }
-        // update the minUpDownTime
-        cluster.minUpDownTime = std::max(cluster.minUpTime, cluster.minDownTime);
     }
     return true;
 }
 
 void ThermalClusterList::calculationOfSpinning()
 {
-    for (auto& cluster : each_enabled())
+    for (auto& cluster: each_enabled())
+    {
         cluster->calculationOfSpinning();
+    }
 }
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    for (auto& cluster : each_enabled())
+    for (auto& cluster: each_enabled())
+    {
         cluster->reverseCalculationOfSpinning();
+    }
 }
 
 void ThermalClusterList::enableMustrunForEveryone()
 {
-    for (auto& c : allClusters_)
+    for (const auto& c: allClusters_)
+    {
         c->mustrun = true;
+    }
 }
 
 void ThermalClusterList::ensureDataPrepro()
 {
-    for (const auto& c : all())
+    for (const auto& c: all())
+    {
         if (!c->prepro)
-            c->prepro = new PreproThermal(c);
+        {
+            c->prepro = std::make_unique<PreproAvailability>(c->id(), c->unitCount);
+        }
+    }
 }
 
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
@@ -375,7 +434,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
     // Allocate the inifile structure
     IniFile ini;
 
-    for (auto& c : allClusters_)
+    for (auto& c: allClusters_)
     {
         // Adding a section to the inifile
         IniFile::Section* s = ini.addSection(c->name());
@@ -385,13 +444,21 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         s->add("name", c->name());
 
         if (!c->group().empty())
+        {
             s->add("group", c->group());
+        }
         if (!c->enabled)
+        {
             s->add("enabled", "false");
+        }
         if (!Utils::isZero(c->unitCount))
+        {
             s->add("unitCount", c->unitCount);
+        }
         if (!Utils::isZero(c->nominalCapacity))
+        {
             s->add("nominalCapacity", c->nominalCapacity);
+        }
         // TS generation
         if (c->tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
         {
@@ -399,53 +466,87 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         }
         // Min. Stable Power
         if (!Utils::isZero(c->minStablePower))
+        {
             s->add("min-stable-power", c->minStablePower);
+        }
 
         // Min up and min down time
         if (c->minUpTime != 1)
+        {
             s->add("min-up-time", c->minUpTime);
+        }
         if (c->minDownTime != 1)
+        {
             s->add("min-down-time", c->minDownTime);
+        }
 
         // must-run
         if (c->mustrun)
+        {
             s->add("must-run", "true");
+        }
 
         // spinning
         if (!Utils::isZero(c->spinning))
+        {
             s->add("spinning", c->spinning);
+        }
 
         // efficiency
         if (c->fuelEfficiency != 100.0)
+        {
             s->add("efficiency", c->fuelEfficiency);
+        }
 
         // volatility
         if (!Utils::isZero(c->forcedVolatility))
+        {
             s->add("volatility.forced", Utils::round(c->forcedVolatility, 3));
+        }
         if (!Utils::isZero(c->plannedVolatility))
+        {
             s->add("volatility.planned", Utils::round(c->plannedVolatility, 3));
+        }
 
         // laws
-        if (c->forcedLaw != thermalLawUniform)
+        if (c->forcedLaw != LawUniform)
+        {
             s->add("law.forced", c->forcedLaw);
-        if (c->plannedLaw != thermalLawUniform)
+        }
+        if (c->plannedLaw != LawUniform)
+        {
             s->add("law.planned", c->plannedLaw);
+        }
 
         // costs
         if (c->costgeneration != setManually)
+        {
             s->add("costgeneration", c->costgeneration);
+        }
         if (!Utils::isZero(c->marginalCost))
+        {
             s->add("marginal-cost", Utils::round(c->marginalCost, 3));
+        }
         if (!Utils::isZero(c->spreadCost))
+        {
             s->add("spread-cost", c->spreadCost);
+        }
         if (!Utils::isZero(c->fixedCost))
+        {
             s->add("fixed-cost", Utils::round(c->fixedCost, 3));
+        }
         if (!Utils::isZero(c->startupCost))
+        {
             s->add("startup-cost", Utils::round(c->startupCost, 3));
+        }
         if (!Utils::isZero(c->marketBidCost))
+        {
             s->add("market-bid-cost", Utils::round(c->marketBidCost, 3));
+        }
         if (!Utils::isZero(c->variableomcost))
+        {
             s->add("variableomcost", Utils::round(c->variableomcost, 3));
+        }
 
         // ramping (only if ramping is enabled)
         if (c->ramping && c->ramping.value().powerIncreaseCost != 0)
@@ -461,26 +562,28 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
         //pollutant factor
         for (auto const& [key, val] : Pollutant::namesToEnum)
+        {
             s->add(key, c->emissions.factors[val]);
-
+        }
 
         buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-            << c->parentArea->id << SEP << c->id();
+                       << c->parentArea->id << SEP << c->id();
         if (IO::Directory::Create(buffer))
         {
             buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                << c->parentArea->id << SEP << c->id() << SEP << "modulation.txt";
+                           << c->parentArea->id << SEP << c->id() << SEP << "modulation.txt";
 
             ret = c->modulation.saveToCSVFile(buffer) && ret;
         }
         else
+        {
             ret = false;
-
-
-        // Write the ini file
-        buffer.clear() << folder << SEP << "list.ini";
-        ret = ini.save(buffer) && ret;
+        }
     }
+
+    // Write the ini file
+    buffer.clear() << folder << SEP << "list.ini";
+    ret = ini.save(buffer) && ret;
 
     return ret;
 }
@@ -490,7 +593,7 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto& c : allClusters_)
+    for (auto& c: allClusters_)
     {
         if (c->prepro)
         {
@@ -507,7 +610,7 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto& c : allClusters_)
+    for (auto& c: allClusters_)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
@@ -516,45 +619,64 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     return ret;
 }
 
-bool ThermalClusterList::loadPreproFromFolder(Study& study,
-                                              const AnyString& folder)
+bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& folder)
 {
-    const bool globalThermalTSgeneration
-        = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
-
     Clob buffer;
-    auto hasPrepro = [](auto c) { return (bool) c->prepro; };
+    auto hasPrepro = [](auto c) { return (bool)c->prepro; };
 
-    auto loadAndCheckPrepro = [&buffer, &folder, &study, &globalThermalTSgeneration](auto c)
+    auto loadPrepro = [&buffer, &folder, &study](auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
-        bool result = c->prepro->loadFromFolder(study, buffer);
-
-        if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
-        {
-            result = c->prepro->normalizeAndCheckNPO();
-        }
-        return result;
+        return c->prepro->loadFromFolder(study, buffer);
     };
 
+    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadPrepro);
+}
+
+bool ThermalClusterList::validatePrepro(const Study& study)
+{
+    auto hasPrepro = [](auto c) { return (bool)c->prepro; };
+
+    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
+                                           & timeSeriesThermal;
+
+    if (!study.usedByTheSolver)
+    {
+        return true;
+    }
+
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro),
-                               loadAndCheckPrepro);
+                               [&globalThermalTSgeneration](auto& c)
+                               {
+                                   if (globalThermalTSgeneration && !c->prepro->validate())
+                                   {
+                                       return false;
+                                   }
+
+                                   if (c->doWeGenerateTS(globalThermalTSgeneration))
+                                   {
+                                       return c->prepro->normalizeAndCheckNPO();
+                                   }
+                                   return true;
+                               });
 }
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
 {
-    return std::ranges::all_of(allClusters_, [&study, folder](const auto& c)
-    {
-        assert(c->parentArea && "cluster: invalid parent area");
-        Clob buffer;
-        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
+    return std::ranges::all_of(allClusters_,
+                               [&study, folder](const auto& c)
+                               {
+                                   assert(c->parentArea && "cluster: invalid parent area");
+                                   Clob buffer;
+                                   buffer.clear()
+                                     << folder << SEP << c->parentArea->id << SEP << c->id();
 
-        bool result = c->ecoInput.loadFromFolder(study, buffer);
-        c->ComputeCostTimeSeries();
-        return result;
-    });
+                                   bool result = c->ecoInput.loadFromFolder(study, buffer);
+                                   c->ComputeCostTimeSeries();
+                                   return result;
+                               });
 }
 
 } // namespace Data

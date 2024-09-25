@@ -103,6 +103,8 @@
 
 #include <assert.h>
 
+#include "yuni/platform.h"
+
 #define YUNI_OS_FLAG_WINDOWS 0
 #define YUNI_OS_FLAG_UNIX 0
 #define YUNI_OS_FLAG_LINUX 0

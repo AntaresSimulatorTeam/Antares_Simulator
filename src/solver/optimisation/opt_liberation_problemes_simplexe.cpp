@@ -19,14 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-
 #include "antares/solver/optimisation/opt_fonctions.h"
-
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/simulation.h"
 #include "antares/solver/utils/ortools_utils.h"
 
 extern "C"
@@ -36,37 +32,43 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO* problemeHebdo)
+void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
+                                     const PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
+    {
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    }
     else
+    {
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
+    }
 
     int nbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (!ProblemeAResoudre)
+    {
         return;
+    }
 
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
-            auto ProbSpx
-              = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
+            auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
             auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
 
-            if (options.useOrtools && solver != NULL)
+            if (options.ortoolsUsed && solver)
             {
                 ORTOOLS_LibererProbleme(solver);
-                solver = NULL;
+                solver = nullptr;
             }
-            else if (ProbSpx != NULL)
+            else if (ProbSpx)
             {
                 SPX_LibererProbleme(ProbSpx);
-                ProbSpx = NULL;
+                ProbSpx = nullptr;
             }
         }
     }

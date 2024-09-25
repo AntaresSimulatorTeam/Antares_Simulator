@@ -62,7 +62,7 @@ static void updateButton(Component::Button* button, bool value, std::string_view
         type = (buttonType == "pto") ? 'P' : 'S';
     }
 
-    assert(button != NULL);
+    assert(button);
     if (value)
     {
         switch (type)
@@ -165,28 +165,12 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
+                     PopupInfo(study.parameters.adqPatchParams.setToZeroOutsideInsideLinks,
                                wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnNTCfromOutToInAdqPatch = button;
-    }
-    // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
-    // Used in the first step of adequacy patch local matching rule.
-    {
-        label = Component::CreateLabel(this, wxT("NTC between physical areas outside adequacy patch"));
-        button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
-        button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        onPopup.bind(this,
-                     &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.adqPatchParams.localMatching.setToZeroOutsideOutsideLinks,
-                               wxT("NTC")));
-        button->onPopupMenu(onPopup);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnNTCfromOutToOutAdqPatch = button;
     }
     // PTO (Price Taking Order). User can choose between DENS and Load
     {
@@ -360,12 +344,7 @@ void AdequacyPatchOptions::refresh()
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
     buttonType = "ntc";
     updateButton(pBtnNTCfromOutToInAdqPatch,
-                 study.parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks,
-                 buttonType);
-    // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
-    // adequacy patch local matching rule.
-    updateButton(pBtnNTCfromOutToOutAdqPatch,
-                 study.parameters.adqPatchParams.localMatching.setToZeroOutsideOutsideLinks,
+                 study.parameters.adqPatchParams.setToZeroOutsideInsideLinks,
                  buttonType);
     // Price taking order (PTO) for adequacy patch
     buttonType = "pto";

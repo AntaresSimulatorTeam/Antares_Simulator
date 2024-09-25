@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/simulation/solver.data.h"
+
 #include <antares/study/parameters.h>
 
 namespace Antares::Solver::Private::Simulation

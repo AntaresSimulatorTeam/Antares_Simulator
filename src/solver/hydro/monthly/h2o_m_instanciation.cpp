@@ -46,12 +46,12 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeReservoirs, nullptr);
 
-    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
+                                                                 .CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
+                                                                  .ProblemeLineairePartieFixe;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-        = ProblemeHydraulique.ProblemeLineairePartieVariable;
+      = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     CorrespondanceDesVariables.NumeroDeVariableVolume.assign(NbPdt, 0);
     CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(NbPdt, 0);
@@ -103,8 +103,8 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
 
     ProblemeLineairePartieFixe.NombreDeTermesAlloues = NombreDeTermesAlloues;
 
-    ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes
-        .assign(NombreDeTermesAlloues, 0.);
+    ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes.assign(NombreDeTermesAlloues,
+                                                                            0.);
 
     ProblemeLineairePartieFixe.IndicesColonnes.assign(NombreDeTermesAlloues, 0);
 
@@ -113,10 +113,9 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieVariable.SecondMembre.assign(NombreDeContraintes, 0.);
 
     ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
-        .assign(NombreDeVariables, nullptr);
+      .assign(NombreDeVariables, nullptr);
 
     ProblemeLineairePartieVariable.X.assign(NombreDeVariables, 0.);
-
 
     ProblemeLineairePartieVariable.PositionDeLaVariable.assign(NombreDeVariables, 0);
     ProblemeLineairePartieVariable.ComplementDeLaBase.assign(NombreDeContraintes, 0);

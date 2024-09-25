@@ -20,13 +20,16 @@
 */
 
 #include "antares/solver/optimisation/opt_rename_problem.h"
+
+#include <map>
 #include <sstream>
 
 const std::string HOUR("hour");
 const std::string DAY("day");
 const std::string WEEK("week");
-const std::map<std::string, std::string> BindingConstraintTimeGranularity
-  = {{HOUR, "hourly"}, {DAY, "daily"}, {WEEK, "weekly"}};
+const std::map<std::string, std::string> BindingConstraintTimeGranularity = {{HOUR, "hourly"},
+                                                                             {DAY, "daily"},
+                                                                             {WEEK, "weekly"}};
 const std::string LINK("link");
 const std::string AREA("area");
 
@@ -42,9 +45,10 @@ std::string BuildName(const std::string& name,
 void Namer::SetLinkElementName(unsigned int element, const std::string& elementType)
 {
     const auto location = origin_ + AREA_SEP + destination_;
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName(elementType, LocationIdentifier(location, LINK), TimeIdentifier(timeStep_, HOUR)),
-      element);
+    targetUpdater_.UpdateTargetAtIndex(BuildName(elementType,
+                                                 LocationIdentifier(location, LINK),
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       element);
 }
 
 void Namer::SetAreaElementNameHour(unsigned int element, const std::string& elementType)
@@ -61,10 +65,10 @@ void Namer::SetAreaElementName(unsigned int element,
                                const std::string& elementType,
                                const std::string& timeStepType)
 {
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName(
-        elementType, LocationIdentifier(area_, AREA), TimeIdentifier(timeStep_, timeStepType)),
-      element);
+    targetUpdater_.UpdateTargetAtIndex(BuildName(elementType,
+                                                 LocationIdentifier(area_, AREA),
+                                                 TimeIdentifier(timeStep_, timeStepType)),
+                                       element);
 }
 
 void VariableNamer::SetAreaVariableName(unsigned int variable,
@@ -82,11 +86,13 @@ void Namer::SetThermalClusterElementName(unsigned int variable,
                                          const std::string& elementType,
                                          const std::string& clusterName)
 {
-    const auto location
-      = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<" + clusterName + ">";
+    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<"
+                          + clusterName + ">";
 
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+    targetUpdater_.UpdateTargetAtIndex(BuildName(elementType,
+                                                 location,
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       variable);
 }
 
 void VariableNamer::DispatchableProduction(unsigned int variable, const std::string& clusterName)
@@ -162,8 +168,10 @@ void VariableNamer::SetShortTermStorageVariableName(unsigned int variable,
 {
     const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<"
                           + shortTermStorageName + ">";
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName(variableType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+    targetUpdater_.UpdateTargetAtIndex(BuildName(variableType,
+                                                 location,
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       variable);
 }
 
 void VariableNamer::ShortTermStorageInjection(unsigned int variable,
@@ -326,9 +334,10 @@ void ConstraintNamer::nameWithTimeGranularity(unsigned int constraint,
                                               const std::string& name,
                                               const std::string& type)
 {
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName(name, BindingConstraintTimeGranularity.at(type), TimeIdentifier(timeStep_, type)),
-      constraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName(name,
+                                                 BindingConstraintTimeGranularity.at(type),
+                                                 TimeIdentifier(timeStep_, type)),
+                                       constraint);
 }
 
 void ConstraintNamer::NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint,
@@ -384,11 +393,11 @@ void ConstraintNamer::ConsistenceNODU(unsigned int constraint, const std::string
 
 void ConstraintNamer::ShortTermStorageLevel(unsigned int constraint, const std::string& name)
 {
-    targetUpdater_.UpdateTargetAtIndex(
-      BuildName("Level",
-                LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<" + name + ">",
-                TimeIdentifier(timeStep_, HOUR)),
-      constraint);
+    targetUpdater_.UpdateTargetAtIndex(BuildName("Level",
+                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                   + "ShortTermStorage" + "<" + name + ">",
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       constraint);
 }
 
 void ConstraintNamer::BindingConstraintHour(unsigned int constraint, const std::string& name)

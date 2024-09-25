@@ -22,8 +22,8 @@
 #define __ANTARES_LIBS_ADMIN_POLICY_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <yuni/core/singleton.h>
+#include <yuni/core/string.h>
 
 /*!
 ** \brief Local policy settings

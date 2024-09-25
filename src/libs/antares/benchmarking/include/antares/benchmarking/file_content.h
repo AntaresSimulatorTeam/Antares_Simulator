@@ -20,9 +20,9 @@
 */
 #pragma once
 
-#include <string>
-#include <mutex>
 #include <map>
+#include <mutex>
+#include <string>
 
 namespace Benchmarking
 {

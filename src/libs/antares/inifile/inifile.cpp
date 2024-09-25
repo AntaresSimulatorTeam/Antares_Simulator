@@ -21,131 +21,54 @@
 
 #include "antares/inifile/inifile.h"
 
-#include <antares/logs/logs.h>
-#include <antares/io/statistics.h>
+#include <filesystem>
+#include <fstream>
 #include <sstream>
+#include <utility>
+
+#include <boost/algorithm/string.hpp>
+
+#include <antares/io/statistics.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 namespace Antares
 {
-static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
-                                               IniFile* d,
-                                               IniFile::Section* section,
-                                               char* line,
-                                               uint64_t& read)
-{
-    enum Type
-    {
-        typeUnknown = 0,
-        typeSection = 1,
-        typeProperty = 2,
-    };
 
-    uint bytesRead = 0;
-    Type type = typeUnknown;
-    char* p = line;
-    const char* key = line;
-    const char* value = nullptr;
-
-    while ('\0' != *p)
-    {
-        ++bytesRead;
-        if (typeUnknown == type)
-        {
-            if ('[' == *p)
-            {
-                type = typeSection;
-                ++p;
-                value = p;
-                continue;
-            }
-            else if ('=' == *p)
-            {
-                type = typeProperty;
-                *p = '\0';
-                ++p;
-                value = p;
-                continue;
-            }
-        }
-        else
-        {
-            if (typeSection == type)
-            {
-                if (']' == *p)
-                {
-                    *p = '\0';
-                    break;
-                }
-            }
-            else
-            {
-                if (('\n' == *p)
-                    or ('\r' == *p)) // or (*p == '/' and ('/' == *(p + 1) or '*' == *(p + 1))))
-                {
-                    *p = '\0';
-                    break;
-                }
-            }
-        }
-        ++p;
-    }
-
-    read += bytesRead;
-
-    if (typeProperty == type)
-    {
-        if (section and *value != '\0' and value)
-            section->add(key, value);
-        return section;
-    }
-    if (typeSection == type and value and '\0' != *value)
-        return d->addSection(value);
-
-    CString<255, false> k = key;
-    k.trim(" \r\n\t");
-    if (not k.empty() and k[0] != ';' and k[0] != '#')
-    {
-        logs.error() << pFilename << ": invalid INI format. Got a key without any value '" << k
-                     << "'";
-    }
-    return section;
-}
-
-IniFile::Property::Property(const AnyString& key) : key(key), next(nullptr)
+IniFile::Property::Property(const AnyString& key):
+    key(key)
 {
     this->key.trim();
     this->key.toLower();
 }
 
-IniFile::Property::Property() : next(nullptr)
-{
-}
-
-IniFile::Property::~Property()
-{
-}
-
-template<class StreamT>
-inline void IniFile::Property::saveToStream(StreamT& file, uint64_t& written) const
+inline void IniFile::Property::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
     written += key.size() + value.size() + 4;
-    file << key << " = " << value << '\n';
+    stream_out << key << " = " << value << '\n';
 }
 
-template<class StreamT>
-void IniFile::Section::saveToStream(StreamT& file, uint64_t& written) const
+void IniFile::Section::add(const Property& property)
+{
+    add(property.key, property.value);
+}
+
+void IniFile::Section::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
     if (!firstProperty)
+    {
         return;
-    file << '[' << name << "]\n";
+    }
+    stream_out << '[' << name << "]\n";
     written += 4 /* []\n\n */ + name.size();
 
-    for (auto* property = firstProperty; property; property = property->next)
-        property->saveToStream(file, written);
+    each([&stream_out, &written](const IniFile::Property& p)
+         { p.saveToStream(stream_out, written); });
 
-    file << '\n';
+    stream_out << '\n';
 }
 
 IniFile::Section::~Section()
@@ -163,11 +86,7 @@ IniFile::Section::~Section()
     }
 }
 
-IniFile::IniFile() : firstSection(nullptr), lastSection(nullptr)
-{
-}
-
-IniFile::IniFile(const AnyString& filename) : firstSection(nullptr), lastSection(nullptr)
+IniFile::IniFile(const fs::path& filename)
 {
     open(filename);
 }
@@ -224,7 +143,9 @@ void IniFile::clear()
 uint IniFile::Section::size() const
 {
     if (!firstProperty)
+    {
         return 0;
+    }
     uint count = 0;
     auto* p = firstProperty;
     do
@@ -235,80 +156,148 @@ uint IniFile::Section::size() const
     return count;
 }
 
-bool IniFile::open(const AnyString& filename, bool warnings)
+static bool isStartingSection(std::string line)
 {
-    // clear
-    clear();
-    pFilename = filename;
+    boost::trim(line);
+    return line.starts_with("[") && line.ends_with("]");
+}
 
-    // Load the file
-    IO::File::Stream file;
-    if (file.open(filename))
+static std::string getSectionName(const std::string& line)
+{
+    std::vector<std::string> splitLine;
+    boost::split(splitLine, line, boost::is_any_of("[]"));
+    return splitLine[1];
+}
+
+static bool isProperty(std::string_view line)
+{
+    return std::ranges::count(line, '=') == 1;
+}
+
+static IniFile::Property getProperty(std::string line)
+{
+    boost::trim(line);
+    std::vector<std::string> splitLine;
+    boost::split(splitLine, line, boost::is_any_of("="));
+
+    return IniFile::Property(splitLine[0], splitLine[1]);
+}
+
+static bool isComment(std::string line)
+{
+    boost::trim_left(line);
+    return line.starts_with("#") || line.starts_with(";");
+}
+
+bool isEmpty(std::string line)
+{
+    boost::trim(line);
+    return line.empty();
+}
+
+bool IniFile::readStream(std::istream& in_stream)
+{
+    std::string line;
+    IniFile::Section* currentSection(nullptr);
+    uint64_t read = 0;
+    while (std::getline(in_stream, line))
     {
-        enum
+        read += line.size();
+        if (isStartingSection(line))
         {
-            lineHardLimit = 2048
-        };
-        auto* line = new char[lineHardLimit];
+            currentSection = addSection(getSectionName(line));
+            continue;
+        }
 
-        IniFile::Section* lastSection = nullptr;
-        uint64_t read = 0;
+        if (isProperty(line))
+        {
+            // Note : if a property not in a section, it's simply skipped
+            if (currentSection)
+            {
+                currentSection->add(getProperty(line));
+            }
+            continue;
+        }
 
-        // analyzing each line
-        while (file.readline(line, lineHardLimit))
-            lastSection = AnalyzeIniLine(pFilename, this, lastSection, line, read);
+        if (isComment(line) || isEmpty(line))
+        {
+            continue;
+        }
 
-        delete[] line;
+        logs.error() << "INI content : unknown format for line '" << line << "'";
+        return false;
+    }
+    if (read)
+    {
+        Statistics::HasReadFromDisk(read);
+    }
 
-        if (read)
-            Statistics::HasReadFromDisk(read);
+    return true;
+}
+
+bool IniFile::open(const std::string& filename, bool warnings)
+{
+    fs::path filepath = filename;
+    return open(filepath, warnings);
+}
+
+bool IniFile::open(const fs::path& filename, bool warnings)
+{
+    clear();
+    filename_ = filename.string(); // storing filename for further use
+
+    if (std::ifstream file(filename); file.is_open())
+    {
+        if (!readStream(file))
+        {
+            logs.error() << "Invalid INI file : " << filename;
+            return false;
+        }
         return true;
     }
 
-    // Error
     if (warnings)
+    {
         logs.error() << "I/O error: " << filename << ": Impossible to read the file";
-    pFilename.clear();
+    }
     return false;
 }
 
-void IniFile::saveToString(std::string& str) const
+void IniFile::saveToStream(std::ostream& stream_out, uint64_t& written) const
+{
+    each([&stream_out, &written](const IniFile::Section& s)
+         { s.saveToStream(stream_out, written); });
+
+    if (written != 0)
+    {
+        Statistics::HasWrittenToDisk(written);
+    }
+}
+
+std::string IniFile::toString() const
 {
     uint64_t written = 0;
     std::ostringstream ostream;
-    // save all sections
-    for (auto* section = firstSection; section; section = section->next)
-        section->saveToStream(ostream, written);
 
-    if (written != 0)
-        Statistics::HasWrittenToDisk(written);
+    this->saveToStream(ostream, written);
 
-    str = ostream.str();
+    return ostream.str();
 }
 
 bool IniFile::save(const AnyString& filename) const
 {
     logs.debug() << "  :: writing `" << filename << '`';
-    IO::File::Stream f;
-    if (f.openRW(filename))
+
+    std::ofstream of(filename.to<std::string>());
+    if (of.good())
     {
-        pFilename = filename;
         uint64_t written = 0;
-
-        // save all sections
-        for (auto* section = firstSection; section; section = section->next)
-            section->saveToStream(f, written);
-
-        if (written != 0)
-            Statistics::HasWrittenToDisk(written);
+        this->saveToStream(of, written);
         return true;
     }
-    else
-    {
-        pFilename.clear();
-        logs.error() << "I/O error: " << filename << ": Impossible to write the file";
-        return false;
-    }
+
+    logs.error() << "I/O error: " << filename << ": Impossible to write the file";
+    return false;
 }
 
 IniFile::Property* IniFile::Section::find(const AnyString& key)
@@ -316,7 +305,9 @@ IniFile::Property* IniFile::Section::find(const AnyString& key)
     for (auto* property = firstProperty; property; property = property->next)
     {
         if (property->key == key)
+        {
             return property;
+        }
     }
     return nullptr;
 }
@@ -326,7 +317,9 @@ const IniFile::Property* IniFile::Section::find(const AnyString& key) const
     for (auto* property = firstProperty; property; property = property->next)
     {
         if (property->key == key)
+        {
             return property;
+        }
     }
     return nullptr;
 }
@@ -336,7 +329,9 @@ IniFile::Section* IniFile::find(const AnyString& name)
     for (auto* section = firstSection; section; section = section->next)
     {
         if (section->name == name)
+        {
             return section;
+        }
     }
     return nullptr;
 }
@@ -346,7 +341,9 @@ const IniFile::Section* IniFile::find(const AnyString& name) const
     for (auto* section = firstSection; section; section = section->next)
     {
         if (section->name == name)
+        {
             return section;
+        }
     }
     return nullptr;
 }

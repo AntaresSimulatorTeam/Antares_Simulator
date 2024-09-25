@@ -30,7 +30,7 @@ namespace Filter
 namespace Operator
 {
 AOperator::AOperator(AFilterBase* parent, const wxChar* name, const wxChar* caption) :
- pParentFilter(parent), pName(name), pCaption(caption), pSizer(NULL)
+ pParentFilter(parent), pName(name), pCaption(caption), pSizer(nullptr)
 {
     parameters.push_back(Parameter(*this).presetInt());
 }

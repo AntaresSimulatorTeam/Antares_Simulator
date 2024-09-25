@@ -21,13 +21,14 @@
 #ifndef __MODIFIED_INODE_H__
 #define __MODIFIED_INODE_H__
 
-#include <mutex>
 #include <fswalker/fswalker.h>
+#include <mutex>
 
-class ModifiedINode : public FSWalker::IExtension
+class ModifiedINode: public FSWalker::IExtension
 {
 public:
     ModifiedINode(int64_t dateLimit);
+
     virtual ~ModifiedINode()
     {
     }

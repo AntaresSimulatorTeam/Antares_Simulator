@@ -19,19 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include "antares/locator/locator.h"
-#include "antares/resources/resources.h"
-#include "antares/config/config.h"
+
+#include <yuni/yuni.h>
 #include "yuni/io/filename-manipulation.h"
+#include <yuni/core/string.h>
 #include <yuni/io/searchpath.h>
 
-using namespace Yuni;
+#include "antares/config/config.h"
+#include "antares/resources/resources.h"
 
-#define SEP \
-    Yuni:;  \
-    IO::Separator
+using namespace Yuni;
 
 namespace Antares::Solver
 {
@@ -58,7 +56,7 @@ bool FindLocation(String& location)
 #ifdef NDEBUG
         searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Release"); // msvc
 #else
-        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Debug");   // msvc
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Debug"); // msvc
 #endif
 
         searchpaths.directories.push_back((s = root) << "\\..\\..\\solver"); // mingw
@@ -199,4 +197,3 @@ bool FindYearByYearAggregator(Yuni::String& location)
 }
 
 } // namespace Antares::Solver
-

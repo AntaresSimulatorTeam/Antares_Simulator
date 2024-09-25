@@ -20,7 +20,6 @@
 */
 
 #include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/optimisation/LinearProblemMatrixRamping.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 

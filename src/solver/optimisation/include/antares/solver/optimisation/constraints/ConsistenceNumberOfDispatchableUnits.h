@@ -25,14 +25,15 @@
 /*!
  * represent 'Consistence Number Of Dispatchable Units Constraint' type
  */
-class ConsistenceNumberOfDispatchableUnits : private ConstraintFactory
+class ConsistenceNumberOfDispatchableUnits: private ConstraintFactory
 {
 public:
-    ConsistenceNumberOfDispatchableUnits(ConstraintBuilder& builder,
-                                         StartUpCostsData& data) :
-     ConstraintFactory(builder), data(data)
+    ConsistenceNumberOfDispatchableUnits(ConstraintBuilder& builder, StartUpCostsData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area

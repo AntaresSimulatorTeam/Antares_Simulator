@@ -39,13 +39,12 @@ void CsrFlowDissociation::add()
               .IntercoDirectCost(interco, -1.0)
               .IntercoIndirectCost(interco, 1.0);
 
-            data.numberOfConstraintCsrFlowDissociation[interco]
-              = builder.data.nombreDeContraintes;
+            data.numberOfConstraintCsrFlowDissociation[interco] = builder.data.nombreDeContraintes;
 
-            const auto& origin
-              = builder.data.NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
-            const auto& destination
-              = builder.data.NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
+            const auto& origin = builder.data
+                                   .NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
+            const auto& destination = builder.data
+                                        .NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
             namer.CsrFlowDissociation(builder.data.nombreDeContraintes, origin, destination);
             builder.equalTo();
             builder.build();

@@ -38,7 +38,7 @@ namespace Filter
 namespace Operator
 {
 Parameter::Parameter(AOperator& parent) :
- pOperator(parent), dataType(DataType::dtNone), pSizer(NULL)
+ pOperator(parent), dataType(DataType::dtNone), pSizer(nullptr)
 {
 }
 
@@ -50,7 +50,7 @@ Parameter::Parameter(const Parameter& copy) :
  dataType(copy.dataType),
  defaultValues(copy.defaultValues),
  value(copy.value),
- pSizer(NULL)
+ pSizer(nullptr)
 {
 }
 
@@ -70,7 +70,7 @@ Parameter& Parameter::operator=(const Parameter& copy)
 
 wxSizer* Parameter::sizer(wxWindow* parent)
 {
-    if (NULL == pSizer)
+    if (nullptr == pSizer)
     {
         pSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -95,7 +95,7 @@ wxSizer* Parameter::sizer(wxWindow* parent)
             ch->Connect(ch->GetId(),
                         wxEVT_COMMAND_CHOICE_SELECTED,
                         wxCommandEventHandler(Parameter::onListChanged),
-                        NULL,
+                        nullptr,
                         this);
             break;
         }
@@ -125,7 +125,7 @@ wxSizer* Parameter::sizer(wxWindow* parent)
             edit->Connect(edit->GetId(),
                           wxEVT_COMMAND_TEXT_UPDATED,
                           wxCommandEventHandler(Parameter::onChange),
-                          NULL,
+                          nullptr,
                           this);
         }
         }

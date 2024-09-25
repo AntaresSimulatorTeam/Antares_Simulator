@@ -19,23 +19,21 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "constraints/ConstraintGroup.h"
+
 #include "ProblemMatrixEssential.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "constraints/PMinMaxDispatchableGenerationGroup.h"
 #include "constraints/ConsistenceNumberOfDispatchableUnitsGroup.h"
-#include "constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h"
-#include "constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h"
+#include "constraints/ConstraintGroup.h"
 #include "constraints/MinDownTimeGroup.h"
-
-#include <antares/study/study.h>
+#include "constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h"
+#include "constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h"
+#include "constraints/PMinMaxDispatchableGenerationGroup.h"
 
 using namespace Antares::Data;
 
-class LinearProblemMatrixStartUpCosts : public ProblemMatrixEssential
+class LinearProblemMatrixStartUpCosts: public ProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo,

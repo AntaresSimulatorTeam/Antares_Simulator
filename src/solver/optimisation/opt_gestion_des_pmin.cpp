@@ -18,11 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/simulation.h"
 
 #define ZERO 1.e-2
 
@@ -32,8 +30,7 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
         std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
         for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; palier++)

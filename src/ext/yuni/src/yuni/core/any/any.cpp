@@ -16,7 +16,7 @@ namespace Yuni
 Any::Any()
 {
     pTable = Private::Any::Table<Private::Any::Empty>::Get();
-    pObject = NULL;
+    pObject = nullptr;
 }
 
 Any::Any(const Any& rhs)
@@ -59,7 +59,7 @@ void Any::reset()
     {
         pTable->staticDelete(&pObject);
         pTable = Private::Any::Table<Private::Any::Empty>::Get();
-        pObject = NULL;
+        pObject = nullptr;
     }
 }
 

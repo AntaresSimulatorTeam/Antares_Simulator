@@ -19,9 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/resources/resources.h"
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "antares/resources/resources.h"
+
 #include <antares/logs/logs.h>
 #include "antares/config/config.h"
 
@@ -56,7 +58,9 @@ bool FindFile(Yuni::String& out, const AnyString& filename)
             IO::Normalize(out, tmp);
 
             if (IO::File::Exists(out))
+            {
                 return true;
+            }
         }
     }
     out.clear();
@@ -79,14 +83,18 @@ bool FindExampleFolder(Yuni::String& folder)
     s.clear() << RootFolder << SEP << ".." << SEP << "examples";
     IO::Normalize(folder, s);
     if (IO::Directory::Exists(folder))
+    {
         return true;
+    }
 #else
     // First guess - typical unix install
     s.clear() << RootFolder << SEP << ".." << SEP << "examples";
     s.clear() << "/usr/share/antares/" << ANTARES_VERSION << "/examples";
     IO::Normalize(folder, s);
     if (IO::Directory::Exists(folder))
+    {
         return true;
+    }
 #endif
 
     // Second guess : Dev mode, from the source repository
@@ -94,7 +102,9 @@ bool FindExampleFolder(Yuni::String& folder)
               << SEP << "examples";
     IO::Normalize(folder, s);
     if (IO::Directory::Exists(folder))
+    {
         return true;
+    }
 
 // Other guesses, Dev mode, special folders when ran from the SVN
 // repository and from Visual Studio
@@ -104,14 +114,18 @@ bool FindExampleFolder(Yuni::String& folder)
         s.clear() << RootFolder << "\\..\\Debug\\..\\..\\..\\..\\resources\\examples";
         IO::Normalize(folder, s);
         if (IO::Directory::Exists(folder))
+        {
             return true;
+        }
     }
     else
     {
         s.clear() << RootFolder << "\\..\\Release\\..\\..\\..\\..\\resources\\examples";
         IO::Normalize(folder, s);
         if (IO::Directory::Exists(folder))
+        {
             return true;
+        }
     }
 #endif
 
@@ -120,9 +134,9 @@ bool FindExampleFolder(Yuni::String& folder)
     return false;
 }
 
-void Initialize(int argc, char** argv, bool initializeSearchPath)
+void Initialize(int argc, const char** argv, bool initializeSearchPath)
 {
-    if (argc < 1 or argv[0] == NULL)
+    if (argc < 1 or !argv[0])
     {
         logs.error() << "Impossible to find the root folder";
         return;
@@ -181,7 +195,9 @@ bool FindFirstOf(String& out, const char* const* const list)
             tmp.clear() << SearchPaths[i] << list[j];
             IO::Normalize(out, tmp);
             if (IO::File::Exists(out))
+            {
                 return true;
+            }
         }
     }
     out.clear();

@@ -1,5 +1,4 @@
 project(result-writer)
-find_package(minizip)
 
 add_library(result_writer
         # Helper class
@@ -28,6 +27,8 @@ add_library(Antares::result_writer ALIAS result_writer)
 target_include_directories(result_writer
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
 
 target_link_libraries(result_writer

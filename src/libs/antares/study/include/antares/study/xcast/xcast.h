@@ -21,14 +21,17 @@
 #ifndef __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 #define __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 
-#include <yuni/yuni.h>
-#include <antares/array/matrix.h>
 #include <vector>
+
+#include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
+
+#include <antares/array/matrix.h>
+#include <antares/study/fwd.h>
 
 namespace Antares::Data
 {
-class XCast final : private Yuni::NonCopyable<XCast>
+class XCast final: private Yuni::NonCopyable<XCast>
 {
 public:
     //! Vector
@@ -210,7 +213,6 @@ protected:
 }; // class XCast
 
 } // namespace Antares::Data
-
 
 #include "xcast.hxx"
 
