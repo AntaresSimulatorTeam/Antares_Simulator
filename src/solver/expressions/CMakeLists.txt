@@ -60,6 +60,7 @@ set(SRC_Expressions
 
         include/antares/solver/expressions/Registry.hxx
         include/antares/solver/expressions/IName.h
+        include/antares/solver/expressions/hashable.h
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
