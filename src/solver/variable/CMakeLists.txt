@@ -109,10 +109,9 @@ set(SRC_VARIABLE_ECONOMY
 		economy/STStorageLevelsByCluster.h
 		economy/STStorageCashFlowByCluster.h
 		economy/unsupliedEnergy.h
-        economy/unsupliedEnergyCsr.h
+		economy/unsupliedEnergyCsr.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h
-		economy/spilledEnergyAfterCSR.h
 		economy/dtgMarginAfterCsr.h
 		economy/spilledEnergy.h
 		economy/dispatchableGeneration.h
