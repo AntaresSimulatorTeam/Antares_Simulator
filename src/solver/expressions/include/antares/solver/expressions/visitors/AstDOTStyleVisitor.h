@@ -123,7 +123,8 @@ private:
     void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
 
-    void updateNumberNodesPerType();
+    void computeNumberNodesPerType();
+
     /**
      * @brief Retrieves a unique ID for a given node.
      *

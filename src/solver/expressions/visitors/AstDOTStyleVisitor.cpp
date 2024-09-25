@@ -42,6 +42,17 @@ static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
+void makeLegendTitle(std::ostream& os)
+{
+    os << R"raw(subgraph cluster_legend {
+label = "Legend";
+style = dashed;
+fontsize = 16;
+color = lightgrey;
+node [shape=plaintext];
+
+)raw";
+}
 void ProcessElementLegend(const std::string& element_name, size_t size, std::ostream& os)
 {
     os << "legend_" << element_name << " [ label =\" " << element_name << ": " << size << "\"]\n";
@@ -59,15 +70,6 @@ void GetLegend(std::map<std::string, unsigned int>& nbNodesByType,
     {
         return;
     }
-
-    os << R"raw(subgraph cluster_legend {
-label = "Legend";
-style = dashed;
-fontsize = 16;
-color = lightgrey;
-node [shape=plaintext];
-
-)raw";
 
     ProcessElementLegend(nbNodesByType.begin()->first, nbNodesByType.begin()->second, os);
     for (auto it = std::next(nbNodesByType.begin()); it != nbNodesByType.end(); ++it)
@@ -192,7 +194,7 @@ unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
     return nodeIds_[node];
 }
 
-void AstDOTStyleVisitor::updateNumberNodesPerType()
+void AstDOTStyleVisitor::computeNumberNodesPerType()
 {
     for (const auto& [node,_] : nodeIds_)
     {
@@ -239,12 +241,16 @@ void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_
 
 void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
 {
+    computeNumberNodesPerType();
+
     // Graph title showing the total number of nodes
     os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
     os << "labelloc = \"t\"\n";
-    updateNumberNodesPerType();
+
+    makeLegendTitle(os);
     GetLegend(nbNodesPerType_, os);
     os << "}\n";
+
     nodeCount_ = 0;
     nodeIds_.clear();
     nbNodesPerType_.clear();
