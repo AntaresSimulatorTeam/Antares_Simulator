@@ -115,7 +115,9 @@ public:
     Node* substitute(Node* original)
     {
         PortFieldSubstitutionContext ctx;
-        ctx.portfield.emplace(PortFieldNode("port", "literal"), create<LiteralNode>(10));
+        ctx.portfield.emplace(std::piecewise_construct,
+                              std::forward_as_tuple("port", "literal"),
+                              std::forward_as_tuple(create<LiteralNode>(10)));
 
         PortFieldSubstitutionVisitor sub(*this, ctx);
         return sub.dispatch(original);
