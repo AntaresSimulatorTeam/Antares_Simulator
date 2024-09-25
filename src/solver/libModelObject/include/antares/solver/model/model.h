@@ -21,6 +21,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 #include "constraint.h"
 #include "expression.h"
@@ -41,7 +42,7 @@ public:
     Model();
     ~Model() = default;
 
-    void getAllConstraints();
+    std::vector<Constraint*> getConstraints();
 
 private:
     std::string id_;
