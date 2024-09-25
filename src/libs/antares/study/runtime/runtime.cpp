@@ -343,6 +343,12 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
 
+    transitMoyenInterconnexionsRecalculQuadratique.resize(interconnectionsCount());
+    for (uint i = 0; i != interconnectionsCount(); i++)
+    {
+        transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
+    }
+
     if (not gd.geographicTrimming)
     {
         disableAllFilters(study);

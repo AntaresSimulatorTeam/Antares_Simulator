@@ -207,8 +207,8 @@ find_package(sirius_solver REQUIRED)
 find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
-  FetchContent_Declare(ortools
-    GIT_REPOSITORY "https://github.com/rte-france/or-tools-rte"
+    FetchContent_Declare(ortools-rte
+            GIT_REPOSITORY "https://github.com/rte-france/or-tools-rte.git"
     GIT_TAG ${ORTOOLS_TAG}
     GIT_SHALLOW TRUE
     )
@@ -226,8 +226,11 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   # In mode optimization error analysis, we call Sirius through or-tools
   # So we need to activate Sirius in or-tools configuration (OFF by default)
   set(USE_SIRIUS "ON" CACHE INTERNAL "")
+    set(ortools_REPO "https://github.com/google/or-tools.git")
+    string(REGEX MATCH "^[^-]+" OFFICIAL_TAG ${ORTOOLS_TAG})
+    set(ortools_REF ${OFFICIAL_TAG})
 
-  FetchContent_MakeAvailable(ortools)
+    FetchContent_MakeAvailable(ortools-rte)
 endif()
 
 find_package(minizip-ng QUIET)
@@ -243,7 +246,7 @@ else ()
 endif ()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
-if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
+if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
 endif()
@@ -294,7 +297,7 @@ OMESSAGE("")
 
 
 
-  
+
 # Informations for NSIS
 if(WIN32 OR WIN64)
 	if(MSVC)
@@ -310,7 +313,7 @@ if(WIN32 OR WIN64)
 		set(COMPILER_MARK "m")
 		set(COMPILER_INCLUDE "mingw")
 	endif(MSVC)
-	
+
 	set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
 
 	# Configure file with custom definitions for NSIS.
@@ -318,17 +321,17 @@ if(WIN32 OR WIN64)
 		${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
 	)
-	
+
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
 	)
-	
+
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
 	)
-	
+
 	SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 	# Define system libraries so NSIS can package these files
@@ -349,7 +352,7 @@ if(WIN32 OR WIN64)
 		${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
 		@ONLY
 	)
-	
+
 	#Define cpack install script to checkout examples
 	configure_file(
 		${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
@@ -368,7 +371,7 @@ else()
     if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         get_linux_lsb_release_information()
         message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
-        set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}") 
+        set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
     endif()
 
 	#For now only test deb, need to define several CPACK variable

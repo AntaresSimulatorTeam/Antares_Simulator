@@ -85,7 +85,6 @@ bool Economy::simulationBegin()
 
             weeklyOptProblems_.emplace_back(options,
                                             &pProblemesHebdo[numSpace],
-                                            numSpace,
                                             resultWriter,
                                             simulationObserver_.get());
 
