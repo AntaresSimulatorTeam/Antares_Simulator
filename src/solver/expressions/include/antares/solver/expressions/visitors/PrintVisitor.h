@@ -33,7 +33,7 @@ public:
     std::string name() const override;
 
 private:
-    std::string visit(const Nodes::AddNode* node) override;
+    std::string visit(const Nodes::SumNode* node) override;
     std::string visit(const Nodes::SubtractionNode* node) override;
     std::string visit(const Nodes::MultiplicationNode* node) override;
     std::string visit(const Nodes::DivisionNode* node) override;

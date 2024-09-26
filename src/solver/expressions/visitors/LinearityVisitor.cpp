@@ -21,15 +21,22 @@
 
 #include "antares/solver/expressions/visitors/LinearityVisitor.h"
 
+#include <numeric>
+
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/LinearStatus.h>
 
 namespace Antares::Solver::Visitors
 {
 
-LinearStatus LinearityVisitor::visit(const Nodes::AddNode* node)
+LinearStatus LinearityVisitor::visit(const Nodes::SumNode* node)
 {
-    return dispatch(node->left()) + dispatch(node->right());
+    auto operands = node->getOperands();
+    return std::accumulate(std::begin(operands),
+                           std::end(operands),
+                           LinearStatus::CONSTANT,
+                           [this](LinearStatus sum, Nodes::Node* operand)
+                           { return sum + dispatch(operand); });
 }
 
 LinearStatus LinearityVisitor::visit(const Nodes::SubtractionNode* node)

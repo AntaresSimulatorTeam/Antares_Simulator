@@ -6,6 +6,7 @@ set(SRC_Expressions
         nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
+        nodes/SumNode.cpp
 
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
@@ -15,9 +16,11 @@ set(SRC_Expressions
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
         visitors/SubstitutionVisitor.cpp
+        visitors/AstDOTStyleVisitor.cpp
+        visitors/PortfieldSubstitutionVisitor.cpp
         visitors/InvalidNode.cpp
 
-        include/antares/solver/expressions/nodes/AddNode.h
+        include/antares/solver/expressions/nodes/SumNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/ComparisonNode.h
         include/antares/solver/expressions/nodes/ComponentNode.h
@@ -49,12 +52,13 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/TimeIndexVisitor.h
         include/antares/solver/expressions/visitors/TimeIndex.h
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/AstDOTStyleVisitor.h
+        include/antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/InvalidNode.h
 
         include/antares/solver/expressions/Registry.hxx
         include/antares/solver/expressions/IName.h
 )
-
 
 source_group("expressions" FILES ${SRC_Expressions})
 add_library(antares-solver-expressions
@@ -67,7 +71,17 @@ target_include_directories(antares-solver-expressions
 target_link_libraries(antares-solver-expressions
         PUBLIC
         Antares::logs
+        Boost::headers
+	)
+
+
+add_library(antares-solver-expressions-iterators
+        iterators/pre-order.cpp
+        include/antares/solver/expressions/iterators/pre-order.h
 )
+
+target_link_libraries(antares-solver-expressions-iterators PRIVATE antares-solver-expressions)
+
 install(DIRECTORY include/antares
         DESTINATION "include"
 )

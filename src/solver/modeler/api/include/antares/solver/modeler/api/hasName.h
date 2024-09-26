@@ -18,8 +18,20 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+
 #pragma once
 
-#include <vector>
+#include <string>
 
-extern std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+namespace Antares::Solver::Modeler::Api
+{
+
+/// Inherited by IMipVariable and IMipConstraint
+class IHasName
+{
+public:
+    virtual ~IHasName() = default;
+    virtual const std::string& getName() const = 0;
+};
+
+} // namespace Antares::Solver::Modeler::Api

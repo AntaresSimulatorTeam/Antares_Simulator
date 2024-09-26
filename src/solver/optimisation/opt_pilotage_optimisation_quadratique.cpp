@@ -19,16 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <cmath>
-
 #include "antares/solver/optimisation/QuadraticProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-extern "C"
-{
-#include "spx_fonctions.h"
-}
 
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {

@@ -23,7 +23,8 @@
 namespace Antares::Solver::Nodes
 {
 class Node;
-class AddNode;
+class BinaryNode;
+class SumNode;
 class SubtractionNode;
 class MultiplicationNode;
 class DivisionNode;

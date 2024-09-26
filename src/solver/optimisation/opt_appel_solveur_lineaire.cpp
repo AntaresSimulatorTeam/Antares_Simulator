@@ -19,35 +19,23 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <yuni/yuni.h>
-
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/utils/basis_status.h"
-
-extern "C"
-{
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-#include "srs_api.h"
-}
-
 #include <chrono>
+#include <spx_definition_arguments.h>
+#include <spx_fonctions.h>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
+#include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
 
 using namespace operations_research;
 
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Yuni;
 using Antares::Solver::IResultWriter;
+using Antares::Solver::Optimization::OptimizationOptions;
 
 class TimeMeasurement
 {
@@ -267,11 +255,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
             logs.info() << " Solver: Standard resolution failed";
             logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
+            logs.debug() << " solver: resetting";
 
-            if (Logs::Verbosity::Debug::enabled)
-            {
-                logs.info() << " solver: resetting";
-            }
             return {.success = false,
                     .timeMeasure = timeMeasure,
                     .mps_writer_factory = mps_writer_factory};

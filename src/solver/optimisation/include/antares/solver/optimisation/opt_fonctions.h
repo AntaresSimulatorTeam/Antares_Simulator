@@ -36,7 +36,6 @@ using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
-                                  const AdqPatchParams& adqPatchParams,
                                   Solver::IResultWriter& writer,
                                   Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
@@ -47,7 +46,6 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
-                                                            const AdqPatchParams&,
                                                             const int,
                                                             const int,
                                                             const int);
@@ -56,7 +54,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
-void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
 
 using namespace Antares::Data::AdequacyPatch;
@@ -68,7 +65,6 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
-                                      const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
@@ -89,7 +85,6 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const P
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
-                              const AdqPatchParams& adqPatchParams,
                               Solver::IResultWriter& writer,
                               Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);

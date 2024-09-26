@@ -100,8 +100,8 @@ jobs:
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
            wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
-           rpm -i gh_2.52.0_linux_amd64.rpm         
-           gh --version   
+           rpm -i gh_2.52.0_linux_amd64.rpm
+           gh --version
 
     - name: Configure
       run: |
@@ -146,16 +146,6 @@ jobs:
            cd _build
            cpack -G TGZ
 
-    - name: Installer TGZ push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.tar.gz
-
-    - name: Installer RPM push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.rpm
-
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:
@@ -163,7 +153,7 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
-        
+
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary

@@ -493,7 +493,6 @@ struct PROBLEME_HEBDO
 
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
-    std::vector<double> CoutDeDefaillanceEnReserve;
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;

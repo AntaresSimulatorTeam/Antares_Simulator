@@ -19,19 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/simulation.h"
+#include <spx_fonctions.h>
+
+#include "antares/optimization-options/options.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/ortools_utils.h"
 
-extern "C"
-{
-#include "spx_fonctions.h"
-}
-
-using namespace Antares;
+using namespace Antares::Solver::Optimization;
 
 void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
                                      const PROBLEME_HEBDO* problemeHebdo)
@@ -73,6 +67,4 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
             }
         }
     }
-
-    return;
 }

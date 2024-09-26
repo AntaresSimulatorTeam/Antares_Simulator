@@ -27,6 +27,7 @@
 #include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
+#include <antares/study/fwd.h>
 
 namespace Antares::Data
 {

@@ -32,17 +32,14 @@ class WeeklyOptimization
 public:
     WeeklyOptimization(const OptimizationOptions& options,
                        PROBLEME_HEBDO* problemeHebdo,
-                       Antares::Data::AdequacyPatch::AdqPatchParams&,
-                       uint numSpace,
                        IResultWriter& writer,
                        Simulation::ISimulationObserver& simulationObserver);
     ~WeeklyOptimization() = default;
     void solve();
 
+private:
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
-    Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams_;
-    const uint thread_number_ = 0;
     IResultWriter& writer_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 };
