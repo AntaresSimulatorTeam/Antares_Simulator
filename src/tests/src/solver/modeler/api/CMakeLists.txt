@@ -1,4 +1,4 @@
-set(EXECUTABLE_NAME test-modeler-linear-problem)
+set(EXECUTABLE_NAME unit-tests-for-modeler-api)
 add_executable(${EXECUTABLE_NAME})
 
 target_sources(${EXECUTABLE_NAME}
