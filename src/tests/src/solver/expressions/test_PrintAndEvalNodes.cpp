@@ -203,6 +203,15 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_node, Registry<Node>)
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
 
+BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, Registry<Node>)
+{
+    PortFieldSumNode pt_fd("august", "2024");
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(&pt_fd);
+
+    BOOST_CHECK_EQUAL(printed, "august.2024");
+}
+
 BOOST_FIXTURE_TEST_CASE(evaluate_param, Registry<Node>)
 {
     ParameterNode root("my-param");
@@ -345,6 +354,7 @@ BOOST_FIXTURE_TEST_CASE(NotEvaluableNodes, Registry<Node>)
                                 create<LessThanOrEqualNode>(&literalNode, &literalNode),
                                 create<GreaterThanOrEqualNode>(&literalNode, &literalNode),
                                 create<PortFieldNode>(name, name),
+                                create<PortFieldSumNode>(name, name),
                                 create<ComponentParameterNode>(component_id, name),
                                 create<ComponentVariableNode>(component_id, name)};
     EvalVisitor evalVisitor;

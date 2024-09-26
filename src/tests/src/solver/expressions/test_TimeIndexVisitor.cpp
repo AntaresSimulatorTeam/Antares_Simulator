@@ -128,6 +128,7 @@ static Node* singleNode(Registry<Node>& registry)
 
 static const std::vector<Node* (*)(Registry<Node>& registry)> singleNode_ALL{
   &singleNode<PortFieldNode>,
+  &singleNode<PortFieldSumNode>,
   &singleNode<ComponentVariableNode>,
   &singleNode<ComponentParameterNode>};
 
