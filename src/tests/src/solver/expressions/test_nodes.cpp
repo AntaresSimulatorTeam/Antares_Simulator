@@ -63,6 +63,17 @@ BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
     BOOST_CHECK_EQUAL(portFieldNode1 == portFieldNode2, false);
 }
 
+
+BOOST_AUTO_TEST_CASE(PortFieldSumNodeTest)
+{
+    std::string portName1("p1");
+    std::string fieldName1("f1");
+
+    PortFieldSumNode pfs(portName1, fieldName1);
+    BOOST_CHECK_EQUAL(pfs.getPortName(), portName1);
+    BOOST_CHECK_EQUAL(pfs.getFieldName(), fieldName1);
+}
+
 BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
 {
     auto literalNode = create<LiteralNode>(2024.2);
