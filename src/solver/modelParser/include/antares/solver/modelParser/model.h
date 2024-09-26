@@ -263,6 +263,8 @@ struct PortType
 {
     std::string id;
     std::string description;
+    // Small optimization: we only need the name of the fields
+    // No need for an intermediate struct "field" with just a string "name" member
     std::vector<std::string> fields;
 };
 

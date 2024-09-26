@@ -209,7 +209,10 @@ struct convert<Antares::Solver::ModelParser::PortType>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.description = node["description"].as<std::string>();
-        rhs.fields = node["fields"].as<std::vector<std::string>>();
+        for (const auto& field: node["fields"])
+        {
+            rhs.fields.push_back(field["name"].as<std::string>());
+        }
         return true;
     }
 };
@@ -231,8 +234,8 @@ struct convert<Antares::Solver::ModelParser::Library>
     {
         rhs.id = node["id"].as<std::string>();
         rhs.description = node["description"].as<std::string>();
-        //        rhs.port_types = node["port-types"]
-        //                           .as<std::vector<Antares::Solver::ModelParser::PortType>>();
+        rhs.port_types = node["port-types"]
+                           .as<std::vector<Antares::Solver::ModelParser::PortType>>();
         //        rhs.models =
         //        node["models"].as<std::vector<Antares::Solver::ModelParser::Model>>();
         return true;
