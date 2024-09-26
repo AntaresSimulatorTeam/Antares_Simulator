@@ -93,7 +93,8 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
        "ComponentParameterNode"},
       {create<ParameterNode>(literalNode->name()), "ParameterNode"},
       {create<VariableNode>(literalNode->name()), "VariableNode"},
-      {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"}};
+      {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"},
+      {create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"}};
 
     for (auto [node, name]: nodes)
     {
