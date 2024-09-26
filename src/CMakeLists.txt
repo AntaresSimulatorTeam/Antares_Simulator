@@ -186,9 +186,6 @@ message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 option(WITH_ANTLR4 "With antlr4" OFF)
 message(STATUS "With antlr4: ${WITH_ANTLR4}")
 
-option(WITH_YAMLCPP "With yaml-cpp" OFF)
-message(STATUS "With yaml-cpp: ${WITH_YAMLCPP}")
-
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
