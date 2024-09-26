@@ -36,6 +36,7 @@
 #include "antares/antares/antares.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/thirdparty/thirdparty.h"
 
 #include "area/store-timeseries-numbers.h"
 #include "binding_constraint/BindingConstraint.h"
@@ -608,6 +609,9 @@ public:
 
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
+
+    // TODO std::vector...
+    std::unique_ptr<Antares::ThirdParty::Module> pThirdParty;
 
 public:
     //! \name TS Generators

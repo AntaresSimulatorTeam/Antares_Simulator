@@ -28,6 +28,8 @@ add_subdirectory(study-loader)
 add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
+add_subdirectory(thirdparty)
+
 if(WITH_ANTLR4)
   add_subdirectory(antlr-interface)
 endif()

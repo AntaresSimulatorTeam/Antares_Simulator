@@ -153,6 +153,7 @@ target_include_directories(antares-solver-variable
 target_link_libraries(antares-solver-variable
         PUBLIC
         antares-solver-simulation
+        antares-third-party
         PRIVATE
         antares-core
         Antares::study

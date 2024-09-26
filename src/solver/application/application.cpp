@@ -39,6 +39,7 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver.h"
 #include "antares/solver/utils/ortools_utils.h"
+#include "antares/thirdparty/sample.h"
 
 using namespace Antares::Check;
 
@@ -252,6 +253,10 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 
     pParameters = &(pStudy->parameters);
     readDataForTheStudy(options);
+
+    // TODO make nice function here
+    pStudy->pThirdParty = std::make_unique<Antares::ThirdParty::SampleModule>();
+    pStudy->pThirdParty->initializeFromStudy(*pStudy);
 
     postParametersChecks();
 
