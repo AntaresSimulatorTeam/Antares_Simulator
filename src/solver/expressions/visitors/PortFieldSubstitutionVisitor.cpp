@@ -18,24 +18,33 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/PortFieldNode.h>
 
-namespace Antares::Solver::Nodes
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include <antares/solver/expressions/visitors/PortFieldSubstitutionVisitor.h>
+
+namespace Antares::Solver::Visitors
 {
-PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
-    Hashable(port_name_, field_name_),
-    port_name_(port_name),
-    field_name_(field_name)
+
+PortFieldSubstitutionVisitor::PortFieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                                           PortFieldSubstitutionContext& ctx):
+    CloneVisitor(registry),
+    ctx_(ctx)
 {
 }
 
-const std::string& PortFieldNode::getPortName() const
+Nodes::Node* PortFieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    return port_name_;
+    if (auto it = ctx_.portfield.find(*node); it != ctx_.portfield.end())
+    {
+        return it->second;
+    }
+
+    return CloneVisitor::visit(node);
 }
 
-const std::string& PortFieldNode::getFieldName() const
+std::string PortFieldSubstitutionVisitor::name() const
 {
-    return field_name_;
+    return "PortFieldSubstitutionVisitor";
 }
-} // namespace Antares::Solver::Nodes
+
+} // namespace Antares::Solver::Visitors

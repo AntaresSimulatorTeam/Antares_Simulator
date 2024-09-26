@@ -27,18 +27,18 @@
 namespace Antares::Solver::Nodes
 {
 /**
- * @brief Represents a port field node in a syntax tree.
+ * @brief Represents a port field node where the expression is a sum.
  */
-class PortFieldNode: public Node, public Hashable
+class PortFieldSumNode: public Node, public Hashable
 {
 public:
     /**
-     * @brief Constructs a port field node with the specified port and field names.
+     * @brief Constructs a port field sum node with the specified port and field names.
      *
      * @param port_name The port name.
      * @param field_name The field name.
      */
-    explicit PortFieldNode(const std::string& port_name, const std::string& field_name);
+    explicit PortFieldSumNode(const std::string& port_name, const std::string& field_name);
 
     /**
      * @brief Retrieves the port name.
@@ -54,11 +54,11 @@ public:
      */
     const std::string& getFieldName() const;
 
-    bool operator==(const PortFieldNode& other) const = default;
+    bool operator==(const PortFieldSumNode& other) const = default;
 
     std::string name() const override
     {
-        return "PortFieldNode";
+        return "PortFieldSumNode";
     }
 
 private:

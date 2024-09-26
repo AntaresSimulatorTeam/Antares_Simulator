@@ -55,6 +55,7 @@ private:
     TimeIndex visit(const Nodes::ParameterNode* param) override;
     TimeIndex visit(const Nodes::LiteralNode* lit) override;
     TimeIndex visit(const Nodes::PortFieldNode* port_field_node) override;
+    TimeIndex visit(const Nodes::PortFieldSumNode* port_field_node) override;
     TimeIndex visit(const Nodes::ComponentVariableNode* component_variable_node) override;
     TimeIndex visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
 };

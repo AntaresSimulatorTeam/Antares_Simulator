@@ -18,24 +18,26 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/PortFieldNode.h>
+#pragma once
+#include <string>
 
-namespace Antares::Solver::Nodes
+namespace Antares::Solver
 {
-PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
-    Hashable(port_name_, field_name_),
-    port_name_(port_name),
-    field_name_(field_name)
+class Hashable
 {
-}
+public:
+    Hashable(const std::string& s1, const std::string& s2);
+    ~Hashable() = default;
 
-const std::string& PortFieldNode::getPortName() const
-{
-    return port_name_;
-}
+    bool operator==(const Hashable& other) const;
 
-const std::string& PortFieldNode::getFieldName() const
+    const std::string& s1;
+    const std::string& s2;
+};
+
+struct PortFieldHash
 {
-    return field_name_;
-}
-} // namespace Antares::Solver::Nodes
+    std::size_t operator()(const Hashable& n) const;
+};
+
+} // namespace Antares::Solver

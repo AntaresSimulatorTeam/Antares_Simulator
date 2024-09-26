@@ -20,42 +20,30 @@
 */
 #include <boost/functional/hash.hpp>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include <antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h>
+#include <antares/solver/expressions/hashable.h>
 
-namespace Antares::Solver::Visitors
+namespace Antares::Solver
 {
 
-PortfieldSubstitutionVisitor::PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                                           PortfieldSubstitutionContext& ctx):
-    CloneVisitor(registry),
-    ctx_(ctx)
+Hashable::Hashable(const std::string& s1, const std::string& s2):
+    s1(s1),
+    s2(s2)
 {
 }
 
-Nodes::Node* PortfieldSubstitutionVisitor::visit(const Nodes::PortFieldNode* node)
+bool Hashable::operator==(const Hashable& other) const
 {
-    if (auto it = ctx_.portfield.find(*node); it != ctx_.portfield.end())
-    {
-        return it->second;
-    }
-
-    return CloneVisitor::visit(node);
+    return s1 == other.s1 && s2 == other.s2;
 }
 
-std::string PortfieldSubstitutionVisitor::name() const
-{
-    return "PortfieldSubstitutionVisitor";
-}
-
-std::size_t KeyHasher::operator()(const Nodes::PortFieldNode& n) const
+std::size_t PortFieldHash::operator()(const Hashable& n) const
 {
     std::size_t seed = 0;
 
-    boost::hash_combine(seed, boost::hash_value(n.getPortName()));
-    boost::hash_combine(seed, boost::hash_value(n.getFieldName()));
+    boost::hash_combine(seed, boost::hash_value(n.s1));
+    boost::hash_combine(seed, boost::hash_value(n.s2));
 
     return seed;
 }
 
-} // namespace Antares::Solver::Visitors
+} // namespace Antares::Solver

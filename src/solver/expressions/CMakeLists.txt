@@ -3,6 +3,7 @@ project(Expressions)
 
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
+        nodes/PortFieldSumNode.cpp
         nodes/ComponentNode.cpp
         nodes/BinaryNode.cpp
         nodes/UnaryNode.cpp
@@ -16,9 +17,12 @@ set(SRC_Expressions
         visitors/TimeIndexVisitor.cpp
         visitors/PrintVisitor.cpp
         visitors/SubstitutionVisitor.cpp
+        visitors/PortFieldSubstitutionVisitor.cpp
+        visitors/PortFieldSumSubstitutionVisitor.cpp
         visitors/AstDOTStyleVisitor.cpp
-        visitors/PortfieldSubstitutionVisitor.cpp
         visitors/InvalidNode.cpp
+
+        hashable.cpp
 
         include/antares/solver/expressions/nodes/SumNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
@@ -37,6 +41,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/nodes/NodesForwardDeclaration.h
         include/antares/solver/expressions/nodes/ParameterNode.h
         include/antares/solver/expressions/nodes/PortFieldNode.h
+        include/antares/solver/expressions/nodes/PortFieldSumNode.h
         include/antares/solver/expressions/nodes/SubtractionNode.h
         include/antares/solver/expressions/nodes/UnaryNode.h
         include/antares/solver/expressions/nodes/VariableNode.h
@@ -52,12 +57,14 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/TimeIndexVisitor.h
         include/antares/solver/expressions/visitors/TimeIndex.h
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/PortFieldSubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/AstDOTStyleVisitor.h
-        include/antares/solver/expressions/visitors/PortfieldSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/InvalidNode.h
 
         include/antares/solver/expressions/Registry.hxx
         include/antares/solver/expressions/IName.h
+        include/antares/solver/expressions/hashable.h
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
@@ -72,7 +79,7 @@ target_link_libraries(antares-solver-expressions
         PUBLIC
         Antares::logs
         Boost::headers
-	)
+)
 
 
 add_library(antares-solver-expressions-iterators

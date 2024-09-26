@@ -50,7 +50,8 @@ public:
         Node* variableNode = registry_.create<VariableNode>("atoms_count");
         Node* divisionNode = registry_.create<DivisionNode>(variableNode, multiplicationNode);
         Node* portFieldNode = registry_.create<PortFieldNode>("gasStation", "1149");
-        Node* sumNode = registry_.create<SumNode>(divisionNode, portFieldNode);
+        Node* portFieldSumNode = registry_.create<PortFieldSumNode>("portfield", "sum");
+        Node* sumNode = registry_.create<SumNode>(divisionNode, portFieldNode, portFieldSumNode);
         Node* componentVariableNode = registry_.create<ComponentVariableNode>("1150",
                                                                               "otherStation");
         Node* componentParameterNode = registry_.create<ComponentParameterNode>("1151",
@@ -103,7 +104,9 @@ node[style = filled]
   14 [label="Param(avogadro_constant)", shape="box", style="filled, solid", color="wheat"];
   7 -> 16;
   16 [label="PF(gasStation,1149)", shape="component", style="filled, solid", color="olive"];
-label="AST Diagram(Total nodes : 16)"
+  7 -> 17;
+  17 [label="PFSUM(portfield,sum)", shape="component", style="filled, solid", color="olive"];
+label="AST Diagram(Total nodes : 17)"
 labelloc = "t"
 subgraph cluster_legend {
 label = "Legend";
@@ -133,7 +136,9 @@ legend_NegationNode -> legend_ParameterNode [style=invis];
 legend_ParameterNode [ label =" ParameterNode: 1"]
 legend_ParameterNode -> legend_PortFieldNode [style=invis];
 legend_PortFieldNode [ label =" PortFieldNode: 1"]
-legend_PortFieldNode -> legend_SubtractionNode [style=invis];
+legend_PortFieldNode -> legend_PortFieldSumNode [style=invis];
+legend_PortFieldSumNode [ label =" PortFieldSumNode: 1"]
+legend_PortFieldSumNode -> legend_SubtractionNode [style=invis];
 legend_SubtractionNode [ label =" SubtractionNode: 1"]
 legend_SubtractionNode -> legend_SumNode [style=invis];
 legend_SumNode [ label =" SumNode: 1"]
