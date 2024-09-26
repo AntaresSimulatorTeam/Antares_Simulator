@@ -19,6 +19,7 @@ set(SRC_Expressions
         visitors/SubstitutionVisitor.cpp
         visitors/PortFieldSubstitutionVisitor.cpp
         visitors/PortFieldSumSubstitutionVisitor.cpp
+        visitors/AstDOTStyleVisitor.cpp
         visitors/InvalidNode.cpp
 
         hashable.cpp
@@ -58,6 +59,7 @@ set(SRC_Expressions
         include/antares/solver/expressions/visitors/SubstitutionVisitor.h
         include/antares/solver/expressions/visitors/PortFieldSubstitutionVisitor.h
         include/antares/solver/expressions/visitors/PortFieldSumSubstitutionVisitor.h
+        include/antares/solver/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/solver/expressions/visitors/InvalidNode.h
 
         include/antares/solver/expressions/Registry.hxx
@@ -80,10 +82,9 @@ target_link_libraries(antares-solver-expressions
 )
 
 
-
 add_library(antares-solver-expressions-iterators
-  iterators/pre-order.cpp
-  include/antares/solver/expressions/iterators/pre-order.h
+        iterators/pre-order.cpp
+        include/antares/solver/expressions/iterators/pre-order.h
 )
 
 target_link_libraries(antares-solver-expressions-iterators PRIVATE antares-solver-expressions)
