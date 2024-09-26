@@ -23,6 +23,7 @@
 namespace Antares::Solver::Nodes
 {
 PortFieldSumNode::PortFieldSumNode(const std::string& port_name, const std::string& field_name):
+    Hashable(port_name_, field_name_),
     port_name_(port_name),
     field_name_(field_name)
 {

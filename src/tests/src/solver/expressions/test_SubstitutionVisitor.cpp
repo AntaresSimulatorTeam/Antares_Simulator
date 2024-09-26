@@ -168,7 +168,9 @@ public:
         Node* sum1 = create<LiteralNode>(12);
         Node* sum2 = create<LiteralNode>(7);
         std::vector<Node*> v = {sum1, sum2};
-        ctx.portfieldSum.emplace(PortFieldSumNode("port", "sum of literal"), v);
+        ctx.portfieldSum.emplace(std::piecewise_construct,
+                                 std::forward_as_tuple("port", "sum of literal"),
+                                 std::forward_as_tuple(v));
 
         PortFieldSumSubstitutionVisitor sub(*this, ctx);
         return sub.dispatch(original);

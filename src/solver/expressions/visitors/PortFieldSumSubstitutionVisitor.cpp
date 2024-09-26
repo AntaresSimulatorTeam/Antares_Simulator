@@ -50,14 +50,4 @@ std::string PortFieldSumSubstitutionVisitor::name() const
     return "PortFieldSumSubstitutionVisitor";
 }
 
-std::size_t PortFieldSumKeyHasher::operator()(const Nodes::PortFieldSumNode& n) const
-{
-    std::size_t seed = 0;
-
-    boost::hash_combine(seed, boost::hash_value(n.getPortName()));
-    boost::hash_combine(seed, boost::hash_value(n.getFieldName()));
-
-    return seed;
-}
-
 } // namespace Antares::Solver::Visitors

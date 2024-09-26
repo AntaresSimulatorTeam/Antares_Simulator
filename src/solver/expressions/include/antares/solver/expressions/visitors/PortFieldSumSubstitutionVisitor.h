@@ -27,18 +27,13 @@
 namespace Antares::Solver::Visitors
 {
 
-struct PortFieldSumKeyHasher
-{
-    std::size_t operator()(const Nodes::PortFieldSumNode& n) const;
-};
-
 /**
  * @brief Represents the context for performing substitutions in a syntax tree.
  */
 struct PortFieldSumSubstitutionContext
 {
-    std::unordered_map<Nodes::PortFieldSumNode, std::vector<Nodes::Node*>, PortFieldSumKeyHasher>
-      portfieldSum;
+    std::unordered_map<Nodes::PortFieldSumNode, std::vector<Nodes::Node*>, PortFieldHash>
+        portfieldSum;
 };
 
 /**
