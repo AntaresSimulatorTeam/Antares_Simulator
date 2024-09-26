@@ -33,7 +33,7 @@ namespace Antares::Solver::Visitors
 struct PortFieldSumSubstitutionContext
 {
     std::unordered_map<Nodes::PortFieldSumNode, std::vector<Nodes::Node*>, PortFieldHash>
-        portfieldSum;
+      portfieldSum;
 };
 
 /**
