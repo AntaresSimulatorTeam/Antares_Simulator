@@ -116,3 +116,33 @@ BOOST_AUTO_TEST_CASE(test_library_models)
     BOOST_CHECK(libraryObj.models[0].constraints.size() == 0);
     BOOST_CHECK(libraryObj.models[0].objective == "objective");
 }
+
+// Test library with one model containing parameters
+BOOST_AUTO_TEST_CASE(test_library_model_parameters)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters:
+                      - name: "param_name"
+                        time-dependent: false
+                        scenario-dependent: false
+                  variables: []
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  objective: "objective"
+        )";
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_CHECK(libraryObj.models.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].parameters.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].parameters[0].name == "param_name");
+    BOOST_CHECK(libraryObj.models[0].parameters[0].time_dependent == false);
+    BOOST_CHECK(libraryObj.models[0].parameters[0].scenario_dependent == false);
+}
