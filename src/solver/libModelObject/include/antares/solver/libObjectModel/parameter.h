@@ -41,8 +41,8 @@ public:
 private:
     std::string name_;
     ValueType type_;
-    bool timeDependent_;
-    bool scenarioDependent_;
+    bool timeDependent_ = true; // optional at construction
+    bool scenarioDependent_ = true; // optional at construction
 };
 
 } // namespace Antares::Solver::ObjectModel
