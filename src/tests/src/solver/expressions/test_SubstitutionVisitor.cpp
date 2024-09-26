@@ -188,4 +188,12 @@ BOOST_FIXTURE_TEST_CASE(PortFieldSumSubstitutionVisitor_simple, SumSubstitutionF
     BOOST_CHECK(cmp.dispatch(substituted, expected));
 }
 
+BOOST_FIXTURE_TEST_CASE(PortfieldSumSubstitutionVisitor_name, Registry<Node>)
+{
+    PortFieldSumSubstitutionContext ctx;
+
+    PortFieldSumSubstitutionVisitor substitutionVisitor(*this, ctx);
+    BOOST_CHECK_EQUAL(substitutionVisitor.name(), "PortFieldSumSubstitutionVisitor");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
