@@ -146,3 +146,33 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters)
     BOOST_CHECK(libraryObj.models[0].parameters[0].time_dependent == false);
     BOOST_CHECK(libraryObj.models[0].parameters[0].scenario_dependent == false);
 }
+
+// Test library with one model containing variables
+BOOST_AUTO_TEST_CASE(test_library_model_variables)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters: []
+                  variables:
+                      - name: "var_name"
+                        lower-bound: 0
+                        upper-bound: 1
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  objective: "objective"
+        )";
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_CHECK(libraryObj.models.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].variables.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].variables[0].name == "var_name");
+    BOOST_CHECK(libraryObj.models[0].variables[0].lower_bound == 0);
+    BOOST_CHECK(libraryObj.models[0].variables[0].upper_bound == 1);
+}
