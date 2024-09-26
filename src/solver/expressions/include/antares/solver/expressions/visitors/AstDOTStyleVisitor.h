@@ -131,6 +131,7 @@ private:
     void visit(const Nodes::ParameterNode* node, std::ostream& os) override;
     void visit(const Nodes::LiteralNode* node, std::ostream& os) override;
     void visit(const Nodes::PortFieldNode* node, std::ostream& os) override;
+    void visit(const Nodes::PortFieldSumNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
 

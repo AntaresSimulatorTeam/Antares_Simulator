@@ -71,6 +71,7 @@ private:
     double visit(const Nodes::ParameterNode* node) override;
     double visit(const Nodes::LiteralNode* node) override;
     double visit(const Nodes::PortFieldNode* node) override;
+    double visit(const Nodes::PortFieldSumNode* node) override;
     double visit(const Nodes::ComponentVariableNode* node) override;
     double visit(const Nodes::ComponentParameterNode* node) override;
 };

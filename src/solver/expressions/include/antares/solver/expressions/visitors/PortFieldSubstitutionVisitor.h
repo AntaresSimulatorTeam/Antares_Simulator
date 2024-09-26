@@ -18,24 +18,37 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/PortFieldNode.h>
+#pragma once
 
-namespace Antares::Solver::Nodes
-{
-PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
-    Hashable(port_name_, field_name_),
-    port_name_(port_name),
-    field_name_(field_name)
-{
-}
+#include <map>
 
-const std::string& PortFieldNode::getPortName() const
-{
-    return port_name_;
-}
+#include "antares/solver/expressions/visitors/CloneVisitor.h"
 
-const std::string& PortFieldNode::getFieldName() const
+namespace Antares::Solver::Visitors
 {
-    return field_name_;
-}
-} // namespace Antares::Solver::Nodes
+
+/**
+ * @brief Represents the context for performing substitutions in a syntax tree.
+ */
+struct PortFieldSubstitutionContext
+{
+    std::unordered_map<Nodes::PortFieldNode, Nodes::Node*, PortFieldHash> portfield;
+};
+
+/**
+ * @brief Represents a visitor for substituting portfield nodes in a syntax tree.
+ */
+class PortFieldSubstitutionVisitor: public CloneVisitor
+{
+public:
+    PortFieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                 PortFieldSubstitutionContext& ctx);
+
+    PortFieldSubstitutionContext& ctx_;
+    std::string name() const override;
+
+private:
+    // Only override visit method for PortField, clone the rest
+    Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
+};
+} // namespace Antares::Solver::Visitors

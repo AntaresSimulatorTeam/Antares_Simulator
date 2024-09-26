@@ -18,23 +18,23 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/solver/expressions/nodes/PortFieldNode.h>
+#include <antares/solver/expressions/nodes/PortFieldSumNode.h>
 
 namespace Antares::Solver::Nodes
 {
-PortFieldNode::PortFieldNode(const std::string& port_name, const std::string& field_name):
+PortFieldSumNode::PortFieldSumNode(const std::string& port_name, const std::string& field_name):
     Hashable(port_name_, field_name_),
     port_name_(port_name),
     field_name_(field_name)
 {
 }
 
-const std::string& PortFieldNode::getPortName() const
+const std::string& PortFieldSumNode::getPortName() const
 {
     return port_name_;
 }
 
-const std::string& PortFieldNode::getFieldName() const
+const std::string& PortFieldSumNode::getFieldName() const
 {
     return field_name_;
 }
