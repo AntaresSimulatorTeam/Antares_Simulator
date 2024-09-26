@@ -23,7 +23,7 @@
 #include "port.h"
 #include "portType.h"
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 class PortFieldDefinition
@@ -37,4 +37,4 @@ private:
     Expression definition_;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

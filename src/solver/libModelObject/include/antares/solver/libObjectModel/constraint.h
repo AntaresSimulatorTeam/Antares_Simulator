@@ -25,7 +25,7 @@
 #include "expression.h"
 #include "parameter.h"
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 /// A constraint linking variables and parameters of a model together
@@ -40,4 +40,4 @@ private:
     Expression expression_;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

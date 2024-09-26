@@ -25,7 +25,7 @@
 #include "model.h"
 #include "portType.h"
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 /// A library is a collection of models
@@ -43,4 +43,4 @@ private:
     std::map<std::string, Model> models_;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

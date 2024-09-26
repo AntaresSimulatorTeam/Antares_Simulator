@@ -29,7 +29,7 @@
 #include "port.h"
 #include "variable.h"
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 /**
@@ -57,4 +57,4 @@ private:
     std::map<std::string, Port> ports_;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

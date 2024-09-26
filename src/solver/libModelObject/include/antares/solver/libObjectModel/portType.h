@@ -25,7 +25,7 @@
 
 #include "portField.h"
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 class PortType
@@ -41,4 +41,4 @@ private:
     std::vector<PortField> fields_;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

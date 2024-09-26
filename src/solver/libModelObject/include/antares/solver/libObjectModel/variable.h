@@ -26,7 +26,7 @@
 #include "parameter.h"
 #include "valueType.h"
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 /// A decision variable of the model
@@ -43,4 +43,4 @@ private:
     Expression upperBound_;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

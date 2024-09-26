@@ -22,7 +22,7 @@
 
 #include <string>
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 class Expression
@@ -32,4 +32,4 @@ public:
     ~Expression() = default;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

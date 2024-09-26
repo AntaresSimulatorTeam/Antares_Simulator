@@ -24,7 +24,7 @@
 
 #include "portType.h"
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 class Port
@@ -38,4 +38,4 @@ private:
     PortType type_;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

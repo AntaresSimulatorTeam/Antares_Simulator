@@ -22,7 +22,7 @@
 
 #include <string>
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 class PortField
@@ -31,4 +31,4 @@ private:
     std::string name;
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel

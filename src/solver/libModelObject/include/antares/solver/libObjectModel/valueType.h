@@ -20,7 +20,7 @@
 */
 #pragma once
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 /// Type of value held by variables or parameters
@@ -31,4 +31,4 @@ enum class ValueType
     BOOL
 };
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel
