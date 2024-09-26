@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/solver/model/model.h>
+#include <antares/solver/libObjectModel/model.h>
 
-namespace Antares::Solver::Model
+namespace Antares::Solver::ObjectModel
 {
 
 std::vector<Constraint*> getConstraints()
@@ -29,4 +29,4 @@ std::vector<Constraint*> getConstraints()
     return std::vector<Constraint*>();
 }
 
-} // namespace Antares::Solver::Model
+} // namespace Antares::Solver::ObjectModel
