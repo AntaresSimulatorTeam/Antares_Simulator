@@ -1,5 +1,16 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a576c127cbbe0448b583e186a8dabac1a":[9,0,0,5,0,0,1],
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a74af88b90038e83fb25c558efa1d9178":[9,0,0,5,0,0,3],
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a7fab86c6a9e2d7cd718e66af498fa662":[9,0,0,5,0,0,0],
+"structAntares_1_1Date_1_1DayInterval.html":[9,0,0,5,1],
+"structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b":[9,0,0,5,1,1],
+"structAntares_1_1Date_1_1DayInterval.html#ad6dd27f028962beaa2f8f1ce1065f6bd":[9,0,0,5,1,0],
+"structAntares_1_1Date_1_1HourInterval.html":[9,0,0,5,2],
+"structAntares_1_1Date_1_1HourInterval.html#a53e86b3732adfe8635cab8d74fa5779d":[9,0,0,5,2,1],
+"structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[9,0,0,5,2,0],
+"structAntares_1_1DebugData.html":[9,0,0,25],
+"structAntares_1_1Forms_1_1CompareBySimulationMode.html":[9,0,0,8,1],
 "structAntares_1_1Forms_1_1CompareByTimestamp.html":[9,0,0,8,2],
 "structAntares_1_1Graph_1_1Edge_1_1addpWeight.html":[9,0,0,9,0,0],
 "structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[9,0,0,9,0,1],
@@ -13,6 +24,7 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[9,0,0,13,3,1],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1b3d66ae8211fc0a17e451bbfd09d854":[9,0,0,13,3,1,0],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#aa53e538badc0a91056f4378579854d7a":[9,0,0,13,3,1,1],
+"structAntares_1_1Solver_1_1PortFieldHash.html":[9,0,0,13,25],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[9,0,0,13,5,5],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[9,0,0,13,5,21],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[9,0,0,13,5,24],
@@ -237,17 +249,5 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html":[9,0,0,13,6,4,104],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#a850d4181da4784d40201475e5016fd41":[9,0,0,13,6,4,104,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#aa287ab48cc64ba1214fb73614a54b6ed":[9,0,0,13,6,4,104,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html":[9,0,0,13,6,4,105],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a0b2b1aeda62055d1f0e77ce6a3235bb4":[9,0,0,13,6,4,105,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a823522da4a8825bd05d5ed5c939028b8":[9,0,0,13,6,4,105,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html":[9,0,0,13,6,4,106],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a505308cb0c9d12d92da113e99e29d35c":[9,0,0,13,6,4,106,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#acf75f329abb2d376d024d61e481f6300":[9,0,0,13,6,4,106,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html":[9,0,0,13,6,4,107],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#a1d93efffd69df8dd96a9b491fc9c22a2":[9,0,0,13,6,4,107,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aa2a8d40a6443b8decac825f758ac9cf4":[9,0,0,13,6,4,107,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[9,0,0,13,6,4,108],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[9,0,0,13,6,4,108,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[9,0,0,13,6,4,108,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[9,0,0,13,6,4,109,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html":[9,0,0,13,6,4,105]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX12 =
 {
+"classAntares_1_1Map_1_1PanelInfos.html":[9,0,0,10,11],
+"classAntares_1_1Map_1_1PanelInfos.html#a12439e99dee52e0155e50a97d3b96cf7":[9,0,0,10,11,2],
 "classAntares_1_1Map_1_1PanelInfos.html#a1b282005e150bbc266b029045691e5f2":[9,0,0,10,11,4],
 "classAntares_1_1Map_1_1PanelInfos.html#a3066387ddb479bcf0d3cbaec4b789d34":[9,0,0,10,11,1],
 "classAntares_1_1Map_1_1PanelInfos.html#a3066387ddb479bcf0d3cbaec4b789d34a406538fdbfc82e3af5973edbd906e343":[9,0,0,10,11,1,3],
@@ -239,15 +241,13 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html":[9,0,0,13,10],
 "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html":[9,0,0,13,12],
 "classAntares_1_1Solver_1_1FinalLevelValidator.html":[9,0,0,13,13],
-"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html":[9,0,0,13,14],
-"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html#a2110528f3be01b0b0c8f9255d3317aad":[9,0,0,13,14,1],
-"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html#adbae3fe7a047491de04c12120ea8a69e":[9,0,0,13,14,0],
-"classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html":[9,0,0,13,15],
-"classAntares_1_1Solver_1_1IName.html":[9,0,0,13,17],
-"classAntares_1_1Solver_1_1IResultWriter.html":[9,0,0,13,20],
-"classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c":[9,0,0,13,20,0],
-"classAntares_1_1Solver_1_1ImmediateFileResultWriter.html":[9,0,0,13,16],
-"classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629":[9,0,0,13,16,0],
-"classAntares_1_1Solver_1_1InMemoryWriter.html":[9,0,0,13,18],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b":[9,0,0,13,18,0]
+"classAntares_1_1Solver_1_1Hashable.html":[9,0,0,13,14],
+"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html":[9,0,0,13,15],
+"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html#a2110528f3be01b0b0c8f9255d3317aad":[9,0,0,13,15,1],
+"classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html#adbae3fe7a047491de04c12120ea8a69e":[9,0,0,13,15,0],
+"classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html":[9,0,0,13,16],
+"classAntares_1_1Solver_1_1IName.html":[9,0,0,13,18],
+"classAntares_1_1Solver_1_1IResultWriter.html":[9,0,0,13,21],
+"classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c":[9,0,0,13,21,0],
+"classAntares_1_1Solver_1_1ImmediateFileResultWriter.html":[9,0,0,13,17]
 };

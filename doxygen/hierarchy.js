@@ -365,6 +365,10 @@ var hierarchy =
     [ "Antares::Graph::Grid< NodeT >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::Graph::Grid< Antares::Data::Area >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::GUILocker", "classAntares_1_1GUILocker.html", null ],
+    [ "Antares::Solver::Hashable", "classAntares_1_1Solver_1_1Hashable.html", [
+      [ "Antares::Solver::Nodes::PortFieldNode", "classAntares_1_1Solver_1_1Nodes_1_1PortFieldNode.html", null ],
+      [ "Antares::Solver::Nodes::PortFieldSumNode", "classAntares_1_1Solver_1_1Nodes_1_1PortFieldSumNode.html", null ]
+    ] ],
     [ "Antares::Solver::HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", null ],
     [ "Antares::Date::HourInterval", "structAntares_1_1Date_1_1HourInterval.html", null ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html", null ],
@@ -668,7 +672,8 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Visitors::NodeVisitor< Nodes::Node * >", "classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Solver::Visitors::CloneVisitor", "classAntares_1_1Solver_1_1Visitors_1_1CloneVisitor.html", [
-          [ "Antares::Solver::Visitors::PortfieldSubstitutionVisitor", "classAntares_1_1Solver_1_1Visitors_1_1PortfieldSubstitutionVisitor.html", null ],
+          [ "Antares::Solver::Visitors::PortFieldSubstitutionVisitor", "classAntares_1_1Solver_1_1Visitors_1_1PortFieldSubstitutionVisitor.html", null ],
+          [ "Antares::Solver::Visitors::PortFieldSumSubstitutionVisitor", "classAntares_1_1Solver_1_1Visitors_1_1PortFieldSumSubstitutionVisitor.html", null ],
           [ "Antares::Solver::Visitors::SubstitutionVisitor", "classAntares_1_1Solver_1_1Visitors_1_1SubstitutionVisitor.html", null ]
         ] ]
       ] ],
@@ -711,6 +716,7 @@ var hierarchy =
         ] ],
         [ "Antares::Solver::Nodes::Leaf< T >", "classAntares_1_1Solver_1_1Nodes_1_1Leaf.html", null ],
         [ "Antares::Solver::Nodes::PortFieldNode", "classAntares_1_1Solver_1_1Nodes_1_1PortFieldNode.html", null ],
+        [ "Antares::Solver::Nodes::PortFieldSumNode", "classAntares_1_1Solver_1_1Nodes_1_1PortFieldSumNode.html", null ],
         [ "Antares::Solver::Nodes::SumNode", "classAntares_1_1Solver_1_1Nodes_1_1SumNode.html", null ],
         [ "Antares::Solver::Nodes::UnaryNode", "classAntares_1_1Solver_1_1Nodes_1_1UnaryNode.html", [
           [ "Antares::Solver::Nodes::NegationNode", "classAntares_1_1Solver_1_1Nodes_1_1NegationNode.html", null ]
@@ -782,7 +788,6 @@ var hierarchy =
     [ "JIT", "classJIT.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],
     [ "JIT::just_in_time_manager", "classJIT_1_1just__in__time__manager.html", null ],
-    [ "Antares::Solver::Visitors::KeyHasher", "structAntares_1_1Solver_1_1Visitors_1_1KeyHasher.html", null ],
     [ "Antares::Window::OutputViewer::Layer", "classAntares_1_1Window_1_1OutputViewer_1_1Layer.html", null ],
     [ "Antares::Data::LayerData", "classAntares_1_1Data_1_1LayerData.html", [
       [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", [
@@ -1078,7 +1083,9 @@ var hierarchy =
     [ "Antares::Window::Inspector::PLinkStyle", "structAntares_1_1Window_1_1Inspector_1_1PLinkStyle.html", null ],
     [ "Antares::Window::Inspector::PLinkWidth", "structAntares_1_1Window_1_1Inspector_1_1PLinkWidth.html", null ],
     [ "Antares::Data::Pollutant", "classAntares_1_1Data_1_1Pollutant.html", null ],
-    [ "Antares::Solver::Visitors::PortfieldSubstitutionContext", "structAntares_1_1Solver_1_1Visitors_1_1PortfieldSubstitutionContext.html", null ],
+    [ "Antares::Solver::PortFieldHash", "structAntares_1_1Solver_1_1PortFieldHash.html", null ],
+    [ "Antares::Solver::Visitors::PortFieldSubstitutionContext", "structAntares_1_1Solver_1_1Visitors_1_1PortFieldSubstitutionContext.html", null ],
+    [ "Antares::Solver::Visitors::PortFieldSumSubstitutionContext", "structAntares_1_1Solver_1_1Visitors_1_1PortFieldSumSubstitutionContext.html", null ],
     [ "Power", "structPower.html", null ],
     [ "Antares::Solver::Variable::PrecisionToPrintfFormat< I >", "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html", null ],
     [ "Antares::Solver::Variable::PrecisionToPrintfFormat< 0 >", "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html", null ],
@@ -1151,7 +1158,8 @@ var hierarchy =
     [ "Antares::Solver::Registry< Base >", "classAntares_1_1Solver_1_1Registry.html", null ],
     [ "Antares::Solver::Registry< Antares::Solver::Nodes::Node >", "classAntares_1_1Solver_1_1Registry.html", null ],
     [ "Antares::Solver::Registry< Node >", "classAntares_1_1Solver_1_1Registry.html", [
-      [ "SubstitutionFixture", "classSubstitutionFixture.html", null ]
+      [ "SubstitutionFixture", "classSubstitutionFixture.html", null ],
+      [ "SumSubstitutionFixture", "classSumSubstitutionFixture.html", null ]
     ] ],
     [ "Antares::Map::RemovalToolPredicate", "classAntares_1_1Map_1_1RemovalToolPredicate.html", null ],
     [ "Antares::Data::Parameters::RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", null ],

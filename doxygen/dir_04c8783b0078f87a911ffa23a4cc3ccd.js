@@ -16,6 +16,7 @@ var dir_04c8783b0078f87a911ffa23a4cc3ccd =
     [ "NodesForwardDeclaration.h", "NodesForwardDeclaration_8h_source.html", null ],
     [ "ParameterNode.h", "ParameterNode_8h_source.html", null ],
     [ "PortFieldNode.h", "PortFieldNode_8h_source.html", null ],
+    [ "PortFieldSumNode.h", "PortFieldSumNode_8h_source.html", null ],
     [ "SubtractionNode.h", "SubtractionNode_8h_source.html", null ],
     [ "SumNode.h", "SumNode_8h_source.html", null ],
     [ "UnaryNode.h", "UnaryNode_8h_source.html", null ],

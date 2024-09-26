@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#adb17a70c1fd11592942251a8b5c3297b":[9,0,0,2,0,0,39,6],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#afe072ea9186593a770a98f7b2b58f3d4":[9,0,0,2,0,0,39,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html":[9,0,0,2,0,0,3,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html#a14336448f2300597e11716c1bb5eb492":[9,0,0,2,0,0,3,0,1],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Links_1_1Summary.html#a6f0693448cf94e168e5c95d4f8994b47":[9,0,0,2,0,0,3,0,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalCluster.html":[9,0,0,2,0,0,86],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalCluster.html#a9e4bbe290f4b4c91ebc113c9dfd72782":[9,0,0,2,0,0,86,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterCO2Cost.html":[9,0,0,2,0,0,87],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterFuelCost.html":[9,0,0,2,0,0,88],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesWind.html":[9,0,0,2,0,0,89],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesWind.html#a38e33c5db1603f5b60605639373519cd":[9,0,0,2,0,0,89,1]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesThermalClusterFuelCost.html":[9,0,0,2,0,0,88]
 };

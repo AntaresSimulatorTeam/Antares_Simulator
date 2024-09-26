@@ -1,5 +1,14 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Toolbox_1_1Filter_1_1Component.html#ae07c2c659b43b1273488ff7c6274d20e":[9,0,0,15,1,4,5],
+"classAntares_1_1Toolbox_1_1Filter_1_1Day.html":[9,0,0,15,1,5],
+"classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a67aef002b8984d3851f8f779fd1a0804":[9,0,0,15,1,5,0],
+"classAntares_1_1Toolbox_1_1Filter_1_1Day.html#aa2654e52f4d659e569aa32154f231dac":[9,0,0,15,1,5,1],
+"classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html":[9,0,0,15,1,6],
+"classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html#ac1e39e5774106ec4134b57f6159ec49e":[9,0,0,15,1,6,0],
+"classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html#aeb5b43a64f0d2c2dc36f7db7ab45907b":[9,0,0,15,1,6,1],
+"classAntares_1_1Toolbox_1_1Filter_1_1Hour.html":[9,0,0,15,1,7],
+"classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a37fdcee745828c06dbfb2f1e356eb7ce":[9,0,0,15,1,7,1],
 "classAntares_1_1Toolbox_1_1Filter_1_1Hour.html#a6312b32396cf27374db4ebd53a2a5094":[9,0,0,15,1,7,0],
 "classAntares_1_1Toolbox_1_1Filter_1_1HourYear.html":[9,0,0,15,1,8],
 "classAntares_1_1Toolbox_1_1Filter_1_1HourYear.html#a41f5cb35b7b00838c77e309967eda2b6":[9,0,0,15,1,8,1],
@@ -240,14 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Window_1_1Hydro_1_1Allocation.html#a56ac770b4d7bd82f4455af913dbae2b0":[9,0,0,18,0,0,1],
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html":[9,0,0,18,0,1],
 "classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#a4555df4ee23bf95d8fc43ba0814ecd4c":[9,0,0,18,0,1,0],
-"classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#aff56fca69695ca0abe880fc8b821e178":[9,0,0,18,0,1,1],
-"classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html":[9,0,0,18,0,2],
-"classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html#a652a6e95cdb5ee19f53b54210a2cf56b":[9,0,0,18,0,2,0],
-"classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html#af9b26a0747c85908a7f0dcd88b785cf4":[9,0,0,18,0,2,1],
-"classAntares_1_1Window_1_1Hydro_1_1Localdatahydro.html":[9,0,0,18,0,3],
-"classAntares_1_1Window_1_1Hydro_1_1Localdatahydro.html#a17f8be9ce3fd5afbfe3291b8e0f40f59":[9,0,0,18,0,3,0],
-"classAntares_1_1Window_1_1Hydro_1_1Localdatahydro.html#ab751c628062f10e2b32796cc3f281c6a":[9,0,0,18,0,3,1],
-"classAntares_1_1Window_1_1Hydro_1_1Management.html":[9,0,0,18,0,4],
-"classAntares_1_1Window_1_1Hydro_1_1Management.html#a81c4be85c6df8149ec969469793ec636":[9,0,0,18,0,4,1],
-"classAntares_1_1Window_1_1Hydro_1_1Management.html#aa473a71e9fc2146e984bf9b1e9dacc01":[9,0,0,18,0,4,0]
+"classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#aff56fca69695ca0abe880fc8b821e178":[9,0,0,18,0,1,1]
 };
