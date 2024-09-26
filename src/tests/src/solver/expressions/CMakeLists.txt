@@ -19,8 +19,8 @@ target_sources(${EXECUTABLE_NAME}
 target_link_libraries(${EXECUTABLE_NAME}
         PRIVATE
         Boost::unit_test_framework
-        antares-solver-expressions
-        antares-solver-expressions-iterators
+        solver-expressions
+        solver-expressions-iterators
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE
