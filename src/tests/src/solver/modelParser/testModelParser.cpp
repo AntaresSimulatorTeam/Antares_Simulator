@@ -234,3 +234,31 @@ BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
     BOOST_CHECK(libraryObj.models[0].port_field_definitions[0].field == "field_name");
     BOOST_CHECK(libraryObj.models[0].port_field_definitions[0].definition == "definition");
 }
+
+// Test library with one model containing constraints
+BOOST_AUTO_TEST_CASE(test_library_model_constraints)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters: []
+                  variables: []
+                  ports: []
+                  port-field-definitions: []
+                  constraints:
+                      - name: "constraint_name"
+                        expression: "expression"
+                  objective: "objective"
+        )";
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_CHECK(libraryObj.models.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].constraints.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].constraints[0].name == "constraint_name");
+    BOOST_CHECK(libraryObj.models[0].constraints[0].expression == "expression");
+}
