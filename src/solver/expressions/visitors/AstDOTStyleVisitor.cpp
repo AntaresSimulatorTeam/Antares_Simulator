@@ -18,13 +18,11 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-
 #include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 
 #include <algorithm>
-#include <set>
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include "antares/solver/expressions/nodes/ExpressionsNodes.h"
 
 namespace Antares::Solver::Visitors
 {
@@ -42,6 +40,16 @@ static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
+void makeLegendTitle(std::ostream& os)
+{
+    os << "subgraph cluster_legend {\n"
+       << "label = \"Legend\";\n"
+       << "style = dashed;\n"
+       << "fontsize = 16;\n"
+       << "color = lightgrey;\n"
+       << "node [shape=plaintext];\n\n";
+}
+
 void ProcessElementLegend(const std::string& element_name, size_t size, std::ostream& os)
 {
     os << "legend_" << element_name << " [ label =\" " << element_name << ": " << size << "\"]\n";
@@ -52,34 +60,20 @@ void AddFiliation(std::ostream& os, const std::string& parent_id, const std::str
     os << "legend_" << parent_id << " -> " << "legend_" << child_id << " [style=invis];\n";
 }
 
-void GetLegend(const std::map<std::string, std::map<const Nodes::Node*, unsigned int>>& nodeIds,
-               std::ostream& os)
+void AstDOTStyleVisitor::makeLegend(std::ostream& os)
 {
-    os << R"raw(subgraph cluster_legend {
-label = "Legend";
-style = dashed;
-fontsize = 16;
-color = lightgrey;
-node [shape=plaintext];
-
-)raw";
-
-    auto order_nb_type = nodeIds.size();
-    if (order_nb_type > 1)
+    if (nbNodesPerType_.empty())
     {
-        for (auto it = nodeIds.begin(), next_it = std::next(it); next_it != nodeIds.end();
-             ++it, ++next_it)
-        {
-            ProcessElementLegend(it->first, it->second.size(), os);
-            AddFiliation(os, it->first, next_it->first);
-        }
-        ProcessElementLegend(nodeIds.rbegin()->first, nodeIds.rbegin()->second.size(), os);
-    }
-    else if (order_nb_type == 1)
-    {
-        ProcessElementLegend(nodeIds.begin()->first, nodeIds.begin()->second.size(), os);
+        return;
     }
 
+    ProcessElementLegend(nbNodesPerType_.begin()->first, nbNodesPerType_.begin()->second, os);
+    for (auto it = std::next(nbNodesPerType_.begin()); it != nbNodesPerType_.end(); ++it)
+    {
+        auto prev_it = std::prev(it);
+        AddFiliation(os, prev_it->first, it->first);
+        ProcessElementLegend(it->first, it->second, os);
+    }
     os << "}\n";
 }
 
@@ -186,17 +180,19 @@ std::string AstDOTStyleVisitor::name() const
 
 unsigned int AstDOTStyleVisitor::getNodeID(const Nodes::Node* node)
 {
-    const auto& node_name = node->name();
-    if (nodeIds_.find(node_name) == nodeIds_.end())
+    if (nodeIds_.find(node) == nodeIds_.end())
     {
-        nodeIds_[node->name()][node] = ++nodeCount_;
+        nodeIds_[node] = ++nodeCount_;
     }
-    else if (auto& id_map = nodeIds_[node_name]; id_map.find(node) == id_map.end())
-    {
-        id_map[node] = ++nodeCount_;
-    }
+    return nodeIds_[node];
+}
 
-    return nodeIds_[node->name()][node];
+void AstDOTStyleVisitor::computeNumberNodesPerType()
+{
+    for (const auto& [node, _]: nodeIds_)
+    {
+        nbNodesPerType_[node->name()]++;
+    }
 }
 
 void AstDOTStyleVisitor::emitNode(unsigned int id,
@@ -238,13 +234,19 @@ void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_
 
 void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
 {
+    computeNumberNodesPerType();
+
     // Graph title showing the total number of nodes
     os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
     os << "labelloc = \"t\"\n";
-    GetLegend(nodeIds_, os);
+
+    makeLegendTitle(os);
+    makeLegend(os);
     os << "}\n";
+
     nodeCount_ = 0;
     nodeIds_.clear();
+    nbNodesPerType_.clear();
 }
 
 void AstDOTStyleVisitor::operator()(std::ostream& os, Nodes::Node* root)
