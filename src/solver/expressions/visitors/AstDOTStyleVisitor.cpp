@@ -191,7 +191,7 @@ void AstDOTStyleVisitor::computeNumberNodesPerType()
 {
     for (const auto& [node, _]: nodeIds_)
     {
-        nbNodesPerType_[node->name()]++;
+        ++nbNodesPerType_[node->name()];
     }
 }
 
