@@ -41,7 +41,7 @@ public:
 private:
     std::string name_;
     ValueType type_;
-    bool timeDependent_ = true; // optional at construction
+    bool timeDependent_ = true;     // optional at construction
     bool scenarioDependent_ = true; // optional at construction
 };
 
