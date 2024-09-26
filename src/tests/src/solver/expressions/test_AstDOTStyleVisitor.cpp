@@ -147,15 +147,16 @@ legend_VariableNode [ label =" VariableNode: 1"]
     Registry<Node> registry_;
 };
 
-BOOST_FIXTURE_TEST_CASE(tree_with_all_type_node, Fixture)
+BOOST_FIXTURE_TEST_CASE(
+  dot_visitor_is_run_on_complex_expression___resulting_dot_content_as_expected,
+  Fixture)
 {
-    std::ostringstream os;
+    std::ostringstream dotContentStream;
 
     AstDOTStyleVisitor astGraphVisitor;
-    astGraphVisitor(os, makeExpression());
+    astGraphVisitor(dotContentStream, makeExpression());
 
-    // read the content of os
-    BOOST_CHECK_EQUAL(expectedDotContent(), os.str());
+    BOOST_CHECK_EQUAL(dotContentStream.str(), expectedDotContent());
 }
 
 BOOST_FIXTURE_TEST_CASE(AstDOTStyleVisitor_name, Registry<Node>)

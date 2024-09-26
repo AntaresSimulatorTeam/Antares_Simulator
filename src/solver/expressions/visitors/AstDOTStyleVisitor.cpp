@@ -40,15 +40,14 @@ static constexpr BoxStyle ComponentVariableStyle{"goldenrod", "octagon", "filled
 static constexpr BoxStyle PortFieldStyle{"olive", "component", "filled, solid"};
 } // namespace NodeStyle
 
-std::string makeLegendTitle()
+void makeLegendTitle(std::ostream& os)
 {
-    std::string to_return = "subgraph cluster_legend {\n";
-    to_return += "label = \"Legend\";\n";
-    to_return += "style = dashed;\n";
-    to_return += "fontsize = 16;\n";
-    to_return += "color = lightgrey;\n";
-    to_return += "node [shape=plaintext];\n\n";
-    return to_return;
+    os << "subgraph cluster_legend {\n"
+       << "label = \"Legend\";\n"
+       << "style = dashed;\n"
+       << "fontsize = 16;\n"
+       << "color = lightgrey;\n"
+       << "node [shape=plaintext];\n\n";
 }
 
 void ProcessElementLegend(const std::string& element_name, size_t size, std::ostream& os)
@@ -241,7 +240,7 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
     os << "labelloc = \"t\"\n";
 
-    os << makeLegendTitle();
+    makeLegendTitle(os);
     makeLegend(os);
     os << "}\n";
 
