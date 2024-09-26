@@ -63,7 +63,6 @@ BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
     BOOST_CHECK_EQUAL(portFieldNode1 == portFieldNode2, false);
 }
 
-
 BOOST_AUTO_TEST_CASE(PortFieldSumNodeTest)
 {
     std::string portName1("p1");
