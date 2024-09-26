@@ -169,10 +169,6 @@ struct convert<Antares::Solver::ModelParser::Model>
 
     static bool decode(const Node& node, Antares::Solver::ModelParser::Model& rhs)
     {
-        if (!node.IsMap())
-        {
-            return false;
-        }
         rhs.id = node["id"].as<std::string>();
         rhs.description = node["description"].as<std::string>();
         rhs.parameters = node["parameters"]
@@ -236,8 +232,7 @@ struct convert<Antares::Solver::ModelParser::Library>
         rhs.description = node["description"].as<std::string>();
         rhs.port_types = node["port-types"]
                            .as<std::vector<Antares::Solver::ModelParser::PortType>>();
-        //        rhs.models =
-        //        node["models"].as<std::vector<Antares::Solver::ModelParser::Model>>();
+        rhs.models = node["models"].as<std::vector<Antares::Solver::ModelParser::Model>>();
         return true;
     }
 };
