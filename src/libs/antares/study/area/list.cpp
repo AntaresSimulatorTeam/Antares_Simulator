@@ -868,7 +868,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Links
     {
-        fs::path folder = fs::path(study.folderInput.c_str()) / "links" / area.id.c_str();
+        fs::path folder = study.folderInput / "links" / area.id.c_str();
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
@@ -979,10 +979,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Thermal cluster list
     {
-        fs::path preproPath = fs::path(study.folderInput) / "thermal" / "prepro";
+        fs::path preproPath = study.folderInput / "thermal" / "prepro";
         ret = area.thermal.list.loadPreproFromFolder(study, preproPath) && ret;
         ret = area.thermal.list.validatePrepro(study) && ret;
-        fs::path seriesPath  = fs::path(study.folderInput) / "thermal" / "series";
+        fs::path seriesPath  = study.folderInput / "thermal" / "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, seriesPath.string()) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, seriesPath) && ret;
 
@@ -1178,7 +1178,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     if (studyVersion >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
-        fs::path stsFolder = fs::path(pStudy.folderInput.c_str()) / "st-storage";
+        fs::path stsFolder = pStudy.folderInput / "st-storage";
 
         if (fs::exists(stsFolder))
         {
