@@ -38,8 +38,6 @@ void RampingIncreaseDecreaseRateGroup::BuildConstraints()
         {
             if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
             {
-                logs.info() << "ramping";
-
                 RampingIncreaseRate rampingIncreaseRate(builder_, data);
                 RampingDecreaseRate rampingDecreaseRate(builder_, data);
 
