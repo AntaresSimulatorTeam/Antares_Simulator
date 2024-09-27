@@ -124,7 +124,7 @@ void Study::clear()
     ClearAndShrink(header.caption);
     ClearAndShrink(header.author);
     ClearAndShrink(folder);
-    ClearAndShrink(folderInput);
+    folderInput.clear();
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
     inputExtension.clear();
@@ -190,7 +190,7 @@ uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
-           + folderInput.capacity() + folderOutput.capacity() + folderSettings.capacity()
+           + folderOutput.capacity() + folderSettings.capacity()
            + buffer.capacity() + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation
@@ -1188,7 +1188,7 @@ void Study::markAsModified() const
 void Study::relocate(const std::string& newFolder)
 {
     folder = newFolder;
-    folderInput.clear() << newFolder << SEP << "input";
+    folderInput = fs::path(newFolder) / "input";
     folderOutput.clear() << newFolder << SEP << "output";
     folderSettings.clear() << newFolder << SEP << "settings";
 }

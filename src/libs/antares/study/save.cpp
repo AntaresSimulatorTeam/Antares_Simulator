@@ -108,7 +108,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
         relocate(location);
 
         // Output
-        if (not IO::Directory::Create(folderInput))
+        if (not IO::Directory::Create(folderInput.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderInput << "'";
             relocate(backupFolder);

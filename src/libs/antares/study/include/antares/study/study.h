@@ -457,7 +457,7 @@ public:
     //! The source folder of the study
     YString folder;
     //! The input folder
-    YString folderInput;
+    std::filesystem::path folderInput;
     //! The output folder
     YString folderOutput;
     //! The settings folder
