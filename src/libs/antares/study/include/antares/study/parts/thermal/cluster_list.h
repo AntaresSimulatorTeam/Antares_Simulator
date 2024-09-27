@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <filesystem>
 #include <functional>
 
 #include "../common/cluster_list.h"
@@ -43,7 +44,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
     ** \return A size (in bytes)
     */
-    bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
+    bool loadFromFolder(Study& s, const std::filesystem::path& folder, Area* area);
 
     //! \name Constructor & Destructor
     //@{

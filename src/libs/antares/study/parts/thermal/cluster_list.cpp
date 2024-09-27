@@ -45,6 +45,8 @@ namespace Data
 {
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 ThermalClusterList::ThermalClusterList()
 {
 }
@@ -94,7 +96,7 @@ unsigned int ThermalClusterList::enabledAndMustRunCount() const
                                  [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
 
-bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
+bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Area* area)
 {
     assert(area && "A parent area is required");
 
@@ -102,9 +104,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     logs.info() << "Loading thermal configuration for the area " << area->name;
 
     // Open the ini file
-    study.buffer.clear() << folder << SEP << "list.ini";
     IniFile ini;
-    if (!ini.open(study.buffer))
+    if (!ini.open(folder / "list.ini"))
     {
         return false;
     }
@@ -115,8 +116,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     {
         return ret;
     }
-
-    String modulationFile;
 
     for (auto* section = ini.firstSection; section; section = section->next)
     {
@@ -150,16 +149,15 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
 
         // Modulation
-        modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                               << cluster->parentArea->id << SEP << cluster->id() << SEP
-                               << "modulation." << study.inputExtension;
+        auto modulationFile = folder / ".." / ".." / "prepro" / cluster->parentArea->id.c_str()
+            / cluster->id() / "modulation.txt";
 
         enum
         {
             options = Matrix<>::optFixedSize,
         };
 
-        ret = cluster->modulation.loadFromCSVFile(modulationFile,
+        ret = cluster->modulation.loadFromCSVFile(modulationFile.string(),
                                                   thermalModulationMax,
                                                   HOURS_PER_YEAR,
                                                   options)
