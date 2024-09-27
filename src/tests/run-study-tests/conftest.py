@@ -5,6 +5,7 @@ def pytest_addoption(parser):
     parser.addoption("--solver-path", action="store")
     parser.addoption("--named-mps-problems", action="store_true", default=False)
     parser.addoption("--force-parallel", action="store_true", default=False)
+    parser.addoption("--ts-generator", action="store_true", default=False)
 
 @pytest.fixture()
 def solver_name(request):

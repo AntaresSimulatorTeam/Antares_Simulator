@@ -20,8 +20,8 @@
 */
 #pragma once
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
-
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+
 struct CsrFlowDissociationData
 {
     std::map<int, int>& numberOfConstraintCsrFlowDissociation;
@@ -34,13 +34,16 @@ struct CsrFlowDissociationData
     const std::vector<int>& PaysExtremiteDeLInterconnexion;
     const int hour;
 };
-class CsrFlowDissociation : private ConstraintFactory
+
+class CsrFlowDissociation: private ConstraintFactory
 {
 public:
-    CsrFlowDissociation(ConstraintBuilder& builder, CsrFlowDissociationData& data) :
-     ConstraintFactory(builder), data(data)
+    CsrFlowDissociation(ConstraintBuilder& builder, CsrFlowDissociationData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     void add();
 
 private:

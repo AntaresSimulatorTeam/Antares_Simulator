@@ -36,7 +36,6 @@ namespace AllYears
 template<bool OpInferior, class NextT>
 inline void MinMaxBase<OpInferior, NextT>::initializeFromStudy(Data::Study& study)
 {
-    minmax.initialize();
     // Next
     NextType::initializeFromStudy(study);
 }
@@ -46,9 +45,13 @@ inline void MinMaxBase<OpInferior, NextT>::reset()
 {
     // Reset at the begining of the simulation
     if (OpInferior)
+    {
         minmax.resetInf();
+    }
     else
+    {
         minmax.resetSup();
+    }
     // Next
     NextType::reset();
 }
@@ -57,9 +60,13 @@ template<bool OpInferior, class NextT>
 inline void MinMaxBase<OpInferior, NextT>::merge(uint year, const IntermediateValues& rhs)
 {
     if (OpInferior)
+    {
         minmax.mergeInf(year, rhs);
+    }
     else
+    {
         minmax.mergeSup(year, rhs);
+    }
     // Next
     NextType::merge(year, rhs);
 }
@@ -92,7 +99,9 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
     // Values
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
+    {
         v[i] = (double)array[i].indice;
+    }
 
     // Next column index
     ++report.data.columnIndex;
@@ -120,7 +129,9 @@ inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& r
     // Values
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
+    {
         v[i] = array[i].value;
+    }
 
     // Next column index
     ++report.data.columnIndex;

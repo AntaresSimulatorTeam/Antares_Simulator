@@ -50,15 +50,24 @@ AccessModifierOffset: -4
 #                            argument2)
 AlignAfterOpenBracket: Align
 
+# If not None, when using initialization for an array of structs aligns the fields into columns.
+# Possible values: Left, Right, None
+AlignArrayOfStructures: None
+
 # If true, aligns consecutive assignments
 # -> false: since it can be strange when types with different length are near
 #           each other
 AlignConsecutiveAssignments: false
 
+AlignConsecutiveBitFields: false
+
 # If true, aligns consecutive declarations
 # -> false: since it can be strange when types with different length are near
 #           each other
 AlignConsecutiveDeclarations: false
+
+AlignConsecutiveMacros: false
+
 
 # Options for aligning backslashes in escaped newlines
 # -> Align: escaped newlines as far left as possible
@@ -82,6 +91,9 @@ AlignOperands: true
 #          double* c  // Comment
 AlignTrailingComments: true
 
+# We favor breaking between arguments
+AllowAllArgumentsOnNextLine: false
+
 # If the function declaration doesn’t fit on a line, allow putting all
 # parameters of a function declaration onto the next line even if
 # BinPackParameters is false.
@@ -93,9 +105,14 @@ AlignTrailingComments: true
 #                           int e);
 AllowAllParametersOfDeclarationOnNextLine: false
 
+AllowBreakBeforeNoexceptSpecifier: Never
+
 # If true, allows contracting simple braced statements to a single line
 # -> false: Not allowed for the sake of absolute clarity
 AllowShortBlocksOnASingleLine: false
+
+# No short instructions on single line
+AllowShortEnumsOnASingleLine: false
 
 # If true, short case labels will be contracted to a single line
 # -> false: Not allowed, only one instruction per line
@@ -109,17 +126,18 @@ AllowShortFunctionsOnASingleLine: false
 # -> false: Not allowed
 AllowShortIfStatementsOnASingleLine: false
 
+# Exception to our "no single line" rule,
+# to allow for lambda-based one liners:
+# std::sort(vec.begin(), vec.end(), [](auto v) { return v.a < v.b; });
+AllowShortLambdasOnASingleLine: All
+
 # If true, while (true) continue; can be put on a single line
 # -> false: Not allowed
 AllowShortLoopsOnASingleLine: false
 
-# DEPRECATED
-# The function definition return type breaking style to use
-# -> None: Break after return type automatically
-AlwaysBreakAfterDefinitionReturnType: None
-
 # The function declaration return type breaking style to use
-# -> None: Break after return type automatically
+# -> None: Break after return type automatically,
+#          according to penalty system
 AlwaysBreakAfterReturnType: None
 
 # If true, always break before multiline string literals
@@ -148,8 +166,6 @@ BinPackParameters: false
 # In this file, BreakBeforeBraces is set to Allman which treats all the braces
 # the same way: break before all braces
 # See BreakBeforeBraces
-
-# BreakAfterJavaFieldAnnotations: ignored for C++
 
 # The way to wrap binary operators when expression are too long to hold on a
 # single line
@@ -191,7 +207,7 @@ BreakStringLiterals: true
 
 # Maximum number of characters per line
 # -> 100: Historically 80 for C++, but quite deprecated today; it is dicutable
-#         but 100 seemed to be more adequat in our case
+#         but 100 seemed to be more adequat in our case.
 ColumnLimit: 100
 
 # A regular expression that describes comments with special meaning, which
@@ -204,16 +220,10 @@ CommentPragmas: '^ IWYU pragma:'
 # -> false: one line per namespace, ugly otherwise
 CompactNamespaces: false
 
-# If the constructor initializers don’t fit on a line, put each initializer on
-# its own line
-# -> true
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-
 # The number of characters to use for indentation of constructor initializer
 # lists
-# -> 1 to highlight the brace at the end of the initialization and emphasize
-#    that it is inside the constructor, but before any instruction
-ConstructorInitializerIndentWidth: 1
+# -> 4 Same indentation level as the block instructions
+ConstructorInitializerIndentWidth: 4
 
 # Indent width for line continuations
 # -> 2: So that it is differenciable from other identations
@@ -234,40 +244,119 @@ DerivePointerAlignment: false
 # -> false
 DisableFormat: false
 
+# No line between access modifier and code
+EmptyLineAfterAccessModifier: Never
+
+# Always one line before public/private/protected
+# to clearly separate the following block
+EmptyLineBeforeAccessModifier: Always
+
 # If true, clang-format detects whether function calls and definitions are
 # formatted with one parameter per line
 # -> false: allways use the convention specified in this file
 ExperimentalAutoDetectBinPacking: false
-
-# A vector of macros that should be interpreted as foreach loops instead of as
-# function calls.
-# -> no macro
-ForEachMacros: []
 
 # If true, clang-format adds missing namespace end comments and fixes invalid
 # existing ones
 # -> true: add a lot of clarity to these endless braces at the end of a file
 FixNamespaceComments: true
 
+# A vector of macros that should be interpreted as foreach loops instead of as
+# function calls.
+# -> no macro
+ForEachMacros: [ ]
+
+# Use include blocks
+IncludeBlocks: Regroup
+
+# First main header, then std libs, then boost, then yuni, then antares
+IncludeCategories:
+  # antares headers with "
+  - Regex: '^"antares/.*'
+    Priority: 10
+    SortPriority: 10
+    CaseSensitive: false
+  # antares headers with <
+  - Regex: '^<antares/.*'
+    Priority: 10
+    SortPriority: 9
+    CaseSensitive: false
+  # Main yuni headers need to go first...
+  - Regex: '^(<|")yuni/(yuni|core).h(>|")'
+    Priority: 5
+    SortPriority: 4
+  # yuni headers
+  - Regex: '^(<|")yuni/.*'
+    Priority: 5
+    CaseSensitive: false
+  # boost
+  - Regex: '^(<|")boost/.*'
+    Priority: 2
+  # stdlib
+  - Regex: '^<.*'
+    Priority: 1
+    CaseSensitive: false
+  # everything else (targets to be internal lib headers)
+  - Regex: '.*'
+    Priority: 15
+    CaseSensitive: false
+
+# Definition of main header of a cpp file
+IncludeIsMainRegex: '([-_](test))?$'
+IncludeIsMainSourceRegex: ''
+
+
+# public/private/protected not indented
+IndentAccessModifiers: false
+
+IndentCaseBlocks: false
+
 # Indent case labels one level from the switch statement
 # -> false
 IndentCaseLabels: false
 
+IndentExternBlock: NoIndent
+
+IndentGotoLabels: false
+
 # The preprocessor directive indenting style to use
 # -> None: never indent preprocessor directives
 IndentPPDirectives: None
+
+IndentRequiresClause: false
 
 # The number of columns to use for indentation
 # -> 4: Good compromise between visible and limiting additional spaces
 IndentWidth: 4
 
 # Indent if a function definition or declaration is wrapped after the type
-# -> true: to be clear on the fact that this is not another function declaration
-IndentWrappedFunctionNames: true
+# -> false: so that function name remains at indentation level
+IndentWrappedFunctionNames: false
+
+# We always use braces to identify blocks, even one-lines
+InsertBraces: true
+
+# This is standard
+InsertNewlineAtEOF: true
+
+# Leave integer literals as they are
+IntegerLiteralSeparator:
+  Binary: 0
+  Decimal: 0
+  Hex: 0
+
+# Remove unnecessary empty lines
+KeepEmptyLinesAtEOF: false
 
 # If true, the empty line at the start of blocks is kept
 # -> false: this is useless
 KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Indent lambda according to its signature, to make it clear it relates to it
+LambdaBodyIndentation: Signature
+
+# Ensure consistent use of unix like EOF.
+LineEnding: LF
 
 # The maximum number of consecutive empty lines to keep
 # -> 1: Use comments to differenciate important parts of a big portion of code
@@ -279,26 +368,65 @@ MaxEmptyLinesToKeep: 1
 # -> None: Do not add an indentation level
 NamespaceIndentation: None
 
+
+# Each constructor initializer on its own line.
+PackConstructorInitializers: Never
+
+# Penalties are used to decide where to break long lines,
+# when multiple alternatives are possible.
+# We use a "high" cost for breaking before assignment and first parameter,
+# to favor breaking between function parameters and chained methods.
+PenaltyBreakAssignment: 1000
+PenaltyBreakBeforeFirstCallParameter: 100
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakOpenParenthesis: 0
+PenaltyBreakString: 1000
+PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter: 1000000
+# Important to allow method chaining,
+# and not breaking assignment or after function parenthesis
+PenaltyIndentedWhitespace: 0
+PenaltyReturnTypeOnItsOwnLine: 200
+
 # Pointer and reference alignment style
 # -> Left: the type of a variable is at its left, and the * or the & are part of
 #          this type
 PointerAlignment: Left
 
+# const goes before type
+QualifierAlignment: Left
+
+# & and * go with type, not variable name
+ReferenceAlignment: Left
+
 # If true, clang-format will attempt to re-flow comments
 # -> true: because clang-format does it better than you
 ReflowComments: true
 
+# No unnecessary ;
+RemoveSemicolon: true
+
+# Concept-related options to be discussed at some point
+RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: OuterScope
+
+# Always have empty lines between function and classes definitions
+SeparateDefinitionBlocks: Always
+
 # If true, clang-format will sort #includes
 # -> false: see coding guidelines
-SortIncludes: false
+SortIncludes: true
 
 # If true, clang-format will sort using declarations
-# -> false
-SortUsingDeclarations: false
+# -> LexicographicNumeric to take into account sub-namespaces
+SortUsingDeclarations: LexicographicNumeric
 
 # If true, a space is inserted after C style casts
 # -> false
 SpaceAfterCStyleCast: false
+
+SpaceAfterLogicalNot: false
 
 # If true, a space will be inserted after the ‘template’ keyword
 # -> false
@@ -308,9 +436,30 @@ SpaceAfterTemplateKeyword: false
 # -> true
 SpaceBeforeAssignmentOperators: true
 
+# "case 1: break;" instead of "case 1 : break;"
+SpaceBeforeCaseColon: false
+
+# Foo foo{ bar };
+SpaceBeforeCpp11BracedList: false
+
+# Foo::Foo(): a(a) {}
+SpaceBeforeCtorInitializerColon: false
+
+# class Foo: Bar {}
+SpaceBeforeInheritanceColon: false
+
 # Defines in which cases to put a space before opening parentheses
 # -> ControlStatements: Before if/while/for statements
 SpaceBeforeParens: ControlStatements
+
+# for (auto v: values) {}
+SpaceBeforeRangeBasedForLoopColon: false
+
+# int a[5]
+SpaceBeforeSquareBrackets: false
+
+# void f() {}
+SpaceInEmptyBlock: false
 
 # If true, spaces may be inserted into ()
 # -> false
@@ -334,9 +483,17 @@ SpacesInCStyleCastParentheses: false
 # -> false
 SpacesInContainerLiterals: false
 
+# Minimum one space to separate the start of the comment
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: -1
+
 # If true, spaces will be inserted after ( and before )
 # -> false
-SpacesInParentheses: false
+# SpacesInParentheses: false
+
+# Keep previous behaviour with SpacesInParentheses: false
+SpacesInParens: Never
 
 # If true, spaces will be inserted after [ and before ]. Lambdas or unspecified
 # size array declarations will not be affected
@@ -345,8 +502,7 @@ SpacesInSquareBrackets: false
 
 # Format compatible with this standard, e.g. use A<A<int> > instead of A<A<int>>
 # for LS_Cpp03
-# Cpp11
-Standard: Cpp11
+Standard: c++20
 
 # The number of columns used for tab stops
 # Note: this property is not used since tabs are forbidden (see UseTab)

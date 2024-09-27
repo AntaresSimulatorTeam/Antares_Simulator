@@ -22,7 +22,6 @@
 #define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesSolar_H__
 
 #include "antares/solver/variable/variable.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 namespace Antares
 {
@@ -39,6 +38,7 @@ struct VCardTimeSeriesValuesSolar
     {
         return "SOLAR";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -62,29 +62,28 @@ struct VCardTimeSeriesValuesSolar
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardTimeSeriesValuesSolar VCardForSpatialAggregate;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 1;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
@@ -98,7 +97,7 @@ struct VCardTimeSeriesValuesSolar
 */
 template<class NextT = Container::EndOfList>
 class TimeSeriesValuesSolar
- : public Variable::IVariable<TimeSeriesValuesSolar<NextT>, NextT, VCardTimeSeriesValuesSolar>
+    : public Variable::IVariable<TimeSeriesValuesSolar<NextT>, NextT, VCardTimeSeriesValuesSolar>
 {
 public:
     //! Type of the next static variable
@@ -124,11 +123,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -146,7 +145,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         isRenewableGenerationAggregrated = study.parameters.renewableGeneration.isAggregated();
 
@@ -176,7 +177,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -201,10 +204,10 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -267,8 +270,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

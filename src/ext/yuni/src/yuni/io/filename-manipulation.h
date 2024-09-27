@@ -21,7 +21,7 @@ namespace IO
 ** The path part will be extracted according the system-(un)dependant path-separator
 ** \code
 **    String outputString;
-**	  IO::parentPath(outputString, "/tmp/foo.txt");
+**	  IO::parent_path(outputString, "/tmp/foo.txt");
 **    std::cout << outputString << std::endl; // writes `/tmp`
 ** \endcode
 **
@@ -29,7 +29,7 @@ namespace IO
 ** \param[in] path The filename
 ** \param[in] systemDependant Consider only the system-dependant path-separator
 */
-void parentPath(String& out, const AnyString& path, bool systemDependant = false);
+void parent_path(String& out, const AnyString& path, bool systemDependant = false);
 
 /*!
 ** \brief Extract the path part of a filename
@@ -37,7 +37,7 @@ void parentPath(String& out, const AnyString& path, bool systemDependant = false
 ** The path part will be extracted according the system-(un)dependant path-separator
 ** \code
 **    String outputString;
-**	  IO::parentPath(outputString, "/tmp/foo.txt");
+**	  IO::parent_path(outputString, "/tmp/foo.txt");
 **    std::cout << outputString << std::endl; // writes `/tmp`
 ** \endcode
 **
@@ -45,7 +45,7 @@ void parentPath(String& out, const AnyString& path, bool systemDependant = false
 ** \param[in] path The filename
 ** \param[in] systemDependant Consider only the system-dependant path-separator
 */
-void parentPathImpl(Clob& out, const AnyString& path, bool systemDependant = false);
+void parent_path_impl(Clob& out, const AnyString& path, bool systemDependant = false);
 
 /*!
 ** \brief Extract the path part of a filename and make it absolute

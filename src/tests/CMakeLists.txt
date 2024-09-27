@@ -9,8 +9,7 @@ if (Boost_FOUND)
     set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)
 endif()
 
-
-
+add_subdirectory(cucumber)
 
 # end to end test require boost 1.6.x because of boost::test_tools::tolerance, BOOST_TEST
 # old versions of Boost don't contain a '.', also ignore them
@@ -34,6 +33,7 @@ if (${RECENT_BOOST})
     add_subdirectory(end-to-end)
     add_subdirectory(src)
     add_subdirectory(kirchhoff-cbuilder)
+    add_subdirectory(inmemory-study)
 else()
     message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()
@@ -84,6 +84,13 @@ if (BUILD_TOOLS)
         COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-kirchhoff-constraints-builder> kirchhoff_pytest.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
         )
+
+      add_test(
+        NAME tsgenerator
+        COMMAND Python3::Interpreter -m pytest -m tsgenerator --tsgenerator_path=$<TARGET_FILE:antares-ts-generator> antares_tools/ts-generator/ts-generator.py
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
+        )
+
 endif()
 
       set_property(TEST unfeasible PROPERTY LABELS study sirius)

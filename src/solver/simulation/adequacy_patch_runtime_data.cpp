@@ -24,11 +24,14 @@
 namespace
 {
 constexpr double thresholdForCostCoefficient = 1.e-12;
+
 double computeHurdleCostCoefficient(double unsuppliedEnergyCost1, double unsuppliedEnergyCost2)
 {
     double m = std::max(unsuppliedEnergyCost1, unsuppliedEnergyCost2);
     if (std::fabs(m) < thresholdForCostCoefficient)
+    {
         m = thresholdForCostCoefficient;
+    }
     return 1. / m;
 }
 } // namespace
@@ -65,6 +68,7 @@ AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
         originAreaMode[i] = from->adequacyPatchMode;
         extremityAreaMode[i] = with->adequacyPatchMode;
         hurdleCostCoefficients[i] = computeHurdleCostCoefficient(
-          from->thermal.unsuppliedEnergyCost, with->thermal.unsuppliedEnergyCost);
+          from->thermal.unsuppliedEnergyCost,
+          with->thermal.unsuppliedEnergyCost);
     }
 }

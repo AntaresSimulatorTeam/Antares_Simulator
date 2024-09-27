@@ -11,6 +11,10 @@ set(SRC
         name_translator.cpp
         include/antares/solver/utils/opt_period_string_generator.h
         opt_period_string_generator.cpp
+	basis_status.cpp
+	include/antares/solver/utils/basis_status.h
+    basis_status_impl.cpp
+    basis_status_impl.h
 )
 
 add_library(utils ${SRC})
@@ -29,8 +33,8 @@ target_link_libraries(utils
         sirius_solver
         Antares::study
         Antares::result_writer #ortools_utils.h
+        Antares::optimization-options
         antares-core #enum.h
-        model_antares #opt_period_string_generator.h -> antares/solver/optimisation/opt_period_string_generator_base.h
 )
 
 target_include_directories(utils

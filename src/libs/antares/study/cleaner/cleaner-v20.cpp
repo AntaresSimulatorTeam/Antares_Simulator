@@ -20,9 +20,10 @@
 */
 
 #include <yuni/yuni.h>
-#include "antares/study/study.h"
-#include "antares/study/cleaner.h"
+
 #include <antares/inifile/inifile.h>
+#include "antares/study/cleaner.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -34,8 +35,10 @@ namespace Antares::Data
 namespace // anonymous
 {
 template<class StringT>
-static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, const Area* area,
-        StringT& buffer)
+static void listOfFilesAnDirectoriesToKeepForArea(PathList& e,
+                                                  PathList& p,
+                                                  const Area* area,
+                                                  StringT& buffer)
 {
     // ID of the current area
     const AreaName& id = area->id;
@@ -79,7 +82,9 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/inflowPattern_" << id << ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxpower_" << id << ".txt";
+    buffer.clear() << "input/hydro/common/capacity/maxDailyGenEnergy_" << id << ".txt";
+    e.add(buffer);
+    buffer.clear() << "input/hydro/common/capacity/maxDailyPumpEnergy_" << id << ".txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/reservoir_" << id << ".txt";
     e.add(buffer);
@@ -90,7 +95,11 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     buffer.clear() << "input/hydro/series/" << id << "/mod.txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/series/" << id << "/mingen.txt";
-    e.add(buffer);    
+    e.add(buffer);
+    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyGenPower.txt";
+    e.add(buffer);
+    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyPumpPower.txt";
+    e.add(buffer);
     buffer.clear() << "input/hydro/allocation/" << id << ".ini";
     p.add(buffer);
     buffer.clear() << "input/hydro/prepro/" << id;
@@ -127,14 +136,15 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (auto cluster : area->thermal.list.all())
+        for (auto& cluster: area->thermal.list.all())
         {
             buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id();
             p.add(buffer);
             buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id();
             p.add(buffer);
 
-            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id() << "/series.txt";
+            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id()
+                           << "/series.txt";
             e.add(buffer);
 
             buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id() << "/data.txt";
@@ -156,7 +166,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (const auto cluster : area->renewable.list.all())
+        for (const auto& cluster: area->renewable.list.all())
         {
             buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
             p.add(buffer);
@@ -203,19 +213,16 @@ void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, Strin
         auto& link = *(i->second);
         // Parameters
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id
-                       << "_parameters"
-                       << ".txt";
+                       << "_parameters" << ".txt";
         p.add(buffer);
 
         // Indirect capacities
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_direct"
-                       << ".txt";
+                       << SEP << link.with->id << "_direct" << ".txt";
         p.add(buffer);
         // Direct capacities
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_indirect"
-                       << ".txt";
+                       << SEP << link.with->id << "_indirect" << ".txt";
         p.add(buffer);
     }
 }
@@ -255,10 +262,12 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     e.add("input/thermal/areas.ini");
 
     // Also exclude custom files/folders provided by the user
-    infos->customExclude.words(":", [&e](const AnyString& word) {
-        e.add(word);
-        return true;
-    });
+    infos->customExclude.words(":",
+                               [&e](const AnyString& word)
+                               {
+                                   e.add(word);
+                                   return true;
+                               });
 
     // Post
     p.add("logs");
@@ -353,7 +362,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                 logs.verbosityLevel = Logs::Verbosity::Warning::level;
                 // load all links
                 buffer.clear() << infos->folder << "/input/links/" << area->id;
-                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer))
+                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer.c_str()))
                 {
                     delete arealist;
                     delete study;
@@ -382,23 +391,24 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     buffer.clear() << infos->folder << "/input/bindingconstraints/bindingconstraints.ini";
     if (ini.open(buffer))
     {
-        String v;
-
-        ini.each([&](const IniFile::Section& section) {
-            auto* property = section.firstProperty;
-            for (; property; property = property->next)
-            {
-                if (property->key == "id")
-                {
-                    v = property->value;
-                    v.toLower();
-                    buffer.clear() << "input/bindingconstraints/" << v << ".txt";
-                    e.add(buffer);
-                    // Go to the next binding constraint
-                    break;
-                }
-            }
-        });
+        ini.each(
+          [&e](const IniFile::Section& section)
+          {
+              auto* property = section.firstProperty;
+              for (; property; property = property->next)
+              {
+                  if (property->key == "id")
+                  {
+                      String v = property->value;
+                      v.toLower();
+                      String tmp;
+                      tmp << "input/bindingconstraints/" << v << ".txt";
+                      e.add(tmp);
+                      // Go to the next binding constraint
+                      break;
+                  }
+              }
+          });
     }
     else
     {
@@ -411,4 +421,3 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 }
 
 } // namespace Antares::Data
-

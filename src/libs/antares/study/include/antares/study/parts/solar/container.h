@@ -30,6 +30,7 @@ namespace Data
 namespace Solar
 {
 class Prepro;
+
 class Container
 {
 public:
@@ -40,7 +41,7 @@ public:
     */
     Container();
     //! Destructor
-    ~Container();
+    ~Container() = default;
     //@}
 
     /*!
@@ -63,13 +64,13 @@ public:
     */
     uint64_t memoryUsage() const;
 
-public:
     //! Data for the pre-processor
-    Data::Solar::Prepro* prepro;
+    std::unique_ptr<Data::Solar::Prepro> prepro;
+
+    TimeSeriesNumbers tsNumbers;
+
     /*! Data for time-series */
     TimeSeries series;
-
-    TimeSeries::numbers tsNumbers;
 
 }; // class Container
 

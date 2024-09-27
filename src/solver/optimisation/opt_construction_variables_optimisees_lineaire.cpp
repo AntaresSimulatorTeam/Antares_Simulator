@@ -1,37 +1,39 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-#include "variables/VariableManagerUtils.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_rename_problem.h"
-
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include <spx_constantes_externes.h>
+
+#include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
+#include "variables/VariableManagerUtils.h"
+
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
+                                                                                   bool);
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
     int NombreDeVariables = 0;
     VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
@@ -45,10 +47,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             variableManager.NTCDirect(interco, pdt) = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
 
-            const auto origin
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
-            const auto destination
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
+            const auto origin = problemeHebdo->NomsDesPays
+                                  [problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+            const auto destination = problemeHebdo->NomsDesPays
+                                       [problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
             variableNamer.NTCDirect(NombreDeVariables, origin, destination);
             NombreDeVariables++;
 
@@ -69,13 +71,13 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                const int palier = PaliersThermiquesDuPays
+                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
                 variableManager.DispatchableProduction(palier, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
@@ -84,7 +86,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
 
-            for (const auto& storage : problemeHebdo->ShortTermStorage[pays])
+            for (const auto& storage: problemeHebdo->ShortTermStorage[pays])
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 // 1. Injection
@@ -134,7 +136,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
             else
+            {
                 variableManager.HydProd(pays, pdt) = -1;
+            }
             variableManager.HydProdDown(pays, pdt) = -1;
             variableManager.HydProdUp(pays, pdt) = -1;
             if (problemeHebdo->TypeDeLissageHydraulique
@@ -183,7 +187,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
             else
+            {
                 variableManager.Pumping(pays, pdt) = -1;
+            }
 
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
             {
@@ -209,7 +215,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168
-                                      + NombreDePasDeTempsPourUneOptimisation - 1);
+                                     + NombreDePasDeTempsPourUneOptimisation - 1);
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {

@@ -28,7 +28,7 @@ namespace Antares::Data::ScenarioBuilder
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
 */
-class TSNumberData : public dataInterface
+class TSNumberData: public dataInterface
 {
 public:
     //! Matrix

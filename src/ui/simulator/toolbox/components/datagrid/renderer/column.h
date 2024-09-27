@@ -91,7 +91,6 @@ public:
     ColumnNTC();
     ~ColumnNTC() override = default;
 };
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

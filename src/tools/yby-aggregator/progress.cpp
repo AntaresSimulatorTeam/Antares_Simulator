@@ -20,6 +20,7 @@
 */
 
 #include "progress.h"
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
@@ -29,7 +30,10 @@ Progress progressBar;
 uint Progress::Total = 0;
 std::atomic<int> Progress::Current = 0;
 
-Progress::Progress() : state(stReading), pCompleted(false), pLastPercent(0)
+Progress::Progress():
+    state(stReading),
+    pCompleted(false),
+    pLastPercent(0)
 {
     Current = 0;
     Total = 0;
@@ -44,14 +48,18 @@ bool Progress::onInterval(uint)
 {
     // Do nothing if in silent mode
     if (state == stSilent)
+    {
         return true;
+    }
 
     const uint current = (uint)Current;
     const uint total = Total;
     uint remains = total - current;
 
     if (!total)
+    {
         return true;
+    }
 
     switch (state)
     {
@@ -66,9 +74,13 @@ bool Progress::onInterval(uint)
         }
 
         if (remains == 1)
+        {
             logs.info() << "Running...  (1 task remains)";
+        }
         else
+        {
             logs.info() << "Running...  (" << remains << " tasks remain)";
+        }
         break;
     }
     case stWrite:

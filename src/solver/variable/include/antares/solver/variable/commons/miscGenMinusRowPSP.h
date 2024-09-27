@@ -21,9 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_MiscGenMinusRowPSP_H__
 #define __SOLVER_VARIABLE_ECONOMY_MiscGenMinusRowPSP_H__
 
-#include "antares/solver/variable/variable.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <antares/study/area/constants.h>
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {
@@ -40,6 +39,7 @@ struct VCardMiscGenMinusRowPSP
     {
         return "MISC. NDG";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -60,29 +60,28 @@ struct VCardMiscGenMinusRowPSP
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardMiscGenMinusRowPSP VCardForSpatialAggregate;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 1;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
@@ -95,7 +94,7 @@ struct VCardMiscGenMinusRowPSP
 */
 template<class NextT = Container::EndOfList>
 class MiscGenMinusRowPSP
- : public Variable::IVariable<MiscGenMinusRowPSP<NextT>, NextT, VCardMiscGenMinusRowPSP>
+    : public Variable::IVariable<MiscGenMinusRowPSP<NextT>, NextT, VCardMiscGenMinusRowPSP>
 {
 public:
     //! Type of the next static variable
@@ -121,11 +120,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -145,7 +144,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -167,7 +168,9 @@ public:
                 {
                     const Matrix<>::ColumnType& col = area->miscGen.entry[x];
                     for (unsigned int y = 0; y != area->miscGen.height; ++y)
+                    {
                         pValuesForTheCurrentYear[numSpace].hour[y] += col[y];
+                    }
                 }
             }
         }
@@ -205,10 +208,10 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -224,8 +227,10 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        {
             AncestorType::pResults.merge(numSpaceToYear[numSpace],
                                          pValuesForTheCurrentYear[numSpace]);
+        }
 
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
@@ -263,8 +268,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

@@ -24,17 +24,21 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <set>
-#include <functional>
+
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
 #include "antares/study/fwd.h"
+
 #include "BindingConstraint.h"
 #include "BindingConstraintSaver.h"
 
-namespace Antares::Data {
+namespace Antares::Data
+{
 
-class BindingConstraintGroupRepository {
+class BindingConstraintGroupRepository
+{
 public:
     [[nodiscard]] unsigned size() const;
 
@@ -62,4 +66,4 @@ private:
     std::vector<std::unique_ptr<BindingConstraintGroup>> groups_;
 };
 
-} // Data
+} // namespace Antares::Data

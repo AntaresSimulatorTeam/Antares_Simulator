@@ -1,5 +1,6 @@
 # Useful variables definitions
 set(src_solver_simulation "${CMAKE_SOURCE_DIR}/solver/simulation")
+set(src_solver_hydro "${CMAKE_SOURCE_DIR}/solver/hydro")
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 set(SRC_TS_NUMBERS
@@ -19,6 +20,7 @@ target_include_directories(tests-ts-numbers
 )
 target_link_libraries(tests-ts-numbers
 						PRIVATE
+                            Antares::utils
 							Boost::unit_test_framework
 							model_antares
 							antares-solver-simulation
@@ -88,3 +90,33 @@ add_test(NAME time_series COMMAND test-time_series)
 
 set_property(TEST time_series PROPERTY LABELS unit)
 
+# ===================================
+# Tests on hydro final reservoir level functions
+# ===================================
+
+add_executable(test-hydro_final test-hydro-final-reservoir-level-functions.cpp)
+
+target_include_directories(test-hydro_final
+	PRIVATE
+	"${src_solver_simulation}"
+	"${src_libs_antares_study}"
+	"${src_solver_hydro}"
+)
+target_link_libraries(test-hydro_final
+	PRIVATE
+	Boost::unit_test_framework
+	Antares::study
+	antares-solver-simulation
+	Antares::array
+)
+
+# Linux
+if(UNIX AND NOT APPLE)
+	target_link_libraries(test-hydro_final PRIVATE stdc++fs)
+endif()
+
+set_target_properties(test-hydro_final PROPERTIES FOLDER Unit-tests)
+
+add_test(NAME hydro_final COMMAND test-hydro_final)
+
+set_property(TEST hydro_final PROPERTY LABELS unit)

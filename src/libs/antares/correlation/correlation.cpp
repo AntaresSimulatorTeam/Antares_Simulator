@@ -1,28 +1,30 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/correlation/correlation.h"
-#include "antares/study/study.h"
-#include "antares/study/area/area.h"
+
 #include <antares/array/matrix.h>
+#include <antares/utils/utils.h>
+#include "antares/study/area/area.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -80,21 +82,27 @@ static inline bool ReadCorrelationModeFromINI(const IniFile& ini,
     if (!section)
     {
         if (warnings)
+        {
             logs.error() << ini.filename() << ": the section 'general' is missing";
+        }
         return false;
     }
     const IniFile::Property* p = section->find("mode");
     if (!p)
     {
         if (warnings)
+        {
             logs.error() << ini.filename() << ": the property 'mode' is missing";
+        }
         return false;
     }
     mode = Correlation::CStringToMode(p->value.c_str());
     if (mode == Correlation::modeNone)
     {
         if (warnings)
+        {
             logs.error() << ini.filename() << ": invalid correlation mode";
+        }
         return false;
     }
     return true;
@@ -114,7 +122,9 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
     for (auto* p = section.firstProperty; p; p = p->next)
     {
         if (p->key.empty())
+        {
             continue;
+        }
 
         const AreaName::Size offset = p->key.find('%');
         if (offset == AreaName::npos or !offset or offset == p->key.size() - 1)
@@ -131,15 +141,19 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
         if (!from)
         {
             if (warnings)
+            {
                 logs.error() << ini.filename() << ": '" << nameFrom
                              << "': impossible to find the area";
+            }
             continue;
         }
         if (!to)
         {
             if (warnings)
+            {
                 logs.error() << ini.filename() << ": '" << nameTo
                              << "': impossible to find the area";
+            }
             continue;
         }
 
@@ -165,7 +179,9 @@ static inline void ExportCorrelationCoefficients(Study& study,
                                                  const std::string& name)
 {
     if (m.empty() or m.width != m.height)
+    {
         return;
+    }
 
     file << '[' << name << "]\n";
 
@@ -177,7 +193,7 @@ static inline void ExportCorrelationCoefficients(Study& study,
         auto& col = m.entry[x];
         for (uint y = 0; y < x; ++y)
         {
-            if (!Math::Zero(col[y]))
+            if (!Utils::isZero(col[y]))
             {
                 file << from << '%' << study.areas.byIndex[y]->id << " = " << col[y] << '\n';
             }
@@ -196,13 +212,13 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
     if (ini)
     {
         IniFile::Section* s;
-        for (s = ini->firstSection; s != NULL; s = s->next) /* Each section */
+        for (s = ini->firstSection; s; s = s->next) /* Each section */
         {
             Area* from = AreaListLFind(l, s->name.c_str());
             if (from)
             {
                 IniFile::Property* p;
-                for (p = s->firstProperty; p != NULL; p = p->next) /* Each property*/
+                for (p = s->firstProperty; p; p = p->next) /* Each property*/
                 {
                     Area* to = AreaListLFind(l, p->key.c_str());
                     if (to and to != from)
@@ -213,15 +229,19 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
                     else /* nullptr != to */
                     {
                         if (warnings)
+                        {
                             logs.warning()
                               << "Correlation: " << s->name << ": " << p->key << ": Area not found";
+                        }
                     }
                 }
             }
             else /* nullptr != from */
             {
                 if (warnings)
+                {
                     logs.warning() << "Correlation: " << s->name << ": Area not found";
+                }
             }
         }
         return 1;
@@ -229,12 +249,12 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
     return 0;
 }
 
-int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const char filename[])
+int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string& filename)
 {
     /* Asserts */
     assert(m);
     assert(l);
-    assert(filename);
+    assert(!filename.empty());
 
     InterAreaCorrelationResetMatrix(m, l);
     IniFile ini;
@@ -272,7 +292,9 @@ IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
             for (y = 0; y < x; ++y)
             {
                 if (fabs(col[y]) > 0.00000001)
+                {
                     s->add(l->byIndex[y]->id, col[y]);
+                }
             }
         }
     }
@@ -286,7 +308,9 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
     assert(l);
 
     if (!filename or '\0' == *filename)
+    {
         return 0;
+    }
     if (m->width != l->size() or m->height != l->size())
     {
         logs.error() << filename << ": The matrix does not have the good sie (" << l->size() << 'x'
@@ -302,14 +326,9 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
     return 0;
 }
 
-Correlation::Correlation() : annual(nullptr), monthly(nullptr), pMode(modeNone)
+Correlation::Correlation():
+    pMode(modeNone)
 {
-}
-
-Correlation::~Correlation()
-{
-    delete annual;
-    delete[] monthly;
 }
 
 bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
@@ -353,9 +372,13 @@ Correlation::Mode Correlation::CStringToMode(const AnyString& str)
     s.trim(" \t\r\n");
     s.toLower();
     if (s == "annual")
+    {
         return modeAnnual;
+    }
     if (s == "monthly")
+    {
         return modeMonthly;
+    }
     return modeNone;
 }
 
@@ -366,14 +389,16 @@ void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
     // mode
     file << "[general]\nmode = " << ModeToCString(pMode) << "\n\n";
 
-    if (annual)
+    if (!annual.empty())
     {
-        ExportCorrelationCoefficients(study, *annual, file, "annual");
+        ExportCorrelationCoefficients(study, annual, file, "annual");
     }
     else
+    {
         logs.error() << correlationName << ": the annual correlation coefficients are missing";
+    }
 
-    if (monthly)
+    if (!monthly.empty())
     {
         for (int month = 0; month < 12; month++)
         {
@@ -381,28 +406,34 @@ void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
         }
     }
     else
+    {
         logs.error() << correlationName << ": the montlhy correlation coefficients are missing";
+    }
 }
 
 bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings)
 {
     if (!ReadCorrelationModeFromINI(ini, pMode, warnings))
+    {
         return false;
+    }
 
     if (JIT::usedFromGUI or pMode == modeAnnual)
     {
-        annual = new Matrix<>();
-        annual->resize(study.areas.size(), study.areas.size());
-        annual->fillUnit();
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
 
         auto* section = ini.find("annual");
         if (section) // the section might be missing
-            ReadCorrelationCoefficients(*this, study, *annual, ini, *section, warnings);
+        {
+            ReadCorrelationCoefficients(*this, study, annual, ini, *section, warnings);
+        }
     }
 
     if (JIT::usedFromGUI or pMode == modeMonthly)
     {
-        monthly = new Matrix<>[12];
+        monthly.resize(12);
         for (uint i = 0; i < 12; ++i)
         {
             monthly[i].resize(study.areas.size(), study.areas.size());
@@ -416,11 +447,17 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
             {
                 if (index >= 0 and index < 12)
                 {
-                    ReadCorrelationCoefficients(
-                      *this, study, monthly[index], ini, *section, warnings);
+                    ReadCorrelationCoefficients(*this,
+                                                study,
+                                                monthly[index],
+                                                ini,
+                                                *section,
+                                                warnings);
                 }
                 else
+                {
                     logs.error() << "Invalid month index: " << index;
+                }
             }
         }
     }
@@ -430,28 +467,18 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
 
 void Correlation::reset(Study& study)
 {
-    // Clean
-    if (annual)
-    {
-        delete annual;
-        annual = nullptr;
-    }
-    if (monthly)
-    {
-        delete[] monthly;
-        monthly = nullptr;
-    }
+    clear();
 
     pMode = modeAnnual;
     if (JIT::usedFromGUI)
     {
         // Reset
-        annual = new Matrix<>();
-        annual->resize(study.areas.size(), study.areas.size());
-        annual->fillUnit();
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
 
         // Preparing the monthly correlation matrices
-        monthly = new Matrix<>[12];
+        monthly.resize(12);
         for (int i = 0; i < 12; ++i)
         {
             monthly[i].resize(study.areas.size(), study.areas.size());
@@ -460,40 +487,21 @@ void Correlation::reset(Study& study)
     }
     else
     {
-        annual = new Matrix<>();
-        annual->resize(study.areas.size(), study.areas.size());
-        annual->fillUnit();
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
     }
 }
 
 void Correlation::clear()
 {
-    // Clean
-    if (annual)
-    {
-        delete annual;
-        annual = nullptr;
-    }
-    if (monthly)
-    {
-        delete[] monthly;
-        monthly = nullptr;
-    }
+    annual.reset();
+    monthly.clear();
 }
 
 bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
 {
-    // Clean
-    if (annual)
-    {
-        delete annual;
-        annual = nullptr;
-    }
-    if (monthly)
-    {
-        delete[] monthly;
-        monthly = nullptr;
-    }
+    clear();
 
     if (!internalLoadFromINITry(study, ini, warnings))
     {
@@ -501,28 +509,22 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
         pMode = modeAnnual;
         if (JIT::usedFromGUI)
         {
-            // Reset
-            annual = new Matrix<>();
-            annual->resize(study.areas.size(), study.areas.size());
-            annual->fillUnit();
-
             // Preparing the monthly correlation matrices
-            monthly = new Matrix<>[12];
+            monthly.resize(12);
             for (int i = 0; i < 12; ++i)
             {
                 monthly[i].resize(study.areas.size(), study.areas.size());
                 monthly[i].fillUnit();
             }
         }
-        else
-        {
-            annual = new Matrix<>();
-            annual->resize(study.areas.size(), study.areas.size());
-            annual->fillUnit();
-        }
+
+        annual.clear();
+        annual.resize(study.areas.size(), study.areas.size());
+        annual.fillUnit();
 
         return false;
     }
+
     return true;
 }
 
@@ -540,9 +542,13 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
     {
         double copy = v;
         if (v < -1.)
+        {
             v = -1.;
+        }
         if (v > +1.)
+        {
             v = +1.;
+        }
         logs.warning() << correlationName << ": `" << from.name << "` / `" << to.name
                        << "`: Expected a value in [-1..+1], got " << copy << ", rounded to " << v;
     }
@@ -551,40 +557,19 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
     m[to.index][from.index] = v;
 }
 
-void Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
-{
-    switch (pMode)
-    {
-    case modeAnnual:
-    {
-        for (uint i = 0; i != 12; ++i)
-            array[i] = annual;
-        break;
-    }
-    case modeMonthly:
-    {
-        for (uint i = 0; i != 12; ++i)
-            array[i] = &(monthly[i]);
-        break;
-    }
-    default:
-    {
-        for (uint i = 0; i != 12; ++i)
-            array[i] = nullptr;
-        return;
-    }
-    }
-}
-
 uint64_t Correlation::memoryUsage() const
 {
     uint64_t r = sizeof(Correlation);
-    if (annual)
-        r += annual->memoryUsage();
-    if (monthly)
+    if (!annual.empty())
+    {
+        r += annual.memoryUsage();
+    }
+    if (!monthly.empty())
     {
         for (uint i = 0; i != 12; ++i)
+        {
             r += monthly[i].memoryUsage();
+        }
     }
     return r;
 }
@@ -592,20 +577,28 @@ uint64_t Correlation::memoryUsage() const
 bool Correlation::forceReload(bool reload) const
 {
     bool ret = true;
-    if (annual)
-        ret = annual->forceReload(reload) and ret;
+    if (!annual.empty())
+    {
+        ret = annual.forceReload(reload) and ret;
+    }
     for (uint i = 0; i != 12; ++i)
+    {
         ret = monthly[i].forceReload(reload) and ret;
+    }
 
     return ret;
 }
 
 void Correlation::markAsModified() const
 {
-    if (annual)
-        annual->markAsModified();
+    if (!annual.empty())
+    {
+        annual.markAsModified();
+    }
     for (uint i = 0; i != 12; ++i)
+    {
         monthly[i].markAsModified();
+    }
 }
 
 static inline uint FindMappedAreaName(const AreaName& name,
@@ -639,7 +632,9 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
         {
             auto* a = studySource.areas.find(*i);
             if (!a)
+            {
                 continue;
+            }
             x = a->index;
         }
 
@@ -666,6 +661,7 @@ void Correlation::copyFrom(const Correlation& source,
         // No correlation
         return;
     }
+
     enum
     {
         invalid = (uint)-1,
@@ -692,8 +688,13 @@ void Correlation::copyFrom(const Correlation& source,
 
     // copying the annual correlation matrix
     std::cout << "ANNUAL\n";
-    CopyFromSingleMatrix(
-      *source.annual, *annual, studySource, areaSourceIndex, areaTargetIndex, mapping, study);
+    CopyFromSingleMatrix(source.annual,
+                         annual,
+                         studySource,
+                         areaSourceIndex,
+                         areaTargetIndex,
+                         mapping,
+                         study);
 
     std::cout << "MONTHLY\n";
     // copying monthly correlation matrix
@@ -710,4 +711,3 @@ void Correlation::copyFrom(const Correlation& source,
 }
 
 } // namespace Antares::Data
-

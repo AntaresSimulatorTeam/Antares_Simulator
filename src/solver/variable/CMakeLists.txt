@@ -12,12 +12,10 @@ set(SRC_VARIABLE
         include/antares/solver/variable/state.hxx
         include/antares/solver/variable/area.h
         include/antares/solver/variable/area.hxx
-        include/antares/solver/variable/area.inc.hxx
         include/antares/solver/variable/setofareas.h
         include/antares/solver/variable/setofareas.hxx
         include/antares/solver/variable/bindConstraints.h
         include/antares/solver/variable/bindConstraints.hxx
-        include/antares/solver/variable/constants.h
         include/antares/solver/variable/categories.h
         include/antares/solver/variable/surveyresults.h
         include/antares/solver/variable/surveyresults/reportbuilder.hxx
@@ -61,19 +59,14 @@ set(SRC_VARIABLE_COMMON
         include/antares/solver/variable/commons/miscGenMinusRowPSP.h
         include/antares/solver/variable/commons/solar.h
         include/antares/solver/variable/commons/spatial-aggregate.h
-        include/antares/solver/variable/commons/links/links.cpp.inc.hxx
-        include/antares/solver/variable/commons/links/links.h.inc.hxx
-        include/antares/solver/variable/commons/links/links.hxx.inc.hxx
+        include/antares/solver/variable/commons/links/links.h
+        include/antares/solver/variable/commons/links/links.hxx
 )
 source_group("variable\\common" FILES ${SRC_VARIABLE_COMMON})
 
 set(SRC_VARIABLE_ADEQUACY
         include/antares/solver/variable/adequacy/all.h
-        adequacy/area.cpp
-        adequacy/area.memory-estimation.cpp
-        adequacy/bc.memory-estimation.cpp
         include/antares/solver/variable/adequacy/links.h
-        adequacy/links.cpp
         include/antares/solver/variable/adequacy/spilledEnergy.h
         include/antares/solver/variable/adequacy/overallCost.h
 )
@@ -83,10 +76,6 @@ source_group("variable\\adequacy" FILES ${SRC_VARIABLE_ADEQUACY})
 set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/links.h
-        economy/links.cpp
-        economy/area.cpp
-        economy/area.memory-estimation.cpp
-        economy/bc.memory-estimation.cpp
 
         # Variables for Economy
         include/antares/solver/variable/economy/max-mrg.h
@@ -103,15 +92,15 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/overflow.h
         include/antares/solver/variable/economy/waterValue.h
         include/antares/solver/variable/economy/hydroCost.h
-        include/antares/solver/variable/economy/shortTermStorage.h
+        include/antares/solver/variable/economy/STSbyGroup.h
         include/antares/solver/variable/economy/STStorageInjectionByCluster.h
         include/antares/solver/variable/economy/STStorageWithdrawalByCluster.h
         include/antares/solver/variable/economy/STStorageLevelsByCluster.h
         include/antares/solver/variable/economy/STStorageCashFlowByCluster.h
         include/antares/solver/variable/economy/unsupliedEnergy.h
+        include/antares/solver/variable/economy/unsupliedEnergyCsr.h
         include/antares/solver/variable/economy/domesticUnsuppliedEnergy.h
         include/antares/solver/variable/economy/localMatchingRuleViolations.h
-        include/antares/solver/variable/economy/spilledEnergyAfterCSR.h
         include/antares/solver/variable/economy/dtgMarginAfterCsr.h
         include/antares/solver/variable/economy/spilledEnergy.h
         include/antares/solver/variable/economy/dispatchableGeneration.h
@@ -173,10 +162,6 @@ target_link_libraries(antares-solver-variable
 add_library(antares-solver-variable-info
         include/antares/solver/variable/adequacy/all.h
         include/antares/solver/variable/economy/all.h
-        economy/area.memory-estimation.cpp
-        adequacy/area.memory-estimation.cpp
-        economy/bc.memory-estimation.cpp
-        adequacy/bc.memory-estimation.cpp
         include/antares/solver/variable/surveyresults.h
         include/antares/solver/variable/surveyresults/surveyresults.h
         include/antares/solver/variable/surveyresults/data.h

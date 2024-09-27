@@ -21,13 +21,69 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
-#include "prepro.h"
-#include "series.h"
+#include <optional>
+
 #include "../../fwd.h"
 #include "allocation.h"
+#include "prepro.h"
+#include "series.h"
 
 namespace Antares::Data
 {
+
+//! The maximum number of days in a year
+constexpr size_t dayYearCount = 366;
+
+struct DailyDemand
+{
+    //! Net demand, for each day of the year, for each area
+    double DLN = 0.;
+    //! Daily local effective load
+    double DLE = 0.;
+};
+
+struct MonthlyGenerationTargetData
+{
+    //! Monthly local effective demand
+    double MLE = 0.;
+    //! Monthly optimal generation
+    double MOG = 0.;
+    //! Monthly optimal level
+    double MOL = 0.;
+    //! Monthly target generations
+    double MTG = 0.;
+};
+
+//!  Hydro Management Data for a given area
+struct TimeDependantHydroManagementData
+{
+    std::array<DailyDemand, dayYearCount> daily{0};
+    std::array<MonthlyGenerationTargetData, 12> monthly{0};
+};
+
+//! Area Hydro Management Data for a given year
+struct AreaDependantHydroManagementData
+{
+    //! inflows
+    std::array<double, 12> inflows{};
+    //! monthly minimal generation
+    std::array<double, 12> mingens{};
+
+    //! daily minimal generation
+    std::array<double, dayYearCount> dailyMinGen{};
+
+    // Data for minGen<->inflows preChecks
+    //! monthly total mingen
+    std::array<double, 12> totalMonthMingen{};
+    //! monthly total inflows
+    std::array<double, 12> totalMonthInflows{};
+    //! yearly total mingen
+    double totalYearMingen = 0;
+    //! yearly total inflows
+    double totalYearInflows = 0;
+
+}; // struct AreaDependantHydroManagementData
+
 /*!
 ** \brief Hydro for a single area
 */
@@ -44,18 +100,6 @@ public:
         maximum,
     };
 
-    enum powerDailyE
-    {
-        //! Generated max power
-        genMaxP = 0,
-        //! Generated max energy
-        genMaxE,
-        //! Pumping max Power
-        pumpMaxP,
-        // Pumping max Energy
-        pumpMaxE,
-    };
-
     enum weeklyHydroMod
     {
         //! Weekly generating modulation
@@ -64,7 +108,6 @@ public:
         pumpMod,
     };
 
-public:
     /*!
     ** \brief Load data for hydro container from a folder
     **
@@ -72,6 +115,13 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     static bool LoadFromFolder(Study& study, const AnyString& folder);
+
+    /*!
+    ** \brief Check and validate the loaded datas
+    **
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    static bool validate(Study& study);
 
     /*!
     ** \brief Save data from several containers to a folder (except data for the prepro and
@@ -83,13 +133,12 @@ public:
     */
     static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
 
-public:
     /*!
     ** \brief Default Constructor
     */
     PartHydro();
     //! Destructor
-    ~PartHydro();
+    ~PartHydro() = default;
 
     /*!
     ** \brief Reset internal data
@@ -105,7 +154,13 @@ public:
     */
     void markAsModified() const;
 
-public:
+    /*!
+    ** \brief Load daily max energy
+    */
+    bool LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid);
+
+    bool CheckDailyMaxEnergy(const AnyString& areaName);
+
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
     //! Intra-daily modulation
@@ -140,17 +195,11 @@ public:
     double leewayUpperBound;
     //! Puming efficiency
     double pumpingEfficiency;
-    //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
-    //! max energy}x365)
-    Matrix<double, double> maxPower;
     //! Credit Modulation (default 0, 101 * 2)
     Matrix<double, double> creditModulation;
 
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
-
-    // Useful for solver RAM estimation
-    bool hydroModulable;
 
     //! Daily reservoir level ({min,avg,max}x365)
     Matrix<double> reservoirLevel;
@@ -162,21 +211,30 @@ public:
     HydroAllocation allocation;
 
     //! Data for the pre-processor
-    PreproHydro* prepro;
+    std::unique_ptr<PreproHydro> prepro;
+
     //! Data for time-series
-    DataSeriesHydro* series;
+    std::unique_ptr<DataSeriesHydro> series;
+    // TODO : following time series could be hosted by the series data member above (of type
+    // DataSeriesHydro),
+    //        which contains other time.
+    Matrix<double, double> dailyNbHoursAtGenPmax;
+    Matrix<double, double> dailyNbHoursAtPumpPmax;
+    std::unordered_map<uint, AreaDependantHydroManagementData> managementData;
+
+    std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
+
+private:
+    static bool checkReservoirLevels(const Study& study);
+    static bool checkProperties(Study& study);
 
 }; // class PartHydro
-
 
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables
 // as arguments, so that we don't have to create them locally (as in a classical function) each
 // time.
-void getWaterValue(const double& level,
-                   const Matrix<double>& waterValues,
-                   const uint day,
-                   double& waterValueToReturn);
+double getWaterValue(const double& level, const Matrix<double>& waterValues, const uint day);
 
 // Interpolates a rate from the credit modulation table according to a level
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
@@ -184,7 +242,5 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
                            int modType);
 
 } // namespace Antares::Data
-
-#include <antares/study/area/area.h>
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__ */

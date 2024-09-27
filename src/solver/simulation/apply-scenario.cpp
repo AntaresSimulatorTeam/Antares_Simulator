@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/simulation/apply-scenario.h"
+
 #include <antares/study/scenario-builder/sets.h>
 
 namespace Antares::Solver
@@ -43,8 +44,10 @@ void ApplyCustomScenario(Data::Study& study)
             rules->apply();
         }
         else
+        {
             logs.error() << "Scenario Builder: Impossible to find the active ruleset '" << rulename
                          << "'";
+        }
     }
 
     study.scenarioRulesDestroy();

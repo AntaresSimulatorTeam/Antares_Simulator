@@ -33,7 +33,7 @@ namespace AntaresStudy
 namespace Constraint
 {
 Offsets::Offsets(const AnyString& name, Antares::Data::ConstraintName targetName) :
- pOriginalConstraintName(name), targetName(targetName), pCurrentContext(NULL)
+ pOriginalConstraintName(name), targetName(targetName), pCurrentContext(nullptr)
 {
     pInfos.caption << "Offsets";
 }
@@ -98,15 +98,12 @@ bool Offsets::performWL(Context& ctx)
         if (source && source != ctx.constraint)
         {
             pCurrentContext = &ctx;
-            Bind<void(Data::AreaName&, const Data::AreaName&)> tr;
-            if (!targetName.empty())
-            {
-                tr.bind(this, &Offsets::toLower);
-            }
-            else
-            {
-                tr.bind(this, &Offsets::translate);
-            }
+            const std::function<void(Data::AreaName&, const Data::AreaName&)> tr
+              = std::bind(targetName.empty() ? &Offsets::translate : &Offsets::toLower,
+                          this,
+                          std::placeholders::_1,
+                          std::placeholders::_2);
+
             ctx.constraint->copyOffsets(*ctx.study, *source, true, tr);
             pCurrentContext = nullptr;
             return true;

@@ -24,12 +24,15 @@
 // TODO[FOM] Remove this, it is only required for PROBLEME_HEBDO
 // but this problem has nothing to do with PROBLEME_HEBDO
 #include <set>
+
 #include <antares/logs/logs.h>
 #include <antares/study/parameters/adq-patch-params.h>
-#include "../variables/VariableManagerUtils.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
+#include "../variables/VariableManagerUtils.h"
+
 struct PROBLEME_HEBDO;
+
 class HourlyCSRProblem
 {
 private:
@@ -76,13 +79,13 @@ public:
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p) :
-     adqPatchParams_(adqPatchParams),
-     variableManager_(p->CorrespondanceVarNativesVarOptim,
-                      p->NumeroDeVariableStockFinal,
-                      p->NumeroDeVariableDeTrancheDeStock,
-                      p->NombreDePasDeTempsPourUneOptimisation),
-     problemeHebdo_(p)
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
+        adqPatchParams_(adqPatchParams),
+        variableManager_(p->CorrespondanceVarNativesVarOptim,
+                         p->NumeroDeVariableStockFinal,
+                         p->NumeroDeVariableDeTrancheDeStock,
+                         p->NombreDePasDeTempsPourUneOptimisation),
+        problemeHebdo_(p)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);
@@ -112,21 +115,32 @@ public:
 
     struct LinkVariable
     {
-        LinkVariable() : directVar(-1), indirectVar(-1)
+        LinkVariable():
+            directVar(-1),
+            indirectVar(-1)
         {
         }
-        LinkVariable(int direct, int indirect) : directVar(direct), indirectVar(indirect)
+
+        LinkVariable(int direct, int indirect):
+            directVar(direct),
+            indirectVar(indirect)
         {
         }
+
         inline bool check() const
         {
             if (directVar < 0)
+            {
                 Antares::logs.warning() << "directVar < 0 detected, this should not happen";
+            }
             if (indirectVar < 0)
+            {
                 Antares::logs.warning() << "indirectVar < 0 detected, this should not happen";
+            }
 
             return (directVar >= 0) && (indirectVar >= 0);
         }
+
         int directVar;
         int indirectVar;
     };

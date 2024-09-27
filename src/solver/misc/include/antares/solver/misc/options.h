@@ -22,10 +22,12 @@
 #define __SOLVER_MISC_GETOPT_H__
 
 #include <memory>
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/getopt.h>
 
+#include <yuni/yuni.h>
+#include <yuni/core/getopt.h>
+#include <yuni/core/string.h>
+
+#include <antares/optimization-options/options.h>
 #include <antares/study/study.h>
 
 /*!
@@ -34,12 +36,15 @@
 class Settings
 {
 public:
+    void checkAndSetStudyFolder(const std::string& folder);
+    void reset();
+
     //! Where is my study
     YString studyFolder;
     //! Name of the simulation
     Yuni::CString<150, false> simulationName;
     //! Comment file
-    YString commentFile;
+    std::string commentFile;
 
     //! Simplex optimizatio range
     Yuni::CString<32, false> simplexOptimRange;
@@ -48,19 +53,18 @@ public:
     int ignoreWarningsErrors = 0;
     //! Ignore constraints
     bool ignoreConstraints = false;
-    //!
+
+    //! Run the TS generator only
     bool tsGeneratorsOnly = false;
+
     //! True to disable the writing in the output folder
     bool noOutput = false;
     //! Progression
     bool displayProgression = false;
 
     Yuni::String PID;
-
     bool forceZipOutput = false;
-
-    void checkAndSetStudyFolder(Yuni::String folder);
-    void reset();
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
 }; // class Settings
 
 /*!
@@ -71,5 +75,5 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
 
-void checkOrtoolsSolver(Data::StudyLoadOptions& options);
+void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions);
 #endif /* __SOLVER_MISC_GETOPT_H__ */

@@ -42,7 +42,7 @@
 #include <antares/sys/policy.h>
 #include "study.h"
 #include <yuni/datetime/timestamp.h>
-#include <antares/logs/cleaner.h>
+#include "log_cleaner.h"
 #include <antares/locale/locale.h>
 #ifndef YUNI_OS_WINDOWS
 #include <signal.h>
@@ -66,7 +66,7 @@ static void detectStudyToLoadAtStartup()
     if (name == "study.antares")
     {
         String t;
-        IO::parentPath(t, Forms::StudyToLoadAtStartup);
+        IO::parent_path(t, Forms::StudyToLoadAtStartup);
         Forms::StudyToLoadAtStartup = t;
     }
     else
@@ -75,7 +75,7 @@ static void detectStudyToLoadAtStartup()
         if (name == "info.antares-output")
         {
             String t;
-            IO::parentPath(t, Forms::StudyToLoadAtStartup);
+            IO::parent_path(t, Forms::StudyToLoadAtStartup);
             if (System::windows)
                 Forms::StudyToLoadAtStartup.clear() << t << "\\..\\..";
             else
@@ -152,7 +152,7 @@ static void AbortProgram(int code)
         }
         else
         {
-            Benchmarking::NullDurationCollector duration_collector;
+            Benchmarking::DurationCollector duration_collector;
             auto resultWriter = Antares::Solver::resultWriterFactory(
                 currentStudy->parameters.resultFormat,
                 currentStudy->folderOutput,
@@ -246,7 +246,7 @@ bool Application::OnInit()
     {
         String s;
         wxStringToString(wxString(argv[0]), s);
-        char* c_argv[] = {s.data(), nullptr};
+        const char* c_argv[] = {s.data(), nullptr};
 
         // Load the local policy settings
         LocalPolicy::Open();
@@ -336,7 +336,7 @@ bool Application::OnInit()
         if (now - lasttime > 3600 * 24 * 20)
         {
             String path;
-            IO::parentPath(path, logs.logfile());
+            IO::parent_path(path, logs.logfile());
             logs.info() << "deleting old log files in " << path << "...";
             PurgeLogFiles(path);
         }

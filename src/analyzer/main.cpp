@@ -20,15 +20,17 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
-#include <antares/args/args_to_utf8.h>
+
 #include <antares/antares/version.h>
-#include "atsp/atsp.h"
-#include <antares/logs/hostinfo.h>
+#include <antares/args/args_to_utf8.h>
 #include <antares/inifile/inifile.h>
-#include <antares/sys/policy.h>
 #include <antares/locale/locale.h>
+#include <antares/logs/hostinfo.h>
+#include <antares/logs/logs.h>
+#include <antares/sys/policy.h>
+
+#include "atsp/atsp.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -76,7 +78,9 @@ static bool OpenLogFilename(const String& optSettings)
         nowstr[0] = '\0';
     }
     else
+    {
         nowstr[result] = '\0';
+    }
 
     filename << SEP << "analyzer-" << (const char*)nowstr << ".log";
 
@@ -97,13 +101,15 @@ static void NotEnoughMemory()
     exit(42);
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     // Dealing with the lack of memory
     std::set_new_handler(&NotEnoughMemory);
 
     if (not memory.initializeTemporaryFolder())
+    {
         return EXIT_FAILURE;
+    }
 
     // locale
     InitializeDefaultLocale();
@@ -131,7 +137,9 @@ int main(int argc, char* argv[])
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 1 : 0;
+        }
 
         if (optVersion)
         {
@@ -147,7 +155,9 @@ int main(int argc, char* argv[])
     }
 
     if (!OpenLogFilename(optSettings))
+    {
         return 1;
+    }
 
     // Starting !
     logs.checkpoint() << "Antares Analyzer v" << Antares::VersionToCString();
@@ -173,7 +183,9 @@ int main(int argc, char* argv[])
             atsp.printSummary();
             // Prepare data
             if (atsp.preflight())
+            {
                 atsp.computeMonthlyCorrelations(); // monthly correlations
+            }
         }
     }
 

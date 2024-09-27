@@ -21,25 +21,22 @@
 
 #include <limits>
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "antares/solver/optimisation/opt_fonctions.h"
-
 /*
  pi_define.h doesn't include this header, yet it uses struct jmp_buf.
  It would be nice to remove this include, but would require to change pi_define.h,
  which isn't part of Antares
 */
-#include <setjmp.h>
 
+#include <setjmp.h>
 extern "C"
 {
-#include "pi_define.h"
-#include "pi_definition_arguments.h"
-#include "pi_fonctions.h"
+#include <pi_constantes_externes.h>
+#include <pi_definition_arguments.h>
+#include <pi_fonctions.h>
 }
 
 #include <antares/logs/logs.h>
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 using namespace Antares;
 
@@ -72,8 +69,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
-    Probleme.CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
+                                                       ->CoefficientsDeLaMatriceDesContraintes
+                                                       .data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
@@ -104,7 +102,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
         {
             double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
+            {
                 *pt = ProblemeAResoudre->X[i];
+            }
         }
 
         return true;
@@ -117,7 +117,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
         {
             double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
+            {
                 *pt = std::numeric_limits<double>::quiet_NaN();
+            }
         }
 
 #ifndef NDEBUG

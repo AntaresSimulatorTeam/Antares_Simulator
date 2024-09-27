@@ -141,7 +141,7 @@ void HydroPrepro::internalAreaChanged(Antares::Data::Area* area)
     if (area && !study)
         study = GetCurrentStudy();
 
-    auto* pPreproHydro = (area) ? area->hydro.prepro : nullptr;
+    auto* pPreproHydro = (area) ? area->hydro.prepro.get() : nullptr;
     Renderer::ARendererArea::internalAreaChanged(area);
     if (pPreproHydro)
     {

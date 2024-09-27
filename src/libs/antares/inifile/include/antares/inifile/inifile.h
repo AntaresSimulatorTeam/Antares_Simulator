@@ -18,12 +18,12 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIBS_INIFILE_INIFILE_H__
-#define __ANTARES_LIBS_INIFILE_INIFILE_H__
+#pragma once
+
+#include <optional>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <optional>
 
 namespace Antares
 {
@@ -42,14 +42,13 @@ public:
     class Property final
     {
     public:
-        Property();
+        Property() = default;
         explicit Property(const AnyString& key);
         template<class U>
         Property(const AnyString& key, const U& value);
-        ~Property();
+        ~Property() = default;
 
-        template<class StreamT>
-        void saveToStream(StreamT& file, uint64_t& written) const;
+        void saveToStream(std::ostream& file, uint64_t& written) const;
 
     public:
         //! The key
@@ -57,7 +56,7 @@ public:
         //! Its associated value
         YString value;
         //! The next value
-        Property* next;
+        Property* next = nullptr;
     };
 
     /*!
@@ -67,7 +66,7 @@ public:
     class Section final
     {
     public:
-        Section();
+        Section() = default;
         explicit Section(const AnyString& name);
         ~Section();
 
@@ -80,8 +79,9 @@ public:
         template<class U>
         Property* add(const AnyString& key, const std::optional<U>& value);
 
-        template<class StreamT>
-        void saveToStream(StreamT& file, uint64_t& written) const;
+        void add(const Property& property);
+
+        void saveToStream(std::ostream& file, uint64_t& written) const;
 
         Property* find(const AnyString& key);
         const Property* find(const AnyString& key) const;
@@ -151,11 +151,11 @@ public:
         //! The name of the section
         Yuni::ShortString256 name;
         //! The first property of the section
-        IniFile::Property* firstProperty;
+        IniFile::Property* firstProperty = nullptr;
         //! The last property of the section
-        IniFile::Property* lastProperty;
+        IniFile::Property* lastProperty = nullptr;
         //! The next section
-        Section* next;
+        Section* next = nullptr;
 
     }; // class Section
 
@@ -165,11 +165,11 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    IniFile();
+    IniFile() = default;
     /*!
     ** \brief Load an INI file
     */
-    explicit IniFile(const AnyString& filename);
+    explicit IniFile(const std::filesystem::path& filename);
     /*!
     ** \brief Destructor
     */
@@ -194,17 +194,22 @@ public:
     ** \param filename Filename to load
     ** \return True if the operation succeeded, false otherwise
     */
-    bool open(const AnyString& filename, bool warnings = true);
+    bool open(const std::string& filename, bool warnings = true);
+
+    bool open(const std::filesystem::path& filename, bool warnings = true);
+
+    bool readStream(std::istream& in_stream);
 
     /*!
     ** \brief Save the entire INI into a file
     */
     bool save(const AnyString& filename) const;
+    void saveToStream(std::ostream&, uint64_t&) const;
 
-    void saveToString(std::string& str) const;
+    std::string toString() const;
 
     //! Get the last filename saved or loaded
-    const YString& filename() const;
+    const std::string& filename() const;
     //@}
 
     //! \name Sections
@@ -304,10 +309,8 @@ public:
     //@}
 
 public:
-    //! The first section
-    Section* firstSection;
-    //! The last section
-    Section* lastSection;
+    Section* firstSection = nullptr;
+    Section* lastSection = nullptr;
 
 private:
     /*!
@@ -316,12 +319,10 @@ private:
     ** \internal This variable to keep const-correctness for the
     ** public API (cf save).
     */
-    mutable YString pFilename;
+    std::string filename_;
 
 }; // class IniFile
 
 } // namespace Antares
 
 #include "inifile.hxx"
-
-#endif /* __ANTARES_LIBS_INIFILE_INIFILE_H__ */

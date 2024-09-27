@@ -26,11 +26,13 @@
 
 #include <functional>
 #include <memory>
+
 #include "BindingConstraint.h"
 #include "BindingConstraintSaver.h"
 
-namespace Antares::Data {
-class BindingConstraintsRepository final : public Yuni::NonCopyable<BindingConstraintsRepository>
+namespace Antares::Data
+{
+class BindingConstraintsRepository final: public Yuni::NonCopyable<BindingConstraintsRepository>
 {
 public:
     //! Vector of binding constraints
@@ -96,8 +98,8 @@ public:
     [[nodiscard]] std::shared_ptr<const Data::BindingConstraint> find(const AnyString& id) const;
 
     /*!
-** \brief Try to find a constraint from its name
-*/
+     ** \brief Try to find a constraint from its name
+     */
     [[nodiscard]] Data::BindingConstraint* findByName(const AnyString& name);
 
     /*!
@@ -108,7 +110,9 @@ public:
     /*!
     ** \brief Load all binding constraints from a folder
     */
-    [[nodiscard]] bool loadFromFolder(Data::Study& s, const Data::StudyLoadOptions& options, const AnyString& folder);
+    [[nodiscard]] bool loadFromFolder(Data::Study& s,
+                                      const Data::StudyLoadOptions& options,
+                                      const AnyString& folder);
 
     /*!
     ** \brief Save all binding constraints into a folder
@@ -174,7 +178,6 @@ public:
 
     [[nodiscard]] Vector getPtrForInequalityBindingConstraints() const;
 
-
 private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
@@ -187,9 +190,11 @@ private:
 struct WhoseNameContains final
 {
 public:
-    explicit WhoseNameContains(AnyString  filter) : pFilter(std::move(filter))
+    explicit WhoseNameContains(AnyString filter):
+        pFilter(std::move(filter))
     {
     }
+
     bool operator()(const std::shared_ptr<BindingConstraint>& s) const
     {
         return (s->name()).contains(pFilter);
@@ -198,5 +203,6 @@ public:
 private:
     AnyString pFilter;
 };
-}
+} // namespace Antares::Data
+
 #include "BindingConstraintsRepository.hxx"

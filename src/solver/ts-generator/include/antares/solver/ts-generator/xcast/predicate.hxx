@@ -21,10 +21,12 @@
 #ifndef __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 #define __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__
 
-#include <antares/series/series.h>
+#include <cmath>
+
 #include <yuni/yuni.h>
+
+#include <antares/series/series.h>
 #include <antares/study/area/area.h>
-#include <yuni/core/math.h>
 #include "antares/study/parts/load/prepro.h"
 
 namespace Antares
@@ -49,7 +51,7 @@ public:
     bool accept(const Data::Area& area) const
     {
         assert(area.wind.prepro != NULL);
-        return !Yuni::Math::Zero(area.wind.prepro->xcast.capacity);
+        return !Utils::isZero(area.wind.prepro->xcast.capacity);
     }
 
     Data::TimeSeries::TS& matrix(Data::Area& area) const
@@ -91,7 +93,7 @@ public:
     bool accept(const Data::Area& area) const
     {
         assert(area.load.prepro != NULL);
-        return !Yuni::Math::Zero(area.load.prepro->xcast.capacity);
+        return !Utils::isZero(area.load.prepro->xcast.capacity);
     }
 
     Data::TimeSeries::TS& matrix(Data::Area& area) const
@@ -133,7 +135,7 @@ public:
     bool accept(const Data::Area& area) const
     {
         assert(area.solar.prepro != NULL);
-        return !Yuni::Math::Zero(area.solar.prepro->xcast.capacity);
+        return !Utils::isZero(area.solar.prepro->xcast.capacity);
     }
 
     Data::TimeSeries::TS& matrix(Data::Area& area) const

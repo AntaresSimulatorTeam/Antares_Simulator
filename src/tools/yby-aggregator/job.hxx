@@ -26,7 +26,9 @@ inline void JobFileReader::resizeJumpTable(uint newsize)
     pJumpTable.clear();
     pJumpTable.resize(newsize);
     for (uint i = 0; i != newsize; ++i)
+    {
         pJumpTable[i] = (uint)-1;
+    }
 }
 
 #endif // __STUDY_JOB_AGGREGATOR_JOB_HXX__

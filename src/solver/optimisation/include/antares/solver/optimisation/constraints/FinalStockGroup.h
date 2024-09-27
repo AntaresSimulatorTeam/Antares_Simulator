@@ -24,12 +24,11 @@
 #include "FinalStockEquivalent.h"
 #include "FinalStockExpression.h"
 
-class FinalStockGroup : public ConstraintGroup
+class FinalStockGroup: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;
 
-    
     void BuildConstraints() override;
 
 private:

@@ -1,31 +1,32 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_CONSTRAINTSBUILDER_BUILDER_CBUILDER_H__
 #define __ANTARES_CONSTRAINTSBUILDER_BUILDER_CBUILDER_H__
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+
 #include <antares/study/study.h>
-#include "antares/study/area/constants.h"
 #include "antares/solver/constraints-builder/grid.h"
+#include "antares/study/area/constants.h"
 
 #define CB_PREFIX "@UTO_"
 
@@ -39,6 +40,7 @@ public:
         ptr = area;
         nodeName = area->name.to<std::string>();
     }
+
     std::string getName()
     {
         return nodeName;
@@ -79,6 +81,7 @@ public:
             return lhs->getWeightWithImpedance() < rhs->getWeightWithImpedance();
         }
     };
+
     struct comparepWeightWithImpedance
     {
         inline bool operator()(const linkInfo* lhs, const linkInfo* rhs) const
@@ -86,6 +89,7 @@ public:
             return lhs->getWeightWithImpedance() < rhs->getWeightWithImpedance();
         }
     };
+
     struct addpWeight
     {
         double operator()(double i, const linkInfo* o) const
@@ -93,6 +97,7 @@ public:
             return (o->getWeightWithImpedance() + i);
         }
     };
+
     struct addpWeightWithImpedance
     {
         double operator()(double i, const linkInfo* o) const
@@ -100,6 +105,7 @@ public:
             return (o->getWeightWithImpedance() + i);
         }
     };
+
     bool operator<(const linkInfo& other) const
     {
         return getWeightWithImpedance() < other.getWeightWithImpedance()
@@ -113,12 +119,13 @@ public:
 class State
 {
 public:
-    State(std::vector<double> impedancesList, uint time, double infinite = 1000000) :
-     secondMember(3, time), impedances(impedancesList)
+    State(std::vector<double> impedancesList, uint time, double infinite = 1000000):
+        secondMember(3, time),
+        impedances(impedancesList)
     {
         secondMember.fillColumn(1, -1 * infinite);
         secondMember.fillColumn(0, infinite);
-    };
+    }
 
     Matrix<double, double> secondMember;
     std::vector<double> impedances;
@@ -128,8 +135,11 @@ public:
 class Cycle
 {
 public:
-    Cycle(const std::vector<linkInfo*>& linkList, double infinite = 1000000) :
-     time(0), loop(linkList), opType(Data::BindingConstraint::opEquality), pInfinite(infinite)
+    Cycle(const std::vector<linkInfo*>& linkList, double infinite = 1000000):
+        time(0),
+        loop(linkList),
+        opType(Data::BindingConstraint::opEquality),
+        pInfinite(infinite)
     {
         uint columnImpedance = (uint)Antares::Data::fhlImpedances;
 
@@ -140,7 +150,9 @@ public:
         {
             if ((*line)->nImpedanceChanges > 0
                 || ((*line)->type == Antares::Data::atAC && (!(*line)->hasPShiftsEqual)))
+            {
                 opType = Data::BindingConstraint::opBoth;
+            }
             impedances.push_back((*line)->ptr->parameters[columnImpedance][0]);
 
             time = HOURS_PER_YEAR; /*BC loading always expects 8786 values heigth will
@@ -163,7 +175,9 @@ public:
                     currentLineSign *= -1;
                 }
                 else
+                {
                     assert(0 and "links of the loops do not connect or are not in the right order");
+                }
             }
 
             sign.push_back(currentLineSign);
@@ -175,18 +189,19 @@ public:
 
     State& getState(std::vector<double>& impedances)
     {
-        std::vector<State>::iterator stIT
-          = std::find_if(states.begin(), states.end(), [&impedances](State& s) -> bool {
-                return s.impedances == impedances;
-            });
+        std::vector<State>::iterator stIT = std::find_if(states.begin(),
+                                                         states.end(),
+                                                         [&impedances](State& s) -> bool
+                                                         { return s.impedances == impedances; });
 
         if (stIT == states.end())
         {
             State state(impedances, time, pInfinite);
             states.push_back(state);
-            stIT = std::find_if(states.begin(), states.end(), [&impedances](State& s) -> bool {
-                return s.impedances == impedances;
-            });
+            stIT = std::find_if(states.begin(),
+                                states.end(),
+                                [&impedances](State& s) -> bool
+                                { return s.impedances == impedances; });
         }
         return *stIT;
     }
@@ -214,9 +229,9 @@ public:
     /*!
     ** \brief Default constructor
     */
-    CBuilder(Antares::Data::Study::Ptr);
+    CBuilder(Antares::Data::Study&);
     //! Destructor
-    ~CBuilder();
+    ~CBuilder() = default;
     //@}
 
     /*!
@@ -235,7 +250,7 @@ public:
     bool deletePreviousConstraints();
 
     bool saveCBuilderToFile(const String& filename = "") const;
-    bool completeCBuilderFromFile(const String& filename = "");
+    bool completeCBuilderFromFile(const std::string& filename = "");
 
     /*!
     ** \brief check if network constraints already exists in the study
@@ -245,17 +260,27 @@ public:
     //! find an edge from node names
     linkInfo* findLinkInfoFromNodeNames(Data::AreaName& u, Data::AreaName& v)
     {
-        auto linkIT
-          = std::find_if(pLink.begin(), pLink.end(), [&u, &v](const linkInfo* edgeP) -> bool {
-                if (edgeP->ptr->from->id == u && edgeP->ptr->with->id == v)
-                    return true;
-                if (edgeP->ptr->from->id == v && edgeP->ptr->with->id == u)
-                    return true;
-                else
-                    return false;
-            });
+        auto linkIT = std::find_if(pLink.begin(),
+                                   pLink.end(),
+                                   [&u, &v](std::shared_ptr<linkInfo> edgeP) -> bool
+                                   {
+                                       if (edgeP->ptr->from->id == u && edgeP->ptr->with->id == v)
+                                       {
+                                           return true;
+                                       }
+                                       if (edgeP->ptr->from->id == v && edgeP->ptr->with->id == u)
+                                       {
+                                           return true;
+                                       }
+                                       else
+                                       {
+                                           return false;
+                                       }
+                                   });
         if (linkIT != pLink.end())
-            return *linkIT;
+        {
+            return linkIT->get();
+        }
 
         return nullptr;
     }
@@ -264,20 +289,27 @@ public:
     void buildAreaToLinkInfosMap()
     {
         areaToLinks.clear();
-        for (auto& area : pStudy->areas)
+        for (auto& area: pStudy.areas)
         {
             auto a = area.second;
-            std::for_each(pLink.begin(), pLink.end(), [&a, this](linkInfo* edgeP) {
-                if (edgeP->ptr->from == a || edgeP->ptr->with == a)
-                    this->areaToLinks[a].insert(edgeP);
-            });
+            std::for_each(pLink.begin(),
+                          pLink.end(),
+                          [&a, this](std::shared_ptr<linkInfo> edgeP)
+                          {
+                              if (edgeP->ptr->from == a || edgeP->ptr->with == a)
+                              {
+                                  this->areaToLinks[a].insert(edgeP.get());
+                              }
+                          });
         }
     }
 
     linkInfo* getLink(uint i)
     {
         if (i < pLink.size())
-            return pLink[i];
+        {
+            return pLink[i].get();
+        }
         return nullptr;
     }
 
@@ -363,6 +395,7 @@ public:
     {
         calendarEnd = end;
     }
+
     uint getCalendarStart()
     {
         return calendarStart;
@@ -377,19 +410,19 @@ private:
     /*!
     ** \brief add one constraint to the study
     */
-    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(const Data::ConstraintName& name,
-                                                    const Yuni::String& op,
-                                                    const Yuni::String& type,
-                                                    const WeightMap& weights,
-                                                    const double& secondMember);
+    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(
+      const Data::ConstraintName& name,
+      const Yuni::String& op,
+      const Yuni::String& type,
+      const WeightMap& weights,
+      const double& secondMember);
 
 public:
-    Vector pLink;
+    std::vector<std::shared_ptr<linkInfo>> pLink;
 
 private:
-    YString pStudyFolder;
-    YString pPrefix;
-    YString pPrefixDelete;
+    std::string pPrefix;
+    std::string pPrefixDelete;
     bool pDelete;
     bool includeLoopFlow = true;
     bool includePhaseShift = true;
@@ -404,7 +437,7 @@ private:
 
     std::map<Data::Area*, std::set<linkInfo*>> areaToLinks;
 
-    Antares::Data::Study::Ptr pStudy;
+    Antares::Data::Study& pStudy;
 
     Graph::Grid<Antares::Data::Area> _grid;
 

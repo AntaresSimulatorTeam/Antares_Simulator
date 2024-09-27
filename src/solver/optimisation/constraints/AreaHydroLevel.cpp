@@ -47,5 +47,7 @@ void AreaHydroLevel::add(int pays, int pdt)
           .build();
     }
     else
+    {
         data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesNiveauxPays[pays] = -1;
+    }
 }

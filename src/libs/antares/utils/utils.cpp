@@ -21,6 +21,10 @@
 
 #include "antares/utils/utils.h"
 
+#include <sstream>
+
+#include <antares/logs/logs.h>
+
 using namespace Yuni;
 
 namespace Antares
@@ -29,15 +33,17 @@ void BeautifyName(YString& out, AnyString oldname)
 {
     out.clear();
     if (oldname.empty())
+    {
         return;
+    }
 
     oldname.trim(" \r\n\t");
     if (oldname.empty())
+    {
         return;
+    }
 
     out.reserve(oldname.size());
-
-
 
     auto end = oldname.utf8end();
     for (auto i = oldname.utf8begin(); i != end; ++i)
@@ -53,13 +59,17 @@ void BeautifyName(YString& out, AnyString oldname)
             out += c;
         }
         else
+        {
             out += ' ';
+        }
     }
 
     out.trim(" \t\r\n");
 
     while (std::string(out.c_str()).find("  ") != std::string::npos)
+    {
         out.replace("  ", " ");
+    }
 
     out.trim(" \t\r\n");
 }
@@ -72,6 +82,13 @@ void TransformNameIntoID(const AnyString& name, std::string& out)
     out = yuniOut;
 }
 
+std::string transformNameIntoID(const std::string& name)
+{
+    std::string out;
+    TransformNameIntoID(name, out);
+    return out;
+}
+
 void BeautifyName(std::string& out, const std::string& oldname)
 {
     YString yuniOut;
@@ -79,4 +96,60 @@ void BeautifyName(std::string& out, const std::string& oldname)
     out = yuniOut.c_str();
 }
 
+std::string FormattedTime(const std::string& format)
+{
+    using namespace std::chrono;
+    auto time = system_clock::to_time_t(system_clock::now());
+    std::tm local_time = *std::localtime(&time);
+
+    char time_buffer[256];
+    std::strftime(time_buffer, sizeof(time_buffer), format.c_str(), &local_time);
+
+    return std::string(time_buffer);
+}
+
+std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
+                                                                      char delimiter1,
+                                                                      char delimiter2)
+{
+    std::vector<std::pair<std::string, std::string>> pairs;
+    std::stringstream ss(s);
+    std::string token;
+
+    while (std::getline(ss, token, delimiter1))
+    {
+        size_t pos = token.find(delimiter2);
+        if (pos != std::string::npos)
+        {
+            std::string begin = token.substr(0, pos);
+            std::string end = token.substr(pos + 1);
+            pairs.push_back({begin, end});
+        }
+        else
+        {
+            logs.warning() << "Error while parsing: " << token;
+            logs.warning() << "Correct format is: \"object1" << delimiter2 << "object2"
+                           << delimiter1 << "object3" << delimiter2 << "object4\"";
+        }
+    }
+
+    return pairs;
+}
+
+namespace Utils
+{
+
+bool isZero(double d)
+{
+    constexpr double threshold = 1.e-6;
+    return std::abs(d) < threshold;
+}
+
+double round(double d, unsigned precision)
+{
+    auto factor = std::pow(10, precision);
+    return std::round(d * factor) / factor;
+}
+
+} // namespace Utils
 } // namespace Antares

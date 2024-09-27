@@ -19,9 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "atsp.h"
-#include <antares/inifile/inifile.h>
 #include <yuni/io/directory.h>
+
+#include <antares/inifile/inifile.h>
+
+#include "atsp.h"
 
 using namespace Yuni;
 
@@ -53,7 +55,9 @@ bool ATSP::preflight()
             }
         }
         if (error)
+        {
             return false;
+        }
     }
 
     logs.info(); // empty line
@@ -67,7 +71,9 @@ bool ATSP::preflight()
             logs.info() << " The area '" << pArea[i]->name << "' has been removed";
         }
         else
+        {
             ++pEnabledAreaCount;
+        }
     }
 
     // moments
@@ -107,10 +113,14 @@ bool ATSP::preflight(const uint areaIndex)
     // Reading the matrix file for the current area
     Matrix<> MTRX;
     if (!MTRX.loadFromCSVFile(info.filename, 1, pMHeight, Matrix<>::optImmediate))
+    {
         return false;
+    }
     // Shrinking the matrix if required
     if (MTRX.width > pTimeseriesCount)
+    {
         MTRX.resizeWithoutDataLost(pTimeseriesCount, MTRX.height);
+    }
     else
     {
         if (MTRX.width < pTimeseriesCount)
@@ -174,7 +184,9 @@ bool ATSP::preflight(const uint areaIndex)
             Retranche_mtrx(SERIE_N, buffer_n, durmois[j], NBS);
         }
         else
+        {
             (void)::memset(buffer_n, 0, sizeof(buffer_n));
+        }
 
         // On calcule les coefficients horaires de modulation pour le mois courant
         {
@@ -188,17 +200,25 @@ bool ATSP::preflight(const uint areaIndex)
                 {
                     double d = 0;
                     for (uint m = 0; m < lonmois[j]; ++m)
+                    {
                         d += (buffer_p[24 * m + n] / lonmois[j]);
+                    }
                     if (d > maxabsmnth[j])
+                    {
                         maxabsmnth[j] = d;
+                    }
                 }
                 if (maxabsmnth[j] == 0)
+                {
                     maxabsmnth[j] = 1; // should never happen
+                }
                 for (uint n = 0; n < 24; ++n)
                 {
                     double d = 0;
                     for (uint m = 0; m < lonmois[j]; ++m)
+                    {
                         d += (buffer_p[24 * m + n] / lonmois[j]);
+                    }
                     normratios[j][n] = d / maxabsmnth[j]; // at this point the maximum shape factor
                                                           // of each month is eqaul to 1
                 }
@@ -211,7 +231,9 @@ bool ATSP::preflight(const uint areaIndex)
                 }
             }
             if (maxabsmnth[j] > maxabsyear)
+            {
                 maxabsyear = maxabsmnth[j];
+            }
         }
 
     } // each month
@@ -229,7 +251,9 @@ bool ATSP::preflight(const uint areaIndex)
                 hiddenhours[j]++;
             }
             else
+            {
                 hidden_hours_month[n] = 0;
+            }
         }
     } // each month
 
@@ -248,7 +272,9 @@ bool ATSP::preflight(const uint areaIndex)
             for (uint n = 0; n < 24; ++n)
             {
                 if (cumul > 0.001)
+                {
                     normratios[j][n] *= double(24 - hiddenhours[j]) / cumul;
+                }
             }
         } // each month
     }
@@ -261,7 +287,9 @@ bool ATSP::preflight(const uint areaIndex)
             for (uint n = 0; n < 24; ++n)
             {
                 if (maxabsyear > 0.001)
+                {
                     normratios[j][n] *= maxabsmnth[j] / maxabsyear;
+                }
             }
         } // each month
     }
@@ -285,12 +313,16 @@ bool ATSP::preflight(const uint areaIndex)
             Retranche_mtrx(SERIE_N, buffer_n, durmois[j], NBS);
         }
         else
+        {
             (void)::memset(buffer_n, 0, sizeof(buffer_n));
+        }
 
         // buffer_n contient la serie de translation et SERIE_N les donnees à normaliser
         pStr.clear() << folder << SEP << "translation-m";
         if (j < 10)
+        {
             pStr << '0';
+        }
         pStr << j << ".txt";
         // To reduce the size of each file, and consequently speed-up their loading
         // we will use the standard matrix of Antares, which perform a lot of
@@ -298,7 +330,9 @@ bool ATSP::preflight(const uint areaIndex)
         mtrxWriter.resize(1, durmois[j]);
         mtrxWriter.pasteToColumn(0, buffer_n);
         if (!mtrxWriter.saveToCSVFile(pStr, 3))
+        {
             return false;
+        }
 
         // On calcule les valeurs extrêmes du processus brut
         Mtrx_bound(minimu_brut[j], maximu_brut[j], SERIE_N, durmois[j], NBS);
@@ -322,7 +356,9 @@ bool ATSP::preflight(const uint areaIndex)
                 for (uint m = 0; m < NBS; ++m)
                 {
                     if (ratios[mod] != 0)
+                    {
                         SERIE_N.entry[m][n] /= ratios[mod];
+                    }
                 }
             }
         }
@@ -333,11 +369,15 @@ bool ATSP::preflight(const uint areaIndex)
         {
             pStr.clear() << folder << SEP << "userfile-m";
             if (j < 10)
+            {
                 pStr << '0';
+            }
             pStr << j << ".txt";
             SERIE_N.height = durmois[j];
             if (!SERIE_N.saveToCSVFile(pStr, 3))
+            {
                 return false;
+            }
 
             SERIE_N.height = 744; // restore the previous value
         }
@@ -358,10 +398,14 @@ bool ATSP::preflight(const uint areaIndex)
 
         double variance = varian_global - expect_global * expect_global;
         if (variance < 0.)
+        {
             variance = 0.; // si bruit numerique
+        }
         double standard = sqrt(variance);
         if (standard < double(0.0001))
+        {
             standard = 0;
+        }
 
         // calcul des moments d'ordre 3 et 4
         double skewne_global = 0.;
@@ -417,7 +461,9 @@ bool ATSP::preflight(const uint areaIndex)
             moments_centr_net_mois[1] += standard * standard;
             moments_centr_net_mois[1] *= 24. / (24. - double(hiddenhours[j]));
             if (moments_centr_net_mois[1] < 0)
+            {
                 moments_centr_net_mois[1] = 0;
+            }
             moments_centr_net_mois[1] = sqrt(moments_centr_net_mois[1]);
 
             moments_centr_net_mois[2] = 0;
@@ -461,16 +507,22 @@ bool ATSP::preflight(const uint areaIndex)
         for (uint n = 1; n < PRA; ++n)
         {
             if (AUTO_ESTIM[n] < 0.006737947)
+            {
                 AUTO_ESTIM[n] = exp(-5.);
+            }
         }
 
         // assessment of theta and mu
         // ignore HOR if variable type is not "Normal"
 
         if (info.distribution != Data::XCast::dtNormal)
+        {
             Analyse_auto(AUTO_ESTIM, PRA, AUC, AUM, (double)HOR, stocha[4], stocha[5]);
+        }
         else
+        {
             Analyse_auto(AUTO_ESTIM, PRA, AUC, AUM, 0, stocha[4], stocha[5]);
+        }
 
         // update of exponential decay parameter theta to remove the contribution of hidden hours
         if (hiddenhours[j] >= 1 && hiddenhours[j] <= 22)
@@ -479,13 +531,15 @@ bool ATSP::preflight(const uint areaIndex)
             stocha[4] *= (24. - double(hiddenhours[j]));
             stocha[4] /= (24. - (double(hiddenhours[j]) + 1.));
             if (stocha[4] > 1.)
+            {
                 stocha[4] = 1.;
+            }
             stocha[4] = -log(stocha[4]);
         }
 
         // si mu>1 il faut majorer l'ecart-type observe  sur les valeurs lissees
         // pour remonter a l'ecart-type des valeurs des series non-lissees
-        double standard_majore = (Math::Abs(stocha[5] - 1.) < 1e-6)
+        double standard_majore = (std::abs(stocha[5] - 1.) < 1e-6)
                                    ? standard
                                    : standard / Standard_shrinkage((int)stocha[5], exp(-stocha[4]));
 
@@ -538,7 +592,9 @@ bool ATSP::preflight(const uint areaIndex)
         {
             auto& out = MTRX[x];
             for (uint y = 0; y != 12; ++y)
+            {
                 out[y] = stocha_values[y][x];
+            }
         }
 
         // Override MU coefficients, to have mu [1..23], and not 24
@@ -546,7 +602,9 @@ bool ATSP::preflight(const uint areaIndex)
         for (uint y = 0; y != 12 /*MTRX.height*/; ++y)
         {
             if (mu[y] > 23.f)
+            {
                 mu[y] = 23.f;
+            }
         }
 
         logs.info() << "  Exporting coefficients";
@@ -571,11 +629,15 @@ bool ATSP::preflight(const uint areaIndex)
         {
             pStr.clear() << folder << SEP << "translation-m";
             if (m < 10)
+            {
                 pStr << '0';
+            }
             pStr << m << ".txt";
 
-            if (!MTRX.loadFromCSVFile(
-                  pStr, 1, durmois[m], Matrix<>::optImmediate | Matrix<>::optFixedSize))
+            if (!MTRX.loadFromCSVFile(pStr,
+                                      1,
+                                      durmois[m],
+                                      Matrix<>::optImmediate | Matrix<>::optFixedSize))
             {
                 logs.error() << "Impossible to reload " << pStr;
                 continue;
@@ -593,7 +655,9 @@ bool ATSP::preflight(const uint areaIndex)
         pStr.clear() << pStudyFolder << SEP << "input" << SEP << tsName << SEP << "prepro" << SEP
                      << info.name << SEP << "translation.txt";
         if (!mtrxWriter.saveToCSVFile(pStr))
+        {
             logs.error() << "Impossible to write " << pStr;
+        }
     }
 
     // Settings for the TS generator (XCast)
@@ -603,7 +667,9 @@ bool ATSP::preflight(const uint areaIndex)
                      << info.name << SEP << "settings.ini";
         IO::File::Stream f;
         if (!f.open(pStr, IO::OpenMode::write | IO::OpenMode::truncate))
+        {
             logs.error() << "Impossible to create " << pStr;
+        }
         else
         {
             // Example : [general]
@@ -614,12 +680,15 @@ bool ATSP::preflight(const uint areaIndex)
             //
             f << "[general]"
               << "\ndistribution = " << Data::XCast::DistributionToNameID(info.distribution)
-              << "\ncapacity = 1"
-              << "\nconversion = false";
+              << "\ncapacity = 1" << "\nconversion = false";
             if (info.rawData)
+            {
                 f << "\ntranslation = never\n";
+            }
             else
+            {
                 f << "\ntranslation = before-conversion\n";
+            }
         }
     }
 

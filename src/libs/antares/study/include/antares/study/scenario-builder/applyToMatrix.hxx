@@ -25,12 +25,15 @@
 #pragma once
 
 #include <cstdlib>
-#include "antares/study/parts/hydro/series.h"
+
 #include "yuni/core/system/stdint.h"
+
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
+#include "antares/study/parts/hydro/series.h"
 #include "antares/study/scenario-builder/TSnumberData.h"
 
-namespace Antares::Data::ScenarioBuilder {
+namespace Antares::Data::ScenarioBuilder
+{
 
 static constexpr unsigned maxErrors = 20;
 
@@ -55,14 +58,16 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
                                           const Data::AreaLink& data,
                                           uint /* tsGenMax */)
 {
-    //Value = index of time series
-    //Direct Capacities = all time series
-    //directCapacities.timeSeries.width = Number of time series
+    // Value = index of time series
+    // Direct Capacities = all time series
+    // directCapacities.timeSeries.width = Number of time series
     return value < data.directCapacities.timeSeries.width;
 }
 
 template<>
-inline bool CheckValidity<BindingConstraintGroup>(uint value, const BindingConstraintGroup& group, uint)
+inline bool CheckValidity<BindingConstraintGroup>(uint value,
+                                                  const BindingConstraintGroup& group,
+                                                  uint)
 {
     return value < group.numberOfTimeseries();
 }
@@ -77,17 +82,16 @@ bool ApplyToMatrix(uint& errors,
     bool ret = true;
 
     // In this case, m.height represents the total number of years
-    const uint nbYears = data.timeseriesNumbers.height;
+    const uint nbYears = data.timeseriesNumbers.height();
     // The matrix m has only one column
-    assert(data.timeseriesNumbers.width == 1);
-    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbers[0];
+    auto& target = data.timeseriesNumbers;
 
     for (uint y = 0; y != nbYears; ++y)
     {
         if (years[y] != 0)
         {
             // The new TS number
-            uint tsNum = years[y] - 1;
+            uint32_t tsNum = years[y] - 1;
 
             // When the TS-Generators are not used
             if (!CheckValidity(tsNum, data, tsGenMax))
@@ -95,10 +99,14 @@ bool ApplyToMatrix(uint& errors,
                 if (errors <= maxErrors)
                 {
                     if (++errors == maxErrors)
+                    {
                         logs.warning() << "scenario-builder: ... (skipped)";
+                    }
                     else
+                    {
                         logs.warning() << "scenario-builder: " << logprefix
                                        << "value out of bounds for the year " << (y + 1);
+                    }
                 }
                 ret = false;
                 continue;
@@ -111,4 +119,4 @@ bool ApplyToMatrix(uint& errors,
 
     return ret;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

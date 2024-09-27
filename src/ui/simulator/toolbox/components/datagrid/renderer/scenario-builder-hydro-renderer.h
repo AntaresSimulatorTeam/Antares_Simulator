@@ -39,7 +39,6 @@ public:
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;
 }; // class hydroScBuilderRenderer
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

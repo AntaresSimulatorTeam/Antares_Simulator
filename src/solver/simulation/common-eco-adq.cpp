@@ -1,36 +1,34 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
-
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <antares/study/study.h>
-#include <antares/exception/UnfeasibleProblemError.hpp>
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/solver/simulation/common-eco-adq.h"
-#include <antares/logs/logs.h>
-#include <cassert>
-#include <map>
-#include "antares/study/simulation.h"
 
-using namespace Yuni;
+#include <cassert>
+#include <cmath>
+#include <map>
+
+#include <antares/exception/UnfeasibleProblemError.hpp>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include "antares/study/simulation.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -49,8 +47,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             assert(balance[j] && "Impossible to find the variable");
             if (balance[j])
             {
-                problem.SoldeMoyenHoraire[i].SoldeMoyenDuPays[j]
-                  = balance[j]->avgdata.hourly[decalPasDeTemps];
+                problem.SoldeMoyenHoraire[i].SoldeMoyenDuPays[j] = balance[j]
+                                                                     ->avgdata
+                                                                     .hourly[decalPasDeTemps];
             }
             else
             {
@@ -61,14 +60,18 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         std::vector<double> avgDirect;
         std::vector<double> avgIndirect;
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
-            auto* link = study.runtime->areaLink[j];
-            int ret = retrieveAverageNTC(
-              study, link->directCapacities.timeSeries, link->timeseriesNumbers, avgDirect);
+            auto* link = study.runtime.areaLink[j];
+            int ret = retrieveAverageNTC(study,
+                                         link->directCapacities.timeSeries,
+                                         link->timeseriesNumbers,
+                                         avgDirect);
 
-            ret = retrieveAverageNTC(
-                    study, link->indirectCapacities.timeSeries, link->timeseriesNumbers, avgIndirect)
+            ret = retrieveAverageNTC(study,
+                                     link->indirectCapacities.timeSeries,
+                                     link->timeseriesNumbers,
+                                     avgIndirect)
                   && ret;
             if (!ret)
             {
@@ -88,11 +91,15 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     try
     {
         NullResultWriter resultWriter;
-        OPT_OptimisationHebdomadaire(createOptimizationOptions(study), &problem, study.parameters.adqPatchParams, resultWriter);
+        NullSimulationObserver simulationObserver;
+        OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+                                     &problem,
+                                     resultWriter,
+                                     simulationObserver);
     }
     catch (Data::UnfeasibleProblemError&)
     {
-        study.runtime->quadraticOptimizationHasFailed = true;
+        study.runtime.quadraticOptimizationHasFailed = true;
     }
 
     for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
@@ -100,59 +107,11 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         const uint indx = i + PasDeTempsDebut;
         auto& ntcValues = problem.ValeursDeNTC[i];
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
-            transitMoyenInterconnexionsRecalculQuadratique[j][indx]
-              = ntcValues.ValeurDuFlux[j];
-        }
-    }
-}
-
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::ScratchMap& scratchmap, uint year)
-{
-    bool inAdequacy = (study.parameters.mode == Data::SimulationMode::Adequacy);
-
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-        if (inAdequacy)
-            memset(scratchpad.originalMustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
-
-        double* mrs = scratchpad.mustrunSum;
-        double* adq = scratchpad.originalMustrunSum;
-
-        for (const auto& cluster : area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            if (inAdequacy && cluster->mustrunOrigin)
-            {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                {
-                    mrs[h] += availableProduction[h];
-                    adq[h] += availableProduction[h];
-                }
-            }
-            else
-            {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                    mrs[h] += availableProduction[h];
-            }
-        }
-
-        if (inAdequacy)
-        {
-            for (const auto& cluster : area.thermal.list.each_mustrun_and_enabled())
-            {
-                if (!cluster->mustrunOrigin)
-                    continue;
-
-                const auto& availableProduction = cluster->series.getColumn(year);
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-                    adq[h] += availableProduction[h];
-            }
+            study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues
+                                                                                      .ValeurDuFlux
+                                                                                        [j];
         }
     }
 }
@@ -161,16 +120,18 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
     const bool flowQuadEnabled = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");
     if (!flowQuadEnabled)
-        return false;
-
-    for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
     {
-        auto& lnk = *(study.runtime->areaLink[j]);
+        return false;
+    }
+
+    for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
+    {
+        auto& lnk = *(study.runtime.areaLink[j]);
         auto& impedances = lnk.parameters[Data::fhlImpedances];
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            if (Math::Abs(impedances[hour]) >= 1e-100)
+            if (std::abs(impedances[hour]) >= 1e-100)
             {
                 return true;
             }
@@ -202,7 +163,7 @@ void ComputeFlowQuad(Data::Study& study,
     {
         logs.info() << "  The quadratic optimisation has been skipped";
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
+        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
             for (uint w = 0; w != nbWeeks; ++w)
             {
@@ -210,7 +171,7 @@ void ComputeFlowQuad(Data::Study& study,
                 for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
                 {
                     const uint indx = i + PasDeTempsDebut;
-                    transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
+                    study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
                 }
             }
         }
@@ -222,164 +183,213 @@ void PrepareRandomNumbers(Data::Study& study,
                           yearRandomNumbers& randomForYear)
 {
     uint indexArea = 0;
-    study.areas.each([&](const Data::Area& area) {
-        double rnd = 0.;
+    study.areas.each(
+      [&study, &problem, &randomForYear, &indexArea](const Data::Area& area)
+      {
+          double rnd = 0.;
 
-        rnd = randomForYear.pUnsuppliedEnergy[indexArea];
+          rnd = randomForYear.pUnsuppliedEnergy[indexArea];
 
-        double alea;
+          double alea;
 
-        if (area.spreadUnsuppliedEnergyCost == 0)
-        {
-            if (rnd < 0.5)
-                alea = 1.e-4 * (5 + 2 * rnd);
-            else
-                alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
-        }
-        else
-        {
-            alea = (rnd - 0.5) * (area.spreadUnsuppliedEnergyCost);
+          if (area.spreadUnsuppliedEnergyCost == 0)
+          {
+              if (rnd < 0.5)
+              {
+                  alea = 1.e-4 * (5 + 2 * rnd);
+              }
+              else
+              {
+                  alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
+              }
+          }
+          else
+          {
+              alea = (rnd - 0.5) * (area.spreadUnsuppliedEnergyCost);
 
-            if (Math::Abs(alea) < 5.e-4)
-            {
-                if (alea >= 0)
-                    alea += 5.e-4;
-                else
-                    alea -= 5.e-4;
-            }
-        }
-        problem.CoutDeDefaillancePositive[area.index] = area.thermal.unsuppliedEnergyCost + alea;
+              if (std::abs(alea) < 5.e-4)
+              {
+                  if (alea >= 0)
+                  {
+                      alea += 5.e-4;
+                  }
+                  else
+                  {
+                      alea -= 5.e-4;
+                  }
+              }
+          }
+          problem.CoutDeDefaillancePositive[area.index] = area.thermal.unsuppliedEnergyCost + alea;
 
-        rnd = randomForYear.pSpilledEnergy[indexArea];
+          rnd = randomForYear.pSpilledEnergy[indexArea];
 
-        if (area.spreadSpilledEnergyCost == 0)
-        {
-            if (rnd < 0.5)
-                alea = 1.e-4 * (5 + 2 * rnd);
-            else
-                alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
-        }
-        else
-        {
-            alea = (rnd - 0.5) * (area.spreadSpilledEnergyCost);
+          if (area.spreadSpilledEnergyCost == 0)
+          {
+              if (rnd < 0.5)
+              {
+                  alea = 1.e-4 * (5 + 2 * rnd);
+              }
+              else
+              {
+                  alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
+              }
+          }
+          else
+          {
+              alea = (rnd - 0.5) * (area.spreadSpilledEnergyCost);
 
-            if (Math::Abs(alea) < 5.e-4)
-            {
-                if (alea >= 0)
-                    alea += 5.e-4;
-                else
-                    alea -= 5.e-4;
-            }
-        }
-        problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
+              if (std::abs(alea) < 5.e-4)
+              {
+                  if (alea >= 0)
+                  {
+                      alea += 5.e-4;
+                  }
+                  else
+                  {
+                      alea -= 5.e-4;
+                  }
+              }
+          }
+          problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
 
+          //-----------------------------
+          // Thermal noises
+          //-----------------------------
+          for (auto& cluster: area.thermal.list.each_enabled())
+          {
+              uint clusterIndex = cluster->areaWideIndex;
+              double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
+              double randomClusterProdCost(0.);
+              if (cluster->spreadCost == 0) // 5e-4 < |randomClusterProdCost| < 6e-4
+              {
+                  if (rnd < 0.5)
+                  {
+                      randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
+                  }
+                  else
+                  {
+                      randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
+                  }
+              }
+              else
+              {
+                  randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
 
-        //-----------------------------
-        // Thermal noises
-        //-----------------------------
-        for (auto cluster : area.thermal.list.each_enabled())
-        {
-            uint clusterIndex = cluster->areaWideIndex;
-            double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
-            double randomClusterProdCost(0.);
-            if (cluster->spreadCost == 0) // 5e-4 < |randomClusterProdCost| < 6e-4
-            {
-                if (rnd < 0.5)
-                    randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
-                else
-                    randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
-            }
-            else
-            {
-                randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
+                  if (std::abs(randomClusterProdCost) < 5.e-4)
+                  {
+                      if (std::abs(randomClusterProdCost) >= 0)
+                      {
+                          randomClusterProdCost += 5.e-4;
+                      }
+                      else
+                      {
+                          randomClusterProdCost -= 5.e-4;
+                      }
+                  }
+              }
+              rnd = randomClusterProdCost;
+          }
 
-                if (Math::Abs(randomClusterProdCost) < 5.e-4)
-                {
-                    if (Math::Abs(randomClusterProdCost) >= 0)
-                        randomClusterProdCost += 5.e-4;
-                    else
-                        randomClusterProdCost -= 5.e-4;
-                }
-            }
-            rnd = randomClusterProdCost;
-        }
+          //-----------------------------
+          // Hydro noises
+          //-----------------------------
+          auto& noise = problem.BruitSurCoutHydraulique[area.index];
+          switch (study.parameters.power.fluctuations)
+          {
+          case Data::lssFreeModulations:
+          {
+              for (uint j = 0; j != 8784; ++j)
+              {
+                  noise[j] = randomForYear.pHydroCostsByArea_freeMod[indexArea][j];
+              }
 
-        //-----------------------------
-        // Hydro noises
-        //-----------------------------
-        auto& noise = problem.BruitSurCoutHydraulique[area.index];
-        switch (study.parameters.power.fluctuations)
-        {
-        case Data::lssFreeModulations:
-        {
-            for (uint j = 0; j != 8784; ++j)
-                noise[j] = randomForYear.pHydroCostsByArea_freeMod[indexArea][j];
+              auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 5.e-4;
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 5.e-4;
+              break;
+          }
 
-            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 5.e-4;
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 5.e-4;
-            break;
-        }
+          case Data::lssMinimizeRamping:
+          case Data::lssMinimizeExcursions:
+          {
+              std::fill(noise.begin(), noise.end(), 0);
 
-        case Data::lssMinimizeRamping:
-        case Data::lssMinimizeExcursions:
-        {
-            std::fill(noise.begin(), noise.end(), 0);
+              auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
+              double rnd = randomForYear.pHydroCosts_rampingOrExcursion[indexArea];
 
-            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
-            double rnd = randomForYear.pHydroCosts_rampingOrExcursion[indexArea];
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations
+                = 0.01 * (1. + rnd / 10.);
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax
+                = 0.1 * (1. + rnd / 100.);
+              break;
+          }
 
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations
-              = 0.01 * (1. + rnd / 10.);
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax
-              = 0.1 * (1. + rnd / 100.);
-            break;
-        }
+          case Data::lssUnknown:
+          {
+              assert(false && "invalid power fluctuations");
+              std::fill(noise.begin(), noise.end(), 0);
 
-        case Data::lssUnknown:
-        {
-            assert(false && "invalid power fluctuations");
-            std::fill(noise.begin(), noise.end(), 0);
+              auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 1e-4;
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 1e-4;
+              break;
+          }
+          }
+          indexArea++;
+      });
+}
 
-            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 1e-4;
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 1e-4;
-            break;
-        }
-        }
-        indexArea++;
-    });
+void SetInitialHydroLevel(Data::Study& study,
+                          PROBLEME_HEBDO& problem,
+                          const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+{
+    uint firstDaySimu = study.parameters.simulationDays.first;
+    study.areas.each(
+      [&problem, &firstDaySimu, &hydroVentilationResults](const Data::Area& area)
+      {
+          if (area.hydro.reservoirManagement)
+          {
+              double capacity = area.hydro.reservoirCapacity;
+              problem.previousSimulationFinalLevel[area.index] = hydroVentilationResults[area.index]
+                                                                   .NiveauxReservoirsDebutJours
+                                                                     [firstDaySimu]
+                                                                 * capacity;
+          }
+      });
 }
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     double** thermalNoises,
+                                     std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year)
 {
     int hourInYear = PasDeTempsDebut;
     const uint nbPays = study.areas.size();
-    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
+    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps;
+         ++hourInWeek, ++hourInYear)
     {
         for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
             auto& area = *study.areas.byIndex[areaIdx];
-            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+            for (auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
             {
-                    auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
-                               .PuissanceDisponibleEtCout[cluster->index];
+                auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
+                             .PuissanceDisponibleEtCout[cluster->index];
 
-                    Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
-                        cluster->getMarketBidCost(hourInYear, year)
-                        + thermalNoises[areaIdx][cluster->areaWideIndex];
+                Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
+                  = cluster->getMarketBidCost(hourInYear, year)
+                    + thermalNoises[areaIdx][cluster->areaWideIndex];
 
-                    Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        = cluster->series.getCoefficient(year, hourInYear);
+                Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] = cluster->series
+                                                                        .getCoefficient(year,
+                                                                                        hourInYear);
 
-                    Pt.PuissanceMinDuPalierThermique[hourInWeek]
-                        = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster->PthetaInf[hourInYear])
-                        ? Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        : cluster->PthetaInf[hourInYear];
+                Pt.PuissanceMinDuPalierThermique[hourInWeek]
+                  = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
+                     < cluster->PthetaInf[hourInYear])
+                      ? Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
+                      : cluster->PthetaInf[hourInYear];
             }
         }
     }
@@ -390,19 +400,19 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
 
         for (uint l = 0; l != area.thermal.list.enabledAndNotMustRunCount(); ++l)
         {
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                   .PuissanceDisponibleDuPalierThermiqueRef
-            =
-            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
-                   .PuissanceDisponibleDuPalierThermique;
+            problem.PaliersThermiquesDuPays[k]
+              .PuissanceDisponibleEtCout[l]
+              .PuissanceDisponibleDuPalierThermiqueRef
+              = problem.PaliersThermiquesDuPays[k]
+                  .PuissanceDisponibleEtCout[l]
+                  .PuissanceDisponibleDuPalierThermique;
         }
     }
-
 }
 
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<uint32_t>& tsNumbers,
+                       const Data::TimeSeriesNumbers& tsNumbers,
                        std::vector<double>& avg)
 {
     const auto& parameters = study.parameters;
@@ -418,14 +428,16 @@ int retrieveAverageNTC(const Data::Study& study,
     for (uint y = 0; y < study.parameters.nbYears; y++)
     {
         if (!yearsFilter[y])
+        {
             continue;
+        }
 
-        uint32_t tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
+        uint32_t tsIndex = (width == 1) ? 0 : tsNumbers[y];
         weightOfTS[tsIndex] += yearsWeight[y];
     }
 
     // No need for the year number, only the TS index is required
-    for (const auto& it : weightOfTS)
+    for (const auto& it: weightOfTS)
     {
         const uint32_t tsIndex = it.first;
         const double weight = it.second;
@@ -452,8 +464,8 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
     auto& secondOptStat = problem.optimizationStatistics[1];
     state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
 
-    state.averageUpdateTime
-      = firstOptStat.getAverageUpdateTime() + secondOptStat.getAverageUpdateTime();
+    state.averageUpdateTime = firstOptStat.getAverageUpdateTime()
+                              + secondOptStat.getAverageUpdateTime();
 
     firstOptStat.reset();
     secondOptStat.reset();
@@ -461,8 +473,7 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
 OptimizationOptions createOptimizationOptions(const Data::Study& study)
 {
-    return { study.parameters.solverName };
+    return study.parameters.optOptions;
 }
-
 
 } // namespace Antares::Solver::Simulation

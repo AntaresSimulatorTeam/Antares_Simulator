@@ -37,7 +37,7 @@ namespace Antares
 **
 ** \see http://en.wikipedia.org/wiki/Mersenne_twister
 */
-class MersenneTwister final : public Yuni::Math::Random::ADistribution<double, MersenneTwister>
+class MersenneTwister final
 {
 public:
     // Name of the distribution
@@ -45,8 +45,10 @@ public:
     {
         return "Mersenne Twister random numbers";
     }
+
     //! Type of a single random
     using Value = double;
+
     enum
     {
         //! A default seed
@@ -91,12 +93,15 @@ public:
     static Value max();
     //@}
 
+    Value operator()();
+
 private:
     enum
     {
         periodN = 624,
         periodM = 397,
     };
+
     //! State vector
     mutable uint32_t mt[periodN];
     //
@@ -105,7 +110,5 @@ private:
 }; // class MersenneTwister
 
 } // namespace Antares
-
-#include "mersenne-twister.hxx"
 
 #endif // __LIB_ANTARES_RANDOM_MERSENNE_H__

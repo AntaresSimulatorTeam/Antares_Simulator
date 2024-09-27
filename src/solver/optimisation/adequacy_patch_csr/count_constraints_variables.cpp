@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
+
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch
@@ -35,7 +36,9 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
             numberOfConstraints++;
+        }
     }
 
     // constraint:
@@ -48,7 +51,9 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     {
         if (problemeHebdo->adequacyPatchRuntimeData->areaMode[Area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
             numberOfConstraints++;
+        }
     }
     // Special case of the hourly binding constraints
     const auto MatrixBindingConstraints = problemeHebdo->MatriceDesContraintesCouplantes;
@@ -56,7 +61,9 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
          CntCouplante++)
     {
         if (MatrixBindingConstraints[CntCouplante].TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
+        {
             numberOfConstraints++;
+        }
     }
     return numberOfConstraints;
 }
@@ -70,7 +77,9 @@ int countVariables(const PROBLEME_HEBDO* problemeHebdo)
         // Only ENS for areas inside adq patch are considered as variables
         if (problemeHebdo->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
             numberOfVariables += 2; // ENS, spilled energy
+        }
     }
 
     for (uint32_t Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)

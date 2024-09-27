@@ -23,6 +23,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
+
 #include "cholesky.h"
 
 namespace Antares

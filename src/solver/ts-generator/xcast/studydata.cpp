@@ -1,57 +1,37 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/studydata.h"
 
+#include <yuni/yuni.h>
+
+#include <antares/study/study.h>
 
 using namespace Yuni;
 
 namespace Antares::TSGenerator::XCast
 {
-StudyData::StudyData() : mode(Data::Correlation::modeNone)
+StudyData::StudyData():
+    mode(Data::Correlation::modeNone)
 {
-    for (uint realmonth = 0; realmonth != 12; ++realmonth)
-        correlation[realmonth] = nullptr;
-}
-
-StudyData::~StudyData()
-{
-    switch (mode)
-    {
-    case Data::Correlation::modeMonthly:
-    {
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
-            delete correlation[realmonth];
-        break;
-    }
-    case Data::Correlation::modeAnnual:
-    {
-        delete correlation[0];
-        break;
-    }
-    case Data::Correlation::modeNone:
-        break;
-    }
 }
 
 void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const
@@ -86,20 +66,17 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
         {
         case Data::Correlation::modeAnnual:
         {
-            auto* m = new Matrix<float>();
-            prepareMatrix(*m, *(originalCorrelation.annual));
-
             for (uint realmonth = 0; realmonth != 12; ++realmonth)
-                correlation[realmonth] = m;
+            {
+                prepareMatrix(correlation[realmonth], originalCorrelation.annual);
+            }
             break;
         }
         case Data::Correlation::modeMonthly:
         {
             for (uint realmonth = 0; realmonth != 12; ++realmonth)
             {
-                auto* m = new Matrix<float>();
-                correlation[realmonth] = m;
-                prepareMatrix(*m, originalCorrelation.monthly[realmonth]);
+                prepareMatrix(correlation[realmonth], originalCorrelation.monthly[realmonth]);
             }
             break;
         }
@@ -107,14 +84,6 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
             break;
         }
     }
-    else
-    {
-        for (uint realmonth = 0; realmonth != 12; ++realmonth)
-            correlation[realmonth] = nullptr;
-    }
 }
 
 } // namespace Antares::TSGenerator::XCast
-
-
-

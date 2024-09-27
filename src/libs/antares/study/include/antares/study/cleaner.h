@@ -22,10 +22,12 @@
 #define __ANTARES_LIBS_STUDY_CLEANER_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <yuni/core/bind.h>
-#include "version.h"
+#include <yuni/core/string.h>
+
 #include <antares/paths/list.h>
+
+#include "version.h"
 
 namespace Antares::Data
 {
@@ -90,11 +92,10 @@ public:
     **
     ** Return false to stop the process
     */
-    Yuni::Bind<bool(uint)> onProgress;
+    std::function<bool(uint)> onProgress;
 
 }; // class StudyCleaningInfos
 
 } // namespace Antares::Data
-
 
 #endif /* __ANTARES_LIBS_STUDY_CLEANER_H__ */

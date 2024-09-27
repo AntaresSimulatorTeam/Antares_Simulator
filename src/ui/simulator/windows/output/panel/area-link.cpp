@@ -152,7 +152,7 @@ protected:
             }
 
             // The loading of the matrix had failed.
-            // The GUI will be updated with NULL
+            // The GUI will be updated with nullptr
             callback.bind(&pPanel, &Panel::loadDataFromMatrix, (MatrixType*)nullptr);
             if (not shouldAbort)
                 Antares::Dispatcher::GUI::Post(callback, 50);
@@ -393,7 +393,7 @@ protected:
         if (shouldAbort || IsGUIAboutToQuit())
             return;
 
-        if (count && NULL != (result = new MatrixType()))
+        if (count && (result = new MatrixType()))
         {
             char conversionBuffer[128];
             result->reset(ops.width, ops.height);
@@ -464,7 +464,7 @@ protected:
         }
 
         // The loading of the matrix had failed.
-        // The GUI will be updated with NULL
+        // The GUI will be updated with nullptr
         callback.bind(&pPanel, &Panel::loadDataFromMatrix, (MatrixType*)nullptr);
         if (shouldAbort || IsGUIAboutToQuit()) // double-check
             return;

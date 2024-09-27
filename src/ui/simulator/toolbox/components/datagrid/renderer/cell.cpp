@@ -76,7 +76,7 @@ bool Cell::isTSgeneratorOn() const
 // ===================
 // Blank cell
 // ===================
-blankCell::blankCell() : Cell(timeSeriesCount /*arbitrary, not used here anyway */)
+blankCell::blankCell() : Cell(timeSeriesLoad /*arbitrary, not used here anyway */)
 {
 }
 wxString blankCell::cellValue() const
@@ -100,7 +100,7 @@ IRenderer::CellStyle blankCell::cellStyle() const
 // Inactive cell
 // ========================
 inactiveCell::inactiveCell(wxString toPrintInCell) :
- Cell(timeSeriesCount /*arbitrary, not used here anyway */), toBePrintedInCell_(toPrintInCell)
+ Cell(timeSeriesLoad /*arbitrary, not used here anyway */), toBePrintedInCell_(toPrintInCell)
 {
 }
 

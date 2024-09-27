@@ -26,15 +26,18 @@
 
 #include "antares/study/study.h"
 
-namespace Benchmarking {
+namespace Benchmarking
+{
 class FileContent;
 
 class StudyInfoCollector
 {
 public:
-    StudyInfoCollector(const Antares::Data::Study& study) : study_(study)
+    StudyInfoCollector(const Antares::Data::Study& study):
+        study_(study)
     {
     }
+
     void toFileContent(FileContent& file_content);
 
 private:
@@ -55,7 +58,6 @@ private:
     const Antares::Data::Study& study_;
 };
 
-
 struct OptimizationInfo
 {
     unsigned int nbVariables = 0;
@@ -66,11 +68,14 @@ struct OptimizationInfo
 class SimulationInfoCollector
 {
 public:
-    SimulationInfoCollector(const OptimizationInfo& optInfo) : opt_info_(optInfo){};
+    SimulationInfoCollector(const OptimizationInfo& optInfo):
+        opt_info_(optInfo)
+    {
+    }
 
     void toFileContent(FileContent& file_content);
 
 private:
     const OptimizationInfo& opt_info_;
 };
-}
+} // namespace Benchmarking

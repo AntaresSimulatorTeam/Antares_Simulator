@@ -22,7 +22,9 @@
 #define __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__
 
 #include <yuni/yuni.h>
+
 #include "antares/study/study.h"
+
 #include "sets.h"
 
 #define SEP IO::Separator
@@ -34,7 +36,8 @@ namespace // anonymous
 class ScenarioBuilderUpdater
 {
 public:
-    ScenarioBuilderUpdater(Data::Study& study) : pStudy(study)
+    ScenarioBuilderUpdater(Data::Study& study):
+        pStudy(study)
     {
         using namespace Yuni;
         // We can store the INI files in disk because it may not fit in memory

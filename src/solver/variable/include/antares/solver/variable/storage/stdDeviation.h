@@ -21,9 +21,9 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_STD_DEVIATION_H__
 #define __SOLVER_VARIABLE_STORAGE_STD_DEVIATION_H__
 
+#include <cmath>
 #include <float.h>
 #include <limits>
-#include <yuni/core/math.h>
 
 namespace Antares
 {
@@ -35,8 +35,8 @@ namespace R
 {
 namespace AllYears
 {
-template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
-struct StdDeviation : public NextT
+template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
+struct StdDeviation: public NextT
 {
 public:
     //! Type of the net item in the list
@@ -47,7 +47,7 @@ public:
         //! The count if item in the list
         count = 1 + NextT::count,
 
-        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
     struct Data
@@ -77,7 +77,7 @@ public:
 protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
-        Antares::Memory::Allocate<double>(stdDeviationHourly, maxHoursInAYear);
+        Antares::Memory::Allocate<double>(stdDeviationHourly, HOURS_PER_YEAR);
         // Next
         NextType::initializeFromStudy(study);
 
@@ -88,10 +88,10 @@ protected:
     void reset()
     {
         // Reset
-        (void)::memset(stdDeviationMonthly, 0, sizeof(double) * maxMonths);
-        (void)::memset(stdDeviationWeekly, 0, sizeof(double) * maxWeeksInAYear);
-        (void)::memset(stdDeviationDaily, 0, sizeof(double) * maxDaysInAYear);
-        Antares::Memory::Zero(maxHoursInAYear, stdDeviationHourly);
+        (void)::memset(stdDeviationMonthly, 0, sizeof(double) * MONTHS_PER_YEAR);
+        (void)::memset(stdDeviationWeekly, 0, sizeof(double) * WEEKS_PER_YEAR);
+        (void)::memset(stdDeviationDaily, 0, sizeof(double) * DAYS_PER_YEAR);
+        Antares::Memory::Zero(HOURS_PER_YEAR, stdDeviationHourly);
         stdDeviationYear = 0.;
         // Next
         NextType::reset();
@@ -104,17 +104,25 @@ protected:
 
         unsigned int i;
         // StdDeviation value for each hour throughout all years
-        for (i = 0; i != maxHoursInAYear; ++i)
+        for (i = 0; i != HOURS_PER_YEAR; ++i)
+        {
             stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
+        }
         // StdDeviation value for each day throughout all years
-        for (i = 0; i != maxDaysInAYear; ++i)
+        for (i = 0; i != DAYS_PER_YEAR; ++i)
+        {
             stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
+        }
         // StdDeviation value for each week throughout all years
-        for (i = 0; i != maxWeeksInAYear; ++i)
+        for (i = 0; i != WEEKS_PER_YEAR; ++i)
+        {
             stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
+        }
         // StdDeviation value for each month throughout all years
-        for (i = 0; i != maxMonths; ++i)
+        for (i = 0; i != MONTHS_PER_YEAR; ++i)
+        {
             stdDeviationMonthly[i] += rhs.month[i] * rhs.month[i] * pRatio;
+        }
         // StdDeviation value throughout all years
         stdDeviationYear += rhs.year * rhs.year * pRatio;
 
@@ -129,54 +137,67 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (!(fileLevel & Category::id))
+        if (!(fileLevel & Category::FileLevel::id))
         {
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<S, maxHoursInAYear, VCardT, Category::hourly>(
-                  report, results, Memory::RawPointer(stdDeviationHourly));
+                InternalExportValues<S, HOURS_PER_YEAR, VCardT, Category::hourly>(
+                  report,
+                  results,
+                  Memory::RawPointer(stdDeviationHourly));
                 break;
             case Category::daily:
-                InternalExportValues<S, maxDaysInAYear, VCardT, Category::daily>(
-                  report, results, stdDeviationDaily);
+                InternalExportValues<S, DAYS_PER_YEAR, VCardT, Category::daily>(report,
+                                                                                results,
+                                                                                stdDeviationDaily);
                 break;
             case Category::weekly:
-                InternalExportValues<S, maxWeeksInAYear, VCardT, Category::weekly>(
-                  report, results, stdDeviationWeekly);
+                InternalExportValues<S, WEEKS_PER_YEAR, VCardT, Category::weekly>(
+                  report,
+                  results,
+                  stdDeviationWeekly);
                 break;
             case Category::monthly:
-                InternalExportValues<S, maxMonths, VCardT, Category::monthly>(
-                  report, results, stdDeviationMonthly);
+                InternalExportValues<S, MONTHS_PER_YEAR, VCardT, Category::monthly>(
+                  report,
+                  results,
+                  stdDeviationMonthly);
                 break;
             case Category::annual:
-                InternalExportValues<S, 1, VCardT, Category::annual>(
-                  report, results, &stdDeviationYear);
+                InternalExportValues<S, 1, VCardT, Category::annual>(report,
+                                                                     results,
+                                                                     &stdDeviationYear);
                 break;
             }
         }
         // Next
-        NextType::template buildSurveyReport<S, VCardT>(
-          report, results, dataLevel, fileLevel, precision);
+        NextType::template buildSurveyReport<S, VCardT>(report,
+                                                        results,
+                                                        dataLevel,
+                                                        fileLevel,
+                                                        precision);
     }
 
     uint64_t memoryUsage() const
     {
-        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
+        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
     }
 
     template<template<class, int> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
         if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, StdDeviation<Empty, 0>>::Yes)
+        {
             return stdDeviationHourly;
+        }
         return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
     }
 
 public:
-    double stdDeviationMonthly[maxMonths];
-    double stdDeviationWeekly[maxWeeksInAYear];
-    double stdDeviationDaily[maxDaysInAYear];
+    double stdDeviationMonthly[MONTHS_PER_YEAR];
+    double stdDeviationWeekly[WEEKS_PER_YEAR];
+    double stdDeviationDaily[DAYS_PER_YEAR];
     Antares::Memory::Stored<double>::Type stdDeviationHourly;
     double stdDeviationYear;
 
@@ -192,8 +213,8 @@ private:
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision
-        report.precision[report.data.columnIndex]
-          = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
+          VCardT::decimal>::Value();
 
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
@@ -202,40 +223,50 @@ private:
         double* target = report.values[report.data.columnIndex];
         // A mere copy
 
+        auto squareRootChecked = [](double d) { return d >= 0 ? std::sqrt(d) : 0.; };
+
         switch (PrecisionT)
         {
         case Category::hourly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+            {
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.hourly[i] * results.avgdata.hourly[i]);
+            }
         }
         break;
         case Category::daily:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+            {
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.daily[i] * results.avgdata.daily[i]);
+            }
         }
         break;
         case Category::weekly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+            {
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.weekly[i] * results.avgdata.weekly[i]);
+            }
         }
         break;
         case Category::monthly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+            {
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.monthly[i] * results.avgdata.monthly[i]);
+            }
         }
         break;
         case Category::annual:
         {
             const double d = *array - results.avgdata.allYears * results.avgdata.allYears;
-            *target = Yuni::Math::SquareRoot(d);
+            *target = squareRootChecked(d);
         }
         break;
         }
@@ -248,7 +279,9 @@ private:
     void InternalExportValuesMC(SurveyResults& report, const S& /*results*/, const A& array) const
     {
         if (not(PrecisionT & Category::annual))
+        {
             return;
+        }
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
         // Caption
@@ -257,8 +290,8 @@ private:
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision
-        report.precision[report.data.columnIndex]
-          = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
+          VCardT::decimal>::Value();
 
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;

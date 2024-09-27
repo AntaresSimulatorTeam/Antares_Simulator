@@ -79,10 +79,10 @@ void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<
         jit_ = JIT::Reset(jit_, buffer);
         mtx->jit = jit_;
         JIT::MarkAsNotLoaded(jit_);
-        jit_->minWidth
-          = (0 != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize))
-              ? jit_recorded_state()->minWidth
-              : 1;
+        jit_->minWidth = (0
+                          != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize))
+                           ? jit_recorded_state()->minWidth
+                           : 1;
         jit_->maxHeight = jit_recorded_state()->maxHeight;
         jit_->options = jit_recorded_state()->options;
         mtx_not_const->clear();

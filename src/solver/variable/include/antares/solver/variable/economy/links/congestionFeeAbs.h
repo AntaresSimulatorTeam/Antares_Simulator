@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_CongestionFeeAbs_H__
 #define __SOLVER_VARIABLE_ECONOMY_CongestionFeeAbs_H__
 
+#include <cmath>
+
 #include "../../variable.h"
 
 namespace Antares
@@ -38,6 +40,7 @@ struct VCardCongestionFeeAbs
     {
         return "CONG. FEE (ABS.)";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -58,29 +61,28 @@ struct VCardCongestionFeeAbs
             >>>>>
       ResultsType;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::link,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::link;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 1;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
@@ -92,7 +94,7 @@ struct VCardCongestionFeeAbs
 */
 template<class NextT = Container::EndOfList>
 class CongestionFeeAbs
- : public Variable::IVariable<CongestionFeeAbs<NextT>, NextT, VCardCongestionFeeAbs>
+    : public Variable::IVariable<CongestionFeeAbs<NextT>, NextT, VCardCongestionFeeAbs>
 {
 public:
     //! Type of the next static variable
@@ -118,11 +120,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -143,7 +145,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -180,10 +184,10 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -231,7 +235,7 @@ public:
       .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
-        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = Yuni::Math::Abs(
+        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = std::abs(
           state.ntc.ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE));
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
@@ -266,8 +270,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

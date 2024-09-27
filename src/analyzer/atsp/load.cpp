@@ -18,9 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "atsp.h"
 #include <antares/inifile/inifile.h>
 #include "antares/config/config.h"
+
+#include "atsp.h"
 
 using namespace Yuni;
 
@@ -53,12 +54,12 @@ bool ATSP::loadFromINIFile(const String& filename)
         CString<50, false> key;
         CString<50, false> value;
 
-        for (section = ini.firstSection; section != NULL; section = section->next)
+        for (section = ini.firstSection; section; section = section->next)
         {
             if (section->name == ".general")
             {
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();
@@ -81,23 +82,33 @@ bool ATSP::loadFromINIFile(const String& filename)
                     if (key == "target")
                     {
                         if (value == "load")
+                        {
                             pTimeseries = Data::timeSeriesLoad;
+                        }
                         else if (value == "solar")
+                        {
                             pTimeseries = Data::timeSeriesSolar;
+                        }
                         else if (value == "wind")
+                        {
                             pTimeseries = Data::timeSeriesWind;
+                        }
                         continue;
                     }
                     if (key == "width")
                     {
                         if (not value.to(pTimeseriesCount))
+                        {
                             logs.error() << "impossible to read the number of timeseries";
+                        }
                         continue;
                     }
                     if (key == "height")
                     {
                         if (not value.to(pMHeight))
+                        {
                             logs.error() << "impossible to read the height";
+                        }
                         continue;
                     }
                     if (key == "medium-term-autocorrelation")
@@ -148,7 +159,9 @@ bool ATSP::loadFromINIFile(const String& filename)
                             pLimitMemory *= 1024u * 1024u;
                         }
                         else
+                        {
                             pLimitMemory *= 1024u * 1024u;
+                        }
                         continue;
                     }
                     if (key == "clean")
@@ -167,7 +180,7 @@ bool ATSP::loadFromINIFile(const String& filename)
                 info->distribution = Data::XCast::dtBeta;
 
                 IniFile::Property* p = section->firstProperty;
-                for (; p != NULL; p = p->next)
+                for (; p; p = p->next)
                 {
                     key = p->key;
                     key.toLower();
@@ -213,7 +226,9 @@ bool ATSP::loadFromINIFile(const String& filename)
         }
 
         if (!checkStudyVersion())
+        {
             return false;
+        }
 
         logs.info() << "Target study: " << pStudyFolder;
 
@@ -304,8 +319,8 @@ bool ATSP::checkStudyVersion() const
     }
     if (v < Data::StudyVersion::latest())
     {
-        logs.error() << "The study folder must be upgraded from v" << v.toString()
-                     << " to v"<< Data::StudyVersion::latest().toString();
+        logs.error() << "The study folder must be upgraded from v" << v.toString() << " to v"
+                     << Data::StudyVersion::latest().toString();
         return false;
     }
     return true;

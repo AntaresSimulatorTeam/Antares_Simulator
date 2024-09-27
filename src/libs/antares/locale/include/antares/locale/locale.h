@@ -28,5 +28,5 @@ namespace Antares
 */
 void InitializeDefaultLocale();
 
-}
+} // namespace Antares
 #endif // __ANTARES_LOCALE_H__

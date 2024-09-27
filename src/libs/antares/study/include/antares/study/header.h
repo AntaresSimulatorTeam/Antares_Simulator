@@ -21,10 +21,14 @@
 #ifndef __ANTARES_LIBS_STUDY_HEADER_H__
 #define __ANTARES_LIBS_STUDY_HEADER_H__
 
+#include <ctime>
+#include <filesystem>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <ctime>
+
 #include <antares/inifile/inifile.h>
+
 #include "version.h"
 
 //! Default author
@@ -49,9 +53,8 @@ public:
     ** \param filename The filename to read
     ** \return The version of the study, or 0 if unknown (invalid header)
     */
-    static bool ReadVersionFromFile(const AnyString& filename, std::string& version);
+    static bool readVersionFromFile(const std::filesystem::path& filename, std::string& version);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -61,6 +64,7 @@ public:
     {
         reset();
     }
+
     /*!
     ** \brief Destructor
     */
@@ -102,9 +106,10 @@ public:
      ** \param folder The folder where data are located
      ** \return The version of the study. `unknown` if not found
      */
-     static StudyVersion tryToFindTheVersion(const AnyString& folder);
+    static StudyVersion tryToFindTheVersion(const std::string& folder);
 
-public:
+    bool validateVersion();
+
     //! Caption of the study
     Yuni::String caption;
 

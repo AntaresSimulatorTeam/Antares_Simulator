@@ -46,6 +46,4 @@ inline void Prepro::resetToDefault()
 
 } // namespace Antares::Data::Wind
 
-
-
 #endif // __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__

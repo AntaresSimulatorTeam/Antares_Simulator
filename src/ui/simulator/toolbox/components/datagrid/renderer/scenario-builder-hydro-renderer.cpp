@@ -62,7 +62,6 @@ double hydroScBuilderRenderer::cellNumericValue(int x, int y) const
     }
     return 0.;
 }
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

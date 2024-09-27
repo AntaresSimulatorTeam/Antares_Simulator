@@ -1279,8 +1279,14 @@ void RefreshListOfOutputsForTheCurrentStudy()
     if (IsGUIAboutToQuit())
         return;
 
-    auto study = GetCurrentStudy();
-    Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, study);
+    if (auto study = GetCurrentStudy(); CurrentStudyIsValid())
+    {
+        Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, *study);
+    }
+    else
+    {
+        ListOfOutputsForTheCurrentStudy.clear();
+    }
 
     auto* mainfrm = Forms::ApplWnd::Instance();
     if (mainfrm)

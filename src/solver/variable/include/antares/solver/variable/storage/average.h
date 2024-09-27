@@ -33,8 +33,8 @@ namespace R
 {
 namespace AllYears
 {
-template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
-struct Average : public NextT
+template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
+struct Average: public NextT
 {
 public:
     //! Type of the net item in the list
@@ -45,7 +45,7 @@ public:
         //! The count if item in the list
         count = 1 + NextT::count,
 
-        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
     struct Data
@@ -95,56 +95,60 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (!(fileLevel & Category::id))
+        if (!(fileLevel & Category::FileLevel::id))
         {
             switch (precision)
             {
-                case Category::hourly:
-                    InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(
-                      report, Memory::RawPointer(avgdata.hourly));
-                    break;
-                case Category::daily:
-                    InternalExportValues<maxDaysInAYear, VCardT, Category::daily>(report,
-                                                                                  avgdata.daily);
-                    break;
-                case Category::weekly:
-                    InternalExportValues<maxWeeksInAYear, VCardT, Category::weekly>(report,
-                                                                                    avgdata.weekly);
-                    break;
-                case Category::monthly:
-                    InternalExportValues<maxMonths, VCardT, Category::monthly>(report,
-                                                                               avgdata.monthly);
-                    break;
-                case Category::annual:
-                    InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
-                    break;
+            case Category::hourly:
+                InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
+                                                                               Memory::RawPointer(
+                                                                                 avgdata.hourly));
+                break;
+            case Category::daily:
+                InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report, avgdata.daily);
+                break;
+            case Category::weekly:
+                InternalExportValues<WEEKS_PER_YEAR, VCardT, Category::weekly>(report,
+                                                                               avgdata.weekly);
+                break;
+            case Category::monthly:
+                InternalExportValues<MONTHS_PER_YEAR, VCardT, Category::monthly>(report,
+                                                                                 avgdata.monthly);
+                break;
+            case Category::annual:
+                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year.data());
+                break;
             }
         }
         // Next
-        NextType::template buildSurveyReport<S, VCardT>(
-          report, results, dataLevel, fileLevel, precision);
+        NextType::template buildSurveyReport<S, VCardT>(report,
+                                                        results,
+                                                        dataLevel,
+                                                        fileLevel,
+                                                        precision);
     }
 
     template<class VCardT>
     void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
     {
-        const bool isCluster = (VCardT::categoryFileLevel & Category::de)
-                               || (VCardT::categoryFileLevel & Category::de_res);
-        const bool isBindingConstraint = VCardT::categoryFileLevel & Category::bc;
+        const bool isCluster = (VCardT::categoryFileLevel & Category::FileLevel::de)
+                               || (VCardT::categoryFileLevel & Category::FileLevel::de_res);
+        const bool isBindingConstraint = VCardT::categoryFileLevel & Category::FileLevel::bc;
         const bool isDigest = digestLevel & Category::digestAllYears;
-        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas) && isDigest
-            && !isCluster && !isBindingConstraint)
+        if ((dataLevel & Category::DataLevel::area || dataLevel & Category::DataLevel::setOfAreas)
+            && isDigest && !isCluster && !isBindingConstraint)
         {
             assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
             report.captions[0][report.data.columnIndex] = report.variableCaption;
             report.captions[1][report.data.columnIndex] = report.variableUnit;
-            report.captions[2][report.data.columnIndex]
-              = (report.variableCaption == "LOLP") ? "values" : "EXP";
+            report.captions[2][report.data.columnIndex] = (report.variableCaption == "LOLP")
+                                                            ? "values"
+                                                            : "EXP";
 
             // Precision
-            report.precision[report.data.columnIndex]
-              = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+            report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
+              VCardT::decimal>::Value();
             // Value
             report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.allYears;
             // Non applicability
@@ -166,7 +170,9 @@ protected:
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
         if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Average<Empty, 0>>::Yes)
+        {
             return avgdata.hourly;
+        }
         return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
     }
 
@@ -183,11 +189,11 @@ private:
         // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
         report.captions[1][report.data.columnIndex] = report.variableUnit;
-        report.captions[2][report.data.columnIndex]
-          = (report.variableCaption == "LOLP") ? "values" : "EXP";
+        report.captions[2][report.data.columnIndex] = (report.variableCaption == "LOLP") ? "values"
+                                                                                         : "EXP";
         // Precision
-        report.precision[report.data.columnIndex]
-          = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
+          VCardT::decimal>::Value();
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
@@ -199,7 +205,9 @@ private:
             double& target = *(report.values[report.data.columnIndex]);
             target = 0;
             for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
+            {
                 target += array[i];
+            }
             avgdata.allYears = target;
             break;
         }

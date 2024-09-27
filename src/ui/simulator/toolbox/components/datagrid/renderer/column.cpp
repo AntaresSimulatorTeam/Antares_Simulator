@@ -156,7 +156,6 @@ ColumnNTC::ColumnNTC() : Column(timeSeriesTransmissionCapacities, "  Links NTC  
               new_check_allocation<intraModalCell>(tsKind_),
               new_check_allocation<inactiveCell>(wxT("-"))};
 }
-
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

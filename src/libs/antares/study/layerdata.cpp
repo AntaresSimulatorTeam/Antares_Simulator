@@ -19,12 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/core/string.h>
-#include <yuni/yuni.h>
+#include "antares/study/layerdata.h"
+
 #include <fstream>
 
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
 #include <antares/inifile/inifile.h>
-#include "antares/study/layerdata.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
@@ -61,7 +63,9 @@ void LayerData::loadLayers(const AnyString& filename)
                 p = p->next;
 
                 if (p)
+                {
                     showAllLayer = p->value.to<bool>();
+                }
             }
             return;
         }
@@ -78,15 +82,15 @@ bool LayerData::saveLayers(const AnyString& filename)
         CString<256, true> data;
         data << "[layers]\n";
 
-        for (const auto& [key, value] : layers)
+        for (const auto& [key, value]: layers)
+        {
             data << key << " = " << value << '\n';
+        }
 
         data << "[activeLayer]\n";
-        data << "activeLayerID"
-             << " = " << activeLayerID;
+        data << "activeLayerID" << " = " << activeLayerID;
         data << '\n';
-        data << "showAllLayer"
-             << " = " << showAllLayer;
+        data << "showAllLayer" << " = " << showAllLayer;
 
         file << data;
 

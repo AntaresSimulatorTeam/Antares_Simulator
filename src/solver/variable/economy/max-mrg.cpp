@@ -19,10 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
 #include "antares/solver/variable/economy/max-mrg.h"
+
+#include <yuni/yuni.h>
+
 #include <antares/study/area/scratchpad.h>
+#include <antares/study/study.h>
 
 using namespace Yuni;
 
@@ -32,8 +34,9 @@ template<bool WithSimplexT>
 struct SpillageSelector
 {
     template<class U>
-    static auto Value(const State&, const U& weeklyResults, uint)
-      -> decltype(weeklyResults.ValeursHorairesDeDefaillanceNegative)
+    static auto Value(const State&,
+                      const U& weeklyResults,
+                      uint) -> decltype(weeklyResults.ValeursHorairesDeDefaillanceNegative)
     {
         return weeklyResults.ValeursHorairesDeDefaillanceNegative;
     }
@@ -54,6 +57,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 {
     assert(168 + state.hourInTheYear <= HOURS_PER_YEAR);
     assert(opmrg && "Invalid OP.MRG target");
+
     enum
     {
         offset = 0,
@@ -89,19 +93,25 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
         {
             // H.STOR
             for (uint i = offset; i != endHour; ++i)
+            {
                 WH += H[i];
+            }
         }
 
-        if (Math::Zero(WH)) // no hydro
+        if (Utils::isZero(WH)) // no hydro
         {
             for (uint i = offset; i != endHour; ++i)
+            {
                 opmrg[i] = +S[i] + M[i] - D[i];
+            }
             return;
         }
 
         // initialisation
         for (uint i = offset; i != endHour; ++i)
+        {
             OI[i] = +S[i] + M[i] - D[i];
+        }
     }
 
     double bottom = +std::numeric_limits<double>::max();
@@ -111,18 +121,21 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     {
         double oii = OI[i];
         if (oii > top)
+        {
             top = oii;
+        }
         if (oii < bottom)
+        {
             bottom = oii;
+        }
     }
 
     double ecart = 1.;
     uint loop = 100; // arbitrary - maximum number of iterations
 
-    // ref to the study calendar
-    auto& calendar = state.study.calendar;
     // Pmax
-    const auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
+    const uint y = problem.year;
+    const auto& P = area.hydro.series->maxHourlyGenPower;
 
     do
     {
@@ -135,22 +148,26 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
             assert(i < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[i])
             {
-                uint dayYear = calendar.hours[i + state.hourInTheYear].dayYear;
-                opmrg[i] = Math::Min(niveau, OI[i] + P[dayYear] - H[i]);
+                opmrg[i] = std::min(niveau,
+                                    OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
                 SM += opmrg[i] - OI[i];
             }
             else
             {
-                opmrg[i] = Math::Max(niveau, OI[i] - H[i]);
+                opmrg[i] = std::max(niveau, OI[i] - H[i]);
                 SP += OI[i] - opmrg[i];
             }
         }
 
         ecart = SP - SM;
         if (ecart > 0)
+        {
             bottom = niveau;
+        }
         else
+        {
             top = niveau;
+        }
 
         if (!--loop)
         {
@@ -164,9 +181,13 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
 {
     if (state.simplexRunNeeded)
+    {
         PrepareMaxMRGFor<true>(state, opmrg, numSpace);
+    }
     else
+    {
         PrepareMaxMRGFor<false>(state, opmrg, numSpace);
+    }
 }
 
 } // namespace Antares::Solver::Variable::Economy

@@ -19,14 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "antares/study/study.h"
 #include "antares/study/parts/renewable/container.h"
+
+#include <yuni/yuni.h>
+
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;
-
 
 namespace Antares::Data
 {
@@ -56,4 +57,3 @@ void PartRenewable::reset()
 }
 
 } // namespace Antares::Data
-

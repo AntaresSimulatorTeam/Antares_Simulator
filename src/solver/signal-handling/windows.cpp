@@ -21,8 +21,9 @@
 #ifdef YUNI_OS_WINDOWS
 
 #include <windows.h>
-#include "common.h"
+
 #include "../application.h"
+#include "common.h"
 
 BOOL WINAPI ConsoleHandler(DWORD dwType)
 {

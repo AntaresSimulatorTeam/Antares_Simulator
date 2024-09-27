@@ -19,20 +19,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <iostream>
+
+#include <yuni/core/getopt.h>
+#include <yuni/core/system/username.h>
+
+#include <antares/antares/version.h>
+#include <antares/args/args_to_utf8.h>
+#include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
 #include <antares/resources/resources.h>
-#include <iostream>
-#include <yuni/core/getopt.h>
-#include <antares/args/args_to_utf8.h>
-#include <antares/antares/version.h>
-#include <yuni/core/system/username.h>
-#include <antares/locale/locale.h>
 #include <antares/sys/policy.h>
 
 using namespace Yuni;
 using namespace Antares;
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     // locale
     InitializeDefaultLocale();
@@ -56,7 +58,9 @@ int main(int argc, char* argv[])
     options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
     if (options(argc, argv) == GetOpt::ReturnCode::error)
+    {
         return options.errors() ? EXIT_FAILURE : 0;
+    }
 
     if (optVersion)
     {

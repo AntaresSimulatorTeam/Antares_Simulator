@@ -68,9 +68,6 @@ source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/container.h
         parts/thermal/container.cpp
-        include/antares/study/parts/thermal/prepro.h
-        include/antares/study/parts/thermal/prepro.hxx
-        parts/thermal/prepro.cpp
         include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
         include/antares/study/parts/thermal/cluster.h
@@ -103,8 +100,6 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/series.h
         include/antares/study/parts/short-term-storage/cluster.h
         parts/short-term-storage/cluster.cpp
-        include/antares/study/parts/short-term-storage/STStorageOutputCaptions.h
-        parts/short-term-storage/STStorageOutputCaptions.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -127,6 +122,8 @@ set(SRC_STUDY_PART_HYDRO
         include/antares/study/parts/hydro/allocation.h
         include/antares/study/parts/hydro/allocation.hxx
         parts/hydro/allocation.cpp
+        include/antares/study/parts/hydro/hydromaxtimeseriesreader.h
+        parts/hydro/hydromaxtimeseriesreader.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 
@@ -211,7 +208,6 @@ set(SRC_STUDY
         include/antares/study/load-options.h
         load-options.cpp
         include/antares/study/runtime/runtime.h
-        include/antares/study/runtime/runtime.hxx
         runtime/runtime.cpp
         include/antares/study/runtime.h
         include/antares/study/study.h
@@ -253,7 +249,7 @@ set(SRC_STUDY
 
         # Sets
         include/antares/study/sets.h
-        include/antares/study/sets.hxx
+        area/sets.cpp
 
         # variable selection
         include/antares/study/variable-print-info.h
@@ -286,9 +282,7 @@ add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
         PUBLIC
-        Boost::boost
         yuni-static-core
-        Antares::array #xcast
         Antares::date #parameters
         Antares::inifile #parameters
         Antares::stdcxx #enum.hxx
@@ -299,6 +293,7 @@ target_link_libraries(study
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::series
+        Antares::array
         antares-core
         antares-solver-simulation
         Antares::hydro

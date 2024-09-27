@@ -22,6 +22,7 @@
 #define ANTARES_CONCURRENCY_H
 
 #include <future>
+
 #include "yuni/job/queue/service.h"
 
 namespace Antares::Concurrency
@@ -37,8 +38,8 @@ using TaskFuture = std::future<void>;
  * as opposite to Yuni::Job::QueueService::add which swallows them.
  */
 [[nodiscard]] TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
-                   const Task& task,
-                   Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
+                                 const Task& task,
+                                 Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
 
 /*!
  * \brief Queues the provided function objects and returns the corresponding std::future.
@@ -48,7 +49,7 @@ using TaskFuture = std::future<void>;
  * This allows to handle exceptions occuring in the underlying task,
  * as opposite to Yuni::Job::QueueService::add which swallows them.
  */
-template <class T>
+template<class T>
 [[nodiscard]] TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
                                  const std::shared_ptr<T>& task,
                                  Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
@@ -89,8 +90,8 @@ private:
     std::vector<TaskFuture> futures_;
 };
 
-
-namespace Detail { //implementation details
+namespace Detail
+{ // implementation details
 
 /*!
  * Utility class to wrap a callable object pointer
@@ -102,8 +103,8 @@ template<class T>
 class CopyableCallable
 {
 public:
-    explicit CopyableCallable(const std::shared_ptr<T>& functionObject) :
-            functionObject_(functionObject)
+    explicit CopyableCallable(const std::shared_ptr<T>& functionObject):
+        functionObject_(functionObject)
     {
     }
 
@@ -116,18 +117,17 @@ private:
     std::shared_ptr<T> functionObject_;
 };
 
-}
+} // namespace Detail
 
-template <class T>
+template<class T>
 TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
-                                 const std::shared_ptr<T>& task,
-                                 Yuni::Job::Priority priority)
+                   const std::shared_ptr<T>& task,
+                   Yuni::Job::Priority priority)
 {
     Task wrappedTask = Detail::CopyableCallable<T>(task);
     return AddTask(threadPool, wrappedTask, priority);
 }
 
-}
+} // namespace Antares::Concurrency
 
-
-#endif //ANTARES_CONCURRENCY_H
+#endif // ANTARES_CONCURRENCY_H

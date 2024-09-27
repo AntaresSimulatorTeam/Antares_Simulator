@@ -2,4 +2,4 @@
 
 #include "VariableManagement.h"
 
-VariableManagement::VariableManager VariableManagerFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo);
+VariableManagement::VariableManager VariableManagerFromProblemHebdo(PROBLEME_HEBDO*);

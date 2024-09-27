@@ -19,9 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "atsp.h"
 #include <assert.h>
-#include <yuni/core/math.h>
+#include <cmath>
+
+#include "atsp.h"
 
 using namespace Yuni;
 
@@ -45,7 +46,9 @@ void ATSP::roundMatrixValues(Matrix<>& m)
                     ++pRoundingCount;
                 }
                 if (src[y] > pUpperBound80percent)
+                {
                     ++pRounding80percentCount;
+                }
             }
         }
         pRoundingCountTotal += m.width * m.height;
@@ -80,7 +83,9 @@ void ATSP::Extrait_bloc(Matrix<>& out,
         auto& outcol = out.entry[j];
         const auto& srccol = MTRX.entry[j + indcol];
         for (uint i = 0; i < nblig; ++i)
+        {
             outcol[i] = srccol[i + indlig];
+        }
     }
 }
 
@@ -93,7 +98,9 @@ void ATSP::Colonne_moyenne(double* out, const Matrix<>& MTRX, uint nblig, uint n
     {
         d = 0.;
         for (uint j = 0; j < nbcol; ++j)
+        {
             d += MTRX[j][i];
+        }
         out[i] = d / nbcol;
     }
 }
@@ -110,9 +117,13 @@ void ATSP::Mtrx_bound(double& rmin, double& rmax, const Matrix<>& MTRX, uint nbl
         for (uint i = 0; i < nblig; ++i)
         {
             if (col[i] > rmax)
+            {
                 rmax = col[i];
+            }
             if (col[i] < rmin)
+            {
                 rmin = col[i];
+            }
         }
     }
 }
@@ -123,7 +134,9 @@ void ATSP::Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol)
     for (uint j = 0; j < nbcol; ++j)
     {
         for (uint i = 0; i < nblig; ++i)
-            out[j][i] = Math::Abs(MTRX[j][i]);
+        {
+            out[j][i] = std::abs(MTRX[j][i]);
+        }
     }
 }
 
@@ -132,7 +145,9 @@ double ATSP::Moyenne_generale(double* A, uint nblig)
 {
     double x = 0.;
     for (uint i = 0; i < nblig; ++i)
+    {
         x += A[i];
+    }
     return x / nblig;
 }
 
@@ -154,14 +169,18 @@ void ATSP::Extrait_col(double* out, const Matrix<>& MTRX, uint nblig, uint indco
 {
     const Matrix<>::ColumnType& col = MTRX.entry[indcol];
     for (uint i = 0; i < nblig; ++i)
+    {
         out[i] = col[i];
+    }
 }
 
 // met dans A le carre de B
 void ATSP::Square(double* A, const double* B, uint nblig)
 {
     for (uint i = 0; i < nblig; ++i)
+    {
         A[i] = B[i] * B[i];
+    }
 }
 
 // met (B- le scalaire x) dans A
@@ -172,7 +191,9 @@ void ATSP::Retranche_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nbl
         const Matrix<>::ColumnType& src = B.entry[j];
         auto& out = A.entry[j];
         for (uint i = 0; i < nblig; ++i)
+        {
             out[i] = src[i] - x;
+        }
     }
 }
 
@@ -185,7 +206,9 @@ void ATSP::Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig,
         auto& out = A.entry[j];
 
         for (uint i = 0; i < nblig; ++i)
+        {
             out[i] = src[i] / x;
+        }
     }
 }
 
@@ -193,21 +216,27 @@ void ATSP::Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig,
 void ATSP::Cube(double* A, const double* B, uint nblig)
 {
     for (uint i = 0; i < nblig; ++i)
+    {
         A[i] = B[i] * B[i] * B[i];
+    }
 }
 
 // met dans A B^4
 void ATSP::Dsquare(double* A, const double* B, uint nblig)
 {
     for (uint i = 0; i < nblig; ++i)
+    {
         A[i] = B[i] * B[i] * B[i] * B[i];
+    }
 }
 
 // range dans OUT  nblig elements de MTRX pris a partir de l'indice indlig
 void ATSP::Extrait_seg(double* out, const double* src, uint nblig, uint indlig)
 {
     for (uint i = 0; i < nblig; ++i)
+    {
         out[i] = src[i + indlig];
+    }
 }
 
 // retourne le coefficient de corrélation entre A et B  (retourne 999 si paramètre "code" aberrant)
@@ -263,17 +292,23 @@ double ATSP::Correlation(double* A,
         return 999.; // should never happen
     }
 
-    if (Math::Abs(sigma_A) < 1e-4 && Math::Abs(sigma_B) < 1e-4)
+    if (std::abs(sigma_A) < 1e-4 && std::abs(sigma_B) < 1e-4)
+    {
         return 1.;
-    if (Math::Abs(sigma_A) < 1e-4 || Math::Abs(sigma_B) < 1e-4)
+    }
+    if (std::abs(sigma_A) < 1e-4 || std::abs(sigma_B) < 1e-4)
+    {
         return 0.;
+    }
 
     double rho = 0.;
 
     if (code == 1)
     {
         for (uint i = 0; i < nblig; ++i)
+        {
             rho += (A[i] - expec_A) * (B[i] - expec_B);
+        }
 
         rho /= nblig;
         rho /= sigma_A;
@@ -284,7 +319,9 @@ double ATSP::Correlation(double* A,
         // if (code == 0)
 
         for (uint i = 0; i < nblig; ++i)
+        {
             rho += A[i] * B[i];
+        }
 
         rho /= nblig;
         rho -= expec_A * expec_B;
@@ -293,9 +330,13 @@ double ATSP::Correlation(double* A,
     }
 
     if (rho > 1)
+    {
         rho = 1;
+    }
     if (rho < -1)
+    {
         rho = -1;
+    }
 
     return rho;
 }
@@ -326,14 +367,18 @@ double ATSP::autocorr_average(int H, int M, double R)
     for (int i = 1; i < M + 1; ++i)
     {
         for (int j = 1 + H; j < M + 1 + H; ++j)
+        {
             x += pow(R, abs(j - i));
+        }
     }
 
     double y = 0.;
     for (int i = 1; i < M + 1; ++i)
     {
         for (int j = i + 1; j < M + 1; ++j)
+        {
             y += pow(R, j - i);
+        }
     }
 
     y *= 2.;
@@ -368,9 +413,13 @@ void ATSP::Analyse_auto(double* A,
     // check thresholds aum & auc
 
     if (aum <= double(0.01))
+    {
         aum = double(0.01);
+    }
     if (auc < aum)
+    {
         auc = aum;
+    }
 
     // 1 address special cases
 
@@ -394,7 +443,9 @@ void ATSP::Analyse_auto(double* A,
     {
         theta = -log(A[nblig - 1]) / double(nblig - 1);
         if (theta < double(0.0001))
+        {
             theta = 0;
+        }
         mu = 1;
         return;
     }
@@ -430,19 +481,29 @@ void ATSP::Analyse_auto(double* A,
     {
         // on trouve une bonne estimation pour TM
         if (A[l] >= aum && A[l + 1] < aum)
+        {
             TM = l;
+        }
         // on trouve une bonne estimation pour TC
         if (A[l] >= auc && A[l + 1] < auc)
+        {
             TC = l;
+        }
         // on cherchera ensuite une valeur de mu comprise entre 1 et max_mu
         if (A[l] >= hor && A[l + 1] < hor)
+        {
             max_mu = l + 1;
+        }
     }
 
     if (max_mu > 24)
+    {
         max_mu = 24;
+    }
     if (max_mu == 0)
+    {
         max_mu = 1;
+    }
 
     // both thresholds crossed at the same time
 
@@ -488,9 +549,13 @@ void ATSP::Analyse_auto(double* A,
             {
                 R = (top + bot) / 2;
                 if (autocorr_average(TM, M, R) >= A[TM])
+                {
                     top = R;
+                }
                 else
+                {
                     bot = R;
+                }
             }
 
             // on a converge vers R tq autocorr_average(TM,M,R) = A[TM]
@@ -527,6 +592,7 @@ double ATSP::GammaEuler(double z)
     {
         g = 6,
     };
+
     double x;
     const double t = z + double(g) + 0.5;
     double rho;
@@ -594,9 +660,9 @@ bool ATSP::Probab_density_funct(double L,
     C = 0.;
     D = 1.;
 
-    if (Math::Abs(S) < 1e-40)
+    if (std::abs(S) < 1e-40)
     {
-        //	double fe = Math::Abs(E);
+        //	double fe = std::abs(E);
         //	S = (fe < 1e-40) ? (1e-4) : (1e-4 / fe);
         S = 0;
     }
@@ -606,7 +672,9 @@ bool ATSP::Probab_density_funct(double L,
     case Data::XCast::dtUniform:
     {
         if (S < 0.)
+        {
             return false;
+        }
         // au lieu de prendre simplement C=L et D=U, on procede
         // par la methode des moments
         C = (2. * E - 3.4641 * S) / 2.;
@@ -622,13 +690,17 @@ bool ATSP::Probab_density_funct(double L,
     case Data::XCast::dtBeta:
     {
         if (U <= L)
+        {
             return false;
+        }
         C = L;
         D = U;
         double V = E - C;
         double W = D - C;
         if (S == W)
+        {
             return false;
+        }
 
         A = (V / W) * (V / W * (1. - (V / W)) / ((S * S) / (W * W)) - 1.);
         B = (1. - V / W) * (V / W * (1. - (V / W)) / ((S * S) / (W * W)) - 1.);
@@ -638,7 +710,9 @@ bool ATSP::Probab_density_funct(double L,
     case Data::XCast::dtNormal:
     {
         if (S < 0.)
+        {
             return false;
+        }
         C = 0.;
         D = 0.;
         A = E;
@@ -649,14 +723,20 @@ bool ATSP::Probab_density_funct(double L,
     case Data::XCast::dtWeibullShapeA:
     {
         if (S < 0.)
+        {
             return false;
+        }
 
         if (E == 0 || S == 0)
+        {
             return false;
+        }
         // pour une loi de weibull de paramètre a>=1, le calage n'est possible que si
         // S/E < 1
         if (S / E > 1.)
+        {
             return false;
+        }
 
         double bot = 1.;
         double top = 50.;
@@ -677,9 +757,13 @@ bool ATSP::Probab_density_funct(double L,
             double niveau = GammaEuler(1. + 2. / a) - g;
             niveau /= g;
             if (niveau >= cible)
+            {
                 bot = a;
+            }
             else
+            {
                 top = a;
+            }
         }
         A = a;
         B = E / GammaEuler(1. + 1. / a);
@@ -691,10 +775,14 @@ bool ATSP::Probab_density_funct(double L,
     case Data::XCast::dtGammaShapeA:
     {
         if (S <= 0.)
+        {
             return false;
+        }
 
         if (E == 0.)
+        {
             return false;
+        }
 
         C = 0;
 
@@ -717,13 +805,17 @@ bool ATSP::Probab_density_funct(double L,
 double ATSP::Standard_shrinkage(int M, double R)
 {
     if (R < 0.) // ceci ne doit jamais se produire
+    {
         R = 0.;
+    }
 
     double x = 0.;
     for (int i = 1; i < M + 1; ++i)
     {
         for (int j = i + 1; j < M + 1; ++j)
+        {
             x += pow(R, j - i);
+        }
     }
 
     x *= 2;

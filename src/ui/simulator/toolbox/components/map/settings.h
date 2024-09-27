@@ -25,6 +25,7 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <list>
+#include <cstdint>
 
 namespace Antares
 {

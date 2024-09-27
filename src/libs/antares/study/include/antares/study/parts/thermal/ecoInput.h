@@ -21,12 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 
-#include <antares/series/series.h>
-#include "cluster.h"
-#include <antares/array/matrix.h>
-#include "defines.h"
-#include "../../fwd.h"
 #include <memory>
+
+#include <antares/array/matrix.h>
+#include <antares/series/series.h>
+
+#include "../../fwd.h"
+#include "defines.h"
 
 namespace Antares::Data
 {
@@ -48,8 +49,6 @@ public:
 
     void markAsModified() const;
 
-
-
     /*!
     ** \brief Reset all values to their default ones
     */
@@ -64,7 +63,7 @@ public:
     ** \param folder The source folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(Study& study, const std::string& folder);
 
     /*!
     ** \brief Save settings used by the thermal prepro to a folder

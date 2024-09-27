@@ -21,21 +21,15 @@
 #ifndef __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 #define __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 
-#include <vector>
+#include <memory>
 #include <string>
+#include <vector>
+
+#include <antares/solver/utils/basis_status.h>
+
 #include "opt_constants.h"
-#include "ortools/linear_solver/linear_solver.h"
 
 /*--------------------------------------------------------------------------------------*/
-
-namespace Antares::Solver::Optimization {
-
-struct OptimizationOptions
-{
-    std::string solverName;
-};
-
-}
 
 /* Le probleme a resoudre */
 struct PROBLEME_ANTARES_A_RESOUDRE
@@ -59,9 +53,9 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     /* Donnees variables de la matrice des contraintes */
     std::vector<double> CoutQuadratique;
     std::vector<double> CoutLineaire;
-    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
-                             (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
-                            valeurs explicites des constantes): VARIABLE_FIXE                  ,
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
+                            suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
+                            utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
                               VARIABLE_BORNEE_DES_DEUX_COTES ,
                               VARIABLE_BORNEE_INFERIEUREMENT ,
                               VARIABLE_BORNEE_SUPERIEUREMENT ,
@@ -98,8 +92,10 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 
     std::vector<void*> ProblemesSpx;
 
-    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int>
+      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int>
+      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
 
     /* Vecteurs de travail pour contruire la matrice des contraintes lineaires */
     std::vector<double> Pi;
@@ -111,12 +107,8 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
 
-private:
-  using BasisStatus = operations_research::MPSolver::BasisStatus;
-public:
-    std::vector<BasisStatus> StatutDesVariables;
-    std::vector<BasisStatus> StatutDesContraintes;
-
+    // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
+    Antares::Optimization::BasisStatus basisStatus;
 };
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */

@@ -8,8 +8,10 @@ add_executable(timeseries-tests ${SRC_TIMESERIES_TESTS})
 
 target_link_libraries(timeseries-tests
                       PRIVATE
+                      Antares::array
                       Boost::unit_test_framework
                       Antares::series
+                      antares-solver-simulation
 )
 
 # Storing timeseries-tests under the folder Unit-tests in the IDE

@@ -40,12 +40,12 @@ void Apply(Antares::Action::Context::Ptr context,
 
         if (windowRequired)
         {
-            auto* form = new Antares::Window::ApplyActionsDialog(NULL, context, root);
+            auto* form = new Antares::Window::ApplyActionsDialog(nullptr, context, root);
             Dispatcher::GUI::ShowModal(form);
         }
         else
         {
-            auto* form = new Antares::Window::PerformerDialog(NULL, context, root);
+            auto* form = new Antares::Window::PerformerDialog(nullptr, context, root);
             Dispatcher::GUI::ShowModal(form);
         }
     }

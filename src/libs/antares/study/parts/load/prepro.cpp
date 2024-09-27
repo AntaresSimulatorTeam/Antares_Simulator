@@ -19,17 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/study/parts/load/prepro.h"
+
+#include <yuni/yuni.h>
+
 #include "antares/study/study.h"
 
 using namespace Yuni;
 
-
-
 namespace Antares::Data::Load
 {
-Prepro::Prepro() : xcast(timeSeriesLoad)
+Prepro::Prepro():
+    xcast(timeSeriesLoad)
 {
 }
 
@@ -48,5 +49,3 @@ bool Prepro::saveToFolder(const AnyString& folder) const
 }
 
 } // namespace Antares::Data::Load
-
-

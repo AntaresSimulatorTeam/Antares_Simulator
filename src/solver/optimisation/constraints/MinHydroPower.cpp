@@ -44,5 +44,7 @@ void MinHydroPower::add(int pays)
         builder.greaterThan().build();
     }
     else
+    {
         data.NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
+    }
 }

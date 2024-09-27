@@ -20,9 +20,10 @@
 */
 #pragma once
 
-#include <string>
 #include <memory>
-#include "antares/solver/optimisation/opt_period_string_generator_base.h"
+#include <string>
+
+#include "opt_period_string_generator.h"
 
 std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimizationWeekly,
                                                                   unsigned int day,

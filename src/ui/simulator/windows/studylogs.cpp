@@ -312,7 +312,7 @@ void FileListProvider::refreshFileList(bool showAll)
     if (showAll)
     {
         folder.clear();
-        IO::parentPath(folder, logs.logfile());
+        IO::parent_path(folder, logs.logfile());
         FindAllLogFiles(pAllUILogs, regex, folder);
     }
 
@@ -855,7 +855,7 @@ void StudyLogs::enterLoadingMode(const String& filename)
     String name;
     String path;
     IO::ExtractFileName(name, filename);
-    IO::parentPath(path, filename);
+    IO::parent_path(path, filename);
 
     // Updating the notebook
     pNotebook->caption(wxEmptyString);

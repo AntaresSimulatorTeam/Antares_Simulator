@@ -18,15 +18,18 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <cmath>
+
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <antares/study/study.h>
+
 #include <antares/logs/logs.h>
-#include "antares/solver/ts-generator/xcast/xcast.h"
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
 #include "antares/antares/constants.h"
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
 #include "antares/solver/ts-generator/xcast/math.hxx"
+#include "antares/solver/ts-generator/xcast/xcast.h"
 
 using namespace Yuni;
 
@@ -76,17 +79,21 @@ bool XCast::generateValuesForTheCurrentDay()
             for (uint s = 0; s != processCount; ++s)
             {
                 if (L[s] != 3)
+                {
                     All_normal = false; // s is not a Normal process
+                }
             }
         }
         if (All_normal)
+        {
             pAccuracyOnCorrelation = false; // standard accuracy is high accuracy
+        }
     }
 
     // si les parametres ont change on reinitialise certaines variables intermediaires
     if (pNewMonth)
     {
-        if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal))
+        if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal.data()))
         {
             // C n'est pas sdp, mais peut-etre proche de sdp
             // on tente un abattement de 0.999
@@ -95,10 +102,15 @@ bool XCast::generateValuesForTheCurrentDay()
                 // on ne traite qu'en dessous de la diagonale et celle-ci n'a pas change (=1
                 // partout)
                 for (uint j = 0; j < i; ++j)
+                {
                     pCorrMonth->entry[i][j] *= 0.999f;
+                }
             }
 
-            if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal))
+            if (Cholesky<float>(Triangle_courant,
+                                pCorrMonth->entry,
+                                processCount,
+                                pQCHOLTotal.data()))
             {
                 // la matrice C n'est pas admissible, on abandonne
                 logs.error() << "TS " << pTSName << " generator: invalid correlation matrix";
@@ -143,8 +155,10 @@ bool XCast::generateValuesForTheCurrentDay()
                 for (uint t = 0; t < s; ++t)
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
-                    if (Math::Zero(x))
+                    if (Utils::isZero(x))
+                    {
                         CORR[s][t] = 0.f;
+                    }
                     else
                     {
                         x = 1.f - ALPH[s] * ALPH[t];
@@ -181,8 +195,10 @@ bool XCast::generateValuesForTheCurrentDay()
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
                     float z = D_COPIE[t] * STDE[s];
-                    if (Math::Zero(x))
+                    if (Utils::isZero(x))
+                    {
                         CORR[s][t] = 0.f;
+                    }
                     else
                     {
                         x = D_COPIE[s] * STDE[t] / z;
@@ -209,8 +225,12 @@ bool XCast::generateValuesForTheCurrentDay()
         }
 
         // calcul et factorisation de la matrice  du mois
-        shrink = MatrixDPMake<float>(
-          Triangle_courant, CORR, Carre_reference, pCorrMonth->entry, processCount, pQCHOLTotal);
+        shrink = MatrixDPMake<float>(Triangle_courant,
+                                     CORR,
+                                     Carre_reference,
+                                     pCorrMonth->entry,
+                                     processCount,
+                                     pQCHOLTotal.data());
         if (shrink == -1.f)
         {
             // sortie impossible  car on a v�rifi� que C est d.p
@@ -228,7 +248,9 @@ bool XCast::generateValuesForTheCurrentDay()
             {
                 x = 1.f;
                 if (T[s] > PETIT)
+                {
                     x = PETIT / T[s];
+                }
                 if (x < STEP)
                 {
                     // plafonne le terme lineaire de retour � la moyenne a PETIT *(ecart � la
@@ -244,7 +266,9 @@ bool XCast::generateValuesForTheCurrentDay()
                     // plafonne l'amplitude de la diffusion � 2*sqrt(PETIT)*STDE (pour brown=1)
                     x *= 4.f * PETIT;
                     if (x < STEP)
+                    {
                         STEP = x;
+                    }
                 }
             }
         }
@@ -269,16 +293,24 @@ bool XCast::generateValuesForTheCurrentDay()
         for (uint s = 0; s != processCount; ++s)
         {
             if (POSI[s] > 0.f)
+            {
                 POSI[s] *= (MAXI[s] - ESPE[s]);
+            }
             else
+            {
                 POSI[s] *= (ESPE[s] - MINI[s]);
+            }
 
             POSI[s] += ESPE[s];
 
             if (POSI[s] >= MAXI[s])
+            {
                 POSI[s] = Presque_maxi[s];
+            }
             if (POSI[s] <= MINI[s])
+            {
                 POSI[s] = Presque_mini[s];
+            }
 
             // on reinitialise la memoire du lissage pour eviter l'accumulation des derives
             if (M[s] > 1.f)
@@ -296,16 +328,24 @@ bool XCast::generateValuesForTheCurrentDay()
         for (uint s = 0; s != processCount; ++s)
         {
             if (POSI[s] > 0.f)
+            {
                 POSI[s] *= (MAXI[s] - ESPE[s]);
+            }
             else
+            {
                 POSI[s] *= (ESPE[s] - MINI[s]);
+            }
 
             POSI[s] += ESPE[s];
 
             if (POSI[s] >= MAXI[s])
+            {
                 POSI[s] = Presque_maxi[s];
+            }
             if (POSI[s] <= MINI[s])
+            {
                 POSI[s] = Presque_mini[s];
+            }
         }
     }
 
@@ -325,16 +365,22 @@ bool XCast::generateValuesForTheCurrentDay()
                 // draw independent Nomal Variables
                 uint j = processCount;
                 if ((processCount - 2 * (processCount / 2)) != 0)
+                {
                     ++j;
+                }
                 for (uint k = 0; k < j; ++k)
+                {
                     normal(WIEN[k], WIEN[j - (1 + k)]);
+                }
 
                 // correlated brownian motions
                 for (uint s = 0; s != processCount; ++s)
                 {
                     BROW[s] = 0.f;
                     for (uint t = 0; t < s + 1; ++t)
+                    {
                         BROW[s] += Triangle_courant[s][t] * WIEN[t];
+                    }
                 }
 
                 // update processes positions
@@ -345,16 +391,22 @@ bool XCast::generateValuesForTheCurrentDay()
                     POSI[s] += BETA[s] * STDE[s] * BROW[s];
 
                     if (POSI[s] >= MAXI[s])
+                    {
                         POSI[s] = Presque_maxi[s];
+                    }
                     if (POSI[s] <= MINI[s])
+                    {
                         POSI[s] = Presque_mini[s];
+                    }
                 }
             }
             else // standard case
             {
                 // calcul des coefficients de diffusion
                 for (uint s = 0; s != processCount; ++s)
+                {
                     DIFF[s] = diffusion(A[s], B[s], G[s], D[s], L[s], T[s], POSI[s]);
+                }
 
                 // on calcule une matrice pour chaque point de passage
                 if (pAccuracyOnCorrelation)
@@ -365,12 +417,14 @@ bool XCast::generateValuesForTheCurrentDay()
 
                     for (uint s = 0; s != processCount; ++s)
                     {
-                        float* corr_s = CORR[s];
+                        auto& corr_s = CORR[s];
                         auto& userMonthlyCorr = pCorrMonth->column(s);
                         for (uint t = 0; t < s; ++t)
                         {
-                            if (Math::Zero(DIFF[s]) || Math::Zero(DIFF[t]))
+                            if (Utils::isZero(DIFF[s]) || Utils::isZero(DIFF[t]))
+                            {
                                 corr_s[t] = 0;
+                            }
                             else
                             {
                                 z = DIFF[t] * STDE[s];
@@ -402,7 +456,7 @@ bool XCast::generateValuesForTheCurrentDay()
                                                  Carre_courant,
                                                  Carre_reference,
                                                  processCount,
-                                                 pQCHOLTotal);
+                                                 pQCHOLTotal.data());
                     if (shrink <= 1.f)
                     {
                         if (shrink == -1.f)
@@ -413,23 +467,31 @@ bool XCast::generateValuesForTheCurrentDay()
                             return false;
                         }
                         if (shrink < 1.f)
+                        {
                             ++pNDPMatrixCount;
+                        }
                     }
                 } // accuracy
 
                 // tirage au sort de lois normales independantes
                 uint j = processCount;
                 if ((processCount - 2 * (processCount / 2)) != 0)
+                {
                     ++j;
+                }
                 for (uint k = 0; k < j; ++k)
+                {
                     normal(WIEN[k], WIEN[j - (1 + k)]);
+                }
 
                 // calcul des mouvements browniens correles
                 for (uint s = 0; s != processCount; ++s)
                 {
                     BROW[s] = 0.f;
                     for (uint t = 0; t < s + 1; ++t)
+                    {
                         BROW[s] += Triangle_courant[s][t] * WIEN[t]; // chg 060610
+                    }
                 }
 
                 // calcul des parametres directeurs du prochain mouvement
@@ -444,12 +506,16 @@ bool XCast::generateValuesForTheCurrentDay()
                 {
                     POSI[s] += (TREN[s] * STEP) + (DIFF[s] * SQST);
                     if (POSI[s] >= MAXI[s])
+                    {
                         POSI[s] = Presque_maxi[s];
+                    }
                     if (POSI[s] <= MINI[s])
+                    {
                         POSI[s] = Presque_mini[s];
+                    }
                 }
             } // end of standard case
-        }     // fin du point horaire
+        } // fin du point horaire
 
         for (uint s = 0; s != processCount; ++s)
         {
@@ -463,27 +529,35 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si > MA[s])
                 {
                     data_si = MA[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MA[s] / FO[s][i];
                         POSI[s] -= G[s];
                         if (POSI[s] >= MAXI[s])
+                        {
                             POSI[s] = Presque_maxi[s];
+                        }
                         if (POSI[s] <= MINI[s])
+                        {
                             POSI[s] = Presque_mini[s];
+                        }
                     }
                 }
                 if (data_si < MI[s])
                 {
                     data_si = MI[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MI[s] / FO[s][i];
                         POSI[s] -= G[s];
                         if (POSI[s] >= MAXI[s])
+                        {
                             POSI[s] = Presque_maxi[s];
+                        }
                         if (POSI[s] <= MINI[s])
+                        {
                             POSI[s] = Presque_mini[s];
+                        }
                     }
                 }
             }
@@ -501,13 +575,17 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (BO[s]) // si ecretement active
                 {
                     if (data_si > MA[s])
+                    {
                         data_si = MA[s];
+                    }
                     if (data_si < MI[s])
+                    {
                         data_si = MI[s];
+                    }
                 }
             }
 
-            assert(0 == Math::Infinite(data_si) && "Infinite value");
+            assert(!std::isinf(data_si) && "Infinite value");
             DATA[s][i] = data_si;
         }
     }
@@ -524,25 +602,30 @@ bool XCast::generateValuesForTheCurrentDay()
     {
         // >
         if (POSI[s] > ESPE[s])
+        {
             POSI[s] = (POSI[s] - ESPE[s]) / (MAXI[s] - ESPE[s]);
+        }
         else
         {
             // <
             if (POSI[s] < ESPE[s])
+            {
                 POSI[s] = (ESPE[s] - POSI[s]) / (MINI[s] - ESPE[s]);
+            }
             else // =
+            {
                 POSI[s] = 0;
+            }
         }
     }
 
     // fin de la serie
     if (!pAccuracyOnCorrelation && Compteur_ndp == 100)
+    {
         ++pNDPMatrixCount;
+    }
 
     return true;
 }
 
 } // namespace Antares::TSGenerator::XCast
-
-
-

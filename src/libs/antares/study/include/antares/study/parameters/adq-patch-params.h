@@ -20,16 +20,16 @@
 */
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <antares/study/fwd.h>
 #include <yuni/core/string.h>
+
 #include <antares/inifile/inifile.h>
+#include <antares/study/fwd.h>
 
 namespace Antares::Data::AdequacyPatch
 {
-
 //! A default threshold value for initiate curtailment sharing rule
 const double defaultThresholdToRunCurtailmentSharing = 0.0;
 //! A default threshold value for display local matching rule violations
@@ -78,27 +78,6 @@ enum class AdqPatchPTO
 
 }; // enum AdqPatchPTO
 
-
-struct LocalMatching
-{
-    bool enabled = true;
-    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
-    //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
-    //! only in the first step of adequacy patch local matching rule.
-    bool setToZeroOutsideInsideLinks = true;
-    //! Transmission capacities between physical areas outside adequacy patch (area type 1).
-    //! NTC is set to null (if true) only in the first step of adequacy patch local matching
-    //! rule.
-    bool setToZeroOutsideOutsideLinks = true;
-    /*!
-        ** \brief Reset to default values related to local matching
-        */
-    void reset();
-    bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
-    void addProperties(IniFile::Section* section) const;
-
-};
-
 class CurtailmentSharing
 {
 public:
@@ -124,12 +103,13 @@ private:
     void resetThresholds();
 };
 
-
 struct AdqPatchParams
 {
-
     bool enabled;
-    LocalMatching localMatching;
+    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
+    //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
+    //! only in the first step of adequacy patch local matching rule.
+    bool setToZeroOutsideInsideLinks = true;
     CurtailmentSharing curtailmentSharing;
 
     void reset();
@@ -140,11 +120,9 @@ struct AdqPatchParams
                              const AreaList& areas,
                              const bool includeHurdleCostParameters) const;
 
-
     void checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const;
     void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
     void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
-    void checkAdqPatchDisabledLocalMatching() const;
 };
 
 } // namespace Antares::Data::AdequacyPatch

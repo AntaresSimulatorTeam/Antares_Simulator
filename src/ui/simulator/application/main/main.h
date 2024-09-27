@@ -578,17 +578,13 @@ private:
 
     void internalFrameClose();
 
-    void evtOnCleanCurrentStudyFolder(wxCommandEvent& evt);
-
-    void evtOnCleanStudyFolder(wxCommandEvent& evt);
-
     void evtLaunchAnalyzer(wxCommandEvent& evt);
 
     void evtLaunchConstraintsBuilder(wxCommandEvent& evt);
 
     void onMouseMoved(wxMouseEvent& evt);
 
-    void onLogMessageDeferred(int level, const Yuni::String& message);
+    void onLogMessageDeferred(int level, const std::string& message);
     void onLogMessage(wxCommandEvent& evt);
 
     void onStudyLoaded();
@@ -697,7 +693,8 @@ private:
     Component::Notebook::Page* pageScBuilderSolar;
     Component::Notebook::Page* pageScBuilderNTC;
     Component::Notebook::Page* pageScBuilderRenewable;
-    Component::Notebook::Page* pageScBuilderHydroLevels;
+    Component::Notebook::Page* pageScBuilderHydroInitialLevels;
+    Component::Notebook::Page* pageScBuilderHydroFinalLevels;
 
     //! A context menu for the map
     wxMenu* pMapContextMenu;

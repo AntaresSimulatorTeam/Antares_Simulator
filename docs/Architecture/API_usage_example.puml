@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title Nominal example of Simulator API usage
+
+Actor Client
+Boundary SimulatorAPI
+
+Client -> SimulatorAPI: PerformSimulation(/path/to/study, 4 /*Force parallelization*/ )
+activate SimulatorAPI
+rnote over SimulatorAPI: Antares-Simulator performs the simulation on the designated study
+SimulatorAPI --> Client: SimulationResult
+deactivate SimulatorAPI
+Client -> SimulationResult: GetHebdoProblems()
+SimulationResult --> Client: HebdoProblems
+Client -> SimulationResult: GetSimulationOutputDir()
+SimulationResult --> Client: path to simulation file results
+Client -> Client: DoStuff(HebdoProblems, simulation_path)
+
+@enduml

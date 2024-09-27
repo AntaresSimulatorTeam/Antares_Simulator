@@ -21,15 +21,16 @@
 #ifndef __ANTARES_FS_WALKER_FS_WALKER_H__
 #define __ANTARES_FS_WALKER_FS_WALKER_H__
 
+#include <memory>
+
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/thread/thread.h>
 #include <yuni/core/bind.h>
 #include <yuni/core/noncopyable.h>
-#include "statistics.h"
-#include "job.h"
+#include <yuni/core/string.h>
+#include <yuni/thread/thread.h>
 
-#include <memory>
+#include "job.h"
+#include "statistics.h"
 
 namespace FSWalker
 {
@@ -49,7 +50,7 @@ using OnFileEvent = void (*)(const YString& filename,
                              uint64_t size,
                              void* user);
 //! Event for dispatching a new job
-using DispatchJobEvent = Yuni::Bind<void(IJob::Ptr job)>;
+using DispatchJobEvent = std::function<void(IJob::Ptr job)>;
 
 class IExtension
 {
@@ -66,6 +67,7 @@ public:
     IExtension()
     {
     }
+
     /*!
     ** \brief Destructor
     */
@@ -122,7 +124,7 @@ public:
 /*!
 ** This class is thread-safe.
 */
-class Walker final : public Yuni::NonCopyable<Walker>
+class Walker final: public Yuni::NonCopyable<Walker>
 {
 public:
     Walker();

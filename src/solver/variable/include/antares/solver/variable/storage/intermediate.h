@@ -23,8 +23,10 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "antares/antares/constants.h"
+
 #include <antares/study/study.h>
+#include "antares/antares/constants.h"
+
 #include "../categories.h"
 #include "../surveyresults.h"
 
@@ -131,11 +133,11 @@ public:
     Antares::Data::StudyRuntimeInfos* pRuntimeInfo;
 
     //! Values for each month
-    Type month[maxMonths];
+    Type month[MONTHS_PER_YEAR];
     //! Values for each week
-    Type week[maxWeeksInAYear];
+    Type week[WEEKS_PER_YEAR];
     //! Values for each day in the year
-    Type day[maxDaysInAYear];
+    Type day[DAYS_PER_YEAR];
     //! Values for each hour in the year
     mutable Antares::Memory::Stored<Type>::Type hour;
     //! Year
@@ -146,6 +148,7 @@ private:
     IntermediateValues(const IntermediateValues&)
     {
     }
+
     IntermediateValues& operator=(const IntermediateValues&)
     {
         return *this;

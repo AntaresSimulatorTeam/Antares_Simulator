@@ -21,7 +21,7 @@
 #ifndef __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
 #define __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
 
-#include <yuni/yuni.h>
+#include <cstdint>
 
 namespace Benchmarking
 {

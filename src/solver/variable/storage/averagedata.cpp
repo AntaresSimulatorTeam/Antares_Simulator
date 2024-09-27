@@ -19,38 +19,42 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "antares/solver/variable/storage/intermediate.h"
 #include "antares/solver/variable/storage/averagedata.h"
+
+#include <yuni/yuni.h>
+
+#include "antares/solver/variable/storage/intermediate.h"
 
 using namespace Yuni;
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-AverageData::AverageData() : hourly(nullptr), year(nullptr), nbYearsCapacity(0), allYears(0.)
+AverageData::AverageData():
+    hourly(nullptr),
+    nbYearsCapacity(0),
+    allYears(0.)
 {
 }
 
 AverageData::~AverageData()
 {
     Antares::Memory::Release(hourly);
-    delete[] year;
 }
 
 void AverageData::reset()
 {
-    Antares::Memory::Zero(maxHoursInAYear, hourly);
-    (void)::memset(monthly, 0, sizeof(double) * maxMonths);
-    (void)::memset(weekly, 0, sizeof(double) * maxWeeksInAYear);
-    (void)::memset(daily, 0, sizeof(double) * maxDaysInAYear);
-    (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
+    Antares::Memory::Zero(HOURS_PER_YEAR, hourly);
+    (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
+    (void)::memset(weekly, 0, sizeof(double) * WEEKS_PER_YEAR);
+    (void)::memset(daily, 0, sizeof(double) * DAYS_PER_YEAR);
+    year.assign(nbYearsCapacity, 0);
 }
 
 void AverageData::initializeFromStudy(Data::Study& study)
 {
-    Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
-    nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
-    year = new double[nbYearsCapacity];
+    Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
+    nbYearsCapacity = study.runtime.rangeLimits.year[Data::rangeEnd] + 1;
+    year.resize(nbYearsCapacity);
 
     yearsWeight = study.parameters.getYearsWeight();
     yearsWeightSum = study.parameters.getYearsWeightSum();
@@ -64,23 +68,27 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
     double ratio = (double)yearsWeight[y] / (double)yearsWeightSum;
 
     // Average value for each hour throughout all years
-    for (i = 0; i != maxHoursInAYear; ++i)
+    for (i = 0; i != HOURS_PER_YEAR; ++i)
+    {
         hourly[i] += rhs.hour[i] * ratio;
+    }
     // Average value for each day throughout all years
-    for (i = 0; i != maxDaysInAYear; ++i)
+    for (i = 0; i != DAYS_PER_YEAR; ++i)
+    {
         daily[i] += rhs.day[i] * ratio;
+    }
     // Average value for each week throughout all years
-    for (i = 0; i != maxWeeksInAYear; ++i)
+    for (i = 0; i != WEEKS_PER_YEAR; ++i)
+    {
         weekly[i] += rhs.week[i] * ratio;
+    }
     // Average value for each month throughout all years
-    for (i = 0; i != maxMonths; ++i)
+    for (i = 0; i != MONTHS_PER_YEAR; ++i)
+    {
         monthly[i] += rhs.month[i] * ratio;
+    }
     // Average value throughout all years
     year[y] += rhs.year * ratio;
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
-
-
-
-

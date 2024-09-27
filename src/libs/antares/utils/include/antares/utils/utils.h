@@ -21,6 +21,9 @@
 #ifndef __ANTARES_LIBS_UTILS_H__
 #define __ANTARES_LIBS_UTILS_H__
 
+#include <string>
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
@@ -33,6 +36,9 @@ namespace Antares
 */
 template<class StringT>
 void TransformNameIntoID(const AnyString& name, StringT& out);
+std::string transformNameIntoID(const std::string& name);
+
+std::string FormattedTime(const std::string& format);
 
 /*!
 ** \brief Beautify a name, for renaming an area for example
@@ -40,6 +46,15 @@ void TransformNameIntoID(const AnyString& name, StringT& out);
 void BeautifyName(YString& out, AnyString oldname);
 void BeautifyName(std::string& out, const std::string& oldname);
 
+std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
+                                                                      char delimiter1,
+                                                                      char delimiter2);
+
+namespace Utils
+{
+bool isZero(double d);
+double round(double d, unsigned precision);
+} // namespace Utils
 } // namespace Antares
 
 #include "utils.hxx"

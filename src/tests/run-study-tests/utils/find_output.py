@@ -1,7 +1,5 @@
 from re import match
-from os.path import isdir, basename
-from os import walk
-from pathlib import Path
+import pathlib, os
 
 from utils.assertions import check
 
@@ -11,11 +9,9 @@ class output_folder_finder:
         self.found_dir_path = None
 
     def find(self):
-        for element in self.output_folder.iterdir():
-            if isdir(element) and match('[0-9]{8}-[0-9]{4}', basename(element)):
-                self.found_dir_path = element
-                return True
-        return False
+        dirs = pathlib.Path(self.output_folder).glob('*/')
+        self.found_dir_path = max(dirs, key=os.path.getmtime)
+        return True
 
     def get(self):
         return self.found_dir_path
@@ -29,7 +25,7 @@ def find_dated_output_folder(study_path):
 
 def find_simulation_folder(output_dir):
     # Return full path of the ouptut simulation path (can be "adequacy", "economy")
-    for root, dirs, files in walk(output_dir):
-        if basename(root) in ["adequacy", "economy"]:
-            return Path(root)
+    for root, dirs, files in os.walk(output_dir):
+        if os.path.basename(root) in ["adequacy", "economy"]:
+            return pathlib.Path(root)
 

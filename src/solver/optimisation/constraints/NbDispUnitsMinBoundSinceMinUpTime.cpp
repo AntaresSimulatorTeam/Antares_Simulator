@@ -23,8 +23,8 @@
 
 void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
 {
-    auto cluster
-      = data.PaliersThermiquesDuPays[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+    auto cluster = data.PaliersThermiquesDuPays[pays]
+                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
     const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
       = data.PaliersThermiquesDuPays[pays].DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
 
@@ -33,8 +33,8 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
       = -1;
     if (!data.Simulation)
     {
-        int NombreDePasDeTempsPourUneOptimisation
-          = builder.data.NombreDePasDeTempsPourUneOptimisation;
+        int NombreDePasDeTempsPourUneOptimisation = builder.data
+                                                      .NombreDePasDeTempsPourUneOptimisation;
 
         builder.updateHourWithinWeek(pdt).NumberOfDispatchableUnits(cluster, 1.0);
 
@@ -42,7 +42,9 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
         {
             int t1 = k;
             if (t1 < 0)
+            {
                 t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+            }
 
             builder.updateHourWithinWeek(t1)
               .NumberStartingDispatchableUnits(cluster, -1.0)

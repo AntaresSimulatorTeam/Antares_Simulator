@@ -22,12 +22,13 @@
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_H__
 
 #include <yuni/yuni.h>
-#include <antares/study/fwd.h>
+#include <yuni/core/noncopyable.h>
+
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/fwd.h>
 #include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/ts-generator/xcast/studydata.h"
-#include <yuni/core/noncopyable.h>
 
 using namespace Antares::Solver;
 
@@ -42,7 +43,7 @@ namespace XCast
 **
 ** \see predicate.hxx for specializations
 */
-class XCast final : private Yuni::NonCopyable<XCast>
+class XCast final: private Yuni::NonCopyable<XCast>
 {
 public:
     /*!
@@ -73,7 +74,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~XCast();
+    ~XCast() = default;
     //@}
 
     //! \name Loading
@@ -104,7 +105,6 @@ public:
 
 private:
     void allocateTemporaryData();
-    void destroyTemporaryData();
 
     template<class PredicateT>
     void updateMissingCoefficients(PredicateT& predicate);
@@ -179,7 +179,7 @@ private:
     //! The correlation matrix for the current month
     const Matrix<float>* pCorrMonth;
 
-    bool pNeverInitialized;
+    bool pNeverInitialized = true;
     uint Nombre_points_intermediaire;
 
     //! True when starting a new month (some data may have to be reinitialized)
@@ -191,57 +191,58 @@ private:
     uint pNDPMatrixCount;
     uint pLevellingCount;
 
-    bool pAccuracyOnCorrelation;
+    bool pAccuracyOnCorrelation = false;
     bool All_normal; // all processes are Normal
 
-    float* A; // les variables de A à CO sont des vues de ALPH à CORR pour un mois particulier
-    float* B;
-    float* G;
-    float* D;
-    int* M;
-    float* T;
-    Data::XCast::Distribution* L;
-    bool* BO;
-    float* MA;
-    float* MI;
-    float** FO; // contrainte : FO >=0
+    // les variables de A à CO sont des vues de ALPH à CORR pour un mois particulier
+    std::vector<float> A;
+    std::vector<float> B;
+    std::vector<float> G;
+    std::vector<float> D;
+    std::vector<int> M;
+    std::vector<float> T;
+    std::vector<Data::XCast::Distribution> L;
+    std::vector<bool> BO;
+    std::vector<float> MA;
+    std::vector<float> MI;
+    std::vector<std::vector<float>> FO; // contrainte : FO >=0
 
     float STEP;
     float SQST;
-    float* POSI;
-    float** CORR;
-    float* MAXI;
-    float* MINI;
-    float* Presque_maxi;
-    float* Presque_mini;
-    float* ESPE;
-    float* STDE;
-    float** LISS;
-    float** DATL;
+    std::vector<float> POSI;
+    std::vector<std::vector<float>> CORR;
+    std::vector<float> MAXI;
+    std::vector<float> MINI;
+    std::vector<float> Presque_maxi;
+    std::vector<float> Presque_mini;
+    std::vector<float> ESPE;
+    std::vector<float> STDE;
+    std::vector<std::vector<float>> LISS;
+    std::vector<std::vector<float>> DATL;
 
-    float* DIFF;
-    float* TREN;
-    float* WIEN;
-    float* BROW;
+    std::vector<float> DIFF;
+    std::vector<float> TREN;
+    std::vector<float> WIEN;
+    std::vector<float> BROW;
 
-    float* BASI; // used only if all processes are Normal
-    float* ALPH; // used only if all processes are Normal
-    float* BETA; // used only if all processes are Normal
+    std::vector<float> BASI; // used only if all processes are Normal
+    std::vector<float> ALPH; // used only if all processes are Normal
+    std::vector<float> BETA; // used only if all processes are Normal
 
-    float** Triangle_reference;
-    float** Triangle_courant;
-    float** Carre_reference;
-    float** Carre_courant;
+    std::vector<std::vector<float>> Triangle_reference;
+    std::vector<std::vector<float>> Triangle_courant;
+    std::vector<std::vector<float>> Carre_reference;
+    std::vector<std::vector<float>> Carre_courant;
 
-    float* D_COPIE;
+    std::vector<float> D_COPIE;
 
-    float** DATA;
+    std::vector<std::vector<float>> DATA;
 
     // cholesky temporary data
-    float* pQCHOLTotal;
+    std::vector<float> pQCHOLTotal;
 
     //!
-    bool* pUseConversion;
+    std::vector<bool> pUseConversion;
 
     //! Name of the current timeseries
     Yuni::CString<32, false> pTSName;

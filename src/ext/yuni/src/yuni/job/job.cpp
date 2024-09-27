@@ -21,14 +21,14 @@ IJob::IJob() : pThread(nullptr)
 
 IJob::~IJob()
 {
-    assert(this != NULL and "IJob: Destructor: Oo `this' is null !?");
-    assert(pThread == NULL and "A job can not be attached to a thread when destroyed");
+    assert(this && "IJob: Destructor: Oo `this' is null !?");
+    assert(!pThread && "A job can not be attached to a thread when destroyed");
 }
 
 bool IJob::suspend(uint delay) const
 {
     // This method must only be called from a thread
-    assert(pThread and "Job: The pointer to the attached thread must not be NULL");
+    assert(pThread and "Job: The pointer to the attached thread must not be nullptr");
 
     // We can suspend the job only if it is running
     if (pState == stateRunning)

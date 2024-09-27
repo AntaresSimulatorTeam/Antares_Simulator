@@ -22,6 +22,8 @@
 //! Precision sur la factorisation des matrices
 #define ANTARES_CHOLESKY_EPSIMIN ((T)1.0e-9)
 
+#include <cmath>
+
 namespace Antares
 {
 namespace Solver
@@ -32,28 +34,32 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp)
     using namespace Yuni;
 
     for (uint i = 0; i != size; ++i)
+    {
         temp[i] = 0;
+    }
 
     T som;
 
     for (uint i = 0; i < size; ++i)
     {
-        typename MatrixSubColumn<U1>::Type Li = L[i];
+        auto& Li = L[i];
 
         // on calcule d'abord L[i][i]
         som = A[i][i];
         for (int j = 0; j <= (int)(i - 1); ++j)
+        {
             som -= Li[j] * Li[j];
+        }
 
         if (som > ANTARES_CHOLESKY_EPSIMIN)
         {
-            Li[i] = Math::SquareRootNoCheck(som);
+            Li[i] = std::sqrt(som);
 
             // maintenant on cherche L[k][i], k > i.
             for (uint k = i + 1; k < size; ++k)
             {
-                typename MatrixSubColumn<U1>::Type Lk = L[k];
-                typename MatrixSubColumn<U2>::Type Ak = A[k];
+                auto& Lk = L[k];
+                auto& Ak = A[k];
 
                 if (temp[k] == Ak[k])
                 {
@@ -63,7 +69,9 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp)
                 {
                     som = Ak[i];
                     for (int j = 0; j <= (int)(i - 1); ++j)
+                    {
                         som -= Li[j] * Lk[j];
+                    }
 
                     Lk[i] = som / Li[i];
                     temp[k] += Lk[i] * Lk[i];
@@ -73,7 +81,9 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp)
                     // si temp > A[k][k] alors il est certain que A n'est ni sdp ni dp donc on
                     // arrete le calcul
                     if (temp[k] > Ak[k])
+                    {
                         return true;
+                    }
                 }
             }
         }
@@ -81,7 +91,9 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp)
         {
             // annule le reste de la colonne
             for (uint k = i; k != size; ++k)
+            {
                 L[k][i] = 0;
+            }
         }
     }
 

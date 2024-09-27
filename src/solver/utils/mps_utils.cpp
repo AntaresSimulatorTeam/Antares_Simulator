@@ -18,24 +18,14 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/study/study.h>
-
-#include "antares/solver/simulation/simulation.h"
-
-#include "antares/solver/utils/ortools_utils.h"
 #include "antares/solver/utils/mps_utils.h"
+
+#include <antares/study/study.h>
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
 using namespace Antares::Data;
-using namespace Yuni;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
-
-constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
 /*
 ** Copyright 2007-2023 RTE
@@ -63,29 +53,30 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 **
 ** SPDX-License-Identifier: MPL-2.0
 */
-#include <antares/study/study.h>
+#include <algorithm>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include "antares/solver/utils/filename.h"
+
+#include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_constants.h"
+#include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/name_translator.h"
-
-using namespace Yuni;
-
-#define SEP IO::Separator
 
 class ProblemConverter
 {
 public:
-    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src, NameTranslator& nameTranslator)
+    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest,
+                                   PROBLEME_SIMPLEXE_NOMME* src,
+                                   NameTranslator& nameTranslator)
     {
         // Variables
         dest->NbVar = src->NombreDeVariables;
 
         mVariableType.resize(src->NombreDeVariables);
         for (int var = 0; var < src->NombreDeVariables; var++)
+        {
             mVariableType[var] = src->VariablesEntieres[var] ? SRS_INTEGER_VAR : SRS_CONTINUOUS_VAR;
+        }
 
         dest->TypeDeVariable = mVariableType.data();
         dest->TypeDeBorneDeLaVariable = src->TypeDeVariable; // VARIABLE_BORNEE_DES_DEUX_COTES,
@@ -108,7 +99,8 @@ public:
 
         // Names
         dest->LabelDeLaVariable = nameTranslator.translate(src->VariableNames(), mVariableNames);
-        dest->LabelDeLaContrainte = nameTranslator.translate(src->ConstraintNames(), mConstraintNames);
+        dest->LabelDeLaContrainte = nameTranslator.translate(src->ConstraintNames(),
+                                                             mConstraintNames);
     }
 
 private:
@@ -142,8 +134,9 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
 // --------------------
 // Full mps writing
 // --------------------
-fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint optNumber) :
- I_MPS_writer(optNumber), named_splx_problem_(named_splx_problem)
+fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint optNumber):
+    I_MPS_writer(optNumber),
+    named_splx_problem_(named_splx_problem)
 {
 }
 
@@ -155,12 +148,13 @@ void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string
 // ---------------------------------
 // Full mps writing by or-tools
 // ---------------------------------
-fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber) :
- I_MPS_writer(optNumber), solver_(solver)
+fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber):
+    I_MPS_writer(optNumber),
+    solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer,
-                                       const std::string& filename)
+
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
@@ -169,12 +163,12 @@ mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
                                    bool exportMPSOnError,
                                    const int current_optim_number,
                                    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                                   MPSolver* solver) :
- export_mps_(exportMPS),
- export_mps_on_error_(exportMPSOnError),
- named_splx_problem_(named_splx_problem),
- solver_(solver),
- current_optim_number_(current_optim_number)
+                                   MPSolver* solver):
+    export_mps_(exportMPS),
+    export_mps_on_error_(exportMPSOnError),
+    named_splx_problem_(named_splx_problem),
+    solver_(solver),
+    current_optim_number_(current_optim_number)
 {
 }
 

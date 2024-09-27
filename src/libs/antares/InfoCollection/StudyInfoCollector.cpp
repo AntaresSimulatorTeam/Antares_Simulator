@@ -23,12 +23,15 @@
 //
 
 #include "antares/infoCollection/StudyInfoCollector.h"
+
+#include <antares/config/config.h>
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/benchmarking/file_content.h"
-#include <antares/config/config.h>
 
 using namespace Antares::Data;
-namespace Benchmarking {
+
+namespace Benchmarking
+{
 
 // Collecting data study
 // ---------------------------
@@ -63,7 +66,9 @@ void StudyInfoCollector::performedYearsCountToFileContent(FileContent& file_cont
     for (uint i = 0; i < study_.parameters.nbYears; i++)
     {
         if (study_.parameters.yearsFilter[i])
+        {
             nbPerformedYears++;
+        }
     }
 
     // Adding an item related to number of performed years to the file content
@@ -94,21 +99,21 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
     unsigned nbEnabledDailyBC(0);
     unsigned nbEnabledWeeklyBC(0);
 
-    for (const auto& bc : activeConstraints)
+    for (const auto& bc: activeConstraints)
     {
         switch (bc->type())
         {
-            case BindingConstraint::Type::typeHourly:
-                nbEnabledHourlyBC++;
-                break;
-            case BindingConstraint::Type::typeDaily:
-                nbEnabledDailyBC++;
-                break;
-            case BindingConstraint::Type::typeWeekly:
-                nbEnabledWeeklyBC++;
-                break;
-            default:
-                break;
+        case BindingConstraint::Type::typeHourly:
+            nbEnabledHourlyBC++;
+            break;
+        case BindingConstraint::Type::typeDaily:
+            nbEnabledDailyBC++;
+            break;
+        case BindingConstraint::Type::typeWeekly:
+            nbEnabledWeeklyBC++;
+            break;
+        default:
+            break;
         }
     }
 
@@ -120,8 +125,8 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
 
 void StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
 {
-    const char* unitCommitment
-            = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
+    const char* unitCommitment = UnitCommitmentModeToCString(
+      study_.parameters.unitCommitment.ucMode);
     file_content.addItemToSection("study", "unit commitment", unitCommitment);
 }
 
@@ -133,8 +138,8 @@ void StudyInfoCollector::maxNbYearsInParallelToFileContent(FileContent& file_con
 void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 {
     // Example : 8.3.0 -> 830
-    const unsigned int version
-            = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
+    const unsigned int version = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO
+                                 + ANTARES_VERSION_BUILD;
 
     file_content.addItemToSection("study", "antares version", version);
 }
@@ -146,7 +151,7 @@ void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    std::string solverName = study_.parameters.solverName;
+    std::string solverName = study_.parameters.optOptions.ortoolsSolver;
     file_content.addItemToSection("study", "ortools solver", solverName);
 }
 
@@ -156,8 +161,9 @@ void SimulationInfoCollector::toFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
     file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);
-    file_content.addItemToSection(
-            "optimization problem", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
+    file_content.addItemToSection("optimization problem",
+                                  "non-zero coefficients",
+                                  opt_info_.nbNonZeroCoeffs);
 }
 
-}
+} // namespace Benchmarking

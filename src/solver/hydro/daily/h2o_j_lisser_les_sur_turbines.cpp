@@ -19,10 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <algorithm>
+
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
-
-#include <algorithm>
 
 #define ZERO 1.e-9
 
@@ -40,14 +40,22 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
 
     double SurTurbineARepartir = 0.0;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
         flag[Pdt] = (Turbine[Pdt] - TurbineCible[Pdt] > ZERO);
+    }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
         if (flag[Pdt])
+        {
             SurTurbineARepartir += Turbine[Pdt] - TurbineCible[Pdt];
+        }
+    }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-        flag[Pdt] = (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO);;
+    {
+        flag[Pdt] = (TurbineMax[Pdt] - TurbineCible[Pdt] > ZERO);
+    };
 
     int NbCycles = 0;
 BoucleDeRepartition:
@@ -55,28 +63,42 @@ BoucleDeRepartition:
     const int Np = std::count(flag.begin(), flag.end(), true);
 
     if (Np == 0)
+    {
         return;
+    }
 
     double MargeMin = 0.;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
         MargeMin += TurbineMax[Pdt];
+    }
 
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    {
         if (flag[Pdt] && TurbineMax[Pdt] - TurbineCible[Pdt] < MargeMin)
+        {
             MargeMin = TurbineMax[Pdt] - TurbineCible[Pdt];
+        }
+    }
 
     double Xmoy = SurTurbineARepartir / Np;
     double SurTurbine;
     if (Xmoy <= MargeMin)
+    {
         SurTurbine = Xmoy;
+    }
     else
+    {
         SurTurbine = MargeMin;
+    }
 
     bool limiteAtteinte = false;
     for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         if (!flag[Pdt])
+        {
             continue;
+        }
 
         Turbine[Pdt] = TurbineCible[Pdt] + SurTurbine;
         if (TurbineMax[Pdt] - Turbine[Pdt] <= ZERO)
@@ -91,7 +113,9 @@ BoucleDeRepartition:
     {
         NbCycles++;
         if (NbCycles <= NbPdt)
+        {
             goto BoucleDeRepartition;
+        }
     }
 
     return;

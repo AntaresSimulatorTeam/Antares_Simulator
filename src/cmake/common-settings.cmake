@@ -99,22 +99,20 @@ endif()
 
 
 if(MSVC)
-	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
+	set(CMAKE_C_FLAGS   "${COMMON_MSVC_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${COMMON_MSVC_FLAGS}")
+
+	# If other libraries have been linked statically with C runtime, we need to keep consistent with it
 	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
-		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+		set(CRT_LIBRARY_DEBUG "/MTd")
+		set(CRT_LIBRARY_RELEASE "/MT")
     else()
-		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
-		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
+		set(CRT_LIBRARY_DEBUG "/MDd")
+		set(CRT_LIBRARY_RELEASE "/MD")
 	endif()
 
-	if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1")
-		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MTd /GR /Ot /Od /EHsc /RTC1 /fp:except")
-    else()
-		set(CMAKE_C_FLAGS_DEBUG   "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1")
-		set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_MSVC_FLAGS} /MDd /GR /Ot /Od /EHsc /RTC1 /fp:except")
-	endif()
+	set(CMAKE_C_FLAGS_DEBUG   "${CRT_LIBRARY_DEBUG} /Zi /GR /Ot /Od /EHsc /RTC1")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CRT_LIBRARY_DEBUG} /Zi /GR /Ot /Od /EHsc /RTC1 /fp:except")
 
 	# RELEASE
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE)
@@ -135,14 +133,9 @@ if(MSVC)
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /GS-")
 	# Intrinsic functions
 	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /Oi")
+	# C runtime library
+	set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} ${CRT_LIBRARY_RELEASE}")
 
-	# Multithreaded DLL
-	#Compile option must be updated if VPCKG static is used (can't mix different compile option)
-    if("${VCPKG_TARGET_TRIPLET}" STREQUAL "x64-windows-static" OR "${VCPKG_TARGET_TRIPLET}" STREQUAL "x86-windows-static")
-	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MT")
-    else()		
-	    set(MSVC_RELEASE_FLAGS "${MSVC_RELEASE_FLAGS} /MD")
-    endif()
 
 	# linker: Link time code generation
 	#set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
@@ -159,8 +152,8 @@ if(MSVC)
 	# Remove symbols
 	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /OPT:REF")
 
-	set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_MSVC_FLAGS} ${MSVC_RELEASE_FLAGS} /EHsc")
-	set(CMAKE_C_FLAGS_RELEASE "${COMMON_MSVC_FLAGS} ${MSVC_RELEASE_FLAGS} /EHsc")
+	set(CMAKE_CXX_FLAGS_RELEASE "${MSVC_RELEASE_FLAGS} /EHsc")
+	set(CMAKE_C_FLAGS_RELEASE "${MSVC_RELEASE_FLAGS} /EHsc")
 
 
 	#SET(CMAKE_EXE_LINKER_FLAGS_DEBUG   "/debug /VERSION:${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}")
@@ -220,14 +213,3 @@ macro(executable_strip TARGET)
 		endif()
 	endif()
 endmacro()
-
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS_RELEASE}")
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
-else()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} ${COVERAGE_CXX_FLAGS}")
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS_DEBUG} ${COVERAGE_CXX_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG} ${COVERAGE_LINKER_FLAGS}")
-endif()
-

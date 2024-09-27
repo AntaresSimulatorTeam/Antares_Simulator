@@ -22,19 +22,25 @@
 #pragma once
 
 #include "yuni/core/fwd.h"
-#include <antares/inifile/inifile.h>
+
 #include <antares/array/matrix.h>
+#include <antares/inifile/inifile.h>
 #include <antares/study/version.h>
 
-namespace Antares::Data {
+namespace Antares::Data
+{
 
 class AreaList;
+
 class EnvForLoading final
 {
 public:
-    explicit EnvForLoading(AreaList& l, const StudyVersion& v) : areaList(l), version(v)
+    explicit EnvForLoading(AreaList& l, const StudyVersion& v):
+        areaList(l),
+        version(v)
     {
     }
+
     //! INI file
     Yuni::Clob iniFilename;
     //! Current section
@@ -50,4 +56,4 @@ public:
     StudyVersion version;
 };
 
-} // Data
+} // namespace Antares::Data

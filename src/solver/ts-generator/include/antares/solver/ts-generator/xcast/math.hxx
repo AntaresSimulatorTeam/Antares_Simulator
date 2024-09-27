@@ -19,11 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <cmath>
+
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <antares/study/study.h>
+
 #include <antares/logs/logs.h>
+#include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/xcast.h"
+
 #include "constants.h"
 
 using namespace Yuni;
@@ -185,7 +188,7 @@ static float diffusion(float a, float b, float g, float d, int l, float t, float
         // Warning:
         // On suppose ici que d a ete correctement initialise avec d=gamma_euler(1+1/a)
         //
-        assert(!Math::Zero(b) && "division by zero");
+        assert(b != 0 && "division by zero");
         const double v = pow(x / b, a);
         const double w = exp(v);
 
@@ -238,7 +241,7 @@ static float diffusion(float a, float b, float g, float d, int l, float t, float
                         for (k = 0; k < N; ++k)
                                 estim_aij += L[i][k] * L[j][k];
 
-                        if (Math::Abs(estim_aij - A[i][j]) > EPSIMAX)
+                        if (std::abs(estim_aij - A[i][j]) > EPSIMAX)
                                 return false;
                 }
         }
@@ -310,7 +313,9 @@ static float maxiDiffusion(float a, float b, float g, float d, int l, float t)
         float m = diffusion(a, b, g, d, l, t, x);
         float y = diffusion(a, b, g, d, l, t, maximum(a, b, g, d, l));
         if (y > m)
+        {
             m = y;
+        }
         if (a > 1.f)
         {
             x = (a - 1.f) / a;
@@ -318,7 +323,9 @@ static float maxiDiffusion(float a, float b, float g, float d, int l, float t)
             x *= b;
             y = diffusion(a, b, g, d, l, t, x);
             if (y > m)
+            {
                 m = y;
+            }
         }
         return m;
     }

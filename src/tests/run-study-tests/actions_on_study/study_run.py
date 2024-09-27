@@ -26,7 +26,8 @@ class study_run:
         if self.named_mps_problems:
             command.append('--named-mps-problems')
         if self.parallel:
-            command.append('--force-parallel=2')
+            command.append('--force-parallel=4')
+
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         process.communicate()
 
@@ -35,7 +36,7 @@ class study_run:
         if not self.raise_exception_on_failure:
             return
 
-        check(self.return_code == 0, "Solver returned error")
+        check(self.success(), f"Solver returned error {self.return_code}")
 
 
     def get_return_code(self):

@@ -19,11 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/logs/hostinfo.h"
+
 #include <yuni/yuni.h>
 #include <yuni/core/system/cpu.h>
-#include "antares/logs/hostinfo.h"
-#include <antares/logs/logs.h>
 
+#include <antares/logs/logs.h>
 #include "antares/logs/hostname.hxx"
 
 using namespace Yuni;
