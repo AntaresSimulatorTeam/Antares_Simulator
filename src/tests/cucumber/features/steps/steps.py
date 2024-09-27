@@ -13,7 +13,7 @@ def study_path_is(context, string):
 @when('I run antares simulator')
 def run_antares(context):
     context.use_ortools = True
-    context.ortools_solver = "xpress"
+    context.ortools_solver = "sirius"
     context.named_mps_problems = False
     context.parallel = False
     run_simulation(context)
