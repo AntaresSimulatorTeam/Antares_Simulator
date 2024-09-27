@@ -113,7 +113,7 @@ public:
      ** \param folder The target folder
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadPreproFromFolder(Study& s, const AnyString& folder);
+    bool loadPreproFromFolder(Study& s, const std::filesystem::path& folder);
     bool validatePrepro(const Study& study);
 
     bool validateClusters(const Parameters& param) const;

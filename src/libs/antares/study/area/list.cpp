@@ -979,8 +979,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Thermal cluster list
     {
-        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-        ret = area.thermal.list.loadPreproFromFolder(study, buffer) && ret;
+        fs::path preproPath = fs::path(study.folderInput) / "thermal" / "prepro";
+        ret = area.thermal.list.loadPreproFromFolder(study, preproPath) && ret;
         ret = area.thermal.list.validatePrepro(study) && ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;

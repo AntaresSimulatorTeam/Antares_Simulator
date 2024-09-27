@@ -80,7 +80,7 @@ public:
     ** \param folder The source folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(Study& study, const std::filesystem::path& folder);
 
     /*!
     ** \brief Validate most settings against min/max rules

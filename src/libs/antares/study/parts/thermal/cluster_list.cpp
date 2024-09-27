@@ -578,17 +578,16 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     return ret;
 }
 
-bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& folder)
+bool ThermalClusterList::loadPreproFromFolder(Study& study, const fs::path& folder)
 {
-    Clob buffer;
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };
 
-    auto loadPrepro = [&buffer, &folder, &study](auto& c)
+    auto loadPrepro = [&folder, &study](auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
-        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
-        return c->prepro->loadFromFolder(study, buffer);
+        auto preproPath = folder / c->parentArea->id.c_str() / c->id();
+        return c->prepro->loadFromFolder(study, preproPath);
     };
 
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadPrepro);

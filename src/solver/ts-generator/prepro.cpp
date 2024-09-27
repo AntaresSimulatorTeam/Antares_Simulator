@@ -59,14 +59,11 @@ bool PreproAvailability::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-bool PreproAvailability::loadFromFolder(Study& study, const AnyString& folder)
+bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::path& folder)
 {
-    auto& buffer = study.bufferLoadingTS;
-
-    buffer.clear() << folder << SEP << "data.txt";
-
+    auto filePath = folder / "data.txt";
     // standard loading
-    return data.loadFromCSVFile(buffer,
+    return data.loadFromCSVFile(filePath.string(),
                                 preproAvailabilityMax,
                                 DAYS_PER_YEAR,
                                 Matrix<>::optFixedSize,
