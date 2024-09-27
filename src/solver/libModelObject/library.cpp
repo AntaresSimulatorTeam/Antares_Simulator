@@ -48,9 +48,12 @@ LibraryBuilder& LibraryBuilder::withPortType(std::span<PortType> portTypes)
     return *this;
 }
 
-LibraryBuilder& LibraryBuilder::withModel(const std::map<std::string, Model>& models)
+LibraryBuilder& LibraryBuilder::withModel(std::span<Model> models)
 {
-    library_.models_ = models;
+    std::transform(models.begin(),
+                   models.end(),
+                   std::inserter(library_.models_, library_.models_.end()),
+                   [](const Model& model) { return std::make_pair(model.Id(), model); });
     return *this;
 }
 

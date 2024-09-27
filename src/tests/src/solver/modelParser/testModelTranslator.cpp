@@ -36,12 +36,12 @@ std::vector<Antares::Solver::ObjectModel::PortType> toPortTypes(
         std::vector<Antares::Solver::ObjectModel::PortField> fields;
         for (const auto& field: portType.fields)
         {
-            fields.push_back(Antares::Solver::ObjectModel::PortField{field});
+            fields.emplace_back(Antares::Solver::ObjectModel::PortField{field});
         }
         Antares::Solver::ObjectModel::PortType portTypeModel(portType.id,
                                                              portType.description,
                                                              std::move(fields));
-        out.push_back(portTypeModel);
+        out.emplace_back(std::move(portTypeModel));
     }
     return out;
 }
@@ -52,10 +52,19 @@ Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser
 {
     Antares::Solver::ObjectModel::LibraryBuilder builder;
     std::vector<Antares::Solver::ObjectModel::PortType> portTypes = toPortTypes(library.port_types);
+    std::vector<Antares::Solver::ObjectModel::Model> models;
+    Antares::Solver::ObjectModel::ModelBuilder modelBuilder;
+    for (const auto& model: library.models)
+    {
+        auto modelObj = modelBuilder.withId(model.id)
+                          .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
+                          .build();
+        models.emplace_back(std::move(modelObj));
+    }
     Antares::Solver::ObjectModel::Library lib = builder.withId(library.id)
                                                   .withDescription(library.description)
                                                   .withPortType(portTypes)
-                                                  //.withModel(library.models)
+                                                  .withModel(models)
                                                   .build();
     return lib;
 }
@@ -115,4 +124,17 @@ BOOST_AUTO_TEST_CASE(test_library_port_types_with_fields)
     BOOST_REQUIRE_EQUAL(lib.portTypes().at("port2").fields().size(), 2);
     BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[0].Name(), "field3");
     BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[1].Name(), "field4");
+}
+
+// Test library with models
+BOOST_AUTO_TEST_CASE(test_library_empty_models)
+{
+    Antares::Solver::ModelParser::Library library;
+    Antares::Solver::ModelParser::Model
+      model1{"model1", "description", {}, {}, {}, {}, {}, "objectives"};
+    library.models = {model1};
+    Antares::Solver::ObjectModel::Library lib = convert(library);
+    BOOST_REQUIRE_EQUAL(lib.models().size(), 1);
+    BOOST_CHECK_EQUAL(lib.models().at("model1").Id(), "model1");
+    BOOST_CHECK_EQUAL(lib.models().at("model1").Objective().Value(), "objectives");
 }

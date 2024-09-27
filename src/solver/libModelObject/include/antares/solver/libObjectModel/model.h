@@ -39,12 +39,36 @@ namespace Antares::Solver::ObjectModel
 class Model
 {
 public:
-    Model();
-    ~Model() = default;
+    const std::string& Id() const
+    {
+        return id_;
+    }
+
+    Expression Objective() const
+    {
+        return objective_;
+    }
 
     std::vector<Constraint*> getConstraints();
+    std::vector<Constraint*> getBindingConstraints();
+
+    const std::map<std::string, Parameter>& Parameters() const
+    {
+        return parameters_;
+    }
+
+    const std::map<std::string, Variable>& Variables() const
+    {
+        return variables_;
+    }
+
+    const std::map<std::string, Port>& Ports() const
+    {
+        return ports_;
+    }
 
 private:
+    friend class ModelBuilder;
     std::string id_;
     Expression objective_;
 
@@ -55,6 +79,24 @@ private:
     std::map<std::string, Constraint> bindingConstraints_;
 
     std::map<std::string, Port> ports_;
+};
+
+class ModelBuilder
+{
+public:
+    ModelBuilder& withId(std::string_view id);
+    ModelBuilder& withObjective(Expression objective);
+    //    ModelBuilder& withParameters(std::span<Parameter> parameter);
+    //    ModelBuilder& withVariables(std::span<Variable> variable);
+    //    ModelBuilder& withPorts(std::span<Port> port);
+    //    ModelBuilder& withConstraints(std::span<Constraint> constraint);
+    //    ModelBuilder& withBindingConstraints(std::span<Constraint> constraint);
+
+    Model build();
+    void clear();
+
+private:
+    Model model_;
 };
 
 } // namespace Antares::Solver::ObjectModel

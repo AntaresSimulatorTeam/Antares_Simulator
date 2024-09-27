@@ -24,9 +24,21 @@
 namespace Antares::Solver::ObjectModel
 {
 
-std::vector<Constraint*> getConstraints()
+Model ModelBuilder::build()
 {
-    return std::vector<Constraint*>();
+    return model_;
+}
+
+ModelBuilder& ModelBuilder::withId(std::string_view id)
+{
+    model_.id_ = id;
+    return *this;
+}
+
+ModelBuilder& ModelBuilder::withObjective(Expression objective)
+{
+    model_.objective_ = objective;
+    return *this;
 }
 
 } // namespace Antares::Solver::ObjectModel

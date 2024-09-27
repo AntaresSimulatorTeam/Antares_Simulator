@@ -73,13 +73,10 @@ private:
 class LibraryBuilder
 {
 public:
-    LibraryBuilder() = default;
-    ~LibraryBuilder() = default;
-
     LibraryBuilder& withId(const std::string& id);
     LibraryBuilder& withDescription(const std::string& description);
     LibraryBuilder& withPortType(std::span<PortType> portTypes);
-    LibraryBuilder& withModel(const std::map<std::string, Model>& models);
+    LibraryBuilder& withModel(std::span<Model> models);
 
     Library build();
 

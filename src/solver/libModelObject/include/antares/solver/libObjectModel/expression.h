@@ -28,8 +28,20 @@ namespace Antares::Solver::ObjectModel
 class Expression
 {
 public:
-    Expression();
-    ~Expression() = default;
+    Expression() = default;
+
+    explicit Expression(std::string value):
+        value(value)
+    {
+    }
+
+    const std::string& Value() const
+    {
+        return value;
+    }
+
+private:
+    std::string value;
 };
 
 } // namespace Antares::Solver::ObjectModel
