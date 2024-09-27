@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - develop
+      - fix/centos7-devtoolset-11
+
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -43,7 +45,7 @@ jobs:
     - name: Install gcc 10
       run: |
         yum install -y centos-release-scl
-        yum install -y devtoolset-10-gcc*
+        yum install -y devtoolset-11-gcc*
 
     - uses: ./.github/workflows/install-cmake-328
 
@@ -80,7 +82,7 @@ jobs:
 
     - name: Configure
       run: |
-           source /opt/rh/devtoolset-10/enable
+           source /opt/rh/devtoolset-11/enable
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -94,7 +96,7 @@ jobs:
 
     - name: Build
       run: |
-           source /opt/rh/devtoolset-10/enable
+           source /opt/rh/devtoolset-11/enable
            source /opt/rh/rh-git227/enable
            cmake --build _build --config Release -j$(nproc)
            ccache -s
