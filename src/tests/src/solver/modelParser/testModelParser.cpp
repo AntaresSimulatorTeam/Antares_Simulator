@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(test_library_port_types)
 BOOST_AUTO_TEST_CASE(test_library_models)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const std::string library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
