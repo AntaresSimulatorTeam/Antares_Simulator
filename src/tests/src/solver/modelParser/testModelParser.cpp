@@ -173,8 +173,81 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables)
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].variables.size() == 1);
     BOOST_CHECK(libraryObj.models[0].variables[0].name == "var_name");
-    BOOST_CHECK(libraryObj.models[0].variables[0].lower_bound == 0);
-    BOOST_CHECK(libraryObj.models[0].variables[0].upper_bound == 1);
+    BOOST_CHECK(libraryObj.models[0].variables[0].lower_bound == "0");
+    BOOST_CHECK(libraryObj.models[0].variables[0].upper_bound == "1");
+}
+
+// variable bounds are strings expressions
+BOOST_AUTO_TEST_CASE(test_library_model_variables_bounds)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters: []
+                  variables:
+                      - name: "var_name"
+                        lower-bound: "near-zero"
+                        upper-bound: "pmax"
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  objective: "objective"
+        )";
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "near-zero");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "pmax");
+}
+
+// variable variable-type
+BOOST_AUTO_TEST_CASE(test_library_model_variables_type)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters: []
+                  variables:
+                    - name: "var1"
+                      lower-bound: 0
+                      upper-bound: 1
+                      variable-type: "BOOL"
+                    - name: "var2"
+                      lower-bound: 0
+                      upper-bound: 1
+                      variable-type: "INTEGER"
+                    - name: "var3"
+                      lower-bound: 0
+                      upper-bound: 1
+                      variable-type: "FLOAT"
+                    - name: "var4"
+                      lower-bound: 0
+                      upper-bound: 1
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  objective: "objective"
+        )";
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    auto& model = libraryObj.models[0];
+    auto& var1 = model.variables[0];
+    auto& var2 = model.variables[1];
+    auto& var3 = model.variables[2];
+    auto& var4 = model.variables[3];
+    BOOST_CHECK_EQUAL(var1.variable_type, Antares::Solver::ModelParser::ValueType::BOOL);
+    BOOST_CHECK_EQUAL(var2.variable_type, Antares::Solver::ModelParser::ValueType::INTEGER);
+    BOOST_CHECK_EQUAL(var3.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
+    BOOST_CHECK_EQUAL(var4.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
 }
 
 // Test library with one model containing ports

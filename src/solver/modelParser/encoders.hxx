@@ -55,6 +55,44 @@ struct convert<Antares::Solver::ModelParser::Parameter>
 };
 
 template<>
+struct convert<Antares::Solver::ModelParser::ValueType>
+{
+    static Node encode(const Antares::Solver::ModelParser::ValueType& rhs)
+    {
+        Node node;
+        node = rhs == Antares::Solver::ModelParser::ValueType::FLOAT     ? "FLOAT"
+               : rhs == Antares::Solver::ModelParser::ValueType::INTEGER ? "INTEGER"
+                                                                         : "BOOL";
+        return node;
+    }
+
+    static bool decode(const Node& node, Antares::Solver::ModelParser::ValueType& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
+        if (node.as<std::string>() == "FLOAT")
+        {
+            rhs = Antares::Solver::ModelParser::ValueType::FLOAT;
+        }
+        else if (node.as<std::string>() == "INTEGER")
+        {
+            rhs = Antares::Solver::ModelParser::ValueType::INTEGER;
+        }
+        else if (node.as<std::string>() == "BOOL")
+        {
+            rhs = Antares::Solver::ModelParser::ValueType::BOOL;
+        }
+        else
+        {
+            return false;
+        }
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::Solver::ModelParser::Variable>
 {
     static Node encode(const Antares::Solver::ModelParser::Variable& rhs)
@@ -73,8 +111,10 @@ struct convert<Antares::Solver::ModelParser::Variable>
             return false;
         }
         rhs.name = node["name"].as<std::string>();
-        rhs.lower_bound = node["lower-bound"].as<double>();
-        rhs.upper_bound = node["upper-bound"].as<double>();
+        rhs.lower_bound = node["lower-bound"].as<std::string>();
+        rhs.upper_bound = node["upper-bound"].as<std::string>();
+        rhs.variable_type = node["variable-type"].as<Antares::Solver::ModelParser::ValueType>(
+          Antares::Solver::ModelParser::ValueType::FLOAT);
         return true;
     }
 };

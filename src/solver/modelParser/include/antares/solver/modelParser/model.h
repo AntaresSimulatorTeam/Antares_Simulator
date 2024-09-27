@@ -34,11 +34,37 @@ struct Parameter
     bool scenario_dependent;
 };
 
+enum class ValueType
+{
+    FLOAT,
+    INTEGER,
+    BOOL
+};
+
+inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
+{
+    using namespace std::string_literals;
+    switch (value_type)
+    {
+    case ValueType::FLOAT:
+        os << "FLOAT"s;
+        break;
+    case ValueType::INTEGER:
+        os << "INTEGER"s;
+        break;
+    case ValueType::BOOL:
+        os << "BOOL"s;
+        break;
+    }
+    return os;
+}
+
 struct Variable
 {
     std::string name;
-    double lower_bound;
-    double upper_bound;
+    std::string lower_bound;
+    std::string upper_bound;
+    ValueType variable_type;
 };
 
 struct Port
