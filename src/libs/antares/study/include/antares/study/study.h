@@ -633,7 +633,7 @@ protected:
     //! Load a study from a folder
     bool internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options);
     //! Load the study header
-    bool internalLoadHeader(const YString& folder);
+    bool internalLoadHeader(const std::filesystem::path& folder);
     //! Load all correlation matrices
     bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
     //! Load all binding constraints
@@ -642,7 +642,7 @@ protected:
     bool internalLoadSets();
     //@}
 
-    bool internalLoadIni(const YString& path, const StudyLoadOptions& options);
+    bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
     void parameterFiller(const StudyLoadOptions& options);
 
