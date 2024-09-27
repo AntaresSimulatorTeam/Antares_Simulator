@@ -1,5 +1,11 @@
 var NAVTREEINDEX19 =
 {
+"classMinDownTime.html":[9,0,145],
+"classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f":[9,0,145,0],
+"classMinDownTimeGroup.html":[9,0,147],
+"classMinDownTimeGroup.html#acf4b43dec12c15af25d3b74cd7ec99cd":[9,0,147,0],
+"classMinHydroPower.html":[9,0,148],
+"classMinHydroPower.html#aa9c54a207ba58ba047a01db66f9de271":[9,0,148,0],
 "classMinMaxHydroPowerGroup.html":[9,0,150],
 "classModifiedINode.html":[9,0,151],
 "classModifiedINode.html#a32e5cffa56a52c2d00558645b6816fd4":[9,0,151,3],
@@ -66,8 +72,8 @@ var NAVTREEINDEX19 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[9,0,197,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[9,0,197,4],
 "classPublicStudy.html":[9,0,198],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,198,0],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,198,1],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,198,0],
 "classQuadraticProblemMatrix.html":[9,0,199],
 "classRealName.html":[9,0,201],
 "classResultMatrix.html":[9,0,207],
@@ -243,11 +249,5 @@ var NAVTREEINDEX19 =
 "decal-area-position_8h_source.html":[10,0,0,7,0,1,0,1,0],
 "decal-area-position_8hxx_source.html":[10,0,0,7,0,1,0,1,1],
 "default_8h_source.html":[10,0,0,7,2,1,1,1,4],
-"dir_00391469cb8886a3ac1b67cd679c42ba.html":[10,0,0,7,0,0,0],
-"dir_00744117a42d95692e735523462d1048.html":[10,0,0,3,0,15],
-"dir_013ef82fe57c42c8e3d883bad18f5d18.html":[10,0,0,3,0,2,0,0],
-"dir_01daa5499a3d0d650df878715323f7b3.html":[10,0,0,3,0,19],
-"dir_03c33018154dcb1c784c6c41021d7f6e.html":[10,0,0,4,7,0],
-"dir_041db6ad6a3d44280e40e5af409429cb.html":[10,0,0,4],
-"dir_04c8783b0078f87a911ffa23a4cc3ccd.html":[10,0,0,4,2,0,0,0,0,1]
+"dir_00391469cb8886a3ac1b67cd679c42ba.html":[10,0,0,7,0,0,0]
 };

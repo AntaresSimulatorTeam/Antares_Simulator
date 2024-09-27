@@ -1,5 +1,15 @@
 var NAVTREEINDEX26 =
 {
+"structRESERVE__JMOINS1.html":[9,0,205],
+"structRESULTATS__HORAIRES.html":[9,0,206],
+"structReadFromStreamFixture.html":[9,0,200],
+"structRenewableClusterStudy.html":[9,0,204],
+"structSOLDE__MOYEN__DES__ECHANGES.html":[9,0,218],
+"structSavingToStreamFixture.html":[9,0,209],
+"structShortTermStorageLevelData.html":[9,0,215],
+"structShortTermStorage_1_1PROPERTIES.html":[9,0,18,0],
+"structShortTermStorage_1_1RESULTS.html":[9,0,18,1],
+"structSimplexResult.html":[9,0,216],
 "structStartUpCostsData.html":[9,0,219],
 "structStudyBuilder.html":[9,0,222],
 "structStudyFixture.html":[9,0,224],

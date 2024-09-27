@@ -805,7 +805,11 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::Modeler::Api::LinearProblemBuilder", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html", null ],
     [ "Antares::Solver::Modeler::Api::LinearProblemData", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html", null ],
-    [ "Antares::Solver::Modeler::Api::LinearProblemFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html", null ],
+    [ "Antares::Solver::Modeler::Api::LinearProblemFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html", [
+      [ "Antares::Solver::Modeler::Api::OneConstraintFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneConstraintFiller.html", null ],
+      [ "Antares::Solver::Modeler::Api::OneVarFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneVarFiller.html", null ],
+      [ "Antares::Solver::Modeler::Api::TwoVarsTwoConstraintsFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1TwoVarsTwoConstraintsFiller.html", null ]
+    ] ],
     [ "Antares::Window::linkGrid", "classAntares_1_1Window_1_1linkGrid.html", [
       [ "Antares::Window::linkNTCgrid", "classAntares_1_1Window_1_1linkNTCgrid.html", null ],
       [ "Antares::Window::linkParametersGrid", "classAntares_1_1Window_1_1linkParametersGrid.html", null ]

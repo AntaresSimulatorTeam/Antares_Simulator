@@ -1,5 +1,11 @@
 var NAVTREEINDEX18 =
 {
+"classAntares_1_1Window_1_1hurdleCostsUsageButton.html":[9,0,0,18,29],
+"classAntares_1_1Window_1_1linkButton.html":[9,0,0,18,34],
+"classAntares_1_1Window_1_1linkGrid.html":[9,0,0,18,35],
+"classAntares_1_1Window_1_1linkNTCgrid.html":[9,0,0,18,36],
+"classAntares_1_1Window_1_1linkParametersGrid.html":[9,0,0,18,37],
+"classAntares_1_1Window_1_1loopFlowUsageButton.html":[9,0,0,18,38],
 "classAntares_1_1Window_1_1menuLinkButton.html":[9,0,0,18,40],
 "classAntares_1_1Window_1_1ntcUsageButton.html":[9,0,0,18,44],
 "classAntares_1_1Window_1_1phaseShifterUsageButton.html":[9,0,0,18,46],
@@ -243,11 +249,5 @@ var NAVTREEINDEX18 =
 "classMaxHydroPower.html#a10a5b06ff8ca24c03b46a50f54181347":[9,0,140,0],
 "classMaxPumping.html":[9,0,142],
 "classMaxPumping.html#a6d8321813803c01b92d9b34095a0e7e0":[9,0,142,0],
-"classMaxPumpingGroup.html":[9,0,144],
-"classMinDownTime.html":[9,0,145],
-"classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f":[9,0,145,0],
-"classMinDownTimeGroup.html":[9,0,147],
-"classMinDownTimeGroup.html#acf4b43dec12c15af25d3b74cd7ec99cd":[9,0,147,0],
-"classMinHydroPower.html":[9,0,148],
-"classMinHydroPower.html#aa9c54a207ba58ba047a01db66f9de271":[9,0,148,0]
+"classMaxPumpingGroup.html":[9,0,144]
 };

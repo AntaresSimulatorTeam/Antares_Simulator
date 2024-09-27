@@ -1,5 +1,15 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Data_1_1TimeSeriesToCStr.html":[9,0,0,4,69],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_0116_01_4.html":[9,0,0,4,71],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_011_01_4.html":[9,0,0,4,70],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_012_01_4.html":[9,0,0,4,72],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html":[9,0,0,4,73],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_014_01_4.html":[9,0,0,4,74],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html":[9,0,0,4,75],
+"structAntares_1_1Data_1_1WhoseNameContains.html":[9,0,0,4,80],
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html":[9,0,0,5,0,0],
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a23f160f379ccae1da99a369db0959dc6":[9,0,0,5,0,0,2],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a576c127cbbe0448b583e186a8dabac1a":[9,0,0,5,0,0,1],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a74af88b90038e83fb25c558efa1d9178":[9,0,0,5,0,0,3],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html#a7fab86c6a9e2d7cd718e66af498fa662":[9,0,0,5,0,0,0],
@@ -239,15 +249,5 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html":[9,0,0,13,6,4,101],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#ab38b58b113854c3cd6268b940963cb0b":[9,0,0,13,6,4,101,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#af8e4d8b6a6407060fb314c2886542b94":[9,0,0,13,6,4,101,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html":[9,0,0,13,6,4,101,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html":[9,0,0,13,6,4,102],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a72dcb8ce6f01f1d9008d68bb3b34bf7a":[9,0,0,13,6,4,102,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a998646f4c3544ae0bb5b6a695eaf710d":[9,0,0,13,6,4,102,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html":[9,0,0,13,6,4,103],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html#a3f21b906233221ae4fb5291046cc42e7":[9,0,0,13,6,4,103,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html#a82a00d81fab6a9f2a44f1bc945caa021":[9,0,0,13,6,4,103,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html":[9,0,0,13,6,4,104],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#a850d4181da4784d40201475e5016fd41":[9,0,0,13,6,4,104,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#aa287ab48cc64ba1214fb73614a54b6ed":[9,0,0,13,6,4,104,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html":[9,0,0,13,6,4,105]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html":[9,0,0,13,6,4,101,0]
 };

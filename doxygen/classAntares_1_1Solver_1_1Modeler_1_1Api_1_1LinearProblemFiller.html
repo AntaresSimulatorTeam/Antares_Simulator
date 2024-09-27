@@ -137,18 +137,29 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Modeler_1_1A
   <div class="headertitle"><div class="title">Antares::Solver::Modeler::Api::LinearProblemFiller Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Inheritance diagram for Antares::Solver::Modeler::Api::LinearProblemFiller:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.png" usemap="#Antares::Solver::Modeler::Api::LinearProblemFiller_map" alt=""/>
+  <map id="Antares::Solver::Modeler::Api::LinearProblemFiller_map" name="Antares::Solver::Modeler::Api::LinearProblemFiller_map">
+<area href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneConstraintFiller.html" alt="Antares::Solver::Modeler::Api::OneConstraintFiller" shape="rect" coords="0,56,348,80"/>
+<area href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneVarFiller.html" alt="Antares::Solver::Modeler::Api::OneVarFiller" shape="rect" coords="358,56,706,80"/>
+<area href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1TwoVarsTwoConstraintsFiller.html" alt="Antares::Solver::Modeler::Api::TwoVarsTwoConstraintsFiller" shape="rect" coords="716,56,1064,80"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aae2205843b1465095303c189469ea57c" id="r_aae2205843b1465095303c189469ea57c"><td class="memItemLeft" align="right" valign="top"><a id="aae2205843b1465095303c189469ea57c" name="aae2205843b1465095303c189469ea57c"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addVariables</b> (LinearProblem *problem, <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html">LinearProblemData</a> *data)=0</td></tr>
-<tr class="separator:aae2205843b1465095303c189469ea57c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6bc6fa72794090f8421ee88feb6e29ba" id="r_a6bc6fa72794090f8421ee88feb6e29ba"><td class="memItemLeft" align="right" valign="top"><a id="a6bc6fa72794090f8421ee88feb6e29ba" name="a6bc6fa72794090f8421ee88feb6e29ba"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addConstraints</b> (LinearProblem *problem, <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html">LinearProblemData</a> *data)=0</td></tr>
-<tr class="separator:a6bc6fa72794090f8421ee88feb6e29ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fe80fa479ffa16a6082bbbcb0a282ef" id="r_a3fe80fa479ffa16a6082bbbcb0a282ef"><td class="memItemLeft" align="right" valign="top"><a id="a3fe80fa479ffa16a6082bbbcb0a282ef" name="a3fe80fa479ffa16a6082bbbcb0a282ef"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addObjectiveCoefficients</b> (LinearProblem *problem, <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html">LinearProblemData</a> *data)=0</td></tr>
-<tr class="separator:a3fe80fa479ffa16a6082bbbcb0a282ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a5c2c022cc81582a03ca43c1099ad09" id="r_a4a5c2c022cc81582a03ca43c1099ad09"><td class="memItemLeft" align="right" valign="top"><a id="a4a5c2c022cc81582a03ca43c1099ad09" name="a4a5c2c022cc81582a03ca43c1099ad09"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addVariables</b> (<a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html">ILinearProblem</a> &amp;pb, <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html">LinearProblemData</a> &amp;data)=0</td></tr>
+<tr class="separator:a4a5c2c022cc81582a03ca43c1099ad09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a964438390bb50d5185cc90060d40da98" id="r_a964438390bb50d5185cc90060d40da98"><td class="memItemLeft" align="right" valign="top"><a id="a964438390bb50d5185cc90060d40da98" name="a964438390bb50d5185cc90060d40da98"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addConstraints</b> (<a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html">ILinearProblem</a> &amp;pb, <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html">LinearProblemData</a> &amp;data)=0</td></tr>
+<tr class="separator:a964438390bb50d5185cc90060d40da98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaabde14cb26efd327467aa3b688a27c" id="r_aaaabde14cb26efd327467aa3b688a27c"><td class="memItemLeft" align="right" valign="top"><a id="aaaabde14cb26efd327467aa3b688a27c" name="aaaabde14cb26efd327467aa3b688a27c"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addObjective</b> (<a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html">ILinearProblem</a> &amp;pb, <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html">LinearProblemData</a> &amp;data)=0</td></tr>
+<tr class="separator:aaaabde14cb26efd327467aa3b688a27c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/solver/modeler/api/include/antares/solver/modeler/api/<a class="el" href="linearProblemFiller_8h_source.html">linearProblemFiller.h</a></li>

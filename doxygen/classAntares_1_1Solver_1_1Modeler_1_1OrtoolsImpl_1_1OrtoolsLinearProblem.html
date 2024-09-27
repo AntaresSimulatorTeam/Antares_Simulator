@@ -160,11 +160,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aebab6ba50907e2356e2f98422dbae92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73d448e1b8684b1d6d3c29c456d0431b" id="r_a73d448e1b8684b1d6d3c29c456d0431b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html">OrtoolsMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a73d448e1b8684b1d6d3c29c456d0431b">getVariable</a> (const std::string &amp;name) const override</td></tr>
 <tr class="separator:a73d448e1b8684b1d6d3c29c456d0431b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bf8a52ccef2693d592f3873204e44a4" id="r_a2bf8a52ccef2693d592f3873204e44a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a2bf8a52ccef2693d592f3873204e44a4">variableCount</a> () const override</td></tr>
+<tr class="separator:a2bf8a52ccef2693d592f3873204e44a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d95005e2fe98b7c8eae1b93b147cfd6" id="r_a1d95005e2fe98b7c8eae1b93b147cfd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipConstraint.html">OrtoolsMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a1d95005e2fe98b7c8eae1b93b147cfd6">addConstraint</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
 <tr class="memdesc:a1d95005e2fe98b7c8eae1b93b147cfd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem.  <br /></td></tr>
 <tr class="separator:a1d95005e2fe98b7c8eae1b93b147cfd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98bc695e0782c0d7d6808c3c69097312" id="r_a98bc695e0782c0d7d6808c3c69097312"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipConstraint.html">OrtoolsMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a98bc695e0782c0d7d6808c3c69097312">getConstraint</a> (const std::string &amp;name) const override</td></tr>
 <tr class="separator:a98bc695e0782c0d7d6808c3c69097312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a753bfaf03b66353ff24ab76011dca61e" id="r_a753bfaf03b66353ff24ab76011dca61e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a753bfaf03b66353ff24ab76011dca61e">constraintCount</a> () const override</td></tr>
+<tr class="separator:a753bfaf03b66353ff24ab76011dca61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0efb6ad0f4bd59f20b6cf61e705cdfd4" id="r_a0efb6ad0f4bd59f20b6cf61e705cdfd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a0efb6ad0f4bd59f20b6cf61e705cdfd4">setObjectiveCoefficient</a> (<a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">Api::IMipVariable</a> *var, double coefficient) override</td></tr>
 <tr class="memdesc:a0efb6ad0f4bd59f20b6cf61e705cdfd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the objective coefficient for a given variable.  <br /></td></tr>
 <tr class="separator:a0efb6ad0f4bd59f20b6cf61e705cdfd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -320,6 +324,33 @@ Public Member Functions</h2></td></tr>
 <p>Create a continuous variable. </p>
 
 <p>Implements <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#a71146d6581e2bbf3e818967487b70992">Antares::Solver::Modeler::Api::ILinearProblem</a>.</p>
+
+</div>
+</div>
+<a id="a753bfaf03b66353ff24ab76011dca61e" name="a753bfaf03b66353ff24ab76011dca61e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a753bfaf03b66353ff24ab76011dca61e">&#9670;&#160;</a></span>constraintCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem::constraintCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html">Antares::Solver::Modeler::Api::ILinearProblem</a>.</p>
 
 </div>
 </div>
@@ -586,6 +617,33 @@ Public Member Functions</h2></td></tr>
 <p>Solve the problem, returns a IMipSolution. </p>
 
 <p>Implements <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#ac44e14b79cdbc584efc0d3f665cb7f95">Antares::Solver::Modeler::Api::ILinearProblem</a>.</p>
+
+</div>
+</div>
+<a id="a2bf8a52ccef2693d592f3873204e44a4" name="a2bf8a52ccef2693d592f3873204e44a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bf8a52ccef2693d592f3873204e44a4">&#9670;&#160;</a></span>variableCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem::variableCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html">Antares::Solver::Modeler::Api::ILinearProblem</a>.</p>
 
 </div>
 </div>

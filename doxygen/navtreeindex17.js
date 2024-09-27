@@ -1,5 +1,11 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Window_1_1Hydro_1_1Allocation.html":[9,0,0,18,0,0],
+"classAntares_1_1Window_1_1Hydro_1_1Allocation.html#a2f5d8e04d311343b645c3f28a7710755":[9,0,0,18,0,0,0],
+"classAntares_1_1Window_1_1Hydro_1_1Allocation.html#a56ac770b4d7bd82f4455af913dbae2b0":[9,0,0,18,0,0,1],
+"classAntares_1_1Window_1_1Hydro_1_1Dailypower.html":[9,0,0,18,0,1],
+"classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#a4555df4ee23bf95d8fc43ba0814ecd4c":[9,0,0,18,0,1,0],
+"classAntares_1_1Window_1_1Hydro_1_1Dailypower.html#aff56fca69695ca0abe880fc8b821e178":[9,0,0,18,0,1,1],
 "classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html":[9,0,0,18,0,2],
 "classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html#a652a6e95cdb5ee19f53b54210a2cf56b":[9,0,0,18,0,2,0],
 "classAntares_1_1Window_1_1Hydro_1_1LevelsAndValues.html#af9b26a0747c85908a7f0dcd88b785cf4":[9,0,0,18,0,2,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Window_1_1XCast.html#a547a566a0bd7377edde497be5cb95179":[9,0,0,18,55,3],
 "classAntares_1_1Window_1_1XCast.html#aa3063e35751157739b757124bbb9d917":[9,0,0,18,55,1],
 "classAntares_1_1Window_1_1assetTypeButton.html":[9,0,0,18,11],
-"classAntares_1_1Window_1_1captionButton.html":[9,0,0,18,18],
-"classAntares_1_1Window_1_1hurdleCostsUsageButton.html":[9,0,0,18,29],
-"classAntares_1_1Window_1_1linkButton.html":[9,0,0,18,34],
-"classAntares_1_1Window_1_1linkGrid.html":[9,0,0,18,35],
-"classAntares_1_1Window_1_1linkNTCgrid.html":[9,0,0,18,36],
-"classAntares_1_1Window_1_1linkParametersGrid.html":[9,0,0,18,37],
-"classAntares_1_1Window_1_1loopFlowUsageButton.html":[9,0,0,18,38]
+"classAntares_1_1Window_1_1captionButton.html":[9,0,0,18,18]
 };

@@ -160,12 +160,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a82b62b8399c2d6c5ac495298ef929e9f" id="r_a82b62b8399c2d6c5ac495298ef929e9f"><td class="memItemLeft" align="right" valign="top"><a id="a82b62b8399c2d6c5ac495298ef929e9f" name="a82b62b8399c2d6c5ac495298ef929e9f"></a>
 virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (const std::string &amp;name) const =0</td></tr>
 <tr class="separator:a82b62b8399c2d6c5ac495298ef929e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add230bd5d57f134210915838eb8cd7a6" id="r_add230bd5d57f134210915838eb8cd7a6"><td class="memItemLeft" align="right" valign="top"><a id="add230bd5d57f134210915838eb8cd7a6" name="add230bd5d57f134210915838eb8cd7a6"></a>
+virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>variableCount</b> () const =0</td></tr>
+<tr class="separator:add230bd5d57f134210915838eb8cd7a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a618f04f128e159d4f48f643053ccd8ea" id="r_a618f04f128e159d4f48f643053ccd8ea"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#a618f04f128e159d4f48f643053ccd8ea">addConstraint</a> (double lb, double ub, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:a618f04f128e159d4f48f643053ccd8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a bounded constraint to the problem.  <br /></td></tr>
 <tr class="separator:a618f04f128e159d4f48f643053ccd8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad889f6b2f0b270cace1b0dc915728d37" id="r_ad889f6b2f0b270cace1b0dc915728d37"><td class="memItemLeft" align="right" valign="top"><a id="ad889f6b2f0b270cace1b0dc915728d37" name="ad889f6b2f0b270cace1b0dc915728d37"></a>
 virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipConstraint.html">IMipConstraint</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraint</b> (const std::string &amp;name) const =0</td></tr>
 <tr class="separator:ad889f6b2f0b270cace1b0dc915728d37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ec7087e43c33bc834f0ad9590d8a2da" id="r_a3ec7087e43c33bc834f0ad9590d8a2da"><td class="memItemLeft" align="right" valign="top"><a id="a3ec7087e43c33bc834f0ad9590d8a2da" name="a3ec7087e43c33bc834f0ad9590d8a2da"></a>
+virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>constraintCount</b> () const =0</td></tr>
+<tr class="separator:a3ec7087e43c33bc834f0ad9590d8a2da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a918f50f60a41591fe4231433da06c247" id="r_a918f50f60a41591fe4231433da06c247"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#a918f50f60a41591fe4231433da06c247">setObjectiveCoefficient</a> (<a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">IMipVariable</a> *var, double coefficient)=0</td></tr>
 <tr class="memdesc:a918f50f60a41591fe4231433da06c247"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the objective coefficient for a given variable.  <br /></td></tr>
 <tr class="separator:a918f50f60a41591fe4231433da06c247"><td class="memSeparator" colspan="2">&#160;</td></tr>

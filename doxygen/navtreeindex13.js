@@ -1,5 +1,8 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1IResultWriter.html":[9,0,0,13,21],
+"classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c":[9,0,0,13,21,0],
+"classAntares_1_1Solver_1_1ImmediateFileResultWriter.html":[9,0,0,13,17],
 "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629":[9,0,0,13,17,0],
 "classAntares_1_1Solver_1_1InMemoryWriter.html":[9,0,0,13,19],
 "classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b":[9,0,0,13,19,0],
@@ -23,6 +26,9 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html":[9,0,0,13,1,0,6],
 "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html":[9,0,0,13,1,0,7],
 "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html":[9,0,0,13,1,0,8],
+"classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneConstraintFiller.html":[9,0,0,13,1,0,9],
+"classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneVarFiller.html":[9,0,0,13,1,0,10],
+"classAntares_1_1Solver_1_1Modeler_1_1Api_1_1TwoVarsTwoConstraintsFiller.html":[9,0,0,13,1,0,11],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1ElemAlreadyExists.html":[9,0,0,13,1,1,0],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html":[9,0,0,13,1,1,1],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a0efb6ad0f4bd59f20b6cf61e705cdfd4":[9,0,0,13,1,1,1,5],
@@ -243,11 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#a680fd0cefe3adafeecb4d18cf4a4ffc9":[9,0,0,13,6,4,6,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#a8a08424765e6011327719d1b318f04de":[9,0,0,13,6,4,6,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#a9123ec1820e3ac86ba002e61bf98dd30":[9,0,0,13,6,4,6,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#aa2bf989e36234d86e4ccac55d984c2df":[9,0,0,13,6,4,6,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html":[9,0,0,13,6,4,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a1caa0f74bcd1850320a427ba3c8ca0f3":[9,0,0,13,6,4,8,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a3c14967c96212ce92f61abb654e72fda":[9,0,0,13,6,4,8,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a6723cbb048ef2686352b505a471dc3af":[9,0,0,13,6,4,8,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#ae12e394060f27c24aec383eb095a35de":[9,0,0,13,6,4,8,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html":[9,0,0,13,6,4,9]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#aa2bf989e36234d86e4ccac55d984c2df":[9,0,0,13,6,4,6,1]
 };
