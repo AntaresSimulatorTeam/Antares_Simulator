@@ -190,8 +190,8 @@ uint64_t Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
-           + folderOutput.capacity() + folderSettings.capacity()
-           + buffer.capacity() + dataBuffer.capacity()
+           + folderOutput.capacity() + folderSettings.capacity() + buffer.capacity()
+           + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation
            + simulationComments.memoryUsage()

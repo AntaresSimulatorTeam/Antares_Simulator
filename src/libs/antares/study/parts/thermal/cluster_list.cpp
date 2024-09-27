@@ -150,7 +150,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
 
         // Modulation
         auto modulationFile = folder / ".." / ".." / "prepro" / cluster->parentArea->id.c_str()
-            / cluster->id() / "modulation.txt";
+                              / cluster->id() / "modulation.txt";
 
         enum
         {

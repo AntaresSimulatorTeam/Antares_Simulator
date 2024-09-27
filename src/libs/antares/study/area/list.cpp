@@ -982,7 +982,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         fs::path preproPath = study.folderInput / "thermal" / "prepro";
         ret = area.thermal.list.loadPreproFromFolder(study, preproPath) && ret;
         ret = area.thermal.list.validatePrepro(study) && ret;
-        fs::path seriesPath  = study.folderInput / "thermal" / "series";
+        fs::path seriesPath = study.folderInput / "thermal" / "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, seriesPath.string()) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, seriesPath) && ret;
 
