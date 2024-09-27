@@ -32,14 +32,34 @@ namespace Antares::Solver::ObjectModel
 class Library
 {
 public:
-    Library();
+    Library() = default;
     ~Library() = default;
+
+    const std::string& id() const
+    {
+        return id_;
+    }
+
+    const std::string& description() const
+    {
+        return description_;
+    }
+
+    const std::map<std::string, PortType>& portTypes() const
+    {
+        return portTypes_;
+    }
+
+    const std::map<std::string, Model>& models() const
+    {
+        return models_;
+    }
 
 private:
     friend class LibraryBuilder;
+
     std::string id_;
     std::string description_;
-
     std::map<std::string, PortType> portTypes_;
     std::map<std::string, Model> models_;
 };
@@ -61,6 +81,9 @@ public:
     LibraryBuilder& withModel(const std::map<std::string, Model>& models);
 
     Library build();
+
+private:
+    Library library_;
 };
 
 } // namespace Antares::Solver::ObjectModel

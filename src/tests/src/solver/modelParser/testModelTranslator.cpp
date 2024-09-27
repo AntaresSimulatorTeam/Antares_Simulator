@@ -30,16 +30,22 @@
 // Antares::Solver::ObjectModel::Library object
 Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library)
 {
-    Antares::Solver::ObjectModel::Library lib;
-    lib.setId(library.id);
-    lib.setDescription(library.description);
-    for (const auto& [name, portType]: library.port_types)
-    {
-        lib.addPortType(name, portType);
-    }
-    for (const auto& [name, model]: library.models)
-    {
-        lib.addModel(name, model);
-    }
+    Antares::Solver::ObjectModel::LibraryBuilder builder;
+    Antares::Solver::ObjectModel::Library lib = builder.withId(library.id)
+                                                  .withDescription(library.description)
+                                                  //.withPortType(library.port_types)
+                                                  //.withModel(library.models)
+                                                  .build();
     return lib;
+}
+
+// Test empty library
+BOOST_AUTO_TEST_CASE(test_library_empty)
+{
+    Antares::Solver::ModelParser::Library library;
+    Antares::Solver::ObjectModel::Library lib = convert(library);
+    BOOST_CHECK(lib.id().empty());
+    BOOST_CHECK(lib.description().empty());
+    BOOST_CHECK(lib.portTypes().empty());
+    BOOST_CHECK(lib.models().empty());
 }
