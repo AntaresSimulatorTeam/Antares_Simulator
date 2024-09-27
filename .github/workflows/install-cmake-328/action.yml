@@ -7,7 +7,7 @@ runs:
     - name: Build cmake
       shell: bash
       run: |
-        source /opt/rh/devtoolset-10/enable
+        source /opt/rh/devtoolset-11/enable
         yum -y install openssl-devel
         wget https://github.com/Kitware/CMake/releases/download/v3.28.2/cmake-3.28.2.tar.gz
         tar -xvf cmake-3.28.2.tar.gz
