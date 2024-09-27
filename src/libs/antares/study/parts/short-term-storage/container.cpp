@@ -84,8 +84,8 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
 
     for (auto& cluster: storagesByIndex)
     {
-        fs::path buffer(folder / cluster.id);
-        ret = cluster.loadSeries(buffer) && ret;
+        fs::path seriesFolder = folder / cluster.id;
+        ret = cluster.loadSeries(seriesFolder) && ret;
     }
 
     return ret;
