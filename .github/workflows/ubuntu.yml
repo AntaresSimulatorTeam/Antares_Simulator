@@ -146,9 +146,9 @@ jobs:
         run: |
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
-      - name: Init submodule Antares_Simulator_Tests_NR
+      - name: Init submodule simulator-cucmber-tests
         run: |
-          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
+          git submodule update --init --remote --recursive src/tests/cucumber/simulator-cucumber-tests
 
       - name: Run named mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
