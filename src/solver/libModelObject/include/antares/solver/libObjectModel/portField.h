@@ -27,6 +27,17 @@ namespace Antares::Solver::ObjectModel
 
 class PortField
 {
+public:
+    explicit PortField(const std::string& name):
+        name(name)
+    {
+    }
+
+    const std::string& Name() const
+    {
+        return name;
+    }
+
 private:
     std::string name;
 };

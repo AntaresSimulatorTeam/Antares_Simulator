@@ -21,6 +21,7 @@
 #pragma once
 
 #include <map>
+#include <span>
 
 #include "model.h"
 #include "portType.h"
@@ -77,7 +78,7 @@ public:
 
     LibraryBuilder& withId(const std::string& id);
     LibraryBuilder& withDescription(const std::string& description);
-    LibraryBuilder& withPortType(const std::map<std::string, PortType>& portTypes);
+    LibraryBuilder& withPortType(std::span<PortType> portTypes);
     LibraryBuilder& withModel(const std::map<std::string, Model>& models);
 
     Library build();
