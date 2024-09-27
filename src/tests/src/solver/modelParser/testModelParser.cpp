@@ -27,17 +27,19 @@
 
 #include "antares/solver/modelParser/parser.h"
 
+using namespace std::string_literals;
+
 // Test empty library
 BOOST_AUTO_TEST_CASE(test_empty_library)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: ""
             description: ""
             port-types: []
             models: []
-    )";
+    )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.id.empty());
     BOOST_CHECK(libraryObj.description.empty());
@@ -49,13 +51,13 @@ BOOST_AUTO_TEST_CASE(test_empty_library)
 BOOST_AUTO_TEST_CASE(test_library_id_description)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "test_id"
             description: "test_description"
             port-types: []
             models: []
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.id == "test_id");
     BOOST_CHECK(libraryObj.description == "test_description");
@@ -67,7 +69,7 @@ BOOST_AUTO_TEST_CASE(test_library_id_description)
 BOOST_AUTO_TEST_CASE(test_library_port_types)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -77,7 +79,7 @@ BOOST_AUTO_TEST_CASE(test_library_port_types)
                   fields:
                       - name: "port_name"
             models: []
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.port_types.size() == 1);
     BOOST_CHECK(libraryObj.port_types[0].id == "porttype_id");
@@ -104,7 +106,7 @@ BOOST_AUTO_TEST_CASE(test_library_models)
                   port-field-definitions: []
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id");
@@ -122,7 +124,7 @@ BOOST_AUTO_TEST_CASE(test_library_models)
 BOOST_AUTO_TEST_CASE(test_library_model_parameters)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -139,7 +141,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters)
                   port-field-definitions: []
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].parameters.size() == 1);
@@ -152,7 +154,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters)
 BOOST_AUTO_TEST_CASE(test_library_model_variables)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -169,7 +171,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables)
                   port-field-definitions: []
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].variables.size() == 1);
@@ -182,7 +184,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables)
 BOOST_AUTO_TEST_CASE(test_library_model_ports)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -198,7 +200,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_ports)
                   port-field-definitions: []
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].ports.size() == 1);
@@ -210,7 +212,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_ports)
 BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -227,7 +229,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
                         definition: "definition"
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].port_field_definitions.size() == 1);
@@ -240,7 +242,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
 BOOST_AUTO_TEST_CASE(test_library_model_constraints)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -256,10 +258,24 @@ BOOST_AUTO_TEST_CASE(test_library_model_constraints)
                       - name: "constraint_name"
                         expression: "expression"
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].constraints.size() == 1);
     BOOST_CHECK(libraryObj.models[0].constraints[0].name == "constraint_name");
     BOOST_CHECK(libraryObj.models[0].constraints[0].expression == "expression");
+}
+
+// Test error when model is not a map
+BOOST_AUTO_TEST_CASE(test_error_model_not_map)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models: "not a map"
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), std::runtime_error);
 }
