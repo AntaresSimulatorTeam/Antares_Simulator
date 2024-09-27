@@ -22,6 +22,9 @@ Makefile
 src/.vs
 
 src/config/include/antares/config/config.h
+config.h
+src/tests/cucumber/conf.yaml
+
 
 # Yuni
 src/ext/yuni/src/ProfileBuild.cmake
