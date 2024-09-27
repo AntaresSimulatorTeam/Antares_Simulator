@@ -40,8 +40,8 @@ namespace Data
 bool Study::internalLoadHeader(const fs::path& path)
 {
     // Header
-    buffer.clear() << path << SEP << "study.antares";
-    if (!header.loadFromFile(buffer))
+    auto headerPath = path / "study.antares";
+    if (!header.loadFromFile(headerPath))
     {
         logs.error() << path << ": impossible to open the header file";
         return false;
