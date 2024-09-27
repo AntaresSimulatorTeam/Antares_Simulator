@@ -109,11 +109,12 @@ BOOST_AUTO_TEST_CASE(test_library_models)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id");
     BOOST_CHECK_EQUAL(libraryObj.models[0].description, "model_description");
-    BOOST_CHECK(libraryObj.models[0].parameters.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].variables.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].ports.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].port_field_definitions.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].constraints.size() == 0);
+    auto& model = libraryObj.models[0];
+    BOOST_CHECK(model.parameters.empty());
+    BOOST_CHECK(model.variables.empty());
+    BOOST_CHECK(model.ports.empty());
+    BOOST_CHECK(model.port_field_definitions.empty());
+    BOOST_CHECK(model.constraints.empty());
     BOOST_CHECK(libraryObj.models[0].objective == "objective");
 }
 
