@@ -459,7 +459,7 @@ public:
     //! The input folder
     std::filesystem::path folderInput;
     //! The output folder
-    YString folderOutput;
+    std::filesystem::path folderOutput;
     //! The settings folder
     std::filesystem::path folderSettings;
     //@}

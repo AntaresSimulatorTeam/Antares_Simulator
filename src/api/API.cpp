@@ -74,7 +74,7 @@ SimulationResults APIInternal::execute() const
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
     auto resultWriter = Solver::resultWriterFactory(study_->parameters.resultFormat,
-                                                    study_->folderOutput,
+                                                    study_->folderOutput.string(),
                                                     ioQueueService,
                                                     durationCollector);
     SimulationObserver simulationObserver;
@@ -88,7 +88,7 @@ SimulationResults APIInternal::execute() const
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
 
-    return {.simulationPath = study_->folderOutput.c_str(),
+    return {.simulationPath = study_->folderOutput,
             .antares_problems = simulationObserver.acquireLps(),
             .error{}};
 }
