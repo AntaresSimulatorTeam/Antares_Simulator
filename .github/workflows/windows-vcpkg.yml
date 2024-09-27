@@ -245,7 +245,7 @@ jobs:
           batch-name: short-tests
           os: ${{ env.os }}
 
-      - name: Run cucumber tests
+      - name: Run cucumber on short-tests
         uses: ./.github/workflows/cucumber-tests
         with:
           feature: "features/short_tests.feature"
@@ -283,6 +283,11 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: medium-tests
           os: ${{ env.os }}
+
+      - name: Run cucumber on medium-tests
+        uses: ./.github/workflows/cucumber-tests
+        with:
+          feature: "features/medium_tests.feature"
 
       - name: Run long-tests-1
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
