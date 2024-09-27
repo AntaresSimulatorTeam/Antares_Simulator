@@ -180,22 +180,14 @@ jobs:
           name: test-log
           path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
-      - name: Run tests about infinity on BCs RHS
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-v830
-          os: ${{ env.os }}
-
-      - name: Run MILP with CBC
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-milp
-          variant: "milp-cbc"
-          os: ${{ env.os }}
+    - name: Run parallel tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-parallel
+        os: ${{ env.os }}
+        variant: "parallel"
 
       - name: Run tests introduced in 8.6.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}

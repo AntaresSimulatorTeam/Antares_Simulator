@@ -173,6 +173,7 @@ jobs:
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end" -LE ortools
 
+<<<<<<< HEAD
       - name: Upload build on failure
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -187,6 +188,15 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: adequacy-patch-CSR
           os: ${{ env.os }}
+=======
+    - name: Run tests about infinity on BCs RHS
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v830
+        os: ${{ env.test-platform }}
+>>>>>>> 8dbf5c11e (Adequacy patch CSR - revamp output variables [ANT-1932] (#2421))
 
       - name: Run tests about infinity on BCs RHS
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}

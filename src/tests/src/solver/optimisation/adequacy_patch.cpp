@@ -19,6 +19,7 @@ static double origineExtremite = -1;
 static double extremiteOrigine = 5;
 
 using namespace Antares::Data::AdequacyPatch;
+namespace tt = boost::test_tools;
 
 static const double flowArea0toArea1_positive = 10;
 static const double flowArea0toArea1_negative = -10;
