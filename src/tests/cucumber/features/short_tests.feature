@@ -2,7 +2,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 001 One node - passive
-    Given the study path is "short-tests/001 One node - passive"
+    Given the study path is "001 One node - passive"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -12,7 +12,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 002 Thermal fleet - Base
-    Given the study path is "short-tests/002 Thermal fleet - Base"
+    Given the study path is "002 Thermal fleet - Base"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -24,7 +24,7 @@ Feature: short tests
 
   @fast @short
   Scenario: 003 Thermal fleet - Must-run
-    Given the study path is "short-tests/003 Thermal fleet - Must-run"
+    Given the study path is "003 Thermal fleet - Must-run"
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
@@ -36,10 +36,10 @@ Feature: short tests
 
   @fast @short
   Scenario: 021 Four areas - DC law
-    Given the study path is "short-tests/021 Four areas - DC law"
+    Given the study path is "021 Four areas - DC law-simplified"
     When I run antares simulator
     Then the simulation takes less than 20 seconds
     And the simulation succeeds
     And the annual system cost is
-      | EXP       | STD       | MIN       | MAX       |
-      | 7.972e+10 | 2.258e+10 | 5.613e+10 | 1.082e+11 |
+      | EXP       | STD         | MIN         | MAX         |
+      | 6.5397e+10| 2.97462e+09 | 6.10076e+10 | 6.84837e+10 |

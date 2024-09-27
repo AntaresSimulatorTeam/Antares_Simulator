@@ -8,3 +8,6 @@
 [submodule "src/tests/resources/Antares_Simulator_Tests_NR"]
 	path = src/tests/resources/Antares_Simulator_Tests_NR
 	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR.git
+[submodule "src/tests/cucumber/simulator-cucumber-tests"]
+	path = src/tests/cucumber/simulator-cucumber-tests
+	url = https://github.com/AntaresSimulatorTeam/simulator-cucumber-tests
