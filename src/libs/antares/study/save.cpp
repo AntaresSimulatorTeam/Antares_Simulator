@@ -111,20 +111,20 @@ bool Study::saveToFolder(const AnyString& newfolder)
         if (not IO::Directory::Create(folderInput.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderInput << "'";
-            relocate(backupFolder);
+            relocate(backupFolder.string());
             return false;
         }
         if (not IO::Directory::Create(folderSettings.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderSettings << "'";
-            relocate(backupFolder);
+            relocate(backupFolder.string());
             return false;
         }
 
         if (not IO::Directory::Create(folderOutput.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderOutput << "'";
-            relocate(backupFolder);
+            relocate(backupFolder.string());
             return false;
         }
     }
