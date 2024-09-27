@@ -92,8 +92,10 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
                                           .ValeursHorairesDeDefaillanceNegative[triggeredHour];
 
+            double* AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
+                                            .ValeursHorairesDeDefaillanceNegative[triggeredHour]);
             problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
-              = nullptr;
+              = AdresseDuResultat;
 
             logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
                          << problemeAResoudre_.Xmax[var];
