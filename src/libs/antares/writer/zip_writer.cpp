@@ -114,17 +114,17 @@ void ZipWriteJob<ContentT>::writeEntry()
 
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
-                     const char* archivePath,
+                     fs::path archivePath,
                      Benchmarking::DurationCollector& duration_collector):
     pQueueService(qs),
     pState(ZipState::can_receive_data),
-    pArchivePath(std::string(archivePath) + ".zip"),
+    pArchivePath(archivePath.string() + ".zip"),
     pDurationCollector(duration_collector)
 {
     pZipHandle = mz_zip_writer_create();
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
     {
-        logErrorAndThrow("Error opening zip file " + pArchivePath + " (" + std::to_string(ret)
+        logErrorAndThrow("Error opening zip file " + pArchivePath.string() + " (" + std::to_string(ret)
                          + ")");
     }
     // TODO : make level of compression configurable

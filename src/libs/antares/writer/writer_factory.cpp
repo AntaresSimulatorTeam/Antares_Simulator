@@ -33,10 +33,11 @@ IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
                                        Benchmarking::DurationCollector& duration_collector)
 {
     using namespace Antares::Data;
+
     switch (fmt)
     {
     case zipArchive:
-        return std::make_shared<ZipWriter>(qs, folderOutput.c_str(), duration_collector);
+        return std::make_shared<ZipWriter>(qs, folderOutput, duration_collector);
     case inMemory:
         return std::make_shared<InMemoryWriter>(duration_collector);
     case legacyFilesDirectories:
