@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE(test_library_id_description)
             models: []
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.id == "test_id");
-    BOOST_CHECK(libraryObj.description == "test_description");
+    BOOST_CHECK_EQUAL(libraryObj.id, "test_id");
+    BOOST_CHECK_EQUAL(libraryObj.description, "test_description");
     BOOST_CHECK(libraryObj.port_types.empty());
     BOOST_CHECK(libraryObj.models.empty());
 }
@@ -81,11 +81,11 @@ BOOST_AUTO_TEST_CASE(test_library_port_types)
             models: []
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.port_types.size() == 1);
-    BOOST_CHECK(libraryObj.port_types[0].id == "porttype_id");
-    BOOST_CHECK(libraryObj.port_types[0].description == "porttype_description");
-    BOOST_CHECK(libraryObj.port_types[0].fields.size() == 1);
-    BOOST_CHECK(libraryObj.port_types[0].fields[0] == "port_name");
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.port_types[0].id, "porttype_id");
+    BOOST_CHECK_EQUAL(libraryObj.port_types[0].description, "porttype_description");
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types[0].fields.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.port_types[0].fields[0], "port_name");
 }
 
 // Test library with models
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(test_library_models)
     BOOST_CHECK(model.ports.empty());
     BOOST_CHECK(model.port_field_definitions.empty());
     BOOST_CHECK(model.constraints.empty());
-    BOOST_CHECK(libraryObj.models[0].objective == "objective");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objective, "objective");
 }
 
 // Test library with one model containing parameters
@@ -143,11 +143,11 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters)
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.models.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].parameters.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].parameters[0].name == "param_name");
-    BOOST_CHECK(libraryObj.models[0].parameters[0].time_dependent == false);
-    BOOST_CHECK(libraryObj.models[0].parameters[0].scenario_dependent == false);
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(libraryObj.models[0].parameters.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].name, "param_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].time_dependent, false);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].scenario_dependent, false);
 }
 
 // Test library with one model containing variables
@@ -173,11 +173,11 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables)
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.models.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].variables.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].variables[0].name == "var_name");
-    BOOST_CHECK(libraryObj.models[0].variables[0].lower_bound == 0);
-    BOOST_CHECK(libraryObj.models[0].variables[0].upper_bound == 1);
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].name, "var_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, 0);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, 1);
 }
 
 // Test library with one model containing ports
@@ -202,10 +202,10 @@ BOOST_AUTO_TEST_CASE(test_library_model_ports)
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.models.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].ports.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].ports[0].name == "port_name");
-    BOOST_CHECK(libraryObj.models[0].ports[0].type == "port_type");
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(libraryObj.models[0].ports.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].name, "port_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].type, "port_type");
 }
 
 // Test library with one model containing port field definitions
@@ -231,11 +231,11 @@ BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.models.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].port_field_definitions.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].port_field_definitions[0].port == "port_name");
-    BOOST_CHECK(libraryObj.models[0].port_field_definitions[0].field == "field_name");
-    BOOST_CHECK(libraryObj.models[0].port_field_definitions[0].definition == "definition");
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].field, "field_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition, "definition");
 }
 
 // Test library with one model containing constraints
@@ -260,10 +260,10 @@ BOOST_AUTO_TEST_CASE(test_library_model_constraints)
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.models.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].constraints.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].constraints[0].name == "constraint_name");
-    BOOST_CHECK(libraryObj.models[0].constraints[0].expression == "expression");
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].name, "constraint_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression, "expression");
 }
 
 // Test error when model is not a map
