@@ -93,7 +93,8 @@ public:
     //    ModelBuilder& withBindingConstraints(std::span<Constraint> constraint);
 
     Model build();
-    void clear();
+
+    ModelBuilder& withParameters(std::vector<Parameter>& parameters);
 
 private:
     Model model_;

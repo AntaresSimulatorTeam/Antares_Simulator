@@ -41,4 +41,14 @@ ModelBuilder& ModelBuilder::withObjective(Expression objective)
     return *this;
 }
 
+ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>& parameters)
+{
+    std::transform(parameters.begin(),
+                   parameters.end(),
+                   std::inserter(model_.parameters_, model_.parameters_.end()),
+                   [](const Parameter& parameter)
+                   { return std::make_pair(parameter.Name(), std::move(parameter)); });
+    return *this;
+}
+
 } // namespace Antares::Solver::ObjectModel

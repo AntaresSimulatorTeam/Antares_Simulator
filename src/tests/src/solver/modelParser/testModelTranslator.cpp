@@ -26,12 +26,12 @@
 #include "antares/solver/libObjectModel/library.h"
 #include "antares/solver/modelParser/model.h"
 
-std::vector<Antares::Solver::ObjectModel::PortType> toPortTypes(
-  std::span<const Antares::Solver::ModelParser::PortType> portTypes)
+std::vector<Antares::Solver::ObjectModel::PortType> convertTypes(
+  const Antares::Solver::ModelParser::Library& library)
 {
     // Convert portTypes to Antares::Solver::ObjectModel::PortType
     std::vector<Antares::Solver::ObjectModel::PortType> out;
-    for (const auto& portType: portTypes)
+    for (const auto& portType: library.port_types)
     {
         std::vector<Antares::Solver::ObjectModel::PortField> fields;
         for (const auto& field: portType.fields)
@@ -46,21 +46,40 @@ std::vector<Antares::Solver::ObjectModel::PortType> toPortTypes(
     return out;
 }
 
+std::vector<Antares::Solver::ObjectModel::Model> convertModels(
+  const Antares::Solver::ModelParser::Library& library)
+{
+    std::vector<Antares::Solver::ObjectModel::Model> models;
+    for (const auto& model: library.models)
+    {
+        Antares::Solver::ObjectModel::ModelBuilder modelBuilder;
+        std::vector<Antares::Solver::ObjectModel::Parameter> parameters;
+        for (const auto& parameter: model.parameters)
+        {
+            parameters.emplace_back(Antares::Solver::ObjectModel::Parameter{
+              parameter.name,
+              Antares::Solver::ObjectModel::ValueType::FLOAT, // TODO: change to correct type
+              static_cast<Antares::Solver::ObjectModel::Parameter::TimeDependent>(
+                parameter.time_dependent),
+              static_cast<Antares::Solver::ObjectModel::Parameter::ScenarioDependent>(
+                parameter.scenario_dependent)});
+        }
+        auto modelObj = modelBuilder.withId(model.id)
+                          .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
+                          .withParameters(parameters)
+                          .build();
+        models.emplace_back(std::move(modelObj));
+    }
+    return models;
+}
+
 // Given a Antares::Solver::ModelParser::Library object, return a
 // Antares::Solver::ObjectModel::Library object
 Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library)
 {
     Antares::Solver::ObjectModel::LibraryBuilder builder;
-    std::vector<Antares::Solver::ObjectModel::PortType> portTypes = toPortTypes(library.port_types);
-    std::vector<Antares::Solver::ObjectModel::Model> models;
-    Antares::Solver::ObjectModel::ModelBuilder modelBuilder;
-    for (const auto& model: library.models)
-    {
-        auto modelObj = modelBuilder.withId(model.id)
-                          .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
-                          .build();
-        models.emplace_back(std::move(modelObj));
-    }
+    std::vector<Antares::Solver::ObjectModel::PortType> portTypes = convertTypes(library);
+    std::vector<Antares::Solver::ObjectModel::Model> models = convertModels(library);
     Antares::Solver::ObjectModel::Library lib = builder.withId(library.id)
                                                   .withDescription(library.description)
                                                   .withPortType(portTypes)
@@ -137,4 +156,30 @@ BOOST_AUTO_TEST_CASE(test_library_empty_models)
     BOOST_REQUIRE_EQUAL(lib.models().size(), 1);
     BOOST_CHECK_EQUAL(lib.models().at("model1").Id(), "model1");
     BOOST_CHECK_EQUAL(lib.models().at("model1").Objective().Value(), "objectives");
+}
+
+// Test library with models and parameters
+BOOST_AUTO_TEST_CASE(test_library_models_with_parameters)
+{
+    Antares::Solver::ModelParser::Library library;
+    Antares::Solver::ModelParser::Model model1{"model1",
+                                               "description",
+                                               {{"param1", true, false}, {"param2", false, false}},
+                                               {},
+                                               {},
+                                               {},
+                                               {},
+                                               "objectives"};
+    library.models = {model1};
+    Antares::Solver::ObjectModel::Library lib = convert(library);
+    auto& model = lib.models().at("model1");
+    BOOST_REQUIRE_EQUAL(model.Parameters().size(), 2);
+    auto& parameter1 = model.Parameters().at("param1");
+    auto& parameter2 = model.Parameters().at("param2");
+    BOOST_CHECK_EQUAL(parameter1.Name(), "param1");
+    BOOST_CHECK(parameter1.isTimeDependent());
+    BOOST_CHECK(!parameter1.isScenarioDependent());
+    BOOST_CHECK_EQUAL(parameter2.Name(), "param2");
+    BOOST_CHECK(!parameter2.isTimeDependent());
+    BOOST_CHECK(!parameter2.isScenarioDependent());
 }

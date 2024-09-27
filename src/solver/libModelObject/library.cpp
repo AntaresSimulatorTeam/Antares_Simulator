@@ -21,8 +21,6 @@
 
 #include "antares/solver/libObjectModel/library.h"
 
-#include <algorithm>
-
 namespace Antares::Solver::ObjectModel
 {
 
@@ -38,22 +36,22 @@ LibraryBuilder& LibraryBuilder::withDescription(const std::string& description)
     return *this;
 }
 
-LibraryBuilder& LibraryBuilder::withPortType(std::span<PortType> portTypes)
+LibraryBuilder& LibraryBuilder::withPortType(std::vector<PortType>& portTypes)
 {
     std::transform(portTypes.begin(),
                    portTypes.end(),
                    std::inserter(library_.portTypes_, library_.portTypes_.end()),
                    [](const PortType& portType)
-                   { return std::make_pair(portType.id(), portType); });
+                   { return std::make_pair(portType.id(), std::move(portType)); });
     return *this;
 }
 
-LibraryBuilder& LibraryBuilder::withModel(std::span<Model> models)
+LibraryBuilder& LibraryBuilder::withModel(std::vector<Model>& models)
 {
     std::transform(models.begin(),
                    models.end(),
                    std::inserter(library_.models_, library_.models_.end()),
-                   [](const Model& model) { return std::make_pair(model.Id(), model); });
+                   [](const Model& model) { return std::make_pair(model.Id(), std::move(model)); });
     return *this;
 }
 
