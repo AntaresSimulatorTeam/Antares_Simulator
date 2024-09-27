@@ -8,6 +8,7 @@
 #include "adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include <adequacy_patch_runtime_data.h>
+#include "adequacy_patch_csr/post_processing.h"
 #include "antares/study/parameters/adq-patch-params.h"
 #include <antares/exception/LoadingError.hpp>
 #include <fstream>
@@ -19,6 +20,7 @@ static double origineExtremite = -1;
 static double extremiteOrigine = 5;
 
 using namespace Antares::Data::AdequacyPatch;
+namespace tt = boost::test_tools;
 
 static const double flowArea0toArea1_positive = 10;
 static const double flowArea0toArea1_negative = -10;
@@ -370,3 +372,75 @@ BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
     auto p = createParams();
     BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
 }
+
+BOOST_AUTO_TEST_SUITE(adq_patch_post_processing)
+
+BOOST_AUTO_TEST_CASE(dtg_mrg_triggered_low_ens)
+{
+    const bool triggered = true;
+    const double dtgMrg = 32.;
+    const double ens = 21.;
+
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) == 11., tt::tolerance(1.e-6));
+
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) + recomputeENS_MRG(triggered, dtgMrg, ens)
+                 == std::abs(dtgMrg - ens),
+               tt::tolerance(1.e-6));
+}
+
+BOOST_AUTO_TEST_CASE(dtg_mrg_triggered_high_ens)
+{
+    const bool triggered = true;
+    const double dtgMrg = 32.;
+    const double ens = 42.;
+
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) == 0., tt::tolerance(1.e-6));
+
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) + recomputeENS_MRG(triggered, dtgMrg, ens)
+                 == std::abs(dtgMrg - ens),
+               tt::tolerance(1.e-6));
+}
+
+BOOST_AUTO_TEST_CASE(dtg_mrg_not_triggered_low_ens)
+{
+    const bool triggered = false;
+    const double dtgMrg = 32.;
+    const double ens = 21.;
+
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) == dtgMrg, tt::tolerance(1.e-6));
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) + recomputeENS_MRG(triggered, dtgMrg, ens)
+                 == dtgMrg + ens,
+               tt::tolerance(1.e-6));
+}
+
+BOOST_AUTO_TEST_CASE(dtg_mrg_not_triggered_high_ens)
+{
+    const bool triggered = false;
+    const double dtgMrg = 32.;
+    const double ens = 42.;
+
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) == dtgMrg, tt::tolerance(1.e-6));
+    BOOST_TEST(recomputeDTG_MRG(triggered, dtgMrg, ens) + recomputeENS_MRG(triggered, dtgMrg, ens)
+                 == dtgMrg + ens,
+               tt::tolerance(1.e-6));
+}
+
+BOOST_AUTO_TEST_CASE(mrgprice_high_enscsr)
+{
+    const double ensCsr = 21.;
+    const double originalCost = 3.;
+    const double unsuppliedEnergyCost = 1000.;
+    BOOST_TEST(recomputeMRGPrice(ensCsr, originalCost, unsuppliedEnergyCost)
+                 == -unsuppliedEnergyCost,
+               tt::tolerance(1.e-6));
+}
+
+BOOST_AUTO_TEST_CASE(mrgprice_low_enscsr)
+{
+    const double ensCsr = 0.;
+    const double originalCost = 3.;
+    const double unsuppliedEnergyCost = 1000.;
+    BOOST_TEST(recomputeMRGPrice(ensCsr, originalCost, unsuppliedEnergyCost) == originalCost,
+               tt::tolerance(1.e-6));
+}
+BOOST_AUTO_TEST_SUITE_END()

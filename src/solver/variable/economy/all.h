@@ -63,7 +63,6 @@
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "localMatchingRuleViolations.h"
-#include "spilledEnergyAfterCSR.h"
 #include "dtgMarginAfterCsr.h"
 #include "spilledEnergy.h"
 
@@ -73,6 +72,7 @@
 
 #include "avail-dispatchable-generation.h"
 #include "dispatchable-generation-margin.h"
+#include "unsupliedEnergyCsr.h"
 
 // By thermal plant
 #include "productionByDispatchablePlant.h"
@@ -161,22 +161,24 @@ typedef                           // Prices
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
-                               <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
                                 <LOLD                 // LOLD
                                  <LOLP                // LOLP
-                                  <AvailableDispatchGen<DispatchableGenMargin<
-                                    DtgMarginCsr // DTG MRG CSR
-                                    <Marge<NonProportionalCost<
-                                      NonProportionalCostByDispatchablePlant // Startup cost + Fixed
-                                                                             // cost per thermal
-                                                                             // plant detail
-                                      <NbOfDispatchedUnits         // Number of Units Dispatched
-                                       <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
-                                                                   // plant
-                                        <ProfitByPlant
-                                         // Links
-                                         <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                  <AvailableDispatchGen<DispatchableGenMargin<DtgMarginCsr< // DTG
+                                                                                            // MRG
+                                                                                            // CSR
+                                    UnsupliedEnergyCSR< // Unsupplied energy after CSR
+                                      Marge<NonProportionalCost<
+                                        NonProportionalCostByDispatchablePlant // Startup cost +
+                                                                               // Fixed cost per
+                                                                               // thermal plant
+                                                                               // detail
+                                        <NbOfDispatchedUnits         // Number of Units Dispatched
+                                         <NbOfDispatchedUnitsByPlant // Number of Units Dispatched
+                                                                     // by plant
+                                          <ProfitByPlant
+                                           // Links
+                                           <Variable::Economy::Links // All links
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -240,8 +242,6 @@ typedef // Prices
                                                     LMRViolations,
                                                     Common::SpatialAggregate<
                                                       SpilledEnergy,
-                                                      Common::SpatialAggregate<
-                                                        SpilledEnergyAfterCSR,
                                                         // LOLD
                                                         Common::SpatialAggregate<
                                                           LOLD,
@@ -271,7 +271,7 @@ typedef // Prices
                                                                                             // -
                                                                                             // refs:
                                                                                             // #55
-                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

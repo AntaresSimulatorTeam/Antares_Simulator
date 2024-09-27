@@ -50,6 +50,8 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/hourly_csr_problem.h
 		adequacy_patch_csr/adq_patch_post_process_list.h
 		adequacy_patch_csr/adq_patch_post_process_list.cpp
+		adequacy_patch_csr/post_processing.cpp
+		adequacy_patch_csr/post_processing.h
 		adequacy_patch_local_matching/adq_patch_local_matching.h
 		adequacy_patch_local_matching/adq_patch_local_matching.cpp
 		adequacy_patch_csr/adq_patch_curtailment_sharing.h

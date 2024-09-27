@@ -1,53 +1,53 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_SpilledEnergyAfterCSR_H__
-#define __SOLVER_VARIABLE_ECONOMY_SpilledEnergyAfterCSR_H__
+#pragma once
 
 #include "../variable.h"
 
-namespace Antares::Solver::Variable::Economy
+namespace Antares
 {
-struct VCardSpilledEnergyAfterCSR
+namespace Solver
+{
+namespace Variable
+{
+namespace Economy
+{
+struct VCardUnsupliedEnergyCSR
 {
     //! Caption
     static std::string Caption()
     {
-        return "SPIL. ENRG. CSR";
+        return "UNSP. ENRG CSR";
     }
+
     //! Unit
     static std::string Unit()
     {
         return "MWh";
     }
+
     //! The short description of the variable
     static std::string Description()
     {
-        return "Spilled Energy After CSR Optimization (generation that cannot be satisfied) "
-               "after CSR optimization";
+        return "Unsuplied Energy after CSR (demand that cannot be satisfied)";
     }
 
     //! The expecte results
@@ -59,8 +59,7 @@ struct VCardSpilledEnergyAfterCSR
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardSpilledEnergyAfterCSR VCardForSpatialAggregate;
-
+    typedef VCardUnsupliedEnergyCSR VCardForSpatialAggregate;
     enum
     {
         //! Data Level
@@ -82,9 +81,8 @@ struct VCardSpilledEnergyAfterCSR
         //! Intermediate values
         hasIntermediateValues = 1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
+        isPossiblyNonApplicable = 0
     };
-
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
 
@@ -92,21 +90,17 @@ struct VCardSpilledEnergyAfterCSR
 
 }; // class VCard
 
-/*!
-** \brief C02 Average value of the overrall SpilledEnergyAfterCSR emissions expected from all
-**   the thermal dispatchable clusters
-*/
 template<class NextT = Container::EndOfList>
-class SpilledEnergyAfterCSR
- : public Variable::IVariable<SpilledEnergyAfterCSR<NextT>, NextT, VCardSpilledEnergyAfterCSR>
+class UnsupliedEnergyCSR
+    : public Variable::IVariable<UnsupliedEnergyCSR<NextT>, NextT, VCardUnsupliedEnergyCSR>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardSpilledEnergyAfterCSR VCardType;
+    typedef VCardUnsupliedEnergyCSR VCardType;
     //! Ancestor
-    typedef Variable::IVariable<SpilledEnergyAfterCSR<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<UnsupliedEnergyCSR<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -124,15 +118,16 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
-    ~SpilledEnergyAfterCSR()
+public:
+    ~UnsupliedEnergyCSR()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -146,7 +141,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -173,7 +170,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -192,10 +191,10 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -229,10 +228,8 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Total SpilledEnergyAfterCSR emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = state.hourlyResults->ValeursHorairesSpilledEnergyAfterCSR[state.hourInTheWeek];
-
+          = state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -257,8 +254,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 
@@ -267,8 +264,9 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class SpilledEnergyAfterCSR
+}; // class UnsupliedEnergyCSR
 
-} // namespace Antares::Solver::Variable::Economy
-
-#endif // __SOLVER_VARIABLE_ECONOMY_SpilledEnergyAfterCSR_H__
+} // namespace Economy
+} // namespace Variable
+} // namespace Solver
+} // namespace Antares

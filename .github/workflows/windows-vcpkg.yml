@@ -195,15 +195,6 @@ jobs:
         name: MPS-diff
         path: ${{ github.workspace }}/src/tests/mps
 
-    
-    - name: Run tests for adequacy patch (CSR)
-      if: false
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: adequacy-patch-CSR
-        os: ${{ env.test-platform }}
-
     - name: Run tests about infinity on BCs RHS
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests

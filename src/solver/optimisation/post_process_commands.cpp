@@ -23,6 +23,7 @@
 #include "../simulation/common-eco-adq.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+#include "adequacy_patch_csr/post_processing.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation
@@ -141,28 +142,23 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
-            // define access to the required variables
-            const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
-            double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-
             auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
-            double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
-            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-            double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
-            // calculate DTG MRG CSR and adjust ENS if neccessary
-            if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
-            {
-                if (adqPatchParams_.curtailmentSharing.recomputeDTGMRG)
-                {
-                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
-                    ens = std::max(0.0, ens - dtgMrg);
-                }
-                // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
-                if (ens > 0.5)
-                    mrgCost = -area_list_[Area]->thermal.unsuppliedEnergyCost;
-            }
-            else
-                dtgMrgCsr = dtgMrg;
+            const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
+            const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+            const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
+                                     ->wasCSRTriggeredAtAreaHour(Area, hour);
+            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(triggered, dtgMrg, ens);
+            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = recomputeENS_MRG(
+              triggered,
+              dtgMrg,
+              ens);
+
+            const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
+            hourlyResults.CoutsMarginauxHoraires[hour] = recomputeMRGPrice(
+              hourlyResults.ValeursHorairesDtgMrgCsr[hour],
+              hourlyResults.CoutsMarginauxHoraires[hour],
+              unsuppliedEnergyCost);
         }
     }
 }
@@ -256,13 +252,8 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                 const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 // write down densNew values for all the hours
-                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour] = std::max(
-                  0.0,
-                  densNew);
-                // copy spilled Energy values into spilled Energy values after CSR
-                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesSpilledEnergyAfterCSR[hour]
-                  = problemeHebdo_->ResultatsHoraires[Area]
-                      .ValeursHorairesDeDefaillanceNegative[hour];
+                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour]
+                  = std::max(0.0, densNew);
                 // check LMR violations
                 totalLmrViolation += LmrViolationAreaHour(
                   problemeHebdo_,
