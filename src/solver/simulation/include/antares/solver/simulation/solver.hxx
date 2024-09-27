@@ -458,7 +458,8 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
             bool doWeWrite = archive && !study.parameters.noOutput;
             if (doWeWrite)
             {
-                fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-" / std::to_string(year);
+                fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-"
+                                    / std::to_string(year);
                 writeThermalTimeSeries(clusters, savePath);
             }
 
