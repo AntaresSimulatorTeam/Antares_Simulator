@@ -123,7 +123,7 @@ void Study::clear()
     // no folder
     ClearAndShrink(header.caption);
     ClearAndShrink(header.author);
-    ClearAndShrink(folder);
+    folder.clear();
     folderInput.clear();
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
@@ -188,9 +188,7 @@ void Study::reduceMemoryUsage()
 
 uint64_t Study::memoryUsage() const
 {
-    return folder.capacity()
-           // Folders paths
-           + folderOutput.capacity() + folderSettings.capacity() + buffer.capacity()
+    return folderOutput.capacity() + folderSettings.capacity() + buffer.capacity() // Folders paths
            + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation

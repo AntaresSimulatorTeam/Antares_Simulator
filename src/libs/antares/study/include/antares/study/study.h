@@ -455,7 +455,7 @@ public:
     //! \name Paths
     //@{
     //! The source folder of the study
-    YString folder;
+    std::filesystem::path folder;
     //! The input folder
     std::filesystem::path folderInput;
     //! The output folder

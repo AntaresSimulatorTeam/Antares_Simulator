@@ -295,7 +295,7 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 
     if (standalone)
     {
-        pStudy.saveToFolder(pStudy.folder);
+        pStudy.saveToFolder(pStudy.folder.string());
     }
     // return result;
     return result;

@@ -103,7 +103,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     // Trying to create a few important folders
     logs.info() << "Preparing folders...";
     {
-        const String backupFolder = this->folder;
+        const auto backupFolder = this->folder;
         // Changing the paths
         relocate(location);
 
@@ -214,7 +214,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     ret = parameters.saveToFile(buffer) and ret;
 
     // All areas
-    ret = areas.saveToFolder(folder) and ret;
+    ret = areas.saveToFolder(folder.string()) and ret;
 
     // Layers
     buffer.clear() << folder << SEP << "layers";

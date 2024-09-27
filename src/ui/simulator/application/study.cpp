@@ -816,7 +816,7 @@ SaveResult SaveStudy()
     mainFrm.SetStatusText(wxString() << wxT("  Saving ") << wxStringFromUTF8(study.folder));
 
     // Save the study
-    auto* job = new JobSaveStudy(studyptr, study.folder);
+    auto* job = new JobSaveStudy(studyptr, study.folder.string());
     if (shouldInvalidateStudy)
         job->shouldInvalidateStudy();
     job->run();
@@ -874,7 +874,7 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
 
     if (!study->folder.empty())
     {
-        String oldP = study->folder;
+        String oldP = study->folder.string();
         String newP = newPath;
         newP.removeTrailingSlash();
         oldP.removeTrailingSlash();
@@ -1200,7 +1200,8 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
             cmd << ' ';
             // The input data
-            AppendWithQuotes(cmd, study->folder);
+            String s = study->folder.string();
+            AppendWithQuotes(cmd, s);
 
             // Parallel mode chosen ?
             if (features == Solver::parallel)
