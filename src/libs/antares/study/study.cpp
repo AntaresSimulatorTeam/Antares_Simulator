@@ -126,7 +126,7 @@ void Study::clear()
     folder.clear();
     folderInput.clear();
     ClearAndShrink(folderOutput);
-    ClearAndShrink(folderSettings);
+    folderSettings.clear();
     inputExtension.clear();
 }
 
@@ -188,7 +188,7 @@ void Study::reduceMemoryUsage()
 
 uint64_t Study::memoryUsage() const
 {
-    return folderOutput.capacity() + folderSettings.capacity() + buffer.capacity() // Folders paths
+    return folderOutput.capacity() + buffer.capacity() // Folders paths
            + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation
@@ -1183,12 +1183,12 @@ void Study::markAsModified() const
     setsOfAreas.markAsModified();
 }
 
-void Study::relocate(const std::string& newFolder)
+void Study::relocate(const fs::path& newFolder)
 {
     folder = newFolder;
-    folderInput = fs::path(newFolder) / "input";
+    folderInput = newFolder / "input";
     folderOutput.clear() << newFolder << SEP << "output";
-    folderSettings.clear() << newFolder << SEP << "settings";
+    folderSettings = newFolder / "settings";
 }
 
 void Study::resizeAllTimeseriesNumbers(uint n)

@@ -105,7 +105,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     {
         const auto backupFolder = this->folder;
         // Changing the paths
-        relocate(location);
+        relocate(location.c_str());
 
         // Output
         if (not IO::Directory::Create(folderInput.string()))
@@ -114,7 +114,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
             relocate(backupFolder);
             return false;
         }
-        if (not IO::Directory::Create(folderSettings))
+        if (not IO::Directory::Create(folderSettings.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderSettings << "'";
             relocate(backupFolder);

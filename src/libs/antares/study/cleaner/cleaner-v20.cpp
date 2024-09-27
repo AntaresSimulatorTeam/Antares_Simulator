@@ -232,7 +232,7 @@ void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, Strin
 bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 {
     auto* study = new Study();
-    study->relocate(infos->folder);
+    study->relocate(infos->folder.c_str());
 
     PathList& e = infos->exclude;
     PathList& p = infos->postExclude;

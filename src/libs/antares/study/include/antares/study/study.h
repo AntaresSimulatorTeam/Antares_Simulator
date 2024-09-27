@@ -141,7 +141,7 @@ public:
     ** This method does not have any effect except modifying
     ** internal variables (`folder`, `folderInput`, ...).
     */
-    void relocate(const std::string& newFolder);
+    void relocate(const std::filesystem::path& newFolder);
 
     /*!
     ** \brief Load a study from a folder
@@ -461,7 +461,7 @@ public:
     //! The output folder
     YString folderOutput;
     //! The settings folder
-    YString folderSettings;
+    std::filesystem::path folderSettings;
     //@}
 
     //! \name Simulation
