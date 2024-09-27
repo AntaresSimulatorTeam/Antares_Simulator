@@ -142,10 +142,9 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
-            // define access to the required variables
+            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
             const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
             const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
                                      ->wasCSRTriggeredAtAreaHour(Area, hour);
@@ -155,20 +154,11 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
               dtgMrg,
               ens);
 
-            double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
-            const double& ensCsr = hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour];
-            double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
-
-            // calculate DTG MRG CSR and adjust ENS if neccessary
-            if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
-            {
-                dtgMrgCsr = std::max(0.0, dtgMrg - ensCsr);
-                // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
-                if (ensCsr > 0.5)
-                    mrgCost = -area_list_[Area]->thermal.unsuppliedEnergyCost;
-            }
-            else
-                dtgMrgCsr = dtgMrg;
+            const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
+            hourlyResults.CoutsMarginauxHoraires[hour] = recomputeMRGPrice(
+              hourlyResults.ValeursHorairesDtgMrgCsr[hour],
+              hourlyResults.CoutsMarginauxHoraires[hour],
+              unsuppliedEnergyCost);
         }
     }
 }

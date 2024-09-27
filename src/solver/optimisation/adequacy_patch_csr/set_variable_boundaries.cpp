@@ -62,7 +62,7 @@ void HourlyCSRProblem::setBoundsOnENS()
                                           .ValeursHorairesDeDefaillancePositive[triggeredHour];
 
             AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
-                                    .ValeursHorairesDeDefaillancePositiveCSR[triggeredHour]);
+                                    .ValeursHorairesDeDefaillancePositive[triggeredHour]);
 
             problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
               = AdresseDuResultat;
