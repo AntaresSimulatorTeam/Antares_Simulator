@@ -106,9 +106,9 @@ BOOST_AUTO_TEST_CASE(test_library_models)
                   objective: "objective"
         )";
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
-    BOOST_CHECK(libraryObj.models.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].id == "model_id");
-    BOOST_CHECK(libraryObj.models[0].description == "model_description");
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].description, "model_description");
     BOOST_CHECK(libraryObj.models[0].parameters.size() == 0);
     BOOST_CHECK(libraryObj.models[0].variables.size() == 0);
     BOOST_CHECK(libraryObj.models[0].ports.size() == 0);
