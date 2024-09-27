@@ -64,7 +64,7 @@ struct VCardThirdParty
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
-                                                 & (Category::FileLevel::va);
+                                                 & Category::FileLevel::va;
     //! Precision (views)
     static constexpr uint8_t precision = Category::all;
     //! Indentation (GUI)
@@ -283,17 +283,26 @@ public:
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
 
+        if (!AncestorType::isPrinted[0])
         {
-            const auto& properties = pModule->getProperties();
-            // Write the data for the current year
+            return;
+        }
+
+        const auto& properties = pModule->getProperties();
+        // Write the data for the current year
+        for (unsigned int column = 0; column < pNbColumns; column++)
+        {
             results.variableCaption = properties.caption;
             results.variableUnit = properties.unit;
+            pValuesForTheCurrentYear[numSpace][column]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+
     unsigned int pNbColumns;
     unsigned int pNbYearsParallel;
     Antares::ThirdParty::Module* pModule;
