@@ -621,17 +621,15 @@ bool ThermalClusterList::validatePrepro(const Study& study)
                                });
 }
 
-bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
+bool ThermalClusterList::loadEconomicCosts(Study& study, const fs::path& folder)
 {
     return std::ranges::all_of(allClusters_,
                                [&study, folder](const auto& c)
                                {
                                    assert(c->parentArea && "cluster: invalid parent area");
-                                   Clob buffer;
-                                   buffer.clear()
-                                     << folder << SEP << c->parentArea->id << SEP << c->id();
+                                   auto filePath = folder / c->parentArea->id.c_str() / c->id();
 
-                                   bool result = c->ecoInput.loadFromFolder(study, buffer);
+                                   bool result = c->ecoInput.loadFromFolder(study, filePath);
                                    c->ComputeCostTimeSeries();
                                    return result;
                                });

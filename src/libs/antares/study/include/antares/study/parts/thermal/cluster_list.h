@@ -118,7 +118,7 @@ public:
 
     bool validateClusters(const Parameters& param) const;
 
-    bool loadEconomicCosts(Study& s, const AnyString& folder);
+    bool loadEconomicCosts(Study& s, const std::filesystem::path& folder);
 
     bool savePreproToFolder(const AnyString& folder) const;
     bool saveEconomicCosts(const AnyString& folder) const;

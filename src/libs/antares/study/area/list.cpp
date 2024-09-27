@@ -982,9 +982,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         fs::path preproPath = fs::path(study.folderInput) / "thermal" / "prepro";
         ret = area.thermal.list.loadPreproFromFolder(study, preproPath) && ret;
         ret = area.thermal.list.validatePrepro(study) && ret;
-        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-        ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;
-        ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
+        fs::path seriesPath  = fs::path(study.folderInput) / "thermal" / "series";
+        ret = area.thermal.list.loadDataSeriesFromFolder(study, seriesPath.string()) && ret;
+        ret = area.thermal.list.loadEconomicCosts(study, seriesPath) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)

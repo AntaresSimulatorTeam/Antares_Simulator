@@ -64,7 +64,7 @@ bool EconomicInputData::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
+bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
 {
     bool ret = true;
 
@@ -72,7 +72,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
     {
         Yuni::Clob dataBuffer;
 
-        fs::path filename = fs::path(folder) / "fuelCost.txt";
+        fs::path filename = folder / "fuelCost.txt";
         if (fs::exists(filename))
         {
             ret = fuelcost.loadFromCSVFile(filename.string(),
@@ -87,7 +87,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
             }
         }
 
-        filename = fs::path(folder) / "CO2Cost.txt";
+        filename = folder / "CO2Cost.txt";
         if (fs::exists(filename))
         {
             ret = co2cost.loadFromCSVFile(filename.string(),
