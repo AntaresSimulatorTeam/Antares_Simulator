@@ -424,7 +424,7 @@ void Application::prepareWriter(const Antares::Data::Study& study,
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
     resultWriter = resultWriterFactory(study.parameters.resultFormat,
-                                       study.folderOutput.string(),
+                                       study.folderOutput,
                                        ioQueueService,
                                        duration_collector);
 }

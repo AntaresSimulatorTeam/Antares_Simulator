@@ -155,7 +155,7 @@ static void AbortProgram(int code)
             Benchmarking::DurationCollector duration_collector;
             auto resultWriter = Antares::Solver::resultWriterFactory(
                 currentStudy->parameters.resultFormat,
-                currentStudy->folderOutput.string(),
+                currentStudy->folderOutput,
                 currentStudy->pQueueService,
                 duration_collector);
 

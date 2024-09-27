@@ -74,7 +74,7 @@ SimulationResults APIInternal::execute() const
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
     auto resultWriter = Solver::resultWriterFactory(study_->parameters.resultFormat,
-                                                    study_->folderOutput.string(),
+                                                    study_->folderOutput,
                                                     ioQueueService,
                                                     durationCollector);
     SimulationObserver simulationObserver;
