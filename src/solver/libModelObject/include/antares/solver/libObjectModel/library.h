@@ -36,11 +36,31 @@ public:
     ~Library() = default;
 
 private:
+    friend class LibraryBuilder;
     std::string id_;
     std::string description_;
 
     std::map<std::string, PortType> portTypes_;
     std::map<std::string, Model> models_;
+};
+
+/**
+ * @brief Builder for the Library class
+ * Follow builder pattern:
+ * builder.Library().withId("id").withDescription("description").withPortType(portList).withModel(modelList).build();
+ */
+class LibraryBuilder
+{
+public:
+    LibraryBuilder() = default;
+    ~LibraryBuilder() = default;
+
+    LibraryBuilder& withId(const std::string& id);
+    LibraryBuilder& withDescription(const std::string& description);
+    LibraryBuilder& withPortType(const std::map<std::string, PortType>& portTypes);
+    LibraryBuilder& withModel(const std::map<std::string, Model>& models);
+
+    Library build();
 };
 
 } // namespace Antares::Solver::ObjectModel
