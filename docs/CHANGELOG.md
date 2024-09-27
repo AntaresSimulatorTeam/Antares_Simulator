@@ -5,7 +5,7 @@ Antares Changelog
 --------------------
 ## Bugfix (adequacy patch)
 * Force enable-first-step=false [ANT-2218] (#2419)
-*Adequacy patch CSR - revamp output variables [ANT-1932] (#2421)
+* Adequacy patch CSR - revamp output variables [ANT-1932] (#2421)
 * Place CSR after hydro remix [ANT-2070] (#2407)
 
 ## Bugfix (other)
