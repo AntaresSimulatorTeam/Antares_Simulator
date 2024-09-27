@@ -19,23 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
+#define BOOST_TEST_MODULE test modeler api
 
-#include <memory>
+#define WIN32_LEAN_AND_MEAN
 
-#include <antares/solver/modeler/api/linearProblem.h>
-#include <antares/solver/modeler/api/linearProblemData.h>
-
-namespace Antares::Solver::Modeler::Api
-{
-
-class LinearProblemFiller
-{
-public:
-    virtual void addVariables(ILinearProblem& pb, LinearProblemData& data) = 0;
-    virtual void addConstraints(ILinearProblem& pb, LinearProblemData& data) = 0;
-    virtual void addObjective(ILinearProblem& pb, LinearProblemData& data) = 0;
-    virtual ~LinearProblemFiller() = default;
-};
-
-} // namespace Antares::Solver::Modeler::Api
+#include <boost/test/unit_test.hpp>
