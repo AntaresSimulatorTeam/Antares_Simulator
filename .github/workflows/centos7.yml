@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - develop
-      - fix/centos7-devtoolset-11
-
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
