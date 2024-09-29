@@ -40,7 +40,7 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
-    - name: Install gcc 10
+    - name: Install gcc 11
       run: |
         yum install -y centos-release-scl
         yum install -y devtoolset-11-gcc*
