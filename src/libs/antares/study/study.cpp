@@ -453,8 +453,8 @@ static std::string getOutputSuffix(ResultFormat fmt)
 
 YString StudyCreateOutputPath(SimulationMode mode,
                               ResultFormat fmt,
-                              const YString& outputRoot,
-                              const YString& label,
+                              const std::string& outputRoot,
+                              const std::string& label,
                               int64_t startTime)
 {
     if (fmt == ResultFormat::inMemory)
