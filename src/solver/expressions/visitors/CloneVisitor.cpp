@@ -94,10 +94,16 @@ Nodes::Node* CloneVisitor::visit(const Nodes::LiteralNode* literalNode)
     return registry_.create<Nodes::LiteralNode>(literalNode->value());
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode* port_field_node)
+Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode* portfieldNode)
 {
-    return registry_.create<Nodes::PortFieldNode>(port_field_node->getPortName(),
-                                                  port_field_node->getFieldName());
+    return registry_.create<Nodes::PortFieldNode>(portfieldNode->getPortName(),
+                                                  portfieldNode->getFieldName());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldSumNode* portfieldSumNode)
+{
+    return registry_.create<Nodes::PortFieldSumNode>(portfieldSumNode->getPortName(),
+                                                     portfieldSumNode->getFieldName());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)

@@ -1,4 +1,4 @@
-set(PROJ optim_api)
+set(PROJ modeler_api)
 
 set(SRC_API
         include/antares/solver/modeler/api/mipVariable.h
@@ -14,6 +14,7 @@ set(SRC_API
         include/antares/solver/modeler/api/linearProblemBuilder.h
 
         linearProblemData.cpp
+		linearProblemBuilder.cpp
 )
 
 add_library(${PROJ} ${SRC_API})

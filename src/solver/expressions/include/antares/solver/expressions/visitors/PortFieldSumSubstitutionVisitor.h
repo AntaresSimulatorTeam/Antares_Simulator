@@ -27,33 +27,31 @@
 namespace Antares::Solver::Visitors
 {
 
-struct KeyHasher
-{
-    std::size_t operator()(const Nodes::PortFieldNode& n) const;
-};
-
 /**
  * @brief Represents the context for performing substitutions in a syntax tree.
  */
-struct PortfieldSubstitutionContext
+struct PortFieldSumSubstitutionContext
 {
-    std::unordered_map<Nodes::PortFieldNode, Nodes::Node*, KeyHasher> portfield;
+    std::unordered_map<Nodes::PortFieldSumNode, std::vector<Nodes::Node*>, PortFieldHash>
+      portfieldSum;
 };
 
 /**
- * @brief Represents a visitor for substituting portfield nodes in a syntax tree.
+ * @brief Represents a visitor for substituting portfield sum nodes in a syntax tree.
  */
-class PortfieldSubstitutionVisitor: public CloneVisitor
+class PortFieldSumSubstitutionVisitor: public CloneVisitor
 {
 public:
-    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                 PortfieldSubstitutionContext& ctx);
+    PortFieldSumSubstitutionVisitor(Registry<Nodes::Node>& registry,
+                                    PortFieldSumSubstitutionContext& ctx);
 
-    PortfieldSubstitutionContext& ctx_;
     std::string name() const override;
 
 private:
-    // Only override visit method for PortField, clone the rest
-    Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
+    // Only override visit method for PortFieldSum, clone the rest
+    Nodes::Node* visit(const Nodes::PortFieldSumNode* node) override;
+
+    Registry<Nodes::Node>& registry_;
+    PortFieldSumSubstitutionContext& ctx_;
 };
 } // namespace Antares::Solver::Visitors
