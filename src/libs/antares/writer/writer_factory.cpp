@@ -42,7 +42,7 @@ IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
         return std::make_shared<InMemoryWriter>(duration_collector);
     case legacyFilesDirectories:
     default:
-        return std::make_shared<ImmediateFileResultWriter>(folderOutput.c_str());
+        return std::make_shared<ImmediateFileResultWriter>(folderOutput);
     }
 }
 } // namespace Antares::Solver
