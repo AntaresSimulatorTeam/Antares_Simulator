@@ -70,4 +70,14 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>& ports)
     return *this;
 }
 
+ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>& constraints)
+{
+    std::transform(constraints.begin(),
+                   constraints.end(),
+                   std::inserter(model_.constraints_, model_.constraints_.end()),
+                   [](const Constraint& constraint)
+                   { return std::make_pair(constraint.Name(), std::move(constraint)); });
+    return *this;
+}
+
 } // namespace Antares::Solver::ObjectModel

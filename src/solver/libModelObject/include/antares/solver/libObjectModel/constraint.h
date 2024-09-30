@@ -32,8 +32,21 @@ namespace Antares::Solver::ObjectModel
 class Constraint
 {
 public:
-    Constraint();
-    ~Constraint() = default;
+    Constraint(std::string name, Expression expression):
+        name_(std::move(name)),
+        expression_(std::move(expression))
+    {
+    }
+
+    const std::string& Name() const
+    {
+        return name_;
+    }
+
+    Expression expression() const
+    {
+        return expression_;
+    }
 
 private:
     std::string name_;

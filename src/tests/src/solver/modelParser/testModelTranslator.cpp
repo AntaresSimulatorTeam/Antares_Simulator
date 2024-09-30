@@ -105,6 +105,19 @@ std::vector<Antares::Solver::ObjectModel::Port> convertPorts(
     return ports;
 }
 
+std::vector<Antares::Solver::ObjectModel::Constraint> convertConstraints(
+  const Antares::Solver::ModelParser::Model& model)
+{
+    std::vector<Antares::Solver::ObjectModel::Constraint> constraints;
+    for (const auto& constraint: model.constraints)
+    {
+        constraints.emplace_back(Antares::Solver::ObjectModel::Constraint{
+          constraint.name,
+          Antares::Solver::ObjectModel::Expression{constraint.expression}});
+    }
+    return constraints;
+}
+
 std::vector<Antares::Solver::ObjectModel::Model> convertModels(
   const Antares::Solver::ModelParser::Library& library)
 {
@@ -115,12 +128,15 @@ std::vector<Antares::Solver::ObjectModel::Model> convertModels(
         std::vector<Antares::Solver::ObjectModel::Parameter> parameters = convertParameters(model);
         std::vector<Antares::Solver::ObjectModel::Variable> variables = convertVariables(model);
         std::vector<Antares::Solver::ObjectModel::Port> ports = convertPorts(model);
+        std::vector<Antares::Solver::ObjectModel::Constraint> constraints = convertConstraints(
+          model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
                           .withParameters(parameters)
                           .withVariables(variables)
                           .withPorts(ports)
+                          .withConstraints(constraints)
                           .build();
         models.emplace_back(std::move(modelObj));
     }
@@ -216,14 +232,15 @@ BOOST_AUTO_TEST_CASE(test_library_empty_models)
 BOOST_AUTO_TEST_CASE(test_library_models_with_parameters)
 {
     Antares::Solver::ModelParser::Library library;
-    Antares::Solver::ModelParser::Model model1{"model1",
-                                               "description",
-                                               {{"param1", true, false}, {"param2", false, false}},
-                                               {},
-                                               {},
-                                               {},
-                                               {},
-                                               "objectives"};
+    Antares::Solver::ModelParser::Model model1{.id = "model1",
+                                               .description = "description",
+                                               .parameters = {{"param1", true, false},
+                                                              {"param2", false, false}},
+                                               .variables = {},
+                                               .ports = {},
+                                               .port_field_definitions{},
+                                               .constraints{},
+                                               .objective = "objectives"};
     library.models = {model1};
     Antares::Solver::ObjectModel::Library lib = convert(library);
     auto& model = lib.models().at("model1");
@@ -245,15 +262,18 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_variables)
 {
     Antares::Solver::ModelParser::Library library;
     Antares::Solver::ModelParser::Model model1{
-      "model1",
-      "description",
-      {},
-      {{"var1", "7", "pmax", Antares::Solver::ModelParser::ValueType::BOOL},
-       {"var2", "99999999.9999999", "vcost", Antares::Solver::ModelParser::ValueType::INTEGER}},
-      {},
-      {},
-      {},
-      "objectives"};
+      .id = "model1",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"var1", "7", "pmax", Antares::Solver::ModelParser::ValueType::BOOL},
+                    {"var2",
+                     "99999999.9999999",
+                     "vcost",
+                     Antares::Solver::ModelParser::ValueType::INTEGER}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = "objectives"};
     library.models = {model1};
     Antares::Solver::ObjectModel::Library lib = convert(library);
     auto& model = lib.models().at("model1");
@@ -274,14 +294,14 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_variables)
 BOOST_AUTO_TEST_CASE(test_library_models_with_ports, *boost::unit_test::disabled())
 {
     Antares::Solver::ModelParser::Library library;
-    Antares::Solver::ModelParser::Model model1{"model1",
-                                               "description",
-                                               {},
-                                               {},
-                                               {{"port1", "flow"}, {"port2", "impedance"}},
-                                               {},
-                                               {},
-                                               "objectives"};
+    Antares::Solver::ModelParser::Model model1{.id = "model1",
+                                               .description = "description",
+                                               .parameters = {},
+                                               .variables = {},
+                                               .ports = {{"port1", "flow"}, {"port2", "impedance"}},
+                                               .port_field_definitions = {},
+                                               .constraints = {},
+                                               .objective = "objectives"};
     library.models = {model1};
     Antares::Solver::ObjectModel::Library lib = convert(library);
     auto& model = lib.models().at("model1");
@@ -292,4 +312,29 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_ports, *boost::unit_test::disabled
     //  BOOST_CHECK_EQUALS port1.Type()
     // BOOST_CHECK_EQUAL(port2.Name(), "port2");
     // BOOST_CHECK_EQUALS port2.Type()
+}
+
+// Test library with models and constraints
+BOOST_AUTO_TEST_CASE(test_library_models_with_constraints)
+{
+    Antares::Solver::ModelParser::Library library;
+    Antares::Solver::ModelParser::Model model1{.id = "model1",
+                                               .description = "description",
+                                               .parameters = {},
+                                               .variables = {},
+                                               .ports = {},
+                                               .port_field_definitions = {},
+                                               .constraints = {{"constraint1", "expression1"},
+                                                               {"constraint2", "expression2"}},
+                                               .objective = "objectives"};
+    library.models = {model1};
+    Antares::Solver::ObjectModel::Library lib = convert(library);
+    auto& model = lib.models().at("model1");
+    BOOST_REQUIRE_EQUAL(model.getConstraints().size(), 2);
+    auto& constraint1 = model.getConstraints().at("constraint1");
+    auto& constraint2 = model.getConstraints().at("constraint2");
+    BOOST_CHECK_EQUAL(constraint1.Name(), "constraint1");
+    BOOST_CHECK_EQUAL(constraint1.expression().Value(), "expression1");
+    BOOST_CHECK_EQUAL(constraint2.Name(), "constraint2");
+    BOOST_CHECK_EQUAL(constraint2.expression().Value(), "expression2");
 }

@@ -49,8 +49,10 @@ public:
         return objective_;
     }
 
-    std::vector<Constraint*> getConstraints();
-    std::vector<Constraint*> getBindingConstraints();
+    const std::map<std::string, Constraint>& getConstraints() const
+    {
+        return constraints_;
+    }
 
     const std::map<std::string, Parameter>& Parameters() const
     {
@@ -74,10 +76,7 @@ private:
 
     std::map<std::string, Parameter> parameters_;
     std::map<std::string, Variable> variables_;
-
     std::map<std::string, Constraint> constraints_;
-    std::map<std::string, Constraint> bindingConstraints_;
-
     std::map<std::string, Port> ports_;
 };
 
@@ -86,17 +85,12 @@ class ModelBuilder
 public:
     ModelBuilder& withId(std::string_view id);
     ModelBuilder& withObjective(Expression objective);
-    //    ModelBuilder& withParameters(std::span<Parameter> parameter);
-    //    ModelBuilder& withVariables(std::span<Variable> variable);
-    //    ModelBuilder& withPorts(std::span<Port> port);
-    //    ModelBuilder& withConstraints(std::span<Constraint> constraint);
-    //    ModelBuilder& withBindingConstraints(std::span<Constraint> constraint);
-
-    Model build();
-
     ModelBuilder& withParameters(std::vector<Parameter>& parameters);
     ModelBuilder& withVariables(std::vector<Variable>& variables);
     ModelBuilder& withPorts(std::vector<Port>& ports);
+    Model build();
+
+    ModelBuilder& withConstraints(std::vector<Constraint>& constraints);
 
 private:
     Model model_;
