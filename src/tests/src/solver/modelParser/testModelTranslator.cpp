@@ -46,6 +46,23 @@ std::vector<Antares::Solver::ObjectModel::PortType> convertTypes(
     return out;
 }
 
+std::vector<Antares::Solver::ObjectModel::Parameter> convertParameters(
+  const Antares::Solver::ModelParser::Model& model)
+{
+    std::vector<Antares::Solver::ObjectModel::Parameter> parameters;
+    for (const auto& parameter: model.parameters)
+    {
+        parameters.emplace_back(Antares::Solver::ObjectModel::Parameter{
+          parameter.name,
+          Antares::Solver::ObjectModel::ValueType::FLOAT, // TODO: change to correct type
+          static_cast<Antares::Solver::ObjectModel::Parameter::TimeDependent>(
+            parameter.time_dependent),
+          static_cast<Antares::Solver::ObjectModel::Parameter::ScenarioDependent>(
+            parameter.scenario_dependent)});
+    }
+    return parameters;
+}
+
 std::vector<Antares::Solver::ObjectModel::Model> convertModels(
   const Antares::Solver::ModelParser::Library& library)
 {
@@ -53,17 +70,7 @@ std::vector<Antares::Solver::ObjectModel::Model> convertModels(
     for (const auto& model: library.models)
     {
         Antares::Solver::ObjectModel::ModelBuilder modelBuilder;
-        std::vector<Antares::Solver::ObjectModel::Parameter> parameters;
-        for (const auto& parameter: model.parameters)
-        {
-            parameters.emplace_back(Antares::Solver::ObjectModel::Parameter{
-              parameter.name,
-              Antares::Solver::ObjectModel::ValueType::FLOAT, // TODO: change to correct type
-              static_cast<Antares::Solver::ObjectModel::Parameter::TimeDependent>(
-                parameter.time_dependent),
-              static_cast<Antares::Solver::ObjectModel::Parameter::ScenarioDependent>(
-                parameter.scenario_dependent)});
-        }
+        std::vector<Antares::Solver::ObjectModel::Parameter> parameters = convertParameters(model);
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
                           .withParameters(parameters)
