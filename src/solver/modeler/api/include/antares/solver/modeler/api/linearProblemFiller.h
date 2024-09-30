@@ -29,6 +29,13 @@
 namespace Antares::Solver::Modeler::Api
 {
 
+struct FillContext
+{
+    std::vector<unsigned> scenariosSelected;
+    unsigned firstTimeStep;
+    unsigned lastTimeStep;
+};
+
 class LinearProblemFiller
 {
 public:
