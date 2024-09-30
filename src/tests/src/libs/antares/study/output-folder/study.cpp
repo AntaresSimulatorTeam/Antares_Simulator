@@ -80,10 +80,10 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_emptylabel, Fixture)
     const int64_t startTime = 1;
     const fs::path expectedOutput = (outputRoot / "19700101-0000eco").string();
     const fs::path actualOutput = StudyCreateOutputPath(mode,
-                                                       fmt,
-                                                       outputRoot.string(),
-                                                       label,
-                                                       startTime);
+                                                        fmt,
+                                                        outputRoot.string(),
+                                                        label,
+                                                        startTime);
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 }
 
@@ -95,10 +95,10 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_label_now, Fixture)
     const int64_t startTime = 1672391667;
     const fs::path expectedOutput = (outputRoot / "20221230-0914eco-test").string();
     const fs::path actualOutput = StudyCreateOutputPath(mode,
-                                                       fmt,
-                                                       outputRoot.string(),
-                                                       label,
-                                                       startTime);
+                                                        fmt,
+                                                        outputRoot.string(),
+                                                        label,
+                                                        startTime);
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 }
 
@@ -110,19 +110,19 @@ BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
     const int64_t startTime = 1672391667;
     const fs::path expectedOutput = (outputRoot / "20221230-0914adq-test").string();
     const fs::path actualOutput = StudyCreateOutputPath(mode,
-                                                       fmt,
-                                                       outputRoot.string(),
-                                                       label,
-                                                       startTime);
+                                                        fmt,
+                                                        outputRoot.string(),
+                                                        label,
+                                                        startTime);
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 
     fs::create_directory(outputRoot / "20221230-0914adq-test");
     const fs::path expectedOutput_suffix = (outputRoot / "20221230-0914adq-test-2").string();
     const fs::path actualOutput_suffix = StudyCreateOutputPath(mode,
-                                                              fmt,
-                                                              outputRoot.string(),
-                                                              label,
-                                                              startTime);
+                                                               fmt,
+                                                               outputRoot.string(),
+                                                               label,
+                                                               startTime);
     BOOST_CHECK_EQUAL(actualOutput_suffix, expectedOutput_suffix);
 }
 
@@ -134,10 +134,10 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
     const int64_t startTime = 1672391667;
     const fs::path expectedOutput = (outputRoot / "20221230-0914adq-test").string();
     const fs::path actualOutput = StudyCreateOutputPath(mode,
-                                                       fmt,
-                                                       outputRoot.string(),
-                                                       label,
-                                                       startTime);
+                                                        fmt,
+                                                        outputRoot.string(),
+                                                        label,
+                                                        startTime);
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 
     std::ofstream zip_file(outputRoot / "20221230-0914adq-test.zip");
@@ -145,10 +145,10 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
 
     const fs::path expectedOutput_suffix = (outputRoot / "20221230-0914adq-test-2").string();
     const fs::path actualOutput_suffix = StudyCreateOutputPath(mode,
-                                                              fmt,
-                                                              outputRoot.string(),
-                                                              label,
-                                                              startTime);
+                                                               fmt,
+                                                               outputRoot.string(),
+                                                               label,
+                                                               startTime);
     BOOST_CHECK_EQUAL(actualOutput_suffix, expectedOutput_suffix);
 }
 
