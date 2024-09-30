@@ -23,7 +23,6 @@
 
 #include <cmath>
 
-#include "antares/logs/logs.h"
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/study/fwd.h"
 
@@ -419,6 +418,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         const bool thermal_details = fileLevel & Category::FileLevel::de;
         const bool renewable_details = fileLevel & Category::FileLevel::de_res;
         const bool st_storage_details = fileLevel & Category::FileLevel::de_sts;
+
         std::array<bool, 3> kind_of_details = {thermal_details,
                                                renewable_details,
                                                st_storage_details};
