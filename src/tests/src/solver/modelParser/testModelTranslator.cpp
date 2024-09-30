@@ -94,6 +94,17 @@ std::vector<Antares::Solver::ObjectModel::Variable> convertVariables(
     return variables;
 }
 
+std::vector<Antares::Solver::ObjectModel::Port> convertPorts(
+  const Antares::Solver::ModelParser::Model& model)
+{
+    std::vector<Antares::Solver::ObjectModel::Port> ports;
+    for (const auto& port: model.ports)
+    {
+        // ports.emplace_back(Antares::Solver::ObjectModel::Port{port.name, port.type});
+    }
+    return ports;
+}
+
 std::vector<Antares::Solver::ObjectModel::Model> convertModels(
   const Antares::Solver::ModelParser::Library& library)
 {
@@ -103,11 +114,13 @@ std::vector<Antares::Solver::ObjectModel::Model> convertModels(
         Antares::Solver::ObjectModel::ModelBuilder modelBuilder;
         std::vector<Antares::Solver::ObjectModel::Parameter> parameters = convertParameters(model);
         std::vector<Antares::Solver::ObjectModel::Variable> variables = convertVariables(model);
+        std::vector<Antares::Solver::ObjectModel::Port> ports = convertPorts(model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
                           .withParameters(parameters)
                           .withVariables(variables)
+                          .withPorts(ports)
                           .build();
         models.emplace_back(std::move(modelObj));
     }
@@ -255,4 +268,28 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_variables)
     BOOST_CHECK_EQUAL(variable2.LowerBound().Value(), "99999999.9999999");
     BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "vcost");
     BOOST_CHECK_EQUAL(variable2.Type(), Antares::Solver::ObjectModel::ValueType::INTEGER);
+}
+
+// Test library with models and ports
+BOOST_AUTO_TEST_CASE(test_library_models_with_ports, *boost::unit_test::disabled())
+{
+    Antares::Solver::ModelParser::Library library;
+    Antares::Solver::ModelParser::Model model1{"model1",
+                                               "description",
+                                               {},
+                                               {},
+                                               {{"port1", "flow"}, {"port2", "impedance"}},
+                                               {},
+                                               {},
+                                               "objectives"};
+    library.models = {model1};
+    Antares::Solver::ObjectModel::Library lib = convert(library);
+    auto& model = lib.models().at("model1");
+    // BOOST_REQUIRE_EQUAL(model.Ports().size(), 2);
+    // auto& port1 = model.Ports().at("port1");
+    // auto& port2 = model.Ports().at("port2");
+    // BOOST_CHECK_EQUAL(port1.Name(), "port1");
+    //  BOOST_CHECK_EQUALS port1.Type()
+    // BOOST_CHECK_EQUAL(port2.Name(), "port2");
+    // BOOST_CHECK_EQUALS port2.Type()
 }

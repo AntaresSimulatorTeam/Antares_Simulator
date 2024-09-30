@@ -61,4 +61,13 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>& variables)
     return *this;
 }
 
+ModelBuilder& ModelBuilder::withPorts(std::vector<Port>& ports)
+{
+    std::transform(ports.begin(),
+                   ports.end(),
+                   std::inserter(model_.ports_, model_.ports_.end()),
+                   [](const Port& port) { return std::make_pair(port.Name(), std::move(port)); });
+    return *this;
+}
+
 } // namespace Antares::Solver::ObjectModel

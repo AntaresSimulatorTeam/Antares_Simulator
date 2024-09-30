@@ -96,6 +96,7 @@ public:
 
     ModelBuilder& withParameters(std::vector<Parameter>& parameters);
     ModelBuilder& withVariables(std::vector<Variable>& variables);
+    ModelBuilder& withPorts(std::vector<Port>& ports);
 
 private:
     Model model_;

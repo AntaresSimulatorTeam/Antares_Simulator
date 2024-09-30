@@ -33,6 +33,16 @@ public:
     Port();
     ~Port() = default;
 
+    const std::string& Name() const
+    {
+        return name_;
+    }
+
+    PortType Type() const
+    {
+        return type_;
+    }
+
 private:
     std::string name_;
     PortType type_;
