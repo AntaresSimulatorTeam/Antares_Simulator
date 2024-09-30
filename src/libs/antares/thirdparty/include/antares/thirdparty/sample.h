@@ -19,6 +19,6 @@ class SampleModule: public Module
     void setObjective(operations_research::MPSolver* solver, OptimizationContext ctx) override;
     unsigned int numberOfColumns(unsigned int areaIndex) override;
     double areaOutputForHour(unsigned int areaIndex, unsigned int hourInTheWeek) override;
-    VariableProperties getProperties() override;
+    std::vector<VariableProperties> getProperties() override;
 };
 } // namespace Antares::ThirdParty

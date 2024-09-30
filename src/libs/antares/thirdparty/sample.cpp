@@ -57,8 +57,8 @@ double SampleModule::areaOutputForHour(unsigned int areaIndex, unsigned int hour
     return 42.;
 }
 
-VariableProperties SampleModule::getProperties()
+std::vector<VariableProperties> SampleModule::getProperties()
 {
-    return VariableProperties("sample", "unit");
+    return std::vector<VariableProperties>{VariableProperties("sample", "unit")};
 }
 } // namespace Antares::ThirdParty

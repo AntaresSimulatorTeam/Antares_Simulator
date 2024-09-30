@@ -296,11 +296,47 @@ public:
         // Write the data for the current year
         for (unsigned int column = 0; column < pNbColumns; column++)
         {
-            results.variableCaption = properties.caption;
-            results.variableUnit = properties.unit;
+            results.variableCaption = properties[column].caption;
+            results.variableUnit = properties[column].unit;
             pValuesForTheCurrentYear[numSpace][column]
               .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
+    }
+
+    void buildSurveyReport(SurveyResults& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const
+    {
+        // Building synthesis results
+        // ------------------------------
+
+        if (AncestorType::isPrinted[0])
+        {
+            // And only if we match the current data level _and_ precision level
+            if ((dataLevel & VCardType::categoryDataLevel)
+                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
+            {
+                results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
+
+                const auto& properties = pModule->getProperties();
+                for (unsigned int column = 0; column < pNbColumns; column++)
+                {
+                    results.variableCaption = properties[column].caption;
+                    results.variableUnit = properties[column].unit;
+
+                    AncestorType::pResults[column]
+                      .template buildSurveyReport<ResultsType, VCardType>(
+                        results,
+                        AncestorType::pResults[column],
+                        dataLevel,
+                        fileLevel,
+                        precision);
+                }
+            }
+        }
+        // Ask to the next item in the static list to export its results as well
+        NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
 
 private:

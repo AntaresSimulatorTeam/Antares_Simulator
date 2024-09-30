@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace operations_research
 {
@@ -70,6 +71,6 @@ public:
 
     virtual unsigned int numberOfColumns(unsigned int areaIndex) = 0;
     virtual double areaOutputForHour(unsigned int areaIndex, unsigned int hourInTheWeek) = 0;
-    virtual VariableProperties getProperties() = 0;
+    virtual std::vector<VariableProperties> getProperties() = 0;
 };
 } // namespace Antares::ThirdParty
