@@ -661,7 +661,7 @@ extern YString StudyIconFile;
 
 std::string StudyCreateOutputPath(SimulationMode mode,
                                   ResultFormat fmt,
-                                  const std::string& folder,
+                                  const std::filesystem::path& folder,
                                   const std::string& label,
                                   int64_t startTime);
 } // namespace Antares::Data

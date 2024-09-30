@@ -24,6 +24,7 @@
 #include <cassert>
 #include <climits>
 #include <cmath> // For use of floor(...) and ceil(...)
+#include <ctime>
 #include <optional>
 #include <sstream> // std::ostringstream
 #include <thread>
@@ -453,7 +454,7 @@ static std::string getOutputSuffix(ResultFormat fmt)
 
 std::string StudyCreateOutputPath(SimulationMode mode,
                                   ResultFormat fmt,
-                                  const std::string& outputRoot,
+                                  const fs::path& rootFolder,
                                   const std::string& label,
                                   int64_t startTime)
 {
@@ -464,12 +465,10 @@ std::string StudyCreateOutputPath(SimulationMode mode,
 
     auto suffix = getOutputSuffix(fmt);
 
-    YString folderOutput;
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    folderOutput.clear() << outputRoot << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", startTime, false);
+    fs::path folderOutput = rootFolder / "output" / FormattedTime("%Y%m%d-%H%M");
 
     switch (mode)
     {
@@ -489,10 +488,10 @@ std::string StudyCreateOutputPath(SimulationMode mode,
     // Folder output
     if (not label.empty())
     {
-        folderOutput << '-' << transformNameIntoID(label);
+        folderOutput += '-' + transformNameIntoID(label);
     }
 
-    std::string outpath = folderOutput + suffix;
+    std::string outpath = folderOutput.string() + suffix;
     // avoid creating the same output twice
     if (fs::exists(outpath))
     {
@@ -501,10 +500,10 @@ std::string StudyCreateOutputPath(SimulationMode mode,
         do
         {
             ++index;
-            newpath = folderOutput + '-' + std::to_string(index) + suffix;
+            newpath = folderOutput.string() + '-' + std::to_string(index) + suffix;
         } while (fs::exists(newpath) and index < 2000);
 
-        folderOutput << '-' << index;
+        folderOutput += '-' + index;
     }
     return folderOutput;
 }
@@ -518,11 +517,9 @@ void Study::prepareOutput()
         return;
     }
 
-    buffer.clear() << folder << SEP << "output";
-
     folderOutput = StudyCreateOutputPath(parameters.mode,
                                          parameters.resultFormat,
-                                         buffer,
+                                         folder,
                                          simulationComments.name,
                                          pStartTime);
 
