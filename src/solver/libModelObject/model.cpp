@@ -24,58 +24,108 @@
 namespace Antares::Solver::ObjectModel
 {
 
+/**
+ * \brief Builds and returns the Model object.
+ *
+ * \return The constructed Model object.
+ */
 Model ModelBuilder::build()
 {
     return model_;
 }
 
+/**
+ * \brief Sets the ID of the model.
+ *
+ * \param id The ID to set.
+ * \return Reference to the ModelBuilder object.
+ */
 ModelBuilder& ModelBuilder::withId(std::string_view id)
 {
     model_.id_ = id;
     return *this;
 }
 
+/**
+ * \brief Sets the objective of the model.
+ *
+ * \param objective The Expression object representing the objective.
+ * \return Reference to the ModelBuilder object.
+ */
 ModelBuilder& ModelBuilder::withObjective(Expression objective)
 {
     model_.objective_ = objective;
     return *this;
 }
 
+/**
+ * \brief Sets the parameters of the model.
+ *
+ * \param parameters A vector of Parameter objects to set.
+ * \return Reference to the ModelBuilder object.
+ *
+ * inputs it not garanteed to be valid after the call
+ */
 ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>& parameters)
 {
     std::transform(parameters.begin(),
                    parameters.end(),
                    std::inserter(model_.parameters_, model_.parameters_.end()),
-                   [](const Parameter& parameter)
+                   [](/*Non const to prevent copy*/ Parameter& parameter)
                    { return std::make_pair(parameter.Name(), std::move(parameter)); });
     return *this;
 }
 
+/**
+ * \brief Sets the variables of the model.
+ *
+ * \param variables A vector of Variable objects to set.
+ * \return Reference to the ModelBuilder object.
+ *
+ * inputs it not garanteed to be valid after the call
+ */
 ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>& variables)
 {
     std::transform(variables.begin(),
                    variables.end(),
                    std::inserter(model_.variables_, model_.variables_.end()),
-                   [](const Variable& variable)
+                   [](/*Non const to prevent copy*/ Variable& variable)
                    { return std::make_pair(variable.Name(), std::move(variable)); });
     return *this;
 }
 
+/**
+ * \brief Sets the ports of the model.
+ *
+ * \param ports A vector of Port objects to set.
+ * \return Reference to the ModelBuilder object.
+ *
+ * inputs it not garanteed to be valid after the call
+ */
 ModelBuilder& ModelBuilder::withPorts(std::vector<Port>& ports)
 {
     std::transform(ports.begin(),
                    ports.end(),
                    std::inserter(model_.ports_, model_.ports_.end()),
-                   [](const Port& port) { return std::make_pair(port.Name(), std::move(port)); });
+                   [](/*Non const to prevent copy*/ Port& port)
+                   { return std::make_pair(port.Name(), std::move(port)); });
     return *this;
 }
 
+/**
+ * \brief Sets the ID of the library.
+ *
+ * \param id The ID to set.
+ * \return Reference to the LibraryBuilder object.
+ *
+ * inputs it not garanteed to be valid after the call
+ */
 ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>& constraints)
 {
     std::transform(constraints.begin(),
                    constraints.end(),
                    std::inserter(model_.constraints_, model_.constraints_.end()),
-                   [](const Constraint& constraint)
+                   [](/*Non const to prevent copy*/ Constraint& constraint)
                    { return std::make_pair(constraint.Name(), std::move(constraint)); });
     return *this;
 }
