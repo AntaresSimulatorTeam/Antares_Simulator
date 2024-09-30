@@ -35,6 +35,11 @@ namespace Antares::Solver::ObjectModel
 class Parameter
 {
 public:
+    /** Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading
+     * Parameter("Param", ValueType::FLOAT, false, true)
+     * Avoid mixing wich value is which boolean parameter
+     */
+
     enum class TimeDependent : bool
     {
         NO = false,
@@ -46,8 +51,6 @@ public:
         NO = false,
         YES = true
     };
-
-    Parameter();
 
     explicit Parameter(std::string name,
                        ValueType type,
