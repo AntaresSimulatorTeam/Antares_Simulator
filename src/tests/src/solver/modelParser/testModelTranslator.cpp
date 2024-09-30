@@ -202,3 +202,36 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_constraints)
     BOOST_CHECK_EQUAL(constraint2.Name(), "constraint2");
     BOOST_CHECK_EQUAL(constraint2.expression().Value(), "expression2");
 }
+
+// Test with 2 models
+BOOST_AUTO_TEST_CASE(test_library_two_models)
+{
+    ModelParser::Library library;
+    ModelParser::Model model1{.id = "model1",
+                              .description = "description",
+                              .parameters = {{"param1", true, false}, {"param2", false, false}},
+                              .variables = {{"varP", "7", "pmin", ModelParser::ValueType::FLOAT}},
+                              .ports = {},
+                              .port_field_definitions = {},
+                              .constraints = {},
+                              .objective = "objectives"};
+    ModelParser::Model model2{
+      .id = "model2",
+      .description = "description",
+      .parameters = {},
+      .variables = {{"var1", "7", "pmax", ModelParser::ValueType::BOOL},
+                    {"var2", "99999999.9999999", "vcost", ModelParser::ValueType::INTEGER}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = "objectives"};
+    library.models = {model1, model2};
+    ObjectModel::Library lib = ModelConverter::convert(library);
+    BOOST_REQUIRE_EQUAL(lib.models().size(), 2);
+    auto& modelo1 = lib.models().at("model1");
+    BOOST_REQUIRE_EQUAL(modelo1.Parameters().size(), 2);
+    BOOST_REQUIRE_EQUAL(modelo1.Variables().size(), 1);
+    auto& modelo2 = lib.models().at("model2");
+    BOOST_REQUIRE_EQUAL(modelo2.Parameters().size(), 0);
+    BOOST_REQUIRE_EQUAL(modelo2.Variables().size(), 2);
+}

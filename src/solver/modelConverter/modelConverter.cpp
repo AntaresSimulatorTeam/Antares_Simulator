@@ -35,6 +35,12 @@
 namespace Antares::Solver::ModelConverter
 {
 
+/**
+ * \brief Converts parameters from ModelParser::Model to ObjectModel::Parameter.
+ *
+ * \param model The ModelParser::Model object containing parameters.
+ * \return A vector of ObjectModel::Parameter objects.
+ */
 std::vector<Antares::Solver::ObjectModel::PortType> convertTypes(
   const Antares::Solver::ModelParser::Library& library)
 {
@@ -55,6 +61,13 @@ std::vector<Antares::Solver::ObjectModel::PortType> convertTypes(
     return out;
 }
 
+/**
+ * \brief Converts a ModelParser::ValueType to an ObjectModel::ValueType.
+ *
+ * \param type The ModelParser::ValueType to convert.
+ * \return The corresponding ObjectModel::ValueType.
+ * \throws std::runtime_error if the type is unknown.
+ */
 std::vector<Antares::Solver::ObjectModel::Parameter> convertParameters(
   const Antares::Solver::ModelParser::Model& model)
 {
@@ -72,6 +85,12 @@ std::vector<Antares::Solver::ObjectModel::Parameter> convertParameters(
     return parameters;
 }
 
+/**
+ * \brief Converts variables from ModelParser::Model to ObjectModel::Variable.
+ *
+ * \param model The ModelParser::Model object containing variables.
+ * \return A vector of ObjectModel::Variable objects.
+ */
 Antares::Solver::ObjectModel::ValueType convertType(Antares::Solver::ModelParser::ValueType type)
 {
     using namespace std::string_literals;
@@ -88,6 +107,12 @@ Antares::Solver::ObjectModel::ValueType convertType(Antares::Solver::ModelParser
     }
 }
 
+/**
+ * \brief Converts ports from ModelParser::Model to ObjectModel::Port.
+ *
+ * \param model The ModelParser::Model object containing ports.
+ * \return A vector of ObjectModel::Port objects.
+ */
 std::vector<Antares::Solver::ObjectModel::Variable> convertVariables(
   const Antares::Solver::ModelParser::Model& model)
 {
@@ -103,6 +128,12 @@ std::vector<Antares::Solver::ObjectModel::Variable> convertVariables(
     return variables;
 }
 
+/**
+ * \brief Converts constraints from ModelParser::Model to ObjectModel::Constraint.
+ *
+ * \param model The ModelParser::Model object containing constraints.
+ * \return A vector of ObjectModel::Constraint objects.
+ */
 std::vector<Antares::Solver::ObjectModel::Port> convertPorts(
   const Antares::Solver::ModelParser::Model& model)
 {
@@ -127,6 +158,12 @@ std::vector<Antares::Solver::ObjectModel::Constraint> convertConstraints(
     return constraints;
 }
 
+/**
+ * \brief Converts models from ModelParser::Library to ObjectModel::Model.
+ *
+ * \param library The ModelParser::Library object containing models.
+ * \return A vector of ObjectModel::Model objects.
+ */
 std::vector<Antares::Solver::ObjectModel::Model> convertModels(
   const Antares::Solver::ModelParser::Library& library)
 {
@@ -152,8 +189,12 @@ std::vector<Antares::Solver::ObjectModel::Model> convertModels(
     return models;
 }
 
-// Given a Antares::Solver::ModelParser::Library object, return a
-// Antares::Solver::ObjectModel::Library object
+/**
+ * \brief Converts a ModelParser::Library object to an ObjectModel::Library object.
+ *
+ * \param library The ModelParser::Library object to convert.
+ * \return The corresponding ObjectModel::Library object.
+ */
 Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library)
 {
     Antares::Solver::ObjectModel::LibraryBuilder builder;
