@@ -54,7 +54,7 @@ bool Study::resetFolderIcon() const
 #ifdef YUNI_OS_WINDOWS
     {
         // The file should be closed at this point
-        Yuni::WString wbuffer(folder);
+        Yuni::WString wbuffer(folder.string());
         if (not wbuffer.empty())
         {
             SetFileAttributesW(wbuffer.c_str(), FILE_ATTRIBUTE_SYSTEM);
