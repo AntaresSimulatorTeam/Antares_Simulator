@@ -12,8 +12,8 @@ add_subdirectory(constraints-builder)
 add_subdirectory(expressions)
 add_subdirectory(hydro)
 add_subdirectory(infeasible-problem-analysis)
-add_subdirectory(lps)
 add_subdirectory(libModelObject)
+add_subdirectory(lps)
 add_subdirectory(misc)
 add_subdirectory(modelConverter)
 add_subdirectory(modelParser)
@@ -24,8 +24,6 @@ add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(variable)
-add_subdirectory(modeler)
-add_subdirectory(expressions)
 
 #
 # Resource file for Windows
