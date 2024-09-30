@@ -107,19 +107,19 @@ var NAVTREEINDEX =
 "classAntares_1_1Forms_1_1ApplWnd.html#a7081494dd3912d94c140f40dcf9a1709",
 "classAntares_1_1Map_1_1Node.html#abaf5387a6c7668591d9453f6a51bbbd6",
 "classAntares_1_1Solver_1_1IResultWriter.html",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html",
-"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ad4b585ee91de455cd88bf1a5956a6630",
-"classAntares_1_1Toolbox_1_1Filter_1_1Component.html",
-"classAntares_1_1Window_1_1Hydro_1_1Allocation.html",
-"classAntares_1_1Window_1_1hurdleCostsUsageButton.html",
-"classMinDownTime.html",
-"dir_00744117a42d95692e735523462d1048.html",
-"dir_b62c0098d8d77819e143d0f8e4c47469.html",
-"functions_y.html",
-"operator_8list_8h_source.html",
-"structAntares_1_1Data_1_1TimeSeriesToCStr.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html",
-"structRESERVE__JMOINS1.html"
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html",
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334",
+"classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#acb29a09ec50c9f4b26cb26c66f418ab1",
+"classAntares_1_1Window_1_1ExportMap.html#a48052f56f06d4adf4e6f58f0be01ac40",
+"classAntares_1_1Window_1_1Thermal_1_1Panel.html#abbce6dda9f5e4cad48bae6dda251dd55",
+"classLinearProblemMatrixStartUpCosts.html",
+"datasource_8hxx_source.html",
+"dir_afc7c14ae171d28f17ac5a59ea66005a.html",
+"functions_vars_l.html",
+"namespacemembers.html",
+"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a1fe574440a01eafe5bbc071c44c50afe",
+"structMaxPumpingData.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

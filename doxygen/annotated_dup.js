@@ -529,6 +529,18 @@ var annotated_dup =
           [ "UnaryNode", "classAntares_1_1Solver_1_1Nodes_1_1UnaryNode.html", "classAntares_1_1Solver_1_1Nodes_1_1UnaryNode" ],
           [ "VariableNode", "classAntares_1_1Solver_1_1Nodes_1_1VariableNode.html", null ]
         ] ],
+        [ "ObjectModel", null, [
+          [ "Constraint", "classAntares_1_1Solver_1_1ObjectModel_1_1Constraint.html", null ],
+          [ "Expression", "classAntares_1_1Solver_1_1ObjectModel_1_1Expression.html", null ],
+          [ "Library", "classAntares_1_1Solver_1_1ObjectModel_1_1Library.html", null ],
+          [ "Model", "classAntares_1_1Solver_1_1ObjectModel_1_1Model.html", null ],
+          [ "Parameter", "classAntares_1_1Solver_1_1ObjectModel_1_1Parameter.html", null ],
+          [ "Port", "classAntares_1_1Solver_1_1ObjectModel_1_1Port.html", null ],
+          [ "PortField", "classAntares_1_1Solver_1_1ObjectModel_1_1PortField.html", null ],
+          [ "PortFieldDefinition", "classAntares_1_1Solver_1_1ObjectModel_1_1PortFieldDefinition.html", null ],
+          [ "PortType", "classAntares_1_1Solver_1_1ObjectModel_1_1PortType.html", null ],
+          [ "Variable", "classAntares_1_1Solver_1_1ObjectModel_1_1Variable.html", null ]
+        ] ],
         [ "Optimization", null, [
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
           [ "OptimizationOptions", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
