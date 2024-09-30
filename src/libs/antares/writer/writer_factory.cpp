@@ -37,12 +37,12 @@ IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
     switch (fmt)
     {
     case zipArchive:
-        return std::make_shared<ZipWriter>(qs, folderOutput.string(), duration_collector);
+        return std::make_shared<ZipWriter>(qs, folderOutput, duration_collector);
     case inMemory:
         return std::make_shared<InMemoryWriter>(duration_collector);
     case legacyFilesDirectories:
     default:
-        return std::make_shared<ImmediateFileResultWriter>(folderOutput.string());
+        return std::make_shared<ImmediateFileResultWriter>(folderOutput);
     }
 }
 } // namespace Antares::Solver

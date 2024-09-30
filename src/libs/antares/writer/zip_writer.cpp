@@ -114,7 +114,7 @@ void ZipWriteJob<ContentT>::writeEntry()
 
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
-                     fs::path archivePath,
+                     const fs::path&  archivePath,
                      Benchmarking::DurationCollector& duration_collector):
     pQueueService(qs),
     pState(ZipState::can_receive_data),

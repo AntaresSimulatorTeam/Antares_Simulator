@@ -78,7 +78,7 @@ class ZipWriter: public IResultWriter
 {
 public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
-              std::filesystem::path archivePath,
+              const std::filesystem::path& archivePath,
               Benchmarking::DurationCollector& duration_collector);
     virtual ~ZipWriter();
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
