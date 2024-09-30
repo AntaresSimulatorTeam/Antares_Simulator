@@ -52,9 +52,12 @@ struct VCardThirdParty
         return "Third party";
     }
 
-    //! The expected results
+    //! The synhesis results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values throughout all years
+          R::AllYears::Max<               // The maximum values throughout all years
+            >>>>>
       ResultsType;
 
     //! The VCard to look for calculating spatial aggregates
@@ -71,7 +74,7 @@ struct VCardThirdParty
     static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = 0;
-    //! Number of columns used by the variable
+    // Nb of columns occupied by this variable in year-by-year results
     static constexpr int columnCount = Category::dynamicColumns;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
@@ -85,6 +88,7 @@ struct VCardThirdParty
     typedef IntermediateValues IntermediateValuesDeepType;
     typedef IntermediateValues* IntermediateValuesBaseType;
     typedef IntermediateValuesBaseType* IntermediateValuesType;
+
 }; // class VCard
 
 template<class NextT = Container::EndOfList>

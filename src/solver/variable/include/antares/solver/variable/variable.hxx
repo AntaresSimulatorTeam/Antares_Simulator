@@ -23,6 +23,7 @@
 
 #include <yuni/core/static/types.h>
 
+#include <antares/logs/logs.h>
 #include <antares/study/variable-print-info.h>
 
 namespace Antares::Solver::Variable
@@ -284,7 +285,8 @@ inline void IVariable<ChildT, NextT, VCardT>::buildSurveyReport(SurveyResults& r
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = isPrinted;
             results.isCurrentVarNA = isNonApplicable;
-
+            Antares::logs.info() << VCardType::Caption() << " " << dataLevel << ' ' << fileLevel
+                                 << ' ' << precision;
             VariableAccessorType::template BuildSurveyReport<VCardType>(results,
                                                                         pResults,
                                                                         dataLevel,
