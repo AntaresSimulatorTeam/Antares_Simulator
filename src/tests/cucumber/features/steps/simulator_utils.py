@@ -18,25 +18,28 @@ SOLVER_PATH = get_solver_path()  # we only need to run this once
 
 
 def run_simulation(context):
-    init_simu(context)  # TODO : remove this and update studies instead
+    init_simu(context)
+    init_empty_context(context)
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     out, err = process.communicate()
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.annual_system_cost = None
-    context.values_hourly = None
-    context.details_hourly = None
-
 
 def init_simu(context):
     sih = study_input_handler(Path(context.study_path))
     # read metadata
     context.nbyears = int(sih.get_value(variable="nbyears", file_nick_name="general"))
-    # activate year-by-year results
+    # activate year-by-year results  # TODO : remove this and update studies instead
     sih.set_value(variable="synthesis", value="true", file_nick_name="general")
     sih.set_value(variable="year-by-year", value="true", file_nick_name="general")
+
+def init_empty_context(context):
+    context.annual_system_cost = None
+    context.values_annual = None
+    context.values_hourly = None
+    context.details_hourly = None
 
 
 def build_antares_solver_command(context):

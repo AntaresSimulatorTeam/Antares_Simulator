@@ -26,7 +26,8 @@ def run_antares(context):
 def after_feature(context, feature):
     # post-processing a test: clean up output files to avoid taking up all the disk space
     if (context.output_path != None):
-        pathlib.Path.rmdir(context.output_path)
+        pass
+        # pathlib.Path.rmdir(context.output_path)
 
 
 @then('the simulation succeeds')
@@ -118,3 +119,8 @@ def check_min_up_down_duration(context, area, prod_name, up_duration, down_durat
         min_up, min_down = compute_min_up_and_down_durations(actual_hourly_prod)
         assert min_up >= float(up_duration)
         assert min_down >= float(down_duration)
+
+
+@step('in area "{area}", during year {year}, total non-proportional cost is {np_cost}')
+def check_np_cost_for_specific_year(context, area, year, np_cost):
+    assert_double_close(float(np_cost), get_values_annual(context, area.lower(), int(year))["NP COST"][0], 1e-6)

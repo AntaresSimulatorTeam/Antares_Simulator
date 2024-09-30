@@ -29,6 +29,10 @@ def parse_simu_time(output_path: str) -> float:
     return float(execution_info['durations_ms']['total']) / 1000
 
 
+def parse_values_annual(output_path: str, area: str, year: int):
+    return read_csv(os.path.join(output_path, "economy", "mc-ind", f"{year:05d}", "areas", area, "values-annual.txt"))
+
+
 def parse_values_hourly(output_path: str, area: str, year: int):
     return read_csv(os.path.join(output_path, "economy", "mc-ind", f"{year:05d}", "areas", area, "values-hourly.txt"))
 

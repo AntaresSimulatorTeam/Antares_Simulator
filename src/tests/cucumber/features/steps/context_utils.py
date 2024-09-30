@@ -12,6 +12,15 @@ def get_values_hourly_for_specific_hour(context, area : str, year : int, date : 
     day, month, hour = date.split(" ")
     return df.loc[(df['Unnamed: 2'] == int(day)) & (df['Unnamed: 3'] == month) & (df['Unnamed: 4'] == hour)]
 
+def get_values_annual(context, area : str, year : int):
+    if context.values_annual is None:
+        context.values_annual = {}
+    if area not in context.values_annual:
+        context.values_annual[area] = {}
+    if year not in context.values_annual[area]:
+        context.values_annual[area][year] = parse_values_annual(context.output_path, area, year)
+    return context.values_annual[area][year]
+
 def get_values_hourly(context, area : str, year : int):
     if context.values_hourly is None:
         context.values_hourly = {}
