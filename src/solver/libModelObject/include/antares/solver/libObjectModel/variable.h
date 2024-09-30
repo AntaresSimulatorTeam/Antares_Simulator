@@ -33,8 +33,33 @@ namespace Antares::Solver::ObjectModel
 class Variable
 {
 public:
-    Variable();
-    ~Variable() = default;
+    Variable(std::string name, Expression lower_bound, Expression upper_bound, ValueType type):
+        name_(std::move(name)),
+        type_(type),
+        lowerBound_(lower_bound),
+        upperBound_(upper_bound)
+    {
+    }
+
+    const std::string& Name() const
+    {
+        return name_;
+    }
+
+    ValueType Type() const
+    {
+        return type_;
+    }
+
+    Expression LowerBound() const
+    {
+        return lowerBound_;
+    }
+
+    Expression UpperBound() const
+    {
+        return upperBound_;
+    }
 
 private:
     std::string name_;

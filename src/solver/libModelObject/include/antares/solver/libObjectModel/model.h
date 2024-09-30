@@ -95,6 +95,7 @@ public:
     Model build();
 
     ModelBuilder& withParameters(std::vector<Parameter>& parameters);
+    ModelBuilder& withVariables(std::vector<Variable>& variables);
 
 private:
     Model model_;

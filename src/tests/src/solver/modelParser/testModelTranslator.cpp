@@ -63,6 +63,37 @@ std::vector<Antares::Solver::ObjectModel::Parameter> convertParameters(
     return parameters;
 }
 
+Antares::Solver::ObjectModel::ValueType convertType(Antares::Solver::ModelParser::ValueType type)
+{
+    using namespace std::string_literals;
+    switch (type)
+    {
+    case Antares::Solver::ModelParser::ValueType::FLOAT:
+        return Antares::Solver::ObjectModel::ValueType::FLOAT;
+    case Antares::Solver::ModelParser::ValueType::INTEGER:
+        return Antares::Solver::ObjectModel::ValueType::INTEGER;
+    case Antares::Solver::ModelParser::ValueType::BOOL:
+        return Antares::Solver::ObjectModel::ValueType::BOOL;
+    default:
+        throw std::runtime_error("Unknown type: " + Antares::Solver::ModelParser::toString(type));
+    }
+}
+
+std::vector<Antares::Solver::ObjectModel::Variable> convertVariables(
+  const Antares::Solver::ModelParser::Model& model)
+{
+    std::vector<Antares::Solver::ObjectModel::Variable> variables;
+    for (const auto& variable: model.variables)
+    {
+        variables.emplace_back(Antares::Solver::ObjectModel::Variable{
+          variable.name,
+          Antares::Solver::ObjectModel::Expression{variable.lower_bound},
+          Antares::Solver::ObjectModel::Expression{variable.upper_bound},
+          convertType(variable.variable_type)});
+    }
+    return variables;
+}
+
 std::vector<Antares::Solver::ObjectModel::Model> convertModels(
   const Antares::Solver::ModelParser::Library& library)
 {
@@ -71,9 +102,12 @@ std::vector<Antares::Solver::ObjectModel::Model> convertModels(
     {
         Antares::Solver::ObjectModel::ModelBuilder modelBuilder;
         std::vector<Antares::Solver::ObjectModel::Parameter> parameters = convertParameters(model);
+        std::vector<Antares::Solver::ObjectModel::Variable> variables = convertVariables(model);
+
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
                           .withParameters(parameters)
+                          .withVariables(variables)
                           .build();
         models.emplace_back(std::move(modelObj));
     }
@@ -186,7 +220,39 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_parameters)
     BOOST_CHECK_EQUAL(parameter1.Name(), "param1");
     BOOST_CHECK(parameter1.isTimeDependent());
     BOOST_CHECK(!parameter1.isScenarioDependent());
+    BOOST_CHECK_EQUAL(parameter1.Type(), Antares::Solver::ObjectModel::ValueType::FLOAT);
     BOOST_CHECK_EQUAL(parameter2.Name(), "param2");
     BOOST_CHECK(!parameter2.isTimeDependent());
     BOOST_CHECK(!parameter2.isScenarioDependent());
+    BOOST_CHECK_EQUAL(parameter2.Type(), Antares::Solver::ObjectModel::ValueType::FLOAT);
+}
+
+// Test library with models and variables
+BOOST_AUTO_TEST_CASE(test_library_models_with_variables)
+{
+    Antares::Solver::ModelParser::Library library;
+    Antares::Solver::ModelParser::Model model1{
+      "model1",
+      "description",
+      {},
+      {{"var1", "7", "pmax", Antares::Solver::ModelParser::ValueType::BOOL},
+       {"var2", "99999999.9999999", "vcost", Antares::Solver::ModelParser::ValueType::INTEGER}},
+      {},
+      {},
+      {},
+      "objectives"};
+    library.models = {model1};
+    Antares::Solver::ObjectModel::Library lib = convert(library);
+    auto& model = lib.models().at("model1");
+    BOOST_REQUIRE_EQUAL(model.Variables().size(), 2);
+    auto& variable1 = model.Variables().at("var1");
+    auto& variable2 = model.Variables().at("var2");
+    BOOST_CHECK_EQUAL(variable1.Name(), "var1");
+    BOOST_CHECK_EQUAL(variable1.LowerBound().Value(), "7");
+    BOOST_CHECK_EQUAL(variable1.UpperBound().Value(), "pmax");
+    BOOST_CHECK_EQUAL(variable1.Type(), Antares::Solver::ObjectModel::ValueType::BOOL);
+    BOOST_CHECK_EQUAL(variable2.Name(), "var2");
+    BOOST_CHECK_EQUAL(variable2.LowerBound().Value(), "99999999.9999999");
+    BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "vcost");
+    BOOST_CHECK_EQUAL(variable2.Type(), Antares::Solver::ObjectModel::ValueType::INTEGER);
 }

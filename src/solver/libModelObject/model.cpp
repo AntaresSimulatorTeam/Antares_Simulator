@@ -51,4 +51,14 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>& parameters)
     return *this;
 }
 
+ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>& variables)
+{
+    std::transform(variables.begin(),
+                   variables.end(),
+                   std::inserter(model_.variables_, model_.variables_.end()),
+                   [](const Variable& variable)
+                   { return std::make_pair(variable.Name(), std::move(variable)); });
+    return *this;
+}
+
 } // namespace Antares::Solver::ObjectModel

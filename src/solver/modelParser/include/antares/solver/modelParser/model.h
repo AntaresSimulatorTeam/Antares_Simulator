@@ -41,6 +41,22 @@ enum class ValueType
     BOOL
 };
 
+inline std::string toString(const ValueType& value_type)
+{
+    using namespace std::string_literals;
+    switch (value_type)
+    {
+    case ValueType::FLOAT:
+        return "FLOAT"s;
+    case ValueType::INTEGER:
+        return "INTEGER"s;
+    case ValueType::BOOL:
+        return "BOOL"s;
+    default:
+        return "UNKNOWN"s;
+    }
+}
+
 inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
 {
     using namespace std::string_literals;
@@ -54,6 +70,9 @@ inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
         break;
     case ValueType::BOOL:
         os << "BOOL"s;
+        break;
+    default:
+        os << "UNKNOWN"s;
         break;
     }
     return os;

@@ -49,11 +49,11 @@ public:
 
     Parameter();
 
-    explicit Parameter(const std::string& name,
+    explicit Parameter(std::string name,
                        ValueType type,
                        TimeDependent timeDependent,
                        ScenarioDependent scenarioDependent):
-        name_(name),
+        name_(std::move(name)),
         type_(type),
         timeDependent_(timeDependent),
         scenarioDependent_(scenarioDependent)
