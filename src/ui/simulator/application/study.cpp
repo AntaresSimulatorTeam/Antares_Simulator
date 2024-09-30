@@ -811,9 +811,9 @@ SaveResult SaveStudy()
     // Reset the entries
     Menu::AddRecentFile(mainFrm.menuRecentFiles(),
                         wxStringFromUTF8(study.header.caption),
-                        wxStringFromUTF8(study.folder));
+                        wxStringFromUTF8(study.folder.string()));
 
-    mainFrm.SetStatusText(wxString() << wxT("  Saving ") << wxStringFromUTF8(study.folder));
+    mainFrm.SetStatusText(wxString() << wxT("  Saving ") << wxStringFromUTF8(study.folder.string()));
 
     // Save the study
     auto* job = new JobSaveStudy(studyptr, study.folder.string());
@@ -839,11 +839,11 @@ SaveResult SaveStudy()
 
     Menu::AddRecentFile(mainFrm.menuRecentFiles(),
                         wxStringFromUTF8(study.header.caption),
-                        wxStringFromUTF8(study.folder));
+                        wxStringFromUTF8(study.folder.string()));
     // Rebuild the menu
     Menu::RebuildRecentFiles(mainFrm.menuRecentFiles());
 
-    gLastOpenedStudyFolder = wxStringFromUTF8(study.folder);
+    gLastOpenedStudyFolder = wxStringFromUTF8(study.folder.string());
 
     RefreshListOfOutputsForTheCurrentStudy();
 
