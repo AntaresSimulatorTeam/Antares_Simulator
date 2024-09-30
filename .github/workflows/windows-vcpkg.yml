@@ -107,6 +107,9 @@ jobs:
           architecture: 'x64'
           python-version: '3.12'
 
+      - name: Install pip dependencies if necessary
+        run: pip install -r src/tests/examples/requirements.txt
+
       - name: Enable git longpaths
         run: git config --system core.longpaths true
 
@@ -140,9 +143,6 @@ jobs:
         shell: bash
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
-
-      - name: Install pip dependencies if necessary
-        run: pip install -r src/tests/examples/requirements.txt
 
       - name: Init submodule Antares_Simulator_Tests
         run: |
