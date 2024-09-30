@@ -454,7 +454,7 @@ static std::string getOutputSuffix(ResultFormat fmt)
 
 fs::path StudyCreateOutputPath(SimulationMode mode,
                                ResultFormat fmt,
-                               const fs::path& rootFolder,
+                               const fs::path& baseOutFolder,
                                const std::string& label,
                                const std::tm& startTime)
 {
@@ -467,7 +467,7 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    fs::path folderOutput = rootFolder / "output" / formatTime(startTime, "%Y%m%d-%H%M");
+    fs::path folderOutput = baseOutFolder / formatTime(startTime, "%Y%m%d-%H%M");
 
     switch (mode)
     {
@@ -513,10 +513,11 @@ void Study::prepareOutput()
     {
         return;
     }
+    fs::path baseFolderOutput = folder / "output";
 
     folderOutput = StudyCreateOutputPath(parameters.mode,
                                          parameters.resultFormat,
-                                         folder,
+                                         baseFolderOutput,
                                          simulationComments.name,
                                          getCurrentTime());
 
