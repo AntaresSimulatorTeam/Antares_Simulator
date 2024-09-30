@@ -502,7 +502,7 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
             newpath = folderOutput.string() + '-' + std::to_string(index) + suffix;
         } while (fs::exists(newpath) and index < 2000);
 
-        folderOutput += '-' + index;
+        folderOutput += '-' + std::to_string(index);
     }
     return folderOutput;
 }
