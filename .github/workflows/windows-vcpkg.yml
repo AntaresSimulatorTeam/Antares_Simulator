@@ -107,17 +107,6 @@ jobs:
           architecture: 'x64'
           python-version: '3.12'
 
-      - name: Install pip dependencies if necessary
-        run: pip install -r src/tests/examples/requirements.txt
-
-      - name: Init submodule Antares_Simulator_Tests
-        run: |
-          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
-
-      - name: Init submodule Antares_Simulator_Tests_NR
-        run: |
-          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
-
       - name: Enable git longpaths
         run: git config --system core.longpaths true
 
@@ -151,6 +140,17 @@ jobs:
         shell: bash
         run: |
           echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
+
+      - name: Install pip dependencies if necessary
+        run: pip install -r src/tests/examples/requirements.txt
+
+      - name: Init submodule Antares_Simulator_Tests
+        run: |
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
+
+      - name: Init submodule Antares_Simulator_Tests_NR
+        run: |
+          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
 
       - name: Run named mps tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
