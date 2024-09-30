@@ -76,10 +76,10 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_emptylabel, Fixture)
 {
     SimulationMode mode = SimulationMode::Economy;
     ResultFormat fmt = legacyFilesDirectories;
-    const YString label = "";
+    const std::string label = "";
     const int64_t startTime = 1;
-    const YString expectedOutput = (outputRoot / "19700101-0000eco").string();
-    const YString actualOutput = StudyCreateOutputPath(mode,
+    const fs::path expectedOutput = (outputRoot / "19700101-0000eco").string();
+    const fs::path actualOutput = StudyCreateOutputPath(mode,
                                                        fmt,
                                                        outputRoot.string(),
                                                        label,
@@ -91,10 +91,10 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_label_now, Fixture)
 {
     SimulationMode mode = SimulationMode::Economy;
     ResultFormat fmt = legacyFilesDirectories;
-    const YString label = "test";
+    const std::string label = "test";
     const int64_t startTime = 1672391667;
-    const YString expectedOutput = (outputRoot / "20221230-0914eco-test").string();
-    const YString actualOutput = StudyCreateOutputPath(mode,
+    const fs::path expectedOutput = (outputRoot / "20221230-0914eco-test").string();
+    const fs::path actualOutput = StudyCreateOutputPath(mode,
                                                        fmt,
                                                        outputRoot.string(),
                                                        label,
@@ -106,10 +106,10 @@ BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
 {
     SimulationMode mode = SimulationMode::Adequacy;
     ResultFormat fmt = legacyFilesDirectories;
-    const YString label = "test";
+    const std::string label = "test";
     const int64_t startTime = 1672391667;
-    const YString expectedOutput = (outputRoot / "20221230-0914adq-test").string();
-    const YString actualOutput = StudyCreateOutputPath(mode,
+    const fs::path expectedOutput = (outputRoot / "20221230-0914adq-test").string();
+    const fs::path actualOutput = StudyCreateOutputPath(mode,
                                                        fmt,
                                                        outputRoot.string(),
                                                        label,
@@ -117,8 +117,8 @@ BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
     BOOST_CHECK_EQUAL(actualOutput, expectedOutput);
 
     fs::create_directory(outputRoot / "20221230-0914adq-test");
-    const YString expectedOutput_suffix = (outputRoot / "20221230-0914adq-test-2").string();
-    const YString actualOutput_suffix = StudyCreateOutputPath(mode,
+    const fs::path expectedOutput_suffix = (outputRoot / "20221230-0914adq-test-2").string();
+    const fs::path actualOutput_suffix = StudyCreateOutputPath(mode,
                                                               fmt,
                                                               outputRoot.string(),
                                                               label,
@@ -130,10 +130,10 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
 {
     SimulationMode mode = SimulationMode::Adequacy;
     ResultFormat fmt = zipArchive;
-    const YString label = "test";
+    const std::string label = "test";
     const int64_t startTime = 1672391667;
-    const YString expectedOutput = (outputRoot / "20221230-0914adq-test").string();
-    const YString actualOutput = StudyCreateOutputPath(mode,
+    const fs::path expectedOutput = (outputRoot / "20221230-0914adq-test").string();
+    const fs::path actualOutput = StudyCreateOutputPath(mode,
                                                        fmt,
                                                        outputRoot.string(),
                                                        label,
@@ -143,8 +143,8 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
     std::ofstream zip_file(outputRoot / "20221230-0914adq-test.zip");
     zip_file << "I am a zip file. Well, not really.";
 
-    const YString expectedOutput_suffix = (outputRoot / "20221230-0914adq-test-2").string();
-    const YString actualOutput_suffix = StudyCreateOutputPath(mode,
+    const fs::path expectedOutput_suffix = (outputRoot / "20221230-0914adq-test-2").string();
+    const fs::path actualOutput_suffix = StudyCreateOutputPath(mode,
                                                               fmt,
                                                               outputRoot.string(),
                                                               label,
