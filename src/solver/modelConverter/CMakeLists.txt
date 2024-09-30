@@ -1,6 +1,5 @@
 set(SOURCES
         modelConverter.cpp
-        #encoders.hxx
         include/antares/solver/modelConverter/modelConverter.h
 )
 
