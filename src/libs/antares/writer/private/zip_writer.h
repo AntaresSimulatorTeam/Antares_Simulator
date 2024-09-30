@@ -49,7 +49,7 @@ class ZipWriteJob
 {
 public:
     ZipWriteJob(ZipWriter& writer,
-                std::string entryPath,
+                const std::string& entryPath,
                 ContentT& content,
                 Benchmarking::DurationCollector& duration_collector);
     void writeEntry();

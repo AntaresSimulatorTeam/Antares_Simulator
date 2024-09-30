@@ -54,13 +54,13 @@ static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 // Class ZipWriteJob
 template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
-                                   std::string entryPath,
+                                   const std::string& entryPath,
                                    ContentT& content,
                                    Benchmarking::DurationCollector& duration_collector):
     pZipHandle(writer.pZipHandle),
     pZipMutex(writer.pZipMutex),
     pState(writer.pState),
-    pEntryPath(std::move(entryPath)),
+    pEntryPath(entryPath),
     pContent(std::move(content)),
     pDurationCollector(duration_collector)
 {
