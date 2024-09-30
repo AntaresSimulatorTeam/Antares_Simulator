@@ -415,11 +415,6 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
 
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
     {
-        // skip
-        if (fileLevel & Category::FileLevel::de_thirdparty)
-        {
-            return true;
-        }
         assert(results.data.area && "Area is NULL");
         const bool thermal_details = fileLevel & Category::FileLevel::de;
         const bool renewable_details = fileLevel & Category::FileLevel::de_res;
@@ -471,7 +466,6 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         bool res;
         if (*results.isPrinted)
         {
-            logs.info() << "size = " << container.size();
             for (uint i = 0; i != container.size(); ++i)
             {
                 res = setClusterCaption(results, fileLevel, i);
