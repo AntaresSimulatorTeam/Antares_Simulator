@@ -659,11 +659,11 @@ protected:
 */
 extern YString StudyIconFile;
 
-std::string StudyCreateOutputPath(SimulationMode mode,
-                                  ResultFormat fmt,
-                                  const std::filesystem::path& folder,
-                                  const std::string& label,
-                                  int64_t startTime);
+std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
+                                            ResultFormat fmt,
+                                            const std::filesystem::path& folder,
+                                            const std::string& label,
+                                            int64_t startTime);
 } // namespace Antares::Data
 
 #include "study.hxx"
