@@ -659,7 +659,7 @@ protected:
 */
 extern YString StudyIconFile;
 
-YString StudyCreateOutputPath(SimulationMode mode,
+std::string StudyCreateOutputPath(SimulationMode mode,
                               ResultFormat fmt,
                               const std::string& folder,
                               const std::string& label,

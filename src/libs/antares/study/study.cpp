@@ -451,11 +451,11 @@ static std::string getOutputSuffix(ResultFormat fmt)
     }
 }
 
-YString StudyCreateOutputPath(SimulationMode mode,
-                              ResultFormat fmt,
-                              const std::string& outputRoot,
-                              const std::string& label,
-                              int64_t startTime)
+std::string StudyCreateOutputPath(SimulationMode mode,
+                                  ResultFormat fmt,
+                                  const std::string& outputRoot,
+                                  const std::string& label,
+                                  int64_t startTime)
 {
     if (fmt == ResultFormat::inMemory)
     {
