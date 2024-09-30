@@ -21,7 +21,6 @@
 #pragma once
 
 #include <map>
-#include <span>
 
 #include "model.h"
 #include "portType.h"
@@ -61,6 +60,7 @@ private:
 
     std::string id_;
     std::string description_;
+
     std::map<std::string, PortType> portTypes_;
     std::map<std::string, Model> models_;
 };
