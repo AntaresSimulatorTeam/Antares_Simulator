@@ -13,6 +13,17 @@ class study_input_handler:
         self.files_path["general"] = self.study_root_dir / "settings" / "generaldata.ini"
         self.files_path["study"] = self.study_root_dir / "study.antares"
 
+    def get_value(self, variable, file_nick_name):
+        # File path
+        file = self.files_path[file_nick_name]
+
+        # Reading the file content (content in)
+        with open(file) as f:
+            # Searching variable and setting its value in a tmp content
+            for line in f:
+                if line.strip().startswith(variable):
+                    return line.split('=')[1].strip()
+
     def set_value(self, variable, value, file_nick_name):
         # File path
         file = self.files_path[file_nick_name]

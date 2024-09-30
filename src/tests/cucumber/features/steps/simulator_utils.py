@@ -10,14 +10,15 @@ from output_utils import parse_output_folder_from_logs
 
 def get_solver_path():
     with open("conf.yaml") as file:
-            content = yaml.full_load(file)
+        content = yaml.full_load(file)
     return content.get("antares-solver")
 
-SOLVER_PATH = get_solver_path() # we only need to run this once
+
+SOLVER_PATH = get_solver_path()  # we only need to run this once
 
 
 def run_simulation(context):
-    activate_simu_outputs(context)  # TODO : remove this and update studies instead
+    init_simu(context)  # TODO : remove this and update studies instead
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
@@ -29,8 +30,11 @@ def run_simulation(context):
     context.details_hourly = None
 
 
-def activate_simu_outputs(context):
+def init_simu(context):
     sih = study_input_handler(Path(context.study_path))
+    # read metadata
+    context.nbyears = int(sih.get_value(variable="nbyears", file_nick_name="general"))
+    # activate year-by-year results
     sih.set_value(variable="synthesis", value="true", file_nick_name="general")
     sih.set_value(variable="year-by-year", value="true", file_nick_name="general")
 
@@ -45,4 +49,3 @@ def build_antares_solver_command(context):
     if context.parallel:
         command.append('--force-parallel=4')
     return command
-

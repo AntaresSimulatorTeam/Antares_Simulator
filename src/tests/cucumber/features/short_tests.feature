@@ -6,9 +6,7 @@ Feature: short tests
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
-    And the annual system cost is
-      | EXP | STD | MIN | MAX |
-      | 0   | 0   | 0   | 0   |
+    And the annual system cost is 0
 
   @fast @short
   Scenario: 002 Thermal fleet - Base
@@ -16,9 +14,7 @@ Feature: short tests
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
-    And the annual system cost is
-      | EXP      | STD | MIN      | MAX      |
-      | 2.729e+7 | 0   | 2.729e+7 | 2.729e+7 |
+    And the annual system cost is 2.729e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
 
@@ -28,9 +24,7 @@ Feature: short tests
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
-    And the annual system cost is
-      | EXP      | STD | MIN      | MAX      |
-      | 2.751e+7 | 0   | 2.751e+7 | 2.751e+7 |
+    And the annual system cost is 2.751e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production on "non-dispatchable semi base" is always equal to 300 MWh
@@ -41,12 +35,24 @@ Feature: short tests
     When I run antares simulator
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
-    And the annual system cost is
-      | EXP      | STD | MIN      | MAX      |
-      | 2.751e+7 | 0   | 2.751e+7 | 2.751e+7 |
+    And the annual system cost is 2.751e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production on "semi base" is always greater than 300 MWh
+
+  @fast @short
+  Scenario: 005 Thermal fleet - Minimum stable power and min up down times
+    Given the study path is "short-tests/005 Thermal fleet - Minimum stable power and min up down times"
+    When I run antares simulator
+    Then the simulation takes less than 5 seconds
+    And the simulation succeeds
+    And the annual system cost is 2.75816e+07
+    And in area "AREA", hourly production on "base" is always zero or greater than 900 MWh
+    And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    And in area "AREA", hourly production on "semi base" is always zero or greater than 100 MWh
+    And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
+    And in area "AREA", hourly production on "peak" is always zero or greater than 10 MWh
+    And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
   @fast @short
   Scenario: 021 Four areas - DC law
