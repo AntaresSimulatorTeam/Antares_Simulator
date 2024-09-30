@@ -456,7 +456,7 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
                                ResultFormat fmt,
                                const fs::path& rootFolder,
                                const std::string& label,
-                               int64_t startTime)
+                               const std::tm& startTime)
 {
     if (fmt == ResultFormat::inMemory)
     {
@@ -467,7 +467,7 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    fs::path folderOutput = rootFolder / "output" / formatTime(getCurrentTime(), "%Y%m%d-%H%M");
+    fs::path folderOutput = rootFolder / "output" / formatTime(startTime, "%Y%m%d-%H%M");
 
     switch (mode)
     {
@@ -509,8 +509,6 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
 
 void Study::prepareOutput()
 {
-    pStartTime = DateTime::Now();
-
     if (parameters.noOutput || !usedByTheSolver)
     {
         return;
@@ -520,7 +518,7 @@ void Study::prepareOutput()
                                          parameters.resultFormat,
                                          folder,
                                          simulationComments.name,
-                                         pStartTime);
+                                         getCurrentTime());
 
     logs.info() << "  Output folder : " << folderOutput;
 }

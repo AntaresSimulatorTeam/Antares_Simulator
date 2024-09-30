@@ -663,7 +663,7 @@ std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
                                             ResultFormat fmt,
                                             const std::filesystem::path& folder,
                                             const std::string& label,
-                                            int64_t startTime);
+                                            const std::tm& startTime);
 } // namespace Antares::Data
 
 #include "study.hxx"
