@@ -90,7 +90,6 @@ toc_depth: 2
 
 ## Branch 8.8.x (end of support 12/2025)
 ### 8.8.10 (09/2024)
-
 #### Bugfix (adequacy patch)
 * Force enable-first-step=false [ANT-2218] (#2419)
 * Adequacy patch CSR - revamp output variables [ANT-1932] (#2421)
@@ -99,10 +98,10 @@ toc_depth: 2
 #### Bugfix (other)
 * Use OR-Tools v9.11-rte1.1 [ANT-2069] (#2418)
 
-## 8.8.9 (09/2024)
+### 8.8.9 (09/2024)
 * Revert "Fix bug hydro heuristic with mingen (ANT-1825) (#2258)"
 
-## 8.8.8 (09/2024)
+### 8.8.8 (09/2024)
 #### Bugfix
 * Timeseries generation stored in input (#2180)
 * Fix bug hydro heuristic with mingen (ANT-1825) (#2258)
