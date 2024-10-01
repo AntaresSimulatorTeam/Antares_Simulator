@@ -21,6 +21,8 @@
 
 #include "antares/solver/libObjectModel/library.h"
 
+#include <algorithm>
+
 namespace Antares::Solver::ObjectModel
 {
 
