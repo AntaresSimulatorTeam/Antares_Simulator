@@ -21,39 +21,40 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
-#include "antares/solver/expressions/visitors/CloneVisitor.h"
+#include "constraint.h"
+#include "expression.h"
+#include "parameter.h"
+#include "port.h"
+#include "variable.h"
 
-namespace Antares::Solver::Visitors
+namespace Antares::Solver::ObjectModel
 {
-
-struct KeyHasher
-{
-    std::size_t operator()(const Nodes::PortFieldNode& n) const;
-};
 
 /**
- * @brief Represents the context for performing substitutions in a syntax tree.
+ * Defines a model that can be referenced by actual components.
+ * A model defines the behaviour of those components.
  */
-struct PortfieldSubstitutionContext
-{
-    std::unordered_map<Nodes::PortFieldNode, Nodes::Node*, KeyHasher> portfield;
-};
-
-/**
- * @brief Represents a visitor for substituting portfield nodes in a syntax tree.
- */
-class PortfieldSubstitutionVisitor: public CloneVisitor
+class Model
 {
 public:
-    PortfieldSubstitutionVisitor(Registry<Nodes::Node>& registry,
-                                 PortfieldSubstitutionContext& ctx);
+    Model();
+    ~Model() = default;
 
-    PortfieldSubstitutionContext& ctx_;
-    std::string name() const override;
+    std::vector<Constraint*> getConstraints();
 
 private:
-    // Only override visit method for PortField, clone the rest
-    Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
+    std::string id_;
+    Expression objective_;
+
+    std::map<std::string, Parameter> parameters_;
+    std::map<std::string, Variable> variables_;
+
+    std::map<std::string, Constraint> constraints_;
+    std::map<std::string, Constraint> bindingConstraints_;
+
+    std::map<std::string, Port> ports_;
 };
-} // namespace Antares::Solver::Visitors
+
+} // namespace Antares::Solver::ObjectModel

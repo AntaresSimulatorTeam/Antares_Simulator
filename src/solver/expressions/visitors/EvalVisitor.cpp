@@ -112,6 +112,11 @@ double EvalVisitor::visit(const Nodes::PortFieldNode* node)
     throw EvalVisitorNotImplemented(name(), node->name());
 }
 
+double EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
+{
+    throw EvalVisitorNotImplemented(name(), node->name());
+}
+
 double EvalVisitor::visit(const Nodes::ComponentVariableNode* node)
 {
     throw EvalVisitorNotImplemented(name(), node->name());

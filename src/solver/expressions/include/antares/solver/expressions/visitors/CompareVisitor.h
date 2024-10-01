@@ -46,6 +46,7 @@ public:
     bool visit(const Nodes::ParameterNode* param, const Nodes::Node* other) override;
     bool visit(const Nodes::LiteralNode* param, const Nodes::Node* other) override;
     bool visit(const Nodes::PortFieldNode* port_field_node, const Nodes::Node* other) override;
+    bool visit(const Nodes::PortFieldSumNode* port_field_node, const Nodes::Node* other) override;
     bool visit(const Nodes::ComponentVariableNode* component_node,
                const Nodes::Node* other) override;
     bool visit(const Nodes::ComponentParameterNode* component_node,
