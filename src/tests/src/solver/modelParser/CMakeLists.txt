@@ -2,6 +2,7 @@
 set(SOURCE_FILES
         testModelParser.cpp
         testModelTranslator.cpp
+        test_full.cpp
 )
 
 # Add executable
