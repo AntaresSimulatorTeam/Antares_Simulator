@@ -39,8 +39,8 @@ struct convert<Antares::Solver::ModelParser::Parameter>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.time_dependent = node["time-dependent"].as<bool>();
-        rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
+        rhs.time_dependent = node["time-dependent"].as<bool>(true);
+        rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
         return true;
     }
 };
