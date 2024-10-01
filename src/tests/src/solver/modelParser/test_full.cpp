@@ -45,6 +45,18 @@ void checkParameter(const ObjectModel::Parameter& parameter,
     BOOST_CHECK_EQUAL(parameter.Type(), type);
 }
 
+void checkVariable(const ObjectModel::Variable& variable,
+                   const std::string& name,
+                   const std::string& lowerBound,
+                   const std::string& upperBound,
+                   ObjectModel::ValueType type)
+{
+    BOOST_CHECK_EQUAL(variable.Name(), name);
+    BOOST_CHECK_EQUAL(variable.LowerBound().Value(), lowerBound);
+    BOOST_CHECK_EQUAL(variable.UpperBound().Value(), upperBound);
+    BOOST_CHECK_EQUAL(variable.Type(), type);
+}
+
 BOOST_AUTO_TEST_CASE(test_full)
 {
     auto library = R"(
@@ -266,6 +278,17 @@ library:
                        false,
                        false,
                        ObjectModel::ValueType::FLOAT);
+        checkParameter(model0.Parameters().at("p_max"),
+                       "p_max",
+                       false,
+                       false,
+                       ObjectModel::ValueType::FLOAT);
+
+        checkVariable(model0.Variables().at("generation"),
+                      "generation",
+                      "0",
+                      "p_max",
+                      ObjectModel::ValueType::FLOAT);
     }
     catch (const YAML::Exception& e)
     {
