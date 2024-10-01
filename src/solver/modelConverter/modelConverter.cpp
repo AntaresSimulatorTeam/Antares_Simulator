@@ -96,7 +96,7 @@ Antares::Solver::ObjectModel::ValueType convertType(Antares::Solver::ModelParser
     using namespace std::string_literals;
     switch (type)
     {
-    case Antares::Solver::ModelParser::ValueType::FLOAT:
+    case Antares::Solver::ModelParser::ValueType::CONTINUOUS:
         return Antares::Solver::ObjectModel::ValueType::FLOAT;
     case Antares::Solver::ModelParser::ValueType::INTEGER:
         return Antares::Solver::ObjectModel::ValueType::INTEGER;

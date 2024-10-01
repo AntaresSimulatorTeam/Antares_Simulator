@@ -240,14 +240,15 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_constraints)
 BOOST_AUTO_TEST_CASE(test_library_two_models)
 {
     ModelParser::Library library;
-    ModelParser::Model model1{.id = "model1",
-                              .description = "description",
-                              .parameters = {{"param1", true, false}, {"param2", false, false}},
-                              .variables = {{"varP", "7", "pmin", ModelParser::ValueType::FLOAT}},
-                              .ports = {},
-                              .port_field_definitions = {},
-                              .constraints = {},
-                              .objective = "objectives"};
+    ModelParser::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}, {"param2", false, false}},
+      .variables = {{"varP", "7", "pmin", ModelParser::ValueType::CONTINUOUS}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = "objectives"};
     ModelParser::Model model2{
       .id = "model2",
       .description = "description",
