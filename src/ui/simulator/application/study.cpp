@@ -156,12 +156,12 @@ static void finalizeSaveExport(Data::Study::Ptr study, Forms::ApplWnd& frame)
 {
     Menu::AddRecentFile(frame.menuRecentFiles(),
                         wxStringFromUTF8(study->header.caption),
-                        wxStringFromUTF8(study->folder));
+                        wxStringFromUTF8(study->folder.string()));
 
     // Rebuild the menu
     Menu::RebuildRecentFiles(frame.menuRecentFiles());
 
-    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder);
+    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder.string());
 
     RefreshListOfOutputsForTheCurrentStudy();
 
