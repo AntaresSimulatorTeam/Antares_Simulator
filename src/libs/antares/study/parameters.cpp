@@ -1230,7 +1230,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
 void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
 {
     // Options only set from the command-line
-    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
     optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
     optOptions.solverParameters = options.optOptions.solverParameters;
 
