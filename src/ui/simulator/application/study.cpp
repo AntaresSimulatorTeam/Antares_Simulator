@@ -1049,7 +1049,7 @@ void OpenStudyFromFolder(wxString folder)
         {
             Menu::AddRecentFile(mainFrm.menuRecentFiles(),
                                 wxStringFromUTF8(study->header.caption),
-                                wxStringFromUTF8(study->folder));
+                                wxStringFromUTF8(study->folder.string()));
         }
     }
     // Lock the window to prevent flickering
@@ -1115,7 +1115,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
     {
         // Logs
-        mainFrm.SetStatusText(wxString() << wxT("  Running ") << wxStringFromUTF8(study->folder));
+        mainFrm.SetStatusText(wxString() << wxT("  Running ") << wxStringFromUTF8(study->folder.string()));
         logs.info();
         logs.checkpoint() << "Launching the simulation";
 
