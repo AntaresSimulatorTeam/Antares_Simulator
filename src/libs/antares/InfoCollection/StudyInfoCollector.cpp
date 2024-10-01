@@ -45,7 +45,6 @@ void StudyInfoCollector::toFileContent(FileContent& file_content)
     unitCommitmentModeToFileContent(file_content);
     maxNbYearsInParallelToFileContent(file_content);
     solverVersionToFileContent(file_content);
-    ORToolsUsed(file_content);
     ORToolsSolver(file_content);
 }
 
@@ -142,11 +141,6 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
                                  + ANTARES_VERSION_BUILD;
 
     file_content.addItemToSection("study", "antares version", version);
-}
-
-void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
-{
-    file_content.addItemToSection("study", "ortools used", "true");
 }
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)

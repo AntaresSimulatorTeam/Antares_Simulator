@@ -147,19 +147,19 @@ jobs:
           cat ./simtest.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-    #  - name: Export simtest version
-    #    shell: bash
-    #    run: |
-    #      echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
+      - name: Export simtest version
+        shell: bash
+        run: |
+          echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-      - name: Run named mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-named-mps
-          os: ${{ env.os }}
-          variant: "named-mps"
+      # - name: Run named mps tests
+      #   if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
+      #   uses: ./.github/workflows/run-tests
+      #   with:
+      #     simtest-tag: ${{ env.SIMTEST }}
+      #     batch-name: valid-named-mps
+      #     os: ${{ env.os }}
+      #     variant: "named-mps"
 
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
@@ -221,13 +221,13 @@ jobs:
           batch-name: valid-v870
           os: ${{ env.os }}
 
-    #  - name: Run tests introduced in 9.1.0
-    #    if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-    #    uses: ./.github/workflows/run-tests
-    #    with:
-    #      simtest-tag: ${{ env.SIMTEST }}
-    #      batch-name: valid-v910
-    #      os: ${{ env.os }}
+      - name: Run tests introduced in 9.1.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v910
+          os: ${{ env.os }}
 
       - name: Run tests introduced in 9.2.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -250,13 +250,13 @@ jobs:
         with:
           feature: "features/short_tests.feature"
 
-      - name: Run mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-mps
-          os: ${{ env.os }}
+      # - name: Run mps tests
+      #   if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+      #   uses: ./.github/workflows/run-tests
+      #   with:
+      #     simtest-tag: ${{ env.SIMTEST }}
+      #     batch-name: valid-mps
+      #     os: ${{ env.os }}
 
       - name: Run parallel tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}

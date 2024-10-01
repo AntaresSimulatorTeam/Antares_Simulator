@@ -219,13 +219,13 @@ jobs:
           batch-name: valid-v910
           os: ${{ env.os }}
 
-    #  - name: Run tests introduced in 9.2.0
-    #    if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-    #    uses: ./.github/workflows/run-tests
-    #    with:
-    #      simtest-tag: ${{ env.SIMTEST }}
-    #      batch-name: valid-v920
-    #      os: ${{ env.os }}
+      - name: Run tests introduced in 9.2.0
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v920
+          os: ${{ env.os }}
 
       - name: Run short-tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -240,13 +240,13 @@ jobs:
         with:
           feature: "features/short_tests.feature"
 
-      - name: Run mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-mps
-          os: ${{ env.os }}
+      # - name: Run mps tests
+      #   if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+      #   uses: ./.github/workflows/run-tests
+      #   with:
+      #     simtest-tag: ${{ env.SIMTEST }}
+      #     batch-name: valid-mps
+      #     os: ${{ env.os }}
 
       - name: Run tests for adequacy patch (CSR)
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}

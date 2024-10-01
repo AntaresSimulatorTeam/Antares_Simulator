@@ -85,7 +85,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
@@ -94,11 +93,10 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     TIME_MEASURE timeMeasure;
     if (!PremierPassage)
     {
-        ProbSpx = nullptr;
         solver = nullptr;
     }
 
-    if (ProbSpx == nullptr && solver == nullptr)
+    if (solver == nullptr)
     {
         Probleme.Contexte = SIMPLEXE_SEUL;
         Probleme.BaseDeDepartFournie = NON_SPX;
@@ -111,13 +109,9 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             {
                 ORTOOLS_LibererProbleme(solver);
             }
-            else if (ProbSpx != nullptr)
-            {
-                SPX_LibererProbleme(ProbSpx);
-            }
+
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-            ProbSpx = nullptr;
             solver = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
@@ -222,10 +216,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             if (solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
-            }
-            else if (ProbSpx != nullptr)
-            {
-                SPX_LibererProbleme(ProbSpx);
             }
 
             logs.info() << " Solver: Standard resolution failed";
