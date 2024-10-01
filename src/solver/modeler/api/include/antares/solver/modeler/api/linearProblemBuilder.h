@@ -24,7 +24,6 @@
 #include <vector>
 
 #include "linearProblemFiller.h"
-#include "mipSolution.h"
 
 namespace Antares::Solver::Modeler::Api
 {
@@ -32,9 +31,11 @@ namespace Antares::Solver::Modeler::Api
 class LinearProblemBuilder
 {
 public:
-    virtual void LinearProblemBuilder(std::vector<LinearProblemFiller*> fillers) = 0;
-    virtual void build(LinearProblemData* data) = 0;
-    virtual MipSolution* solve() = 0;
+    explicit LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers);
+    void build(ILinearProblem& pb, LinearProblemData& data);
+
+private:
+    const std::vector<LinearProblemFiller*>& fillers_;
 };
 
 } // namespace Antares::Solver::Modeler::Api
