@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
                   description: "model_description"
                   parameters:
                       - id: "param_name"
-                        time-dependent: false
+                        time-dependent: FALSE
                         scenario-dependent: false
                   variables: []
                   ports: []
@@ -363,15 +363,15 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
                     - id: "var1"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "BOOL"
+                      variable-type: "boolean"
                     - id: "var2"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "INTEGER"
+                      variable-type: "integer"
                     - id: "var3"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "FLOAT"
+                      variable-type: "continuous"
                     - id: "var4"
                       lower-bound: 0
                       upper-bound: 1
@@ -388,8 +388,8 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
     auto& var4 = model.variables[3];
     BOOST_CHECK_EQUAL(var1.variable_type, Antares::Solver::ModelParser::ValueType::BOOL);
     BOOST_CHECK_EQUAL(var2.variable_type, Antares::Solver::ModelParser::ValueType::INTEGER);
-    BOOST_CHECK_EQUAL(var3.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
-    BOOST_CHECK_EQUAL(var4.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
+    BOOST_CHECK_EQUAL(var3.variable_type, Antares::Solver::ModelParser::ValueType::CONTINUOUS);
+    BOOST_CHECK_EQUAL(var4.variable_type, Antares::Solver::ModelParser::ValueType::CONTINUOUS);
 }
 
 // Test library with one model containing ports

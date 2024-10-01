@@ -240,14 +240,15 @@ BOOST_AUTO_TEST_CASE(model_constraints_properly_translated)
 BOOST_AUTO_TEST_CASE(multiple_models_properly_translated)
 {
     ModelParser::Library library;
-    ModelParser::Model model1{.id = "model1",
-                              .description = "description",
-                              .parameters = {{"param1", true, false}, {"param2", false, false}},
-                              .variables = {{"varP", "7", "pmin", ModelParser::ValueType::FLOAT}},
-                              .ports = {},
-                              .port_field_definitions = {},
-                              .constraints = {},
-                              .objective = "objectives"};
+    ModelParser::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}, {"param2", false, false}},
+      .variables = {{"varP", "7", "pmin", ModelParser::ValueType::CONTINUOUS}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = "objectives"};
     ModelParser::Model model2{
       .id = "model2",
       .description = "description",
