@@ -92,6 +92,11 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* port_field_node)
     return context_.at(port_field_node);
 }
 
+TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* port_field_node)
+{
+    return context_.at(port_field_node);
+}
+
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)
 {
     return context_.at(component_variable_node);

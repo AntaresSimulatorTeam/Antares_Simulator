@@ -131,8 +131,12 @@ private:
     void visit(const Nodes::ParameterNode* node, std::ostream& os) override;
     void visit(const Nodes::LiteralNode* node, std::ostream& os) override;
     void visit(const Nodes::PortFieldNode* node, std::ostream& os) override;
+    void visit(const Nodes::PortFieldSumNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentVariableNode* node, std::ostream& os) override;
     void visit(const Nodes::ComponentParameterNode* node, std::ostream& os) override;
+
+    void computeNumberNodesPerType();
+    void makeLegend(std::ostream& os);
 
     /**
      * @brief Retrieves a unique ID for a given node.
@@ -181,7 +185,14 @@ private:
      *
      * This map is used to keep track of assigned IDs for each node in the AST.
      */
-    std::map<std::string, std::map<const Nodes::Node*, unsigned int>> nodeIds_;
+    std::map<const Nodes::Node*, unsigned int> nodeIds_;
+
+    /**
+     * @brief A map associating a number of instances to a type name.
+     *
+     * This map is used to keep track of assigned IDs for each node in the AST.
+     */
+    std::map<std::string, unsigned int> nbNodesPerType_;
 
     /**
      * @brief Counter for generating unique node IDs.
