@@ -20,6 +20,8 @@
 */
 
 #include <algorithm>
+#include <utility>
+#include <vector>
 
 #include <antares/solver/libObjectModel/model.h>
 
