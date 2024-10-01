@@ -3,6 +3,7 @@
 import os
 import pandas
 import configparser
+import numpy as np
 
 
 def parse_output_folder_from_logs(logs: bytes) -> str:
@@ -46,20 +47,21 @@ def read_csv(file_name):
     return pandas.read_csv(file_name, skiprows=ignore_rows, sep='\t', low_memory=False)
 
 
-def compute_min_up_and_down_durations(prod):
+def compute_min_up_and_down_durations(prod, nominal_capacity_per_unit : float):
     min_up = 1e10
     min_down = 1e10
-    up = 1 if prod[0] > 1e-6 else 0
-    down = 0 if prod[0] > 1e-6 else 1
+    nb_up_units = np.ceil(prod / nominal_capacity_per_unit)
+    up = 1 if nb_up_units[0] > 1e-6 else 0
+    down = 0 if nb_up_units[0] > 1e-6 else 1
     for t in range(1, len(prod)):
-        if prod[t] > 1e-6:
+        if nb_up_units[t] > 1e-6:
             up += 1
-            if prod[t - 1] < 1e-6:
+            if nb_up_units[t - 1] < 1e-6:
                 min_down = min(min_down, down)
                 down = 0
         else:
             down += 1
-            if prod[t - 1] > 1e-6:
+            if nb_up_units[t - 1] > 1e-6:
                 min_up = min(min_up, up)
                 up = 0
     return min_up, min_down

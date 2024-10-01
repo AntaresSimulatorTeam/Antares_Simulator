@@ -1,7 +1,6 @@
 # Methods to run Antares simulator
 
 import subprocess
-import glob
 import yaml
 from pathlib import Path
 from study_input_handler import study_input_handler

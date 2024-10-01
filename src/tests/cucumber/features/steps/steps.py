@@ -7,6 +7,7 @@ from behave import *
 from assertions import *
 from context_utils import *
 from simulator_utils import *
+from input_utils import *
 
 
 @given('the study path is "{string}"')
@@ -90,7 +91,7 @@ def check_lold_value(context, area, date, year, lold_value_mw):
 
 
 @then(
-    'in area "{area}", during year {year}, hourly production on "{prod_name}" is always {comparator_and_hourly_prod} MWh')
+    'in area "{area}", during year {year}, hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
 def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_hourly_prod):
     expected_prod = float(comparator_and_hourly_prod.split(" ")[-1])
     actual_hourly_prod = get_details_hourly(context, area.lower(), int(year))[prod_name]
@@ -105,7 +106,7 @@ def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_
     assert ok.all()
 
 
-@then('in area "{area}", hourly production on "{prod_name}" is always {comparator_and_hourly_prod} MWh')
+@then('in area "{area}", hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
 def check_prod_for_all_years(context, area, prod_name, comparator_and_hourly_prod):
     for year in range(1, context.nbyears + 1):
         check_prod_for_specific_year(context, area, year, prod_name, comparator_and_hourly_prod)
@@ -116,7 +117,7 @@ def check_prod_for_all_years(context, area, prod_name, comparator_and_hourly_pro
 def check_min_up_down_duration(context, area, prod_name, up_duration, down_duration):
     for year in range(1, context.nbyears + 1):
         actual_hourly_prod = get_details_hourly(context, area.lower(), year)[prod_name]
-        min_up, min_down = compute_min_up_and_down_durations(actual_hourly_prod)
+        min_up, min_down = compute_min_up_and_down_durations(actual_hourly_prod, get_thermal_cluster_nominal_capacity(context.study_path, area, prod_name))
         assert min_up >= float(up_duration)
         assert min_down >= float(down_duration)
 
@@ -124,3 +125,22 @@ def check_min_up_down_duration(context, area, prod_name, up_duration, down_durat
 @step('in area "{area}", during year {year}, total non-proportional cost is {np_cost}')
 def check_np_cost_for_specific_year(context, area, year, np_cost):
     assert_double_close(float(np_cost), get_values_annual(context, area.lower(), int(year))["NP COST"][0], 1e-6)
+
+@then('in area "{area}", the {n_units} units of "{prod_name}" produce between {min_p} and {max_p} MWh hourly')
+def check_pmin_pmax(context, area, n_units, prod_name, min_p, max_p):
+    allowed_ranges = [(0, 0)]
+    for n_units_up in range(1, int(n_units) + 1):
+        allowed_ranges.append((n_units_up * int(min_p), n_units_up * int(max_p)))
+    merged_ranges = merge_ranges(allowed_ranges)
+    for year in range(1, context.nbyears + 1):
+        actual_hourly_prod = get_details_hourly(context, area.lower(), year)[prod_name]
+
+def merge_ranges(a):
+    b = []
+    for begin, end in sorted(a):
+        if b and b[-1][1] >= begin - 1:
+            b[-1][1] = max(b[-1][1], end)
+        else:
+            b.append([begin, end])
+    return b
+

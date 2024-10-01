@@ -27,7 +27,7 @@ Feature: short tests
     And the annual system cost is 2.751e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
-    And in area "AREA", during year 1, hourly production on "non-dispatchable semi base" is always equal to 300 MWh
+    And in area "AREA", during year 1, hourly production of "non-dispatchable semi base" is always equal to 300 MWh
 
   @fast @short
   Scenario: 004 Thermal fleet - Partial must-run
@@ -38,7 +38,7 @@ Feature: short tests
     And the annual system cost is 2.751e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
-    And in area "AREA", during year 1, hourly production on "semi base" is always greater than 300 MWh
+    And in area "AREA", during year 1, hourly production of "semi base" is always greater than 300 MWh
 
   @fast @short
   Scenario: 005 Thermal fleet - Minimum stable power and min up down times
@@ -47,11 +47,14 @@ Feature: short tests
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
     And the annual system cost is 2.75816e+07
-    And in area "AREA", hourly production on "base" is always zero or greater than 900 MWh
+    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
+    And in area "AREA", the 4 units of "base" produce between 400 and 900 MWh hourly
+    And in area "AREA", the 5 units of "semi base" produce between 100 and 300 MWh hourly
+    And in area "AREA", the 8 units of "peak" produce between 10 and 100 MWh hourly
     And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
-    And in area "AREA", hourly production on "semi base" is always zero or greater than 100 MWh
+    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
     And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
-    And in area "AREA", hourly production on "peak" is always zero or greater than 10 MWh
+    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
     And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
   @fast @short
@@ -64,12 +67,51 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.9338e+07
     And in area "AREA", during year 1, total non-proportional cost is 1756400
-    And in area "AREA", hourly production on "base" is always zero or greater than 900 MWh
+    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
     And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
-    And in area "AREA", hourly production on "semi base" is always zero or greater than 100 MWh
+    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
     And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
-    And in area "AREA", hourly production on "peak" is always zero or greater than 10 MWh
+    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
     And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
+
+  @fast @short @wip
+  Scenario: 007 Thermal fleet - Fast unit commitment
+    # This example is the first of a set of two that are comparing the two unit-commitment modes of Antares.
+    # Fast mode
+    # => overall cost is not great, there are a lot of startups, and min up & down time are considered equal
+    Given the study path is "short-tests/007 Thermal fleet - Fast unit commitment"
+    When I run antares simulator
+    Then the simulation takes less than 5 seconds
+    And the simulation succeeds
+    And the annual system cost is 2.98912e+07
+    And in area "AREA", during year 1, total non-proportional cost is 1861400
+    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
+    And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
+    And in area "AREA", unit "semi base" respects a minimum up duration of 12 hours, and a minimum down duration of 12 hours
+    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
+    And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
+    And in area "AREA", during year 1, loss of load lasts 1 hours
+    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
+
+  @fast @short @wip
+  Scenario: 008 Thermal fleet - Accurate unit commitment
+    # Like previous test, but with unit commitment
+    # => overall cost is better, there are less startups, and min up & down time are not equal
+    Given the study path is "short-tests/008 Thermal fleet - Accurate unit commitment"
+    When I run antares simulator
+    Then the simulation takes less than 5 seconds
+    And the simulation succeeds
+    And the annual system cost is 2.97339e+07
+    And in area "AREA", during year 1, total non-proportional cost is 1861400
+    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
+    And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
+    And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
+    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
+    And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
+    And in area "AREA", during year 1, loss of load lasts 1 hours
+    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
 
   @fast @short
   Scenario: 021 Four areas - DC law

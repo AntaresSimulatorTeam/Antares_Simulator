@@ -1,6 +1,3 @@
-# Currently used to activate simulation outputs
-# TODO : remove this and update parameters in simulation input files
-
 import os
 
 
@@ -12,6 +9,7 @@ class study_input_handler:
         self.files_path["desktop"] = self.study_root_dir / "Desktop.ini"
         self.files_path["general"] = self.study_root_dir / "settings" / "generaldata.ini"
         self.files_path["study"] = self.study_root_dir / "study.antares"
+        self.files_path["thermal"] = self.study_root_dir / "study.antares"
 
     def get_value(self, variable, file_nick_name):
         # File path
@@ -23,6 +21,23 @@ class study_input_handler:
             for line in f:
                 if line.strip().startswith(variable):
                     return line.split('=')[1].strip()
+
+    def get_input(self, input_file, section, variable):
+        # File path
+        file = self.study_root_dir / "input" / input_file.replace("/", os.sep)
+        correct_section = False
+        # Reading the file content (content in)
+        with open(file) as f:
+            # Searching variable and setting its value in a tmp content
+            for line in f:
+                if line.startswith("["):
+                    if f"[{section}]" in line:
+                        correct_section = True
+                    else:
+                        correct_section = False
+                else:
+                    if correct_section and line.strip().startswith(variable):
+                        return line.split('=')[1].strip()
 
     def set_value(self, variable, value, file_nick_name):
         # File path
