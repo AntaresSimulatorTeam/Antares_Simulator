@@ -22,6 +22,8 @@
 
 #include <yaml-cpp/exceptions.h>
 
+#include "antares/solver/libObjectModel/library.h"
+#include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/model.h"
 #include "antares/solver/modelParser/parser.h"
 #define WIN32_LEAN_AND_MEAN
@@ -29,6 +31,19 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace std::string_literals;
+using namespace Antares::Solver;
+
+void checkParameter(const ObjectModel::Parameter& parameter,
+                    const std::string& name,
+                    bool timeDependent,
+                    bool scenarioDependent,
+                    ObjectModel::ValueType type)
+{
+    BOOST_CHECK_EQUAL(parameter.Name(), name);
+    BOOST_CHECK_EQUAL(parameter.isTimeDependent(), timeDependent);
+    BOOST_CHECK_EQUAL(parameter.isScenarioDependent(), scenarioDependent);
+    BOOST_CHECK_EQUAL(parameter.Type(), type);
+}
 
 BOOST_AUTO_TEST_CASE(test_full)
 {
@@ -220,8 +235,37 @@ library:
 
     try
     {
-        Antares::Solver::ModelParser::Parser parser;
-        Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+        ModelParser::Parser parser;
+        ModelParser::Library libraryObj = parser.parse(library);
+        ObjectModel::Library lib = ModelConverter::convert(libraryObj);
+        BOOST_CHECK_EQUAL(lib.id(), "basic");
+        BOOST_CHECK_EQUAL(lib.description(), "Basic library");
+
+        BOOST_REQUIRE_EQUAL(lib.portTypes().size(), 1);
+        auto& portType = lib.portTypes().at("flow");
+        BOOST_CHECK_EQUAL(portType.id(), "flow");
+        BOOST_CHECK_EQUAL(portType.description(), "A port which transfers power flow");
+
+        BOOST_REQUIRE_EQUAL(portType.fields().size(), 1);
+        auto& portTypeField = portType.fields().at(0);
+        BOOST_CHECK_EQUAL(portTypeField.Name(), "flow");
+
+        BOOST_REQUIRE_EQUAL(lib.models().size(), 7);
+        auto& model0 = lib.models().at("generator");
+        BOOST_CHECK_EQUAL(model0.Id(), "generator");
+        BOOST_CHECK_EQUAL(model0.Objective().Value(), "expec(sum(cost * generation))");
+
+        BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);
+        BOOST_REQUIRE_EQUAL(model0.Variables().size(), 1);
+        // BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1); Unsuported
+        //  BOOST_REQUIRE_EQUAL(model0.PortFieldDefinitions().size(), 1); Unsuported
+
+        checkParameter(model0.Parameters().at("cost"),
+                       "cost",
+                       false,
+                       false,
+                       ObjectModel::ValueType::FLOAT);
     }
     catch (const YAML::Exception& e)
     {
