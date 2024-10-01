@@ -107,19 +107,19 @@ var NAVTREEINDEX =
 "classAntares_1_1Forms_1_1ApplWnd.html#a7081494dd3912d94c140f40dcf9a1709",
 "classAntares_1_1Map_1_1Node.html#abaf5387a6c7668591d9453f6a51bbbd6",
 "classAntares_1_1Solver_1_1IResultWriter.html",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html",
-"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334",
-"classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#acb29a09ec50c9f4b26cb26c66f418ab1",
-"classAntares_1_1Window_1_1ExportMap.html#a48052f56f06d4adf4e6f58f0be01ac40",
-"classAntares_1_1Window_1_1Thermal_1_1Panel.html#abbce6dda9f5e4cad48bae6dda251dd55",
-"classLinearProblemMatrixStartUpCosts.html",
-"datasource_8hxx_source.html",
-"dir_afc7c14ae171d28f17ac5a59ea66005a.html",
-"functions_vars_l.html",
-"namespacemembers.html",
-"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a1fe574440a01eafe5bbc071c44c50afe",
-"structMaxPumpingData.html"
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#acd13d29fbdbad7c894a59965bd067bed",
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c3f05d20ded3bcfc6b05017ae2b0957",
+"classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html#abd3c0c1c598af850c58695db89822d96",
+"classAntares_1_1Window_1_1ExportMap.html#a370853c49f5dd026e856a9ef98956e8b",
+"classAntares_1_1Window_1_1Thermal_1_1Panel.html#a8219aad020405e1651c6aff3f18c4cd4",
+"classLinearProblemMatrix.html",
+"datasource_8h_source.html",
+"dir_ade70c9ce0816f814aedf32407cf483d.html",
+"functions_vars_e.html",
+"namespaceLocalPolicy.html#a1333fdac82eb04f896ccba5d66b48ad3",
+"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a7d8a25ee0fb5862708223cac004f4acf",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html",
+"structExchangeBalanceData.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

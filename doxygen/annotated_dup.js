@@ -504,6 +504,17 @@ var annotated_dup =
             [ "OrtoolsMipVariable", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html", null ]
           ] ]
         ] ],
+        [ "ModelParser", null, [
+          [ "Constraint", "structAntares_1_1Solver_1_1ModelParser_1_1Constraint.html", null ],
+          [ "Library", "structAntares_1_1Solver_1_1ModelParser_1_1Library.html", null ],
+          [ "Model", "structAntares_1_1Solver_1_1ModelParser_1_1Model.html", null ],
+          [ "Parameter", "structAntares_1_1Solver_1_1ModelParser_1_1Parameter.html", null ],
+          [ "Parser", "classAntares_1_1Solver_1_1ModelParser_1_1Parser.html", null ],
+          [ "Port", "structAntares_1_1Solver_1_1ModelParser_1_1Port.html", null ],
+          [ "PortFieldDefinition", "structAntares_1_1Solver_1_1ModelParser_1_1PortFieldDefinition.html", null ],
+          [ "PortType", "structAntares_1_1Solver_1_1ModelParser_1_1PortType.html", null ],
+          [ "Variable", "structAntares_1_1Solver_1_1ModelParser_1_1Variable.html", null ]
+        ] ],
         [ "Nodes", null, [
           [ "AST", "classAntares_1_1Solver_1_1Nodes_1_1AST.html", null ],
           [ "ASTPreOrderIterator", "classAntares_1_1Solver_1_1Nodes_1_1ASTPreOrderIterator.html", null ],
@@ -1231,6 +1242,14 @@ var annotated_dup =
       [ "VariableManager", "classVariableManagement_1_1VariableManager.html", null ]
     ] ],
     [ "YAML", null, [
+      [ "convert< Antares::Solver::ModelParser::Constraint >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1Constraint_01_4.html", null ],
+      [ "convert< Antares::Solver::ModelParser::Library >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1Library_01_4.html", null ],
+      [ "convert< Antares::Solver::ModelParser::Model >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1Model_01_4.html", null ],
+      [ "convert< Antares::Solver::ModelParser::Parameter >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1Parameter_01_4.html", null ],
+      [ "convert< Antares::Solver::ModelParser::Port >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1Port_01_4.html", null ],
+      [ "convert< Antares::Solver::ModelParser::PortFieldDefinition >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1PortFieldDefinition_01_4.html", null ],
+      [ "convert< Antares::Solver::ModelParser::PortType >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1PortType_01_4.html", null ],
+      [ "convert< Antares::Solver::ModelParser::Variable >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelParser_1_1Variable_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Vec3 >", "structYAML_1_1convert_3_01Vec3_01_4.html", null ]

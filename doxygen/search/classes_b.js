@@ -60,7 +60,7 @@ var searchData=
   ['misc_57',['Misc',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Misc.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['miscgen_58',['MiscGen',['../classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1MiscGen.html',1,'Antares::Action::AntaresStudy::Area']]],
   ['miscgenminusrowpsp_59',['MiscGenMinusRowPSP',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP.html',1,'Antares::Solver::Variable::Economy']]],
-  ['model_60',['Model',['../classAntares_1_1Solver_1_1ObjectModel_1_1Model.html',1,'Antares::Solver::ObjectModel']]],
+  ['model_60',['model',['../structAntares_1_1Solver_1_1ModelParser_1_1Model.html',1,'Antares::Solver::ModelParser::Model'],['../classAntares_1_1Solver_1_1ObjectModel_1_1Model.html',1,'Antares::Solver::ObjectModel::Model']]],
   ['modifiedinode_61',['ModifiedINode',['../classModifiedINode.html',1,'']]],
   ['modulo_62',['Modulo',['../classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Modulo.html',1,'Antares::Toolbox::Filter::Operator']]],
   ['monster_63',['Monster',['../structMonster.html',1,'']]],
