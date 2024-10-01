@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
                   description: "model_description"
                   parameters:
                       - id: "param_name1"
-                        time-dependent: false
+                        time-dependent: FALSE
                         scenario-dependent: false
                       - id: "param_name2"
                         time-dependent: true
