@@ -68,26 +68,27 @@ set(SRC_Expressions
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
-add_library(antares-solver-expressions
+add_library(solver-expressions
         ${SRC_Expressions})
+add_library(Antares::solver-expressions ALIAS solver-expressions)
 
-target_include_directories(antares-solver-expressions
+target_include_directories(solver-expressions
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_link_libraries(antares-solver-expressions
+target_link_libraries(solver-expressions
         PUBLIC
         Antares::logs
         Boost::headers
 )
 
 
-add_library(antares-solver-expressions-iterators
+add_library(solver-expressions-iterators
         iterators/pre-order.cpp
         include/antares/solver/expressions/iterators/pre-order.h
 )
 
-target_link_libraries(antares-solver-expressions-iterators PRIVATE antares-solver-expressions)
+target_link_libraries(solver-expressions-iterators PRIVATE solver-expressions)
 
 install(DIRECTORY include/antares
         DESTINATION "include"
