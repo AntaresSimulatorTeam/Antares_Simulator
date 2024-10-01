@@ -39,6 +39,7 @@ void checkParameter(const ObjectModel::Parameter& parameter,
                     bool scenarioDependent,
                     ObjectModel::ValueType type)
 {
+    std::cout << "Parameter: " << parameter.Name() << std::endl;
     BOOST_CHECK_EQUAL(parameter.Name(), name);
     BOOST_CHECK_EQUAL(parameter.isTimeDependent(), timeDependent);
     BOOST_CHECK_EQUAL(parameter.isScenarioDependent(), scenarioDependent);
@@ -51,10 +52,20 @@ void checkVariable(const ObjectModel::Variable& variable,
                    const std::string& upperBound,
                    ObjectModel::ValueType type)
 {
+    std::cout << "Variable: " << variable.Name() << std::endl;
     BOOST_CHECK_EQUAL(variable.Name(), name);
     BOOST_CHECK_EQUAL(variable.LowerBound().Value(), lowerBound);
     BOOST_CHECK_EQUAL(variable.UpperBound().Value(), upperBound);
     BOOST_CHECK_EQUAL(variable.Type(), type);
+}
+
+void checkConstraint(const ObjectModel::Constraint& constraint,
+                     const std::string& name,
+                     const std::string& expression)
+{
+    std::cout << "Constraint: " << constraint.Name() << std::endl;
+    BOOST_CHECK_EQUAL(constraint.Name(), name);
+    BOOST_CHECK_EQUAL(constraint.expression().Value(), expression);
 }
 
 BOOST_AUTO_TEST_CASE(test_full)
@@ -404,6 +415,89 @@ library:
                       "level_min",
                       "level_max",
                       ObjectModel::ValueType::FLOAT);
+        checkConstraint(model5.getConstraints().at("Level equation"),
+                        "Level equation",
+                        "level[t] - level[t-1] - efficiency * injection + withdrawal = inflows");
+
+        auto& model6 = lib.models().at("thermal-cluster-dhd");
+        BOOST_CHECK_EQUAL(model6.Id(), "thermal-cluster-dhd");
+        BOOST_REQUIRE_EQUAL(model6.getConstraints().size(), 5);
+        BOOST_REQUIRE_EQUAL(model6.Parameters().size(), 7);
+        BOOST_REQUIRE_EQUAL(model6.Variables().size(), 4);
+        // BOOST_REQUIRE_EQUAL(model6.Ports().size(), 1); Unsuported
+        //  BOOST_REQUIRE_EQUAL(model6.PortFieldDefinitions().size(), 1); Unsuported
+        checkParameter(model6.Parameters().at("cost"),
+                       "cost",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model6.Parameters().at("p_min"),
+                       "p_min",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model6.Parameters().at("p_max"),
+                       "p_max",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model6.Parameters().at("d_min_up"),
+                       "d_min_up",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model6.Parameters().at("d_min_down"),
+                       "d_min_down",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model6.Parameters().at("nb_units_max"),
+                       "nb_units_max",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model6.Parameters().at("nb_failures"),
+                       "nb_failures",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkVariable(model6.Variables().at("generation"),
+                      "generation",
+                      "0",
+                      "nb_units_max * p_max",
+                      ObjectModel::ValueType::FLOAT);
+        checkVariable(model6.Variables().at("nb_on"),
+                      "nb_on",
+                      "0",
+                      "nb_units_max",
+                      ObjectModel::ValueType::FLOAT);
+        checkVariable(model6.Variables().at("nb_stop"),
+                      "nb_stop",
+                      "0",
+                      "nb_units_max",
+                      ObjectModel::ValueType::FLOAT);
+        checkVariable(model6.Variables().at("nb_start"),
+                      "nb_start",
+                      "0",
+                      "nb_units_max",
+                      ObjectModel::ValueType::FLOAT);
+        checkConstraint(model6.getConstraints().at("Max generation"),
+                        "Max generation",
+                        "generation <= nb_on * p_max");
+        checkConstraint(model6.getConstraints().at("Min generation"),
+                        "Min generation",
+                        "generation >= nb_on * p_min");
+        checkConstraint(model6.getConstraints().at("Number of units variation"),
+                        "Number of units variation",
+                        "nb_on = nb_on[t-1] + nb_start - nb_stop");
+        checkConstraint(model6.getConstraints().at("Min up time"),
+                        "Min up time",
+                        "sum(t-d_min_up + 1 .. t, nb_start) <= nb_on");
+        checkConstraint(
+          model6.getConstraints().at("Min down time"),
+          "Min down time",
+          "sum(t-d_min_down + 1 .. t, nb_stop) <= nb_units_max[t-d_min_down] - nb_on");
+        BOOST_CHECK_EQUAL(model6.Objective().Value(), "expec(sum(cost * generation))");
     }
     catch (const YAML::Exception& e)
     {
