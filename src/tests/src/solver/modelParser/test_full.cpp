@@ -289,6 +289,121 @@ library:
                       "0",
                       "p_max",
                       ObjectModel::ValueType::FLOAT);
+
+        // auto& port = model0.Ports().at("injection_port");
+        // BOOST_CHECK_EQUAL(port.Name(), "injection_port");
+        //  other properties
+
+        auto& model1 = lib.models().at("node");
+        BOOST_CHECK_EQUAL(model1.Id(), "node");
+        // BOOST_REQUIRE_EQUAL(model1.getConstraints().size(), 1);
+        BOOST_REQUIRE_EQUAL(model1.Parameters().size(), 0);
+        BOOST_REQUIRE_EQUAL(model1.Variables().size(), 0);
+        // BOOST_REQUIRE_EQUAL(model1.Ports().size(), 1); Unsuported
+        //  BOOST_REQUIRE_EQUAL(model1.PortFieldDefinitions().size(), 0); Unsuported
+
+        auto& model2 = lib.models().at("spillage");
+        BOOST_CHECK_EQUAL(model2.Id(), "spillage");
+        BOOST_REQUIRE_EQUAL(model2.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model2.Parameters().size(), 1);
+        BOOST_REQUIRE_EQUAL(model2.Variables().size(), 1);
+        // BOOST_REQUIRE_EQUAL(model2.Ports().size(), 1); Unsuported
+        //  BOOST_REQUIRE_EQUAL(model2.PortFieldDefinitions().size(), 1); Unsuported
+
+        checkParameter(model2.Parameters().at("cost"),
+                       "cost",
+                       false,
+                       false,
+                       ObjectModel::ValueType::FLOAT);
+        checkVariable(model2.Variables().at("spillage"),
+                      "spillage",
+                      "0",
+                      "",
+                      ObjectModel::ValueType::FLOAT);
+
+        auto& model3 = lib.models().at("unsupplied");
+        BOOST_CHECK_EQUAL(model3.Id(), "unsupplied");
+        BOOST_REQUIRE_EQUAL(model3.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model3.Parameters().size(), 1);
+        BOOST_REQUIRE_EQUAL(model3.Variables().size(), 1);
+        // BOOST_REQUIRE_EQUAL(model3.Ports().size(), 1); Unsuported
+        //  BOOST_REQUIRE_EQUAL(model3.PortFieldDefinitions().size(), 1); Unsuported
+        checkParameter(model3.Parameters().at("cost"),
+                       "cost",
+                       false,
+                       false,
+                       ObjectModel::ValueType::FLOAT);
+        checkVariable(model3.Variables().at("unsupplied_energy"),
+                      "unsupplied_energy",
+                      "0",
+                      "",
+                      ObjectModel::ValueType::FLOAT);
+
+        auto& model4 = lib.models().at("demand");
+        BOOST_CHECK_EQUAL(model4.Id(), "demand");
+        BOOST_REQUIRE_EQUAL(model4.getConstraints().size(), 0);
+        BOOST_REQUIRE_EQUAL(model4.Parameters().size(), 1);
+        BOOST_REQUIRE_EQUAL(model4.Variables().size(), 0);
+        // BOOST_REQUIRE_EQUAL(model4.Ports().size(), 1); Unsuported
+        //  BOOST_REQUIRE_EQUAL(model4.PortFieldDefinitions().size(), 1); Unsuported
+        checkParameter(model4.Parameters().at("demand"),
+                       "demand",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+
+        auto& model5 = lib.models().at("short-term-storage");
+        BOOST_CHECK_EQUAL(model5.Id(), "short-term-storage");
+        BOOST_REQUIRE_EQUAL(model5.getConstraints().size(), 1);
+        BOOST_REQUIRE_EQUAL(model5.Parameters().size(), 6);
+        BOOST_REQUIRE_EQUAL(model5.Variables().size(), 3);
+        // BOOST_REQUIRE_EQUAL(model5.Ports().size(), 1); Unsuported
+        //  BOOST_REQUIRE_EQUAL(model5.PortFieldDefinitions().size(), 1); Unsuported
+        checkParameter(model5.Parameters().at("efficiency"),
+                       "efficiency",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model5.Parameters().at("level_min"),
+                       "level_min",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model5.Parameters().at("level_max"),
+                       "level_max",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model5.Parameters().at("p_max_withdrawal"),
+                       "p_max_withdrawal",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model5.Parameters().at("p_max_injection"),
+                       "p_max_injection",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkParameter(model5.Parameters().at("inflows"),
+                       "inflows",
+                       true,
+                       true,
+                       ObjectModel::ValueType::FLOAT);
+        checkVariable(model5.Variables().at("injection"),
+                      "injection",
+                      "0",
+                      "p_max_injection",
+                      ObjectModel::ValueType::FLOAT);
+        checkVariable(model5.Variables().at("withdrawal"),
+                      "withdrawal",
+                      "0",
+                      "p_max_withdrawal",
+                      ObjectModel::ValueType::FLOAT);
+        checkVariable(model5.Variables().at("level"),
+                      "level",
+                      "level_min",
+                      "level_max",
+                      ObjectModel::ValueType::FLOAT);
     }
     catch (const YAML::Exception& e)
     {
