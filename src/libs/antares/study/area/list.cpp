@@ -1014,16 +1014,17 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     readAdqPatchMode(study, area, buffer);
 
     // Nodal Optimization
-    buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
-                   << "optimization.ini";
+    fs::path nodalPath = study.folderInput / "areas" / area.id.to<std::string>()
+                         / "optimization.ini";
+
     IniFile ini;
-    if (!ini.open(buffer))
+    if (!ini.open(nodalPath))
     {
         return false;
     }
 
     ini.each(
-      [&area, &buffer](const IniFile::Section& section)
+      [&area, &nodalPath](const IniFile::Section& section)
       {
           for (auto* p = section.firstProperty; p; p = p->next)
           {
@@ -1084,7 +1085,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   continue;
               }
 
-              logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+              logs.warning() << nodalPath << ": Unknown property '" << p->key << "'";
           }
       });
 
