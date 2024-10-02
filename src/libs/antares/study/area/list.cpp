@@ -877,7 +877,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
-    // UI
+    // TODO remove with GUI
     if (JIT::usedFromGUI)
     {
         if (!area.ui)
@@ -895,9 +895,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.load.prepro) // Prepro
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "load" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.load.prepro->loadFromFolder(buffer) && ret;
+            fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
+            ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
