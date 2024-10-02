@@ -1729,7 +1729,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring hurdle costs";
     }
 
-    logs.info() << "  :: solver " << options.optOptions.ortoolsSolver << " is used for problem resolution";
+    logs.info() << "  :: solver " << options.optOptions.ortoolsSolver
+                << " is used for problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)

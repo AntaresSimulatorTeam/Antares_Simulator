@@ -123,17 +123,18 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
             TimeMeasurement updateMeasure;
 
-            ORTOOLS_ModifierLeVecteurCouts(
-                solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+            ORTOOLS_ModifierLeVecteurCouts(solver,
+                                           ProblemeAResoudre->CoutLineaire.data(),
+                                           ProblemeAResoudre->NombreDeVariables);
             ORTOOLS_ModifierLeVecteurSecondMembre(solver,
-                                                    ProblemeAResoudre->SecondMembre.data(),
-                                                    ProblemeAResoudre->Sens.data(),
-                                                    ProblemeAResoudre->NombreDeContraintes);
+                                                  ProblemeAResoudre->SecondMembre.data(),
+                                                  ProblemeAResoudre->Sens.data(),
+                                                  ProblemeAResoudre->NombreDeContraintes);
             ORTOOLS_CorrigerLesBornes(solver,
-                                        ProblemeAResoudre->Xmin.data(),
-                                        ProblemeAResoudre->Xmax.data(),
-                                        ProblemeAResoudre->TypeDeVariable.data(),
-                                        ProblemeAResoudre->NombreDeVariables);
+                                      ProblemeAResoudre->Xmin.data(),
+                                      ProblemeAResoudre->Xmax.data(),
+                                      ProblemeAResoudre->TypeDeVariable.data(),
+                                      ProblemeAResoudre->NombreDeVariables);
 
             updateMeasure.tick();
             timeMeasure.updateTime = updateMeasure.duration_ms();

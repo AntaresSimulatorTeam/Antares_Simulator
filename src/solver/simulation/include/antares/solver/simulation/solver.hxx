@@ -1015,20 +1015,20 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             // continue;
 
             auto task = std::make_shared<yearJob<ImplementationType>>(
-                    this,
-                    y,
-                    batch.yearFailed,
-                    batch.isFirstPerformedYearOfASet,
-                    pFirstSetParallelWithAPerformedYearWasRun,
-                    numSpace,
-                    randomForParallelYears,
-                    performCalculations,
-                    study,
-                    state,
-                    pYearByYear,
-                    pDurationCollector,
-                    pResultWriter,
-                    simulationObserver_.get());
+              this,
+              y,
+              batch.yearFailed,
+              batch.isFirstPerformedYearOfASet,
+              pFirstSetParallelWithAPerformedYearWasRun,
+              numSpace,
+              randomForParallelYears,
+              performCalculations,
+              study,
+              state,
+              pYearByYear,
+              pDurationCollector,
+              pResultWriter,
+              simulationObserver_.get());
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 

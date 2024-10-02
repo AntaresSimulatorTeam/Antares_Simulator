@@ -24,8 +24,7 @@
 namespace Antares::Check
 {
 
-void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
-                       const std::string& solverName);
+void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode, const std::string& solverName);
 
 void checkStudyVersion(const AnyString& optStudyFolder);
 

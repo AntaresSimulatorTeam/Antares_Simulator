@@ -29,8 +29,7 @@
 
 namespace Antares::Check
 {
-void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
-                       const std::string& solverName)
+void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode, const std::string& solverName)
 {
     using namespace Antares::Data;
     if (ucMode == UnitCommitmentMode::ucMILP && solverName == "sirius")
