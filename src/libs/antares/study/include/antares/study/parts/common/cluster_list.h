@@ -132,7 +132,7 @@ public:
 
     /// \name IO functions
     /// @{
-    bool loadDataSeriesFromFolder(Study& study, const AnyString& folder);
+    bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
 
