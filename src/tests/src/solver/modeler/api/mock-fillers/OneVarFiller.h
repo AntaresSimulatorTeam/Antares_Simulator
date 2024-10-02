@@ -17,16 +17,22 @@ private:
     std::string added_var_name_ = "var-by-OneVarFiller";
 };
 
-void OneVarFiller::addVariables(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
+void OneVarFiller::addVariables(ILinearProblem& pb,
+                                [[maybe_unused]] LinearProblemData& data,
+                                [[maybe_unused]] FillContext& ctx)
 {
     pb.addNumVariable(0, 1, added_var_name_);
 }
 
-void OneVarFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
+void OneVarFiller::addConstraints([[maybe_unused]] ILinearProblem& pb,
+                                  [[maybe_unused]] LinearProblemData& data,
+                                  [[maybe_unused]] FillContext& ctx)
 {
 }
 
-void OneVarFiller::addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
+void OneVarFiller::addObjective(ILinearProblem& pb,
+                                [[maybe_unused]] LinearProblemData& data,
+                                [[maybe_unused]] FillContext& ctx)
 {
     auto* var = pb.getVariable(added_var_name_);
     pb.setObjectiveCoefficient(var, 1);

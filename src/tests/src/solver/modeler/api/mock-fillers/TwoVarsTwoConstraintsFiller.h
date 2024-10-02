@@ -15,24 +15,24 @@ public:
 };
 
 void TwoVarsTwoConstraintsFiller::addVariables(ILinearProblem& pb,
-                                               LinearProblemData& data,
-                                               FillContext& ctx)
+                                               [[maybe_unused]] LinearProblemData& data,
+                                               [[maybe_unused]] FillContext& ctx)
 {
     pb.addNumVariable(0, 1, "var-1-by-TwoVarsTwoConstraintsFiller");
     pb.addNumVariable(0, 3, "var-2-by-TwoVarsTwoConstraintsFiller");
 }
 
 void TwoVarsTwoConstraintsFiller::addConstraints(ILinearProblem& pb,
-                                                 LinearProblemData& data,
-                                                 FillContext& ctx)
+                                                 [[maybe_unused]] LinearProblemData& data,
+                                                 [[maybe_unused]] FillContext& ctx)
 {
     pb.addConstraint(1, 2, "constr-1-by-TwoVarsTwoConstraintsFiller");
     pb.addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
 }
 
 void TwoVarsTwoConstraintsFiller::addObjective(ILinearProblem& pb,
-                                               LinearProblemData& data,
-                                               FillContext& ctx)
+                                               [[maybe_unused]] LinearProblemData& data,
+                                               [[maybe_unused]] FillContext& ctx)
 {
 }
 
