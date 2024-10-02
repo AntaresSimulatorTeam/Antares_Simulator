@@ -72,7 +72,6 @@ public:
         simulationObserver_(simulationObserver),
         hydroManagement(study.areas, study.parameters, study.calendar, resultWriter)
     {
-        // scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
     yearJob(const yearJob&) = delete;
@@ -95,7 +94,6 @@ private:
     IResultWriter& pResultWriter;
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
     HydroManagement hydroManagement;
-    // Antares::Data::Area::ScratchMap scratchmap;
 
 private:
     /*
