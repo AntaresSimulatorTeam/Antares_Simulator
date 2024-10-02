@@ -31,10 +31,25 @@ namespace Antares::Solver::Modeler::Api
 
 struct FillContext
 {
-    unsigned getFirstTimeStep() const { return firstTimeStep; }
-    unsigned getLastTimeStep() const { return lastTimeStep; }
-    void setFirstTimeStep(unsigned timeStep) { firstTimeStep = timeStep; }
-    void setLastTimeStep(unsigned timeStep) { lastTimeStep = timeStep; }
+    unsigned getFirstTimeStep() const
+    {
+        return firstTimeStep;
+    }
+
+    unsigned getLastTimeStep() const
+    {
+        return lastTimeStep;
+    }
+
+    void setFirstTimeStep(unsigned timeStep)
+    {
+        firstTimeStep = timeStep;
+    }
+
+    void setLastTimeStep(unsigned timeStep)
+    {
+        lastTimeStep = timeStep;
+    }
 
     std::vector<unsigned> scenariosSelected;
 
