@@ -25,9 +25,9 @@ void VarFillerContext::addVariables(ILinearProblem& pb,
     {
         for (unsigned scenario : ctx.scenariosSelected)
         {
-            pb.addNumVariable(scenario,
-                              timestep,
-                              std::to_string(timestep) + "-" + std::to_string(scenario));
+            pb.addNumVariable(timeseries[scenario],
+                              timeseries[scenario],
+                              std::to_string(scenario) + "-" + std::to_string(timestep));
         }
     }
 

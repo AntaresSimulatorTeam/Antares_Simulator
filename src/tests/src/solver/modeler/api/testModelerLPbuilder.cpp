@@ -114,4 +114,27 @@ BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_bui
     BOOST_CHECK_EQUAL(pb->constraintCount(), 3);
 }
 
+BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
+{
+    auto varFiller = std::make_unique<VarFillerContext>();
+    fillers = {varFiller.get()};
+
+    ctx.firstTimeStep = 10;
+    ctx.lastTimeStep = 15;
+
+    ctx.scenariosSelected.push_back(0);
+    ctx.scenariosSelected.push_back(2);
+
+    LinearProblemBuilder lpBuilder(fillers);
+    lpBuilder.build(*pb, LP_Data, ctx);
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 10); // 5 timestep * 2 scenario
+
+    auto var1 = pb->getVariable("0-11");
+    BOOST_CHECK_EQUAL(var1->getLb(), 1); // 1 is timeserie for scenario 0 defined in filler class
+
+    auto var2 = pb->getVariable("2-13");
+    BOOST_CHECK_EQUAL(var2->getLb(), 5); // 1 is timeserie for scenario 0 defined in filler class
+}
+
 BOOST_AUTO_TEST_SUITE_END()
