@@ -29,7 +29,7 @@ namespace Antares::Solver::ModelParser
 // Define structures
 struct Parameter
 {
-    std::string name;
+    std::string id;
     bool time_dependent;
     bool scenario_dependent;
 };
@@ -80,7 +80,7 @@ inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
 
 struct Variable
 {
-    std::string name;
+    std::string id;
     std::string lower_bound;
     std::string upper_bound;
     ValueType variable_type;
@@ -88,7 +88,7 @@ struct Variable
 
 struct Port
 {
-    std::string name;
+    std::string id;
     std::string type;
 };
 
@@ -101,7 +101,7 @@ struct PortFieldDefinition
 
 struct Constraint
 {
-    std::string name;
+    std::string id;
     std::string expression;
 };
 

@@ -75,7 +75,7 @@ std::vector<Antares::Solver::ObjectModel::Parameter> convertParameters(
     for (const auto& parameter: model.parameters)
     {
         parameters.emplace_back(Antares::Solver::ObjectModel::Parameter{
-          parameter.name,
+          parameter.id,
           Antares::Solver::ObjectModel::ValueType::FLOAT, // TODO: change to correct type
           static_cast<Antares::Solver::ObjectModel::Parameter::TimeDependent>(
             parameter.time_dependent),
@@ -120,7 +120,7 @@ std::vector<Antares::Solver::ObjectModel::Variable> convertVariables(
     for (const auto& variable: model.variables)
     {
         variables.emplace_back(Antares::Solver::ObjectModel::Variable{
-          variable.name,
+          variable.id,
           Antares::Solver::ObjectModel::Expression{variable.lower_bound},
           Antares::Solver::ObjectModel::Expression{variable.upper_bound},
           convertType(variable.variable_type)});
@@ -152,7 +152,7 @@ std::vector<Antares::Solver::ObjectModel::Constraint> convertConstraints(
     for (const auto& constraint: model.constraints)
     {
         constraints.emplace_back(Antares::Solver::ObjectModel::Constraint{
-          constraint.name,
+          constraint.id,
           Antares::Solver::ObjectModel::Expression{constraint.expression}});
     }
     return constraints;

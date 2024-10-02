@@ -63,7 +63,7 @@ public:
     {
     }
 
-    const std::string& Name() const
+    const std::string& Id() const
     {
         return name_;
     }

@@ -77,7 +77,7 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
                    parameters.end(),
                    std::inserter(model_.parameters_, model_.parameters_.end()),
                    [](/*Non const to prevent copy*/ Parameter& parameter)
-                   { return std::make_pair(parameter.Name(), std::move(parameter)); });
+                   { return std::make_pair(parameter.Id(), std::move(parameter)); });
     return *this;
 }
 
@@ -95,7 +95,7 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
                    variables.end(),
                    std::inserter(model_.variables_, model_.variables_.end()),
                    [](/*Non const to prevent copy*/ Variable& variable)
-                   { return std::make_pair(variable.Name(), std::move(variable)); });
+                   { return std::make_pair(variable.Id(), std::move(variable)); });
     return *this;
 }
 
@@ -131,7 +131,7 @@ ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraint
                    constraints.end(),
                    std::inserter(model_.constraints_, model_.constraints_.end()),
                    [](/*Non const to prevent copy*/ Constraint& constraint)
-                   { return std::make_pair(constraint.Name(), std::move(constraint)); });
+                   { return std::make_pair(constraint.Id(), std::move(constraint)); });
     return *this;
 }
 

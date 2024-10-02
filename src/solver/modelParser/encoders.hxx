@@ -38,7 +38,7 @@ struct convert<Antares::Solver::ModelParser::Parameter>
         {
             return false;
         }
-        rhs.name = node["name"].as<std::string>();
+        rhs.id = node["id"].as<std::string>();
         rhs.time_dependent = node["time-dependent"].as<bool>();
         rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
         return true;
@@ -83,7 +83,7 @@ struct convert<Antares::Solver::ModelParser::Variable>
         {
             return false;
         }
-        rhs.name = node["name"].as<std::string>();
+        rhs.id = node["id"].as<std::string>();
         rhs.lower_bound = node["lower-bound"].as<std::string>();
         rhs.upper_bound = node["upper-bound"].as<std::string>();
         rhs.variable_type = node["variable-type"].as<Antares::Solver::ModelParser::ValueType>(
@@ -101,7 +101,7 @@ struct convert<Antares::Solver::ModelParser::Port>
         {
             return false;
         }
-        rhs.name = node["name"].as<std::string>();
+        rhs.id = node["id"].as<std::string>();
         rhs.type = node["type"].as<std::string>();
         return true;
     }
@@ -132,7 +132,7 @@ struct convert<Antares::Solver::ModelParser::Constraint>
         {
             return false;
         }
-        rhs.name = node["name"].as<std::string>();
+        rhs.id = node["id"].as<std::string>();
         rhs.expression = node["expression"].as<std::string>();
         return true;
     }
@@ -176,7 +176,7 @@ struct convert<Antares::Solver::ModelParser::PortType>
         rhs.description = node["description"].as<std::string>();
         for (const auto& field: node["fields"])
         {
-            rhs.fields.push_back(field["name"].as<std::string>());
+            rhs.fields.push_back(field["id"].as<std::string>());
         }
         return true;
     }

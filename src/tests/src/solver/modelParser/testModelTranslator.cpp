@@ -103,11 +103,11 @@ BOOST_AUTO_TEST_CASE(test_library_port_types_with_fields)
     library.port_types = {portType1, portType2};
     ObjectModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.portTypes().at("port1").fields().size(), 2);
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").fields()[0].Name(), "field1");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").fields()[1].Name(), "field2");
+    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").fields()[0].Id(), "field1");
+    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").fields()[1].Id(), "field2");
     BOOST_REQUIRE_EQUAL(lib.portTypes().at("port2").fields().size(), 2);
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[0].Name(), "field3");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[1].Name(), "field4");
+    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[0].Id(), "field3");
+    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[1].Id(), "field4");
 }
 
 // Test library with models
@@ -147,11 +147,11 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_parameters)
     BOOST_REQUIRE_EQUAL(model.Parameters().size(), 2);
     auto& parameter1 = model.Parameters().at("param1");
     auto& parameter2 = model.Parameters().at("param2");
-    BOOST_CHECK_EQUAL(parameter1.Name(), "param1");
+    BOOST_CHECK_EQUAL(parameter1.Id(), "param1");
     BOOST_CHECK(parameter1.isTimeDependent());
     BOOST_CHECK(!parameter1.isScenarioDependent());
     BOOST_CHECK_EQUAL(parameter1.Type(), ObjectModel::ValueType::FLOAT);
-    BOOST_CHECK_EQUAL(parameter2.Name(), "param2");
+    BOOST_CHECK_EQUAL(parameter2.Id(), "param2");
     BOOST_CHECK(!parameter2.isTimeDependent());
     BOOST_CHECK(!parameter2.isScenarioDependent());
     BOOST_CHECK_EQUAL(parameter2.Type(), ObjectModel::ValueType::FLOAT);
@@ -177,11 +177,11 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_variables)
     BOOST_REQUIRE_EQUAL(model.Variables().size(), 2);
     auto& variable1 = model.Variables().at("var1");
     auto& variable2 = model.Variables().at("var2");
-    BOOST_CHECK_EQUAL(variable1.Name(), "var1");
+    BOOST_CHECK_EQUAL(variable1.Id(), "var1");
     BOOST_CHECK_EQUAL(variable1.LowerBound().Value(), "7");
     BOOST_CHECK_EQUAL(variable1.UpperBound().Value(), "pmax");
     BOOST_CHECK_EQUAL(variable1.Type(), ObjectModel::ValueType::BOOL);
-    BOOST_CHECK_EQUAL(variable2.Name(), "var2");
+    BOOST_CHECK_EQUAL(variable2.Id(), "var2");
     BOOST_CHECK_EQUAL(variable2.LowerBound().Value(), "99999999.9999999");
     BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "vcost");
     BOOST_CHECK_EQUAL(variable2.Type(), ObjectModel::ValueType::INTEGER);
@@ -230,9 +230,9 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_constraints)
     BOOST_REQUIRE_EQUAL(model.getConstraints().size(), 2);
     auto& constraint1 = model.getConstraints().at("constraint1");
     auto& constraint2 = model.getConstraints().at("constraint2");
-    BOOST_CHECK_EQUAL(constraint1.Name(), "constraint1");
+    BOOST_CHECK_EQUAL(constraint1.Id(), "constraint1");
     BOOST_CHECK_EQUAL(constraint1.expression().Value(), "expression1");
-    BOOST_CHECK_EQUAL(constraint2.Name(), "constraint2");
+    BOOST_CHECK_EQUAL(constraint2.Id(), "constraint2");
     BOOST_CHECK_EQUAL(constraint2.expression().Value(), "expression2");
 }
 
