@@ -29,6 +29,30 @@
 
 using namespace std::string_literals;
 
+namespace Antares::Solver::ModelParser
+{
+inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
+{
+    using namespace std::string_literals;
+    switch (value_type)
+    {
+    case ValueType::CONTINUOUS:
+        os << "CONTINUOUS"s;
+        break;
+    case ValueType::INTEGER:
+        os << "INTEGER"s;
+        break;
+    case ValueType::BOOL:
+        os << "BOOL"s;
+        break;
+    default:
+        os << "UNKNOWN"s;
+        break;
+    }
+    return os;
+}
+} // namespace Antares::Solver::ModelParser
+
 // Test empty library
 BOOST_AUTO_TEST_CASE(test_empty_library)
 {
