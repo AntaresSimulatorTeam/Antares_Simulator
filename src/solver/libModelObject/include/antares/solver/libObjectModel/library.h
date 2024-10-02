@@ -21,6 +21,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include "model.h"
 #include "portType.h"
