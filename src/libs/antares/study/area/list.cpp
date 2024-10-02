@@ -996,10 +996,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Short term storage
     if (studyVersion >= StudyVersion(8, 6))
     {
-        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series" << SEP
-                       << area.id;
+        fs::path seriesPath = study.folderInput / "st-storage" / "series"
+                              / area.id.to<std::string>();
 
-        ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
+        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath) && ret;
         ret = area.shortTermStorage.validate() && ret;
     }
 
