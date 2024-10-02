@@ -343,6 +343,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables_bounds)
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].name, "var_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "near-zero");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "pmax");
 }
