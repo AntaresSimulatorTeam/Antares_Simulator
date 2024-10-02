@@ -859,8 +859,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Fatal hors hydro - Misc Gen.
-    buffer.clear() << study.folderInput << SEP << "misc-gen" << SEP << "miscgen-" << area.id
-                   << ".txt";
+    std::string miscgenName = "miscgen-" + area.id + ".txt";
+    fs::path miscgenPath = study.folderInput / "misc-gen" / miscgenName;
+
     ret = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
           && ret;
 
