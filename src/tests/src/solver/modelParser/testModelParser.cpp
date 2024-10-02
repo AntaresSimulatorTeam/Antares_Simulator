@@ -186,15 +186,6 @@ BOOST_AUTO_TEST_CASE(test_library_multiple_models)
     BOOST_CHECK_EQUAL(libraryObj.models[1].id, "model_id2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].description, "model_description2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].objective, "objective2");
-    BOOST_CHECK(libraryObj.models.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].id == "model_id");
-    BOOST_CHECK(libraryObj.models[0].description == "model_description");
-    BOOST_CHECK(libraryObj.models[0].parameters.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].variables.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].ports.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].port_field_definitions.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].constraints.size() == 0);
-    BOOST_CHECK(libraryObj.models[0].objective == "objective");
 }
 
 // Test library with one model containing parameters
@@ -322,18 +313,18 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_variables)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].name, "var_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, 0);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "0");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].name, "var_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound, -1);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound, 2);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound, "-1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound, "2");
 }
 
 // variable bounds are strings expressions
 BOOST_AUTO_TEST_CASE(test_library_model_variables_bounds)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -350,7 +341,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables_bounds)
                   port-field-definitions: []
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "near-zero");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "pmax");
@@ -360,7 +351,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables_bounds)
 BOOST_AUTO_TEST_CASE(test_library_model_variables_type)
 {
     Antares::Solver::ModelParser::Parser parser;
-    auto library = R"(
+    const auto library = R"(
         library:
             id: "lib_id"
             description: "lib_description"
@@ -389,7 +380,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables_type)
                   port-field-definitions: []
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     auto& model = libraryObj.models[0];
     auto& var1 = model.variables[0];
