@@ -69,15 +69,15 @@ private:
 /**
  * @brief Builder for the Library class
  * Follow builder pattern:
- * builder.Library().withId("id").withDescription("description").withPortType(portList).withModel(modelList).build();
+ * builder.Library().withId("id").withDescription("description").withPortTypes(portList).withModels(modelList).build();
  */
 class LibraryBuilder
 {
 public:
     LibraryBuilder& withId(const std::string& id);
     LibraryBuilder& withDescription(const std::string& description);
-    LibraryBuilder& withPortType(std::vector<PortType>&& portTypes);
-    LibraryBuilder& withModel(std::vector<Model>&& models);
+    LibraryBuilder& withPortTypes(std::vector<PortType>&& portTypes);
+    LibraryBuilder& withModels(std::vector<Model>&& models);
 
     Library build();
 

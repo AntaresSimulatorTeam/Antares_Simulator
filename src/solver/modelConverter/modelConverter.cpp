@@ -202,8 +202,8 @@ Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser
     std::vector<Antares::Solver::ObjectModel::Model> models = convertModels(library);
     Antares::Solver::ObjectModel::Library lib = builder.withId(library.id)
                                                   .withDescription(library.description)
-                                                  .withPortType(std::move(portTypes))
-                                                  .withModel(std::move(models))
+                                                  .withPortTypes(std::move(portTypes))
+                                                  .withModels(std::move(models))
                                                   .build();
     return lib;
 }
