@@ -211,6 +211,8 @@ public:
      */
     void build();
 
+    void AddVariable(int index, double coeff);
+
     int NumberOfVariables() const
     {
         return nombreDeTermes_;
@@ -227,8 +229,6 @@ private:
 
     char operator_ = '=';
     int nombreDeTermes_ = 0;
-
-    void AddVariable(int index, double coeff);
 
     /*!
      * @brief

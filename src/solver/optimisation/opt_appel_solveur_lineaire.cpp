@@ -25,12 +25,14 @@
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
+#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
+#include "antares/thirdparty/thirdparty.h"
 
 using namespace operations_research;
 
@@ -204,6 +206,16 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     if (options.ortoolsUsed)
     {
         solver = ORTOOLS_ConvertIfNeeded(options.ortoolsSolver, &Probleme, solver);
+        // TODO FIX (memory leak & bad design)
+        auto shared = new std::shared_ptr<MPSolver>(solver);
+        Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem pb(*shared);
+        Antares::Solver::Modeler::Api::LinearProblemData data;
+        if (Antares::ThirdParty::GLOBAL_mod)
+        {
+            Antares::ThirdParty::GLOBAL_mod->addVariables(pb, data);
+            Antares::ThirdParty::GLOBAL_mod->addConstraints(pb, data);
+            Antares::ThirdParty::GLOBAL_mod->addObjective(pb, data);
+        }
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 

@@ -257,6 +257,7 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
     // TODO make nice function here
     pStudy->pThirdParty = std::make_unique<Antares::ThirdParty::SampleModule>();
     pStudy->pThirdParty->initializeFromStudy(*pStudy);
+    Antares::ThirdParty::GLOBAL_mod = pStudy->pThirdParty.get();
 
     postParametersChecks();
 

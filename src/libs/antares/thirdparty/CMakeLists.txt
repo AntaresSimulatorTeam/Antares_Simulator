@@ -12,6 +12,8 @@ add_library(${PROJ} ${SRC_PROJ})
 target_link_libraries(${PROJ}
         PRIVATE
         yuni-static-core
+	PUBLIC
+	modeler_api
 )
 
 target_include_directories(${PROJ}

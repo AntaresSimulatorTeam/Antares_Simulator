@@ -195,6 +195,7 @@ target_link_libraries(model_antares
         Antares::optimization-options
 		Antares::lps
 		PRIVATE
+		modeler-ortools-impl
 		infeasible_problem_analysis
 )
 

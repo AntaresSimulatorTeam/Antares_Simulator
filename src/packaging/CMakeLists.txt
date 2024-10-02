@@ -87,6 +87,10 @@ set(TARGET_LIBS #No alias
         yuni-static-uuid
         antares-third-party
         antares-solver #executable
+
+	# optim api
+	modeler_api
+	modeler-ortools-impl
 )
 
 install(TARGETS ${TARGET_LIBS}

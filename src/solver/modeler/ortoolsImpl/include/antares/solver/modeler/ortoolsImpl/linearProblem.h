@@ -40,6 +40,7 @@ class OrtoolsLinearProblem final: public Api::ILinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
+    OrtoolsLinearProblem(std::shared_ptr<operations_research::MPSolver> mpSolver);
     ~OrtoolsLinearProblem() override = default;
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;

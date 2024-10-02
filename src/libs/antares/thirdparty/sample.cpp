@@ -22,30 +22,6 @@ bool SampleModule::initializeFromStudy(const Antares::Data::Study& study)
     return true;
 }
 
-// OPTIMIZATION
-// 1st call = 1st weeks
-void SampleModule::addVariables(operations_research::MPSolver* solver)
-{
-}
-
-void SampleModule::addConstraints(operations_research::MPSolver* solver)
-{
-}
-
-// subsequent weeks
-void SampleModule::updateVariables(operations_research::MPSolver* solver, OptimizationContext ctx)
-{
-}
-
-void SampleModule::updateConstraints(operations_research::MPSolver* solver, OptimizationContext ctx)
-{
-}
-
-// all weeks
-void SampleModule::setObjective(operations_research::MPSolver* solver, OptimizationContext ctx)
-{
-}
-
 // OUTPUTS
 unsigned int SampleModule::numberOfColumns(unsigned int areaIndex)
 {
@@ -54,11 +30,27 @@ unsigned int SampleModule::numberOfColumns(unsigned int areaIndex)
 
 double SampleModule::areaOutputForHour(unsigned int areaIndex, unsigned int hourInTheWeek)
 {
-    return 42.;
+    return 42.; // TODO pVar->solution_value();
 }
 
 std::vector<VariableProperties> SampleModule::getProperties()
 {
     return std::vector<VariableProperties>{VariableProperties("sample", "unit")};
 }
+
+void SampleModule::addVariables(LP& pb, LPD& data)
+{
+    pVar = pb.addNumVariable(0, 10, "sample_variable");
+}
+
+void SampleModule::addConstraints(LP& pb, LPD& data)
+{
+    pConstr = pb.addConstraint(0, 1, "sample_constraint");
+}
+
+void SampleModule::addObjective(LP& pb, LPD& data)
+{
+    pb.setObjectiveCoefficient(pVar, 1);
+}
+
 } // namespace Antares::ThirdParty

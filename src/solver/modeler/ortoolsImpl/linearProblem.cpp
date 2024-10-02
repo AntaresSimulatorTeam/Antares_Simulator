@@ -43,6 +43,17 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
     params_.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
 }
 
+OrtoolsLinearProblem::OrtoolsLinearProblem(std::shared_ptr<operations_research::MPSolver> mpSolver):
+    mpSolver_(mpSolver)
+{
+    objective_ = mpSolver->MutableObjective();
+
+    params_.SetIntegerParam(MPSolverParameters::SCALING, 0);
+    params_.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+
+    mpSolver_->SetSolverSpecificParametersAsString("THREADS 1");
+}
+
 class ElemAlreadyExists: public std::exception
 {
 public:

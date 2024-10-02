@@ -209,6 +209,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
     ConstraintBuilder builder(builder_data);
+
     LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
