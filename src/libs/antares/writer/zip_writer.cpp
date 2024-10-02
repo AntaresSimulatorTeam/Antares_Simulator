@@ -123,9 +123,10 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
 {
     pZipHandle = mz_zip_writer_create();
 
-    std::string outputCStr = pArchivePath.string();
-    const char* outputCStr2 = outputCStr.c_str();
-    if (int32_t ret = mz_zip_writer_open_file(pZipHandle, outputCStr2, 0, 0); ret != MZ_OK)
+    // conversion in 2 steps to avoid weird behavior differences for linux and windows
+    std::string tmpStr = pArchivePath.string();
+    const char* outputCStr = tmpStr.c_str();
+    if (int32_t ret = mz_zip_writer_open_file(pZipHandle, outputCStr, 0, 0); ret != MZ_OK)
     {
         logErrorAndThrow("Error opening zip file " + pArchivePath.string() + " ("
                          + std::to_string(ret) + ")");
