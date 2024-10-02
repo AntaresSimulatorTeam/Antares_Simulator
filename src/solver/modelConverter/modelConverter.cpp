@@ -179,10 +179,10 @@ std::vector<Antares::Solver::ObjectModel::Model> convertModels(
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
-                          .withParameters(parameters)
-                          .withVariables(variables)
-                          .withPorts(ports)
-                          .withConstraints(constraints)
+                          .withParameters(std::move(parameters))
+                          .withVariables(std::move(variables))
+                          .withPorts(std::move(ports))
+                          .withConstraints(std::move(constraints))
                           .build();
         models.emplace_back(std::move(modelObj));
     }
@@ -202,8 +202,8 @@ Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser
     std::vector<Antares::Solver::ObjectModel::Model> models = convertModels(library);
     Antares::Solver::ObjectModel::Library lib = builder.withId(library.id)
                                                   .withDescription(library.description)
-                                                  .withPortType(portTypes)
-                                                  .withModel(models)
+                                                  .withPortType(std::move(portTypes))
+                                                  .withModel(std::move(models))
                                                   .build();
     return lib;
 }

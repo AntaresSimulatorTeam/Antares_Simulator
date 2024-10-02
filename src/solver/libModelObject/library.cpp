@@ -61,7 +61,7 @@ LibraryBuilder& LibraryBuilder::withDescription(const std::string& description)
  *
  * inputs it not garanteed to be valid after the call
  */
-LibraryBuilder& LibraryBuilder::withPortType(std::vector<PortType>& portTypes)
+LibraryBuilder& LibraryBuilder::withPortType(std::vector<PortType>&& portTypes)
 {
     std::transform(portTypes.begin(),
                    portTypes.end(),
@@ -79,7 +79,7 @@ LibraryBuilder& LibraryBuilder::withPortType(std::vector<PortType>& portTypes)
  *
  * inputs it not garanteed to be valid after the call
  */
-LibraryBuilder& LibraryBuilder::withModel(std::vector<Model>& models)
+LibraryBuilder& LibraryBuilder::withModel(std::vector<Model>&& models)
 {
     std::transform(models.begin(),
                    models.end(),

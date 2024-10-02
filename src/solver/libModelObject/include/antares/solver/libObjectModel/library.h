@@ -76,8 +76,8 @@ class LibraryBuilder
 public:
     LibraryBuilder& withId(const std::string& id);
     LibraryBuilder& withDescription(const std::string& description);
-    LibraryBuilder& withPortType(std::vector<PortType>& portTypes);
-    LibraryBuilder& withModel(std::vector<Model>& models);
+    LibraryBuilder& withPortType(std::vector<PortType>&& portTypes);
+    LibraryBuilder& withModel(std::vector<Model>&& models);
 
     Library build();
 

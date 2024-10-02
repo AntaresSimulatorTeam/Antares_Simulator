@@ -85,12 +85,12 @@ class ModelBuilder
 public:
     ModelBuilder& withId(std::string_view id);
     ModelBuilder& withObjective(Expression objective);
-    ModelBuilder& withParameters(std::vector<Parameter>& parameters);
-    ModelBuilder& withVariables(std::vector<Variable>& variables);
-    ModelBuilder& withPorts(std::vector<Port>& ports);
+    ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
+    ModelBuilder& withVariables(std::vector<Variable>&& variables);
+    ModelBuilder& withPorts(std::vector<Port>&& ports);
     Model build();
 
-    ModelBuilder& withConstraints(std::vector<Constraint>& constraints);
+    ModelBuilder& withConstraints(std::vector<Constraint>&& constraints);
 
 private:
     Model model_;

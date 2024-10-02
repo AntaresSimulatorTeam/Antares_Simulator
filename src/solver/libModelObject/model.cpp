@@ -71,7 +71,7 @@ ModelBuilder& ModelBuilder::withObjective(Expression objective)
  *
  * inputs it not garanteed to be valid after the call
  */
-ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>& parameters)
+ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>&& parameters)
 {
     std::transform(parameters.begin(),
                    parameters.end(),
@@ -89,7 +89,7 @@ ModelBuilder& ModelBuilder::withParameters(std::vector<Parameter>& parameters)
  *
  * inputs it not garanteed to be valid after the call
  */
-ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>& variables)
+ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>&& variables)
 {
     std::transform(variables.begin(),
                    variables.end(),
@@ -107,7 +107,7 @@ ModelBuilder& ModelBuilder::withVariables(std::vector<Variable>& variables)
  *
  * inputs it not garanteed to be valid after the call
  */
-ModelBuilder& ModelBuilder::withPorts(std::vector<Port>& ports)
+ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
 {
     std::transform(ports.begin(),
                    ports.end(),
@@ -125,7 +125,7 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>& ports)
  *
  * inputs it not garanteed to be valid after the call
  */
-ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>& constraints)
+ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraints)
 {
     std::transform(constraints.begin(),
                    constraints.end(),
