@@ -119,8 +119,8 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
     auto varFiller = std::make_unique<VarFillerContext>();
     fillers = {varFiller.get()};
 
-    ctx.firstTimeStep = 10;
-    ctx.lastTimeStep = 15;
+    ctx.setFirstTimeStep(10);
+    ctx.setLastTimeStep(15);
 
     ctx.scenariosSelected.push_back(0);
     ctx.scenariosSelected.push_back(2);

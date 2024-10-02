@@ -21,7 +21,7 @@ void VarFillerContext::addVariables(ILinearProblem& pb,
                                     [[maybe_unused]] FillContext& ctx)
 {
 
-    for (unsigned timestep = ctx.firstTimeStep; timestep < ctx.lastTimeStep; timestep++)
+    for (unsigned timestep = ctx.getFirstTimeStep(); timestep < ctx.getLastTimeStep(); timestep++)
     {
         for (unsigned scenario : ctx.scenariosSelected)
         {
