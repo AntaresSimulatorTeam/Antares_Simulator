@@ -114,7 +114,14 @@ BOOST_AUTO_TEST_CASE(test_library_port_types_with_fields)
 BOOST_AUTO_TEST_CASE(test_library_empty_models)
 {
     ModelParser::Library library;
-    ModelParser::Model model1{"model1", "description", {}, {}, {}, {}, {}, "objectives"};
+    ModelParser::Model model1{.id = "model1",
+                              .description = "description",
+                              .parameters = {},
+                              .variables = {},
+                              .ports = {},
+                              .port_field_definitions = {},
+                              .constraints = {},
+                              .objective = "objectives"};
     library.models = {model1};
     ObjectModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.models().size(), 1);
