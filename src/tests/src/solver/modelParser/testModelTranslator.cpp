@@ -21,6 +21,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <iostream>
+
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/libObjectModel/library.h"
@@ -28,6 +30,30 @@
 #include "antares/solver/modelParser/model.h"
 
 using namespace Antares::Solver;
+
+namespace Antares::Solver::ObjectModel
+{
+inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
+{
+    using namespace std::string_literals;
+    switch (value_type)
+    {
+    case ValueType::FLOAT:
+        os << "FLOAT"s;
+        break;
+    case ValueType::INTEGER:
+        os << "INTEGER"s;
+        break;
+    case ValueType::BOOL:
+        os << "BOOL"s;
+        break;
+    default:
+        os << "UNKNOWN"s;
+        break;
+    }
+    return os;
+}
+} // namespace Antares::Solver::ObjectModel
 
 // Test empty library
 BOOST_AUTO_TEST_CASE(test_library_empty)
