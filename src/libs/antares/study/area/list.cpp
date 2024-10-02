@@ -833,8 +833,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     const auto studyVersion = study.header.version;
 
     // DSM, Reserves, D-1
-    buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << ".txt";
-    ret = area.reserves.loadFromCSVFile(buffer, fhrMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+    fs::path reservesPath = study.folderInput / "reserves" / area.id.to<std::string>();
+    reservesPath += ".txt";
+    ret = area.reserves.loadFromCSVFile(reservesPath.string(),
+                                        fhrMax,
+                                        HOURS_PER_YEAR,
+                                        Matrix<>::optFixedSize)
           && ret;
 
     // Optimzation preferences
