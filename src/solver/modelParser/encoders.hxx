@@ -209,6 +209,10 @@ struct convert<Antares::Solver::ModelParser::Model>
 
     static bool decode(const Node& node, Antares::Solver::ModelParser::Model& rhs)
     {
+        if (!node.IsMap())
+        {
+            return false;
+        }
         rhs.id = node["id"].as<std::string>();
         rhs.description = node["description"].as<std::string>();
         rhs.parameters = node["parameters"]
