@@ -13,7 +13,8 @@ public:
     void addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
     void addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
 
-    std::array<int, 3> timeseries = {1, 3, 5};
+    std::array<std::array<int, 3>, 5> timeseries = {
+      {{1, 3, 5}, {2, 4, 6}, {7, 9, 11}, {8, 10, 12}, {13, 15, 17}}};
 };
 
 void VarFillerContext::addVariables(ILinearProblem& pb,
@@ -24,9 +25,9 @@ void VarFillerContext::addVariables(ILinearProblem& pb,
     {
         for (unsigned scenario: ctx.scenariosSelected)
         {
-            pb.addNumVariable(timeseries[scenario],
-                              timeseries[scenario],
-                              std::to_string(scenario) + "-" + std::to_string(timestep));
+            pb.addNumVariable(timeseries[timestep][scenario],
+                              timeseries[timestep][scenario],
+                              std::to_string(timestep) + "-" + std::to_string(scenario));
         }
     }
 }

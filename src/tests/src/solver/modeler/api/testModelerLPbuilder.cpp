@@ -119,8 +119,8 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
     auto varFiller = std::make_unique<VarFillerContext>();
     fillers = {varFiller.get()};
 
-    ctx.setFirstTimeStep(10);
-    ctx.setLastTimeStep(15);
+    ctx.setFirstTimeStep(0);
+    ctx.setLastTimeStep(5);
 
     ctx.scenariosSelected.push_back(0);
     ctx.scenariosSelected.push_back(2);
@@ -130,11 +130,11 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 10); // 5 timestep * 2 scenario
 
-    auto var1 = pb->getVariable("0-11");
-    BOOST_CHECK_EQUAL(var1->getLb(), 1); // 1 is timeserie for scenario 0 defined in filler class
+    auto var1 = pb->getVariable("0-0");
+    BOOST_CHECK_EQUAL(var1->getLb(), varFiller->timeseries[0][0]);
 
-    auto var2 = pb->getVariable("2-13");
-    BOOST_CHECK_EQUAL(var2->getLb(), 5); // 1 is timeserie for scenario 0 defined in filler class
+    auto var2 = pb->getVariable("3-2");
+    BOOST_CHECK_EQUAL(var2->getLb(), varFiller->timeseries[3][2]);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
