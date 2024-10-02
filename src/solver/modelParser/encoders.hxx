@@ -32,15 +32,6 @@ namespace YAML
 template<>
 struct convert<Antares::Solver::ModelParser::Parameter>
 {
-    static Node encode(const Antares::Solver::ModelParser::Parameter& rhs)
-    {
-        Node node;
-        node["name"] = rhs.name;
-        node["time-dependent"] = rhs.time_dependent;
-        node["scenario-dependent"] = rhs.scenario_dependent;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::Parameter& rhs)
     {
         if (!node.IsMap())
@@ -57,15 +48,6 @@ struct convert<Antares::Solver::ModelParser::Parameter>
 template<>
 struct convert<Antares::Solver::ModelParser::ValueType>
 {
-    static Node encode(const Antares::Solver::ModelParser::ValueType& rhs)
-    {
-        Node node;
-        node = rhs == Antares::Solver::ModelParser::ValueType::FLOAT     ? "FLOAT"
-               : rhs == Antares::Solver::ModelParser::ValueType::INTEGER ? "INTEGER"
-                                                                         : "BOOL";
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::ValueType& rhs)
     {
         if (!node.IsScalar())
@@ -95,15 +77,6 @@ struct convert<Antares::Solver::ModelParser::ValueType>
 template<>
 struct convert<Antares::Solver::ModelParser::Variable>
 {
-    static Node encode(const Antares::Solver::ModelParser::Variable& rhs)
-    {
-        Node node;
-        node["name"] = rhs.name;
-        node["lower-bound"] = rhs.lower_bound;
-        node["upper-bound"] = rhs.upper_bound;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::Variable& rhs)
     {
         if (!node.IsMap())
@@ -122,14 +95,6 @@ struct convert<Antares::Solver::ModelParser::Variable>
 template<>
 struct convert<Antares::Solver::ModelParser::Port>
 {
-    static Node encode(const Antares::Solver::ModelParser::Port& rhs)
-    {
-        Node node;
-        node["name"] = rhs.name;
-        node["type"] = rhs.type;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::Port& rhs)
     {
         if (!node.IsMap())
@@ -145,15 +110,6 @@ struct convert<Antares::Solver::ModelParser::Port>
 template<>
 struct convert<Antares::Solver::ModelParser::PortFieldDefinition>
 {
-    static Node encode(const Antares::Solver::ModelParser::PortFieldDefinition& rhs)
-    {
-        Node node;
-        node["port"] = rhs.port;
-        node["field"] = rhs.field;
-        node["definition"] = rhs.definition;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::PortFieldDefinition& rhs)
     {
         if (!node.IsMap())
@@ -170,14 +126,6 @@ struct convert<Antares::Solver::ModelParser::PortFieldDefinition>
 template<>
 struct convert<Antares::Solver::ModelParser::Constraint>
 {
-    static Node encode(const Antares::Solver::ModelParser::Constraint& rhs)
-    {
-        Node node;
-        node["name"] = rhs.name;
-        node["expression"] = rhs.expression;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::Constraint& rhs)
     {
         if (!node.IsMap())
@@ -193,20 +141,6 @@ struct convert<Antares::Solver::ModelParser::Constraint>
 template<>
 struct convert<Antares::Solver::ModelParser::Model>
 {
-    static Node encode(const Antares::Solver::ModelParser::Model& rhs)
-    {
-        Node node;
-        node["id"] = rhs.id;
-        node["description"] = rhs.description;
-        node["parameters"] = rhs.parameters;
-        node["variables"] = rhs.variables;
-        node["ports"] = rhs.ports;
-        node["port-field-definitions"] = rhs.port_field_definitions;
-        node["constraints"] = rhs.constraints;
-        node["objective"] = rhs.objective;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::Model& rhs)
     {
         if (!node.IsMap())
@@ -232,15 +166,6 @@ struct convert<Antares::Solver::ModelParser::Model>
 template<>
 struct convert<Antares::Solver::ModelParser::PortType>
 {
-    static Node encode(const Antares::Solver::ModelParser::PortType& rhs)
-    {
-        Node node;
-        node["id"] = rhs.id;
-        node["description"] = rhs.description;
-        node["fields"] = rhs.fields;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::PortType& rhs)
     {
         if (!node.IsMap())
@@ -260,16 +185,6 @@ struct convert<Antares::Solver::ModelParser::PortType>
 template<>
 struct convert<Antares::Solver::ModelParser::Library>
 {
-    static Node encode(const Antares::Solver::ModelParser::Library& rhs)
-    {
-        Node node;
-        node["id"] = rhs.id;
-        node["description"] = rhs.description;
-        node["port-types"] = rhs.port_types;
-        node["models"] = rhs.models;
-        return node;
-    }
-
     static bool decode(const Node& node, Antares::Solver::ModelParser::Library& rhs)
     {
         rhs.id = node["id"].as<std::string>();
