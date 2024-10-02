@@ -30,7 +30,7 @@ void TwoVarsTwoConstraintsFiller::addConstraints(ILinearProblem& pb,
     pb.addConstraint(1, 3, "constr-2-by-TwoVarsTwoConstraintsFiller");
 }
 
-void TwoVarsTwoConstraintsFiller::addObjective(ILinearProblem& pb,
+void TwoVarsTwoConstraintsFiller::addObjective([[maybe_unused]] ILinearProblem& pb,
                                                [[maybe_unused]] LinearProblemData& data,
                                                [[maybe_unused]] FillContext& ctx)
 {

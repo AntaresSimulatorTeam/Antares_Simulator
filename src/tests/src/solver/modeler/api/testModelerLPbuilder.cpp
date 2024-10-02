@@ -28,6 +28,7 @@
 #include "mock-fillers/OneConstraintFiller.h"
 #include "mock-fillers/OneVarFiller.h"
 #include "mock-fillers/TwoVarsTwoConstraintsFiller.h"
+#include "mock-fillers/FillerContext.h"
 
 using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Solver::Modeler::OrtoolsImpl;
