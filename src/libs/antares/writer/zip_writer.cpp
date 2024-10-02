@@ -123,7 +123,7 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
 {
     pZipHandle = mz_zip_writer_create();
 
-    auto outputCStr = pArchivePath.string().c_str();
+    const char* outputCStr = pArchivePath.native().c_str();
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, outputCStr, 0, 0); ret != MZ_OK)
     {
         logErrorAndThrow("Error opening zip file " + pArchivePath.string() + " ("
