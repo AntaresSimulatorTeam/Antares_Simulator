@@ -22,6 +22,7 @@
 #include "antares/solver/libObjectModel/library.h"
 
 #include <algorithm>
+#include <iterator>
 #include <utility>
 #include <vector>
 
