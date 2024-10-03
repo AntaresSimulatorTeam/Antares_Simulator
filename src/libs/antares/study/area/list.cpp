@@ -929,9 +929,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Hydro
     {
         // Allocation
-        buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "allocation" << SEP
-                       << area.id << ".ini";
-        ret = area.hydro.allocation.loadFromFile(area.id, buffer.c_str()) && ret;
+        std::string areaIdIni = area.id + ".ini";
+        fs::path hydroAlloc = study.folderInput / "hydro" / "allocation" / areaIdIni;
+        ret = area.hydro.allocation.loadFromFile(area.id, hydroAlloc) && ret;
 
         if (area.hydro.prepro) /* Hydro */
         {
