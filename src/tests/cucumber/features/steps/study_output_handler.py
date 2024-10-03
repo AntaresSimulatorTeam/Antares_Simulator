@@ -16,7 +16,6 @@ class study_output_handler:
     def __init__(self, study_output_path):
         self.study_output_path = study_output_path
         self.annual_system_cost = None
-        self.values_annual = None
         self.hourly_results = {result_type.VALUES: None, result_type.DETAILS: None}
 
     def get_annual_system_cost(self):
