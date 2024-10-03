@@ -149,6 +149,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
+        // Hydraulic
+        problem.CoutDeDebordement[i] = area.hydro.overflowCost;
+        problem.CoutDeRemplissage[i] = area.hydro.levelCost;
+
         problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower
                                                                & area.nodalOptimization)
                                                               != 0;
@@ -178,17 +182,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                                                               .useHeuristicTarget
                                                                            || area.hydro.useLeeway);
 
-        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire
-          = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
-            && (!area.hydro.useHeuristicTarget
-                || problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable);
+        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = area.hydro.reservoirManagement;
 
         problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
         if (problem.WaterValueAccurate && area.hydro.useWaterValue)
         {
             problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = true;
-            problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = true;
             problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = true;
         }
 

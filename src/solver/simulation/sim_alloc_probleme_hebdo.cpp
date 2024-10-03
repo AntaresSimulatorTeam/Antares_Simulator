@@ -84,6 +84,9 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.CoutDeDefaillancePositive.assign(nbPays, 0);
     problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
 
+    problem.CoutDeDebordement.assign(nbPays, 0);
+    problem.CoutDeRemplissage.assign(nbPays, 0);
+
     problem.NumeroDeContrainteEnergieHydraulique.assign(nbPays, 0);
     problem.NumeroDeContrainteMinEnergieHydraulique.assign(nbPays, 0);
     problem.NumeroDeContrainteMaxEnergieHydraulique.assign(nbPays, 0);

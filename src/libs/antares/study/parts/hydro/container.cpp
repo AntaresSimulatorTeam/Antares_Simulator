@@ -70,6 +70,8 @@ void PartHydro::reset()
     powerToLevel = false;
     leewayLowerBound = 1.;
     leewayUpperBound = 1.;
+    overflowCost = 0.;
+    levelCost = 0.;
 
     inflowPattern.reset(1, DAYS_PER_YEAR, true);
     inflowPattern.fillColumn(0, 1.0);
@@ -330,6 +332,17 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
               && ret;
     }
 
+    if (IniFile::Section* section = ini.find("overflow cost"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::overflowCost)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("level cost"))
+    {
+        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::levelCost) && ret;
+    }
+
     return ret;
 }
 
@@ -500,6 +513,8 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
         IniFile::Section* sLeewayLow;
         IniFile::Section* sLeewayUp;
         IniFile::Section* spumpingEfficiency;
+        IniFile::Section* sOverflowCost;
+        IniFile::Section* sLevelCost;
 
         AllSections(IniFile& ini):
             s(ini.addSection("inter-daily-breakdown")),
@@ -516,7 +531,9 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
             sPowerToLevel(ini.addSection("power to level")),
             sLeewayLow(ini.addSection("leeway low")),
             sLeewayUp(ini.addSection("leeway up")),
-            spumpingEfficiency(ini.addSection("pumping efficiency"))
+            spumpingEfficiency(ini.addSection("pumping efficiency")),
+            sOverflowCost(ini.addSection("overflow cost")),
+            sLevelCost(ini.addSection("level cost"))
         {
         }
     };
@@ -571,6 +588,14 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
           if (area.hydro.powerToLevel)
           {
               allSections.sPowerToLevel->add(area.id, true);
+          }
+          if (area.hydro.overflowCost)
+          {
+              allSections.sOverflowCost->add(area.id, area.hydro.overflowCost);
+          }
+          if (area.hydro.levelCost)
+          {
+              allSections.sLevelCost->add(area.id, area.hydro.levelCost);
           }
 
           // max hours gen

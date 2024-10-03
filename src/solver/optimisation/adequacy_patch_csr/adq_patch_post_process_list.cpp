@@ -52,8 +52,6 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
     post_process_list.push_back(
       std::make_unique<DTGmarginForAdqPatchPostProcessCmd>(problemeHebdo_, areas, thread_number));
     post_process_list.push_back(
-      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
-    post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
     post_process_list.push_back(
       std::make_unique<HydroLevelsFinalUpdatePostProcessCmd>(problemeHebdo_, areas));
