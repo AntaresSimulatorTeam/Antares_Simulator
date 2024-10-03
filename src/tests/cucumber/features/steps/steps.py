@@ -1,13 +1,11 @@
 # Gherkins test steps definitions
 
-import pathlib
+import os
 
 from behave import *
 
 from assertions import *
-from context_utils import *
 from simulator_utils import *
-from input_utils import *
 
 
 @given('the study path is "{string}"')
@@ -41,60 +39,59 @@ def simu_success(context):
     assert context.return_code != 0
 
 
-@then('the expected value of the annual system cost is {value}')
+@then('the expected value of the annual system cost is {value:g}')
 def check_annual_cost_expected(context, value):
-    assert_double_close(float(value), get_annual_system_cost(context)["EXP"], 0.001)
+    assert_double_close(value, context.soh.get_annual_system_cost()["EXP"], 0.001)
 
 
-@then('the minimum annual system cost is {value}')
+@then('the minimum annual system cost is {value:g}')
 def check_annual_cost_min(context, value):
-    assert_double_close(float(value), get_annual_system_cost(context)["MIN"], 0.001)
+    assert_double_close(value, context.soh.get_annual_system_cost()["MIN"], 0.001)
 
 
-@then('the maximum annual system cost is {value}')
+@then('the maximum annual system cost is {value:g}')
 def check_annual_cost_max(context, value):
-    assert_double_close(float(value), get_annual_system_cost(context)["MAX"], 0.001)
+    assert_double_close(value, context.soh.get_annual_system_cost()["MAX"], 0.001)
 
 
 @then('the annual system cost is')
 def check_annual_cost(context):
     for row in context.table:
-        assert_double_close(float(row["EXP"]), get_annual_system_cost(context)["EXP"], 0.001)
-        assert_double_close(float(row["STD"]), get_annual_system_cost(context)["STD"], 0.001)
-        assert_double_close(float(row["MIN"]), get_annual_system_cost(context)["MIN"], 0.001)
-        assert_double_close(float(row["MAX"]), get_annual_system_cost(context)["MAX"], 0.001)
+        assert_double_close(float(row["EXP"]), context.soh.get_annual_system_cost()["EXP"], 0.001)
+        assert_double_close(float(row["STD"]), context.soh.get_annual_system_cost()["STD"], 0.001)
+        assert_double_close(float(row["MIN"]), context.soh.get_annual_system_cost()["MIN"], 0.001)
+        assert_double_close(float(row["MAX"]), context.soh.get_annual_system_cost()["MAX"], 0.001)
 
 
-@then('the annual system cost is {one_year_value}')
+@then('the annual system cost is {one_year_value:g}')
 def check_annual_cost(context, one_year_value):
-    assert_double_close(float(one_year_value), get_annual_system_cost(context)["EXP"], 0.001)
-    assert_double_close(0, get_annual_system_cost(context)["STD"], 0.001)
-    assert_double_close(float(one_year_value), get_annual_system_cost(context)["MIN"], 0.001)
-    assert_double_close(float(one_year_value), get_annual_system_cost(context)["MAX"], 0.001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["EXP"], 0.001)
+    assert_double_close(0, context.soh.get_annual_system_cost()["STD"], 0.001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MIN"], 0.001)
+    assert_double_close(one_year_value, context.soh.get_annual_system_cost()["MAX"], 0.001)
 
 
-@then('the simulation takes less than {seconds} seconds')
+@then('the simulation takes less than {seconds:g} seconds')
 def check_simu_time(context, seconds):
-    actual_simu_time = parse_simu_time(context.output_path)
-    assert actual_simu_time <= float(seconds)
+    assert context.soh.get_simu_time() <= seconds
 
 
-@then('in area "{area}", during year {year}, loss of load lasts {lold_hours} hours')
+@then('in area "{area}", during year {year:d}, loss of load lasts {lold_hours:d} hours')
 def check_lold_duration(context, area, year, lold_hours):
-    assert int(lold_hours) == get_values_hourly(context, area.lower(), int(year))["LOLD"].sum()
+    assert lold_hours == context.soh.get_loss_of_load_duration_h(area, year)
 
 
-@then('in area "{area}", unsupplied energy on "{date}" of year {year} is of {lold_value_mw} MW')
+@then('in area "{area}", unsupplied energy on "{date}" of year {year:d} is of {lold_value_mw:g} MW')
 def check_lold_value(context, area, date, year, lold_value_mw):
-    actual_unsp_energ = get_values_hourly_for_specific_hour(context, area.lower(), int(year), date)["UNSP. ENRG"].sum()
-    assert_double_close(float(lold_value_mw), actual_unsp_energ, 0.001)
+    actual_unsp_energ = context.soh.get_unsupplied_energy_mwh(area, year, date)
+    assert_double_close(lold_value_mw, actual_unsp_energ, 0.001)
 
 
 @then(
-    'in area "{area}", during year {year}, hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
+    'in area "{area}", during year {year:d}, hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
 def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_hourly_prod):
     expected_prod = float(comparator_and_hourly_prod.split(" ")[-1])
-    actual_hourly_prod = get_details_hourly(context, area.lower(), int(year))[prod_name]
+    actual_hourly_prod = context.soh.get_hourly_prod_mwh(area, year, prod_name)
     if "greater than" in comparator_and_hourly_prod:
         ok = actual_hourly_prod >= expected_prod
     elif "equal to" in comparator_and_hourly_prod:
@@ -112,35 +109,17 @@ def check_prod_for_all_years(context, area, prod_name, comparator_and_hourly_pro
         check_prod_for_specific_year(context, area, year, prod_name, comparator_and_hourly_prod)
 
 
-@then(
-    'in area "{area}", unit "{prod_name}" respects a minimum up duration of {up_duration} hours, and a minimum down duration of {down_duration} hours')
-def check_min_up_down_duration(context, area, prod_name, up_duration, down_duration):
-    for year in range(1, context.nbyears + 1):
-        actual_hourly_prod = get_details_hourly(context, area.lower(), year)[prod_name]
-        min_up, min_down = compute_min_up_and_down_durations(actual_hourly_prod, get_thermal_cluster_nominal_capacity(context.study_path, area, prod_name))
-        assert min_up >= float(up_duration)
-        assert min_down >= float(down_duration)
-
-
-@step('in area "{area}", during year {year}, total non-proportional cost is {np_cost}')
+@step('in area "{area}", during year {year:d}, total non-proportional cost is {np_cost:g}')
 def check_np_cost_for_specific_year(context, area, year, np_cost):
-    assert_double_close(float(np_cost), get_values_annual(context, area.lower(), int(year))["NP COST"][0], 1e-6)
+    assert_double_close(np_cost, context.soh.get_non_proportional_cost(area, year), 1e-6)
 
-@then('in area "{area}", the {n_units} units of "{prod_name}" produce between {min_p} and {max_p} MWh hourly')
-def check_pmin_pmax(context, area, n_units, prod_name, min_p, max_p):
-    allowed_ranges = [(0, 0)]
-    for n_units_up in range(1, int(n_units) + 1):
-        allowed_ranges.append((n_units_up * int(min_p), n_units_up * int(max_p)))
-    merged_ranges = merge_ranges(allowed_ranges)
+
+@then('in area "{area}", the units of "{prod_name}" produce between {min_p:g} and {max_p:g} MWh hourly')
+def check_pmin_pmax(context, area, prod_name, min_p, max_p):
     for year in range(1, context.nbyears + 1):
-        actual_hourly_prod = get_details_hourly(context, area.lower(), year)[prod_name]
-
-def merge_ranges(a):
-    b = []
-    for begin, end in sorted(a):
-        if b and b[-1][1] >= begin - 1:
-            b[-1][1] = max(b[-1][1], end)
-        else:
-            b.append([begin, end])
-    return b
-
+        actual_hourly_prod = context.soh.get_hourly_prod_mwh(area, year, prod_name)
+        actual_n_dispatched_units = context.soh.get_hourly_n_dispatched_units(area, year, prod_name)
+        assert (actual_hourly_prod <= actual_n_dispatched_units.apply(
+            lambda n: n * max_p)).all(), f"max_p constraint not respected during year {year}"
+        assert (actual_hourly_prod >= actual_n_dispatched_units.apply(
+            lambda n: n * min_p)).all(), f"min_p constraint not respected during year {year}"

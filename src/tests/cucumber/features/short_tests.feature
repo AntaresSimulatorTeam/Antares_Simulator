@@ -16,7 +16,7 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.729e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
-    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
+    And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
 
   @fast @short
   Scenario: 003 Thermal fleet - Must-run
@@ -26,7 +26,7 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.751e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
-    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
+    And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production of "non-dispatchable semi base" is always equal to 300 MWh
 
   @fast @short
@@ -37,7 +37,7 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.751e+7
     And in area "AREA", during year 1, loss of load lasts 1 hours
-    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
+    And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production of "semi base" is always greater than 300 MWh
 
   @fast @short
@@ -48,14 +48,17 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.75816e+07
     And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
-    And in area "AREA", the 4 units of "base" produce between 400 and 900 MWh hourly
-    And in area "AREA", the 5 units of "semi base" produce between 100 and 300 MWh hourly
-    And in area "AREA", the 8 units of "peak" produce between 10 and 100 MWh hourly
-    And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    And in area "AREA", the units of "base" produce between 400 and 900 MWh hourly
+    And in area "AREA", the units of "semi base" produce between 100 and 300 MWh hourly
+    And in area "AREA", the units of "peak" produce between 10 and 100 MWh hourly
     And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
     And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
-    And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
+    # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
+    # in this test have a unitcount > 1
+    # TODO : create similar tests with unitcount = 1, and implement the following steps:
+    # And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    # And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
+    # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
   @fast @short
   Scenario: 006 Thermal fleet - Extra costs
@@ -68,11 +71,14 @@ Feature: short tests
     And the annual system cost is 2.9338e+07
     And in area "AREA", during year 1, total non-proportional cost is 1756400
     And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
-    And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
     And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
     And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
-    And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
+    # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
+    # in this test have a unitcount > 1
+    # TODO : create similar tests with unitcount = 1, and implement the following steps:
+    # And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    # And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
+    # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
   @fast @short @wip
   Scenario: 007 Thermal fleet - Fast unit commitment
@@ -86,13 +92,16 @@ Feature: short tests
     And the annual system cost is 2.98912e+07
     And in area "AREA", during year 1, total non-proportional cost is 1861400
     And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
-    And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
     And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", unit "semi base" respects a minimum up duration of 12 hours, and a minimum down duration of 12 hours
     And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
-    And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
     And in area "AREA", during year 1, loss of load lasts 1 hours
-    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
+    And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
+    # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
+    # in this test have a unitcount > 1
+    # TODO : create similar tests with unitcount = 1, and implement the following steps:
+    # And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    # And in area "AREA", unit "semi base" respects a minimum up duration of 12 hours, and a minimum down duration of 12 hours
+    # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
   @fast @short @wip
   Scenario: 008 Thermal fleet - Accurate unit commitment
@@ -103,15 +112,18 @@ Feature: short tests
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
     And the annual system cost is 2.97339e+07
-    And in area "AREA", during year 1, total non-proportional cost is 1861400
+    And in area "AREA", during year 1, total non-proportional cost is 1680900
     And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
-    And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
     And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
     And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
-    And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
     And in area "AREA", during year 1, loss of load lasts 1 hours
-    And in area "AREA", unsupplied energy on "02 JAN 09:00" of year 1 is of 52 MW
+    And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
+    # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
+    # in this test have a unitcount > 1
+    # TODO : create similar tests with unitcount = 1, and implement the following steps:
+    # And in area "AREA", unit "base" respects a minimum up duration of 24 hours, and a minimum down duration of 24 hours
+    # And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
+    # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
   @fast @short
   Scenario: 021 Four areas - DC law
