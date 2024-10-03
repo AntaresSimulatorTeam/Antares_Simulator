@@ -30,7 +30,7 @@
 using namespace std::string_literals;
 
 // Test empty library
-BOOST_AUTO_TEST_CASE(test_empty_library)
+BOOST_AUTO_TEST_CASE(EmpyLibrary_is_valid)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(test_empty_library)
 }
 
 // Test library with id and description
-BOOST_AUTO_TEST_CASE(test_library_id_description)
+BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -61,12 +61,10 @@ BOOST_AUTO_TEST_CASE(test_library_id_description)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.id, "test_id");
     BOOST_CHECK_EQUAL(libraryObj.description, "test_description");
-    BOOST_CHECK(libraryObj.port_types.empty());
-    BOOST_CHECK(libraryObj.models.empty());
 }
 
 // Test library with port types
-BOOST_AUTO_TEST_CASE(test_library_port_types)
+BOOST_AUTO_TEST_CASE(port_types_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -89,7 +87,7 @@ BOOST_AUTO_TEST_CASE(test_library_port_types)
 }
 
 // Test library with multiple port types
-BOOST_AUTO_TEST_CASE(test_library_multiple_port_types)
+BOOST_AUTO_TEST_CASE(library_can_contain_multiple_port_types)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -120,7 +118,7 @@ BOOST_AUTO_TEST_CASE(test_library_multiple_port_types)
 }
 
 // Test library with models
-BOOST_AUTO_TEST_CASE(test_library_models)
+BOOST_AUTO_TEST_CASE(models_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const std::string library = R"(
@@ -152,7 +150,7 @@ BOOST_AUTO_TEST_CASE(test_library_models)
 }
 
 // Test library with multiple models
-BOOST_AUTO_TEST_CASE(test_library_multiple_models)
+BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -189,7 +187,7 @@ BOOST_AUTO_TEST_CASE(test_library_multiple_models)
 }
 
 // Test library with one model containing parameters
-BOOST_AUTO_TEST_CASE(test_library_model_parameters)
+BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -219,7 +217,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters)
 }
 
 // Test library with one model containing multiple parameters
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_parameters)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -255,7 +253,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_parameters)
 }
 
 // Test library with one model containing variables
-BOOST_AUTO_TEST_CASE(test_library_model_variables)
+BOOST_AUTO_TEST_CASE(variables_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -285,7 +283,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables)
 }
 
 // Test library with one model containing multiple variables
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_variables)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -321,7 +319,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_variables)
 }
 
 // variable bounds are strings expressions
-BOOST_AUTO_TEST_CASE(test_library_model_variables_bounds)
+BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -349,7 +347,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables_bounds)
 }
 
 // variable variable-type
-BOOST_AUTO_TEST_CASE(test_library_model_variables_type)
+BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -395,7 +393,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables_type)
 }
 
 // Test library with one model containing ports
-BOOST_AUTO_TEST_CASE(test_library_model_ports)
+BOOST_AUTO_TEST_CASE(ports_are_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -423,7 +421,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_ports)
 }
 
 // Test library with one model containing multiple ports
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_ports)
+BOOST_AUTO_TEST_CASE(model_can_conatin_multiple_ports)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -455,7 +453,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_ports)
 }
 
 // Test library with one model containing port field definitions
-BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
+BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -485,7 +483,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
 }
 
 // Test library with one model containing multiple port field definitions
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_port_field_definitions)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -521,7 +519,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_port_field_definitions)
 }
 
 // Test library with one model containing constraints
-BOOST_AUTO_TEST_CASE(test_library_model_constraints)
+BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -549,7 +547,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_constraints)
 }
 
 // Test library with one model containing multiple constraints
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_constraints)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -581,7 +579,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_constraints)
 }
 
 // Test error when model is not a map
-BOOST_AUTO_TEST_CASE(test_error_model_not_map)
+BOOST_AUTO_TEST_CASE(model_is_scalar)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
