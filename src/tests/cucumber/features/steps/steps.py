@@ -1,6 +1,7 @@
 # Gherkins test steps definitions
 
 import os
+import pathlib
 
 from behave import *
 
@@ -25,8 +26,7 @@ def run_antares(context):
 def after_feature(context, feature):
     # post-processing a test: clean up output files to avoid taking up all the disk space
     if (context.output_path != None):
-        pass
-        # pathlib.Path.rmdir(context.output_path)
+        pathlib.Path.rmdir(context.output_path)
 
 
 @then('the simulation succeeds')
