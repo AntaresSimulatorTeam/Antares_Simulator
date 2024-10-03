@@ -80,7 +80,7 @@ Feature: short tests
     # And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
     # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
-  @fast @short @wip
+  @fast @short
   Scenario: 007 Thermal fleet - Fast unit commitment
     # This example is the first of a set of two that are comparing the two unit-commitment modes of Antares.
     # Fast mode
@@ -103,7 +103,7 @@ Feature: short tests
     # And in area "AREA", unit "semi base" respects a minimum up duration of 12 hours, and a minimum down duration of 12 hours
     # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
-  @fast @short @wip
+  @fast @short
   Scenario: 008 Thermal fleet - Accurate unit commitment
     # Like previous test, but with unit commitment
     # => overall cost is better, there are less startups, and min up & down time are not equal
