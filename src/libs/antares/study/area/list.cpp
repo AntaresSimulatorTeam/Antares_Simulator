@@ -933,24 +933,24 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         fs::path hydroAlloc = study.folderInput / "hydro" / "allocation" / areaIdIni;
         ret = area.hydro.allocation.loadFromFile(area.id, hydroAlloc) && ret;
 
+        fs::path pathHydro = study.folderInput / "hydro";
+        fs::path hydroSeries = pathHydro / "series";
+
         if (area.hydro.prepro) /* Hydro */
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
-            ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
+            fs::path hydroPrepro = pathHydro / "prepro";
+            ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro) && ret;
             ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
         if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->loadGenerationTS(area.id, buffer, studyVersion) && ret;
+            ret = area.hydro.series->loadGenerationTS(area.id, hydroSeries, studyVersion) && ret;
         }
 
         if (studyVersion < StudyVersion(9, 1))
         {
-            buffer.clear() << study.folderInput << SEP << "hydro";
-
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
@@ -958,8 +958,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
         else
         {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->LoadMaxPower(area.id, buffer) && ret;
+            ret = area.hydro.series->LoadMaxPower(area.id, hydroSeries) && ret;
         }
 
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
