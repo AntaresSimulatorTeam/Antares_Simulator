@@ -30,7 +30,7 @@
 #include "antares/solver/libObjectModel/port.h"
 #include "antares/solver/libObjectModel/portType.h"
 #include "antares/solver/libObjectModel/variable.h"
-#include "antares/solver/modelParser/model.h"
+#include "antares/solver/modelParser/Library.h"
 
 namespace Antares::Solver::ModelConverter
 {

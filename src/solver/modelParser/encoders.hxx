@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "antares/solver/modelParser/model.h"
+#include "antares/solver/modelParser/Library.h"
 
 #include "yaml-cpp/yaml.h"
 

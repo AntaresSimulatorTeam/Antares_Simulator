@@ -27,7 +27,7 @@
 
 #include "antares/solver/libObjectModel/library.h"
 #include "antares/solver/modelConverter/modelConverter.h"
-#include "antares/solver/modelParser/model.h"
+#include "antares/solver/modelParser/Library.h"
 
 using namespace Antares::Solver;
 
