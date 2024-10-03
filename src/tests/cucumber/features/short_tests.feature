@@ -47,12 +47,9 @@ Feature: short tests
     Then the simulation takes less than 5 seconds
     And the simulation succeeds
     And the annual system cost is 2.75816e+07
-    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
     And in area "AREA", the units of "base" produce between 400 and 900 MWh hourly
     And in area "AREA", the units of "semi base" produce between 100 and 300 MWh hourly
     And in area "AREA", the units of "peak" produce between 10 and 100 MWh hourly
-    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
     # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
     # in this test have a unitcount > 1
     # TODO : create similar tests with unitcount = 1, and implement the following steps:
@@ -70,9 +67,9 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.9338e+07
     And in area "AREA", during year 1, total non-proportional cost is 1756400
-    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
-    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
+    And in area "AREA", the units of "base" produce between 400 and 900 MWh hourly
+    And in area "AREA", the units of "semi base" produce between 100 and 300 MWh hourly
+    And in area "AREA", the units of "peak" produce between 10 and 100 MWh hourly
     # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
     # in this test have a unitcount > 1
     # TODO : create similar tests with unitcount = 1, and implement the following steps:
@@ -91,9 +88,9 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.98912e+07
     And in area "AREA", during year 1, total non-proportional cost is 1861400
-    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
-    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
+    And in area "AREA", the units of "base" produce between 400 and 900 MWh hourly
+    And in area "AREA", the units of "semi base" produce between 100 and 300 MWh hourly
+    And in area "AREA", the units of "peak" produce between 10 and 100 MWh hourly
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
@@ -113,9 +110,9 @@ Feature: short tests
     And the simulation succeeds
     And the annual system cost is 2.97339e+07
     And in area "AREA", during year 1, total non-proportional cost is 1680900
-    And in area "AREA", hourly production of "base" is always zero or greater than 900 MWh
-    And in area "AREA", hourly production of "semi base" is always zero or greater than 100 MWh
-    And in area "AREA", hourly production of "peak" is always zero or greater than 10 MWh
+    And in area "AREA", the units of "base" produce between 400 and 900 MWh hourly
+    And in area "AREA", the units of "semi base" produce between 100 and 300 MWh hourly
+    And in area "AREA", the units of "peak" produce between 10 and 100 MWh hourly
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     # Ideally, we would also check min up & down durations in this test. But is not possible, since clusters defined
