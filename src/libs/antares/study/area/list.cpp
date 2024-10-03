@@ -862,7 +862,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     std::string miscgenName = "miscgen-" + area.id + ".txt";
     fs::path miscgenPath = study.folderInput / "misc-gen" / miscgenName;
 
-    ret = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+    ret = area.miscGen.loadFromCSVFile(miscgenPath.string(),
+                                       fhhMax,
+                                       HOURS_PER_YEAR,
+                                       Matrix<>::optFixedSize)
           && ret;
 
     // Check misc gen
