@@ -51,7 +51,7 @@ public:
             randomNumbers& pRandomForParallelYears,
             bool pPerformCalculations,
             Data::Study& pStudy,
-            Variable::State& pState,
+            std::vector<Variable::State>& pStates,
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
             IResultWriter& resultWriter,
@@ -65,14 +65,13 @@ public:
         randomForParallelYears(pRandomForParallelYears),
         performCalculations(pPerformCalculations),
         study(pStudy),
-        state(pState),
+        states(pStates),
         yearByYear(pYearByYear),
         pDurationCollector(durationCollector),
         pResultWriter(resultWriter),
         simulationObserver_(simulationObserver),
         hydroManagement(study.areas, study.parameters, study.calendar, resultWriter)
     {
-        scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
     yearJob(const yearJob&) = delete;
@@ -89,13 +88,12 @@ private:
     randomNumbers& randomForParallelYears;
     bool performCalculations;
     Data::Study& study;
-    Variable::State& state;
+    std::vector<Variable::State>& states;
     bool yearByYear;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
     HydroManagement hydroManagement;
-    Antares::Data::Area::ScratchMap scratchmap;
 
 private:
     /*
@@ -147,17 +145,18 @@ public:
             // 1 - Applying random levels for current year
             auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
-            // 2 - Preparing the Time-series numbers
-            // removed
+            // Getting the scratchMap associated to the current year
+            Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numSpace);
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
             simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
-            pDurationCollector("hydro_ventilation") << [this, &randomReservoirLevel]
+            pDurationCollector("hydro_ventilation") << [this, &scratchmap, &randomReservoirLevel]
             { hydroManagement.makeVentilation(randomReservoirLevel.data(), y, scratchmap); };
 
             // Updating the state
+            auto& state = states[numSpace];
             state.year = y;
 
             // 5 - Resetting all variables for the output
@@ -1025,7 +1024,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               randomForParallelYears,
               performCalculations,
               study,
-              state[numSpace],
+              state,
               pYearByYear,
               pDurationCollector,
               pResultWriter,
