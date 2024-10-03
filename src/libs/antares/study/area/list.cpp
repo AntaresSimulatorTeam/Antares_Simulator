@@ -903,9 +903,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
         if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "load" << SEP << "series" << SEP
-                           << "load_" << area.id << ".txt";
-            ret = area.load.series.loadFromFile(buffer.c_str(), averageTs) && ret;
+            std::string loadId = "load_" + area.id + ".txt";
+            fs::path loadSeriesPath = study.folderInput / "load" / "series" / loadId;
+
+            ret = area.load.series.loadFromFile(loadSeriesPath, averageTs) && ret;
         }
     }
 
@@ -914,15 +915,14 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.solar.prepro) // Prepro
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.solar.prepro->loadFromFolder(buffer) && ret;
+            fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
+            ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series" << SEP
-                           << "solar_" << area.id << ".txt";
-            ret = area.solar.series.loadFromFile(buffer.c_str(), averageTs) && ret;
+            std::string solarId = "solar_" + area.id + ".txt";
+            fs::path solarPath = study.folderInput / "solar" / "series" / solarId;
+            ret = area.solar.series.loadFromFile(solarPath, averageTs) && ret;
         }
     }
 
