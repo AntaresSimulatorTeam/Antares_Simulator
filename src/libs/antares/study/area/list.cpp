@@ -971,15 +971,14 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.wind.prepro) // Prepro
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.wind.prepro->loadFromFolder(buffer) && ret;
+            fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
+            ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series" << SEP
-                           << "wind_" << area.id << ".txt";
-            ret = area.wind.series.loadFromFile(buffer.c_str(), averageTs) && ret;
+            std::string windId = "wind_" + area.id + ".txt";
+            fs::path windPath = study.folderInput / "wind" / "series" / windId;
+            ret = area.wind.series.loadFromFile(windPath, averageTs) && ret;
         }
     }
 
