@@ -493,31 +493,10 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
         unsigned int indexSpace = 999999;
         bool performCalculations = yearsFilter[y];
 
-        // Do we refresh just before this year ? If yes a new set of parallel years has to be
-        // created
-        bool refreshing = false;
-        refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
-        refreshing = refreshing
-                     || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
-
-        // Some thermal clusters may override the global parameter.
-        // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
-        bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal
-                                      || study.runtime.thermalTSRefresh;
-        refreshing = refreshing
-                     || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
-
         // We build a new set of parallel years if one of these conditions is fulfilled :
-        //	- We have to refresh (or regenerate) some or all time series before running the
-        //    current year
         //	- This is the first year (to be executed or not) after the previous set is full with
         //    years to be executed. That is : in the previous set filled, the max number of
         //    years to be actually run is reached.
-        buildNewSet = buildNewSet || refreshing;
 
         if (buildNewSet)
         {
@@ -530,14 +509,6 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
             set->nbYears = 0;
             set->regenerateTS = false;
             set->yearForTSgeneration = 999999;
-
-            // In case we have to regenerate times series before run the current set of parallel
-            // years
-            if (refreshing)
-            {
-                set->regenerateTS = true;
-                set->yearForTSgeneration = y;
-            }
         }
 
         set->yearsIndices.push_back(y);
