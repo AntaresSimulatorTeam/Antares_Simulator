@@ -954,7 +954,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
-            ret = reader.read(buffer, study.usedByTheSolver) && ret;
+            ret = reader.read(pathHydro.string(), study.usedByTheSolver) && ret;
         }
         else
         {
