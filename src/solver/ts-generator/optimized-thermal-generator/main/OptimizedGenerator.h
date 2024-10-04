@@ -7,8 +7,8 @@
 #include "ortools/linear_solver/linear_solver.h"
 #include "../../randomized-thermal-generator/RandomizedGenerator.h"
 #include "../../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
-#include "../auxillary/AuxillaryStructures.h"
-#include "../auxillary/AuxFreeFun.h"
+#include "../support/SupportStructures.h"
+#include "../support/SupportFunctions.h"
 #include "../parameters/OptimizationParameters.h"
 #include <antares/exception/AssertionError.hpp>
 

@@ -13,12 +13,12 @@ source_group("ts-generator\\Randomized-thermal-generator" FILES ${SRC_RANDOMIZED
 # Optimized-thermal-ts-generator
 #
 set(SRC_OPTIMIZEDGENERATORS
-	optimized-thermal-generator/auxillary/AuxillaryStructures.h
-	optimized-thermal-generator/auxillary/AuxillaryStructures.cpp
-	optimized-thermal-generator/auxillary/AuxFreeFun.h
-	optimized-thermal-generator/auxillary/AuxFreeFun.cpp
-	optimized-thermal-generator/auxillary/pre-scenario-builder.h
-	optimized-thermal-generator/auxillary/pre-scenario-builder.cpp
+	optimized-thermal-generator/support/SupportStructures.h
+	optimized-thermal-generator/support/SupportStructures.cpp
+	optimized-thermal-generator/support/SupportFunctions.h
+	optimized-thermal-generator/support/SupportFunctions.cpp
+	optimized-thermal-generator/support/pre-scenario-builder.h
+	optimized-thermal-generator/support/pre-scenario-builder.cpp
 	optimized-thermal-generator/main/OptimizedGenerator.h
 	optimized-thermal-generator/main/OptimizedGenerator.cpp
 	optimized-thermal-generator/parameters/OptimizationParameters.h

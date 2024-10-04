@@ -9,7 +9,7 @@
 namespace Antares::Solver::TSGenerator
 {
 
-// auxillary functions
+// support functions
 std::array<double, DAYS_PER_YEAR> calculateDailySums(
   const std::array<double, HOURS_PER_YEAR>& hourlyValues);
 std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,

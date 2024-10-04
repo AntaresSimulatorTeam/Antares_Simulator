@@ -5,7 +5,7 @@
 #include <numeric>
 #include <algorithm>
 #include "../main/OptimizedGenerator.h"
-#include "../auxillary/AuxFreeFun.h"
+#include "../support/SupportFunctions.h"
 
 namespace Antares::Solver::TSGenerator
 {
@@ -79,7 +79,7 @@ std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(
     }
 }
 
-// auxillary functions - for parameter calculations
+// support functions - for parameter calculations
 std::array<double, DAYS_PER_YEAR> calculateDailySums(
   const std::array<double, HOURS_PER_YEAR>& hourlyValues)
 {

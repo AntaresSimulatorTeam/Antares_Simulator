@@ -2,7 +2,7 @@
 // Created by milos on 14/11/23.
 //
 
-#include "AuxillaryStructures.h"
+#include "SupportStructures.h"
 
 namespace Antares::Solver::TSGenerator
 {
