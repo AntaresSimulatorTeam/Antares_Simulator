@@ -292,7 +292,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // years and pick the size of the smallest set.
 
     std::vector<uint>* set = nullptr;
-    bool buildNewSet = true;
     std::vector<std::vector<uint>> setsOfParallelYears;
 
     for (uint y = 0; y < p.nbYears; ++y)
@@ -303,56 +302,9 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
             performCalculations = p.yearsFilter[y];
         }
 
-        // Do we have to refresh ?
-        bool refreshing = false;
-        refreshing = (p.timeSeriesToGenerate & timeSeriesLoad)
-                     && (p.timeSeriesToRefresh & timeSeriesLoad)
-                     && (!y || ((y % p.refreshIntervalLoad) == 0));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesSolar)
-                         && (p.timeSeriesToRefresh & timeSeriesSolar)
-                         && (!y || ((y % p.refreshIntervalSolar) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesWind)
-                         && (p.timeSeriesToRefresh & timeSeriesWind)
-                         && (!y || ((y % p.refreshIntervalWind) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesHydro)
-                         && (p.timeSeriesToRefresh & timeSeriesHydro)
-                         && (!y || ((y % p.refreshIntervalHydro) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesThermal)
-                         && (p.timeSeriesToRefresh & timeSeriesThermal)
-                         && (!y || ((y % p.refreshIntervalThermal) == 0)));
-
-        buildNewSet = buildNewSet || refreshing;
-
-        // We build a new set of parallel years if one of these conditions is fulfilled :
-        //	- We have to refresh (or regenerate) some or all time series before running the
-        // current year
-        //	- This is the first year after the previous set is full with years to be actually
-        // executed (not skipped). 	  That is : in the previous set filled, the max number of
-        // years to be actually run is reached.
-        if (buildNewSet)
-        {
-            std::vector<uint> setToCreate;
-            setsOfParallelYears.push_back(setToCreate);
-            set = &(setsOfParallelYears.back());
-        }
-
         if (performCalculations)
         {
             set->push_back(y);
-        }
-
-        // Do we build a new set at next iteration (for years to be executed or not) ?
-        if (set->size() == maxNbYearsInParallel)
-        {
-            buildNewSet = true;
-        }
-        else
-        {
-            buildNewSet = false;
         }
     } // End of loop over years
 

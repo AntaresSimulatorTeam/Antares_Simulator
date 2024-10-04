@@ -115,12 +115,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
         parameters.synthesis = false;
     }
 
-    if (options.loadOnlyNeeded && !parameters.timeSeriesToGenerate)
-    {
-        // Nothing to refresh
-        parameters.timeSeriesToRefresh = 0;
-    }
-
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
     if (usedByTheSolver)
