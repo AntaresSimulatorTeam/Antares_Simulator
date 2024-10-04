@@ -28,18 +28,18 @@ namespace Antares::Solver::ObjectModel
 class PortField
 {
 public:
-    explicit PortField(const std::string& name):
-        name(name)
+    explicit PortField(const std::string& id):
+        id_(id)
     {
     }
 
     const std::string& Id() const
     {
-        return name;
+        return id_;
     }
 
 private:
-    std::string name;
+    std::string id_;
 };
 
 } // namespace Antares::Solver::ObjectModel

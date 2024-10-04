@@ -52,11 +52,11 @@ public:
         YES = true
     };
 
-    explicit Parameter(std::string name,
+    explicit Parameter(std::string id,
                        ValueType type,
                        TimeDependent timeDependent,
                        ScenarioDependent scenarioDependent):
-        name_(std::move(name)),
+        id_(std::move(id)),
         type_(type),
         timeDependent_(timeDependent),
         scenarioDependent_(scenarioDependent)
@@ -65,7 +65,7 @@ public:
 
     const std::string& Id() const
     {
-        return name_;
+        return id_;
     }
 
     ValueType Type() const
@@ -84,7 +84,7 @@ public:
     }
 
 private:
-    std::string name_;
+    std::string id_;
     ValueType type_;
     TimeDependent timeDependent_ = TimeDependent::YES;             // optional at construction
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES; // optional at construction

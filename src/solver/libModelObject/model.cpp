@@ -113,7 +113,7 @@ ModelBuilder& ModelBuilder::withPorts(std::vector<Port>&& ports)
                    ports.end(),
                    std::inserter(model_.ports_, model_.ports_.end()),
                    [](/*Non const to prevent copy*/ Port& port)
-                   { return std::make_pair(port.Name(), std::move(port)); });
+                   { return std::make_pair(port.Id(), std::move(port)); });
     return *this;
 }
 
