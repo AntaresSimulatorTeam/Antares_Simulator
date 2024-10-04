@@ -579,7 +579,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
 }
 
 // Test error when model is not a map
-BOOST_AUTO_TEST_CASE(model_is_scalar)
+BOOST_AUTO_TEST_CASE(model_is_not_scalar)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(

@@ -148,7 +148,7 @@ struct convert<Antares::Solver::ModelParser::Model>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.description = node["description"].as<std::string>();
+        rhs.description = node["description"].as<std::string>("");
         rhs.parameters = node["parameters"]
                            .as<std::vector<Antares::Solver::ModelParser::Parameter>>();
         rhs.variables = node["variables"].as<std::vector<Antares::Solver::ModelParser::Variable>>();
@@ -173,7 +173,7 @@ struct convert<Antares::Solver::ModelParser::PortType>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.description = node["description"].as<std::string>();
+        rhs.description = node["description"].as<std::string>("");
         for (const auto& field: node["fields"])
         {
             rhs.fields.push_back(field["id"].as<std::string>());
@@ -188,7 +188,7 @@ struct convert<Antares::Solver::ModelParser::Library>
     static bool decode(const Node& node, Antares::Solver::ModelParser::Library& rhs)
     {
         rhs.id = node["id"].as<std::string>();
-        rhs.description = node["description"].as<std::string>();
+        rhs.description = node["description"].as<std::string>("");
         rhs.port_types = node["port-types"]
                            .as<std::vector<Antares::Solver::ModelParser::PortType>>();
         rhs.models = node["models"].as<std::vector<Antares::Solver::ModelParser::Model>>();
