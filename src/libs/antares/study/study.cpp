@@ -187,6 +187,7 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
+// TODO remove with GUI
 uint64_t Study::memoryUsage() const
 {
     return buffer.capacity() // Folders paths

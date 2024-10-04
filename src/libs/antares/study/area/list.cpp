@@ -833,8 +833,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     const auto studyVersion = study.header.version;
 
     // DSM, Reserves, D-1
-    fs::path reservesPath = study.folderInput / "reserves" / area.id.to<std::string>();
-    reservesPath += ".txt";
+    fs::path reservesPath = (study.folderInput / "reserves"
+                            / area.id.to<std::string>()).replace_extension("txt");
     ret = area.reserves.loadFromCSVFile(reservesPath.string(),
                                         fhrMax,
                                         HOURS_PER_YEAR,
