@@ -1222,6 +1222,10 @@ var annotated_dup =
     [ "study_modifier", null, [
       [ "study_modifier", "classstudy__modifier_1_1study__modifier.html", null ]
     ] ],
+    [ "study_output_handler", null, [
+      [ "result_type", "classstudy__output__handler_1_1result__type.html", null ],
+      [ "study_output_handler", "classstudy__output__handler_1_1study__output__handler.html", null ]
+    ] ],
     [ "study_run", null, [
       [ "study_run", "classstudy__run_1_1study__run.html", null ]
     ] ],

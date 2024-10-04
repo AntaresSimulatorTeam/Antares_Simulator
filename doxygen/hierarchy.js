@@ -1417,6 +1417,7 @@ var hierarchy =
     [ "Antares::Data::ShortTermStorage::STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ],
     [ "study_input_handler.study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", null ],
     [ "study_modifier.study_modifier", "classstudy__modifier_1_1study__modifier.html", null ],
+    [ "study_output_handler.study_output_handler", "classstudy__output__handler_1_1study__output__handler.html", null ],
     [ "study_run.study_run", "classstudy__run_1_1study__run.html", null ],
     [ "StudyBuilder", "structStudyBuilder.html", [
       [ "HydroMaxPowerStudy", "structHydroMaxPowerStudy.html", null ],
@@ -1821,5 +1822,8 @@ var hierarchy =
       [ "output_compare.output_compare", "classoutput__compare_1_1output__compare.html", null ],
       [ "sim_return_code.simulation_success", "classsim__return__code_1_1simulation__success.html", null ],
       [ "unfeasible_problem.unfeasible_problem", "classunfeasible__problem_1_1unfeasible__problem.html", null ]
+    ] ],
+    [ "Enum", null, [
+      [ "study_output_handler.result_type", "classstudy__output__handler_1_1result__type.html", null ]
     ] ]
 ];
