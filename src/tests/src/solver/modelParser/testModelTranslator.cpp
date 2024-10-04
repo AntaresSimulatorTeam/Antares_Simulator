@@ -29,31 +29,9 @@
 #include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
 
-using namespace Antares::Solver;
+#include "enum_operators.h"
 
-namespace Antares::Solver::ObjectModel
-{
-inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
-{
-    using namespace std::string_literals;
-    switch (value_type)
-    {
-    case ValueType::FLOAT:
-        os << "FLOAT"s;
-        break;
-    case ValueType::INTEGER:
-        os << "INTEGER"s;
-        break;
-    case ValueType::BOOL:
-        os << "BOOL"s;
-        break;
-    default:
-        os << "UNKNOWN"s;
-        break;
-    }
-    return os;
-}
-} // namespace Antares::Solver::ObjectModel
+using namespace Antares::Solver;
 
 // Test empty library
 BOOST_AUTO_TEST_CASE(Empty_library_is_valid)

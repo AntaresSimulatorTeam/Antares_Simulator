@@ -20,15 +20,18 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <yaml-cpp/exceptions.h>
+
+#include <boost/test/unit_test.hpp>
 
 #include "antares/solver/libObjectModel/library.h"
 #include "antares/solver/modelConverter/modelConverter.h"
-#include "antares/solver/modelParser/model.h"
+#include "antares/solver/modelParser/Library.h"
 #include "antares/solver/modelParser/parser.h"
-#define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
+#include "enum_operators.h"
 
 using namespace std::string_literals;
 using namespace Antares::Solver;
@@ -39,8 +42,8 @@ void checkParameter(const ObjectModel::Parameter& parameter,
                     bool scenarioDependent,
                     ObjectModel::ValueType type)
 {
-    std::cout << "Parameter: " << parameter.Name() << std::endl;
-    BOOST_CHECK_EQUAL(parameter.Name(), name);
+    std::cout << "Parameter: " << parameter.Id() << std::endl;
+    BOOST_CHECK_EQUAL(parameter.Id(), name);
     BOOST_CHECK_EQUAL(parameter.isTimeDependent(), timeDependent);
     BOOST_CHECK_EQUAL(parameter.isScenarioDependent(), scenarioDependent);
     BOOST_CHECK_EQUAL(parameter.Type(), type);
@@ -52,8 +55,8 @@ void checkVariable(const ObjectModel::Variable& variable,
                    const std::string& upperBound,
                    ObjectModel::ValueType type)
 {
-    std::cout << "Variable: " << variable.Name() << std::endl;
-    BOOST_CHECK_EQUAL(variable.Name(), name);
+    std::cout << "Variable: " << variable.Id() << std::endl;
+    BOOST_CHECK_EQUAL(variable.Id(), name);
     BOOST_CHECK_EQUAL(variable.LowerBound().Value(), lowerBound);
     BOOST_CHECK_EQUAL(variable.UpperBound().Value(), upperBound);
     BOOST_CHECK_EQUAL(variable.Type(), type);
@@ -63,8 +66,8 @@ void checkConstraint(const ObjectModel::Constraint& constraint,
                      const std::string& name,
                      const std::string& expression)
 {
-    std::cout << "Constraint: " << constraint.Name() << std::endl;
-    BOOST_CHECK_EQUAL(constraint.Name(), name);
+    std::cout << "Constraint: " << constraint.Id() << std::endl;
+    BOOST_CHECK_EQUAL(constraint.Id(), name);
     BOOST_CHECK_EQUAL(constraint.expression().Value(), expression);
 }
 
@@ -90,24 +93,24 @@ library:
     - id: flow
       description: A port which transfers power flow
       fields:
-        - name: flow
+        - id: flow
 
   models:
     - id: generator
       description: A basic generator model
       parameters:
-        - name: cost
+        - id: cost
           time-dependent: false
           scenario-dependent: false
-        - name: p_max
+        - id: p_max
           time-dependent: false
           scenario-dependent: false
       variables:
-        - name: generation
+        - id: generation
           lower-bound: 0
           upper-bound: p_max
       ports:
-        - name: injection_port
+        - id: injection_port
           type: flow
       port-field-definitions:
         - port: injection_port
@@ -118,23 +121,23 @@ library:
     - id: node
       description: A basic balancing node model
       ports:
-        - name: injection_port
+        - id: injection_port
           type: flow
       binding-constraints:
-        - name: balance
+        - id: balance
           expression:  sum_connections(injection_port.flow) = 0
 
     - id: spillage
       description: A basic spillage model
       parameters:
-        - name: cost
+        - id: cost
           time-dependent: false
           scenario-dependent: false
       variables:
-        - name: spillage
+        - id: spillage
           lower-bound: 0
       ports:
-        - name: injection_port
+        - id: injection_port
           type: flow
       port-field-definitions:
         - port: injection_port
@@ -144,14 +147,14 @@ library:
     - id: unsupplied
       description: A basic unsupplied model
       parameters:
-        - name: cost
+        - id: cost
           time-dependent: false
           scenario-dependent: false
       variables:
-        - name: unsupplied_energy
+        - id: unsupplied_energy
           lower-bound: 0
       ports:
-        - name: injection_port
+        - id: injection_port
           type: flow
       port-field-definitions:
         - port: injection_port
@@ -161,11 +164,11 @@ library:
     - id: demand
       description: A basic fixed demand model
       parameters:
-        - name: demand
+        - id: demand
           time-dependent: true
           scenario-dependent: true
       ports:
-        - name: injection_port
+        - id: injection_port
           type: flow
       port-field-definitions:
         - port: injection_port
@@ -175,83 +178,83 @@ library:
     - id: short-term-storage
       description: A short term storage
       parameters:
-        - name: efficiency
-        - name: level_min
-        - name: level_max
-        - name: p_max_withdrawal
-        - name: p_max_injection
-        - name: inflows
+        - id: efficiency
+        - id: level_min
+        - id: level_max
+        - id: p_max_withdrawal
+        - id: p_max_injection
+        - id: inflows
       variables:
-        - name: injection
+        - id: injection
           lower-bound: 0
           upper-bound: p_max_injection
-        - name: withdrawal
+        - id: withdrawal
           lower-bound: 0
           upper-bound: p_max_withdrawal
-        - name: level
+        - id: level
           lower-bound: level_min
           upper-bound: level_max
       ports:
-        - name: injection_port
+        - id: injection_port
           type: flow
       port-field-definitions:
         - port: injection_port
           field: flow
           definition: injection - withdrawal
       constraints:
-        - name: Level equation
+        - id: Level equation
           expression: level[t] - level[t-1] - efficiency * injection + withdrawal = inflows
 
     - id: thermal-cluster-dhd
       description: DHD model for thermal cluster
       parameters:
-        - name: cost
-        - name: p_min
-        - name: p_max
-        - name: d_min_up
-        - name: d_min_down
-        - name: nb_units_max
-        - name: nb_failures
+        - id: cost
+        - id: p_min
+        - id: p_max
+        - id: d_min_up
+        - id: d_min_down
+        - id: nb_units_max
+        - id: nb_failures
           time-dependent: true
           scenario-dependent: true
       variables:
-        - name: generation
+        - id: generation
           lower-bound: 0
           upper-bound: nb_units_max * p_max
           time-dependent: true
           scenario-dependent: true
-        - name: nb_on
+        - id: nb_on
           lower-bound: 0
           upper-bound: nb_units_max
           time-dependent: true
           scenario-dependent: false
-        - name: nb_stop
+        - id: nb_stop
           lower-bound: 0
           upper-bound: nb_units_max
           time-dependent: true
           scenario-dependent: false
-        - name: nb_start
+        - id: nb_start
           lower-bound: 0
           upper-bound: nb_units_max
           time-dependent: true
           scenario-dependent: false
       ports:
-        - name: injection_port
+        - id: injection_port
           type: flow
       port-field-definitions:
         - port: injection_port
           field: flow
           definition: generation
       constraints:
-        - name: Max generation
+        - id: Max generation
           expression: generation <= nb_on * p_max
-        - name: Min generation
+        - id: Min generation
           expression: generation >= nb_on * p_min
-        - name: Number of units variation
+        - id: Number of units variation
           expression: nb_on = nb_on[t-1] + nb_start - nb_stop
-        - name: Min up time
+        - id: Min up time
           expression: sum(t-d_min_up + 1 .. t, nb_start) <= nb_on
-        - name: Min down time
+        - id: Min down time
           expression: sum(t-d_min_down + 1 .. t, nb_stop) <= nb_units_max[t-d_min_down] - nb_on
       objective: expec(sum(cost * generation))
     )"s;
@@ -271,7 +274,7 @@ library:
 
         BOOST_REQUIRE_EQUAL(portType.fields().size(), 1);
         auto& portTypeField = portType.fields().at(0);
-        BOOST_CHECK_EQUAL(portTypeField.Name(), "flow");
+        BOOST_CHECK_EQUAL(portTypeField.Id(), "flow");
 
         BOOST_REQUIRE_EQUAL(lib.models().size(), 7);
         auto& model0 = lib.models().at("generator");
@@ -302,7 +305,7 @@ library:
                       ObjectModel::ValueType::FLOAT);
 
         // auto& port = model0.Ports().at("injection_port");
-        // BOOST_CHECK_EQUAL(port.Name(), "injection_port");
+        // BOOST_CHECK_EQUAL(port.Id(), "injection_port");
         //  other properties
 
         auto& model1 = lib.models().at("node");

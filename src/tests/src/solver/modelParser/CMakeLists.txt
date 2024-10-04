@@ -3,6 +3,7 @@ set(SOURCE_FILES
         testModelParser.cpp
         testModelTranslator.cpp
         test_full.cpp
+        enum_operators.h
 )
 
 # Add executable
