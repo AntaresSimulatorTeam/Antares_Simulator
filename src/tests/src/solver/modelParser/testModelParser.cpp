@@ -265,17 +265,17 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters_default_values)
                 - id: "model_id"
                   description: "model_description"
                   parameters:
-                      - name: "param_name"
+                      - id: "param_name"
                   variables: []
                   ports: []
                   port-field-definitions: []
                   constraints: []
                   objective: "objective"
-        )";
+        )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].parameters.size() == 1);
-    BOOST_CHECK(libraryObj.models[0].parameters[0].name == "param_name");
+    BOOST_CHECK(libraryObj.models[0].parameters[0].id == "param_name");
     BOOST_CHECK(libraryObj.models[0].parameters[0].time_dependent == true);
     BOOST_CHECK(libraryObj.models[0].parameters[0].scenario_dependent == true);
 }
