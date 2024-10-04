@@ -56,7 +56,7 @@ inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
 } // namespace Antares::Solver::ObjectModel
 
 // Test empty library
-BOOST_AUTO_TEST_CASE(test_library_empty)
+BOOST_AUTO_TEST_CASE(Empty_library_is_valid)
 {
     ModelParser::Library library;
     ObjectModel::Library lib = ModelConverter::convert(library);
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(test_library_empty)
 }
 
 // Test library with id and description
-BOOST_AUTO_TEST_CASE(test_library_id_and_description)
+BOOST_AUTO_TEST_CASE(library_id_description_properly_translated)
 {
     ModelParser::Library library;
     library.id = "test_id";
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(test_library_id_and_description)
 }
 
 // Test library with port types
-BOOST_AUTO_TEST_CASE(test_library_port_types_empty_fields)
+BOOST_AUTO_TEST_CASE(port_type_with_empty_fileds_properly_translated)
 {
     ModelParser::Library library;
     ModelParser::PortType portType1{"port1", "flow port", {}};
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(test_library_port_types_empty_fields)
 }
 
 // Test library with port types and fields
-BOOST_AUTO_TEST_CASE(test_library_port_types_with_fields)
+BOOST_AUTO_TEST_CASE(portType_with_fields_properly_translated)
 {
     ModelParser::Library library;
     ModelParser::PortType portType1{"port1", "flow port", {"field1", "field2"}};
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(test_library_port_types_with_fields)
 }
 
 // Test library with models
-BOOST_AUTO_TEST_CASE(test_library_empty_models)
+BOOST_AUTO_TEST_CASE(empty_model_properly_translated)
 {
     ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(test_library_empty_models)
 }
 
 // Test library with models and parameters
-BOOST_AUTO_TEST_CASE(test_library_models_with_parameters)
+BOOST_AUTO_TEST_CASE(model_parameters_properly_translated)
 {
     ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_parameters)
 }
 
 // Test library with models and variables
-BOOST_AUTO_TEST_CASE(test_library_models_with_variables)
+BOOST_AUTO_TEST_CASE(model_variables_properly_translated)
 {
     ModelParser::Library library;
     ModelParser::Model model1{
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_variables)
 }
 
 // Test library with models and ports
-BOOST_AUTO_TEST_CASE(test_library_models_with_ports, *boost::unit_test::disabled())
+BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disabled())
 {
     ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_ports, *boost::unit_test::disabled
 }
 
 // Test library with models and constraints
-BOOST_AUTO_TEST_CASE(test_library_models_with_constraints)
+BOOST_AUTO_TEST_CASE(model_constraints_properly_translated)
 {
     ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(test_library_models_with_constraints)
 }
 
 // Test with 2 models
-BOOST_AUTO_TEST_CASE(test_library_two_models)
+BOOST_AUTO_TEST_CASE(multiple_models_properly_translated)
 {
     ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
