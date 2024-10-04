@@ -59,10 +59,12 @@ jobs:
       with:
         key: windows
 
-    - name: Install VCPKG
+    - name: Install VCPKG and Dependencies
       shell: bash
       run: |
-        git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
+        git submodule update --init vcpkg
+        ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
+        ./vcpkg/vcpkg install boost --triplet x64-windows
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
