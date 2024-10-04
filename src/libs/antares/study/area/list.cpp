@@ -535,7 +535,7 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
     return nullptr;
 }
 
-bool AreaList::loadListFromFile(const AnyString& filename)
+bool AreaList::loadListFromFile(const fs::path& filename)
 {
     std::ifstream file(filename);
     if (!file.is_open())
@@ -1145,9 +1145,8 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Load the list of all available areas
     {
         logs.info() << "Loading the list of areas...";
-        buffer.clear() << pStudy.folderInput << SEP << "areas" << SEP << "list."
-                       << pStudy.inputExtension;
-        ret = loadListFromFile(buffer) && ret;
+        fs::path areaListPath = pStudy.folderInput / "areas" / "list.txt";
+        ret = loadListFromFile(areaListPath) && ret;
     }
 
     // Hydro

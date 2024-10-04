@@ -315,7 +315,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     logs.info() << "  :: analyzing the study data";
     logs.verbosityLevel = Logs::Verbosity::Warning::level;
 
-    if (arealist->loadListFromFile(buffer))
+    if (arealist->loadListFromFile(buffer.c_str()))
     {
         // restoring standard verbosity level
         logs.verbosityLevel = Logs::Verbosity::Debug::level;
