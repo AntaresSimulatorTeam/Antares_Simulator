@@ -424,7 +424,7 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
     }
 }
 
-void ORTOOLS_LibererProbleme(MPSolver* solver)
+void ORTOOLS_LibererProbleme(MPSolver*& solver)
 {
     delete solver;
     solver = nullptr;
