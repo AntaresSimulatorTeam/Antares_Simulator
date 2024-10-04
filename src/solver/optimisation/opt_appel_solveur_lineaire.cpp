@@ -91,10 +91,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
-    if (!PremierPassage)
-    {
-        solver = nullptr;
-    }
 
     if (solver == nullptr)
     {
@@ -105,14 +101,11 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (solver != nullptr)
-            {
-                ORTOOLS_LibererProbleme(solver);
-            }
+
+            ORTOOLS_LibererProbleme(solver);
 
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
-            solver = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
         }
@@ -184,7 +177,11 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    solver = ORTOOLS_ConvertIfNeeded(options.ortoolsSolver, &Probleme, solver);
+    if (solver == nullptr)
+    {
+        solver = ORTOOLS_Convert(options.ortoolsSolver, &Probleme);
+    }
+
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
