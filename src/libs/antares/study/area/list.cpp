@@ -940,7 +940,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path hydroPrepro = pathHydro / "prepro";
-            ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro) && ret;
+            ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro.string()) && ret;
             ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
