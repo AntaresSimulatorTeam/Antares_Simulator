@@ -1152,8 +1152,8 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Hydro
     {
         logs.info() << "Loading global hydro data...";
-        buffer.clear() << pStudy.folderInput << SEP << "hydro";
-        ret = PartHydro::LoadFromFolder(pStudy, buffer) && ret;
+        fs::path hydroPath = pStudy.folderInput / "hydro";
+        ret = PartHydro::LoadFromFolder(pStudy, hydroPath.string()) && ret;
         ret = PartHydro::validate(pStudy) && ret;
     }
 
