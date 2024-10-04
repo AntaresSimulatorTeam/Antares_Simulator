@@ -238,6 +238,7 @@ unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 /// Getting the number of parallel years based on the number of cores level
 void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
 {
+    auto& p = parameters;
     unsigned nbLogicalCores = std::thread::hardware_concurrency();
     maxNbYearsInParallel = getNumberOfCoresPerMode(nbLogicalCores, parameters.nbCores.ncMode);
 
