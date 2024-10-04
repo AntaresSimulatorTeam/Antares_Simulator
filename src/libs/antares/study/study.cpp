@@ -235,14 +235,9 @@ unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
     return 0;
 }
 
+/// Getting the number of parallel years based on the number of cores level
 void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
 {
-    /*
-            Getting the number of parallel years based on the number
-            of cores level.
-            This number is limited by the smallest refresh span (if at least
-            one type of time series is generated)
-    */
     unsigned nbLogicalCores = std::thread::hardware_concurrency();
     maxNbYearsInParallel = getNumberOfCoresPerMode(nbLogicalCores, parameters.nbCores.ncMode);
 
@@ -290,54 +285,13 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // Getting the minimum number of years in a set of parallel years.
     // To get this number, we have to divide all years into sets of parallel
     // years and pick the size of the smallest set.
-
-    std::vector<uint>* set = nullptr;
-    std::vector<std::vector<uint>> setsOfParallelYears;
-
-    for (uint y = 0; y < p.nbYears; ++y)
-    {
-        bool performCalculations = true;
-        if (p.userPlaylist)
-        {
-            performCalculations = p.yearsFilter[y];
-        }
-
-        if (performCalculations)
-        {
-            set->push_back(y);
-        }
-    } // End of loop over years
-
-    // Now finding the smallest size among all sets.
-    minNbYearsInParallel = maxNbYearsInParallel;
-    for (uint s = 0; s < setsOfParallelYears.size(); s++)
-    {
-        uint setSize = (uint)setsOfParallelYears[s].size();
-        // Empty sets are not taken into account because, on the solver side,
-        // they will contain only skipped years
-        if (setSize && (setSize < minNbYearsInParallel))
-        {
-            minNbYearsInParallel = setSize;
-        }
-    }
+    unsigned minYears = p.userPlaylist ? p.yearsFilter.size() % maxNbYearsInParallel :
+                        p.nbYears % maxNbYearsInParallel;
 
     // GUI : storing minimum number of parallel years (in a set of parallel years).
     //		 Useful in the run window's simulation cores field in case parallel mode is enabled
     // by user.
-    minNbYearsInParallel_save = minNbYearsInParallel;
-
-    // The max number of years to run in parallel is limited by the max number years in a set of
-    // parallel years. This latter number can be limited by the smallest interval between 2 refresh
-    // points and determined by the unrun MC years in case of play-list.
-    uint maxNbYearsOverAllSets = 0;
-    for (uint s = 0; s < setsOfParallelYears.size(); s++)
-    {
-        if (setsOfParallelYears[s].size() > maxNbYearsOverAllSets)
-        {
-            maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].size();
-        }
-    }
-    maxNbYearsInParallel = maxNbYearsOverAllSets;
+    minNbYearsInParallel_save = minYears;
 
     // GUI : storing max nb of parallel years (in a set of parallel years) in case parallel mode is
     // enabled.
