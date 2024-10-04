@@ -149,8 +149,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
 
         // Modulation
-        auto modulationFile = folder / ".." / ".." / "prepro" / cluster->parentArea->id.c_str()
-                              / cluster->id() / "modulation.txt";
+        auto modulationFile = folder.parent_path().parent_path() / "prepro"
+                              / cluster->parentArea->id.c_str() / cluster->id() / "modulation.txt";
 
         enum
         {
