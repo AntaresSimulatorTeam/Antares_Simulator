@@ -247,35 +247,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         maxNbYearsInParallel = nbYearsParallelForced;
     }
 
-    // Limiting the number of parallel years by the smallest refresh span
-    auto& p = parameters;
-    uint TSlimit = UINT_MAX;
-    if ((p.timeSeriesToGenerate & timeSeriesLoad) && (p.timeSeriesToRefresh & timeSeriesLoad))
-    {
-        TSlimit = p.refreshIntervalLoad;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesSolar) && (p.timeSeriesToRefresh & timeSeriesSolar))
-    {
-        TSlimit = (p.refreshIntervalSolar < TSlimit) ? p.refreshIntervalSolar : TSlimit;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesHydro) && (p.timeSeriesToRefresh & timeSeriesHydro))
-    {
-        TSlimit = (p.refreshIntervalHydro < TSlimit) ? p.refreshIntervalHydro : TSlimit;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesWind) && (p.timeSeriesToRefresh & timeSeriesWind))
-    {
-        TSlimit = (p.refreshIntervalWind < TSlimit) ? p.refreshIntervalWind : TSlimit;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesThermal) && (p.timeSeriesToRefresh & timeSeriesThermal))
-    {
-        TSlimit = (p.refreshIntervalThermal < TSlimit) ? p.refreshIntervalThermal : TSlimit;
-    }
-
-    if (TSlimit < maxNbYearsInParallel)
-    {
-        maxNbYearsInParallel = TSlimit;
-    }
-
     // Limiting the number of parallel years by the total number of years
     if (p.nbYears < maxNbYearsInParallel)
     {
