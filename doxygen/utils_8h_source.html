@@ -174,25 +174,26 @@ $(document).ready(function(){initNavTree('utils_8h_source.html',''); initResizab
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keywordtype">void</span> TransformNameIntoID(<span class="keyword">const</span> AnyString&amp; name, StringT&amp; out);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>std::string transformNameIntoID(<span class="keyword">const</span> std::string&amp; name);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>std::string FormattedTime(<span class="keyword">const</span> std::string&amp; format);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keywordtype">void</span> BeautifyName(YString&amp; out, AnyString oldname);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keywordtype">void</span> BeautifyName(std::string&amp; out, <span class="keyword">const</span> std::string&amp; oldname);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt; splitStringIntoPairs(<span class="keyword">const</span> std::string&amp; s,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                                                                      <span class="keywordtype">char</span> delimiter1,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                                                      <span class="keywordtype">char</span> delimiter2);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">namespace </span>Utils</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>{</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keywordtype">bool</span> isZero(<span class="keywordtype">double</span> d);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keywordtype">double</span> round(<span class="keywordtype">double</span> d, <span class="keywordtype">unsigned</span> precision);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>} <span class="comment">// namespace Utils</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#include &quot;utils.hxx&quot;</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_UTILS_H__</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>std::tm getCurrentTime();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>std::string formatTime(<span class="keyword">const</span> std::tm&amp; localTime, <span class="keyword">const</span> std::string&amp; format);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keywordtype">void</span> BeautifyName(YString&amp; out, AnyString oldname);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keywordtype">void</span> BeautifyName(std::string&amp; out, <span class="keyword">const</span> std::string&amp; oldname);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt; splitStringIntoPairs(<span class="keyword">const</span> std::string&amp; s,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                                                      <span class="keywordtype">char</span> delimiter1,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                                                                      <span class="keywordtype">char</span> delimiter2);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">namespace </span>Utils</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keywordtype">bool</span> isZero(<span class="keywordtype">double</span> d);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keywordtype">double</span> round(<span class="keywordtype">double</span> d, <span class="keywordtype">unsigned</span> precision);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>} <span class="comment">// namespace Utils</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#include &quot;utils.hxx&quot;</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_UTILS_H__</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

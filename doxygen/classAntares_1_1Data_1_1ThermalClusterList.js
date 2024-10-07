@@ -5,8 +5,8 @@ var classAntares_1_1Data_1_1ThermalClusterList =
     [ "calculationOfSpinning", "classAntares_1_1Data_1_1ThermalClusterList.html#af7797eca6b2dbb4c687517e505f07766", null ],
     [ "enableMustrunForEveryone", "classAntares_1_1Data_1_1ThermalClusterList.html#acfdbe09e497ffc9ce817c903638529e6", null ],
     [ "ensureDataPrepro", "classAntares_1_1Data_1_1ThermalClusterList.html#adfa5186bb19b5913bb535053cfde9269", null ],
-    [ "loadFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a5325260f36cb2f3fdc5ff918381c6ff8", null ],
-    [ "loadPreproFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a9b469dfb60537db0159ff24f85c79a0c", null ],
+    [ "loadFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a9887e31792e0c7b9035267f8717047dd", null ],
+    [ "loadPreproFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2", null ],
     [ "memoryUsage", "classAntares_1_1Data_1_1ThermalClusterList.html#a81f03911144901fc9c180daa29a67f54", null ],
     [ "reverseCalculationOfSpinning", "classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4", null ]
 ];

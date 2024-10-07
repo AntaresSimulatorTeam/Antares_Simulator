@@ -3,7 +3,7 @@ var classAntares_1_1Data_1_1StudyHeader =
     [ "StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html#a147bd67a2671e4d250141c33bc5e97d4", null ],
     [ "~StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html#a71396b36c71b801cd1fb6c915ef1f20c", null ],
     [ "CopySettingsToIni", "classAntares_1_1Data_1_1StudyHeader.html#a47dda2381371e426ffea4177f1170f1d", null ],
-    [ "loadFromFile", "classAntares_1_1Data_1_1StudyHeader.html#adb8656ee7776f7a8bf6335f2d1ebb70a", null ],
+    [ "loadFromFile", "classAntares_1_1Data_1_1StudyHeader.html#a5a6a7590b619ec914940a974b8a5e795", null ],
     [ "reset", "classAntares_1_1Data_1_1StudyHeader.html#a99e8bcfe7c0dbd33b2e9cbd897f81d87", null ],
     [ "saveToFile", "classAntares_1_1Data_1_1StudyHeader.html#a891e80673d04fb25233638723a57a83a", null ],
     [ "author", "classAntares_1_1Data_1_1StudyHeader.html#a1dde88024c6dc9b87cbe87dc806b428a", null ],

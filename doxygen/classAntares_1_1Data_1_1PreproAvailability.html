@@ -187,9 +187,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyFrom</b> (const <a class="el" href="classAntares_1_1Data_1_1PreproAvailability.html">PreproAvailability</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a21061bb1f7d3d0a00354cf4daf5d1a3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy data from another struct. <br /></td></tr>
 <tr class="separator:a21061bb1f7d3d0a00354cf4daf5d1a3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b509550be279b4ef9cf7873a80619ee" id="r_a0b509550be279b4ef9cf7873a80619ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PreproAvailability.html#a0b509550be279b4ef9cf7873a80619ee">loadFromFolder</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const AnyString &amp;folder)</td></tr>
-<tr class="memdesc:a0b509550be279b4ef9cf7873a80619ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load settings for the thermal prepro from a folder.  <br /></td></tr>
-<tr class="separator:a0b509550be279b4ef9cf7873a80619ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af10876e3da1ad823f2097ae32aa28bff" id="r_af10876e3da1ad823f2097ae32aa28bff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PreproAvailability.html#af10876e3da1ad823f2097ae32aa28bff">loadFromFolder</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const std::filesystem::path &amp;folder)</td></tr>
+<tr class="memdesc:af10876e3da1ad823f2097ae32aa28bff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load settings for the thermal prepro from a folder.  <br /></td></tr>
+<tr class="separator:af10876e3da1ad823f2097ae32aa28bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d84250e96121d358abb5f8ace50d583" id="r_a1d84250e96121d358abb5f8ace50d583"><td class="memItemLeft" align="right" valign="top"><a id="a1d84250e96121d358abb5f8ace50d583" name="a1d84250e96121d358abb5f8ace50d583"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> () const</td></tr>
 <tr class="memdesc:a1d84250e96121d358abb5f8ace50d583"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate most settings against min/max rules. <br /></td></tr>
@@ -237,8 +237,8 @@ uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> (
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0b509550be279b4ef9cf7873a80619ee" name="a0b509550be279b4ef9cf7873a80619ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b509550be279b4ef9cf7873a80619ee">&#9670;&#160;</a></span>loadFromFolder()</h2>
+<a id="af10876e3da1ad823f2097ae32aa28bff" name="af10876e3da1ad823f2097ae32aa28bff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af10876e3da1ad823f2097ae32aa28bff">&#9670;&#160;</a></span>loadFromFolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,7 +252,7 @@ uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> (
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>folder</em>&#160;</td>
         </tr>
         <tr>
