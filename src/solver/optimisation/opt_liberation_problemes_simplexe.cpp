@@ -56,7 +56,7 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
 
             if (solver != NULL)
             {
-                ORTOOLS_LibererProbleme(solver);
+                solver = ORTOOLS_LibererProbleme(solver);
             }
         }
     }

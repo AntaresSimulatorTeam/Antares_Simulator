@@ -424,10 +424,10 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
     }
 }
 
-void ORTOOLS_LibererProbleme(MPSolver*& solver)
+MPSolver* ORTOOLS_LibererProbleme(MPSolver* solver)
 {
     delete solver;
-    solver = nullptr;
+    return nullptr;
 }
 
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
