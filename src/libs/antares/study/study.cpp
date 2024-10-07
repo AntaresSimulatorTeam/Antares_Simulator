@@ -257,8 +257,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // Getting the minimum number of years in a set of parallel years.
     // To get this number, we have to divide all years into sets of parallel
     // years and pick the size of the smallest set.
-    unsigned minYears = p.userPlaylist ? p.yearsFilter.size() % maxNbYearsInParallel :
-                        p.nbYears % maxNbYearsInParallel;
+    unsigned minYears = p.userPlaylist ? p.yearsFilter.size() % maxNbYearsInParallel
+                                       : p.nbYears % maxNbYearsInParallel;
 
     // GUI : storing minimum number of parallel years (in a set of parallel years).
     //		 Useful in the run window's simulation cores field in case parallel mode is enabled

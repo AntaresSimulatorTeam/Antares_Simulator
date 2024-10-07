@@ -84,11 +84,6 @@ public:
 
 private:
     /*!
-    ** \brief Regenerate time-series if required for a given year
-    */
-    void regenerateTimeSeries(uint year);
-
-    /*!
     ** \brief Builds sets of parallel years
     **
     ** \return The max number of years in a set of parallel years (to be executed or not)
