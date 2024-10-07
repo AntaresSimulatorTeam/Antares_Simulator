@@ -1160,21 +1160,18 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Thermal data, specific to areas
     {
         logs.info() << "Loading thermal clusters...";
-        fs::path thermalPath = pStudy.folderInput / "thermal" / "areas.ini";
-        ret = AreaListLoadThermalDataFromFile(*this, thermalPath) && ret;
+        fs::path thermalPath = pStudy.folderInput / "thermal";
+        fs::path areaIniPath = thermalPath / "areas.ini";
+        ret = AreaListLoadThermalDataFromFile(*this, areaIniPath) && ret;
 
-        // The cluster list must be loaded before the method
-        // ensureDataIsInitialized is called
+        // The cluster list must be loaded before the method ensureDataIsInitialized is called
         // in order to allocate data with all thermal clusters.
-        CString<30, false> thermalPlant;
-        thermalPlant << SEP << "thermal" << SEP << "clusters" << SEP;
-
         auto end = areas.end();
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
-            ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) && ret;
+            fs::path areaPath = thermalPath / "clusters" / area.id.to<std::string>();
+            ret = area.thermal.list.loadFromFolder(pStudy, areaPath, &area) && ret;
             ret = area.thermal.list.validateClusters(pStudy.parameters) && ret;
         }
     }
