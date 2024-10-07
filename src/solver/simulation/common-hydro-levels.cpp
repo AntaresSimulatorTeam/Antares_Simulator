@@ -41,16 +41,6 @@ void computingHydroLevels(const Data::AreaList& areas,
 {
     for (const auto& [_, area]: areas)
     {
-        if (!area->hydro.reservoirManagement)
-        {
-            continue;
-        }
-
-        if (!computeAnyway && area->hydro.useHeuristicTarget != remixWasRun)
-        {
-            continue;
-        }
-
         uint index = area->index;
 
         double reservoirCapacity = area->hydro.reservoirCapacity;
