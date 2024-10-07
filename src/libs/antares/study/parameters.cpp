@@ -1200,8 +1200,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
         }
     }
 
-    fixRefreshIntervals();
-
     fixGenRefreshForNTC();
 
     // We currently always returns true to not block any loading process
@@ -1580,7 +1578,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         {
             timeSeriesToRefresh &= ~timeSeriesThermal;
         }
-
     }
 
     if (options.noTimeseriesImportIntoInput && timeSeriesToArchive != 0)

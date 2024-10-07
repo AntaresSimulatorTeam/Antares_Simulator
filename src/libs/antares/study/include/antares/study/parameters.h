@@ -138,11 +138,6 @@ public:
     void validateOptions(const StudyLoadOptions&);
 
     /*!
-    ** \brief Try to detect then fix refresh intervals
-    */
-    void fixRefreshIntervals();
-
-    /*!
     ** \brief Try to detect then fix TS generation/refresh parameters
     *         for NTC
     */
