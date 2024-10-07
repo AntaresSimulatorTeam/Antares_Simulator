@@ -109,9 +109,9 @@ set(SRC_VARIABLE_ECONOMY
 		economy/STStorageLevelsByCluster.h
 		economy/STStorageCashFlowByCluster.h
 		economy/unsupliedEnergy.h
+		economy/unsupliedEnergyCsr.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h
-		economy/spilledEnergyAfterCSR.h
 		economy/dtgMarginAfterCsr.h
 		economy/spilledEnergy.h
 		economy/dispatchableGeneration.h
@@ -127,6 +127,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/lolp.h
 		economy/avail-dispatchable-generation.h
 		economy/dispatchable-generation-margin.h
+
 
 		# Links
 		economy/links/flowLinear.h

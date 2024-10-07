@@ -59,7 +59,7 @@ enum class AdqPatchPTO
 
 struct LocalMatching
 {
-    bool enabled = true;
+    const bool enabled = false;
     //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
     //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
     //! only in the first step of adequacy patch local matching rule.
@@ -91,8 +91,6 @@ public:
     bool includeHurdleCost;
     //! Check CSR cost function prior & after CSR optimization
     bool checkCsrCostFunction;
-
-    bool recomputeDTGMRG = false;
 
     bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
     void addProperties(IniFile::Section* section) const;
