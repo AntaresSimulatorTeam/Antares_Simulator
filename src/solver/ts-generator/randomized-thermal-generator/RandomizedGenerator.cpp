@@ -25,6 +25,9 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
     nbThermalTimeseries = parameters.nbTimeSeriesThermal;
 
     derated = parameters.derated;
+
+    FPOW.resize(DAYS_PER_YEAR);
+    PPOW.resize(DAYS_PER_YEAR);
 }
 
 void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
@@ -143,14 +146,10 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series.timeSeries.reset(1, nbHoursPerYear);
-
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
-
-    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -184,6 +183,9 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     for (uint d = 0; d < daysPerYear; ++d)
     {
+        FPOW[d].resize(cluster.unitCount + 1);
+        PPOW[d].resize(cluster.unitCount + 1);
+
         PODOfTheDay = (int)POD[d];
         FODOfTheDay = (int)FOD[d];
 
@@ -257,7 +259,6 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
         for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
         {
-            assert(AUN <= 100 and "Thermal Prepro: AUN is out of bounds (>=100)");
             assert(dayInTheYear < 366);
             assert(not(lf[dayInTheYear] < 0.));
             assert(not(lp[dayInTheYear] < 0.));

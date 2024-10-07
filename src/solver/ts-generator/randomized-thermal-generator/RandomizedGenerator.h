@@ -71,8 +71,9 @@ private:
     double ap[366];
     double bf[366];
     double bp[366];
-    double FPOW[366][102];
-    double PPOW[366][102];
+    
+    std::vector<std::vector<double>> FPOW;
+    std::vector<std::vector<double>> PPOW;
 
     String pTempFilename;
     Solver::Progression::Task& pProgression;
