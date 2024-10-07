@@ -342,8 +342,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            const OptimizationOptions& options)
 {
     MPSolverParameters params;
-    setGenericParameters(
-      params);              // Keep generic params for default settings working for all solvers
+    // Keep generic params for default settings working for all solvers
+    setGenericParameters(params);
     if (options.solverLogs) // May be overriden by log level if set as specific parameters
     {
         solver->EnableOutput();
