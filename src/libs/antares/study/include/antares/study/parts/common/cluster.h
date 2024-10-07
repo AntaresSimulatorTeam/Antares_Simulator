@@ -105,7 +105,7 @@ public:
     virtual void reset();
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
-    bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
+    bool loadDataSeriesFromFolder(Study& s, const std::filesystem::path& folder);
 
     uint unitCount = 0;
 

@@ -535,7 +535,7 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
     return nullptr;
 }
 
-bool AreaList::loadListFromFile(const AnyString& filename)
+bool AreaList::loadListFromFile(const fs::path& filename)
 {
     std::ifstream file(filename);
     if (!file.is_open())
@@ -833,8 +833,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     const auto studyVersion = study.header.version;
 
     // DSM, Reserves, D-1
-    buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << ".txt";
-    ret = area.reserves.loadFromCSVFile(buffer, fhrMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+    fs::path reservesPath = (study.folderInput / "reserves" / area.id.to<std::string>())
+                              .replace_extension("txt");
+    ret = area.reserves.loadFromCSVFile(reservesPath.string(),
+                                        fhrMax,
+                                        HOURS_PER_YEAR,
+                                        Matrix<>::optFixedSize)
           && ret;
 
     // Optimzation preferences
@@ -855,9 +859,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Fatal hors hydro - Misc Gen.
-    buffer.clear() << study.folderInput << SEP << "misc-gen" << SEP << "miscgen-" << area.id
-                   << ".txt";
-    ret = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+    std::string miscgenName = "miscgen-" + area.id + ".txt";
+    fs::path miscgenPath = study.folderInput / "misc-gen" / miscgenName;
+
+    ret = area.miscGen.loadFromCSVFile(miscgenPath.string(),
+                                       fhhMax,
+                                       HOURS_PER_YEAR,
+                                       Matrix<>::optFixedSize)
           && ret;
 
     // Check misc gen
@@ -868,11 +876,11 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Links
     {
-        fs::path folder = fs::path(study.folderInput.c_str()) / "links" / area.id.c_str();
+        fs::path folder = study.folderInput / "links" / area.id.c_str();
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
-    // UI
+    // TODO remove with GUI
     if (JIT::usedFromGUI)
     {
         if (!area.ui)
@@ -890,15 +898,15 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.load.prepro) // Prepro
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "load" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.load.prepro->loadFromFolder(buffer) && ret;
+            fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
+            ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "load" << SEP << "series" << SEP
-                           << "load_" << area.id << ".txt";
-            ret = area.load.series.loadFromFile(buffer.c_str(), averageTs) && ret;
+            std::string loadId = "load_" + area.id + ".txt";
+            fs::path loadSeriesPath = study.folderInput / "load" / "series" / loadId;
+
+            ret = area.load.series.loadFromFile(loadSeriesPath, averageTs) && ret;
         }
     }
 
@@ -907,52 +915,50 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.solar.prepro) // Prepro
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.solar.prepro->loadFromFolder(buffer) && ret;
+            fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
+            ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series" << SEP
-                           << "solar_" << area.id << ".txt";
-            ret = area.solar.series.loadFromFile(buffer.c_str(), averageTs) && ret;
+            std::string solarId = "solar_" + area.id + ".txt";
+            fs::path solarPath = study.folderInput / "solar" / "series" / solarId;
+            ret = area.solar.series.loadFromFile(solarPath, averageTs) && ret;
         }
     }
 
     // Hydro
     {
         // Allocation
-        buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "allocation" << SEP
-                       << area.id << ".ini";
-        ret = area.hydro.allocation.loadFromFile(area.id, buffer.c_str()) && ret;
+        std::string areaIdIni = area.id + ".ini";
+        fs::path hydroAlloc = study.folderInput / "hydro" / "allocation" / areaIdIni;
+        ret = area.hydro.allocation.loadFromFile(area.id, hydroAlloc) && ret;
+
+        fs::path pathHydro = study.folderInput / "hydro";
+        fs::path hydroSeries = pathHydro / "series";
 
         if (area.hydro.prepro) /* Hydro */
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
-            ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
+            fs::path hydroPrepro = pathHydro / "prepro";
+            ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro.string()) && ret;
             ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
         if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->loadGenerationTS(area.id, buffer, studyVersion) && ret;
+            ret = area.hydro.series->loadGenerationTS(area.id, hydroSeries, studyVersion) && ret;
         }
 
         if (studyVersion < StudyVersion(9, 1))
         {
-            buffer.clear() << study.folderInput << SEP << "hydro";
-
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
-            ret = reader.read(buffer, study.usedByTheSolver) && ret;
+            ret = reader.read(pathHydro.string(), study.usedByTheSolver) && ret;
         }
         else
         {
-            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->LoadMaxPower(area.id, buffer) && ret;
+            ret = area.hydro.series->LoadMaxPower(area.id, hydroSeries) && ret;
         }
 
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
@@ -965,26 +971,25 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (area.wind.prepro) // Prepro
         {
             // if changes are required, please update reloadXCastData()
-            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.wind.prepro->loadFromFolder(buffer) && ret;
+            fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
+            ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series" << SEP
-                           << "wind_" << area.id << ".txt";
-            ret = area.wind.series.loadFromFile(buffer.c_str(), averageTs) && ret;
+            std::string windId = "wind_" + area.id + ".txt";
+            fs::path windPath = study.folderInput / "wind" / "series" / windId;
+            ret = area.wind.series.loadFromFile(windPath, averageTs) && ret;
         }
     }
 
     // Thermal cluster list
     {
-        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-        ret = area.thermal.list.loadPreproFromFolder(study, buffer) && ret;
+        fs::path preproPath = study.folderInput / "thermal" / "prepro";
+        ret = area.thermal.list.loadPreproFromFolder(study, preproPath) && ret;
         ret = area.thermal.list.validatePrepro(study) && ret;
-        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-        ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;
-        ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
+        fs::path seriesPath = study.folderInput / "thermal" / "series";
+        ret = area.thermal.list.loadDataSeriesFromFolder(study, seriesPath) && ret;
+        ret = area.thermal.list.loadEconomicCosts(study, seriesPath) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)
@@ -996,34 +1001,35 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Short term storage
     if (studyVersion >= StudyVersion(8, 6))
     {
-        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series" << SEP
-                       << area.id;
+        fs::path seriesPath = study.folderInput / "st-storage" / "series"
+                              / area.id.to<std::string>();
 
-        ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
+        ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath) && ret;
         ret = area.shortTermStorage.validate() && ret;
     }
 
     // Renewable cluster list
     if (studyVersion >= StudyVersion(8, 1))
     {
-        buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.loadDataSeriesFromFolder(study, buffer) && ret;
+        fs::path seriesPath = study.folderInput / "renewables" / "series";
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, seriesPath) && ret;
     }
 
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);
 
     // Nodal Optimization
-    buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
-                   << "optimization.ini";
+    fs::path nodalPath = study.folderInput / "areas" / area.id.to<std::string>()
+                         / "optimization.ini";
+
     IniFile ini;
-    if (!ini.open(buffer))
+    if (!ini.open(nodalPath))
     {
         return false;
     }
 
     ini.each(
-      [&area, &buffer](const IniFile::Section& section)
+      [&area, &nodalPath](const IniFile::Section& section)
       {
           for (auto* p = section.firstProperty; p; p = p->next)
           {
@@ -1084,7 +1090,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   continue;
               }
 
-              logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+              logs.warning() << nodalPath << ": Unknown property '" << p->key << "'";
           }
       });
 
@@ -1139,16 +1145,15 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Load the list of all available areas
     {
         logs.info() << "Loading the list of areas...";
-        buffer.clear() << pStudy.folderInput << SEP << "areas" << SEP << "list."
-                       << pStudy.inputExtension;
-        ret = loadListFromFile(buffer) && ret;
+        fs::path areaListPath = pStudy.folderInput / "areas" / "list.txt";
+        ret = loadListFromFile(areaListPath) && ret;
     }
 
     // Hydro
     {
         logs.info() << "Loading global hydro data...";
-        buffer.clear() << pStudy.folderInput << SEP << "hydro";
-        ret = PartHydro::LoadFromFolder(pStudy, buffer) && ret;
+        fs::path hydroPath = pStudy.folderInput / "hydro";
+        ret = PartHydro::LoadFromFolder(pStudy, hydroPath.string()) && ret;
         ret = PartHydro::validate(pStudy) && ret;
     }
 
@@ -1178,7 +1183,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     if (studyVersion >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
-        fs::path stsFolder = fs::path(pStudy.folderInput.c_str()) / "st-storage";
+        fs::path stsFolder = pStudy.folderInput / "st-storage";
 
         if (fs::exists(stsFolder))
         {

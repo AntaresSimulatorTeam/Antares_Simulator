@@ -156,12 +156,12 @@ static void finalizeSaveExport(Data::Study::Ptr study, Forms::ApplWnd& frame)
 {
     Menu::AddRecentFile(frame.menuRecentFiles(),
                         wxStringFromUTF8(study->header.caption),
-                        wxStringFromUTF8(study->folder));
+                        wxStringFromUTF8(study->folder.string()));
 
     // Rebuild the menu
     Menu::RebuildRecentFiles(frame.menuRecentFiles());
 
-    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder);
+    gLastOpenedStudyFolder = wxStringFromUTF8(study->folder.string());
 
     RefreshListOfOutputsForTheCurrentStudy();
 
@@ -811,12 +811,12 @@ SaveResult SaveStudy()
     // Reset the entries
     Menu::AddRecentFile(mainFrm.menuRecentFiles(),
                         wxStringFromUTF8(study.header.caption),
-                        wxStringFromUTF8(study.folder));
+                        wxStringFromUTF8(study.folder.string()));
 
-    mainFrm.SetStatusText(wxString() << wxT("  Saving ") << wxStringFromUTF8(study.folder));
+    mainFrm.SetStatusText(wxString() << wxT("  Saving ") << wxStringFromUTF8(study.folder.string()));
 
     // Save the study
-    auto* job = new JobSaveStudy(studyptr, study.folder);
+    auto* job = new JobSaveStudy(studyptr, study.folder.string());
     if (shouldInvalidateStudy)
         job->shouldInvalidateStudy();
     job->run();
@@ -839,11 +839,11 @@ SaveResult SaveStudy()
 
     Menu::AddRecentFile(mainFrm.menuRecentFiles(),
                         wxStringFromUTF8(study.header.caption),
-                        wxStringFromUTF8(study.folder));
+                        wxStringFromUTF8(study.folder.string()));
     // Rebuild the menu
     Menu::RebuildRecentFiles(mainFrm.menuRecentFiles());
 
-    gLastOpenedStudyFolder = wxStringFromUTF8(study.folder);
+    gLastOpenedStudyFolder = wxStringFromUTF8(study.folder.string());
 
     RefreshListOfOutputsForTheCurrentStudy();
 
@@ -874,7 +874,7 @@ SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, b
 
     if (!study->folder.empty())
     {
-        String oldP = study->folder;
+        String oldP = study->folder.string();
         String newP = newPath;
         newP.removeTrailingSlash();
         oldP.removeTrailingSlash();
@@ -1049,7 +1049,7 @@ void OpenStudyFromFolder(wxString folder)
         {
             Menu::AddRecentFile(mainFrm.menuRecentFiles(),
                                 wxStringFromUTF8(study->header.caption),
-                                wxStringFromUTF8(study->folder));
+                                wxStringFromUTF8(study->folder.string()));
         }
     }
     // Lock the window to prevent flickering
@@ -1115,7 +1115,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
     {
         // Logs
-        mainFrm.SetStatusText(wxString() << wxT("  Running ") << wxStringFromUTF8(study->folder));
+        mainFrm.SetStatusText(wxString() << wxT("  Running ") << wxStringFromUTF8(study->folder.string()));
         logs.info();
         logs.checkpoint() << "Launching the simulation";
 
@@ -1200,7 +1200,8 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
             cmd << ' ';
             // The input data
-            AppendWithQuotes(cmd, study->folder);
+            String s = study->folder.string();
+            AppendWithQuotes(cmd, s);
 
             // Parallel mode chosen ?
             if (features == Solver::parallel)

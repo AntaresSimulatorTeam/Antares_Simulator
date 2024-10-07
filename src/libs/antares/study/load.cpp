@@ -37,11 +37,11 @@ namespace Antares
 {
 namespace Data
 {
-bool Study::internalLoadHeader(const String& path)
+bool Study::internalLoadHeader(const fs::path& path)
 {
     // Header
-    buffer.clear() << path << SEP << "study.antares";
-    if (!header.loadFromFile(buffer))
+    auto headerPath = path / "study.antares";
+    if (!header.loadFromFile(headerPath))
     {
         logs.error() << path << ": impossible to open the header file";
         return false;
@@ -63,7 +63,7 @@ bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& opti
     return internalLoadFromFolder(normPath, options);
 }
 
-bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
+bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& options)
 {
     if (!internalLoadHeader(path))
     {
@@ -191,7 +191,7 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     this->bufferLoadingTS.reserve(2096);
     assert(this->bufferLoadingTS.capacity() > 0);
 
-    if (!internalLoadIni(path.string(), options))
+    if (!internalLoadIni(path, options))
     {
         return false;
     }

@@ -93,7 +93,7 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
     // there is no need to perform additional tests on the logs
     // or on the outputs
     Data::StudyHeader header;
-    if (not header.loadFromFile(filename, false))
+    if (not header.loadFromFile(filename.c_str(), false))
     {
         logs.info() << " delete study " << folder << " [invalid header]";
         return true;

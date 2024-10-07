@@ -388,7 +388,6 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     }
 }
 
-template<class ImplementationType>
 uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
   uint firstYear,
   uint endYear,

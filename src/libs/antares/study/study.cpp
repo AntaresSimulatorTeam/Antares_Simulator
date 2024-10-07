@@ -24,6 +24,7 @@
 #include <cassert>
 #include <climits>
 #include <cmath> // For use of floor(...) and ceil(...)
+#include <ctime>
 #include <optional>
 #include <sstream> // std::ostringstream
 #include <thread>
@@ -123,10 +124,10 @@ void Study::clear()
     // no folder
     ClearAndShrink(header.caption);
     ClearAndShrink(header.author);
-    ClearAndShrink(folder);
-    ClearAndShrink(folderInput);
-    ClearAndShrink(folderOutput);
-    ClearAndShrink(folderSettings);
+    folder.clear();
+    folderInput.clear();
+    folderOutput.clear();
+    folderSettings.clear();
     inputExtension.clear();
 }
 
@@ -186,12 +187,11 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
+// TODO remove with GUI
 uint64_t Study::memoryUsage() const
 {
-    return folder.capacity()
-           // Folders paths
-           + folderInput.capacity() + folderOutput.capacity() + folderSettings.capacity()
-           + buffer.capacity() + dataBuffer.capacity()
+    return buffer.capacity() // Folders paths
+           + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation
            + simulationComments.memoryUsage()
@@ -331,11 +331,11 @@ static std::string getOutputSuffix(ResultFormat fmt)
     }
 }
 
-YString StudyCreateOutputPath(SimulationMode mode,
-                              ResultFormat fmt,
-                              const YString& outputRoot,
-                              const YString& label,
-                              int64_t startTime)
+fs::path StudyCreateOutputPath(SimulationMode mode,
+                               ResultFormat fmt,
+                               const fs::path& baseOutFolder,
+                               const std::string& label,
+                               const std::tm& startTime)
 {
     if (fmt == ResultFormat::inMemory)
     {
@@ -344,12 +344,9 @@ YString StudyCreateOutputPath(SimulationMode mode,
 
     auto suffix = getOutputSuffix(fmt);
 
-    YString folderOutput;
-
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    folderOutput.clear() << outputRoot << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", startTime, false);
+    fs::path folderOutput = baseOutFolder / formatTime(startTime, "%Y%m%d-%H%M");
 
     switch (mode)
     {
@@ -369,10 +366,10 @@ YString StudyCreateOutputPath(SimulationMode mode,
     // Folder output
     if (not label.empty())
     {
-        folderOutput << '-' << transformNameIntoID(label);
+        folderOutput += '-' + transformNameIntoID(label);
     }
 
-    std::string outpath = folderOutput + suffix;
+    std::string outpath = folderOutput.string() + suffix;
     // avoid creating the same output twice
     if (fs::exists(outpath))
     {
@@ -381,30 +378,27 @@ YString StudyCreateOutputPath(SimulationMode mode,
         do
         {
             ++index;
-            newpath = folderOutput + '-' + std::to_string(index) + suffix;
+            newpath = folderOutput.string() + '-' + std::to_string(index) + suffix;
         } while (fs::exists(newpath) and index < 2000);
 
-        folderOutput << '-' << index;
+        folderOutput += '-' + std::to_string(index);
     }
     return folderOutput;
 }
 
 void Study::prepareOutput()
 {
-    pStartTime = DateTime::Now();
-
     if (parameters.noOutput || !usedByTheSolver)
     {
         return;
     }
-
-    buffer.clear() << folder << SEP << "output";
+    fs::path baseFolderOutput = folder / "output";
 
     folderOutput = StudyCreateOutputPath(parameters.mode,
                                          parameters.resultFormat,
-                                         buffer,
+                                         baseFolderOutput,
                                          simulationComments.name,
-                                         pStartTime);
+                                         getCurrentTime());
 
     logs.info() << "  Output folder : " << folderOutput;
 }
@@ -984,12 +978,12 @@ void Study::markAsModified() const
     setsOfAreas.markAsModified();
 }
 
-void Study::relocate(const std::string& newFolder)
+void Study::relocate(const fs::path& newFolder)
 {
     folder = newFolder;
-    folderInput.clear() << newFolder << SEP << "input";
-    folderOutput.clear() << newFolder << SEP << "output";
-    folderSettings.clear() << newFolder << SEP << "settings";
+    folderInput = newFolder / "input";
+    folderOutput = newFolder / "output";
+    folderSettings = newFolder / "settings";
 }
 
 void Study::resizeAllTimeseriesNumbers(uint n)
