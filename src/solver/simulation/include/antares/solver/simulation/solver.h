@@ -30,7 +30,6 @@
 #include <antares/writer/writer_factory.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/misc/options.h"
-#include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
@@ -131,8 +130,6 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-    //! Some temporary to avoid performing useless complex checks
-    Solver::Private::Simulation::CacheData pData;
     //!
     uint pNbYearsReallyPerformed;
     //! Max number of years performed in parallel

@@ -286,10 +286,6 @@ void ISimulation<ImplementationType>::run()
         ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
     }
 
-    // Preprocessors
-    // Determine if we have to use the preprocessors at least one time.
-    pData.initialize(study.parameters);
-
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
     // Export ts-numbers into output

@@ -22,8 +22,6 @@ set(SRC_SIMULATION
         solver_utils.cpp
         include/antares/solver/simulation/solver.h
         include/antares/solver/simulation/solver.hxx
-        include/antares/solver/simulation/solver.data.h
-        solver.data.cpp
         include/antares/solver/simulation/simulation-run.h
         simulation-run.cpp
         include/antares/solver/simulation/common-eco-adq.h
