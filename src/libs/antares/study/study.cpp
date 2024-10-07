@@ -212,7 +212,7 @@ unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
     if (!nbLogicalCores)
     {
         logs.fatal() << "Number of logical cores available is 0.";
-        return 0;
+        return 1;
     }
 
     switch (ncMode)
@@ -232,7 +232,7 @@ unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
         break;
     }
 
-    return 0;
+    return 1;
 }
 
 /// Getting the number of parallel years based on the number of cores level
