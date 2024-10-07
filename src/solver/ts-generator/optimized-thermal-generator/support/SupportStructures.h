@@ -5,7 +5,7 @@
 #pragma once
 
 #include "ortools/linear_solver/linear_solver.h"
-#include "../../../src/libs/antares/study/area/area.h"
+#include "../../../libs/antares/study/area/area.h"
 
 using namespace operations_research;
 
