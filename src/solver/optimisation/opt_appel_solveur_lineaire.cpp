@@ -196,23 +196,15 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
     {
-        if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
-        {
-            solver = ORTOOLS_LibererProbleme(solver);
+        solver = ORTOOLS_LibererProbleme(solver);
 
-            logs.info() << " Solver: Standard resolution failed";
-            logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
-            logs.debug() << " solver: resetting";
+        logs.info() << " Solver: Standard resolution failed";
+        logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
+        logs.debug() << " solver: resetting";
 
-            return {.success = false,
-                    .timeMeasure = timeMeasure,
-                    .mps_writer_factory = mps_writer_factory};
-        }
-
-        else
-        {
-            throw FatalError("Internal error: insufficient memory");
-        }
+        return {.success = false,
+                .timeMeasure = timeMeasure,
+                .mps_writer_factory = mps_writer_factory};
     }
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
