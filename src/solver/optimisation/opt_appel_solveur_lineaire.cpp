@@ -85,7 +85,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
+    MPSolver*& solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -97,7 +97,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         if (problemeHebdo->ReinitOptimisation)
         {
             solver = ORTOOLS_LibererProbleme(solver);
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
         }
@@ -189,10 +188,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
     solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
-    if (solver != nullptr)
-    {
-        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
-    }
 
     measure.tick();
     timeMeasure.solveTime = measure.duration_ms();
@@ -204,7 +199,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
             solver = ORTOOLS_LibererProbleme(solver);
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
 

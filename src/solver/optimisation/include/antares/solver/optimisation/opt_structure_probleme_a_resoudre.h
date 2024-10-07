@@ -29,6 +29,7 @@
 
 #include "opt_constants.h"
 
+using namespace operations_research;
 /*--------------------------------------------------------------------------------------*/
 
 /* Le probleme a resoudre */
@@ -90,7 +91,7 @@ struct PROBLEME_ANTARES_A_RESOUDRE
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    std::vector<void*> ProblemesSpx;
+    std::vector<MPSolver*> ProblemesSpx;
 
     std::vector<int>
       PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
