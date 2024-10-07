@@ -509,7 +509,7 @@ bool ThermalClusterList::generateRandomDaysSinceLastMaintenance(Study& study)
     bool ret = true;
     MersenneTwister random[seedMax];
 
-    for (auto& [name, c] : cluster)
+    for (auto& c : clusters)
     {
         assert(c->parentArea and "cluster: invalid parent area");
 
