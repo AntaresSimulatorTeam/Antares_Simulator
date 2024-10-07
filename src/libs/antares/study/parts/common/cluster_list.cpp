@@ -261,7 +261,7 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const std::filesystem::path& folder)
 {
     return std::ranges::all_of(allClusters_,
                                [&s, &folder](auto c)

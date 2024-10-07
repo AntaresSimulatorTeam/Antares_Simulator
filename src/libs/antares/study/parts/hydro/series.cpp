@@ -32,6 +32,8 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 #define SEP IO::Separator
 
 namespace Antares::Data
@@ -39,7 +41,7 @@ namespace Antares::Data
 
 static bool loadTSfromFile(Matrix<double>& ts,
                            const AreaName& areaID,
-                           const AnyString& folder,
+                           const fs::path& folder,
                            const std::string& filename,
                            unsigned int height)
 {
@@ -140,7 +142,7 @@ void DataSeriesHydro::markAsModified() const
 }
 
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
-                                       const AnyString& folder,
+                                       const fs::path& folder,
                                        StudyVersion studyVersion)
 {
     timeseriesNumbers.clear();
@@ -155,7 +157,7 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
     return ret;
 }
 
-bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
+bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const fs::path& folder)
 {
     bool ret = true;
     YString filepath;

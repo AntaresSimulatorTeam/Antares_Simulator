@@ -141,7 +141,7 @@ public:
     ** This method does not have any effect except modifying
     ** internal variables (`folder`, `folderInput`, ...).
     */
-    void relocate(const std::string& newFolder);
+    void relocate(const std::filesystem::path& newFolder);
 
     /*!
     ** \brief Load a study from a folder
@@ -455,13 +455,13 @@ public:
     //! \name Paths
     //@{
     //! The source folder of the study
-    YString folder;
+    std::filesystem::path folder;
     //! The input folder
-    YString folderInput;
+    std::filesystem::path folderInput;
     //! The output folder
-    YString folderOutput;
+    std::filesystem::path folderOutput;
     //! The settings folder
-    YString folderSettings;
+    std::filesystem::path folderSettings;
     //@}
 
     //! \name Simulation
@@ -633,7 +633,7 @@ protected:
     //! Load a study from a folder
     bool internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options);
     //! Load the study header
-    bool internalLoadHeader(const YString& folder);
+    bool internalLoadHeader(const std::filesystem::path& folder);
     //! Load all correlation matrices
     bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
     //! Load all binding constraints
@@ -642,7 +642,7 @@ protected:
     bool internalLoadSets();
     //@}
 
-    bool internalLoadIni(const YString& path, const StudyLoadOptions& options);
+    bool internalLoadIni(const std::filesystem::path& path, const StudyLoadOptions& options);
 
     void parameterFiller(const StudyLoadOptions& options);
 
@@ -659,11 +659,11 @@ protected:
 */
 extern YString StudyIconFile;
 
-YString StudyCreateOutputPath(SimulationMode mode,
-                              ResultFormat fmt,
-                              const YString& folder,
-                              const YString& label,
-                              int64_t startTime);
+std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
+                                            ResultFormat fmt,
+                                            const std::filesystem::path& folder,
+                                            const std::string& label,
+                                            const std::tm& startTime);
 } // namespace Antares::Data
 
 #include "study.hxx"

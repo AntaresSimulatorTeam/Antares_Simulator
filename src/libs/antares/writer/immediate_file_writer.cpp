@@ -32,7 +32,7 @@ namespace Antares
 {
 namespace Solver
 {
-ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput):
+ImmediateFileResultWriter::ImmediateFileResultWriter(const fs::path& folderOutput):
     pOutputFolder(folderOutput)
 {
 }

@@ -456,7 +456,7 @@ public:
     ** \param filename The file to read
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
-    bool loadListFromFile(const AnyString& filename);
+    bool loadListFromFile(const std::filesystem::path& filename);
 
     /*!
     ** \brief Save all informations about areas into a folder (-> input/generalData)

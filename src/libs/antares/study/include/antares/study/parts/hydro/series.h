@@ -71,10 +71,12 @@ public:
 
     // Loading hydro time series collection
     // Returned boolean : reading from file failed
-    bool loadGenerationTS(const AreaName& areaID, const AnyString& folder, StudyVersion version);
+    bool loadGenerationTS(const AreaName& areaID,
+                          const std::filesystem::path& folder,
+                          StudyVersion version);
 
     // Loading hydro max generation and mqx pumping TS's
-    bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
+    bool LoadMaxPower(const AreaName& areaID, const std::filesystem::path& folder);
 
     void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                         const Matrix<double>::ColumnType& DailyMaxPumpPower);

@@ -115,11 +115,11 @@ TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
 {
 }
 
-bool TimeSeries::loadFromFile(const std::string& path, const bool average)
+bool TimeSeries::loadFromFile(const std::filesystem::path& path, const bool average)
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
-    ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
+    ret = timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)
     {

@@ -27,6 +27,8 @@
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
+namespace fs = std::filesystem;
+
 namespace Antares::Data
 {
 Cluster::Cluster(Area* parent):
@@ -84,7 +86,7 @@ bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
     return series.timeSeries.saveToCSVFile(buffer, precision());
 }
 
-bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 {
     if (folder.empty())
     {
@@ -94,9 +96,10 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
-    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-                   << s.inputExtension;
-    ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+    fs::path seriesPath = folder / parentArea->id.to<std::string>() / id() / "series.txt";
+
+    ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
+          && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)
     {

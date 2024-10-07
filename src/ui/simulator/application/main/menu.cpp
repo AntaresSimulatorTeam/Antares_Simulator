@@ -626,9 +626,9 @@ void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
     {
         if (System::windows)
             wxExecute(wxString(wxT("explorer.exe \""))
-                      << wxStringFromUTF8(study->folder) << wxT("\""));
+                      << wxStringFromUTF8(study->folder.string()) << wxT("\""));
         else
-            wxExecute(wxString(wxT("xdg-open \"")) << wxStringFromUTF8(study->folder) << wxT("\""));
+            wxExecute(wxString(wxT("xdg-open \"")) << wxStringFromUTF8(study->folder.string()) << wxT("\""));
     }
 }
 

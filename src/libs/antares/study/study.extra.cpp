@@ -82,12 +82,13 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
     return true;
 }
 
+// TODO VP: remove with GUI
 bool Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warnings)
 {
     String b;
     b << folder << IO::Separator << "study.antares";
     StudyHeader header;
-    if (header.loadFromFile(b, warnings))
+    if (header.loadFromFile(b.c_str(), warnings))
     {
         out = header.caption;
         return true;
@@ -107,7 +108,7 @@ bool Study::IsRootStudy(const AnyString& folder, String& buffer)
 {
     buffer.clear() << folder << IO::Separator << "study.antares";
     StudyHeader header;
-    return (header.loadFromFile(buffer, false));
+    return (header.loadFromFile(buffer.c_str(), false));
 }
 
 bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String& title)

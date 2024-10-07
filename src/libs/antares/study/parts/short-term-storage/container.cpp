@@ -22,7 +22,6 @@
 #include "antares/study/parts/short-term-storage/container.h"
 
 #include <algorithm>
-#include <filesystem>
 #include <string>
 
 #include <yuni/io/file.h>
@@ -74,7 +73,7 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
-bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
+bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
 {
     if (folder.empty())
     {
@@ -85,8 +84,8 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 
     for (auto& cluster: storagesByIndex)
     {
-        const std::string buffer(folder + SEP + cluster.id);
-        ret = cluster.loadSeries(buffer) && ret;
+        fs::path seriesFolder = folder / cluster.id;
+        ret = cluster.loadSeries(seriesFolder) && ret;
     }
 
     return ret;

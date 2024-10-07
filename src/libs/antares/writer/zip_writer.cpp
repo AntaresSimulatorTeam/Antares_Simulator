@@ -54,13 +54,13 @@ static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 // Class ZipWriteJob
 template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
-                                   std::string entryPath,
+                                   const std::string& entryPath,
                                    ContentT& content,
                                    Benchmarking::DurationCollector& duration_collector):
     pZipHandle(writer.pZipHandle),
     pZipMutex(writer.pZipMutex),
     pState(writer.pState),
-    pEntryPath(std::move(entryPath)),
+    pEntryPath(entryPath),
     pContent(std::move(content)),
     pDurationCollector(duration_collector)
 {
@@ -114,18 +114,22 @@ void ZipWriteJob<ContentT>::writeEntry()
 
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
-                     const char* archivePath,
+                     const fs::path& archivePath,
                      Benchmarking::DurationCollector& duration_collector):
     pQueueService(qs),
     pState(ZipState::can_receive_data),
-    pArchivePath(std::string(archivePath) + ".zip"),
+    pArchivePath(archivePath.string() + ".zip"),
     pDurationCollector(duration_collector)
 {
     pZipHandle = mz_zip_writer_create();
-    if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
+
+    // conversion in 2 steps to avoid weird behavior differences for linux and windows
+    std::string tmpStr = pArchivePath.string();
+    const char* outputCStr = tmpStr.c_str();
+    if (int32_t ret = mz_zip_writer_open_file(pZipHandle, outputCStr, 0, 0); ret != MZ_OK)
     {
-        logErrorAndThrow("Error opening zip file " + pArchivePath + " (" + std::to_string(ret)
-                         + ")");
+        logErrorAndThrow("Error opening zip file " + pArchivePath.string() + " ("
+                         + std::to_string(ret) + ")");
     }
     // TODO : make level of compression configurable
     mz_zip_writer_set_compress_level(pZipHandle, MZ_COMPRESS_LEVEL_FAST);

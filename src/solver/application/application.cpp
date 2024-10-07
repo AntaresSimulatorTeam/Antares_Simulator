@@ -405,7 +405,7 @@ void Application::resetLogFilename() const
     }
 
     logfile /= "solver-"; // append the filename
-    logfile += FormattedTime("%Y%m%d-%H%M%S")
+    logfile += formatTime(getCurrentTime(), "%Y%m%d-%H%M%S")
                + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename
