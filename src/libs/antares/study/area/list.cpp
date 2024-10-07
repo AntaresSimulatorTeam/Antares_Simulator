@@ -1200,18 +1200,16 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Renewable data, specific to areas
     if (studyVersion >= StudyVersion(8, 1))
     {
-        // The cluster list must be loaded before the method
-        // ensureDataIsInitialized is called
+        // The cluster list must be loaded before the method ensureDataIsInitialized is called
         // in order to allocate data with all renewable clusters.
-        CString<30, false> renewablePlant;
-        renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
+        fs::path renewClusterPath = pStudy.folderInput / "renewables" / "clusters";
 
         auto end = areas.end();
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
-            ret = area.renewable.list.loadFromFolder(buffer.c_str(), &area) && ret;
+            fs::path areaPath = renewClusterPath / area.id.to<std::string>();
+            ret = area.renewable.list.loadFromFolder(areaPath, &area) && ret;
             ret = area.renewable.list.validateClusters() && ret;
         }
     }

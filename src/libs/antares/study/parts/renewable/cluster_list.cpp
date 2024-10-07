@@ -28,6 +28,8 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 namespace Antares::Data
 {
 
@@ -143,7 +145,7 @@ static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Pr
     return false;
 }
 
-static bool ClusterLoadFromSection(const AnyString& filename,
+static bool clusterLoadFromSection(const fs::path& filename,
                                    RenewableCluster& cluster,
                                    const IniFile::Section& section)
 {
@@ -176,7 +178,7 @@ static bool ClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
+bool RenewableClusterList::loadFromFolder(const fs::path& folder, Area* area)
 {
     assert(area and "A parent area is required");
 
@@ -184,11 +186,10 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
     logs.info() << "Loading renewable configuration for the area " << area->name;
 
     // Open the ini file
-    YString buffer;
-    buffer << folder << SEP << "list.ini";
+    fs::path filename = folder / "list.ini";
 
     IniFile ini;
-    if (ini.open(buffer, false))
+    if (ini.open(filename, false))
     {
         bool ret = true;
 
@@ -204,7 +205,7 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                 auto cluster = std::make_shared<RenewableCluster>(area);
 
                 // Load data of a renewable cluster from a ini file section
-                if (!ClusterLoadFromSection(buffer, *cluster, *section))
+                if (!clusterLoadFromSection(filename, *cluster, *section))
                 {
                     continue;
                 }

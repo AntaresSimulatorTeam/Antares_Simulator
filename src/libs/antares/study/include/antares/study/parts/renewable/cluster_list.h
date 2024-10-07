@@ -22,6 +22,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_LIST_H__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_LIST_H__
 
+#include <filesystem>
+
 #include "../../fwd.h"
 #include "../common/cluster_list.h"
 #include "cluster.h"
@@ -38,7 +40,7 @@ public:
     std::string typeID() const override;
     uint64_t memoryUsage() const override;
 
-    bool loadFromFolder(const AnyString& folder, Area* area);
+    bool loadFromFolder(const std::filesystem::path& folder, Area* area);
     bool validateClusters() const;
 
     bool saveToFolder(const AnyString& folder) const override;
