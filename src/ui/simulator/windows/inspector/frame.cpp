@@ -178,9 +178,8 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
         for (auto i = data->areas.begin(); i != areaEnd; ++i)
         {
             Data::Area& area = *(*i);
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
-                data->ThClusters.insert(i->second.get());
+            for (auto& c : area.thermal.list)
+                data->ThClusters.insert(c.get());
         }
         data->areas.clear();
         data->links.clear();
@@ -197,26 +196,6 @@ void Frame::onSelectPlant(wxCommandEvent& evt)
     {
         data->ThClusters.clear();
         data->ThClusters.insert((Data::ThermalCluster*)mapIDPointer[evt.GetId()]);
-        data->areas.clear();
-        data->links.clear();
-        data->empty = data->ThClusters.empty();
-        gInspector->delayApplyGlobalSelection();
-    }
-}
-
-// gp : never used - to be removed
-void Frame::onSelectAllPlantsFromArea(wxCommandEvent& evt)
-{
-    InspectorData::Ptr data = gData;
-    if (!(!data) and gInspector and evt.GetEventObject())
-    {
-        Data::Area* area = (Data::Area*)mapIDPointer[evt.GetId()];
-        if (!area)
-            return;
-        data->ThClusters.clear();
-        auto end = area->thermal.list.end();
-        for (auto i = area->thermal.list.begin(); i != end; ++i)
-            data->ThClusters.insert(i->second.get());
         data->areas.clear();
         data->links.clear();
         data->empty = data->ThClusters.empty();

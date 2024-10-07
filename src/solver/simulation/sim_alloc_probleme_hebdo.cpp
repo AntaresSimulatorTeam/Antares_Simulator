@@ -415,12 +415,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
           .assign(NombreDePasDeTemps, 0.);
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveCSR
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].ValeursHorairesDENS
           .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
           .assign(NombreDePasDeTemps, 0); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
-          .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr
           .assign(NombreDePasDeTemps, 0.); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp

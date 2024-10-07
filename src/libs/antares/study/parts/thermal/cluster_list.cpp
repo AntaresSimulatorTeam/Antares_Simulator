@@ -1,6 +1,7 @@
 #include "cluster_list.h"
 #include "cluster.h"
 #include "../../study.h"
+#include <ranges>
 
 namespace // anonymous
 {
@@ -31,6 +32,11 @@ ThermalClusterList::~ThermalClusterList()
 }
 
 #define SEP IO::Separator
+
+std::string ThermalClusterList::typeID() const
+{
+    return "thermal";
+}
 
 static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
@@ -143,11 +149,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     }
 
     return ret;
-}
-
-YString ThermalClusterList::typeID() const
-{
-    return "thermal";
 }
 
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
@@ -286,31 +287,7 @@ void ThermalClusterList::calculationOfSpinning()
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        cluster.reverseCalculationOfSpinning();
-    }
-}
-
-bool ThermalClusterList::remove(const ClusterName& id)
-{
-    auto i = cluster.find(id);
-    if (i == cluster.end())
-        return false;
-
-    // Getting the pointer on the cluster
-    SharedPtr c = i->second;
-
-    // Removing it from the list
-    cluster.erase(i);
-    // Invalidating the parent area
-    c->parentArea->forceReload();
-
-    // Rebuilding the index
-    rebuildIndex();
-    return true;
+    each([&](ThermalCluster& cluster) { cluster.reverseCalculationOfSpinning(); });
 }
 
 void ThermalClusterList::enableMustrunForEveryone()
@@ -321,13 +298,9 @@ void ThermalClusterList::enableMustrunForEveryone()
 
 void ThermalClusterList::ensureDataPrepro()
 {
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto c = it->second;
-        if (not c->prepro)
+    for (const auto& c : clusters)
+        if (!c->prepro)
             c->prepro = new PreproThermal(c);
-    }
 }
 
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
@@ -399,7 +372,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
             // costs
             if (c.costgeneration != setManually)
-                s->add("costgeneration", c.costgeneration);            
+                s->add("costgeneration", c.costgeneration);
             if (not Math::Zero(c.marginalCost))
                 s->add("marginal-cost", Math::Round(c.marginalCost, 3));
             if (not Math::Zero(c.spreadCost))
@@ -454,9 +427,6 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
 bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 {
-    if (empty())
-        return true;
-
     Clob buffer;
     bool ret = true;
 
@@ -473,9 +443,6 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 
 bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
 {
-    if (empty())
-        return true;
-
     Clob buffer;
     bool ret = true;
 
@@ -491,59 +458,47 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
                                               const StudyLoadOptions& options,
                                               const AnyString& folder)
 {
-    if (empty())
-        return true;
-
     const bool globalThermalTSgeneration
-      = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
+        = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
 
     Clob buffer;
-    bool ret = true;
-
-    for (auto& [name, c] : cluster)
-    {
-        if (c->prepro)
-        {
-            assert(c->parentArea and "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-
-            bool result = c->prepro->loadFromFolder(study, buffer);
-
-            if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
-            {
-                // checking NPO max
-                result = c->prepro->normalizeAndCheckNPO();
-            }
-
-            ret = result and ret;
-        }
-        
+    auto hasPrepro = [&](auto c)
+    {   
         ++options.progressTicks;
         options.pushProgressLogs();
-    }
-    return ret;
-}
+        return (bool) c->prepro;
+    };
+    
+    auto loadAndCheckPrepro = [&](auto c)
+    {
+        assert(c->parentArea && "cluster: invalid parent area");
+        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
+        bool result = c->prepro->loadFromFolder(study, buffer);
+
+        if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
+        {
+            result = c->prepro->normalizeAndCheckNPO();
+        }
+        return result;
+    };
+
+    return std::ranges::all_of(clusters | std::views::filter(hasPrepro),
+                               loadAndCheckPrepro);
+}
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
 {
-    if (empty())
-        return true;
-
-    Clob buffer;
-    bool ret = true;
-
-    for (auto& [name, c] : cluster)
+    return std::ranges::all_of(clusters, [&study, folder](const auto& c)
     {
-        assert(c->parentArea and "cluster: invalid parent area");
+        assert(c->parentArea && "cluster: invalid parent area");
+        Clob buffer;
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
         bool result = c->ecoInput.loadFromFolder(study, buffer);
         c->ComputeCostTimeSeries();
-
-        ret = result && ret;
-    }
-    return ret;
+        return result;
+    });
 }
 
 bool ThermalClusterList::generateRandomDaysSinceLastMaintenance(Study& study)

@@ -136,8 +136,6 @@ void Study::clear()
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
     inputExtension.clear();
-
-    gotFatalError = false;
 }
 
 void Study::createAsNew()
@@ -1144,12 +1142,8 @@ void Study::destroyAllWindTSGeneratorData()
 void Study::destroyAllThermalTSGeneratorData()
 {
     areas.each([&](Data::Area& area) {
-        auto pend = area.thermal.list.end();
-        for (auto j = area.thermal.list.begin(); j != pend; ++j)
-        {
-            ThermalCluster& cluster = *(j->second);
-            FreeAndNil(cluster.prepro);
-        }
+        for (const auto& cluster : area.thermal.list)
+            FreeAndNil(cluster->prepro);
     });
 }
 
@@ -1573,10 +1567,8 @@ void Study::computePThetaInfForThermalClusters() const
         // Alias de la zone courant
         const auto& area = *(this->areas.byIndex[i]);
 
-        for (uint j = 0; j < area.thermal.list.size(); j++)
+        for (auto& cluster : area.thermal.list)
         {
-            // Alias du cluster courant
-            auto& cluster = area.thermal.list.byIndex[j];
             for (uint k = 0; k < HOURS_PER_YEAR; k++)
                 cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
                                         * cluster->unitCount * cluster->nominalCapacity;

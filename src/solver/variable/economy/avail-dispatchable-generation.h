@@ -194,7 +194,7 @@ public:
 
     void addThermalClusterList(Data::ThermalClusterList& list, unsigned int year, unsigned int numSpace)
     {
-        for (auto& [name, cluster] : list)
+        for (const auto& cluster : list)
         {
             const auto& availableProduction = cluster->series.getColumn(year);
             for (unsigned int hour = 0; hour != cluster->series.timeSeries.height; ++hour)

@@ -23,6 +23,7 @@ jobs:
              git clone https://github.com/jothepro/doxygen-awesome-css.git
              cd doxygen-awesome-css
              git checkout v2.2.1
+             git apply ../docs/antares-simulator-doxygen.patch
              
       - name: Doxygen
         uses: mattnotmitt/doxygen-action@1.9.5
@@ -34,10 +35,9 @@ jobs:
         # If you're changing the branch from main,
         # also change the `main` in `refs/heads/main`
         # below accordingly.
-        if: github.ref == 'refs/heads/develop'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./html
-
+          destination_dir: ./doxygen
           
           

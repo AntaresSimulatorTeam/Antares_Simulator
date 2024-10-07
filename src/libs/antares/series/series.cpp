@@ -38,8 +38,6 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-const std::vector<double> TimeSeries::emptyColumn(HOURS_PER_YEAR);
-
 TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
 {}
 
@@ -74,24 +72,17 @@ int TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) 
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 {
-    if (timeSeries.width == 0)
-        return 0;
     return timeSeries[getSeriesIndex(year)][timestep];
 }
 
 const double* TimeSeries::getColumn(uint32_t year) const
 {
-    if (timeSeries.width == 0)
-        return emptyColumn.data();
     return timeSeries[getSeriesIndex(year)];
 }
 
 uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 {
-    if (timeSeries.width == 1)
-        return 0;
-    else
-        return timeseriesNumbers[0][year];
+    return timeseriesNumbers[0][year];
 }
 
 double* TimeSeries::operator[](uint32_t index)

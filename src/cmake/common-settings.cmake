@@ -24,7 +24,7 @@ macro(EMBED_MANIFEST manifestfile target)
 	if(MSVC AND NOT MSVC9)
 		message(STATUS "{antares}    :: adding rule for manifest ${manifestfile}")
 		set(ANTARES_UI_BIN_TARGET "Debug\\")
-		if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 			set(ANTARES_UI_BIN_TARGET "Release\\")
 		endif()
 
@@ -42,7 +42,7 @@ endmacro()
 #
 # Ex: cmake . -DCMAKE_BUILD_TYPE=release
 #
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
 	#
 	# Build Configuration: Release
@@ -61,12 +61,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "t
 	if (NOT MSVC)
 		set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -std=c99")
 	endif()
-
-	if("${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
-		set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE} -pg --no-inline")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -pg --no-inline")
-	endif("${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
-
 else()
 
 	#
@@ -216,7 +210,7 @@ endmacro()
 
 
 macro(executable_strip TARGET)
-	if("${CMAKE_BUILD_TYPE}" STREQUAL "release")
+	if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 		if(NOT MSVC)
 			if(WIN32)
 				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${TARGET}>)
@@ -227,7 +221,7 @@ macro(executable_strip TARGET)
 	endif()
 endmacro()
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS_RELEASE}")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")

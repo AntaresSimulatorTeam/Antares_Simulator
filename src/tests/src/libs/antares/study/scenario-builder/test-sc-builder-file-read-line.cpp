@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE test read scenario-builder.dat 
-#define BOOST_TEST_DYN_LINK
+
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -25,7 +25,6 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-	area->renewable.clusters.push_back(cluster.get());
 	area->renewable.list.add(cluster);
 }
 
@@ -408,6 +407,27 @@ BOOST_FIXTURE_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_
     BOOST_CHECK(my_rule.apply());
     auto actual = study->bindingConstraintsGroups["groupTest"]->timeseriesNumbers[0][yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber-1);
+}
+
+// ========================
+// Tests on TSNumberData
+// ========================
+BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
+{
+    ScenarioBuilder::thermalTSNumberData tsdata;
+    tsdata.attachArea(area_1);
+    tsdata.reset(*study);
+    tsdata.setTSnumber(thCluster_12.get(), 2, 22);
+    tsdata.setTSnumber(thCluster_12.get(), 5, 32); //out of bounds
+
+    study->parameters.nbTimeSeriesThermal = 1;
+    thCluster_12->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
+    thCluster_12->series.timeSeries.resize(30, 8760);
+
+    tsdata.apply(*study);
+
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][2], 21);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][5], 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

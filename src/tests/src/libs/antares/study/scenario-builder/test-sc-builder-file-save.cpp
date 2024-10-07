@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE test save scenario - builder.dat
-#define BOOST_TEST_DYN_LINK
+
 #include <boost/test/unit_test.hpp>
 
 #include <string>
@@ -66,7 +66,6 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-    area->renewable.clusters.push_back(cluster.get());
     area->renewable.list.add(cluster);
 }
 

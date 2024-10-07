@@ -54,24 +54,27 @@ class Properties
 public:
     bool validate();
     bool loadKey(const IniFile::Property* p);
-    bool saveToFolder(const std::string& folder) const;
+    void save(IniFile& ini) const;
 
-    // Not optional   Injection nominal capacity, >= 0
+    /// Not optional   Injection nominal capacity, >= 0
     std::optional<double> injectionNominalCapacity;
-    // Not optional   Withdrawal nominal capacity, >= 0
+    /// Not optional   Withdrawal nominal capacity, >= 0
     std::optional<double> withdrawalNominalCapacity;
-    // Not optional   Reservoir capacity in MWh, >= 0
+    /// Not optional   Reservoir capacity in MWh, >= 0
     std::optional<double> reservoirCapacity;
-    // Initial level, <= 1
+    /// Initial level, <= 1
     double initialLevel = initiallevelDefault;
-    // Bool to optimise or not initial level
+    /// Bool to optimise or not initial level
     bool initialLevelOptim = false;
-    // Efficiency factor between 0 and 1
+    /// Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
-    // Used to sort outputs
+    /// Used to sort outputs
     Group group = Group::Other1;
-    // cluster name
+    /// cluster name
     std::string name;
+
+    /// Enabled ?
+    bool enabled = true;
 
     static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 private:

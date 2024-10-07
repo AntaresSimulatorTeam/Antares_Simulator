@@ -404,9 +404,8 @@ template<class T>
 template<class StringT>
 inline bool Sets<T>::hasOutput(const StringT& s) const
 {
-    using namespace Yuni;
     // Assert, if a C* container can not be found at compile time
-    YUNI_STATIC_ASSERT(Traits::CString<StringT>::valid, HasOutput_InvalidTypeForBuffer);
+    static_assert(Yuni::Traits::CString<StringT>::valid);
 
     typename MapOptions::const_iterator i = pOptions.find(s);
     return (i != pOptions.end()) ? i->second.output : false;
@@ -422,9 +421,8 @@ template<class T>
 template<class StringT>
 inline uint Sets<T>::resultSize(const StringT& s) const
 {
-    using namespace Yuni;
     // Assert, if a C* container can not be found at compile time
-    YUNI_STATIC_ASSERT(Traits::CString<StringT>::valid, HasOutput_InvalidTypeForBuffer);
+    static_assert(Yuni::Traits::CString<StringT>::valid);
 
     typename MapOptions::const_iterator i = pOptions.find(s);
     return (i != pOptions.end()) ? i->second.resultSize : 0;
@@ -434,9 +432,8 @@ template<class T>
 template<class StringT>
 inline typename Sets<T>::IDType Sets<T>::caption(const StringT& s) const
 {
-    using namespace Yuni;
     // Assert, if a C* container can not be found at compile time
-    YUNI_STATIC_ASSERT(Traits::CString<StringT>::valid, HasOutput_InvalidTypeForBuffer);
+    static_assert(Yuni::Traits::CString<StringT>::valid);
 
     typename MapOptions::const_iterator i = pOptions.find(s);
     return (i != pOptions.end()) ? i->second.caption : IDType();

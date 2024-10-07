@@ -163,7 +163,10 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
-    OPT_ExportStructures(problemeHebdo, writer);
+    if (problemeHebdo->ExportStructure && problemeHebdo->firstWeekOfSimulation)
+    {
+        OPT_ExportStructures(problemeHebdo, writer);
+    }
 
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);

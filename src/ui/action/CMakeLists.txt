@@ -132,7 +132,6 @@ target_link_libraries(antares-action
         Antares::result_writer #study.h
         Antares::date #parameters
         Antares::inifile #parameters
-        Antares::object
         Antares::study
 )
 

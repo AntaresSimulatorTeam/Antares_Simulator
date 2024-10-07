@@ -8,11 +8,21 @@ on:
       - develop
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
 
@@ -28,7 +38,14 @@ jobs:
 
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
+
+    - name: Install gcc 11
+      run: |
+        yum install -y centos-release-scl
+        yum install -y devtoolset-11-gcc*
+
+    - uses: ./.github/workflows/install-cmake-328
 
     - name: Init submodule
       run: |
@@ -44,7 +61,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
+           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download OR-Tools
       id: ortools
@@ -54,41 +71,43 @@ jobs:
             unzip -q ortools.zip
             rm ortools.zip
 
-    - name: Install gcc 10
+    - name: Install gh if needed
+      if: ${{ env.IS_RELEASE == 'true' }}
       run: |
-        yum install -y centos-release-scl
-        yum install -y devtoolset-10-gcc*
+           wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
+           rpm -i gh_2.52.0_linux_amd64.rpm
+           gh --version
 
     - name: Configure
       run: |
-           source /opt/rh/devtoolset-10/enable
-           cmake3 -B _build -S src \
+           source /opt/rh/devtoolset-11/enable
+           cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
-           -DBUILD_TOOLS=OFF \
+           -DBUILD_TOOLS=ON \
            -DBUILD_UI=OFF \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
 
     - name: Build
       run: |
-           source /opt/rh/devtoolset-10/enable
+           source /opt/rh/devtoolset-11/enable
            source /opt/rh/rh-git227/enable
-           cmake3 --build _build --config Release -j$(nproc)
+           cmake --build _build --config Release -j$(nproc)
            ccache -s
 
     - name: Installer .rpm creation
       run: |
            cd _build
-           cpack3 -G RPM
+           cpack -G RPM
 
     - name: Solver archive creation
       run: |
            cd _build
-           cmake3 --install . --prefix install
+           cmake --install . --prefix install
            pushd .
            cd install/bin
            tar czf ../../antares-solver_centos7.tar.gz antares-*-solver libsirius_solver.so
@@ -98,33 +117,13 @@ jobs:
     - name: .tar.gz creation
       run: |
            cd _build
-           cpack3 -G TGZ
-
-    - name: Installer TGZ push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.tar.gz
-
-    - name: Installer RPM push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.rpm
-
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
+           cpack -G TGZ
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+

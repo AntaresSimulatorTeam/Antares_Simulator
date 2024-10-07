@@ -33,7 +33,7 @@
 
 #include "opt_fonctions.h"
 
-void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
 {
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
     const int DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
@@ -98,7 +98,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
     {
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+            PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)
@@ -115,7 +115,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo)
     {
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+            PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)

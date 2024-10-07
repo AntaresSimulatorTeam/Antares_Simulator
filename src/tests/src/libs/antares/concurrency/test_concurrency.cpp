@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #define BOOST_TEST_MODULE test-concurrency tests
-#define BOOST_TEST_DYN_LINK
+
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(test_throw)
 BOOST_AUTO_TEST_CASE(test_future_set)
 {
     auto threadPool = createThreadPool(4);
-    int counter = 0;
+    std::atomic<int> counter = 0;
     Task incrementCounter = [&counter]() {
         counter++;
     };

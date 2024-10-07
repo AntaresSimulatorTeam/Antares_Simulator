@@ -10,31 +10,50 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: string
+      target_branch:
+        required: true
+        type: string
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
+  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
+
 
 jobs:
-  windows:
+  build:
 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        buildtype: [release]
-        include:
-          - os: windows-latest
-            triplet: x64-windows
-            vcpkgPackages: wxwidgets boost-test
-            test-platform: windows-2022
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
-      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
+      os: windows-latest
+      test-platform: windows-2022
+      vcpkgPackages: wxwidgets boost-test yaml-cpp antlr4
+      triplet: x64-windows
+
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ env.REF }}
+
+    - name: Config OR-Tools URL
+      run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius.zip" >> $GITHUB_ENV
+      shell: bash
 
     - name: Pre-requisites
       shell: cmd
@@ -59,7 +78,33 @@ jobs:
       with:
         key: windows
 
-    - name: Install VCPKG and Dependencies
+    - name : Init VCPKG submodule
+      run: |
+          git submodule update --init vcpkg
+
+    # Restore both vcpkg and its artifacts from the GitHub cache service.
+    - name: Restore vcpkg and its artifacts.
+      uses: actions/cache@v4
+      with:
+        # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
+        # The other paths starting with '!' are exclusions: they contain temporary files generated during the build of the installed packages.
+        path: |
+          ${{ env.VCPKG_ROOT }}
+          !${{ env.VCPKG_ROOT }}/buildtrees
+          !${{ env.VCPKG_ROOT }}/packages
+          !${{ env.VCPKG_ROOT }}/downloads
+        # The key is composed in a way that it gets properly invalidated: this must happen whenever vcpkg's Git commit id changes, or the list of packages changes. In this case a cache miss must happen and a new entry with a new key with be pushed to GitHub the cache service.
+        # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
+        # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
+        key: |
+          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ env.triplet }}
+
+    - name : Install deps with VCPKG
+      run: |
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
+          vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
+          rm -rf buildtrees packages downloads
       shell: bash
       run: |
         git submodule update --init vcpkg
@@ -87,12 +132,12 @@ jobs:
       uses: ./.github/workflows/download-extract-precompiled-libraries-zip
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{matrix.os}}
+        os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Setup Python 3.12
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       id: setup-python
       with:
         architecture: 'x64'
@@ -116,44 +161,18 @@ jobs:
            -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
            -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
-           -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
-           -DCMAKE_BUILD_TYPE=release \
+           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
-           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}' \
+           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
            -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
-
-    - name: Run unfeasibility-related tests
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R "^unfeasible$"
-
-    - name: Run unit and end-to-end tests
-      run: |
-           cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
-
-    - name: Run kirchhoff-constraint-tests
-      if: ${{ false }}
-      shell: bash
-      run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
-           cd _build
-           ctest -C Release --output-on-failure -R kirchhoff
-
-    - name: Upload build on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: MPS-diff
-        path: ${{ github.workspace }}/src/tests/mps
-
+           cmake --build _build --config Release -j$(nproc)
     # simtest
     - name: Read simtest version
       id: simtest-version
@@ -163,55 +182,81 @@ jobs:
         prop_path: 'version'
 
     - name: Run named mps tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
         variant: "named-mps"
 
-    - name: Run tests for adequacy patch (CSR)
-      uses: ./.github/workflows/run-tests
+    - name: Run unfeasibility-related tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R "^unfeasible$"
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -L "unit|end-to-end" -LE ortools
+
+    - name: Upload build on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v4
       with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: adequacy-patch-CSR
-        os: ${{ matrix.test-platform }}
+        name: MPS-diff
+        path: ${{ github.workspace }}/src/tests/mps
 
     - name: Run tests about infinity on BCs RHS
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
+
+    - name: Run MILP with CBC
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-milp
+        variant: "milp-cbc"
+        os: ${{ env.test-platform }}
 
     - name: Run tests introduced in v860
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Run tests introduced in v870
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v870
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Run short-tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Run mps tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -219,7 +264,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-parallel
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
         variant: "parallel"
 
     - name: Run medium-tests
@@ -228,7 +273,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -236,7 +281,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -244,7 +289,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Run long-tests-3
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -252,7 +297,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.test-platform }}
 
     - name: Solver archive creation
       shell: bash
@@ -271,7 +316,7 @@ jobs:
 
     - name: Upload NSIS log on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: NSISError.log
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
@@ -282,11 +327,16 @@ jobs:
            cpack -G ZIP
 
     - name: Installer upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: installer
         path: _build/${{env.NSIS_NAME}}
 
-    - name: Archive upload
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.zip
+    - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.zip _build/*.exe
+      shell: bash

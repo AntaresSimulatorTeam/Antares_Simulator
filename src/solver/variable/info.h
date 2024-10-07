@@ -407,7 +407,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         if (renewable_details)
         {
             auto& renewable = results.data.area->renewable;
-            results.variableCaption = renewable.clusters[idx]->name();
+            results.variableCaption = renewable.list[idx]->name();
             return true;
         }
         if (st_storage_details)

@@ -100,7 +100,6 @@ public:
 
     void onSelectAllPlants(wxCommandEvent& evt);
     void onSelectPlant(wxCommandEvent& evt);
-    void onSelectAllPlantsFromArea(wxCommandEvent& evt);
 
     void clearAssociatinsBetweenIDAndPtr()
     {

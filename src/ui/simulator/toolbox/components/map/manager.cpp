@@ -768,7 +768,7 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
                             for (Data::ThermalClusterList::iterator t = area->thermal.list.begin();
                                  t != tend;
                                  ++t)
-                                clusterlist.push_back(t->second.get());
+                                clusterlist.push_back((*t).get());
                         }
                         continue;
                     }

@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     }
 
     String targetFolder;
-    IO::ExtractFilePath(targetFolder, targetfile);
+    IO::parentPath(targetFolder, targetfile);
 
     String tmplcontent;
 

@@ -283,7 +283,7 @@ bool IsAbsolute(const AnyString& filename)
 }
 
 template<class StringT>
-static inline void ExtractFilePathImpl(StringT& out, const AnyString& path, bool systemDependant)
+static inline void parentPathImpl(StringT& out, const AnyString& path, bool systemDependant)
 {
     AnyString::size_type pos = (systemDependant)
                                  ? path.find_last_of(IO::Constant<char>::Separator)
@@ -294,14 +294,9 @@ static inline void ExtractFilePathImpl(StringT& out, const AnyString& path, bool
         out.assign(path, pos);
 }
 
-void ExtractFilePath(String& out, const AnyString& path, bool systemDependant)
+void parentPath(String& out, const AnyString& path, bool systemDependant)
 {
-    ExtractFilePathImpl(out, path, systemDependant);
-}
-
-void ExtractFilePath(Clob& out, const AnyString& path, bool systemDependant)
-{
-    ExtractFilePathImpl(out, path, systemDependant);
+    parentPathImpl(out, path, systemDependant);
 }
 
 template<class StringT>
@@ -369,13 +364,13 @@ static inline void ExtractAbsoluteFilePathImpl(StringT& out,
     String tmp;
     if (IsAbsolute(path))
     {
-        ExtractFilePath(tmp, path, systemDependant);
+        parentPath(tmp, path, systemDependant);
     }
     else
     {
         String absolute;
         MakeAbsolute(absolute, path);
-        ExtractFilePath(tmp, absolute, systemDependant);
+        parentPath(tmp, absolute, systemDependant);
     }
     Normalize(out, tmp);
 }

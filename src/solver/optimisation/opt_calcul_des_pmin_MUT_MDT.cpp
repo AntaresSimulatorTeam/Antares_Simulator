@@ -101,7 +101,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
     for (uint32_t Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[Pays];
         const std::vector<double>& PminDuPalierThermiquePendantUneHeure
           = PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;

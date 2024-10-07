@@ -100,7 +100,6 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
         double WH = 0.;
         {
             // H.STOR
-            auto& H = weeklyResults.TurbinageHoraire;
             for (uint i = offset; i != endHour; ++i)
                 WH += H[i];
         }

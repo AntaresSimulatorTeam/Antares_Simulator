@@ -35,11 +35,9 @@
 /*! Vendor */
 #define LOG_APPLICATION_VENDOR "RTE"
 
-/*! Days per year */
-#define DAYS_PER_YEAR 365
-
-/*! Hours per year */
-#define HOURS_PER_YEAR 8760
+const unsigned int HOURS_PER_DAY = 24;
+const unsigned int DAYS_PER_YEAR = 365;
+const unsigned int HOURS_PER_YEAR = 8760;
 
 namespace Antares::Constants
 {

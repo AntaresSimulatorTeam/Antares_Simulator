@@ -15,7 +15,6 @@ public:
     [[nodiscard]] std::string name() { return name_; }
     void add(const std::shared_ptr<BindingConstraint>& constraint);
     [[nodiscard]] std::set<std::shared_ptr<BindingConstraint>> constraints() const;
-    void fixTSNumbersWhenWidthIsOne();
     [[nodiscard]] unsigned numberOfTimeseries() const;
 
 public:

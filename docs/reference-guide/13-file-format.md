@@ -10,6 +10,8 @@ This is a list of all recent changes that came with new Antares Simulator featur
 #### Short-term storage
 If no value is specified for `initiallevel`, then a default value of 50% is used. Note that this value is used only if `initialleveloptim=false`, and that `false` is the default value for `initialleveloptim`.
 
+Add property `enabled` (bool, default=`true`). If a ST storage object is not enabled, it is ignored by Antares Simulator.
+
 #### Experimental "MILP" mode
 New value `milp` for existing property `other preferences/unit-commitment-mode` in file **settings/generaldata.ini**.
 

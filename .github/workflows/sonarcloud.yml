@@ -20,12 +20,15 @@ jobs:
     env:
       SONAR_SERVER_URL: "https://sonarcloud.io"
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius.zip"
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Config OR-Tools URL
+        run: |
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v2
@@ -85,7 +88,7 @@ jobs:
           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
           -DDEPS_INSTALL_DIR=./rte-antares-deps-Debug \
           -DCODE_COVERAGE=ON \
-          -DCMAKE_BUILD_TYPE=debug \
+          -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
           -DBUILD_TESTING=ON \
           -DMZ_CODE_COVERAGE=ON \

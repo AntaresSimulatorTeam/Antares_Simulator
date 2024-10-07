@@ -148,14 +148,14 @@ void LibConfigProgram::findRootPath(const char* a0)
     const String argv0 = a0;
     if (IO::IsAbsolute(argv0))
     {
-        IO::ExtractFilePath(pRootPath, argv0);
+        IO::parentPath(pRootPath, argv0);
     }
     else
     {
         IO::Directory::Current::Get(pRootPath);
         pRootPath << IO::Separator;
         String t;
-        IO::ExtractFilePath(t, argv0);
+        IO::parentPath(t, argv0);
         pRootPath += t;
         pRootPath.removeTrailingSlash();
     }

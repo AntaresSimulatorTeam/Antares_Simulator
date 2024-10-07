@@ -1,37 +1,102 @@
 Antares Changelog
 =================
 
-8.9.0 (Unreleased yet)
+8.8.10 (09/2024)
 --------------------
-## New Features
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
+## Bugfix (adequacy patch)
+* Force enable-first-step=false [ANT-2218] (#2419)
+* Adequacy patch CSR - revamp output variables [ANT-1932] (#2421)
+* Place CSR after hydro remix [ANT-2070] (#2407)
 
+## Bugfix (other)
+* Use OR-Tools v9.11-rte1.1 [ANT-2069] (#2418)
 
-8.8.0-rc3 (11/2023)
+8.8.9 (09/2024)
 --------------------
-## Bugfixes
-* Fix oracle-linux8 binaries missing compression feature (#1741)
+* Revert "Fix bug hydro heuristic with mingen (ANT-1825) (#2258)"
 
-8.8.0-rc2 (10/2023)
+8.8.8 (09/2024)
 --------------------
-## Build
-- Fix version numbers (8b9b2b389)
+## Bugfix
+* Timeseries generation stored in input (#2180)
+* Fix bug hydro heuristic with mingen (ANT-1825) (#2258)
 
-8.8.0-rc1 (10/2023)
+8.8.7 (07/2024)
 --------------------
+## Batchrun tool improvement
+* Add OR-Tools solver option for batchrun tool #1981
+* Add missing parameter to command built by batchrun for OR-Tools #1984
+## Bugfix
+* Adequacy Patch regression [ANT-1845] #2235
+
+8.8.6 (07/2024)
+--------------------
+## Bugfix
+* BC marginal cost #2121
+
+8.8.5 (05/2024)
+--------------------
+## Bugfix
+* [UI] Fix opening a study from the file browser
+* Fix crash occurring when duplicate thermal clusters are present in a study (same name)
+* Fix formula for "PROFIT BY PLANT"
+
+8.8.4 (03/2024)
+--------------------
+## Bugfix
+* Adequacy patch CSR - fix DTG MRG (#1982)
+* Fix ts numbers for no gen clusters (#1969)
+* Remove unitcount limit for time series generation (#1960)
+
+8.8.3
+--------------------
+## Bugfix
+* Fix an issue where depending on the platform the output archive could contain several entries of the same area and inrco files
+
+8.8.2
+--------------------
+
+## Bugfix
+* Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
+* Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
+
+8.8.1 (01/2024)
+--------------------
+/!\ This version has known bugs, please use 8.8.2 instead.
+
+## Bugfix
+* Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
+
+## Improvements
+* Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
+* Fail if OR-Tools solver is not found (#1851)
+* Normalize simulation mode Expansion, fix logs (#1771)
+* Add possibility to release without running any tests (#1852)
+
+## Code quality
+* Use `std::unordered_map` for tmpDataByArea_ (hydro ventilation) (#1855)
+* Remove `mutable` keyword from `PROBLEME_HEBDO` (#1846)
+* Remove `Study::gotFatalError`, throw exceptions instead (#1806)
+* Renewable containers (#1809)
+* Use modern style `for` loops, avoid int cast (#1847)
+* Remove `YUNI_STATIC_ASSERT` (#1863)
+
+## Testing
+* Add tests on short-term storage/thermal cluster/renewable cluster removal (#1841)
+
+## Doc
+* Add precision about `enabled` field in ST storage (#1850)
+* Use dedicated URL path for Doxygen, instead of root (#1865)
+* Fix HTML generation for readthedocs (#1867)
+* Add dark mode switch for Doxygen online documentation (#1792)
+
+8.8.0 (12/2023)
+--------------------
+
 ## New features
 * New "cash-flow" variable for ST storage (#1633)
-* Experimental ptimization discrete variables (#670)
-
-## Bugfixes
-* Prevent segfault during simulation, check bounds of scenario builder (#1567)
-* Fix number of links in deprecated output file digest.txt (#1646)
-* Fix unfeasible problem analyzer (#1527)
-* [Windows only] Increase file size limit when reading file (#1674)
-* Fix segfault encountered when importing logs (#1702)
-* Fixes swallowed exceptions in computation thread (#1685)
-* Fix writer causing a segfault with OR-Tools (#1584)
-* Bug on renewable cluster (wrong group) (#1631)
+* Experimental optimization with discrete variables (MILP unit-commitment mode #670)
+* Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
 
 ## Improvements
 * Add shortcut -s for names MPS problems in CLI options (#1613)
@@ -41,7 +106,25 @@ Antares Changelog
 * Fix wrong year number in logs upon failed year (#1672)
 * Always check mingen against maxPower, regardless of reservoirManagement (#1656)
 * New log msg when solver not found in or-tools (#1687)
+
+## For developers
 * Fix annoying error log about correlation matrices in tests (#1573)
+
+## Bugfixes (reported by users)
+* Fix output variable PROFIT for thermal clusters (#1767)
+* Bug on renewable cluster (wrong group) (#1631)
+
+## Bugfixes (reported internally)
+* Fix oracle-linux8 binaries missing compression feature (#1741)
+* Named MPS - fix duplicated "ranged" binding constraints (#1569)
+* Fix save for short term storage objects (#1807)
+* Prevent segfault during simulation, check bounds of scenario builder (#1567)
+* Fix number of links in deprecated output file digest.txt (#1646)
+* Fix unfeasible problem analyzer (#1527)
+* [Windows only] Increase file size limit when reading file (#1674)
+* Fix segfault encountered when importing logs (#1702)
+* Fixes swallowed exceptions in computation thread (#1685)
+* Fix writer causing a segfault with OR-Tools (#1584)
 
 ## Documentation
 * Create Doxygen documentation (#1650)

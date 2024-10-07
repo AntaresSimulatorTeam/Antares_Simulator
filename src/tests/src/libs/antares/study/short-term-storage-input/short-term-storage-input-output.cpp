@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE "test short term storage"
-#define BOOST_TEST_DYN_LINK
+
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -15,6 +15,7 @@
 using namespace std;
 using namespace Antares::Data;
 
+namespace {
 std::string getFolder()
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
@@ -76,7 +77,7 @@ void createFileSeries(unsigned int size)
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", size);
 }
 
-void createIniFile()
+void createIniFile(bool enabled)
 {
     std::string folder = getFolder();
 
@@ -91,7 +92,7 @@ void createIniFile()
     outfile << "reservoircapacity = 31200.000000" << std::endl;
     outfile << "efficiency = 0.75" << std::endl;
     outfile << "initiallevel = 0.50000" << std::endl;
-
+    outfile << "enabled = " << (enabled ? "true" : "false") << std::endl;
     outfile.close();
 }
 
@@ -128,6 +129,7 @@ void removeIniFile()
 {
     std::string folder = getFolder();
     std::filesystem::remove(folder + SEP + "list.ini");
+}
 }
 
 // =================
@@ -244,12 +246,32 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
         && cluster.series->lowerRuleCurve[6392] == 0.5);
 }
 
-BOOST_FIXTURE_TEST_CASE(check_container_properties_load, Fixture)
+BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
 {
-    createIniFile();
+    createIniFile(true);
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-    BOOST_CHECK(container.storagesByIndex[0].properties.validate());
+
+    auto& properties = container.storagesByIndex[0].properties;
+
+    BOOST_CHECK(properties.enabled);
+    BOOST_CHECK_EQUAL(container.count(), 1);
+    BOOST_CHECK(properties.validate());
+
+    removeIniFile();
+}
+
+BOOST_FIXTURE_TEST_CASE(check_container_properties_disabled_load, Fixture)
+{
+    createIniFile(false);
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    auto& properties = container.storagesByIndex[0].properties;
+
+    BOOST_CHECK(!properties.enabled);
+    BOOST_CHECK_EQUAL(container.count(), 0);
+    BOOST_CHECK(properties.validate());
 
     removeIniFile();
 }
@@ -275,7 +297,7 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 {
-    createIniFile();
+    createIniFile(true);
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 

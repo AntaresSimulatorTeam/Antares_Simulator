@@ -115,23 +115,14 @@ bool Properties::loadKey(const IniFile::Property* p)
         return false;
     }
 
+    if (p->key == "enabled")
+       return p->value.to<bool>(this->enabled);
+
     return false;
 }
 
-bool Properties::saveToFolder(const std::string& folder) const
+void Properties::save(IniFile& ini) const
 {
-    const std::string pathIni(folder + SEP + "list.ini");
-
-    // Make sure the folder is created
-    if (!Yuni::IO::Directory::Create(folder))
-    {
-        logs.warning() << "Couldn't create dir for sts: " << folder;
-        return false;
-    }
-
-    logs.debug() << "saving file " << pathIni;
-
-    IniFile ini;
     IniFile::Section* s = ini.addSection(this->name);
 
     s->add("name", this->name);
@@ -147,9 +138,7 @@ bool Properties::saveToFolder(const std::string& folder) const
 
     s->add("efficiency", this->efficiencyFactor);
     s->add("initialleveloptim", this->initialLevelOptim);
-
-
-    return ini.save(pathIni);
+    s->add("enabled", this->enabled);
 }
 
 bool Properties::validate()

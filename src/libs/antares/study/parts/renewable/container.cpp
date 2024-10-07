@@ -63,51 +63,20 @@ void PartRenewable::prepareAreaWideIndexes()
     // And init the areaWideIndex (unique index for a given area)
     if (list.empty())
     {
-        clusters.clear();
         return;
     }
 
-    clusters.assign(list.size(), nullptr);
-
-    auto end = list.end();
     uint idx = 0;
-    for (auto i = list.begin(); i != end; ++i)
+    for (const auto& cluster : list)
     {
-        RenewableCluster* t = i->second.get();
-        t->areaWideIndex = idx;
-        clusters[idx] = t;
+        cluster->areaWideIndex = idx;
         ++idx;
     }
-}
-
-uint PartRenewable::removeDisabledClusters()
-{
-    // nothing to do if there is no cluster available
-    if (list.empty())
-        return 0;
-
-    std::vector<ClusterName> disabledClusters;
-
-    for (auto& it : list)
-    {
-        if (!it.second->enabled)
-            disabledClusters.push_back(it.first);
-    }
-
-    for (auto& cluster : disabledClusters)
-        list.remove(cluster);
-
-    const auto count = disabledClusters.size();
-    if (count)
-        list.rebuildIndex();
-
-    return count;
 }
 
 void PartRenewable::reset()
 {
     list.clear();
-    clusters.clear();
 }
 
 } // namespace Data

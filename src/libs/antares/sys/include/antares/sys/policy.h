@@ -60,14 +60,6 @@ void Close();
 void CheckRootPrefix(const char* argv0);
 
 /*!
-** \brief Read an entry from the local policies
-**
-** If the local policies are not opened, it will always return false
-** \return True if the entry exists, false otherwise
-*/
-bool HasKey(const PolicyKey& key);
-
-/*!
 ** \brief Read the content of a single entry
 **
 ** If the local policies are not opened, the value is guaranted to be empty.
@@ -82,11 +74,6 @@ bool Read(YString& out, const PolicyKey& key);
 ** \return True if the entry exists, false otherwise
 */
 bool ReadAsBool(const PolicyKey& key, bool defval = false);
-
-/*!
-** \brief Dump the entries to the standard output
-*/
-void DumpToStdOut();
 
 /*!
 ** \brief Dump the entries to the logs

@@ -315,7 +315,6 @@ target_link_libraries(study
         Antares::path
         Antares::mersenne
         Antares::result_writer #study.h
-        Antares::object
         Antares::series
     PRIVATE
         Antares::exception

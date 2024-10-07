@@ -93,7 +93,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO*,
                               const AdqPatchParams&,
                               Antares::Solver::IResultWriter& writer);
-void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*);
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);

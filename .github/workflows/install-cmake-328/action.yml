@@ -1,0 +1,17 @@
+name: "Install cmake 3.28 using devtoolset 10"
+description: "Download and install system wide cmake 3.28"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build cmake
+      shell: bash
+      run: |
+        source /opt/rh/devtoolset-11/enable
+        yum -y install openssl-devel
+        wget https://github.com/Kitware/CMake/releases/download/v3.28.2/cmake-3.28.2.tar.gz
+        tar -xvf cmake-3.28.2.tar.gz
+        cd cmake-3.28.2
+        ./bootstrap
+        make -j$(nproc)
+        make install

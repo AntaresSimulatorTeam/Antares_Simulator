@@ -267,10 +267,8 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount();
-             ++clusterIndex)
+        for (const auto& renewableCluster : state.area->renewable.list)
         {
-            const auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
             double renewableClusterProduction
               = renewableCluster->valueAtTimeStep(state.year, state.hourInTheYear);
 

@@ -22,6 +22,7 @@ target_link_libraries(tests-ts-numbers
 							Boost::unit_test_framework
 							model_antares
 							antares-solver-simulation
+							antares-solver-ts-generator
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE

@@ -285,7 +285,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
-            auto& cluster = *(area.thermal.list.byIndex[clusterIndex]);
+            auto& cluster = *(area.thermal.list[clusterIndex]);
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
               = NombrePaliers + clusterIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
@@ -319,10 +319,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebut,
-                               const BindingConstraintsRepository &bindingConstraints,
-                               const BindingConstraintGroupRepository &bcgroups,
-                               const uint weekFirstDay, int pasDeTemps)
+static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
+                                     int PasDeTempsDebut,
+                                     const BindingConstraintsRepository &bindingConstraints,
+                                     const BindingConstraintGroupRepository &bcgroups,
+                                     const uint weekFirstDay,
+                                     int pasDeTemps)
 {
     auto activeContraints = bindingConstraints.activeContraints();
     const auto constraintCount = activeContraints.size();
@@ -573,7 +575,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
 
-        preparerBindingConstraint(problem, PasDeTempsDebut,
+        prepareBindingConstraint(problem, PasDeTempsDebut,
                 study.bindingConstraints, study.bindingConstraintsGroups,
                 weekFirstDay, hourInWeek);
 
@@ -587,8 +589,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double windSeries = area.wind.series.getCoefficient(year, hourInYear);
             double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
             double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
-
-            assert(&scratchpad);
 
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
@@ -788,7 +788,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                     if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
                         < weekTarget_tmp)
+                    {
                         marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+                    }
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)

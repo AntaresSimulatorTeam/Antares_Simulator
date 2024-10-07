@@ -36,8 +36,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace XCast
@@ -344,5 +342,4 @@ static float maxiDiffusion(float a, float b, float g, float d, int l, float t)
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

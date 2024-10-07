@@ -25,7 +25,15 @@ bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::Stri
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(setToZeroOutsideOutsideLinks);
     if (key == "enable-first-step")
-        return value.to<bool>(enabled);
+    {
+        if (value == "true")
+        {
+            logs.info() << "Property enable-first-step has been disabled, it is known to cause "
+                              "errors and inconsistent results";
+        }
+        return true;
+    }
+
     return false;
 }
 
@@ -140,14 +148,8 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
     {
         out.emplace_back("DENS");
         out.emplace_back("LMR VIOL.");
-        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("UNSP. ENRG CSR");
         out.emplace_back("DTG MRG CSR");
-    }
-
-    // If the adequacy patch is enabled, but the LMR is disabled, the DENS variable shouldn't exist
-    if (enabled && !localMatching.enabled)
-    {
-        out.emplace_back("DENS");
     }
 }
 
@@ -176,13 +178,13 @@ bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
     checkAdqPatchSimulationModeEconomyOnly(simulationMode);
     checkAdqPatchContainsAdqPatchArea(areas);
     checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
-    checkAdqPatchDisabledLocalMatching();
 
     return true;
 }
 
 // Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const
+void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(
+  const SimulationMode simulationMode) const
 {
     if (simulationMode != SimulationMode::Economy)
         throw Error::IncompatibleSimulationModeForAdqPatch();
@@ -205,11 +207,4 @@ void AdqPatchParams::checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost
     if (curtailmentSharing.includeHurdleCost && !includeHurdleCostParameters)
         throw Error::IncompatibleHurdleCostCSR();
 }
-
-void AdqPatchParams::checkAdqPatchDisabledLocalMatching() const
-{
-    if (!localMatching.enabled && curtailmentSharing.priceTakingOrder == AdqPatchPTO::isDens)
-        throw Error::AdqPatchDisabledLMR();
-}
-
-} // Antares::Data::AdequacyPatch
+} // namespace Antares::Data::AdequacyPatch

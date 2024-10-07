@@ -13,8 +13,9 @@ namespace Data
 class ThermalClusterList : public ClusterList<ThermalCluster>
 {
 public:
-    // Overriden pure virtual methods
-    YString typeID() const override;
+    std::string typeID() const override;
+    // Map container
+    using Map = typename std::map<ClusterName, std::shared_ptr<ThermalCluster>>;
 
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
@@ -57,8 +58,6 @@ public:
     */
     void enableMustrunForEveryone();
     //@}
-
-    bool remove(const ClusterName& id) override;
 
     Map mapping;
 

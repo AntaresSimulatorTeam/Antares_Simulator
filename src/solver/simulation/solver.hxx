@@ -313,6 +313,8 @@ void ISimulation<Impl>::run()
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
+    TSGenerator::ResizeGeneratedTimeSeries(study.areas, study.parameters);
+
     if (settings.tsGeneratorsOnly)
     {
         // Only the preprocessors can be used
@@ -327,7 +329,7 @@ void ISimulation<Impl>::run()
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
-        Solver::TSGenerator::DestroyAll(study);
+        TSGenerator::DestroyAll(study);
     }
     else
     {
@@ -374,7 +376,7 @@ void ISimulation<Impl>::run()
         }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
-        Solver::TSGenerator::DestroyAll(study);
+        TSGenerator::DestroyAll(study);
 
         // Post operations
         {
@@ -453,7 +455,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year) // TMP.INFO CR27: Genera
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
     // * Both options "Preprocessor" and "Refresh" are checked in the interface
     //   _and_ the refresh must be done for the given year (always done for the first year).
-    using namespace Solver::TSGenerator;
+    using namespace TSGenerator;
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {

@@ -18,15 +18,13 @@ inline bool BindingConstraintsRepository::empty() const {
 
 template<class PredicateT>
 inline void BindingConstraintsRepository::each(const PredicateT &predicate) {
-    uint count = (uint) constraints_.size();
-    for (uint i = 0; i != count; ++i)
-        predicate(*(constraints_[i]));
+    for (auto bc : constraints_)
+        predicate(*bc);
 }
 
 template<class PredicateT>
 inline void BindingConstraintsRepository::each(const PredicateT &predicate) const {
-    uint count = (uint) constraints_.size();
-    for (uint i = 0; i != count; ++i)
-        predicate(*(constraints_[i].get()));
+    for (auto bc : constraints_)
+        predicate(*bc);
 }
 }

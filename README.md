@@ -41,7 +41,7 @@ The GUI is deprecated in favor of [Antares Web](https://github.com/AntaresSimula
 
 - Antares web site :  https://antares-simulator.org
 - RTE web site  : http://www.rte-france.com/
-- Doxygen code documentation  : https://antaressimulatorteam.github.io/Antares_Simulator/
+- Doxygen code documentation  : https://antaressimulatorteam.github.io/Antares_Simulator/doxygen
 - Antares Web : https://github.com/AntaresSimulatorTeam/AntaREST
 
 

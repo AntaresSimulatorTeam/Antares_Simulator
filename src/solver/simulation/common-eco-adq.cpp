@@ -106,7 +106,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         const uint indx = i + PasDeTempsDebut;
         auto& ntcValues = problem.ValeursDeNTC[i];
-        assert(&ntcValues);
 
         for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
@@ -132,40 +131,33 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 
-        if (!area.thermal.mustrunList.empty())
+        for (const auto& cluster : area.thermal.mustrunList)
         {
-            auto end = area.thermal.mustrunList.end();
-            for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
+            const auto& availableProduction = cluster->series.getColumn(year);
+            if (inAdequacy && cluster->mustrunOrigin)
             {
-                auto& cluster = *(i->second);
-                const auto& availableProduction = cluster.series.getColumn(year);
-                if (inAdequacy && cluster.mustrunOrigin)
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
                 {
-                    for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
-                    {
-                        mrs[h] += availableProduction[h];
-                        adq[h] += availableProduction[h];
-                    }
+                    mrs[h] += availableProduction[h];
+                    adq[h] += availableProduction[h];
                 }
-                else
-                {
-                    for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
-                        mrs[h] += availableProduction[h];
-                }
+            }
+            else
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                    mrs[h] += availableProduction[h];
             }
         }
 
         if (inAdequacy)
         {
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            for (const auto& cluster : area.thermal.mustrunList)
             {
-                auto& cluster = *(i->second);
-                if (!cluster.mustrunOrigin)
+                if (!cluster->mustrunOrigin)
                     continue;
 
-                const auto& availableProduction = cluster.series.getColumn(year);
-                for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
+                const auto& availableProduction = cluster->series.getColumn(year);
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
                     adq[h] += availableProduction[h];
             }
         }

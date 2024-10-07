@@ -1,10 +1,8 @@
 macro(copy_dependency deps target)
 
-        if("${CMAKE_BUILD_TYPE}" STREQUAL "release")
-
+        if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
             get_target_property( DEP_SHARED_LIB_PATH ${deps} IMPORTED_LOCATION_RELEASE )
         else()
-
             get_target_property( DEP_SHARED_LIB_PATH ${deps} IMPORTED_LOCATION_DEBUG )
         endif()
 

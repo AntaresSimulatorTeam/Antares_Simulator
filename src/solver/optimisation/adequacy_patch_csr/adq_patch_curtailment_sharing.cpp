@@ -37,9 +37,9 @@ using namespace Yuni;
 
 namespace Antares::Data::AdequacyPatch
 {
-double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
+double LmrViolationAreaHour(PROBLEME_HEBDO* problemeHebdo,
                             double totalNodeBalance,
-                            const double threshold,
+                            double threshold,
                             int Area,
                             int hour)
 {

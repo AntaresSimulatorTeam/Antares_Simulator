@@ -49,45 +49,38 @@ void Cluster::setName(const AnyString& newname)
 }
 
 #define SEP Yuni::IO::Separator
-int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
+bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 {
-    if (not folder.empty())
-    {
-        Yuni::Clob buffer;
+    if (folder.empty())
+        return true;
 
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
-        if (Yuni::IO::Directory::Create(buffer))
-        {
-            int ret = 1;
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
-            ret = series.timeSeries.saveToCSVFile(buffer, precision()) && ret;
+    Yuni::Clob buffer;
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+    if (!Yuni::IO::Directory::Create(buffer))
+        return true;
 
-            return ret;
-        }
-        return 0;
-    }
-    return 1;
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+    return series.timeSeries.saveToCSVFile(buffer, precision());
 }
 
-int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
-    if (not folder.empty())
-    {
-        auto& buffer = s.bufferLoadingTS;
+    if (folder.empty())
+        return true;
 
-        int ret = 1;
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-                       << s.inputExtension;
-        ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+    auto& buffer = s.bufferLoadingTS;
 
-        if (s.usedByTheSolver && s.parameters.derated)
-            series.timeSeries.averageTimeseries();
+    bool ret = true;
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+        << s.inputExtension;
+    ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
-        series.timeseriesNumbers.clear();
+    if (s.usedByTheSolver && s.parameters.derated)
+        series.timeSeries.averageTimeseries();
 
-        return ret;
-    }
-    return 1;
+    series.timeseriesNumbers.clear();
+
+    return ret;
 }
 #undef SEP
 

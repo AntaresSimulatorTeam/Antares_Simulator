@@ -45,6 +45,7 @@ source_group("ts-generator\\Optimized-thermal-generator" FILES ${SRC_OPTIMIZEDGE
 set(SRC_GENERATORS
 	generator.h
 	generator.hxx
+	generator.cpp
 	thermal.cpp
 	hydro.cpp
 )

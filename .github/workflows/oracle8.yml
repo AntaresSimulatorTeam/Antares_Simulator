@@ -6,20 +6,32 @@ on:
   push:
     branches:
       - develop
+      - dependabot/*
+
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
+
 
 jobs:
 
   build:
     name: Build
     env:
-      ORTOOLSDIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
     container: 'oraclelinux:8'
@@ -34,11 +46,23 @@ jobs:
     - name: Install libraries
       run: |
            dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
-           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
+           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-11 zlib-devel
 
     - name: Checkout
       run: |
-           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
+
+    - name: Config OR-Tools URL
+      run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
+
+    - name: Download & extract OR-Tools
+      run: |
+           mkdir -p  ${{env.ORTOOLS_DIR}}
+           cd ${{env.ORTOOLS_DIR}}
+           wget ${{env.ORTOOLS_URL}} -O ortools.zip
+           unzip ortools.zip
+           rm ortools.zip
 
     - name: Init submodule
       run: |
@@ -49,18 +73,26 @@ jobs:
       run: |
           pip3 install -r src/tests/examples/requirements.txt
 
+    - name: Install gh if needed
+      if: ${{ env.IS_RELEASE == 'true' }}
+      run: |
+           dnf -y install 'dnf-command(config-manager)'
+           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+           dnf -y install gh
+
     - name: Configure
       run: |
-           source /opt/rh/gcc-toolset-10/enable
+           source /opt/rh/gcc-toolset-11/enable
            cmake -B _build -S src \
-             -DCMAKE_BUILD_TYPE=release \
-             -DBUILD_TESTING=ON \
-             -DBUILD_TOOLS=OFF \
+             -DCMAKE_BUILD_TYPE=Release \
+             -DBUILD_TESTING=OFF \
+             -DBUILD_TOOLS=ON \
              -DBUILD_UI=OFF \
+             -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
     - name: Build
       run: |
-           source /opt/rh/gcc-toolset-10/enable
+           source /opt/rh/gcc-toolset-11/enable
            cmake --build _build --config Release -j$(nproc)
 
     - name: Run unit and end-to-end tests
@@ -90,30 +122,21 @@ jobs:
            cpack -G TGZ
 
     - name: Installer TGZ push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: oracle-targz
         path: _build/*.tar.gz
 
     - name: Installer RPM push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: oracle-rpm
         path: _build/*.rpm
-
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
