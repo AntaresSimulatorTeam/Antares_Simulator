@@ -60,10 +60,10 @@ BOOST_AUTO_TEST_CASE(Empty_library_is_valid)
 {
     ModelParser::Library library;
     ObjectModel::Library lib = ModelConverter::convert(library);
-    BOOST_CHECK(lib.id().empty());
-    BOOST_CHECK(lib.description().empty());
-    BOOST_CHECK(lib.portTypes().empty());
-    BOOST_CHECK(lib.models().empty());
+    BOOST_CHECK(lib.Id().empty());
+    BOOST_CHECK(lib.Description().empty());
+    BOOST_CHECK(lib.PortTypes().empty());
+    BOOST_CHECK(lib.Models().empty());
 }
 
 // Test library with id and description
@@ -73,8 +73,8 @@ BOOST_AUTO_TEST_CASE(library_id_description_properly_translated)
     library.id = "test_id";
     library.description = "test_description";
     ObjectModel::Library lib = ModelConverter::convert(library);
-    BOOST_CHECK_EQUAL(lib.id(), "test_id");
-    BOOST_CHECK_EQUAL(lib.description(), "test_description");
+    BOOST_CHECK_EQUAL(lib.Id(), "test_id");
+    BOOST_CHECK_EQUAL(lib.Description(), "test_description");
 }
 
 // Test library with port types
@@ -85,13 +85,13 @@ BOOST_AUTO_TEST_CASE(port_type_with_empty_fileds_properly_translated)
     ModelParser::PortType portType2{"port2", "impedance port", {}};
     library.port_types = {portType1, portType2};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    BOOST_REQUIRE_EQUAL(lib.portTypes().size(), 2);
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").id(), "port1");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").description(), "flow port");
-    BOOST_CHECK(lib.portTypes().at("port1").fields().empty());
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").id(), "port2");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").description(), "impedance port");
-    BOOST_CHECK(lib.portTypes().at("port2").fields().empty());
+    BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 2);
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Id(), "port1");
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Description(), "flow port");
+    BOOST_CHECK(lib.PortTypes().at("port1").Fields().empty());
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Id(), "port2");
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Description(), "impedance port");
+    BOOST_CHECK(lib.PortTypes().at("port2").Fields().empty());
 }
 
 // Test library with port types and fields
@@ -102,12 +102,12 @@ BOOST_AUTO_TEST_CASE(portType_with_fields_properly_translated)
     ModelParser::PortType portType2{"port2", "impedance port", {"field3", "field4"}};
     library.port_types = {portType1, portType2};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    BOOST_REQUIRE_EQUAL(lib.portTypes().at("port1").fields().size(), 2);
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").fields()[0].Id(), "field1");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").fields()[1].Id(), "field2");
-    BOOST_REQUIRE_EQUAL(lib.portTypes().at("port2").fields().size(), 2);
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[0].Id(), "field3");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").fields()[1].Id(), "field4");
+    BOOST_REQUIRE_EQUAL(lib.PortTypes().at("port1").Fields().size(), 2);
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Fields()[0].Id(), "field1");
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Fields()[1].Id(), "field2");
+    BOOST_REQUIRE_EQUAL(lib.PortTypes().at("port2").Fields().size(), 2);
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Fields()[0].Id(), "field3");
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Fields()[1].Id(), "field4");
 }
 
 // Test library with models
@@ -124,9 +124,9 @@ BOOST_AUTO_TEST_CASE(empty_model_properly_translated)
                               .objective = "objectives"};
     library.models = {model1};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    BOOST_REQUIRE_EQUAL(lib.models().size(), 1);
-    BOOST_CHECK_EQUAL(lib.models().at("model1").Id(), "model1");
-    BOOST_CHECK_EQUAL(lib.models().at("model1").Objective().Value(), "objectives");
+    BOOST_REQUIRE_EQUAL(lib.Models().size(), 1);
+    BOOST_CHECK_EQUAL(lib.Models().at("model1").Id(), "model1");
+    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objective().Value(), "objectives");
 }
 
 // Test library with models and parameters
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(model_parameters_properly_translated)
                               .objective = "objectives"};
     library.models = {model1};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    auto& model = lib.models().at("model1");
+    auto& model = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(model.Parameters().size(), 2);
     auto& parameter1 = model.Parameters().at("param1");
     auto& parameter2 = model.Parameters().at("param2");
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(model_variables_properly_translated)
       .objective = "objectives"};
     library.models = {model1};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    auto& model = lib.models().at("model1");
+    auto& model = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(model.Variables().size(), 2);
     auto& variable1 = model.Variables().at("var1");
     auto& variable2 = model.Variables().at("var2");
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disable
                               .objective = "objectives"};
     library.models = {model1};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    auto& model = lib.models().at("model1");
+    auto& model = lib.Models().at("model1");
     // BOOST_REQUIRE_EQUAL(model.Ports().size(), 2);
     // auto& port1 = model.Ports().at("port1");
     // auto& port2 = model.Ports().at("port2");
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE(model_constraints_properly_translated)
                               .objective = "objectives"};
     library.models = {model1};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    auto& model = lib.models().at("model1");
+    auto& model = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(model.getConstraints().size(), 2);
     auto& constraint1 = model.getConstraints().at("constraint1");
     auto& constraint2 = model.getConstraints().at("constraint2");
@@ -260,11 +260,11 @@ BOOST_AUTO_TEST_CASE(multiple_models_properly_translated)
       .objective = "objectives"};
     library.models = {model1, model2};
     ObjectModel::Library lib = ModelConverter::convert(library);
-    BOOST_REQUIRE_EQUAL(lib.models().size(), 2);
-    auto& modelo1 = lib.models().at("model1");
+    BOOST_REQUIRE_EQUAL(lib.Models().size(), 2);
+    auto& modelo1 = lib.Models().at("model1");
     BOOST_REQUIRE_EQUAL(modelo1.Parameters().size(), 2);
     BOOST_REQUIRE_EQUAL(modelo1.Variables().size(), 1);
-    auto& modelo2 = lib.models().at("model2");
+    auto& modelo2 = lib.Models().at("model2");
     BOOST_REQUIRE_EQUAL(modelo2.Parameters().size(), 0);
     BOOST_REQUIRE_EQUAL(modelo2.Variables().size(), 2);
 }

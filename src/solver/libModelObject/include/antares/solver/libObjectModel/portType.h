@@ -40,17 +40,17 @@ public:
     {
     }
 
-    const std::string& id() const
+    const std::string& Id() const
     {
         return id_;
     }
 
-    const std::string& description() const
+    const std::string& Description() const
     {
         return description_;
     }
 
-    const std::vector<PortField>& fields() const
+    const std::vector<PortField>& Fields() const
     {
         return fields_;
     }
