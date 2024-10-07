@@ -7,12 +7,12 @@
 
 using namespace Yuni;
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
-                                     IResultWriter& writer) :
+                                     Solver::IResultWriter& writer) :
  study(study),
  rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
  pProgression(progr),
@@ -501,4 +501,4 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     cluster.calculationOfSpinning();
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator
