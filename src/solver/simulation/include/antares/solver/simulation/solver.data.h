@@ -38,15 +38,11 @@ public:
     bool haveToRefreshTSSolar;
     //! True if the prepro `wind` must be used
     bool haveToRefreshTSWind;
-    //! True if the prepro `hydro` must be used
-    bool haveToRefreshTSHydro;
     //! True if the prepro `thermal` must be used
     bool haveToRefreshTSThermal;
 
     //! Refresh time interval for Solar
     unsigned int refreshIntervalSolar;
-    //! Refresh time interval for Hydro
-    unsigned int refreshIntervalHydro;
     //! Refresh time interval for wind
     unsigned int refreshIntervalWind;
     //! Refresh time interval for thermal

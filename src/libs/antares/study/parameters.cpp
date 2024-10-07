@@ -284,7 +284,6 @@ void Parameters::reset()
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
     refreshIntervalSolar = 100;
-    refreshIntervalHydro = 100;
     refreshIntervalWind = 100;
     refreshIntervalThermal = 100;
     // Archive
@@ -532,10 +531,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         // This data is among solver data, but is useless while running a simulation
         // Only by TS generator. We skip it here (otherwise, we get a reading error).
         return true;
-    }
-    if (key == "refreshintervalhydro")
-    {
-        return value.to<uint>(d.refreshIntervalHydro);
     }
     if (key == "refreshintervalwind")
     {
@@ -1246,7 +1241,6 @@ void Parameters::fixRefreshIntervals()
                          enum TimeSeriesType /* ts */,
                          const std::string /* label */>;
     const std::list<T> timeSeriesToCheck = {{refreshIntervalSolar, timeSeriesSolar, "solar"},
-                                            {refreshIntervalHydro, timeSeriesHydro, "hydro"},
                                             {refreshIntervalWind, timeSeriesWind, "wind"},
                                             {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
 
@@ -1634,11 +1628,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
             timeSeriesToRefresh |= timeSeriesWind;
             refreshIntervalWind = UINT_MAX;
         }
-        if (timeSeriesToGenerate & timeSeriesHydro && !(timeSeriesToRefresh & timeSeriesHydro))
-        {
-            timeSeriesToRefresh |= timeSeriesHydro;
-            refreshIntervalHydro = UINT_MAX;
-        }
         if (timeSeriesToGenerate & timeSeriesThermal && !(timeSeriesToRefresh & timeSeriesThermal))
         {
             timeSeriesToRefresh |= timeSeriesThermal;
@@ -1791,7 +1780,6 @@ void Parameters::saveToINI(IniFile& ini) const
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
         ParametersSaveTimeSeries(section, "intra-modal", intraModal);
         ParametersSaveTimeSeries(section, "inter-modal", interModal);
-        section->add("refreshIntervalHydro", refreshIntervalHydro);
         section->add("refreshIntervalWind", refreshIntervalWind);
         section->add("refreshIntervalThermal", refreshIntervalThermal);
         section->add("refreshIntervalSolar", refreshIntervalSolar);

@@ -302,7 +302,6 @@ RefreshSpanCell::RefreshSpanCell(TimeSeriesType ts) : Cell(ts)
 void RefreshSpanCell::onStudyLoaded()
 {
     tsToRefreshSpan_[timeSeriesThermal] = &(study_->parameters.refreshIntervalThermal);
-    tsToRefreshSpan_[timeSeriesHydro] = &(study_->parameters.refreshIntervalHydro);
     tsToRefreshSpan_[timeSeriesWind] = &(study_->parameters.refreshIntervalWind);
     tsToRefreshSpan_[timeSeriesSolar] = &(study_->parameters.refreshIntervalSolar);
 }
