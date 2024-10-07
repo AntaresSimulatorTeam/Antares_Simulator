@@ -267,9 +267,6 @@ public:
     ** \see TimeSeries
     */
     uint timeSeriesToRefresh;
-
-    //! Refresh interval (in years) for timeSeries : Thermal
-    uint refreshIntervalThermal;
     //@}
 
     //! \name Archives

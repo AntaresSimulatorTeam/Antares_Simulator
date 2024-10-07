@@ -37,9 +37,6 @@ inline static bool CheckTSToRefresh(const Antares::Data::Parameters& g)
 
 void CacheData::initialize(const Antares::Data::Parameters& parameters)
 {
-    haveToRefreshTSThermal = CheckTSToRefresh<Data::timeSeriesThermal>(parameters);
-
-    refreshIntervalThermal = parameters.refreshIntervalThermal;
 }
 
 } // namespace Antares::Solver::Private::Simulation

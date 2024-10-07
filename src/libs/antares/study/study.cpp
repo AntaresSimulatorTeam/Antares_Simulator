@@ -897,13 +897,6 @@ struct TS final
         {
             return false;
         }
-
-        switch (T)
-        {
-        case timeSeriesThermal:
-            return (!(y % s.parameters.refreshIntervalThermal));
-        }
-        return false;
     }
 };
 

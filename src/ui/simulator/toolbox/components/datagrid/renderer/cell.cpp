@@ -301,7 +301,6 @@ RefreshSpanCell::RefreshSpanCell(TimeSeriesType ts) : Cell(ts)
 
 void RefreshSpanCell::onStudyLoaded()
 {
-    tsToRefreshSpan_[timeSeriesThermal] = &(study_->parameters.refreshIntervalThermal);
 }
 
 wxString RefreshSpanCell::cellValue() const

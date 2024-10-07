@@ -25,6 +25,8 @@
 
 namespace Antares::Solver::Private::Simulation
 {
+
+// TODO REMOVE
 class CacheData
 {
 public:
@@ -32,13 +34,6 @@ public:
     ** \brief Re-Initialize the inner variables
     */
     void initialize(const Antares::Data::Parameters& parameters);
-
-public:
-    //! True if the prepro `thermal` must be used
-    bool haveToRefreshTSThermal;
-
-    //! Refresh time interval for thermal
-    unsigned int refreshIntervalThermal;
 
 }; // class CacheData
 

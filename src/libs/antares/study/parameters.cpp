@@ -283,7 +283,6 @@ void Parameters::reset()
     nbTimeSeriesThermal = 1;
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
-    refreshIntervalThermal = 100;
     // Archive
     timeSeriesToArchive = 0; // None
     // Pre-Processor
@@ -529,10 +528,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         // This data is among solver data, but is useless while running a simulation
         // Only by TS generator. We skip it here (otherwise, we get a reading error).
         return true;
-    }
-    if (key == "refreshintervalthermal")
-    {
-        return value.to<uint>(d.refreshIntervalThermal);
     }
     // What timeSeries to refresh ?
     if (key == "refreshtimeseries")
@@ -1225,26 +1220,6 @@ void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
     optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
 }
 
-void Parameters::fixRefreshIntervals()
-{
-    using T = std::tuple<uint& /* refreshInterval */,
-                         enum TimeSeriesType /* ts */,
-                         const std::string /* label */>;
-    const std::list<T> timeSeriesToCheck = {
-                                            {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
-
-    for (const auto& [refreshInterval, ts, label]: timeSeriesToCheck)
-    {
-        if (ts & timeSeriesToRefresh && 0 == refreshInterval)
-        {
-            refreshInterval = 1;
-            logs.error() << "The " << label
-                         << " time-series must be refreshed but the interval is equal to 0. "
-                            "Auto-Reset to a safe value (1).";
-        }
-    }
-}
-
 void Parameters::fixGenRefreshForNTC()
 {
     if ((timeSeriesTransmissionCapacities & timeSeriesToGenerate) != 0)
@@ -1606,12 +1581,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
             timeSeriesToRefresh &= ~timeSeriesThermal;
         }
 
-        // Force mode refresh if the timeseries must be regenerated
-        if (timeSeriesToGenerate & timeSeriesThermal && !(timeSeriesToRefresh & timeSeriesThermal))
-        {
-            timeSeriesToRefresh |= timeSeriesThermal;
-            refreshIntervalThermal = UINT_MAX;
-        }
     }
 
     if (options.noTimeseriesImportIntoInput && timeSeriesToArchive != 0)
@@ -1759,7 +1728,6 @@ void Parameters::saveToINI(IniFile& ini) const
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
         ParametersSaveTimeSeries(section, "intra-modal", intraModal);
         ParametersSaveTimeSeries(section, "inter-modal", interModal);
-        section->add("refreshIntervalThermal", refreshIntervalThermal);
 
         // Readonly
         section->add("readonly", readonly);

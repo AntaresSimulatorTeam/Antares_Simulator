@@ -81,6 +81,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
     return r;
 }
 
+// TODO REMOVE
 template<enum Data::TimeSeriesType T>
 void Destroy(Data::Study& study, uint year)
 {
@@ -94,18 +95,7 @@ void Destroy(Data::Study& study, uint year)
     // releasing
     auto& parameters = study.parameters;
 
-    bool shouldDestroy;
-    switch (T)
-    {
-    case Data::timeSeriesThermal:
-    {
-        shouldDestroy = (parameters.refreshIntervalThermal > parameters.nbYears)
-                        || year + parameters.refreshIntervalThermal > parameters.nbYears;
-        break;
-    }
-    default:
-        shouldDestroy = true;
-    }
+    bool shouldDestroy = true;
 
     if (shouldDestroy)
     {
