@@ -83,7 +83,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
 
 // TODO REMOVE
 template<enum Data::TimeSeriesType T>
-void Destroy(Data::Study& study, uint year)
+void Destroy(Data::Study& study)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
       study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
@@ -95,16 +95,11 @@ void Destroy(Data::Study& study, uint year)
     // releasing
     auto& parameters = study.parameters;
 
-    bool shouldDestroy = true;
-
-    if (shouldDestroy)
-    {
-        logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-        study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
-        study.destroyTSGeneratorData<T>();
-        delete xcast;
-        xcast = nullptr;
-    }
+    logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
+    study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
+    study.destroyTSGeneratorData<T>();
+    delete xcast;
+    xcast = nullptr;
 }
 
 } // namespace Antares::TSGenerator
