@@ -212,6 +212,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
             ORTOOLS_LibererProbleme(solver);
+            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
 
             logs.info() << " Solver: Standard resolution failed";
             logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
