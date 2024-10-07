@@ -106,20 +106,6 @@ jobs:
           vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
           rm -rf buildtrees packages downloads
       shell: bash
-      run: |
-        git submodule update --init vcpkg
-        ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
-        ./vcpkg/vcpkg install boost --triplet x64-windows
-
-    - name: Restore vcpkg binary dir from cache
-      id: cache-vcpkg-binary
-      uses: actions/cache/restore@v4
-      with:
-        path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
-        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-        restore-keys: vcpkg-cache-windows-
-
 
     - name: Read antares-deps version
       id: antares-deps-version
