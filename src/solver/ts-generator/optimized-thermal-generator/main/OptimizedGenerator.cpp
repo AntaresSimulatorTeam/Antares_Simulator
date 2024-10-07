@@ -7,7 +7,7 @@
 #include <numeric>
 #include <algorithm>
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 // optimization problem - methods
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
@@ -69,4 +69,4 @@ void OptimizedThermalGenerator::allocateWhereToWriteTs()
     return;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

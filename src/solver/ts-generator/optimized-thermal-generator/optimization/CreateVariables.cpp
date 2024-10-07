@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 void OptimizedThermalGenerator::buildProblemVariables(const OptProblemSettings& optSett)
 {
@@ -153,4 +153,4 @@ void OptimizedThermalGenerator::buildEndVariables(const OptProblemSettings& optS
     return;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

@@ -7,7 +7,7 @@
 #include "../../randomized-thermal-generator/RandomizedGenerator.h"
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 // it is better to immediately calculate and populate structure
@@ -71,7 +71,7 @@ public:
                                     OptimizationVariables& vars,
                                     OptimizationResults& scenarioResults,
                                     Solver::Progression::Task& progr,
-                                    IResultWriter& writer) :
+                                    Solver::IResultWriter& writer) :
      GeneratorTempData(study, progr, writer),
      maintenanceGroup_(maintenanceGroup),
      globalThermalTSgeneration_(globalThermalTSgeneration),
@@ -169,4 +169,4 @@ public:
     void printAvailability(OptProblemSettings& optSett);
 };
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

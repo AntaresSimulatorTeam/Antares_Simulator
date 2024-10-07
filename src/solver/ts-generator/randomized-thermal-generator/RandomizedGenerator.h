@@ -11,7 +11,7 @@ using namespace Yuni;
 
 #define FAILURE_RATE_EQ_1 0.999
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 class GeneratorTempData
@@ -20,7 +20,7 @@ class GeneratorTempData
     friend class OptimizedThermalGenerator;
 
 public:
-    GeneratorTempData(Data::Study& study, Solver::Progression::Task& progr, IResultWriter& writer);
+    GeneratorTempData(Data::Study& study, Solver::Progression::Task& progr, Solver::IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -76,7 +76,7 @@ private:
 
     String pTempFilename;
     Solver::Progression::Task& pProgression;
-    IResultWriter& pWriter;
+    Solver::IResultWriter& pWriter;
 };
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 // create OBJECTIVE FUNCTION - sum through [t] and sum through [u]
 // sum[days]{ EnsCost*Ens[day] + SpillCost[day] + sum[units][ avgCost*P[t][u] ] }
@@ -66,4 +66,4 @@ void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& op
     return;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

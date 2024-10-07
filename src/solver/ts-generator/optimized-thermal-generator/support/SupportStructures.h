@@ -9,7 +9,7 @@
 
 using namespace operations_research;
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 // this class stores data about optimization problem settings
@@ -81,4 +81,4 @@ struct OptimizationVariables
     std::vector<MPVariable*> spill; // pointers to Spill[t] variables
 };
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

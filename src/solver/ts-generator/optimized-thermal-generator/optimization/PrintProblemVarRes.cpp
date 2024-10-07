@@ -10,7 +10,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 void OptimizationParameters::printProblemVarAndResults(OptProblemSettings& optSett, MPSolver& solver)
 {
@@ -212,4 +212,4 @@ void printColumnToFile(const std::vector<std::vector<T>>& data, const std::strin
     }
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

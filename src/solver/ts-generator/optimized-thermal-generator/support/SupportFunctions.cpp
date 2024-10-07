@@ -7,7 +7,7 @@
 #include "../main/OptimizedGenerator.h"
 #include "../support/SupportFunctions.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 // calculate Average time-series functions
@@ -196,4 +196,4 @@ std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalC
     return avrCostDailyValues;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

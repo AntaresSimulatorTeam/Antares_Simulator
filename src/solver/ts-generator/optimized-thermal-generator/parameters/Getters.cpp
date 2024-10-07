@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 // Getters
 double OptimizationParameters::getPowerCost(const Data::ThermalCluster& cluster,
@@ -71,4 +71,4 @@ int OptimizationParameters::getDaysSinceLastMaintenance(const Data::ThermalClust
     return clusterData[&cluster].dynamicInputs.daysSinceLastMaintenance[unit];
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

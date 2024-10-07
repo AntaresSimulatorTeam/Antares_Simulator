@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 void OptimizationParameters::postTimeStepOptimization(OptProblemSettings& optSett)
@@ -151,4 +151,4 @@ void OptimizationParameters::reCalculateNumberOfMaintenances()
     }
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

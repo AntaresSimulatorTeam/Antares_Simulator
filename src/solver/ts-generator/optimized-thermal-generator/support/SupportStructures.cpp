@@ -4,7 +4,7 @@
 
 #include "SupportStructures.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 // post-time step optimization - functions
 int Maintenances::startDay(int limit) const
@@ -54,4 +54,4 @@ void Unit::calculateAvailableDailyPower(int tsCount)
     }
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

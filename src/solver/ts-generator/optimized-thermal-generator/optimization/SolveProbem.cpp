@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 // call all methods
 bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSett)
@@ -39,4 +39,4 @@ bool OptimizedThermalGenerator::solveProblem(OptProblemSettings& optSett)
     return true;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

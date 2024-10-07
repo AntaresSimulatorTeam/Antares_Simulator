@@ -29,7 +29,7 @@
 #include "randomized-thermal-generator/RandomizedGenerator.h"
 #include "optimized-thermal-generator/main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 bool GenerateRandomizedThermalTimeSeries(Data::Study& study,
@@ -111,4 +111,4 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     }
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

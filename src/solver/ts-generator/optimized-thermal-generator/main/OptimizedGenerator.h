@@ -18,7 +18,7 @@ static const double solverDelta = 10e-4;
 
 using namespace operations_research;
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 class OptimizedThermalGenerator : public GeneratorTempData
@@ -141,7 +141,7 @@ public:
                                        uint year,
                                        bool globalThermalTSgeneration,
                                        Solver::Progression::Task& progr,
-                                       IResultWriter& writer) :
+                                       Solver::IResultWriter& writer) :
      GeneratorTempData(study, progr, writer),
      maintenanceGroup_(maintenanceGroup),
      progression_(progr),
@@ -177,4 +177,4 @@ public:
     void GenerateOptimizedThermalTimeSeries();
 };
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

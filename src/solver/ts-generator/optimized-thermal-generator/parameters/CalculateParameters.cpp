@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 // methods are ordered in the line of execution order
@@ -267,4 +267,4 @@ bool OptimizationParameters::checkTimeHorizon(OptProblemSettings& optSett)
     return true;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

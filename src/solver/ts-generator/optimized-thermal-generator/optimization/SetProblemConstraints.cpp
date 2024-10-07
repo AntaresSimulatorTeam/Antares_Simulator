@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 void OptimizedThermalGenerator::buildProblemConstraints(const OptProblemSettings& optSett)
 {
@@ -245,4 +245,4 @@ void OptimizedThermalGenerator::insertEndSum(MPConstraint* ct,
     }
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

@@ -6,7 +6,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 // support functions
@@ -36,4 +36,4 @@ std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalC
 template<typename T>
 void printColumnToFile(const std::vector<std::vector<T>>& data, const std::string& filename);
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

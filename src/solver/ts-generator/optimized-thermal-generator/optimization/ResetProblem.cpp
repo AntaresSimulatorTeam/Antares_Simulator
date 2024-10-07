@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 void OptimizedThermalGenerator::resetProblem()
 {
@@ -16,4 +16,4 @@ void OptimizedThermalGenerator::resetProblem()
     return;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

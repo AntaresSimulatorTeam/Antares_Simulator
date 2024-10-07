@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 int OptimizationParameters::calculateUnitEarliestStartOfFirstMaintenance(
@@ -68,4 +68,4 @@ std::vector<int> OptimizationParameters::calculateNumberOfMaintenances(
     return numberOfMaintenances;
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator

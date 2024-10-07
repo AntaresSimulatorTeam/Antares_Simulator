@@ -4,7 +4,7 @@
 
 #include "../main/OptimizedGenerator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 // TODO CR27: see if to make this bound or constraint -
@@ -93,4 +93,4 @@ void OptimizedThermalGenerator::fixBoundsMntEnd(const Unit& unit,
     }
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator
