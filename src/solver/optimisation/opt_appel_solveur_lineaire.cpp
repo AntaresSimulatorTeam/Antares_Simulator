@@ -92,19 +92,12 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
 
-    if (solver == nullptr)
-    {
-        Probleme.Contexte = SIMPLEXE_SEUL;
-        Probleme.BaseDeDepartFournie = NON_SPX;
-    }
-    else
+    if (solver != nullptr)
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-
             solver = ORTOOLS_LibererProbleme(solver);
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
-
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
         }
@@ -212,6 +205,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         {
             solver = ORTOOLS_LibererProbleme(solver);
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
+            Probleme.Contexte = SIMPLEXE_SEUL;
+            Probleme.BaseDeDepartFournie = NON_SPX;
 
             logs.info() << " Solver: Standard resolution failed";
             logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
