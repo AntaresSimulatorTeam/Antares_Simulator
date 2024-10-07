@@ -37,11 +37,8 @@ inline static bool CheckTSToRefresh(const Antares::Data::Parameters& g)
 
 void CacheData::initialize(const Antares::Data::Parameters& parameters)
 {
-    haveToRefreshTSSolar = CheckTSToRefresh<Data::timeSeriesSolar>(parameters)
-                           && parameters.renewableGeneration.isAggregated();
     haveToRefreshTSThermal = CheckTSToRefresh<Data::timeSeriesThermal>(parameters);
 
-    refreshIntervalSolar = parameters.refreshIntervalSolar;
     refreshIntervalThermal = parameters.refreshIntervalThermal;
 }
 

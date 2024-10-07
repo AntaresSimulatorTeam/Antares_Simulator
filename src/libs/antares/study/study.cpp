@@ -900,8 +900,6 @@ struct TS final
 
         switch (T)
         {
-        case timeSeriesSolar:
-            return (!(y % s.parameters.refreshIntervalSolar));
         case timeSeriesThermal:
             return (!(y % s.parameters.refreshIntervalThermal));
         }

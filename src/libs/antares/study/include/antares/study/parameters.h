@@ -270,8 +270,6 @@ public:
 
     //! Refresh interval (in years) for timeSeries : Thermal
     uint refreshIntervalThermal;
-    //! Refresh interval (in years) for timeSeries : Solar
-    uint refreshIntervalSolar;
     //@}
 
     //! \name Archives

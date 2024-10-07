@@ -283,7 +283,6 @@ void Parameters::reset()
     nbTimeSeriesThermal = 1;
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
-    refreshIntervalSolar = 100;
     refreshIntervalThermal = 100;
     // Archive
     timeSeriesToArchive = 0; // None
@@ -534,10 +533,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     if (key == "refreshintervalthermal")
     {
         return value.to<uint>(d.refreshIntervalThermal);
-    }
-    if (key == "refreshintervalsolar")
-    {
-        return value.to<uint>(d.refreshIntervalSolar);
     }
     // What timeSeries to refresh ?
     if (key == "refreshtimeseries")
@@ -1235,7 +1230,7 @@ void Parameters::fixRefreshIntervals()
     using T = std::tuple<uint& /* refreshInterval */,
                          enum TimeSeriesType /* ts */,
                          const std::string /* label */>;
-    const std::list<T> timeSeriesToCheck = {{refreshIntervalSolar, timeSeriesSolar, "solar"},
+    const std::list<T> timeSeriesToCheck = {
                                             {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
 
     for (const auto& [refreshInterval, ts, label]: timeSeriesToCheck)
@@ -1612,11 +1607,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         }
 
         // Force mode refresh if the timeseries must be regenerated
-        if (timeSeriesToGenerate & timeSeriesSolar && !(timeSeriesToRefresh & timeSeriesSolar))
-        {
-            timeSeriesToRefresh |= timeSeriesSolar;
-            refreshIntervalSolar = UINT_MAX;
-        }
         if (timeSeriesToGenerate & timeSeriesThermal && !(timeSeriesToRefresh & timeSeriesThermal))
         {
             timeSeriesToRefresh |= timeSeriesThermal;
@@ -1770,7 +1760,6 @@ void Parameters::saveToINI(IniFile& ini) const
         ParametersSaveTimeSeries(section, "intra-modal", intraModal);
         ParametersSaveTimeSeries(section, "inter-modal", interModal);
         section->add("refreshIntervalThermal", refreshIntervalThermal);
-        section->add("refreshIntervalSolar", refreshIntervalSolar);
 
         // Readonly
         section->add("readonly", readonly);
