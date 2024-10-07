@@ -1107,7 +1107,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     }
 
     // ignored since 9.3
-    if (key == "refreshintervalload" || key == "refreshintervalhydro"
+    if (key == "refreshtimeseries" || key == "refreshintervalload" || key == "refreshintervalhydro"
         || key == "refreshintervalwind" || key == "refreshintervalthermal"
         || key == "refreshintervalsolar")
     {
