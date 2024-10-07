@@ -44,7 +44,7 @@ std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsAggregated(const D
 std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area)
 {
     std::array<double, HOURS_PER_YEAR> averageTsRenewable = {};
-    for (const auto& entryCluster : area.renewable.clusters)
+    for (const auto& entryCluster : area.renewable.list)
     {
         auto& cluster = *entryCluster;
         // this is not even necessary - because area.renewable.clusters returns list of only
