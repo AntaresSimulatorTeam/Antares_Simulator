@@ -507,8 +507,6 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
             // Initializations
             set->nbPerformedYears = 0;
             set->nbYears = 0;
-            set->regenerateTS = false;
-            set->yearForTSgeneration = 999999;
         }
 
         set->yearsIndices.push_back(y);
@@ -936,10 +934,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Loop over sets of parallel years to check hydro inputs
     for (const auto& batch: setsOfParallelYears)
     {
-        if (batch.regenerateTS)
-        {
-            break;
-        }
         for (auto year: batch.yearsIndices)
         {
             hydroInputsChecker.Execute(year);
@@ -952,13 +946,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Loop over sets of parallel years to run the simulation
     for (auto& batch: setsOfParallelYears)
     {
-        // 1 - We may want to regenerate the time-series this year.
-        // This is the case when the preprocessors are enabled from the
-        // interface and/or the refresh is enabled.
-        if (batch.regenerateTS)
-        {
-            regenerateTimeSeries(batch.yearForTSgeneration);
-        }
         computeRandomNumbers(randomForParallelYears,
                              batch.yearsIndices,
                              batch.isYearPerformed,
