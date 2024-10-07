@@ -27,6 +27,7 @@
 
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
+#include "basis_status.h"
 
 namespace Antares
 {
@@ -40,7 +41,6 @@ public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
                             const std::vector<bool>& VariablesEntieres,
-                            BasisStatus& basisStatus,
                             bool UseNamedProblems,
                             bool SolverLogs);
 
@@ -51,7 +51,7 @@ private:
 
 public:
     const std::vector<bool>& VariablesEntieres;
-    BasisStatus& basisStatus;
+    BasisStatus basisStatus;
 
     bool isMIP() const;
     bool basisExists() const;

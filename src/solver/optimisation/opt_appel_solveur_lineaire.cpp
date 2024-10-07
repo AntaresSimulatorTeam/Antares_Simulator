@@ -228,7 +228,6 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->VariablesEntieres,
-                                                   ProblemeAResoudre->basisStatus,
                                                    problemeHebdo->NamedProblems,
                                                    options.solverLogs);
 
