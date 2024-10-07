@@ -39,12 +39,9 @@ void CacheData::initialize(const Antares::Data::Parameters& parameters)
 {
     haveToRefreshTSSolar = CheckTSToRefresh<Data::timeSeriesSolar>(parameters)
                            && parameters.renewableGeneration.isAggregated();
-    haveToRefreshTSWind = CheckTSToRefresh<Data::timeSeriesWind>(parameters)
-                          && parameters.renewableGeneration.isAggregated();
     haveToRefreshTSThermal = CheckTSToRefresh<Data::timeSeriesThermal>(parameters);
 
     refreshIntervalSolar = parameters.refreshIntervalSolar;
-    refreshIntervalWind = parameters.refreshIntervalWind;
     refreshIntervalThermal = parameters.refreshIntervalThermal;
 }
 

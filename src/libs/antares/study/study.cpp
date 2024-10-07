@@ -902,8 +902,6 @@ struct TS final
         {
         case timeSeriesSolar:
             return (!(y % s.parameters.refreshIntervalSolar));
-        case timeSeriesWind:
-            return (!(y % s.parameters.refreshIntervalWind));
         case timeSeriesThermal:
             return (!(y % s.parameters.refreshIntervalThermal));
         }
