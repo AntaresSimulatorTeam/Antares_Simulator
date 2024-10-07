@@ -1133,7 +1133,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
     }
 
-    if (key == "refreshintervalload") // ignored since 9.3
+    // ignored since 9.3
+    if (key == "refreshintervalload" || key == "refreshintervalhydro"
+        || key == "refreshintervalwind" || key == "refreshintervalthermal"
+        || key == "refreshintervalsolar")
     {
         return true;
     }
