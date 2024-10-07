@@ -268,8 +268,6 @@ public:
     */
     uint timeSeriesToRefresh;
 
-    //! Refresh interval (in years) for timeSeries : Load
-    uint refreshIntervalLoad;
     //! Refresh interval (in years) for timeSeries : Hydro
     uint refreshIntervalHydro;
     //! Refresh interval (in years) for timeSeries : Wind

@@ -97,12 +97,6 @@ void Destroy(Data::Study& study, uint year)
     bool shouldDestroy;
     switch (T)
     {
-    case Data::timeSeriesLoad:
-    {
-        shouldDestroy = (parameters.refreshIntervalLoad > parameters.nbYears)
-                        || year + parameters.refreshIntervalLoad > parameters.nbYears;
-        break;
-    }
     case Data::timeSeriesSolar:
     {
         shouldDestroy = (parameters.refreshIntervalSolar > parameters.nbYears)

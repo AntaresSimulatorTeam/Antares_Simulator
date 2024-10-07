@@ -34,8 +34,6 @@ public:
     void initialize(const Antares::Data::Parameters& parameters);
 
 public:
-    //! True if the prepro `load` must be used
-    bool haveToRefreshTSLoad;
     //! True if the prepro `solar` must be used
     bool haveToRefreshTSSolar;
     //! True if the prepro `wind` must be used
@@ -45,8 +43,6 @@ public:
     //! True if the prepro `thermal` must be used
     bool haveToRefreshTSThermal;
 
-    //! Refresh time interval for Load
-    unsigned int refreshIntervalLoad;
     //! Refresh time interval for Solar
     unsigned int refreshIntervalSolar;
     //! Refresh time interval for Hydro
