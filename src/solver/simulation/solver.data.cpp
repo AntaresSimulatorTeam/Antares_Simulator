@@ -30,7 +30,7 @@ namespace
 template<int TS>
 inline static bool CheckTSToRefresh(const Antares::Data::Parameters& g)
 {
-    return (TS & g.timeSeriesToRefresh) && (TS & g.timeSeriesToGenerate);
+    return false;
 }
 
 } // namespace

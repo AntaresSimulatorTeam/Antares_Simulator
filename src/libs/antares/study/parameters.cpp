@@ -281,8 +281,6 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
-    // Time-series refresh
-    timeSeriesToRefresh = 0; // None
     // Archive
     timeSeriesToArchive = 0; // None
     // Pre-Processor
@@ -528,11 +526,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         // This data is among solver data, but is useless while running a simulation
         // Only by TS generator. We skip it here (otherwise, we get a reading error).
         return true;
-    }
-    // What timeSeries to refresh ?
-    if (key == "refreshtimeseries")
-    {
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToRefresh);
     }
     // readonly
     if (key == "readonly")
@@ -1226,12 +1219,6 @@ void Parameters::fixGenRefreshForNTC()
         logs.error() << "Time-series generation is not available for transmission capacities. It "
                         "will be automatically disabled.";
     }
-    if ((timeSeriesTransmissionCapacities & timeSeriesToRefresh) != 0)
-    {
-        timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
-        logs.error() << "Time-series refresh is not available for transmission capacities. It will "
-                        "be automatically disabled.";
-    }
     if ((timeSeriesTransmissionCapacities & interModal) != 0)
     {
         interModal &= ~timeSeriesTransmissionCapacities;
@@ -1549,37 +1536,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         interModal = 0;
     }
 
-    // Preprocessors
-    if (!timeSeriesToGenerate)
-    {
-        // Nothing to refresh
-        timeSeriesToRefresh = 0;
-    }
-    else
-    {
-        // Removing `refresh`
-        if (!(timeSeriesToGenerate & timeSeriesLoad))
-        {
-            timeSeriesToRefresh &= ~timeSeriesLoad;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesSolar))
-        {
-            timeSeriesToRefresh &= ~timeSeriesSolar;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesWind))
-        {
-            timeSeriesToRefresh &= ~timeSeriesWind;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesHydro))
-        {
-            timeSeriesToRefresh &= ~timeSeriesHydro;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesThermal))
-        {
-            timeSeriesToRefresh &= ~timeSeriesThermal;
-        }
-    }
-
     if (options.noTimeseriesImportIntoInput && timeSeriesToArchive != 0)
     {
         logs.info() << "  :: ignoring timeseries importation to input";
@@ -1722,7 +1678,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
 
         // Refresh
-        ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
         ParametersSaveTimeSeries(section, "intra-modal", intraModal);
         ParametersSaveTimeSeries(section, "inter-modal", interModal);
 

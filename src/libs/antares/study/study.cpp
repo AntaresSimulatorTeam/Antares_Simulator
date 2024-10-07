@@ -893,10 +893,6 @@ struct TS final
 {
     static bool IsNeeded(const Study& s, const uint y)
     {
-        if (not(T & s.parameters.timeSeriesToRefresh))
-        {
-            return false;
-        }
         return false;
     }
 };

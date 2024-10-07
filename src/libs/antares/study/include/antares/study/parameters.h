@@ -253,17 +253,6 @@ public:
     uint nbTimeSeriesSolar;
     //@}
 
-    //! \name Time-series refresh
-    //@{
-    /*!
-    ** \brief Time series to refresh on-line
-    **
-    ** This value is a mask bits for timeSeries
-    ** \see TimeSeries
-    */
-    uint timeSeriesToRefresh;
-    //@}
-
     //! \name Archives
     //@{
     /*!

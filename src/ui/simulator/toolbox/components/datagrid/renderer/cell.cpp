@@ -264,12 +264,12 @@ RefreshTsCell::RefreshTsCell(TimeSeriesType ts) : Cell(ts)
 
 wxString RefreshTsCell::cellValue() const
 {
-    return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_)) ? wxT("Yes") : wxT("No");
+    return "No";
 }
 
 double RefreshTsCell::cellNumericValue() const
 {
-    return (0 != (study_->parameters.timeSeriesToRefresh & tsKind_)) ? 1. : 0.;
+    return 0;
 }
 
 bool RefreshTsCell::setCellValue(const String& value)
@@ -278,10 +278,6 @@ bool RefreshTsCell::setCellValue(const String& value)
     if (not convertToDouble(value, valueDouble))
         return false;
 
-    if (Math::Zero(valueDouble))
-        study_->parameters.timeSeriesToRefresh &= ~tsKind_;
-    else
-        study_->parameters.timeSeriesToRefresh |= tsKind_;
     return true;
 }
 
@@ -338,9 +334,7 @@ bool RefreshSpanCell::setCellValue(const String& value)
 
 IRenderer::CellStyle RefreshSpanCell::cellStyle() const
 {
-    return (isTSgeneratorOn() && 0 != (study_->parameters.timeSeriesToRefresh & tsKind_))
-             ? IRenderer::cellStyleDefault
-             : IRenderer::cellStyleDefaultDisabled;
+    return IRenderer::cellStyleDefaultDisabled;
 }
 // ============================
 //  Seasonal correlation cell
