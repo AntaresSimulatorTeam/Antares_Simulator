@@ -44,7 +44,7 @@ namespace Antares::Data
 {
 namespace // anonymous
 {
-static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename)
+static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& filename)
 {
     // Reset to 0
     list.each(
@@ -1160,8 +1160,8 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Thermal data, specific to areas
     {
         logs.info() << "Loading thermal clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "thermal" << SEP << "areas.ini";
-        ret = AreaListLoadThermalDataFromFile(*this, buffer) && ret;
+        fs::path thermalPath = pStudy.folderInput / "thermal" / "areas.ini";
+        ret = AreaListLoadThermalDataFromFile(*this, thermalPath) && ret;
 
         // The cluster list must be loaded before the method
         // ensureDataIsInitialized is called
