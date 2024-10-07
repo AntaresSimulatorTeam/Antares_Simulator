@@ -42,7 +42,7 @@ struct Fixture
 
     std::vector<LinearProblemFiller*> fillers;
     LinearProblemData LP_Data;
-    FillContext ctx;
+    FillContext ctx = {0, 0}; // dummy value for other tests than context
     std::unique_ptr<ILinearProblem> pb;
 };
 
@@ -119,8 +119,7 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
     auto varFiller = std::make_unique<VarFillerContext>();
     fillers = {varFiller.get()};
 
-    ctx.setFirstTimeStep(0);
-    ctx.setLastTimeStep(5);
+    ctx = FillContext(0, 5);
 
     ctx.scenariosSelected.push_back(0);
     ctx.scenariosSelected.push_back(2);
