@@ -203,7 +203,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     EnvForLoading env(study.areas, study.header.version);
     env.folder = folder;
 
-    env.iniFilename = env.folder / "bindingconstraints.ini";
+    env.iniFilename = folder / "bindingconstraints.ini";
     IniFile ini;
     if (!ini.open(env.iniFilename))
     {

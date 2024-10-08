@@ -48,7 +48,7 @@ public:
 
     Yuni::Clob buffer;
     Matrix<>::BufferType matrixBuffer;
-    std::filesystem::path folder;
+    Yuni::Clob folder;
 
     //! List of areas
     AreaList& areaList;
