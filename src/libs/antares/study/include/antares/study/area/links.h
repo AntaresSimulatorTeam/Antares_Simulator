@@ -69,7 +69,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(const StudyVersion& version, const AnyString& folder);
+    bool loadTimeSeries(const StudyVersion& version, const std::filesystem::path& folder);
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
@@ -121,8 +121,8 @@ public:
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
-    bool linkLoadTimeSeries_for_version_below_810(const AnyString& folder);
-    bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_below_810(const std::filesystem::path& folder);
+    bool linkLoadTimeSeries_for_version_820_and_later(const std::filesystem::path& folder);
     NamePair getNamePair() const;
 
 public:

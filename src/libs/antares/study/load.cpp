@@ -28,9 +28,7 @@
 
 namespace fs = std::filesystem;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 bool Study::internalLoadHeader(const fs::path& path)
 {
@@ -326,11 +324,10 @@ bool Study::reloadXCastData()
           fs::path solarPath = folderInput / "solar" / "prepro" / area.id.to<std::string>();
           ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
           // Wind
-          fs::path windPath= folderInput / "wind" / "prepro" / area.id.to<std::string>();
+          fs::path windPath = folderInput / "wind" / "prepro" / area.id.to<std::string>();
           ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
       });
     return ret;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
