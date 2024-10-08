@@ -349,10 +349,21 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         solver->EnableOutput();
     }
     TuneSolverSpecificOptions(solver, options.ortoolsSolver, options.solverParameters);
+    const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
+    // Provide an initial simplex basis, if any
+    if (warmStart && Probleme->basisExists())
+    {
+        Probleme->basisStatus.setStartingBasis(solver);
+    }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
+        // Save the final simplex basis for next resolutions
+        if (warmStart && keepBasis)
+        {
+            Probleme->basisStatus.extractBasis(solver);
+        }
     }
 
     return solver;
