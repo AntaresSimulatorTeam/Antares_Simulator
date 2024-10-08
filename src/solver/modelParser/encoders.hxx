@@ -39,8 +39,8 @@ struct convert<Antares::Solver::ModelParser::Parameter>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.time_dependent = node["time-dependent"].as<bool>();
-        rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
+        rhs.time_dependent = node["time-dependent"].as<bool>(true);
+        rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
         return true;
     }
 };
@@ -56,7 +56,7 @@ struct convert<Antares::Solver::ModelParser::ValueType>
         }
         if (node.as<std::string>() == "FLOAT")
         {
-            rhs = Antares::Solver::ModelParser::ValueType::FLOAT;
+            rhs = Antares::Solver::ModelParser::ValueType::CONTINUOUS;
         }
         else if (node.as<std::string>() == "INTEGER")
         {
@@ -87,7 +87,7 @@ struct convert<Antares::Solver::ModelParser::Variable>
         rhs.lower_bound = node["lower-bound"].as<std::string>();
         rhs.upper_bound = node["upper-bound"].as<std::string>();
         rhs.variable_type = node["variable-type"].as<Antares::Solver::ModelParser::ValueType>(
-          Antares::Solver::ModelParser::ValueType::FLOAT);
+          Antares::Solver::ModelParser::ValueType::CONTINUOUS);
         return true;
     }
 };

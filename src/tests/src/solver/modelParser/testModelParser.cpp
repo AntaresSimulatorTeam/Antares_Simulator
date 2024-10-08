@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
                   description: "model_description"
                   parameters:
                       - id: "param_name"
-                        time-dependent: false
+                        time-dependent: FALSE
                         scenario-dependent: false
                   variables: []
                   ports: []
@@ -250,6 +250,34 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[1].id, "param_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[1].time_dependent, true);
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[1].scenario_dependent, true);
+}
+
+// Time dependent and scenario dependant default value are true
+BOOST_AUTO_TEST_CASE(test_library_model_parameters_default_values)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters:
+                      - id: "param_name"
+                  variables: []
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  objective: "objective"
+        )"s;
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_CHECK(libraryObj.models.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].parameters.size() == 1);
+    BOOST_CHECK(libraryObj.models[0].parameters[0].id == "param_name");
+    BOOST_CHECK(libraryObj.models[0].parameters[0].time_dependent == true);
+    BOOST_CHECK(libraryObj.models[0].parameters[0].scenario_dependent == true);
 }
 
 // Test library with one model containing variables
@@ -388,8 +416,8 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
     auto& var4 = model.variables[3];
     BOOST_CHECK_EQUAL(var1.variable_type, Antares::Solver::ModelParser::ValueType::BOOL);
     BOOST_CHECK_EQUAL(var2.variable_type, Antares::Solver::ModelParser::ValueType::INTEGER);
-    BOOST_CHECK_EQUAL(var3.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
-    BOOST_CHECK_EQUAL(var4.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
+    BOOST_CHECK_EQUAL(var3.variable_type, Antares::Solver::ModelParser::ValueType::CONTINUOUS);
+    BOOST_CHECK_EQUAL(var4.variable_type, Antares::Solver::ModelParser::ValueType::CONTINUOUS);
 }
 
 // Test library with one model containing ports

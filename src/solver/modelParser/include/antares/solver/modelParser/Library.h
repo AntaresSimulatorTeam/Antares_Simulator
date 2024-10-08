@@ -37,7 +37,7 @@ struct Parameter
 
 enum class ValueType
 {
-    FLOAT,
+    CONTINUOUS,
     INTEGER,
     BOOL
 };
@@ -47,8 +47,8 @@ inline std::string toString(const ValueType& value_type)
     using namespace std::string_literals;
     switch (value_type)
     {
-    case ValueType::FLOAT:
-        return "FLOAT"s;
+    case ValueType::CONTINUOUS:
+        return "CONTINUOUS"s;
     case ValueType::INTEGER:
         return "INTEGER"s;
     case ValueType::BOOL:
@@ -63,8 +63,8 @@ inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
     using namespace std::string_literals;
     switch (value_type)
     {
-    case ValueType::FLOAT:
-        os << "FLOAT"s;
+    case ValueType::CONTINUOUS:
+        os << "CONTINUOUS"s;
         break;
     case ValueType::INTEGER:
         os << "INTEGER"s;
