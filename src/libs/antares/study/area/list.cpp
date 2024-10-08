@@ -783,7 +783,8 @@ static void readAdqPatchMode(Study& study, Area& area)
         return;
     }
 
-    fs::path adqPath = study.folderInput / "areas" / area.id.to<fs::path>() / "adequacy_patch.ini";
+    fs::path adqPath = study.folderInput / "areas" / area.id.to<std::string>()
+                       / "adequacy_patch.ini";
     IniFile ini;
     if (ini.open(adqPath))
     {
