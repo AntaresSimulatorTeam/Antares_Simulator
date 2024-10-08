@@ -28,6 +28,8 @@
 using namespace Antares;
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 #define SEP IO::Separator
 
 namespace Antares::Data
@@ -132,7 +134,7 @@ static bool loadProperties(Study& study,
     return ret;
 }
 
-bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
+bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 {
     auto& buffer = study.bufferLoadingTS;
     bool ret = true;
@@ -174,7 +176,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                       enabledModeIsChanged = true;
                   }
 
-                  ret = area.hydro.LoadDailyMaxEnergy(folder, area.id) && ret;
+                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
 
                   if (enabledModeIsChanged)
                   {
@@ -183,7 +185,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
               }
               else
               {
-                  ret = area.hydro.LoadDailyMaxEnergy(folder, area.id) && ret;
+                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
 
                   // Check is moved here, because in case of old study
                   // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.
@@ -192,36 +194,38 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
               }
           }
 
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "creditmodulations_" << area.id << '.' << study.inputExtension;
-          ret = area.hydro.creditModulation.loadFromCSVFile(buffer,
+          fs::path capacityPath = folder / "common" / "capacity";
+
+          std::string creditId = "creditmodulations_" + area.id + ".txt";
+          fs::path creditPath = capacityPath / creditId;
+          ret = area.hydro.creditModulation.loadFromCSVFile(creditPath.string(),
                                                             101,
                                                             2,
                                                             Matrix<>::optFixedSize,
                                                             &study.dataBuffer)
                 && ret;
 
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                         << area.id << '.' << study.inputExtension;
-          ret = area.hydro.reservoirLevel.loadFromCSVFile(buffer,
+          std::string reservoirId = "reservoir_" + area.id + ".txt";
+          fs::path reservoirPath = capacityPath / creditId;
+          ret = area.hydro.reservoirLevel.loadFromCSVFile(reservoirPath.string(),
                                                           3,
                                                           DAYS_PER_YEAR,
                                                           Matrix<>::optFixedSize,
                                                           &study.dataBuffer)
                 && ret;
 
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
-                         << area.id << '.' << study.inputExtension;
-          ret = area.hydro.waterValues.loadFromCSVFile(buffer,
+          std::string waterValueId = "waterValues_" + area.id + ".txt";
+          fs::path waterValuePath = capacityPath / creditId;
+          ret = area.hydro.waterValues.loadFromCSVFile(waterValuePath.string(),
                                                        101,
                                                        DAYS_PER_YEAR,
                                                        Matrix<>::optFixedSize,
                                                        &study.dataBuffer)
                 && ret;
 
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "inflowPattern_" << area.id << '.' << study.inputExtension;
-          ret = area.hydro.inflowPattern.loadFromCSVFile(buffer,
+          std::string inflowId = "inflowPattern_" + area.id + ".txt";
+          fs::path inflowPath = capacityPath / creditId;
+          ret = area.hydro.inflowPattern.loadFromCSVFile(inflowPath.string(),
                                                          1,
                                                          DAYS_PER_YEAR,
                                                          Matrix<>::optFixedSize,
@@ -230,7 +234,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
       });
 
     IniFile ini;
-    if (not ini.open(buffer.clear() << folder << SEP << "hydro.ini"))
+    if (not ini.open(folder / "hydro.ini"))
     {
         return false;
     }
