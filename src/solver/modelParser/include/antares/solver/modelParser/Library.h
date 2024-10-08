@@ -79,50 +79,6 @@ inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
     return os;
 }
 
-enum class ValueType
-{
-    FLOAT,
-    INTEGER,
-    BOOL
-};
-
-inline std::string toString(const ValueType& value_type)
-{
-    using namespace std::string_literals;
-    switch (value_type)
-    {
-    case ValueType::FLOAT:
-        return "FLOAT"s;
-    case ValueType::INTEGER:
-        return "INTEGER"s;
-    case ValueType::BOOL:
-        return "BOOL"s;
-    default:
-        return "UNKNOWN"s;
-    }
-}
-
-inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
-{
-    using namespace std::string_literals;
-    switch (value_type)
-    {
-    case ValueType::FLOAT:
-        os << "FLOAT"s;
-        break;
-    case ValueType::INTEGER:
-        os << "INTEGER"s;
-        break;
-    case ValueType::BOOL:
-        os << "BOOL"s;
-        break;
-    default:
-        os << "UNKNOWN"s;
-        break;
-    }
-    return os;
-}
-
 struct Variable
 {
     std::string id;

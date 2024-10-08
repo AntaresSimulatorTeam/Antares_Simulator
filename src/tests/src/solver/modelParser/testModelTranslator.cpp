@@ -92,13 +92,13 @@ BOOST_AUTO_TEST_CASE(port_type_with_empty_fileds_properly_translated)
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Id(), "port2");
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Description(), "impedance port");
     BOOST_CHECK(lib.PortTypes().at("port2").Fields().empty());
-    BOOST_REQUIRE_EQUAL(lib.portTypes().size(), 2);
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").id(), "port1");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port1").description(), "flow port");
-    BOOST_CHECK(lib.portTypes().at("port1").fields().empty());
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").id(), "port2");
-    BOOST_CHECK_EQUAL(lib.portTypes().at("port2").description(), "impedance port");
-    BOOST_CHECK(lib.portTypes().at("port2").fields().empty());
+    BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 2);
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Id(), "port1");
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port1").Description(), "flow port");
+    BOOST_CHECK(lib.PortTypes().at("port1").Fields().empty());
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Id(), "port2");
+    BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Description(), "impedance port");
+    BOOST_CHECK(lib.PortTypes().at("port2").Fields().empty());
 }
 
 // Test library with port types and fields
@@ -247,14 +247,15 @@ BOOST_AUTO_TEST_CASE(model_constraints_properly_translated)
 BOOST_AUTO_TEST_CASE(multiple_models_properly_translated)
 {
     ModelParser::Library library;
-    ModelParser::Model model1{.id = "model1",
-                              .description = "description",
-                              .parameters = {{"param1", true, false}, {"param2", false, false}},
-                              .variables = {{"varP", "7", "pmin", ModelParser::ValueType::CONTINUOUS}},
-                              .ports = {},
-                              .port_field_definitions = {},
-                              .constraints = {},
-                              .objective = "objectives"};
+    ModelParser::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}, {"param2", false, false}},
+      .variables = {{"varP", "7", "pmin", ModelParser::ValueType::CONTINUOUS}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .objective = "objectives"};
     ModelParser::Model model2{
       .id = "model2",
       .description = "description",

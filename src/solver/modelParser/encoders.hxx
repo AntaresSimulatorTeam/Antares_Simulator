@@ -56,7 +56,7 @@ struct convert<Antares::Solver::ModelParser::ValueType>
         }
         if (node.as<std::string>() == "FLOAT")
         {
-            rhs = Antares::Solver::ModelParser::ValueType::FLOAT;
+            rhs = Antares::Solver::ModelParser::ValueType::CONTINUOUS;
         }
         else if (node.as<std::string>() == "INTEGER")
         {
