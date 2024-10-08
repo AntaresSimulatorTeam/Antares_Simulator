@@ -238,40 +238,32 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
     if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
         || timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
-        buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
-                       << "correlation.ini";
-        preproLoadCorrelation.loadFromFile(*this, buffer);
+        fs::path loadPath = folderInput / "load" / "prepro" / "correlation.ini";
+        preproLoadCorrelation.loadFromFile(*this, loadPath.string());
     }
 
     // Solar
     if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
         || timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
-        buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
-                       << "correlation.ini";
-        preproSolarCorrelation.loadFromFile(*this, buffer);
+        fs::path solarPath = folderInput / "solar" / "prepro" / "correlation.ini";
+        preproSolarCorrelation.loadFromFile(*this, solarPath.string());
     }
 
     // Wind
+    if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh
+        || timeSeriesWind & parameters.timeSeriesToGenerate)
     {
-        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh
-            || timeSeriesWind & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproWindCorrelation.loadFromFile(*this, buffer);
-        }
+        fs::path windPath = folderInput / "wind" / "prepro" / "correlation.ini";
+        preproWindCorrelation.loadFromFile(*this, windPath.string());
     }
 
     // Hydro
+    if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh)
+        || (timeSeriesHydro & parameters.timeSeriesToGenerate))
     {
-        if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh)
-            || (timeSeriesHydro & parameters.timeSeriesToGenerate))
-        {
-            buffer.clear() << folderInput << SEP << "hydro" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproHydroCorrelation.loadFromFile(*this, buffer);
-        }
+        fs::path hydroPath = folderInput / "hydro" / "prepro" / "correlation.ini";
+        preproHydroCorrelation.loadFromFile(*this, hydroPath.string());
     }
     return true;
 }
