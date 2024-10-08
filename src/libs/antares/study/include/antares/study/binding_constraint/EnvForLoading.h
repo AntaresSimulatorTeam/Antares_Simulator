@@ -42,13 +42,13 @@ public:
     }
 
     //! INI file
-    Yuni::Clob iniFilename;
+    std::filesystem::path iniFilename;
     //! Current section
     IniFile::Section* section;
 
     Yuni::Clob buffer;
     Matrix<>::BufferType matrixBuffer;
-    Yuni::Clob folder;
+    std::filesystem::path folder;
 
     //! List of areas
     AreaList& areaList;

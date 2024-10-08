@@ -273,7 +273,7 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     // All checks are performed in 'loadFromFolder'
     // (actually internalLoadFromFolder)
     fs::path constraintPath = folderInput / "bindingconstraints";
-    bool r = bindingConstraints.loadFromFolder(*this, options, buffer);
+    bool r = bindingConstraints.loadFromFolder(*this, options, constraintPath);
     if (r)
     {
         r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
