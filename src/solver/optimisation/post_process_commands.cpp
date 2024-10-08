@@ -43,29 +43,27 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     unsigned int year = opt_runtime_data.year;
-    area_list_.each(
-      [&](Data::Area& area)
-      {
-          double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
-          for (uint h = 0; h != nbHoursInWeek; ++h)
-              dtgmrg[h] = 0.;
+    area_list_.each([&](Data::Area& area) {
+        double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
+        for (uint h = 0; h != nbHoursInWeek; ++h)
+            dtgmrg[h] = 0.;
 
-          if (not area.thermal.list.empty())
-          {
-              auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
+        if (not area.thermal.list.empty())
+        {
+            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
 
-              for (const auto& cluster : area.thermal.list)
-              {
-                  const auto& availableProduction = cluster->series.getColumn(year);
-                  for (uint h = 0; h != nbHoursInWeek; ++h)
-                  {
-                      double production = hourlyResults.ProductionThermique[h]
-                                            .ProductionThermiqueDuPalier[cluster->index];
-                      dtgmrg[h] += availableProduction[h + hourInYear] - production;
-                  }
-              }
-          }
-      });
+            for (const auto& cluster : area.thermal.list)
+            {
+                const auto& availableProduction = cluster->series.getColumn(year);
+                for (uint h = 0; h != nbHoursInWeek; ++h)
+                {
+                    double production = hourlyResults.ProductionThermique[h]
+                                          .ProductionThermiqueDuPalier[cluster->index];
+                    dtgmrg[h] += availableProduction[h + hourInYear] - production;
+                }
+            }
+        }
+    });
 }
 
 // -----------------------------
