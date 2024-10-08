@@ -283,16 +283,15 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 
 bool Study::internalLoadSets()
 {
-    const fs::path path = fs::path(folderInput.c_str()) / "areas" / "sets.ini";
     // Set of areas
     logs.info();
     logs.info() << "Loading sets of areas...";
 
     // filename
-    buffer.clear() << folderInput << SEP << "areas" << SEP << "sets.ini";
+    const fs::path setPath = folderInput / "areas" / "sets.ini";
 
     // Load the rules
-    if (setsOfAreas.loadFromFile(path))
+    if (setsOfAreas.loadFromFile(setPath))
     {
         // Apply the rules
         SetHandlerAreas handler(areas);
@@ -325,14 +324,14 @@ bool Study::reloadXCastData()
           assert(area.wind.prepro);
 
           // Load
-          buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
-          ret = area.load.prepro->loadFromFolder(buffer) && ret;
+          fs::path loadPath = folderInput / "load" / "prepro" / area.id.to<std::string>();
+          ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
           // Solar
-          buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
-          ret = area.solar.prepro->loadFromFolder(buffer) && ret;
+          fs::path solarPath = folderInput / "solar" / "prepro" / area.id.to<std::string>();
+          ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
           // Wind
-          buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
-          ret = area.wind.prepro->loadFromFolder(buffer) && ret;
+          fs::path windPath= folderInput / "wind" / "prepro" / area.id.to<std::string>();
+          ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
       });
     return ret;
 }
