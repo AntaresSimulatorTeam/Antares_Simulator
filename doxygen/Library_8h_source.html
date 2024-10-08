@@ -180,7 +180,7 @@ $(document).ready(function(){initNavTree('Library_8h_source.html',''); initResiz
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">enum class</span> ValueType</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    FLOAT,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    CONTINUOUS,</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    INTEGER,</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    BOOL</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
@@ -190,8 +190,8 @@ $(document).ready(function(){initNavTree('Library_8h_source.html',''); initResiz
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">switch</span> (value_type)</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">case</span> ValueType::FLOAT:</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;FLOAT&quot;</span>s;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">case</span> ValueType::CONTINUOUS:</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;CONTINUOUS&quot;</span>s;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">case</span> ValueType::INTEGER:</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;INTEGER&quot;</span>s;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">case</span> ValueType::BOOL:</div>
@@ -206,8 +206,8 @@ $(document).ready(function(){initNavTree('Library_8h_source.html',''); initResiz
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">switch</span> (value_type)</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">case</span> ValueType::FLOAT:</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        os &lt;&lt; <span class="stringliteral">&quot;FLOAT&quot;</span>s;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">case</span> ValueType::CONTINUOUS:</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        os &lt;&lt; <span class="stringliteral">&quot;CONTINUOUS&quot;</span>s;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">case</span> ValueType::INTEGER:</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        os &lt;&lt; <span class="stringliteral">&quot;INTEGER&quot;</span>s;</div>
