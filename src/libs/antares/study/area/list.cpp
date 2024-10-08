@@ -776,38 +776,38 @@ bool AreaList::saveToFolder(const AnyString& folder) const
     return ret;
 }
 
-template<class StringT>
-static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
+static void readAdqPatchMode(Study& study, Area& area)
 {
-    if (study.header.version >= StudyVersion(8, 3))
+    if (study.header.version < StudyVersion(8, 3))
     {
-        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
-                       << "adequacy_patch.ini";
-        IniFile ini;
-        if (ini.open(buffer))
-        {
-            auto* section = ini.find("adequacy-patch");
-            for (auto* p = section->firstProperty; p; p = p->next)
-            {
-                CString<30, false> tmp;
-                tmp = p->key;
-                tmp.toLower();
-                if (tmp == "adequacy-patch-mode")
-                {
-                    auto value = (p->value).toLower();
+        return;
+    }
 
-                    if (value == "virtual")
-                    {
-                        area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
-                    }
-                    else if (value == "inside")
-                    {
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
-                    }
-                    else
-                    {
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
-                    }
+    fs::path adqPath = study.folderInput / "areas" / area.id.to<fs::path>() / "adequacy_patch.ini";
+    IniFile ini;
+    if (ini.open(adqPath))
+    {
+        auto* section = ini.find("adequacy-patch");
+        for (auto* p = section->firstProperty; p; p = p->next)
+        {
+            CString<30, false> tmp;
+            tmp = p->key;
+            tmp.toLower();
+            if (tmp == "adequacy-patch-mode")
+            {
+                auto value = (p->value).toLower();
+
+                if (value == "virtual")
+                {
+                    area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
+                }
+                else if (value == "inside")
+                {
+                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                }
+                else
+                {
+                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
                 }
             }
         }
@@ -1016,7 +1016,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Adequacy patch
-    readAdqPatchMode(study, area, buffer);
+    readAdqPatchMode(study, area);
 
     // Nodal Optimization
     fs::path nodalPath = study.folderInput / "areas" / area.id.to<std::string>()
