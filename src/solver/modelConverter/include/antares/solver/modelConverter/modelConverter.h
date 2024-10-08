@@ -21,16 +21,21 @@
  */
 
 #pragma once
-#include "antares/solver/modelParser/Library.h"
 
-namespace Antares::Solver::ModelParser
+namespace Antares::Solver
 {
-class Parser
+namespace ObjectModel
 {
-public:
-    Parser() = default;
-    ~Parser() = default;
+class Library;
+}
 
-    Library parse(const std::string& content);
-};
-} // namespace Antares::Solver::ModelParser
+namespace ModelParser
+{
+class Library;
+}
+} // namespace Antares::Solver
+
+namespace Antares::Solver::ModelConverter
+{
+Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library);
+}

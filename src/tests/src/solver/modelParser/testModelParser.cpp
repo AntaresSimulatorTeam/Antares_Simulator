@@ -30,7 +30,7 @@
 using namespace std::string_literals;
 
 // Test empty library
-BOOST_AUTO_TEST_CASE(test_empty_library)
+BOOST_AUTO_TEST_CASE(EmpyLibrary_is_valid)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(test_empty_library)
 }
 
 // Test library with id and description
-BOOST_AUTO_TEST_CASE(test_library_id_description)
+BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -61,12 +61,10 @@ BOOST_AUTO_TEST_CASE(test_library_id_description)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.id, "test_id");
     BOOST_CHECK_EQUAL(libraryObj.description, "test_description");
-    BOOST_CHECK(libraryObj.port_types.empty());
-    BOOST_CHECK(libraryObj.models.empty());
 }
 
 // Test library with port types
-BOOST_AUTO_TEST_CASE(test_library_port_types)
+BOOST_AUTO_TEST_CASE(port_types_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -77,7 +75,7 @@ BOOST_AUTO_TEST_CASE(test_library_port_types)
                 - id: "porttype_id"
                   description: "porttype_description"
                   fields:
-                      - name: "port_name"
+                      - id: "port_name"
             models: []
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
@@ -89,7 +87,7 @@ BOOST_AUTO_TEST_CASE(test_library_port_types)
 }
 
 // Test library with multiple port types
-BOOST_AUTO_TEST_CASE(test_library_multiple_port_types)
+BOOST_AUTO_TEST_CASE(library_can_contain_multiple_port_types)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -100,11 +98,11 @@ BOOST_AUTO_TEST_CASE(test_library_multiple_port_types)
                 - id: "porttype_id1"
                   description: "porttype_description1"
                   fields:
-                      - name: "port_name1"
+                      - id: "port_name1"
                 - id: "porttype_id2"
                   description: "porttype_description2"
                   fields:
-                      - name: "port_name2"
+                      - id: "port_name2"
             models: []
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
@@ -120,7 +118,7 @@ BOOST_AUTO_TEST_CASE(test_library_multiple_port_types)
 }
 
 // Test library with models
-BOOST_AUTO_TEST_CASE(test_library_models)
+BOOST_AUTO_TEST_CASE(models_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const std::string library = R"(
@@ -152,7 +150,7 @@ BOOST_AUTO_TEST_CASE(test_library_models)
 }
 
 // Test library with multiple models
-BOOST_AUTO_TEST_CASE(test_library_multiple_models)
+BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -189,7 +187,7 @@ BOOST_AUTO_TEST_CASE(test_library_multiple_models)
 }
 
 // Test library with one model containing parameters
-BOOST_AUTO_TEST_CASE(test_library_model_parameters)
+BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -201,7 +199,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters)
                 - id: "model_id"
                   description: "model_description"
                   parameters:
-                      - name: "param_name"
+                      - id: "param_name"
                         time-dependent: false
                         scenario-dependent: false
                   variables: []
@@ -213,13 +211,13 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].parameters.size(), 1);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].name, "param_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].id, "param_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].time_dependent, false);
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].scenario_dependent, false);
 }
 
 // Test library with one model containing multiple parameters
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_parameters)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -231,10 +229,10 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_parameters)
                 - id: "model_id"
                   description: "model_description"
                   parameters:
-                      - name: "param_name1"
+                      - id: "param_name1"
                         time-dependent: false
                         scenario-dependent: false
-                      - name: "param_name2"
+                      - id: "param_name2"
                         time-dependent: true
                         scenario-dependent: true
                   variables: []
@@ -246,16 +244,16 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_parameters)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].parameters.size(), 2);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].name, "param_name1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].id, "param_name1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].time_dependent, false);
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].scenario_dependent, false);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[1].name, "param_name2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[1].id, "param_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[1].time_dependent, true);
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[1].scenario_dependent, true);
 }
 
 // Test library with one model containing variables
-BOOST_AUTO_TEST_CASE(test_library_model_variables)
+BOOST_AUTO_TEST_CASE(variables_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -268,7 +266,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables)
                   description: "model_description"
                   parameters: []
                   variables:
-                      - name: "var_name"
+                      - id: "var_name"
                         lower-bound: 0
                         upper-bound: 1
                   ports: []
@@ -279,13 +277,13 @@ BOOST_AUTO_TEST_CASE(test_library_model_variables)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 1);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].name, "var_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, 0);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "0");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "1");
 }
 
 // Test library with one model containing multiple variables
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_variables)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -298,10 +296,10 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_variables)
                   description: "model_description"
                   parameters: []
                   variables:
-                      - name: "var_name1"
+                      - id: "var_name1"
                         lower-bound: 0
                         upper-bound: 1
-                      - name: "var_name2"
+                      - id: "var_name2"
                         lower-bound: -1
                         upper-bound: 2
                   ports: []
@@ -312,16 +310,90 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_variables)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 2);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].name, "var_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, 0);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, 1);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].name, "var_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound, -1);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound, 2);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "0");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].id, "var_name2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound, "-1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound, "2");
+}
+
+// variable bounds are strings expressions
+BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters: []
+                  variables:
+                      - id: "var_name"
+                        lower-bound: "near-zero"
+                        upper-bound: "pmax"
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  objective: "objective"
+        )"s;
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "near-zero");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "pmax");
+}
+
+// variable variable-type
+BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+                  description: "model_description"
+                  parameters: []
+                  variables:
+                    - id: "var1"
+                      lower-bound: 0
+                      upper-bound: 1
+                      variable-type: "BOOL"
+                    - id: "var2"
+                      lower-bound: 0
+                      upper-bound: 1
+                      variable-type: "INTEGER"
+                    - id: "var3"
+                      lower-bound: 0
+                      upper-bound: 1
+                      variable-type: "FLOAT"
+                    - id: "var4"
+                      lower-bound: 0
+                      upper-bound: 1
+                  ports: []
+                  port-field-definitions: []
+                  constraints: []
+                  objective: "objective"
+        )"s;
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    auto& model = libraryObj.models[0];
+    auto& var1 = model.variables[0];
+    auto& var2 = model.variables[1];
+    auto& var3 = model.variables[2];
+    auto& var4 = model.variables[3];
+    BOOST_CHECK_EQUAL(var1.variable_type, Antares::Solver::ModelParser::ValueType::BOOL);
+    BOOST_CHECK_EQUAL(var2.variable_type, Antares::Solver::ModelParser::ValueType::INTEGER);
+    BOOST_CHECK_EQUAL(var3.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
+    BOOST_CHECK_EQUAL(var4.variable_type, Antares::Solver::ModelParser::ValueType::FLOAT);
 }
 
 // Test library with one model containing ports
-BOOST_AUTO_TEST_CASE(test_library_model_ports)
+BOOST_AUTO_TEST_CASE(ports_are_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -335,7 +407,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_ports)
                   parameters: []
                   variables: []
                   ports:
-                      - name: "port_name"
+                      - id: "port_name"
                         type: "port_type"
                   port-field-definitions: []
                   constraints: []
@@ -344,12 +416,12 @@ BOOST_AUTO_TEST_CASE(test_library_model_ports)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].ports.size(), 1);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].name, "port_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].id, "port_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].type, "port_type");
 }
 
 // Test library with one model containing multiple ports
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_ports)
+BOOST_AUTO_TEST_CASE(model_can_conatin_multiple_ports)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -363,9 +435,9 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_ports)
                   parameters: []
                   variables: []
                   ports:
-                      - name: "port_name1"
+                      - id: "port_name1"
                         type: "port_type1"
-                      - name: "port_name2"
+                      - id: "port_name2"
                         type: "port_type2"
                   port-field-definitions: []
                   constraints: []
@@ -374,14 +446,14 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_ports)
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].ports.size(), 2);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].name, "port_name1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].id, "port_name1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].type, "port_type1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[1].name, "port_name2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].ports[1].id, "port_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].ports[1].type, "port_type2");
 }
 
 // Test library with one model containing port field definitions
-BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
+BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -411,7 +483,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_port_field_definitions)
 }
 
 // Test library with one model containing multiple port field definitions
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_port_field_definitions)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -447,7 +519,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_port_field_definitions)
 }
 
 // Test library with one model containing constraints
-BOOST_AUTO_TEST_CASE(test_library_model_constraints)
+BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -463,19 +535,19 @@ BOOST_AUTO_TEST_CASE(test_library_model_constraints)
                   ports: []
                   port-field-definitions: []
                   constraints:
-                      - name: "constraint_name"
+                      - id: "constraint_name"
                         expression: "expression"
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 1);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].name, "constraint_name");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression, "expression");
 }
 
 // Test library with one model containing multiple constraints
-BOOST_AUTO_TEST_CASE(test_library_model_multiple_constraints)
+BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(
@@ -491,23 +563,23 @@ BOOST_AUTO_TEST_CASE(test_library_model_multiple_constraints)
                   ports: []
                   port-field-definitions: []
                   constraints:
-                      - name: "constraint_name1"
+                      - id: "constraint_name1"
                         expression: "expression1"
-                      - name: "constraint_name2"
+                      - id: "constraint_name2"
                         expression: "expression2"
                   objective: "objective"
         )"s;
     Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 2);
-    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].name, "constraint_name1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression, "expression1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].name, "constraint_name2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].id, "constraint_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].expression, "expression2");
 }
 
 // Test error when model is not a map
-BOOST_AUTO_TEST_CASE(test_error_model_not_map)
+BOOST_AUTO_TEST_CASE(model_is_not_scalar)
 {
     Antares::Solver::ModelParser::Parser parser;
     const auto library = R"(

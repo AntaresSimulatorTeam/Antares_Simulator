@@ -35,14 +35,59 @@ namespace Antares::Solver::ObjectModel
 class Parameter
 {
 public:
-    Parameter();
-    ~Parameter() = default;
+    /** Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading
+     * Parameter("Param", ValueType::FLOAT, false, true)
+     * Avoid mixing wich value is which boolean parameter
+     */
+
+    enum class TimeDependent : bool
+    {
+        NO = false,
+        YES = true
+    };
+
+    enum class ScenarioDependent : bool
+    {
+        NO = false,
+        YES = true
+    };
+
+    explicit Parameter(std::string id,
+                       ValueType type,
+                       TimeDependent timeDependent,
+                       ScenarioDependent scenarioDependent):
+        id_(std::move(id)),
+        type_(type),
+        timeDependent_(timeDependent),
+        scenarioDependent_(scenarioDependent)
+    {
+    }
+
+    const std::string& Id() const
+    {
+        return id_;
+    }
+
+    ValueType Type() const
+    {
+        return type_;
+    }
+
+    bool isTimeDependent() const
+    {
+        return timeDependent_ == TimeDependent::YES;
+    }
+
+    bool isScenarioDependent() const
+    {
+        return scenarioDependent_ == ScenarioDependent::YES;
+    }
 
 private:
-    std::string name_;
+    std::string id_;
     ValueType type_;
-    bool timeDependent_ = true;     // optional at construction
-    bool scenarioDependent_ = true; // optional at construction
+    TimeDependent timeDependent_ = TimeDependent::YES;             // optional at construction
+    ScenarioDependent scenarioDependent_ = ScenarioDependent::YES; // optional at construction
 };
 
 } // namespace Antares::Solver::ObjectModel

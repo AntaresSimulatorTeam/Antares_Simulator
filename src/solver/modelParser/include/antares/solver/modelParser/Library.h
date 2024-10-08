@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -29,21 +30,66 @@ namespace Antares::Solver::ModelParser
 // Define structures
 struct Parameter
 {
-    std::string name;
+    std::string id;
     bool time_dependent;
     bool scenario_dependent;
 };
 
+enum class ValueType
+{
+    FLOAT,
+    INTEGER,
+    BOOL
+};
+
+inline std::string toString(const ValueType& value_type)
+{
+    using namespace std::string_literals;
+    switch (value_type)
+    {
+    case ValueType::FLOAT:
+        return "FLOAT"s;
+    case ValueType::INTEGER:
+        return "INTEGER"s;
+    case ValueType::BOOL:
+        return "BOOL"s;
+    default:
+        return "UNKNOWN"s;
+    }
+}
+
+inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
+{
+    using namespace std::string_literals;
+    switch (value_type)
+    {
+    case ValueType::FLOAT:
+        os << "FLOAT"s;
+        break;
+    case ValueType::INTEGER:
+        os << "INTEGER"s;
+        break;
+    case ValueType::BOOL:
+        os << "BOOL"s;
+        break;
+    default:
+        os << "UNKNOWN"s;
+        break;
+    }
+    return os;
+}
+
 struct Variable
 {
-    std::string name;
-    double lower_bound;
-    double upper_bound;
+    std::string id;
+    std::string lower_bound;
+    std::string upper_bound;
+    ValueType variable_type;
 };
 
 struct Port
 {
-    std::string name;
+    std::string id;
     std::string type;
 };
 
@@ -56,7 +102,7 @@ struct PortFieldDefinition
 
 struct Constraint
 {
-    std::string name;
+    std::string id;
     std::string expression;
 };
 
