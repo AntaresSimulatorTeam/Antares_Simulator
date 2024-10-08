@@ -98,8 +98,8 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
     }
 
     // Load the layer data
-    buffer.clear() << path << SEP << "layers" << SEP << "layers.ini";
-    loadLayers(buffer);
+    fs::path layersPath = path / "layers" / "layers.ini";
+    loadLayers(layersPath);
 
     return true;
 }
