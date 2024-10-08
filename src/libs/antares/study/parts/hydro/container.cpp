@@ -25,12 +25,9 @@
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/study.h"
 
-using namespace Antares;
-using namespace Yuni;
-
 namespace fs = std::filesystem;
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 namespace Antares::Data
 {
@@ -484,7 +481,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
         return false;
     }
 
-    String buffer;
+    Yuni::String buffer;
     buffer.clear() << folder << SEP << "common" << SEP << "capacity";
 
     struct AllSections
