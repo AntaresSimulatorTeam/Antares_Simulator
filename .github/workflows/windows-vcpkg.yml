@@ -39,7 +39,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: windows-latest
       test-platform: windows-2022
-      vcpkgPackages: wxwidgets boost-test yaml-cpp antlr4
+      vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows
 
     runs-on: windows-latest
