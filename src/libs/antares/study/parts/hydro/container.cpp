@@ -708,26 +708,21 @@ void PartHydro::copyFrom(const PartHydro& rhs)
     }
 }
 
-bool PartHydro::LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid)
+bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& areaid)
 {
-    YString filePath;
     Matrix<>::BufferType fileContent;
     bool ret = true;
 
-    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                     << "maxDailyGenEnergy_" << areaid << ".txt";
-
-    ret = dailyNbHoursAtGenPmax.loadFromCSVFile(filePath,
+    fs::path genPath = folder / "common" / "capacity" / ("maxDailyGenEnergy_" + areaid + ".txt");
+    ret = dailyNbHoursAtGenPmax.loadFromCSVFile(genPath.string(),
                                                 1,
                                                 DAYS_PER_YEAR,
                                                 Matrix<>::optFixedSize,
                                                 &fileContent)
           && ret;
 
-    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                     << "maxDailyPumpEnergy_" << areaid << ".txt";
-
-    ret = dailyNbHoursAtPumpPmax.loadFromCSVFile(filePath,
+    fs::path pumpPath = folder / "common" / "capacity" / ("maxDailyPumpEnergy_" + areaid + ".txt");
+    ret = dailyNbHoursAtPumpPmax.loadFromCSVFile(pumpPath.string(),
                                                  1,
                                                  DAYS_PER_YEAR,
                                                  Matrix<>::optFixedSize,

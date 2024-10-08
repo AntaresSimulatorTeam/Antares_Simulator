@@ -157,7 +157,7 @@ public:
     /*!
     ** \brief Load daily max energy
     */
-    bool LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid);
+    bool LoadDailyMaxEnergy(const std::filesystem::path& folder, const std::string& areaid);
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 
