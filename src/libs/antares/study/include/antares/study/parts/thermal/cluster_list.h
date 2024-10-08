@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <filesystem>
 #include <functional>
 
 #include "../common/cluster_list.h"
@@ -43,7 +44,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
     ** \return A size (in bytes)
     */
-    bool loadFromFolder(Study& s, const AnyString& folder, Area* area);
+    bool loadFromFolder(Study& s, const std::filesystem::path& folder, Area* area);
 
     //! \name Constructor & Destructor
     //@{
@@ -112,12 +113,12 @@ public:
      ** \param folder The target folder
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadPreproFromFolder(Study& s, const AnyString& folder);
+    bool loadPreproFromFolder(Study& s, const std::filesystem::path& folder);
     bool validatePrepro(const Study& study);
 
     bool validateClusters(const Parameters& param) const;
 
-    bool loadEconomicCosts(Study& s, const AnyString& folder);
+    bool loadEconomicCosts(Study& s, const std::filesystem::path& folder);
 
     bool savePreproToFolder(const AnyString& folder) const;
     bool saveEconomicCosts(const AnyString& folder) const;

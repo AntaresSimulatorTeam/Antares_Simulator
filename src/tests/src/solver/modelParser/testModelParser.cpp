@@ -391,15 +391,15 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
                     - id: "var1"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "boolean"
+                      variable-type: "BOOL"
                     - id: "var2"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "integer"
+                      variable-type: "INTEGER"
                     - id: "var3"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "continuous"
+                      variable-type: "FLOAT"
                     - id: "var4"
                       lower-bound: 0
                       upper-bound: 1

@@ -96,16 +96,19 @@ void BeautifyName(std::string& out, const std::string& oldname)
     out = yuniOut.c_str();
 }
 
-std::string FormattedTime(const std::string& format)
+std::tm getCurrentTime()
 {
     using namespace std::chrono;
     auto time = system_clock::to_time_t(system_clock::now());
-    std::tm local_time = *std::localtime(&time);
+    return *std::localtime(&time);
+}
 
-    char time_buffer[256];
-    std::strftime(time_buffer, sizeof(time_buffer), format.c_str(), &local_time);
+std::string formatTime(const std::tm& localTime, const std::string& format)
+{
+    char timeBuffer[256];
+    std::strftime(timeBuffer, sizeof(timeBuffer), format.c_str(), &localTime);
 
-    return std::string(time_buffer);
+    return std::string(timeBuffer);
 }
 
 std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,

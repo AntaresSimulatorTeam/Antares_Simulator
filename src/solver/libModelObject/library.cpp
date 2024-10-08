@@ -67,7 +67,7 @@ LibraryBuilder& LibraryBuilder::withPortTypes(std::vector<PortType>&& portTypes)
                    portTypes.end(),
                    std::inserter(library_.portTypes_, library_.portTypes_.end()),
                    [](/*Non const to prevent copy*/ PortType& portType)
-                   { return std::make_pair(portType.id(), std::move(portType)); });
+                   { return std::make_pair(portType.Id(), std::move(portType)); });
     return *this;
 }
 
