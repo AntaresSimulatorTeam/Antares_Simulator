@@ -52,12 +52,11 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
-            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
+            MPSolver*& solver = ProblemeAResoudre->ProblemesSpx[numIntervalle];
 
             if (solver != NULL)
             {
-                ORTOOLS_LibererProbleme(solver);
-                solver = nullptr;
+                solver = ORTOOLS_LibererProbleme(solver);
             }
         }
     }

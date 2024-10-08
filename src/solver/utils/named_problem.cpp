@@ -29,14 +29,12 @@ namespace Antares::Optimization
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  const std::vector<bool>& VariablesEntieres,
-                                                 BasisStatus& basisStatus,
                                                  bool UseNamedProblems,
                                                  bool SolverLogs):
     NomDesVariables(NomDesVariables),
     NomDesContraintes(NomDesContraintes),
     useNamedProblems_(UseNamedProblems),
-    VariablesEntieres(VariablesEntieres),
-    basisStatus(basisStatus)
+    VariablesEntieres(VariablesEntieres)
 {
     AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
 }

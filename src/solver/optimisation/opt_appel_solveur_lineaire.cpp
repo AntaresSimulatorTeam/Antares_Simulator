@@ -85,36 +85,18 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
+    MPSolver*& solver = ProblemeAResoudre->ProblemesSpx[NumIntervalle];
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
-    if (!PremierPassage)
-    {
-        solver = nullptr;
-    }
 
-    if (solver == nullptr)
-    {
-        Probleme.Contexte = SIMPLEXE_SEUL;
-        Probleme.BaseDeDepartFournie = NON_SPX;
-    }
-    else
+    if (solver != nullptr)
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (solver != nullptr)
-            {
-                ORTOOLS_LibererProbleme(solver);
-            }
-
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = nullptr;
-
-            solver = nullptr;
-            Probleme.Contexte = SIMPLEXE_SEUL;
-            Probleme.BaseDeDepartFournie = NON_SPX;
+            solver = ORTOOLS_LibererProbleme(solver);
         }
         else
         {
@@ -184,7 +166,13 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    solver = ORTOOLS_ConvertIfNeeded(options.ortoolsSolver, &Probleme, solver);
+    if (solver == nullptr)
+    {
+        Probleme.Contexte = SIMPLEXE_SEUL;
+        Probleme.BaseDeDepartFournie = NON_SPX;
+        solver = ORTOOLS_Convert(options.ortoolsSolver, &Probleme);
+    }
+
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
@@ -200,10 +188,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
     solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
-    if (solver != nullptr)
-    {
-        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
-    }
 
     measure.tick();
     timeMeasure.solveTime = measure.duration_ms();
@@ -212,26 +196,15 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
     {
-        if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
-        {
-            if (solver != nullptr)
-            {
-                ORTOOLS_LibererProbleme(solver);
-            }
+        solver = ORTOOLS_LibererProbleme(solver);
 
-            logs.info() << " Solver: Standard resolution failed";
-            logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
-            logs.debug() << " solver: resetting";
+        logs.info() << " Solver: Standard resolution failed";
+        logs.info() << " Solver: Retry in safe mode"; // second trial w/o scaling
+        logs.debug() << " solver: resetting";
 
-            return {.success = false,
-                    .timeMeasure = timeMeasure,
-                    .mps_writer_factory = mps_writer_factory};
-        }
-
-        else
-        {
-            throw FatalError("Internal error: insufficient memory");
-        }
+        return {.success = false,
+                .timeMeasure = timeMeasure,
+                .mps_writer_factory = mps_writer_factory};
     }
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
@@ -247,7 +220,6 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->VariablesEntieres,
-                                                   ProblemeAResoudre->basisStatus,
                                                    problemeHebdo->NamedProblems,
                                                    options.solverLogs);
 

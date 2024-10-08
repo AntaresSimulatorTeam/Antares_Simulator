@@ -329,19 +329,11 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
-                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                                  MPSolver* solver)
+MPSolver* ORTOOLS_Convert(const std::string& solverName,
+                          const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme)
 {
-    if (solver == nullptr)
-    {
-        Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
-        return converter.Convert();
-    }
-    else
-    {
-        return solver;
-    }
+    Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
+    return converter.Convert();
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
@@ -350,8 +342,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            const OptimizationOptions& options)
 {
     MPSolverParameters params;
-    setGenericParameters(
-      params);              // Keep generic params for default settings working for all solvers
+    // Keep generic params for default settings working for all solvers
+    setGenericParameters(params);
     if (options.solverLogs) // May be overriden by log level if set as specific parameters
     {
         solver->EnableOutput();
@@ -432,9 +424,10 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
     }
 }
 
-void ORTOOLS_LibererProbleme(MPSolver* solver)
+MPSolver* ORTOOLS_LibererProbleme(MPSolver* solver)
 {
     delete solver;
+    return nullptr;
 }
 
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
