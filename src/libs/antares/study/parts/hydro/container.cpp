@@ -203,7 +203,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                 && ret;
 
           std::string reservoirId = "reservoir_" + area.id + ".txt";
-          fs::path reservoirPath = capacityPath / creditId;
+          fs::path reservoirPath = capacityPath / reservoirId;
           ret = area.hydro.reservoirLevel.loadFromCSVFile(reservoirPath.string(),
                                                           3,
                                                           DAYS_PER_YEAR,
@@ -212,7 +212,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                 && ret;
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
-          fs::path waterValuePath = capacityPath / creditId;
+          fs::path waterValuePath = capacityPath / waterValueId;
           ret = area.hydro.waterValues.loadFromCSVFile(waterValuePath.string(),
                                                        101,
                                                        DAYS_PER_YEAR,
@@ -221,7 +221,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                 && ret;
 
           std::string inflowId = "inflowPattern_" + area.id + ".txt";
-          fs::path inflowPath = capacityPath / creditId;
+          fs::path inflowPath = capacityPath / inflowId;
           ret = area.hydro.inflowPattern.loadFromCSVFile(inflowPath.string(),
                                                          1,
                                                          DAYS_PER_YEAR,
