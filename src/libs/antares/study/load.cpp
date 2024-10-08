@@ -26,12 +26,7 @@
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
 
-using namespace Yuni;
-using Antares::Constants::nbHoursInAWeek;
-
 namespace fs = std::filesystem;
-
-#define SEP IO::Separator
 
 namespace Antares
 {
@@ -312,6 +307,7 @@ void Study::reloadCorrelation()
     internalLoadCorrelationMatrices(options);
 }
 
+// TODO remove with GUI
 bool Study::reloadXCastData()
 {
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
