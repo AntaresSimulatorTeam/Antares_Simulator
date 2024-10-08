@@ -133,23 +133,45 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1ObjectModel_
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classAntares_1_1Solver_1_1ObjectModel_1_1Model-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Solver::ObjectModel::Model Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="libModelObject_2include_2antares_2solver_2libObjectModel_2model_8h_source.html">model.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="model_8h_source.html">model.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abbcb3756cf1e2c1e94a7202356c06c86" id="r_abbcb3756cf1e2c1e94a7202356c06c86"><td class="memItemLeft" align="right" valign="top"><a id="abbcb3756cf1e2c1e94a7202356c06c86" name="abbcb3756cf1e2c1e94a7202356c06c86"></a>
-std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Constraint.html">Constraint</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraints</b> ()</td></tr>
-<tr class="separator:abbcb3756cf1e2c1e94a7202356c06c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc72260b7105ce9463b8c82b165c310c" id="r_afc72260b7105ce9463b8c82b165c310c"><td class="memItemLeft" align="right" valign="top"><a id="afc72260b7105ce9463b8c82b165c310c" name="afc72260b7105ce9463b8c82b165c310c"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Id</b> () const</td></tr>
+<tr class="separator:afc72260b7105ce9463b8c82b165c310c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a256ab7891b91aae35e068ed117b4f396" id="r_a256ab7891b91aae35e068ed117b4f396"><td class="memItemLeft" align="right" valign="top"><a id="a256ab7891b91aae35e068ed117b4f396" name="a256ab7891b91aae35e068ed117b4f396"></a>
+<a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Expression.html">Expression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Objective</b> () const</td></tr>
+<tr class="separator:a256ab7891b91aae35e068ed117b4f396"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71ffa639e84e0f44ce4555ae57f48c6d" id="r_a71ffa639e84e0f44ce4555ae57f48c6d"><td class="memItemLeft" align="right" valign="top"><a id="a71ffa639e84e0f44ce4555ae57f48c6d" name="a71ffa639e84e0f44ce4555ae57f48c6d"></a>
+const std::map&lt; std::string, <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Constraint.html">Constraint</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getConstraints</b> () const</td></tr>
+<tr class="separator:a71ffa639e84e0f44ce4555ae57f48c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a515cfb7daf60b516a2f3627e43eb48c1" id="r_a515cfb7daf60b516a2f3627e43eb48c1"><td class="memItemLeft" align="right" valign="top"><a id="a515cfb7daf60b516a2f3627e43eb48c1" name="a515cfb7daf60b516a2f3627e43eb48c1"></a>
+const std::map&lt; std::string, <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Parameter.html">Parameter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Parameters</b> () const</td></tr>
+<tr class="separator:a515cfb7daf60b516a2f3627e43eb48c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7b8afd913fe40eb3aa33b5bb2ec9313" id="r_ad7b8afd913fe40eb3aa33b5bb2ec9313"><td class="memItemLeft" align="right" valign="top"><a id="ad7b8afd913fe40eb3aa33b5bb2ec9313" name="ad7b8afd913fe40eb3aa33b5bb2ec9313"></a>
+const std::map&lt; std::string, <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Variable.html">Variable</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Variables</b> () const</td></tr>
+<tr class="separator:ad7b8afd913fe40eb3aa33b5bb2ec9313"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f2cad266bf26f47ea7292b8df244235" id="r_a4f2cad266bf26f47ea7292b8df244235"><td class="memItemLeft" align="right" valign="top"><a id="a4f2cad266bf26f47ea7292b8df244235" name="a4f2cad266bf26f47ea7292b8df244235"></a>
+const std::map&lt; std::string, <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Port.html">Port</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Ports</b> () const</td></tr>
+<tr class="separator:a4f2cad266bf26f47ea7292b8df244235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a77c3d1f6a449713b2a45b269ff0dd07a" id="r_a77c3d1f6a449713b2a45b269ff0dd07a"><td class="memItemLeft" align="right" valign="top"><a id="a77c3d1f6a449713b2a45b269ff0dd07a" name="a77c3d1f6a449713b2a45b269ff0dd07a"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>ModelBuilder</b></td></tr>
+<tr class="separator:a77c3d1f6a449713b2a45b269ff0dd07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines a model that can be referenced by actual components. A model defines the behaviour of those components. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/solver/libModelObject/include/antares/solver/libObjectModel/<a class="el" href="libModelObject_2include_2antares_2solver_2libObjectModel_2model_8h_source.html">model.h</a></li>
+<li>src/solver/libModelObject/include/antares/solver/libObjectModel/<a class="el" href="model_8h_source.html">model.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

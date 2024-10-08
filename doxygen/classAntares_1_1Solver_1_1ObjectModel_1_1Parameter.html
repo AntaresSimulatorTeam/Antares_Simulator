@@ -132,15 +132,71 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1ObjectModel_
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAntares_1_1Solver_1_1ObjectModel_1_1Parameter-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Solver::ObjectModel::Parameter Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="solver_2libModelObject_2include_2antares_2solver_2libObjectModel_2parameter_8h_source.html">parameter.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a9c27f846886bbff9fedcc984e3394826" id="r_a9c27f846886bbff9fedcc984e3394826"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Parameter.html#a9c27f846886bbff9fedcc984e3394826">TimeDependent</a> : bool { <b>NO</b> = false
+, <b>YES</b> = true
+ }</td></tr>
+<tr class="separator:a9c27f846886bbff9fedcc984e3394826"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa66f56b188092aa8e64d252a8d94175e" id="r_aa66f56b188092aa8e64d252a8d94175e"><td class="memItemLeft" align="right" valign="top"><a id="aa66f56b188092aa8e64d252a8d94175e" name="aa66f56b188092aa8e64d252a8d94175e"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>ScenarioDependent</b> : bool { <b>NO</b> = false
+, <b>YES</b> = true
+ }</td></tr>
+<tr class="separator:aa66f56b188092aa8e64d252a8d94175e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a875e54eedd8d69039a4ff6ad90940799" id="r_a875e54eedd8d69039a4ff6ad90940799"><td class="memItemLeft" align="right" valign="top"><a id="a875e54eedd8d69039a4ff6ad90940799" name="a875e54eedd8d69039a4ff6ad90940799"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Parameter</b> (std::string id, ValueType type, <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Parameter.html#a9c27f846886bbff9fedcc984e3394826">TimeDependent</a> timeDependent, ScenarioDependent scenarioDependent)</td></tr>
+<tr class="separator:a875e54eedd8d69039a4ff6ad90940799"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9f188f53c1a0563d29b66faa5e5eba6" id="r_ad9f188f53c1a0563d29b66faa5e5eba6"><td class="memItemLeft" align="right" valign="top"><a id="ad9f188f53c1a0563d29b66faa5e5eba6" name="ad9f188f53c1a0563d29b66faa5e5eba6"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Id</b> () const</td></tr>
+<tr class="separator:ad9f188f53c1a0563d29b66faa5e5eba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f8f3d60cdbdff5336ec94a9e3b5951d" id="r_a0f8f3d60cdbdff5336ec94a9e3b5951d"><td class="memItemLeft" align="right" valign="top"><a id="a0f8f3d60cdbdff5336ec94a9e3b5951d" name="a0f8f3d60cdbdff5336ec94a9e3b5951d"></a>
+ValueType&#160;</td><td class="memItemRight" valign="bottom"><b>Type</b> () const</td></tr>
+<tr class="separator:a0f8f3d60cdbdff5336ec94a9e3b5951d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ea390b58f9afbb4a20fd898af758e9e" id="r_a2ea390b58f9afbb4a20fd898af758e9e"><td class="memItemLeft" align="right" valign="top"><a id="a2ea390b58f9afbb4a20fd898af758e9e" name="a2ea390b58f9afbb4a20fd898af758e9e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTimeDependent</b> () const</td></tr>
+<tr class="separator:a2ea390b58f9afbb4a20fd898af758e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ca8032e1eb9b06723d98bcedae3d97" id="r_ae0ca8032e1eb9b06723d98bcedae3d97"><td class="memItemLeft" align="right" valign="top"><a id="ae0ca8032e1eb9b06723d98bcedae3d97" name="ae0ca8032e1eb9b06723d98bcedae3d97"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isScenarioDependent</b> () const</td></tr>
+<tr class="separator:ae0ca8032e1eb9b06723d98bcedae3d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A parameter of the model: a parameter is mainly defined by a name and expected type. When the model is instantiated as a component, a value must be provided for parameters, either as constant values or timeseries-based values. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a9c27f846886bbff9fedcc984e3394826" name="a9c27f846886bbff9fedcc984e3394826"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c27f846886bbff9fedcc984e3394826">&#9670;&#160;</a></span>TimeDependent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Parameter.html#a9c27f846886bbff9fedcc984e3394826">Antares::Solver::ObjectModel::Parameter::TimeDependent</a> : bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading <a class="el" href="classAntares_1_1Solver_1_1ObjectModel_1_1Parameter.html">Parameter</a>("Param", ValueType::FLOAT, false, true) Avoid mixing wich value is which boolean parameter </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/solver/libModelObject/include/antares/solver/libObjectModel/<a class="el" href="solver_2libModelObject_2include_2antares_2solver_2libObjectModel_2parameter_8h_source.html">parameter.h</a></li>
 </ul>
 </div><!-- contents -->
