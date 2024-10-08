@@ -114,7 +114,7 @@ public:
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    static bool LoadFromFolder(Study& study, const AnyString& folder);
+    static bool LoadFromFolder(Study& study, const std::filesystem::path& folder);
 
     /*!
     ** \brief Check and validate the loaded datas
