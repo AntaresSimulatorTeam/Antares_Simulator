@@ -166,7 +166,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
         std::filesystem::path path = originalOutput;
         path /= "grid";
         path /= filename;
-        writer.addEntryFromBuffer(path, buffer);
+        writer.addEntryFromBuffer(path.string(), buffer);
     };
 
     add("areas.txt", std::move(out));
