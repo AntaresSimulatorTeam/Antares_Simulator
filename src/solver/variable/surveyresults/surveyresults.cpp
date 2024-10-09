@@ -163,7 +163,9 @@ static void ExportGridInfosAreas(const Data::Study& study,
       }); // each area
     auto add = [&writer, &originalOutput](const std::string& filename, Yuni::Clob&& buffer)
     {
-        std::filesystem::path path = std::filesystem::path(originalOutput) / "grid" / filename;
+        std::filesystem::path path = originalOutput;
+        path /= "grid";
+        path /= filename;
         writer.addEntryFromBuffer(path, buffer);
     };
 
