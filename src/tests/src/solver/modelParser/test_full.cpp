@@ -264,20 +264,20 @@ library:
         ModelParser::Parser parser;
         ModelParser::Library libraryObj = parser.parse(library);
         ObjectModel::Library lib = ModelConverter::convert(libraryObj);
-        BOOST_CHECK_EQUAL(lib.id(), "basic");
-        BOOST_CHECK_EQUAL(lib.description(), "Basic library");
+        BOOST_CHECK_EQUAL(lib.Id(), "basic");
+        BOOST_CHECK_EQUAL(lib.Description(), "Basic library");
 
-        BOOST_REQUIRE_EQUAL(lib.portTypes().size(), 1);
-        auto& portType = lib.portTypes().at("flow");
-        BOOST_CHECK_EQUAL(portType.id(), "flow");
-        BOOST_CHECK_EQUAL(portType.description(), "A port which transfers power flow");
+        BOOST_REQUIRE_EQUAL(lib.PortTypes().size(), 1);
+        auto& portType = lib.PortTypes().at("flow");
+        BOOST_CHECK_EQUAL(portType.Id(), "flow");
+        BOOST_CHECK_EQUAL(portType.Description(), "A port which transfers power flow");
 
-        BOOST_REQUIRE_EQUAL(portType.fields().size(), 1);
-        auto& portTypeField = portType.fields().at(0);
+        BOOST_REQUIRE_EQUAL(portType.Fields().size(), 1);
+        auto& portTypeField = portType.Fields().at(0);
         BOOST_CHECK_EQUAL(portTypeField.Id(), "flow");
 
-        BOOST_REQUIRE_EQUAL(lib.models().size(), 7);
-        auto& model0 = lib.models().at("generator");
+        BOOST_REQUIRE_EQUAL(lib.Models().size(), 7);
+        auto& model0 = lib.Models().at("generator");
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
         BOOST_CHECK_EQUAL(model0.Objective().Value(), "expec(sum(cost * generation))");
 
@@ -308,7 +308,7 @@ library:
         // BOOST_CHECK_EQUAL(port.Id(), "injection_port");
         //  other properties
 
-        auto& model1 = lib.models().at("node");
+        auto& model1 = lib.Models().at("node");
         BOOST_CHECK_EQUAL(model1.Id(), "node");
         // BOOST_REQUIRE_EQUAL(model1.getConstraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model1.Parameters().size(), 0);
@@ -316,7 +316,7 @@ library:
         // BOOST_REQUIRE_EQUAL(model1.Ports().size(), 1); Unsuported
         //  BOOST_REQUIRE_EQUAL(model1.PortFieldDefinitions().size(), 0); Unsuported
 
-        auto& model2 = lib.models().at("spillage");
+        auto& model2 = lib.Models().at("spillage");
         BOOST_CHECK_EQUAL(model2.Id(), "spillage");
         BOOST_REQUIRE_EQUAL(model2.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model2.Parameters().size(), 1);
@@ -335,7 +335,7 @@ library:
                       "",
                       ObjectModel::ValueType::FLOAT);
 
-        auto& model3 = lib.models().at("unsupplied");
+        auto& model3 = lib.Models().at("unsupplied");
         BOOST_CHECK_EQUAL(model3.Id(), "unsupplied");
         BOOST_REQUIRE_EQUAL(model3.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model3.Parameters().size(), 1);
@@ -353,7 +353,7 @@ library:
                       "",
                       ObjectModel::ValueType::FLOAT);
 
-        auto& model4 = lib.models().at("demand");
+        auto& model4 = lib.Models().at("demand");
         BOOST_CHECK_EQUAL(model4.Id(), "demand");
         BOOST_REQUIRE_EQUAL(model4.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model4.Parameters().size(), 1);
@@ -366,7 +366,7 @@ library:
                        true,
                        ObjectModel::ValueType::FLOAT);
 
-        auto& model5 = lib.models().at("short-term-storage");
+        auto& model5 = lib.Models().at("short-term-storage");
         BOOST_CHECK_EQUAL(model5.Id(), "short-term-storage");
         BOOST_REQUIRE_EQUAL(model5.getConstraints().size(), 1);
         BOOST_REQUIRE_EQUAL(model5.Parameters().size(), 6);
@@ -422,7 +422,7 @@ library:
                         "Level equation",
                         "level[t] - level[t-1] - efficiency * injection + withdrawal = inflows");
 
-        auto& model6 = lib.models().at("thermal-cluster-dhd");
+        auto& model6 = lib.Models().at("thermal-cluster-dhd");
         BOOST_CHECK_EQUAL(model6.Id(), "thermal-cluster-dhd");
         BOOST_REQUIRE_EQUAL(model6.getConstraints().size(), 5);
         BOOST_REQUIRE_EQUAL(model6.Parameters().size(), 7);
