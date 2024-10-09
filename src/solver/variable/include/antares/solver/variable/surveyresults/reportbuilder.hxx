@@ -410,9 +410,10 @@ private:
                     Antares::logs.info() << "Exporting results : " << area.name << " - "
                                          << results.data.link->with->name;
                     // The new output
-                    results.data.output.clear();
-                    results.data.output << results.data.originalOutput << SEP << "links" << SEP
-                                        << area.id << " - " << results.data.link->with->id;
+                    fs::path path = results.data.originalOutput;
+                    std::string areaId = std::string(area.id) + " - " + results.data.link->with->id;
+                    path /= fs::path("links") / areaId;
+
                     SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list,
                                                                              results,
                                                                              numSpace);
