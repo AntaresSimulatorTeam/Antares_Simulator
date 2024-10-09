@@ -56,7 +56,7 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.costLevel.resize(size, value);
 }
 
-void createIndividualFileSeries(const std::string& path, double value, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, double value, unsigned int size)
 {
     std::ofstream outfile(path);
 
@@ -68,7 +68,7 @@ void createIndividualFileSeries(const std::string& path, double value, unsigned 
     outfile.close();
 }
 
-void createIndividualFileSeries(const std::string& path, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, unsigned int size)
 {
     std::ofstream outfile;
     outfile.open(path, std::ofstream::out | std::ofstream::trunc);
