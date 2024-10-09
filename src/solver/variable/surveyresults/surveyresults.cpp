@@ -31,10 +31,7 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 
-using namespace Yuni;
 using namespace Antares;
-
-#define SEP IO::Separator
 
 namespace Antares::Solver::Variable::Private
 {
@@ -114,12 +111,12 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
 }
 
 static void ExportGridInfosAreas(const Data::Study& study,
-                                 const Yuni::String& originalOutput,
+                                 const std::string& originalOutput,
                                  IResultWriter& writer)
 {
-    Clob out;
-    Clob outLinks;
-    Clob outThermal;
+    Yuni::Clob out;
+    Yuni::Clob outLinks;
+    Yuni::Clob outThermal;
 
     out << "id\tname\n";
     outLinks << "upstream\tdownstream\n";
@@ -164,11 +161,10 @@ static void ExportGridInfosAreas(const Data::Study& study,
 
           } // each thermal cluster
       }); // each area
-    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer)
+    auto add = [&writer, &originalOutput](const std::string& filename, Yuni::Clob&& buffer)
     {
-        YString path;
-        path << originalOutput << SEP << "grid" << SEP << filename;
-        writer.addEntryFromBuffer(path.c_str(), buffer);
+        std::filesystem::path path = std::filesystem::path(originalOutput) / "grid" / filename;
+        writer.addEntryFromBuffer(path, buffer);
     };
 
     add("areas.txt", std::move(out));
@@ -176,7 +172,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
     add("thermal.txt", std::move(outThermal));
 }
 
-SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o):
+SurveyResultsData::SurveyResultsData(const Data::Study& s, const Yuni::String& o):
     columnIndex((uint)-1),
     thermalCluster(nullptr),
     area(nullptr),
@@ -511,7 +507,7 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWriter& writer):
+SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResultWriter& writer):
     data(s, o),
     yearByYearResults(false),
     isCurrentVarNA(nullptr),
