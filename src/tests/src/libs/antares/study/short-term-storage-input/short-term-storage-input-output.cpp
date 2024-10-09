@@ -343,7 +343,7 @@ BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 
     removeIniFile();
 
-    BOOST_CHECK(container.saveToFolder(folder));
+    BOOST_CHECK(container.saveToFolder(folder.string()));
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 
@@ -354,7 +354,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 {
     resizeFillVectors(series, 0.123456789, 8760);
 
-    BOOST_CHECK(series.saveToFolder(folder));
+    BOOST_CHECK(series.saveToFolder(folder.string()));
     resizeFillVectors(series, 0, 0);
 
     BOOST_CHECK(series.loadFromFolder(folder));
