@@ -129,10 +129,10 @@ BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 10); // 5 timestep * 2 scenario
 
-    auto var1 = pb->getVariable("0-0");
+    auto var1 = pb->getVariable("variable-ts0-sc0");
     BOOST_CHECK_EQUAL(var1->getLb(), varFiller->timeseries[0][0]);
 
-    auto var2 = pb->getVariable("3-2");
+    auto var2 = pb->getVariable("variable-ts3-sc2");
     BOOST_CHECK_EQUAL(var2->getLb(), varFiller->timeseries[3][2]);
 }
 
