@@ -455,9 +455,9 @@ private:
 
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
-            results.data.output.clear();
-            results.data.output << results.data.originalOutput << SEP << "areas" << SEP << "@ "
-                                << sets.nameByIndex(i);
+            fs::path path = results.data.originalOutput;
+            std::string setId = "@ " + sets.nameByIndex(i);
+            path /= fs::path("areas") / setId;
 
             results.data.setOfAreasIndex = indx++;
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
