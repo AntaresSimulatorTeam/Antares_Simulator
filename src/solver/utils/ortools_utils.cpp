@@ -329,19 +329,11 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
-                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                                  MPSolver* solver)
+MPSolver* ConvertIntoOrtools(const std::string& solverName,
+                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme)
 {
-    if (solver == nullptr)
-    {
-        Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
-        return converter.Convert();
-    }
-    else
-    {
-        return solver;
-    }
+    Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
+    return converter.Convert();
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,

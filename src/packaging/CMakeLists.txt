@@ -6,18 +6,18 @@
 include(GNUInstallDirs)
 # generate and install export file
 set(TARGET_LIBS #No alias
-        #each "block" of dependency describe the dependency for a target
-        #not dependency is present since once a dependency is in the export set
-        #it is available for everything
+        # each "block" of dependency describe the dependency for a target
+        # not dependency is present since once a dependency is in the export set
+        # it is available for everything
 
-        solver_api #What we want to export
+        solver_api # What we want to export
 
-        #solver_api
+        # solver_api
         study
         study-loader
         file-tree-study-loader
         antares-solver-simulation
-        #study
+        # study
         yuni-static-core
         array
         date
@@ -37,39 +37,37 @@ set(TARGET_LIBS #No alias
         antares-solver-variable
         lps
 
-        #study-loader
-        #nothing
+        # study-loader : nothing
 
-        #file-tree-study-loader
+        # file-tree-study-loader
         application
 
-        #run-mode
+        # run-mode
         infoCollection
 
-        #antares-solver-simulation
+        # antares-solver-simulation
         concurrency
         misc
         model_antares
         antares-solver-ts-generator
 
-        #lps
-        #nothing
+        # lps : nothing
 
-        #array
+        # array
         io
         jit
         AntaresMemory
 
-        #date
+        # date
         logs
 
-        #correlation
+        # correlation
         locator
 
-        #antares-core
+        # antares-core
         antares-config-lib
 
-        #application
+        # application
         solver-lib
         sys
         signal-handling
@@ -77,16 +75,19 @@ set(TARGET_LIBS #No alias
         optimization-options
         resources
 
-        #model_antares
+        # model_antares
         infeasible_problem_analysis
+        modeler_api
+        modeler-ortools-impl
 
-        #solver-lib
+        # solver-lib
         args_helper
         checks
         locale
         yuni-static-uuid
 
-        antares-solver #executable
+        # executable
+        antares-solver
 )
 
 install(TARGETS ${TARGET_LIBS}

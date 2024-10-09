@@ -188,14 +188,16 @@ else ()
 endif ()
 target_link_libraries(model_antares
 		PUBLIC
-		Antares::solverUtils
-		sirius_solver
-		antares-solver-simulation
-		Antares::benchmarking
-        Antares::optimization-options
-		Antares::lps
+			Antares::solverUtils
+			sirius_solver
+			antares-solver-simulation
+			Antares::benchmarking
+			Antares::optimization-options
+			Antares::lps
 		PRIVATE
-		infeasible_problem_analysis
+			infeasible_problem_analysis
+			Antares::modeler_api
+			Antares::modeler-ortools-impl
 )
 
 target_include_directories(model_antares

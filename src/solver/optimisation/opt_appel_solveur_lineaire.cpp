@@ -31,8 +31,13 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
+#include "antares/solver/modeler/api/fillers/LegacyOrtoolsFiller.h"
+#include "antares/solver/modeler/api/linearProblemBuilder.h"
+#include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 
 using namespace operations_research;
+using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Solver::Modeler::OrtoolsImpl;
 
 using Antares::Solver::IResultWriter;
 using Antares::Solver::Optimization::OptimizationOptions;
@@ -201,9 +206,17 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    if (options.ortoolsUsed)
+    if (options.ortoolsUsed && solver == nullptr)
     {
-        solver = ORTOOLS_ConvertIfNeeded(options.ortoolsSolver, &Probleme, solver);
+        auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>();
+        std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
+        LinearProblemData LP_Data;
+        LinearProblemBuilder linearProblemBuilder(fillersCollection);
+        auto ortoolsProblem = std::make_unique<OrtoolsLinearProblem>(false, "sirius");
+        linearProblemBuilder.build(*ortoolsProblem, LP_Data);
+
+
+        solver = ConvertIntoOrtools(options.ortoolsSolver, &Probleme);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
