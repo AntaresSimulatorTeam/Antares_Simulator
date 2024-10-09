@@ -21,7 +21,8 @@
 
 #pragma once
 
-#include <yuni/core/string.h>
+#include <filesystem>
+
 #include <yuni/job/queue/service.h>
 
 #include "i_writer.h"
@@ -35,7 +36,7 @@ class DurationCollector;
 namespace Antares::Solver
 {
 IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
-                                       const YString& folderOutput,
+                                       const std::filesystem::path& folderOutput,
                                        std::shared_ptr<Yuni::Job::QueueService> qs,
                                        Benchmarking::DurationCollector& duration_collector);
 }

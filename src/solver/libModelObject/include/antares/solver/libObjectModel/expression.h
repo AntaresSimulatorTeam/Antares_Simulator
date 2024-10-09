@@ -31,17 +31,17 @@ public:
     Expression() = default;
 
     explicit Expression(std::string value):
-        value(value)
+        value_(std::move(value))
     {
     }
 
     const std::string& Value() const
     {
-        return value;
+        return value_;
     }
 
 private:
-    std::string value;
+    std::string value_;
 };
 
 } // namespace Antares::Solver::ObjectModel

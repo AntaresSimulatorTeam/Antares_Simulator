@@ -33,14 +33,14 @@ class Constraint
 {
 public:
     Constraint(std::string name, Expression expression):
-        name_(std::move(name)),
+        id_(std::move(name)),
         expression_(std::move(expression))
     {
     }
 
     const std::string& Id() const
     {
-        return name_;
+        return id_;
     }
 
     Expression expression() const
@@ -49,7 +49,7 @@ public:
     }
 
 private:
-    std::string name_;
+    std::string id_;
     Expression expression_;
 };
 

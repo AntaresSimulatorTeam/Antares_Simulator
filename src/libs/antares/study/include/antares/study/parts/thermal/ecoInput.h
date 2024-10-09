@@ -63,7 +63,7 @@ public:
     ** \param folder The source folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& study, const std::string& folder);
+    bool loadFromFolder(Study& study, const std::filesystem::path& folder);
 
     /*!
     ** \brief Save settings used by the thermal prepro to a folder

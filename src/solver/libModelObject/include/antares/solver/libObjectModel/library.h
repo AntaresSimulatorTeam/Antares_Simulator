@@ -20,8 +20,8 @@
 */
 #pragma once
 
-#include <map>
 #include <string>
+#include <unordered_map>
 
 #include "model.h"
 #include "portType.h"
@@ -36,22 +36,22 @@ public:
     Library() = default;
     ~Library() = default;
 
-    const std::string& id() const
+    const std::string& Id() const
     {
         return id_;
     }
 
-    const std::string& description() const
+    const std::string& Description() const
     {
         return description_;
     }
 
-    const std::map<std::string, PortType>& portTypes() const
+    const std::unordered_map<std::string, PortType>& PortTypes() const
     {
         return portTypes_;
     }
 
-    const std::map<std::string, Model>& models() const
+    const std::unordered_map<std::string, Model>& Models() const
     {
         return models_;
     }
@@ -62,8 +62,8 @@ private:
     std::string id_;
     std::string description_;
 
-    std::map<std::string, PortType> portTypes_;
-    std::map<std::string, Model> models_;
+    std::unordered_map<std::string, PortType> portTypes_;
+    std::unordered_map<std::string, Model> models_;
 };
 
 /**

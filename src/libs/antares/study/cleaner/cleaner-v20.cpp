@@ -232,7 +232,7 @@ void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, Strin
 bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 {
     auto* study = new Study();
-    study->relocate(infos->folder);
+    study->relocate(infos->folder.c_str());
 
     PathList& e = infos->exclude;
     PathList& p = infos->postExclude;
@@ -315,7 +315,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     logs.info() << "  :: analyzing the study data";
     logs.verbosityLevel = Logs::Verbosity::Warning::level;
 
-    if (arealist->loadListFromFile(buffer))
+    if (arealist->loadListFromFile(buffer.c_str()))
     {
         // restoring standard verbosity level
         logs.verbosityLevel = Logs::Verbosity::Debug::level;

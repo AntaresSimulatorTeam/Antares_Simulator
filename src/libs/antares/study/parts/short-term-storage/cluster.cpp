@@ -76,7 +76,7 @@ bool STStorageCluster::validate() const
     return properties.validate() && series->validate(id);
 }
 
-bool STStorageCluster::loadSeries(const std::string& folder) const
+bool STStorageCluster::loadSeries(const std::filesystem::path& folder) const
 {
     bool ret = series->loadFromFolder(folder);
     series->fillDefaultSeriesIfEmpty(); // fill series if no file series

@@ -61,6 +61,38 @@ struct convert<Antares::Solver::ModelParser::ValueType>
         {
             return false;
         }
+        if (node.as<std::string>() == "FLOAT")
+        {
+            rhs = Antares::Solver::ModelParser::ValueType::CONTINUOUS;
+        }
+        else if (node.as<std::string>() == "INTEGER")
+        {
+            rhs = Antares::Solver::ModelParser::ValueType::INTEGER;
+        }
+        else if (node.as<std::string>() == "BOOL")
+        {
+            rhs = Antares::Solver::ModelParser::ValueType::BOOL;
+        }
+        else
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.time_dependent = node["time-dependent"].as<bool>(true);
+        rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::Solver::ModelParser::ValueType>
+{
+    static bool decode(const Node& node, Antares::Solver::ModelParser::ValueType& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
         if (node.as<std::string>() == "continuous")
         {
             rhs = Antares::Solver::ModelParser::ValueType::CONTINUOUS;

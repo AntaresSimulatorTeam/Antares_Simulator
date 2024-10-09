@@ -88,7 +88,7 @@ SimulationResults APIInternal::execute() const
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
 
-    return {.simulationPath = study_->folderOutput.c_str(),
+    return {.simulationPath = study_->folderOutput,
             .antares_problems = simulationObserver.acquireLps(),
             .error{}};
 }

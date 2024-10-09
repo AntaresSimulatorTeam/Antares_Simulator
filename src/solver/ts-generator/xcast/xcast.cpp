@@ -73,7 +73,6 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
 
         String output;
         String filename;
-        output.reserve(study.folderOutput.size() + 80);
 
         output << "ts-generator" << SEP << predicate.timeSeriesName() << SEP << "mc-" << year;
         filename.reserve(output.size() + 80);

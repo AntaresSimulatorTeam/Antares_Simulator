@@ -243,7 +243,7 @@ void SaveAs::internalCreateComponents()
         if (not pStudy->folder.empty())
         {
             // Get the parent folder
-            wxString s = wxStringFromUTF8(pStudy->folder);
+            wxString s = wxStringFromUTF8(pStudy->folder.string());
             size_t p = s.find_last_of(wxT("\\/"));
             if (p != std::string::npos)
                 pFolder->SetValue(s.substr(0, p));
