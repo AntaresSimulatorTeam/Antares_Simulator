@@ -358,9 +358,10 @@ private:
 
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
-                results.data.output.clear();
-                results.data.output << results.data.originalOutput << SEP << "areas" << SEP
-                                    << area.id << SEP << "thermal" << SEP << cluster->id();
+                fs::path path = results.data.originalOutput;
+                path /= fs::path("areas") / area.id.to<std::string>() / "thermal" / cluster->id();
+
+                results.data.output = path.string();
 
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
