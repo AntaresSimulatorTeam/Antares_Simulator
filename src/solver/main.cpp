@@ -28,9 +28,6 @@
 #include "antares/application/application.h"
 
 using namespace Antares;
-using namespace Yuni;
-
-#define SEP Yuni::IO::Separator
 
 namespace
 {
