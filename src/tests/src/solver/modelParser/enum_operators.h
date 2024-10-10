@@ -35,13 +35,13 @@ inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
     switch (value_type)
     {
     case ValueType::FLOAT:
-        os << "FLOAT"s;
+        os << "float"s;
         break;
     case ValueType::INTEGER:
-        os << "INTEGER"s;
+        os << "integer"s;
         break;
     case ValueType::BOOL:
-        os << "BOOL"s;
+        os << "boolean"s;
         break;
     default:
         os << "UNKNOWN"s;
