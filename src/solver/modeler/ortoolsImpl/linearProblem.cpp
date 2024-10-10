@@ -31,7 +31,7 @@ namespace Antares::Solver::Modeler::OrtoolsImpl
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
-    mpSolver_ = std::shared_ptr<operations_research::MPSolver>(MPSolverFactory(isMip, solverName));
+    mpSolver_ = MPSolverFactory(isMip, solverName);
     objective_ = mpSolver_->MutableObjective();
 }
 
@@ -166,7 +166,7 @@ bool OrtoolsLinearProblem::isMaximization() const
 
 MPSolver* OrtoolsLinearProblem::MPSolver()
 {
-    return mpSolver_.get();
+    return mpSolver_;
 }
 
 OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)

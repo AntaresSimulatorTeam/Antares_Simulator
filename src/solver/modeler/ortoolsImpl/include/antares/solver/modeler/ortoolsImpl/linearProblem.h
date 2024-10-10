@@ -66,7 +66,7 @@ public:
 private:
     OrtoolsMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name);
 
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
+    operations_research::MPSolver* mpSolver_;
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 
