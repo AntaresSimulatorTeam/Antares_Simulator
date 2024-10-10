@@ -354,7 +354,7 @@ private:
 
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
-                std::filesystem::path path = results.data.originalOutput;
+                std::filesystem::path path = std::string(results.data.originalOutput);
                 path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal"
                         / cluster->id();
 
@@ -407,7 +407,7 @@ private:
                     Antares::logs.info() << "Exporting results : " << area.name << " - "
                                          << results.data.link->with->name;
                     // The new output
-                    std::filesystem::path path = results.data.originalOutput;
+                    std::filesystem::path path = std::string(results.data.originalOutput);
                     std::string areaId = std::string(area.id) + " - " + results.data.link->with->id;
                     path /= std::filesystem::path("links") / areaId;
 
@@ -454,7 +454,7 @@ private:
 
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
-            std::filesystem::path path = results.data.originalOutput;
+            std::filesystem::path path = std::string(results.data.originalOutput);
             std::string setId = "@ " + sets.nameByIndex(i);
             path /= std::filesystem::path("areas") / setId;
 
