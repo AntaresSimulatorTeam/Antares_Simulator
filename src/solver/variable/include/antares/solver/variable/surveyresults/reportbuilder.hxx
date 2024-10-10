@@ -38,8 +38,6 @@
 
 #define SEP Yuni::IO::Separator
 
-namespace fs = std::filesystem;
-
 namespace Antares
 {
 namespace Solver
@@ -322,7 +320,7 @@ private:
             {
                 logs.info() << "Exporting results : " << area.name;
                 // The new output
-                fs::path path = results.data.originalOutput;
+                std::filesystem::path path = results.data.originalOutput;
                 path /= "areas";
                 path /= area.id.to<std::string>();
 
@@ -358,8 +356,8 @@ private:
 
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
-                fs::path path = results.data.originalOutput;
-                path /= fs::path("areas") / area.id.to<std::string>() / "thermal" / cluster->id();
+                std::filesystem::path path = results.data.originalOutput;
+                path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal" / cluster->id();
 
                 results.data.output = path.string();
 
@@ -410,9 +408,10 @@ private:
                     Antares::logs.info() << "Exporting results : " << area.name << " - "
                                          << results.data.link->with->name;
                     // The new output
-                    fs::path path = results.data.originalOutput;
+                    std::filesystem::path path = results.data.originalOutput;
                     std::string areaId = std::string(area.id) + " - " + results.data.link->with->id;
-                    path /= fs::path("links") / areaId;
+                    path /= std::filesystem::path("links") / areaId;
+
                     results.data.output = path.string();
 
                     SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list,
@@ -456,12 +455,13 @@ private:
 
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
-            fs::path path = results.data.originalOutput;
+            std::filesystem::path path = results.data.originalOutput;
             std::string setId = "@ " + sets.nameByIndex(i);
-            path /= fs::path("areas") / setId;
-            results.data.output = path.string();
+            path /= std::filesystem::path("areas") / setId;
 
+            results.data.output = path.string();
             results.data.setOfAreasIndex = indx++;
+
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
     }
