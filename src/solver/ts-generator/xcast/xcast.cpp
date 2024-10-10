@@ -25,16 +25,11 @@
 #include <sstream>
 #include <string>
 
-#include <yuni/yuni.h>
-
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/predicate.hxx"
 
-using namespace Yuni;
-
-#define SEP (IO::Separator)
 namespace fs = std::filesystem;
 
 namespace Antares::TSGenerator::XCast
