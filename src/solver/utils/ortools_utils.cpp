@@ -330,7 +330,7 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
 }
 
 MPSolver* ConvertIntoOrtools(const std::string& solverName,
-                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme)
+                             const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme)
 {
     Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
     return converter.Convert();
@@ -466,13 +466,13 @@ std::string availableOrToolsSolversString()
     return solvers.str();
 }
 
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
+MPSolver* MPSolverFactory(const bool isMip,
                           const std::string& solverName)
 {
     MPSolver* solver;
     try
     {
-        if (probleme->isMIP())
+        if (isMip)
         {
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName);
         }

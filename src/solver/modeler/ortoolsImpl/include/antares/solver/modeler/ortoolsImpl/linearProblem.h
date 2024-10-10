@@ -61,6 +61,7 @@ public:
     bool isMaximization() const override;
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
+    operations_research::MPSolver* MPSolver();
 
 private:
     OrtoolsMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name);

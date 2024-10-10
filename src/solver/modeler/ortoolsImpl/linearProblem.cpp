@@ -31,16 +31,7 @@ namespace Antares::Solver::Modeler::OrtoolsImpl
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
-    auto* mpSolver = isMip ? MPSolver::CreateSolver(
-                               (OrtoolsUtils::solverMap.at(solverName)).MIPSolverName)
-                           : MPSolver::CreateSolver(
-                               (OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
-
-    mpSolver_ = std::unique_ptr<operations_research::MPSolver>(mpSolver);
-    objective_ = mpSolver->MutableObjective();
-
-    params_.SetIntegerParam(MPSolverParameters::SCALING, 0);
-    params_.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+    mpSolver_ = std::shared_ptr<operations_research::MPSolver>(MPSolverFactory(isMip, solverName));
 }
 
 class ElemAlreadyExists: public std::exception
@@ -170,6 +161,11 @@ bool OrtoolsLinearProblem::isMinimization() const
 bool OrtoolsLinearProblem::isMaximization() const
 {
     return objective_->maximization();
+}
+
+MPSolver* OrtoolsLinearProblem::MPSolver()
+{
+    return mpSolver_.get();
 }
 
 OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
