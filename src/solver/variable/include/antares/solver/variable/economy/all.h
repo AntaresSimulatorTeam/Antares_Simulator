@@ -82,6 +82,9 @@
 // Output variables associated to links
 #include "links.h"
 
+// Third-party modules
+#include "thirdparty.h"
+
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
 
@@ -140,10 +143,11 @@ typedef          // Prices
                                        <NbOfDispatchedUnits         // Number of Units Dispatched
                                         <NbOfDispatchedUnitsByPlant // Number of Units Dispatched
                                                                     // by plant
-                                         <ProfitByPlant
-                                          // Links
-                                          <Variable::Economy::Links // All links
-                                           >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                         <ProfitByPlant<
+                                           ThirdParty
+                                           // Links
+                                           <Variable::Economy::Links // All links
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

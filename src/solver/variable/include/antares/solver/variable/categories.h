@@ -55,8 +55,11 @@ constexpr uint8_t de_res = 8;
 constexpr uint8_t bc = 16;
 //! Detailed values regarding short term storage
 constexpr uint8_t de_sts = 32;
+//! Third-party modules
+constexpr uint8_t de_thirdparty = 64;
 //! The maximum available value
-constexpr uint8_t maxFileLevel = 32;
+constexpr uint8_t maxFileLevel = 64;
+;
 //! All file level
 constexpr uint8_t allFile = va | id | de | de_res | bc | de_sts;
 }; // namespace FileLevel

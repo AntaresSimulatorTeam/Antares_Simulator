@@ -85,7 +85,7 @@ set(TARGET_LIBS #No alias
         checks
         locale
         yuni-static-uuid
-
+        antares-third-party
         antares-solver #executable
 )
 
