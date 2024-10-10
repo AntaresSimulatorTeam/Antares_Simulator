@@ -297,6 +297,23 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to<double>(cluster.startupCost);
     }
 
+    // initialize the ramping attributes only if ramping is enabled, else ignore these properties
+    if (p->key == "power-increase-cost")
+        return (cluster.ramping)? p->value.to<double>(cluster.ramping.value().powerIncreaseCost) : true;
+    if (p->key == "power-decrease-cost")
+        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerDecreaseCost)
+                                 : true;
+    if (p->key == "max-upward-power-ramping-rate")
+        return (cluster.ramping)
+                 ? p->value.to<double>(cluster.ramping.value().maxUpwardPowerRampingRate)
+                 : true;
+    if (p->key == "max-downward-power-ramping-rate")
+        return (cluster.ramping)
+          ? p->value.to<double>(cluster.ramping.value().maxDownwardPowerRampingRate) : true;
+    // we ignore this property as it was already handled in ThermalClusterLoadFromSection
+    if (p->key == "ramping-enabled")
+        return true;
+
     if (p->key == "unitcount")
     {
         return p->value.to<uint>(cluster.unitCount);
@@ -334,6 +351,16 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
     }
 
     cluster.setName(section.name);
+
+    // initialize the ramping attributes only if ramping-enabled=true
+    auto* rampingEnabledProperty = section.find("ramping-enabled");
+    if(rampingEnabledProperty)
+    {
+        bool rampingEnabled = false;
+        bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
+        if (rampingEnabled && attributeOK)
+            cluster.ramping = ThermalCluster::Ramping();
+    }
 
     if (section.firstProperty)
     {
@@ -519,8 +546,20 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("variableomcost", Utils::round(c->variableomcost, 3));
         }
 
-        // pollutant factor
-        for (const auto& [key, val]: Pollutant::namesToEnum)
+        // ramping (only if ramping is enabled)
+        if (c->ramping && c->ramping.value().powerIncreaseCost != 0)
+            s->add("power-increase-cost", Math::Round(c->ramping.value().powerIncreaseCost, 3));
+        if (c->ramping && c->ramping.value().powerDecreaseCost != 0)
+            s->add("power-decrease-cost", Math::Round(c->ramping.value().powerDecreaseCost, 3));
+        if (c->ramping && c->ramping.value().maxUpwardPowerRampingRate != 0)
+            s->add("max-upward-power-ramping-rate",
+                   Math::Round(c->ramping.value().maxUpwardPowerRampingRate, 3));
+        if (c->ramping && c->ramping.value().maxDownwardPowerRampingRate != 0)
+            s->add("max-downward-power-ramping-rate",
+                   Math::Round(c->ramping.value().maxDownwardPowerRampingRate, 3));
+
+        //pollutant factor
+        for (auto const& [key, val] : Pollutant::namesToEnum)
         {
             s->add(key, c->emissions.factors[val]);
         }

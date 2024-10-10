@@ -162,6 +162,9 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     minUpTime = cluster.minUpTime;
     minDownTime = cluster.minDownTime;
 
+    // ramping
+    ramping = cluster.ramping;
+
     // spinning
     spinning = cluster.spinning;
 
@@ -460,6 +463,9 @@ void Data::ThermalCluster::reset()
     marketBidCost = 0.;
     variableomcost = 0.;
     costsTimeSeries.resize(1, CostsTimeSeries());
+    
+    // ramping
+    ramping.reset();
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -581,6 +587,18 @@ bool Data::ThermalCluster::integrityCheck()
             minStablePower = nominalCapacity;
             ret = false;
     }*/
+
+    // ramping
+    if (ramping)
+    {
+        // if the ramping model is ill defined, then we disable the ramping model for this cluster
+        bool ramping_ret = ramping.value().checkValidity(parentArea, pName);
+        if(!ramping_ret)
+        {
+            ramping.reset();
+        }
+        ret = ramping_ret && ret;
+    }
 
     return ret;
 }
@@ -805,6 +823,57 @@ void ThermalCluster::checkAndCorrectAvailability()
 bool ThermalCluster::isActive() const
 {
     return enabled && !mustrun;
+}
+
+void ThermalCluster::Ramping::reset()
+{
+    powerIncreaseCost = 0;
+    powerDecreaseCost = 0;
+    maxUpwardPowerRampingRate = 0;
+    maxDownwardPowerRampingRate = 0;
+}
+
+bool ThermalCluster::Ramping::checkValidity(Area* parentArea, Data::ClusterName clusterName)
+{
+    bool ret = true;
+
+    if (maxUpwardPowerRampingRate <= 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The maximum upward power ramping rate must greater than zero."
+                     << "Ramping is disabled for this thermal cluster";
+        ret = false;
+    }
+    if (maxDownwardPowerRampingRate <= 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The maximum downward power ramping rate must greater than zero."
+                     << "Ramping is disabled for this thermal cluster";
+        ret = false;
+    }
+    if (powerIncreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The ramping power increase cost must be positive or null."
+                     << "Ramping is disabled for this thermal cluster";
+        ret = false;
+    }
+    if (powerDecreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The ramping power decrease cost must be positive or null."
+                     << "Ramping is disabled for this thermal cluster";
+        ret = false;
+    }
+    return ret;
+}
+
+std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
+{
+    return os << r.powerIncreaseCost << '\t'
+              << r.powerDecreaseCost << '\t'
+              << r.maxUpwardPowerRampingRate << '\t'
+              << r.maxDownwardPowerRampingRate;
 }
 
 } // namespace Data

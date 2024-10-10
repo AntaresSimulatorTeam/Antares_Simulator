@@ -252,6 +252,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(problemeHebdo);
+        OPT_DecompteDesVariablesEtDesContraintesRampesThermiques(problemeHebdo);
     }
 
     return mxPaliers;

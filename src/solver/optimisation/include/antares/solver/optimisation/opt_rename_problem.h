@@ -83,6 +83,8 @@ class VariableNamer: public Namer
 public:
     using Namer::Namer;
     void DispatchableProduction(unsigned int variable, const std::string& clusterName);
+    void ProductionIncreaseAboveMin(unsigned int variable, const std::string& clusterName);
+    void ProductionDecreaseAboveMin(unsigned int variable, const std::string& clusterName);
     void NODU(unsigned int variable, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned int variable, const std::string& clusterName);
@@ -145,6 +147,9 @@ public:
     void NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint, const std::string& clusterName);
     void MinDownTime(unsigned int constraint, const std::string& clusterName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
+    void RampingIncreaseRate(unsigned int constraint, const std::string& clusterName);
+    void RampingDecreaseRate(unsigned int constraint, const std::string& clusterName);
+    void ProductionOutputVariation(unsigned int constraint, const std::string& clusterName);
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void ConsistenceNODU(unsigned int constraint, const std::string& clusterName);
     void ShortTermStorageLevel(unsigned int constraint, const std::string& name);

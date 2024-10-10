@@ -155,6 +155,9 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                     }
 
                     NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)ceil(X);
+                    /* logs.info()
+                      << " Nombre de groupe en marche = "
+                                << NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] << " avant = " << X;*/
                 }
 
                 if (!problemeHebdo->OptimisationAvecVariablesEntieres)
@@ -165,10 +168,15 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                       pays,
                       index);
 
+                     int ramp = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index];
+
+
                     for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
                     {
+                        // When using the ramping model, we must ensure that the NODU don't change during the 2nd optimization.
+                        // Without this, the solver may bypass the ramping constraints by partially starting/stopping units.
                         if (NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                            < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo])
+                            < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] || ramp >= 0 )
                         {
                             NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
                               = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];

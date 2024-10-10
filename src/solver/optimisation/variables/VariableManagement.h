@@ -21,6 +21,16 @@ public:
                                 int offset = 0,
                                 int delta = 0);
 
+    int& ProductionIncreaseAboveMin(unsigned int index, 
+                                    unsigned int hourInWeek,
+                                    int offset = 0,
+                                    int delta = 0);
+
+    int& ProductionDecreaseAboveMin(unsigned int index,
+                                    unsigned int hourInWeek,
+                                    int offset = 0,
+                                    int delta = 0);
+
     int& NumberOfDispatchableUnits(unsigned int index,
                                    unsigned int hourInWeek,
                                    int offset = 0,

@@ -48,6 +48,7 @@
 #include "hydrostorage.h"
 #include "inflow.h"
 #include "localMatchingRuleViolations.h"
+#include "rampingCosts.h"
 #include "lold.h"
 #include "lolp.h"
 #include "max-mrg.h"
@@ -70,6 +71,7 @@
 #include "npCostByDispatchablePlant.h"
 #include "productionByDispatchablePlant.h"
 #include "profitByPlant.h"
+#include "rampingCostByDispatchablePlant.h"
 
 // By RES plant
 #include "STSbyGroup.h"
@@ -141,9 +143,11 @@ typedef          // Prices
                                         <NbOfDispatchedUnitsByPlant // Number of Units Dispatched
                                                                     // by plant
                                          <ProfitByPlant
+                                          <RampingCost              // Ramping cost 
+                                          <RampingCostByDispatchablePlant // Ramping cost per plant
                                           // Links
                                           <Variable::Economy::Links // All links
-                                           >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                           >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -226,15 +230,17 @@ typedef // Prices
                                                                                        // -
                                                                                        // refs:
                                                                                        // #21
+                                                                      // Number Of Dispatched Units
+                                                                      Common::SpatialAggregate<
+                                                                        NbOfDispatchedUnits, // MBO
+                                                                                            // 25/02/2016
+                                                                                            // -
+                                                                                            // refs:
+                                                                                            // #55
+                                                                        Common::SpatialAggregate<
+                                                                        RampingCost
+                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-                                                                  // Number Of Dispatched Units
-                                                                  Common::SpatialAggregate<
-                                                                    NbOfDispatchedUnits // MBO
-                                                                                        // 25/02/2016
-                                                                                        // -
-                                                                                        // refs:
-                                                                                        // #55
-                                                                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

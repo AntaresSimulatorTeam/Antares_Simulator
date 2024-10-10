@@ -148,6 +148,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
+
         variablesMapping.NumeroDeVariableDeLInterconnexion.assign(linkCount, 0);
         variablesMapping.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion.assign(linkCount,
                                                                                           0);
@@ -155,6 +156,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
                                                                                           0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
+          .assign(study.runtime.thermalPlantTotalCount, 0);        
+        variablesMapping.powerRampingIncreaseIndex
+          .assign(study.runtime.thermalPlantTotalCount, 0);
+        variablesMapping.powerRampingDecreaseIndex
           .assign(study.runtime.thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
@@ -311,6 +316,15 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.enabledAndNotMustRunCount();
 
+        // count clusters with ramping enabled
+        uint nRampingClusters = 0;
+        for (uint clusterIndex = 0; clusterIndex != nbPaliers; ++clusterIndex)
+        {
+            auto& cluster = *(study.areas.byIndex[k]->thermal.list[clusterIndex]);
+            if (cluster.ramping)
+                nRampingClusters++;
+        }
+
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure.assign(nbPaliers,
                                                                                        0.);
@@ -333,6 +347,11 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         problem.PaliersThermiquesDuPays[k]
           .DureeMinimaleDArretDUnGroupeDuPalierThermique.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.resize(nbPaliers);
+
+        problem.PaliersThermiquesDuPays[k].downwardRampingCost.assign(nbPaliers, -1);
+        problem.PaliersThermiquesDuPays[k].upwardRampingCost.assign(nbPaliers, -1);
+        problem.PaliersThermiquesDuPays[k].maxUpwardPowerRampingRate.assign(nbPaliers, -1);
+        problem.PaliersThermiquesDuPays[k].maxDownwardPowerRampingRate.assign(nbPaliers, -1);
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise.assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParJour.assign(7, 0.);
