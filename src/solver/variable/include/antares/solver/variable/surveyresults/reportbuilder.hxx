@@ -272,7 +272,7 @@ public:
         }
         // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
-        digestFileName << results.data.originalOutput << "/grid/digest.txt";
+        digestFileName << results.data.originalOutput << SEP << "grid" << SEP << "digest.txt";
         writer.addEntryFromBuffer(digestFileName.c_str(), digestBuffer);
     }
 
@@ -320,11 +320,9 @@ private:
             {
                 logs.info() << "Exporting results : " << area.name;
                 // The new output
-                std::filesystem::path path = results.data.originalOutput;
-                path /= "areas";
-                path /= area.id.to<std::string>();
-
-                results.data.output = path.string();
+                results.data.output.clear();
+                results.data.output << results.data.originalOutput << SEP << "areas" << SEP
+                                    << area.id;
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
 

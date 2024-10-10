@@ -84,7 +84,7 @@ public:
     //! The filename to use for the current report
     Yuni::String filename;
     //!
-    const std::string originalOutput;
+    const Yuni::String& originalOutput;
 
     //! Captions for rows
     Yuni::String::Vector rowCaptions;
