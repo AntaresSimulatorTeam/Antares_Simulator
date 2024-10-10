@@ -22,21 +22,18 @@
 #include "antares/solver/simulation/solver_utils.h"
 
 #include <cmath>
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <limits>
 #include <sstream>
 
-#include <yuni/io/file.h>
-
-#define SEP Yuni::IO::Separator
+namespace fs = std::filesystem;
 
 static const std::string systemCostFilename = "annualSystemCost.txt";
 static const std::string criterionsCostsFilename = "checkIntegrity.txt";
-static const std::string optimizationTimeFilename = std::string("optimization") + SEP
-                                                    + "solve-durations.txt";
-static const std::string updateTimeFilename = std::string("optimization") + SEP
-                                              + "update-durations.txt";
+static const fs::path optimizationTimeFilename = fs::path("optimization") / "solve-durations.txt";
+static const fs::path updateTimeFilename = fs::path("optimization") / "update-durations.txt";
 
 static std::ostream& toScientific(std::ostream& os)
 {
@@ -145,7 +142,7 @@ void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
     buffer << "MAX (ms) : " << updateTime.costMax << "\n";
 
     std::string s = buffer.str();
-    writer.addEntryFromBuffer(updateTimeFilename, s);
+    writer.addEntryFromBuffer(updateTimeFilename.string(), s);
 }
 
 void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer) const
@@ -164,7 +161,7 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer)
     buffer << "MAX (ms) : " << optimizationTime2.costMax << "\n";
 
     std::string s = buffer.str();
-    writer.addEntryFromBuffer(optimizationTimeFilename, s);
+    writer.addEntryFromBuffer(optimizationTimeFilename.string(), s);
 }
 
 } // namespace Antares::Solver::Simulation
