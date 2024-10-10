@@ -143,11 +143,6 @@ protected:
 
     void merge(uint year, const IntermediateValues& rhs);
 
-    uint64_t memoryUsage() const
-    {
-        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
-    }
-
     template<template<class> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {

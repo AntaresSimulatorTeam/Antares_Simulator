@@ -53,11 +53,6 @@ inline const IntermediateValues::Type& IntermediateValues::operator[](
     return hour[index];
 }
 
-inline uint64_t IntermediateValues::MemoryUsage()
-{
-    return +sizeof(Type) * HOURS_PER_YEAR;
-}
-
 template<class VCardT>
 inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
                                                         int fileLevel,

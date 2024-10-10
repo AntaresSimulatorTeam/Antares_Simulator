@@ -225,8 +225,4 @@ void TimeSeries::markAsModified() const
     timeSeries.markAsModified();
 }
 
-uint64_t TimeSeries::memoryUsage() const
-{
-    return timeSeries.memoryUsage();
-}
 } // namespace Antares::Data

@@ -1376,12 +1376,6 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
     handleOptimizationOptions(options);
 }
 
-uint64_t Parameters::memoryUsage() const
-{
-    return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
-           + yearsFilter.size(); // vector of bools, 1 bit per coefficient
-}
-
 void Parameters::resetYearsWeigth()
 {
     yearsWeight.clear();

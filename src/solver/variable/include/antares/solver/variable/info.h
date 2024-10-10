@@ -164,12 +164,7 @@ struct VariableAccessor
 
     static uint64_t Value(const Type& container)
     {
-        uint64_t result = 0;
-        for (uint i = 0; i != ColumnCountT; ++i)
-        {
-            result += container[i].memoryUsage();
-        }
-        return result;
+        return 0;
     }
 
     template<class VCardT>
@@ -385,13 +380,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
 
     static uint64_t Value(const Type& container)
     {
-        uint64_t result = 0;
-        const typename Type::const_iterator end = container.end();
-        for (typename Type::const_iterator i = container.begin(); i != end; ++i)
-        {
-            result += sizeof(ResultsT) + (*i).memoryUsage();
-        }
-        return result;
+        return 0;
     }
 
     template<class VCardT>
@@ -622,7 +611,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
 
     static uint64_t Value(const Type& container)
     {
-        return container.memoryUsage();
+        return 0;
     }
 
     template<class VCardT>

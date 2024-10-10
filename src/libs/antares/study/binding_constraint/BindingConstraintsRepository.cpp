@@ -315,16 +315,6 @@ void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
     each([&lnk](BindingConstraint& constraint) { constraint.reverseWeightSign(lnk); });
 }
 
-uint64_t BindingConstraintsRepository::memoryUsage() const
-{
-    uint64_t m = sizeof(BindingConstraintsRepository);
-    for (const auto& i: constraints_)
-    {
-        m += i->memoryUsage();
-    }
-    return m;
-}
-
 namespace // anonymous
 {
 template<class T>

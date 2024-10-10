@@ -57,11 +57,6 @@ public:
     bool saveToFolder(const AnyString& folder) const;
 
     /*!
-    ** \brief Get the amount of memory currently used
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
     ** \brief Make sure that all data are loaded in memory
     */
     bool forceReload(bool reload = false) const;

@@ -188,17 +188,6 @@ public:
     */
     void markAsModified() const;
 
-    /*!
-    ** \brief Get the amount of memory currently used by the area
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
-    ** \brief Try to estimate the amount of memory required by the area for a simulation
-    */
-
-    //@}
-
     //! \name Thermal clusters min stable power validity checking
     //@{
     /*!
@@ -655,22 +644,6 @@ public:
 
     /// create a map with the corresponding scratchpad for each area link to this numspace
     Area::ScratchMap buildScratchMap(uint numspace);
-
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Try to estimate the amount of memory required by the class for a simulation
-    */
-
-    /*!
-    ** \brief Get the average amount of memory currently used by each area
-    */
-    double memoryUsageAveragePerArea() const;
-
-    /*!
-    ** \brief Get the amount of memory currently used by the class
-    */
-    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Update the name id set

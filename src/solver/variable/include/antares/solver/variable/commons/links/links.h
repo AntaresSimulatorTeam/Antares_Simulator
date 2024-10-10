@@ -174,8 +174,6 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    uint64_t memoryUsage() const;
-
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
 
     template<class I>

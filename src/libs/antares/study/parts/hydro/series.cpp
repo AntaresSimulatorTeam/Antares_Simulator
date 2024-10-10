@@ -213,12 +213,6 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
     return false;
 }
 
-uint64_t DataSeriesHydro::memoryUsage() const
-{
-    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
-           + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
-}
-
 uint DataSeriesHydro::TScount() const
 {
     const std::vector<uint32_t> nbColumns({storage.numberOfColumns(),

@@ -228,11 +228,6 @@ public:
     {
     }
 
-    static uint64_t memoryUsage()
-    {
-        return 0;
-    }
-
     template<class I>
     static void provideInformations(I&)
     {
