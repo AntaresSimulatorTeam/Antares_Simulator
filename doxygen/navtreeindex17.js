@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Window_1_1CalendarViewStandard.html#a3ebd3f0e984dbe39345ade0dff4e426d":[9,0,0,18,17,6],
+"classAntares_1_1Window_1_1CalendarViewStandard.html#a5b08fa04ce49e201dffdd538e3364521":[9,0,0,18,17,4],
 "classAntares_1_1Window_1_1CalendarViewStandard.html#a75718e9ac0dc6b7f52b725a18481d5a0":[9,0,0,18,17,2],
 "classAntares_1_1Window_1_1CalendarViewStandard.html#ac9e3de983c5827c31812de713f5c8c00":[9,0,0,18,17,1],
 "classAntares_1_1Window_1_1CompareDesc.html":[9,0,0,18,19],
@@ -247,7 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Window_1_1Sets.html#a7b00a0de292840e085455d1ebb8308b9":[9,0,0,18,49,4],
 "classAntares_1_1Window_1_1Sets.html#ae769264b4606f35bd83fb84e8f74e494":[9,0,0,18,49,2],
 "classAntares_1_1Window_1_1Simulation_1_1Panel.html":[9,0,0,18,6,0],
-"classAntares_1_1Window_1_1Simulation_1_1Panel.html#a241f8b5b878d6b20033ef36799cc15e0":[9,0,0,18,6,0,0],
-"classAntares_1_1Window_1_1Simulation_1_1Panel.html#a3a16ccedda8c95850a7bddcc6f38a8b1":[9,0,0,18,6,0,1],
-"classAntares_1_1Window_1_1Simulation_1_1ResourcesInfoTimer.html":[9,0,0,18,6,1]
+"classAntares_1_1Window_1_1Simulation_1_1Panel.html#a241f8b5b878d6b20033ef36799cc15e0":[9,0,0,18,6,0,0]
 };

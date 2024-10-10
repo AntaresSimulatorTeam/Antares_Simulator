@@ -1,5 +1,7 @@
 var NAVTREEINDEX19 =
 {
+"classJIT_1_1Informations.html#a8e73ad3bba1b513201e2e1880f8a2b54":[9,0,132,0,4],
+"classJIT_1_1Informations.html#a93e678b555bd5a4a7c4133be44e383c4":[9,0,132,0,2],
 "classJIT_1_1Informations.html#aa5d6792c070b958e4bf49436ea0fec90":[9,0,132,0,5],
 "classJIT_1_1Informations.html#ab64260c0bdcded0fb93c17e5b81b9dc7":[9,0,132,0,10],
 "classJIT_1_1Informations.html#addae1b1dd67aea33b1b5f4cb1239f753":[9,0,132,0,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX19 =
 "congestionFeeAbs_8h_source.html":[10,0,0,4,16,0,0,0,0,2,1,1],
 "congestionFee_8h_source.html":[10,0,0,4,16,0,0,0,0,2,1,0],
 "congestionProbability_8h_source.html":[10,0,0,4,16,0,0,0,0,2,1,2],
-"connection_8hxx_source.html":[10,0,0,7,2,1,1,3,1,2],
-"connectioncreator_8h_source.html":[10,0,0,7,2,1,1,3,2,0],
-"constraint-slack-analysis_8h_source.html":[10,0,0,4,4,0,0,0,0,0]
+"connection_8hxx_source.html":[10,0,0,7,2,1,1,3,1,2]
 };

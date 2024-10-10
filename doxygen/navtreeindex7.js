@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classAntares_1_1Data_1_1AreaLink.html#ac32b5df249acdb8872d1795c37bf0176":[9,0,0,4,9,11],
 "classAntares_1_1Data_1_1AreaLink.html#ac8ee40f37bae525e273788e43b263d56":[9,0,0,4,9,20],
 "classAntares_1_1Data_1_1AreaLink.html#ad05052a16d6dcb98345291ef99ccda23":[9,0,0,4,9,16],
 "classAntares_1_1Data_1_1AreaLink.html#af0c8f6d00e71c2e4ae498952c9ebb69d":[9,0,0,4,9,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classAntares_1_1Data_1_1HydroAllocation.html#ac9ff05a5e4e6a373f7485dec1ea29e44":[9,0,0,4,32,7],
 "classAntares_1_1Data_1_1HydroAllocation.html#add18ed47df45017fd18e40a2e3b72f29":[9,0,0,4,32,17],
 "classAntares_1_1Data_1_1HydroAllocation.html#ade200607558dce782585fd39713af6b9":[9,0,0,4,32,12],
-"classAntares_1_1Data_1_1HydroAllocation.html#ae51e4f93585d23d50332288a372df88d":[9,0,0,4,32,0],
-"classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html":[9,0,0,4,33]
+"classAntares_1_1Data_1_1HydroAllocation.html#ae51e4f93585d23d50332288a372df88d":[9,0,0,4,32,0]
 };

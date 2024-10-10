@@ -1,5 +1,8 @@
 var NAVTREEINDEX27 =
 {
+"xcast-coefficients_8h_source.html":[10,0,0,7,2,1,1,1,1,1,18],
+"xcast-coefficients_8hxx_source.html":[10,0,0,7,2,1,1,1,1,1,19],
+"xcast-conversion_8h_source.html":[10,0,0,7,2,1,1,1,1,1,20],
 "xcast-conversion_8hxx_source.html":[10,0,0,7,2,1,1,1,1,1,21],
 "xcast-k_8h_source.html":[10,0,0,7,2,1,1,1,1,1,22],
 "xcast-k_8hxx_source.html":[10,0,0,7,2,1,1,1,1,1,23],

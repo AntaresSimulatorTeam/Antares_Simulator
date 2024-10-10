@@ -1,5 +1,8 @@
 var NAVTREEINDEX25 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html#adac8cac1e5bce050938e56eb22c5f8a6":[9,0,0,13,8,4,79,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html":[9,0,0,13,8,4,80],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a780167a642bf5aa2c6300dfade007828":[9,0,0,13,8,4,80,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a9a598b2dfa52b0e1ea9c2bdfd77a86f9":[9,0,0,13,8,4,80,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html":[9,0,0,13,8,4,81],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html#a1d338bac2b286e79e6d7e77dd15c9c20":[9,0,0,13,8,4,81,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX25 =
 "structAntares_1_1linkInfo_1_1comparepWeight.html":[9,0,0,35,2],
 "structAntares_1_1linkInfo_1_1comparepWeightWithImpedance.html":[9,0,0,35,3],
 "structAreaBalanceData.html":[9,0,37],
-"structAreaHydroLevelData.html":[9,0,39],
-"structBOUND__FLEX__DOWN__NODE.html":[9,0,51],
-"structBOUND__FLEX__UP__NODE.html":[9,0,52],
-"structBenchmarking_1_1DurationCollector_1_1OperationTimer.html":[9,0,2,0,0]
+"structAreaHydroLevelData.html":[9,0,39]
 };

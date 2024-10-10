@@ -1,5 +1,7 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html#a8e25e8db260c3461d82e97509c2d9df5":[9,0,0,13,8,4,1,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html":[9,0,0,13,8,4,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a2b42e6c167669c8a49f7a556e689792d":[9,0,0,13,8,4,2,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a54e8dbd19271761a634f4989c5d5ad0b":[9,0,0,13,8,4,2,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a88733af0ff889e55c2e25165dd7b5967":[9,0,0,13,8,4,2,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html":[9,0,0,13,8,4,53],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#a1d65c4e2f796e2c60321e927b7543da4":[9,0,0,13,8,4,53,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#abea16cc423e375f687ebe1f5e0eea616":[9,0,0,13,8,4,53,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#ac86d450f8241e7fa0f9d8123fdd0bc19":[9,0,0,13,8,4,53,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#afb57cd882e52080364fbca12c613ff5b":[9,0,0,13,8,4,53,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergyCSR.html":[9,0,0,13,8,4,54]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy.html#ac86d450f8241e7fa0f9d8123fdd0bc19":[9,0,0,13,8,4,53,4]
 };

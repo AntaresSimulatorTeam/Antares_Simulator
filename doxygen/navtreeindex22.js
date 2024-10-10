@@ -1,5 +1,7 @@
 var NAVTREEINDEX22 =
 {
+"functions_r.html":[9,3,0,17],
+"functions_s.html":[9,3,0,18],
 "functions_t.html":[9,3,0,19],
 "functions_type.html":[9,3,3,0],
 "functions_type.html":[9,3,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX22 =
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md24":[4,5,2],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md25":[4,5,3],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md26":[4,6],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md27":[4,6,0],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md28":[4,6,1],
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md29":[4,7]
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md27":[4,6,0]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html":[9,0,0,4,33],
 "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47b":[9,0,0,4,33,0],
 "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47ba385204e11dcae93341145965fa002089":[9,0,0,4,33,0,0],
 "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47bab8690231241b1ae3736d9f5b564329c6":[9,0,0,4,33,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a60d7c7e23c54fbcf541d5b54deefeccc":[9,0,0,4,2,8,11],
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a65525c03a9d41529a8bf54f8d3f298f6":[9,0,0,4,2,8,9],
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a6c4cd7f83ebdd90d2cf0acbf6e4668e7":[9,0,0,4,2,8,4],
-"classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a6db707f487d44b853f653a113a7db2ce":[9,0,0,4,2,8,15],
-"classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a9576fa3d5d7eee12fcf46a05090fd39d":[9,0,0,4,2,8,1]
+"classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a6db707f487d44b853f653a113a7db2ce":[9,0,0,4,2,8,15]
 };

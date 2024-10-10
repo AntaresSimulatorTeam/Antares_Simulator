@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"classAntares_1_1Window_1_1Simulation_1_1Panel.html#a3a16ccedda8c95850a7bddcc6f38a8b1":[9,0,0,18,6,0,1],
+"classAntares_1_1Window_1_1Simulation_1_1ResourcesInfoTimer.html":[9,0,0,18,6,1],
 "classAntares_1_1Window_1_1Simulation_1_1Run.html":[9,0,0,18,6,2],
 "classAntares_1_1Window_1_1Simulation_1_1Run.html#a3980baac69f0f8796781b2911fc8a4b0":[9,0,0,18,6,2,0],
 "classAntares_1_1Window_1_1Simulation_1_1Run.html#a60c6e73af2281065bbb2e12c43646f80":[9,0,0,18,6,2,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "classJIT_1_1Informations.html#a099cbe47c83c8ca89d0ca0e2685494ca":[9,0,132,0,0],
 "classJIT_1_1Informations.html#a523b6a56ae7d3f26d9bac6d8af275f90":[9,0,132,0,8],
 "classJIT_1_1Informations.html#a5ce51fa2022c55ead0cb33efde2b8919":[9,0,132,0,7],
-"classJIT_1_1Informations.html#a780fcb2563580076b73605876976d8db":[9,0,132,0,12],
-"classJIT_1_1Informations.html#a8e73ad3bba1b513201e2e1880f8a2b54":[9,0,132,0,4],
-"classJIT_1_1Informations.html#a93e678b555bd5a4a7c4133be44e383c4":[9,0,132,0,2]
+"classJIT_1_1Informations.html#a780fcb2563580076b73605876976d8db":[9,0,132,0,12]
 };

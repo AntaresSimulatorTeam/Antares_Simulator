@@ -105,7 +105,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -131,14 +131,18 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Modeler_1_1A
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Antares::Solver::Modeler::Api::LinearProblemBuilder Member List</div></div>
+  <div class="headertitle"><div class="title">Antares::Solver::Modeler::Api::VarFillerContext Member List</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html">Antares::Solver::Modeler::Api::LinearProblemBuilder</a>, including all inherited members.</p>
+<p>This is the complete list of members for <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>build</b>(ILinearProblem &amp;pb, LinearProblemData &amp;data, FillContext &amp;ctx) (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html">Antares::Solver::Modeler::Api::LinearProblemBuilder</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html">Antares::Solver::Modeler::Api::LinearProblemBuilder</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>LinearProblemBuilder</b>(const std::vector&lt; LinearProblemFiller * &gt; &amp;fillers) (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html">Antares::Solver::Modeler::Api::LinearProblemBuilder</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html">Antares::Solver::Modeler::Api::LinearProblemBuilder</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addConstraints</b>(ILinearProblem &amp;pb, LinearProblemData &amp;data, FillContext &amp;ctx) override (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>addObjective</b>(ILinearProblem &amp;pb, LinearProblemData &amp;data, FillContext &amp;ctx) override (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addVariables</b>(ILinearProblem &amp;pb, LinearProblemData &amp;data, FillContext &amp;ctx) override (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>timeseries</b> (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>VarFillerContext</b>()=default (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html">Antares::Solver::Modeler::Api::VarFillerContext</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~LinearProblemFiller</b>()=default (defined in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html">Antares::Solver::Modeler::Api::LinearProblemFiller</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html">Antares::Solver::Modeler::Api::LinearProblemFiller</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
