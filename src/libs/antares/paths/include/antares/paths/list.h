@@ -178,17 +178,6 @@ public:
         return item.empty();
     }
 
-    template<class StringT>
-    size_t sizeOnDisk(const StringT& sourceFolder) const
-    {
-        if (item.empty())
-        {
-            return 0;
-        }
-        pTmp = sourceFolder;
-        return (!pTmp) ? 0 : internalSizeOnDisk();
-    }
-
     size_t totalSizeInBytes() const;
 
     template<class StringT>
