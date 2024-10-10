@@ -382,8 +382,14 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         Probleme.SetUseNamedProblems(true);
 
-        auto MPproblem = std::shared_ptr<MPSolver>(
-          ProblemSimplexeNommeConverter(options.ortoolsSolver, &Probleme).Convert());
+        auto ortoolsProblem = std::make_unique<OrtoolsLinearProblem>(Probleme.isMIP(), options.ortoolsSolver);
+        auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>(ortoolsProblem->MPSolver(), &Probleme);
+        std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
+        LinearProblemData LP_Data;
+        LinearProblemBuilder linearProblemBuilder(fillersCollection);
+
+        linearProblemBuilder.build(*ortoolsProblem, LP_Data);
+        auto MPproblem = std::shared_ptr<MPSolver>(ortoolsProblem->MPSolver());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
