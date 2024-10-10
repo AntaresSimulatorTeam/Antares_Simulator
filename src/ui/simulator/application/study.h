@@ -114,7 +114,7 @@ bool CheckIfInsideAStudyFolder(const AnyString& path, bool quiet = false);
 ** \param simuComments Comments for the simulation
 ** \param ignoreWarnings True if warnings can be silently ignored
 ** \param useOrtools True if ortools must be used by antares-solver
-** \param ortoolsSolver Ortools solver used in case of ortools use by antares-solver
+** \param solverName Solver used
 */
 void RunSimulationOnTheStudy(Data::Study::Ptr study,
                              const YString& simuName,
@@ -123,7 +123,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
                              Solver::Feature features = Solver::standard,
                              bool preproOnly = false,
                              bool useOrtools = false,
-                             const std::string& ortoolsSolver = "sirius");
+                             const std::string& solverName = "sirius");
 
 /*!
 ** \brief Update the state of controls

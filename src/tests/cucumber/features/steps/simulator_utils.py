@@ -38,9 +38,7 @@ def init_simu(context):
 
 def build_antares_solver_command(context):
     command = [SOLVER_PATH, "-i", str(context.study_path)]
-    if context.use_ortools:
-        command.append('--use-ortools')
-        command.append('--ortools-solver=' + context.ortools_solver)
+    command.append('--solver=' + context.ortools_solver)
     if context.named_mps_problems:
         command.append('--named-mps-problems')
     if context.parallel:

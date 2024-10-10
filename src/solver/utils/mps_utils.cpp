@@ -163,12 +163,10 @@ mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
                                    bool exportMPSOnError,
                                    const int current_optim_number,
                                    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                                   bool ortoolsUsed,
                                    MPSolver* solver):
     export_mps_(exportMPS),
     export_mps_on_error_(exportMPSOnError),
     named_splx_problem_(named_splx_problem),
-    ortools_used_(ortoolsUsed),
     solver_(solver),
     current_optim_number_(current_optim_number)
 {
@@ -211,12 +209,5 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
 
 std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
 {
-    if (ortools_used_)
-    {
-        return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_);
-    }
-    else
-    {
-        return std::make_unique<fullMPSwriter>(named_splx_problem_, current_optim_number_);
-    }
+    return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_);
 }
