@@ -413,6 +413,7 @@ private:
                     fs::path path = results.data.originalOutput;
                     std::string areaId = std::string(area.id) + " - " + results.data.link->with->id;
                     path /= fs::path("links") / areaId;
+                    results.data.output = path.string();
 
                     SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list,
                                                                              results,
@@ -458,6 +459,7 @@ private:
             fs::path path = results.data.originalOutput;
             std::string setId = "@ " + sets.nameByIndex(i);
             path /= fs::path("areas") / setId;
+            results.data.output = path.string();
 
             results.data.setOfAreasIndex = indx++;
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
