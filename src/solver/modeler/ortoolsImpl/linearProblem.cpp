@@ -32,6 +32,7 @@ namespace Antares::Solver::Modeler::OrtoolsImpl
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName)
 {
     mpSolver_ = std::shared_ptr<operations_research::MPSolver>(MPSolverFactory(isMip, solverName));
+    objective_ = mpSolver_->MutableObjective();
 }
 
 class ElemAlreadyExists: public std::exception
