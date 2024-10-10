@@ -162,11 +162,6 @@ struct VariableAccessor
         }
     }
 
-    static uint64_t Value(const Type& container)
-    {
-        return 0;
-    }
-
     template<class VCardT>
     static void BuildDigest(SurveyResults& results,
                             const Type& container,
@@ -376,11 +371,6 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             // Merge all those values with the global results
             container[i].merge(year, intermediateValues[i]);
         }
-    }
-
-    static uint64_t Value(const Type& container)
-    {
-        return 0;
     }
 
     template<class VCardT>
@@ -607,11 +597,6 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     {
         // Merge all those values with the global results
         container.merge(year, intermediateValues);
-    }
-
-    static uint64_t Value(const Type& container)
-    {
-        return 0;
     }
 
     template<class VCardT>
