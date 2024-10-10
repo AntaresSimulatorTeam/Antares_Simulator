@@ -61,15 +61,16 @@ struct convert<Antares::Solver::ModelParser::ValueType>
         {
             return false;
         }
-        if (node.as<std::string>() == "continuous")
+        auto value = node.as<std::string>();
+        if (value == "continuous")
         {
             rhs = Antares::Solver::ModelParser::ValueType::CONTINUOUS;
         }
-        else if (node.as<std::string>() == "integer")
+        else if (value == "integer")
         {
             rhs = Antares::Solver::ModelParser::ValueType::INTEGER;
         }
-        else if (node.as<std::string>() == "boolean")
+        else if (value == "boolean")
         {
             rhs = Antares::Solver::ModelParser::ValueType::BOOL;
         }
