@@ -357,7 +357,8 @@ private:
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
                 std::filesystem::path path = results.data.originalOutput;
-                path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal" / cluster->id();
+                path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal"
+                        / cluster->id();
 
                 results.data.output = path.string();
 

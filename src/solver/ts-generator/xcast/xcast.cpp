@@ -25,6 +25,8 @@
 #include <sstream>
 #include <string>
 
+#include <yuni/yuni.h>
+
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
