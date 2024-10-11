@@ -1,5 +1,7 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1RefeshInspector.html":[9,0,0,2,0,0,54],
+"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1RefeshInspectorAndMarkAsModified.html":[9,0,0,2,0,0,55],
 "structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaOrder.html":[9,0,0,2,2,0,5],
 "structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaReverseOrder.html":[9,0,0,2,2,0,6],
 "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html":[9,0,0,4,0,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#aced4e0865cb18c815e20390897886ff5":[9,0,0,13,8,4,77,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html":[9,0,0,13,8,4,78],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a500884d4187ee64804dbf8835b13be8a":[9,0,0,13,8,4,78,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#adaae28064d39ab12fab29342d81a36f6":[9,0,0,13,8,4,78,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html":[9,0,0,13,8,4,79],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html#a13927a7a04deae617f2c28475c91eec9":[9,0,0,13,8,4,79,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#adaae28064d39ab12fab29342d81a36f6":[9,0,0,13,8,4,78,1]
 };

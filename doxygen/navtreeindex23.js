@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md26":[4,6],
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md27":[4,6,0],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md28":[4,6,1],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md29":[4,7],
 "md_src_2tests_2run-study-tests_2readme.html#autotoc_md30":[4,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89":[9,0,0,1,3,1],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CheckMinUpDownTime.html":[9,0,0,2,0,0,10],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CheckUnitCount.html":[9,0,0,2,0,0,11],
-"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html":[9,0,0,2,0,0,48],
-"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1RefeshInspector.html":[9,0,0,2,0,0,54],
-"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1RefeshInspectorAndMarkAsModified.html":[9,0,0,2,0,0,55]
+"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html":[9,0,0,2,0,0,48]
 };

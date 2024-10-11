@@ -114,13 +114,13 @@ var NAVTREEINDEX =
 "classAntares_1_1Window_1_1Simulation_1_1Panel.html#a3a16ccedda8c95850a7bddcc6f38a8b1",
 "classJIT_1_1Informations.html#a8e73ad3bba1b513201e2e1880f8a2b54",
 "connectioncreator_8h_source.html",
-"dir_9beabf1e0a3cddf0531c471fe3d86ed1.html",
-"functions_r.html",
-"md_src_2tests_2run-study-tests_2readme.html#autotoc_md28",
-"structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaOrder.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html#adac8cac1e5bce050938e56eb22c5f8a6",
-"structBOUND__FLEX__DOWN__NODE.html",
-"xcast-coefficients_8h_source.html"
+"dir_9ac70c255f4d84cbc977a7586db8d783.html",
+"functions_p.html",
+"md_src_2tests_2run-study-tests_2readme.html#autotoc_md26",
+"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1RefeshInspector.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html",
+"structAreaBalanceData.html",
+"xcast-allareas_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
