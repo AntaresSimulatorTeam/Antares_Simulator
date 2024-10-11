@@ -182,4 +182,9 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
     return solution_.get();
 }
 
+double OrtoolsLinearProblem::infinity() const
+{
+    return MPSolver::infinity();
+}
+
 } // namespace Antares::Solver::Modeler::OrtoolsImpl
