@@ -13,8 +13,6 @@ set(SRC_API
         include/antares/solver/modeler/api/linearProblemFiller.h
         include/antares/solver/modeler/api/linearProblemBuilder.h
 
-		include/antares/solver/modeler/api/fillers/LegacyOrtoolsFiller.h
-
         linearProblemData.cpp
 		linearProblemBuilder.cpp
 )

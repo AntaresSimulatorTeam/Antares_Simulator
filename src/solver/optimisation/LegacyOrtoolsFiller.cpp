@@ -1,34 +1,8 @@
-#pragma once
+#include "antares/solver/optimisation/LegacyOrtoolsFiller.h"
 
-#include "antares/solver/modeler/api/linearProblemFiller.h"
-#include "ortools/linear_solver/linear_solver.h"
-#include "antares/solver/utils/named_problem.h"
-#include "antares/solver/utils/ortools_utils.h"
 
-using namespace Antares::Optimization;
-
-namespace Antares::Solver::Modeler::Api
+namespace Antares::Optimization
 {
-class LegacyOrtoolsFiller: public LinearProblemFiller
-{
-public:
-    explicit LegacyOrtoolsFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-    void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
-    void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
-    void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
-
-private:
-    operations_research::MPSolver* mpSolver_ = nullptr;
-    const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
-    Nomenclature variableNameManager_ = Nomenclature('x');
-    Nomenclature constraintNameManager_ = Nomenclature('c');
-
-    void CreateVariable(unsigned idxVar, MPSolver* solver, MPObjective* const objective) const;
-    void CopyVariables(MPSolver* solver) const;
-    void UpdateContraints(unsigned idxRow, MPSolver* solver) const;
-    void CopyRows(MPSolver* solver) const;
-    void CopyMatrix(const MPSolver* solver) const;
-};
 
 LegacyOrtoolsFiller::LegacyOrtoolsFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
     problemeSimplexe_(problemeSimplexe)
@@ -50,7 +24,7 @@ void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb, LinearProblemData& da
     }
     else
     {
-        logs.error() << "Invalid cast, ortools MPSolver expected.";;
+        logs.error() << "Invalid cast, ortools MPSolver expected.";
         throw std::bad_cast();
     }
 }
@@ -95,8 +69,8 @@ void LegacyOrtoolsFiller::CopyMatrix(const MPSolver* solver) const
 }
 
 void LegacyOrtoolsFiller::CreateVariable(unsigned idxVar,
-                                                   MPSolver* solver,
-                                                   MPObjective* const objective) const
+                                         MPSolver* solver,
+                                         MPObjective* const objective) const
 {
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
@@ -145,3 +119,4 @@ void LegacyOrtoolsFiller::CopyRows(MPSolver* solver) const
     }
 }
 }
+

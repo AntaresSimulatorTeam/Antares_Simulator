@@ -27,7 +27,7 @@
 #include <antares/logs/logs.h>
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
-#include "antares/solver/modeler/api/fillers/LegacyOrtoolsFiller.h"
+#include "antares/solver/optimisation/LegacyOrtoolsFiller.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"

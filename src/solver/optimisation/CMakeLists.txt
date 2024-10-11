@@ -170,6 +170,8 @@ set(RTESOLVER_OPT
 		variables/VariableManagerUtils.cpp
 		include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
 		HebdoProblemToLpsTranslator.cpp
+		include/antares/solver/optimisation/LegacyOrtoolsFiller.h
+		LegacyOrtoolsFiller.cpp
 )
 
 
