@@ -5,12 +5,12 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ### Input
 #### Removed properties
 The following properties were removed from **settings/generaldata.ini**.
-- adequacy patch/enable-first-step
-- adequacy patch/set-to-null-ntc-between-physical-out-for-first-step
-- other preferences/initial-reservoir-levels
+- `adequacy patch/enable-first-step`
+- `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step`
+- `other preferences/initial-reservoir-levels`
 #### Short-term storages
-- Added property efficiencywithdrawal (double in [0, 1]) short-term storages (file input/st-storage/clusters/<area id>/list.ini)
-- Added timeseries cost-injection.txt, cost-withdrawal.txt and cost-level.txt. These files are optional. If present, they must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column.
+- Added property `efficiencywithdrawal` (double in [0, 1]) short-term storages (file input/st-storage/clusters/<area id>/list.ini)
+- Added timeseries cost-injection.txt, cost-withdrawal.txt and cost-level.txt. These files are optional. If present, they must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. Each of these timeseries is located in directory input/st-storage/series/<area id>/<ST id>/, along existing series (rule-curves.txt, etc.).
 
 #### Final levels / scenario-builder
 - Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing prefix "hl" (hydro initial level), that is
