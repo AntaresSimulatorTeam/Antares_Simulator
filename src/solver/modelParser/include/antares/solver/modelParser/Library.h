@@ -58,27 +58,6 @@ inline std::string toString(const ValueType& value_type)
     }
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
-{
-    using namespace std::string_literals;
-    switch (value_type)
-    {
-    case ValueType::CONTINUOUS:
-        os << "CONTINUOUS"s;
-        break;
-    case ValueType::INTEGER:
-        os << "INTEGER"s;
-        break;
-    case ValueType::BOOL:
-        os << "BOOL"s;
-        break;
-    default:
-        os << "UNKNOWN"s;
-        break;
-    }
-    return os;
-}
-
 struct Variable
 {
     std::string id;

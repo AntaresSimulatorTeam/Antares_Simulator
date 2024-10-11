@@ -27,6 +27,8 @@
 
 #include "antares/solver/modelParser/parser.h"
 
+#include "enum_operators.h"
+
 using namespace std::string_literals;
 
 // Test empty library
@@ -230,7 +232,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
                   description: "model_description"
                   parameters:
                       - id: "param_name1"
-                        time-dependent: false
+                        time-dependent: FALSE
                         scenario-dependent: false
                       - id: "param_name2"
                         time-dependent: true
@@ -391,15 +393,15 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
                     - id: "var1"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "BOOL"
+                      variable-type: "boolean"
                     - id: "var2"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "INTEGER"
+                      variable-type: "integer"
                     - id: "var3"
                       lower-bound: 0
                       upper-bound: 1
-                      variable-type: "FLOAT"
+                      variable-type: "continuous"
                     - id: "var4"
                       lower-bound: 0
                       upper-bound: 1
@@ -618,4 +620,27 @@ BOOST_AUTO_TEST_CASE(model_is_not_scalar)
             models: "not a map"
         )"s;
     BOOST_CHECK_THROW(parser.parse(library), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(model_attributs_can_be_ommited)
+{
+    Antares::Solver::ModelParser::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types: []
+            models:
+                - id: "model_id"
+        )"s;
+    Antares::Solver::ModelParser::Library libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].description, "");
+    BOOST_CHECK(libraryObj.models[0].parameters.empty());
+    BOOST_CHECK(libraryObj.models[0].variables.empty());
+    BOOST_CHECK(libraryObj.models[0].ports.empty());
+    BOOST_CHECK(libraryObj.models[0].port_field_definitions.empty());
+    BOOST_CHECK(libraryObj.models[0].constraints.empty());
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objective, "");
 }

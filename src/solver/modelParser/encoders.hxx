@@ -29,6 +29,23 @@
 // Implement convert specializations
 namespace YAML
 {
+
+/**
+ * @brief shortend to default construct a value when node is null
+ * @tparam T Type to convert the node to
+ * @param n node
+ * @return Object of type T
+ * It's just to simplify repertitve and verbose lines
+ * as_fallback_default<std::vector<Antares::Solver::ModelParser::Parameter>>(
+node["parameters"]) is equivalent to
+ node["parameters"].as<std::vector<Antares::Solver::ModelParser::Parameter>>(std::vector<Antares::Solver::ModelParser::Parameter>())
+ */
+template<typename T>
+inline T as_fallback_default(const Node& n)
+{
+    return n.as<T>(T());
+}
+
 template<>
 struct convert<Antares::Solver::ModelParser::Parameter>
 {
@@ -54,15 +71,16 @@ struct convert<Antares::Solver::ModelParser::ValueType>
         {
             return false;
         }
-        if (node.as<std::string>() == "FLOAT")
+        const auto value = node.as<std::string>();
+        if (value == "continuous")
         {
             rhs = Antares::Solver::ModelParser::ValueType::CONTINUOUS;
         }
-        else if (node.as<std::string>() == "INTEGER")
+        else if (value == "integer")
         {
             rhs = Antares::Solver::ModelParser::ValueType::INTEGER;
         }
-        else if (node.as<std::string>() == "BOOL")
+        else if (value == "boolean")
         {
             rhs = Antares::Solver::ModelParser::ValueType::BOOL;
         }
@@ -84,8 +102,8 @@ struct convert<Antares::Solver::ModelParser::Variable>
             return false;
         }
         rhs.id = node["id"].as<std::string>();
-        rhs.lower_bound = node["lower-bound"].as<std::string>();
-        rhs.upper_bound = node["upper-bound"].as<std::string>();
+        rhs.lower_bound = node["lower-bound"].as<std::string>("");
+        rhs.upper_bound = node["upper-bound"].as<std::string>("");
         rhs.variable_type = node["variable-type"].as<Antares::Solver::ModelParser::ValueType>(
           Antares::Solver::ModelParser::ValueType::CONTINUOUS);
         return true;
@@ -149,16 +167,18 @@ struct convert<Antares::Solver::ModelParser::Model>
         }
         rhs.id = node["id"].as<std::string>();
         rhs.description = node["description"].as<std::string>("");
-        rhs.parameters = node["parameters"]
-                           .as<std::vector<Antares::Solver::ModelParser::Parameter>>();
-        rhs.variables = node["variables"].as<std::vector<Antares::Solver::ModelParser::Variable>>();
-        rhs.ports = node["ports"].as<std::vector<Antares::Solver::ModelParser::Port>>();
-        rhs.port_field_definitions = node["port-field-definitions"]
-                                       .as<std::vector<
-                                         Antares::Solver::ModelParser::PortFieldDefinition>>();
-        rhs.constraints = node["constraints"]
-                            .as<std::vector<Antares::Solver::ModelParser::Constraint>>();
-        rhs.objective = node["objective"].as<std::string>();
+        rhs.parameters = as_fallback_default<std::vector<Antares::Solver::ModelParser::Parameter>>(
+          node["parameters"]);
+        rhs.variables = as_fallback_default<std::vector<Antares::Solver::ModelParser::Variable>>(
+          node["variables"]);
+        rhs.ports = as_fallback_default<std::vector<Antares::Solver::ModelParser::Port>>(
+          node["ports"]);
+        rhs.port_field_definitions = as_fallback_default<
+          std::vector<Antares::Solver::ModelParser::PortFieldDefinition>>(
+          node["port-field-definitions"]);
+        rhs.constraints = as_fallback_default<
+          std::vector<Antares::Solver::ModelParser::Constraint>>(node["constraints"]);
+        rhs.objective = node["objective"].as<std::string>("");
         return true;
     }
 };
@@ -189,8 +209,8 @@ struct convert<Antares::Solver::ModelParser::Library>
     {
         rhs.id = node["id"].as<std::string>();
         rhs.description = node["description"].as<std::string>("");
-        rhs.port_types = node["port-types"]
-                           .as<std::vector<Antares::Solver::ModelParser::PortType>>();
+        rhs.port_types = as_fallback_default<std::vector<Antares::Solver::ModelParser::PortType>>(
+          node["port-types"]);
         rhs.models = node["models"].as<std::vector<Antares::Solver::ModelParser::Model>>();
         return true;
     }
