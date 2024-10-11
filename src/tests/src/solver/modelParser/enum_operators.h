@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include <iostream>
+#include <ostream>
 #include <string>
 
 #include "antares/solver/libObjectModel/valueType.h"
