@@ -38,8 +38,6 @@
 using namespace Yuni;
 using namespace Antares;
 
-#define SEP IO::Separator
-
 namespace Antares::Data
 {
 Data::RenewableCluster::RenewableCluster(Area* parent):

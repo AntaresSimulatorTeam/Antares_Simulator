@@ -40,15 +40,14 @@ namespace Antares::Data
 {
 
 static bool loadTSfromFile(Matrix<double>& ts,
-                           const AreaName& areaID,
+                           const std::string& areaID,
                            const fs::path& folder,
                            const std::string& filename,
                            unsigned int height)
 {
-    YString filePath;
+    fs::path filePath = folder / areaID / filename;
     Matrix<>::BufferType fileContent;
-    filePath.clear() << folder << SEP << areaID << SEP << filename;
-    return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
+    return ts.loadFromCSVFile(filePath.string(), 1, height, &fileContent);
 }
 
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
