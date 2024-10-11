@@ -353,14 +353,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>removeThermalTimeseri
 Area::ScratchMap&#160;</td><td class="memItemRight" valign="bottom"><b>buildScratchMap</b> (uint numspace)</td></tr>
 <tr class="memdesc:a4f2076d1a54724f1682f85943ca253fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a map with the corresponding scratchpad for each area link to this numspace <br /></td></tr>
 <tr class="separator:a4f2076d1a54724f1682f85943ca253fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Memory management</div></td></tr>
-<tr class="memitem:abb6793d7837c87493b31c75efd0a10be" id="r_abb6793d7837c87493b31c75efd0a10be"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#abb6793d7837c87493b31c75efd0a10be">memoryUsageAveragePerArea</a> () const</td></tr>
-<tr class="memdesc:abb6793d7837c87493b31c75efd0a10be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to estimate the amount of memory required by the class for a simulation.  <br /></td></tr>
-<tr class="separator:abb6793d7837c87493b31c75efd0a10be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a304cd882e5be932e517f9dcd92e0f253" id="r_a304cd882e5be932e517f9dcd92e0f253"><td class="memItemLeft" align="right" valign="top"><a id="a304cd882e5be932e517f9dcd92e0f253" name="a304cd882e5be932e517f9dcd92e0f253"></a>
-uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> () const</td></tr>
-<tr class="memdesc:a304cd882e5be932e517f9dcd92e0f253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the amount of memory currently used by the class. <br /></td></tr>
-<tr class="separator:a304cd882e5be932e517f9dcd92e0f253"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a600e35fa262c7fea7de82a4f95c4cc7a" id="r_a600e35fa262c7fea7de82a4f95c4cc7a"><td class="memItemLeft" align="right" valign="top"><a id="a600e35fa262c7fea7de82a4f95c4cc7a" name="a600e35fa262c7fea7de82a4f95c4cc7a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>updateNameIDSet</b> () const</td></tr>
 <tr class="memdesc:a600e35fa262c7fea7de82a4f95c4cc7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the name id set. <br /></td></tr>
@@ -401,13 +393,13 @@ const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</t
 <div class="line">    ...</div>
 <div class="line">    c = c-&gt;next;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition</b> area.h:377</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition</b> area.h:366</div></div>
 </div><!-- fragment --><p>It is possible to directly access to an area via its index : </p><div class="fragment"><div class="line"><a class="code hl_class" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a>* l;</div>
 <div class="line">...</div>
 <div class="line">&lt;<span class="keywordflow">do</span> some stuff here to fill the area list&gt;</div>
 <div class="line">...</div>
 <div class="line">printf(<span class="stringliteral">&quot;Area name : `%s`\n&quot;</span>, (*(l-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1AreaList.html#abc0bdb59b3d70e7a2a6b61ba4376a391">byIndex</a>[2])).name);</div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html_abc0bdb59b3d70e7a2a6b61ba4376a391"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html#abc0bdb59b3d70e7a2a6b61ba4376a391">Antares::Data::AreaList::byIndex</a></div><div class="ttdeci">std::vector&lt; Area * &gt; byIndex</div><div class="ttdoc">All areas by their index.</div><div class="ttdef"><b>Definition</b> area.h:692</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html_abc0bdb59b3d70e7a2a6b61ba4376a391"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html#abc0bdb59b3d70e7a2a6b61ba4376a391">Antares::Data::AreaList::byIndex</a></div><div class="ttdeci">std::vector&lt; Area * &gt; byIndex</div><div class="ttdoc">All areas by their index.</div><div class="ttdef"><b>Definition</b> area.h:665</div></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab01f9674081f9a0210d4df2d2489a037" name="ab01f9674081f9a0210d4df2d2489a037"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab01f9674081f9a0210d4df2d2489a037">&#9670;&#160;</a></span>ensureDataIsInitialized()</h2>
@@ -557,26 +549,6 @@ const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</t
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A non-zero value if the operation was successful, 0 otherwise </dd></dl>
-
-</div>
-</div>
-<a id="abb6793d7837c87493b31c75efd0a10be" name="abb6793d7837c87493b31c75efd0a10be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb6793d7837c87493b31c75efd0a10be">&#9670;&#160;</a></span>memoryUsageAveragePerArea()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double Antares::Data::AreaList::memoryUsageAveragePerArea </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Try to estimate the amount of memory required by the class for a simulation. </p>
-<p>Get the average amount of memory currently used by each area </p>
 
 </div>
 </div>

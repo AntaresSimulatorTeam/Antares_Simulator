@@ -4,7 +4,6 @@ var classJIT_1_1Informations =
     [ "Informations", "classJIT_1_1Informations.html#adf1b5eca4b7f69f15f4b2096118d3441", null ],
     [ "~Informations", "classJIT_1_1Informations.html#a93e678b555bd5a4a7c4133be44e383c4", null ],
     [ "markAsModified", "classJIT_1_1Informations.html#af62b4f794931d1cb5b9d4a0273ea9326", null ],
-    [ "memoryUsage", "classJIT_1_1Informations.html#a8e73ad3bba1b513201e2e1880f8a2b54", null ],
     [ "alreadyLoaded", "classJIT_1_1Informations.html#aa5d6792c070b958e4bf49436ea0fec90", null ],
     [ "estimatedSize", "classJIT_1_1Informations.html#afe715f505434288202aa4a473070b7ec", null ],
     [ "lastModification", "classJIT_1_1Informations.html#a5ce51fa2022c55ead0cb33efde2b8919", null ],

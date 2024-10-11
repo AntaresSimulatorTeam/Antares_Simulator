@@ -189,20 +189,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>storeTimeseriesNumber
 void&#160;</td><td class="memItemRight" valign="bottom"><b>detach</b> ()</td></tr>
 <tr class="memdesc:a6b072a19e5be6e9e69d79dcf374af877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detach the link from the areas. <br /></td></tr>
 <tr class="separator:a6b072a19e5be6e9e69d79dcf374af877"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Data management</div></td></tr>
-<tr class="memitem:a953ec9b48ab3a1e28cb0e22b2d7a2ac4" id="r_a953ec9b48ab3a1e28cb0e22b2d7a2ac4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a953ec9b48ab3a1e28cb0e22b2d7a2ac4">reverse</a> ()</td></tr>
-<tr class="memdesc:a953ec9b48ab3a1e28cb0e22b2d7a2ac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse the link.  <br /></td></tr>
-<tr class="separator:a953ec9b48ab3a1e28cb0e22b2d7a2ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a002ef94fafebb634a3e7247f562797" id="r_a4a002ef94fafebb634a3e7247f562797"><td class="memItemLeft" align="right" valign="top"><a id="a4a002ef94fafebb634a3e7247f562797" name="a4a002ef94fafebb634a3e7247f562797"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>resetToDefaultValues</b> ()</td></tr>
-<tr class="separator:a4a002ef94fafebb634a3e7247f562797"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d04f7504f9122281cf1981bf29260dd" id="r_a0d04f7504f9122281cf1981bf29260dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a0d04f7504f9122281cf1981bf29260dd">forceReload</a> (bool reload=false) const</td></tr>
-<tr class="memdesc:a0d04f7504f9122281cf1981bf29260dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate all matrices.  <br /></td></tr>
-<tr class="separator:a0d04f7504f9122281cf1981bf29260dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1983f2f1ec53ff29608a80e0712808e3" id="r_a1983f2f1ec53ff29608a80e0712808e3"><td class="memItemLeft" align="right" valign="top"><a id="a1983f2f1ec53ff29608a80e0712808e3" name="a1983f2f1ec53ff29608a80e0712808e3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> () const</td></tr>
-<tr class="memdesc:a1983f2f1ec53ff29608a80e0712808e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the data associated to the link as modified. <br /></td></tr>
-<tr class="separator:a1983f2f1ec53ff29608a80e0712808e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -294,11 +280,20 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>linkWidth</b></td></tr
 struct&#160;</td><td class="memItemRight" valign="bottom"><b>CompareLinkName</b></td></tr>
 <tr class="separator:a75c454b1fef4da92eee10015570f3ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Memory management</h2></td></tr>
-<tr class="memitem:a8bfbaa4728c6a4d2148fbd27f65cde9a" id="r_a8bfbaa4728c6a4d2148fbd27f65cde9a"><td class="memItemLeft" align="right" valign="top"><a id="a8bfbaa4728c6a4d2148fbd27f65cde9a" name="a8bfbaa4728c6a4d2148fbd27f65cde9a"></a>
-uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> () const</td></tr>
-<tr class="memdesc:a8bfbaa4728c6a4d2148fbd27f65cde9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size (bytes) in memory occupied by a <code><a class="el" href="classAntares_1_1Data_1_1AreaLink.html" title="Definition of a link between two areas (Interconnection)">AreaLink</a></code> structure. <br /></td></tr>
-<tr class="separator:a8bfbaa4728c6a4d2148fbd27f65cde9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Data management</h2></td></tr>
+<tr class="memitem:a953ec9b48ab3a1e28cb0e22b2d7a2ac4" id="r_a953ec9b48ab3a1e28cb0e22b2d7a2ac4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a953ec9b48ab3a1e28cb0e22b2d7a2ac4">reverse</a> ()</td></tr>
+<tr class="memdesc:a953ec9b48ab3a1e28cb0e22b2d7a2ac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse the link.  <br /></td></tr>
+<tr class="separator:a953ec9b48ab3a1e28cb0e22b2d7a2ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a002ef94fafebb634a3e7247f562797" id="r_a4a002ef94fafebb634a3e7247f562797"><td class="memItemLeft" align="right" valign="top"><a id="a4a002ef94fafebb634a3e7247f562797" name="a4a002ef94fafebb634a3e7247f562797"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resetToDefaultValues</b> ()</td></tr>
+<tr class="separator:a4a002ef94fafebb634a3e7247f562797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d04f7504f9122281cf1981bf29260dd" id="r_a0d04f7504f9122281cf1981bf29260dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a0d04f7504f9122281cf1981bf29260dd">forceReload</a> (bool reload=false) const</td></tr>
+<tr class="memdesc:a0d04f7504f9122281cf1981bf29260dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate all matrices.  <br /></td></tr>
+<tr class="separator:a0d04f7504f9122281cf1981bf29260dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1983f2f1ec53ff29608a80e0712808e3" id="r_a1983f2f1ec53ff29608a80e0712808e3"><td class="memItemLeft" align="right" valign="top"><a id="a1983f2f1ec53ff29608a80e0712808e3" name="a1983f2f1ec53ff29608a80e0712808e3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> () const</td></tr>
+<tr class="memdesc:a1983f2f1ec53ff29608a80e0712808e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the data associated to the link as modified. <br /></td></tr>
+<tr class="separator:a1983f2f1ec53ff29608a80e0712808e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02e7793bb2ceab8b562b1ebb8a5de520" id="r_a02e7793bb2ceab8b562b1ebb8a5de520"><td class="memItemLeft" align="right" valign="top"><a id="a02e7793bb2ceab8b562b1ebb8a5de520" name="a02e7793bb2ceab8b562b1ebb8a5de520"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVisibleOnLayer</b> (const size_t &amp;layerID) const</td></tr>
 <tr class="separator:a02e7793bb2ceab8b562b1ebb8a5de520"><td class="memSeparator" colspan="2">&#160;</td></tr>

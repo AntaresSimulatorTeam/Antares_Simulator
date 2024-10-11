@@ -22,7 +22,6 @@ var classAntares_1_1Data_1_1XCast =
     [ "forceReload", "classAntares_1_1Data_1_1XCast.html#a063d8a5fa3fe7c4da73704ef9205f827", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1XCast.html#ac4916ec9da427484a7a1b77626cb3622", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1XCast.html#aafbace03d662190cab2fddebeeeb6cb7", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1XCast.html#a20745472647a7e6876cac00fd3436cea", null ],
     [ "resetToDefaultValues", "classAntares_1_1Data_1_1XCast.html#aefcf3b9d0a2c9c3f7db4afac00db2016", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1XCast.html#aa542cfed40fe837e8be95f8d4e115e15", null ],
     [ "capacity", "classAntares_1_1Data_1_1XCast.html#a45cf83d40b900b21cdc7184a8c503e69", null ],

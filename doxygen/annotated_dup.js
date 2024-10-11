@@ -310,7 +310,7 @@ var annotated_dup =
         [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ],
         [ "PreproHydro", "classAntares_1_1Data_1_1PreproHydro.html", "classAntares_1_1Data_1_1PreproHydro" ],
         [ "RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html", "classAntares_1_1Data_1_1RenewableCluster" ],
-        [ "RenewableClusterList", "classAntares_1_1Data_1_1RenewableClusterList.html", "classAntares_1_1Data_1_1RenewableClusterList" ],
+        [ "RenewableClusterList", "classAntares_1_1Data_1_1RenewableClusterList.html", null ],
         [ "SetHandlerAreas", "classAntares_1_1Data_1_1SetHandlerAreas.html", null ],
         [ "Sets", "classAntares_1_1Data_1_1Sets.html", "classAntares_1_1Data_1_1Sets" ],
         [ "SimulationComments", "classAntares_1_1Data_1_1SimulationComments.html", "classAntares_1_1Data_1_1SimulationComments" ],

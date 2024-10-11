@@ -8,7 +8,6 @@ var classAntares_1_1Data_1_1AreaLink =
     [ "detach", "classAntares_1_1Data_1_1AreaLink.html#a6b072a19e5be6e9e69d79dcf374af877", null ],
     [ "forceReload", "classAntares_1_1Data_1_1AreaLink.html#a0d04f7504f9122281cf1981bf29260dd", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1AreaLink.html#a1983f2f1ec53ff29608a80e0712808e3", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1AreaLink.html#a8bfbaa4728c6a4d2148fbd27f65cde9a", null ],
     [ "reverse", "classAntares_1_1Data_1_1AreaLink.html#a953ec9b48ab3a1e28cb0e22b2d7a2ac4", null ],
     [ "assetType", "classAntares_1_1Data_1_1AreaLink.html#afec7a458508d5d545aa22e2dad68382f", null ],
     [ "color", "classAntares_1_1Data_1_1AreaLink.html#ac32b5df249acdb8872d1795c37bf0176", null ],

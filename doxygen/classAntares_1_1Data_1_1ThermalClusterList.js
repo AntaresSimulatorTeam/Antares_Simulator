@@ -7,6 +7,5 @@ var classAntares_1_1Data_1_1ThermalClusterList =
     [ "ensureDataPrepro", "classAntares_1_1Data_1_1ThermalClusterList.html#adfa5186bb19b5913bb535053cfde9269", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a9887e31792e0c7b9035267f8717047dd", null ],
     [ "loadPreproFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1ThermalClusterList.html#a81f03911144901fc9c180daa29a67f54", null ],
     [ "reverseCalculationOfSpinning", "classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4", null ]
 ];

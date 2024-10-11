@@ -23,7 +23,6 @@ var classAntares_1_1Data_1_1RenewableCluster =
     [ "groupId", "classAntares_1_1Data_1_1RenewableCluster.html#a242c33df7d31195d2fcadd40c93cff62", null ],
     [ "integrityCheck", "classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1RenewableCluster.html#ae8ec6b0966a8bec49347a806054cd484", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1RenewableCluster.html#af1e7130b288acd19f71b07e6d5652882", null ],
     [ "reset", "classAntares_1_1Data_1_1RenewableCluster.html#a45d0c3151285c29957c016f920077693", null ],
     [ "setGroup", "classAntares_1_1Data_1_1RenewableCluster.html#a021725327dab871273ea8d04da9f0a19", null ],
     [ "groupID", "classAntares_1_1Data_1_1RenewableCluster.html#a68675a5d06a20fc0d9a8eb6d677ca4bd", null ]

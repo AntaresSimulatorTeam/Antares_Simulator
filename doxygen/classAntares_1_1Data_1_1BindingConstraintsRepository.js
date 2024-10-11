@@ -16,7 +16,6 @@ var classAntares_1_1Data_1_1BindingConstraintsRepository =
     [ "forceReload", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#ac33b84bf9a7b08e3bec112ad6258e81e", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#abd83bcf6d74fb76c740751cc35aeda22", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a9c68726b0811d6dd3be70c9821c357ce", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a6a89ece24272732b66beb7243f24d7c5", null ],
     [ "remove", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a6936ec7b725e7b9ea756e1ba444b1c69", null ],
     [ "remove", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a17eeb8edd739f52517fb761914388e90", null ],
     [ "remove", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#af21e4dce151e51bd4ceb2d8c41897235", null ],

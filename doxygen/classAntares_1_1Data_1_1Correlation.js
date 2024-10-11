@@ -7,7 +7,6 @@ var classAntares_1_1Data_1_1Correlation =
     [ "forceReload", "classAntares_1_1Data_1_1Correlation.html#ac74bc9e92f95cb444eaa8603cfdc6a43", null ],
     [ "loadFromFile", "classAntares_1_1Data_1_1Correlation.html#abd37985ed6c7ff6486b8ed7bcb7534d0", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1Correlation.html#a828e8d529528db6da8849f3cd94cc379", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1Correlation.html#ae6b52eadf7da8115feeb6b8e45f8465f", null ],
     [ "mode", "classAntares_1_1Data_1_1Correlation.html#ad24b833b9dd6761ddbce73d18e4edc37", null ],
     [ "mode", "classAntares_1_1Data_1_1Correlation.html#a0f8f7010c990e6d275eb91ebe2647df6", null ],
     [ "reset", "classAntares_1_1Data_1_1Correlation.html#aee3c56bc865e166a8b8a4d8c6911b1c4", null ],

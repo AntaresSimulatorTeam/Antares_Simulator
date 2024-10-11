@@ -4,7 +4,6 @@ var classAntares_1_1Data_1_1AreaUI =
     [ "~AreaUI", "classAntares_1_1Data_1_1AreaUI.html#a00e40ca3f49ee00639da58cdf3f1a16c", null ],
     [ "loadFromFile", "classAntares_1_1Data_1_1AreaUI.html#a0aa5f8e3888a10d4f56ac9e025a6d771", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1AreaUI.html#ab14c6c2638102613c256603227bf10a0", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1AreaUI.html#a1ac8da9d409a881100d2176e7280bfd8", null ],
     [ "modified", "classAntares_1_1Data_1_1AreaUI.html#a82b9e2f5bc9c9cd90e9c684fa5a98dd6", null ],
     [ "reset", "classAntares_1_1Data_1_1AreaUI.html#a3a74c64682ddd04a20d5159a8b1468ae", null ],
     [ "saveToFile", "classAntares_1_1Data_1_1AreaUI.html#ab9dc91a8ccd522e21d8478ab295d9e8d", null ],

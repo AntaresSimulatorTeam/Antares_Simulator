@@ -283,21 +283,6 @@ template&lt;class VCardToFindT &gt; </td></tr>
 template&lt;class VCardToFindT &gt; </td></tr>
 <tr class="memitem:acedbde3983999f6346a3dd6ee2be18f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>retrieveResultsForLink</b> (typename <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html">Variable::Storage</a>&lt; VCardToFindT &gt;::ResultsType **result, const <a class="el" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a> *link)</td></tr>
 <tr class="separator:acedbde3983999f6346a3dd6ee2be18f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">User reports</div></td></tr>
-<tr class="memitem:aee22f18b519086d608ed552a4a7e1ba9" id="r_aee22f18b519086d608ed552a4a7e1ba9"><td class="memItemLeft" align="right" valign="top"><a id="aee22f18b519086d608ed552a4a7e1ba9" name="aee22f18b519086d608ed552a4a7e1ba9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;results, int dataLevel, int fileLevel, int precision) const</td></tr>
-<tr class="memdesc:aee22f18b519086d608ed552a4a7e1ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask to all variables to fullfil the report. <br /></td></tr>
-<tr class="separator:aee22f18b519086d608ed552a4a7e1ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab14e564425b64a35ceea3243c46b6041" id="r_ab14e564425b64a35ceea3243c46b6041"><td class="memItemLeft" align="right" valign="top"><a id="ab14e564425b64a35ceea3243c46b6041" name="ab14e564425b64a35ceea3243c46b6041"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>buildAnnualSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;results, int dataLevel, int fileLevel, int precision, unsigned int numSpace) const</td></tr>
-<tr class="separator:ab14e564425b64a35ceea3243c46b6041"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeea2b05f6ad888e02e34afa9aadd1a7b" id="r_aeea2b05f6ad888e02e34afa9aadd1a7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#aeea2b05f6ad888e02e34afa9aadd1a7b">exportSurveyResults</a> (bool global, const Yuni::String &amp;output, unsigned int numSpace, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;writer)</td></tr>
-<tr class="memdesc:aeea2b05f6ad888e02e34afa9aadd1a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask to all variables to fullfil additional reports (like the digest for example)  <br /></td></tr>
-<tr class="separator:aeea2b05f6ad888e02e34afa9aadd1a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab967510525e2f3670364ba5a8ae46ca8" id="r_ab967510525e2f3670364ba5a8ae46ca8"><td class="memItemLeft" align="right" valign="top"><a id="ab967510525e2f3670364ba5a8ae46ca8" name="ab967510525e2f3670364ba5a8ae46ca8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>buildDigest</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;results, int digestLevel, int dataLevel) const</td></tr>
-<tr class="memdesc:ab967510525e2f3670364ba5a8ae46ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask to all variables to fullfil the digest. <br /></td></tr>
-<tr class="separator:ab967510525e2f3670364ba5a8ae46ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html">Antares::Solver::Variable::Container::EndOfList</a></td></tr>
 <tr class="memitem:abdf0525f5032fab55c135bb1bb7626b3 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList" id="r_abdf0525f5032fab55c135bb1bb7626b3"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><b>broadcastNonApplicability</b> (bool)</td></tr>
@@ -328,11 +313,21 @@ template&lt;class VCardToFindT &gt; </td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>localBuildAnnualSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;, int, int, unsigned int) const</td></tr>
 <tr class="separator:a26e1a928a7562cf912a1f362a7ae6316 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Memory management</h2></td></tr>
-<tr class="memitem:aba6555a31a6f99767233481b83f569eb" id="r_aba6555a31a6f99767233481b83f569eb"><td class="memItemLeft" align="right" valign="top"><a id="aba6555a31a6f99767233481b83f569eb" name="aba6555a31a6f99767233481b83f569eb"></a>
-uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> () const</td></tr>
-<tr class="memdesc:aba6555a31a6f99767233481b83f569eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the amount of memory currently used by the class. <br /></td></tr>
-<tr class="separator:aba6555a31a6f99767233481b83f569eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">User reports</h2></td></tr>
+<tr class="memitem:aee22f18b519086d608ed552a4a7e1ba9" id="r_aee22f18b519086d608ed552a4a7e1ba9"><td class="memItemLeft" align="right" valign="top"><a id="aee22f18b519086d608ed552a4a7e1ba9" name="aee22f18b519086d608ed552a4a7e1ba9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;results, int dataLevel, int fileLevel, int precision) const</td></tr>
+<tr class="memdesc:aee22f18b519086d608ed552a4a7e1ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask to all variables to fullfil the report. <br /></td></tr>
+<tr class="separator:aee22f18b519086d608ed552a4a7e1ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab14e564425b64a35ceea3243c46b6041" id="r_ab14e564425b64a35ceea3243c46b6041"><td class="memItemLeft" align="right" valign="top"><a id="ab14e564425b64a35ceea3243c46b6041" name="ab14e564425b64a35ceea3243c46b6041"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildAnnualSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;results, int dataLevel, int fileLevel, int precision, unsigned int numSpace) const</td></tr>
+<tr class="separator:ab14e564425b64a35ceea3243c46b6041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeea2b05f6ad888e02e34afa9aadd1a7b" id="r_aeea2b05f6ad888e02e34afa9aadd1a7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#aeea2b05f6ad888e02e34afa9aadd1a7b">exportSurveyResults</a> (bool global, const Yuni::String &amp;output, unsigned int numSpace, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &amp;writer)</td></tr>
+<tr class="memdesc:aeea2b05f6ad888e02e34afa9aadd1a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask to all variables to fullfil additional reports (like the digest for example)  <br /></td></tr>
+<tr class="separator:aeea2b05f6ad888e02e34afa9aadd1a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab967510525e2f3670364ba5a8ae46ca8" id="r_ab967510525e2f3670364ba5a8ae46ca8"><td class="memItemLeft" align="right" valign="top"><a id="ab967510525e2f3670364ba5a8ae46ca8" name="ab967510525e2f3670364ba5a8ae46ca8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildDigest</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;results, int digestLevel, int dataLevel) const</td></tr>
+<tr class="memdesc:ab967510525e2f3670364ba5a8ae46ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask to all variables to fullfil the digest. <br /></td></tr>
+<tr class="separator:ab967510525e2f3670364ba5a8ae46ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -418,9 +413,6 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>buildDigest</b
 <tr class="memitem:ac6eadd92eaaaf6129b0465619b37389b inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList" id="r_ac6eadd92eaaaf6129b0465619b37389b"><td class="memItemLeft" align="right" valign="top">
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>beforeYearByYearExport</b> (uint, uint)</td></tr>
 <tr class="separator:ac6eadd92eaaaf6129b0465619b37389b inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b6b2d7319afc6a93fd29e80cfb68ab7 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList" id="r_a5b6b2d7319afc6a93fd29e80cfb68ab7"><td class="memItemLeft" align="right" valign="top">
-static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> ()</td></tr>
-<tr class="separator:a5b6b2d7319afc6a93fd29e80cfb68ab7 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9895591513ebed9ef117459c2d30ee4e inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList" id="r_a9895591513ebed9ef117459c2d30ee4e"><td class="memTemplParams" colspan="2">
 template&lt;class I &gt; </td></tr>
 <tr class="memitem:a9895591513ebed9ef117459c2d30ee4e inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>provideInformations</b> (I &amp;)</td></tr>

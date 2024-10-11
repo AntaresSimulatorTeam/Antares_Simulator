@@ -28,7 +28,6 @@ var classAntares_1_1Data_1_1ThermalCluster =
     [ "groupId", "classAntares_1_1Data_1_1ThermalCluster.html#a4a5dde22643ed69a9f489dfd34b9a93a", null ],
     [ "integrityCheck", "classAntares_1_1Data_1_1ThermalCluster.html#aa5f85df7b9029d31f4c775e558604b7c", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1ThermalCluster.html#aee1ba740e0ec981839a06f0b5617ed45", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1ThermalCluster.html#afe909ae1171f72d1ad8c2896f81f2089", null ],
     [ "reset", "classAntares_1_1Data_1_1ThermalCluster.html#a134006aac9ea4f5a48d6373649434ee0", null ],
     [ "reverseCalculationOfSpinning", "classAntares_1_1Data_1_1ThermalCluster.html#a3bd2c387658f172827fed74472b76597", null ],
     [ "setGroup", "classAntares_1_1Data_1_1ThermalCluster.html#a073742dd9e1502e7976e5e9b295347a5", null ],

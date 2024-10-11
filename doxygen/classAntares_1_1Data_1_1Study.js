@@ -36,7 +36,6 @@ var classAntares_1_1Data_1_1Study =
     [ "linkDelete", "classAntares_1_1Data_1_1Study.html#a4484ea0f7cfcdda95fefcf775f1f4e96", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1Study.html#a72d5a931861077820467c61e39136cbf", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1Study.html#a92df811430c20bf487c90f0507a6871c", null ],
-    [ "memoryUsage", "classAntares_1_1Data_1_1Study.html#af471ee675835101f03bd6a7942799bfe", null ],
     [ "modifyAreaNameIfAlreadyTaken", "classAntares_1_1Data_1_1Study.html#a72747f33cee6845ff0ae1ab349614962", null ],
     [ "performTransformationsBeforeLaunchingSimulation", "classAntares_1_1Data_1_1Study.html#adbac27cdf3533a86aaf7e0b331b41f00", null ],
     [ "prepareOutput", "classAntares_1_1Data_1_1Study.html#a2c8bcf73d2e4e9791c1e555f8b9b3ef9", null ],

@@ -12,7 +12,6 @@ var classAntares_1_1Solver_1_1Variable_1_1Container_1_1List =
     [ "initializeFromLink", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a8e713c8209b119d3585749d99c99eecd", null ],
     [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a8dce733696fc8ccde5341a62f0b8d1c4", null ],
     [ "initializeFromThermalCluster", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#ad8599ae4e950213a6853bc58711439cc", null ],
-    [ "memoryUsage", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#aba6555a31a6f99767233481b83f569eb", null ],
     [ "simulationBegin", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a408daa61d94e8daf0f6aa0406df4e4c8", null ],
     [ "simulationEnd", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a350467ab43984271627daf1fc68cf020", null ],
     [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a50050a48180b25db7078912843a921cf", null ],

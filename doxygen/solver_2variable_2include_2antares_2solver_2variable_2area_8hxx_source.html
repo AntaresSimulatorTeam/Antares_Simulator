@@ -685,28 +685,15 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>        pAreas[i].beforeYearByYearExport(year, numSpace);</div>
 <div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>    }</div>
 <div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>}</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span> </div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>uint64_t Areas&lt;NextT&gt;::memoryUsage()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    uint64_t result = 0;</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i != pAreaCount; ++i)</div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>    {</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>        result += <span class="keyword">sizeof</span>(NextType) + <span class="keyword">sizeof</span>(<span class="keywordtype">void</span>*); <span class="comment">// overhead vector</span></div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>        result += pAreas[i].memoryUsage();</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>    }</div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>    <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>}</div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span> </div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>} <span class="comment">// namespace Variable</span></div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span> </div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_AREA_HXX__</span></div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span> </div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_AREA_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition</b> links.h:50</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition</b> area.h:52</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html_a90abcca3d7d84d70337f48f9ade4af76"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html#a90abcca3d7d84d70337f48f9ade4af76">Antares::Data::Area::index</a></div><div class="ttdeci">uint index</div><div class="ttdoc">Index of the area - only valid when already added to an area list.</div><div class="ttdef"><b>Definition</b> area.h:228</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Cluster_html_ab593cef54f0e36411998fe057e82ce34"><div class="ttname"><a href="classAntares_1_1Data_1_1Cluster.html#ab593cef54f0e36411998fe057e82ce34">Antares::Data::Cluster::parentArea</a></div><div class="ttdeci">Area * parentArea</div><div class="ttdoc">The associate area (alias)</div><div class="ttdef"><b>Definition</b> cluster.h:120</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html_a90abcca3d7d84d70337f48f9ade4af76"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html#a90abcca3d7d84d70337f48f9ade4af76">Antares::Data::Area::index</a></div><div class="ttdeci">uint index</div><div class="ttdoc">Index of the area - only valid when already added to an area list.</div><div class="ttdef"><b>Definition</b> area.h:217</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Cluster_html_ab593cef54f0e36411998fe057e82ce34"><div class="ttname"><a href="classAntares_1_1Data_1_1Cluster.html#ab593cef54f0e36411998fe057e82ce34">Antares::Data::Cluster::parentArea</a></div><div class="ttdeci">Area * parentArea</div><div class="ttdoc">The associate area (alias)</div><div class="ttdef"><b>Definition</b> cluster.h:114</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:61</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition</b> cluster.h:71</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Areas_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Areas.html">Antares::Solver::Variable::Areas</a></div><div class="ttdef"><b>Definition</b> area.h:73</div></div>
@@ -715,7 +702,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Areas_html_a7ca85bb5f5592bc8827fcaf6e3bd0dc3"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Areas.html#a7ca85bb5f5592bc8827fcaf6e3bd0dc3">Antares::Solver::Variable::Areas::~Areas</a></div><div class="ttdeci">~Areas()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> area.hxx:298</div></div>
 <div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition</b> cbuilder.h:120</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition</b> variable.h:25</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_a57926881b164d4e92ae6218126c7e079"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#a57926881b164d4e92ae6218126c7e079">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typenameVCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition</b> info.h:790</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_a57926881b164d4e92ae6218126c7e079"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#a57926881b164d4e92ae6218126c7e079">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typenameVCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition</b> info.h:764</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
