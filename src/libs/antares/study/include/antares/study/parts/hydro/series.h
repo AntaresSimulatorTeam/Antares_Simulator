@@ -93,18 +93,6 @@ public:
     bool saveToFolder(const AreaName& areaID, const AnyString& folder) const;
     //@}
 
-    //! \name Memory
-    //@{
-    /*!
-    ** \brief Get the size (bytes) in memory occupied by a `DataSeriesHydro` structure
-    */
-    uint64_t memoryUsage() const;
-    /*!
-    ** \brief Try to estimate the amount of memory required for launching a simulation
-    */
-
-    //@}
-
     TimeSeriesNumbers timeseriesNumbers;
 
     /*!

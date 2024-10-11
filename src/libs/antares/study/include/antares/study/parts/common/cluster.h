@@ -71,12 +71,6 @@ public:
     virtual bool integrityCheck() = 0;
 
     /*!
-    ** \brief Get the memory consummed by the cluster (in bytes)
-    */
-    virtual uint64_t memoryUsage() const = 0;
-    //@}
-
-    /*!
     ** \brief Invalidate all data associated to the cluster
     */
     virtual bool forceReload(bool reload) const = 0;

@@ -90,10 +90,5 @@ bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
     return true;
 }
 
-uint64_t SimulationComments::memoryUsage() const
-{
-    return name.capacity() + comments.capacity();
-}
-
 } // namespace Data
 } // namespace Antares

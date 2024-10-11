@@ -36,7 +36,6 @@ class RenewableClusterList: public ClusterList<RenewableCluster>
 {
 public:
     std::string typeID() const override;
-    uint64_t memoryUsage() const override;
 
     bool loadFromFolder(const AnyString& folder, Area* area);
     bool validateClusters() const;

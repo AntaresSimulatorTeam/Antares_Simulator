@@ -92,11 +92,6 @@ PreproHydro::PreproHydro()
 {
 }
 
-uint64_t PreproHydroMemoryUsage(PreproHydro* h)
-{
-    return (h) ? sizeof(double) : 0;
-}
-
 void PreproHydro::reset()
 {
     intermonthlyCorrelation = 0.5;

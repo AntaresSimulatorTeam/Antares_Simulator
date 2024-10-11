@@ -326,11 +326,6 @@ public:
         RightType::template simulationEndSpatialAggregates(allVars);
     }
 
-    uint64_t memoryUsage() const
-    {
-        return LeftType::memoryUsage() + RightType::memoryUsage();
-    }
-
     template<class I>
     static void provideInformations(I& infos)
     {

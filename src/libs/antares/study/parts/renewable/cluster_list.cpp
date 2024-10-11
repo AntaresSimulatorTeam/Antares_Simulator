@@ -38,13 +38,6 @@ std::string RenewableClusterList::typeID() const
     return "renewables";
 }
 
-uint64_t RenewableClusterList::memoryUsage() const
-{
-    uint64_t ret = sizeof(RenewableClusterList) + (2 * sizeof(void*)) * enabledCount();
-    std::ranges::for_each(each_enabled(), [&ret](const auto c) { ret += c->memoryUsage(); });
-    return ret;
-}
-
 bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created

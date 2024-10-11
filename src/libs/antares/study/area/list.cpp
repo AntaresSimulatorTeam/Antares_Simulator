@@ -1394,13 +1394,6 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
     l->each([](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
-uint64_t AreaList::memoryUsage() const
-{
-    uint64_t ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
-    each([&ret](const Data::Area& area) { ret += area.memoryUsage(); });
-    return ret;
-}
-
 uint AreaList::areaLinkCount() const
 {
     uint ret = 0;

@@ -201,13 +201,6 @@ double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
     return 0.;
 }
 
-uint64_t RenewableCluster::memoryUsage() const
-{
-    uint64_t amount = sizeof(RenewableCluster);
-    amount += series.memoryUsage();
-    return amount;
-}
-
 unsigned int RenewableCluster::precision() const
 {
     return 4;

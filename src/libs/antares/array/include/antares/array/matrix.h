@@ -415,13 +415,6 @@ public:
     */
     bool empty() const;
 
-    //! Get the amount of memory used by the matrix
-    uint64_t memoryUsage() const;
-
-    //! Get the amount of memory used by the matrix
-    uint64_t valuesMemoryUsage() const;
-    //@}
-
     /*!
     ** \brief Print the matrix to std::cout (debug)
     */

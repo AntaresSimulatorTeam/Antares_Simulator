@@ -128,12 +128,6 @@ public:
     */
     uint groupId() const override;
 
-    /*!
-    ** \brief Get the memory consummed by the renewable cluster (in bytes)
-    */
-    uint64_t memoryUsage() const override;
-    //@}
-
     bool setTimeSeriesModeFromString(const YString& value);
 
     YString getTimeSeriesModeAsString() const;
