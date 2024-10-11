@@ -12,8 +12,7 @@ namespace Antares::Solver::Modeler::Api
 class LegacyOrtoolsFiller: public LinearProblemFiller
 {
 public:
-    explicit LegacyOrtoolsFiller(operations_research::MPSolver* mpSolver,
-                                 const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+    explicit LegacyOrtoolsFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
     void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
     void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
     void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
@@ -31,9 +30,7 @@ private:
     void CopyMatrix(const MPSolver* solver) const;
 };
 
-LegacyOrtoolsFiller::LegacyOrtoolsFiller(operations_research::MPSolver* mpSolver,
-                                         const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
-    mpSolver_(mpSolver),
+LegacyOrtoolsFiller::LegacyOrtoolsFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
     problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
@@ -45,16 +42,33 @@ LegacyOrtoolsFiller::LegacyOrtoolsFiller(operations_research::MPSolver* mpSolver
 
 void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb, LinearProblemData& data)
 {
-    // Create the variables and set objective cost.
-    CopyVariables(mpSolver_);
+    auto* mpSolver = dynamic_cast<operations_research::MPSolver*>(&pb);
+    if(mpSolver)
+    {
+        // Create the variables and set objective cost.
+        CopyVariables(mpSolver);
+    }
+    else
+    {
+        logs.error() << "Invalid cast, ortools MPSolver expected.";;
+        throw std::bad_cast();
+    }
 }
 
 void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data)
 {
-    // Create constraints and set coefs
-    CopyRows(mpSolver_);
-
-    CopyMatrix(mpSolver_);
+    auto* mpSolver = dynamic_cast<operations_research::MPSolver*>(&pb);
+    if(mpSolver)
+    {
+        // Create constraints and set coefs
+        CopyRows(mpSolver);
+        CopyMatrix(mpSolver);
+    }
+    else
+    {
+        logs.error() << "Invalid cast, ortools MPSolver expected.";
+        throw std::bad_cast();
+    }
 }
 
 void LegacyOrtoolsFiller::addObjective(ILinearProblem& pb, LinearProblemData& data)
