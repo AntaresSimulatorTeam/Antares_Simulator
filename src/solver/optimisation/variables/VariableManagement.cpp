@@ -123,15 +123,8 @@ int& VariableManager::LTStorageClusterReserveUpParticipation(unsigned int index,
                                                              int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    auto& indices
-      = CorrespondanceVarNativesVarOptim_[pdt].LTStorageClusterReserveUpParticipationIndex;
-
-    if (indices.size() <= index)
-    {
-        indices.resize(index + 1, -1); 
-    }
-
-     return indices[index];
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .LTStorageClusterReserveUpParticipationIndex[index];
 }
 
 int& VariableManager::LTStorageClusterReserveDownParticipation(unsigned int index,

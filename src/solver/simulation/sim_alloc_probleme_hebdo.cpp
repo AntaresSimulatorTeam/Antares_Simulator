@@ -264,7 +264,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation.assign(
             study.runtime.shortTermStorageCount * study.runtime.capacityReservationCount, -1);
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholds.assign(
+          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholdsMax.assign(
+            study.runtime.shortTermStorageCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholdsMin.assign(
             study.runtime.shortTermStorageCount, -1);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds.assign(
@@ -277,7 +280,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation.assign(
             study.runtime.longTermStorageCount * study.runtime.capacityReservationCount, -1);
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds.assign(
+          .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholdsMax.assign(
+            study.runtime.longTermStorageCount, -1);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholdsMin.assign(
             study.runtime.longTermStorageCount, -1);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds.assign(
@@ -517,7 +523,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].Reserves[j].ValeursHorairesInternalExcessReserve.assign(
               nbReserves, 0.);
             problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster.assign(
-              nbReserves,
+              1, // For the moment only one hydro cluster per area
               0.);
         }
         // Short term storage results

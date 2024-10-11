@@ -78,156 +78,134 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                 for (const auto& clusterReserveParticipation :
                      areaReserveUp.AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .runningThermalClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat3
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ProductionThermique[pdtHebdo]
-                                .ParticipationReservesDuPalierOn[clusterReserveParticipation
-                                                                   .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat3;
-                    }
-                    if (clusterReserveParticipation.maxPowerOff > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .offThermalClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat3 = &(
-                          problemeHebdo->ResultatsHoraires[pays]
-                            .ProductionThermique[pdtHebdo]
-                            .ParticipationReservesDuPalierOff[clusterReserveParticipation
-                                                                .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat3;
-
-                        var = CorrespondanceVarNativesVarOptim
-                                .nbOffGroupUnitsParticipatingToReservesInThermalClusterIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat4
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ProductionThermique[pdtHebdo]
-                                .NombreDeGroupesEteintDuPalierQuiParticipentAuxReserves
-                                  [clusterReserveParticipation.areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat4;
-                    }
-                    if (clusterReserveParticipation.maxPower > 0
-                        || clusterReserveParticipation.maxPowerOff > 0)
-                    {
-                        var
-                          = CorrespondanceVarNativesVarOptim.thermalClusterReserveParticipationIndex
+                    var = CorrespondanceVarNativesVarOptim
+                            .runningThermalClusterReserveParticipationIndex
                               [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat3
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ProductionThermique[pdtHebdo]
-                                .ParticipationReservesDuPalier[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat3;
-                    }
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    double* adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ProductionThermique[pdtHebdo]
+                        .ParticipationReservesDuPalierOn[clusterReserveParticipation
+                                                           .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .offThermalClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ProductionThermique[pdtHebdo]
+                        .ParticipationReservesDuPalierOff[clusterReserveParticipation
+                                                            .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .nbOffGroupUnitsParticipatingToReservesInThermalClusterIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ProductionThermique[pdtHebdo]
+                        .NombreDeGroupesEteintDuPalierQuiParticipentAuxReserves
+                          [clusterReserveParticipation.clusterIdInArea]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
+
+                    var = CorrespondanceVarNativesVarOptim.thermalClusterReserveParticipationIndex
+                            [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ProductionThermique[pdtHebdo]
+                        .ParticipationReservesDuPalier[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                 }
 
                 // Short Term Storage Cluster
-                for (const auto& clusterReserveParticipation :
+                for (const auto& clusterReserveParticipation:
                      areaReserveUp.AllSTStorageReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxTurbining > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .STStorageTurbiningClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ShortTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if (clusterReserveParticipation.maxPumping > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .STStoragePumpingClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ShortTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if ((clusterReserveParticipation.maxPumping > 0)
-                        || (clusterReserveParticipation.maxTurbining > 0))
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .STStorageClusterReserveUpParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat1
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ShortTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat1;
-                    }
+                    var = CorrespondanceVarNativesVarOptim
+                            .STStorageTurbiningClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    double* adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ShortTermStorage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .STStoragePumpingClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ShortTermStorage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .STStorageClusterReserveUpParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ShortTermStorage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                 }
 
                 // Long Term Storage Cluster
-                for (const auto& clusterReserveParticipation :
+                for (const auto& clusterReserveParticipation:
                      areaReserveUp.AllLTStorageReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxTurbining > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .LTStorageTurbiningClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .HydroUsage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if (clusterReserveParticipation.maxPumping > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .LTStoragePumpingClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .HydroUsage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if ((clusterReserveParticipation.maxPumping > 0)
-                        || (clusterReserveParticipation.maxTurbining > 0))
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .LTStorageClusterReserveUpParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat1
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .HydroUsage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat1;
-                    }
+                    var = CorrespondanceVarNativesVarOptim
+                            .LTStorageTurbiningClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    double* adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .HydroUsage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .LTStoragePumpingClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .HydroUsage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .LTStorageClusterReserveUpParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .HydroUsage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                 }
             }
             for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
@@ -253,130 +231,113 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat2;
 
                 // Thermal Clusters
-                for (const auto& clusterReserveParticipation :
+                for (const auto& clusterReserveParticipation:
                      areaReserveDown.AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .runningThermalClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat3
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ProductionThermique[pdtHebdo]
-                                .ParticipationReservesDuPalierOn[clusterReserveParticipation
-                                                                   .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat3;
-
-                        var
-                          = CorrespondanceVarNativesVarOptim.thermalClusterReserveParticipationIndex
+                    var = CorrespondanceVarNativesVarOptim
+                            .runningThermalClusterReserveParticipationIndex
                               [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat4
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ProductionThermique[pdtHebdo]
-                                .ParticipationReservesDuPalier[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat4;
-                    }
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    double* adresseDuResultat3 = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ProductionThermique[pdtHebdo]
+                        .ParticipationReservesDuPalierOn[clusterReserveParticipation
+                                                           .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat3;
+
+                    var = CorrespondanceVarNativesVarOptim.thermalClusterReserveParticipationIndex
+                            [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    double* adresseDuResultat4 = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ProductionThermique[pdtHebdo]
+                        .ParticipationReservesDuPalier[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat4;
                 }
 
                 // Short Term Storage Cluster
-                for (const auto& clusterReserveParticipation :
+                for (const auto& clusterReserveParticipation:
                      areaReserveDown.AllSTStorageReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxTurbining > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .STStorageTurbiningClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ShortTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if (clusterReserveParticipation.maxPumping > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .STStoragePumpingClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ShortTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if ((clusterReserveParticipation.maxPumping > 0)
-                        || (clusterReserveParticipation.maxTurbining > 0))
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .STStorageClusterReserveDownParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .ShortTermStorage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation
-                                                                 .areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
+                    var = CorrespondanceVarNativesVarOptim
+                            .STStorageTurbiningClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    double* adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ShortTermStorage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .STStoragePumpingClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ShortTermStorage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .STStorageClusterReserveDownParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .ShortTermStorage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                 }
 
                 // Long Term Storage Cluster
-                for (const auto& clusterReserveParticipation :
+                for (const auto& clusterReserveParticipation:
                      areaReserveDown.AllLTStorageReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxTurbining > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .LTStorageTurbiningClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .HydroUsage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if (clusterReserveParticipation.maxPumping > 0)
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .LTStoragePumpingClusterReserveParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .HydroUsage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
-                    if ((clusterReserveParticipation.maxPumping > 0)
-                        || (clusterReserveParticipation.maxTurbining > 0))
-                    {
-                        var = CorrespondanceVarNativesVarOptim
-                                .LTStorageClusterReserveDownParticipationIndex
-                                  [clusterReserveParticipation.globalIndexClusterParticipation];
-                        Xmin[var] = 0;
-                        Xmax[var] = LINFINI_ANTARES;
-                        double* adresseDuResultat
-                          = &(problemeHebdo->ResultatsHoraires[pays]
-                                .HydroUsage[pdtHebdo]
-                                .reserveParticipationOfCluster[clusterReserveParticipation.areaIndexClusterParticipation]);
-                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
-                    }
+                    var = CorrespondanceVarNativesVarOptim
+                            .LTStorageTurbiningClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    double* adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .HydroUsage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .LTStoragePumpingClusterReserveParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .HydroUsage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
+
+                    var = CorrespondanceVarNativesVarOptim
+                            .LTStorageClusterReserveDownParticipationIndex
+                              [clusterReserveParticipation.globalIndexClusterParticipation];
+                    Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+                    adresseDuResultat = &(
+                      problemeHebdo->ResultatsHoraires[pays]
+                        .HydroUsage[pdtHebdo]
+                        .reserveParticipationOfCluster[clusterReserveParticipation
+                                                         .areaIndexClusterParticipation]);
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
                 }
             }
         }

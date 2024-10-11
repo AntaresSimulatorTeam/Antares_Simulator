@@ -27,11 +27,6 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllThermalReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        && (data.thermalClusters[pays]
-                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
-                                                                                 .clusterIdInArea]
-                            == globalClusterIdx))
                         builder.RunningThermalClusterReserveParticipation(
                           reserveParticipations.globalIndexClusterParticipation, 1);
                 }
@@ -66,13 +61,9 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllThermalReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        && (data.thermalClusters[pays]
-                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
-                                                                                 .clusterIdInArea]
-                            == globalClusterIdx))
-                        builder.RunningThermalClusterReserveParticipation(
-                          reserveParticipations.globalIndexClusterParticipation, 1);
+                    builder.RunningThermalClusterReserveParticipation(
+                      reserveParticipations.globalIndexClusterParticipation,
+                      1);
                 }
             }
 
@@ -97,37 +88,25 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
     else
     {
         // Lambda that count the number of reserves that the cluster is participating to
-        auto countReservesFromCluster
-          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations,
-                      int globalClusterIdx,
-                      int pays,
-                      ReserveData data)
+        auto countReservesParticipations
+          = [](const std::vector<CAPACITY_RESERVATION>& reservations)
         {
             int counter = 0;
             for (const auto& capacityReservation : reservations)
             {
-                for (const auto& reserveParticipations :
-                     capacityReservation.AllThermalReservesParticipation)
-                {
-                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        && (data.thermalClusters[pays]
-                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
-                                                                                 .clusterIdInArea]
-                            == globalClusterIdx))
-                        counter++;
-                }
+                counter += capacityReservation.AllThermalReservesParticipation.size();
             }
             return counter;
         };
 
-        int nbConstraintsToAdd
-          = countReservesFromCluster(
-              data.areaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data)
-            + countReservesFromCluster(
-              data.areaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
+        int nbTermsUp = countReservesParticipations(
+            data.areaReserves[pays].areaCapacityReservationsUp);
+        int nbTermsDown = countReservesParticipations(
+            data.areaReserves[pays].areaCapacityReservationsDown);
 
-        builder.data.NbTermesContraintesPourLesReserves += 2*(nbConstraintsToAdd+2);
+        builder.data.NbTermesContraintesPourLesReserves
+            += (nbTermsUp + 1) * (nbTermsUp > 0) + (nbTermsDown + 1) * (nbTermsDown > 0);
 
-        builder.data.nombreDeContraintes += 2*nbConstraintsToAdd;
+        builder.data.nombreDeContraintes += (nbTermsUp > 0) + (nbTermsDown > 0);
     }
 }

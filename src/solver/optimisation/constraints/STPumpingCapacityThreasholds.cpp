@@ -24,10 +24,6 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllSTStorageReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                        && (data.shortTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
-                              .clusterGlobalIndex
-                            == globalClusterIdx))
                         builder.STStoragePumpingClusterReserveParticipation(
                           reserveParticipations.globalIndexClusterParticipation, 1);
                 }
@@ -56,10 +52,6 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllSTStorageReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPumping != CLUSTER_NOT_PARTICIPATING)
-                        && (data.shortTermStorageOfArea[pays][reserveParticipations.clusterIdInArea]
-                              .clusterGlobalIndex
-                            == globalClusterIdx))
                         builder.STStoragePumpingClusterReserveParticipation(
                           reserveParticipations.globalIndexClusterParticipation, 1);
                 }
@@ -90,7 +82,7 @@ void STPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
             int counter = 0;
             for (const auto& capacityReservation: reservations)
             {
-                counter += capacityReservation.AllLTStorageReservesParticipation.size();
+                counter += capacityReservation.AllSTStorageReservesParticipation.size();
             }
             return counter;
         };

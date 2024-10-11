@@ -32,13 +32,17 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.Pumping(pays, -1).lessThan();
+                if (data.longTermStorageOfArea[pays].PresenceDePompageModulable)
+                {
+                    builder.Pumping(pays, -1);
+                }
+                builder.lessThan();
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
                 namer.LTPumpingCapacityThreasholdsDown(builder.data.nombreDeContraintes,
-                                                   "LongTermStorage");
+                    "LongTermStorage");
                 builder.build();
             }
         }
@@ -61,17 +65,21 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.Pumping(pays, 1).lessThan();
+                if (data.longTermStorageOfArea[pays].PresenceDHydrauliqueModulable)
+                {
+                    builder.Pumping(pays, 1);
+                }
+                builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
+                    .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
                     [globalClusterIdx]
-                  = builder.data.nombreDeContraintes;
+                    = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
                 namer.LTPumpingCapacityThreasholdsUp(builder.data.nombreDeContraintes,
-                                                   "LongTermStorage");
+                    "LongTermStorage");
                 builder.build();
             }
         }
@@ -94,8 +102,10 @@ void LTPumpingCapacityThreasholds::add(int pays, int cluster, int pdt)
         int nbTermsDown = countReservesParticipation(
           data.areaReserves[pays].areaCapacityReservationsDown);
 
+        int hydroPump = data.longTermStorageOfArea[pays].PresenceDePompageModulable;
+
         builder.data.NbTermesContraintesPourLesReserves
-          += (nbTermsUp + 1) * (nbTermsUp > 0) + (nbTermsDown + 1) * (nbTermsDown > 0);
+          += (nbTermsUp + hydroPump) * (nbTermsUp > 0) + (nbTermsDown + hydroPump) * (nbTermsDown > 0);
 
         builder.data.nombreDeContraintes += (nbTermsUp > 0) + (nbTermsDown > 0);
     }

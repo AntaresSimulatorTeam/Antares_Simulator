@@ -100,25 +100,23 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveUp.AllThermalReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxPower > 0)
-                            {
-                                // 16 bis
-                                pMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
+                            // 16 bis
+                            pMaxReserve.add(pays, reserve, cluster_participation, pdt, true);
 
-                            }
-                            if (clusterReserveParticipation.maxPowerOff > 0)
-                            {
-                                // 16 ter
-                                offUnitsThermalParticipatingToReserves.add(pays,
-                                                                           reserve,
-                                                                           cluster_participation,
-                                                                           pdt);
+                            // 16 ter
+                            offUnitsThermalParticipatingToReserves.add(pays,
+                                                                       reserve,
+                                                                       cluster_participation,
+                                                                       pdt);
+                            // 16 quater
+                            pOffUnits.add(pays, reserve, cluster_participation, pdt);
 
-                                // 16 quater
-                                pOffUnits.add(pays, reserve, cluster_participation, pdt);
-                            }
                             // 17 quinquies
-                            thermalReserveParticipation.add(pays, reserve, cluster_participation, pdt, true);
+                            thermalReserveParticipation.add(pays,
+                                                            reserve,
+                                                            cluster_participation,
+                                                            pdt,
+                                                            true);
                             cluster_participation++;
                         }
                         reserve++;
@@ -132,17 +130,18 @@ void ReserveParticipationGroup::BuildConstraints()
                         reserveSatisfaction.add(pays, reserve, pdt, false);
 
                         uint32_t cluster_participation = 0;
-                        for (const auto& clusterReserveParticipation :
+                        for (const auto& clusterReserveParticipation:
                              areaReserveDown.AllThermalReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxPower > 0)
-                            {
-                                // 16 bis
-                                pMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
+                            // 16 bis
+                            pMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
 
-                                // 17 sexies
-                                thermalReserveParticipation.add(pays, reserve, cluster_participation, pdt, false);
-                            }
+                            // 17 sexies
+                            thermalReserveParticipation.add(pays,
+                                                            reserve,
+                                                            cluster_participation,
+                                                            pdt,
+                                                            false);
                             cluster_participation++;
                         }
                         reserve++;
@@ -159,25 +158,20 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveUp.AllSTStorageReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxTurbining > 0)
-                            {
-                                // 15 (k)
-                                STTurbiningMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, true);
-                            }
-                            if (clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (l)
-                                STPumpingMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, true);
-                            }
-                            if (clusterReserveParticipation.maxTurbining > 0
-                                || clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (o)
-                                STReserveUpParticipation.add(
-                                  pays, reserve, cluster_participation, pdt);
-                            }
+                            // 15 (k)
+                            STTurbiningMaxReserve.add(pays,
+                                                      reserve,
+                                                      cluster_participation,
+                                                      pdt,
+                                                      true);
+                            // 15 (l)
+                            STPumpingMaxReserve.add(pays,
+                                                    reserve,
+                                                    cluster_participation,
+                                                    pdt,
+                                                    true);
+                            // 15 (o)
+                            STReserveUpParticipation.add(pays, reserve, cluster_participation, pdt);
                             cluster_participation++;
                         }
                         reserve++;
@@ -191,32 +185,30 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveDown.AllSTStorageReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxTurbining > 0)
-                            {
-                                // 15 (k)
-                                STTurbiningMaxReserve.add(pays, reserve, cluster_participation, pdt, false);
-                            }
-                            if (clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (l)
-                                STPumpingMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, false);
-                            }
-                            if (clusterReserveParticipation.maxTurbining > 0
-                                || clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (p)
-                                STReserveDownParticipation.add(
-                                  pays, reserve, cluster_participation, pdt);
-                            }
+                            // 15 (k)
+                            STTurbiningMaxReserve.add(pays,
+                                                      reserve,
+                                                      cluster_participation,
+                                                      pdt,
+                                                      false);
+                            // 15 (l)
+                            STPumpingMaxReserve.add(pays,
+                                                    reserve,
+                                                    cluster_participation,
+                                                    pdt,
+                                                    false);
+                            // 15 (p)
+                            STReserveDownParticipation.add(pays,
+                                                           reserve,
+                                                           cluster_participation,
+                                                           pdt);
                             cluster_participation++;
                         }
                         reserve++;
                     }
                 }
 
-                 //LongTerm Storage reserve participations
-                for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+                // LongTerm Storage reserve participations
                 {
                     auto& areaReservesUp = data.areaReserves[pays].areaCapacityReservationsUp;
                     uint32_t reserve = 0;
@@ -226,25 +218,20 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveUp.AllLTStorageReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxTurbining > 0)
-                            {
-                                // 15 (a)
-                                LTTurbiningMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, true);
-                            }
-                            if (clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (b)
-                                LTPumpingMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, true);
-                            }
-                            if (clusterReserveParticipation.maxTurbining > 0
-                                || clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (e)
-                                LTReserveUpParticipation.add(
-                                  pays, reserve, cluster_participation, pdt);
-                            }
+                            // 15 (a)
+                            LTTurbiningMaxReserve.add(pays,
+                                                      reserve,
+                                                      cluster_participation,
+                                                      pdt,
+                                                      true);
+                            // 15 (b)
+                            LTPumpingMaxReserve.add(pays,
+                                                    reserve,
+                                                    cluster_participation,
+                                                    pdt,
+                                                    true);
+                            // 15 (e)
+                            LTReserveUpParticipation.add(pays, reserve, cluster_participation, pdt);
                             cluster_participation++;
                         }
                         reserve++;
@@ -258,25 +245,23 @@ void ReserveParticipationGroup::BuildConstraints()
                         for (const auto& clusterReserveParticipation :
                              areaReserveDown.AllLTStorageReservesParticipation)
                         {
-                            if (clusterReserveParticipation.maxTurbining > 0)
-                            {
-                                // 15 (a)
-                                LTTurbiningMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, false);
-                            }
-                            if (clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (b)
-                                LTPumpingMaxReserve.add(
-                                  pays, reserve, cluster_participation, pdt, false);
-                            }
-                            if (clusterReserveParticipation.maxTurbining > 0
-                                || clusterReserveParticipation.maxPumping > 0)
-                            {
-                                // 15 (f)
-                                LTReserveDownParticipation.add(
-                                  pays, reserve, cluster_participation, pdt);
-                            }
+                            // 15 (a)
+                            LTTurbiningMaxReserve.add(pays,
+                                                      reserve,
+                                                      cluster_participation,
+                                                      pdt,
+                                                      false);
+                            // 15 (b)
+                            LTPumpingMaxReserve.add(pays,
+                                                    reserve,
+                                                    cluster_participation,
+                                                    pdt,
+                                                    false);
+                            // 15 (f)
+                            LTReserveDownParticipation.add(pays,
+                                                           reserve,
+                                                           cluster_participation,
+                                                           pdt);
                             cluster_participation++;
                         }
                         reserve++;
@@ -322,7 +307,20 @@ void ReserveParticipationGroup::BuildConstraints()
                 }
 
                 // Long Term Storage Clusters
-                if (problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable) {
+                // Check if the LT Storage is participating to the reserves
+                auto isClusterParticipatingToReserves =
+                  [](std::vector<CAPACITY_RESERVATION>& reserves)
+                {
+                    auto hasReserveParticipations = [](CAPACITY_RESERVATION& res)
+                    { return res.AllLTStorageReservesParticipation.size() > 0; };
+                    return std::any_of(reserves.begin(), reserves.end(), hasReserveParticipations);
+                };
+
+                if (isClusterParticipatingToReserves(
+                      problemeHebdo_->allReserves[pays].areaCapacityReservationsDown)
+                    || isClusterParticipatingToReserves(
+                      problemeHebdo_->allReserves[pays].areaCapacityReservationsUp))
+                {
                     // 15 (c)
                     LTTurbiningCapacityThreasholds.add(pays, 0, pdt);
                     // 15 (d)

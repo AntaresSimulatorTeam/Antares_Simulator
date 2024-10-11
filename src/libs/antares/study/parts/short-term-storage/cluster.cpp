@@ -134,7 +134,7 @@ float STStorageCluster::reserveMaxTurbining(Data::ReserveName name)
     if (clusterReservesParticipations.contains(name))
         return clusterReservesParticipations.at(name).maxTurbining;
     else
-        return -1;
+        throw std::out_of_range("reserve " + name + " has not been found in this cluster participations");
 }
 
 float STStorageCluster::reserveMaxPumping(Data::ReserveName name)
@@ -142,7 +142,7 @@ float STStorageCluster::reserveMaxPumping(Data::ReserveName name)
     if (clusterReservesParticipations.contains(name))
         return clusterReservesParticipations.at(name).maxPumping;
     else
-        return -1;
+        throw std::out_of_range("reserve " + name + " has not been found in this cluster participations");
 }
 
 float STStorageCluster::reserveCost(Data::ReserveName name)
@@ -150,7 +150,7 @@ float STStorageCluster::reserveCost(Data::ReserveName name)
     if (clusterReservesParticipations.contains(name))
         return clusterReservesParticipations.at(name).participationCost;
     else
-        return -1;
+        throw std::out_of_range("reserve " + name + " has not been found in this cluster participations");
 }
 
 uint STStorageCluster::reserveParticipationsCount(){

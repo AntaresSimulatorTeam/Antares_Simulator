@@ -128,34 +128,34 @@ bool Cluster::isParticipatingInReserve(Data::ReserveName name)
 
 float Cluster::reserveMaxPower(Data::ReserveName name)
 {
-    if (clusterReservesParticipations.contains(name))
+    if (isParticipatingInReserve(name))
         return clusterReservesParticipations.at(name).maxPower;
     else
-        return -1;
+        throw std::out_of_range("reserve " + name + " has not been found in this cluster participations");
 }
 
 float Cluster::reserveCost(Data::ReserveName name)
 {
-    if (clusterReservesParticipations.contains(name))
+    if (isParticipatingInReserve(name))
         return clusterReservesParticipations.at(name).participationCost;
     else
-        return -1;
+        throw std::out_of_range("reserve " + name + " has not been found in this cluster participations");
 }
 
 float Cluster::reserveCostOff(Data::ReserveName name)
 {
-    if (clusterReservesParticipations.contains(name))
+    if (isParticipatingInReserve(name))
         return clusterReservesParticipations.at(name).participationCostOff;
-    else
-        return -1;
+   else
+        throw std::out_of_range("reserve " + name + " has not been found in this cluster participations");
 }
 
 float Cluster::reserveMaxPowerOff(Data::ReserveName name)
 {
-    if (clusterReservesParticipations.contains(name))
+    if (isParticipatingInReserve(name))
         return clusterReservesParticipations.at(name).maxPowerOff;
     else
-        return -1;
+        throw std::out_of_range("reserve " + name + " has not been found in this cluster participations");
 }
 
 unsigned int Cluster::reserveParticipationsCount(){

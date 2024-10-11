@@ -117,12 +117,14 @@ struct CORRESPONDANCES_DES_CONTRAINTES
 
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterMaxWithdrawParticipation;
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterMaxInjectionParticipation;
-    std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholds;
+    std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholdsMax;
+    std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholdsMin;
     std::vector<int> NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds;
 
     std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterMaxWithdrawParticipation;
     std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterMaxInjectionParticipation;
-    std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds;
+    std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholdsMax;
+    std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholdsMin;
     std::vector<int> NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds;
 
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
@@ -288,12 +290,11 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
     std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 };
 
-constexpr float CLUSTER_NOT_PARTICIPATING = -1.0f;
 struct RESERVE_PARTICIPATION_BASE
 {
-    float participationCost = CLUSTER_NOT_PARTICIPATING;
-    int globalIndexClusterParticipation = 0;
-    int areaIndexClusterParticipation = 0;
+    float participationCost;
+    int globalIndexClusterParticipation;
+    int areaIndexClusterParticipation;
     std::string clusterName;
     int clusterIdInArea;
 
@@ -302,21 +303,21 @@ struct RESERVE_PARTICIPATION_BASE
 
 struct RESERVE_PARTICIPATION_THERMAL : public RESERVE_PARTICIPATION_BASE
 {
-    float maxPower = CLUSTER_NOT_PARTICIPATING;
-    float maxPowerOff = CLUSTER_NOT_PARTICIPATING;
-    float participationCostOff = CLUSTER_NOT_PARTICIPATING;
+    float maxPower;
+    float maxPowerOff;
+    float participationCostOff;
 };
 
 struct RESERVE_PARTICIPATION_STSTORAGE : public RESERVE_PARTICIPATION_BASE
 {
-    float maxTurbining = CLUSTER_NOT_PARTICIPATING;
-    float maxPumping = CLUSTER_NOT_PARTICIPATING;
+    float maxTurbining;
+    float maxPumping;
 };
 
 struct RESERVE_PARTICIPATION_LTSTORAGE : public RESERVE_PARTICIPATION_BASE
 {
-    float maxTurbining = CLUSTER_NOT_PARTICIPATING;
-    float maxPumping = CLUSTER_NOT_PARTICIPATING;
+    float maxTurbining;
+    float maxPumping;
 };
 
 struct CAPACITY_RESERVATION
