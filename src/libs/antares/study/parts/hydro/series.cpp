@@ -156,18 +156,17 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
     return ret;
 }
 
-bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const fs::path& folder)
+bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& folder)
 {
     bool ret = true;
-    YString filepath;
     Matrix<>::BufferType fileContent;
 
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
+    fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
+    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filePath.string(), 1, HOURS_PER_YEAR, &fileContent)
           && ret;
 
-    filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
+    filePath = folder / areaID / "maxHourlyPumpPower.txt";
+    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filePath.string(), 1, HOURS_PER_YEAR, &fileContent)
           && ret;
 
     return ret;
