@@ -51,18 +51,14 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                      reservesDuPays.areaCapacityReservationsUp[index]
                        .AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower > 0)
-                    {
-                        var = variableManager.RunningThermalClusterReserveParticipation(
-                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
-                    }
-                    if (clusterReserveParticipation.maxPowerOff > 0)
-                    {
-                        var = variableManager.OffThermalClusterReserveParticipation(
-                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCostOff;
-                    }
+                    var = variableManager.RunningThermalClusterReserveParticipation(
+                      clusterReserveParticipation.globalIndexClusterParticipation,
+                      pdtHebdo);
+                    CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    var = variableManager.OffThermalClusterReserveParticipation(
+                      clusterReserveParticipation.globalIndexClusterParticipation,
+                      pdtHebdo);
+                    CoutLineaire[var] = clusterReserveParticipation.participationCostOff;
                 }
 
                 // Short Term Storage clusters
@@ -70,13 +66,10 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                      reservesDuPays.areaCapacityReservationsUp[index]
                        .AllSTStorageReservesParticipation)
                 {
-                    if ((clusterReserveParticipation.maxTurbining > 0)
-                        || (clusterReserveParticipation.maxPumping > 0))
-                    {
-                        var = variableManager.STStorageClusterReserveUpParticipation(
-                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
-                    }
+                    var = variableManager.STStorageClusterReserveUpParticipation(
+                      clusterReserveParticipation.globalIndexClusterParticipation,
+                      pdtHebdo);
+                    CoutLineaire[var] = clusterReserveParticipation.participationCost;
                 }
 
                 // Long Term Storage clusters
@@ -84,13 +77,10 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                      reservesDuPays.areaCapacityReservationsUp[index]
                        .AllLTStorageReservesParticipation)
                 {
-                    if ((clusterReserveParticipation.maxTurbining > 0)
-                        || (clusterReserveParticipation.maxPumping > 0))
-                    {
-                        var = variableManager.LTStorageClusterReserveUpParticipation(
-                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
-                    }
+                    var = variableManager.LTStorageClusterReserveUpParticipation(
+                      clusterReserveParticipation.globalIndexClusterParticipation,
+                      pdtHebdo);
+                    CoutLineaire[var] = clusterReserveParticipation.participationCost;
                 }
 
                 var = variableManager.InternalExcessReserve(
@@ -104,8 +94,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                   reservesDuPays.areaCapacityReservationsUp[index].globalReserveIndex, pdtHebdo);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[var] = CoutLineaire[var]
-                      = reservesDuPays.areaCapacityReservationsUp[index].failureCost;
+                    CoutLineaire[var] = reservesDuPays.areaCapacityReservationsUp[index].failureCost;
                 }
             }
 
@@ -116,12 +105,10 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                      reservesDuPays.areaCapacityReservationsDown[index]
                        .AllThermalReservesParticipation)
                 {
-                    if (clusterReserveParticipation.maxPower > 0)
-                    {
-                        var = variableManager.RunningThermalClusterReserveParticipation(
-                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
-                    }
+                    var = variableManager.RunningThermalClusterReserveParticipation(
+                      clusterReserveParticipation.globalIndexClusterParticipation,
+                      pdtHebdo);
+                    CoutLineaire[var] = clusterReserveParticipation.participationCost;
                 }
 
                 // Short Term Storage clusters
@@ -129,13 +116,10 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                      reservesDuPays.areaCapacityReservationsDown[index]
                        .AllSTStorageReservesParticipation)
                 {
-                    if ((clusterReserveParticipation.maxTurbining > 0)
-                        || (clusterReserveParticipation.maxPumping > 0))
-                    {
-                        var = variableManager.STStorageClusterReserveDownParticipation(
-                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
-                    }
+                    var = variableManager.STStorageClusterReserveDownParticipation(
+                      clusterReserveParticipation.globalIndexClusterParticipation,
+                      pdtHebdo);
+                    CoutLineaire[var] = clusterReserveParticipation.participationCost;
                 }
 
                 // Long Term Storage clusters
@@ -143,13 +127,10 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                      reservesDuPays.areaCapacityReservationsDown[index]
                        .AllLTStorageReservesParticipation)
                 {
-                    if ((clusterReserveParticipation.maxTurbining > 0)
-                        || (clusterReserveParticipation.maxPumping > 0))
-                    {
-                        var = variableManager.LTStorageClusterReserveDownParticipation(
-                          clusterReserveParticipation.globalIndexClusterParticipation, pdtHebdo);
-                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
-                    }
+                    var = variableManager.LTStorageClusterReserveDownParticipation(
+                      clusterReserveParticipation.globalIndexClusterParticipation,
+                      pdtHebdo);
+                    CoutLineaire[var] = clusterReserveParticipation.participationCost;
                 }
 
                 var = variableManager.InternalExcessReserve(
@@ -164,8 +145,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                   reservesDuPays.areaCapacityReservationsDown[index].globalReserveIndex, pdtHebdo);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[var] = CoutLineaire[var]
-                      = reservesDuPays.areaCapacityReservationsDown[index].failureCost;
+                    CoutLineaire[var] = reservesDuPays.areaCapacityReservationsDown[index].failureCost;
                 }
             }
         }

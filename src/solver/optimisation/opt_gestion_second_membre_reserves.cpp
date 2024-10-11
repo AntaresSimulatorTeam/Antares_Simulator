@@ -196,24 +196,37 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                 for (const auto& cluster : problemeHebdo->ShortTermStorage[pays])
                 {
                     int globalClusterIdx = cluster.clusterGlobalIndex;
-                    int cnt1
+                    int cnt
                       = CorrespondanceCntNativesCntOptim
-                          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholds
+                          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholdsMax
                             [globalClusterIdx];
-                    if (cnt1 >= 0)
+                    if (cnt >= 0)
                     {
-                        SecondMembre[cnt1] = cluster.series.get()->maxWithdrawalModulation[pdtJour] * cluster.withdrawalNominalCapacity;
-                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
+                        SecondMembre[cnt] = cluster.series.get()->maxWithdrawalModulation[pdtJour]
+                                            * cluster.withdrawalNominalCapacity;
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                     }
 
-                    int cnt2
+                    cnt
+                      = CorrespondanceCntNativesCntOptim
+                          .NumeroDeContrainteDesContraintesSTStorageClusterTurbiningCapacityThreasholdsMin
+                            [globalClusterIdx];
+                    if (cnt >= 0)
+                    {
+                        SecondMembre[cnt] = cluster.series.get()->lowerRuleCurve[pdtJour]
+                                            * cluster.withdrawalNominalCapacity;
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+                    }
+
+                    cnt
                       = CorrespondanceCntNativesCntOptim
                           .NumeroDeContrainteDesContraintesSTStorageClusterPumpingCapacityThreasholds
                             [globalClusterIdx];
-                    if (cnt2 >= 0)
+                    if (cnt >= 0)
                     {
-                        SecondMembre[cnt2] = cluster.series.get()->maxInjectionModulation[pdtJour] * cluster.injectionNominalCapacity;
-                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
+                        SecondMembre[cnt] = cluster.series.get()->maxInjectionModulation[pdtJour]
+                                            * cluster.injectionNominalCapacity;
+                        AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                     }
                 }
             }
@@ -275,28 +288,56 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                        }
                    }
 
-                   auto& hydroCluster = problemeHebdo->CaracteristiquesHydrauliques[pays];
-                   if (hydroCluster.PresenceDHydrauliqueModulable)
+                   // Checks if LTStorage cluster are participating to reserves
+                   auto isClusterParticipatingToReserves =
+                     [](std::vector<CAPACITY_RESERVATION>& reserves)
                    {
+                       auto hasReserveParticipations = [](CAPACITY_RESERVATION& res)
+                       { return res.AllLTStorageReservesParticipation.size() > 0; };
+                       return std::any_of(reserves.begin(),
+                                          reserves.end(),
+                                          hasReserveParticipations);
+                   };
+
+                   if (isClusterParticipatingToReserves(
+                         problemeHebdo->allReserves[pays].areaCapacityReservationsDown)
+                       || isClusterParticipatingToReserves(
+                         problemeHebdo->allReserves[pays].areaCapacityReservationsUp))
+                   {
+                       auto& hydroCluster = problemeHebdo->CaracteristiquesHydrauliques[pays];
+
                        int globalClusterIdx = hydroCluster.GlobalHydroIndex;
                        int cnt1
                          = CorrespondanceCntNativesCntOptim
-                             .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholds
+                             .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholdsMax
                                [globalClusterIdx];
                        if (cnt1 >= 0)
                        {
-                           SecondMembre[cnt1] = hydroCluster.ContrainteDePmaxHydrauliqueHoraire[pdtJour];
+                           SecondMembre[cnt1] = hydroCluster
+                                                  .ContrainteDePmaxHydrauliqueHoraire[pdtJour];
                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
                        }
-
+                       
                        int cnt2
                          = CorrespondanceCntNativesCntOptim
-                             .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
+                             .NumeroDeContrainteDesContraintesLTStorageClusterTurbiningCapacityThreasholdsMin
                                [globalClusterIdx];
                        if (cnt2 >= 0)
                        {
-                           SecondMembre[cnt2] = hydroCluster.ContrainteDePmaxPompageHoraire[pdtJour];
+                           SecondMembre[cnt2] = hydroCluster
+                                                  .MingenHoraire[pdtJour];
                            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
+                       }
+
+                       int cnt3
+                         = CorrespondanceCntNativesCntOptim
+                             .NumeroDeContrainteDesContraintesLTStorageClusterPumpingCapacityThreasholds
+                               [globalClusterIdx];
+                       if (cnt3 >= 0)
+                       {
+                           SecondMembre[cnt3] = hydroCluster
+                                                  .ContrainteDePmaxPompageHoraire[pdtJour];
+                           AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt3] = nullptr;
                        }
                    }
                 }

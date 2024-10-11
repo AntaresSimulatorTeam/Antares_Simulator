@@ -5,13 +5,6 @@ void POutBounds::add(int pays, int cluster, int pdt)
     int globalClusterIdx
       = data.thermalClusters[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
 
-    data.CorrespondanceCntNativesCntOptim[pdt]
-      .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[globalClusterIdx]
-      = -1;
-    data.CorrespondanceCntNativesCntOptim[pdt]
-      .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[globalClusterIdx]
-      = -1;
-
     if (!data.Simulation)
     {
         // 17 ter
@@ -34,15 +27,9 @@ void POutBounds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllThermalReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        && (data.thermalClusters[pays]
-                             .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
-                                                                                .clusterIdInArea]
-                           == globalClusterIdx))
-                    {
-                        builder.RunningThermalClusterReserveParticipation(
-                          reserveParticipations.globalIndexClusterParticipation, 1);
-                    }
+                    builder.RunningThermalClusterReserveParticipation(
+                      reserveParticipations.globalIndexClusterParticipation,
+                      1);
                 }
             }
 
@@ -75,13 +62,9 @@ void POutBounds::add(int pays, int cluster, int pdt)
                 for (const auto& reserveParticipations :
                      capacityReservation.AllThermalReservesParticipation)
                 {
-                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        && (data.thermalClusters[pays]
-                             .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
-                                                                                .clusterIdInArea]
-                           == globalClusterIdx))
-                        builder.RunningThermalClusterReserveParticipation(
-                          reserveParticipations.globalIndexClusterParticipation, 1);
+                    builder.RunningThermalClusterReserveParticipation(
+                      reserveParticipations.globalIndexClusterParticipation,
+                      1);
                 }
             }
 
@@ -106,38 +89,28 @@ void POutBounds::add(int pays, int cluster, int pdt)
     }
     else
     {
-        // Lambda that count the number of reserves that the cluster is participating to
-        auto countReservesFromCluster
-          = [cluster](const std::vector<CAPACITY_RESERVATION>& reservations,
-                      int globalClusterIdx,
-                      int pays,
-                      ReserveData data)
+        // Lambda that count the number of reserves Participations
+        auto countReservesParticipations
+          = [](const std::vector<CAPACITY_RESERVATION>& reservations)
         {
             int counter = 0;
             for (const auto& capacityReservation : reservations)
             {
-                for (const auto& reserveParticipations :
-                     capacityReservation.AllThermalReservesParticipation)
-                {
-                    if ((reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        && (data.thermalClusters[pays]
-                             .NumeroDuPalierDansLEnsembleDesPaliersThermiques[reserveParticipations
-                                                                                .clusterIdInArea]
-                           == globalClusterIdx))
-                        counter++;
-                }
+                        counter += capacityReservation.AllThermalReservesParticipation.size();
             }
             return counter;
         };
 
-        int nbConstraintsToAdd
-          = countReservesFromCluster(
-              data.areaReserves[pays].areaCapacityReservationsUp, globalClusterIdx, pays, data)
-            + countReservesFromCluster(
-              data.areaReserves[pays].areaCapacityReservationsDown, globalClusterIdx, pays, data);
+        int nbTermsToAdd
+          = countReservesParticipations(
+              data.areaReserves[pays].areaCapacityReservationsUp)
+            + countReservesParticipations(
+              data.areaReserves[pays].areaCapacityReservationsDown);
 
-        builder.data.NbTermesContraintesPourLesReserves += 2 * (nbConstraintsToAdd + 1);
 
-        builder.data.nombreDeContraintes += 2 * nbConstraintsToAdd;
+
+        builder.data.NbTermesContraintesPourLesReserves += 2 * (nbTermsToAdd + 1);
+
+        builder.data.nombreDeContraintes += 2;
     }
 }
