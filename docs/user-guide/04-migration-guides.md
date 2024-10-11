@@ -2,10 +2,27 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v9.2.0
-### Adequacy Patch LMR
-Removed following properties from **settings/generaldata.ini**.
-- enable-first-step
-- set-to-null-ntc-between-physical-out-for-first-step
+### Input
+#### Removed properties
+The following properties were removed from **settings/generaldata.ini**.
+- adequacy patch/enable-first-step
+- adequacy patch/set-to-null-ntc-between-physical-out-for-first-step
+- other preferences/initial-reservoir-levels
+#### Short-term storages
+- Added property efficiencywithdrawal (double in [0, 1]) short-term storages (file input/st-storage/clusters/<area id>/list.ini)
+- Added timeseries cost-injection.txt, cost-withdrawal.txt and cost-level.txt. These files are optional. If present, they must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column.
+
+#### Final levels / scenario-builder
+- Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing prefix "hl" (hydro initial level), that is
+```
+hl,area,<year> = <value>
+```
+
+By convention, `year` start at 0 and `value` must be in interval [0, 1].
+
+#### Compatibility flag for hydro pmax coefficients
+TODO
+
 
 ### (TS-generator only) TS generation for link capacities
 In files input/links/<link1>/properties.ini, add the following properties
