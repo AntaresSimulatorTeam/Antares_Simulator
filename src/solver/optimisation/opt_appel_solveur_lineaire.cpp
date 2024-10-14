@@ -211,11 +211,12 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
     LinearProblemData LP_Data;
+    FillContext fillCtx(0, 167);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     if (options.ortoolsUsed && solver == nullptr)
     {
-        linearProblemBuilder.build(*ortoolsProblem, LP_Data);
+        linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
         solver = ortoolsProblem->MPSolver();
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
@@ -388,9 +389,10 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
         LinearProblemData LP_Data;
+        FillContext fillCtx(0, 167);
         LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
-        linearProblemBuilder.build(*ortoolsProblem, LP_Data);
+        linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
         auto MPproblem = std::shared_ptr<MPSolver>(ortoolsProblem->MPSolver());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();

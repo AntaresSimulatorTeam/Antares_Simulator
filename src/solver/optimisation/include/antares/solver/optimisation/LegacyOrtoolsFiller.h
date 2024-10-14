@@ -15,9 +15,9 @@ class LegacyOrtoolsFiller: public LinearProblemFiller
 public:
     explicit LegacyOrtoolsFiller(
       const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-    void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
-    void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
-    void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
+    void addVariables(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
+    void addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
+    void addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
 
 private:
     operations_research::MPSolver* mpSolver_ = nullptr;
