@@ -14,7 +14,9 @@ LegacyOrtoolsFiller::LegacyOrtoolsFiller(
     }
 }
 
-void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
+void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb,
+                                       LinearProblemData& data,
+                                       FillContext& ctx)
 {
     auto* mpSolver = dynamic_cast<operations_research::MPSolver*>(&pb);
     if (mpSolver)
@@ -29,7 +31,9 @@ void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb, LinearProblemData& da
     }
 }
 
-void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
+void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb,
+                                         LinearProblemData& data,
+                                         FillContext& ctx)
 {
     auto* mpSolver = dynamic_cast<operations_research::MPSolver*>(&pb);
     if (mpSolver)
@@ -45,7 +49,9 @@ void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb, LinearProblemData& 
     }
 }
 
-void LegacyOrtoolsFiller::addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
+void LegacyOrtoolsFiller::addObjective(ILinearProblem& pb,
+                                       LinearProblemData& data,
+                                       FillContext& ctx)
 {
 }
 
