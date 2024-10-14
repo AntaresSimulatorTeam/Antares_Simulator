@@ -308,15 +308,6 @@ public:
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
-    inline uint64_t memoryUsage() const
-    {
-        uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                     * pNbYearsParallel;
-        r += sizeof(double) * pSize * HOURS_PER_YEAR * pNbYearsParallel;
-        r += AncestorType::memoryUsage();
-        return r;
-    }
-
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,

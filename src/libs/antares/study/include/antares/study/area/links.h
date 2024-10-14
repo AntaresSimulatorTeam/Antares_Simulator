@@ -106,13 +106,6 @@ public:
     void markAsModified() const;
     //@}
 
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Get the size (bytes) in memory occupied by a `AreaLink` structure
-    */
-    uint64_t memoryUsage() const;
-
     bool isVisibleOnLayer(const size_t& layerID) const;
 
     Yuni::String getName() const;

@@ -30,11 +30,18 @@ namespace Antares::Solver::ObjectModel
 class Port
 {
 public:
-    Port();
-    ~Port() = default;
+    const std::string& Id() const
+    {
+        return id_;
+    }
+
+    PortType Type() const
+    {
+        return type_;
+    }
 
 private:
-    std::string name_;
+    std::string id_;
     PortType type_;
 };
 

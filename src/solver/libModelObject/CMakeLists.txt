@@ -1,6 +1,7 @@
 project(LibObjectModel)
 
 set(SRC_model
+    library.cpp
     model.cpp
 
     include/antares/solver/libObjectModel/library.h
@@ -19,6 +20,7 @@ set(SRC_model
 source_group("libObjectModel" FILES ${SRC_model})
 add_library(antares-solver-libObjectModel
         ${SRC_model})
+add_library(Antares::antares-solver-libObjectModel ALIAS antares-solver-libObjectModel)
 
 target_include_directories(antares-solver-libObjectModel
         PUBLIC

@@ -39,22 +39,61 @@ namespace Antares::Solver::ObjectModel
 class Model
 {
 public:
-    Model();
-    ~Model() = default;
+    const std::string& Id() const
+    {
+        return id_;
+    }
 
-    std::vector<Constraint*> getConstraints();
+    Expression Objective() const
+    {
+        return objective_;
+    }
+
+    const std::map<std::string, Constraint>& getConstraints() const
+    {
+        return constraints_;
+    }
+
+    const std::map<std::string, Parameter>& Parameters() const
+    {
+        return parameters_;
+    }
+
+    const std::map<std::string, Variable>& Variables() const
+    {
+        return variables_;
+    }
+
+    const std::map<std::string, Port>& Ports() const
+    {
+        return ports_;
+    }
 
 private:
+    friend class ModelBuilder;
     std::string id_;
     Expression objective_;
 
     std::map<std::string, Parameter> parameters_;
     std::map<std::string, Variable> variables_;
-
     std::map<std::string, Constraint> constraints_;
-    std::map<std::string, Constraint> bindingConstraints_;
-
     std::map<std::string, Port> ports_;
+};
+
+class ModelBuilder
+{
+public:
+    ModelBuilder& withId(std::string_view id);
+    ModelBuilder& withObjective(Expression objective);
+    ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
+    ModelBuilder& withVariables(std::vector<Variable>&& variables);
+    ModelBuilder& withPorts(std::vector<Port>&& ports);
+    Model build();
+
+    ModelBuilder& withConstraints(std::vector<Constraint>&& constraints);
+
+private:
+    Model model_;
 };
 
 } // namespace Antares::Solver::ObjectModel

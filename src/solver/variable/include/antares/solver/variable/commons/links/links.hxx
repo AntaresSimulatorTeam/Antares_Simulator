@@ -349,18 +349,6 @@ void Links<VariablePerLink>::RetrieveVariableList(PredicateT& predicate)
 }
 
 template<class VariablePerLink>
-inline uint64_t Links<VariablePerLink>::memoryUsage() const
-{
-    uint64_t result = 0;
-    for (uint i = 0; i != pLinkCount; ++i)
-    {
-        result += sizeof(NextType) + sizeof(void*);
-        result += pLinks[i].memoryUsage();
-    }
-    return result;
-}
-
-template<class VariablePerLink>
 Links<VariablePerLink>::~Links()
 {
     // Releasing the memory occupied by the areas

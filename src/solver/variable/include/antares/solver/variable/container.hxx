@@ -238,12 +238,6 @@ inline void List<NextT>::retrieveResultsForLink(
 }
 
 template<class NextT>
-inline uint64_t List<NextT>::memoryUsage() const
-{
-    return sizeof(ListType) + NextType::memoryUsage();
-}
-
-template<class NextT>
 void List<NextT>::buildSurveyReport(SurveyResults& results,
                                     int dataLevel,
                                     int fileLevel,

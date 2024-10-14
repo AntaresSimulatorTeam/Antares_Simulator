@@ -30,11 +30,6 @@ inline bool JIT::IsReady(JIT::Informations* j)
     return (!j or j->alreadyLoaded);
 }
 
-inline uint64_t JIT::Informations::memoryUsage() const
-{
-    return sizeof(JIT::Informations) + sourceFilename.capacity();
-}
-
 inline void JIT::Informations::markAsModified()
 {
     modified = true;

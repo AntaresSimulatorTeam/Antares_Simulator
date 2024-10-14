@@ -49,11 +49,6 @@ public:
     typedef double Type;
 
 public:
-    //! Get the dynamic amount of memory consummed by a simulation
-    // \note This method assumes that you've already have gathered the size
-    //   of this class
-    static uint64_t MemoryUsage();
-
     //! \name Constructor & Destructor
     //@{
     /*!

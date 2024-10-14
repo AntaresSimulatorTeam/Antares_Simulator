@@ -158,11 +158,6 @@ public:
     void changeConstraintsWeeklyToDaily();
 
     /*!
-    ** \brief Get the memory usage
-    */
-    [[nodiscard]] uint64_t memoryUsage() const;
-
-    /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
     void forceReload(bool reload = false) const;

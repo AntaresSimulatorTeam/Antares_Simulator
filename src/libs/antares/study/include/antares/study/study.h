@@ -428,11 +428,6 @@ public:
     */
     void ensureDataAreLoadedForAllBindingConstraints();
 
-    /*!
-    ** \brief Get the amound of memory consummed by the study (in bytes)
-    */
-    uint64_t memoryUsage() const;
-
     //! \name Logs
     //@{
     /*!

@@ -616,18 +616,6 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
     return "";
 }
 
-uint64_t ThermalCluster::memoryUsage() const
-{
-    uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
-    if (prepro)
-    {
-        amount += prepro->memoryUsage();
-    }
-    amount += series.memoryUsage();
-    amount += ecoInput.memoryUsage();
-    return amount;
-}
-
 void ThermalCluster::calculatMinDivModulation()
 {
     minDivModulation.value = (modulation[thermalModulationCapacity][0]
