@@ -38,11 +38,6 @@ namespace fs = std::filesystem;
 
 #define SEP (IO::Separator)
 
-namespace
-{
-const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
-}
-
 namespace Antares
 {
 namespace Data
@@ -188,14 +183,12 @@ bool AreaLink::loadTimeSeries(const StudyVersion& version, const fs::path& folde
 
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
-    Clob path;
+    std::string filename = with->id + ".txt";
+    fs::path path = fs::path("ts-numbers") / "ntc" / from->id.to<std::string>() / filename;
+
     std::string buffer;
-
-    path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
-         << SEP << with->id << ".txt";
-
     timeseriesNumbers.saveToBuffer(buffer);
-    writer.addEntryFromBuffer(path.c_str(), buffer);
+    writer.addEntryFromBuffer(path.string(), buffer);
 }
 
 void AreaLink::detach()
