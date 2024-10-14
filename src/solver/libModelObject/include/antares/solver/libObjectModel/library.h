@@ -20,7 +20,8 @@
 */
 #pragma once
 
-#include <map>
+#include <string>
+#include <unordered_map>
 
 #include "model.h"
 #include "portType.h"
@@ -32,15 +33,56 @@ namespace Antares::Solver::ObjectModel
 class Library
 {
 public:
-    Library();
+    Library() = default;
     ~Library() = default;
 
+    const std::string& Id() const
+    {
+        return id_;
+    }
+
+    const std::string& Description() const
+    {
+        return description_;
+    }
+
+    const std::unordered_map<std::string, PortType>& PortTypes() const
+    {
+        return portTypes_;
+    }
+
+    const std::unordered_map<std::string, Model>& Models() const
+    {
+        return models_;
+    }
+
 private:
+    friend class LibraryBuilder;
+
     std::string id_;
     std::string description_;
 
-    std::map<std::string, PortType> portTypes_;
-    std::map<std::string, Model> models_;
+    std::unordered_map<std::string, PortType> portTypes_;
+    std::unordered_map<std::string, Model> models_;
+};
+
+/**
+ * @brief Builder for the Library class
+ * Follow builder pattern:
+ * builder.Library().withId("id").withDescription("description").withPortTypes(portList).withModels(modelList).build();
+ */
+class LibraryBuilder
+{
+public:
+    LibraryBuilder& withId(const std::string& id);
+    LibraryBuilder& withDescription(const std::string& description);
+    LibraryBuilder& withPortTypes(std::vector<PortType>&& portTypes);
+    LibraryBuilder& withModels(std::vector<Model>&& models);
+
+    Library build();
+
+private:
+    Library library_;
 };
 
 } // namespace Antares::Solver::ObjectModel

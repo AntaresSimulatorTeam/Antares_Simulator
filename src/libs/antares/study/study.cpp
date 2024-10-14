@@ -187,26 +187,6 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-// TODO remove with GUI
-uint64_t Study::memoryUsage() const
-{
-    return buffer.capacity() // Folders paths
-           + dataBuffer.capacity()
-           + bufferLoadingTS.capacity()
-           // Simulation
-           + simulationComments.memoryUsage()
-           // parameters
-           + parameters.memoryUsage()
-           // Areas
-           + areas.memoryUsage()
-           // Binding constraints
-           + bindingConstraints.memoryUsage()
-           // Correlations matrices
-           + preproLoadCorrelation.memoryUsage() + preproSolarCorrelation.memoryUsage()
-           + preproHydroCorrelation.memoryUsage() + preproWindCorrelation.memoryUsage()
-           + (uiinfo ? uiinfo->memoryUsage() : 0);
-}
-
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 {
     if (!nbLogicalCores)

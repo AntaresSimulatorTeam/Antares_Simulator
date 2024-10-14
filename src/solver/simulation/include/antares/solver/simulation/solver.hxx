@@ -280,8 +280,6 @@ void ISimulation<ImplementationType>::run()
 
     // Memory usage
     {
-        logs.info() << " Variables:  ("
-                    << (uint)(ImplementationType::variables.memoryUsage() / 1024 / 1024) << "Mo)";
         Variable::PrintInfosStdCout c;
         ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
     }

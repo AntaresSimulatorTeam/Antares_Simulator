@@ -155,11 +155,6 @@ void PreproAvailability::markAsModified() const
     data.markAsModified();
 }
 
-uint64_t PreproAvailability::memoryUsage() const
-{
-    return sizeof(PreproAvailability);
-}
-
 void PreproAvailability::reset()
 {
     data.reset(preproAvailabilityMax, DAYS_PER_YEAR, true);

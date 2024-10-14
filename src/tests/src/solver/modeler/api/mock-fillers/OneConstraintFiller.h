@@ -9,21 +9,27 @@ class OneConstraintFiller: public LinearProblemFiller
 {
 public:
     explicit OneConstraintFiller() = default;
-    void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
-    void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
-    void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
+    void addVariables(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
+    void addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
+    void addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
 };
 
-void OneConstraintFiller::addVariables(ILinearProblem& pb, LinearProblemData& data)
+void OneConstraintFiller::addVariables([[maybe_unused]] ILinearProblem& pb,
+                                       [[maybe_unused]] LinearProblemData& data,
+                                       [[maybe_unused]] FillContext& ctx)
 {
 }
 
-void OneConstraintFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data)
+void OneConstraintFiller::addConstraints(ILinearProblem& pb,
+                                         [[maybe_unused]] LinearProblemData& data,
+                                         [[maybe_unused]] FillContext& ctx)
 {
     pb.addConstraint(1, 2, "constraint-by-OneConstraintFiller");
 }
 
-void OneConstraintFiller::addObjective(ILinearProblem& pb, LinearProblemData& data)
+void OneConstraintFiller::addObjective([[maybe_unused]] ILinearProblem& pb,
+                                       [[maybe_unused]] LinearProblemData& data,
+                                       [[maybe_unused]] FillContext& ctx)
 {
 }
 

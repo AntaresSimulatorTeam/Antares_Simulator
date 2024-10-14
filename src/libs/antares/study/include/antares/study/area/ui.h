@@ -64,11 +64,6 @@ public:
     bool saveToFile(const AnyString& filename, bool force = false) const;
 
     /*!
-    ** \brief Amount of memory consummed by the instance
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
     ** \brief Get if the structure has been modified
     */
     bool modified() const;

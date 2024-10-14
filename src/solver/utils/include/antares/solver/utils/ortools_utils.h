@@ -58,8 +58,7 @@ std::string availableOrToolsSolversString();
  *
  *  \return MPSolver
  */
-MPSolver* MPSolverFactory(const bool isMip,
-                          const std::string& solverName);
+MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);

@@ -14,20 +14,26 @@ LegacyOrtoolsFiller::LegacyOrtoolsFiller(
     }
 }
 
-void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb, LinearProblemData& data)
+void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb,
+                                       LinearProblemData& data,
+                                       FillContext& ctx)
 {
     // Create the variables and set objective cost.
     CopyVariables(pb);
 }
 
-void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data)
+void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb,
+                                         LinearProblemData& data,
+                                         FillContext& ctx)
 {
     // Create constraints and set coefs
     CopyRows(pb);
     CopyMatrix(pb);
 }
 
-void LegacyOrtoolsFiller::addObjective(ILinearProblem& pb, LinearProblemData& data)
+void LegacyOrtoolsFiller::addObjective(ILinearProblem& pb,
+                                       LinearProblemData& data,
+                                       FillContext& ctx)
 {
 }
 

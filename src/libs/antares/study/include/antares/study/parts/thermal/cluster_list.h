@@ -38,7 +38,6 @@ class ThermalClusterList: public ClusterList<ThermalCluster>
 {
 public:
     std::string typeID() const override;
-    uint64_t memoryUsage() const override;
 
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure

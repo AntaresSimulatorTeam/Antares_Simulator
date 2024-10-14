@@ -2,7 +2,7 @@ find_package(yaml-cpp REQUIRED)
 
 set(SOURCES
         parser.cpp
-        #encoders.hxx
+        encoders.hxx
         include/antares/solver/modelParser/parser.h
 )
 

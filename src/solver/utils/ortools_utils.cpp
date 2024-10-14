@@ -354,8 +354,7 @@ std::string availableOrToolsSolversString()
     return solvers.str();
 }
 
-MPSolver* MPSolverFactory(const bool isMip,
-                          const std::string& solverName)
+MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
 {
     MPSolver* solver;
     try

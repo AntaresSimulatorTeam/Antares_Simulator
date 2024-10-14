@@ -21,6 +21,7 @@
  */
 
 #pragma once
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -29,21 +30,45 @@ namespace Antares::Solver::ModelParser
 // Define structures
 struct Parameter
 {
-    std::string name;
+    std::string id;
     bool time_dependent;
     bool scenario_dependent;
 };
 
+enum class ValueType
+{
+    CONTINUOUS,
+    INTEGER,
+    BOOL
+};
+
+inline std::string toString(const ValueType& value_type)
+{
+    using namespace std::string_literals;
+    switch (value_type)
+    {
+    case ValueType::CONTINUOUS:
+        return "CONTINUOUS"s;
+    case ValueType::INTEGER:
+        return "INTEGER"s;
+    case ValueType::BOOL:
+        return "BOOL"s;
+    default:
+        return "UNKNOWN"s;
+    }
+}
+
 struct Variable
 {
-    std::string name;
-    double lower_bound;
-    double upper_bound;
+    std::string id;
+    std::string lower_bound;
+    std::string upper_bound;
+    ValueType variable_type;
 };
 
 struct Port
 {
-    std::string name;
+    std::string id;
     std::string type;
 };
 
@@ -56,7 +81,7 @@ struct PortFieldDefinition
 
 struct Constraint
 {
-    std::string name;
+    std::string id;
     std::string expression;
 };
 

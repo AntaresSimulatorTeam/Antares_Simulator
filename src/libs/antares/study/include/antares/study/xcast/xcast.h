@@ -159,17 +159,6 @@ public:
     */
     void markAsModified() const;
 
-    /*!
-    ** \brief Get the amount of memory currently used by the XCast data
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
-    ** \brief Estimate the amount of memory required by this class for a simulation
-    */
-
-    //@}
-
 public:
     /*!
     ** \brief Data required for XCast: coefficients (coeffMax x 12)
@@ -213,7 +202,5 @@ protected:
 }; // class XCast
 
 } // namespace Antares::Data
-
-#include "xcast.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_XCAST_XCAST_H__

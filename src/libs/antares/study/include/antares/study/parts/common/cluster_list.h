@@ -124,12 +124,6 @@ public:
     */
     void markAsModified() const;
 
-    /*!
-    ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
-    ** \return A size (in bytes)
-    */
-    virtual uint64_t memoryUsage() const = 0;
-
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);

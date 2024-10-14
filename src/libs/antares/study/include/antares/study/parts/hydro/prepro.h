@@ -123,12 +123,6 @@ int PreproHydroLoadFromFolder(Study& s,
                               const AreaName& areaID,
                               const char folder[]);
 
-/*!
-** \brief Get the size (bytes) occupied in memory by a `PreproHydro` structure
-** \ingroup hydroprepro
-*/
-uint64_t PreproHydroMemoryUsage(PreproHydro* h);
-
 } // namespace Data
 } // namespace Antares
 

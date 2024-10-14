@@ -27,9 +27,9 @@
 #include <antares/logs/logs.h>
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
-#include "antares/solver/optimisation/LegacyOrtoolsFiller.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
+#include "antares/solver/optimisation/LegacyOrtoolsFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
@@ -206,15 +206,17 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    auto ortoolsProblem = std::make_unique<OrtoolsLinearProblem>(Probleme.isMIP(), options.ortoolsSolver);
+    auto ortoolsProblem = std::make_unique<OrtoolsLinearProblem>(Probleme.isMIP(),
+                                                                 options.ortoolsSolver);
     auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
     LinearProblemData LP_Data;
+    FillContext fillCtx(0, 167);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     if (options.ortoolsUsed && solver == nullptr)
     {
-        linearProblemBuilder.build(*ortoolsProblem, LP_Data);
+        linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
         solver = ortoolsProblem->MPSolver();
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
@@ -382,13 +384,15 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         Probleme.SetUseNamedProblems(true);
 
-        auto ortoolsProblem = std::make_unique<OrtoolsLinearProblem>(Probleme.isMIP(), options.ortoolsSolver);
+        auto ortoolsProblem = std::make_unique<OrtoolsLinearProblem>(Probleme.isMIP(),
+                                                                     options.ortoolsSolver);
         auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
         LinearProblemData LP_Data;
+        FillContext fillCtx(0, 167);
         LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
-        linearProblemBuilder.build(*ortoolsProblem, LP_Data);
+        linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
         auto MPproblem = std::shared_ptr<MPSolver>(ortoolsProblem->MPSolver());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
