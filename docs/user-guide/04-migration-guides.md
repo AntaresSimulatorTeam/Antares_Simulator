@@ -9,7 +9,7 @@ The following properties were removed from **settings/generaldata.ini**.
 - `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step`
 - `other preferences/initial-reservoir-levels`
 #### Short-term storages
-- Added property `efficiencywithdrawal` (double in [0, 1]) short-term storages (file input/st-storage/clusters/<area id>/list.ini)
+- Added property `efficiencywithdrawal` (double in [0, 1], default 1) short-term storages (file input/st-storage/clusters/<area id>/list.ini)
 - Added timeseries cost-injection.txt, cost-withdrawal.txt and cost-level.txt. These files are optional. If present, they must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. Each of these timeseries is located in directory input/st-storage/series/<area id>/<ST id>/, along existing series (rule-curves.txt, etc.).
 
 #### Final levels / scenario-builder
