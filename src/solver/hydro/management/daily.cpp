@@ -53,20 +53,18 @@ namespace
 FatalError fatalError(const std::string& areaName, int year)
 {
     std::ostringstream msg;
-    msg << "Year : " << year + 1 << " - hydro: " << areaName
-        << " [daily] fatal error";
+    msg << "Year : " << year + 1 << " - hydro: " << areaName << " [daily] fatal error";
     return FatalError(msg.str());
 }
 
 FatalError solutionNotFound(const std::string& areaName, int year)
 {
     std::ostringstream msg;
-    msg << "Year : " << year + 1 << " - hydro: " << areaName
-        << " [daily] no solution found";
+    msg << "Year : " << year + 1 << " - hydro: " << areaName << " [daily] no solution found";
     return FatalError(msg.str());
 }
 
-}
+} // namespace
 
 namespace Antares
 {
@@ -187,7 +185,8 @@ struct DebugData
             uint dayMonth = 1;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                double turbines = ventilationResults.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
+                double turbines
+                  = ventilationResults.HydrauliqueModulableQuotidien[day] / reservoirCapacity;
                 double niveauDeb = ventilationResults.NiveauxReservoirsDebutJours[day];
                 double niveauFin = ventilationResults.NiveauxReservoirsFinJours[day];
                 double apports = srcinflows[day] / reservoirCapacity;
@@ -401,7 +400,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 dayMonth = 0;
                 for (uint day = firstDay; day != endDay; ++day)
                 {
-                    ventilationResults.HydrauliqueModulableQuotidien[day] = problem->Turbine[dayMonth];
+                    ventilationResults.HydrauliqueModulableQuotidien[day]
+                      = problem->Turbine[dayMonth];
                     dayMonth++;
                 }
                 break;
@@ -496,9 +496,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 for (uint day = firstDay; day != endDay; ++day)
                 {
                     ventilationResults.HydrauliqueModulableQuotidien[day]
-                      = problem.Turbine[dayMonth] * reservoirCapacity;
+                      = problem.Turbine[dayMonth] * reservoirCapacity
+                        + problem.overflows[dayMonth] * reservoirCapacity;
 
-                    ventilationResults.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
+                    ventilationResults.NiveauxReservoirsFinJours[day]
+                      = problem.niveauxFinJours[dayMonth];
 
                     if (debugData)
                     {
@@ -546,10 +548,8 @@ void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& st
                                                      uint y,
                                                      uint numSpace)
 {
-    areas_.each(
-      [&](Data::Area& area) {
-          prepareDailyOptimalGenerations(state, area, y, numSpace);
-          });
+    areas_.each([&](Data::Area& area)
+                { prepareDailyOptimalGenerations(state, area, y, numSpace); });
 }
 
 } // namespace Antares
