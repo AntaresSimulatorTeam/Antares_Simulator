@@ -103,7 +103,7 @@ int main(int argc, const char* argv[])
         }
 
         // Source Folder
-        logs.debug() << "Folder : `" << argv[1] << '`';
+        logs.debug() << "Folder : `" << optInput << '`';
 
         String solver;
         Solver::FindLocation(solver);
@@ -126,7 +126,7 @@ int main(int argc, const char* argv[])
         {
             if (finder.list.size() > 1)
             {
-                logs.info() << "Found " << finder.list.size() << " studyies";
+                logs.info() << "Found " << finder.list.size() << " studies";
             }
             else
             {
@@ -180,6 +180,10 @@ int main(int argc, const char* argv[])
                     }
                     else
                     {
+                        // Wrap spaces around quotes, if any
+                        // example
+                        // antares-batchrun directory --use-ortools --ortools-solver xpress
+                        // --solver-parameters "PRESOLVE 1"
                         cmd << " \"" << arg << "\"";
                     }
                 }
