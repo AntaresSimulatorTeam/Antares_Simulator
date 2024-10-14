@@ -172,7 +172,7 @@ set(RTESOLVER_OPT
         HebdoProblemToLpsTranslator.cpp
         include/antares/solver/optimisation/LegacyOrtoolsLinearProblem.h
         include/antares/solver/optimisation/LegacyFiller.h
-        LegacyOrtoolsFiller.cpp
+        LegacyFiller.cpp
 )
 
 

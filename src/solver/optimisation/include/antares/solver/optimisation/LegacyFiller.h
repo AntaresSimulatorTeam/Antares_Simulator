@@ -11,8 +11,7 @@ namespace Antares::Optimization
 class LegacyFiller: public Antares::Solver::Modeler::Api::LinearProblemFiller
 {
 public:
-    explicit LegacyFiller(
-      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+    explicit LegacyFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
     void addVariables(Antares::Solver::Modeler::Api::ILinearProblem& pb,
                       Antares::Solver::Modeler::Api::LinearProblemData& data,
                       Antares::Solver::Modeler::Api::FillContext& ctx) override;

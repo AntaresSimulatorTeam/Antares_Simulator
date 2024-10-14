@@ -5,8 +5,7 @@ using namespace Antares::Solver::Modeler::Api;
 namespace Antares::Optimization
 {
 
-LegacyFiller::LegacyFiller(
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe):
+LegacyFiller::LegacyFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe):
     problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
@@ -16,26 +15,20 @@ LegacyFiller::LegacyFiller(
     }
 }
 
-void LegacyFiller::addVariables(ILinearProblem& pb,
-                                       LinearProblemData& data,
-                                       FillContext& ctx)
+void LegacyFiller::addVariables(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
 {
     // Create the variables and set objective cost.
     CopyVariables(pb);
 }
 
-void LegacyFiller::addConstraints(ILinearProblem& pb,
-                                         LinearProblemData& data,
-                                         FillContext& ctx)
+void LegacyFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
 {
     // Create constraints and set coefs
     CopyRows(pb);
     CopyMatrix(pb);
 }
 
-void LegacyFiller::addObjective(ILinearProblem& pb,
-                                       LinearProblemData& data,
-                                       FillContext& ctx)
+void LegacyFiller::addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
 {
     // nothing to do: objective coefficients are set along with variables definition
 }
