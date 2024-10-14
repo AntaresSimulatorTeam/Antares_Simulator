@@ -900,7 +900,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
-            ret = area.load.prepro->loadFromFolder(loadPath) && ret;
+            ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
@@ -917,7 +917,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
-            ret = area.solar.prepro->loadFromFolder(solarPath) && ret;
+            ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
         {
@@ -973,7 +973,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             // if changes are required, please update reloadXCastData()
             fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
-            ret = area.wind.prepro->loadFromFolder(windPath) && ret;
+            ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
         }
         if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {

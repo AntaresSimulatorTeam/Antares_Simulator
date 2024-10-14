@@ -34,8 +34,6 @@
 
 using namespace Antares;
 
-#define SEP IO::Separator
-
 #ifdef _MSC_VER
 #define SNPRINTF sprintf_s
 #else
