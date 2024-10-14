@@ -20,15 +20,14 @@ public:
     void addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) override;
 
 private:
-    operations_research::MPSolver* mpSolver_ = nullptr;
     const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
     Nomenclature variableNameManager_ = Nomenclature('x');
     Nomenclature constraintNameManager_ = Nomenclature('c');
 
-    void CreateVariable(unsigned idxVar, MPSolver* solver, MPObjective* const objective) const;
-    void CopyVariables(MPSolver* solver) const;
-    void UpdateContraints(unsigned idxRow, MPSolver* solver) const;
-    void CopyRows(MPSolver* solver) const;
-    void CopyMatrix(const MPSolver* solver) const;
+    void CreateVariable(unsigned idxVar, ILinearProblem& pb) const;
+    void CopyVariables(ILinearProblem& pb) const;
+    void UpdateContraints(unsigned idxRow, ILinearProblem& pb) const;
+    void CopyRows(ILinearProblem& pb) const;
+    void CopyMatrix(ILinearProblem& pb) const;
 };
 } // namespace Antares::Optimization

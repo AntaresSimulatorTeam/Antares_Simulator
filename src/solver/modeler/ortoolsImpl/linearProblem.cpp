@@ -164,7 +164,7 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
-MPSolver* OrtoolsLinearProblem::MPSolver()
+MPSolver* OrtoolsLinearProblem::MpSolver() const
 {
     return mpSolver_;
 }
@@ -180,6 +180,11 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 
     solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_);
     return solution_.get();
+}
+
+double OrtoolsLinearProblem::infinity() const
+{
+    return MPSolver::infinity();
 }
 
 } // namespace Antares::Solver::Modeler::OrtoolsImpl
