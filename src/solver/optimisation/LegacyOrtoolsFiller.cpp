@@ -1,10 +1,10 @@
 #include "antares/solver/optimisation/LegacyOrtoolsFiller.h"
 
-
 namespace Antares::Optimization
 {
 
-LegacyOrtoolsFiller::LegacyOrtoolsFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
+LegacyOrtoolsFiller::LegacyOrtoolsFiller(
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe):
     problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
@@ -17,7 +17,7 @@ LegacyOrtoolsFiller::LegacyOrtoolsFiller(const Antares::Optimization::PROBLEME_S
 void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb, LinearProblemData& data)
 {
     auto* mpSolver = dynamic_cast<operations_research::MPSolver*>(&pb);
-    if(mpSolver)
+    if (mpSolver)
     {
         // Create the variables and set objective cost.
         CopyVariables(mpSolver);
@@ -32,7 +32,7 @@ void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb, LinearProblemData& da
 void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb, LinearProblemData& data)
 {
     auto* mpSolver = dynamic_cast<operations_research::MPSolver*>(&pb);
-    if(mpSolver)
+    if (mpSolver)
     {
         // Create constraints and set coefs
         CopyRows(mpSolver);
@@ -118,5 +118,4 @@ void LegacyOrtoolsFiller::CopyRows(MPSolver* solver) const
         UpdateContraints(idxRow, solver);
     }
 }
-}
-
+} // namespace Antares::Optimization

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "antares/solver/modeler/api/linearProblemFiller.h"
-#include "ortools/linear_solver/linear_solver.h"
 #include "antares/solver/utils/named_problem.h"
 #include "antares/solver/utils/ortools_utils.h"
+
+#include "ortools/linear_solver/linear_solver.h"
 
 using namespace Antares::Solver::Modeler::Api;
 
@@ -12,7 +13,8 @@ namespace Antares::Optimization
 class LegacyOrtoolsFiller: public LinearProblemFiller
 {
 public:
-    explicit LegacyOrtoolsFiller(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+    explicit LegacyOrtoolsFiller(
+      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
     void addVariables(ILinearProblem& pb, LinearProblemData& data) override;
     void addConstraints(ILinearProblem& pb, LinearProblemData& data) override;
     void addObjective(ILinearProblem& pb, LinearProblemData& data) override;
@@ -29,4 +31,4 @@ private:
     void CopyRows(MPSolver* solver) const;
     void CopyMatrix(const MPSolver* solver) const;
 };
-}
+} // namespace Antares::Optimization
