@@ -49,7 +49,7 @@ public:
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(const AnyString& folder);
+    bool loadFromFolder(const std::string& folder);
 
     /*!
     ** \brief Save data to a folder
