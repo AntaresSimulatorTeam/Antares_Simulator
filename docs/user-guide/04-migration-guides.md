@@ -29,12 +29,12 @@ Note: This flag allows to bypass the breaking change that took place in version 
 ### (TS-generator only) TS generation for link capacities
 In files input/links/<link1>/properties.ini, add the following properties
 - unitcount (unsigned int, default 1)
-- nominalcapacity (float)
-- law.planned (string "uniform"/"geometric")
+- nominalcapacity (float, default 0)
+- law.planned (string "uniform"/"geometric", default "uniform")
 - law.forced (same)
-- volatility.planned (double in [0,1])
+- volatility.planned (double in [0,1], default 0)
 - volatility.forced (same)
-- force-no-generation (true/false)
+- force-no-generation (true/false, default true)
 
 - "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in maintenance", "maximum of groups in maintenance".
 - "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
