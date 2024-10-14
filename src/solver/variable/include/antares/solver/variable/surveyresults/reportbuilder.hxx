@@ -507,4 +507,7 @@ public:
 } // namespace Solver
 } // namespace Antares
 
+// cleanup
+#undef SEP
+
 #endif // __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__

@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__
 #define __ANTARES_LIBS_STUDY_SCENARIO_BUILDER_UPDATER_HXX__
 
-#include <filesystem>
+#include <yuni/yuni.h>
 
 #include "antares/study/study.h"
 
 #include "sets.h"
+
+#define SEP IO::Separator
 
 namespace Antares
 {
@@ -37,6 +39,7 @@ public:
     ScenarioBuilderUpdater(Data::Study& study):
         pStudy(study)
     {
+        using namespace Yuni;
         // We can store the INI files in disk because it may not fit in memory
 
         if (study.scenarioRules)
@@ -46,12 +49,10 @@ public:
 
             logs.debug()
               << "[scenario-builder] writing data to a temporary file before structure changes";
-
-            std::string filename = "antares-scenbld-save-" + memory.processID() + '-' + (size_t)(this) + std::string("-scenariobuilder.tmp");
-            pTempFile = memory.cacheFolder();
-            pTempFile /= filename;
+            pTempFile << memory.cacheFolder() << SEP << "antares-scenbld-save-"
+                      << memory.processID() << '-' << (size_t)(this) << "-scenariobuilder.tmp";
             // Dump the memory
-            study.scenarioRules->saveToINIFile(pTempFile.string());
+            study.scenarioRules->saveToINIFile(pTempFile);
             study.scenarioRules->clear();
         }
     }
@@ -65,19 +66,19 @@ public:
             if (pStudy.scenarioRules)
             {
                 logs.debug() << "[scenario-builder] reloading data from a temporary file";
-                pStudy.scenarioRules->loadFromINIFile(pTempFile.string());
+                pStudy.scenarioRules->loadFromINIFile(pTempFile);
 
                 pStudy.scenarioRules->inUpdaterMode = false;
                 logs.debug() << "[scenario-builder] updater mode OFF";
             }
             // Removing the temporary file
-            std::filesystem::remove(pTempFile);
+            IO::File::Delete(pTempFile);
         }
     }
 
 private:
     Data::Study& pStudy;
-    std::filesystem::path pTempFile;
+    Yuni::String pTempFile;
 
 }; // class ScenarioBuilderUpdater
 
