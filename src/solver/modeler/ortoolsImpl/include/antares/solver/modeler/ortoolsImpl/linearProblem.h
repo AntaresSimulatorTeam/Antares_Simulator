@@ -71,6 +71,7 @@ public:
 
 protected:
     operations_research::MPSolver* mpSolver_;
+
 private:
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
