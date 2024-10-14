@@ -23,6 +23,8 @@ class study_run:
         solver_full_path = str(Path(self.solver_path).resolve())
 
         command = [solver_full_path, "-i", str(self.study_path)]
+        self.use_ortools = True
+        self.ortools_solver = "sirius"
         if self.use_ortools:
             command.append('--use-ortools')
             command.append('--ortools-solver=' + self.ortools_solver)
