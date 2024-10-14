@@ -2,31 +2,44 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v9.2.0
-### Adequacy Patch LMR
-Removed following properties from **settings/generaldata.ini**.
-- enable-first-step
-- set-to-null-ntc-between-physical-out-for-first-step
+### Input
+#### Removed properties
+The following properties were removed from **settings/generaldata.ini**.
+- `adequacy patch/enable-first-step`
+- `adequacy patch/set-to-null-ntc-between-physical-out-for-first-step`
+- `other preferences/initial-reservoir-levels`
+#### Short-term storages
+- Added property `efficiencywithdrawal` (double in [0, 1], default 1) short-term storages (file input/st-storage/clusters/<area id>/list.ini)
+- Added timeseries cost-injection.txt, cost-withdrawal.txt and cost-level.txt. These files are optional. If present, they must contain either no value (same behavior as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. Each of these timeseries is located in directory input/st-storage/series/<area id>/<ST id>/, along existing series (rule-curves.txt, etc.).
+
+#### Final levels / scenario-builder
+- Added optional key type "hfl" (hydro final level) in the scenario builder. The syntax is equivalent to existing prefix "hl" (hydro initial level), that is
+```
+hl,area,<year> = <value>
+```
+
+By convention, `year` start at 0 and `value` must be in interval [0, 1].
+
+#### Compatibility flag for hydro pmax coefficients
+In file settings/generaldata.ini, in section `other preferences`, add property `hydro-pmax-format` with possible values `daily` (default, legacy) and `hourly` (new).
+
+Note: This flag allows to bypass the breaking change that took place in version 9.1 for hydro max powers. It is possible to support only the `legacy` file format. 
+
 
 ### (TS-generator only) TS generation for link capacities
 In files input/links/<link1>/properties.ini, add the following properties
-- tsgen_direct_XXX,
-- tsgen_indirect_XXX
-with XXX in
 - unitcount (unsigned int, default 1)
-- nominalcapacity (float)
-- law.planned (string "uniform"/"geometric")
+- nominalcapacity (float, default 0)
+- law.planned (string "uniform"/"geometric", default "uniform")
 - law.forced (same)
-- volatility.planned (double in [0,1])
+- volatility.planned (double in [0,1], default 0)
 - volatility.forced (same)
+- force-no-generation (true/false, default true)
 
 - "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in maintenance", "maximum of groups in maintenance".
 - "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
 - number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
 
-
-### Input
-#### Short term storage: efficiency for withdrawal
-In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
 
 ### Output
 - Remove column SPIL ENRG CSR (adequacy patch)
