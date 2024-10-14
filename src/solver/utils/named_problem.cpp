@@ -26,19 +26,46 @@
 
 namespace Antares::Optimization
 {
-PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
-                                                 const std::vector<std::string>& NomDesContraintes,
-                                                 const std::vector<bool>& VariablesEntieres,
-                                                 BasisStatus& basisStatus,
+PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
                                                  bool UseNamedProblems,
                                                  bool SolverLogs):
-    NomDesVariables(NomDesVariables),
-    NomDesContraintes(NomDesContraintes),
+    NomDesVariables(problemeAResoudre->NomDesVariables),
+    NomDesContraintes(problemeAResoudre->NomDesContraintes),
+    VariablesEntieres(problemeAResoudre->VariablesEntieres),
     useNamedProblems_(UseNamedProblems),
-    VariablesEntieres(VariablesEntieres),
     basisStatus(basisStatus)
 {
     AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
+    NombreMaxDIterations = -1;
+    DureeMaxDuCalcul = -1.;
+    CoutLineaire = problemeAResoudre->CoutLineaire.data();
+    X = problemeAResoudre->X.data();
+    Xmin = problemeAResoudre->Xmin.data();
+    Xmax = problemeAResoudre->Xmax.data();
+    NombreDeVariables = problemeAResoudre->NombreDeVariables;
+    TypeDeVariable = problemeAResoudre->TypeDeVariable.data();
+
+    NombreDeContraintes = problemeAResoudre->NombreDeContraintes;
+    IndicesDebutDeLigne = problemeAResoudre->IndicesDebutDeLigne.data();
+    NombreDeTermesDesLignes = problemeAResoudre->NombreDeTermesDesLignes.data();
+    IndicesColonnes = problemeAResoudre->IndicesColonnes.data();
+    CoefficientsDeLaMatriceDesContraintes = problemeAResoudre
+                                                       ->CoefficientsDeLaMatriceDesContraintes
+                                                       .data();
+    Sens = problemeAResoudre->Sens.data();
+    SecondMembre = problemeAResoudre->SecondMembre.data();
+    ChoixDeLAlgorithme = SPX_DUAL;
+    TypeDePricing = PRICING_STEEPEST_EDGE;
+    StrategieAntiDegenerescence = AGRESSIF;
+    PositionDeLaVariable = problemeAResoudre->PositionDeLaVariable.data();
+    NbVarDeBaseComplementaires = 0;
+    ComplementDeLaBase = problemeAResoudre->ComplementDeLaBase.data();
+    LibererMemoireALaFin = NON_SPX;
+    UtiliserCoutMax = NON_SPX;
+    CoutMax = 0.0;
+    CoutsMarginauxDesContraintes = problemeAResoudre->CoutsMarginauxDesContraintes.data();
+    CoutsReduits = problemeAResoudre->CoutsReduits.data();
+    NombreDeContraintesCoupes = 0;
 }
 
 bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
