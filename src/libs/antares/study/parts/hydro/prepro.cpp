@@ -32,6 +32,8 @@
 using namespace Antares;
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 #define SEP IO::Separator
 
 namespace Antares
@@ -46,7 +48,7 @@ static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
     return ini.save(filename);
 }
 
-static bool PreproHydroLoadSettings(PreproHydro* h, const std::string& filename)
+static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 {
     IniFile ini;
     IniFile::Section* s;
@@ -145,7 +147,7 @@ bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
     return false;
 }
 
-bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::string& folder)
+bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
 {
     enum
     {
@@ -157,11 +159,11 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const std::st
     data.resize(hydroPreproMax, 12, true);
     String& buffer = s.bufferLoadingTS;
 
-    buffer.clear() << folder << SEP << areaID << SEP << "prepro.ini";
-    bool ret = PreproHydroLoadSettings(this, buffer);
+    fs::path preproPath = folder / areaID / "prepro.ini";
+    bool ret = PreproHydroLoadSettings(this, preproPath);
 
-    buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-    ret = data.loadFromCSVFile(buffer, hydroPreproMax, maxNbOfLineToLoad, mtrxOption, &s.dataBuffer)
+    fs::path energyPath = folder / areaID / "energy.txt";
+    ret = data.loadFromCSVFile(energyPath.string(), hydroPreproMax, maxNbOfLineToLoad, mtrxOption, &s.dataBuffer)
           && ret;
 
     return ret;

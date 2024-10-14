@@ -95,7 +95,7 @@ public:
     ** \param folder The source folder (ex: `input/hydro/prepro`)
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& s, const AreaName& areaID, const std::string& folder);
+    bool loadFromFolder(Study& s, const std::string& areaID, const std::filesystem::path& folder);
 
     bool validate(const std::string& areaID);
     /*!
