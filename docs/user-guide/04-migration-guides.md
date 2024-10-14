@@ -34,6 +34,7 @@ In files input/links/<link1>/properties.ini, add the following properties
 - law.forced (same)
 - volatility.planned (double in [0,1])
 - volatility.forced (same)
+- force-no-generation (true/false)
 
 - "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in maintenance", "maximum of groups in maintenance".
 - "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
