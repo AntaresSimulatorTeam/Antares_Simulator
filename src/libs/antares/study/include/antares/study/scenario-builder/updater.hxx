@@ -47,8 +47,9 @@ public:
             logs.debug()
               << "[scenario-builder] writing data to a temporary file before structure changes";
 
-            std::string filename = "antares-scenbld-save-" + memory.processID() + '-' + (size_t)(this) + std::string("-scenariobuilder.tmp");
-            pTempFile = memory.cacheFolder();
+            std::string filename = "antares-scenbld-save-" + memory.processID() + '-'
+                                   + (size_t)(this) + std::string("-scenariobuilder.tmp");
+            pTempFile = memory.cacheFolder().c_str();
             pTempFile /= filename;
             // Dump the memory
             study.scenarioRules->saveToINIFile(pTempFile.string());
