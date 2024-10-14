@@ -115,12 +115,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
         parameters.synthesis = false;
     }
 
-    if (options.loadOnlyNeeded && !parameters.timeSeriesToGenerate)
-    {
-        // Nothing to refresh
-        parameters.timeSeriesToRefresh = 0;
-    }
-
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
     if (usedByTheSolver)
@@ -235,8 +229,7 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
     // Load
-    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
-        || timeSeriesLoad & parameters.timeSeriesToGenerate)
+    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
                        << "correlation.ini";
@@ -244,8 +237,7 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
     }
 
     // Solar
-    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
-        || timeSeriesSolar & parameters.timeSeriesToGenerate)
+    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
                        << "correlation.ini";
@@ -254,8 +246,7 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 
     // Wind
     {
-        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh
-            || timeSeriesWind & parameters.timeSeriesToGenerate)
+        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToGenerate)
         {
             buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP
                            << "correlation.ini";
@@ -265,8 +256,7 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 
     // Hydro
     {
-        if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh)
-            || (timeSeriesHydro & parameters.timeSeriesToGenerate))
+        if (!options.loadOnlyNeeded || timeSeriesHydro & parameters.timeSeriesToGenerate)
         {
             buffer.clear() << folderInput << SEP << "hydro" << SEP << "prepro" << SEP
                            << "correlation.ini";

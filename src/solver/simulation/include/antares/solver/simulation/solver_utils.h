@@ -60,12 +60,6 @@ public:
 
     // Nbre d'années en parallele jouées ou non pour ce lot
     unsigned int nbYears;
-
-    // Regenere-t-on des times series avant de jouer les annees du lot courant
-    bool regenerateTS;
-
-    // Annee a passer a la fonction "regenerateTimeSeries<false>(y)" (si regenerateTS is "true")
-    unsigned int yearForTSgeneration;
 };
 
 class costStatistics

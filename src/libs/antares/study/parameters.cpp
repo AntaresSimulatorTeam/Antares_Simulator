@@ -281,13 +281,6 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
-    // Time-series refresh
-    timeSeriesToRefresh = 0; // None
-    refreshIntervalLoad = 100;
-    refreshIntervalSolar = 100;
-    refreshIntervalHydro = 100;
-    refreshIntervalWind = 100;
-    refreshIntervalThermal = 100;
     // Archive
     timeSeriesToArchive = 0; // None
     // Pre-Processor
@@ -533,32 +526,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         // This data is among solver data, but is useless while running a simulation
         // Only by TS generator. We skip it here (otherwise, we get a reading error).
         return true;
-    }
-    // Interval values
-    if (key == "refreshintervalload")
-    {
-        return value.to<uint>(d.refreshIntervalLoad);
-    }
-    if (key == "refreshintervalhydro")
-    {
-        return value.to<uint>(d.refreshIntervalHydro);
-    }
-    if (key == "refreshintervalwind")
-    {
-        return value.to<uint>(d.refreshIntervalWind);
-    }
-    if (key == "refreshintervalthermal")
-    {
-        return value.to<uint>(d.refreshIntervalThermal);
-    }
-    if (key == "refreshintervalsolar")
-    {
-        return value.to<uint>(d.refreshIntervalSolar);
-    }
-    // What timeSeries to refresh ?
-    if (key == "refreshtimeseries")
-    {
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToRefresh);
     }
     // readonly
     if (key == "readonly")
@@ -1139,6 +1106,14 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
     }
 
+    // ignored since 9.3
+    if (key == "refreshtimeseries" || key == "refreshintervalload" || key == "refreshintervalhydro"
+        || key == "refreshintervalwind" || key == "refreshintervalthermal"
+        || key == "refreshintervalsolar")
+    {
+        return true;
+    }
+
     return false;
 }
 
@@ -1218,8 +1193,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
         }
     }
 
-    fixRefreshIntervals();
-
     fixGenRefreshForNTC();
 
     // We currently always returns true to not block any loading process
@@ -1238,29 +1211,6 @@ void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
     optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
 }
 
-void Parameters::fixRefreshIntervals()
-{
-    using T = std::tuple<uint& /* refreshInterval */,
-                         enum TimeSeriesType /* ts */,
-                         const std::string /* label */>;
-    const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
-                                            {refreshIntervalSolar, timeSeriesSolar, "solar"},
-                                            {refreshIntervalHydro, timeSeriesHydro, "hydro"},
-                                            {refreshIntervalWind, timeSeriesWind, "wind"},
-                                            {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
-
-    for (const auto& [refreshInterval, ts, label]: timeSeriesToCheck)
-    {
-        if (ts & timeSeriesToRefresh && 0 == refreshInterval)
-        {
-            refreshInterval = 1;
-            logs.error() << "The " << label
-                         << " time-series must be refreshed but the interval is equal to 0. "
-                            "Auto-Reset to a safe value (1).";
-        }
-    }
-}
-
 void Parameters::fixGenRefreshForNTC()
 {
     if ((timeSeriesTransmissionCapacities & timeSeriesToGenerate) != 0)
@@ -1268,12 +1218,6 @@ void Parameters::fixGenRefreshForNTC()
         timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Time-series generation is not available for transmission capacities. It "
                         "will be automatically disabled.";
-    }
-    if ((timeSeriesTransmissionCapacities & timeSeriesToRefresh) != 0)
-    {
-        timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
-        logs.error() << "Time-series refresh is not available for transmission capacities. It will "
-                        "be automatically disabled.";
     }
     if ((timeSeriesTransmissionCapacities & interModal) != 0)
     {
@@ -1592,64 +1536,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         interModal = 0;
     }
 
-    // Preprocessors
-    if (!timeSeriesToGenerate)
-    {
-        // Nothing to refresh
-        timeSeriesToRefresh = 0;
-    }
-    else
-    {
-        // Removing `refresh`
-        if (!(timeSeriesToGenerate & timeSeriesLoad))
-        {
-            timeSeriesToRefresh &= ~timeSeriesLoad;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesSolar))
-        {
-            timeSeriesToRefresh &= ~timeSeriesSolar;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesWind))
-        {
-            timeSeriesToRefresh &= ~timeSeriesWind;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesHydro))
-        {
-            timeSeriesToRefresh &= ~timeSeriesHydro;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesThermal))
-        {
-            timeSeriesToRefresh &= ~timeSeriesThermal;
-        }
-
-        // Force mode refresh if the timeseries must be regenerated
-        if (timeSeriesToGenerate & timeSeriesLoad && !(timeSeriesToRefresh & timeSeriesLoad))
-        {
-            timeSeriesToRefresh |= timeSeriesLoad;
-            refreshIntervalLoad = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesSolar && !(timeSeriesToRefresh & timeSeriesSolar))
-        {
-            timeSeriesToRefresh |= timeSeriesSolar;
-            refreshIntervalSolar = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesWind && !(timeSeriesToRefresh & timeSeriesWind))
-        {
-            timeSeriesToRefresh |= timeSeriesWind;
-            refreshIntervalWind = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesHydro && !(timeSeriesToRefresh & timeSeriesHydro))
-        {
-            timeSeriesToRefresh |= timeSeriesHydro;
-            refreshIntervalHydro = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesThermal && !(timeSeriesToRefresh & timeSeriesThermal))
-        {
-            timeSeriesToRefresh |= timeSeriesThermal;
-            refreshIntervalThermal = UINT_MAX;
-        }
-    }
-
     if (options.noTimeseriesImportIntoInput && timeSeriesToArchive != 0)
     {
         logs.info() << "  :: ignoring timeseries importation to input";
@@ -1792,14 +1678,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
 
         // Refresh
-        ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
         ParametersSaveTimeSeries(section, "intra-modal", intraModal);
         ParametersSaveTimeSeries(section, "inter-modal", interModal);
-        section->add("refreshIntervalLoad", refreshIntervalLoad);
-        section->add("refreshIntervalHydro", refreshIntervalHydro);
-        section->add("refreshIntervalWind", refreshIntervalWind);
-        section->add("refreshIntervalThermal", refreshIntervalThermal);
-        section->add("refreshIntervalSolar", refreshIntervalSolar);
 
         // Readonly
         section->add("readonly", readonly);

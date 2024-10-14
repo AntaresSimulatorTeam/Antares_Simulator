@@ -30,7 +30,6 @@
 #include <antares/writer/writer_factory.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/misc/options.h"
-#include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
 
@@ -84,11 +83,6 @@ public:
 
 private:
     /*!
-    ** \brief Regenerate time-series if required for a given year
-    */
-    void regenerateTimeSeries(uint year);
-
-    /*!
     ** \brief Builds sets of parallel years
     **
     ** \return The max number of years in a set of parallel years (to be executed or not)
@@ -136,8 +130,6 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-    //! Some temporary to avoid performing useless complex checks
-    Solver::Private::Simulation::CacheData pData;
     //!
     uint pNbYearsReallyPerformed;
     //! Max number of years performed in parallel

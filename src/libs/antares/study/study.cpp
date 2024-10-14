@@ -212,7 +212,7 @@ unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
     if (!nbLogicalCores)
     {
         logs.fatal() << "Number of logical cores available is 0.";
-        return 0;
+        return 1;
     }
 
     switch (ncMode)
@@ -232,17 +232,13 @@ unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
         break;
     }
 
-    return 0;
+    return 1;
 }
 
+/// Getting the number of parallel years based on the number of cores level
 void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
 {
-    /*
-            Getting the number of parallel years based on the number
-            of cores level.
-            This number is limited by the smallest refresh span (if at least
-            one type of time series is generated)
-    */
+    auto& p = parameters;
     unsigned nbLogicalCores = std::thread::hardware_concurrency();
     maxNbYearsInParallel = getNumberOfCoresPerMode(nbLogicalCores, parameters.nbCores.ncMode);
 
@@ -250,35 +246,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     if (forceParallel)
     {
         maxNbYearsInParallel = nbYearsParallelForced;
-    }
-
-    // Limiting the number of parallel years by the smallest refresh span
-    auto& p = parameters;
-    uint TSlimit = UINT_MAX;
-    if ((p.timeSeriesToGenerate & timeSeriesLoad) && (p.timeSeriesToRefresh & timeSeriesLoad))
-    {
-        TSlimit = p.refreshIntervalLoad;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesSolar) && (p.timeSeriesToRefresh & timeSeriesSolar))
-    {
-        TSlimit = (p.refreshIntervalSolar < TSlimit) ? p.refreshIntervalSolar : TSlimit;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesHydro) && (p.timeSeriesToRefresh & timeSeriesHydro))
-    {
-        TSlimit = (p.refreshIntervalHydro < TSlimit) ? p.refreshIntervalHydro : TSlimit;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesWind) && (p.timeSeriesToRefresh & timeSeriesWind))
-    {
-        TSlimit = (p.refreshIntervalWind < TSlimit) ? p.refreshIntervalWind : TSlimit;
-    }
-    if ((p.timeSeriesToGenerate & timeSeriesThermal) && (p.timeSeriesToRefresh & timeSeriesThermal))
-    {
-        TSlimit = (p.refreshIntervalThermal < TSlimit) ? p.refreshIntervalThermal : TSlimit;
-    }
-
-    if (TSlimit < maxNbYearsInParallel)
-    {
-        maxNbYearsInParallel = TSlimit;
     }
 
     // Limiting the number of parallel years by the total number of years
@@ -290,102 +257,13 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // Getting the minimum number of years in a set of parallel years.
     // To get this number, we have to divide all years into sets of parallel
     // years and pick the size of the smallest set.
-
-    std::vector<uint>* set = nullptr;
-    bool buildNewSet = true;
-    std::vector<std::vector<uint>> setsOfParallelYears;
-
-    for (uint y = 0; y < p.nbYears; ++y)
-    {
-        bool performCalculations = true;
-        if (p.userPlaylist)
-        {
-            performCalculations = p.yearsFilter[y];
-        }
-
-        // Do we have to refresh ?
-        bool refreshing = false;
-        refreshing = (p.timeSeriesToGenerate & timeSeriesLoad)
-                     && (p.timeSeriesToRefresh & timeSeriesLoad)
-                     && (!y || ((y % p.refreshIntervalLoad) == 0));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesSolar)
-                         && (p.timeSeriesToRefresh & timeSeriesSolar)
-                         && (!y || ((y % p.refreshIntervalSolar) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesWind)
-                         && (p.timeSeriesToRefresh & timeSeriesWind)
-                         && (!y || ((y % p.refreshIntervalWind) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesHydro)
-                         && (p.timeSeriesToRefresh & timeSeriesHydro)
-                         && (!y || ((y % p.refreshIntervalHydro) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesThermal)
-                         && (p.timeSeriesToRefresh & timeSeriesThermal)
-                         && (!y || ((y % p.refreshIntervalThermal) == 0)));
-
-        buildNewSet = buildNewSet || refreshing;
-
-        // We build a new set of parallel years if one of these conditions is fulfilled :
-        //	- We have to refresh (or regenerate) some or all time series before running the
-        // current year
-        //	- This is the first year after the previous set is full with years to be actually
-        // executed (not skipped). 	  That is : in the previous set filled, the max number of
-        // years to be actually run is reached.
-        if (buildNewSet)
-        {
-            std::vector<uint> setToCreate;
-            setsOfParallelYears.push_back(setToCreate);
-            set = &(setsOfParallelYears.back());
-        }
-
-        if (performCalculations)
-        {
-            set->push_back(y);
-        }
-
-        // Do we build a new set at next iteration (for years to be executed or not) ?
-        if (set->size() == maxNbYearsInParallel)
-        {
-            buildNewSet = true;
-        }
-        else
-        {
-            buildNewSet = false;
-        }
-    } // End of loop over years
-
-    // Now finding the smallest size among all sets.
-    minNbYearsInParallel = maxNbYearsInParallel;
-    for (uint s = 0; s < setsOfParallelYears.size(); s++)
-    {
-        uint setSize = (uint)setsOfParallelYears[s].size();
-        // Empty sets are not taken into account because, on the solver side,
-        // they will contain only skipped years
-        if (setSize && (setSize < minNbYearsInParallel))
-        {
-            minNbYearsInParallel = setSize;
-        }
-    }
+    unsigned minYears = p.userPlaylist ? p.yearsFilter.size() % maxNbYearsInParallel
+                                       : p.nbYears % maxNbYearsInParallel;
 
     // GUI : storing minimum number of parallel years (in a set of parallel years).
     //		 Useful in the run window's simulation cores field in case parallel mode is enabled
     // by user.
-    minNbYearsInParallel_save = minNbYearsInParallel;
-
-    // The max number of years to run in parallel is limited by the max number years in a set of
-    // parallel years. This latter number can be limited by the smallest interval between 2 refresh
-    // points and determined by the unrun MC years in case of play-list.
-    uint maxNbYearsOverAllSets = 0;
-    for (uint s = 0; s < setsOfParallelYears.size(); s++)
-    {
-        if (setsOfParallelYears[s].size() > maxNbYearsOverAllSets)
-        {
-            maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].size();
-        }
-    }
-    maxNbYearsInParallel = maxNbYearsOverAllSets;
+    minNbYearsInParallel_save = minYears;
 
     // GUI : storing max nb of parallel years (in a set of parallel years) in case parallel mode is
     // enabled.
@@ -1002,37 +880,6 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
     }
 }
 
-namespace // anonymous
-{
-template<enum TimeSeriesType T>
-struct TS final
-{
-    static bool IsNeeded(const Study& s, const uint y)
-    {
-        if (not(T & s.parameters.timeSeriesToRefresh))
-        {
-            return false;
-        }
-
-        switch (T)
-        {
-        case timeSeriesLoad:
-            return (!(y % s.parameters.refreshIntervalLoad));
-        case timeSeriesSolar:
-            return (!(y % s.parameters.refreshIntervalSolar));
-        case timeSeriesWind:
-            return (!(y % s.parameters.refreshIntervalWind));
-        case timeSeriesHydro:
-            return (!(y % s.parameters.refreshIntervalHydro));
-        case timeSeriesThermal:
-            return (!(y % s.parameters.refreshIntervalThermal));
-        }
-        return false;
-    }
-};
-
-} // anonymous namespace
-
 void Study::initializeProgressMeter(bool tsGeneratorOnly)
 {
     uint years = tsGeneratorOnly ? 1 : (runtime.rangeLimits.year[rangeEnd] + 1);
@@ -1056,54 +903,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
 
     for (uint y = 0; y != years; ++y)
     {
-        if (TS<timeSeriesLoad>::IsNeeded(*this, y))
-        {
-            n = parameters.nbTimeSeriesLoad * areas.size() * 365;
-            if (0 != (timeSeriesLoad & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGLoad, n);
-        }
-        if (TS<timeSeriesSolar>::IsNeeded(*this, y))
-        {
-            n = parameters.nbTimeSeriesSolar * areas.size() * 365;
-            if (0 != (timeSeriesSolar & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGSolar, n);
-        }
-        if (TS<timeSeriesWind>::IsNeeded(*this, y))
-        {
-            n = parameters.nbTimeSeriesWind * areas.size() * 365;
-            if (0 != (timeSeriesWind & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGWind, n);
-        }
-        if (TS<timeSeriesHydro>::IsNeeded(*this, y))
-        {
-            // n += parameters.nbTimeSeriesHydro * areas.size() * 12;
-            n = parameters.nbTimeSeriesHydro;
-            if (0 != (timeSeriesHydro & parameters.timeSeriesToArchive))
-            {
-                n += areas.size();
-            }
-            progression.add(y, Solver::Progression::sectTSGHydro, n);
-        }
-        if (TS<timeSeriesThermal>::IsNeeded(*this, y))
-        {
-            n = runtime.thermalPlantTotalCount;
-            if (0 != (timeSeriesThermal & parameters.timeSeriesToArchive))
-            {
-                n += runtime.thermalPlantTotalCount;
-                n += runtime.thermalPlantTotalCountMustRun;
-            }
-            progression.add(y, Solver::Progression::sectTSGThermal, n);
-        }
-
         progression.add(y, Solver::Progression::sectYear, ticksPerYear);
 
         if (parameters.yearByYear)

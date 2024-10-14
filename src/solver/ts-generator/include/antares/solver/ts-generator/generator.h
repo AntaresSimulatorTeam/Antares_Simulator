@@ -127,7 +127,7 @@ void DestroyAll(Data::Study& study);
 ** \brief Destroy a TS generator if it exists and no longer needed
 */
 template<enum Data::TimeSeriesType T>
-void Destroy(Data::Study& study, uint year);
+void Destroy(Data::Study& study);
 
 } // namespace Antares::TSGenerator
 

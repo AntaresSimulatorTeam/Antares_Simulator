@@ -52,7 +52,6 @@ void initializeStudy(Study& study)
 
     study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
-    study.parameters.timeSeriesToRefresh = 0;
 }
 
 BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
