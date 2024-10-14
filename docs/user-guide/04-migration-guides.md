@@ -41,10 +41,6 @@ In files input/links/<link1>/properties.ini, add the following properties
 - number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
 
 
-### Input
-#### Short term storage: efficiency for withdrawal
-In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
-
 ### Output
 - Remove column SPIL ENRG CSR (adequacy patch)
 - Add DTG MRG CSR and UNSP ENRG CSR variables
