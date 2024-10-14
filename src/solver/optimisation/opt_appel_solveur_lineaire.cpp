@@ -28,7 +28,7 @@
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
-#include "antares/solver/optimisation/LegacyOrtoolsFiller.h"
+#include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -208,7 +208,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
                                                                        options.ortoolsSolver);
-    auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>(&Probleme);
+    auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
     LinearProblemData LP_Data;
     FillContext fillCtx(0, 167);
@@ -386,7 +386,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
                                                                            options.ortoolsSolver);
-        auto legacyOrtoolsFiller = std::make_unique<LegacyOrtoolsFiller>(&Probleme);
+        auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
         LinearProblemData LP_Data;
         FillContext fillCtx(0, 167);

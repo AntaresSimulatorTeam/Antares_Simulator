@@ -1,9 +1,11 @@
-#include "antares/solver/optimisation/LegacyOrtoolsFiller.h"
+#include "antares/solver/optimisation/LegacyFiller.h"
+
+using namespace Antares::Solver::Modeler::Api;
 
 namespace Antares::Optimization
 {
 
-LegacyOrtoolsFiller::LegacyOrtoolsFiller(
+LegacyFiller::LegacyFiller(
   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe):
     problemeSimplexe_(problemeSimplexe)
 {
@@ -14,7 +16,7 @@ LegacyOrtoolsFiller::LegacyOrtoolsFiller(
     }
 }
 
-void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb,
+void LegacyFiller::addVariables(ILinearProblem& pb,
                                        LinearProblemData& data,
                                        FillContext& ctx)
 {
@@ -22,7 +24,7 @@ void LegacyOrtoolsFiller::addVariables(ILinearProblem& pb,
     CopyVariables(pb);
 }
 
-void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb,
+void LegacyFiller::addConstraints(ILinearProblem& pb,
                                          LinearProblemData& data,
                                          FillContext& ctx)
 {
@@ -31,13 +33,14 @@ void LegacyOrtoolsFiller::addConstraints(ILinearProblem& pb,
     CopyMatrix(pb);
 }
 
-void LegacyOrtoolsFiller::addObjective(ILinearProblem& pb,
+void LegacyFiller::addObjective(ILinearProblem& pb,
                                        LinearProblemData& data,
                                        FillContext& ctx)
 {
+    // nothing to do: objective coefficients are set along with variables definition
 }
 
-void LegacyOrtoolsFiller::CopyMatrix(ILinearProblem& pb) const
+void LegacyFiller::CopyMatrix(ILinearProblem& pb) const
 {
     for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
     {
@@ -54,7 +57,7 @@ void LegacyOrtoolsFiller::CopyMatrix(ILinearProblem& pb) const
     }
 }
 
-void LegacyOrtoolsFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) const
+void LegacyFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) const
 {
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
@@ -66,7 +69,7 @@ void LegacyOrtoolsFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) co
     pb.setObjectiveCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
-void LegacyOrtoolsFiller::CopyVariables(ILinearProblem& pb) const
+void LegacyFiller::CopyVariables(ILinearProblem& pb) const
 {
     for (int idxVar = 0; idxVar < problemeSimplexe_->NombreDeVariables; ++idxVar)
     {
@@ -74,7 +77,7 @@ void LegacyOrtoolsFiller::CopyVariables(ILinearProblem& pb) const
     }
 }
 
-void LegacyOrtoolsFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
+void LegacyFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
 {
     double bMin = -pb.infinity(), bMax = pb.infinity();
     if (problemeSimplexe_->Sens[idxRow] == '=')
@@ -93,7 +96,7 @@ void LegacyOrtoolsFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) 
     pb.addConstraint(bMin, bMax, constraintNameManager_.GetName(idxRow));
 }
 
-void LegacyOrtoolsFiller::CopyRows(ILinearProblem& pb) const
+void LegacyFiller::CopyRows(ILinearProblem& pb) const
 {
     for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
     {
