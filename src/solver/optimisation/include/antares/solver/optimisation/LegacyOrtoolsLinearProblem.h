@@ -30,9 +30,15 @@ class LegacyOrtoolsLinearProblem final
     : public Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem
 {
 public:
+    LegacyOrtoolsLinearProblem(bool isMip, const std::string& solverName):
+        OrtoolsLinearProblem(isMip, solverName)
+    {
+        // nothing else to do
+    }
+
     operations_research::MPSolver* getMpSolver()
     {
-        return mpSolver_;
+        return MpSolver();
     }
 };
 

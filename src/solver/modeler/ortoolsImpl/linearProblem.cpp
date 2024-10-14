@@ -164,7 +164,7 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
-MPSolver* OrtoolsLinearProblem::MPSolver()
+MPSolver* OrtoolsLinearProblem::MpSolver() const
 {
     return mpSolver_;
 }

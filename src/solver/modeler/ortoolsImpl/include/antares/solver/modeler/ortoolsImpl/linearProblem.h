@@ -65,14 +65,14 @@ public:
     bool isMaximization() const override;
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
-    operations_research::MPSolver* MPSolver();
 
-    virtual double infinity() const override;
+    double infinity() const override;
 
 protected:
-    operations_research::MPSolver* mpSolver_;
+    operations_research::MPSolver* MpSolver() const;
 
 private:
+    operations_research::MPSolver* mpSolver_;
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 
