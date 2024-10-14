@@ -28,9 +28,6 @@ Note: This flag allows to bypass the breaking change that took place in version 
 
 ### (TS-generator only) TS generation for link capacities
 In files input/links/<link1>/properties.ini, add the following properties
-- tsgen_direct_XXX,
-- tsgen_indirect_XXX
-with XXX in
 - unitcount (unsigned int, default 1)
 - nominalcapacity (float)
 - law.planned (string "uniform"/"geometric")
