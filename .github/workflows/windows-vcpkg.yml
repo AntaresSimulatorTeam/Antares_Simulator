@@ -259,7 +259,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run parallel tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
