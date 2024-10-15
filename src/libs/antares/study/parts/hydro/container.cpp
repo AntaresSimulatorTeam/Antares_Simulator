@@ -84,6 +84,8 @@ void PartHydro::reset()
     powerToLevel = false;
     leewayLowerBound = 1.;
     leewayUpperBound = 1.;
+    overflowCost = 0.;
+    levelCost = 0.;
 
     inflowPattern.reset(1, DAYS_PER_YEAR, true);
     inflowPattern.fillColumn(0, 1.0);
@@ -618,6 +620,49 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         }
     }
 
+    if ((section = ini.find("overflow cost")))
+    {
+        if ((property = section->firstProperty))
+        {
+            // Browse all properties
+            for (; property; property = property->next)
+            {
+                AreaName id = property->key;
+                id.toLower();
+
+                auto* area = study.areas.find(id);
+                if (area)
+                {
+                    ret = property->value.to<double>(area->hydro.overflowCost) && ret;
+                }
+                else
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
+            }
+        }
+    }
+
+    if ((section = ini.find("level cost")))
+    {
+        if ((property = section->firstProperty))
+        {
+            // Browse all properties
+            for (; property; property = property->next)
+            {
+                AreaName id = property->key;
+                id.toLower();
+
+                auto* area = study.areas.find(id);
+                if (area)
+                {
+                    ret = property->value.to<double>(area->hydro.levelCost) && ret;
+                }
+                else
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
+            }
+        }
+    }
+
+
     study.areas.each([&](Data::Area& area) {
         if (not area.hydro.useHeuristicTarget && not area.hydro.useWaterValue)
         {
@@ -659,6 +704,8 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
     auto* sLeewayLow = ini.addSection("leeway low");
     auto* sLeewayUp = ini.addSection("leeway up");
     auto* spumpingEfficiency = ini.addSection("pumping efficiency");
+    auto* sOverflowCost = ini.addSection("overflow cost");
+    auto* sLevelCost = ini.addSection("level cost");
 
     // return status
     bool ret = true;
@@ -688,6 +735,9 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
             sUseLeeway->add(area.id, true);
         if (area.hydro.powerToLevel)
             sPowerToLevel->add(area.id, true);
+	sOverflowCost->add(area.id, area.hydro.overflowCost);
+	sLevelCost->add(area.id, area.hydro.levelCost);
+
         // max power
         buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
                        << area.id << ".txt";

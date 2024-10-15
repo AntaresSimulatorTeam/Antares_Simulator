@@ -57,7 +57,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
         int Var = CorrespondanceDesVariables.NumeroDeVariableTurbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];
 
-        Xmin[Var] = std::min(TurbineMax[Pdt], std::max(TurbineCible[Pdt], TurbineMin[Pdt]));
+        Xmin[Var] = std::min(TurbineMax[Pdt], TurbineMin[Pdt]);
 
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(Turbine[Pdt]);
     }

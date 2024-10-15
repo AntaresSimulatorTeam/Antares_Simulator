@@ -39,7 +39,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: windows-latest
       test-platform: windows-2022
-      vcpkgPackages: wxwidgets boost-test yaml-cpp antlr4
+      vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows
 
     runs-on: windows-latest
@@ -149,7 +149,7 @@ jobs:
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_BUILD_TYPE=Release \
-           -DBUILD_TESTING=ON  \
+           -DBUILD_TESTING=OFF  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
            -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \

@@ -137,18 +137,18 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         char Pump = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
-        char TurbEntreBornes
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-        char MonitorHourlyLev
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire;
+        char TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                 .TurbinageEntreBornes;
 
-        if (!Pump && !TurbEntreBornes && !MonitorHourlyLev
+        if (!Pump && !TurbEntreBornes
             && problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
         {
             ProblemeAResoudre->NombreDeContraintes++;
         }
 
-        if (Pump && !TurbEntreBornes && !MonitorHourlyLev)
+        ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
+
+        if (Pump && !TurbEntreBornes)
         {
             ProblemeAResoudre->NombreDeContraintes
               += 2; /* 2 constraints bounding the overall energy generated over the period (10a in
@@ -161,14 +161,14 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                                           period (10c in the reference document) */
         }
 
-        if (!Pump && TurbEntreBornes && !MonitorHourlyLev)
+        if (!Pump && TurbEntreBornes)
         {
             ProblemeAResoudre->NombreDeContraintes++;
 
             ProblemeAResoudre->NombreDeContraintes++;
         }
 
-        if (Pump && TurbEntreBornes && !MonitorHourlyLev)
+        if (Pump && TurbEntreBornes)
         {
             ProblemeAResoudre->NombreDeContraintes++;
 
@@ -177,7 +177,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
             ProblemeAResoudre->NombreDeContraintes++;
         }
 
-        if (!Pump && TurbEntreBornes && MonitorHourlyLev)
+        if (!Pump && TurbEntreBornes)
         {
             ProblemeAResoudre->NombreDeContraintes++;
 
@@ -186,7 +186,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
             ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
         }
 
-        if (Pump && TurbEntreBornes && MonitorHourlyLev)
+        if (Pump && TurbEntreBornes)
         {
             ProblemeAResoudre->NombreDeContraintes++;
 
@@ -196,7 +196,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
             ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
         }
-        if (Pump && !TurbEntreBornes && MonitorHourlyLev)
+        if (Pump && !TurbEntreBornes)
         {
             ProblemeAResoudre->NombreDeContraintes
               += 2; /* 2 constraints bounding the overall energy generated over the period (10a in
@@ -211,11 +211,6 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
               += nombreDePasDeTempsPourUneOptimisation; /* T constraints expressing the level hourly
                                                            variations (14a in the reference
                                                            document) */
-        }
-        if (!Pump && !TurbEntreBornes && MonitorHourlyLev)
-        {
-            const std::string areaName(problemeHebdo->NomsDesPays[pays]);
-            throw FatalError("Level explicit modeling requires flexible generation in area " + areaName);
         }
     }
 

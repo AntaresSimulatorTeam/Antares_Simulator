@@ -338,74 +338,6 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
                                       constraint on final level*/
 };
 
-class computeTimeStepLevel
-{
-private:
-    int step;
-    double level;
-
-    double capacity;
-    std::vector<double>& inflows;
-    std::vector<double>& ovf;
-    std::vector<double>& turb;
-    double pumpRatio;
-    std::vector<double>& pump;
-    double excessDown;
-
-public:
-    computeTimeStepLevel(
-            const double& startLvl,
-            std::vector<double>& infl,
-            std::vector<double>& overfl,
-            std::vector<double>& H,
-            double pumpEff,
-            std::vector<double>& Pump,
-            double rc) :
-        step(0),
-        level(startLvl),
-        capacity(rc),
-        inflows(infl),
-        ovf(overfl),
-        turb(H),
-        pumpRatio(pumpEff),
-        pump(Pump),
-        excessDown(0.)
-    {
-    }
-
-    void run()
-    {
-        excessDown = 0.;
-
-        level = level + inflows[step] - turb[step] + pumpRatio * pump[step];
-
-        if (level > capacity)
-        {
-            ovf[step] = level - capacity;
-            level = capacity;
-        }
-
-        if (level < 0)
-        {
-            excessDown = -level;
-            level = 0.;
-            inflows[step] += excessDown;
-        }
-    }
-
-    void prepareNextStep()
-    {
-        step++;
-
-        inflows[step] -= excessDown;
-    }
-
-    double getLevel()
-    {
-        return level;
-    }
-};
-
 struct RESERVE_JMOINS1
 {
     std::vector<double> ReserveHoraireJMoins1;
@@ -521,6 +453,9 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
     std::vector<double> CoutDeDefaillanceEnReserve;
+
+    std::vector<double> CoutDeDebordement;
+    std::vector<double> CoutDeRemplissage;
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;

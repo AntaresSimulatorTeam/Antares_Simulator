@@ -72,11 +72,11 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
 HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                                                  AreaList& areas,
                                                                  bool remixWasRun,
-                                                                 bool computeAnyway) :
- basePostProcessCommand(problemeHebdo),
- area_list_(areas),
- remixWasRun_(remixWasRun),
- computeAnyway_(computeAnyway)
+                                                                 bool computeAnyway):
+    basePostProcessCommand(problemeHebdo),
+    area_list_(areas),
+    remixWasRun_(remixWasRun),
+    computeAnyway_(computeAnyway)
 {
 }
 

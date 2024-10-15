@@ -39,53 +39,18 @@ void computingHydroLevels(const Data::AreaList& areas,
                           bool remixWasRun,
                           bool computeAnyway)
 {
-    areas.each([&](const Data::Area& area) {
-        if (!area.hydro.reservoirManagement)
-            return;
+    for (const auto& [_, area]: areas)
+    {
+        uint index = area->index;
 
-        if (not computeAnyway)
-        {
-            if (area.hydro.useHeuristicTarget != remixWasRun)
-                return;
-        }
-
-        uint index = area.index;
-
-        double reservoirCapacity = area.hydro.reservoirCapacity;
-
-        std::vector<double>& inflows
-            = problem.CaracteristiquesHydrauliques[index].ApportNaturelHoraire;
-
+        double reservoirCapacity = area->hydro.reservoirCapacity;
         RESULTATS_HORAIRES& weeklyResults = problem.ResultatsHoraires[index];
-
-        std::vector<double>& turb = weeklyResults.TurbinageHoraire;
-
-        std::vector<double>& pump = weeklyResults.PompageHoraire;
-        double pumpingRatio = area.hydro.pumpingEfficiency;
-
-        double nivInit = problem.CaracteristiquesHydrauliques[index].NiveauInitialReservoir;
         std::vector<double>& niv = weeklyResults.niveauxHoraires;
-
-        std::vector<double>& ovf = weeklyResults.debordementsHoraires;
-
-        computeTimeStepLevel computeLvlObj(nivInit,
-                                           inflows,
-                                           ovf,
-                                           turb,
-                                           pumpingRatio,
-                                           pump,
-                                           reservoirCapacity);
-
-        for (uint h = 0; h < nbHoursInAWeek - 1; h++)
+        for (uint h = 0; h < nbHoursInAWeek; h++)
         {
-            computeLvlObj.run();
-            niv[h] = computeLvlObj.getLevel() * 100 / reservoirCapacity;
-            computeLvlObj.prepareNextStep();
+            niv[h] = niv[h] * 100 / reservoirCapacity;
         }
-
-        computeLvlObj.run();
-        niv[nbHoursInAWeek - 1] = computeLvlObj.getLevel() * 100 / reservoirCapacity;
-    });
+    }
 }
 
 void interpolateWaterValue(const Data::AreaList& areas,

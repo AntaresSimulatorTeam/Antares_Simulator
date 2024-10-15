@@ -157,6 +157,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
+        problem.CoutDeDebordement[i] = area.hydro.overflowCost;
+        problem.CoutDeRemplissage[i] = area.hydro.levelCost;
+
         problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
 
         problem.DefaillanceNegativeUtiliserPMinThermique[i]
@@ -184,17 +187,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
 
-        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire
-          = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
-            && (!area.hydro.useHeuristicTarget
-                || problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable);
+        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = area.hydro.reservoirManagement;
 
         problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
         if (problem.WaterValueAccurate && area.hydro.useWaterValue)
         {
             problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = true;
-            problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = true;
             problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = true;
         }
 
@@ -785,12 +784,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         weekGenerationTarget = weekTarget_tmp;
 
                     marginGen = weekGenerationTarget;
-
-                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-                        < weekTarget_tmp)
-                    {
-                        marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
-                    }
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)

@@ -274,26 +274,19 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
               */
 
+                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo->CoutDeDebordement[pays];
                 if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
                     ProblemeAResoudre->CoutLineaire[var]
-                      = problemeHebdo->CoutDeDefaillanceNegative[pays];
-
-                    ProblemeAResoudre->CoutLineaire[var]
                       += problemeHebdo->CaracteristiquesHydrauliques[pays]
                            .WeeklyWaterValueStateRegular;
-                }
-                else
-                {
-                    ProblemeAResoudre->CoutLineaire[var]
-                      = problemeHebdo->CoutDeDefaillanceNegative[pays];
                 }
             }
 
             var = CorrespondanceVarNativesVarOptim.NumeroDeVariablesDeNiveau[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[var] = 0;
+                ProblemeAResoudre->CoutLineaire[var] = problemeHebdo->CoutDeRemplissage[pays];
             }
 
             var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];

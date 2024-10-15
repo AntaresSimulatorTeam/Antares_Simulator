@@ -117,7 +117,6 @@ void computingHydroLevels(const Data::AreaList& areas,
                           bool remixWasRun,
                           bool computeAnyway = false);
 
-
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
 **
