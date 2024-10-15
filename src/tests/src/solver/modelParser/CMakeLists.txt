@@ -4,11 +4,12 @@ set(SOURCE_FILES
         testModelTranslator.cpp
         test_full.cpp
         enum_operators.h
+        ConvertorVisitor.h
 )
 
 # Add executable
 add_executable(TestModelParser ${SOURCE_FILES})
-
+find_package(antlr4-runtime CONFIG REQUIRED)
 # Link libraries
 target_link_libraries(TestModelParser
         PRIVATE
@@ -16,6 +17,9 @@ target_link_libraries(TestModelParser
         Antares::modelConverter
         Antares::modelParser
         Antares::antares-solver-libObjectModel
+        Antares::solver-expressions
+        Antares::antlr-interface
+        Antares::modeler-ortools-impl
 )
 
 # Storing test-toybox under the folder Unit-tests in the IDE

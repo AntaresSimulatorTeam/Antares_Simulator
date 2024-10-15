@@ -21,6 +21,7 @@
 #include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 
 #include <algorithm>
+#include <regex>
 
 #include "antares/solver/expressions/nodes/ExpressionsNodes.h"
 
@@ -84,7 +85,8 @@ void AstDOTStyleVisitor::visit(const Nodes::SumNode* node, std::ostream& os)
     for (auto* child: node->getOperands())
     {
         auto childId = getNodeID(child);
-        os << "  " << id << " -> " << childId << ";\n";
+        os << "  " << graphName_ + std::to_string(id) << " -> "
+           << graphName_ + std::to_string(childId) << ";\n";
         dispatch(child, os);
     }
 }
@@ -142,7 +144,8 @@ void AstDOTStyleVisitor::visit(const Nodes::NegationNode* node, std::ostream& os
     auto id = getNodeID(node);
     emitNode(id, "-", NodeStyle::NegationStyle, os);
     auto childId = getNodeID(node->child());
-    os << "  " << id << " -> " << childId << ";\n";
+    os << "  " << graphName_ + std::to_string(id) << " -> " << graphName_ + std::to_string(childId)
+       << ";\n";
     dispatch(node->child(), os);
 }
 
@@ -209,8 +212,9 @@ void AstDOTStyleVisitor::emitNode(unsigned int id,
                                   const BoxStyle& box_style,
                                   std::ostream& os)
 {
-    os << "  " << id << " [label=\"" << label << "\", shape=\"" << box_style.shape << "\", style=\""
-       << box_style.style << "\", color=\"" << box_style.color << "\"];\n";
+    os << "  " << graphName_ + std::to_string(id) << " [label=\"" << label << "\", shape=\""
+       << box_style.shape << "\", style=\"" << box_style.style << "\", color=\"" << box_style.color
+       << "\"];\n";
 }
 
 // Process binary operation nodes like Add, Subtract, etc.
@@ -228,8 +232,10 @@ void AstDOTStyleVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
     auto leftId = getNodeID(left);
     auto rightId = getNodeID(right);
 
-    os << "  " << id << " -> " << leftId << ";\n";
-    os << "  " << id << " -> " << rightId << ";\n";
+    os << "  " << graphName_ + std::to_string(id) << " -> " << graphName_ + std::to_string(leftId)
+       << ";\n";
+    os << "  " << graphName_ + std::to_string(id) << " -> " << graphName_ + std::to_string(rightId)
+       << ";\n";
 
     dispatch(left, os);
     dispatch(right, os);
@@ -237,8 +243,9 @@ void AstDOTStyleVisitor::processBinaryOperation(const Nodes::BinaryNode* node,
 
 void AstDOTStyleVisitor::NewTreeGraph(std::ostream& os, const std::string& tree_name)
 {
-    os << "digraph " + tree_name + " {\n";
+    os << "subgraph cluster_" + tree_name + " {\n";
     os << "node[style = filled]\n";
+    os << "color = blue\n";
 }
 
 void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
@@ -246,11 +253,14 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     computeNumberNodesPerType();
 
     // Graph title showing the total number of nodes
-    os << "label=\"AST Diagram(Total nodes : " << nodeCount_ << ")\"\n";
+    //    std::regex_replace(expression_, std::regex("\\("), "\\(");
+    //    std::regex_replace(expression_, std::regex("\\)"), "\\)");
+    os << "label=\"" << expression_ << "\"\n";
+
     os << "labelloc = \"t\"\n";
 
-    makeLegendTitle(os);
-    makeLegend(os);
+    // makeLegendTitle(os);
+    // makeLegend(os);
     os << "}\n";
 
     nodeCount_ = 0;
@@ -260,8 +270,19 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
 
 void AstDOTStyleVisitor::operator()(std::ostream& os, Nodes::Node* root)
 {
-    NewTreeGraph(os);
+    NewTreeGraph(os, graphName_);
     dispatch(root, os);
     EndTreeGraph(os);
 }
+
+void AstDOTStyleVisitor::setGraphName(const std::string& name)
+{
+    graphName_ = name;
+}
+
+void AstDOTStyleVisitor::setExpression(const std::string& expr)
+{
+    expression_ = expr;
+}
+
 } // namespace Antares::Solver::Visitors

@@ -28,9 +28,7 @@ add_subdirectory(study-loader)
 add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
-if(WITH_ANTLR4)
-  add_subdirectory(antlr-interface)
-endif()
+add_subdirectory(antlr-interface)
 
 add_subdirectory(optimization-options)
 

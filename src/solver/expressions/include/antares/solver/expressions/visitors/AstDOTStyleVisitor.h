@@ -118,6 +118,9 @@ public:
      */
     void operator()(std::ostream& os, Nodes::Node* root);
 
+    void setGraphName(const std::string& name);
+    void setExpression(const std::string& expr);
+
 private:
     void visit(const Nodes::SumNode* node, std::ostream& os) override;
     void visit(const Nodes::SubtractionNode* node, std::ostream& os) override;
@@ -200,5 +203,7 @@ private:
      * This counter is incremented each time a new node ID is needed.
      */
     unsigned int nodeCount_ = 0;
+    std::string graphName_;
+    std::string expression_;
 };
 } // namespace Antares::Solver::Visitors

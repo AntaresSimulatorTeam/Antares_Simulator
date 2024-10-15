@@ -1,0 +1,240 @@
+
+/*
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
+
+#pragma once
+
+#include <ExprVisitor.h>
+
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include "antares/solver/expressions/Registry.hxx"
+#include "antares/solver/libObjectModel/model.h"
+
+using namespace Antares::Solver::ObjectModel;
+
+// Visitor to convert nodes to Antares::Solver::Nodes
+// TODO add reference to model to be able to resolve names as either parameters or variables
+static auto toNodePtr = [](const auto& x)
+{ return std::any_cast<Antares::Solver::Nodes::Node*>(x); };
+
+class ConvertorVisitor: public ExprVisitor
+{
+public:
+    ConvertorVisitor(Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry,
+                     const Model& model):
+        registry_(registry),
+        model_(model)
+    {
+    }
+
+    virtual antlrcpp::Any visitChildren(antlr4::tree::ParseTree* node) override
+    {
+        for (auto child: node->children)
+        {
+            child->accept(this);
+        }
+        return antlrcpp::Any();
+    }
+
+    std::any visit(antlr4::tree::ParseTree* tree) override
+    {
+        return tree->accept(this);
+    }
+
+    std::any visitTerminal(antlr4::tree::TerminalNode* node) override
+    {
+        return std::any();
+    }
+
+    std::any visitErrorNode(antlr4::tree::ErrorNode* node) override
+    {
+        return std::any();
+    }
+
+    std::any visitIdentifier(ExprParser::IdentifierContext* context) override
+    {
+        bool is_parameter = false;
+        for (const auto& parameter: model_.Parameters())
+        {
+            if (parameter.first == context->getText())
+            {
+                is_parameter = true;
+                break;
+            }
+        }
+        if (is_parameter)
+        {
+            return static_cast<Antares::Solver::Nodes::Node*>(
+              registry_.create<Antares::Solver::Nodes::ParameterNode>(context->getText()));
+        }
+        else
+        {
+            return static_cast<Antares::Solver::Nodes::Node*>(
+              registry_.create<Antares::Solver::Nodes::VariableNode>(context->getText()));
+        }
+    }
+
+    std::any visitMuldiv(ExprParser::MuldivContext* context) override
+    {
+        // Meh
+        // Having to know the underlying type of the node is not great. We can eitgher return
+        // expression node containing the concrete node to be able to always anycast<Expression> Or
+        // we can return a pair Node/type (difficult to return a type in c++)
+        auto* left = toNodePtr(visit(context->expr(0)));
+        auto* right = toNodePtr(visit(context->expr(1)));
+        auto mult_node = registry_.create<Antares::Solver::Nodes::MultiplicationNode>(left, right);
+        return dynamic_cast<Antares::Solver::Nodes::Node*>(mult_node);
+    }
+
+    std::any visitFullexpr(ExprParser::FullexprContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitShift(ExprParser::ShiftContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitNegation(ExprParser::NegationContext* context) override
+    {
+        auto* expr = toNodePtr(visit(context->expr()));
+        auto neg_node = registry_.create<Antares::Solver::Nodes::NegationNode>(expr);
+        return dynamic_cast<Antares::Solver::Nodes::Node*>(neg_node);
+    }
+
+    std::any visitExpression(ExprParser::ExpressionContext* context) override
+    {
+        return toNodePtr(visit(context->expr()));
+    }
+
+    std::any visitComparison(ExprParser::ComparisonContext* context) override
+    {
+        auto* left = toNodePtr(visit(context->expr(0)));
+        auto* comparison = toNodePtr(visit(context->expr(1)));
+        auto operator_str = context->COMPARISON()->getText();
+        if (operator_str == "<=")
+        {
+            auto comp_node = registry_.create<Antares::Solver::Nodes::LessThanOrEqualNode>(
+              left,
+              comparison);
+            return dynamic_cast<Antares::Solver::Nodes::Node*>(comp_node);
+        }
+        else if (operator_str == ">=")
+        {
+            auto comp_node = registry_.create<Antares::Solver::Nodes::GreaterThanOrEqualNode>(
+              left,
+              comparison);
+            return dynamic_cast<Antares::Solver::Nodes::Node*>(comp_node);
+        }
+        else if (operator_str == "=")
+        {
+            auto comp_node = registry_.create<Antares::Solver::Nodes::EqualNode>(left, comparison);
+            return dynamic_cast<Antares::Solver::Nodes::Node*>(comp_node);
+        }
+        else
+        {
+            throw std::runtime_error("Unknown operator");
+        }
+    }
+
+    std::any visitAddsub(ExprParser::AddsubContext* context) override
+    {
+        auto* left = toNodePtr(visit(context->expr(0)));
+        auto* right = toNodePtr(visit(context->expr(1)));
+        auto operator_str = context->op->getText();
+        if (operator_str == "+")
+        {
+            auto add_node = registry_.create<Antares::Solver::Nodes::SumNode>(left, right);
+            return dynamic_cast<Antares::Solver::Nodes::Node*>(add_node);
+        }
+        else if (operator_str == "-")
+        {
+            auto sub_node = registry_.create<Antares::Solver::Nodes::SubtractionNode>(left, right);
+            return dynamic_cast<Antares::Solver::Nodes::Node*>(sub_node);
+        }
+        else
+        {
+            throw std::runtime_error("Unknown operator");
+        }
+    }
+
+    std::any visitPortField(ExprParser::PortFieldContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitNumber(ExprParser::NumberContext* context) override
+    {
+        auto number = std::stod(context->getText());
+        auto lit_node = registry_.create<Antares::Solver::Nodes::LiteralNode>(number);
+        return dynamic_cast<Antares::Solver::Nodes::Node*>(lit_node);
+    }
+
+    std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitTimeShift(ExprParser::TimeShiftContext* context) override
+    {
+        // Variable Node for the time being
+        return static_cast<Antares::Solver::Nodes::Node*>(
+          registry_.create<Antares::Solver::Nodes::VariableNode>(context->getText()));
+    }
+
+    std::any visitFunction(ExprParser::FunctionContext* context) override
+    {
+        // Construct SumNode
+        if (context->IDENTIFIER()->getText() == "sum")
+        {
+            auto* left = toNodePtr(visit(context->expr()));
+            auto sum_node = registry_.create<Antares::Solver::Nodes::SumNode>(left);
+            return dynamic_cast<Antares::Solver::Nodes::Node*>(sum_node);
+            //            auto* left = toNodePtr(visit(context->expr(0)));
+            //            auto* right = toNodePtr(visit(context->expr(1)));
+            //            auto sum_node = registry_.create<Antares::Solver::Nodes::SumNode>(left,
+            //            right); return dynamic_cast<Antares::Solver::Nodes::Node*>(sum_node);
+        }
+        else if (context->IDENTIFIER()->getText() == "expec")
+        {
+            // Throw unimplemented
+            throw std::runtime_error("Unimplemented function");
+        }
+        else
+        {
+            throw std::runtime_error("Unknown function");
+        }
+    }
+
+    std::any visitTimeShiftRange(ExprParser::TimeShiftRangeContext* context) override
+    {
+        return std::any();
+    }
+
+    std::any visitTimeRange(ExprParser::TimeRangeContext* context) override
+    {
+        return std::any();
+    }
+
+    Antares::Solver::Registry<Antares::Solver::Nodes::Node>& registry_;
+    const Model& model_;
+};
