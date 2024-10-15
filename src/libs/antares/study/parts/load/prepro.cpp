@@ -38,7 +38,7 @@ Prepro::~Prepro()
 {
 }
 
-bool Prepro::loadFromFolder(const std::string& folder)
+bool Prepro::loadFromFolder(const std::filesystem::path& folder)
 {
     return xcast.loadFromFolder(folder);
 }
