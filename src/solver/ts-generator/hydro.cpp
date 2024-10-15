@@ -291,11 +291,11 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                   std::string buffer;
                   area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
                   fs::path outputFile = outputFolder / "ror.txt";
-                  writer.addEntryFromBuffer(outputFile.string(), buffer);
+                  writer.addEntryFromBuffer(outputFile, buffer);
 
                   area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
                   outputFile = outputFolder / "storage.txt";
-                  writer.addEntryFromBuffer(outputFile.string(), buffer);
+                  writer.addEntryFromBuffer(outputFile, buffer);
 
                   ++progression;
               });
