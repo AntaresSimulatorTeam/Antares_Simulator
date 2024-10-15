@@ -27,7 +27,8 @@
 namespace Antares::Solver
 {
 template<class ContentType>
-void ZipWriter::addEntryFromBufferHelper(const std::filesystem::path& entryPath, ContentType& entryContent)
+void ZipWriter::addEntryFromBufferHelper(const std::filesystem::path& entryPath,
+                                         ContentType& entryContent)
 {
     if (pState != ZipState::can_receive_data)
     {

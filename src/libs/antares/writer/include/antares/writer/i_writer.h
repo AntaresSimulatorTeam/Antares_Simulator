@@ -35,7 +35,9 @@ class IResultWriter
 public:
     using Ptr = std::shared_ptr<IResultWriter>;
     virtual void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) = 0;
-    virtual void addEntryFromBuffer(const std::filesystem::path& entryPath, std::string& entryContent) = 0;
+    virtual void addEntryFromBuffer(const std::filesystem::path& entryPath,
+                                    std::string& entryContent)
+      = 0;
     virtual void addEntryFromFile(const std::filesystem::path& entryPath,
                                   const std::filesystem::path& filePath)
       = 0;

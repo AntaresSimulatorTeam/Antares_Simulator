@@ -82,7 +82,8 @@ public:
               Benchmarking::DurationCollector& duration_collector);
     virtual ~ZipWriter();
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
-    void addEntryFromBuffer(const std::filesystem::path& entryPath, std::string& entryContent) override;
+    void addEntryFromBuffer(const std::filesystem::path& entryPath,
+                            std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,
                           const std::filesystem::path& filePath) override;
     void flush() override;
@@ -109,7 +110,8 @@ private:
 
 private:
     template<class ContentType>
-    void addEntryFromBufferHelper(const std::filesystem::path& entryPath, ContentType& entryContent);
+    void addEntryFromBufferHelper(const std::filesystem::path& entryPath,
+                                  ContentType& entryContent);
 };
 } // namespace Antares::Solver
 
