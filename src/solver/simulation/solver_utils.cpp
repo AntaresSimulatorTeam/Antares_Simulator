@@ -142,7 +142,7 @@ void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
     buffer << "MAX (ms) : " << updateTime.costMax << "\n";
 
     std::string s = buffer.str();
-    writer.addEntryFromBuffer(updateTimeFilename.string(), s);
+    writer.addEntryFromBuffer(updateTimeFilename, s);
 }
 
 void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer) const
@@ -161,7 +161,7 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer)
     buffer << "MAX (ms) : " << optimizationTime2.costMax << "\n";
 
     std::string s = buffer.str();
-    writer.addEntryFromBuffer(optimizationTimeFilename.string(), s);
+    writer.addEntryFromBuffer(optimizationTimeFilename, s);
 }
 
 } // namespace Antares::Solver::Simulation

@@ -273,7 +273,7 @@ public:
         std::filesystem::path path = std::string(results.data.originalOutput);
         path /= "grid";
         path /= "digest.txt";
-        writer.addEntryFromBuffer(path.string(), digestBuffer);
+        writer.addEntryFromBuffer(path, digestBuffer);
     }
 
 private:
