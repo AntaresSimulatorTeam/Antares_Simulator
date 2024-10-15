@@ -277,10 +277,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 ProblemeAResoudre->CoutLineaire[var] = problemeHebdo->CoutDeDebordement[pays];
                 if (!problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
                 {
-                    ProblemeAResoudre->CoutLineaire[var] = abs(problemeHebdo
-                                                                 ->CoutDeDefaillanceNegative[pays])
-                                                           * 1.10;
-
                     ProblemeAResoudre->CoutLineaire[var]
                       += problemeHebdo->CaracteristiquesHydrauliques[pays]
                            .WeeklyWaterValueStateRegular;
