@@ -36,7 +36,7 @@ namespace Antares::Data
 namespace // anonymous
 {
 
-[[ deprecated ("remove with GUI") ]]
+// TODO VP: remove with GUI
 class OutputFolderIterator: public IO::Directory::IIterator<true>
 {
 public:
@@ -191,7 +191,7 @@ bool Output::loadFromFolder(const AnyString& folder)
     return true;
 }
 
-[[ deprecated ("remove with GUI") ]]
+// TODO VP: remove with GUI
 void Output::RetrieveListFromStudy(List& out, const Study& study)
 {
     out.clear();

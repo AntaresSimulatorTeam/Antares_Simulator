@@ -35,6 +35,7 @@ namespace Antares
 namespace Data
 {
 
+// TODO VP: remove with GUI
 class Output final
 {
 public:

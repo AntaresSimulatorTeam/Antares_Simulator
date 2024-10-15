@@ -305,7 +305,7 @@ void Study::reloadCorrelation()
     internalLoadCorrelationMatrices(options);
 }
 
-[[ deprecated ("remove with GUI") ]]
+// TODO remove with GUI
 bool Study::reloadXCastData()
 {
     // if changes are required, please update AreaListLoadFromFolderSingleArea()

@@ -35,6 +35,7 @@ namespace Data
 ** \brief Set of settings for a simulation
 */
 
+// TODO VP: remove with GUI
 class SimulationComments final
 {
 public:

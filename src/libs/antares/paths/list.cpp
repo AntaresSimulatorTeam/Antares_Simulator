@@ -53,7 +53,7 @@ size_t PathList::totalSizeInBytes() const
     return size;
 }
 
-[[ deprecated ("remove with GUI") ]]
+// TODO VP: remove with tools
 uint PathList::internalDeleteAllEmptyFolders()
 {
     if (!pTmp || item.empty())
