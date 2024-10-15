@@ -82,7 +82,7 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
     return true;
 }
 
-// TODO VP: remove with GUI
+[[ deprecated ("remove with GUI") ]]
 bool Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warnings)
 {
     String b;

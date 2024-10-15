@@ -1194,7 +1194,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
-// TODO VP: Could be removed with the GUI
+[[ deprecated ("remove with GUI") ]]
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
 {
     enum
