@@ -40,7 +40,7 @@ static void storeTSnumbers(Solver::IResultWriter& writer,
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer);
 
-    writer.addEntryFromBuffer(path.string(), buffer);
+    writer.addEntryFromBuffer(path, buffer);
 }
 
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)

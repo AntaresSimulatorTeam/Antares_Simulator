@@ -188,7 +188,7 @@ void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer);
-    writer.addEntryFromBuffer(path.string(), buffer);
+    writer.addEntryFromBuffer(path, buffer);
 }
 
 void AreaLink::detach()
