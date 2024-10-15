@@ -73,17 +73,17 @@ void LegacyFiller::CopyVariables(ILinearProblem& pb) const
 void LegacyFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
 {
     double bMin = -pb.infinity(), bMax = pb.infinity();
-    if (problemeSimplexe_->Sens[idxRow] == '=')
+    switch (problemeSimplexe_->Sens[idxRow])
     {
+    case '=':
         bMin = bMax = problemeSimplexe_->SecondMembre[idxRow];
-    }
-    else if (problemeSimplexe_->Sens[idxRow] == '<')
-    {
+        break;
+    case '<':
         bMax = problemeSimplexe_->SecondMembre[idxRow];
-    }
-    else if (problemeSimplexe_->Sens[idxRow] == '>')
-    {
+        break;
+    case: '>':
         bMin = problemeSimplexe_->SecondMembre[idxRow];
+        break;
     }
 
     pb.addConstraint(bMin, bMax, constraintNameManager_.GetName(idxRow));
