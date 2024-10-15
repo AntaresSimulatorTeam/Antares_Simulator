@@ -35,7 +35,7 @@ class IResultWriter
 public:
     using Ptr = std::shared_ptr<IResultWriter>;
     virtual void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) = 0;
-    virtual void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) = 0;
+    virtual void addEntryFromBuffer(const std::filesystem::path& entryPath, std::string& entryContent) = 0;
     virtual void addEntryFromFile(const std::filesystem::path& entryPath,
                                   const std::filesystem::path& filePath)
       = 0;
@@ -52,7 +52,7 @@ public:
 class NullResultWriter: public Solver::IResultWriter
 {
     void addEntryFromBuffer(const std::string&, Yuni::Clob&) override;
-    void addEntryFromBuffer(const std::string&, std::string&) override;
+    void addEntryFromBuffer(const std::filesystem::path&, std::string&) override;
     void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override;
     void flush() override;
     bool needsTheJobQueue() const override;
