@@ -81,7 +81,7 @@ void LegacyFiller::UpdateContraints(unsigned idxRow, ILinearProblem& pb) const
     case '<':
         bMax = problemeSimplexe_->SecondMembre[idxRow];
         break;
-    case: '>':
+    case '>':
         bMin = problemeSimplexe_->SecondMembre[idxRow];
         break;
     }
