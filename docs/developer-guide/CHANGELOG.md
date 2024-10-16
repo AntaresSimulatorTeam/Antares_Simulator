@@ -7,15 +7,20 @@ toc_depth: 2
 ## Branch 9.2.x
 ### 9.2.0
 #### New features
+Short term storage withdrawal efficiency [ANT-1862] (#2223)
 Short term storage costs [ANT-1854] (#2302)
-
 
 #### Improvements
 batchrun forwards options to antares-solver [ANT-2314] (#2463)
 Add help button to website (#2368)
 Remove adequacy patch lmr [ANT-1933] (#2341)
 Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
-Infeasibility anaylsis : make it more changeable (#2232)
+Infeasibility analyzer [ANT-1825] (#2232) (#2227)
+Collect hydro validation errors (#2204)
+Perform hydro checks prior to the simulation [ANT-1720] (#2132)
+Expose API [ANT-1158] (#1993)
+Separation of loading and validation for header [ANT-1213] (#2179)
+
 
 
 #### Bugfixes
@@ -26,8 +31,8 @@ Fix reset order (#2304)
 Adequacy Patch regression [ANT-1845] (#2235)
 
 
-#### Modeler
 
+#### Modeler
 1.1: Modeler API [ANT-1876] (#2286) (#2391)
 1.1c: Scenarize problem filler (#2445)
 
@@ -67,12 +72,17 @@ Feature/test name translator (#2285)
 Add short test to coverage analysis (#2280) (#2267)
 Fix Sonar warning: use compile_commands.json (#2281)
 Use devtoolset-11 on CentOS7 to fix build (#2282)
-Infeasibility analyzer : improve unit tests (#2249)
+Infeasibility analyzer : improve unit tests (#2249) (#2226) (#2225)
 Add tests in CI for version 9.2 (#2241)
 Keep using node js 16 on centos CI (#2248)
 Document clang-format (#2243)
 Fix sonarcloud job (#2246)
-
+Always run clang-format on PR (#2230)
+Add changelog for minor versions (#2229)
+Remove actions dependencies using node js 16 (#2215)
+install gh from rpm (#2216)
+Format code using clang-format==18.3.1 (#2214)
+Check formatting as part of the CI (workflow only) (#2198)
 
 
 
@@ -87,10 +97,15 @@ Remove duplication in simulation run (#2274)
 Fix various compilation warnings (#2346)
 Remove useless ;, macro definition (#2348)
 Use const char** for argv, remove function prepareArgs (#2338)
+Move TS number print (#2228)
 Link TS generation : splitting into multiple files (#2171)
 Infeasibility more cleaning (#2231)
-
-
+Compilation warnings (#2237) (#2199)
+Harmonize time constants (#2203)
+Replace NULL -> nullptr in .cpp (#2209)
+Resize data collections in PROBLEME_A_RESOUDRE (#2189)
+Remove TS links from solver (#2155)
+Simplify functions prepareClustersInMustRunMode (#2168)
 
 
 
@@ -104,7 +119,8 @@ Remove unused CoutDeDefaillanceEnReserve (#2392)
 Remove unused adqPatchParams argument, class member (#2390)
 Remove unused headers in src/solver (yuni, cstdint, sim.h) (#2371)
 Remove useless forward declaration (#2268)
-
+Remove unused CMake option BUILD MINIZIP (#2210)
+Remove Antares::Memory::Array (#2187)
 
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
 
