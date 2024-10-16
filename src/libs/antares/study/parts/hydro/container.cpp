@@ -244,10 +244,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
     if (IniFile::Section* section = ini.find("intra-daily-modulation"))
     {
-        ret = loadProperties(study,
-                             section->firstProperty,
-                             path,
-                             &PartHydro::intraDailyModulation)
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::intraDailyModulation)
               && ret;
     }
 
@@ -265,17 +262,13 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
     if (IniFile::Section* section = ini.find("follow load"))
     {
-        ret = loadProperties(study,
-                             section->firstProperty,
-                             path,
-                             &PartHydro::followLoadModulations)
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::followLoadModulations)
               && ret;
     }
 
     if (IniFile::Section* section = ini.find("use water"))
     {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useWaterValue)
-              && ret;
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useWaterValue) && ret;
     }
 
     if (IniFile::Section* section = ini.find("hard bounds"))
@@ -295,8 +288,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
     if (IniFile::Section* section = ini.find("power to level"))
     {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::powerToLevel)
-              && ret;
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::powerToLevel) && ret;
     }
 
     if (IniFile::Section* section = ini.find("initialize reservoir date"))
