@@ -167,9 +167,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>adequacy</b> () const
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resetPlaylist</b> (uint nbOfYears)</td></tr>
 <tr class="memdesc:aaaaa8525ad98ddcf4e49002965d6a603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the playlist (played years and associated years) <br /></td></tr>
 <tr class="separator:aaaaa8525ad98ddcf4e49002965d6a603"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3959b66b45305576b51bb96cf9f1037" id="r_af3959b66b45305576b51bb96cf9f1037"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Parameters.html#af3959b66b45305576b51bb96cf9f1037">loadFromFile</a> (const AnyString &amp;filename, const <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> &amp;version)</td></tr>
-<tr class="memdesc:af3959b66b45305576b51bb96cf9f1037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data from a file.  <br /></td></tr>
-<tr class="separator:af3959b66b45305576b51bb96cf9f1037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8087b54093bb1905f4b9b0ae6826e350" id="r_a8087b54093bb1905f4b9b0ae6826e350"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Parameters.html#a8087b54093bb1905f4b9b0ae6826e350">loadFromFile</a> (const std::filesystem::path &amp;filename, const <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> &amp;version)</td></tr>
+<tr class="memdesc:a8087b54093bb1905f4b9b0ae6826e350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data from a file.  <br /></td></tr>
+<tr class="separator:a8087b54093bb1905f4b9b0ae6826e350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f5a9de0308442c0b03b4d9ca3b72407" id="r_a1f5a9de0308442c0b03b4d9ca3b72407"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Parameters.html#a1f5a9de0308442c0b03b4d9ca3b72407">prepareForSimulation</a> (const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;options)</td></tr>
 <tr class="memdesc:a1f5a9de0308442c0b03b4d9ca3b72407"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare all settings for a simulation.  <br /></td></tr>
 <tr class="separator:a1f5a9de0308442c0b03b4d9ca3b72407"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -563,8 +563,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>namedProblems</b></td
 
 </div>
 </div>
-<a id="af3959b66b45305576b51bb96cf9f1037" name="af3959b66b45305576b51bb96cf9f1037"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3959b66b45305576b51bb96cf9f1037">&#9670;&#160;</a></span>loadFromFile()</h2>
+<a id="a8087b54093bb1905f4b9b0ae6826e350" name="a8087b54093bb1905f4b9b0ae6826e350"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8087b54093bb1905f4b9b0ae6826e350">&#9670;&#160;</a></span>loadFromFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -572,7 +572,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>namedProblems</b></td
         <tr>
           <td class="memname">bool Antares::Data::Parameters::loadFromFile </td>
           <td>(</td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>filename</em>, </td>
         </tr>
         <tr>
@@ -620,8 +620,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>namedProblems</b></td
 
 <p>Prepare all settings for a simulation. </p>
 <p>The solver must be able to rely on all variables for performance reasons. The first case scenario can be the user who might not have disabled all settings, like the <code>refresh</code>, that can have a non-zero value even if the ts-generator is disabled. Another case would be the directives given by the command line.</p>
-<dl class="section note"><dt>Note</dt><dd>This method is automatically called from <code><a class="el" href="classAntares_1_1Data_1_1Parameters.html#af3959b66b45305576b51bb96cf9f1037" title="Load data from a file.">loadFromFile()</a></code> if the flag options.usedByTheSolver is set. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classAntares_1_1Data_1_1Parameters.html#af3959b66b45305576b51bb96cf9f1037" title="Load data from a file.">loadFromFile()</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This method is automatically called from <code><a class="el" href="classAntares_1_1Data_1_1Parameters.html#a8087b54093bb1905f4b9b0ae6826e350" title="Load data from a file.">loadFromFile()</a></code> if the flag options.usedByTheSolver is set. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classAntares_1_1Data_1_1Parameters.html#a8087b54093bb1905f4b9b0ae6826e350" title="Load data from a file.">loadFromFile()</a> </dd></dl>
 
 </div>
 </div>

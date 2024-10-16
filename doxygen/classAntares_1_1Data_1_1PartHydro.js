@@ -6,7 +6,7 @@ var classAntares_1_1Data_1_1PartHydro =
     ] ],
     [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html#a04d548a70f2829cc320ea34d473f3f02", null ],
     [ "~PartHydro", "classAntares_1_1Data_1_1PartHydro.html#aea4cb3ee6e3b5739f47ed5637d43d55c", null ],
-    [ "LoadDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#acad6e4644d4c78c6f7621e19bb22baf0", null ],
+    [ "LoadDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#a936d638d0cfaeec15c878f97e367b965", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1PartHydro.html#a076984e01722b7147ab993e224cbe4db", null ],
     [ "reset", "classAntares_1_1Data_1_1PartHydro.html#a62e9b91214feb6cded4b8340a77ec4de", null ],
     [ "allocation", "classAntares_1_1Data_1_1PartHydro.html#abef4d91c29b2032f5a1a00e8a05265c3", null ],

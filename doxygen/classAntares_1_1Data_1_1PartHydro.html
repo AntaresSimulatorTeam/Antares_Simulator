@@ -182,19 +182,19 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>forceReload</b> (bool
 void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> () const</td></tr>
 <tr class="memdesc:a076984e01722b7147ab993e224cbe4db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark all data as modified. <br /></td></tr>
 <tr class="separator:a076984e01722b7147ab993e224cbe4db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acad6e4644d4c78c6f7621e19bb22baf0" id="r_acad6e4644d4c78c6f7621e19bb22baf0"><td class="memItemLeft" align="right" valign="top"><a id="acad6e4644d4c78c6f7621e19bb22baf0" name="acad6e4644d4c78c6f7621e19bb22baf0"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>LoadDailyMaxEnergy</b> (const AnyString &amp;folder, const AnyString &amp;areaid)</td></tr>
-<tr class="memdesc:acad6e4644d4c78c6f7621e19bb22baf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load daily max energy. <br /></td></tr>
-<tr class="separator:acad6e4644d4c78c6f7621e19bb22baf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a936d638d0cfaeec15c878f97e367b965" id="r_a936d638d0cfaeec15c878f97e367b965"><td class="memItemLeft" align="right" valign="top"><a id="a936d638d0cfaeec15c878f97e367b965" name="a936d638d0cfaeec15c878f97e367b965"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>LoadDailyMaxEnergy</b> (const std::filesystem::path &amp;folder, const std::string &amp;areaid)</td></tr>
+<tr class="memdesc:a936d638d0cfaeec15c878f97e367b965"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load daily max energy. <br /></td></tr>
+<tr class="separator:a936d638d0cfaeec15c878f97e367b965"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a750b7bb11e93e55240989f71f87e1a51" id="r_a750b7bb11e93e55240989f71f87e1a51"><td class="memItemLeft" align="right" valign="top"><a id="a750b7bb11e93e55240989f71f87e1a51" name="a750b7bb11e93e55240989f71f87e1a51"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckDailyMaxEnergy</b> (const AnyString &amp;areaName)</td></tr>
 <tr class="separator:a750b7bb11e93e55240989f71f87e1a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ad6037124bdf6932669220fdd1d1524c1" id="r_ad6037124bdf6932669220fdd1d1524c1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#ad6037124bdf6932669220fdd1d1524c1">LoadFromFolder</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const AnyString &amp;folder)</td></tr>
-<tr class="memdesc:ad6037124bdf6932669220fdd1d1524c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data for hydro container from a folder.  <br /></td></tr>
-<tr class="separator:ad6037124bdf6932669220fdd1d1524c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a397ed3d7e48a611d375d98279e264e08" id="r_a397ed3d7e48a611d375d98279e264e08"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a397ed3d7e48a611d375d98279e264e08">LoadFromFolder</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const std::filesystem::path &amp;folder)</td></tr>
+<tr class="memdesc:a397ed3d7e48a611d375d98279e264e08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data for hydro container from a folder.  <br /></td></tr>
+<tr class="separator:a397ed3d7e48a611d375d98279e264e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3d9fad9b3e6c888828ac9a2fa747a2c" id="r_ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#ac3d9fad9b3e6c888828ac9a2fa747a2c">validate</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study)</td></tr>
 <tr class="memdesc:ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check and validate the loaded datas.  <br /></td></tr>
 <tr class="separator:ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -351,8 +351,8 @@ std::vector&lt; std::optional&lt; double &gt; &gt;&#160;</td><td class="memItemR
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad6037124bdf6932669220fdd1d1524c1" name="ad6037124bdf6932669220fdd1d1524c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6037124bdf6932669220fdd1d1524c1">&#9670;&#160;</a></span>LoadFromFolder()</h2>
+<a id="a397ed3d7e48a611d375d98279e264e08" name="a397ed3d7e48a611d375d98279e264e08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a397ed3d7e48a611d375d98279e264e08">&#9670;&#160;</a></span>LoadFromFolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -369,7 +369,7 @@ std::vector&lt; std::optional&lt; double &gt; &gt;&#160;</td><td class="memItemR
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>folder</em>&#160;</td>
         </tr>
         <tr>

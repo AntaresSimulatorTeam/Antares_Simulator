@@ -178,9 +178,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyFrom</b> (const <a class="el" href="classAntares_1_1Data_1_1PreproHydro.html">PreproHydro</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a3c3a51ebaacde178d0a09e3fac887a58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy data from another <a class="el" href="classAntares_1_1Data_1_1PreproHydro.html" title="Data for the hydro preprocessor.">PreproHydro</a> structure. <br /></td></tr>
 <tr class="separator:a3c3a51ebaacde178d0a09e3fac887a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab14346288adf62171afece82e0b6f796" id="r_ab14346288adf62171afece82e0b6f796"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PreproHydro.html#ab14346288adf62171afece82e0b6f796">loadFromFolder</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;s, const AreaName &amp;areaID, const std::string &amp;folder)</td></tr>
-<tr class="memdesc:ab14346288adf62171afece82e0b6f796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load hydro settings for the prepro from a folder.  <br /></td></tr>
-<tr class="separator:ab14346288adf62171afece82e0b6f796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a850bdc503ce3b1eda9ec9e6843afeb" id="r_a5a850bdc503ce3b1eda9ec9e6843afeb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PreproHydro.html#a5a850bdc503ce3b1eda9ec9e6843afeb">loadFromFolder</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;s, const std::string &amp;areaID, const std::filesystem::path &amp;folder)</td></tr>
+<tr class="memdesc:a5a850bdc503ce3b1eda9ec9e6843afeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load hydro settings for the prepro from a folder.  <br /></td></tr>
+<tr class="separator:a5a850bdc503ce3b1eda9ec9e6843afeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e128c42586b58d6b46995a99b2f4068" id="r_a0e128c42586b58d6b46995a99b2f4068"><td class="memItemLeft" align="right" valign="top"><a id="a0e128c42586b58d6b46995a99b2f4068" name="a0e128c42586b58d6b46995a99b2f4068"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> (const std::string &amp;areaID)</td></tr>
 <tr class="separator:a0e128c42586b58d6b46995a99b2f4068"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,8 +229,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> ()
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab14346288adf62171afece82e0b6f796" name="ab14346288adf62171afece82e0b6f796"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab14346288adf62171afece82e0b6f796">&#9670;&#160;</a></span>loadFromFolder()</h2>
+<a id="a5a850bdc503ce3b1eda9ec9e6843afeb" name="a5a850bdc503ce3b1eda9ec9e6843afeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a850bdc503ce3b1eda9ec9e6843afeb">&#9670;&#160;</a></span>loadFromFolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,13 +244,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> ()
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const AreaName &amp;&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>areaID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>folder</em>&#160;</td>
         </tr>
         <tr>

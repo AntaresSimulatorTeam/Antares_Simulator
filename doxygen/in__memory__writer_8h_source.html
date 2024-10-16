@@ -180,23 +180,24 @@ $(document).ready(function(){initNavTree('in__memory__writer_8h_source.html','')
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1InMemoryWriter.html">InMemoryWriter</a>(<a class="code hl_class" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; duration_collector);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1InMemoryWriter.html">~InMemoryWriter</a>();</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::string&amp; entryPath, Yuni::Clob&amp; entryContent) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::string&amp; entryPath, std::string&amp; entryContent) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                          <span class="keyword">const</span> std::filesystem::path&amp; filePath) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b">flush</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">const</span> MapType&amp; getMap() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::mutex pMapMutex;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// minizip-ng requires a void* as a zip handle.</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    MapType pEntries;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// State, to allow/prevent new jobs being added to the queue</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_class" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; pDurationCollector;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>};</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                            std::string&amp; entryContent) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                          <span class="keyword">const</span> std::filesystem::path&amp; filePath) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b">flush</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">const</span> MapType&amp; getMap() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::mutex pMapMutex;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// minizip-ng requires a void* as a zip handle.</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    MapType pEntries;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// State, to allow/prevent new jobs being added to the queue</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <a class="code hl_class" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; pDurationCollector;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>};</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>} <span class="comment">// namespace Antares::Solver</span></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition</b> i_writer.h:34</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1InMemoryWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></div><div class="ttdef"><b>Definition</b> in_memory_writer.h:35</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1InMemoryWriter_html_ae79bc278d4eff373baf313ebb426361b"><div class="ttname"><a href="classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b">Antares::Solver::InMemoryWriter::flush</a></div><div class="ttdeci">void flush() override</div><div class="ttdef"><b>Definition</b> in_memory_writer.cpp:92</div></div>
