@@ -15,13 +15,15 @@ batchrun forwards options to antares-solver [ANT-2314] (#2463)
 Add help button to website (#2368)
 Remove adequacy patch lmr [ANT-1933] (#2341)
 Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
+Infeasibility anaylsis : make it more changeable (#2232)
+
 
 #### Bugfixes
 Reset adequacy patch enabled (#2420)
 Fix/rhs hydro power constraint (#2034)
 Fix Windows Debug version crash (#2322)
 Fix reset order (#2304)
-
+Adequacy Patch regression [ANT-1845] (#2235)
 
 
 #### Modeler
@@ -56,6 +58,22 @@ Fix clang++ warning about typeid (#2340)
 Enable parallel run for API (#2337)
 Free up space for SonarCloud job (#2315)
 update AUTHORS.txt (#2312)
+Fix links in README (#2310)
+Remove spurious assert(false), fix debug binaries (#2291)
+Add missing changelog for v8.8.7 (#2287)
+Run all tests even if one of them fails (#2265)
+Use a formula for the number of cores used (#2284)
+Feature/test name translator (#2285)
+Add short test to coverage analysis (#2280) (#2267)
+Fix Sonar warning: use compile_commands.json (#2281)
+Use devtoolset-11 on CentOS7 to fix build (#2282)
+Infeasibility analyzer : improve unit tests (#2249)
+Add tests in CI for version 9.2 (#2241)
+Keep using node js 16 on centos CI (#2248)
+Document clang-format (#2243)
+Fix sonarcloud job (#2246)
+
+
 
 
 
@@ -63,12 +81,17 @@ update AUTHORS.txt (#2312)
 Using filesystem path instead of yuni [ANT-1999] (#2435) (#2454)
 Add a few const ref qualifiers to improve code readibility (#2459)
 Mark overriden functions as such in hydroLevelsData (#2389)
-Remove manually allocated memory (#2363)
+Remove manually allocated memory  (#2254) (#2270) (#2273) (#2363)
 Districts : simplifying the code (#2279)
 Remove duplication in simulation run (#2274)
 Fix various compilation warnings (#2346)
 Remove useless ;, macro definition (#2348)
 Use const char** for argv, remove function prepareArgs (#2338)
+Link TS generation : splitting into multiple files (#2171)
+Infeasibility more cleaning (#2231)
+
+
+
 
 
 #### Removed
@@ -76,11 +99,11 @@ Remove function memoryUsage and affiliates (#2456)
 Headers files : remove useless inclusions in OPT (#2411)
 Remove unused code & #defines (#2412)
 Remove last global variable (#2410)
-Local matching removal : remove unused thread_number / numSpace (#2404)
+Local matching removal : remove unused thread number / numSpace (#2404)
 Remove unused CoutDeDefaillanceEnReserve (#2392)
 Remove unused adqPatchParams argument, class member (#2390)
-Remove unused headers in src/solver (yuni, cstdint, sim_*.h) (#2371)
-
+Remove unused headers in src/solver (yuni, cstdint, sim.h) (#2371)
+Remove useless forward declaration (#2268)
 
 
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
