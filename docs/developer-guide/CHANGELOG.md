@@ -6,6 +6,51 @@ toc_depth: 2
 
 ## Branch 9.2.x
 ### 9.2.0
+#### New features
+
+
+
+#### Improvements
+batchrun forwards options to antares-solver [ANT-2314] (#2463)
+
+
+
+#### Modeler
+
+1.1.b API modeler (#2391)
+1.1c: Scenarize problem filler (#2445)
+2.1: Lib for modeling objects (#2383)
+2.4c: PortFieldSum and substitution [ANT-2005] (#2415)
+2.4e: visualize ast with graphviz [ANT-2036] (#2399) (#2426) (#2429)
+
+4.5 Parse yaml [ANT-2206] (#2433) (#2431) (#2447)
+4.5 Full exemple of parsing (#2448)
+
+
+#### Bugfixes
+Reset adequacy patch enabled (#2420)
+
+
+
+#### For developers
+Cucumber: add short tests & refactor some steps (#2382)
+Use OR-Tools v9.11-rte1.1 (#2437)
+Fix or-tools integration (#2402)
+
+
+#### Code quality
+Using filesystem path instead of yuni [ANT-1999] (#2435) (#2454)
+Add a few const ref qualifiers to improve code readibility (#2459)
+
+
+
+#### Removed
+Remove function memoryUsage and affiliates (#2456)
+Headers files : remove useless inclusions in OPT (#2411)
+Remove unused code & #defines (#2412)
+Remove last global variable (#2410)
+
+
 
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
 
