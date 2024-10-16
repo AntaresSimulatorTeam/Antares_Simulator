@@ -155,9 +155,7 @@ bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::
     };
 
     constexpr int maxNbOfLineToLoad = 12;
-
     data.resize(hydroPreproMax, 12, true);
-    String& buffer = s.bufferLoadingTS;
 
     fs::path preproPath = folder / areaID / "prepro.ini";
     bool ret = PreproHydroLoadSettings(this, preproPath);

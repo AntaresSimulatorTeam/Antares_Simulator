@@ -75,7 +75,7 @@ AreaLink::~AreaLink()
 
 bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
 {
-    fs::path path = folder / std::string(with->id + ".txt");
+    fs::path path = folder / static_cast<std::string>(with->id + ".txt");
 
     // Load link's data
     Matrix<> tmpMatrix;
@@ -120,11 +120,11 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& fold
     fs::path capacitiesFolder = folder / "capacities";
 
     // Read link's direct capacities time series
-    path = capacitiesFolder / std::string(with->id + "_direct.txt");
+    path = capacitiesFolder / static_cast<std::string>(with->id + "_direct.txt");
     success = directCapacities.loadFromFile(path, false) && success;
 
     // Read link's indirect capacities time series
-    path = capacitiesFolder / std::string(with->id + "_indirect.txt");
+    path = capacitiesFolder / static_cast<std::string>(with->id + "_indirect.txt");
     success = indirectCapacities.loadFromFile(path, false) && success;
 
     return success;

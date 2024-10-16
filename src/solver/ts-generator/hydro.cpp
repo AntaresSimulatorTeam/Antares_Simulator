@@ -281,7 +281,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         {
             logs.info() << "Archiving the hydro time-series";
             study.areas.each(
-              [&study, &currentYear, &writer, &progression](const Data::Area& area)
+              [&currentYear, &writer, &progression](const Data::Area& area)
               {
                   const int precision = 0;
                   std::string mcYear = "mc-" + currentYear;

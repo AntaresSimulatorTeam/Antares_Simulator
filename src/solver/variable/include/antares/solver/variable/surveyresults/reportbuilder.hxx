@@ -270,7 +270,7 @@ public:
         }
         // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
-        std::filesystem::path path = std::string(results.data.originalOutput);
+        std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
         path /= "grid";
         path /= "digest.txt";
         writer.addEntryFromBuffer(path, digestBuffer);
@@ -320,7 +320,7 @@ private:
             {
                 logs.info() << "Exporting results : " << area.name;
                 // The new output
-                std::filesystem::path path = std::string(results.data.originalOutput);
+                std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
                 path /= "areas";
                 path /= area.id.to<std::string>();
 
@@ -356,7 +356,7 @@ private:
 
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
-                std::filesystem::path path = std::string(results.data.originalOutput);
+                std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
                 path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal"
                         / cluster->id();
 
@@ -409,8 +409,10 @@ private:
                     Antares::logs.info() << "Exporting results : " << area.name << " - "
                                          << results.data.link->with->name;
                     // The new output
-                    std::filesystem::path path = std::string(results.data.originalOutput);
-                    std::string areaId = std::string(area.id) + " - " + results.data.link->with->id;
+                    std::filesystem::path path = static_cast<std::string>(
+                      results.data.originalOutput);
+                    std::string areaId = static_cast<std::string>(area.id) + " - "
+                                         + results.data.link->with->id;
                     path /= std::filesystem::path("links") / areaId;
 
                     results.data.output = path.string();
@@ -456,7 +458,7 @@ private:
 
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
-            std::filesystem::path path = std::string(results.data.originalOutput);
+            std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
             std::string setId = "@ " + sets.nameByIndex(i);
             path /= std::filesystem::path("areas") / setId;
 
@@ -478,7 +480,7 @@ private:
         {
             logs.info() << "Exporting results : binding constraints";
             // The new output
-            std::filesystem::path path = std::string(results.data.originalOutput);
+            std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
             path /= "binding_constraints";
 
             results.data.output = path.string();
