@@ -30,6 +30,8 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 #define SEP IO::Separator
 
 namespace Antares::Data
@@ -181,7 +183,7 @@ void XCast::resetToDefaultValues()
     useTranslation = tsTranslationNone;
 }
 
-bool XCast::loadFromFolder(const AnyString& folder)
+bool XCast::loadFromFolder(const fs::path& folder)
 {
     // reset
     distribution = dtBeta;
@@ -196,13 +198,13 @@ bool XCast::loadFromFolder(const AnyString& folder)
     // Return value
     bool ret = true;
     // Settings
-    buffer.clear() << folder << SEP << "settings.ini";
+    fs::path settingsPath = folder / "settings.ini";
 
     IniFile ini;
-    if (ini.open(buffer))
+    if (ini.open(settingsPath))
     {
         ini.each(
-          [this, &buffer](const IniFile::Section& section)
+          [this, &settingsPath](const IniFile::Section& section)
           {
               // For each property
               if (section.name == "general")
@@ -217,7 +219,7 @@ bool XCast::loadFromFolder(const AnyString& folder)
                           distribution = StringToDistribution(p->value);
                           if (distribution == dtNone)
                           {
-                              logs.warning() << buffer
+                              logs.warning() << settingsPath
                                              << ": Invalid probability distribution. The beta "
                                                 "distribution will be used";
                               distribution = dtBeta;
@@ -230,7 +232,7 @@ bool XCast::loadFromFolder(const AnyString& folder)
                           if (capacity < 0.)
                           {
                               logs.warning()
-                                << buffer << ": The capacity can not be a negative value";
+                                << settingsPath << ": The capacity can not be a negative value";
                               capacity = 0.;
                           }
                           continue;
@@ -246,18 +248,18 @@ bool XCast::loadFromFolder(const AnyString& folder)
                           continue;
                       }
 
-                      logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+                      logs.warning() << settingsPath << ": Unknown property '" << p->key << "'";
                   }
               }
               else
               {
-                  logs.warning() << buffer << ": unknown section '" << section.name << "'";
+                  logs.warning() << settingsPath << ": unknown section '" << section.name << "'";
               }
           });
     }
     else
     {
-        logs.error() << "I/O Error: unable to open '" << buffer << "'";
+        logs.error() << "I/O Error: unable to open '" << settingsPath << "'";
         ret = false;
     }
 
@@ -265,22 +267,22 @@ bool XCast::loadFromFolder(const AnyString& folder)
     // fix invalid data
 
     // Coefficients
-    buffer.clear() << folder << SEP << "data.txt";
+    fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
+    ret = data.loadFromCSVFile(p.string(), (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
           && ret;
 
     // K
-    buffer.clear() << folder << SEP << "k.txt";
-    ret = K.loadFromCSVFile(buffer, 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
+    p = folder / "k.txt";
+    ret = K.loadFromCSVFile(p.string(), 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
 
     uint opts = Matrix<>::optNone;
 
     // Time-series translation
-    buffer.clear() << folder << SEP << "translation.txt";
+    p = folder / "translation.txt";
 
-    ret = translation.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
+    ret = translation.loadFromCSVFile(p.string(), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
     if (!JIT::usedFromGUI)
     {
         if (translation.empty())
@@ -303,8 +305,9 @@ bool XCast::loadFromFolder(const AnyString& folder)
     opts = Matrix<>::optNone;
 
     // Transfer function
-    buffer.clear() << folder << SEP << "conversion.txt";
-    ret = conversion.loadFromCSVFile(buffer, 3, 2, opts, &readBuffer) && ret;
+    p = folder / "conversion.txt";
+
+    ret = conversion.loadFromCSVFile(p.string(), 3, 2, opts, &readBuffer) && ret;
     if (not JIT::enabled)
     {
         if (conversion.width >= 3 && conversion.width <= conversionMaxPoints)
@@ -318,7 +321,7 @@ bool XCast::loadFromFolder(const AnyString& folder)
             {
                 if (conversion[x][0] <= -1.0e+19 || conversion[x][0] >= +1.0e+19)
                 {
-                    logs.error() << "TS-Generator: Conversion: Invalid range: " << buffer;
+                    logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
                 }
             }
             conversion[conversion.width - 1][0]
@@ -327,7 +330,7 @@ bool XCast::loadFromFolder(const AnyString& folder)
         }
         else
         {
-            logs.warning() << "Invalid transfer function: '" << buffer << "'";
+            logs.warning() << "Invalid transfer function: '" << p << "'";
             resetTransferFunction();
             useConversion = false;
         }

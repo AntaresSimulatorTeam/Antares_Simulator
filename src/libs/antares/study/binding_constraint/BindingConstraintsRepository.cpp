@@ -177,7 +177,7 @@ bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString
 
 bool BindingConstraintsRepository::loadFromFolder(Study& study,
                                                   const StudyLoadOptions& options,
-                                                  const AnyString& folder)
+                                                  const std::filesystem::path& folder)
 {
     // Log entries
     logs.info(); // space for beauty
@@ -203,7 +203,7 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     EnvForLoading env(study.areas, study.header.version);
     env.folder = folder;
 
-    env.iniFilename << env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
+    env.iniFilename = folder / "bindingconstraints.ini";
     IniFile ini;
     if (!ini.open(env.iniFilename))
     {

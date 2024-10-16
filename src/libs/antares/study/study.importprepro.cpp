@@ -29,6 +29,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
+
+// TODO VP: remove with time series TS generation before solver execution
 bool Study::importTimeseriesIntoInput()
 {
     // Special case: some thermal clusters may force TS generation

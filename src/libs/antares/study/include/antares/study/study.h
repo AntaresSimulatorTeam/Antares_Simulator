@@ -462,6 +462,7 @@ public:
     //! \name Simulation
     //@{
     //! The current Simulation
+    // TODO VP: remove with GUI
     SimulationComments simulationComments;
 
     int64_t pStartTime;

@@ -114,7 +114,7 @@ public:
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    static bool LoadFromFolder(Study& study, const AnyString& folder);
+    static bool LoadFromFolder(Study& study, const std::filesystem::path& folder);
 
     /*!
     ** \brief Check and validate the loaded datas
@@ -157,7 +157,7 @@ public:
     /*!
     ** \brief Load daily max energy
     */
-    bool LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid);
+    bool LoadDailyMaxEnergy(const std::filesystem::path& folder, const std::string& areaid);
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 

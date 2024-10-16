@@ -141,7 +141,7 @@ struct DebugData
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
-        pWriter.addEntryFromBuffer(path.string(), buffer_str);
+        pWriter.addEntryFromBuffer(path, buffer_str);
     }
 
     void writeDailyDebugData(const Date::Calendar& calendar,
@@ -210,7 +210,7 @@ struct DebugData
             }
         }
         auto buffer_str = buffer.str();
-        pWriter.addEntryFromBuffer(path.string(), buffer_str);
+        pWriter.addEntryFromBuffer(path, buffer_str);
     }
 };
 
