@@ -7,41 +7,68 @@ toc_depth: 2
 ## Branch 9.2.x
 ### 9.2.0
 #### New features
-
+Short term storage costs [ANT-1854] (#2302)
 
 
 #### Improvements
 batchrun forwards options to antares-solver [ANT-2314] (#2463)
+Add help button to website (#2368)
+Remove adequacy patch lmr [ANT-1933] (#2341)
+Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
+
+#### Bugfixes
+Reset adequacy patch enabled (#2420)
+Fix/rhs hydro power constraint (#2034)
+Fix Windows Debug version crash (#2322)
+Fix reset order (#2304)
 
 
 
 #### Modeler
 
-1.1.b API modeler (#2391)
+1.1: Modeler API [ANT-1876] (#2286) (#2391)
 1.1c: Scenarize problem filler (#2445)
+
 2.1: Lib for modeling objects (#2383)
+2.4: Expression visitors : first implementation (#2290)
+2.4a: Replace AddNode with SumNode (#2396)
+2.4c: portfield substitution (#2406)
 2.4c: PortFieldSum and substitution [ANT-2005] (#2415)
 2.4e: visualize ast with graphviz [ANT-2036] (#2399) (#2426) (#2429)
 
 4.5 Parse yaml [ANT-2206] (#2433) (#2431) (#2447)
 4.5 Full exemple of parsing (#2448)
 
-
-#### Bugfixes
-Reset adequacy patch enabled (#2420)
-
-
+Add SumNode "wide" test (#2403)
+Add iterators on ASTs, allowing for loops (#2387)
 
 #### For developers
 Cucumber: add short tests & refactor some steps (#2382)
 Use OR-Tools v9.11-rte1.1 (#2437)
 Fix or-tools integration (#2402)
+Add contribution guidelines (#2380)
+Update deprecated actions (#2381)
+Better dependencies with cmake, antares matrix (#2369)
+Centos mirror list (#2372)
+Properly set common data in API output when using playlist (#2364)
+Add cucumber tests tool (#2347)
+Fix clang++ warning about typeid (#2340)
+Enable parallel run for API (#2337)
+Free up space for SonarCloud job (#2315)
+update AUTHORS.txt (#2312)
+
 
 
 #### Code quality
 Using filesystem path instead of yuni [ANT-1999] (#2435) (#2454)
 Add a few const ref qualifiers to improve code readibility (#2459)
-
+Mark overriden functions as such in hydroLevelsData (#2389)
+Remove manually allocated memory (#2363)
+Districts : simplifying the code (#2279)
+Remove duplication in simulation run (#2274)
+Fix various compilation warnings (#2346)
+Remove useless ;, macro definition (#2348)
+Use const char** for argv, remove function prepareArgs (#2338)
 
 
 #### Removed
@@ -49,6 +76,10 @@ Remove function memoryUsage and affiliates (#2456)
 Headers files : remove useless inclusions in OPT (#2411)
 Remove unused code & #defines (#2412)
 Remove last global variable (#2410)
+Local matching removal : remove unused thread_number / numSpace (#2404)
+Remove unused CoutDeDefaillanceEnReserve (#2392)
+Remove unused adqPatchParams argument, class member (#2390)
+Remove unused headers in src/solver (yuni, cstdint, sim_*.h) (#2371)
 
 
 
