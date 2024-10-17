@@ -19,20 +19,7 @@ add_subdirectory(exception)
 
 add_subdirectory(sys)
 add_subdirectory(writer)
-if(WITH_ANTLR4)
-  add_subdirectory(antlr-interface)
-endif()
 
-add_subdirectory(optimization-options)
-
-set(HEADERS
-        include/antares/antares/antares.h
-        include/antares/antares/constants.h
-        include/antares/antares/fatal-error.h
-        include/antares/antares/version.h
-        include/antares/antares/Enum.hpp
-        include/antares/antares/Enum.hxx
-)
 set(SRC
     config.h
     constants.h
