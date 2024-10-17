@@ -1,9 +1,60 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-## v8.9.0
+## v9.1.0
+### Input 
+#### Hydro Maximum Generation/Pumping Power
+* For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
+
+Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
+- inflows, ROR and minimum generation, max pumping & generation (prefix "h")
+- initial level (prefix "hl")
+This implies that, inside one of the previous categories, the number of available time series is the same
+
+* [Logic changes](17-v91.md)
+
+#### Short term storage groups
+STS groups in input are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
+
+In the "thematic trimming" section, the new dynamic variable `STS by group` is now used to enable/disable all variables (level/injection/withdrawal) for all groups. The following variables are obsolete and must not be provided
+
+```
+PSP_open_injection
+PSP_open_withdrawal
+PSP_open_level
+...
+
+Other1_injection
+Other1_withdral
+Other1_level
+...
+Other5_injection
+Other5_withdral
+Other5_level
+```
+(3*9=27 variables in total)
+
+The default value for group is "OTHER1".
+
+### Output
+#### ST Storage
+
+- Output columns for ST storage are capitalized. For any STS group name my_group, 3 output columns are created : `MY_GROUP_INJECTION`, `MY_GROUP_WITHDRAWAL`, `MY_GROUP_LEVEL`.
+- If a group is empty, no column is produced.
+- There is now a variable number of columns in files values-XXX.txt, depending on the groups of ST storages provided by the user. Note that groups are case-insensitive, for example `battery`, `Battery` and `BATTERY` all represent the same group. If no ST storage exist for a given area, no variables associated to ST storages will be produced.
+
+## v9.0.0
 ### Input
-### Solver logs
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
+#### Study version
+Breaking change in the study format, file **study.antares**
+```
+version = 900
+```
+becomes
+```
+version = 9.0
+```
+Compatibility is kept with versions up to 8.8.0. Starting from version 9.0.0, the new format must be used.
+
 
 ## v8.8.0
 ### Input

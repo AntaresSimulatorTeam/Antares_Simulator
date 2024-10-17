@@ -96,8 +96,128 @@ void Application::prepare(int argc, char* argv[])
         return;
     }
 
-    // Perform some checks
-    checkAndCorrectSettingsAndOptions(pSettings, options);
+    // Name of the simulation
+    if (!pSettings.simulationName.empty())
+    {
+        study.simulationComments.name = pSettings.simulationName;
+    }
+
+    // Force some options
+    options.prepareOutput = !pSettings.noOutput;
+    options.ignoreConstraints = pSettings.ignoreConstraints;
+    options.loadOnlyNeeded = true;
+
+    // Load the study from a folder
+    Benchmarking::Timer timer;
+
+    std::exception_ptr loadingException;
+    try
+    {
+        pDurationCollector("study_loading") << [&]
+        {
+            if (study.loadFromFolder(pSettings.studyFolder, options))
+            {
+                logs.info() << "The study is loaded.";
+                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+            }
+        };
+
+        if (study.areas.empty())
+        {
+            throw Error::NoAreas();
+        }
+
+        // no output ?
+        study.parameters.noOutput = pSettings.noOutput;
+
+        if (pSettings.forceZipOutput)
+        {
+            pParameters->resultFormat = Antares::Data::zipArchive;
+        }
+    }
+    catch (...)
+    {
+        loadingException = std::current_exception();
+    }
+
+    // For solver
+    study.parameters.optOptions = options.optOptions;
+
+    // This settings can only be enabled from the solver
+    // Prepare the output for the study
+    study.prepareOutput();
+
+    // Initialize the result writer
+    prepareWriter(study, pDurationCollector);
+
+    // Some checks may have failed, but we need a writer to copy the logs
+    // to the output directory
+    // So we wait until we have initialized the writer to rethrow
+    if (loadingException)
+    {
+        std::rethrow_exception(loadingException);
+    }
+
+    Antares::Solver::initializeSignalHandlers(resultWriter);
+
+    // Save about-the-study files (comments, notes, etc.)
+    study.saveAboutTheStudy(*resultWriter);
+
+    // Name of the simulation (again, if the value has been overwritten)
+    if (!pSettings.simulationName.empty())
+    {
+        study.simulationComments.name = pSettings.simulationName;
+    }
+
+    // Removing all callbacks, which are no longer needed
+    logs.callback.clear();
+    logs.info();
+
+    if (pSettings.noOutput)
+    {
+        logs.info() << "The output has been disabled.";
+        logs.info();
+    }
+
+    // Errors
+    if (pErrorCount || pWarningCount)
+    {
+        if (pErrorCount || !pSettings.ignoreWarningsErrors)
+        {
+            // The loading of the study produces warnings and/or errors
+            // As the option '--force' is not given, we can not continue
+            LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
+            throw FatalError("The simulation must stop.");
+        }
+        else
+        {
+            LogDisplayErrorInfos(
+              0,
+              pWarningCount,
+              "As requested, the warnings can be ignored and the simulation will continue",
+              false /* not an error */);
+            // Actually importing the log file is useless here.
+            // However, since we have warnings/errors, it allows to have a piece of
+            // log when the unexpected happens.
+            if (!study.parameters.noOutput)
+            {
+                study.importLogsToOutputFolder(*resultWriter);
+            }
+            // empty line
+            logs.info();
+        }
+    }
+
+    // Checking for filename length limits
+    if (!pSettings.noOutput)
+    {
+        if (!study.checkForFilenameLimits(true))
+        {
+            throw Error::InvalidFileName();
+        }
+
+        writeComment(study);
+    }
 
     pSettings.checkAndSetStudyFolder(options.studyFolder);
 
@@ -135,8 +255,9 @@ void Application::prepare(int argc, char* argv[])
 
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
-    checkOrtoolsUsage(
-      pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsSolver);
+    checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
+                      pParameters->optOptions.ortoolsUsed,
+                      pParameters->optOptions.ortoolsSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
