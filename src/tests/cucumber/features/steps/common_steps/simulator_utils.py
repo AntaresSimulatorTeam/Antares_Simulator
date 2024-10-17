@@ -3,8 +3,8 @@
 import subprocess
 import yaml
 from pathlib import Path
-from study_input_handler import study_input_handler
-from study_output_handler import study_output_handler
+from common_steps.study_input_handler import study_input_handler
+from common_steps.study_output_handler import study_output_handler
 
 
 def get_solver_path():
