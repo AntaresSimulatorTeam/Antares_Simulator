@@ -35,7 +35,7 @@ class OrtoolsMipSolution final: public Api::IMipSolution
 {
 public:
     OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
-                       std::shared_ptr<operations_research::MPSolver> solver);
+                       operations_research::MPSolver* solver);
 
     ~OrtoolsMipSolution() override = default;
 
@@ -47,7 +47,7 @@ public:
 
 private:
     operations_research::MPSolver::ResultStatus status_;
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
+    operations_research::MPSolver* mpSolver_;
     std::map<std::string, double> solution_;
 };
 

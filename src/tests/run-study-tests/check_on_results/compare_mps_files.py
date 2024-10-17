@@ -26,10 +26,10 @@ class compare_mps_files(check_interface):
         self.find_folders_to_compare()
 
         ref_mps_files = list(self.ref_folder.glob('*.mps'))
-        assert ref_mps_files
+        assert ref_mps_files, "Couldn't find reference MPS files"
 
         mps_files = list(self.dated_output_folder.glob('**/*.mps'))
-        assert mps_files
+        assert mps_files, "Couldn't find actual output MPS files"
 
         list_of_pairs = [(mps_ref, mps) for mps_ref in ref_mps_files for mps in mps_files if mps_ref.name == mps.name]
         for pair in list_of_pairs:

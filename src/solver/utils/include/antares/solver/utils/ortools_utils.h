@@ -58,8 +58,7 @@ std::string availableOrToolsSolversString();
  *
  *  \return MPSolver
  */
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
-                          const std::string& solverName);
+MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
@@ -108,26 +107,5 @@ private:
     char prefix_;
 };
 
-class ProblemSimplexeNommeConverter
-{
-public:
-    explicit ProblemSimplexeNommeConverter(
-      const std::string& solverName,
-      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-
-    MPSolver* Convert();
-
-private:
-    const std::string& solverName_;
-    const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
-    Nomenclature variableNameManager_ = Nomenclature('x');
-    Nomenclature constraintNameManager_ = Nomenclature('c');
-
-    void CreateVariable(unsigned idxVar, MPSolver* solver, MPObjective* const objective) const;
-    void CopyVariables(MPSolver* solver) const;
-    void UpdateContraints(unsigned idxRow, MPSolver* solver) const;
-    void CopyRows(MPSolver* solver) const;
-    void CopyMatrix(const MPSolver* solver) const;
-};
 } // namespace Optimization
 } // namespace Antares

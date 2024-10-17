@@ -26,7 +26,7 @@ namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
 OrtoolsMipSolution::OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& status,
-                                       std::shared_ptr<operations_research::MPSolver> solver):
+                                       operations_research::MPSolver* solver):
     status_(status),
     mpSolver_(solver)
 {
