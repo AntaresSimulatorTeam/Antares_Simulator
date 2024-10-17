@@ -38,11 +38,6 @@ namespace fs = std::filesystem;
 
 #define SEP (IO::Separator)
 
-namespace
-{
-const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
-}
-
 namespace Antares
 {
 namespace Data
@@ -78,15 +73,14 @@ AreaLink::~AreaLink()
 {
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
+bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
 {
-    String buffer;
-    buffer.clear() << folder << SEP << with->id << ".txt";
+    fs::path path = folder / static_cast<std::string>(with->id + ".txt");
 
     // Load link's data
     Matrix<> tmpMatrix;
     const uint matrixWidth = 8;
-    if (!tmpMatrix.loadFromCSVFile(buffer,
+    if (!tmpMatrix.loadFromCSVFile(path.string(),
                                    matrixWidth,
                                    HOURS_PER_YEAR,
                                    Matrix<>::optFixedSize | Matrix<>::optImmediate))
@@ -110,26 +104,28 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     return true;
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder)
+bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& folder)
 {
-    String capacitiesFolder;
-    capacitiesFolder << folder << SEP << "capacities";
-
-    String filename;
     bool success = true;
 
     // Read link's parameters times series
-    filename.clear() << folder << SEP << with->id << "_parameters.txt";
-    success = parameters.loadFromCSVFile(filename, fhlMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+    std::string paramId = with->id + "_parameters.txt";
+    fs::path path = folder / paramId;
+    success = parameters.loadFromCSVFile(path.string(),
+                                         fhlMax,
+                                         HOURS_PER_YEAR,
+                                         Matrix<>::optFixedSize)
               && success;
 
+    fs::path capacitiesFolder = folder / "capacities";
+
     // Read link's direct capacities time series
-    filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.loadFromFile(filename.c_str(), false) && success;
+    path = capacitiesFolder / static_cast<std::string>(with->id + "_direct.txt");
+    success = directCapacities.loadFromFile(path, false) && success;
 
     // Read link's indirect capacities time series
-    filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = indirectCapacities.loadFromFile(filename.c_str(), false) && success;
+    path = capacitiesFolder / static_cast<std::string>(with->id + "_indirect.txt");
+    success = indirectCapacities.loadFromFile(path, false) && success;
 
     return success;
 }
@@ -173,7 +169,7 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& folder)
+bool AreaLink::loadTimeSeries(const StudyVersion& version, const fs::path& folder)
 {
     if (version < StudyVersion(8, 2))
     {
@@ -187,14 +183,12 @@ bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& fold
 
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
-    Clob path;
+    std::string filename = with->id + ".txt";
+    fs::path path = fs::path("ts-numbers") / "ntc" / from->id.to<std::string>() / filename;
+
     std::string buffer;
-
-    path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
-         << SEP << with->id << ".txt";
-
     timeseriesNumbers.saveToBuffer(buffer);
-    writer.addEntryFromBuffer(path.c_str(), buffer);
+    writer.addEntryFromBuffer(path, buffer);
 }
 
 void AreaLink::detach()
@@ -527,7 +521,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study.header.version, folder.string()) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)

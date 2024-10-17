@@ -25,24 +25,22 @@
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
 
-using namespace Yuni;
-
-#define SEP IO::Separator
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
 static void storeTSnumbers(Solver::IResultWriter& writer,
                            const TimeSeriesNumbers& timeseriesNumbers,
-                           const String& id,
-                           const String& directory)
+                           const std::string& id,
+                           const fs::path& directory)
 {
-    Clob path;
-    path << "ts-numbers" << SEP << directory << SEP << id << ".txt";
+    std::string fullId = id + ".txt";
+    fs::path path = "ts-numbers" / directory / fullId;
 
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer);
 
-    writer.addEntryFromBuffer(path.c_str(), buffer);
+    writer.addEntryFromBuffer(path, buffer);
 }
 
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)

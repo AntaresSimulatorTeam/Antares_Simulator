@@ -26,8 +26,6 @@
 
 using namespace Yuni;
 
-#define SEP IO::Separator
-
 namespace Antares::Data::ScenarioBuilder
 {
 Sets::Sets():

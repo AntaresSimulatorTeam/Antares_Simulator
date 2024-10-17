@@ -42,7 +42,7 @@ public:
     }
 
     //! INI file
-    Yuni::Clob iniFilename;
+    std::filesystem::path iniFilename;
     //! Current section
     IniFile::Section* section;
 

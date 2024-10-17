@@ -36,8 +36,6 @@
 #include "../info.h"
 #include "../surveyresults.h"
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares
 {
 namespace Solver
@@ -272,8 +270,10 @@ public:
         }
         // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
-        digestFileName << results.data.originalOutput << SEP << "grid" << SEP << "digest.txt";
-        writer.addEntryFromBuffer(digestFileName.c_str(), digestBuffer);
+        std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
+        path /= "grid";
+        path /= "digest.txt";
+        writer.addEntryFromBuffer(path, digestBuffer);
     }
 
 private:
@@ -320,9 +320,11 @@ private:
             {
                 logs.info() << "Exporting results : " << area.name;
                 // The new output
-                results.data.output.clear();
-                results.data.output << results.data.originalOutput << SEP << "areas" << SEP
-                                    << area.id;
+                std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
+                path /= "areas";
+                path /= area.id.to<std::string>();
+
+                results.data.output = path.string();
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
 
@@ -354,9 +356,11 @@ private:
 
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
-                results.data.output.clear();
-                results.data.output << results.data.originalOutput << SEP << "areas" << SEP
-                                    << area.id << SEP << "thermal" << SEP << cluster->id();
+                std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
+                path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal"
+                        / cluster->id();
+
+                results.data.output = path.string();
 
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
@@ -405,9 +409,14 @@ private:
                     Antares::logs.info() << "Exporting results : " << area.name << " - "
                                          << results.data.link->with->name;
                     // The new output
-                    results.data.output.clear();
-                    results.data.output << results.data.originalOutput << SEP << "links" << SEP
-                                        << area.id << " - " << results.data.link->with->id;
+                    std::filesystem::path path = static_cast<std::string>(
+                      results.data.originalOutput);
+                    std::string areaId = static_cast<std::string>(area.id) + " - "
+                                         + results.data.link->with->id;
+                    path /= std::filesystem::path("links") / areaId;
+
+                    results.data.output = path.string();
+
                     SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list,
                                                                              results,
                                                                              numSpace);
@@ -449,11 +458,13 @@ private:
 
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
-            results.data.output.clear();
-            results.data.output << results.data.originalOutput << SEP << "areas" << SEP << "@ "
-                                << sets.nameByIndex(i);
+            std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
+            std::string setId = "@ " + sets.nameByIndex(i);
+            path /= std::filesystem::path("areas") / setId;
 
+            results.data.output = path.string();
             results.data.setOfAreasIndex = indx++;
+
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
     }
@@ -469,8 +480,10 @@ private:
         {
             logs.info() << "Exporting results : binding constraints";
             // The new output
-            results.data.output.clear();
-            results.data.output << results.data.originalOutput << SEP << "binding_constraints";
+            std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
+            path /= "binding_constraints";
+
+            results.data.output = path.string();
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
     }
@@ -495,8 +508,5 @@ public:
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
-
-// cleanup
-#undef SEP
 
 #endif // __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__

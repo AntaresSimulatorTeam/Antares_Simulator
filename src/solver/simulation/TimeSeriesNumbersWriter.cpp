@@ -48,7 +48,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
 
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer);
-    writer.addEntryFromBuffer(path.string(), buffer);
+    writer.addEntryFromBuffer(path, buffer);
 }
 
 void BindingConstraintsTimeSeriesNumbersWriter::write(

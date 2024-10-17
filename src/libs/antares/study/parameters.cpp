@@ -1974,7 +1974,7 @@ void Parameters::saveToINI(IniFile& ini) const
     }
 }
 
-bool Parameters::loadFromFile(const AnyString& filename, const StudyVersion& version)
+bool Parameters::loadFromFile(const std::filesystem::path& filename, const StudyVersion& version)
 {
     // Loading the INI file
     IniFile ini;

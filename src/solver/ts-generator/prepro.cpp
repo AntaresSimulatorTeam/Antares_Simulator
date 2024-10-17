@@ -20,17 +20,10 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/prepro.h>
 #include "antares/study/study.h"
-
-using namespace Yuni;
-
-#define SEP IO::Separator
 
 namespace Antares::Data
 {
@@ -50,10 +43,10 @@ void PreproAvailability::copyFrom(const PreproAvailability& rhs)
 
 bool PreproAvailability::saveToFolder(const AnyString& folder) const
 {
-    if (IO::Directory::Create(folder))
+    if (Yuni::IO::Directory::Create(folder))
     {
-        String buffer;
-        buffer.clear() << folder << SEP << "data.txt";
+        Yuni::String buffer;
+        buffer.clear() << folder << Yuni::IO::Separator << "data.txt";
         return data.saveToCSVFile(buffer, /*decimal*/ 6);
     }
     return false;

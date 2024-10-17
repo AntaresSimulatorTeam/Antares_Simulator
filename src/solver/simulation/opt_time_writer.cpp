@@ -47,5 +47,5 @@ void OptimizationStatisticsWriter::finalize()
     const path filename = path("optimization") / "week-by-week"
                           / ("year_" + std::to_string(pYear) + ".txt");
     std::string s = pBuffer.str();
-    pWriter.addEntryFromBuffer(filename.string(), s);
+    pWriter.addEntryFromBuffer(filename, s);
 }

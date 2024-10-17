@@ -112,7 +112,7 @@ public:
     */
     [[nodiscard]] bool loadFromFolder(Data::Study& s,
                                       const Data::StudyLoadOptions& options,
-                                      const AnyString& folder);
+                                      const std::filesystem::path& folder);
 
     /*!
     ** \brief Save all binding constraints into a folder

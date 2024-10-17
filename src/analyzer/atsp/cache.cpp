@@ -21,10 +21,6 @@
 
 #include "atsp.h"
 
-using namespace Yuni;
-
-#define SEP Yuni::Core::IO::Separator
-
 namespace Antares
 {
 void ATSP::cacheCreate()
