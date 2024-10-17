@@ -13,7 +13,7 @@ from common_steps.simulator_utils import *
 def get_resources_path():
     with open("conf.yaml") as file:
         content = yaml.full_load(file)
-    return content.get("resources-path")
+    return content.get("resources-path").replace("/", os.sep)
 
 
 RESOURCES_PATH = get_resources_path()  # we only need to run this once
