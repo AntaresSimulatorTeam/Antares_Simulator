@@ -37,7 +37,12 @@
 #include <antares/writer/result_format.h>
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
-#include "fwd.h"
+#include <antares/optimization-options/options.h>
+#include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/writer/result_format.h>
+#include "antares/study/fwd.h"
+
+#include "parameters/adq-patch-params.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"
 
@@ -141,6 +146,11 @@ public:
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();
+
+    /*!
+    ** \brief Handle priority between command-line option and configuration file
+    */
+    void handleOptimizationOptions(const StudyLoadOptions& options);
 
     /*!
     ** \brief Try to detect then fix any bad value
@@ -509,21 +519,14 @@ public:
     uint seed[seedMax];
     //@}
 
-    //! \name Ortools configuration
-    //@{
-    //! Define if ortools is used
-    bool ortoolsUsed;
-    //! Ortool solver used for simulation
-    std::string ortoolsSolver;
-    //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
 
     // Naming constraints and variables in problems
     bool namedProblems;
 
-    // solver logs
-    bool solverLogs;
+    // All options related to optimization
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:
     //! Load data from an INI file

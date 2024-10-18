@@ -101,12 +101,11 @@ private:
     Nomenclature variableNameManager_ = Nomenclature('x');
     Nomenclature constraintNameManager_ = Nomenclature('c');
 
-    void CreateVariable(unsigned idxVar, MPSolver* solver, MPObjective* const objective);
-    void CopyVariables(MPSolver* solver);
-    void UpdateContraints(unsigned idxRow, MPSolver* solver);
-    void CopyRows(MPSolver* solver);
-    void TuneSolverSpecificOptions(MPSolver* solver) const;
-    void CopyMatrix(const MPSolver* solver);
+    void CreateVariable(unsigned idxVar, MPSolver* solver, MPObjective* const objective) const;
+    void CopyVariables(MPSolver* solver) const;
+    void UpdateContraints(unsigned idxRow, MPSolver* solver) const;
+    void CopyRows(MPSolver* solver) const;
+    void CopyMatrix(const MPSolver* solver) const;
 };
 } // namespace Optimization
 } // namespace Antares

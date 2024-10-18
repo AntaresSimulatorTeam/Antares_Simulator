@@ -12,15 +12,14 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
                                                  std::vector<BasisStatus>& StatutDesVariables,
                                                  std::vector<BasisStatus>& StatutDesContraintes,
                                                  bool UseNamedProblems,
-                                                 bool SolverLogs) : PROBLEME_SIMPLEXE(),
-
- NomDesVariables(NomDesVariables),
- NomDesContraintes(NomDesContraintes),
- useNamedProblems_(UseNamedProblems),
- solverLogs_(SolverLogs),
- StatutDesVariables(StatutDesVariables),
- StatutDesContraintes(StatutDesContraintes),
- VariablesEntieres(VariablesEntieres)
+                                                 bool SolverLogs):
+    NomDesVariables(NomDesVariables),
+    NomDesContraintes(NomDesContraintes),
+    useNamedProblems_(UseNamedProblems),
+    solverLogs_(SolverLogs),
+    StatutDesVariables(StatutDesVariables),
+    StatutDesContraintes(StatutDesContraintes),
+    VariablesEntieres(VariablesEntieres)
 {
     AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
 }

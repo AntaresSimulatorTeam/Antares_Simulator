@@ -11,9 +11,11 @@ Antares Changelog
 ## Bugfix (other)
 * Use OR-Tools v9.11-rte1.1 [ANT-2069] (#2418)
 
-8.8.9 (09/2024)
+## Next version
 --------------------
-* Revert "Fix bug hydro heuristic with mingen (ANT-1825) (#2258)"
+### Improvements
+* STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
+* When XPRESS or SCIP solver is selected (using OR-Tools), solver specific parameters can be specified from the command-line (#1837)
 
 8.8.8 (09/2024)
 --------------------

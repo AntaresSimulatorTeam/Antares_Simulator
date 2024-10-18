@@ -72,6 +72,7 @@ set(ANTARES_SOLVER_LIBS
 	Antares::infoCollection
 	Antares::checks
 	Antares::misc
+    Antares::optimization-options
 	yuni-static-uuid
 	yuni-static-core		
 	${CMAKE_THREADS_LIBS_INIT}
