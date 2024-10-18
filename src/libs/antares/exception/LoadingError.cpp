@@ -78,12 +78,6 @@ InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(
 {
 }
 
-InvalidStudy::InvalidStudy(const Yuni::String& study):
-    LoadingError(std::string("The folder `") + study.c_str()
-                 + "` does not seem to be a valid study")
-{
-}
-
 NoStudyProvided::NoStudyProvided() :
  LoadingError("A study folder is required. Use '--help' for more information")
 {

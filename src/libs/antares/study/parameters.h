@@ -40,7 +40,6 @@
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/writer/result_format.h>
-#include "antares/antares/antares.h"
 #include "antares/study/fwd.h"
 
 #include "parameters/adq-patch-params.h"
@@ -531,9 +530,7 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini,
-                     const StudyVersion& version,
-                     const StudyLoadOptions& options);
+    bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
 
     void resetPlayedYears(uint nbOfYears);
 

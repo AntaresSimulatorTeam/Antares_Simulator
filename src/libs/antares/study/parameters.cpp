@@ -951,9 +951,7 @@ bool firstKeyLetterIsValid(const String& name)
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini,
-                             const StudyVersion& version,
-                             const StudyLoadOptions& options)
+bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options)
 {
     // Reset inner data
     reset();

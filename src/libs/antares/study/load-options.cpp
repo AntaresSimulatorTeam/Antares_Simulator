@@ -32,6 +32,8 @@
 
 namespace Antares
 {
+namespace Data
+{
 StudyLoadOptions::StudyLoadOptions():
     nbYears(0),
     prepareOutput(false),

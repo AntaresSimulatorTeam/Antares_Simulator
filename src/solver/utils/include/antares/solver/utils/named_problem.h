@@ -30,6 +30,7 @@ private:
     const std::vector<std::string>& NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
     bool useNamedProblems_;
+    bool solverLogs_;
 
 public:
     std::vector<BasisStatus>& StatutDesVariables;
@@ -57,6 +58,11 @@ public:
     const std::vector<std::string>& ConstraintNames() const
     {
         return NomDesContraintes;
+    }
+
+    bool SolverLogs() const
+    {
+        return solverLogs_;
     }
 
     bool IntegerVariable(size_t idx) const

@@ -16,8 +16,10 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
     NomDesVariables(NomDesVariables),
     NomDesContraintes(NomDesContraintes),
     useNamedProblems_(UseNamedProblems),
-    VariablesEntieres(VariablesEntieres),
-    basisStatus(basisStatus)
+    solverLogs_(SolverLogs),
+    StatutDesVariables(StatutDesVariables),
+    StatutDesContraintes(StatutDesContraintes),
+    VariablesEntieres(VariablesEntieres)
 {
     AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
 }
