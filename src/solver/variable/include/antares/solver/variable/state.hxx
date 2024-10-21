@@ -88,6 +88,16 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
     scratchpad = &area->scratchpad[numSpace];
     thermalCluster = nullptr;
 
+    if (unitCommitmentMode != Data::UnitCommitmentMode::ucHeuristicFast)
+    {
+        memset(LTStorageClusterReserveParticipationCostForYear, 0, sizeof(LTStorageClusterReserveParticipationCostForYear));
+        memset(reserveParticipationCostForYear, 0, sizeof(reserveParticipationCostForYear));
+        for (int h=0 ; h< HOURS_PER_YEAR; h++)
+        {
+            reserveParticipationPerLTStorageClusterForYear[hourInTheYear].clear();
+            
+        }
+    }
     switch (simulationMode)
     {
     case Data::SimulationMode::Adequacy:

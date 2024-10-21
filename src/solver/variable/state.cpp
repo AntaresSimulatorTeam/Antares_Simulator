@@ -237,6 +237,7 @@ void State::initFromHydroStorage()
 
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
     {
+        //reserveParticipationPerLTStorageClusterForYear[hourInTheYear].clear();
         for (const auto& [resName, resParticipation] : LTStorage.reservesParticipations)
         {
             double participation = hourlyResults->HydroUsage[hourInTheWeek]
