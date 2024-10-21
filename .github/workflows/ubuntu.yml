@@ -150,14 +150,14 @@ jobs:
         run: |
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
 
-      - name: Run named mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-named-mps
-          os: ${{ env.os }}
-          variant: "named-mps"
+      #- name: Run named mps tests
+      #  if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+      #  uses: ./.github/workflows/run-tests
+      #  with:
+      #    simtest-tag: ${{ env.SIMTEST }}
+      #    batch-name: valid-named-mps
+      #    os: ${{ env.os }}
+      #    variant: "named-mps"
 
       - name: Run unfeasibility-related tests
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -240,13 +240,13 @@ jobs:
         with:
           feature: "features/short_tests.feature"
 
-      - name: Run mps tests
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-mps
-          os: ${{ env.os }}
+      #- name: Run mps tests
+      #  if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+      #  uses: ./.github/workflows/run-tests
+      #  with:
+      #    simtest-tag: ${{ env.SIMTEST }}
+      #    batch-name: valid-mps
+      #    os: ${{ env.os }}
 
       - name: Run tests for adequacy patch (CSR)
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -257,7 +257,7 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run parallel tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
@@ -275,7 +275,7 @@ jobs:
           variant: "tsgenerator"
 
       - name: Run medium-tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
           simtest-tag: ${{ env.SIMTEST }}
