@@ -413,6 +413,9 @@ double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
+    if (tsGenBehavior == LocalTSGenerationBehavior::forceNoGen)
+        return;
+
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
     if (not Math::Zero(spinning))
