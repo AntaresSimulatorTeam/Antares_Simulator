@@ -33,7 +33,7 @@ static void checkSetSolverSpecificParameters(bool status,
     }
     else
     {
-        Antares::logs.info() << "  Successfully set " + solverName + " solver specific parameters";
+        Antares::logs.debug() << "  Successfully set " + solverName + " solver specific parameters";
     }
 }
 
