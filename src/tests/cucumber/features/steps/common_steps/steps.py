@@ -2,7 +2,6 @@
 
 import os
 import pathlib
-import yaml
 
 from behave import *
 
@@ -10,24 +9,13 @@ from common_steps.assertions import *
 from common_steps.simulator_utils import *
 
 
-def get_resources_path():
-    with open("conf.yaml") as file:
-        content = yaml.full_load(file)
-    return content.get("resources-path").replace("/", os.sep)
-
-
-RESOURCES_PATH = get_resources_path()  # we only need to run this once
-
-
 @given('the study path is "{string}"')
 def study_path_is(context, string):
-    context.study_path = os.path.join(RESOURCES_PATH, string.replace("/", os.sep))
+    context.study_path = os.path.join(context.config.userdata["resources-path"], string.replace("/", os.sep))
 
 
 @when('I run antares simulator')
 def run_antares(context):
-    context.use_ortools = True
-    context.ortools_solver = "sirius"
     context.named_mps_problems = False
     context.parallel = False
     run_simulation(context)
