@@ -28,6 +28,8 @@
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
 namespace Antares
 {
 namespace Optimization
@@ -37,10 +39,7 @@ class BasisStatus;
 struct PROBLEME_SIMPLEXE_NOMME: public PROBLEME_SIMPLEXE
 {
 public:
-    PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
-                            const std::vector<std::string>& NomDesContraintes,
-                            const std::vector<bool>& VariablesEntieres,
-                            BasisStatus& basisStatus,
+    PROBLEME_SIMPLEXE_NOMME(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                             bool UseNamedProblems,
                             bool SolverLogs);
 

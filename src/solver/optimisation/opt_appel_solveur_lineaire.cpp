@@ -164,47 +164,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         }
     }
 
-    Probleme.NombreMaxDIterations = -1;
-    Probleme.DureeMaxDuCalcul = -1.;
-
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire.data();
-    Probleme.X = ProblemeAResoudre->X.data();
-    Probleme.Xmin = ProblemeAResoudre->Xmin.data();
-    Probleme.Xmax = ProblemeAResoudre->Xmax.data();
-    Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable.data();
-
-    Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
-    Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
-                                                       ->CoefficientsDeLaMatriceDesContraintes
-                                                       .data();
-    Probleme.Sens = ProblemeAResoudre->Sens.data();
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
-
-    Probleme.ChoixDeLAlgorithme = SPX_DUAL;
-
-    Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
-
     Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
-
-    Probleme.StrategieAntiDegenerescence = AGRESSIF;
-
-    Probleme.PositionDeLaVariable = ProblemeAResoudre->PositionDeLaVariable.data();
-    Probleme.NbVarDeBaseComplementaires = 0;
-    Probleme.ComplementDeLaBase = ProblemeAResoudre->ComplementDeLaBase.data();
-
-    Probleme.LibererMemoireALaFin = NON_SPX;
-
-    Probleme.UtiliserCoutMax = NON_SPX;
-    Probleme.CoutMax = 0.0;
-
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
-    Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
-
-    Probleme.NombreDeContraintesCoupes = 0;
 
     auto ortoolsProblem = std::make_unique<LegacyOrtoolsLinearProblem>(Probleme.isMIP(),
                                                                        options.ortoolsSolver);
@@ -292,10 +252,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
-                                                   ProblemeAResoudre->NomDesContraintes,
-                                                   ProblemeAResoudre->VariablesEntieres,
-                                                   ProblemeAResoudre->basisStatus,
+    Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre.get(),
                                                    problemeHebdo->NamedProblems,
                                                    options.solverLogs);
 
