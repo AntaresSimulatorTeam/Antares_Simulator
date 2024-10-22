@@ -2,9 +2,6 @@
 
 #include "antares/solver/modeler/api/linearProblemFiller.h"
 #include "antares/solver/utils/named_problem.h"
-#include "antares/solver/utils/ortools_utils.h"
-
-#include "ortools/linear_solver/linear_solver.h"
 
 namespace Antares::Optimization
 {
@@ -24,13 +21,13 @@ public:
 
 private:
     const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
-    Nomenclature variableNameManager_ = Nomenclature('x');
-    Nomenclature constraintNameManager_ = Nomenclature('c');
 
     void CreateVariable(unsigned idxVar, Antares::Solver::Modeler::Api::ILinearProblem& pb) const;
     void CopyVariables(Antares::Solver::Modeler::Api::ILinearProblem& pb) const;
     void UpdateContraints(unsigned idxRow, Antares::Solver::Modeler::Api::ILinearProblem& pb) const;
     void CopyRows(Antares::Solver::Modeler::Api::ILinearProblem& pb) const;
     void CopyMatrix(Antares::Solver::Modeler::Api::ILinearProblem& pb) const;
+    std::string GetVariableName(unsigned index) const;
+    std::string GetConstraintName(unsigned index) const;
 };
 } // namespace Antares::Optimization
