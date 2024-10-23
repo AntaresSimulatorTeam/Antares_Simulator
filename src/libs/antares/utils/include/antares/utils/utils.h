@@ -36,6 +36,9 @@ namespace Antares
 */
 template<class StringT>
 void TransformNameIntoID(const AnyString& name, StringT& out);
+
+void TransformNameIntoID(const AnyString& name, std::string& out);
+
 std::string transformNameIntoID(const std::string& name);
 
 std::string FormattedTime(const std::string& format);
