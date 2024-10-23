@@ -20,7 +20,6 @@
  */
 
 #include <algorithm>
-#include <memory>
 
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
 
