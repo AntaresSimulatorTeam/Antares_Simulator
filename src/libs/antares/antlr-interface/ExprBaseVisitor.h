@@ -1,5 +1,5 @@
 
-// Generated from Expr.g4 by ANTLR 4.13.1
+// Generated from Expr.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -15,63 +15,95 @@
 class  ExprBaseVisitor : public ExprVisitor {
 public:
 
-  virtual std::any visitFullexpr(ExprParser::FullexprContext *ctx) override {
+  virtual antlrcpp::Any visitFullexpr(ExprParser::FullexprContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitShift(ExprParser::ShiftContext *ctx) override {
+  virtual antlrcpp::Any visitTimeSum(ExprParser::TimeSumContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIdentifier(ExprParser::IdentifierContext *ctx) override {
+  virtual antlrcpp::Any visitNegation(ExprParser::NegationContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNegation(ExprParser::NegationContext *ctx) override {
+  virtual antlrcpp::Any visitUnsignedAtom(ExprParser::UnsignedAtomContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression(ExprParser::ExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitExpression(ExprParser::ExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComparison(ExprParser::ComparisonContext *ctx) override {
+  virtual antlrcpp::Any visitTimeIndex(ExprParser::TimeIndexContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAddsub(ExprParser::AddsubContext *ctx) override {
+  virtual antlrcpp::Any visitComparison(ExprParser::ComparisonContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPortField(ExprParser::PortFieldContext *ctx) override {
+  virtual antlrcpp::Any visitAllTimeSum(ExprParser::AllTimeSumContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMuldiv(ExprParser::MuldivContext *ctx) override {
+  virtual antlrcpp::Any visitTimeShift(ExprParser::TimeShiftContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNumber(ExprParser::NumberContext *ctx) override {
+  virtual antlrcpp::Any visitFunction(ExprParser::FunctionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeIndex(ExprParser::TimeIndexContext *ctx) override {
+  virtual antlrcpp::Any visitAddsub(ExprParser::AddsubContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeShift(ExprParser::TimeShiftContext *ctx) override {
+  virtual antlrcpp::Any visitPortField(ExprParser::PortFieldContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFunction(ExprParser::FunctionContext *ctx) override {
+  virtual antlrcpp::Any visitMuldiv(ExprParser::MuldivContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeShiftRange(ExprParser::TimeShiftRangeContext *ctx) override {
+  virtual antlrcpp::Any visitNumber(ExprParser::NumberContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTimeRange(ExprParser::TimeRangeContext *ctx) override {
+  virtual antlrcpp::Any visitIdentifier(ExprParser::IdentifierContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitShift(ExprParser::ShiftContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSignedAtom(ExprParser::SignedAtomContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSignedExpression(ExprParser::SignedExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitShiftMuldiv(ExprParser::ShiftMuldivContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitShiftAddsub(ExprParser::ShiftAddsubContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitRightExpression(ExprParser::RightExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitRightMuldiv(ExprParser::RightMuldivContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitRightAtom(ExprParser::RightAtomContext *ctx) override {
     return visitChildren(ctx);
   }
 
