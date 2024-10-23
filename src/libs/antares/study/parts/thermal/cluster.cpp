@@ -403,22 +403,29 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (!Utils::isZero(spinning))
+    if (Utils::isZero(spinning))
     {
-        logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
-                     << "::" << pName;
-
-        auto& ts = series.timeSeries;
-        // The formula
-        // const double s = 1. - cluster.spinning / 100.;
-
-        // All values in the matrix will be multiply by this coeff
-        // It is no really useful to test if the result of the formula
-        // is equal to zero, since the method `Matrix::multiplyAllValuesBy()`
-        // already does this test.
-        ts.multiplyAllEntriesBy(1. / (1. - (spinning / 100.)));
-        ts.roundAllEntries();
+        return;
     }
+
+    // No ts have been generated, no need to save them into input or it will apply spinning twice
+    if (tsGenBehavior == LocalTSGenerationBehavior::forceNoGen)
+    {
+        return;
+    }
+
+    logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name << "::" << pName;
+
+    auto& ts = series.timeSeries;
+    // The formula
+    // const double s = 1. - cluster.spinning / 100.;
+
+    // All values in the matrix will be multiply by this coeff
+    // It is no really useful to test if the result of the formula
+    // is equal to zero, since the method `Matrix::multiplyAllValuesBy()`
+    // already does this test.
+    ts.multiplyAllEntriesBy(1. / (1. - (spinning / 100.)));
+    ts.roundAllEntries();
 }
 
 void Data::ThermalCluster::reset()
