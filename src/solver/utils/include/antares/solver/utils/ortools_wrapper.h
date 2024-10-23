@@ -34,10 +34,6 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            bool keepBasis,
                            const Antares::Solver::Optimization::OptimizationOptions& options);
 
-MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
-                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                                  MPSolver* solver);
-
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, const double* costs, int nbVar);
 void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx,
                                            const double* rhs,

@@ -58,8 +58,7 @@ std::string availableOrToolsSolversString();
  *
  *  \return MPSolver
  */
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
-                          const std::string& solverName);
+MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
@@ -73,61 +72,3 @@ public:
     };
     static const std::map<std::string, struct SolverNames> solverMap;
 };
-
-namespace Antares
-{
-namespace Optimization
-{
-
-class Nomenclature
-{
-public:
-    Nomenclature() = delete;
-
-    explicit Nomenclature(char prefix):
-        prefix_(prefix)
-    {
-    }
-
-    void SetTarget(const std::vector<std::string>& target)
-    {
-        target_ = &target;
-    }
-
-    std::string GetName(unsigned index) const
-    {
-        if (target_ == nullptr || target_->at(index).empty())
-        {
-            return prefix_ + std::to_string(index);
-        }
-        return target_->at(index);
-    }
-
-private:
-    const std::vector<std::string>* target_ = nullptr;
-    char prefix_;
-};
-
-class ProblemSimplexeNommeConverter
-{
-public:
-    explicit ProblemSimplexeNommeConverter(
-      const std::string& solverName,
-      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
-
-    MPSolver* Convert();
-
-private:
-    const std::string& solverName_;
-    const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe_;
-    Nomenclature variableNameManager_ = Nomenclature('x');
-    Nomenclature constraintNameManager_ = Nomenclature('c');
-
-    void CreateVariable(unsigned idxVar, MPSolver* solver, MPObjective* const objective) const;
-    void CopyVariables(MPSolver* solver) const;
-    void UpdateContraints(unsigned idxRow, MPSolver* solver) const;
-    void CopyRows(MPSolver* solver) const;
-    void CopyMatrix(const MPSolver* solver) const;
-};
-} // namespace Optimization
-} // namespace Antares

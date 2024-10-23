@@ -19,26 +19,27 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <algorithm>
+#pragma once
 
-#include <antares/solver/modeler/api/linearProblemBuilder.h>
+#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 
-namespace Antares::Solver::Modeler::Api
+namespace Antares::Optimization
 {
 
-LinearProblemBuilder::LinearProblemBuilder(const std::vector<LinearProblemFiller*>& fillers):
-    fillers_(fillers)
+class LegacyOrtoolsLinearProblem final
+    : public Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem
 {
-}
+public:
+    LegacyOrtoolsLinearProblem(bool isMip, const std::string& solverName):
+        OrtoolsLinearProblem(isMip, solverName)
+    {
+        // nothing else to do
+    }
 
-void LinearProblemBuilder::build(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx)
-{
-    std::ranges::for_each(fillers_,
-                          [&](const auto& filler) { filler->addVariables(pb, data, ctx); });
-    std::ranges::for_each(fillers_,
-                          [&](const auto& filler) { filler->addConstraints(pb, data, ctx); });
-    std::ranges::for_each(fillers_,
-                          [&](const auto& filler) { filler->addObjective(pb, data, ctx); });
-}
+    operations_research::MPSolver* getMpSolver()
+    {
+        return MpSolver();
+    }
+};
 
-} // namespace Antares::Solver::Modeler::Api
+} // namespace Antares::Optimization

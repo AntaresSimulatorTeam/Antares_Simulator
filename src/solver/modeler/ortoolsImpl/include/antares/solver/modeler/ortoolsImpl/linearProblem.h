@@ -36,7 +36,7 @@ class MPObjective;
 namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
-class OrtoolsLinearProblem final: public Api::ILinearProblem
+class OrtoolsLinearProblem: public Api::ILinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
@@ -44,6 +44,10 @@ public:
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
+    OrtoolsMipVariable* addVariable(double lb,
+                                    double ub,
+                                    bool integer,
+                                    const std::string& name) override;
     OrtoolsMipVariable* getVariable(const std::string& name) const override;
     int variableCount() const override;
 
@@ -62,10 +66,13 @@ public:
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
 
-private:
-    OrtoolsMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name);
+    double infinity() const override;
 
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
+protected:
+    operations_research::MPSolver* MpSolver() const;
+
+private:
+    operations_research::MPSolver* mpSolver_;
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 
