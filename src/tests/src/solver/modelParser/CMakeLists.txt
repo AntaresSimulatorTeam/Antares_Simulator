@@ -2,6 +2,7 @@
 set(SOURCE_FILES
         testModelParser.cpp
         testModelTranslator.cpp
+        testConvertorVisitor.cpp
         test_full.cpp
         enum_operators.h
 )
