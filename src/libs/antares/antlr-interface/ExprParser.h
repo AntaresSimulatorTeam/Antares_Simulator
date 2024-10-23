@@ -1,5 +1,5 @@
 
-// Generated from Expr.g4 by ANTLR 4.7.2
+// Generated from Expr.g4 by ANTLR 4.13.2
 
 #pragma once
 
@@ -22,14 +22,21 @@ public:
     RuleRight_expr = 5
   };
 
-  ExprParser(antlr4::TokenStream *input);
-  ~ExprParser();
+  explicit ExprParser(antlr4::TokenStream *input);
 
-  virtual std::string getGrammarFileName() const override;
-  virtual const antlr4::atn::ATN& getATN() const override { return _atn; };
-  virtual const std::vector<std::string>& getTokenNames() const override { return _tokenNames; }; // deprecated: use vocabulary instead.
-  virtual const std::vector<std::string>& getRuleNames() const override;
-  virtual antlr4::dfa::Vocabulary& getVocabulary() const override;
+  ExprParser(antlr4::TokenStream *input, const antlr4::atn::ParserATNSimulatorOptions &options);
+
+  ~ExprParser() override;
+
+  std::string getGrammarFileName() const override;
+
+  const antlr4::atn::ATN& getATN() const override;
+
+  const std::vector<std::string>& getRuleNames() const override;
+
+  const antlr4::dfa::Vocabulary& getVocabulary() const override;
+
+  antlr4::atn::SerializedATNView getSerializedATN() const override;
 
 
   class FullexprContext;
@@ -46,7 +53,8 @@ public:
     ExprContext *expr();
     antlr4::tree::TerminalNode *EOF();
 
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -74,7 +82,8 @@ public:
     ExprContext *expr();
     std::vector<ShiftContext *> shift();
     ShiftContext* shift(size_t i);
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  NegationContext : public ExprContext {
@@ -82,7 +91,8 @@ public:
     NegationContext(ExprContext *ctx);
 
     ExprContext *expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  UnsignedAtomContext : public ExprContext {
@@ -90,7 +100,8 @@ public:
     UnsignedAtomContext(ExprContext *ctx);
 
     AtomContext *atom();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  ExpressionContext : public ExprContext {
@@ -98,7 +109,8 @@ public:
     ExpressionContext(ExprContext *ctx);
 
     ExprContext *expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  TimeIndexContext : public ExprContext {
@@ -107,7 +119,8 @@ public:
 
     antlr4::tree::TerminalNode *IDENTIFIER();
     ExprContext *expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  ComparisonContext : public ExprContext {
@@ -117,7 +130,8 @@ public:
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
     antlr4::tree::TerminalNode *COMPARISON();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  AllTimeSumContext : public ExprContext {
@@ -125,7 +139,8 @@ public:
     AllTimeSumContext(ExprContext *ctx);
 
     ExprContext *expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  TimeShiftContext : public ExprContext {
@@ -134,7 +149,8 @@ public:
 
     antlr4::tree::TerminalNode *IDENTIFIER();
     ShiftContext *shift();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  FunctionContext : public ExprContext {
@@ -143,7 +159,8 @@ public:
 
     antlr4::tree::TerminalNode *IDENTIFIER();
     ExprContext *expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  AddsubContext : public ExprContext {
@@ -153,7 +170,8 @@ public:
     antlr4::Token *op = nullptr;
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  PortFieldContext : public ExprContext {
@@ -162,7 +180,8 @@ public:
 
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  MuldivContext : public ExprContext {
@@ -172,7 +191,8 @@ public:
     antlr4::Token *op = nullptr;
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   ExprContext* expr();
@@ -195,7 +215,8 @@ public:
     NumberContext(AtomContext *ctx);
 
     antlr4::tree::TerminalNode *NUMBER();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  IdentifierContext : public AtomContext {
@@ -203,7 +224,8 @@ public:
     IdentifierContext(AtomContext *ctx);
 
     antlr4::tree::TerminalNode *IDENTIFIER();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   AtomContext* atom();
@@ -215,7 +237,8 @@ public:
     antlr4::tree::TerminalNode *TIME();
     Shift_exprContext *shift_expr();
 
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -240,7 +263,8 @@ public:
 
     antlr4::Token *op = nullptr;
     AtomContext *atom();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  SignedExpressionContext : public Shift_exprContext {
@@ -249,7 +273,8 @@ public:
 
     antlr4::Token *op = nullptr;
     ExprContext *expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  ShiftMuldivContext : public Shift_exprContext {
@@ -259,7 +284,8 @@ public:
     antlr4::Token *op = nullptr;
     Shift_exprContext *shift_expr();
     Right_exprContext *right_expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  ShiftAddsubContext : public Shift_exprContext {
@@ -269,7 +295,8 @@ public:
     antlr4::Token *op = nullptr;
     Shift_exprContext *shift_expr();
     Right_exprContext *right_expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   Shift_exprContext* shift_expr();
@@ -292,7 +319,8 @@ public:
     RightExpressionContext(Right_exprContext *ctx);
 
     ExprContext *expr();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  RightMuldivContext : public Right_exprContext {
@@ -302,7 +330,8 @@ public:
     antlr4::Token *op = nullptr;
     std::vector<Right_exprContext *> right_expr();
     Right_exprContext* right_expr(size_t i);
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  RightAtomContext : public Right_exprContext {
@@ -310,33 +339,24 @@ public:
     RightAtomContext(Right_exprContext *ctx);
 
     AtomContext *atom();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   Right_exprContext* right_expr();
   Right_exprContext* right_expr(int precedence);
 
-  virtual bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
+  bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
+
   bool exprSempred(ExprContext *_localctx, size_t predicateIndex);
   bool shift_exprSempred(Shift_exprContext *_localctx, size_t predicateIndex);
   bool right_exprSempred(Right_exprContext *_localctx, size_t predicateIndex);
 
+  // By default the static state used to implement the parser is lazily initialized during the first
+  // call to the constructor. You can call this function if you wish to initialize the static state
+  // ahead of time.
+  static void initialize();
+
 private:
-  static std::vector<antlr4::dfa::DFA> _decisionToDFA;
-  static antlr4::atn::PredictionContextCache _sharedContextCache;
-  static std::vector<std::string> _ruleNames;
-  static std::vector<std::string> _tokenNames;
-
-  static std::vector<std::string> _literalNames;
-  static std::vector<std::string> _symbolicNames;
-  static antlr4::dfa::Vocabulary _vocabulary;
-  static antlr4::atn::ATN _atn;
-  static std::vector<uint16_t> _serializedATN;
-
-
-  struct Initializer {
-    Initializer();
-  };
-  static Initializer _init;
 };
 
