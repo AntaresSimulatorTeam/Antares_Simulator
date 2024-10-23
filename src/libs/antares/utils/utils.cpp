@@ -74,7 +74,6 @@ void BeautifyName(YString& out, AnyString oldname)
     out.trim(" \t\r\n");
 }
 
-template<>
 void TransformNameIntoID(const AnyString& name, std::string& out)
 {
     Yuni::String yuniOut;

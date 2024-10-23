@@ -63,9 +63,6 @@ void TransformNameIntoID(const AnyString& name, StringT& out)
     }
 }
 
-template<>
-void TransformNameIntoID(const AnyString& name, std::string& out);
-
 } // namespace Antares
 
 #endif // __ANTARES_LIBS_UTILS_HXX__
