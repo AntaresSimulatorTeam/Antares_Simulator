@@ -5,19 +5,17 @@ import pathlib
 
 from behave import *
 
-from assertions import *
-from simulator_utils import *
+from common_steps.assertions import *
+from common_steps.simulator_utils import *
 
 
 @given('the study path is "{string}"')
 def study_path_is(context, string):
-    context.study_path = os.path.join("..", "resources", "Antares_Simulator_Tests_NR", string.replace("/", os.sep))
+    context.study_path = os.path.join(context.config.userdata["resources-path"], string.replace("/", os.sep))
 
 
 @when('I run antares simulator')
 def run_antares(context):
-    context.use_ortools = True
-    context.ortools_solver = "sirius"
     context.named_mps_problems = False
     context.parallel = False
     run_simulation(context)

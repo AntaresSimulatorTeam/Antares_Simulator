@@ -1,19 +1,9 @@
 # Methods to run Antares simulator
 
 import subprocess
-import yaml
 from pathlib import Path
-from study_input_handler import study_input_handler
-from study_output_handler import study_output_handler
-
-
-def get_solver_path():
-    with open("conf.yaml") as file:
-        content = yaml.full_load(file)
-    return content.get("antares-solver")
-
-
-SOLVER_PATH = get_solver_path()  # we only need to run this once
+from common_steps.study_input_handler import study_input_handler
+from common_steps.study_output_handler import study_output_handler
 
 
 def run_simulation(context):
@@ -37,10 +27,14 @@ def init_simu(context):
 
 
 def build_antares_solver_command(context):
-    command = [SOLVER_PATH, "-i", str(context.study_path)]
-    if context.use_ortools:
+    command = [context.config.userdata["antares-solver"], "-i", str(context.study_path)]
+    if "use-ortools" in context.config.userdata and context.config.userdata["use-ortools"].lower() == 'true':
         command.append('--use-ortools')
-        command.append('--ortools-solver=' + context.ortools_solver)
+        if "ortools-solver" in context.config.userdata:
+            solver = context.config.userdata["ortools-solver"]
+        else:
+            solver = "sirius"
+        command.append('--ortools-solver=' + solver)
     if context.named_mps_problems:
         command.append('--named-mps-problems')
     if context.parallel:
