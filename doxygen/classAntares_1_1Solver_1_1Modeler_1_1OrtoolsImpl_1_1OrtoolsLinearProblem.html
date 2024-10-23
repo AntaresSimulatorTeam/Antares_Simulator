@@ -133,8 +133,9 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Modeler_1_1O
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
@@ -144,6 +145,7 @@ Inheritance diagram for Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProb
   <img src="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.png" usemap="#Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem_map" alt=""/>
   <map id="Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem_map" name="Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem_map">
 <area href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html" alt="Antares::Solver::Modeler::Api::ILinearProblem" shape="rect" coords="0,0,350,24"/>
+<area href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html" alt="Antares::Optimization::LegacyOrtoolsLinearProblem" shape="rect" coords="0,112,350,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -158,6 +160,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aebab6ba50907e2356e2f98422dbae92d" id="r_aebab6ba50907e2356e2f98422dbae92d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html">OrtoolsMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#aebab6ba50907e2356e2f98422dbae92d">addIntVariable</a> (double lb, double ub, const std::string &amp;name) override</td></tr>
 <tr class="memdesc:aebab6ba50907e2356e2f98422dbae92d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a integer variable.  <br /></td></tr>
 <tr class="separator:aebab6ba50907e2356e2f98422dbae92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f407f487cb3c357d7591fcaa381c4b8" id="r_a6f407f487cb3c357d7591fcaa381c4b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html">OrtoolsMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a6f407f487cb3c357d7591fcaa381c4b8">addVariable</a> (double lb, double ub, bool integer, const std::string &amp;name) override</td></tr>
+<tr class="memdesc:a6f407f487cb3c357d7591fcaa381c4b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable.  <br /></td></tr>
+<tr class="separator:a6f407f487cb3c357d7591fcaa381c4b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73d448e1b8684b1d6d3c29c456d0431b" id="r_a73d448e1b8684b1d6d3c29c456d0431b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html">OrtoolsMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a73d448e1b8684b1d6d3c29c456d0431b">getVariable</a> (const std::string &amp;name) const override</td></tr>
 <tr class="separator:a73d448e1b8684b1d6d3c29c456d0431b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bf8a52ccef2693d592f3873204e44a4" id="r_a2bf8a52ccef2693d592f3873204e44a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a2bf8a52ccef2693d592f3873204e44a4">variableCount</a> () const override</td></tr>
@@ -187,6 +192,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5436e6247e131f7c168f201f2355c051" id="r_a5436e6247e131f7c168f201f2355c051"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a5436e6247e131f7c168f201f2355c051">solve</a> (bool verboseSolver) override</td></tr>
 <tr class="memdesc:a5436e6247e131f7c168f201f2355c051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a IMipSolution.  <br /></td></tr>
 <tr class="separator:a5436e6247e131f7c168f201f2355c051"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdd0c58e174885016a8c70d0cb57df7b" id="r_afdd0c58e174885016a8c70d0cb57df7b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#afdd0c58e174885016a8c70d0cb57df7b">infinity</a> () const override</td></tr>
+<tr class="separator:afdd0c58e174885016a8c70d0cb57df7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a2274e60ba56c287717910ee123714ef2" id="r_a2274e60ba56c287717910ee123714ef2"><td class="memItemLeft" align="right" valign="top"><a id="a2274e60ba56c287717910ee123714ef2" name="a2274e60ba56c287717910ee123714ef2"></a>
+operations_research::MPSolver *&#160;</td><td class="memItemRight" valign="bottom"><b>MpSolver</b> () const</td></tr>
+<tr class="separator:a2274e60ba56c287717910ee123714ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1d95005e2fe98b7c8eae1b93b147cfd6" name="a1d95005e2fe98b7c8eae1b93b147cfd6"></a>
@@ -327,6 +340,58 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a6f407f487cb3c357d7591fcaa381c4b8" name="a6f407f487cb3c357d7591fcaa381c4b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f407f487cb3c357d7591fcaa381c4b8">&#9670;&#160;</a></span>addVariable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html">OrtoolsMipVariable</a> * Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem::addVariable </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>lb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>ub</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>integer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a continuous or integer variable. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#ab2328e768e699d9f45d4c5eadfb1b936">Antares::Solver::Modeler::Api::ILinearProblem</a>.</p>
+
+</div>
+</div>
 <a id="a753bfaf03b66353ff24ab76011dca61e" name="a753bfaf03b66353ff24ab76011dca61e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a753bfaf03b66353ff24ab76011dca61e">&#9670;&#160;</a></span>constraintCount()</h2>
 
@@ -424,6 +489,33 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html">Antares::Solver::Modeler::Api::ILinearProblem</a>.</p>
+
+</div>
+</div>
+<a id="afdd0c58e174885016a8c70d0cb57df7b" name="afdd0c58e174885016a8c70d0cb57df7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdd0c58e174885016a8c70d0cb57df7b">&#9670;&#160;</a></span>infinity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem::infinity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>

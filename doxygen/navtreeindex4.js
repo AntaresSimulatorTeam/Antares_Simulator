@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#a23e34005e8424c41aaec32daae234674":[9,0,0,2,0,0,39,4],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#a29f931d122f23a2b1a5f00a68dd48d5c":[9,0,0,2,0,0,39,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#a310b1d55214b1b74fa621061aa4121a3":[9,0,0,2,0,0,39,1],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#a68b7b07a807befb84e3bc0d4aae12c6a":[9,0,0,2,0,0,39,2],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LayersVisibility.html#a7cddfc54efc7d1aa8cd542d16992eb1d":[9,0,0,2,0,0,39,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesLoad.html#a2ed44875bb7458ae1c2006e6ff8b0b5b":[9,0,0,2,0,0,83,2],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesLoad.html#a90821638644ca46c5a850e356d705536":[9,0,0,2,0,0,83,0],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesRenewableCluster.html":[9,0,0,2,0,0,84],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesSolar.html":[9,0,0,2,0,0,85],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesSolar.html#a33fb939d5ed258f91080ae31c60ab487":[9,0,0,2,0,0,85,1],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesSolar.html#a4118e0f660d54c82a3789b8f301fe619":[9,0,0,2,0,0,85,0]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesSolar.html":[9,0,0,2,0,0,85]
 };

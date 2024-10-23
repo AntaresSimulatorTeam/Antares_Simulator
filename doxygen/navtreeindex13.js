@@ -1,16 +1,20 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html":[9,0,0,13,1,0,9],
+"classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneConstraintFiller.html":[9,0,0,13,1,0,10],
+"classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneVarFiller.html":[9,0,0,13,1,0,11],
 "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1TwoVarsTwoConstraintsFiller.html":[9,0,0,13,1,0,12],
 "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1VarFillerContext.html":[9,0,0,13,1,0,13],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1ElemAlreadyExists.html":[9,0,0,13,1,1,0],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html":[9,0,0,13,1,1,1],
-"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a0efb6ad0f4bd59f20b6cf61e705cdfd4":[9,0,0,13,1,1,1,5],
+"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a0efb6ad0f4bd59f20b6cf61e705cdfd4":[9,0,0,13,1,1,1,6],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a1d95005e2fe98b7c8eae1b93b147cfd6":[9,0,0,13,1,1,1,0],
-"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a4aac714ec87c1c4e9df7fb14aed0cfa2":[9,0,0,13,1,1,1,3],
-"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a5436e6247e131f7c168f201f2355c051":[9,0,0,13,1,1,1,6],
+"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a4aac714ec87c1c4e9df7fb14aed0cfa2":[9,0,0,13,1,1,1,4],
+"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a5436e6247e131f7c168f201f2355c051":[9,0,0,13,1,1,1,7],
+"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a6f407f487cb3c357d7591fcaa381c4b8":[9,0,0,13,1,1,1,3],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#aebab6ba50907e2356e2f98422dbae92d":[9,0,0,13,1,1,1,1],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#af2a637634efd1ea468aeb347546203d1":[9,0,0,13,1,1,1,2],
-"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#af913b3c365cddd21de60a2a25e5e4cad":[9,0,0,13,1,1,1,4],
+"classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#af913b3c365cddd21de60a2a25e5e4cad":[9,0,0,13,1,1,1,5],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipConstraint.html":[9,0,0,13,1,1,2],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html":[9,0,0,13,1,1,3],
 "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipVariable.html":[9,0,0,13,1,1,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#ad86b1ec08e9d2776b9672ab341964936":[9,0,0,13,8,4,7,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin.html#af36bf39360b65d3a1309d63903678acb":[9,0,0,13,8,4,7,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html":[9,0,0,13,8,4,6],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#a680fd0cefe3adafeecb4d18cf4a4ffc9":[9,0,0,13,8,4,6,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#a8a08424765e6011327719d1b318f04de":[9,0,0,13,8,4,6,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#a9123ec1820e3ac86ba002e61bf98dd30":[9,0,0,13,8,4,6,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#aa2bf989e36234d86e4ccac55d984c2df":[9,0,0,13,8,4,6,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html":[9,0,0,13,8,4,8]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html#a680fd0cefe3adafeecb4d18cf4a4ffc9":[9,0,0,13,8,4,6,4]
 };

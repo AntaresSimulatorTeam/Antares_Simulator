@@ -146,6 +146,7 @@ Inheritance diagram for Antares::Solver::Modeler::Api::ILinearProblem:</div>
   <img src="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.png" usemap="#Antares::Solver::Modeler::Api::ILinearProblem_map" alt=""/>
   <map id="Antares::Solver::Modeler::Api::ILinearProblem_map" name="Antares::Solver::Modeler::Api::ILinearProblem_map">
 <area href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html" alt="Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem" shape="rect" coords="0,56,350,80"/>
+<area href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html" alt="Antares::Optimization::LegacyOrtoolsLinearProblem" shape="rect" coords="0,112,350,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -157,6 +158,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a455d846c769e1d9287d771ace3db0514" id="r_a455d846c769e1d9287d771ace3db0514"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#a455d846c769e1d9287d771ace3db0514">addIntVariable</a> (double lb, double ub, const std::string &amp;name)=0</td></tr>
 <tr class="memdesc:a455d846c769e1d9287d771ace3db0514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a integer variable.  <br /></td></tr>
 <tr class="separator:a455d846c769e1d9287d771ace3db0514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2328e768e699d9f45d4c5eadfb1b936" id="r_ab2328e768e699d9f45d4c5eadfb1b936"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#ab2328e768e699d9f45d4c5eadfb1b936">addVariable</a> (double lb, double ub, bool integer, const std::string &amp;name)=0</td></tr>
+<tr class="memdesc:ab2328e768e699d9f45d4c5eadfb1b936"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a continuous or integer variable.  <br /></td></tr>
+<tr class="separator:ab2328e768e699d9f45d4c5eadfb1b936"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82b62b8399c2d6c5ac495298ef929e9f" id="r_a82b62b8399c2d6c5ac495298ef929e9f"><td class="memItemLeft" align="right" valign="top"><a id="a82b62b8399c2d6c5ac495298ef929e9f" name="a82b62b8399c2d6c5ac495298ef929e9f"></a>
 virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">IMipVariable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (const std::string &amp;name) const =0</td></tr>
 <tr class="separator:a82b62b8399c2d6c5ac495298ef929e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,6 +197,9 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMaximizatio
 <tr class="memitem:ac44e14b79cdbc584efc0d3f665cb7f95" id="r_ac44e14b79cdbc584efc0d3f665cb7f95"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html">IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html#ac44e14b79cdbc584efc0d3f665cb7f95">solve</a> (bool verboseSolver)=0</td></tr>
 <tr class="memdesc:ac44e14b79cdbc584efc0d3f665cb7f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html">IMipSolution</a>.  <br /></td></tr>
 <tr class="separator:ac44e14b79cdbc584efc0d3f665cb7f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6924aa728047fba455132e1f680511fe" id="r_a6924aa728047fba455132e1f680511fe"><td class="memItemLeft" align="right" valign="top"><a id="a6924aa728047fba455132e1f680511fe" name="a6924aa728047fba455132e1f680511fe"></a>
+virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const =0</td></tr>
+<tr class="separator:a6924aa728047fba455132e1f680511fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Linear Problem This class is aimed at creating and manipulating variables/constraints Also used to to control the objective, maximization or minimization, and to solve the problem </p>
@@ -332,6 +339,58 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMaximizatio
 <p>Create a continuous variable. </p>
 
 <p>Implemented in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#af2a637634efd1ea468aeb347546203d1">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem</a>.</p>
+
+</div>
+</div>
+<a id="ab2328e768e699d9f45d4c5eadfb1b936" name="ab2328e768e699d9f45d4c5eadfb1b936"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2328e768e699d9f45d4c5eadfb1b936">&#9670;&#160;</a></span>addVariable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">IMipVariable</a> * Antares::Solver::Modeler::Api::ILinearProblem::addVariable </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>lb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>ub</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>integer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a continuous or integer variable. </p>
+
+<p>Implemented in <a class="el" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html#a6f407f487cb3c357d7591fcaa381c4b8">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem</a>.</p>
 
 </div>
 </div>

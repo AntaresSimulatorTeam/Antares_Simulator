@@ -671,7 +671,9 @@ var hierarchy =
       [ "JobFileReader", "classJobFileReader.html", null ]
     ] ],
     [ "Antares::Solver::Modeler::Api::ILinearProblem", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1ILinearProblem.html", [
-      [ "Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html", null ]
+      [ "Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html", [
+        [ "Antares::Optimization::LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", null ]
+      ] ]
     ] ],
     [ "Antares::Solver::Modeler::Api::IMipSolution", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html", [
       [ "Antares::Solver::Modeler::OrtoolsImpl::OrtoolsMipSolution", "classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html", null ]
@@ -822,6 +824,7 @@ var hierarchy =
     [ "Antares::Solver::Modeler::Api::LinearProblemBuilder", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemBuilder.html", null ],
     [ "Antares::Solver::Modeler::Api::LinearProblemData", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemData.html", null ],
     [ "Antares::Solver::Modeler::Api::LinearProblemFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1LinearProblemFiller.html", [
+      [ "Antares::Optimization::LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ],
       [ "Antares::Solver::Modeler::Api::OneConstraintFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneConstraintFiller.html", null ],
       [ "Antares::Solver::Modeler::Api::OneVarFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1OneVarFiller.html", null ],
       [ "Antares::Solver::Modeler::Api::TwoVarsTwoConstraintsFiller", "classAntares_1_1Solver_1_1Modeler_1_1Api_1_1TwoVarsTwoConstraintsFiller.html", null ],
@@ -975,7 +978,6 @@ var hierarchy =
     [ "Antares::Component::Datagrid::Renderer::NoCheck", "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html", null ],
     [ "Antares::Graph::Node< NodeT >", "classAntares_1_1Graph_1_1Node.html", null ],
     [ "Antares::Solver::Visitors::NodeVisitsProvider< R, Args >", "structAntares_1_1Solver_1_1Visitors_1_1NodeVisitsProvider.html", null ],
-    [ "Antares::Optimization::Nomenclature", "classAntares_1_1Optimization_1_1Nomenclature.html", null ],
     [ "Yuni::NonCopyable", null, [
       [ "UserData", "classUserData.html", null ],
       [ "Antares::Data::Area", "classAntares_1_1Data_1_1Area.html", null ],
@@ -1156,7 +1158,6 @@ var hierarchy =
       [ "LinearProblemMatrixStartUpCosts", "classLinearProblemMatrixStartUpCosts.html", null ],
       [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", null ]
     ] ],
-    [ "Antares::Optimization::ProblemSimplexeNommeConverter", "classAntares_1_1Optimization_1_1ProblemSimplexeNommeConverter.html", null ],
     [ "PRODUCTION_THERMIQUE", "structPRODUCTION__THERMIQUE.html", null ],
     [ "PRODUCTION_THERMIQUE_OPTIMALE", "structPRODUCTION__THERMIQUE__OPTIMALE.html", null ],
     [ "Antares::Solver::Progression", "classAntares_1_1Solver_1_1Progression.html", null ],

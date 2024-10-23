@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/modeler/ortoolsImpl/include/antares/solver/modeler/ortoolsImpl/mipSolution.h Source File</title>
+<title>Antares Simulator: src/solver/optimisation/include/antares/solver/optimisation/LegacyOrtoolsLinearProblem.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -110,7 +110,7 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('ortoolsImpl_2include_2antares_2solver_2modeler_2ortoolsImpl_2mipSolution_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('LegacyOrtoolsLinearProblem_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('ortoolsImpl_2include_2antares_2solver_
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">mipSolution.h</div></div>
+  <div class="headertitle"><div class="title">LegacyOrtoolsLinearProblem.h</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
@@ -162,48 +162,38 @@ $(document).ready(function(){initNavTree('ortoolsImpl_2include_2antares_2solver_
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;ortools/linear_solver/linear_solver.h&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;antares/solver/modeler/ortoolsImpl/linearProblem.h&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;antares/solver/modeler/api/mipSolution.h&gt;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span>Antares::Solver::Modeler::OrtoolsImpl</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html">   34</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a> final: <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html">Api::IMipSolution</a></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a>(operations_research::MPSolver::ResultStatus&amp; responseStatus,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                       operations_research::MPSolver* solver);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html">~OrtoolsMipSolution</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    Api::MipStatus getStatus() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">double</span> getObjectiveValue() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">double</span> getOptimalValue(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">Api::IMipVariable</a>* var) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::vector&lt;double&gt; getOptimalValues(</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keyword">const</span> std::vector&lt;Api::IMipVariable*&gt;&amp; vars) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    operations_research::MPSolver::ResultStatus status_;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    operations_research::MPSolver* mpSolver_;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::map&lt;std::string, double&gt; solution_;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">   29</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">LegacyOrtoolsLinearProblem</a> final</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    : <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem</a></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_class" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">LegacyOrtoolsLinearProblem</a>(<span class="keywordtype">bool</span> isMip, <span class="keyword">const</span> std::string&amp; solverName):</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        OrtoolsLinearProblem(isMip, solverName)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="comment">// nothing else to do</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    operations_research::MPSolver* getMpSolver()</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span> MpSolver();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
 </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>} <span class="comment">// namespace Antares::Solver::Modeler::OrtoolsImpl</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html">Antares::Solver::Modeler::Api::IMipSolution</a></div><div class="ttdef"><b>Definition</b> mipSolution.h:46</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">Antares::Solver::Modeler::Api::IMipVariable</a></div><div class="ttdef"><b>Definition</b> mipVariable.h:31</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsMipSolution</a></div><div class="ttdef"><b>Definition</b> mipSolution.h:35</div></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">Antares::Optimization::LegacyOrtoolsLinearProblem</a></div><div class="ttdef"><b>Definition</b> LegacyOrtoolsLinearProblem.h:31</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsLinearProblem.html">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem</a></div><div class="ttdef"><b>Definition</b> linearProblem.h:40</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_b8241ba192950c55c6815e86d6b06d2c.html">modeler</a></li><li class="navelem"><a class="el" href="dir_c865effb214fcc8eb92d4267f91ac8b4.html">ortoolsImpl</a></li><li class="navelem"><a class="el" href="dir_f9109d916144f8d4bcdd36e0364a93a3.html">include</a></li><li class="navelem"><a class="el" href="dir_4e14623aef83ef0f6b1cdb1255171e2a.html">antares</a></li><li class="navelem"><a class="el" href="dir_2f7dc2eb24d4bc6774223ab6aa46e40c.html">solver</a></li><li class="navelem"><a class="el" href="dir_2eb0f43ce6b8b9c8d59c0dd62f36aeb5.html">modeler</a></li><li class="navelem"><a class="el" href="dir_5c1b0b5af876d2ed18dc3ab5e0e16f84.html">ortoolsImpl</a></li><li class="navelem"><b>mipSolution.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_58214dbee968e8ac661492141d050741.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_7f9265255be167d9fc7d889839beddde.html">include</a></li><li class="navelem"><a class="el" href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html">antares</a></li><li class="navelem"><a class="el" href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html">solver</a></li><li class="navelem"><a class="el" href="dir_703a08c8b9d2f88ac5fb64946c0e4ddb.html">optimisation</a></li><li class="navelem"><b>LegacyOrtoolsLinearProblem.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

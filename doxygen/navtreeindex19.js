@@ -1,5 +1,9 @@
 var NAVTREEINDEX19 =
 {
+"classMaxPumpingGroup.html":[9,0,145],
+"classMinDownTime.html":[9,0,146],
+"classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f":[9,0,146,0],
+"classMinDownTimeGroup.html":[9,0,148],
 "classMinDownTimeGroup.html#acf4b43dec12c15af25d3b74cd7ec99cd":[9,0,148,0],
 "classMinHydroPower.html":[9,0,149],
 "classMinHydroPower.html#aa9c54a207ba58ba047a01db66f9de271":[9,0,149,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX19 =
 "day_8h_source.html":[10,0,0,7,2,1,1,1,0,0,2],
 "dayyear_8h_source.html":[10,0,0,7,2,1,1,1,0,0,3],
 "dbgrid_8h_source.html":[10,0,0,7,2,1,1,1,3],
-"decal-area-position_8h_source.html":[10,0,0,7,0,1,0,1,0],
-"decal-area-position_8hxx_source.html":[10,0,0,7,0,1,0,1,1],
-"default_8h_source.html":[10,0,0,7,2,1,1,1,4],
-"dir_00391469cb8886a3ac1b67cd679c42ba.html":[10,0,0,7,0,0,0],
-"dir_00744117a42d95692e735523462d1048.html":[10,0,0,3,0,15]
+"decal-area-position_8h_source.html":[10,0,0,7,0,1,0,1,0]
 };
