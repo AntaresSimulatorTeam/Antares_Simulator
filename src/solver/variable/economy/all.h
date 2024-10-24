@@ -68,6 +68,7 @@
 #include "spilledEnergy.h"
 
 #include "lold.h"
+#include "loldCsr.h"
 #include "lolp.h"
 #include "max-mrg.h"
 
@@ -167,6 +168,7 @@ typedef                           // Prices
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
                                 <LOLD                 // LOLD
+                                <LOLD_CSR
                                  <LOLP                // LOLP
                                   <AvailableDispatchGen
                                   <DispatchableGenMargin
@@ -183,7 +185,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -247,7 +249,6 @@ typedef // Prices
                                                     LMRViolations,
                                                     Common::SpatialAggregate<
                                                       SpilledEnergy,
-                                                        // LOLD
                                                         Common::SpatialAggregate<
                                                           LOLD,
                                                           Common::SpatialAggregate<
