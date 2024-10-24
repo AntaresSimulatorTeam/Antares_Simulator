@@ -113,7 +113,6 @@ set(SRC_VARIABLE_ECONOMY
 		economy/unsupliedEnergyCsr.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h
-		economy/dtgMarginAfterCsr.h
 		economy/spilledEnergy.h
 		economy/dispatchableGeneration.h
 		economy/renewableGeneration.h
@@ -127,9 +126,10 @@ set(SRC_VARIABLE_ECONOMY
 		economy/lold.h
 		economy/loldCsr.h
 		economy/lolp.h
+		economy/lolpCsr.h
 		economy/avail-dispatchable-generation.h
 		economy/dispatchable-generation-margin.h
-
+		economy/dtgMarginAfterCsr.h
 
 		# Links
 		economy/links/flowLinear.h

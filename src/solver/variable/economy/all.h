@@ -70,6 +70,7 @@
 #include "lold.h"
 #include "loldCsr.h"
 #include "lolp.h"
+#include "lolpCsr.h"
 #include "max-mrg.h"
 
 #include "avail-dispatchable-generation.h"
@@ -170,6 +171,7 @@ typedef                           // Prices
                                 <LOLD                 // LOLD
                                 <LOLD_CSR
                                  <LOLP                // LOLP
+                                 <LOLP_CSR
                                   <AvailableDispatchGen
                                   <DispatchableGenMargin
                                    <DtgMarginCsr // DTG MRG CSR
@@ -185,7 +187,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
