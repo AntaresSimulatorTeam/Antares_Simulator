@@ -146,19 +146,20 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
             const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-            const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
-                                     ->wasCSRTriggeredAtAreaHour(Area, hour);
+            const bool triggered
+              = problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour);
             hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(triggered, dtgMrg, ens);
-            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = recomputeENS_MRG(
-              triggered,
-              dtgMrg,
-              ens);
+            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour]
+              = recomputeENS_MRG(triggered, dtgMrg, ens);
 
-            const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
-            hourlyResults.CoutsMarginauxHoraires[hour] = recomputeMRGPrice(
-              hourlyResults.ValeursHorairesDtgMrgCsr[hour],
-              hourlyResults.CoutsMarginauxHoraires[hour],
-              unsuppliedEnergyCost);
+            if (triggered)
+            {
+                const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
+                hourlyResults.CoutsMarginauxHoraires[hour]
+                  = recomputeMRGPrice(hourlyResults.ValeursHorairesDtgMrgCsr[hour],
+                                      hourlyResults.CoutsMarginauxHoraires[hour],
+                                      unsuppliedEnergyCost);
+            }
         }
     }
 }
