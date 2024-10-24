@@ -33,6 +33,7 @@
 #include "../bindConstraints.h"
 
 #include "price.h"
+#include "priceCsr.h"
 #include "balance.h"
 #include "../commons/load.h"
 #include "../commons/wind.h"
@@ -134,6 +135,7 @@ typedef                           // Prices
   <OverallCostCsr                 // Overall Cost after CSR (adequacy patch Curtailment ShaRing)
   <OperatingCost                  // Operating Cost
    <Price                         // Marginal price
+   <PriceCsr
                                   // Thermal pollutants
     <ThermalAirPollutantEmissions // Overall pollutant emissions(from all thermal dispatchable
                                   // clusters) Production by thermal cluster
