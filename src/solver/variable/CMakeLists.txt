@@ -92,6 +92,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/max-mrg.h
 		economy/max-mrg.cpp
 		economy/price.h
+		economy/priceCsr.h
 		economy/balance.h
 		economy/operatingCost.h
 		economy/overallCost.h
@@ -124,6 +125,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/nbOfDispatchedUnits.h
 		economy/profitByPlant.h
 		economy/lold.h
+		economy/loldCsr.h
 		economy/lolp.h
 		economy/avail-dispatchable-generation.h
 		economy/dispatchable-generation-margin.h

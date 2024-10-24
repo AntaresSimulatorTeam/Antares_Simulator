@@ -33,6 +33,7 @@
 #include "../bindConstraints.h"
 
 #include "price.h"
+#include "priceCsr.h"
 #include "balance.h"
 #include "../commons/load.h"
 #include "../commons/wind.h"
@@ -67,6 +68,7 @@
 #include "spilledEnergy.h"
 
 #include "lold.h"
+#include "loldCsr.h"
 #include "lolp.h"
 #include "max-mrg.h"
 
@@ -129,6 +131,7 @@ typedef                           // Prices
   OverallCost                     // Overall Cost (Op. Cost + Unsupplied Eng.)
   <OperatingCost                  // Operating Cost
    <Price                         // Marginal price
+   <PriceCsr
                                   // Thermal pollutants
     <ThermalAirPollutantEmissions // Overall pollutant emissions(from all thermal dispatchable
                                   // clusters) Production by thermal cluster
@@ -154,21 +157,25 @@ typedef                           // Prices
                      <Overflows        // Hydraulic overflows
                       <WaterValue      // Water values
                        <HydroCost      // Hydro costs
-                        <ShortTermStorageByGroup<STstorageInjectionByCluster<
-                          STstorageWithdrawalByCluster<STstorageLevelsByCluster<
-                          STstorageCashFlowByCluster<
-                            UnsupliedEnergy           // Unsuplied Energy
+                        <ShortTermStorageByGroup
+                        <STstorageInjectionByCluster
+                        <STstorageWithdrawalByCluster
+                        <STstorageLevelsByCluster
+                          <STstorageCashFlowByCluster
+                          <UnsupliedEnergy    // Unsuplied Energy
+                          <UnsupliedEnergyCSR // Unsupplied energy CSR
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
                                 <LOLD                 // LOLD
+                                <LOLD_CSR
                                  <LOLP                // LOLP
-                                  <AvailableDispatchGen<DispatchableGenMargin<DtgMarginCsr< // DTG
-                                                                                            // MRG
-                                                                                            // CSR
-                                    UnsupliedEnergyCSR< // Unsupplied energy after CSR
-                                      Marge<NonProportionalCost<
-                                        NonProportionalCostByDispatchablePlant // Startup cost +
+                                  <AvailableDispatchGen
+                                  <DispatchableGenMargin
+                                   <DtgMarginCsr // DTG MRG CSR
+                                   <Marge
+                                   <NonProportionalCost
+                                      <NonProportionalCostByDispatchablePlant // Startup cost +
                                                                                // Fixed cost per
                                                                                // thermal plant
                                                                                // detail
@@ -178,7 +185,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -242,7 +249,6 @@ typedef // Prices
                                                     LMRViolations,
                                                     Common::SpatialAggregate<
                                                       SpilledEnergy,
-                                                        // LOLD
                                                         Common::SpatialAggregate<
                                                           LOLD,
                                                           Common::SpatialAggregate<
