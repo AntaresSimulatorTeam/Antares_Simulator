@@ -37,6 +37,9 @@
     },
     {
       "name": "yaml-cpp"
+    },
+    {
+      "name": "antlr4"
     }
   ]
 }
