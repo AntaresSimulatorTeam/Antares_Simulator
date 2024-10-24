@@ -125,6 +125,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/nbOfDispatchedUnits.h
 		economy/profitByPlant.h
 		economy/lold.h
+		economy/loldCsr.h
 		economy/lolp.h
 		economy/avail-dispatchable-generation.h
 		economy/dispatchable-generation-margin.h
