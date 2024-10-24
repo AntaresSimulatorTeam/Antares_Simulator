@@ -22,5 +22,5 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/modelConverter/convertorVisitor.h"
+/* #include "antares/solver/modelConverter/convertorVisitor.h" */
 

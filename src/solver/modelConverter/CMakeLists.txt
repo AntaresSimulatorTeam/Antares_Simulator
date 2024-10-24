@@ -21,6 +21,7 @@ target_link_libraries(modelConverter
         Antares::antares-solver-libObjectModel
         Antares::modelParser
         Antares::antlr-interface
+        Antares::solver-expressions
 )
 
 install(DIRECTORY include/antares
