@@ -33,6 +33,7 @@
 #include "../bindConstraints.h"
 
 #include "price.h"
+#include "priceCsr.h"
 #include "balance.h"
 #include "../commons/load.h"
 #include "../commons/wind.h"
@@ -129,6 +130,7 @@ typedef                           // Prices
   OverallCost                     // Overall Cost (Op. Cost + Unsupplied Eng.)
   <OperatingCost                  // Operating Cost
    <Price                         // Marginal price
+   <PriceCsr
                                   // Thermal pollutants
     <ThermalAirPollutantEmissions // Overall pollutant emissions(from all thermal dispatchable
                                   // clusters) Production by thermal cluster
@@ -178,7 +180,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
