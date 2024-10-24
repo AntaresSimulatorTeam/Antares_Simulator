@@ -23,7 +23,6 @@
 #include "../simulation/common-eco-adq.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
-#include "adequacy_patch_csr/post_processing.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation
@@ -140,25 +139,33 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] != physicalAreaInsideAdqPatch)
             continue;
 
+        auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
+        const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
+        const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
+
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
-            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
-            const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
+            const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
+                    ->wasCSRTriggeredAtAreaHour(Area, hour);
+
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-            const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
-                                     ->wasCSRTriggeredAtAreaHour(Area, hour);
-            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(triggered, dtgMrg, ens);
-            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = recomputeENS_MRG(
-              triggered,
-              dtgMrg,
-              ens);
 
-            const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
-            hourlyResults.CoutsMarginauxHoraires[hour] = recomputeMRGPrice(
-              hourlyResults.ValeursHorairesDtgMrgCsr[hour],
-              hourlyResults.CoutsMarginauxHoraires[hour],
-              unsuppliedEnergyCost);
+            // Default value (when the hour is not triggered by csr)
+            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = dtgMrg;
+            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = ens;
+
+            if (isHourTriggeredByCsr)
+            {
+                hourlyResults.ValeursHorairesDtgMrgCsr[hour] = std::max(0.0, dtgMrg - ens);
+                hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = std::max(0.0, ens - dtgMrg);
+            }
+
+            // Updating marginal price updated due to CSR's dispatchable generation margin
+            if (hourlyResults.ValeursHorairesDtgMrgCsr[hour] > 0.5)
+            {
+                hourlyResults.CoutsMarginauxHoraires[hour] = -unsuppliedEnergyCost;
+            }
         }
     }
 }
