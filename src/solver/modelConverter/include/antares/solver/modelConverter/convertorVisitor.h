@@ -21,9 +21,10 @@
 
 #pragma once
 
-#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <ExprVisitor.h>
+
 #include <antares/solver/expressions/Registry.hxx>
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/libObjectModel/model.h>
 
 namespace Antares::Solver::ModelConverter
