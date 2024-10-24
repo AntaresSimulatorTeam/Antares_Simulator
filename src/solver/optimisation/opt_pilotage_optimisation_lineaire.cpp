@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "antares/optimization-options/options.h"
+
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"

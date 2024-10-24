@@ -11,7 +11,7 @@
 #include <antares/version.h>
 #include <antares/writer/writer_factory.h>
 
-#include "signal-handling/public.h"
+#include "../signal-handling/public.h"
 
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
@@ -95,8 +95,6 @@ void Application::prepare(int argc, char* argv[])
         pStudy = nullptr;
         return;
     }
-
-    // Perform some checks
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
     pSettings.checkAndSetStudyFolder(options.studyFolder);
@@ -130,13 +128,17 @@ void Application::prepare(int argc, char* argv[])
     // Setting global variables for backward compatibility
     pParameters = &(pStudy->parameters);
 
+    // For solver
+    pParameters->optOptions = options.optOptions;
+
     // Loading the study
     readDataForTheStudy(options);
 
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
-    checkOrtoolsUsage(
-      pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsSolver);
+    checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
+                      pParameters->optOptions.ortoolsUsed,
+                      pParameters->optOptions.ortoolsSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);

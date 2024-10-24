@@ -122,17 +122,17 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 
 void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
 {
-    const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
+    const bool& ortoolsUsed = study_.parameters.optOptions.ortoolsUsed;
     file_content.addItemToSection("study", "ortools used", ortoolsUsed ? "true" : "false");
 }
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
+    const bool& ortoolsUsed = study_.parameters.optOptions.ortoolsUsed;
     std::string ortoolsSolver = "none";
     if (ortoolsUsed)
     {
-        ortoolsSolver = study_.parameters.ortoolsSolver;
+        ortoolsSolver = study_.parameters.optOptions.ortoolsSolver;
     }
     file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
 }

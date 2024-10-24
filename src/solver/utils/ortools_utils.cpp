@@ -1,5 +1,9 @@
 #include "antares/solver/utils/ortools_utils.h"
 
+#include <filesystem>
+
+#include <antares/exception/AssertionError.hpp>
+#include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
@@ -7,13 +11,66 @@
 
 using namespace operations_research;
 
-const char* const XPRESS_PARAMS = "THREADS 1";
+const std::string XPRESS_PARAMS = "THREADS 1";
+const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
+
+using Antares::Solver::Optimization::OptimizationOptions;
 
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
 {
     params.SetIntegerParam(MPSolverParameters::SCALING, 0);
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
+}
+
+static void checkSetSolverSpecificParameters(bool status,
+                                             const std::string& solverName,
+                                             const std::string& specificParameters)
+{
+    if (!status)
+    {
+        throw Antares::Error::InvalidSolverSpecificParameters(solverName, specificParameters);
+    }
+    else
+    {
+        Antares::logs.debug() << "  Successfully set " + solverName + " solver specific parameters";
+    }
+}
+
+static void TuneSolverSpecificOptions(
+  MPSolver* solver,
+  const std::string& solverName,
+  const std::string& solverParameters)
+{
+    if (!solver)
+    {
+        return;
+    }
+
+    bool status;
+    std::string specificParams;
+
+    switch (solver->ProblemType())
+    {
+    // Allow solver to use only one thread
+    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
+    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
+    {
+        specificParams = XPRESS_PARAMS + " " + solverParameters;
+        status = solver->SetSolverSpecificParametersAsString(specificParams);
+        checkSetSolverSpecificParameters(status, solverName, specificParams);
+        break;
+    }
+    case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING:
+    {
+        specificParams = SCIP_PARAMS + ", " + solverParameters;
+        status = solver->SetSolverSpecificParametersAsString(specificParams);
+        checkSetSolverSpecificParameters(status, solverName, specificParams);
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solverType)
@@ -46,7 +103,6 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
 MPSolver* ProblemSimplexeNommeConverter::Convert()
 {
     MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
-    TuneSolverSpecificOptions(solver);
 
     // Create the variables and set objective cost.
     CopyVariables(solver);
@@ -55,32 +111,12 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
-    if (problemeSimplexe_->SolverLogs())
-    {
-        solver->EnableOutput();
-    }
 
     return solver;
 }
 
-void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) const
-{
-    if (!solver)
-        return;
 
-    switch (solver->ProblemType())
-    {
-    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
-    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
-        solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
-        break;
-    // Add solver-specific options here
-    default:
-        break;
-    }
-}
-
-void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver) const
 {
     auto variables = solver->variables();
     auto constraints = solver->constraints();
@@ -101,7 +137,7 @@ void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
 
 void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
                                                    MPSolver* solver,
-                                                   MPObjective* const objective)
+                                                   MPObjective* const objective) const
 {
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
@@ -110,7 +146,7 @@ void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
-void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver) const
 
 {
     MPObjective* const objective = solver->MutableObjective();
@@ -120,7 +156,7 @@ void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
     }
 }
 
-void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* solver)
+void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* solver) const
 {
     double bMin = -MPSolver::infinity(), bMax = MPSolver::infinity();
     if (problemeSimplexe_->Sens[idxRow] == '=')
@@ -139,7 +175,7 @@ void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* 
     solver->MakeRowConstraint(bMin, bMax, constraintNameManager_.GetName(idxRow));
 }
 
-void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver) const
 {
     for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
     {
@@ -301,10 +337,17 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
-                           bool keepBasis)
+                           bool keepBasis,
+                           const OptimizationOptions& options)
 {
     MPSolverParameters params;
-    setGenericParameters(params);
+    setGenericParameters(
+      params);              // Keep generic params for default settings working for all solvers
+    if (options.solverLogs) // May be overriden by log level if set as specific parameters
+    {
+        solver->EnableOutput();
+    }
+    TuneSolverSpecificOptions(solver, options.ortoolsSolver, options.solverParameters);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())

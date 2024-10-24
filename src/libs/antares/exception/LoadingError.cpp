@@ -57,14 +57,29 @@ InvalidSolver::InvalidSolver(const std::string& solver, const std::string& avail
 {
 }
 
-InvalidStudy::InvalidStudy(const Yuni::String& study) :
- LoadingError(std::string("The folder `") + study.c_str() + "` does not seem to be a valid study")
+InvalidStudy::InvalidStudy(const std::string& study) :
+ LoadingError(std::string("The folder `") + study + "` does not seem to be a valid study")
 {
 }
 
 InvalidVersion::InvalidVersion(const char* version, const char* latest) :
  LoadingError(std::string("Invalid version for the study : found `") + version + "`, expected <=`"
               + latest + '`')
+{}
+
+static std::string InvalidSolverSpecificParametersHelper(const std::string& solver,
+                                                         const std::string& specificParameters)
+{
+    std::ostringstream message;
+    message << "Specific parameters '" << specificParameters
+            << "' are not valid or not supported for solver " << solver;
+    return message.str();
+}
+
+InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(
+  const std::string& solver,
+  const std::string& specificParameters):
+    LoadingError(InvalidSolverSpecificParametersHelper(solver, specificParameters))
 {
 }
 

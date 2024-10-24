@@ -2,7 +2,6 @@
 OMESSAGE("Antares Core library")
 
 add_subdirectory(args)
-add_subdirectory(writer)
 add_subdirectory(memory)
 
 add_subdirectory(array)
@@ -19,6 +18,9 @@ add_subdirectory(io)
 add_subdirectory(exception)
 
 add_subdirectory(sys)
+add_subdirectory(writer)
+
+add_subdirectory(optimization-options)
 
 set(SRC
     config.h
