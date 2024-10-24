@@ -156,21 +156,24 @@ typedef                           // Prices
                      <Overflows        // Hydraulic overflows
                       <WaterValue      // Water values
                        <HydroCost      // Hydro costs
-                        <ShortTermStorageByGroup<STstorageInjectionByCluster<
-                          STstorageWithdrawalByCluster<STstorageLevelsByCluster<
-                          STstorageCashFlowByCluster<
-                            UnsupliedEnergy           // Unsuplied Energy
+                        <ShortTermStorageByGroup
+                        <STstorageInjectionByCluster
+                        <STstorageWithdrawalByCluster
+                        <STstorageLevelsByCluster
+                          <STstorageCashFlowByCluster
+                          <UnsupliedEnergy    // Unsuplied Energy
+                          <UnsupliedEnergyCSR // Unsupplied energy CSR
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
                                 <LOLD                 // LOLD
                                  <LOLP                // LOLP
-                                  <AvailableDispatchGen<DispatchableGenMargin<DtgMarginCsr< // DTG
-                                                                                            // MRG
-                                                                                            // CSR
-                                    UnsupliedEnergyCSR< // Unsupplied energy after CSR
-                                      Marge<NonProportionalCost<
-                                        NonProportionalCostByDispatchablePlant // Startup cost +
+                                  <AvailableDispatchGen
+                                  <DispatchableGenMargin
+                                   <DtgMarginCsr // DTG MRG CSR
+                                   <Marge
+                                   <NonProportionalCost
+                                      <NonProportionalCostByDispatchablePlant // Startup cost +
                                                                                // Fixed cost per
                                                                                // thermal plant
                                                                                // detail
