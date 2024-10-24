@@ -161,10 +161,11 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
                 hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = std::max(0.0, ens - dtgMrg);
             }
 
-            // Updating marginal price updated due to CSR's dispatchable generation margin
+            // CSR Marginal costs
+            hourlyResults.MarginalCostsCSR[hour] = hourlyResults.CoutsMarginauxHoraires[hour];
             if (hourlyResults.ValeursHorairesDtgMrgCsr[hour] > 0.5)
             {
-                hourlyResults.CoutsMarginauxHoraires[hour] = -unsuppliedEnergyCost;
+                hourlyResults.MarginalCostsCSR[hour] = -unsuppliedEnergyCost;
             }
         }
     }
