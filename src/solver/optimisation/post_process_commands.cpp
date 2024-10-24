@@ -192,6 +192,12 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
                 hourlyResults.ValeursHorairesDtgMrgCsr[hour] = std::max(0.0, dtgMrg - ens);
                 hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = std::max(0.0, ens - dtgMrg);
             }
+
+            // Updating marginal price updated due to CSR's dispatchable generation margin
+            if (hourlyResults.ValeursHorairesDtgMrgCsr[hour] > 0.5)
+            {
+                hourlyResults.CoutsMarginauxHoraires[hour] = -unsuppliedEnergyCost;
+            }
         }
     }
 }
