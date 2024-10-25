@@ -73,31 +73,21 @@ void computeMaxMRG(double* opmrg, const MaxMRGinput& in)
     assert(nbHoursInWeek + state.hourInTheYear <= HOURS_PER_YEAR);
     assert(opmrg && "Invalid OP.MRG target");
 
-    // Energie turbinee dans semaine
-    double weeklyHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
-    if (Math::Zero(weeklyHydroGen))
+    double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
+    if (Math::Zero(weekHydroGen))
     {
-        for (uint i = 0; i != nbHoursInWeek; ++i)
-            opmrg[i] = in.spillage[i] + in.dtgMargin[i] - in.dens[i];
+        for (uint h = 0; h != nbHoursInWeek; ++h)
+            opmrg[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
         return;
     }
 
     // Initialisation
-    double OI[168];
-    for (uint i = 0; i != nbHoursInWeek; ++i)
-        OI[i] = +in.spillage[i] + in.dtgMargin[i] - in.dens[i];
+    std::vector<double> OI(nbHoursInWeek);
+    for (uint h = 0; h != nbHoursInWeek; ++h)
+        OI[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
 
-    double bottom = +std::numeric_limits<double>::max();
-    double top = 0;
-
-    for (uint i = 0; i != nbHoursInWeek; ++i)
-    {
-        double oii = OI[i];
-        if (oii > top)
-            top = oii;
-        if (oii < bottom)
-            bottom = oii;
-    }
+    double bottom = *std::min_element(OI.begin(), OI.end());
+    double top = *std::max_element(OI.begin(), OI.end());
 
     double ecart = 1.;
     uint loop = 100; // arbitrary - maximum number of iterations
@@ -108,19 +98,19 @@ void computeMaxMRG(double* opmrg, const MaxMRGinput& in)
         double SP = 0; // S+
         double SM = 0; // S-
 
-        for (uint i = 0; i != nbHoursInWeek; ++i)
+        for (uint h = 0; h != nbHoursInWeek; ++h)
         {
-            assert(i < HOURS_PER_YEAR && "calendar overflow");
-            if (niveau > OI[i])
+            assert(h < HOURS_PER_YEAR && "calendar overflow");
+            if (niveau > OI[h])
             {
-                uint dayYear = in.calendar->hours[i + in.hourInYear].dayYear;
-                opmrg[i] = std::min(niveau, OI[i] + in.hydroMaxPower[dayYear] - in.hydroGeneration[i]);
-                SM += opmrg[i] - OI[i];
+                uint dayYear = in.calendar->hours[h + in.hourInYear].dayYear;
+                opmrg[h] = std::min(niveau, OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
+                SM += opmrg[h] - OI[h];
             }
             else
             {
-                opmrg[i] = Math::Max(niveau, OI[i] - in.hydroGeneration[i]);
-                SP += OI[i] - opmrg[i];
+                opmrg[h] = Math::Max(niveau, OI[h] - in.hydroGeneration[h]);
+                SP += OI[h] - opmrg[h];
             }
         }
 
