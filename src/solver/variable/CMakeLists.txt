@@ -89,8 +89,9 @@ set(SRC_VARIABLE_ECONOMY
 		economy/bc.memory-estimation.cpp
 
 		# Variables for Economy
+		economy/max-mrg-utils.h
+		economy/max-mrg-utils.cpp
 		economy/max-mrg.h
-		economy/max-mrg.cpp
 		economy/price.h
 		economy/priceCsr.h
 		economy/balance.h
@@ -162,9 +163,9 @@ add_library(antares-solver-variable
 
 target_include_directories(antares-solver-variable
 		PRIVATE
-		${CMAKE_SOURCE_DIR}/libs
+			${CMAKE_SOURCE_DIR}/libs
 		PUBLIC
-		.)
+			${CMAKE_SOURCE_DIR})
 target_link_libraries(antares-solver-variable PRIVATE antares-core
 	Antares::study
 )

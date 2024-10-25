@@ -28,6 +28,7 @@
 #define __SOLVER_VARIABLE_ECONOMY_MARGE_H__
 
 #include "../variable.h"
+#include "max-mrg-utils.h"
 
 namespace Antares
 {
@@ -97,26 +98,6 @@ struct VCardMARGE
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
 }; // class VCard
-
-/*!
-** \brief Prepare MAX.MRG results for a given week
-*/
-void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace);
-
-struct MaxMRGinput
-{
-    double* spillage = nullptr;
-    double* dens = nullptr;
-    double* hydroGeneration = nullptr;
-    double* hydroMaxPower = nullptr;
-    double* dtgMargin = nullptr;
-    unsigned int hourInYear = 0;
-    Date::Calendar* calendar = nullptr;
-    std::string areaName;
-};
-
-MaxMRGinput dataToComputeMaxMRG(const State& state, unsigned int numSpace);
-void computeMaxMRG(double* opmrg, const MaxMRGinput& in);
 
 /*!
 ** \brief Max MRG
