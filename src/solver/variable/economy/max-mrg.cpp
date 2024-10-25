@@ -30,8 +30,6 @@
 #include "max-mrg.h"
 #include <antares/study/area/scratchpad.h>
 
-using namespace Yuni;
-
 const unsigned int nbHoursInWeek = 168;
 
 namespace Antares::Solver::Variable::Economy
@@ -74,7 +72,7 @@ void computeMaxMRG(double* opmrg, const MaxMRGinput& in)
     assert(opmrg && "Invalid OP.MRG target");
 
     double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
-    if (Math::Zero(weekHydroGen))
+    if (Yuni::Math::Zero(weekHydroGen))
     {
         for (uint h = 0; h != nbHoursInWeek; ++h)
             opmrg[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
@@ -109,7 +107,7 @@ void computeMaxMRG(double* opmrg, const MaxMRGinput& in)
             }
             else
             {
-                opmrg[h] = Math::Max(niveau, OI[h] - in.hydroGeneration[h]);
+                opmrg[h] = std::max(niveau, OI[h] - in.hydroGeneration[h]);
                 SP += OI[h] - opmrg[h];
             }
         }
