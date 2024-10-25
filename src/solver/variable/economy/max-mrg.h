@@ -116,7 +116,7 @@ struct MaxMRGinput
 };
 
 MaxMRGinput dataToComputeMaxMRG(const State& state, unsigned int numSpace);
-void computeMaxMRG(double* opmrg, MaxMRGinput& in);
+void computeMaxMRG(double* opmrg, const MaxMRGinput& in);
 
 /*!
 ** \brief Max MRG
@@ -225,8 +225,6 @@ public:
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
-        // Merge all those values with the global results
-        // AncestorType::pResults.merge(year, pValuesForTheCurrentYear);
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -265,8 +263,6 @@ public:
         // Getting data required to compute max margin
         MaxMRGinput maxMRGinput = dataToComputeMaxMRG(state, numSpace);
         computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
-
-        // PrepareMaxMRG(state, rawhourly + state.hourInTheYear, numSpace);
 
         // next
         NextType::weekForEachArea(state, numSpace);
