@@ -32,34 +32,8 @@
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
-{
-template<bool WithSimplexT>
-struct SpillageSelector
-{
-    template<class U>
-    static auto Value(const State&, const U& weeklyResults, uint)
-      -> decltype(weeklyResults.ValeursHorairesDeDefaillanceNegative)
-    {
-        return weeklyResults.ValeursHorairesDeDefaillanceNegative;
-    }
-};
-
-template<>
-struct SpillageSelector<false>
-{
-    template<class U>
-    static auto Value(const State& state, const U&, uint index) -> decltype(state.resSpilled[index])
-    {
-        return state.resSpilled[index];
-    }
-};
 
 MaxMRGinput dataToComputeMaxMRG(const State& state, unsigned int numSpace)
 {
@@ -91,6 +65,8 @@ MaxMRGinput dataToComputeMaxMRG(const State& state, unsigned int numSpace)
 
     return maxMrGinput;
 }
+
+
 
 void computeMaxMRG(double* opmrg, MaxMRGinput& in)
 {
@@ -179,119 +155,4 @@ void computeMaxMRG(double* opmrg, MaxMRGinput& in)
     } while (ecart * ecart > 0.25);
 }
 
-template<bool WithSimplexT>
-inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
-{
-    const unsigned int nbHoursInWeeks = 168;
-    assert(nbHoursInWeeks + state.hourInTheYear <= HOURS_PER_YEAR);
-    assert(opmrg && "Invalid OP.MRG target");
-
-    // current area
-    auto& area = *state.area;
-    // index of the current area
-    auto index = area.index;
-
-    // current problem
-    auto& problem = *state.problemeHebdo;
-    // Weekly results from solver for the current area
-    auto& weeklyResults = problem.ResultatsHoraires[index];
-    // Unsupplied enery for the current area
-    auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
-    // Spillage
-    auto S = SpillageSelector<WithSimplexT>::Value(state, weeklyResults, area.index);
-
-    double OI[168];
-
-    const std::vector<double>& H = weeklyResults.TurbinageHoraire;
-
-    // Energie turbinee de la semaine
-    {
-        const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
-
-        double WH = 0.;
-        {
-            for (uint i = 0; i != nbHoursInWeeks; ++i)
-                WH += H[i];
-        }
-
-        if (Math::Zero(WH)) // no hydro
-        {
-            for (uint i = 0; i != nbHoursInWeeks; ++i)
-                opmrg[i] = +S[i] + M[i] - D[i];
-            return;
-        }
-
-        // initialisation
-        for (uint i = 0; i != nbHoursInWeeks; ++i)
-            OI[i] = +S[i] + M[i] - D[i];
-    }
-
-    double bottom = +std::numeric_limits<double>::max();
-    double top = 0;
-
-    for (uint i = 0; i != nbHoursInWeeks; ++i)
-    {
-        double oii = OI[i];
-        if (oii > top)
-            top = oii;
-        if (oii < bottom)
-            bottom = oii;
-    }
-
-    double ecart = 1.;
-    uint loop = 100; // arbitrary - maximum number of iterations
-
-    // ref to the study calendar
-    auto& calendar = state.study.calendar;
-    // Pmax
-    const auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
-
-    do
-    {
-        double niveau = (top + bottom) * 0.5;
-        double SP = 0; // S+
-        double SM = 0; // S-
-
-        for (uint i = 0; i != nbHoursInWeeks; ++i)
-        {
-            assert(i < HOURS_PER_YEAR && "calendar overflow");
-            if (niveau > OI[i])
-            {
-                uint dayYear = calendar.hours[i + state.hourInTheYear].dayYear;
-                opmrg[i] = Math::Min(niveau, OI[i] + P[dayYear] - H[i]);
-                SM += opmrg[i] - OI[i];
-            }
-            else
-            {
-                opmrg[i] = Math::Max(niveau, OI[i] - H[i]);
-                SP += OI[i] - opmrg[i];
-            }
-        }
-
-        ecart = SP - SM;
-        if (ecart > 0)
-            bottom = niveau;
-        else
-            top = niveau;
-
-        if (!--loop)
-        {
-            logs.error() << "OP.MRG: " << area.name
-                         << ": infinite loop detected. please check input data";
-            return;
-        }
-    } while (ecart * ecart > 0.25);
-}
-
-void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
-{
-    if (state.simplexRunNeeded)
-        PrepareMaxMRGFor<true>(state, opmrg, numSpace);
-    else
-        PrepareMaxMRGFor<false>(state, opmrg, numSpace);
-}
-
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
