@@ -61,22 +61,135 @@ struct SpillageSelector<false>
     }
 };
 
+MaxMRGinput dataToComputeMaxMRG(const State& state, unsigned int numSpace)
+{
+    auto& area = *state.area;
+    auto index = area.index;
+    auto& problem = *state.problemeHebdo;
+    auto& weeklyResults = problem.ResultatsHoraires[index];
+
+    MaxMRGinput maxMrGinput;
+
+    // Spillage
+    if (state.simplexRunNeeded)
+    {
+        maxMrGinput.spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative.data();
+    }
+    else
+    {
+        maxMrGinput.spillage = state.resSpilled[index];
+    }
+
+    maxMrGinput.dens = weeklyResults.ValeursHorairesDeDefaillancePositive.data();
+
+    maxMrGinput.hydroGeneration = weeklyResults.TurbinageHoraire.data();
+    maxMrGinput.hydroMaxPower = area.hydro.maxPower[Data::PartHydro::genMaxP];
+    maxMrGinput.dtgMargin = area.scratchpad[numSpace].dispatchableGenerationMargin;
+    maxMrGinput.hourInYear = state.hourInTheYear;
+    maxMrGinput.calendar = &state.study.calendar;
+    maxMrGinput.areaName = area.name.c_str();
+
+    return maxMrGinput;
+}
+
+void computeMaxMRG(double* opmrg, MaxMRGinput& in)
+{
+    const unsigned int nbHoursInWeeks = 168;
+    assert(nbHoursInWeeks + state.hourInTheYear <= HOURS_PER_YEAR);
+    assert(opmrg && "Invalid OP.MRG target");
+
+    double OI[168];
+
+    const double* H = in.hydroGeneration;
+
+    // Energie turbinee de la semaine
+    {
+        const double* M = in.dtgMargin;
+
+        double WH = 0.;
+        {
+            for (uint i = 0; i != nbHoursInWeeks; ++i)
+                WH += H[i];
+        }
+
+        if (Math::Zero(WH)) // no hydro
+        {
+            for (uint i = 0; i != nbHoursInWeeks; ++i)
+                opmrg[i] = +in.spillage[i] + M[i] - in.dens[i];
+            return;
+        }
+
+        // initialisation
+        for (uint i = 0; i != nbHoursInWeeks; ++i)
+            OI[i] = +in.spillage[i] + M[i] - in.dens[i];
+    }
+
+    double bottom = +std::numeric_limits<double>::max();
+    double top = 0;
+
+    for (uint i = 0; i != nbHoursInWeeks; ++i)
+    {
+        double oii = OI[i];
+        if (oii > top)
+            top = oii;
+        if (oii < bottom)
+            bottom = oii;
+    }
+
+    double ecart = 1.;
+    uint loop = 100; // arbitrary - maximum number of iterations
+
+    // Pmax
+    const double* P = in.hydroMaxPower;
+
+    do
+    {
+        double niveau = (top + bottom) * 0.5;
+        double SP = 0; // S+
+        double SM = 0; // S-
+
+        for (uint i = 0; i != nbHoursInWeeks; ++i)
+        {
+            assert(i < HOURS_PER_YEAR && "calendar overflow");
+            if (niveau > OI[i])
+            {
+                uint dayYear = in.calendar->hours[i + in.hourInYear].dayYear;
+                opmrg[i] = Math::Min(niveau, OI[i] + P[dayYear] - H[i]);
+                SM += opmrg[i] - OI[i];
+            }
+            else
+            {
+                opmrg[i] = Math::Max(niveau, OI[i] - H[i]);
+                SP += OI[i] - opmrg[i];
+            }
+        }
+
+        ecart = SP - SM;
+        if (ecart > 0)
+            bottom = niveau;
+        else
+            top = niveau;
+
+        if (!--loop)
+        {
+            logs.error() << "OP.MRG: " << in.areaName
+                         << ": infinite loop detected. please check input data";
+            return;
+        }
+    } while (ecart * ecart > 0.25);
+}
+
 template<bool WithSimplexT>
 inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 {
-    assert(168 + state.hourInTheYear <= HOURS_PER_YEAR);
+    const unsigned int nbHoursInWeeks = 168;
+    assert(nbHoursInWeeks + state.hourInTheYear <= HOURS_PER_YEAR);
     assert(opmrg && "Invalid OP.MRG target");
-    enum
-    {
-        offset = 0,
-        endHour = 168,
-    };
 
     // current area
     auto& area = *state.area;
     // index of the current area
     auto index = area.index;
-    assert(area.index < 50000 && "seems invalid");
 
     // current problem
     auto& problem = *state.problemeHebdo;
@@ -89,37 +202,34 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 
     double OI[168];
 
-    // H.STOR
-    std::vector<double>& H = weeklyResults.TurbinageHoraire;
+    const std::vector<double>& H = weeklyResults.TurbinageHoraire;
 
-    // energie turbinee de la semaine
+    // Energie turbinee de la semaine
     {
-        // DTG MRG
         const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
 
         double WH = 0.;
         {
-            // H.STOR
-            for (uint i = offset; i != endHour; ++i)
+            for (uint i = 0; i != nbHoursInWeeks; ++i)
                 WH += H[i];
         }
 
         if (Math::Zero(WH)) // no hydro
         {
-            for (uint i = offset; i != endHour; ++i)
+            for (uint i = 0; i != nbHoursInWeeks; ++i)
                 opmrg[i] = +S[i] + M[i] - D[i];
             return;
         }
 
         // initialisation
-        for (uint i = offset; i != endHour; ++i)
+        for (uint i = 0; i != nbHoursInWeeks; ++i)
             OI[i] = +S[i] + M[i] - D[i];
     }
 
     double bottom = +std::numeric_limits<double>::max();
     double top = 0;
 
-    for (uint i = offset; i != endHour; ++i)
+    for (uint i = 0; i != nbHoursInWeeks; ++i)
     {
         double oii = OI[i];
         if (oii > top)
@@ -142,7 +252,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
         double SP = 0; // S+
         double SM = 0; // S-
 
-        for (uint i = offset; i != endHour; ++i)
+        for (uint i = 0; i != nbHoursInWeeks; ++i)
         {
             assert(i < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[i])

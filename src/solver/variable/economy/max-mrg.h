@@ -103,6 +103,21 @@ struct VCardMARGE
 */
 void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace);
 
+struct MaxMRGinput
+{
+    double* spillage = nullptr;
+    double* dens = nullptr;
+    double* hydroGeneration = nullptr;
+    double* hydroMaxPower = nullptr;
+    double* dtgMargin = nullptr;
+    unsigned int hourInYear = 0;
+    Date::Calendar* calendar = nullptr;
+    std::string areaName;
+};
+
+MaxMRGinput dataToComputeMaxMRG(const State& state, unsigned int numSpace);
+void computeMaxMRG(double* opmrg, MaxMRGinput& in);
+
 /*!
 ** \brief Max MRG
 */
@@ -246,7 +261,12 @@ public:
     void weekForEachArea(State& state, unsigned int numSpace)
     {
         double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
-        PrepareMaxMRG(state, rawhourly + state.hourInTheYear, numSpace);
+
+        // Getting data required to compute max margin
+        MaxMRGinput maxMRGinput = dataToComputeMaxMRG(state, numSpace);
+        computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
+
+        // PrepareMaxMRG(state, rawhourly + state.hourInTheYear, numSpace);
 
         // next
         NextType::weekForEachArea(state, numSpace);
