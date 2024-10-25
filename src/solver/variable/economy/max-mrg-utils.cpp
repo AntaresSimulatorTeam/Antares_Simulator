@@ -63,6 +63,13 @@ MaxMRGinput MaxMrgUsualDataFactory::data()
     return maxMRGinput_;
 }
 
+MaxMRGinput MaxMrgCSRdataFactory::data()
+{
+    maxMRGinput_.spillage = weeklyResults_.ValeursHorairesDeDefaillanceNegative.data();
+    maxMRGinput_.dens = weeklyResults_.ValeursHorairesDeDefaillancePositiveCSR.data();
+    return maxMRGinput_;
+}
+
 void computeMaxMRG(double* opmrg, const MaxMRGinput& in)
 {
     assert(nbHoursInWeek + state.hourInTheYear <= HOURS_PER_YEAR);

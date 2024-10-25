@@ -40,5 +40,12 @@ public:
     virtual MaxMRGinput data() override;
 };
 
+class MaxMrgCSRdataFactory : public MaxMrgDataFactory
+{
+    using MaxMrgDataFactory::MaxMrgDataFactory;
+public:
+    virtual MaxMRGinput data() override;
+};
+
 } // Antares::Solver::Variable::Economy
 
