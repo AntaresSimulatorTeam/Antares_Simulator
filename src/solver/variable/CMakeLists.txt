@@ -92,6 +92,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/max-mrg-utils.h
 		economy/max-mrg-utils.cpp
 		economy/max-mrg.h
+		economy/max-mrg-csr.h
 		economy/price.h
 		economy/priceCsr.h
 		economy/balance.h

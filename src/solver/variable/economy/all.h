@@ -72,6 +72,7 @@
 #include "lolp.h"
 #include "lolpCsr.h"
 #include "max-mrg.h"
+#include "max-mrg-csr.h"
 
 #include "avail-dispatchable-generation.h"
 #include "dispatchable-generation-margin.h"
@@ -176,6 +177,7 @@ typedef                           // Prices
                                   <DispatchableGenMargin
                                    <DtgMarginCsr // DTG MRG CSR
                                    <Marge
+                                   <MaxMrgCsr
                                    <NonProportionalCost
                                       <NonProportionalCostByDispatchablePlant // Startup cost +
                                                                                // Fixed cost per
@@ -187,7 +189,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
