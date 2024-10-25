@@ -35,35 +35,32 @@ const unsigned int nbHoursInWeek = 168;
 namespace Antares::Solver::Variable::Economy
 {
 
-MaxMRGinput dataToComputeMaxMRG(const State& state, unsigned int numSpace)
+MaxMrgDataFactory::MaxMrgDataFactory(const State &state, unsigned int numSpace) :
+        state_(state),
+        numSpace_(numSpace),
+        weeklyResults_(state.problemeHebdo->ResultatsHoraires[state.area->index])
 {
-    auto& area = *state.area;
-    auto index = area.index;
-    auto& problem = *state.problemeHebdo;
-    auto& weeklyResults = problem.ResultatsHoraires[index];
+    maxMRGinput_.hydroGeneration = weeklyResults_.TurbinageHoraire.data();
+    maxMRGinput_.hydroMaxPower = state_.area->hydro.maxPower[Data::PartHydro::genMaxP];
+    maxMRGinput_.dtgMargin = state_.area->scratchpad[numSpace].dispatchableGenerationMargin;
+    maxMRGinput_.hourInYear = state.hourInTheYear;
+    maxMRGinput_.calendar = &state.study.calendar;
+    maxMRGinput_.areaName = state_.area->name.c_str();
+}
 
-    MaxMRGinput maxMrGinput;
-
-    // Spillage
-    if (state.simplexRunNeeded)
+MaxMRGinput MaxMrgUsualDataFactory::data()
+{
+    if (state_.simplexRunNeeded)
     {
-        maxMrGinput.spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative.data();
+        maxMRGinput_.spillage = weeklyResults_.ValeursHorairesDeDefaillanceNegative.data();
     }
     else
     {
-        maxMrGinput.spillage = state.resSpilled[index];
+        maxMRGinput_.spillage = state_.resSpilled[state_.area->index];
     }
 
-    maxMrGinput.dens = weeklyResults.ValeursHorairesDeDefaillancePositive.data();
-
-    maxMrGinput.hydroGeneration = weeklyResults.TurbinageHoraire.data();
-    maxMrGinput.hydroMaxPower = area.hydro.maxPower[Data::PartHydro::genMaxP];
-    maxMrGinput.dtgMargin = area.scratchpad[numSpace].dispatchableGenerationMargin;
-    maxMrGinput.hourInYear = state.hourInTheYear;
-    maxMrGinput.calendar = &state.study.calendar;
-    maxMrGinput.areaName = area.name.c_str();
-
-    return maxMrGinput;
+    maxMRGinput_.dens = weeklyResults_.ValeursHorairesDeDefaillancePositive.data();
+    return maxMRGinput_;
 }
 
 void computeMaxMRG(double* opmrg, const MaxMRGinput& in)

@@ -17,8 +17,28 @@ struct MaxMRGinput
     std::string areaName;
 };
 
-MaxMRGinput dataToComputeMaxMRG(const State &state, unsigned int numSpace);
 void computeMaxMRG(double *opmrg, const MaxMRGinput &in);
+
+class MaxMrgDataFactory
+{
+public:
+    MaxMrgDataFactory(const State &state, unsigned int numSpace);
+    virtual MaxMRGinput data() = 0;
+protected:
+    // in data
+    const State& state_;
+    const unsigned int numSpace_ = 0;
+    RESULTATS_HORAIRES& weeklyResults_;
+    // data to be built
+    MaxMRGinput maxMRGinput_;
+};
+
+class MaxMrgUsualDataFactory : public MaxMrgDataFactory
+{
+    using MaxMrgDataFactory::MaxMrgDataFactory;
+public:
+    virtual MaxMRGinput data() override;
+};
 
 } // Antares::Solver::Variable::Economy
 

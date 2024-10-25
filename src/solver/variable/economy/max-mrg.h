@@ -242,7 +242,8 @@ public:
         double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
 
         // Getting data required to compute max margin
-        MaxMRGinput maxMRGinput = dataToComputeMaxMRG(state, numSpace);
+        MaxMrgUsualDataFactory maxMRGdataFactory(state, numSpace);
+        MaxMRGinput maxMRGinput = maxMRGdataFactory.data();
         computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
 
         // next
