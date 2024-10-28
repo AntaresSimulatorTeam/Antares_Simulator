@@ -191,7 +191,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
