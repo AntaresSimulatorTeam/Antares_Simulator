@@ -70,16 +70,16 @@ MaxMRGinput MaxMrgCSRdataFactory::data()
     return maxMRGinput_;
 }
 
-void computeMaxMRG(double* opmrg, const MaxMRGinput& in)
+void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
 {
     assert(nbHoursInWeek + state.hourInTheYear <= HOURS_PER_YEAR);
-    assert(opmrg && "Invalid OP.MRG target");
+    assert(maxMrgOut && "Invalid OP.MRG target");
 
     double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
     if (Yuni::Math::Zero(weekHydroGen))
     {
         for (uint h = 0; h != nbHoursInWeek; ++h)
-            opmrg[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
+            maxMrgOut[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
         return;
     }
 
@@ -106,13 +106,13 @@ void computeMaxMRG(double* opmrg, const MaxMRGinput& in)
             if (niveau > OI[h])
             {
                 uint dayYear = in.calendar->hours[h + in.hourInYear].dayYear;
-                opmrg[h] = std::min(niveau, OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
-                SM += opmrg[h] - OI[h];
+                maxMrgOut[h] = std::min(niveau, OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
+                SM += maxMrgOut[h] - OI[h];
             }
             else
             {
-                opmrg[h] = std::max(niveau, OI[h] - in.hydroGeneration[h]);
-                SP += OI[h] - opmrg[h];
+                maxMrgOut[h] = std::max(niveau, OI[h] - in.hydroGeneration[h]);
+                SP += OI[h] - maxMrgOut[h];
             }
         }
 

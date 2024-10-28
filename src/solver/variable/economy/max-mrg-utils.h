@@ -17,7 +17,7 @@ struct MaxMRGinput
     std::string areaName;
 };
 
-void computeMaxMRG(double *opmrg, const MaxMRGinput &in);
+void computeMaxMRG(double *maxMrgOut, const MaxMRGinput &in);
 
 class MaxMrgDataFactory
 {
