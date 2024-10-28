@@ -50,6 +50,7 @@
 #include "thermalAirPollutantEmissions.h"
 #include "renewableGeneration.h"
 #include "overallCost.h"
+#include "overallCostCsr.h"
 #include "operatingCost.h"
 #include "nonProportionalCost.h"
 #include "nbOfDispatchedUnits.h"
@@ -131,6 +132,7 @@ class Links;
 */
 typedef                           // Prices
   OverallCost                     // Overall Cost (Op. Cost + Unsupplied Eng.)
+  <OverallCostCsr                 // Overall Cost after CSR (adequacy patch Curtailment ShaRing)
   <OperatingCost                  // Operating Cost
    <Price                         // Marginal price
    <PriceCsr
@@ -189,7 +191,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

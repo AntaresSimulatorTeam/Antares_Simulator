@@ -98,6 +98,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/balance.h
 		economy/operatingCost.h
 		economy/overallCost.h
+		economy/overallCostCsr.h
 		economy/nonProportionalCost.h
 		economy/hydrostorage.h
 		economy/pumping.h
