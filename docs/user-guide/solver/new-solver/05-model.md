@@ -25,10 +25,3 @@ The basic attributes of a model are:
   For example, for a thermal cluster, the contribution might look like this:  
   **time_sum(cost * generation)**
 
-```plantuml
-@startuml
-class Model {
-+ vector<Parameter> parameters
-}
-@enduml
-```

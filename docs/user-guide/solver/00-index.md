@@ -4,7 +4,6 @@
 
 ```{toctree}
 :hidden:
-
 01-overview-solver.md
 legacy-solver/00-index.md
 new-solver/00-index.md

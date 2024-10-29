@@ -33,27 +33,17 @@ _In "Economy" simulations, all variables have a techno-economic meaning._
 |                                 |                      | /links/name/... | contains interconnection-related results |
 
 _("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
-_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same
-values._
+_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._
 _The only variables that have a techno-economic meaning are the "Adequacy" indicators (unsupplied energy,LOLD,LOLP)_
 
 **IMPORTANT** Adequacy and Economy files look the same but their content are specific
 
-In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it
-may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences").
+In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences").
 
-In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at
-Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy
-indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of
-Unsupplied and spilled energies, and on hurdle costs on interconnections.
-In the specific case where binding constraints are present in the study, **all thermal clusters will consequently be
-de-activated from the binding constraints**. This can lead to incorrect adequacy indicators in Antares studies
-containing binding constraints in "Adequacy" simulations.
+In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.
+In the specific case where binding constraints are present in the study, **all thermal clusters will consequently be de-activated from the binding constraints**. This can lead to incorrect adequacy indicators in Antares studies containing binding constraints in "Adequacy" simulations.
 
-As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the
-following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and
-the minimum VOLL assigned to the different areas of the system, and if no binding constraint is altered due to the fact
-that they contain clusters in must-run.
+As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system, and if no binding constraint is altered due to the fact that they contain clusters in must-run.
 
 The files and their content are hereafter described.
 
@@ -62,33 +52,26 @@ The files and their content are hereafter described.
 **25** files resulting from the combination of the following attributes:
 **[values | id | details | details-res | details-STstorage] X [hourly | daily | weekly | monthly | annual]**
 
-- The second attribute defines the time span over which the results are assessed: hourly detail, daily bundle, weekly
-  bundle, monthly bundle, annual bundle.
+- The second attribute defines the time span over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle.
 
 - The first attribute defines the nature of the results presented in the file :
 
-**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is
-common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.
+**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.
 These results appear under the label "general values" in the output GUI.
 
-**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal
-from the south coast"). The sizes of these files differ from one area to another.
+**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.
 These results appear under the label "thermal plants" in the output GUI.
 
-**details-res** Values regarding the different renewable clusters of each area. The sizes of these files differ from one
-area to another.
+**details-res** Values regarding the different renewable clusters of each area. The sizes of these files differ from one area to another.
 These results appear under the label "Ren. clusters" in the output GUI.
 
-**details-STstorage** Values regarding the different short-term storages of each area. The sizes of these files differ
-from one area to another.
+**details-STstorage** Values regarding the different short-term storages of each area. The sizes of these files differ from one area to another.
 These results appear under the label "ST storages" in the output GUI.
 
-**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different
-variables presented in the « values » files
+**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files
 These results appear under the label "record years" in the output GUI
 
-The area files that belong to the "values" class display fields corresponding to the expectation, standard deviation,
-minimal and maximal values of the variables whose list is given hereafter.
+The area files that belong to the "values" class display fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
 
 | variables                              | description                                                                                                                                                                               |
 |----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -134,13 +117,13 @@ minimal and maximal values of the variables whose list is given hereafter.
 | SPIL. ENRG                             | Spilled energy (energy produced that cannot be used and has to be wasted)                                                                                                                 |
 | LOLD                                   | Loss of load duration: adequacy indicator (length of shortfalls)                                                                                                                          |
 | LOLP                                   | Loss of Load probability: adequacy indicator (probability of at least one hour of shortfall within the considered period, without normalization by the duration of the considered period) |
-| AVL DTG                                | Available dispatchable thermal generation (sum of av. power over all plants)                                                                                                              |
-| DTG MRG                                | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation)                                                                                                                     |
+| AVL DTG                               | Available dispatchable thermal generation (sum of av. power over all plants)                                                                                                              |
+| DTG MRG                               | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation)                                                                                                                     |
 | MAX. MRG                               | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs                                             |
 | DENS                                   | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^adqp]                                                               |
 | LMR. VIOL                              | Local Matching Rule Violation after the Antares Simulation as defined by the adequacy patch[^adqp]                                                                                        |
-| UNSP. ENRG. CSR                        | Unsupplied enery after CSR (demand that cannot be satisfied)[^adqp]                                                                                                                       |
-| DTG MRG CSR                            | DTG MRG after CSR[^adqp]                                                                                                                                                                  |
+| UNSP. ENRG. CSR                        | Unsupplied enery after CSR (demand that cannot be satisfied)[^adqp]                                                                                                        |
+| DTG MRG CSR                            | DTG MRG after CSR[^adqp]                                                                                                        |
 | <Short-term storage group\>_injection  | Injection of energy from the area into each short-term storage group                                                                                                                      |
 | <Short-term storage group\>_withdrawal | Withdrawal of energy from each short-term storage group into the area                                                                                                                     |
 | <Short-term storage group\>_level      | Average level  of each short-term storage group                                                                                                                                           |
@@ -151,28 +134,24 @@ minimal and maximal values of the variables whose list is given hereafter.
 | <Short-term storage\>,P-withdrawal     | Withdrawal of energy the short-term storage into the area                                                                                                                                 |
 | <Short-term storage\>,Levels           | Level  of the short-term storage                                                                                                                                                          |
 
-_Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different
-results applying the given formula because MRG. PRICE values are rounded to 10^-2._
+_Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2._
 
 ## Economy and Adequacy, interconnection results [^14]
-
 **10** files resulting from the combination of the following attributes:
 **[values | id] X [hourly | daily | weekly | monthly | annual]**
 
-- The second attribute defines the period of time over which the results are assessed: hourly detail, daily bundle,
-  weekly bundle, monthly bundle, annual bundle.
+- The second attribute defines the period of time over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle.
 - The first attribute defines the nature of the results presented in the file.
 
-**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections.
-The files of type "values" have therefore the same size everywhere
+
+**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere
 These results appear under the label "general values" in the output GUI.
 
-**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different
-variables presented in the « values » files.
+**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files.
 These results appear under the label "record years" in the output GUI.
 
-The area files that belong to the « values » class display  **28**  fields corresponding to the expectation, standard
-deviation, minimal and maximal values of the variables whose list is given hereafter.
+
+The area files that belong to the « values » class display  **28**  fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
 
 | variables     | description                                                                                                                                                                                                                                                                                                                                                                   |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -189,21 +168,19 @@ deviation, minimal and maximal values of the variables whose list is given herea
 
 ## Economy and Adequacy, other results
 
-Depending on the options chosen in the main simulation window, the output folders may also include either, both or none
-of the following sections:
+Depending on the options chosen in the main simulation window, the output folders may also include either, both or none of the following sections:
 
-| OUTPUT/Simu id/ts-numbers/ |                   |                 |
-|----------------------------|-------------------|-----------------|
-|                            | /Load             | /area names/... |
-|                            | /Thermal          | /area names/... |
-|                            | /Hydro            | /area names/... |
-|                            | /Wind[^agg]       | /area names/... |
-|                            | /Solar[^agg]      | /area names/... |
-|                            | /Renewables[^ren] | /area names/... |
-|                            | /NTC              | /area names/... |
+| OUTPUT/Simu id/ts-numbers/ |                   |                  |
+|----------------------------|-------------------|------------------|
+|                            | /Load             | /area names/...  |
+|                            | /Thermal          | /area names/...  |
+|                            | /Hydro            | /area names/...  |
+|                            | /Wind[^agg]       | /area names/...  |
+|                            | /Solar[^agg]      | /area names/...  |
+|                            | /Renewables[^ren] | /area names/...  |
+|                            | /NTC              | /area names/...  |
 
-These files contain, for each kind of time-series, the number drawn (randomly or not) in each Monte-Carlo year (files
-are present if "output profile / MC scenarios" was set to "true").
+These files contain, for each kind of time-series, the number drawn (randomly or not) in each Monte-Carlo year (files are present if "output profile / MC scenarios" was set to "true").
 
 | OUTPUT/Simu id/ts-generator/ |              |                              |
 |------------------------------|--------------|------------------------------|
@@ -212,50 +189,37 @@ are present if "output profile / MC scenarios" was set to "true").
 |                              | /Wind[^agg]  | /batch number/area names/... |
 |                              | /Solar[^agg] | /batch number/area names/... |
 
-These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated.
-Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present
-if "store in output" was set to "true").
+
+These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
 
 ## Miscellaneous
 
-Alike Input data, output results can be filtered so as to include only items that are associated with Areas and Links
-defined as "visible" in the current map. In addition, the output filtering dialog box makes it possible to filter
-according to two special categories (**Districts** and **Unknown**) that are not related to standard maps:
+Alike Input data, output results can be filtered so as to include only items that are associated with Areas and Links defined as "visible" in the current map. In addition, the output filtering dialog box makes it possible to filter according to two special categories (**Districts** and **Unknown**) that are not related to standard maps:
 
 - **Districts** displays only results obtained for spatial aggregates
-- **Unknown** displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has
-  changed since the last simulation)
+- **Unknown** displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has changed since the last simulation)
 
-[^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in
-the latter case
+[^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
 [^12]: Value identical to that defined under the same name in the "Misc Gen" input section.
 
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is
-activated (see [Adequacy Patch](../optional-features/adequacy-patch.md))
+[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](../optional-features/adequacy-patch.md))
 
-[^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in
-the latter case
+[^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
-[^agg]: This output is only available if the parameter "renewable generation modelling" is set to "cluster" in the input
-of the simulation
+[^agg]: This output is only available if the parameter "renewable generation modelling" is set to "cluster" in the input of the simulation
 
-[^ren]: This output is only available if the parameter "renewable generation modelling" is set to "aggregated" in the
-input of the simulation
+[^ren]: This output is only available if the parameter "renewable generation modelling" is set to "aggregated" in the input of the simulation
 
-[^15]: dispatchable production = power generation above min gen = (power generation) - (min gen modulation)*units*
-capacity
+[^15]: dispatchable production = power generation above min gen = (power generation) - (min gen modulation)*units*capacity
 
 ### The Annual System Cost Output file
 
-In addition to the general files introduced in [Output Files](03-outputs.md), the Output folder of each economic or
-adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global
-Monte-Carlo variable further denoted ASC.
+In addition to the general files introduced in [Output Files](03-outputs.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
 
-The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of
-the area-variable "OV.COST" and of the link-variable "HURD. COST".
+The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of the area-variable "OV.COST" and of the link-variable "HURD. COST".
 
 The metrics displayed in the "Annual system cost" file take the form of four values:
 
@@ -267,10 +231,7 @@ The metrics displayed in the "Annual system cost" file take the form of four val
 
 - Maximum UASC
 
-As with all other random variables displayed in the Antares Output section, the computed standard deviation of the
-variable can be used to give a measure of the confidence interval attached to the estimate of the expectation. For a
-number of Monte-Carlo years N, the law of large numbers states for instance that there is a 95 % probability for the
-actual expectation of ASC to lie within the interval:
+As with all other random variables displayed in the Antares Output section, the computed standard deviation of the variable can be used to give a measure of the confidence interval attached to the estimate of the expectation. For a number of Monte-Carlo years N, the law of large numbers states for instance that there is a 95 % probability for the actual expectation of ASC to lie within the interval:
 
 <center>**EASC +/- 1.96 (SASC / sqrt(N))**</center>
 
@@ -279,7 +240,6 @@ There is also a 99.8 % probability that it lies within the interval:
 <center>**EASC +/- 3 (SASC / sqrt(N))**</center>
 
 ### Changelog
-
 Here is a list of new output variables in recent versions:
 
 | Version | Variable(s) introduced                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Files                     | Enabled by default |
