@@ -55,28 +55,9 @@ ConvertorVisitor::ConvertorVisitor(
 {
 }
 
-std::any ConvertorVisitor::visitChildren(antlr4::tree::ParseTree* node)
-{
-    for (auto child: node->children)
-    {
-        child->accept(this);
-    }
-    return std::any();
-}
-
 std::any ConvertorVisitor::visit(antlr4::tree::ParseTree* tree)
 {
     return tree->accept(this);
-}
-
-std::any ConvertorVisitor::visitTerminal(antlr4::tree::TerminalNode* node)
-{
-    return std::any();
-}
-
-std::any ConvertorVisitor::visitErrorNode(antlr4::tree::ErrorNode* node)
-{
-    return std::any();
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
@@ -153,9 +134,7 @@ std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 {
     double d = stod(context->getText());
-    auto n = registry_.create<Nodes::LiteralNode>(d);
-
-    return static_cast<Nodes::Node*>(n);
+    return registry_.create<Nodes::LiteralNode>(d);
 }
 
 std::any ConvertorVisitor::visitTimeIndex(ExprParser::TimeIndexContext* context)
