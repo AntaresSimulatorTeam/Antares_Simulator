@@ -134,7 +134,8 @@ std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 {
     double d = stod(context->getText());
-    return registry_.create<Nodes::LiteralNode>(d);
+    auto lit = registry_.create<Nodes::LiteralNode>(d);
+    return static_cast<Nodes::Node*>(lit);
 }
 
 std::any ConvertorVisitor::visitTimeIndex(ExprParser::TimeIndexContext* context)
