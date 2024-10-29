@@ -53,7 +53,8 @@ jobs:
         run: |
           PDF_NAME=antares-general-reference-guide.pdf
           cd docs/pdf-doc-generation-with-sphinx
-          bash create_pdf_doc.sh $PDF_NAME
+          chmod +x create_pdf_doc.sh
+          ./create_pdf_doc.sh $PDF_NAME
           echo "PDF_PATH=docs/pdf-doc-generation-with-sphinx/$PDF_NAME" >> $GITHUB_ENV
           echo "PDF_PATH_ASSET= [\"docs/pdf-doc-generation-with-sphinx/$PDF_NAME\"]" >> $GITHUB_ENV
 
