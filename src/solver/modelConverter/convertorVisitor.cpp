@@ -43,8 +43,8 @@ Nodes::Node* convertExpressionToNode(
     ExprParser::ExprContext* tree = parser.expr();
 
     ConvertorVisitor visitor(registry, model);
-    auto a = visitor.visit(tree);
-    return std::any_cast<Nodes::Node*>(a);
+    auto node = visitor.visit(tree);
+    return std::any_cast<Nodes::Node*>(node);
 }
 
 ConvertorVisitor::ConvertorVisitor(
@@ -73,13 +73,12 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     }
     if (is_parameter)
     {
-        return static_cast<Antares::Solver::Nodes::Node*>(
-          registry_.create<Antares::Solver::Nodes::ParameterNode>(context->getText()));
+        return static_cast<Nodes::Node*>(
+          registry_.create<Nodes::ParameterNode>(context->getText()));
     }
     else
     {
-        return static_cast<Antares::Solver::Nodes::Node*>(
-          registry_.create<Antares::Solver::Nodes::VariableNode>(context->getText()));
+        return static_cast<Nodes::Node*>(registry_.create<Nodes::VariableNode>(context->getText()));
     }
 }
 
@@ -92,8 +91,18 @@ std::any ConvertorVisitor::visitMuldiv(ExprParser::MuldivContext* context)
     auto toNodePtr = [](const auto& x) { return std::any_cast<Nodes::Node*>(x); };
     auto* left = toNodePtr(visit(context->expr(0)));
     auto* right = toNodePtr(visit(context->expr(1)));
-    auto mult_node = registry_.create<Nodes::MultiplicationNode>(left, right);
-    return dynamic_cast<Nodes::Node*>(mult_node);
+
+    std::string op = context->op->getText();
+    if (op == "*")
+    {
+        return dynamic_cast<Nodes::Node*>(registry_.create<Nodes::MultiplicationNode>(left, right));
+    }
+    else if (op == "/")
+    {
+        return static_cast<Nodes::Node*>(registry_.create<Nodes::DivisionNode>(left, right));
+    }
+
+    return std::any();
 }
 
 std::any ConvertorVisitor::visitFullexpr(ExprParser::FullexprContext* context)

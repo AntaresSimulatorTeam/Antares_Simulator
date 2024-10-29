@@ -44,14 +44,13 @@ BOOST_AUTO_TEST_CASE(simple_expression)
     ObjectModel::Model model;
     Antares::Solver::Registry<Nodes::Node> registry;
 
-    auto twelve = registry.create<Nodes::LiteralNode>(12);
-    std::cout << twelve->value() << std::endl;
-
     std::string expression = "1 * 2";
+    auto* nodeMult = ModelConverter::convertExpressionToNode(expression, registry, model);
 
-    auto* node = ModelConverter::convertExpressionToNode(expression, registry, model);
+    expression = "6 / 3";
+    auto* nodeDiv = ModelConverter::convertExpressionToNode(expression, registry, model);
 
     std::ofstream out("/tmp/abc.dot");
     Visitors::AstDOTStyleVisitor dot;
-    dot(out, node);
+    dot(out, nodeDiv);
 }
