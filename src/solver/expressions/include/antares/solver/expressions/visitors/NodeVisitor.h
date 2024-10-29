@@ -19,11 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <functional>
+#include <iostream>
 #include <optional>
 #include <typeindex>
 #include <vector>
 
-#include <antares/logs/logs.h>
 #include <antares/solver/expressions/IName.h>
 #include <antares/solver/expressions/nodes/Node.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
@@ -31,6 +32,29 @@
 
 namespace Antares::Solver::Visitors
 {
+struct NodeVisitorCustomLog
+{
+    using LogFunction = std::function<void(const std::string&)>;
+
+    LogFunction info;
+    LogFunction warning;
+    LogFunction error;
+};
+
+inline void ToStdOutput(const std::string& msg)
+{
+    std::cout << msg;
+}
+
+inline void ToStdErr(const std::string& msg)
+{
+    std::cerr << msg;
+}
+
+static inline NodeVisitorCustomLog RedirectToStandardOutputs()
+{
+    return {.info = ToStdOutput, .warning = ToStdOutput, .error = ToStdErr};
+}
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
 RetT tryVisit(const Nodes::Node* node, VisitorT& visitor, Args... args)
@@ -119,7 +143,7 @@ public:
         }
         catch (std::exception&)
         {
-            logs.error() << "Antares::Solver::Visitor: could not visit the node!";
+            nodeVisitorCustomLog_.error("Antares::Solver::Visitor: could not visit the node!");
             throw;
         }
     }
@@ -269,5 +293,13 @@ public:
      * @return The result of processing the ComponentParameterNode.
      */
     virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
+
+    void setNodeVisitorCustomLog(const NodeVisitorCustomLog& nodeVisitorCustomLog)
+    {
+        nodeVisitorCustomLog_ = nodeVisitorCustomLog;
+    }
+
+private:
+    NodeVisitorCustomLog nodeVisitorCustomLog_ = RedirectToStandardOutputs();
 };
 } // namespace Antares::Solver::Visitors
