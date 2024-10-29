@@ -126,6 +126,11 @@ DBGrid::DBGrid(Component* parent) :
 
 DBGrid::~DBGrid()
 {
+    // Remove any remaining reference
+    auto* mainFrm = Forms::ApplWnd::Instance();
+    if (mainFrm)
+        mainFrm->disableGridOperatorIfGrid(this);
+
     pParentComponent = nullptr;
     otherGrid_ = nullptr;
 }
@@ -134,6 +139,10 @@ void DBGrid::onGridSelectCell(wxGridEvent& evt)
 {
     assert(GetParent() && "invalid parent");
 
+    auto* mainFrm = Forms::ApplWnd::Instance();
+    if (mainFrm)
+        mainFrm->gridOperatorSelectedCellsUpdateResult(this);
+    pCurrentPosition.x = evt.GetCol();
     pCurrentPosition.y = evt.GetRow();
 
     auto* r = ((Component*)GetParent())->renderer();
@@ -147,6 +156,9 @@ void DBGrid::onGridRangeSelect(wxGridRangeSelectEvent& evt)
 {
     assert(GetGridWindow() && "invalid grid window");
 
+    Forms::ApplWnd* mainFrm = Forms::ApplWnd::Instance();
+    if (mainFrm)
+        mainFrm->gridOperatorSelectedCellsUpdateResult(this);
     if (GetGridWindow())
         GetGridWindow()->SetFocus();
     evt.Skip();
@@ -154,6 +166,9 @@ void DBGrid::onGridRangeSelect(wxGridRangeSelectEvent& evt)
 
 void DBGrid::onGridLeave(wxFocusEvent& evt)
 {
+    auto* mainFrm = Forms::ApplWnd::Instance();
+    if (mainFrm)
+        mainFrm->gridOperatorSelectedCellsUpdateResult(nullptr);
     evt.Skip();
 }
 
@@ -207,6 +222,10 @@ void DBGrid::ensureDataAreLoaded()
     {
         r->invalidate = false;
         // Post an event to update the gui after the data are loaded
+
+        Forms::ApplWnd* mainFrm = Forms::ApplWnd::Instance();
+        if (mainFrm)
+            mainFrm->disableGridOperatorIfGrid(this);
 
         assert(pAllowRefresh == true);
         parent->forceRefresh();
