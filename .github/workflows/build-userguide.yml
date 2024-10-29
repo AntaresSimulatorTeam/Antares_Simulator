@@ -14,9 +14,6 @@ on:
       - dependabot/*
   workflow_call:
     inputs:
-      run-tests:
-        required: true
-        type: string
       target_branch:
         required: true
         type: string
@@ -51,7 +48,6 @@ jobs:
           sudo apt-get update --fix-missing
           sudo apt-get install latexmk texlive-latex-recommended texlive-formats-extra
 
-
       - name: Generate PDF for user-guide
         shell: bash
         run: |
@@ -61,16 +57,11 @@ jobs:
           echo "PDF_PATH=docs/pdf-doc-generation-with-sphinx/$PDF_NAME" >> $GITHUB_ENV
           echo "PDF_PATH_ASSET= [\"docs/pdf-doc-generation-with-sphinx/$PDF_NAME\"]" >> $GITHUB_ENV
 
-      - name: Exit on failure
-        if: ${{ !success() }}
-        run: exit 1
-
       - name: user guide upload
         uses: actions/upload-artifact@v4
         with:
           name: pdf-reference-guide
           path: ${{ env.PDF_PATH }}
-
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
@@ -78,5 +69,4 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           tag: ${{ github.event.inputs.release_tag }}
         run: |
-          gh release upload "$tag" ${{ env.PDF_PATH }}      
-
+          gh release upload "$tag" ${{ env.PDF_PATH }}

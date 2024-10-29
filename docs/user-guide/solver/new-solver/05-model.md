@@ -20,15 +20,15 @@ The basic attributes of a model are:
   For example: the power produced by a thermal cluster, or the level of a stock.
 - a list of constraints: these are equations that link parameters and model variables.
   For example, for a battery, we might have an equation of the following type:  
-  level[t] - level[t-1] - efficiency * injection + withdrawal = inflows
+  **level[t] - level[t-1] - efficiency * injection + withdrawal = inflows**
 - a contribution to system cost, defined on the basis of model parameters and variables.  
   For example, for a thermal cluster, the contribution might look like this:  
-  time_sum(cost * generation)
+  **time_sum(cost * generation)**
 
 ```plantuml
 @startuml
 class Model {
-+ List<Parameter> parameters
++ vector<Parameter> parameters
 }
 @enduml
 ```
