@@ -25,7 +25,7 @@ The basic attributes of a model are:
   For example, for a thermal cluster, the contribution might look like this:  
   time_sum(cost * generation)
 
-```puml
+```plantuml
 @startuml
 class Model {
 + List<Parameter> parameters

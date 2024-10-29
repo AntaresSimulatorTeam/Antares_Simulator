@@ -19,14 +19,15 @@ theme:
   #   - toc.separate
   palette:
     - media: "(prefers-color-scheme: light)"
-      scheme: antares
+      scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/toggle-switch
         name: Switch to dark mode
+
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
-        icon: material/toggle-switch
+        icon: material/toggle-switch-off-outline
         name: Switch to light mode
 
 nav:
@@ -103,6 +104,11 @@ plugins:
   - search
   - plantuml:
       puml_url: https://www.plantuml.com/plantuml/
+      puml_keyword: plantuml
+      theme:
+        url: https://raw.githubusercontent.com/MikhailKravets/mkdocs_puml/themes/themes/
+        light: material/indigo-light
+        dark: material/indigo-dark
 
 extra_css:
   - stylesheets/extra.css
