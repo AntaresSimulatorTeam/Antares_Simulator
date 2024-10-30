@@ -35,10 +35,11 @@
 #include <wx/statusbr.h>
 #include <ui/common/lock.h>
 
-namespace Antares
+using namespace Component::Datagrid;
+
+namespace Antares::Forms
 {
-namespace Forms
-{
+
 void ApplWnd::resetDefaultStatusBarText()
 {
     assert(wxIsMainThread() == true && "Must be ran from the main thread");
@@ -47,19 +48,18 @@ void ApplWnd::resetDefaultStatusBarText()
 #endif
 }
 
-/*
-** Applies a functor to all selected cells. Returns the number of selected
-** cells.
-*/
-static size_t ForAllSelectedCells(wxGrid& grid,
-                                  Component::Datagrid::VGridHelper* gridHelper,
-                                  Component::Datagrid::Selection::IOperator* op)
+
+bool oneCellSelected(wxGrid& grid)
 {
-    assert(wxIsMainThread() == true and "Must be ran from the main thread");
+    const wxGridCellCoordsArray& cells(grid.GetSelectedCells());
+    return cells.size() > 0;
+}
 
+size_t updateStatisticsOpForOneCell(wxGrid& grid,
+                                     VGridHelper* gridHelper,
+                                     Selection::IOperator* op)
+{
     size_t totalCell = 0;
-
-    // Singly selected cells.
     const wxGridCellCoordsArray& cells(grid.GetSelectedCells());
     for (uint i = 0; i < (uint)cells.size(); ++i)
     {
@@ -67,8 +67,20 @@ static size_t ForAllSelectedCells(wxGrid& grid,
         op->appendValue(gridHelper->GetNumericValue(cell.GetRow(), cell.GetCol()));
         ++totalCell;
     }
+    return totalCell;
+}
 
-    // Whole selected rows.
+bool rowsSelected(wxGrid& grid)
+{
+    const wxArrayInt& rows(grid.GetSelectedRows());
+    return rows.size() > 0;
+}
+
+size_t updateStatisticsOpForRows(wxGrid& grid,
+                                  VGridHelper* gridHelper,
+                                  Selection::IOperator* op)
+{
+    size_t totalCell = 0;
     int colCount = grid.GetNumberCols();
     const wxArrayInt& rows(grid.GetSelectedRows());
     for (uint i = 0; i < (uint)rows.size(); ++i)
@@ -79,8 +91,20 @@ static size_t ForAllSelectedCells(wxGrid& grid,
             ++totalCell;
         }
     }
+    return totalCell;
+}
 
-    // Whole selected columns.
+bool columnsSelected(wxGrid& grid)
+{
+    const wxArrayInt& cols(grid.GetSelectedCols());
+    return cols.size() > 0;
+}
+
+size_t updateStatisticsOpForColumns(wxGrid& grid,
+                                     VGridHelper* gridHelper,
+                                     Selection::IOperator* op)
+{
+    size_t totalCell = 0;
     int rowCount = grid.GetNumberRows();
     const wxArrayInt& cols(grid.GetSelectedCols());
     for (uint i = 0; i < (uint)cols.size(); ++i)
@@ -91,29 +115,74 @@ static size_t ForAllSelectedCells(wxGrid& grid,
             ++totalCell;
         }
     }
+    return totalCell;
+}
 
-    // Blocks. We always expect btl and bbr to have the same size, since their
+bool blockSelected(wxGrid& grid)
+{
+    // Blocks. We always expect blocks top left and bottom right to have the same size, since their
     // entries are supposed to correspond.
-    const wxGridCellCoordsArray& btl(grid.GetSelectionBlockTopLeft());
-    const wxGridCellCoordsArray& bbr(grid.GetSelectionBlockBottomRight());
-    size_t count = btl.size();
-    if (count == bbr.size())
+    const wxGridCellCoordsArray& blockTopLeft(grid.GetSelectionBlockTopLeft());
+    const wxGridCellCoordsArray& blockBottomRight(grid.GetSelectionBlockBottomRight());
+    return (blockTopLeft.size() == blockBottomRight.size()) && (blockTopLeft.size() > 0);
+}
+
+size_t updateStatisticsOpForBlock(wxGrid& grid,
+                                   VGridHelper* gridHelper,
+                                   Selection::IOperator* op)
+{
+    size_t totalCell = 0;
+    const wxGridCellCoordsArray& blockTopLeft(grid.GetSelectionBlockTopLeft());
+    const wxGridCellCoordsArray& blockBottomRight(grid.GetSelectionBlockBottomRight());
+    size_t blockSize = blockTopLeft.size();
+
+    for (uint i = 0; i < blockSize; ++i)
     {
-        for (uint i = 0; i < count; ++i)
+        const wxGridCellCoords& topLeft = blockTopLeft[i];
+        const wxGridCellCoords& bottomRight = blockBottomRight[i];
+        for (int row = topLeft.GetRow(); row <= bottomRight.GetRow(); ++row)
         {
-            const wxGridCellCoords& tl = btl[i];
-            const wxGridCellCoords& br = bbr[i];
-            for (int row = tl.GetRow(); row <= br.GetRow(); ++row)
+            for (int col = topLeft.GetCol(); col <= bottomRight.GetCol(); ++col)
             {
-                for (int col = tl.GetCol(); col <= br.GetCol(); ++col)
-                {
-                    op->appendValue(gridHelper->GetNumericValue(row, col));
-                    ++totalCell;
-                }
+                op->appendValue(gridHelper->GetNumericValue(row, col));
+                ++totalCell;
             }
         }
     }
     return totalCell;
+}
+
+/*
+** Applies a functor to all selected cells. Returns the number of selected
+** cells.
+*/
+static size_t ForAllSelectedCells(wxGrid& grid,
+                                  VGridHelper* gridHelper,
+                                  Selection::IOperator* op)
+{
+    assert(wxIsMainThread() == true and "Must be ran from the main thread");
+
+    if (oneCellSelected(grid))
+    {
+        return updateStatisticsOpForOneCell(grid, gridHelper, op);
+    }
+
+    if (rowsSelected(grid))
+    {
+        return updateStatisticsOpForRows(grid, gridHelper, op);
+    }
+    
+    if (columnsSelected(grid))
+    {
+        return updateStatisticsOpForColumns(grid, gridHelper, op);
+    }
+
+    if (blockSelected(grid))
+    {
+        return updateStatisticsOpForBlock(grid, gridHelper, op);
+    }
+    
+    return 0;
 }
 
 void ApplWnd::gridOperatorSelectedCellsUpdateResult(wxGrid* grid)
@@ -191,5 +260,4 @@ void ApplWnd::evtOnContextMenuStatusBar(wxContextMenuEvent& evt)
     evt.Skip();
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms
