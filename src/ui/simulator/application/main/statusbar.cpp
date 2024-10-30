@@ -56,8 +56,8 @@ bool oneCellSelected(wxGrid& grid)
 }
 
 size_t updateStatisticsOpForOneCell(wxGrid& grid,
-                                     VGridHelper* gridHelper,
-                                     Selection::IOperator* op)
+                                    VGridHelper* gridHelper,
+                                    Selection::IOperator* op)
 {
     size_t totalCell = 0;
     const wxGridCellCoordsArray& cells(grid.GetSelectedCells());
@@ -77,8 +77,8 @@ bool rowsSelected(wxGrid& grid)
 }
 
 size_t updateStatisticsOpForRows(wxGrid& grid,
-                                  VGridHelper* gridHelper,
-                                  Selection::IOperator* op)
+                                 VGridHelper* gridHelper,
+                                 Selection::IOperator* op)
 {
     size_t totalCell = 0;
     int colCount = grid.GetNumberCols();
@@ -101,8 +101,8 @@ bool columnsSelected(wxGrid& grid)
 }
 
 size_t updateStatisticsOpForColumns(wxGrid& grid,
-                                     VGridHelper* gridHelper,
-                                     Selection::IOperator* op)
+                                    VGridHelper* gridHelper,
+                                    Selection::IOperator* op)
 {
     size_t totalCell = 0;
     int rowCount = grid.GetNumberRows();
@@ -128,8 +128,8 @@ bool blockSelected(wxGrid& grid)
 }
 
 size_t updateStatisticsOpForBlock(wxGrid& grid,
-                                   VGridHelper* gridHelper,
-                                   Selection::IOperator* op)
+                                  VGridHelper* gridHelper,
+                                  Selection::IOperator* op)
 {
     size_t totalCell = 0;
     const wxGridCellCoordsArray& blockTopLeft(grid.GetSelectionBlockTopLeft());
@@ -156,9 +156,9 @@ size_t updateStatisticsOpForBlock(wxGrid& grid,
 ** Applies a functor to all selected cells. Returns the number of selected
 ** cells.
 */
-static size_t ForAllSelectedCells(wxGrid& grid,
-                                  VGridHelper* gridHelper,
-                                  Selection::IOperator* op)
+static size_t applyOperatorOnSelectedCells(wxGrid& grid,
+                                           VGridHelper* gridHelper,
+                                           Selection::IOperator* op)
 {
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
@@ -216,7 +216,7 @@ void ApplWnd::gridOperatorSelectedCellsUpdateResult(wxGrid* grid)
                 // Reset of the operator
                 pGridSelectionOperator->reset();
                 // Browse all selected cells
-                if (ForAllSelectedCells(*grid, gridHelper, pGridSelectionOperator))
+                if (applyOperatorOnSelectedCells(*grid, gridHelper, pGridSelectionOperator))
                 {
                     // Update the GUI
                     statusBar->SetStatusText(wxString()
