@@ -93,6 +93,8 @@ nav:
       - 'Continuous Integration': 'developer-guide/continuous-integration.md'
       - 'OR-tools integration': 'developer-guide/ortools-integration.md'
       - 'Changelog': 'developer-guide/CHANGELOG.md'
+      - 'Software architecture':
+          - 'New solver architecture' : 'developer-guide/Architecture/New-solver-architecture.md'
   - 'External links':
       - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
       - 'Antares website': 'https://antares-simulator.org'
