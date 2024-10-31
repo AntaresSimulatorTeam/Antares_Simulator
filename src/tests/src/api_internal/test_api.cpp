@@ -37,7 +37,7 @@ public:
     {
     }
 
-    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override
+    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() override
     {
         if (!success_)
         {

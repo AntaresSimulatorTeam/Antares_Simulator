@@ -31,17 +31,17 @@ namespace Antares
 FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path):
     study_path_{std::move(study_path)}
 {
-    study_path_c_str_ = study_path_.string().c_str();
+    study_path_str_ = study_path_.string();
+    argv_ = {"", study_path_str_.c_str(), "--parallel"};
 }
 
-std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
+std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load()
 {
     using namespace std::literals::string_literals;
     Antares::Solver::Application application;
     constexpr unsigned int argc = 3;
 
-    std::array<const char*, argc> argv{"", study_path_c_str_, "--parallel"};
-    application.prepare(argc, argv.data());
+    application.prepare(argc, argv_.data());
 
     return application.acquireStudy();
 }

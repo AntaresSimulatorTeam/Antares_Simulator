@@ -46,7 +46,7 @@ public:
      * load the study that will be simulated.
      * @return SimulationResults object which contains the results of the simulation.
      */
-    SimulationResults run(const IStudyLoader& study_loader);
+    SimulationResults run(IStudyLoader& study_loader);
 
 private:
     std::shared_ptr<Antares::Data::Study> study_;

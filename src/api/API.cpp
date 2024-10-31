@@ -32,7 +32,7 @@
 
 namespace Antares::API
 {
-SimulationResults APIInternal::run(const IStudyLoader& study_loader)
+SimulationResults APIInternal::run(IStudyLoader& study_loader)
 {
     try
     {
