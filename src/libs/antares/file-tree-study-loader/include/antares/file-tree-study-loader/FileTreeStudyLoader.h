@@ -55,12 +55,9 @@ public:
      *
      * @return std::shared_ptr<Antares::Data::Study> A shared_ptr to the loaded Study object.
      */
-    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() override;
+    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override;
 
 private:
     std::filesystem::path study_path_;
-    std::string study_path_str_ = "";
-    const char* study_path_c_str_ = nullptr;
-    std::vector<const char*> argv_;
 };
 } // namespace Antares
