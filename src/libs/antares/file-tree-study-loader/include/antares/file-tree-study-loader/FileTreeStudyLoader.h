@@ -59,5 +59,6 @@ public:
 
 private:
     std::filesystem::path study_path_;
+    const char* study_path_c_str_ = nullptr;
 };
 } // namespace Antares
