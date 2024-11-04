@@ -199,6 +199,16 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
     BOOST_CHECK(areaA->thermal.list.empty());
 }
 
+BOOST_FIXTURE_TEST_CASE(thermal_cluster_forceNoGen, ThermalClusterStudy)
+{
+    cluster->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
+    cluster->series.timeSeries.resize(1, 8760);
+    cluster->series.timeSeries.fill(100);
+    cluster->reverseCalculationOfSpinning();
+
+    BOOST_CHECK_EQUAL(cluster->series[0][0], 100);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // thermal clusters
 
 BOOST_AUTO_TEST_SUITE(renewable_clusters_operations)
