@@ -1,6 +1,12 @@
-set(EXECUTABLE_NAME tests-modeler-api-ortools)
-add_executable(${EXECUTABLE_NAME} testApiOrtoolsLinearProblem.cpp)
+set(EXECUTABLE_NAME unit-tests-for-modeler-api)
+add_executable(${EXECUTABLE_NAME})
 
+target_sources(${EXECUTABLE_NAME}
+        PRIVATE
+        test_main.cpp
+        testModelerLinearProblemWithOrtools.cpp
+        testModelerLPbuilder.cpp
+)
 target_include_directories(${EXECUTABLE_NAME}
         PRIVATE
         "${src_solver_optimisation}"
@@ -12,9 +18,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         Antares::modeler-ortools-impl
 )
 
-# Storing tests-ts-numbers under the folder Unit-tests in the IDE
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES FOLDER Unit-tests)
+add_test(NAME ${EXECUTABLE_NAME} COMMAND ${EXECUTABLE_NAME})
+set_property(TEST ${EXECUTABLE_NAME} PROPERTY LABELS unit)
 
-add_test(NAME test-modeler-api-ortools COMMAND ${EXECUTABLE_NAME})
-
-set_property(TEST test-modeler-api-ortools PROPERTY LABELS unit)

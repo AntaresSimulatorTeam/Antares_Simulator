@@ -20,6 +20,7 @@
  */
 
 #pragma once
+#include <filesystem>
 #include <memory>
 #include <string>
 
@@ -37,7 +38,7 @@ public:
     bool validate() const;
 
     bool loadFromSection(const IniFile::Section& section);
-    bool loadSeries(const std::string& folder) const;
+    bool loadSeries(const std::filesystem::path& folder) const;
 
     void saveProperties(IniFile& ini) const;
     bool saveSeries(const std::string& path) const;

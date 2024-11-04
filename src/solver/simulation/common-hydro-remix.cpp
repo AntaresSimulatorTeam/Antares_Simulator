@@ -59,7 +59,7 @@ static bool Remix(const Data::AreaList& areas,
 
           auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
 
-          auto& S = weeklyResults.ValeursHorairesDeDefaillanceNegative;
+          const auto& S = weeklyResults.ValeursHorairesDeDefaillanceNegative;
 
           auto& H = weeklyResults.TurbinageHoraire;
 

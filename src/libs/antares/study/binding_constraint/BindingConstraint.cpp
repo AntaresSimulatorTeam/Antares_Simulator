@@ -32,10 +32,7 @@
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
-using namespace Yuni;
 using namespace Antares;
-
-#define SEP IO::Separator
 
 #ifdef _MSC_VER
 #define SNPRINTF sprintf_s
@@ -48,7 +45,7 @@ namespace Antares::Data
 
 BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
 {
-    ShortString16 l(text);
+    Yuni::ShortString16 l(text);
     l.toLower();
 
     if (l == "both" || l == "<>" || l == "><" || l == "< and >")
@@ -74,7 +71,7 @@ BindingConstraint::Type BindingConstraint::StringToType(const AnyString& text)
 {
     if (!text.empty())
     {
-        ShortString16 l(text);
+        Yuni::ShortString16 l(text);
         l.toLower();
         switch (l.first())
         {
@@ -441,7 +438,7 @@ bool BindingConstraint::contains(const Area* area) const
     return false;
 }
 
-void BindingConstraint::buildFormula(String& s) const
+void BindingConstraint::buildFormula(Yuni::String& s) const
 {
     char tmp[42];
     bool first = true;
@@ -505,23 +502,6 @@ void BindingConstraint::buildFormula(String& s) const
         s << ')';
         first = false;
     }
-}
-
-uint64_t BindingConstraint::memoryUsage() const
-{
-    return sizeof(BindingConstraint)
-           // comments
-           + pComments.capacity()
-           // Values
-           + RHSTimeSeries().memoryUsage()
-           // Estimation
-           + pLinkWeights.size() * (sizeof(double) + 3 * sizeof(void*))
-           // Estimation
-           + pLinkOffsets.size() * (sizeof(int) + 3 * sizeof(void*))
-           // Estimation
-           + pClusterWeights.size() * (sizeof(double) + 3 * sizeof(void*))
-           // Estimation
-           + pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void*));
 }
 
 bool BindingConstraint::contains(const BindingConstraint* bc) const

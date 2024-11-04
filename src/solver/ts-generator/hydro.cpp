@@ -27,11 +27,10 @@
 #include <antares/writer/i_writer.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 using namespace Antares;
 
-#define SEP Yuni::IO::Separator
+namespace fs = std::filesystem;
 
 #define EPSILON ((double)1.0e-9)
 
@@ -282,26 +281,22 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         {
             logs.info() << "Archiving the hydro time-series";
             study.areas.each(
-              [&study, &currentYear, &writer, &progression](const Data::Area& area)
+              [&currentYear, &writer, &progression](const Data::Area& area)
               {
                   const int precision = 0;
-                  Yuni::String output;
-                  study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
-                                       << currentYear << SEP << area.id;
+                  std::string mcYear = "mc-" + currentYear;
+                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear
+                                          / area.id.to<std::string>();
 
-                  {
-                      std::string buffer;
-                      area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
-                      output.clear() << study.buffer << SEP << "ror.txt";
-                      writer.addEntryFromBuffer(output.c_str(), buffer);
-                  }
+                  std::string buffer;
+                  area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
+                  fs::path outputFile = outputFolder / "ror.txt";
+                  writer.addEntryFromBuffer(outputFile, buffer);
 
-                  {
-                      std::string buffer;
-                      area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
-                      output.clear() << study.buffer << SEP << "storage.txt";
-                      writer.addEntryFromBuffer(output.c_str(), buffer);
-                  }
+                  area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
+                  outputFile = outputFolder / "storage.txt";
+                  writer.addEntryFromBuffer(outputFile, buffer);
+
                   ++progression;
               });
         }

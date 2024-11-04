@@ -60,13 +60,13 @@ BOOST_FIXTURE_TEST_CASE(deep_tree_odd, Registry<Node>)
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), -42.);
 }
 
-static Node* deepAddTree(Registry<Node>& registry, AddNode* root, int depth)
+static Node* deepAddTree(Registry<Node>& registry, SumNode* root, int depth)
 {
     if (depth > 0)
     {
         Node* left = deepAddTree(registry, root, depth - 1);
         Node* right = deepAddTree(registry, root, depth - 1);
-        return registry.create<AddNode>(left, right);
+        return registry.create<SumNode>(left, right);
     }
     else
     {
@@ -76,12 +76,25 @@ static Node* deepAddTree(Registry<Node>& registry, AddNode* root, int depth)
 
 BOOST_FIXTURE_TEST_CASE(binary_tree, Registry<Node>)
 {
-    // AddNode's children are not mutable, so we'll replace this empty root with an actual one
-    AddNode* root = create<AddNode>(nullptr, nullptr);
+    // SumNode's children are not mutable, so we'll replace this empty root with an actual one
+    SumNode* root = create<SumNode>(nullptr, nullptr);
     Node* node = deepAddTree(*this, root, 10);
     EvalVisitor evalVisitor;
     // We expect 1024 = 2^10 literal nodes, each carrying value 42.
     BOOST_CHECK_EQUAL(evalVisitor.dispatch(node), 42. * 1024);
+}
+
+BOOST_FIXTURE_TEST_CASE(wide_sum_tree, Registry<Node>)
+{
+    const int nb_operands = 1'000;
+    std::vector<Node*> operands(nb_operands);
+    for (auto& op: operands)
+    {
+        op = create<LiteralNode>(1.);
+    }
+    SumNode root(std::move(operands));
+    EvalVisitor evalVisitor;
+    BOOST_CHECK_EQUAL(evalVisitor.dispatch(&root), nb_operands * 1.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -4,9 +4,7 @@ add_subdirectory(study)
 add_subdirectory(benchmarking)
 add_subdirectory(inifile)
 
-if(WITH_YAMLCPP)
-    add_subdirectory(yaml-parser)
-endif()
+add_subdirectory(yaml-parser)
 
 if(WITH_ANTLR4)
     add_subdirectory(antlr4-interface)

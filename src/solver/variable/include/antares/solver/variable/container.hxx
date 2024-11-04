@@ -23,12 +23,9 @@
 
 #include <memory>
 
-#include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 
 #include "antares/solver/variable/surveyresults/reportbuilder.hxx"
-
-#define SEP Yuni::IO::Separator
 
 namespace Antares
 {
@@ -238,12 +235,6 @@ inline void List<NextT>::retrieveResultsForLink(
 }
 
 template<class NextT>
-inline uint64_t List<NextT>::memoryUsage() const
-{
-    return sizeof(ListType) + NextType::memoryUsage();
-}
-
-template<class NextT>
 void List<NextT>::buildSurveyReport(SurveyResults& results,
                                     int dataLevel,
                                     int fileLevel,
@@ -254,7 +245,8 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
 
     // The new filename
     results.data.filename.clear();
-    results.data.filename << results.data.output << SEP;
+    results.data.filename << std::filesystem::path(static_cast<std::string>(results.data.output))
+                               / "";
     Category::FileLevelToStream(results.data.filename, fileLevel);
     results.data.filename << '-';
     Category::PrecisionLevelToStream(results.data.filename, precision);
@@ -283,7 +275,8 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     // The new filename
     results.data.filename.clear();
-    results.data.filename << results.data.output << SEP;
+    results.data.filename << std::filesystem::path(static_cast<std::string>(results.data.output))
+                               / "";
     Category::FileLevelToStream(results.data.filename, fileLevel);
     results.data.filename << '-';
     Category::PrecisionLevelToStream(results.data.filename, precision);

@@ -59,7 +59,7 @@ public:
 
 private:
     const EvaluationContext context_;
-    double visit(const Nodes::AddNode* node) override;
+    double visit(const Nodes::SumNode* node) override;
     double visit(const Nodes::SubtractionNode* node) override;
     double visit(const Nodes::MultiplicationNode* node) override;
     double visit(const Nodes::DivisionNode* node) override;
@@ -71,6 +71,7 @@ private:
     double visit(const Nodes::ParameterNode* node) override;
     double visit(const Nodes::LiteralNode* node) override;
     double visit(const Nodes::PortFieldNode* node) override;
+    double visit(const Nodes::PortFieldSumNode* node) override;
     double visit(const Nodes::ComponentVariableNode* node) override;
     double visit(const Nodes::ComponentParameterNode* node) override;
 };

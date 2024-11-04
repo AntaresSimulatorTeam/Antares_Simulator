@@ -18,28 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <yuni/yuni.h>
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
+#include <spx_fonctions.h>
 
-extern "C"
-{
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-}
-
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Yuni;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                            std::vector<int>&,
@@ -658,6 +640,4 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         printf("Pas de solution au probleme auxiliaire\n");
 #endif
     }
-
-    return;
 }

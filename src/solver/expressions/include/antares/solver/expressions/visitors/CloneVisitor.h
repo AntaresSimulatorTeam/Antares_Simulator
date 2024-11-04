@@ -39,7 +39,7 @@ public:
     explicit CloneVisitor(Registry<Nodes::Node>& registry);
     std::string name() const override;
 
-    Nodes::Node* visit(const Nodes::AddNode* node) override;
+    Nodes::Node* visit(const Nodes::SumNode* node) override;
     Nodes::Node* visit(const Nodes::SubtractionNode* node) override;
     Nodes::Node* visit(const Nodes::MultiplicationNode* node) override;
     Nodes::Node* visit(const Nodes::DivisionNode* node) override;
@@ -51,6 +51,7 @@ public:
     Nodes::Node* visit(const Nodes::ParameterNode* node) override;
     Nodes::Node* visit(const Nodes::LiteralNode* node) override;
     Nodes::Node* visit(const Nodes::PortFieldNode* node) override;
+    Nodes::Node* visit(const Nodes::PortFieldSumNode* node) override;
     Nodes::Node* visit(const Nodes::ComponentVariableNode* node) override;
     Nodes::Node* visit(const Nodes::ComponentParameterNode* node) override;
 

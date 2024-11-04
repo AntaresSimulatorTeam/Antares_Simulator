@@ -22,20 +22,19 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-extern "C"
-{
-#include "spx_fonctions.h"
-}
-
-using namespace Antares;
 using namespace Antares::Data;
 
 using Antares::Solver::Optimization::OptimizationOptions;
+
+bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
+                                      PROBLEME_HEBDO*,
+                                      Solver::IResultWriter&,
+                                      Solver::Simulation::ISimulationObserver&);
+bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
+void OPT_LiberationProblemesSimplexe(const OptimizationOptions&, const PROBLEME_HEBDO*);
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,

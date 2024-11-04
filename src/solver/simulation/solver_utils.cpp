@@ -22,21 +22,18 @@
 #include "antares/solver/simulation/solver_utils.h"
 
 #include <cmath>
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <limits>
 #include <sstream>
 
-#include <yuni/io/file.h>
-
-#define SEP Yuni::IO::Separator
+namespace fs = std::filesystem;
 
 static const std::string systemCostFilename = "annualSystemCost.txt";
 static const std::string criterionsCostsFilename = "checkIntegrity.txt";
-static const std::string optimizationTimeFilename = std::string("optimization") + SEP
-                                                    + "solve-durations.txt";
-static const std::string updateTimeFilename = std::string("optimization") + SEP
-                                              + "update-durations.txt";
+static const fs::path optimizationTimeFilename = fs::path("optimization") / "solve-durations.txt";
+static const fs::path updateTimeFilename = fs::path("optimization") / "update-durations.txt";
 
 static std::ostream& toScientific(std::ostream& os)
 {

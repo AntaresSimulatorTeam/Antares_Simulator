@@ -20,20 +20,17 @@
 */
 
 #include <cmath>
+#include <spx_constantes_externes.h>
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-#include "spx_constantes_externes.h"
 #include "variables/VariableManagement.h"
 #include "variables/VariableManagerUtils.h"
 
-using namespace Antares;
-using namespace Antares::Data;
-
-using namespace Yuni;
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
+                                                                            const int,
+                                                                            const int);
 
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
 {
@@ -57,8 +54,6 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
 
         problemeHebdo->CaracteristiquesHydrauliques[pays].MaxDesPmaxHydrauliques = pmaxHyd;
     }
-
-    return;
 }
 
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, uint pdtHebdo)
@@ -505,6 +500,4 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
           PremierPdtDeLIntervalle,
           DernierPdtDeLIntervalle);
     }
-
-    return;
 }

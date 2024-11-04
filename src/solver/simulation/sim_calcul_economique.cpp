@@ -19,20 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <cmath>
+#include <algorithm>
 #include <sstream>
 
 #include <antares/antares/fatal-error.h>
-#include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/fwd.h"
-#include "antares/study/simulation.h"
 
 using namespace Antares;
 using namespace Antares::Data;

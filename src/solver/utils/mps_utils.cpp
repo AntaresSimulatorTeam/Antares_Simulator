@@ -26,15 +26,6 @@
 
 using namespace Antares;
 using namespace Antares::Data;
-using namespace Yuni;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
-
-constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
 /*
 ** Copyright 2007-2023 RTE
@@ -70,10 +61,6 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 #include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/name_translator.h"
-
-using namespace Yuni;
-
-#define SEP IO::Separator
 
 class ProblemConverter
 {

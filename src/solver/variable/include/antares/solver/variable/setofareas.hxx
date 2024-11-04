@@ -267,17 +267,6 @@ void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, in
 }
 
 template<class NextT>
-inline uint64_t SetsOfAreas<NextT>::memoryUsage() const
-{
-    uint64_t result = sizeof(NextType) * pSetsOfAreas.size();
-    for (auto i = pBegin; i != pEnd; ++i)
-    {
-        result += (*i)->memoryUsage();
-    }
-    return result;
-}
-
-template<class NextT>
 template<class I>
 inline void SetsOfAreas<NextT>::provideInformations(I& infos)
 {

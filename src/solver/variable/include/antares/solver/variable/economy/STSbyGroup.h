@@ -337,15 +337,6 @@ public:
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
-    inline uint64_t memoryUsage() const
-    {
-        uint64_t r = (sizeof(IntermediateValues) * nbColumns_ + IntermediateValues::MemoryUsage())
-                     * pNbYearsParallel;
-        r += sizeof(double) * nbColumns_ * HOURS_PER_YEAR * pNbYearsParallel;
-        r += AncestorType::memoryUsage();
-        return r;
-    }
-
     std::string caption(unsigned int column) const
     {
         static const std::vector<std::string> VAR_POSSIBLE_KINDS = {"INJECTION",

@@ -239,12 +239,13 @@ void ExportMap::internalCreateComponents()
         if (not pStudy->folder.empty() && defaultPath == wxEmptyString)
         {
             // Get the parent folder
-            folderPath = pStudy->folder + SEP << "maps";
+            String f = pStudy->folder.string();
+            folderPath = f << SEP << "maps";
 
             if (not IO::Directory::Exists(folderPath))
             {
-                folderPath = pStudy->folder;
-                uint sepPos = pStudy->folder.find_last_of(SEP);
+                folderPath = f;
+                uint sepPos = f.find_last_of(SEP);
                 if (sepPos != YString::npos)
                 {
                     // found it

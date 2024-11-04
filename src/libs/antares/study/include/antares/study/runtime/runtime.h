@@ -131,10 +131,10 @@ public:
     */
     bool quadraticOptimizationHasFailed;
 
+    std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+
 private:
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
-    //! Prepare all thermal clusters in 'must-run' mode
-    void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledShortTermStorageClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);

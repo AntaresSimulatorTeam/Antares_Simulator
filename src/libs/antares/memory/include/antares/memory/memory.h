@@ -92,11 +92,6 @@ public:
     //@}
 
     /*!
-    ** \brief Get the amount of memory currently used
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
     ** \brief Get the process ID of the application
     **
     ** This value is cached and detected at the creation of the instance.

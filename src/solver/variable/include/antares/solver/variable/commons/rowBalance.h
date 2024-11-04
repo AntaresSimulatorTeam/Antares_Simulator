@@ -22,7 +22,6 @@
 #define __SOLVER_VARIABLE_ECONOMY_RowBalance_H__
 
 #include <antares/study/area/constants.h>
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares

@@ -538,19 +538,6 @@ void Areas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
         pAreas[i].beforeYearByYearExport(year, numSpace);
     }
 }
-
-template<class NextT>
-uint64_t Areas<NextT>::memoryUsage() const
-{
-    uint64_t result = 0;
-    for (unsigned int i = 0; i != pAreaCount; ++i)
-    {
-        result += sizeof(NextType) + sizeof(void*); // overhead vector
-        result += pAreas[i].memoryUsage();
-    }
-    return result;
-}
-
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares

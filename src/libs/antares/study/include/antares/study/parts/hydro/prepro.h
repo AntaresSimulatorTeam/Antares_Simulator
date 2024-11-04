@@ -95,7 +95,7 @@ public:
     ** \param folder The source folder (ex: `input/hydro/prepro`)
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& s, const AreaName& areaID, const std::string& folder);
+    bool loadFromFolder(Study& s, const std::string& areaID, const std::filesystem::path& folder);
 
     bool validate(const std::string& areaID);
     /*!
@@ -122,12 +122,6 @@ int PreproHydroLoadFromFolder(Study& s,
                               PreproHydro* h,
                               const AreaName& areaID,
                               const char folder[]);
-
-/*!
-** \brief Get the size (bytes) occupied in memory by a `PreproHydro` structure
-** \ingroup hydroprepro
-*/
-uint64_t PreproHydroMemoryUsage(PreproHydro* h);
 
 } // namespace Data
 } // namespace Antares

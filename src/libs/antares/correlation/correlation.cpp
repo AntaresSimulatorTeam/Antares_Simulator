@@ -557,23 +557,6 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
     m[to.index][from.index] = v;
 }
 
-uint64_t Correlation::memoryUsage() const
-{
-    uint64_t r = sizeof(Correlation);
-    if (!annual.empty())
-    {
-        r += annual.memoryUsage();
-    }
-    if (!monthly.empty())
-    {
-        for (uint i = 0; i != 12; ++i)
-        {
-            r += monthly[i].memoryUsage();
-        }
-    }
-    return r;
-}
-
 bool Correlation::forceReload(bool reload) const
 {
     bool ret = true;

@@ -185,12 +185,6 @@ public:
     */
     uint groupId() const override;
 
-    /*!
-    ** \brief Get the memory consummed by the thermal cluster (in bytes)
-    */
-    uint64_t memoryUsage() const override;
-    //@}
-
     //! \name validity of Min Stable Power
     //@{
     // bool minStablePowerValidity() const;

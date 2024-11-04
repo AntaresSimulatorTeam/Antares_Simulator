@@ -42,8 +42,6 @@ using namespace Antares;
 
 #define THERMALAGGREGATELIST_INITIAL_CAPACITY 10
 
-#define SEP IO::Separator
-
 namespace Yuni::Extension::CString
 {
 bool Into<Antares::Data::StatisticalLaw>::Perform(AnyString string, TargetType& out)
@@ -614,18 +612,6 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
         return "";
     }
     return "";
-}
-
-uint64_t ThermalCluster::memoryUsage() const
-{
-    uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
-    if (prepro)
-    {
-        amount += prepro->memoryUsage();
-    }
-    amount += series.memoryUsage();
-    amount += ecoInput.memoryUsage();
-    return amount;
 }
 
 void ThermalCluster::calculatMinDivModulation()

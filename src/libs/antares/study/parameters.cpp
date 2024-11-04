@@ -1111,15 +1111,30 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "initial-reservoir-levels") // ignored since 9.2
     {
-        if (version >= StudyVersion(9, 2))
+        if (value == "hot start")
         {
             logs.warning()
               << "Option initial-reservoir-levels is deprecated, please remove it from the study";
         }
-        else if (value == "hot start")
+        return true;
+    }
+
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step") // ignored since 9.2
+    {
+        if (value == "false")
         {
-            logs.warning()
-              << "Hydro hot start not supported with this solver, please use a version < 9.2";
+            logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step "
+                              " is deprecated, please remove it from the study";
+        }
+        return true;
+    }
+
+    if (key == "enable-first-step") // ignored since 9.2
+    {
+        if (value == "true")
+        {
+            logs.warning() << "Parameter enable-first-step is deprecated, please remove it from"
+                              " the study";
         }
         return true;
     }
@@ -1359,12 +1374,6 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
     namedProblems = options.namedProblems;
 
     handleOptimizationOptions(options);
-}
-
-uint64_t Parameters::memoryUsage() const
-{
-    return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
-           + yearsFilter.size(); // vector of bools, 1 bit per coefficient
 }
 
 void Parameters::resetYearsWeigth()
@@ -1965,7 +1974,7 @@ void Parameters::saveToINI(IniFile& ini) const
     }
 }
 
-bool Parameters::loadFromFile(const AnyString& filename, const StudyVersion& version)
+bool Parameters::loadFromFile(const std::filesystem::path& filename, const StudyVersion& version)
 {
     // Loading the INI file
     IniFile ini;

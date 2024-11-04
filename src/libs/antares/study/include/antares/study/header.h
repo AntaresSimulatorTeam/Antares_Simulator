@@ -83,7 +83,7 @@ public:
     ** \param warnings Enable warnings/errors
     ** \return True if the operation succeeded, false otherwise
     */
-    bool loadFromFile(const AnyString& filename, bool warnings = true);
+    bool loadFromFile(const std::filesystem::path& filename, bool warnings = true);
 
     /*!
     ** \brief Save a study header into a file

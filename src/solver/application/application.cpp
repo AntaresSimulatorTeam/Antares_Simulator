@@ -229,9 +229,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.performTransformationsBeforeLaunchingSimulation();
 
     ScenarioBuilderOwner(study).callScenarioBuilder();
-
-    // alloc global vectors
-    SIM_AllocationTableaux(study);
 }
 
 void Application::startSimulation(Data::StudyLoadOptions& options)
@@ -408,7 +405,7 @@ void Application::resetLogFilename() const
     }
 
     logfile /= "solver-"; // append the filename
-    logfile += FormattedTime("%Y%m%d-%H%M%S")
+    logfile += formatTime(getCurrentTime(), "%Y%m%d-%H%M%S")
                + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename

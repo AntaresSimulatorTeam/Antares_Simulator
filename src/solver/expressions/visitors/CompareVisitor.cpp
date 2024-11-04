@@ -55,9 +55,24 @@ static bool compareEqualOperator(const T* node, const Antares::Solver::Nodes::No
 
 namespace Antares::Solver::Visitors
 {
-bool CompareVisitor::visit(const Nodes::AddNode* node, const Nodes::Node* other)
+bool CompareVisitor::visit(const Nodes::SumNode* node, const Nodes::Node* other)
 {
-    return compareBinaryNode(*this, node, other);
+    if (const auto* other_node = dynamic_cast<const Nodes::SumNode*>(other))
+    {
+        if (node->size() != other_node->size())
+        {
+            return false;
+        }
+        for (std::size_t i = 0; i < node->size(); ++i)
+        {
+            if (!dispatch(node->getOperands()[i], other_node->getOperands()[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 bool CompareVisitor::visit(const Nodes::SubtractionNode* node, const Nodes::Node* other)
@@ -115,6 +130,11 @@ bool CompareVisitor::visit(const Nodes::VariableNode* node, const Nodes::Node* o
 }
 
 bool CompareVisitor::visit(const Nodes::PortFieldNode* node, const Nodes::Node* other)
+{
+    return compareEqualOperator(node, other);
+}
+
+bool CompareVisitor::visit(const Nodes::PortFieldSumNode* node, const Nodes::Node* other)
 {
     return compareEqualOperator(node, other);
 }

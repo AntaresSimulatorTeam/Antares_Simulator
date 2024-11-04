@@ -220,12 +220,6 @@ public:
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
     //@}
 
-    //! \name Memory management
-    //@{
-    //! Get the amount of memory currently used by the class
-    uint64_t memoryUsage() const;
-    //@}
-
 private:
     //! Pointer to the current study
     Data::Study* pStudy;
