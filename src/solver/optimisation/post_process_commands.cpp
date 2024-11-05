@@ -197,7 +197,7 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
                 // CSR Marginal costs
                 if (hourlyResults.ValeursHorairesDtgMrgCsr[hour] > 0.5)
                 {
-                    hourlyResults.MarginalCostsCSR[hour] = -unsuppliedEnergyCost;
+                    hourlyResults.MarginalCostsCSR[hour] = unsuppliedEnergyCost;
                 }
             }
         }
