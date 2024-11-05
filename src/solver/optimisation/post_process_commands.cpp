@@ -151,21 +151,22 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
 
-            // Default value (when the hour is not triggered by csr)
+            // Default value (when the hour is not triggered by CSR)
             hourlyResults.ValeursHorairesDtgMrgCsr[hour] = dtgMrg;
             hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = ens;
+            // Marginal cost from solver is negative, and we need it positive, hence the '-' sign.
+            hourlyResults.MarginalCostsCSR[hour] = -hourlyResults.CoutsMarginauxHoraires[hour];
 
             if (isHourTriggeredByCsr)
             {
                 hourlyResults.ValeursHorairesDtgMrgCsr[hour] = std::max(0.0, dtgMrg - ens);
                 hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = std::max(0.0, ens - dtgMrg);
-            }
 
-            // CSR Marginal costs
-            hourlyResults.MarginalCostsCSR[hour] = hourlyResults.CoutsMarginauxHoraires[hour];
-            if (hourlyResults.ValeursHorairesDtgMrgCsr[hour] > 0.5)
-            {
-                hourlyResults.MarginalCostsCSR[hour] = -unsuppliedEnergyCost;
+                // CSR Marginal costs
+                if (hourlyResults.ValeursHorairesDtgMrgCsr[hour] > 0.5)
+                {
+                    hourlyResults.MarginalCostsCSR[hour] = -unsuppliedEnergyCost;
+                }
             }
         }
     }
