@@ -144,4 +144,3 @@ void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 
     optimisationAllocateProblem(problemeHebdo, mxPaliers);
 }
-
