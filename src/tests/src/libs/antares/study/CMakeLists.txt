@@ -17,3 +17,5 @@ target_link_libraries(test-study
 )
 
 add_test(NAME test-study COMMAND test-study)
+
+set_property(TEST test-study PROPERTY LABELS unit)

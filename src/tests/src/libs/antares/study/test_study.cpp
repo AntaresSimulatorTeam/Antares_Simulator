@@ -41,10 +41,13 @@ struct OneAreaStudy
 {
     OneAreaStudy()
     {
-        areaA = study.areaAdd("A");
+        study = std::make_unique<Study>();
+        areaA = study->areaAdd("A");
+        study->parameters.simulationDays.first = 0;
+        study->parameters.simulationDays.end = 7;
     }
 
-    Study study;
+    std::unique_ptr<Study> study;
     Area* areaA;
 };
 
@@ -52,8 +55,8 @@ BOOST_AUTO_TEST_SUITE(areas_operations)
 
 BOOST_AUTO_TEST_CASE(area_add)
 {
-    Study study;
-    const auto areaA = study.areaAdd("A");
+    auto study = std::make_unique<Study>() ;
+    const auto areaA = study->areaAdd("A");
     BOOST_CHECK(areaA != nullptr);
     BOOST_CHECK_EQUAL(areaA->name, "A");
     BOOST_CHECK_EQUAL(areaA->id, "a");
@@ -61,16 +64,16 @@ BOOST_AUTO_TEST_CASE(area_add)
 
 BOOST_FIXTURE_TEST_CASE(area_rename, OneAreaStudy)
 {
-    BOOST_CHECK(study.areaRename(areaA, "B"));
+    BOOST_CHECK(study->areaRename(areaA, "B"));
     BOOST_CHECK(areaA->name == "B");
     BOOST_CHECK(areaA->id == "b");
 }
 
 BOOST_FIXTURE_TEST_CASE(area_delete, OneAreaStudy)
 {
-    BOOST_CHECK_EQUAL(study.areas.size(), 1);
-    BOOST_CHECK(study.areaDelete(areaA));
-    BOOST_CHECK(study.areas.empty());
+    BOOST_CHECK_EQUAL(study->areas.size(), 1);
+    BOOST_CHECK(study->areaDelete(areaA));
+    BOOST_CHECK(study->areas.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END() //areas
@@ -87,7 +90,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
     // Check that "Cluster1" is found
     BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), disabledCluster.get());
 
-    study.initializeRuntimeInfos(); // This should remove all disabled thermal clusters
+    study->initializeRuntimeInfos(); // This should remove all disabled thermal clusters
     // Check that "Cluster1" isn't found
     BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), nullptr);
 }
@@ -102,7 +105,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     // Check that "Cluster1" is found
     BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), disabledCluster.get());
 
-    study.initializeRuntimeInfos(); // This should remove all disabled renewable clusters
+    study->initializeRuntimeInfos(); // This should remove all disabled renewable clusters
     // Check that "Cluster1" isn't found
     BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), nullptr);
 }
@@ -137,7 +140,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end()); 
     BOOST_CHECK(findDisabledCluster("Cluster2") != sts.end()); 
 
-    study.initializeRuntimeInfos(); // This should remove all disabled short-term storages
+    study->initializeRuntimeInfos(); // This should remove all disabled short-term storages
 
     // Check that only "Cluster1" is found
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
@@ -183,7 +186,7 @@ struct ThermalClusterStudy: public OneAreaStudy
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
 {
-    BOOST_CHECK(study.clusterRename(cluster, "Renamed"));
+    BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
     BOOST_CHECK(cluster->name() == "Renamed");
     BOOST_CHECK(cluster->id() == "renamed");
 }
@@ -194,6 +197,16 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
     areaA->thermal.list.remove("cluster");
     BOOST_CHECK(areaA->thermal.list.find("cluster") == nullptr);
     BOOST_CHECK(areaA->thermal.list.empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(thermal_cluster_forceNoGen, ThermalClusterStudy)
+{
+    cluster->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
+    cluster->series.timeSeries.resize(1, 8760);
+    cluster->series.timeSeries.fill(100);
+    cluster->reverseCalculationOfSpinning();
+
+    BOOST_CHECK_EQUAL(cluster->series[0][0], 100);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // thermal clusters
@@ -222,7 +235,7 @@ struct RenewableClusterStudy : public OneAreaStudy
 {
     RenewableClusterStudy()
     {
-        areaA = study.areaAdd("A");
+        areaA = study->areaAdd("A");
         auto newCluster = std::make_shared<RenewableCluster>(areaA);
         newCluster->setName("WindCluster");
         areaA->renewable.list.add(newCluster);
@@ -234,7 +247,7 @@ struct RenewableClusterStudy : public OneAreaStudy
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_rename, RenewableClusterStudy)
 {
-    BOOST_CHECK(study.clusterRename(cluster, "Renamed"));
+    BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
     BOOST_CHECK(cluster->name() == "Renamed");
     BOOST_CHECK(cluster->id() == "renamed");
 }
