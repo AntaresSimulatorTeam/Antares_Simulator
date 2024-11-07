@@ -104,7 +104,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
       "solver-parameters",
       "Set solver-specific parameters, for instance --solver-parameters=\"THREADS 1 PRESOLVE 1\""
       "for XPRESS or --solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for SCIP."
-      "Syntax is solver-dependent, and only supported for SCIP & XPRESS."
+      "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
     parser->addParagraph("\nParameters");
     // --name
