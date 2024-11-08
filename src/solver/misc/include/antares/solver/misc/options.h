@@ -29,6 +29,7 @@
 
 #include <antares/optimization-options/options.h>
 #include <antares/study/study.h>
+#include <antares/optimization-options/options.h>
 
 /*!
 ** \brief Command line settings for launching the simulation
