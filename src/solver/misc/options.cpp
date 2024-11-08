@@ -264,7 +264,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkOrtoolsSolver(const Optimization::OptimizationOptions& optOptions)
+void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
     if (optOptions.ortoolsUsed)
     {
