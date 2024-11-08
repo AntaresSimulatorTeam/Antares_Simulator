@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "antares/optimization-options/options.h"
-#include "antares/study/fwd.h"
 
 namespace Antares::Check
 {
