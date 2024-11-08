@@ -90,9 +90,8 @@ static std::string InvalidSolverParameterMessage(const std::string& solver,
     return message.str();
 }
 
-InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(
-  const std::string& solver,
-  const std::string& parameters):
+InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(const std::string& solver,
+                                                                 const std::string& parameters):
     LoadingError(InvalidSolverParameterMessage(solver, parameters))
 {
 }
