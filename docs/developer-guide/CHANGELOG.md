@@ -11,6 +11,10 @@ toc_depth: 2
 * Short term storage costs [ANT-1854] (#2302)
 * Add ts-generation for links [ANT-1084] (#1986)
 
+#### Removed features
+* Remove hydro hotstart (#2131)
+* Remove adequacy patch lmr [ANT-1933] (#2341)
+
 #### Improvements
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
 * Expose API [ANT-1158] (#1993)
@@ -49,8 +53,7 @@ toc_depth: 2
 * Add SumNode "wide" test (#2403)
 * Add iterators on ASTs, allowing for loops (#2387)
 
-#### For developers
-##### CI
+#### CI
 * SonarCloud job, improvements, bugfixes (#2315) (#2281) (#2246)
 * Run all tests even if one of them fails (#2265)
 * install gh from rpm (#2216)
@@ -63,13 +66,15 @@ toc_depth: 2
 * Add short test to coverage analysis (#2280) (#2267)
 * Check formatting as part of the CI (workflow only) (#2198)
 * Always run clang-format on PR (#2230)
-##### Build
+
+#### Build
 * vcpkg (linux, sirius) (#2078) (#2090) (#2145)
 * Remove src/antares-deps (#2182)
 * Use OR-Tools v9.11-rte1.1 (#2437)
 * Fix or-tools integration (#2402)
 * Better dependencies with cmake, antares matrix (#2369)
-##### Doc
+
+#### Doc
 * CHANGELOG improvements (#2287) (#2229) (#2125)
 * Fix PDF generation for useguide (#2134)
 * Add contribution guidelines (#2380)
@@ -77,14 +82,6 @@ toc_depth: 2
 * Fix links in README (#2310)
 * Document clang-format (#2243)
 * Add help button to website (#2368)
-##### Misc
-* Format code using clang-format==18.3.1 (#2214)
-* Properly set common data in API output when using playlist (#2364)
-* Enable parallel run for API (#2337)
-* Infeasibility analyzer : improve unit tests (#2249) (#2226) (#2225)
-* Remove spurious assert(false), fix debug binaries (#2291)
-* Feature/test name translator (#2285)
-* Fix build for Mersenne-Twister pybind11 with clang (#2117)
 
 #### Code quality
 * Using filesystem path instead of Yuni [ANT-1999] (#2435) (#2454) (#2123) (#2066)
@@ -111,11 +108,7 @@ toc_depth: 2
 * Fix circular dependencies on CMake targets (#2140)
 * Fix Variable::Join (#2116)
 
-#### Removed
-##### Functional
-* Remove hydro hotstart (#2131)
-* Remove adequacy patch lmr [ANT-1933] (#2341)
-##### Technical
+#### Technical cleaning
 * Remove last global variable (#2410)
 * Local matching removal : remove unused thread number / numSpace (#2404)
 * Remove Antares::Memory::Array (#2187)
