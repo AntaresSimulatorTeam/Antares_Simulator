@@ -30,6 +30,7 @@
 #include "antares/solver/libObjectModel/port.h"
 #include "antares/solver/libObjectModel/portType.h"
 #include "antares/solver/libObjectModel/variable.h"
+#include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/solver/modelParser/Library.h"
 
 namespace Antares::Solver::ModelConverter
@@ -41,21 +42,18 @@ namespace Antares::Solver::ModelConverter
  * \param model The ModelParser::Model object containing parameters.
  * \return A vector of ObjectModel::Parameter objects.
  */
-std::vector<Antares::Solver::ObjectModel::PortType> convertTypes(
-  const Antares::Solver::ModelParser::Library& library)
+std::vector<ObjectModel::PortType> convertTypes(const ModelParser::Library& library)
 {
-    // Convert portTypes to Antares::Solver::ObjectModel::PortType
-    std::vector<Antares::Solver::ObjectModel::PortType> out;
+    // Convert portTypes to ObjectModel::PortType
+    std::vector<ObjectModel::PortType> out;
     for (const auto& portType: library.port_types)
     {
-        std::vector<Antares::Solver::ObjectModel::PortField> fields;
+        std::vector<ObjectModel::PortField> fields;
         for (const auto& field: portType.fields)
         {
-            fields.emplace_back(Antares::Solver::ObjectModel::PortField{field});
+            fields.emplace_back(ObjectModel::PortField{field});
         }
-        Antares::Solver::ObjectModel::PortType portTypeModel(portType.id,
-                                                             portType.description,
-                                                             std::move(fields));
+        ObjectModel::PortType portTypeModel(portType.id, portType.description, std::move(fields));
         out.emplace_back(std::move(portTypeModel));
     }
     return out;
@@ -68,19 +66,16 @@ std::vector<Antares::Solver::ObjectModel::PortType> convertTypes(
  * \return The corresponding ObjectModel::ValueType.
  * \throws std::runtime_error if the type is unknown.
  */
-std::vector<Antares::Solver::ObjectModel::Parameter> convertParameters(
-  const Antares::Solver::ModelParser::Model& model)
+std::vector<ObjectModel::Parameter> convertParameters(const ModelParser::Model& model)
 {
-    std::vector<Antares::Solver::ObjectModel::Parameter> parameters;
+    std::vector<ObjectModel::Parameter> parameters;
     for (const auto& parameter: model.parameters)
     {
-        parameters.emplace_back(Antares::Solver::ObjectModel::Parameter{
+        parameters.emplace_back(ObjectModel::Parameter{
           parameter.id,
-          Antares::Solver::ObjectModel::ValueType::FLOAT, // TODO: change to correct type
-          static_cast<Antares::Solver::ObjectModel::Parameter::TimeDependent>(
-            parameter.time_dependent),
-          static_cast<Antares::Solver::ObjectModel::Parameter::ScenarioDependent>(
-            parameter.scenario_dependent)});
+          ObjectModel::ValueType::FLOAT, // TODO: change to correct type
+          static_cast<ObjectModel::Parameter::TimeDependent>(parameter.time_dependent),
+          static_cast<ObjectModel::Parameter::ScenarioDependent>(parameter.scenario_dependent)});
     }
     return parameters;
 }
@@ -91,19 +86,19 @@ std::vector<Antares::Solver::ObjectModel::Parameter> convertParameters(
  * \param model The ModelParser::Model object containing variables.
  * \return A vector of ObjectModel::Variable objects.
  */
-Antares::Solver::ObjectModel::ValueType convertType(Antares::Solver::ModelParser::ValueType type)
+ObjectModel::ValueType convertType(ModelParser::ValueType type)
 {
     using namespace std::string_literals;
     switch (type)
     {
-    case Antares::Solver::ModelParser::ValueType::CONTINUOUS:
-        return Antares::Solver::ObjectModel::ValueType::FLOAT;
-    case Antares::Solver::ModelParser::ValueType::INTEGER:
-        return Antares::Solver::ObjectModel::ValueType::INTEGER;
-    case Antares::Solver::ModelParser::ValueType::BOOL:
-        return Antares::Solver::ObjectModel::ValueType::BOOL;
+    case ModelParser::ValueType::CONTINUOUS:
+        return ObjectModel::ValueType::FLOAT;
+    case ModelParser::ValueType::INTEGER:
+        return ObjectModel::ValueType::INTEGER;
+    case ModelParser::ValueType::BOOL:
+        return ObjectModel::ValueType::BOOL;
     default:
-        throw std::runtime_error("Unknown type: " + Antares::Solver::ModelParser::toString(type));
+        throw std::runtime_error("Unknown type: " + ModelParser::toString(type));
     }
 }
 
@@ -113,16 +108,18 @@ Antares::Solver::ObjectModel::ValueType convertType(Antares::Solver::ModelParser
  * \param model The ModelParser::Model object containing ports.
  * \return A vector of ObjectModel::Port objects.
  */
-std::vector<Antares::Solver::ObjectModel::Variable> convertVariables(
-  const Antares::Solver::ModelParser::Model& model)
+std::vector<ObjectModel::Variable> convertVariables(const ModelParser::Model& model,
+                                                    Registry<Nodes::Node>& registry)
 {
-    std::vector<Antares::Solver::ObjectModel::Variable> variables;
+    std::vector<ObjectModel::Variable> variables;
     for (const auto& variable: model.variables)
     {
-        variables.emplace_back(Antares::Solver::ObjectModel::Variable{
+        variables.emplace_back(ObjectModel::Variable{
           variable.id,
-          Antares::Solver::ObjectModel::Expression{variable.lower_bound},
-          Antares::Solver::ObjectModel::Expression{variable.upper_bound},
+          ObjectModel::Expression{variable.lower_bound,
+                                  convertExpressionToNode(variable.lower_bound, registry, model)},
+          ObjectModel::Expression{variable.upper_bound,
+                                  convertExpressionToNode(variable.upper_bound, registry, model)},
           convertType(variable.variable_type)});
     }
     return variables;
@@ -134,27 +131,26 @@ std::vector<Antares::Solver::ObjectModel::Variable> convertVariables(
  * \param model The ModelParser::Model object containing constraints.
  * \return A vector of ObjectModel::Constraint objects.
  */
-std::vector<Antares::Solver::ObjectModel::Port> convertPorts(
-  const Antares::Solver::ModelParser::Model& model)
+std::vector<ObjectModel::Port> convertPorts([[maybe_unused]] const ModelParser::Model& model)
 {
-    std::vector<Antares::Solver::ObjectModel::Port> ports;
+    std::vector<ObjectModel::Port> ports;
     /* for (const auto& port: model.ports) */
     /* { */
-    /*     ports.emplace_back(Antares::Solver::ObjectModel::Port{port.name, port.type}); */
+    /*     ports.emplace_back(ObjectModel::Port{port.name, port.type}); */
     /* } */
     return ports;
 }
 
-std::vector<Antares::Solver::ObjectModel::Constraint> convertConstraints(
-  const Antares::Solver::ModelParser::Model& model)
+std::vector<ObjectModel::Constraint> convertConstraints(const ModelParser::Model& model,
+                                                        Registry<Nodes::Node>& registry)
 {
-    std::vector<Antares::Solver::ObjectModel::Constraint> constraints;
+    std::vector<ObjectModel::Constraint> constraints;
     for (const auto& constraint: model.constraints)
     {
-        /* Node* expr = convertExpressionToNode(constraint.expression); */
-        constraints.emplace_back(Antares::Solver::ObjectModel::Constraint{
-          constraint.id,
-          Antares::Solver::ObjectModel::Expression{constraint.expression /*, expr */}});
+        Nodes::Node* expr = convertExpressionToNode(constraint.expression, registry, model);
+        constraints.emplace_back(
+          ObjectModel::Constraint{constraint.id,
+                                  ObjectModel::Expression{constraint.expression, expr}});
     }
     return constraints;
 }
@@ -165,21 +161,22 @@ std::vector<Antares::Solver::ObjectModel::Constraint> convertConstraints(
  * \param library The ModelParser::Library object containing models.
  * \return A vector of ObjectModel::Model objects.
  */
-std::vector<Antares::Solver::ObjectModel::Model> convertModels(
-  const Antares::Solver::ModelParser::Library& library)
+std::vector<ObjectModel::Model> convertModels(const ModelParser::Library& library,
+                                              Registry<Nodes::Node>& registry)
 {
-    std::vector<Antares::Solver::ObjectModel::Model> models;
+    std::vector<ObjectModel::Model> models;
     for (const auto& model: library.models)
     {
-        Antares::Solver::ObjectModel::ModelBuilder modelBuilder;
-        std::vector<Antares::Solver::ObjectModel::Parameter> parameters = convertParameters(model);
-        std::vector<Antares::Solver::ObjectModel::Variable> variables = convertVariables(model);
-        std::vector<Antares::Solver::ObjectModel::Port> ports = convertPorts(model);
-        std::vector<Antares::Solver::ObjectModel::Constraint> constraints = convertConstraints(
-          model);
+        ObjectModel::ModelBuilder modelBuilder;
+        std::vector<ObjectModel::Parameter> parameters = convertParameters(model);
+        std::vector<ObjectModel::Variable> variables = convertVariables(model, registry);
+        std::vector<ObjectModel::Port> ports = convertPorts(model);
+        std::vector<ObjectModel::Constraint> constraints = convertConstraints(model, registry);
+
+        auto nodeObjective = convertExpressionToNode(model.objective, registry, model);
 
         auto modelObj = modelBuilder.withId(model.id)
-                          .withObjective(Antares::Solver::ObjectModel::Expression{model.objective})
+                          .withObjective(ObjectModel::Expression{model.objective, nodeObjective})
                           .withParameters(std::move(parameters))
                           .withVariables(std::move(variables))
                           .withPorts(std::move(ports))
@@ -196,16 +193,16 @@ std::vector<Antares::Solver::ObjectModel::Model> convertModels(
  * \param library The ModelParser::Library object to convert.
  * \return The corresponding ObjectModel::Library object.
  */
-Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library)
+ObjectModel::Library convert(const ModelParser::Library& library, Registry<Nodes::Node>& registry)
 {
-    Antares::Solver::ObjectModel::LibraryBuilder builder;
-    std::vector<Antares::Solver::ObjectModel::PortType> portTypes = convertTypes(library);
-    std::vector<Antares::Solver::ObjectModel::Model> models = convertModels(library);
-    Antares::Solver::ObjectModel::Library lib = builder.withId(library.id)
-                                                  .withDescription(library.description)
-                                                  .withPortTypes(std::move(portTypes))
-                                                  .withModels(std::move(models))
-                                                  .build();
+    ObjectModel::LibraryBuilder builder;
+    std::vector<ObjectModel::PortType> portTypes = convertTypes(library);
+    std::vector<ObjectModel::Model> models = convertModels(library, registry);
+    ObjectModel::Library lib = builder.withId(library.id)
+                                 .withDescription(library.description)
+                                 .withPortTypes(std::move(portTypes))
+                                 .withModels(std::move(models))
+                                 .build();
     return lib;
 }
 

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -22,6 +21,9 @@
 
 #pragma once
 
+#include <antares/solver/expressions/Registry.hxx>
+#include <antares/solver/expressions/nodes/Node.h>
+
 namespace Antares::Solver
 {
 namespace ObjectModel
@@ -37,5 +39,5 @@ class Library;
 
 namespace Antares::Solver::ModelConverter
 {
-Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library);
+ObjectModel::Library convert(const ModelParser::Library& library, Registry<Nodes::Node>& registry);
 }

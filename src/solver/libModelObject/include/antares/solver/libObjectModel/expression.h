@@ -32,8 +32,9 @@ class Expression
 public:
     Expression() = default;
 
-    explicit Expression(std::string value):
-        value_(std::move(value))
+    explicit Expression(std::string value, Nodes::Node* node):
+        value_(std::move(value)),
+        node_(node)
     {
     }
 

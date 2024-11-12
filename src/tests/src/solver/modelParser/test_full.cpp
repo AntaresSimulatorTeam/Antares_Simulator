@@ -115,7 +115,7 @@ library:
         - port: injection_port
           field: flow
           definition: generation
-      objective: expec(sum(cost * generation))
+      objective: cost * generation
 
     - id: node
       description: A basic balancing node model
@@ -124,7 +124,7 @@ library:
           type: flow
       binding-constraints:
         - id: balance
-          expression:  sum_connections(injection_port.flow) = 0
+          expression:  injection_port = 0
 
     - id: spillage
       description: A basic spillage model
@@ -202,7 +202,7 @@ library:
           definition: injection - withdrawal
       constraints:
         - id: Level equation
-          expression: level[t] - level[t-1] - efficiency * injection + withdrawal = inflows
+          expression: level - level - efficiency * injection + withdrawal = inflows
 
     - id: thermal-cluster-dhd
       description: DHD model for thermal cluster
@@ -250,19 +250,20 @@ library:
         - id: Min generation
           expression: generation >= nb_on * p_min
         - id: Number of units variation
-          expression: nb_on = nb_on[t-1] + nb_start - nb_stop
+          expression: nb_on = nb_on + nb_start - nb_stop
         - id: Min up time
-          expression: sum(t-d_min_up + 1 .. t, nb_start) <= nb_on
+          expression: t-d_min_up + 1 <= nb_on
         - id: Min down time
-          expression: sum(t-d_min_down + 1 .. t, nb_stop) <= nb_units_max[t-d_min_down] - nb_on
-      objective: expec(sum(cost * generation))
+          expression: t-d_min_down + 1 <= nb_units_max - nb_on
+      objective: cost * generation
     )"s;
 
     try
     {
+        Registry<Nodes::Node> registry;
         ModelParser::Parser parser;
         ModelParser::Library libraryObj = parser.parse(library);
-        ObjectModel::Library lib = ModelConverter::convert(libraryObj);
+        ObjectModel::Library lib = ModelConverter::convert(libraryObj, registry);
         BOOST_CHECK_EQUAL(lib.Id(), "basic");
         BOOST_CHECK_EQUAL(lib.Description(), "Basic library");
 
@@ -278,7 +279,7 @@ library:
         BOOST_REQUIRE_EQUAL(lib.Models().size(), 7);
         auto& model0 = lib.Models().at("generator");
         BOOST_CHECK_EQUAL(model0.Id(), "generator");
-        BOOST_CHECK_EQUAL(model0.Objective().Value(), "expec(sum(cost * generation))");
+        BOOST_CHECK_EQUAL(model0.Objective().Value(), "cost * generation");
 
         BOOST_REQUIRE_EQUAL(model0.getConstraints().size(), 0);
         BOOST_REQUIRE_EQUAL(model0.Parameters().size(), 2);
@@ -419,7 +420,7 @@ library:
                       ObjectModel::ValueType::FLOAT);
         checkConstraint(model5.getConstraints().at("Level equation"),
                         "Level equation",
-                        "level[t] - level[t-1] - efficiency * injection + withdrawal = inflows");
+                        "level - level - efficiency * injection + withdrawal = inflows");
 
         auto& model6 = lib.Models().at("thermal-cluster-dhd");
         BOOST_CHECK_EQUAL(model6.Id(), "thermal-cluster-dhd");
@@ -491,15 +492,14 @@ library:
                         "generation >= nb_on * p_min");
         checkConstraint(model6.getConstraints().at("Number of units variation"),
                         "Number of units variation",
-                        "nb_on = nb_on[t-1] + nb_start - nb_stop");
+                        "nb_on = nb_on + nb_start - nb_stop");
         checkConstraint(model6.getConstraints().at("Min up time"),
                         "Min up time",
-                        "sum(t-d_min_up + 1 .. t, nb_start) <= nb_on");
-        checkConstraint(
-          model6.getConstraints().at("Min down time"),
-          "Min down time",
-          "sum(t-d_min_down + 1 .. t, nb_stop) <= nb_units_max[t-d_min_down] - nb_on");
-        BOOST_CHECK_EQUAL(model6.Objective().Value(), "expec(sum(cost * generation))");
+                        "t-d_min_up + 1 <= nb_on");
+        checkConstraint(model6.getConstraints().at("Min down time"),
+                        "Min down time",
+                        "t-d_min_down + 1 <= nb_units_max - nb_on");
+        BOOST_CHECK_EQUAL(model6.Objective().Value(), "cost * generation");
     }
     catch (const YAML::Exception& e)
     {
