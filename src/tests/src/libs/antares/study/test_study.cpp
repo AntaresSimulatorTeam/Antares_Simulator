@@ -186,49 +186,48 @@ struct ThermalClusterStudy: public OneAreaStudy
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
 {
     BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
-    BOOST_CHECK(cluster->name() == "Renamed");
-    BOOST_CHECK(cluster->id() == "renamed");
+    BOOST_CHECK_EQUAL(cluster->name(), "Renamed");
+    BOOST_CHECK_EQUAL(cluster->id(), "renamed");
 }
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
     // gp : remove() only used in GUI (will go away when removing the GUI)
-    BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == cluster);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster"), cluster);
     areaA->thermal.list.remove("cluster");
-    BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == nullptr);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster"), nullptr);
     BOOST_CHECK(areaA->thermal.list.empty());
 }
+
+// Custom macro
+#define BOOST_CHECK_EQUAL_MESSAGE(L, R, M) \
+    {                                      \
+        BOOST_TEST_INFO(M);                \
+        BOOST_CHECK_EQUAL(L, R);           \
+    }
 
 BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpinning,
                         ThermalClusterStudy)
 {
     cluster->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
-    cluster->series.timeSeries.resize(1, 8760);
-    cluster->series.timeSeries.fill(100);
+    auto& ts = cluster->series.timeSeries;
+
+    ts.resize(1, 8760);
+    ts.fill(100);
     cluster->reverseCalculationOfSpinning();
 
-    bool all_equals = true;
-    unsigned i = 0;
-    unsigned j = 0;
-    for (i = 0; i < cluster->series.timeSeries.width && all_equals; ++i)
+    for (unsigned i = 0; i < ts.width; ++i)
     {
-        for (j = 0; j < cluster->series.timeSeries.height; ++j)
+        for (unsigned j = 0; j < ts.height; ++j)
         {
-            if (cluster->series[i][j] != 100)
-            {
-                all_equals = false;
-                break;
-            }
+            BOOST_CHECK_EQUAL_MESSAGE(ts[i][j],
+                                      100,
+                                      "Error at " + std::to_string(i) + ", " + std::to_string(j));
         }
     }
-    if (!all_equals)
-    {
-        std::ostringstream msg("Error at :");
-        msg << i << "," << j << std::endl;
-        BOOST_TEST_INFO(msg.str());
-    }
-    BOOST_CHECK(all_equals);
 }
+
+#undef BOOST_CHECK_EQUAL_MESSAGE
 
 BOOST_AUTO_TEST_SUITE_END() // thermal clusters
 
