@@ -26,7 +26,7 @@
 */
 
 #include "adq_patch_curtailment_sharing.h"
-#include "../opt_fonctions.h"
+#include "solve_problem.h"
 #include "csr_quadratic_problem.h"
 #include "count_constraints_variables.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
@@ -138,7 +138,7 @@ void HourlyCSRProblem::calculateCsrParameters()
             double spillageInit
               = problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDeDefaillanceNegative[hour];
 
-            rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
+            rhsAreaBalanceValues_[Area] = ensInit + netPositionInit - spillageInit;
         }
     }
 }

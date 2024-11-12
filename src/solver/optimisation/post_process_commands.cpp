@@ -24,6 +24,7 @@
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "adequacy_patch_csr/hourly_csr_problem.h"
 
 namespace Antares::Solver::Simulation
 {

@@ -27,8 +27,7 @@
 
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
-
-#include "../solver/optimisation/opt_fonctions.h"
+#include "hourly_csr_problem.h"
 #include "sim_structure_probleme_economique.h"
 
 namespace
