@@ -207,13 +207,27 @@ BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpin
     cluster->series.timeSeries.fill(100);
     cluster->reverseCalculationOfSpinning();
 
-    for (unsigned int i = 0; i < cluster->series.timeSeries.width; ++i)
+    bool all_equals = true;
+    unsigned i = 0;
+    unsigned j = 0;
+    for (i = 0; i < cluster->series.timeSeries.width && all_equals; ++i)
     {
-        for (unsigned int j = 0; j < cluster->series.timeSeries.height; ++i)
+        for (j = 0; j < cluster->series.timeSeries.height; ++j)
         {
-            BOOST_CHECK_EQUAL(cluster->series[i][j], 100);
+            if (cluster->series[i][j] != 100)
+            {
+                all_equals = false;
+                break;
+            }
         }
     }
+    if (!all_equals)
+    {
+        std::ostringstream msg("Error at :");
+        msg << i << "," << j << std::endl;
+        BOOST_TEST_INFO(msg.str());
+    }
+    BOOST_CHECK(all_equals);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // thermal clusters
