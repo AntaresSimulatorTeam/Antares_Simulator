@@ -72,7 +72,6 @@ MaxMRGinput MaxMrgCSRdataFactory::data()
 
 void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
 {
-    assert(nbHoursInWeek + state.hourInTheYear <= HOURS_PER_YEAR);
     assert(maxMrgOut && "Invalid OP.MRG target");
 
     double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
