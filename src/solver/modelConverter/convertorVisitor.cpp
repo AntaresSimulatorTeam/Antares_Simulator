@@ -176,7 +176,6 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 {
     double d = stod(context->getText());
     return static_cast<Node*>(registry_.create<LiteralNode>(d));
-
 }
 
 // TODO implement this
