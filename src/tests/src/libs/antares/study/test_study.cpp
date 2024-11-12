@@ -210,6 +210,8 @@ BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpin
                         ThermalClusterStudy)
 {
     cluster->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
+    cluster->spinning = 0.9; // An arbitrary value != 1.0 is chosen here, otherwise the reverse
+                             // calculation of spinning does nothing
     auto& ts = cluster->series.timeSeries;
 
     ts.resize(1, 8760);
