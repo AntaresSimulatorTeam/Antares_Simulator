@@ -154,7 +154,7 @@ void UpdateMrgPriceAfterCSRcmd::execute(const optRuntimeData&)
 // -----------------------------
 //  DTG margin for adq patch
 // -----------------------------
-DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
+DTGnettingAfterCSRcmd::DTGnettingAfterCSRcmd(
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
   unsigned int thread_number) :
@@ -168,7 +168,7 @@ DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
 ** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
 ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** */
-void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
+void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
 {
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {

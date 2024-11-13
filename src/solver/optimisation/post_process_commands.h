@@ -63,10 +63,10 @@ private:
 };
 
 
-class DTGmarginForAdqPatchPostProcessCmd : public basePostProcessCommand
+class DTGnettingAfterCSRcmd : public basePostProcessCommand
 {
 public:
-    DTGmarginForAdqPatchPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+    DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
                                        AreaList& areas,
                                        unsigned int thread_number);
     void execute(const optRuntimeData&) override;
