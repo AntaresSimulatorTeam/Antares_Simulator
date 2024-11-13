@@ -164,10 +164,6 @@ DTGnettingAfterCSRcmd::DTGnettingAfterCSRcmd(
 {
 }
 
-/*!
-** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
-** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
-** */
 void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
 {
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
