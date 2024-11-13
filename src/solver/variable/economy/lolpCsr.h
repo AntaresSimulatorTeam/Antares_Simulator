@@ -194,7 +194,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.)
+        if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.5)
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 100;
 
         // Next variable
