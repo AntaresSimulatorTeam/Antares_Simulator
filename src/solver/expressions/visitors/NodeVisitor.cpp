@@ -29,7 +29,7 @@ void ToYuniInfo(const std::string& msg)
     logs.info() << msg;
 }
 
-inline void ToYuniError(const std::string& msg)
+void ToYuniError(const std::string& msg)
 {
     logs.error() << msg;
 }
