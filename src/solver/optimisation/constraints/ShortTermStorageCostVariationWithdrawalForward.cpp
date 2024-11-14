@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionBackward.h"
+#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationWithdrawalForward.h"
 
-void ShortTermStorageCostVariationInjectionBackward::add(int pdt, int pays)
+void ShortTermStorageCostVariationWithdrawalForward::add(int pdt, int pays)
 {
     ConstraintNamer namer(builder.data.NomDesContraintes);
     const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
