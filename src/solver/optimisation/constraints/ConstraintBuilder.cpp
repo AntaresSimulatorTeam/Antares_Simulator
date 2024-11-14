@@ -97,15 +97,23 @@ ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index, do
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index,
+                                                                double coeff,
+                                                                int offset,
+                                                                int delta)
 {
-    AddVariable(variableManager_.ShortTermStorageInjection(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.ShortTermStorageInjection(index, hourInWeek_, offset, delta),
+                coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
 {
-    AddVariable(variableManager_.ShortTermStorageWithdrawal(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.ShortTermStorageWithdrawal(index, hourInWeek_, offset, delta),
+                coeff);
     return *this;
 }
 

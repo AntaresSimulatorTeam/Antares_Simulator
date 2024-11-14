@@ -40,10 +40,11 @@ void ShortTermStorageCostVariationWithdrawalForward::add(int pdt, int pays)
           = builder.data.nombreDeContraintes;
 
         builder.ShortTermCostVariationWithdrawal(index, 1.0)
-          .ShortTermCostVariationWithdrawal(index,
-                                            -1.0,
-                                            1,
-                                            builder.data.NombreDePasDeTempsPourUneOptimisation)
+          .ShortTermStorageWithdrawal(index, 1.0)
+          .ShortTermStorageWithdrawal(index,
+                                      -1.0,
+                                      1,
+                                      builder.data.NombreDePasDeTempsPourUneOptimisation)
           .greaterThan()
           .build();
     }

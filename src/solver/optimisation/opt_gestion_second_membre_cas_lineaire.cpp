@@ -49,14 +49,15 @@ static void shortTermStorageLevelsRHS(
             SecondMembre[cnt] = rhs_cost_injection;
             // check for withdrawal
 
-            auto rhs_cost_withdrawal = -storage.series->inflows[hourInTheYear]
-                                       * storage.series->costVariationWithdrawal[hourInTheYear];
+            //            auto rhs_cost_withdrawal = -storage.series->inflows[hourInTheYear]
+            //                                       * storage.series->costVariationWithdrawal[hourInTheYear];
+            // may be not needed if SecondMembre is 0 initialiazed
             cnt = CorrespondanceCntNativesCntOptim
                     .ShortTermStorageCostVariationWithdrawalForward[clusterGlobalIndex];
-            SecondMembre[cnt] = rhs_cost_withdrawal;
+            SecondMembre[cnt] = 0.;
             cnt = CorrespondanceCntNativesCntOptim
                     .ShortTermStorageCostVariationWithdrawalBackward[clusterGlobalIndex];
-            SecondMembre[cnt] = rhs_cost_withdrawal;
+            SecondMembre[cnt] = 0.;
         }
     }
 }

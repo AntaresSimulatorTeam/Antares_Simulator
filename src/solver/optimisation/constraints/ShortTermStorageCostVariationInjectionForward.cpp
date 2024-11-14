@@ -40,10 +40,11 @@ void ShortTermStorageCostVariationInjectionForward::add(int pdt, int pays)
           = builder.data.nombreDeContraintes;
 
         builder.ShortTermCostVariationInjection(index, 1.0)
-          .ShortTermCostVariationInjection(index,
-                                           -1.0,
-                                           1,
-                                           builder.data.NombreDePasDeTempsPourUneOptimisation)
+          .ShortTermStorageInjection(index, 1.0)
+          .ShortTermStorageInjection(index,
+                                     -1.0,
+                                     1,
+                                     builder.data.NombreDePasDeTempsPourUneOptimisation)
           .greaterThan()
           .build();
     }
