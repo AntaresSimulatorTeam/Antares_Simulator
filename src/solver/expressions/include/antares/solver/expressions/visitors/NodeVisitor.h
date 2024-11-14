@@ -41,19 +41,13 @@ struct NodeVisitorCustomLog
     LogFunction error;
 };
 
-inline void ToStdOutput(const std::string& msg)
-{
-    std::cout << msg;
-}
+void ToYuniInfo(const std::string& msg);
 
-inline void ToStdErr(const std::string& msg)
-{
-    std::cerr << msg;
-}
+void ToYuniError(const std::string& msg);
 
-static inline NodeVisitorCustomLog RedirectToStandardOutputs()
+inline NodeVisitorCustomLog RedirectToStandardOutputs()
 {
-    return {.info = ToStdOutput, .warning = ToStdOutput, .error = ToStdErr};
+    return {.info = ToYuniInfo, .warning = ToYuniInfo, .error = ToYuniError};
 }
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
