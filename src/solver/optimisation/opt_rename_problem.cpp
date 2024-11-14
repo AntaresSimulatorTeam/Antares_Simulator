@@ -180,6 +180,18 @@ void VariableNamer::ShortTermStorageLevel(unsigned int variable,
     SetShortTermStorageVariableName(variable, "Level", shortTermStorageName);
 }
 
+void VariableNamer::ShortTermStorageCostVariationInjection(unsigned int variable,
+                                                           const std::string& shortTermStorageName)
+{
+    SetShortTermStorageVariableName(variable, "CostVariationInjection", shortTermStorageName);
+}
+
+void VariableNamer::ShortTermStorageCostVariationWithdrawal(unsigned int variable,
+                                                            const std::string& shortTermStorageName)
+{
+    SetShortTermStorageVariableName(variable, "CostVariationWithdrawal", shortTermStorageName);
+}
+
 void VariableNamer::HydProd(unsigned int variable)
 {
     SetAreaElementNameHour(variable, "HydProd");
@@ -365,6 +377,46 @@ void ConstraintNamer::ConsistenceNODU(unsigned int constraint, const std::string
 void ConstraintNamer::ShortTermStorageLevel(unsigned int constraint, const std::string& name)
 {
     targetUpdater_.UpdateTargetAtIndex(BuildName("Level",
+                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                   + "ShortTermStorage" + "<" + name + ">",
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       constraint);
+}
+
+void ConstraintNamer::ShortTermStorageCostVariationInjectionForward(unsigned int constraint,
+                                                                    const std::string& name)
+{
+    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationInjectionForward",
+                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                   + "ShortTermStorage" + "<" + name + ">",
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       constraint);
+}
+
+void ConstraintNamer::ShortTermStorageCostVariationInjectionBackward(unsigned int constraint,
+                                                                     const std::string& name)
+{
+    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationInjectionBackward",
+                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                   + "ShortTermStorage" + "<" + name + ">",
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       constraint);
+}
+
+void ConstraintNamer::ShortTermStorageCostVariationWithdrawalForward(unsigned int constraint,
+                                                                     const std::string& name)
+{
+    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationWithdrawalForward",
+                                                 LocationIdentifier(area_, AREA) + SEPARATOR
+                                                   + "ShortTermStorage" + "<" + name + ">",
+                                                 TimeIdentifier(timeStep_, HOUR)),
+                                       constraint);
+}
+
+void ConstraintNamer::ShortTermStorageCostVariationWithdrawalBackward(unsigned int constraint,
+                                                                      const std::string& name)
+{
+    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationWithdrawalBackward",
                                                  LocationIdentifier(area_, AREA) + SEPARATOR
                                                    + "ShortTermStorage" + "<" + name + ">",
                                                  TimeIdentifier(timeStep_, HOUR)),

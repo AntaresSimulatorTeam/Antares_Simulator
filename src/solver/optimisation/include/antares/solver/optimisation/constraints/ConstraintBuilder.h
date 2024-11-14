@@ -124,6 +124,14 @@ public:
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
+    ConstraintBuilder& ShortTermCostVariationInjection(unsigned int index,
+                                                       double coeff,
+                                                       int offset = 0,
+                                                       int delta = 0);
+    ConstraintBuilder& ShortTermCostVariationWithdrawal(unsigned int index,
+                                                        double coeff,
+                                                        int offset = 0,
+                                                        int delta = 0);
 
     ConstraintBuilder& HydProd(unsigned int index, double coeff);
 

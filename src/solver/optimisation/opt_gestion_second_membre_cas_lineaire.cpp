@@ -36,9 +36,27 @@ static void shortTermStorageLevelsRHS(
         for (auto& storage: shortTermStorageInput[areaIndex])
         {
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
-            const int cnt = CorrespondanceCntNativesCntOptim
-                              .ShortTermStorageLevelConstraint[clusterGlobalIndex];
+            int cnt = CorrespondanceCntNativesCntOptim
+                        .ShortTermStorageLevelConstraint[clusterGlobalIndex];
             SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
+            cnt = CorrespondanceCntNativesCntOptim
+                    .ShortTermStorageCostVariationInjectionForward[clusterGlobalIndex];
+            auto rhs_cost_injection = -storage.series->inflows[hourInTheYear]
+                                      * storage.series->costVariationInjection[hourInTheYear];
+            SecondMembre[cnt] = rhs_cost_injection;
+            cnt = CorrespondanceCntNativesCntOptim
+                    .ShortTermStorageCostVariationInjectionBackward[clusterGlobalIndex];
+            SecondMembre[cnt] = rhs_cost_injection;
+            // check for withdrawal
+
+            auto rhs_cost_withdrawal = -storage.series->inflows[hourInTheYear]
+                                       * storage.series->costVariationWithdrawal[hourInTheYear];
+            cnt = CorrespondanceCntNativesCntOptim
+                    .ShortTermStorageCostVariationWithdrawalForward[clusterGlobalIndex];
+            SecondMembre[cnt] = rhs_cost_withdrawal;
+            cnt = CorrespondanceCntNativesCntOptim
+                    .ShortTermStorageCostVariationWithdrawalBackward[clusterGlobalIndex];
+            SecondMembre[cnt] = rhs_cost_withdrawal;
         }
     }
 }

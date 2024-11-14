@@ -99,6 +99,10 @@ public:
     void ShortTermStorageInjection(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageWithdrawal(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageLevel(unsigned int variable, const std::string& shortTermStorageName);
+    void ShortTermStorageCostVariationInjection(unsigned int variable,
+                                                const std::string& shortTermStorageName);
+    void ShortTermStorageCostVariationWithdrawal(unsigned int variable,
+                                                 const std::string& shortTermStorageName);
     void HydProd(unsigned int variable);
     void HydProdDown(unsigned int variable);
     void HydProdUp(unsigned int variable);
@@ -148,6 +152,14 @@ public:
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void ConsistenceNODU(unsigned int constraint, const std::string& clusterName);
     void ShortTermStorageLevel(unsigned int constraint, const std::string& name);
+    void ShortTermStorageCostVariationInjectionForward(unsigned int constraint,
+                                                       const std::string& name);
+    void ShortTermStorageCostVariationInjectionBackward(unsigned int constraint,
+                                                        const std::string& name);
+    void ShortTermStorageCostVariationWithdrawalForward(unsigned int constraint,
+                                                        const std::string& name);
+    void ShortTermStorageCostVariationWithdrawalBackward(unsigned int constraint,
+                                                         const std::string& name);
     void BindingConstraintHour(unsigned int constraint, const std::string& name);
     void BindingConstraintDay(unsigned int constraint, const std::string& name);
     void BindingConstraintWeek(unsigned int constraint, const std::string& name);

@@ -66,6 +66,14 @@ public:
                                unsigned int hourInWeek,
                                int offset = 0,
                                int delta = 0);
+    int& ShortTermStorageCostVariationInjection(unsigned int index,
+                                                unsigned int hourInWeek,
+                                                int offset = 0,
+                                                int delta = 0);
+    int& ShortTermStorageCostVariationWithdrawal(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset = 0,
+                                                 int delta = 0);
 
     int& HydProd(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 

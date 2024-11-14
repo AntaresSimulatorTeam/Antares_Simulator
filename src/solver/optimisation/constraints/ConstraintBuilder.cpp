@@ -118,6 +118,28 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::ShortTermCostVariationInjection(unsigned int index,
+                                                                      double coeff,
+                                                                      int offset,
+                                                                      int delta)
+{
+    AddVariable(
+      variableManager_.ShortTermStorageCostVariationInjection(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ShortTermCostVariationWithdrawal(unsigned int index,
+                                                                       double coeff,
+                                                                       int offset,
+                                                                       int delta)
+{
+    AddVariable(
+      variableManager_.ShortTermStorageCostVariationWithdrawal(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index, double coeff)
 {
     AddVariable(variableManager_.HydProd(index, hourInWeek_), coeff);

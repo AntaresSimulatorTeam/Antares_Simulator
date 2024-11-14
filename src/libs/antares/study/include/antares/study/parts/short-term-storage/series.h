@@ -47,6 +47,8 @@ public:
     std::vector<double> costInjection;
     std::vector<double> costWithdrawal;
     std::vector<double> costLevel;
+    std::vector<double> costVariationInjection;
+    std::vector<double> costVariationWithdrawal;
 
 private:
     bool validateSizes(const std::string&) const;

@@ -69,6 +69,8 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> InjectionVariable;
         std::vector<int> WithdrawalVariable;
         std::vector<int> LevelVariable;
+        std::vector<int> CostVariationInjection;
+        std::vector<int> CostVariationWithdrawal;
     } SIM_ShortTermStorage;
 };
 
@@ -95,6 +97,10 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
     std::vector<int> ShortTermStorageLevelConstraint;
+    std::vector<int> ShortTermStorageCostVariationInjectionForward;
+    std::vector<int> ShortTermStorageCostVariationInjectionBackward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalForward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalBackward;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -184,9 +190,11 @@ using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is loca
 struct RESULTS
 {
     // Index is the number of the STS in the area
-    std::vector<double> level;      // MWh
-    std::vector<double> injection;  // MWh
-    std::vector<double> withdrawal; // MWh
+    std::vector<double> level;                   // MWh
+    std::vector<double> injection;               // MWh
+    std::vector<double> withdrawal;              // MWh
+    std::vector<double> costVariationInjection;  // MWh
+    std::vector<double> costVariationwithdrawal; // MWh
 };
 } // namespace ShortTermStorage
 
