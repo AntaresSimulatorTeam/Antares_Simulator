@@ -454,7 +454,6 @@ struct RESULTATS_HORAIRES
     std::vector<double> debordementsHoraires;
 
     std::vector<double> CoutsMarginauxHoraires;
-    std::vector<double> MarginalCostsCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
