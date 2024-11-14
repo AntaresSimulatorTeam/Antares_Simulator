@@ -39,7 +39,7 @@ void ShortTermStorageCostVariationInjectionBackward::add(int pdt, int pays)
           .ShortTermStorageCostVariationInjectionBackward[index]
           = builder.data.nombreDeContraintes;
 
-        builder.ShortTermCostVariationInjection(index, -1.0)
+        builder.ShortTermCostVariationInjection(index, 1.0)
           .ShortTermStorageInjection(index, -1.0)
           .ShortTermStorageInjection(index,
                                      1.0,
