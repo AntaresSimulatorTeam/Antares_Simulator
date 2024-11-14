@@ -45,10 +45,7 @@ void ToYuniInfo(const std::string& msg);
 
 void ToYuniError(const std::string& msg);
 
-inline NodeVisitorCustomLog RedirectToStandardOutputs()
-{
-    return {.info = ToYuniInfo, .warning = ToYuniInfo, .error = ToYuniError};
-}
+NodeVisitorCustomLog RedirectToStandardOutputs();
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
 RetT tryVisit(const Nodes::Node* node, VisitorT& visitor, Args... args)

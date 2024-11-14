@@ -34,4 +34,8 @@ inline void ToYuniError(const std::string& msg)
     logs.error() << msg;
 }
 
+NodeVisitorCustomLog RedirectToStandardOutputs()
+{
+    return {.info = ToYuniInfo, .warning = ToYuniInfo, .error = ToYuniError};
+}
 } // namespace Antares::Solver::Visitors
