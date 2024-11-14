@@ -94,7 +94,6 @@ set(SRC_VARIABLE_ECONOMY
 		economy/max-mrg.h
 		economy/max-mrg-csr.h
 		economy/price.h
-		economy/priceCsr.h
 		economy/balance.h
 		economy/operatingCost.h
 		economy/overallCost.h
