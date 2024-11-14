@@ -22,19 +22,11 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-struct ShortTermStorageCostVariationInjectionBackwardData
-{
-    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
-
-    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
-};
-
 class ShortTermStorageCostVariationInjectionBackward: private ConstraintFactory
 {
 public:
-    ShortTermStorageCostVariationInjectionBackward(
-      ConstraintBuilder& builder,
-      ShortTermStorageCostVariationInjectionBackwardData& data):
+    ShortTermStorageCostVariationInjectionBackward(ConstraintBuilder& builder,
+                                                   ShortTermStorageData& data):
         ConstraintFactory(builder),
         data(data)
     {
@@ -43,5 +35,5 @@ public:
     void add(int pdt, int pays);
 
 private:
-    ShortTermStorageCostVariationInjectionBackwardData& data;
+    ShortTermStorageData& data;
 };

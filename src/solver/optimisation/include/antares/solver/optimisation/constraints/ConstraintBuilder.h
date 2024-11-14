@@ -296,3 +296,10 @@ struct StartUpCostsData
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     bool Simulation;
 };
+
+struct ShortTermStorageData
+{
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
+
+    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+};

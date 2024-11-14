@@ -22,19 +22,11 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-struct ShortTermStorageCostVariationWithdrawalForwardData
-{
-    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
-
-    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
-};
-
 class ShortTermStorageCostVariationWithdrawalForward: private ConstraintFactory
 {
 public:
-    ShortTermStorageCostVariationWithdrawalForward(
-      ConstraintBuilder& builder,
-      ShortTermStorageCostVariationWithdrawalForwardData& data):
+    ShortTermStorageCostVariationWithdrawalForward(ConstraintBuilder& builder,
+                                                   ShortTermStorageData& data):
         ConstraintFactory(builder),
         data(data)
     {
@@ -43,5 +35,5 @@ public:
     void add(int pdt, int pays);
 
 private:
-    ShortTermStorageCostVariationWithdrawalForwardData& data;
+    ShortTermStorageData& data;
 };
