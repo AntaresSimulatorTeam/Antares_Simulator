@@ -446,6 +446,10 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].withdrawal.resize(
               nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
+            problem.ResultatsHoraires[k].ShortTermStorage[pdt].costVariationInjection.resize(
+              nbShortTermStorage);
+            problem.ResultatsHoraires[k].ShortTermStorage[pdt].costVariationwithdrawal.resize(
+              nbShortTermStorage);
         }
     }
 }
