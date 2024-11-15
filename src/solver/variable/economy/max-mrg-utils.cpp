@@ -30,6 +30,8 @@
 #include "max-mrg.h"
 #include <antares/study/area/scratchpad.h>
 
+using namespace Yuni;
+
 const unsigned int nbHoursInWeek = 168;
 
 namespace Antares::Solver::Variable::Economy
@@ -74,7 +76,14 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
 {
     assert(maxMrgOut && "Invalid OP.MRG target");
 
-    double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
+    // Following block could be replaced with :
+    // double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
+    double weekHydroGen = 0.;
+    for (uint h = 0; h != nbHoursInWeek; ++h)
+    {
+        weekHydroGen += in.hydroGeneration[h];
+    }
+
     if (Yuni::Math::Zero(weekHydroGen))
     {
         for (uint h = 0; h != nbHoursInWeek; ++h)
@@ -87,8 +96,19 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
     for (uint h = 0; h != nbHoursInWeek; ++h)
         OI[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
 
-    double bottom = *std::min_element(OI.begin(), OI.end());
-    double top = *std::max_element(OI.begin(), OI.end());
+    // Following block could be replaced with :
+    // double bottom = *std::min_element(OI.begin(), OI.end());
+    // double top = *std::max_element(OI.begin(), OI.end());
+    double bottom = +std::numeric_limits<double>::max();
+    double top = 0;
+    for (uint i = 0; i != nbHoursInWeek; ++i)
+    {
+        double oii = OI[i];
+        if (oii > top)
+            top = oii;
+        if (oii < bottom)
+            bottom = oii;
+    }
 
     double ecart = 1.;
     uint loop = 100; // arbitrary - maximum number of iterations
@@ -105,12 +125,12 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
             if (niveau > OI[h])
             {
                 uint dayYear = in.calendar->hours[h + in.hourInYear].dayYear;
-                maxMrgOut[h] = std::min(niveau, OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
+                maxMrgOut[h] = Math::Min(niveau, OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
                 SM += maxMrgOut[h] - OI[h];
             }
             else
             {
-                maxMrgOut[h] = std::max(niveau, OI[h] - in.hydroGeneration[h]);
+                maxMrgOut[h] = Math::Min(niveau, OI[h] - in.hydroGeneration[h]);
                 SP += OI[h] - maxMrgOut[h];
             }
         }
