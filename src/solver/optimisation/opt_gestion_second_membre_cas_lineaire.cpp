@@ -39,25 +39,28 @@ static void shortTermStorageLevelsRHS(
             int cnt = CorrespondanceCntNativesCntOptim
                         .ShortTermStorageLevelConstraint[clusterGlobalIndex];
             SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
-            cnt = CorrespondanceCntNativesCntOptim
-                    .ShortTermStorageCostVariationInjectionForward[clusterGlobalIndex];
-            auto rhs_cost_injection = -storage.series->inflows[hourInTheYear]
-                                      * storage.series->costVariationInjection[hourInTheYear];
-            SecondMembre[cnt] = rhs_cost_injection;
-            cnt = CorrespondanceCntNativesCntOptim
-                    .ShortTermStorageCostVariationInjectionBackward[clusterGlobalIndex];
-            SecondMembre[cnt] = rhs_cost_injection;
-            // check for withdrawal
 
-            //            auto rhs_cost_withdrawal = -storage.series->inflows[hourInTheYear]
-            //                                       * storage.series->costVariationWithdrawal[hourInTheYear];
             // may be not needed if SecondMembre is 0 initialiazed
-            cnt = CorrespondanceCntNativesCntOptim
-                    .ShortTermStorageCostVariationWithdrawalForward[clusterGlobalIndex];
-            SecondMembre[cnt] = 0.;
-            cnt = CorrespondanceCntNativesCntOptim
-                    .ShortTermStorageCostVariationWithdrawalBackward[clusterGlobalIndex];
-            SecondMembre[cnt] = 0.;
+            if (storage.penalizeVariationInjection)
+            {
+                cnt = CorrespondanceCntNativesCntOptim
+                        .ShortTermStorageCostVariationInjectionForward[clusterGlobalIndex];
+                SecondMembre[cnt] = 0;
+                cnt = CorrespondanceCntNativesCntOptim
+                        .ShortTermStorageCostVariationInjectionBackward[clusterGlobalIndex];
+                SecondMembre[cnt] = 0;
+            }
+
+            // may be not needed if SecondMembre is 0 initialiazed
+            if (storage.penalizeVariationWithdrawal)
+            {
+                cnt = CorrespondanceCntNativesCntOptim
+                        .ShortTermStorageCostVariationWithdrawalForward[clusterGlobalIndex];
+                SecondMembre[cnt] = 0.;
+                cnt = CorrespondanceCntNativesCntOptim
+                        .ShortTermStorageCostVariationWithdrawalBackward[clusterGlobalIndex];
+                SecondMembre[cnt] = 0.;
+            }
         }
     }
 }
