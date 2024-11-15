@@ -192,24 +192,32 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
                 // 4. Cost Variation Injection
-                int varCostVariationInjection = variableManager
-                                                  .ShortTermStorageCostVariationInjection(
-                                                    clusterGlobalIndex,
-                                                    pdtJour);
 
-                Xmin[varCostVariationInjection] = 0.;
+                // is this necessary?
+                if (storage.penalizeVariationInjection)
+                {
+                    int varCostVariationInjection = variableManager
+                                                      .ShortTermStorageCostVariationInjection(
+                                                        clusterGlobalIndex,
+                                                        pdtJour);
 
-                AddressForVars[varCostVariationInjection] = &STSResult.costVariationInjection
-                                                               [storageIndex];
-                // 4. Cost Variation Withdrawal
-                int varCostVariationWithdrawal = variableManager
-                                                   .ShortTermStorageCostVariationWithdrawal(
-                                                     clusterGlobalIndex,
-                                                     pdtJour);
-                Xmin[varCostVariationWithdrawal] = 0.;
-                AddressForVars[varCostVariationWithdrawal] = &STSResult.costVariationwithdrawal
-                                                                [storageIndex];
+                    Xmin[varCostVariationInjection] = 0.;
 
+                    AddressForVars[varCostVariationInjection] = &STSResult.costVariationInjection
+                                                                   [storageIndex];
+                }
+                // 5. Cost Variation Withdrawal
+                // is this necessary?
+                if (storage.penalizeVariationWithdrawal)
+                {
+                    int varCostVariationWithdrawal = variableManager
+                                                       .ShortTermStorageCostVariationWithdrawal(
+                                                         clusterGlobalIndex,
+                                                         pdtJour);
+                    Xmin[varCostVariationWithdrawal] = 0.;
+                    AddressForVars[varCostVariationWithdrawal] = &STSResult.costVariationwithdrawal
+                                                                    [storageIndex];
+                }
                 storageIndex++;
             }
         }
