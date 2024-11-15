@@ -31,21 +31,24 @@ void ShortTermStorageCostVariationInjectionForward::add(int pdt, int pays)
     builder.updateHourWithinWeek(pdt);
     for (const auto& storage: data.ShortTermStorage[pays])
     {
-        // z[h] - P[h+1] + P[h]  >= 0
-        namer.ShortTermStorageCostVariationInjectionForward(builder.data.nombreDeContraintes,
-                                                            storage.name);
-        const auto index = storage.clusterGlobalIndex;
-        data.CorrespondanceCntNativesCntOptim[pdt]
-          .ShortTermStorageCostVariationInjectionForward[index]
-          = builder.data.nombreDeContraintes;
+        if (storage.penalizeVariationInjection)
+        {
+            // z[h] - P[h+1] + P[h]  >= 0
+            namer.ShortTermStorageCostVariationInjectionForward(builder.data.nombreDeContraintes,
+                                                                storage.name);
+            const auto index = storage.clusterGlobalIndex;
+            data.CorrespondanceCntNativesCntOptim[pdt]
+              .ShortTermStorageCostVariationInjectionForward[index]
+              = builder.data.nombreDeContraintes;
 
-        builder.ShortTermCostVariationInjection(index, 1.0)
-          .ShortTermStorageInjection(index, 1.0)
-          .ShortTermStorageInjection(index,
-                                     -1.0,
-                                     1,
-                                     builder.data.NombreDePasDeTempsPourUneOptimisation)
-          .greaterThan()
-          .build();
+            builder.ShortTermCostVariationInjection(index, 1.0)
+              .ShortTermStorageInjection(index, 1.0)
+              .ShortTermStorageInjection(index,
+                                         -1.0,
+                                         1,
+                                         builder.data.NombreDePasDeTempsPourUneOptimisation)
+              .greaterThan()
+              .build();
+        }
     }
 }

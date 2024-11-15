@@ -31,21 +31,24 @@ void ShortTermStorageCostVariationWithdrawalBackward::add(int pdt, int pays)
     builder.updateHourWithinWeek(pdt);
     for (const auto& storage: data.ShortTermStorage[pays])
     {
-        // z[h] + P[h+1] - P[h]  >= 0
-        namer.ShortTermStorageCostVariationWithdrawalBackward(builder.data.nombreDeContraintes,
-                                                              storage.name);
-        const auto index = storage.clusterGlobalIndex;
-        data.CorrespondanceCntNativesCntOptim[pdt]
-          .ShortTermStorageCostVariationWithdrawalBackward[index]
-          = builder.data.nombreDeContraintes;
+        if (storage.penalizeVariationWithdrawal)
+        {
+            // z[h] + P[h+1] - P[h]  >= 0
+            namer.ShortTermStorageCostVariationWithdrawalBackward(builder.data.nombreDeContraintes,
+                                                                  storage.name);
+            const auto index = storage.clusterGlobalIndex;
+            data.CorrespondanceCntNativesCntOptim[pdt]
+              .ShortTermStorageCostVariationWithdrawalBackward[index]
+              = builder.data.nombreDeContraintes;
 
-        builder.ShortTermCostVariationWithdrawal(index, 1.0)
-          .ShortTermStorageWithdrawal(index, -1.0)
-          .ShortTermStorageWithdrawal(index,
-                                      1.0,
-                                      1,
-                                      builder.data.NombreDePasDeTempsPourUneOptimisation)
-          .greaterThan()
-          .build();
+            builder.ShortTermCostVariationWithdrawal(index, 1.0)
+              .ShortTermStorageWithdrawal(index, -1.0)
+              .ShortTermStorageWithdrawal(index,
+                                          1.0,
+                                          1,
+                                          builder.data.NombreDePasDeTempsPourUneOptimisation)
+              .greaterThan()
+              .build();
+        }
     }
 }

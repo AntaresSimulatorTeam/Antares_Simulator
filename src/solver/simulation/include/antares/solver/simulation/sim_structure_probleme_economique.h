@@ -178,6 +178,8 @@ struct PROPERTIES
     double withdrawalEfficiency;
     double initialLevel;
     bool initialLevelOptim;
+    bool penalizeVariationWithdrawal;
+    bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
