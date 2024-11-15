@@ -20,7 +20,6 @@
 */
 #pragma once
 #include <functional>
-#include <iostream>
 #include <optional>
 #include <typeindex>
 #include <vector>
