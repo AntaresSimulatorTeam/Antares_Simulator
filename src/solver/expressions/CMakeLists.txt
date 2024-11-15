@@ -21,6 +21,7 @@ set(SRC_Expressions
         visitors/PortFieldSumSubstitutionVisitor.cpp
         visitors/AstDOTStyleVisitor.cpp
         visitors/InvalidNode.cpp
+        visitors/NodeVisitor.cpp
 
         hashable.cpp
 
@@ -78,8 +79,8 @@ target_include_directories(solver-expressions
 )
 target_link_libraries(solver-expressions
         PUBLIC
-        Antares::logs
         Boost::headers
+        Antares::logs
 )
 
 

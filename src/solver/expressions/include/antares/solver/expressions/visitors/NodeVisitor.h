@@ -19,11 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <functional>
 #include <optional>
 #include <typeindex>
 #include <vector>
 
-#include <antares/logs/logs.h>
 #include <antares/solver/expressions/IName.h>
 #include <antares/solver/expressions/nodes/Node.h>
 #include <antares/solver/expressions/nodes/NodesForwardDeclaration.h>
@@ -31,6 +31,19 @@
 
 namespace Antares::Solver::Visitors
 {
+// we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
+// inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers (defines
+// in the former become enums in the latter etc...)
+struct LogSink
+{
+    using LogFunction = std::function<void(const std::string&)>;
+
+    LogFunction info;
+    LogFunction warning;
+    LogFunction error;
+};
+
+LogSink RedirectToAntaresLogs();
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
 RetT tryVisit(const Nodes::Node* node, VisitorT& visitor, Args... args)
@@ -119,7 +132,7 @@ public:
         }
         catch (std::exception&)
         {
-            logs.error() << "Antares::Solver::Visitor: could not visit the node!";
+            log_.error("Antares::Solver::Visitor: could not visit the node!");
             throw;
         }
     }
@@ -269,5 +282,11 @@ public:
      * @return The result of processing the ComponentParameterNode.
      */
     virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
+
+private:
+    // we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
+    // inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers
+    // (defines in the former become enums in the latter etc...)
+    LogSink log_ = RedirectToAntaresLogs();
 };
 } // namespace Antares::Solver::Visitors
