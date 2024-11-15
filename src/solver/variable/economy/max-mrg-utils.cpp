@@ -130,7 +130,7 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
             }
             else
             {
-                maxMrgOut[h] = Math::Min(niveau, OI[h] - in.hydroGeneration[h]);
+                maxMrgOut[h] = Math::Max(niveau, OI[h] - in.hydroGeneration[h]);
                 SP += OI[h] - maxMrgOut[h];
             }
         }
