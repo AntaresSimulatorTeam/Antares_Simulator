@@ -45,7 +45,7 @@ public:
 
     std::string id;
 
-    std::shared_ptr<Series> series;
+    std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
     void SynchronizePenaltyOnVariation() const;
 };
