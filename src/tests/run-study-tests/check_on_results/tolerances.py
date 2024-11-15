@@ -61,8 +61,7 @@ class Linux_tolerances(Tolerances):
 
 class Win_tolerances(Tolerances):
     def __init__(self):
-        self.RTOL = {"MAX MRG": 1e-3}
-        self.ATOL = {"MAX MRG": 1}
+        pass
 
 
 def get_tolerances():
