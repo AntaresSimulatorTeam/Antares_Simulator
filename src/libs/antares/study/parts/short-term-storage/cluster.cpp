@@ -78,9 +78,16 @@ bool STStorageCluster::validate() const
 
 bool STStorageCluster::loadSeries(const std::filesystem::path& folder) const
 {
+    SynchronizePenaltyOnVariation();
     bool ret = series->loadFromFolder(folder);
     series->fillDefaultSeriesIfEmpty(); // fill series if no file series
     return ret;
+}
+
+void STStorageCluster::SynchronizePenaltyOnVariation() const
+{
+    series->penaltyCostOnVariation = {.injection = properties.penalizeVariationInjection,
+                                      .withdrawal = properties.penalizeVariationWithdrawal};
 }
 
 void STStorageCluster::saveProperties(IniFile& ini) const
