@@ -285,11 +285,6 @@ public:
      */
     virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
 
-    void setNodeVisitorCustomLog(const NodeVisitorCustomLog& nodeVisitorCustomLog)
-    {
-        nodeVisitorCustomLog_ = nodeVisitorCustomLog;
-    }
-
 private:
     NodeVisitorCustomLog nodeVisitorCustomLog_ = RedirectToStandardOutputs();
 };

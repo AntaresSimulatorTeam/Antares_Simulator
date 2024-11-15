@@ -21,7 +21,6 @@
 
 #include "antares/solver/expressions/visitors/EvalVisitor.h"
 
-#include <cmath>
 #include <numeric>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
