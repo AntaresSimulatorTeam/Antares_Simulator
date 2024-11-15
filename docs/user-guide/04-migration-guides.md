@@ -42,10 +42,6 @@ In files input/links/<link1>/properties.ini, add the following properties
 
 
 ### Input
-  
-#### Short term storage: efficiency for withdrawal
-In input/st-storage/area/list.ini add property: `efficiencywithdrawal` [double] in range 0-1
-
 #### Hydro Final Reservoir Level
 In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if final reservoir level specified, different from `init`):
 * **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
