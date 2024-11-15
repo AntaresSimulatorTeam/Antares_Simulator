@@ -195,8 +195,8 @@ struct RESULTS
     std::vector<double> level;                   // MWh
     std::vector<double> injection;               // MWh
     std::vector<double> withdrawal;              // MWh
-    std::vector<double> costVariationInjection;  // MWh
-    std::vector<double> costVariationwithdrawal; // MWh
+    std::vector<double> costVariationInjection;  // EUR/MWh
+    std::vector<double> costVariationwithdrawal; // EUR/MWh
 };
 } // namespace ShortTermStorage
 
