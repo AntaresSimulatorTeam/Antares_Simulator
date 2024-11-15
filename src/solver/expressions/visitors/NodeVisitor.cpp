@@ -24,18 +24,23 @@
 
 namespace Antares::Solver::Visitors
 {
-void ToYuniInfo(const std::string& msg)
+static void ToYuniInfo(const std::string& msg)
 {
     logs.info() << msg;
 }
 
-void ToYuniError(const std::string& msg)
+static void ToYuniWarning(const std::string& msg)
+{
+    logs.warning() << msg;
+}
+
+static void ToYuniError(const std::string& msg)
 {
     logs.error() << msg;
 }
 
-NodeVisitorCustomLog RedirectToStandardOutputs()
+LogSink RedirectToAntaresLogs()
 {
-    return {.info = ToYuniInfo, .warning = ToYuniInfo, .error = ToYuniError};
+    return {.info = ToYuniInfo, .warning = ToYuniWarning, .error = ToYuniError};
 }
 } // namespace Antares::Solver::Visitors

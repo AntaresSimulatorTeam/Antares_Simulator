@@ -32,7 +32,10 @@
 
 namespace Antares::Solver::Visitors
 {
-struct NodeVisitorCustomLog
+// we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
+// inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers (defines
+// in the former become enums in the latter etc...)
+struct LogSink
 {
     using LogFunction = std::function<void(const std::string&)>;
 
@@ -41,11 +44,7 @@ struct NodeVisitorCustomLog
     LogFunction error;
 };
 
-void ToYuniInfo(const std::string& msg);
-
-void ToYuniError(const std::string& msg);
-
-NodeVisitorCustomLog RedirectToStandardOutputs();
+LogSink RedirectToAntaresLogs();
 
 template<class RetT, class VisitorT, class NodeT, class... Args>
 RetT tryVisit(const Nodes::Node* node, VisitorT& visitor, Args... args)
@@ -134,7 +133,7 @@ public:
         }
         catch (std::exception&)
         {
-            nodeVisitorCustomLog_.error("Antares::Solver::Visitor: could not visit the node!");
+            log_.error("Antares::Solver::Visitor: could not visit the node!");
             throw;
         }
     }
@@ -286,6 +285,9 @@ public:
     virtual R visit(const Nodes::ComponentParameterNode*, Args... args) = 0;
 
 private:
-    NodeVisitorCustomLog nodeVisitorCustomLog_ = RedirectToStandardOutputs();
+    // we use LogSink because the inclusion of <antares/logs/logs.h> somehow results in the
+    // inclusion of <windows.h> (very bad idea in a header!) which conflict with antlr4 headers
+    // (defines in the former become enums in the latter etc...)
+    LogSink log_ = RedirectToAntaresLogs();
 };
 } // namespace Antares::Solver::Visitors
