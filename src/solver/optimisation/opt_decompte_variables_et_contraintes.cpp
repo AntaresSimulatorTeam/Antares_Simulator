@@ -210,21 +210,43 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                              + areaName);
         }
     }
-
     // Short term storage
     {
         const uint nbSTS = problemeHebdo->NumberOfShortTermStorages;
-        // Level, injection, withdrawal, CostVariationInjection, CostVariationWithdrawal
-        ProblemeAResoudre->NombreDeVariables += 5 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
+        // Level, injection, withdrawal
+        ProblemeAResoudre->NombreDeVariables += 3 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
         // Level equation (Level[h+1] = Level[h] + ...)
         ProblemeAResoudre->NombreDeContraintes += nbSTS * nombreDePasDeTempsPourUneOptimisation;
-        /*
-         * ShortTermStorageCostVariationInjectionBackward
-         * ShortTermStorageCostVariationInjectionForward
-         * ShortTermStorageCostVariationWithdrawalBackward
-         * ShortTerStorageCostVariationWithdrawalForward
-         */
-        ProblemeAResoudre->NombreDeContraintes += 4 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
+
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            for (const auto& storage: problemeHebdo->ShortTermStorage[pays])
+            {
+                /*
+                 * ShortTermStorageCostVariationInjectionBackward
+                 * ShortTermStorageCostVariationInjectionForward
+                 */
+                if (storage.penalizeVariationInjection)
+                {
+                    // CostVariationInjection
+                    ProblemeAResoudre->NombreDeVariables += nombreDePasDeTempsPourUneOptimisation;
+                    ProblemeAResoudre->NombreDeContraintes
+                      += 2 * nombreDePasDeTempsPourUneOptimisation;
+                }
+
+                /*
+                 * ShortTermStorageCostVariationWithdrawalBackward
+                 * ShortTerStorageCostVariationWithdrawalForward
+                 */
+                if (storage.penalizeVariationWithdrawal)
+                {
+                    // CostVariationWithdrawal
+                    ProblemeAResoudre->NombreDeVariables += nombreDePasDeTempsPourUneOptimisation;
+                    ProblemeAResoudre->NombreDeContraintes
+                      += 2 * nombreDePasDeTempsPourUneOptimisation;
+                }
+            }
+        }
     }
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)

@@ -179,6 +179,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.LevelVariable.assign(shortTermStorageCount, 0);
+        
         variablesMapping.SIM_ShortTermStorage.CostVariationInjection.assign(shortTermStorageCount,
                                                                             0);
         variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,

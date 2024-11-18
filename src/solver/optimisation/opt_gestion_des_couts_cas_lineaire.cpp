@@ -68,7 +68,7 @@ static void shortTermStorageCost(
                                                             .ShortTermStorageCostVariationInjection(
                                                               clusterGlobalIndex,
                                                               pdtJour);
-                    varCostVariationInjection >= 0 && storage.penalizeVariationInjection)
+                    storage.penalizeVariationInjection && varCostVariationInjection >= 0)
                 {
                     linearCost[varCostVariationInjection] = storage.series
                                                               ->costVariationInjection[pdtHebdo];
@@ -76,7 +76,7 @@ static void shortTermStorageCost(
                 if (const int varCostVariationWithdrawal
                     = variableManager.ShortTermStorageCostVariationWithdrawal(clusterGlobalIndex,
                                                                               pdtJour);
-                    varCostVariationWithdrawal >= 0 && storage.penalizeVariationWithdrawal)
+                    storage.penalizeVariationWithdrawal >= 0 && varCostVariationWithdrawal)
                 {
                     linearCost[varCostVariationWithdrawal] = storage.series
                                                                ->costVariationWithdrawal[pdtHebdo];
