@@ -127,6 +127,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/links/congestionFeeAbs.h
         include/antares/solver/variable/economy/links/marginalCost.h
         include/antares/solver/variable/economy/links/congestionProbability.h
+	include/antares/solver/variable/economy/overallCostCsr.h
 
         # Binding constraints
         include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h

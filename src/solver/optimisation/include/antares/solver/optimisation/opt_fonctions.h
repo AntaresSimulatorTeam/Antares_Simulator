@@ -56,13 +56,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
 
-using namespace Antares::Data::AdequacyPatch;
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
-                   HourlyCSRProblem&,
-                   const AdqPatchParams&,
-                   uint week,
-                   int year);
-
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,

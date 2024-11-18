@@ -146,6 +146,10 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
         out.emplace_back("LMR VIOL.");
         out.emplace_back("UNSP. ENRG CSR");
         out.emplace_back("DTG MRG CSR");
+        out.emplace_back("LOLD CSR");
+        out.emplace_back("LOLP CSR");
+        out.emplace_back("MAX MRG CSR");
+        out.emplace_back("OV. COST CSR");
     }
 }
 

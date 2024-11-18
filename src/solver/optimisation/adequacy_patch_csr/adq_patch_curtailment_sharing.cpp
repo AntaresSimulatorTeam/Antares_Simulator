@@ -133,7 +133,7 @@ void HourlyCSRProblem::calculateCsrParameters()
             double spillageInit = problemeHebdo_->ResultatsHoraires[Area]
                                     .ValeursHorairesDeDefaillanceNegative[hour];
 
-            rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
+            rhsAreaBalanceValues_[Area] = ensInit + netPositionInit - spillageInit;
         }
     }
 }
