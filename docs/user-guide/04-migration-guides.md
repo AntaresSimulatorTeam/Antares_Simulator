@@ -41,6 +41,11 @@ In files input/links/<link1>/properties.ini, add the following properties
 - number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
 
 
+### Input
+#### Hydro Final Reservoir Level
+In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if final reservoir level specified, different from `init`):
+* **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
+
 ### Output
 - Remove column SPIL ENRG CSR (adequacy patch)
 - Add DTG MRG CSR and UNSP ENRG CSR variables
@@ -153,10 +158,6 @@ For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;
 * `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior). Unit is Euro / MWh
 
 For each thermal cluster, new files added **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability). The number of rows for these new matrices is 8760.
-
-#### Hydro Final Reservoir Level
-In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if final reservoir level specified, different from `init`):
-* **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
 
 ### Output
 #### Scenarized RHS for binding constraints

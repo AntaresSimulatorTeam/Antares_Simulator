@@ -6,8 +6,121 @@ toc_depth: 2
 
 ## Branch 9.2.x
 ### 9.2.0
+#### New features
+* Short term storage withdrawal efficiency [ANT-1862] (#2223)
+* Short term storage costs [ANT-1854] (#2302)
+* Add ts-generation for links [ANT-1084] (#1986)
 
+#### Removed features
+* Remove hydro hotstart (#2131)
+* Remove adequacy patch lmr [ANT-1933] (#2341)
+
+#### Improvements
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
+* Expose API [ANT-1158] (#1993)
+* Hydro final lvl (CR 25) [ANT-1084] (#1521)
+* Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
+* batchrun forwards options to antares-solver [ANT-2314] (#2463)
+* Infeasibility analyzer [ANT-1825] (#2232) (#2227)
+* Collect hydro validation errors (#2204)
+* Perform hydro checks prior to the simulation [ANT-1720] (#2132)
+* BC marginal cost : remove "return"s that break the static chain (#2121)
+
+#### Bugfixes
+* Adequacy Patch regression [ANT-1845] (#2235)
+* Fix condition for disabling "store in input" (#2180)
+* Fix/rhs hydro power constraint (#2034)
+* Fix Windows Debug version crash (#2322)
+* Reset adequacy patch enabled (#2420)
+* Fix reset order (#2304)
+* Restore correct behavior when options -h/--list-solvers are provided (#2138)
+* Fix missing synthesis results for links (#2115)
+
+#### Modeler
+* 1.1: Modeler API [ANT-1876] (#2286) (#2391)
+* 1.1c: Scenarize problem filler (#2445)
+
+* 2.1: Lib for modeling objects (#2383)
+* 2.4: Expression visitors : first implementation (#2290)
+* 2.4a: Replace AddNode with SumNode (#2396)
+* 2.4c: portfield substitution (#2406)
+* 2.4c: PortFieldSum and substitution [ANT-2005] (#2415)
+* 2.4e: visualize ast with graphviz [ANT-2036] (#2399) (#2426) (#2429)
+
+* 4.5 Parse yaml [ANT-2206] (#2433) (#2431) (#2447)
+* 4.5 Full exemple of parsing (#2448)
+
+* Add SumNode "wide" test (#2403)
+* Add iterators on ASTs, allowing for loops (#2387)
+
+#### CI
+* SonarCloud job, improvements, bugfixes (#2315) (#2281) (#2246)
+* Run all tests even if one of them fails (#2265)
+* install gh from rpm (#2216)
+* Centos mirror list (#2372)
+* Add tests in CI for version 9.2 (#2241)
+* Use devtoolset-11 on CentOS7 to fix build (#2282)
+* Keep using node js 16 on centos CI (#2248)
+* Remove actions dependencies using node js 16 (#2215)
+* Update deprecated actions (#2381)
+* Add short test to coverage analysis (#2280) (#2267)
+* Check formatting as part of the CI (workflow only) (#2198)
+* Always run clang-format on PR (#2230)
+
+#### Build
+* vcpkg (linux, sirius) (#2078) (#2090) (#2145)
+* Remove src/antares-deps (#2182)
+* Use OR-Tools v9.11-rte1.1 (#2437)
+* Fix or-tools integration (#2402)
+* Better dependencies with cmake, antares matrix (#2369)
+
+#### Doc
+* CHANGELOG improvements (#2287) (#2229) (#2125)
+* Fix PDF generation for useguide (#2134)
+* Add contribution guidelines (#2380)
+* update AUTHORS.txt (#2312)
+* Fix links in README (#2310)
+* Document clang-format (#2243)
+* Add help button to website (#2368)
+
+#### Code quality
+* Using filesystem path instead of Yuni [ANT-1999] (#2435) (#2454) (#2123) (#2066)
+* Compilation warnings (#2237) (#2199) (#2183) (#2144) (#2119) (#2340)
+* Separation of loading and validation [ANT-1213] (#2173) (#2175) (#2177) (#2179)
+* Remove manually allocated memory  (#2254) (#2270) (#2273) (#2363)
+* Mark overriden functions as such in hydroLevelsData (#2389)
+* Districts : simplifying the code (#2279)
+* Remove duplication in simulation run (#2274)
+* Fix various compilation warnings (#2346)
+* Remove useless ;, macro definition (#2348)
+* Use const char** for argv, remove function prepareArgs (#2338)
+* Move TS number print (#2228)
+* Link TS generation : splitting into multiple files (#2171)
+* Infeasibility more cleaning (#2231)
+* Harmonize time constants (#2203)
+* Replace NULL -> nullptr in .cpp (#2209)
+* Resize data collections in PROBLEME_A_RESOUDRE (#2189)
+* Remove TS links from solver (#2155)
+* Simplify functions prepareClustersInMustRunMode (#2168)
+* Add a few const ref qualifiers to improve code readibility (#2459)
+* Parallel years cleaning : few removal of "numspace" (#2128)
+* Capture explicit var for lambdas (#2170)
+* Fix circular dependencies on CMake targets (#2140)
+* Fix Variable::Join (#2116)
+
+#### Technical cleaning
+* Remove last global variable (#2410)
+* Local matching removal : remove unused thread number / numSpace (#2404)
+* Remove Antares::Memory::Array (#2187)
+* Remove function memoryUsage and affiliates (#2456)
+* Remove multiple definitions for Antares::Statistics::HasWrittenToDisk (#2136)
+* Headers files : remove useless inclusions in OPT (#2411)
+* Remove unused code & #defines (#2412)
+* Remove unused CoutDeDefaillanceEnReserve (#2392)
+* Remove unused adqPatchParams argument, class member (#2390)
+* Remove unused headers in src/solver (yuni, cstdint, sim.h) (#2371)
+* Remove unused CMake option BUILD MINIZIP (#2210)
+* Remove useless forward declaration (#2268)
 
 ## Branch 9.1.x
 
