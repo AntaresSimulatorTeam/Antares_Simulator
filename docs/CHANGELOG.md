@@ -1,6 +1,15 @@
 Antares Changelog
 =================
 
+## New features
+* Adding parameters for the used optimization solver [ANT-2280] (#2466)
+* Adequacy patch CSR : add out variables after DTG netting step [ANT-2295] (#2472)
+
+## Bugfix
+* Legacy GUI : Restore and fix grid statistics [ANT-2381] (#2478)
+* Don't apply reverse spinning if the cluster is no force gen [ANT-2293] (#2468)
+* Use "trigerred" criterion for mrg price [ANT-2294] (#2453)
+
 8.8.10 (09/2024)
 --------------------
 ## Bugfix (adequacy patch)
