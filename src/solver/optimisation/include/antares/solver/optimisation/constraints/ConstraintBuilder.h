@@ -39,8 +39,8 @@ public:
     int& nombreDeContraintes;
     int& nombreDeTermesDansLaMatriceDeContrainte;
     std::vector<int>& IndicesDebutDeLigne;
-    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
-    std::vector<int>& IndicesColonnes;
+    VectorMap<double>& CoefficientsDeLaMatriceDesContraintes;
+    VectorMap<int>& IndicesColonnes;
     int& NombreDeTermesAllouesDansLaMatriceDesContraintes; // TODO Check if ref is needed
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;

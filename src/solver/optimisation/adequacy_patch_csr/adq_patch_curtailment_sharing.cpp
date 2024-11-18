@@ -141,13 +141,8 @@ void HourlyCSRProblem::calculateCsrParameters()
 void HourlyCSRProblem::allocateProblem()
 {
     using namespace Antares::Data::AdequacyPatch;
-    int nbConst;
-
     problemeAResoudre_.NombreDeVariables = countVariables(problemeHebdo_);
-    nbConst = problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
-    int nbTerms = 3 * nbConst; // This is a rough estimate, reallocations may happen later if it's
-                               // too low
-    OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_, nbTerms);
+    OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_);
 }
 
 void HourlyCSRProblem::buildProblemVariables()

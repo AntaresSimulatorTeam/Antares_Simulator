@@ -212,9 +212,5 @@ void ConstraintBuilder::OPT_AugmenterLaTailleDeLaMatriceDesContraintes()
                 << NbTermes;
     logs.info();
 
-    data.CoefficientsDeLaMatriceDesContraintes.resize(NbTermes);
-
-    data.IndicesColonnes.resize(NbTermes);
-
     data.NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
 }
