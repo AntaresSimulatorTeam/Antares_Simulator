@@ -61,8 +61,8 @@ public:
         }
         else
         {
-            const int maxMaxKey = m.rbegin()->first;
-            v.assign(mapMaxKey + 1, 0.);
+            const int maxMapKey = m.rbegin()->first;
+            v.assign(maxMapKey + 1, 0.);
             for (auto [index, coeff]: m)
             {
                 v[index] = coeff;
