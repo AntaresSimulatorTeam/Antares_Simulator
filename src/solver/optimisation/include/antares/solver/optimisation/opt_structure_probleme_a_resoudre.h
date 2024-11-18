@@ -37,6 +37,11 @@ template<class T>
 class VectorMap
 {
 public:
+    std::size_t size() const
+    {
+        return m.size();
+    }
+
     T& operator[](std::size_t idx)
     {
         return m[idx];
@@ -50,10 +55,18 @@ public:
 
     std::vector<T>& extractVec() const
     {
-        v.resize(m.size());
-        for (auto [index, coeff]: m)
+        if (m.empty())
         {
-            v[index] = coeff;
+            v.clear();
+        }
+        else
+        {
+            const int maxMaxKey = m.rbegin()->first;
+            v.assign(mapMaxKey + 1, 0.);
+            for (auto [index, coeff]: m)
+            {
+                v[index] = coeff;
+            }
         }
         return v;
     }
