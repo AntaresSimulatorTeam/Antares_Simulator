@@ -2,7 +2,7 @@
 
 _**This section is under construction**_
 
-The new Antares optimization model is all about giving the user the power to define the mathematical model of every
+The new Antares dynamic modeler is all about giving the user the power to define the mathematical model of every
 physical element in the system. Elements of this model are described in this section.
 
 ## Models

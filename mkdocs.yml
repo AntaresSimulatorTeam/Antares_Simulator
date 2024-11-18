@@ -38,23 +38,23 @@ nav:
       - 'Getting started': 'user-guide/03-getting_started.md'
       - 'Solver':
           - 'Overview': 'user-guide/solver/01-overview-solver.md'
-          - 'Legacy Solver':
-              - 'Overview': 'user-guide/solver/legacy-solver/01-overview-legacy-solver.md'
-              - 'Input files': 'user-guide/solver/legacy-solver/02-inputs.md'
-              - 'Output files': 'user-guide/solver/legacy-solver/03-outputs.md'
-              - 'Parameters': 'user-guide/solver/legacy-solver/04-parameters.md'
-              - 'Optimization model': 'user-guide/solver/legacy-solver/05-model.md'
-              - 'Hydro heuristics': 'user-guide/solver/legacy-solver/06-hydro-heuristics.md'
-              - 'Thermal heuristics': 'user-guide/solver/legacy-solver/07-thermal-heuristic.md'
-          - 'New Solver':
-              - 'Overview': 'user-guide/solver/new-solver/01-overview-new-solver.md'
-              - 'Input files': 'user-guide/solver/new-solver/02-inputs.md'
-              - 'Output files': 'user-guide/solver/new-solver/03-outputs.md'
-              - 'Parameters': 'user-guide/solver/new-solver/04-parameters.md'
-              - 'Optimization model': 'user-guide/solver/new-solver/05-model.md'
-              - 'Heuristics': 'user-guide/solver/new-solver/06-heuristics.md'
-              - 'Standard library': 'user-guide/solver/new-solver/07-standard-library.md'
-              - 'Hybrid studies': 'user-guide/solver/new-solver/08-hybrid-studies.md'
+          - 'Static Modeler':
+              - 'Overview': 'user-guide/solver/static-modeler/01-overview-static-modeler.md'
+              - 'Input files': 'user-guide/solver/static-modeler/02-inputs.md'
+              - 'Output files': 'user-guide/solver/static-modeler/03-outputs.md'
+              - 'Parameters': 'user-guide/solver/static-modeler/04-parameters.md'
+              - 'Optimization model': 'user-guide/solver/static-modeler/05-model.md'
+              - 'Hydro heuristics': 'user-guide/solver/static-modeler/06-hydro-heuristics.md'
+              - 'Thermal heuristics': 'user-guide/solver/static-modeler/07-thermal-heuristic.md'
+          - 'Dynamic Modeler':
+              - 'Overview': 'user-guide/solver/dynamic-modeler/01-overview-dynamic-modeler.md'
+              - 'Input files': 'user-guide/solver/dynamic-modeler/02-inputs.md'
+              - 'Output files': 'user-guide/solver/dynamic-modeler/03-outputs.md'
+              - 'Parameters': 'user-guide/solver/dynamic-modeler/04-parameters.md'
+              - 'Optimization model': 'user-guide/solver/dynamic-modeler/05-model.md'
+              - 'Heuristics': 'user-guide/solver/dynamic-modeler/06-heuristics.md'
+              - 'Standard library': 'user-guide/solver/dynamic-modeler/07-standard-library.md'
+              - 'Hybrid studies': 'user-guide/solver/dynamic-modeler/08-hybrid-studies.md'
           - 'Command-line instructions': 'user-guide/solver/02-command-line.md'
           - 'Optional features':
               - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
@@ -94,7 +94,7 @@ nav:
       - 'OR-tools integration': 'developer-guide/ortools-integration.md'
       - 'Changelog': 'developer-guide/CHANGELOG.md'
       - 'Software architecture':
-          - 'New solver architecture' : 'developer-guide/Architecture/New-solver-architecture.md'
+          - 'Dynamic modeler architecture' : 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
   - 'External links':
       - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
       - 'Antares website': 'https://antares-simulator.org'

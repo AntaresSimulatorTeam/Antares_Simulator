@@ -2,17 +2,18 @@
 
 _**This section is under construction**_
 
-The *Solver* is *Antares Simulator*'s main feature.
+The *Solver* is *Antares Simulator*'s main feature.  
+It covers modelling & solving the adequacy optimization problem.
 
-As of 2024, this feature is being overhauled to allow more flexibility in the definition of physical models.
+As of 2024, the modelling feature is being overhauled to allow more flexibility in the definition of physical models.
 
-- The existing solver will still be maintained for a few years, you can find its
-  documentation under the ["legacy solver" section](legacy-solver/01-overview-legacy-solver.md).
-- The new solver will be gradually enriched to cover all existing features, you can find its
-  documentation under the ["new solver" section](new-solver/01-overview-new-solver.md).
+- The existing modeler will still be maintained for a few years, you can find its
+  documentation under the ["static modeler" section](static-modeler/01-overview-static-modeler).
+- The new modeler will be gradually enriched to cover all existing features, you can find its
+  documentation under the ["dynamic modeler" section](dynamic-modeler/01-overview-dynamic-modeler).
 - It will be possible, for a few transitional years, to define "hybrid" studies,
-  mixing [legacy models](legacy-solver/05-model.md) with [new models](new-solver/05-model.md). This is
-  documented [here](new-solver/08-hybrid-studies.md).
+  mixing [static models](static-modeler/05-model.md) with [dynamic models](dynamic-modeler/05-model.md). This is
+  documented [here](dynamic-modeler/08-hybrid-studies.md).
 
 As a consequence, you will be able to use the solver with three types of studies: legacy studies, new studies, and
 hybrid studies.  

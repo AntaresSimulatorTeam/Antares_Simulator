@@ -1,6 +1,6 @@
 [//]: # (Index used by Sphinx to generate correct PDF tree)
 
-# New Solver
+# Dynamic Modeler
 
 ```{toctree}
 :hidden:
