@@ -30,10 +30,9 @@
 #include <antares/optimization-options/options.h>
 #include <antares/writer/i_writer.h>
 #include "../config.h"
-#include "adequacy_patch_csr/hourly_csr_problem.h"
+#include "sim_structure_probleme_economique.h"
 #include "opt_period_string_generator_base.h"
 #include "antares/study/parameters/adq-patch-params.h"
-#include "opt_structure_probleme_a_resoudre.h"
 #include <antares/writer/i_writer.h>
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
@@ -62,13 +61,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
 void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
-
-using namespace Antares::Data::AdequacyPatch;
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
-                   HourlyCSRProblem&,
-                   const AdqPatchParams&,
-                   uint week,
-                   int year);
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO*,

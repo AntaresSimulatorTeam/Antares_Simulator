@@ -89,12 +89,15 @@ set(SRC_VARIABLE_ECONOMY
 		economy/bc.memory-estimation.cpp
 
 		# Variables for Economy
+		economy/max-mrg-utils.h
+		economy/max-mrg-utils.cpp
 		economy/max-mrg.h
-		economy/max-mrg.cpp
+		economy/max-mrg-csr.h
 		economy/price.h
 		economy/balance.h
 		economy/operatingCost.h
 		economy/overallCost.h
+		economy/overallCostCsr.h
 		economy/nonProportionalCost.h
 		economy/hydrostorage.h
 		economy/pumping.h
@@ -112,7 +115,6 @@ set(SRC_VARIABLE_ECONOMY
 		economy/unsupliedEnergyCsr.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h
-		economy/dtgMarginAfterCsr.h
 		economy/spilledEnergy.h
 		economy/dispatchableGeneration.h
 		economy/renewableGeneration.h
@@ -124,10 +126,12 @@ set(SRC_VARIABLE_ECONOMY
 		economy/nbOfDispatchedUnits.h
 		economy/profitByPlant.h
 		economy/lold.h
+		economy/loldCsr.h
 		economy/lolp.h
+		economy/lolpCsr.h
 		economy/avail-dispatchable-generation.h
 		economy/dispatchable-generation-margin.h
-
+		economy/dtgMarginAfterCsr.h
 
 		# Links
 		economy/links/flowLinear.h
@@ -160,9 +164,9 @@ add_library(antares-solver-variable
 
 target_include_directories(antares-solver-variable
 		PRIVATE
-		${CMAKE_SOURCE_DIR}/libs
+			${CMAKE_SOURCE_DIR}/libs
 		PUBLIC
-		.)
+			${CMAKE_SOURCE_DIR})
 target_link_libraries(antares-solver-variable PRIVATE antares-core
 	Antares::study
 )

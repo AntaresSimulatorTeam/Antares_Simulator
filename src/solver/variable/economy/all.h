@@ -49,6 +49,7 @@
 #include "thermalAirPollutantEmissions.h"
 #include "renewableGeneration.h"
 #include "overallCost.h"
+#include "overallCostCsr.h"
 #include "operatingCost.h"
 #include "nonProportionalCost.h"
 #include "nbOfDispatchedUnits.h"
@@ -67,8 +68,11 @@
 #include "spilledEnergy.h"
 
 #include "lold.h"
+#include "loldCsr.h"
 #include "lolp.h"
+#include "lolpCsr.h"
 #include "max-mrg.h"
+#include "max-mrg-csr.h"
 
 #include "avail-dispatchable-generation.h"
 #include "dispatchable-generation-margin.h"
@@ -127,6 +131,7 @@ class Links;
 */
 typedef                           // Prices
   OverallCost                     // Overall Cost (Op. Cost + Unsupplied Eng.)
+  <OverallCostCsr                 // Overall Cost after CSR (adequacy patch Curtailment ShaRing)
   <OperatingCost                  // Operating Cost
    <Price                         // Marginal price
                                   // Thermal pollutants
@@ -154,21 +159,27 @@ typedef                           // Prices
                      <Overflows        // Hydraulic overflows
                       <WaterValue      // Water values
                        <HydroCost      // Hydro costs
-                        <ShortTermStorageByGroup<STstorageInjectionByCluster<
-                          STstorageWithdrawalByCluster<STstorageLevelsByCluster<
-                          STstorageCashFlowByCluster<
-                            UnsupliedEnergy           // Unsuplied Energy
+                        <ShortTermStorageByGroup
+                        <STstorageInjectionByCluster
+                        <STstorageWithdrawalByCluster
+                        <STstorageLevelsByCluster
+                          <STstorageCashFlowByCluster
+                          <UnsupliedEnergy    // Unsuplied Energy
+                          <UnsupliedEnergyCSR // Unsupplied energy CSR
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
                                 <LOLD                 // LOLD
+                                <LOLD_CSR
                                  <LOLP                // LOLP
-                                  <AvailableDispatchGen<DispatchableGenMargin<DtgMarginCsr< // DTG
-                                                                                            // MRG
-                                                                                            // CSR
-                                    UnsupliedEnergyCSR< // Unsupplied energy after CSR
-                                      Marge<NonProportionalCost<
-                                        NonProportionalCostByDispatchablePlant // Startup cost +
+                                 <LOLP_CSR
+                                  <AvailableDispatchGen
+                                  <DispatchableGenMargin
+                                   <DtgMarginCsr // DTG MRG CSR
+                                   <Marge
+                                   <MaxMrgCsr
+                                   <NonProportionalCost
+                                      <NonProportionalCostByDispatchablePlant // Startup cost +
                                                                                // Fixed cost per
                                                                                // thermal plant
                                                                                // detail
@@ -178,7 +189,7 @@ typedef                           // Prices
                                           <ProfitByPlant
                                            // Links
                                            <Variable::Economy::Links // All links
-                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                            >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -242,7 +253,6 @@ typedef // Prices
                                                     LMRViolations,
                                                     Common::SpatialAggregate<
                                                       SpilledEnergy,
-                                                        // LOLD
                                                         Common::SpatialAggregate<
                                                           LOLD,
                                                           Common::SpatialAggregate<

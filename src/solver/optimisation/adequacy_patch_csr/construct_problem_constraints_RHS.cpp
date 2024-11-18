@@ -71,7 +71,7 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
             if (it != numberOfConstraintCsrAreaBalance.end())
             {
                 int Cnt = it->second;
-                problemeAResoudre_.SecondMembre[Cnt] = rhsAreaBalanceValues[Area];
+                problemeAResoudre_.SecondMembre[Cnt] = rhsAreaBalanceValues_[Area];
                 logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt
                              << "] = " << problemeAResoudre_.SecondMembre[Cnt]
                              << " (Area = " << Area << ")";

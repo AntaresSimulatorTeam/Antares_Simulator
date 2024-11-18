@@ -24,49 +24,40 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_MARGE_H__
-#define __SOLVER_VARIABLE_ECONOMY_MARGE_H__
+#pragma once
 
 #include "../variable.h"
-#include "max-mrg-utils.h"
 
-namespace Antares
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
-{
-struct VCardMARGE
+struct VCardOverallCostCsr
 {
     //! Caption
     static std::string Caption()
     {
-        return "MAX MRG";
+        return "OV. COST CSR";
     }
     //! Unit
     static std::string Unit()
     {
-        return "MWh";
+        return "Euro";
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "Maximum margin throughout all MC years";
+        return "Overall Cost throughout all MC years";
     }
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
+                      >,
+                    R::AllYears::Average // Use these values for spatial cluster
+                    >
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardMARGE VCardForSpatialAggregate;
+    typedef VCardOverallCostCsr VCardForSpatialAggregate;
 
     enum
     {
@@ -100,18 +91,19 @@ struct VCardMARGE
 }; // class VCard
 
 /*!
-** \brief Max MRG
+** \brief C02 Average value of the overall OverallCostCsr emissions expected from all
+**   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class Marge : public Variable::IVariable<Marge<NextT>, NextT, VCardMARGE>
+class OverallCostCsr : public Variable::IVariable<OverallCostCsr<NextT>, NextT, VCardOverallCostCsr>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardMARGE VCardType;
+    typedef VCardOverallCostCsr VCardType;
     //! Ancestor
-    typedef Variable::IVariable<Marge<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<OverallCostCsr<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -138,7 +130,7 @@ public:
     };
 
 public:
-    ~Marge()
+    ~OverallCostCsr()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -150,11 +142,11 @@ public:
         // Intermediate values
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
+        // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
-        // Next
         NextType::initializeFromStudy(study);
     }
 
@@ -164,50 +156,31 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        // Next
-        NextType::simulationEnd();
-    }
-
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
-        // Next variable
+
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
-        // Next variable
-        NextType::yearEndBuild(state, year);
+        for (unsigned int i = state.study.runtime->rangeLimits.hour[Data::rangeBegin];
+             i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
+             ++i)
+        {
+            pValuesForTheCurrentYear[numSpace][i] += state.thermalClusterOperatingCostForYear[i];
+        }
+
+        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
+        // Compute all statistics for the current year (daily, weekly, monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
-        // Next variable
         NextType::yearEnd(year, numSpace);
     }
 
@@ -221,33 +194,26 @@ public:
                                          pValuesForTheCurrentYear[numSpace]);
         }
 
-        // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
+        const double costForSpilledOrUnsuppliedEnergyCSR =
+          // Total UnsupliedEnergy emissions
+          (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
+           * state.area->thermal.unsuppliedEnergyCost)
+          + (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
+             * state.area->thermal.spilledEnergyCost)
+          // Current hydro storage and pumping generation costs
+          + (state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
+             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
+                - state.area->hydro.pumpingEfficiency
+                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
+
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergyCSR;
+
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void weekForEachArea(State& state, unsigned int numSpace)
-    {
-        double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
-
-        // Getting data required to compute max margin
-        MaxMrgUsualDataFactory maxMRGdataFactory(state, numSpace);
-        MaxMRGinput maxMRGinput = maxMRGdataFactory.data();
-        computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
-
-        // next
-        NextType::weekForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -280,11 +246,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class Marge
+}; // class OverallCostCsr
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
-
-#endif // __SOLVER_VARIABLE_ECONOMY_MARGE_H__
+} // namespace Antares::Solver::Variable::Economy

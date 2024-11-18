@@ -50,12 +50,12 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/hourly_csr_problem.h
 		adequacy_patch_csr/adq_patch_post_process_list.h
 		adequacy_patch_csr/adq_patch_post_process_list.cpp
-		adequacy_patch_csr/post_processing.cpp
-		adequacy_patch_csr/post_processing.h
+
 		adequacy_patch_local_matching/adq_patch_local_matching.h
 		adequacy_patch_local_matching/adq_patch_local_matching.cpp
 		adequacy_patch_csr/adq_patch_curtailment_sharing.h
 		adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
+		adequacy_patch_csr/solve_problem.h
 		adequacy_patch_csr/solve_problem.cpp
 		adequacy_patch_csr/set_variable_boundaries.cpp
 		adequacy_patch_csr/set_problem_cost_function.cpp
@@ -170,15 +170,9 @@ set(RTESOLVER_OPT
 		constraints/ExchangeBalance.h
 		constraints/ExchangeBalance.cpp
 		constraints/ExchangeBalanceGroup.h
-		constraints/ExchangeBalanceGroup.cpp
+		constraints/ExchangeBalanceGroup.cpp)
 
-	)
-
-
-
-set(SRC_MODEL
-	${RTESOLVER_OPT}
-)
+set(SRC_MODEL ${RTESOLVER_OPT})
 
 add_library(model_antares ${SRC_MODEL})
 if(NOT MSVC)

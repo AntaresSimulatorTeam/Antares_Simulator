@@ -24,37 +24,30 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_MARGE_H__
-#define __SOLVER_VARIABLE_ECONOMY_MARGE_H__
+#pragma once
 
 #include "../variable.h"
-#include "max-mrg-utils.h"
 
-namespace Antares
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
-{
-struct VCardMARGE
+
+struct VCardLOLD_CSR
 {
     //! Caption
     static std::string Caption()
     {
-        return "MAX MRG";
+        return "LOLD CSR";
     }
     //! Unit
     static std::string Unit()
     {
-        return "MWh";
+        return "Hours";
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "Maximum margin throughout all MC years";
+        return "LOLD for CSR";
     }
 
     //! The expecte results
@@ -64,9 +57,6 @@ struct VCardMARGE
           R::AllYears::Max<               // The maximum values throughout all years
             >>>>>
       ResultsType;
-
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardMARGE VCardForSpatialAggregate;
 
     enum
     {
@@ -79,11 +69,11 @@ struct VCardMARGE
         //! Indentation (GUI)
         nodeDepthForGUI = +0,
         //! Decimal precision
-        decimal = 0,
+        decimal = 2,
         //! Number of columns used by the variable (One ResultsType per column)
         columnCount = 1,
         //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
+        spatialAggregate = Category::spatialAggregateSumThen1IfPositive,
         spatialAggregateMode = Category::spatialAggregateEachYear,
         spatialAggregatePostProcessing = 0,
         //! Intermediate values
@@ -100,18 +90,18 @@ struct VCardMARGE
 }; // class VCard
 
 /*!
-** \brief Max MRG
+** \brief
 */
 template<class NextT = Container::EndOfList>
-class Marge : public Variable::IVariable<Marge<NextT>, NextT, VCardMARGE>
+class LOLD_CSR : public Variable::IVariable<LOLD_CSR<NextT>, NextT, VCardLOLD_CSR>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardMARGE VCardType;
+    typedef VCardLOLD_CSR VCardType;
     //! Ancestor
-    typedef Variable::IVariable<Marge<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<LOLD_CSR<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -138,7 +128,7 @@ public:
     };
 
 public:
-    ~Marge()
+    ~LOLD_CSR()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -153,7 +143,6 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -164,42 +153,21 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
     void simulationBegin()
     {
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            pValuesForTheCurrentYear[numSpace].reset();
         // Next
         NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        // Next
-        NextType::simulationEnd();
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
+
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuild(State& state, unsigned int year)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -225,29 +193,13 @@ public:
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.5)
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void weekForEachArea(State& state, unsigned int numSpace)
-    {
-        double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
-
-        // Getting data required to compute max margin
-        MaxMrgUsualDataFactory maxMRGdataFactory(state, numSpace);
-        MaxMRGinput maxMRGinput = maxMRGdataFactory.data();
-        computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
-
-        // next
-        NextType::weekForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -280,11 +232,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class Marge
+}; // class LOLD_CSR
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
-
-#endif // __SOLVER_VARIABLE_ECONOMY_MARGE_H__
+} // namespace Antares::Solver::Variable::Economy

@@ -24,26 +24,19 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_MARGE_H__
-#define __SOLVER_VARIABLE_ECONOMY_MARGE_H__
+#pragma once
 
 #include "../variable.h"
 #include "max-mrg-utils.h"
 
-namespace Antares
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
-{
-struct VCardMARGE
+struct VCardMAX_MRG_CSR
 {
     //! Caption
     static std::string Caption()
     {
-        return "MAX MRG";
+        return "MAX MRG CSR";
     }
     //! Unit
     static std::string Unit()
@@ -54,7 +47,7 @@ struct VCardMARGE
     //! The short description of the variable
     static std::string Description()
     {
-        return "Maximum margin throughout all MC years";
+        return "Max margin for CSR";
     }
 
     //! The expecte results
@@ -66,7 +59,7 @@ struct VCardMARGE
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardMARGE VCardForSpatialAggregate;
+    typedef VCardMAX_MRG_CSR VCardForSpatialAggregate;
 
     enum
     {
@@ -100,18 +93,24 @@ struct VCardMARGE
 }; // class VCard
 
 /*!
+** \brief Prepare MAX.MRG results for a given week
+*/
+template<bool WithSimplexT>
+void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace);
+
+/*!
 ** \brief Max MRG
 */
 template<class NextT = Container::EndOfList>
-class Marge : public Variable::IVariable<Marge<NextT>, NextT, VCardMARGE>
+class MaxMrgCsr : public Variable::IVariable<MaxMrgCsr<NextT>, NextT, VCardMAX_MRG_CSR>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardMARGE VCardType;
+    typedef VCardMAX_MRG_CSR VCardType;
     //! Ancestor
-    typedef Variable::IVariable<Marge<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<MaxMrgCsr<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -138,7 +137,7 @@ public:
     };
 
 public:
-    ~Marge()
+    ~MaxMrgCsr()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -164,42 +163,12 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        // Next
-        NextType::simulationEnd();
-    }
-
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuild(State& state, unsigned int year)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -225,25 +194,13 @@ public:
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
     void weekForEachArea(State& state, unsigned int numSpace)
     {
         double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
 
         // Getting data required to compute max margin
-        MaxMrgUsualDataFactory maxMRGdataFactory(state, numSpace);
-        MaxMRGinput maxMRGinput = maxMRGdataFactory.data();
+        MaxMrgCSRdataFactory maxMRGcsrDataFactory(state, numSpace);
+        MaxMRGinput maxMRGinput = maxMRGcsrDataFactory.data();
         computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
 
         // next
@@ -280,11 +237,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class Marge
+}; // class MaxMrgCsr
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
-
-#endif // __SOLVER_VARIABLE_ECONOMY_MARGE_H__
+} // namespace Antares::Solver::Variable::Economy
