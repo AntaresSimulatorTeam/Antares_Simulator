@@ -244,6 +244,15 @@ jobs:
         batch-name: valid-mps
         os: ${{ env.test-platform }}
 
+    - name: Run tests on adequacy patch
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
+        os: ${{ env.test-platform }}
+    
+
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
