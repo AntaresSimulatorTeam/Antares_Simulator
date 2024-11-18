@@ -62,7 +62,6 @@ struct OptimizationInfo
 {
     unsigned int nbVariables = 0;
     unsigned int nbConstraints = 0;
-    unsigned int nbNonZeroCoeffs = 0;
 };
 
 class SimulationInfoCollector
