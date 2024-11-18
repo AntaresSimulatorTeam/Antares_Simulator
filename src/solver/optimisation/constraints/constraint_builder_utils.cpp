@@ -32,7 +32,6 @@ ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre
             ProblemeAResoudre.IndicesDebutDeLigne,
             ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
             ProblemeAResoudre.IndicesColonnes,
-            ProblemeAResoudre.NombreDeTermesAllouesDansLaMatriceDesContraintes,
             ProblemeAResoudre.NombreDeTermesDesLignes,
             ProblemeAResoudre.Sens,
             ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,

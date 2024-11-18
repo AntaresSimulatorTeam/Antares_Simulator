@@ -188,11 +188,6 @@ void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
           = data.Pi[i];
         data.IndicesColonnes[data.nombreDeTermesDansLaMatriceDeContrainte] = data.Colonne[i];
         data.nombreDeTermesDansLaMatriceDeContrainte++;
-        if (data.nombreDeTermesDansLaMatriceDeContrainte
-            == data.NombreDeTermesAllouesDansLaMatriceDesContraintes)
-        {
-            OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
-        }
     }
     data.NombreDeTermesDesLignes[data.nombreDeContraintes] = nombreDeTermes_;
 
@@ -200,17 +195,4 @@ void ConstraintBuilder::OPT_ChargerLaContrainteDansLaMatriceDesContraintes()
     data.nombreDeContraintes++;
 
     return;
-}
-
-void ConstraintBuilder::OPT_AugmenterLaTailleDeLaMatriceDesContraintes()
-{
-    int NbTermes = data.NombreDeTermesAllouesDansLaMatriceDesContraintes;
-    NbTermes += data.IncrementDAllocationMatriceDesContraintes;
-
-    logs.info();
-    logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : "
-                << NbTermes;
-    logs.info();
-
-    data.NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
 }

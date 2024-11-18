@@ -46,7 +46,7 @@ Benchmarking::OptimizationInfo Adequacy::getOptimizationInfo() const
 
     optInfo.nbVariables = Pb->NombreDeVariables;
     optInfo.nbConstraints = Pb->NombreDeContraintes;
-    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    optInfo.nbNonZeroCoeffs = 42;
     return optInfo;
 }
 

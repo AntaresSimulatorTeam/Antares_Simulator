@@ -79,7 +79,6 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     std::vector<int> NombreDeTermesDesLignes;
     VectorMap<double> CoefficientsDeLaMatriceDesContraintes;
     VectorMap<int> IndicesColonnes;
-    int NombreDeTermesAllouesDansLaMatriceDesContraintes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */

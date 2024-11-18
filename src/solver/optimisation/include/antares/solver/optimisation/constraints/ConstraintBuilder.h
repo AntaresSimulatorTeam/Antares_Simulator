@@ -41,7 +41,6 @@ public:
     std::vector<int>& IndicesDebutDeLigne;
     VectorMap<double>& CoefficientsDeLaMatriceDesContraintes;
     VectorMap<int>& IndicesColonnes;
-    int& NombreDeTermesAllouesDansLaMatriceDesContraintes; // TODO Check if ref is needed
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
@@ -219,8 +218,6 @@ public:
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
-
-    void OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
 
     unsigned int hourInWeek_ = 0;
 
