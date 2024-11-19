@@ -142,6 +142,7 @@ void HourlyCSRProblem::allocateProblem()
 {
     using namespace Antares::Data::AdequacyPatch;
     problemeAResoudre_.NombreDeVariables = countVariables(problemeHebdo_);
+    problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
     OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_);
 }
 
