@@ -76,7 +76,7 @@ static void shortTermStorageCost(
                 if (const int varCostVariationWithdrawal
                     = variableManager.ShortTermStorageCostVariationWithdrawal(clusterGlobalIndex,
                                                                               pdtJour);
-                    storage.penalizeVariationWithdrawal >= 0 && varCostVariationWithdrawal)
+                    storage.penalizeVariationWithdrawal && varCostVariationWithdrawal >= 0)
                 {
                     linearCost[varCostVariationWithdrawal] = storage.series
                                                                ->costVariationWithdrawal[pdtHebdo];
