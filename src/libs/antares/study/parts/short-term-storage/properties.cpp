@@ -168,36 +168,34 @@ bool Properties::validate()
     }
     if (reservoirCapacity < 0)
     {
-        logs.error() << "Property reservoircapacity must be >= 0 "
-                     << "for short term storage " << name;
+        logs.error() << "Property reservoircapacity must be >= 0 " << "for short term storage "
+                     << name;
         return false;
     }
 
     if (injectionEfficiency < 0)
     {
-        logs.warning() << "Property efficiency must be >= 0 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiency must be >= 0 " << "for short term storage " << name;
         injectionEfficiency = 0;
     }
 
     if (injectionEfficiency > 1)
     {
-        logs.warning() << "Property efficiency must be <= 1 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiency must be <= 1 " << "for short term storage " << name;
         injectionEfficiency = 1;
     }
 
     if (withdrawalEfficiency < 0)
     {
-        logs.warning() << "Property efficiencyWithdrawal must be >= 0 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiencyWithdrawal must be >= 0 " << "for short term storage "
+                       << name;
         withdrawalEfficiency = 0;
     }
 
     if (withdrawalEfficiency > 1)
     {
-        logs.warning() << "Property efficiencyWithdrawal must be <= 1 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiencyWithdrawal must be <= 1 " << "for short term storage "
+                       << name;
         withdrawalEfficiency = 1;
     }
 
