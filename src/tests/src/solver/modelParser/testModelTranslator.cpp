@@ -25,9 +25,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/study/system-model/library.h"
 #include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
+#include "antares/study/system-model/library.h"
 
 #include "enum_operators.h"
 

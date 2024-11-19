@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -33,7 +32,7 @@ namespace Solver::ModelParser
 {
 class Library;
 }
-} // namespace Antares::Solver
+} // namespace Antares
 
 namespace Antares::Solver::ModelConverter
 {

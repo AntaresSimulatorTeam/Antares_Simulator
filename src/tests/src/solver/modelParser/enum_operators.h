@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -24,8 +23,8 @@
 #include <ostream>
 #include <string>
 
-#include "antares/study/system-model/valueType.h"
 #include "antares/solver/modelParser/Library.h"
+#include "antares/study/system-model/valueType.h"
 
 namespace Antares::Study::SystemModel
 {

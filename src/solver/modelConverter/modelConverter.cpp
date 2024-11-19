@@ -23,6 +23,7 @@
 
 #include <stdexcept>
 
+#include "antares/solver/modelParser/Library.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
 #include "antares/study/system-model/model.h"
@@ -30,11 +31,9 @@
 #include "antares/study/system-model/port.h"
 #include "antares/study/system-model/portType.h"
 #include "antares/study/system-model/variable.h"
-#include "antares/solver/modelParser/Library.h"
 
 namespace Antares::Solver::ModelConverter
 {
-
 /**
  * \brief Converts parameters from ModelParser::Model to ObjectModel::Parameter.
  *
@@ -54,8 +53,8 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
             fields.emplace_back(Antares::Study::SystemModel::PortField{field});
         }
         Antares::Study::SystemModel::PortType portTypeModel(portType.id,
-                                                             portType.description,
-                                                             std::move(fields));
+                                                            portType.description,
+                                                            std::move(fields));
         out.emplace_back(std::move(portTypeModel));
     }
     return out;
@@ -201,11 +200,10 @@ Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser:
     std::vector<Antares::Study::SystemModel::PortType> portTypes = convertTypes(library);
     std::vector<Antares::Study::SystemModel::Model> models = convertModels(library);
     Antares::Study::SystemModel::Library lib = builder.withId(library.id)
-                                                  .withDescription(library.description)
-                                                  .withPortTypes(std::move(portTypes))
-                                                  .withModels(std::move(models))
-                                                  .build();
+                                                 .withDescription(library.description)
+                                                 .withPortTypes(std::move(portTypes))
+                                                 .withModels(std::move(models))
+                                                 .build();
     return lib;
 }
-
 } // namespace Antares::Solver::ModelConverter
