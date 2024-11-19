@@ -21,60 +21,16 @@
 #ifndef __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 #define __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 
-#include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include <antares/solver/utils/basis_status.h>
 
+#include "SparseVector.hxx"
 #include "opt_constants.h"
 
 /*--------------------------------------------------------------------------------------*/
-// This class provides a hybrid structure combining the benefits of a std::map (key-based access)
-// and a std::vector (contiguous storage and sequential access).
-template<class T>
-class VectorMap
-{
-public:
-    std::size_t size() const
-    {
-        return m.size();
-    }
-
-    T& operator[](std::size_t idx)
-    {
-        return m[idx];
-    }
-
-    T* data() const
-    {
-        extractVec();
-        return v.data();
-    }
-
-    std::vector<T>& extractVec() const
-    {
-        if (m.empty())
-        {
-            v.clear();
-        }
-        else
-        {
-            const int maxMapKey = m.rbegin()->first;
-            v.assign(maxMapKey + 1, 0.);
-            for (auto [index, coeff]: m)
-            {
-                v[index] = coeff;
-            }
-        }
-        return v;
-    }
-
-private:
-    std::map<int, T> m;
-    mutable std::vector<T> v;
-};
 
 /* Le probleme a resoudre */
 struct PROBLEME_ANTARES_A_RESOUDRE
@@ -90,8 +46,8 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     std::string Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
-    VectorMap<double> CoefficientsDeLaMatriceDesContraintes;
-    VectorMap<int> IndicesColonnes;
+    SparseVector<double> CoefficientsDeLaMatriceDesContraintes;
+    SparseVector<int> IndicesColonnes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */

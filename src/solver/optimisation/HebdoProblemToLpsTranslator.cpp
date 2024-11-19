@@ -45,9 +45,9 @@ void copy(const T& in, U& out)
 }
 
 template<class T, class U>
-void copy(const VectorMap<T>& in, U& out)
+void copy(const SparseVector<T>& in, U& out)
 {
-    copy(in.extractVec(), out);
+    copy(in.extract(), out);
 }
 
 } // namespace
