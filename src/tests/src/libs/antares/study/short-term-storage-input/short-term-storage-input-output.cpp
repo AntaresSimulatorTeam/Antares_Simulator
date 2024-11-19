@@ -54,6 +54,26 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.costInjection.resize(size, value);
     series.costWithdrawal.resize(size, value);
     series.costLevel.resize(size, value);
+
+    series.costVariationInjection.resize(size, value);
+    series.costVariationWithdrawal.resize(size, value);
+}
+
+void resizeFillVectors(
+  ShortTermStorage::Series& series,
+  double value,
+  unsigned int size,
+  const Antares::Data::ShortTermStorage::PenaltyCostOnVariation& penaltyCostOnVariation)
+{
+    resizeFillVectors(series, value, size);
+    if (penaltyCostOnVariation.injection)
+    {
+        series.costVariationInjection.resize(size, value);
+    }
+    if (penaltyCostOnVariation.withdrawal)
+    {
+        series.costVariationWithdrawal.resize(size, value);
+    }
 }
 
 void createIndividualFileSeries(const fs::path& path, double value, unsigned int size)
@@ -97,6 +117,26 @@ void createFileSeries(double value, unsigned int size)
     createIndividualFileSeries(folder / "cost-level.txt", value, size);
 }
 
+void createFileSeries(
+  double value,
+  unsigned int size,
+  const Antares::Data::ShortTermStorage::PenaltyCostOnVariation& penaltyCostOnVariation)
+{
+    fs::path folder = getFolder();
+
+    createFileSeries(value, size);
+
+    if (penaltyCostOnVariation.injection)
+    {
+        createIndividualFileSeries(folder / "cost-variation-injection.txt", value, size);
+    }
+
+    if (penaltyCostOnVariation.withdrawal)
+    {
+        createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", value, size);
+    }
+}
+
 void createFileSeries(unsigned int size)
 {
     fs::path folder = getFolder();
@@ -110,6 +150,9 @@ void createFileSeries(unsigned int size)
     createIndividualFileSeries(folder / "cost-injection.txt", size);
     createIndividualFileSeries(folder / "cost-withdrawal.txt", size);
     createIndividualFileSeries(folder / "cost-level.txt", size);
+
+    createIndividualFileSeries(folder / "cost-variation-injection.txt", size);
+    createIndividualFileSeries(folder / "cost-variation-withdrawal.txt", size);
 }
 
 void createIniFile(bool enabled)
@@ -129,6 +172,24 @@ void createIniFile(bool enabled)
     outfile << "efficiencywithdrawal = 0.9" << std::endl;
     outfile << "initiallevel = 0.50000" << std::endl;
     outfile << "enabled = " << (enabled ? "true" : "false") << std::endl;
+    outfile.close();
+}
+
+void createIniFile(
+  const Antares::Data::ShortTermStorage::PenaltyCostOnVariation& penaltyCostOnVariation)
+{
+    fs::path folder = getFolder();
+
+    std::ofstream outfile;
+    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    outfile << "[area]" << std::endl;
+    outfile << "name = area" << std::endl;
+    outfile << "group = PSP_open" << std::endl;
+    outfile << "penalize-variation-injection = " << std::boolalpha
+            << penaltyCostOnVariation.injection << std::endl;
+    outfile << "penalize-variation-withdrawal = " << std::boolalpha
+            << penaltyCostOnVariation.withdrawal << std::endl;
     outfile.close();
 }
 
@@ -190,6 +251,16 @@ struct Fixture
         fs::remove(folder / "cost-injection.txt");
         fs::remove(folder / "cost-withdrawal.txt");
         fs::remove(folder / "cost-level.txt");
+
+        if (penaltyCostOnVariation.injection)
+        {
+            fs::remove(folder / "cost-variation-injection.txt");
+        }
+
+        if (penaltyCostOnVariation.withdrawal)
+        {
+            fs::remove(folder / "cost-variation-withdrawal.txt");
+        }
     }
 
     fs::path folder = getFolder();
@@ -198,6 +269,7 @@ struct Fixture
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
     ShortTermStorage::STStorageInput container;
+    ShortTermStorage::PenaltyCostOnVariation penaltyCostOnVariation;
 };
 
 // ==================
@@ -215,6 +287,40 @@ BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
     BOOST_CHECK(series.validate());
 }
 
+BOOST_FIXTURE_TEST_CASE(check_vector_sizes_with_cost_variation_injection_true, Fixture)
+{
+    penaltyCostOnVariation = {.injection = true, .withdrawal = false};
+    series.penaltyCostOnVariation = penaltyCostOnVariation;
+    resizeFillVectors(series, 0.0, 12, penaltyCostOnVariation);
+    BOOST_CHECK(!series.validate());
+
+    resizeFillVectors(series, 0.0, 8760, penaltyCostOnVariation);
+    BOOST_CHECK(series.validate());
+}
+
+BOOST_FIXTURE_TEST_CASE(check_vector_sizes_with_cost_variation_withdrawal_true, Fixture)
+{
+    penaltyCostOnVariation = {.injection = false, .withdrawal = true};
+    series.penaltyCostOnVariation = penaltyCostOnVariation;
+    resizeFillVectors(series, 0.0, 12, penaltyCostOnVariation);
+    BOOST_CHECK(!series.validate());
+
+    resizeFillVectors(series, 0.0, 8760, penaltyCostOnVariation);
+    BOOST_CHECK(series.validate());
+}
+
+BOOST_FIXTURE_TEST_CASE(check_vector_sizes_with_cost_variation_injection_and_withdrawal_true,
+                        Fixture)
+{
+    penaltyCostOnVariation = {.injection = true, .withdrawal = true};
+    series.penaltyCostOnVariation = penaltyCostOnVariation;
+    resizeFillVectors(series, 0.0, 12, penaltyCostOnVariation);
+    BOOST_CHECK(!series.validate());
+
+    resizeFillVectors(series, 0.0, 8760, penaltyCostOnVariation);
+    BOOST_CHECK(series.validate());
+}
+
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 {
     createFileSeries(1.0, 8760);
@@ -223,6 +329,40 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
     BOOST_CHECK(series.validate());
     BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
                 && series.upperRuleCurve[1343] == 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_cost_variation_injection_true, Fixture)
+{
+    penaltyCostOnVariation = {.injection = true, .withdrawal = false};
+    series.penaltyCostOnVariation = penaltyCostOnVariation;
+    createFileSeries(1.0, 8760, penaltyCostOnVariation);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+    BOOST_CHECK(series.costVariationInjection[0] == 1 && series.costVariationWithdrawal.empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_cost_variation_withdrawal_true, Fixture)
+{
+    penaltyCostOnVariation = {.injection = false, .withdrawal = true};
+    series.penaltyCostOnVariation = penaltyCostOnVariation;
+    createFileSeries(1.0, 8760, penaltyCostOnVariation);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+    BOOST_CHECK(series.costVariationWithdrawal[0] == 1 && series.costVariationInjection.empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_cost_variation_injection_and_withdrawal_true,
+                        Fixture)
+{
+    penaltyCostOnVariation = {.injection = true, .withdrawal = true};
+    series.penaltyCostOnVariation = penaltyCostOnVariation;
+    createFileSeries(1.0, 8760, penaltyCostOnVariation);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+    BOOST_CHECK(series.costVariationWithdrawal[0] == 1 && series.costVariationInjection[0] == 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
@@ -269,6 +409,14 @@ BOOST_FIXTURE_TEST_CASE(check_series_vector_fill, Fixture)
     BOOST_CHECK(series.validate());
 }
 
+BOOST_FIXTURE_TEST_CASE(check_series_vector_fill_with_no_cost_variation, Fixture)
+{
+    series.fillDefaultSeriesIfEmpty();
+    BOOST_CHECK(series.validate());
+    BOOST_CHECK(series.costVariationInjection.empty());
+    BOOST_CHECK(series.costVariationWithdrawal.empty());
+}
+
 BOOST_FIXTURE_TEST_CASE(check_cluster_series_vector_fill, Fixture)
 {
     BOOST_CHECK(cluster.loadSeries(folder));
@@ -286,6 +434,19 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
                 && cluster.series->lowerRuleCurve[6392] == 0.5);
 }
 
+BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector_with_cost_variation, Fixture)
+{
+    penaltyCostOnVariation = {.injection = true, .withdrawal = true};
+    cluster.properties.penalizeVariationInjection = penaltyCostOnVariation.injection;
+    cluster.properties.penalizeVariationWithdrawal = penaltyCostOnVariation.withdrawal;
+    createFileSeries(0.5, 8760, penaltyCostOnVariation);
+
+    BOOST_CHECK(cluster.loadSeries(folder));
+    BOOST_CHECK(cluster.series->validate());
+    BOOST_CHECK(cluster.series->costVariationInjection[15] == 0.5
+                && cluster.series->costVariationWithdrawal[756] == 0.5);
+}
+
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
 {
     createIniFile(true);
@@ -297,6 +458,55 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
     BOOST_CHECK(properties.enabled);
     BOOST_CHECK_EQUAL(container.count(), 1);
     BOOST_CHECK(properties.validate());
+    BOOST_CHECK(!properties.penalizeVariationInjection);
+    BOOST_CHECK(!properties.penalizeVariationWithdrawal);
+
+    removeIniFile();
+}
+
+BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variation_injection,
+                        Fixture)
+{
+    penaltyCostOnVariation = {.injection = true, .withdrawal = false};
+    createIniFile(penaltyCostOnVariation);
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    auto& properties = container.storagesByIndex[0].properties;
+
+    BOOST_CHECK(properties.penalizeVariationInjection);
+
+    removeIniFile();
+}
+
+BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load_with_cost_variation_withdrawal,
+                        Fixture)
+{
+    penaltyCostOnVariation = {.injection = false, .withdrawal = true};
+    createIniFile(penaltyCostOnVariation);
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    auto& properties = container.storagesByIndex[0].properties;
+
+    BOOST_CHECK(properties.penalizeVariationWithdrawal);
+
+    removeIniFile();
+}
+
+BOOST_FIXTURE_TEST_CASE(
+  check_container_properties_enabled_load_with_cost_variation_injection_and_withdrawal,
+  Fixture)
+{
+    penaltyCostOnVariation = {.injection = true, .withdrawal = true};
+    createIniFile(penaltyCostOnVariation);
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+
+    auto& properties = container.storagesByIndex[0].properties;
+
+    BOOST_CHECK(properties.penalizeVariationInjection);
+    BOOST_CHECK(properties.penalizeVariationWithdrawal);
 
     removeIniFile();
 }
