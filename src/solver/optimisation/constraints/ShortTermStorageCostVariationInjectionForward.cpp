@@ -21,6 +21,7 @@
 
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionForward.h"
 
+// CostVariationInjection[h] - Injection[h+1] + Injection[h]  >= 0
 void ShortTermStorageCostVariationInjectionForward::add(int pdt, int pays)
 {
     ConstraintNamer namer(builder.data.NomDesContraintes);
@@ -33,7 +34,6 @@ void ShortTermStorageCostVariationInjectionForward::add(int pdt, int pays)
     {
         if (storage.penalizeVariationInjection)
         {
-            // z[h] - P[h+1] + P[h]  >= 0
             namer.ShortTermStorageCostVariationInjectionForward(builder.data.nombreDeContraintes,
                                                                 storage.name);
             const auto index = storage.clusterGlobalIndex;

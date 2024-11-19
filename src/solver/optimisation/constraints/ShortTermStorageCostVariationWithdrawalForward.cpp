@@ -21,6 +21,7 @@
 
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationWithdrawalForward.h"
 
+// CostVariationWithdrawal[h] - Withdrawal[h+1] + Withdrawal[h]  >= 0
 void ShortTermStorageCostVariationWithdrawalForward::add(int pdt, int pays)
 {
     ConstraintNamer namer(builder.data.NomDesContraintes);
@@ -33,7 +34,6 @@ void ShortTermStorageCostVariationWithdrawalForward::add(int pdt, int pays)
     {
         if (storage.penalizeVariationWithdrawal)
         {
-            // z[h] - P[h+1] + P[h]  >= 0
             namer.ShortTermStorageCostVariationWithdrawalForward(builder.data.nombreDeContraintes,
                                                                  storage.name);
             const auto index = storage.clusterGlobalIndex;
