@@ -70,8 +70,6 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
-          += 1 + 2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
         builder.data.nombreDeContraintes++;
     }
 }

@@ -112,6 +112,15 @@ BOOST_AUTO_TEST_CASE(empty_problem_empty_const_data)
     BOOST_CHECK(ret == ConstantDataFromAntares());
 }
 
+template<class T>
+static void fillSparseVector(SparseVector<T>& v, int idxMax)
+{
+    for (int idx = 0; idx < idxMax; idx++)
+    {
+        v[idx] = idx;
+    }
+}
+
 BOOST_AUTO_TEST_CASE(common_data_properly_copied)
 {
     HebdoProblemToLpsTranslator translator;
@@ -121,15 +130,17 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
     problemHebdo.TypeDeVariable = {0, 1, 2};
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {3, 3};
-    problemHebdo.CoefficientsDeLaMatriceDesContraintes = {0, 1, 2, 3, 4, 5};
-    problemHebdo.IndicesColonnes = {0, 1, 2, 3, 4, 5};
+    fillSparseVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 6);
+    fillSparseVector(problemHebdo.IndicesColonnes, 6);
 
     auto ret = translator.commonProblemData(&problemHebdo);
+
     BOOST_CHECK_EQUAL(ret.VariablesCount, problemHebdo.NombreDeVariables);
     BOOST_CHECK_EQUAL(ret.ConstraintesCount, problemHebdo.NombreDeContraintes);
     BOOST_CHECK(std::ranges::equal(ret.VariablesType, problemHebdo.TypeDeVariable));
-    BOOST_CHECK(ret.ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
-    BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes));
+    BOOST_CHECK(ret.ConstraintsMatrixCoeff
+                == problemHebdo.CoefficientsDeLaMatriceDesContraintes.extract());
+    BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes.extract()));
     auto expectedMdeb = problemHebdo.IndicesDebutDeLigne;
     expectedMdeb.push_back(problemHebdo.CoefficientsDeLaMatriceDesContraintes.size());
     BOOST_CHECK(std::ranges::equal(ret.Mdeb, expectedMdeb));
@@ -183,8 +194,9 @@ BOOST_AUTO_TEST_CASE(NombreDeCoefficients_is_properly_computed)
     problemHebdo.NombreDeContraintes = 3;
     problemHebdo.IndicesDebutDeLigne = {0, 3, 6};
     problemHebdo.NombreDeTermesDesLignes = {3, 3, 3};
-    problemHebdo.CoefficientsDeLaMatriceDesContraintes = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-    problemHebdo.IndicesColonnes = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+
+    fillSparseVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 9);
+    fillSparseVector(problemHebdo.IndicesColonnes, 9);
 
     auto ret = translator.commonProblemData(&problemHebdo);
     BOOST_CHECK_EQUAL(ret.CoeffCount, 9);

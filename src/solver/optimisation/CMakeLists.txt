@@ -5,6 +5,7 @@ set(RTESOLVER_OPT
         opt_optimisation_lineaire.cpp
         opt_chainage_intercos.cpp
         include/antares/solver/optimisation/opt_fonctions.h
+        include/antares/solver/optimisation/SparseVector.hxx
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
         include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
