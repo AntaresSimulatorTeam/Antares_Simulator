@@ -28,16 +28,14 @@ namespace Antares::Data::ShortTermStorage
 {
 struct PenaltyCostOnVariation
 {
-    bool injection;
-    bool withdrawal;
+    bool injection = false;
+    bool withdrawal = false;
 };
 
 class Series
 {
 public:
-    explicit Series(const PenaltyCostOnVariation& penaltyCostOnVariation = PenaltyCostOnVariation{
-                      .injection = false,
-                      .withdrawal = false});
+    Series() = default;
     // check if series values are valid
     bool validate(const std::string& id = "") const;
 

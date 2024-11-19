@@ -294,9 +294,4 @@ bool Series::validateLowerRuleCurve(const std::string& id) const
     return checkVectBetweenZeroOne("lower rule curve", id, maxInjectionModulation);
 }
 
-Series::Series(const PenaltyCostOnVariation& penaltyCostOnVariation):
-    penaltyCostOnVariation(penaltyCostOnVariation)
-{
-}
-
 } // namespace Antares::Data::ShortTermStorage

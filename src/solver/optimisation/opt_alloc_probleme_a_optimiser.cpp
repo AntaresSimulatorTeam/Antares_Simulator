@@ -128,7 +128,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
             if (storage.penalizeVariationInjection)
             {
                 // CostVariationInjection
-                NbTermes += NombreDePasDeTempsPourUneOptimisation;
+                NbTermes += 2 * 3 * NombreDePasDeTempsPourUneOptimisation;
             }
 
             /*
@@ -138,7 +138,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
             if (storage.penalizeVariationWithdrawal)
             {
                 // CostVariationWithdrawal
-                NbTermes += NombreDePasDeTempsPourUneOptimisation;
+                NbTermes += 2 * 3 * NombreDePasDeTempsPourUneOptimisation;
             }
         }
     }
