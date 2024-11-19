@@ -6,11 +6,12 @@ class SparseVector
 public:
     std::size_t size() const
     {
-        return m.size();
+        return isExtracted ? v.size() : m.size();
     }
 
     T& operator[](std::size_t idx)
     {
+        isExtracted = false;
         m.push_back({idx, 0});
         return m.back().second;
     }
@@ -23,16 +24,21 @@ public:
 
     std::vector<T>& extract() const
     {
-        v.assign(m.size(), 0.);
-        for (auto [index, coeff]: m)
+        if (!isExtracted)
         {
-            v[index] = coeff;
+            isExtracted = true;
+            v.assign(m.size(), 0.);
+            for (auto [index, coeff]: m)
+            {
+                v[index] = coeff;
+            }
+            m.clear();
         }
-        m.clear();
         return v;
     }
 
 private:
+    mutable bool isExtracted = false;
     mutable std::vector<std::pair<int, T>> m;
     mutable std::vector<T> v;
 };
