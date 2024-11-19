@@ -22,19 +22,14 @@
 
 #include <string>
 
-#include "expression.h"
-#include "parameter.h"
-
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
-/// A constraint linking variables and parameters of a model together
-class Constraint
+class PortField
 {
 public:
-    Constraint(std::string name, Expression expression):
-        id_(std::move(name)),
-        expression_(std::move(expression))
+    explicit PortField(const std::string& id):
+        id_(id)
     {
     }
 
@@ -43,14 +38,8 @@ public:
         return id_;
     }
 
-    Expression expression() const
-    {
-        return expression_;
-    }
-
 private:
     std::string id_;
-    Expression expression_;
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

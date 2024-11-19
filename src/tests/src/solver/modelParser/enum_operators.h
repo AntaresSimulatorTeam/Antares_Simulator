@@ -24,10 +24,10 @@
 #include <ostream>
 #include <string>
 
-#include "antares/solver/libObjectModel/valueType.h"
+#include "antares/study/system-model/valueType.h"
 #include "antares/solver/modelParser/Library.h"
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
 {
@@ -49,7 +49,7 @@ inline std::ostream& operator<<(std::ostream& os, const ValueType& value_type)
     }
     return os;
 }
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel
 
 namespace Antares::Solver::ModelParser
 {

@@ -22,24 +22,26 @@
 
 #include <string>
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
-class PortField
+class Expression
 {
 public:
-    explicit PortField(const std::string& id):
-        id_(id)
+    Expression() = default;
+
+    explicit Expression(std::string value):
+        value_(std::move(value))
     {
     }
 
-    const std::string& Id() const
+    const std::string& Value() const
     {
-        return id_;
+        return value_;
     }
 
 private:
-    std::string id_;
+    std::string value_;
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

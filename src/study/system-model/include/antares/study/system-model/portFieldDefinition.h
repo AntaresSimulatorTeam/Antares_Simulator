@@ -20,28 +20,21 @@
 */
 #pragma once
 
-#include <string>
+#include "port.h"
+#include "portType.h"
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
-class Expression
+class PortFieldDefinition
 {
-public:
-    Expression() = default;
-
-    explicit Expression(std::string value):
-        value_(std::move(value))
-    {
-    }
-
-    const std::string& Value() const
-    {
-        return value_;
-    }
+    PortFieldDefinition();
+    ~PortFieldDefinition() = default;
 
 private:
-    std::string value_;
+    Port port_;
+    PortField field_;
+    Expression definition_;
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

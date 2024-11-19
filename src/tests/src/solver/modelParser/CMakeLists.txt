@@ -15,7 +15,7 @@ target_link_libraries(TestModelParser
         Boost::unit_test_framework
         Antares::modelConverter
         Antares::modelParser
-        Antares::antares-solver-libObjectModel
+        Antares::antares-study-system-model
 )
 
 # Storing test-toybox under the folder Unit-tests in the IDE

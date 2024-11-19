@@ -22,14 +22,14 @@
 
 #pragma once
 
-namespace Antares::Solver
+namespace Antares
 {
-namespace ObjectModel
+namespace Study::SystemModel
 {
 class Library;
 }
 
-namespace ModelParser
+namespace Solver::ModelParser
 {
 class Library;
 }
@@ -37,5 +37,5 @@ class Library;
 
 namespace Antares::Solver::ModelConverter
 {
-Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library);
+Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library);
 }

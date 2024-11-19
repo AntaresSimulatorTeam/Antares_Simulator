@@ -16,7 +16,7 @@ target_include_directories(modelConverter
 # Link dependencies (if any)
 target_link_libraries(modelConverter
         PRIVATE
-        Antares::antares-solver-libObjectModel
+        Antares::antares-study-system-model
         Antares::modelParser
 )
 

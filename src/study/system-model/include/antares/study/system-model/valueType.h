@@ -19,53 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
+#include <iostream>
 #include <string>
 
-#include "expression.h"
-#include "parameter.h"
-#include "valueType.h"
-
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
-/// A decision variable of the model
-class Variable
+/// Type of value held by variables or parameters
+enum class ValueType
 {
-public:
-    Variable(std::string id, Expression lower_bound, Expression upper_bound, ValueType type):
-        id_(std::move(id)),
-        type_(type),
-        lowerBound_(lower_bound),
-        upperBound_(upper_bound)
-    {
-    }
-
-    const std::string& Id() const
-    {
-        return id_;
-    }
-
-    ValueType Type() const
-    {
-        return type_;
-    }
-
-    Expression LowerBound() const
-    {
-        return lowerBound_;
-    }
-
-    Expression UpperBound() const
-    {
-        return upperBound_;
-    }
-
-private:
-    std::string id_;
-    ValueType type_;
-    Expression lowerBound_;
-    Expression upperBound_;
+    FLOAT,
+    INTEGER,
+    BOOL
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel
