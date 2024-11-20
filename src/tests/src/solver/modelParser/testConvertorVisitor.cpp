@@ -108,9 +108,9 @@ BOOST_FIXTURE_TEST_CASE(identifierNotFound, FixtureConvertVisitor)
                           expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(AddSub, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(addTwoLiterals, FixtureConvertVisitor)
 {
-    std::string expression = "1 + 2";
+    const std::string expression = "1 + 2";
     auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
     BOOST_CHECK_EQUAL(n->name(), "SumNode");
 
@@ -119,9 +119,12 @@ BOOST_FIXTURE_TEST_CASE(AddSub, FixtureConvertVisitor)
     auto operands = nodeSum->getOperands();
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
+}
 
-    expression = "6 - 3";
-    n = ModelConverter::convertExpressionToNode(expression, registry, model);
+BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, FixtureConvertVisitor)
+{
+    const std::string expression = "6 - 3";
+    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
     BOOST_CHECK_EQUAL(n->name(), "SubtractionNode");
 
     auto* nodeSub = dynamic_cast<Nodes::SubtractionNode*>(n);
@@ -130,7 +133,7 @@ BOOST_FIXTURE_TEST_CASE(AddSub, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(mulDiv, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(multiplyTwoLiterals, FixtureConvertVisitor)
 {
     std::string expression = "1 * 2";
     auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
@@ -140,9 +143,12 @@ BOOST_FIXTURE_TEST_CASE(mulDiv, FixtureConvertVisitor)
     BOOST_REQUIRE(nodeMult);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->left())->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->right())->value(), 2);
+}
 
-    expression = "6 / 3";
-    n = ModelConverter::convertExpressionToNode(expression, registry, model);
+BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, FixtureConvertVisitor)
+{
+    const std::string expression = "6 / 3";
+    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
     BOOST_CHECK_EQUAL(n->name(), "DivisionNode");
 
     auto* nodeDiv = dynamic_cast<Nodes::DivisionNode*>(n);
