@@ -26,11 +26,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-struct PenaltyCostOnVariation
-{
-    bool injection = false;
-    bool withdrawal = false;
-};
 
 class Series
 {
@@ -56,7 +51,6 @@ public:
     std::vector<double> costLevel;
     std::vector<double> costVariationInjection;
     std::vector<double> costVariationWithdrawal;
-    PenaltyCostOnVariation penaltyCostOnVariation = {.injection = false, .withdrawal = false};
 
 private:
     bool validateSizes(const std::string&) const;

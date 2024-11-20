@@ -47,6 +47,5 @@ public:
 
     std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
-    void SynchronizePenaltyOnVariation() const;
 };
 } // namespace Antares::Data::ShortTermStorage

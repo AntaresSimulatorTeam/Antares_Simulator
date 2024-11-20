@@ -49,14 +49,9 @@ bool Series::loadFromFolder(const fs::path& folder)
     ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
     ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
 
-    if (penaltyCostOnVariation.injection)
-    {
-        ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
-    }
-    if (penaltyCostOnVariation.withdrawal)
-    {
-        ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
-    }
+    ret = loadFile(folder / "cost-variation-injection.txt", costVariationInjection) && ret;
+
+    ret = loadFile(folder / "cost-variation-withdrawal.txt", costVariationWithdrawal) && ret;
 
     return ret;
 }
@@ -132,15 +127,9 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(costWithdrawal, 0.0);
     fillIfEmpty(costLevel, 0.0);
 
-    if (penaltyCostOnVariation.injection)
-    {
-        fillIfEmpty(costVariationInjection, 0.0);
-    }
+    fillIfEmpty(costVariationInjection, 0.0);
 
-    if (penaltyCostOnVariation.withdrawal)
-    {
-        fillIfEmpty(costVariationWithdrawal, 0.0);
-    }
+    fillIfEmpty(costVariationWithdrawal, 0.0);
 }
 
 bool Series::saveToFolder(const std::string& folder) const
@@ -167,14 +156,8 @@ bool Series::saveToFolder(const std::string& folder) const
     checkWrite("cost-withdrawal.txt", costWithdrawal);
     checkWrite("cost-level.txt", costLevel);
 
-    if (penaltyCostOnVariation.injection)
-    {
-        checkWrite("cost-variation-injection.txt", costVariationInjection);
-    }
-    if (penaltyCostOnVariation.withdrawal)
-    {
-        checkWrite("cost-variation-withdrawal.txt", costVariationWithdrawal);
-    }
+    checkWrite("cost-variation-injection.txt", costVariationInjection);
+    checkWrite("cost-variation-withdrawal.txt", costVariationWithdrawal);
 
     return ret;
 }
@@ -236,23 +219,16 @@ static bool checkSize(const std::string& seriesFilename,
 
 bool Series::validateSizes(const std::string& id) const
 {
-    auto ret = checkSize("PMAX-injection.txt", id, maxInjectionModulation)
-               && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
-               && checkSize("inflows.txt", id, inflows)
-               && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
-               && checkSize("upper-rule-curve.txt", id, upperRuleCurve)
-               && checkSize("cost-injection.txt", id, costInjection)
-               && checkSize("cost-withdrawal.txt", id, costWithdrawal)
-               && checkSize("cost-level.txt", id, costLevel);
-    if (penaltyCostOnVariation.injection)
-    {
-        ret = ret && checkSize("cost-variation-injection.txt", id, costVariationInjection);
-    }
-    if (penaltyCostOnVariation.withdrawal)
-    {
-        ret = ret && checkSize("cost-variation-withdrawal.txt", id, costVariationWithdrawal);
-    }
-    return ret;
+    return checkSize("PMAX-injection.txt", id, maxInjectionModulation)
+           && checkSize("PMAX-withdrawal.txt", id, maxWithdrawalModulation)
+           && checkSize("inflows.txt", id, inflows)
+           && checkSize("lower-rule-curve.txt", id, lowerRuleCurve)
+           && checkSize("upper-rule-curve.txt", id, upperRuleCurve)
+           && checkSize("cost-injection.txt", id, costInjection)
+           && checkSize("cost-withdrawal.txt", id, costWithdrawal)
+           && checkSize("cost-level.txt", id, costLevel)
+           && checkSize("cost-variation-injection.txt", id, costVariationInjection)
+           && checkSize("cost-variation-withdrawal.txt", id, costVariationWithdrawal);
 }
 
 bool Series::validateMaxInjection(const std::string& id) const
