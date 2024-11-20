@@ -248,7 +248,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
-        os: ${{ env.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
