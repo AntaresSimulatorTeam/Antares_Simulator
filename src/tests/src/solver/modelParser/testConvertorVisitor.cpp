@@ -55,6 +55,7 @@ BOOST_FIXTURE_TEST_CASE(negation, FixtureConvertVisitor)
     auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
     BOOST_CHECK_EQUAL(n->name(), "NegationNode");
     auto* nodeNeg = dynamic_cast<Nodes::NegationNode*>(n);
+    BOOST_REQUIRE(nodeNeg);
     BOOST_CHECK_EQUAL(toLiteral(nodeNeg->child())->value(), 7);
 }
 
@@ -114,6 +115,7 @@ BOOST_FIXTURE_TEST_CASE(AddSub, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(n->name(), "SumNode");
 
     auto* nodeSum = dynamic_cast<Nodes::SumNode*>(n);
+    BOOST_REQUIRE(nodeSum);
     auto operands = nodeSum->getOperands();
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
@@ -123,6 +125,7 @@ BOOST_FIXTURE_TEST_CASE(AddSub, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(n->name(), "SubtractionNode");
 
     auto* nodeSub = dynamic_cast<Nodes::SubtractionNode*>(n);
+    BOOST_REQUIRE(nodeSub);
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->left())->value(), 6);
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->right())->value(), 3);
 }
@@ -134,6 +137,7 @@ BOOST_FIXTURE_TEST_CASE(mulDiv, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(n->name(), "MultiplicationNode");
 
     auto* nodeMult = dynamic_cast<Nodes::MultiplicationNode*>(n);
+    BOOST_REQUIRE(nodeMult);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->left())->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->right())->value(), 2);
 
@@ -142,6 +146,7 @@ BOOST_FIXTURE_TEST_CASE(mulDiv, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(n->name(), "DivisionNode");
 
     auto* nodeDiv = dynamic_cast<Nodes::DivisionNode*>(n);
+    BOOST_REQUIRE(nodeDiv);
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->left())->value(), 6);
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->right())->value(), 3);
 }
@@ -161,6 +166,7 @@ BOOST_FIXTURE_TEST_CASE(comparison, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(n->name(), "GreaterThanOrEqualNode");
 
     auto* nodeGreater = dynamic_cast<Nodes::GreaterThanOrEqualNode*>(n);
+    BOOST_REQUIRE(nodeGreater);
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->left())->value(), 8364);
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->right())->value(), 27);
 }
