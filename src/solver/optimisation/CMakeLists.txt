@@ -81,6 +81,7 @@ set(RTESOLVER_OPT
         constraints/FictitiousLoad.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageLevel.h
         constraints/ShortTermStorageLevel.cpp
+        include/antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h
         include/antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionForward.h
         constraints/ShortTermStorageCostVariationInjectionForward.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionBackward.h

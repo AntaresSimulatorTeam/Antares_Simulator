@@ -20,20 +20,12 @@
  */
 
 #pragma once
-#include "ConstraintBuilder.h"
+#include "ShortTermStorageCostVariation.h"
 
-class ShortTermStorageCostVariationInjectionForward: private ConstraintFactory
+class ShortTermStorageCostVariationInjectionForward: private ShortTermStorageCostVariation
 {
 public:
-    ShortTermStorageCostVariationInjectionForward(ConstraintBuilder& builder,
-                                                  ShortTermStorageData& data):
-        ConstraintFactory(builder),
-        data(data)
-    {
-    }
+    using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
-    void add(int pdt, int pays);
-
-private:
-    ShortTermStorageData& data;
+    void add(int pdt, int pays) override;
 };

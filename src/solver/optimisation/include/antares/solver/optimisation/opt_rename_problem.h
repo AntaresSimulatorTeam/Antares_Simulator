@@ -170,6 +170,10 @@ public:
     void CsrAreaBalance(unsigned int constraint);
     void CsrBindingConstraintHour(unsigned int constraint, const std::string& name);
 
+    void ShortTermStorageCostVariation(const std::string& constraint_name,
+                                       unsigned int constraint,
+                                       const std::string& short_term_name);
+
 private:
     void nameWithTimeGranularity(unsigned int constraint,
                                  const std::string& name,

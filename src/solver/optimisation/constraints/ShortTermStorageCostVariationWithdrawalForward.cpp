@@ -22,33 +22,27 @@
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationWithdrawalForward.h"
 
 // CostVariationWithdrawal[h] - Withdrawal[h+1] + Withdrawal[h]  >= 0
+auto buildForwardWithdrawalConstraint = [](ConstraintBuilder& builder, int index)
+{
+    builder.ShortTermCostVariationWithdrawal(index, 1.0)
+      .ShortTermStorageWithdrawal(index, 1.0)
+      .ShortTermStorageWithdrawal(index,
+                                  -1.0,
+                                  1,
+                                  builder.data.NombreDePasDeTempsPourUneOptimisation)
+      .greaterThan()
+      .build();
+};
+
 void ShortTermStorageCostVariationWithdrawalForward::add(int pdt, int pays)
 {
-    ConstraintNamer namer(builder.data.NomDesContraintes);
-    const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
-    namer.UpdateTimeStep(hourInTheYear);
-    namer.UpdateArea(builder.data.NomsDesPays[pays]);
-
-    builder.updateHourWithinWeek(pdt);
-    for (const auto& storage: data.ShortTermStorage[pays])
-    {
-        if (storage.penalizeVariationWithdrawal)
-        {
-            namer.ShortTermStorageCostVariationWithdrawalForward(builder.data.nombreDeContraintes,
-                                                                 storage.name);
-            const auto index = storage.clusterGlobalIndex;
-            data.CorrespondanceCntNativesCntOptim[pdt]
-              .ShortTermStorageCostVariationWithdrawalForward[index]
-              = builder.data.nombreDeContraintes;
-
-            builder.ShortTermCostVariationWithdrawal(index, 1.0)
-              .ShortTermStorageWithdrawal(index, 1.0)
-              .ShortTermStorageWithdrawal(index,
-                                          -1.0,
-                                          1,
-                                          builder.data.NombreDePasDeTempsPourUneOptimisation)
-              .greaterThan()
-              .build();
-        }
-    }
+    addStorageConstraint(
+      buildForwardWithdrawalConstraint,
+      "ShortTermStorageCostVariationWithdrawalForward",
+      &ShortTermStorage::PROPERTIES::penalizeVariationWithdrawal,
+      pdt,
+      pays,
+      data,
+      builder,
+      &CORRESPONDANCES_DES_CONTRAINTES::ShortTermStorageCostVariationWithdrawalForward);
 }

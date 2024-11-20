@@ -22,33 +22,24 @@
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionForward.h"
 
 // CostVariationInjection[h] - Injection[h+1] + Injection[h]  >= 0
+auto buildForwardInjectionConstraint = [](ConstraintBuilder& builder, int index)
+{
+    builder.ShortTermCostVariationInjection(index, 1.0)
+      .ShortTermStorageInjection(index, 1.0)
+      .ShortTermStorageInjection(index, -1.0, 1, builder.data.NombreDePasDeTempsPourUneOptimisation)
+      .greaterThan()
+      .build();
+};
+
 void ShortTermStorageCostVariationInjectionForward::add(int pdt, int pays)
 {
-    ConstraintNamer namer(builder.data.NomDesContraintes);
-    const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
-    namer.UpdateTimeStep(hourInTheYear);
-    namer.UpdateArea(builder.data.NomsDesPays[pays]);
-
-    builder.updateHourWithinWeek(pdt);
-    for (const auto& storage: data.ShortTermStorage[pays])
-    {
-        if (storage.penalizeVariationInjection)
-        {
-            namer.ShortTermStorageCostVariationInjectionForward(builder.data.nombreDeContraintes,
-                                                                storage.name);
-            const auto index = storage.clusterGlobalIndex;
-            data.CorrespondanceCntNativesCntOptim[pdt]
-              .ShortTermStorageCostVariationInjectionForward[index]
-              = builder.data.nombreDeContraintes;
-
-            builder.ShortTermCostVariationInjection(index, 1.0)
-              .ShortTermStorageInjection(index, 1.0)
-              .ShortTermStorageInjection(index,
-                                         -1.0,
-                                         1,
-                                         builder.data.NombreDePasDeTempsPourUneOptimisation)
-              .greaterThan()
-              .build();
-        }
-    }
+    addStorageConstraint(
+      buildForwardInjectionConstraint,
+      "ShortTermStorageCostVariationInjectionForward",
+      &ShortTermStorage::PROPERTIES::penalizeVariationInjection,
+      pdt,
+      pays,
+      data,
+      builder,
+      &CORRESPONDANCES_DES_CONTRAINTES::ShortTermStorageCostVariationInjectionForward);
 }
