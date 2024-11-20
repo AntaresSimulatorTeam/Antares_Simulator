@@ -19,14 +19,14 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/libObjectModel/library.h"
+#include "antares/study/system-model/library.h"
 
 #include <algorithm>
 #include <iterator>
 #include <utility>
 #include <vector>
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
 /**
@@ -98,4 +98,4 @@ Library LibraryBuilder::build()
 {
     return library_;
 }
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

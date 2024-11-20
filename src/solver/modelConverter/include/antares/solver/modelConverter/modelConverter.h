@@ -21,23 +21,20 @@
 
 #pragma once
 
-#include <antares/solver/expressions/Registry.hxx>
-#include <antares/solver/expressions/nodes/Node.h>
-
-namespace Antares::Solver
+namespace Antares
 {
-namespace ObjectModel
+namespace Study::SystemModel
 {
 class Library;
 }
 
-namespace ModelParser
+namespace Solver::ModelParser
 {
 class Library;
 }
-} // namespace Antares::Solver
+} // namespace Antares
 
 namespace Antares::Solver::ModelConverter
 {
-ObjectModel::Library convert(const ModelParser::Library& library, Registry<Nodes::Node>& registry);
+Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library);
 }

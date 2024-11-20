@@ -22,50 +22,36 @@
 
 #include <string>
 
-#include "expression.h"
-#include "parameter.h"
-#include "valueType.h"
+#include <antares/solver/expressions/nodes/Node.h>
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
-/// A decision variable of the model
-class Variable
+class Expression
 {
 public:
-    Variable(std::string id, Expression lower_bound, Expression upper_bound, ValueType type):
-        id_(std::move(id)),
-        type_(type),
-        lowerBound_(lower_bound),
-        upperBound_(upper_bound)
+    Expression() = default;
+
+    explicit Expression(std::string value, Nodes::Node* node):
+        value_(std::move(value)),
+        node_(node)
     {
     }
 
-    const std::string& Id() const
+    const std::string& Value() const
     {
-        return id_;
+        return value_;
     }
 
-    ValueType Type() const
+    const Nodes::Node* Node() const
     {
-        return type_;
-    }
-
-    Expression LowerBound() const
-    {
-        return lowerBound_;
-    }
-
-    Expression UpperBound() const
-    {
-        return upperBound_;
+        return node_;
     }
 
 private:
-    std::string id_;
-    ValueType type_;
-    Expression lowerBound_;
-    Expression upperBound_;
+    std::string value_;
+
+    Nodes::Node* node_;
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

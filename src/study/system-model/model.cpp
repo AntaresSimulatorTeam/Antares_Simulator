@@ -24,9 +24,9 @@
 #include <utility>
 #include <vector>
 
-#include <antares/solver/libObjectModel/model.h>
+#include <antares/study/system-model/model.h>
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
 /**
@@ -135,4 +135,4 @@ ModelBuilder& ModelBuilder::withConstraints(std::vector<Constraint>&& constraint
     return *this;
 }
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

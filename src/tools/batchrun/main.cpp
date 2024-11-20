@@ -124,14 +124,7 @@ int main(int argc, const char* argv[])
 
         if (not finder.list.empty())
         {
-            if (finder.list.size() > 1)
-            {
-                logs.info() << "Found " << finder.list.size() << " studies";
-            }
-            else
-            {
-                logs.info() << "Found 1 study";
-            }
+            logs.info() << "Number of studies found : " << finder.list.size();
             logs.info() << "Starting...";
 
             // The folder that contains the solver

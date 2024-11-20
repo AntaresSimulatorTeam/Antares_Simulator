@@ -167,9 +167,6 @@ void SimulationInfoCollector::toFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
     file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);
-    file_content.addItemToSection("optimization problem",
-                                  "non-zero coefficients",
-                                  opt_info_.nbNonZeroCoeffs);
 }
 
 } // namespace Benchmarking

@@ -19,39 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-
+#include <iostream>
 #include <string>
 
-#include <antares/solver/expressions/nodes/Node.h>
-
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
-class Expression
+/// Type of value held by variables or parameters
+enum class ValueType
 {
-public:
-    Expression() = default;
-
-    explicit Expression(std::string value, Nodes::Node* node):
-        value_(std::move(value)),
-        node_(node)
-    {
-    }
-
-    const std::string& Value() const
-    {
-        return value_;
-    }
-
-    const Nodes::Node* Node() const
-    {
-        return node_;
-    }
-
-private:
-    std::string value_;
-
-    Nodes::Node* node_;
+    FLOAT,
+    INTEGER,
+    BOOL
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

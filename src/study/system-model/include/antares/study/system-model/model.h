@@ -29,7 +29,7 @@
 #include "port.h"
 #include "variable.h"
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
 /**
@@ -96,4 +96,4 @@ private:
     Model model_;
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

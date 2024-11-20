@@ -25,21 +25,22 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/libObjectModel/library.h"
 #include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
 #include "antares/solver/modelParser/parser.h"
+#include "antares/study/system-model/library.h"
 
 #include "enum_operators.h"
 
 using namespace std::string_literals;
 using namespace Antares::Solver;
+using namespace Antares::Study;
 
-void checkParameter(const ObjectModel::Parameter& parameter,
+void checkParameter(const SystemModel::Parameter& parameter,
                     const std::string& name,
                     bool timeDependent,
                     bool scenarioDependent,
-                    ObjectModel::ValueType type)
+                    SystemModel::ValueType type)
 {
     std::cout << "Parameter: " << parameter.Id() << std::endl;
     BOOST_CHECK_EQUAL(parameter.Id(), name);
@@ -48,11 +49,11 @@ void checkParameter(const ObjectModel::Parameter& parameter,
     BOOST_CHECK_EQUAL(parameter.Type(), type);
 }
 
-void checkVariable(const ObjectModel::Variable& variable,
+void checkVariable(const SystemModel::Variable& variable,
                    const std::string& name,
                    const std::string& lowerBound,
                    const std::string& upperBound,
-                   ObjectModel::ValueType type)
+                   SystemModel::ValueType type)
 {
     std::cout << "Variable: " << variable.Id() << std::endl;
     BOOST_CHECK_EQUAL(variable.Id(), name);
@@ -61,7 +62,7 @@ void checkVariable(const ObjectModel::Variable& variable,
     BOOST_CHECK_EQUAL(variable.Type(), type);
 }
 
-void checkConstraint(const ObjectModel::Constraint& constraint,
+void checkConstraint(const SystemModel::Constraint& constraint,
                      const std::string& name,
                      const std::string& expression)
 {
@@ -263,7 +264,7 @@ library:
         Registry<Nodes::Node> registry;
         ModelParser::Parser parser;
         ModelParser::Library libraryObj = parser.parse(library);
-        ObjectModel::Library lib = ModelConverter::convert(libraryObj, registry);
+        SystemModel::Library lib = ModelConverter::convert(libraryObj, registry);
         BOOST_CHECK_EQUAL(lib.Id(), "basic");
         BOOST_CHECK_EQUAL(lib.Description(), "Basic library");
 
@@ -291,18 +292,18 @@ library:
                        "cost",
                        false,
                        false,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model0.Parameters().at("p_max"),
                        "p_max",
                        false,
                        false,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
 
         checkVariable(model0.Variables().at("generation"),
                       "generation",
                       "0",
                       "p_max",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
 
         // auto& port = model0.Ports().at("injection_port");
         // BOOST_CHECK_EQUAL(port.Id(), "injection_port");
@@ -328,12 +329,12 @@ library:
                        "cost",
                        false,
                        false,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkVariable(model2.Variables().at("spillage"),
                       "spillage",
                       "0",
                       "",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
 
         auto& model3 = lib.Models().at("unsupplied");
         BOOST_CHECK_EQUAL(model3.Id(), "unsupplied");
@@ -346,12 +347,12 @@ library:
                        "cost",
                        false,
                        false,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkVariable(model3.Variables().at("unsupplied_energy"),
                       "unsupplied_energy",
                       "0",
                       "",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
 
         auto& model4 = lib.Models().at("demand");
         BOOST_CHECK_EQUAL(model4.Id(), "demand");
@@ -364,7 +365,7 @@ library:
                        "demand",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
 
         auto& model5 = lib.Models().at("short-term-storage");
         BOOST_CHECK_EQUAL(model5.Id(), "short-term-storage");
@@ -377,47 +378,47 @@ library:
                        "efficiency",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model5.Parameters().at("level_min"),
                        "level_min",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model5.Parameters().at("level_max"),
                        "level_max",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model5.Parameters().at("p_max_withdrawal"),
                        "p_max_withdrawal",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model5.Parameters().at("p_max_injection"),
                        "p_max_injection",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model5.Parameters().at("inflows"),
                        "inflows",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkVariable(model5.Variables().at("injection"),
                       "injection",
                       "0",
                       "p_max_injection",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
         checkVariable(model5.Variables().at("withdrawal"),
                       "withdrawal",
                       "0",
                       "p_max_withdrawal",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
         checkVariable(model5.Variables().at("level"),
                       "level",
                       "level_min",
                       "level_max",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
         checkConstraint(model5.getConstraints().at("Level equation"),
                         "Level equation",
                         "level - level - efficiency * injection + withdrawal = inflows");
@@ -433,57 +434,57 @@ library:
                        "cost",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model6.Parameters().at("p_min"),
                        "p_min",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model6.Parameters().at("p_max"),
                        "p_max",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model6.Parameters().at("d_min_up"),
                        "d_min_up",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model6.Parameters().at("d_min_down"),
                        "d_min_down",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model6.Parameters().at("nb_units_max"),
                        "nb_units_max",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkParameter(model6.Parameters().at("nb_failures"),
                        "nb_failures",
                        true,
                        true,
-                       ObjectModel::ValueType::FLOAT);
+                       SystemModel::ValueType::FLOAT);
         checkVariable(model6.Variables().at("generation"),
                       "generation",
                       "0",
                       "nb_units_max * p_max",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
         checkVariable(model6.Variables().at("nb_on"),
                       "nb_on",
                       "0",
                       "nb_units_max",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
         checkVariable(model6.Variables().at("nb_stop"),
                       "nb_stop",
                       "0",
                       "nb_units_max",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
         checkVariable(model6.Variables().at("nb_start"),
                       "nb_start",
                       "0",
                       "nb_units_max",
-                      ObjectModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT);
         checkConstraint(model6.getConstraints().at("Max generation"),
                         "Max generation",
                         "generation <= nb_on * p_max");

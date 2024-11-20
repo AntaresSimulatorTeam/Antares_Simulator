@@ -272,7 +272,7 @@ void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
 
         // Check if solver is available
-        bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), solverName)
+        bool found = (std::ranges::find(availableSolverList, solverName)
                       != availableSolverList.end());
         if (!found)
         {

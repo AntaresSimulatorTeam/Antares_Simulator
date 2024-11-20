@@ -24,7 +24,7 @@
 
 #include "valueType.h"
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
 /**
@@ -90,4 +90,4 @@ private:
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES; // optional at construction
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel

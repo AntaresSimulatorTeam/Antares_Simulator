@@ -36,11 +36,7 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
 {
     post_process_list.push_back(
       std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, thread_number_, areas));
-    // Here a post process particular to adq patch
-    post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
-                                                                                   problemeHebdo_,
-                                                                                   areas,
-                                                                                   thread_number_));
+
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, false, false));
     post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
@@ -48,6 +44,12 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                                            sheddingPolicy,
                                                                            splxOptimization,
                                                                            thread_number));
+
+    // Here a post process particular to adq patch
+    post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
+                                                                                   problemeHebdo_,
+                                                                                   areas,
+                                                                                   thread_number_));
     // Here a post process particular to adq patch
     post_process_list.push_back(
       std::make_unique<DTGmarginForAdqPatchPostProcessCmd>(problemeHebdo_, areas, thread_number));

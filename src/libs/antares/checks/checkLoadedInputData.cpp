@@ -29,9 +29,9 @@
 
 namespace Antares::Check
 {
-void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
-                       bool ortoolsUsed,
-                       const std::string& solverName)
+void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
+                                    bool ortoolsUsed,
+                                    const std::string& solverName)
 {
     using namespace Antares::Data;
     if (ucMode == UnitCommitmentMode::ucMILP)

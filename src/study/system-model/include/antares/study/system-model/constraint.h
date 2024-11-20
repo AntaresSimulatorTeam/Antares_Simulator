@@ -22,27 +22,35 @@
 
 #include <string>
 
-#include "portType.h"
+#include "expression.h"
+#include "parameter.h"
 
-namespace Antares::Solver::ObjectModel
+namespace Antares::Study::SystemModel
 {
 
-class Port
+/// A constraint linking variables and parameters of a model together
+class Constraint
 {
 public:
+    Constraint(std::string name, Expression expression):
+        id_(std::move(name)),
+        expression_(std::move(expression))
+    {
+    }
+
     const std::string& Id() const
     {
         return id_;
     }
 
-    PortType Type() const
+    Expression expression() const
     {
-        return type_;
+        return expression_;
     }
 
 private:
     std::string id_;
-    PortType type_;
+    Expression expression_;
 };
 
-} // namespace Antares::Solver::ObjectModel
+} // namespace Antares::Study::SystemModel
