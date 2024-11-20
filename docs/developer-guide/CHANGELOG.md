@@ -10,6 +10,7 @@ toc_depth: 2
 * Short term storage withdrawal efficiency [ANT-1862] (#2223)
 * Short term storage costs [ANT-1854] (#2302)
 * Add ts-generation for links [ANT-1084] (#1986)
+* Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
 
 #### Removed features
 * Remove hydro hotstart (#2131)
@@ -18,16 +19,15 @@ toc_depth: 2
 #### Improvements
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
 * Expose API [ANT-1158] (#1993)
-* Hydro final lvl (CR 25) [ANT-1084] (#1521)
 * Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
 * batchrun forwards options to antares-solver [ANT-2314] (#2463)
 * Infeasibility analyzer [ANT-1825] (#2232) (#2227)
 * Collect hydro validation errors (#2204)
 * Perform hydro checks prior to the simulation [ANT-1720] (#2132)
-* BC marginal cost : remove "return"s that break the static chain (#2121)
 
 #### Bugfixes
 * Adequacy Patch regression [ANT-1845] (#2235)
+* BC marginal cost : remove "return"s that break the static chain (#2121)
 * Fix condition for disabling "store in input" (#2180)
 * Fix/rhs hydro power constraint (#2034)
 * Fix Windows Debug version crash (#2322)
@@ -39,17 +39,14 @@ toc_depth: 2
 #### Modeler
 * 1.1: Modeler API [ANT-1876] (#2286) (#2391)
 * 1.1c: Scenarize problem filler (#2445)
-
 * 2.1: Lib for modeling objects (#2383)
 * 2.4: Expression visitors : first implementation (#2290)
 * 2.4a: Replace AddNode with SumNode (#2396)
 * 2.4c: portfield substitution (#2406)
 * 2.4c: PortFieldSum and substitution [ANT-2005] (#2415)
 * 2.4e: visualize ast with graphviz [ANT-2036] (#2399) (#2426) (#2429)
-
 * 4.5 Parse yaml [ANT-2206] (#2433) (#2431) (#2447)
 * 4.5 Full exemple of parsing (#2448)
-
 * Add SumNode "wide" test (#2403)
 * Add iterators on ASTs, allowing for loops (#2387)
 

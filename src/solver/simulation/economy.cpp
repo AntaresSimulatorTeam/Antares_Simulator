@@ -51,7 +51,6 @@ Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
 
     optInfo.nbVariables = Pb->NombreDeVariables;
     optInfo.nbConstraints = Pb->NombreDeContraintes;
-    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     return optInfo;
 }
 
