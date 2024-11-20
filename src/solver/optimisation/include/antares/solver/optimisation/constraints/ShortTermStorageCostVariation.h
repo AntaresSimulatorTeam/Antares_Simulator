@@ -67,3 +67,35 @@ public:
     virtual void add(int pdt, int pays) = 0;
     ShortTermStorageData& data;
 };
+
+class ShortTermStorageCostVariationInjectionBackward: private ShortTermStorageCostVariation
+{
+public:
+    using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
+
+    void add(int pdt, int pays) override;
+};
+
+class ShortTermStorageCostVariationInjectionForward: private ShortTermStorageCostVariation
+{
+public:
+    using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
+
+    void add(int pdt, int pays) override;
+};
+
+class ShortTermStorageCostVariationWithdrawalBackward: private ShortTermStorageCostVariation
+{
+public:
+    using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
+
+    void add(int pdt, int pays) override;
+};
+
+class ShortTermStorageCostVariationWithdrawalForward: private ShortTermStorageCostVariation
+{
+public:
+    using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
+
+    void add(int pdt, int pays) override;
+};

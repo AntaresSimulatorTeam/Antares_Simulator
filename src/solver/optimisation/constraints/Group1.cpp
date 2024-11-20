@@ -21,10 +21,7 @@
 
 #include "antares/solver/optimisation/constraints/Group1.h"
 
-#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionBackward.h"
-#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionForward.h"
-#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationWithdrawalBackward.h"
-#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationWithdrawalForward.h"
+#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
 
 AreaBalanceData Group1::GetAreaBalanceData()
 {

@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationWithdrawalBackward.h"
+#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
 
 // CostVariationWithdrawal[h] + Withdrawal[h+1] - Withdrawal[h]  >= 0
 auto buildBackwardWithdrawalConstraint = [](ConstraintBuilder& builder, int index)

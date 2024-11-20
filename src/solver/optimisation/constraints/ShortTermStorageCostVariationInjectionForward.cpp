@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariationInjectionForward.h"
+#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
 
 // CostVariationInjection[h] - Injection[h+1] + Injection[h]  >= 0
 auto buildForwardInjectionConstraint = [](ConstraintBuilder& builder, int index)
