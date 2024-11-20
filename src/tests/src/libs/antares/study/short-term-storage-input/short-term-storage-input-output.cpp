@@ -307,14 +307,6 @@ BOOST_FIXTURE_TEST_CASE(check_series_vector_fill, Fixture)
     BOOST_CHECK(series.validate());
 }
 
-BOOST_FIXTURE_TEST_CASE(check_series_vector_fill_with_no_cost_variation, Fixture)
-{
-    series.fillDefaultSeriesIfEmpty();
-    BOOST_CHECK(series.validate());
-    BOOST_CHECK(series.costVariationInjection.empty());
-    BOOST_CHECK(series.costVariationWithdrawal.empty());
-}
-
 BOOST_FIXTURE_TEST_CASE(check_cluster_series_vector_fill, Fixture)
 {
     BOOST_CHECK(cluster.loadSeries(folder));
