@@ -383,46 +383,6 @@ void ConstraintNamer::ShortTermStorageLevel(unsigned int constraint, const std::
                                        constraint);
 }
 
-void ConstraintNamer::ShortTermStorageCostVariationInjectionForward(unsigned int constraint,
-                                                                    const std::string& name)
-{
-    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationInjectionForward",
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
-                                                   + "ShortTermStorage" + "<" + name + ">",
-                                                 TimeIdentifier(timeStep_, HOUR)),
-                                       constraint);
-}
-
-void ConstraintNamer::ShortTermStorageCostVariationInjectionBackward(unsigned int constraint,
-                                                                     const std::string& name)
-{
-    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationInjectionBackward",
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
-                                                   + "ShortTermStorage" + "<" + name + ">",
-                                                 TimeIdentifier(timeStep_, HOUR)),
-                                       constraint);
-}
-
-void ConstraintNamer::ShortTermStorageCostVariationWithdrawalForward(unsigned int constraint,
-                                                                     const std::string& name)
-{
-    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationWithdrawalForward",
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
-                                                   + "ShortTermStorage" + "<" + name + ">",
-                                                 TimeIdentifier(timeStep_, HOUR)),
-                                       constraint);
-}
-
-void ConstraintNamer::ShortTermStorageCostVariationWithdrawalBackward(unsigned int constraint,
-                                                                      const std::string& name)
-{
-    targetUpdater_.UpdateTargetAtIndex(BuildName("ShortTermStorageCostVariationWithdrawalBackward",
-                                                 LocationIdentifier(area_, AREA) + SEPARATOR
-                                                   + "ShortTermStorage" + "<" + name + ">",
-                                                 TimeIdentifier(timeStep_, HOUR)),
-                                       constraint);
-}
-
 void ConstraintNamer::BindingConstraintHour(unsigned int constraint, const std::string& name)
 {
     nameWithTimeGranularity(constraint, name, HOUR);

@@ -152,14 +152,6 @@ public:
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void ConsistenceNODU(unsigned int constraint, const std::string& clusterName);
     void ShortTermStorageLevel(unsigned int constraint, const std::string& name);
-    void ShortTermStorageCostVariationInjectionForward(unsigned int constraint,
-                                                       const std::string& name);
-    void ShortTermStorageCostVariationInjectionBackward(unsigned int constraint,
-                                                        const std::string& name);
-    void ShortTermStorageCostVariationWithdrawalForward(unsigned int constraint,
-                                                        const std::string& name);
-    void ShortTermStorageCostVariationWithdrawalBackward(unsigned int constraint,
-                                                         const std::string& name);
     void BindingConstraintHour(unsigned int constraint, const std::string& name);
     void BindingConstraintDay(unsigned int constraint, const std::string& name);
     void BindingConstraintWeek(unsigned int constraint, const std::string& name);
