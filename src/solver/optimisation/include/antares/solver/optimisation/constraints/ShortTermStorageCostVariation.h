@@ -25,12 +25,12 @@
 template<typename BuilderFunc, class PenaltyBoolean, class ConstraintIndex>
 void addStorageConstraint(BuilderFunc buildConstraint,
                           const std::string& constraintName,
-                          PenaltyBoolean ShortTermStorage::PROPERTIES::* ptr,
+                          PenaltyBoolean ShortTermStorage::PROPERTIES::*ptr,
                           int pdt,
                           int pays,
                           ShortTermStorageData& data,
                           ConstraintBuilder& builder,
-                          ConstraintIndex CORRESPONDANCES_DES_CONTRAINTES::* constraintIndexVector)
+                          ConstraintIndex CORRESPONDANCES_DES_CONTRAINTES::*constraintIndexVector)
 {
     ConstraintNamer namer(builder.data.NomDesContraintes);
     const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
