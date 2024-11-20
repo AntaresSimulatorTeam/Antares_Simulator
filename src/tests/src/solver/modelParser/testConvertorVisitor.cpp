@@ -32,7 +32,7 @@
 
 using namespace Antares::Solver;
 
-struct Fixture
+struct FixtureConvertVisitor
 {
     ModelParser::Model model;
     Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
@@ -43,13 +43,13 @@ static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
     return dynamic_cast<Nodes::LiteralNode*>(n);
 }
 
-BOOST_FIXTURE_TEST_CASE(empty_expression, Fixture)
+BOOST_FIXTURE_TEST_CASE(empty_expression, FixtureConvertVisitor)
 {
     auto* node = ModelConverter::convertExpressionToNode("", registry, model);
     BOOST_CHECK_EQUAL(node, nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(negation, Fixture)
+BOOST_FIXTURE_TEST_CASE(negation, FixtureConvertVisitor)
 {
     std::string expression = "-7";
     auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
@@ -58,7 +58,7 @@ BOOST_FIXTURE_TEST_CASE(negation, Fixture)
     BOOST_CHECK_EQUAL(toLiteral(nodeNeg->child())->value(), 7);
 }
 
-BOOST_FIXTURE_TEST_CASE(identifier, Fixture)
+BOOST_FIXTURE_TEST_CASE(identifier, FixtureConvertVisitor)
 {
     ModelParser::Library library;
     ModelParser::Model model0{
@@ -87,7 +87,7 @@ bool expectedMessage(const std::exception& ex)
     return true;
 }
 
-BOOST_FIXTURE_TEST_CASE(identifierNotFound, Fixture)
+BOOST_FIXTURE_TEST_CASE(identifierNotFound, FixtureConvertVisitor)
 {
     ModelParser::Library library;
     ModelParser::Model model0{
@@ -107,7 +107,7 @@ BOOST_FIXTURE_TEST_CASE(identifierNotFound, Fixture)
                           expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(AddSub, Fixture)
+BOOST_FIXTURE_TEST_CASE(AddSub, FixtureConvertVisitor)
 {
     std::string expression = "1 + 2";
     auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
@@ -127,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(AddSub, Fixture)
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(mulDiv, Fixture)
+BOOST_FIXTURE_TEST_CASE(mulDiv, FixtureConvertVisitor)
 {
     std::string expression = "1 * 2";
     auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
@@ -146,7 +146,7 @@ BOOST_FIXTURE_TEST_CASE(mulDiv, Fixture)
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison, Fixture)
+BOOST_FIXTURE_TEST_CASE(comparison, FixtureConvertVisitor)
 {
     std::string expression = "1 = 2";
     auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
@@ -165,7 +165,7 @@ BOOST_FIXTURE_TEST_CASE(comparison, Fixture)
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->right())->value(), 27);
 }
 
-BOOST_FIXTURE_TEST_CASE(medium_expression, Fixture)
+BOOST_FIXTURE_TEST_CASE(medium_expression, FixtureConvertVisitor)
 {
     ModelParser::Model model0{
       .id = "model0",
