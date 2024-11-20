@@ -17,12 +17,14 @@ The following properties were removed from **settings/generaldata.ini**.
 
 #### Short-term storages
 
-- Added properties (file
-  input/st-storage/clusters/<area id>/list.ini):
-    - `efficiencywithdrawal` (double in [0, 1], default 1) short-term storages
-    - `penalize-variation-injection` boolean, default false
-    - `penalize-variation-withdrawal` boolean, default false
-  
+- Added properties:
+    - `efficiencywithdrawal` (double in [0, 1], default 1) short-term storages (file
+      input/st-storage/clusters/<area id>/list.ini)
+    - `penalize-variation-injection` boolean, default false (file
+      input/st-storage/series/<area id>/list.ini)
+    - `penalize-variation-withdrawal` boolean, default false (file
+      input/st-storage/series/<area id>/list.ini)
+
 - Added timeseries cost-injection.txt, cost-withdrawal.txt, cost-level.txt, cost-variation-injection.txt and
   cost-variation-withdrawal.txt. These files are optional. If present, they must contain either no value (same behavior
   as no file), or HOURS_PER_YEAR = 8760 coefficients in one column. Each of these timeseries is located in directory
