@@ -22,24 +22,29 @@
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
 
 // CostVariationInjection[h] - Injection[h+1] + Injection[h]  >= 0
-auto buildForwardInjectionConstraint = [](ConstraintBuilder& builder, int index)
+void ShortTermStorageCostVariationInjectionForward::buildConstraint(int index)
 {
     builder.ShortTermCostVariationInjection(index, 1.0)
       .ShortTermStorageInjection(index, 1.0)
       .ShortTermStorageInjection(index, -1.0, 1, builder.data.NombreDePasDeTempsPourUneOptimisation)
       .greaterThan()
       .build();
-};
+}
 
 void ShortTermStorageCostVariationInjectionForward::add(int pdt, int pays)
 {
-    addStorageConstraint(
-      buildForwardInjectionConstraint,
-      "ShortTermStorageCostVariationInjectionForward",
-      &ShortTermStorage::PROPERTIES::penalizeVariationInjection,
-      pdt,
-      pays,
-      data,
-      builder,
-      &CORRESPONDANCES_DES_CONTRAINTES::ShortTermStorageCostVariationInjectionForward);
+    addStorageConstraint("ShortTermStorageCostVariationInjectionForward", pdt, pays);
+}
+
+int& ShortTermStorageCostVariationInjectionForward::ShortTermStorageCostVariationInjectionForward::
+  TargetConstraintIndex(int pdt, int index)
+{
+    return data.CorrespondanceCntNativesCntOptim[pdt]
+      .ShortTermStorageCostVariationInjectionForward[index];
+}
+
+bool ShortTermStorageCostVariationInjectionForward::IsConstraintEnabled(
+  const ShortTermStorage::PROPERTIES& properties)
+{
+    return properties.penalizeVariationInjection;
 }

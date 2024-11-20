@@ -82,6 +82,7 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/constraints/ShortTermStorageLevel.h
         constraints/ShortTermStorageLevel.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h
+        constraints/ShortTermStorageCostVariation.cpp
         constraints/ShortTermStorageCostVariationInjectionForward.cpp
         constraints/ShortTermStorageCostVariationInjectionBackward.cpp
         constraints/ShortTermStorageCostVariationWithdrawalForward.cpp

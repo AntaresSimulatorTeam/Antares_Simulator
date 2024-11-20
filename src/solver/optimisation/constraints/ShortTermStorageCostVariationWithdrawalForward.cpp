@@ -22,7 +22,7 @@
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
 
 // CostVariationWithdrawal[h] - Withdrawal[h+1] + Withdrawal[h]  >= 0
-auto buildForwardWithdrawalConstraint = [](ConstraintBuilder& builder, int index)
+void ShortTermStorageCostVariationWithdrawalForward::buildConstraint(int index)
 {
     builder.ShortTermCostVariationWithdrawal(index, 1.0)
       .ShortTermStorageWithdrawal(index, 1.0)
@@ -32,17 +32,21 @@ auto buildForwardWithdrawalConstraint = [](ConstraintBuilder& builder, int index
                                   builder.data.NombreDePasDeTempsPourUneOptimisation)
       .greaterThan()
       .build();
-};
+}
 
 void ShortTermStorageCostVariationWithdrawalForward::add(int pdt, int pays)
 {
-    addStorageConstraint(
-      buildForwardWithdrawalConstraint,
-      "ShortTermStorageCostVariationWithdrawalForward",
-      &ShortTermStorage::PROPERTIES::penalizeVariationWithdrawal,
-      pdt,
-      pays,
-      data,
-      builder,
-      &CORRESPONDANCES_DES_CONTRAINTES::ShortTermStorageCostVariationWithdrawalForward);
+    addStorageConstraint("ShortTermStorageCostVariationWithdrawalForward", pdt, pays);
+}
+
+bool ShortTermStorageCostVariationWithdrawalForward::IsConstraintEnabled(
+  const ShortTermStorage::PROPERTIES& properties)
+{
+    return properties.penalizeVariationWithdrawal;
+}
+
+int& ShortTermStorageCostVariationWithdrawalForward::TargetConstraintIndex(int pdt, int index)
+{
+    return data.CorrespondanceCntNativesCntOptim[pdt]
+      .ShortTermStorageCostVariationWithdrawalForward[index];
 }

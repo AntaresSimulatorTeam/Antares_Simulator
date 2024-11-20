@@ -22,24 +22,28 @@
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
 
 // CostVariationWithdrawal[h] + Withdrawal[h+1] - Withdrawal[h]  >= 0
-auto buildBackwardWithdrawalConstraint = [](ConstraintBuilder& builder, int index)
+void ShortTermStorageCostVariationWithdrawalBackward::buildConstraint(int index)
 {
     builder.ShortTermCostVariationWithdrawal(index, 1.0)
       .ShortTermStorageWithdrawal(index, -1.0)
       .ShortTermStorageWithdrawal(index, 1.0, 1, builder.data.NombreDePasDeTempsPourUneOptimisation)
       .greaterThan()
       .build();
-};
+}
 
 void ShortTermStorageCostVariationWithdrawalBackward::add(int pdt, int pays)
 {
-    addStorageConstraint(
-      buildBackwardWithdrawalConstraint,
-      "ShortTermStorageCostVariationWithdrawalBackward",
-      &ShortTermStorage::PROPERTIES::penalizeVariationWithdrawal,
-      pdt,
-      pays,
-      data,
-      builder,
-      &CORRESPONDANCES_DES_CONTRAINTES::ShortTermStorageCostVariationWithdrawalBackward);
+    addStorageConstraint("ShortTermStorageCostVariationWithdrawalBackward", pdt, pays);
+}
+
+int& ShortTermStorageCostVariationWithdrawalBackward::TargetConstraintIndex(int pdt, int index)
+{
+    return data.CorrespondanceCntNativesCntOptim[pdt]
+      .ShortTermStorageCostVariationWithdrawalBackward[index];
+}
+
+bool ShortTermStorageCostVariationWithdrawalBackward::IsConstraintEnabled(
+  const ShortTermStorage::PROPERTIES& properties)
+{
+    return properties.penalizeVariationWithdrawal;
 }

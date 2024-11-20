@@ -22,39 +22,6 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-template<typename BuilderFunc, class PenaltyBoolean, class ConstraintIndex>
-void addStorageConstraint(BuilderFunc buildConstraint,
-                          const std::string& constraintName,
-                          PenaltyBoolean ShortTermStorage::PROPERTIES::*ptr,
-                          int pdt,
-                          int pays,
-                          ShortTermStorageData& data,
-                          ConstraintBuilder& builder,
-                          ConstraintIndex CORRESPONDANCES_DES_CONTRAINTES::*constraintIndexVector)
-{
-    ConstraintNamer namer(builder.data.NomDesContraintes);
-    const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
-    namer.UpdateTimeStep(hourInTheYear);
-    namer.UpdateArea(builder.data.NomsDesPays[pays]);
-
-    builder.updateHourWithinWeek(pdt);
-    for (const auto& storage: data.ShortTermStorage[pays])
-    {
-        if (storage.*ptr)
-        {
-            namer.ShortTermStorageCostVariation(constraintName,
-                                                builder.data.nombreDeContraintes,
-                                                storage.name);
-            const auto index = storage.clusterGlobalIndex;
-
-            (data.CorrespondanceCntNativesCntOptim[pdt].*constraintIndexVector)[index]
-              = builder.data.nombreDeContraintes;
-
-            buildConstraint(builder, index);
-        }
-    }
-}
-
 class ShortTermStorageCostVariation: public ConstraintFactory
 {
 public:
@@ -66,6 +33,15 @@ public:
 
     virtual void add(int pdt, int pays) = 0;
     ShortTermStorageData& data;
+
+protected:
+    virtual void buildConstraint(int index) = 0;
+
+    virtual bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) = 0;
+
+    virtual int& TargetConstraintIndex(int pdt, int index) = 0;
+
+    void addStorageConstraint(const std::string& constraintName, int pdt, int pays);
 };
 
 class ShortTermStorageCostVariationInjectionBackward: private ShortTermStorageCostVariation
@@ -74,6 +50,9 @@ public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(int pdt, int pays) override;
+    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    int& TargetConstraintIndex(int pdt, int index) override;
+    void buildConstraint(int index) override;
 };
 
 class ShortTermStorageCostVariationInjectionForward: private ShortTermStorageCostVariation
@@ -82,6 +61,9 @@ public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(int pdt, int pays) override;
+    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    int& TargetConstraintIndex(int pdt, int index) override;
+    void buildConstraint(int index) override;
 };
 
 class ShortTermStorageCostVariationWithdrawalBackward: private ShortTermStorageCostVariation
@@ -90,6 +72,9 @@ public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(int pdt, int pays) override;
+    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    int& TargetConstraintIndex(int pdt, int index) override;
+    void buildConstraint(int index) override;
 };
 
 class ShortTermStorageCostVariationWithdrawalForward: private ShortTermStorageCostVariation
@@ -98,4 +83,7 @@ public:
     using ShortTermStorageCostVariation::ShortTermStorageCostVariation;
 
     void add(int pdt, int pays) override;
+    bool IsConstraintEnabled(const ShortTermStorage::PROPERTIES& properties) override;
+    int& TargetConstraintIndex(int pdt, int index) override;
+    void buildConstraint(int index) override;
 };
