@@ -37,7 +37,7 @@ public:
 
     explicit Expression(const std::string& value, Antares::Solver::Nodes::Node* root):
         value_(value),
-        node_(node)
+        root_(root)
     {
     }
 
@@ -46,15 +46,9 @@ public:
         return value_;
     }
 
-    const Antares::Solver::Nodes::Node* Node() const
-    {
-        return node_;
-    }
-
 private:
     std::string value_;
-
-    Antares::Solver::Nodes::Node* node_;
+    Antares::Solver::Nodes::Node* root_;
 };
 
 } // namespace Antares::Study::SystemModel
