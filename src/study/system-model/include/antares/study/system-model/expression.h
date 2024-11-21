@@ -35,7 +35,7 @@ class Expression
 public:
     Expression() = default;
 
-    explicit Expression(const std::string& value, Antares::Solver::Nodes::Node* node):
+    explicit Expression(const std::string& value, Antares::Solver::Nodes::Node* root):
         value_(value),
         node_(node)
     {
