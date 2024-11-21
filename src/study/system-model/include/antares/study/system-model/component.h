@@ -76,7 +76,7 @@ public:
 private:
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
-    Component(const ComponentData& component_data);
+    explicit Component(const ComponentData& component_data);
     ComponentData data_;
 };
 
