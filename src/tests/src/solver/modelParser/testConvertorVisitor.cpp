@@ -25,7 +25,6 @@
 #include "antares/solver/expressions/Registry.hxx"
 #include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 #include "antares/solver/expressions/visitors/CompareVisitor.h"
-#include "antares/solver/libObjectModel/library.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"

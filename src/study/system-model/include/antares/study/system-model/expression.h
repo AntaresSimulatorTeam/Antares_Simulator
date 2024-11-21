@@ -22,7 +22,10 @@
 
 #include <string>
 
-#include <antares/solver/expressions/nodes/Node.h>
+namespace Antares::Solver::Nodes
+{
+class Node;
+}
 
 namespace Antares::Study::SystemModel
 {
@@ -32,8 +35,8 @@ class Expression
 public:
     Expression() = default;
 
-    explicit Expression(std::string value, Nodes::Node* node):
-        value_(std::move(value)),
+    explicit Expression(const std::string& value, Antares::Solver::Nodes::Node* node):
+        value_(value),
         node_(node)
     {
     }
@@ -43,7 +46,7 @@ public:
         return value_;
     }
 
-    const Nodes::Node* Node() const
+    const Antares::Solver::Nodes::Node* Node() const
     {
         return node_;
     }
@@ -51,7 +54,7 @@ public:
 private:
     std::string value_;
 
-    Nodes::Node* node_;
+    Antares::Solver::Nodes::Node* node_;
 };
 
 } // namespace Antares::Study::SystemModel

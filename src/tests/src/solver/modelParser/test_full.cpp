@@ -25,6 +25,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/solver/expressions/nodes/Node.h"
 #include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
 #include "antares/solver/modelParser/parser.h"
@@ -261,7 +262,7 @@ library:
 
     try
     {
-        Registry<Nodes::Node> registry;
+        Registry<Antares::Solver::Nodes::Node> registry;
         ModelParser::Parser parser;
         ModelParser::Library libraryObj = parser.parse(library);
         SystemModel::Library lib = ModelConverter::convert(libraryObj, registry);

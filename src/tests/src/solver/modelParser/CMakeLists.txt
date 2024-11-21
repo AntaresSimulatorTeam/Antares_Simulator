@@ -14,6 +14,7 @@ add_executable(TestModelParser ${SOURCE_FILES})
 target_link_libraries(TestModelParser
         PRIVATE
         Boost::unit_test_framework
+	Antares::solver-expressions
         Antares::modelConverter
         Antares::modelParser
         Antares::antares-study-system-model
