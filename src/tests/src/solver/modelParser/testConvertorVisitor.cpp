@@ -76,7 +76,7 @@ BOOST_FIXTURE_TEST_CASE(negation, ExpressionToNodeConvertor)
     BOOST_CHECK_EQUAL(toLiteral(nodeNeg->child())->value(), 7);
 }
 
-BOOST_FIXTURE_TEST_CASE(identifier, ExpressionToNodeConvertor)
+BOOST_AUTO_TEST_CASE(identifier)
 {
     ModelParser::Model model{
       .id = "model0",
@@ -87,13 +87,14 @@ BOOST_FIXTURE_TEST_CASE(identifier, ExpressionToNodeConvertor)
       .port_field_definitions = {},
       .constraints = {},
       .objective = "objectives"};
+    ExpressionToNodeConvertor converter(std::move(model));
 
     std::string expression = "param1";
-    Nodes::Node* n = run(expression);
+    Nodes::Node* n = converter.run(expression);
     BOOST_CHECK_EQUAL(n->name(), "ParameterNode");
 
     expression = "varP";
-    n = run(expression);
+    n = converter.run(expression);
     BOOST_CHECK_EQUAL(n->name(), "VariableNode");
 }
 
