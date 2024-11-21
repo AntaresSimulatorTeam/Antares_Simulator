@@ -110,7 +110,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (solver != nullptr)
+            if (solver)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -217,7 +217,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
     solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
-    if (solver != nullptr)
+    if (solver)
     {
         ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
     }
@@ -231,7 +231,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (solver != nullptr)
+            if (solver)
             {
                 ORTOOLS_LibererProbleme(solver);
             }

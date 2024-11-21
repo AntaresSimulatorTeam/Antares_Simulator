@@ -4,9 +4,9 @@ from pathlib import Path
 from utils.assertions import check
 
 class study_run:
-    def __init__(self, study_path, solver_path, solver_name, named_mps_problems, parallel):
+    def __init__(self, study_path, antares_simu_path, solver_name, named_mps_problems, parallel):
         self.study_path = study_path
-        self.solver_path = solver_path
+        self.antares_simu_path = antares_simu_path
         self.solverName = solver_name
         self.named_mps_problems = named_mps_problems
         self.parallel = parallel
@@ -19,9 +19,9 @@ class study_run:
 
     def run(self):
         print("\nRunning the study")
-        solver_full_path = str(Path(self.solver_path).resolve())
+        antares_full_path = str(Path(self.antares_simu_path).resolve())
 
-        command = [solver_full_path, "-i", str(self.study_path)]
+        command = [antares_full_path, "-i", str(self.study_path)]
         command.append('--solver=' + self.solverName)
         if self.named_mps_problems:
             command.append('--named-mps-problems')
