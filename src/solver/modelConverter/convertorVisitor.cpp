@@ -30,11 +30,6 @@ namespace Antares::Solver::ModelConverter
 
 using namespace Antares::Solver::Nodes;
 
-static Node* toNodePtr(const std::any& a)
-{
-    return std::any_cast<Node*>(a);
-}
-
 Node* convertExpressionToNode(const std::string& exprStr,
                               Antares::Solver::Registry<Node>& registry,
                               const ModelParser::Model& model)
@@ -52,7 +47,7 @@ Node* convertExpressionToNode(const std::string& exprStr,
     ExprParser::ExprContext* tree = parser.expr();
 
     ConvertorVisitor visitor(registry, model);
-    return toNodePtr(visitor.visit(tree));
+    return std::any_cast<Node*>(visitor.visit(tree));
 }
 
 ConvertorVisitor::ConvertorVisitor(Antares::Solver::Registry<Node>& registry,
@@ -96,8 +91,8 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
 
 std::any ConvertorVisitor::visitMuldiv(ExprParser::MuldivContext* context)
 {
-    auto* left = toNodePtr(visit(context->expr(0)));
-    auto* right = toNodePtr(visit(context->expr(1)));
+    auto* left = std::any_cast<Node*>(visit(context->expr(0)));
+    auto* right = std::any_cast<Node*>(visit(context->expr(1)));
 
     std::string op = context->op->getText();
     return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
@@ -111,7 +106,7 @@ std::any ConvertorVisitor::visitFullexpr(ExprParser::FullexprContext* context)
 
 std::any ConvertorVisitor::visitNegation(ExprParser::NegationContext* context)
 {
-    auto n = toNodePtr(context->expr()->accept(this));
+    auto n = std::any_cast<Node*>(context->expr()->accept(this));
     return static_cast<Node*>(registry_.create<NegationNode>(n));
 }
 
@@ -122,8 +117,8 @@ std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* contex
 
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
 {
-    auto* left = toNodePtr(visit(context->expr(0)));
-    auto* right = toNodePtr(visit(context->expr(1)));
+    auto* left = std::any_cast<Node*>(visit(context->expr(0)));
+    auto* right = std::any_cast<Node*>(visit(context->expr(1)));
 
     std::string op = context->COMPARISON()->getText();
     if (op == "=")
@@ -142,8 +137,8 @@ std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* contex
 
 std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
 {
-    auto* left = toNodePtr(visit(context->expr(0)));
-    auto* right = toNodePtr(visit(context->expr(1)));
+    auto* left = std::any_cast<Node*>(visit(context->expr(0)));
+    auto* right = std::any_cast<Node*>(visit(context->expr(1)));
 
     std::string op = context->op->getText();
     return (op == "+") ? static_cast<Node*>(registry_.create<SumNode>(left, right))
@@ -204,7 +199,7 @@ std::any ConvertorVisitor::visitSignedAtom(ExprParser::SignedAtomContext* contex
     auto a = context->atom()->accept(this);
     if (context->op->getText() == "-")
     {
-        return static_cast<Node*>(registry_.create<NegationNode>(toNodePtr(a)));
+        return static_cast<Node*>(registry_.create<NegationNode>(std::any_cast<Node*>(a)));
     }
     return a;
 }
