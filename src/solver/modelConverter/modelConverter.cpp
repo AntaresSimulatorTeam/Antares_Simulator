@@ -79,7 +79,6 @@ std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
     {
         parameters.emplace_back(
           parameter.id,
-          Antares::Study::SystemModel::ValueType::FLOAT, // TODO: change to correct type
           static_cast<Antares::Study::SystemModel::Parameter::TimeDependent>(
             parameter.time_dependent),
           static_cast<Antares::Study::SystemModel::Parameter::ScenarioDependent>(

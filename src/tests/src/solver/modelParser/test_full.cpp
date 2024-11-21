@@ -40,14 +40,12 @@ using namespace Antares::Study;
 void checkParameter(const SystemModel::Parameter& parameter,
                     const std::string& name,
                     bool timeDependent,
-                    bool scenarioDependent,
-                    SystemModel::ValueType type)
+                    bool scenarioDependent)
 {
     std::cout << "Parameter: " << parameter.Id() << std::endl;
     BOOST_CHECK_EQUAL(parameter.Id(), name);
     BOOST_CHECK_EQUAL(parameter.isTimeDependent(), timeDependent);
     BOOST_CHECK_EQUAL(parameter.isScenarioDependent(), scenarioDependent);
-    BOOST_CHECK_EQUAL(parameter.Type(), type);
 }
 
 void checkVariable(const SystemModel::Variable& variable,
@@ -289,16 +287,8 @@ library:
         // BOOST_REQUIRE_EQUAL(model0.Ports().size(), 1); Unsuported
         //  BOOST_REQUIRE_EQUAL(model0.PortFieldDefinitions().size(), 1); Unsuported
 
-        checkParameter(model0.Parameters().at("cost"),
-                       "cost",
-                       false,
-                       false,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model0.Parameters().at("p_max"),
-                       "p_max",
-                       false,
-                       false,
-                       SystemModel::ValueType::FLOAT);
+        checkParameter(model0.Parameters().at("cost"), "cost", false, false);
+        checkParameter(model0.Parameters().at("p_max"), "p_max", false, false);
 
         checkVariable(model0.Variables().at("generation"),
                       "generation",
@@ -326,11 +316,7 @@ library:
         // BOOST_REQUIRE_EQUAL(model2.Ports().size(), 1); Unsuported
         //  BOOST_REQUIRE_EQUAL(model2.PortFieldDefinitions().size(), 1); Unsuported
 
-        checkParameter(model2.Parameters().at("cost"),
-                       "cost",
-                       false,
-                       false,
-                       SystemModel::ValueType::FLOAT);
+        checkParameter(model2.Parameters().at("cost"), "cost", false, false);
         checkVariable(model2.Variables().at("spillage"),
                       "spillage",
                       "0",
@@ -344,11 +330,7 @@ library:
         BOOST_REQUIRE_EQUAL(model3.Variables().size(), 1);
         // BOOST_REQUIRE_EQUAL(model3.Ports().size(), 1); Unsuported
         //  BOOST_REQUIRE_EQUAL(model3.PortFieldDefinitions().size(), 1); Unsuported
-        checkParameter(model3.Parameters().at("cost"),
-                       "cost",
-                       false,
-                       false,
-                       SystemModel::ValueType::FLOAT);
+        checkParameter(model3.Parameters().at("cost"), "cost", false, false);
         checkVariable(model3.Variables().at("unsupplied_energy"),
                       "unsupplied_energy",
                       "0",
@@ -362,11 +344,7 @@ library:
         BOOST_REQUIRE_EQUAL(model4.Variables().size(), 0);
         // BOOST_REQUIRE_EQUAL(model4.Ports().size(), 1); Unsuported
         //  BOOST_REQUIRE_EQUAL(model4.PortFieldDefinitions().size(), 1); Unsuported
-        checkParameter(model4.Parameters().at("demand"),
-                       "demand",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
+        checkParameter(model4.Parameters().at("demand"), "demand", true, true);
 
         auto& model5 = lib.Models().at("short-term-storage");
         BOOST_CHECK_EQUAL(model5.Id(), "short-term-storage");
@@ -375,36 +353,12 @@ library:
         BOOST_REQUIRE_EQUAL(model5.Variables().size(), 3);
         // BOOST_REQUIRE_EQUAL(model5.Ports().size(), 1); Unsuported
         //  BOOST_REQUIRE_EQUAL(model5.PortFieldDefinitions().size(), 1); Unsuported
-        checkParameter(model5.Parameters().at("efficiency"),
-                       "efficiency",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model5.Parameters().at("level_min"),
-                       "level_min",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model5.Parameters().at("level_max"),
-                       "level_max",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model5.Parameters().at("p_max_withdrawal"),
-                       "p_max_withdrawal",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model5.Parameters().at("p_max_injection"),
-                       "p_max_injection",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model5.Parameters().at("inflows"),
-                       "inflows",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
+        checkParameter(model5.Parameters().at("efficiency"), "efficiency", true, true);
+        checkParameter(model5.Parameters().at("level_min"), "level_min", true, true);
+        checkParameter(model5.Parameters().at("level_max"), "level_max", true, true);
+        checkParameter(model5.Parameters().at("p_max_withdrawal"), "p_max_withdrawal", true, true);
+        checkParameter(model5.Parameters().at("p_max_injection"), "p_max_injection", true, true);
+        checkParameter(model5.Parameters().at("inflows"), "inflows", true, true);
         checkVariable(model5.Variables().at("injection"),
                       "injection",
                       "0",
@@ -431,41 +385,13 @@ library:
         BOOST_REQUIRE_EQUAL(model6.Variables().size(), 4);
         // BOOST_REQUIRE_EQUAL(model6.Ports().size(), 1); Unsuported
         //  BOOST_REQUIRE_EQUAL(model6.PortFieldDefinitions().size(), 1); Unsuported
-        checkParameter(model6.Parameters().at("cost"),
-                       "cost",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model6.Parameters().at("p_min"),
-                       "p_min",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model6.Parameters().at("p_max"),
-                       "p_max",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model6.Parameters().at("d_min_up"),
-                       "d_min_up",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model6.Parameters().at("d_min_down"),
-                       "d_min_down",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model6.Parameters().at("nb_units_max"),
-                       "nb_units_max",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
-        checkParameter(model6.Parameters().at("nb_failures"),
-                       "nb_failures",
-                       true,
-                       true,
-                       SystemModel::ValueType::FLOAT);
+        checkParameter(model6.Parameters().at("cost"), "cost", true, true);
+        checkParameter(model6.Parameters().at("p_min"), "p_min", true, true);
+        checkParameter(model6.Parameters().at("p_max"), "p_max", true, true);
+        checkParameter(model6.Parameters().at("d_min_up"), "d_min_up", true, true);
+        checkParameter(model6.Parameters().at("d_min_down"), "d_min_down", true, true);
+        checkParameter(model6.Parameters().at("nb_units_max"), "nb_units_max", true, true);
+        checkParameter(model6.Parameters().at("nb_failures"), "nb_failures", true, true);
         checkVariable(model6.Variables().at("generation"),
                       "generation",
                       "0",

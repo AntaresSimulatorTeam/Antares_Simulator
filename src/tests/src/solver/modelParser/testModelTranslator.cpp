@@ -137,11 +137,9 @@ BOOST_FIXTURE_TEST_CASE(model_parameters_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(parameter1.Id(), "param1");
     BOOST_CHECK(parameter1.isTimeDependent());
     BOOST_CHECK(!parameter1.isScenarioDependent());
-    BOOST_CHECK_EQUAL(parameter1.Type(), SystemModel::ValueType::FLOAT);
     BOOST_CHECK_EQUAL(parameter2.Id(), "param2");
     BOOST_CHECK(!parameter2.isTimeDependent());
     BOOST_CHECK(!parameter2.isScenarioDependent());
-    BOOST_CHECK_EQUAL(parameter2.Type(), SystemModel::ValueType::FLOAT);
 }
 
 // Test library with models and variables
