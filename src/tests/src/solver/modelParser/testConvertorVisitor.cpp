@@ -92,9 +92,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
     ModelParser::Model model{
       .id = "model0",
       .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "pmin", ModelParser::ValueType::CONTINUOUS},
-                    {"var2", "0", "param2", ModelParser::ValueType::CONTINUOUS}},
+      .parameters = {{"param1", true, false}},
+      .variables = {{"varP", "7", "pmin", ModelParser::ValueType::CONTINUOUS}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
