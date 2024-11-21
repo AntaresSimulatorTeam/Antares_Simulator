@@ -29,9 +29,9 @@ def init_simu(context):
 def build_antares_solver_command(context):
     command = [context.config.userdata["antares-solver"], "-i", str(context.study_path)]
     solver = "sirius"
-    if "ortools-solver" in context.config.userdata:
-        solver = context.config.userdata["ortools-solver"]
-    command.append('--ortools-solver=' + solver)
+    if "solver" in context.config.userdata:
+        solver = context.config.userdata["solver"]
+    command.append('--solver=' + solver)
 
     if context.named_mps_problems:
         command.append('--named-mps-problems')

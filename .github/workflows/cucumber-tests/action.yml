@@ -20,4 +20,4 @@ runs:
       shell: bash
       run: |
         cd src/tests/cucumber
-        behave --tags ${{ inputs.tags }} ${{ inputs.feature }} --define use-ortools=false
+        behave --tags ${{ inputs.tags }} ${{ inputs.feature }}
