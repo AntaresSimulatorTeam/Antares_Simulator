@@ -30,10 +30,30 @@
 
 using namespace Antares::Solver;
 
-struct FixtureConvertVisitor
+class ExpressionToNodeConvertor
 {
-    ModelParser::Model model;
-    Registry<Nodes::Node> registry;
+public:
+    ExpressionToNodeConvertor(ModelParser::Model&& model):
+        model_(std::move(model))
+    {
+    }
+
+    // Empty model
+    ExpressionToNodeConvertor() = default;
+
+    Nodes::Node* run(const std::string& input)
+    {
+        return ModelConverter::convertExpressionToNode(input, registry_, model_);
+    }
+
+    Registry<Nodes::Node>& registry()
+    {
+        return registry_;
+    }
+
+private:
+    Registry<Nodes::Node> registry_;
+    const ModelParser::Model model_;
 };
 
 static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
@@ -41,25 +61,23 @@ static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
     return dynamic_cast<Nodes::LiteralNode*>(n);
 }
 
-BOOST_FIXTURE_TEST_CASE(empty_expression, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(empty_expression, ExpressionToNodeConvertor)
 {
-    auto* node = ModelConverter::convertExpressionToNode("", registry, model);
-    BOOST_CHECK_EQUAL(node, nullptr);
+    BOOST_CHECK_EQUAL(run(""), nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(negation, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(negation, ExpressionToNodeConvertor)
 {
     std::string expression = "-7";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    Nodes::Node* n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "NegationNode");
     auto* nodeNeg = dynamic_cast<Nodes::NegationNode*>(n);
     BOOST_REQUIRE(nodeNeg);
     BOOST_CHECK_EQUAL(toLiteral(nodeNeg->child())->value(), 7);
 }
 
-BOOST_AUTO_TEST_CASE(identifier)
+BOOST_FIXTURE_TEST_CASE(identifier, ExpressionToNodeConvertor)
 {
-    Registry<Nodes::Node> registry;
     ModelParser::Model model{
       .id = "model0",
       .description = "description",
@@ -71,11 +89,11 @@ BOOST_AUTO_TEST_CASE(identifier)
       .objective = "objectives"};
 
     std::string expression = "param1";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    Nodes::Node* n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "ParameterNode");
 
     expression = "varP";
-    n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "VariableNode");
 }
 
@@ -105,10 +123,10 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
                           expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(addTwoLiterals, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertor)
 {
     const std::string expression = "1 + 2";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    Nodes::Node* n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "SumNode");
 
     auto* nodeSum = dynamic_cast<Nodes::SumNode*>(n);
@@ -118,10 +136,10 @@ BOOST_FIXTURE_TEST_CASE(addTwoLiterals, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
 }
 
-BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertor)
 {
     const std::string expression = "6 - 3";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    Nodes::Node* n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "SubtractionNode");
 
     auto* nodeSub = dynamic_cast<Nodes::SubtractionNode*>(n);
@@ -130,10 +148,10 @@ BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(multiplyTwoLiterals, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(multiplyTwoLiterals, ExpressionToNodeConvertor)
 {
     std::string expression = "1 * 2";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    Nodes::Node* n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "MultiplicationNode");
 
     auto* nodeMult = dynamic_cast<Nodes::MultiplicationNode*>(n);
@@ -142,10 +160,10 @@ BOOST_FIXTURE_TEST_CASE(multiplyTwoLiterals, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->right())->value(), 2);
 }
 
-BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, ExpressionToNodeConvertor)
 {
     const std::string expression = "6 / 3";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    Nodes::Node* n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "DivisionNode");
 
     auto* nodeDiv = dynamic_cast<Nodes::DivisionNode*>(n);
@@ -154,18 +172,18 @@ BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison, FixtureConvertVisitor)
+BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertor)
 {
     std::string expression = "1 = 2";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    auto* n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "EqualNode");
 
     expression = "1 <= 5";
-    n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "LessThanOrEqualNode");
 
     expression = "8364 >= 27";
-    n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    n = run(expression);
     BOOST_CHECK_EQUAL(n->name(), "GreaterThanOrEqualNode");
 
     auto* nodeGreater = dynamic_cast<Nodes::GreaterThanOrEqualNode*>(n);
@@ -176,7 +194,6 @@ BOOST_FIXTURE_TEST_CASE(comparison, FixtureConvertVisitor)
 
 BOOST_AUTO_TEST_CASE(medium_expression)
 {
-    Registry<Nodes::Node> registry;
     ModelParser::Model model{
       .id = "model0",
       .description = "description",
@@ -187,8 +204,12 @@ BOOST_AUTO_TEST_CASE(medium_expression)
       .constraints = {},
       .objective = "objectives"};
 
+    ExpressionToNodeConvertor converter(std::move(model));
     std::string expression = "(12 * (4 - 1) + param1) / -(42 + 3 + varP)";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
+    Nodes::Node* n = converter.run(expression);
+
+    // NOTE : we don't need this registry, any registry could work
+    Registry<Nodes::Node>& registry = converter.registry();
 
     auto* param = registry.create<Nodes::ParameterNode>("param1");
     auto* var = registry.create<Nodes::VariableNode>("varP");
