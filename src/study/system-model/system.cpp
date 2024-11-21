@@ -50,18 +50,35 @@ System::System(const std::string_view id, std::vector<Component> components):
                    });
 }
 
+/**
+ * \brief Sets the ID of the system.
+ *
+ * \param id The ID to set.
+ * \return Reference to the SystemBuilder object.
+ */
 SystemBuilder& SystemBuilder::withId(std::string_view id)
 {
     id_ = id;
     return *this;
 }
 
+/**
+ * \brief Sets the components of the system.
+ *
+ * \param components A vector of components to set.
+ * \return Reference to the SystemBuilder object.
+ */
 SystemBuilder& SystemBuilder::withComponents(std::vector<Component>&& components)
 {
     components_ = std::move(components);
     return *this;
 }
 
+/**
+ * \brief Builds and returns the System object.
+ *
+ * \return The constructed System object.
+ */
 System SystemBuilder::build() const
 {
     return System(id_, components_);
