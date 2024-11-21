@@ -80,7 +80,7 @@ BOOST_FIXTURE_TEST_CASE(identifier, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(n->name(), "VariableNode");
 }
 
-bool expectedMessage(const std::exception& ex)
+bool expectedMessage(const std::runtime_error& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(),
                       std::string("No parameter or variable found for this identifier: abc"));
@@ -103,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(identifierNotFound, FixtureConvertVisitor)
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, registry, model0),
-                          std::exception,
+                          std::runtime_error,
                           expectedMessage);
 }
 

@@ -70,21 +70,10 @@ std::any ConvertorVisitor::visit(antlr4::tree::ParseTree* tree)
     return tree->accept(this);
 }
 
-class NoParameterOrVariableWithThisName: public std::exception
+class NoParameterOrVariableWithThisName: public std::runtime_error
 {
 public:
-    NoParameterOrVariableWithThisName(const std::string& id)
-    {
-        msg_ = "No parameter or variable found for this identifier: " + id;
-    }
-
-    const char* what() const noexcept override
-    {
-        return msg_.c_str();
-    }
-
-private:
-    std::string msg_;
+    using std::runtime_error::runtime_error;
 };
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
