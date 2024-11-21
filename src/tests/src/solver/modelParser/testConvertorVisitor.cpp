@@ -57,9 +57,10 @@ BOOST_FIXTURE_TEST_CASE(negation, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(toLiteral(nodeNeg->child())->value(), 7);
 }
 
-BOOST_FIXTURE_TEST_CASE(identifier, FixtureConvertVisitor)
+BOOST_AUTO_TEST_CASE(identifier)
 {
-    ModelParser::Model model0{
+    Registry<Nodes::Node> registry;
+    ModelParser::Model model{
       .id = "model0",
       .description = "description",
       .parameters = {{"param1", true, false}, {"param2", false, false}},
@@ -70,11 +71,11 @@ BOOST_FIXTURE_TEST_CASE(identifier, FixtureConvertVisitor)
       .objective = "objectives"};
 
     std::string expression = "param1";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model0);
+    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
     BOOST_CHECK_EQUAL(n->name(), "ParameterNode");
 
     expression = "varP";
-    n = ModelConverter::convertExpressionToNode(expression, registry, model0);
+    n = ModelConverter::convertExpressionToNode(expression, registry, model);
     BOOST_CHECK_EQUAL(n->name(), "VariableNode");
 }
 
@@ -85,9 +86,10 @@ bool expectedMessage(const std::runtime_error& ex)
     return true;
 }
 
-BOOST_FIXTURE_TEST_CASE(identifierNotFound, FixtureConvertVisitor)
+BOOST_AUTO_TEST_CASE(identifierNotFound)
 {
-    ModelParser::Model model0{
+    Registry<Nodes::Node> registry;
+    ModelParser::Model model{
       .id = "model0",
       .description = "description",
       .parameters = {{"param1", true, false}, {"param2", false, false}},
@@ -99,7 +101,7 @@ BOOST_FIXTURE_TEST_CASE(identifierNotFound, FixtureConvertVisitor)
       .objective = "objectives"};
 
     std::string expression = "abc"; // not a param or var
-    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, registry, model0),
+    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, registry, model),
                           std::runtime_error,
                           expectedMessage);
 }
@@ -173,9 +175,10 @@ BOOST_FIXTURE_TEST_CASE(comparison, FixtureConvertVisitor)
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->right())->value(), 27);
 }
 
-BOOST_FIXTURE_TEST_CASE(medium_expression, FixtureConvertVisitor)
+BOOST_AUTO_TEST_CASE(medium_expression)
 {
-    ModelParser::Model model0{
+    Registry<Nodes::Node> registry;
+    ModelParser::Model model{
       .id = "model0",
       .description = "description",
       .parameters = {{"param1", true, false}, {"param2", false, false}},
@@ -186,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(medium_expression, FixtureConvertVisitor)
       .objective = "objectives"};
 
     std::string expression = "(12 * (4 - 1) + param1) / -(42 + 3 + varP)";
-    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model0);
+    auto* n = ModelConverter::convertExpressionToNode(expression, registry, model);
 
     auto* param = registry.create<Nodes::ParameterNode>("param1");
     auto* var = registry.create<Nodes::VariableNode>("varP");
