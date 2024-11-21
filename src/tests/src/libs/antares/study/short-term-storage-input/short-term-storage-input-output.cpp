@@ -31,17 +31,16 @@
 
 #include "antares/study/parts/short-term-storage/container.h"
 
-#define SEP Yuni::IO::Separator
-
 using namespace std;
 using namespace Antares::Data;
 
+namespace fs = std::filesystem;
+
 namespace
 {
-std::string getFolder()
+fs::path getFolder()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    return tmpDir.string();
+    return fs::temp_directory_path();
 }
 
 void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)
@@ -57,7 +56,7 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
     series.costLevel.resize(size, value);
 }
 
-void createIndividualFileSeries(const std::string& path, double value, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, double value, unsigned int size)
 {
     std::ofstream outfile(path);
 
@@ -69,7 +68,7 @@ void createIndividualFileSeries(const std::string& path, double value, unsigned 
     outfile.close();
 }
 
-void createIndividualFileSeries(const std::string& path, unsigned int size)
+void createIndividualFileSeries(const fs::path& path, unsigned int size)
 {
     std::ofstream outfile;
     outfile.open(path, std::ofstream::out | std::ofstream::trunc);
@@ -85,40 +84,40 @@ void createIndividualFileSeries(const std::string& path, unsigned int size)
 
 void createFileSeries(double value, unsigned int size)
 {
-    std::string folder = getFolder();
+    fs::path folder = getFolder();
 
-    createIndividualFileSeries(folder + SEP + "PMAX-injection.txt", value, size);
-    createIndividualFileSeries(folder + SEP + "PMAX-withdrawal.txt", value, size);
-    createIndividualFileSeries(folder + SEP + "inflows.txt", value, size);
-    createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", value, size);
-    createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", value, size);
+    createIndividualFileSeries(folder / "PMAX-injection.txt", value, size);
+    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", value, size);
+    createIndividualFileSeries(folder / "inflows.txt", value, size);
+    createIndividualFileSeries(folder / "lower-rule-curve.txt", value, size);
+    createIndividualFileSeries(folder / "upper-rule-curve.txt", value, size);
 
-    createIndividualFileSeries(folder + SEP + "cost-injection.txt", value, size);
-    createIndividualFileSeries(folder + SEP + "cost-withdrawal.txt", value, size);
-    createIndividualFileSeries(folder + SEP + "cost-level.txt", value, size);
+    createIndividualFileSeries(folder / "cost-injection.txt", value, size);
+    createIndividualFileSeries(folder / "cost-withdrawal.txt", value, size);
+    createIndividualFileSeries(folder / "cost-level.txt", value, size);
 }
 
 void createFileSeries(unsigned int size)
 {
-    std::string folder = getFolder();
+    fs::path folder = getFolder();
 
-    createIndividualFileSeries(folder + SEP + "PMAX-injection.txt", size);
-    createIndividualFileSeries(folder + SEP + "PMAX-withdrawal.txt", size);
-    createIndividualFileSeries(folder + SEP + "inflows.txt", size);
-    createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", size);
-    createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", size);
+    createIndividualFileSeries(folder / "PMAX-injection.txt", size);
+    createIndividualFileSeries(folder / "PMAX-withdrawal.txt", size);
+    createIndividualFileSeries(folder / "inflows.txt", size);
+    createIndividualFileSeries(folder / "lower-rule-curve.txt", size);
+    createIndividualFileSeries(folder / "upper-rule-curve.txt", size);
 
-    createIndividualFileSeries(folder + SEP + "cost-injection.txt", size);
-    createIndividualFileSeries(folder + SEP + "cost-withdrawal.txt", size);
-    createIndividualFileSeries(folder + SEP + "cost-level.txt", size);
+    createIndividualFileSeries(folder / "cost-injection.txt", size);
+    createIndividualFileSeries(folder / "cost-withdrawal.txt", size);
+    createIndividualFileSeries(folder / "cost-level.txt", size);
 }
 
 void createIniFile(bool enabled)
 {
-    std::string folder = getFolder();
+    fs::path folder = getFolder();
 
     std::ofstream outfile;
-    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
     outfile << "[area]" << std::endl;
     outfile << "name = area" << std::endl;
@@ -135,10 +134,10 @@ void createIniFile(bool enabled)
 
 void createIniFileWrongValue()
 {
-    std::string folder = getFolder();
+    fs::path folder = getFolder();
 
     std::ofstream outfile;
-    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
     outfile << "[area]" << std::endl;
     outfile << "name = area" << std::endl;
@@ -155,18 +154,17 @@ void createIniFileWrongValue()
 
 void createEmptyIniFile()
 {
-    std::string folder = getFolder();
+    fs::path folder = getFolder();
 
     std::ofstream outfile;
-    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+    outfile.open(folder / "list.ini", std::ofstream::out | std::ofstream::trunc);
 
     outfile.close();
 }
 
 void removeIniFile()
 {
-    std::string folder = getFolder();
-    std::filesystem::remove(folder + SEP + "list.ini");
+    fs::remove(getFolder() / "list.ini");
 }
 } // namespace
 
@@ -183,18 +181,18 @@ struct Fixture
 
     ~Fixture()
     {
-        std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
-        std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
-        std::filesystem::remove(folder + SEP + "inflows.txt");
-        std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
-        std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
+        fs::remove(folder / "PMAX-injection.txt");
+        fs::remove(folder / "PMAX-withdrawal.txt");
+        fs::remove(folder / "inflows.txt");
+        fs::remove(folder / "lower-rule-curve.txt");
+        fs::remove(folder / "upper-rule-curve.txt");
 
-        std::filesystem::remove(folder + SEP + "cost-injection.txt");
-        std::filesystem::remove(folder + SEP + "cost-withdrawal.txt");
-        std::filesystem::remove(folder + SEP + "cost-level.txt");
+        fs::remove(folder / "cost-injection.txt");
+        fs::remove(folder / "cost-withdrawal.txt");
+        fs::remove(folder / "cost-level.txt");
     }
 
-    std::string folder = getFolder();
+    fs::path folder = getFolder();
 
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
@@ -345,7 +343,7 @@ BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 
     removeIniFile();
 
-    BOOST_CHECK(container.saveToFolder(folder));
+    BOOST_CHECK(container.saveToFolder(folder.string()));
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 
@@ -356,7 +354,7 @@ BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 {
     resizeFillVectors(series, 0.123456789, 8760);
 
-    BOOST_CHECK(series.saveToFolder(folder));
+    BOOST_CHECK(series.saveToFolder(folder.string()));
     resizeFillVectors(series, 0, 0);
 
     BOOST_CHECK(series.loadFromFolder(folder));

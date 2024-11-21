@@ -179,11 +179,6 @@ protected:
                                                         precision);
     }
 
-    uint64_t memoryUsage() const
-    {
-        return sizeof(double) * HOURS_PER_YEAR + NextType::memoryUsage();
-    }
-
     template<template<class, int> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {

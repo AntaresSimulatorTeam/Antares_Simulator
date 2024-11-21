@@ -52,11 +52,6 @@ public:
 
     void merge(unsigned int year, const IntermediateValues& rhs);
 
-    uint64_t dynamicMemoryUsage() const
-    {
-        return sizeof(double) * HOURS_PER_YEAR + sizeof(double) * nbYearsCapacity;
-    }
-
 public:
     double monthly[MONTHS_PER_YEAR];
     double weekly[WEEKS_PER_YEAR];

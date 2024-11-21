@@ -32,7 +32,7 @@ namespace Antares
 {
 namespace Solver
 {
-ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput):
+ImmediateFileResultWriter::ImmediateFileResultWriter(const fs::path& folderOutput):
     pOutputFolder(folderOutput)
 {
 }
@@ -68,7 +68,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
+void ImmediateFileResultWriter::addEntryFromBuffer(const fs::path& entryPath,
                                                    std::string& entryContent)
 {
     fs::path output;
@@ -121,7 +121,7 @@ void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
 {
 }
 
-void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
+void NullResultWriter::addEntryFromBuffer(const fs::path&, std::string&)
 {
 }
 

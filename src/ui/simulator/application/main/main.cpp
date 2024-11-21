@@ -876,7 +876,7 @@ void ApplWnd::evtOnUpdateInterfaceAfterLoadedStudy(wxCommandEvent&)
     {
         Menu::AddRecentFile(menuRecentFiles(),
                             wxStringFromUTF8(study.header.caption),
-                            wxStringFromUTF8(study.folder));
+                            wxStringFromUTF8(study.folder.string()));
     }
 
     // User notes

@@ -29,12 +29,37 @@
 namespace Antares::Solver::Modeler::Api
 {
 
+struct FillContext
+{
+    FillContext(unsigned first, unsigned last):
+        firstTimeStep(first),
+        lastTimeStep(last)
+    {
+    }
+
+    unsigned getFirstTimeStep() const
+    {
+        return firstTimeStep;
+    }
+
+    unsigned getLastTimeStep() const
+    {
+        return lastTimeStep;
+    }
+
+    std::vector<unsigned> scenariosSelected;
+
+private:
+    unsigned firstTimeStep;
+    unsigned lastTimeStep;
+};
+
 class LinearProblemFiller
 {
 public:
-    virtual void addVariables(ILinearProblem& pb, LinearProblemData& data) = 0;
-    virtual void addConstraints(ILinearProblem& pb, LinearProblemData& data) = 0;
-    virtual void addObjective(ILinearProblem& pb, LinearProblemData& data) = 0;
+    virtual void addVariables(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) = 0;
+    virtual void addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) = 0;
+    virtual void addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) = 0;
     virtual ~LinearProblemFiller() = default;
 };
 

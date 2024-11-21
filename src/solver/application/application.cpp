@@ -277,7 +277,7 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 void Application::postParametersChecks() const
 { // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
-    checkOrtoolsUsage(pParameters->unitCommitment.ucMode, pParameters->optOptions.ortoolsSolver);
+    checkSolverMILPincompatibility(pParameters->unitCommitment.ucMode, pParameters->optOptions.ortoolsSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
@@ -403,7 +403,7 @@ void Application::resetLogFilename() const
     }
 
     logfile /= "solver-"; // append the filename
-    logfile += FormattedTime("%Y%m%d-%H%M%S")
+    logfile += formatTime(getCurrentTime(), "%Y%m%d-%H%M%S")
                + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename

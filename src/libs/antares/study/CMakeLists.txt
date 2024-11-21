@@ -179,7 +179,6 @@ source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 set(SRC_XCAST
         include/antares/study/xcast.h
         include/antares/study/xcast/xcast.h
-        include/antares/study/xcast/xcast.hxx
         xcast/xcast.cpp
 )
 source_group("study\\xcast" FILES ${SRC_XCAST})

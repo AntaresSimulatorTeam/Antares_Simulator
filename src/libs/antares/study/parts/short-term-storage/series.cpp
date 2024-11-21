@@ -33,24 +33,26 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool Series::loadFromFolder(const std::string& folder)
+namespace fs = std::filesystem;
+
+bool Series::loadFromFolder(const fs::path& folder)
 {
     bool ret = true;
 
-    ret = loadFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
-    ret = loadFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadFile(folder + SEP + "inflows.txt", inflows) && ret;
-    ret = loadFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
-    ret = loadFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
+    ret = loadFile(folder / "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = loadFile(folder / "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
+    ret = loadFile(folder / "inflows.txt", inflows) && ret;
+    ret = loadFile(folder / "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = loadFile(folder / "upper-rule-curve.txt", upperRuleCurve) && ret;
 
-    ret = loadFile(folder + SEP + "cost-injection.txt", costInjection) && ret;
-    ret = loadFile(folder + SEP + "cost-withdrawal.txt", costWithdrawal) && ret;
-    ret = loadFile(folder + SEP + "cost-level.txt", costLevel) && ret;
+    ret = loadFile(folder / "cost-injection.txt", costInjection) && ret;
+    ret = loadFile(folder / "cost-withdrawal.txt", costWithdrawal) && ret;
+    ret = loadFile(folder / "cost-level.txt", costLevel) && ret;
 
     return ret;
 }
 
-bool loadFile(const std::string& path, std::vector<double>& vect)
+bool loadFile(const fs::path& path, std::vector<double>& vect)
 {
     logs.debug() << "  :: loading file " << path;
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+# exit script if any subcommand fails
+set -e
 # copy reference guide md files and assets
 cp -r ../user-guide source/
 cp -r ../assets/ source/

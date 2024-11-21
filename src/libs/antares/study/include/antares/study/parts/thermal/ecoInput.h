@@ -63,7 +63,7 @@ public:
     ** \param folder The source folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool loadFromFolder(Study& study, const std::string& folder);
+    bool loadFromFolder(Study& study, const std::filesystem::path& folder);
 
     /*!
     ** \brief Save settings used by the thermal prepro to a folder
@@ -72,11 +72,6 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Get the amount of memory used by the class
-    */
-    uint64_t memoryUsage() const;
 
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR

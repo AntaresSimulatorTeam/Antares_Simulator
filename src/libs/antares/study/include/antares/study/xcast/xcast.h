@@ -140,7 +140,7 @@ public:
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(const AnyString& folder);
+    bool loadFromFolder(const std::filesystem::path& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -158,17 +158,6 @@ public:
     ** \brief Mark the load data as modified
     */
     void markAsModified() const;
-
-    /*!
-    ** \brief Get the amount of memory currently used by the XCast data
-    */
-    uint64_t memoryUsage() const;
-
-    /*!
-    ** \brief Estimate the amount of memory required by this class for a simulation
-    */
-
-    //@}
 
 public:
     /*!
@@ -213,7 +202,5 @@ protected:
 }; // class XCast
 
 } // namespace Antares::Data
-
-#include "xcast.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_XCAST_XCAST_H__

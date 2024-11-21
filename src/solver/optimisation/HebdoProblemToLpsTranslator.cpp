@@ -43,6 +43,13 @@ void copy(const T& in, U& out)
 {
     std::ranges::copy(in, std::back_inserter(out));
 }
+
+template<class T, class U>
+void copy(const SparseVector<T>& in, U& out)
+{
+    copy(in.extract(), out);
+}
+
 } // namespace
 
 WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(

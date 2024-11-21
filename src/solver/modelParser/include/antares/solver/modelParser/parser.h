@@ -21,7 +21,7 @@
  */
 
 #pragma once
-#include "antares/solver/modelParser/model.h"
+#include "antares/solver/modelParser/Library.h"
 
 namespace Antares::Solver::ModelParser
 {

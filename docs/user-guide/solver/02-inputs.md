@@ -266,7 +266,7 @@ a choice can be made between different tabs:
       _where Efficiency[%], CO2_emission_factor[tons/MWh] and Variable_O&M_cost[€/MWh] are specified in the `Common` tab under operating costs and parameters, while Fuel_Cost[€/GJ] and C02_cost[€/tons] are provided as time-series in separate tabs._
 
 
-## Storages
+## Short-term storages
 
 _[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/08-st-storages/)_
 

@@ -27,8 +27,6 @@
 
 #include <antares/logs/logs.h>
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares::Data::ShortTermStorage
 {
 

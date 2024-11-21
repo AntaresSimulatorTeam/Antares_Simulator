@@ -49,7 +49,7 @@ class ZipWriteJob
 {
 public:
     ZipWriteJob(ZipWriter& writer,
-                std::string entryPath,
+                const std::string& entryPath,
                 ContentT& content,
                 Benchmarking::DurationCollector& duration_collector);
     void writeEntry();
@@ -78,11 +78,12 @@ class ZipWriter: public IResultWriter
 {
 public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
-              const char* archivePath,
+              const std::filesystem::path& archivePath,
               Benchmarking::DurationCollector& duration_collector);
     virtual ~ZipWriter();
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
-    void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
+    void addEntryFromBuffer(const std::filesystem::path& entryPath,
+                            std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,
                           const std::filesystem::path& filePath) override;
     void flush() override;
@@ -101,7 +102,7 @@ private:
     // State, to allow/prevent new jobs being added to the queue
     ZipState pState;
     // Absolute path to the archive
-    const std::string pArchivePath;
+    const std::filesystem::path pArchivePath;
     // Benchmarking. Passed to jobs
     Benchmarking::DurationCollector& pDurationCollector;
 
@@ -109,7 +110,8 @@ private:
 
 private:
     template<class ContentType>
-    void addEntryFromBufferHelper(const std::string& entryPath, ContentType& entryContent);
+    void addEntryFromBufferHelper(const std::filesystem::path& entryPath,
+                                  ContentType& entryContent);
 };
 } // namespace Antares::Solver
 

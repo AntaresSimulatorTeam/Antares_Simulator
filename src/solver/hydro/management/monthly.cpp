@@ -304,7 +304,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(const double* random_rese
                   buffer << '\n';
               }
               auto content = buffer.str();
-              resultWriter_.addEntryFromBuffer(path.string(), content);
+              resultWriter_.addEntryFromBuffer(path, content);
           }
           indexArea++;
       });

@@ -108,7 +108,7 @@ int main(int argc, const char* argv[])
 
         // === Writing generated TS on disk ===
         auto thermalSavePath = fs::path(settings.studyFolder) / "output"
-                               / FormattedTime("%Y%m%d-%H%M");
+                               / formatTime(getCurrentTime(), "%Y%m%d-%H%M");
         thermalSavePath /= "ts-generator";
         thermalSavePath /= "thermal";
         writeThermalTimeSeries(clusters, thermalSavePath);

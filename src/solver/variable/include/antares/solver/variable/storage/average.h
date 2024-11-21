@@ -161,11 +161,6 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    uint64_t memoryUsage() const
-    {
-        return avgdata.dynamicMemoryUsage() + NextType::memoryUsage();
-    }
-
     template<template<class, int> class DecoratorT>
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {

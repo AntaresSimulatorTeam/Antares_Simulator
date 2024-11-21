@@ -529,19 +529,6 @@ inline bool Matrix<T, ReadWriteT>::empty() const
 }
 
 template<class T, class ReadWriteT>
-inline uint64_t Matrix<T, ReadWriteT>::memoryUsage() const
-{
-    return sizeof(Matrix<T, ReadWriteT>) + (sizeof(T) * (width * height))
-           + ((jit) ? jit->memoryUsage() : 0);
-}
-
-template<class T, class ReadWriteT>
-inline uint64_t Matrix<T, ReadWriteT>::valuesMemoryUsage() const
-{
-    return (sizeof(T) * (width * height));
-}
-
-template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::clear()
 {
     if (entry)

@@ -1375,12 +1375,6 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
     handleOptimizationOptions(options);
 }
 
-uint64_t Parameters::memoryUsage() const
-{
-    return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
-           + yearsFilter.size(); // vector of bools, 1 bit per coefficient
-}
-
 void Parameters::resetYearsWeigth()
 {
     yearsWeight.clear();
@@ -1975,7 +1969,7 @@ void Parameters::saveToINI(IniFile& ini) const
     }
 }
 
-bool Parameters::loadFromFile(const AnyString& filename, const StudyVersion& version)
+bool Parameters::loadFromFile(const std::filesystem::path& filename, const StudyVersion& version)
 {
     // Loading the INI file
     IniFile ini;

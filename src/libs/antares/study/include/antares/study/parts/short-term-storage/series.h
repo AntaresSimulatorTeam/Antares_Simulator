@@ -19,6 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -31,7 +33,7 @@ public:
     bool validate(const std::string& id = "") const;
 
     // load all series files with folder path
-    bool loadFromFolder(const std::string& folder);
+    bool loadFromFolder(const std::filesystem::path& folder);
     void fillDefaultSeriesIfEmpty();
 
     bool saveToFolder(const std::string& folder) const;
@@ -55,7 +57,7 @@ private:
     bool validateLowerRuleCurve(const std::string&) const;
 };
 
-bool loadFile(const std::string& folder, std::vector<double>& vect);
+bool loadFile(const std::filesystem::path& folder, std::vector<double>& vect);
 bool writeVectorToFile(const std::string& path, const std::vector<double>& vect);
 
 } // namespace Antares::Data::ShortTermStorage

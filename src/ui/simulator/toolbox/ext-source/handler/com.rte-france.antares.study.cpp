@@ -506,7 +506,7 @@ void AntaresStudy(Data::Study::Ptr target,
 
     // If the path of the study where items should be extracted is the same than the current opened
     // study, we can directly use it
-    if (!path || path == target->folder)
+    if (!path || path == target->folder.string())
     {
         context->extStudy = target;
 

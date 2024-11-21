@@ -38,8 +38,6 @@
 using namespace Yuni;
 using namespace Antares;
 
-#define SEP IO::Separator
-
 namespace Antares::Data
 {
 Data::RenewableCluster::RenewableCluster(Area* parent):
@@ -199,13 +197,6 @@ double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
         return std::round(unitCount * nominalCapacity * tsValue);
     }
     return 0.;
-}
-
-uint64_t RenewableCluster::memoryUsage() const
-{
-    uint64_t amount = sizeof(RenewableCluster);
-    amount += series.memoryUsage();
-    return amount;
 }
 
 unsigned int RenewableCluster::precision() const

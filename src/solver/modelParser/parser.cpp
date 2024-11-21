@@ -21,7 +21,7 @@
 
 #include "antares/solver/modelParser/parser.h"
 
-#include "antares/solver/modelParser/model.h"
+#include "antares/solver/modelParser/Library.h"
 
 #include "encoders.hxx"
 

@@ -338,14 +338,6 @@ public:
     */
     void markAsModified() const;
 
-    //! \name Memory Usage
-    //@{
-    /*!
-    ** \brief Get the memory usage
-    */
-    uint64_t memoryUsage() const;
-    //@}
-
     /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
     **

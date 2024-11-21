@@ -34,8 +34,6 @@
 
 using namespace Antares;
 
-#define SEP IO::Separator
-
 #ifdef _MSC_VER
 #define SNPRINTF sprintf_s
 #else
@@ -504,23 +502,6 @@ void BindingConstraint::buildFormula(Yuni::String& s) const
         s << ')';
         first = false;
     }
-}
-
-uint64_t BindingConstraint::memoryUsage() const
-{
-    return sizeof(BindingConstraint)
-           // comments
-           + pComments.capacity()
-           // Values
-           + RHSTimeSeries().memoryUsage()
-           // Estimation
-           + pLinkWeights.size() * (sizeof(double) + 3 * sizeof(void*))
-           // Estimation
-           + pLinkOffsets.size() * (sizeof(int) + 3 * sizeof(void*))
-           // Estimation
-           + pClusterWeights.size() * (sizeof(double) + 3 * sizeof(void*))
-           // Estimation
-           + pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void*));
 }
 
 bool BindingConstraint::contains(const BindingConstraint* bc) const
