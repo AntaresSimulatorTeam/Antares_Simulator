@@ -632,7 +632,6 @@ void Run::onRun(void*)
                             pIgnoreWarnings->GetValue(),                     // Ignore warnings
                             featuresAlias[pFeatureIndex],                    // Features
                             pPreproOnly->GetValue(),                         // Prepro Only ?
-                            pOrtoolsCheckBox->IsChecked(),                   // Ortools use
                             pOrtoolsSolverCombox->GetValue().ToStdString()); // Ortools solver
 
     // Remove the temporary file
