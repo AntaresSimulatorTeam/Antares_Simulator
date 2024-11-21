@@ -20,6 +20,7 @@
 */
 
 #include <antares/study/system-model/system.h>
+#include <algorithm>
 
 namespace Antares::Study::SystemModel
 {
