@@ -309,15 +309,6 @@ Run::Run(wxWindow* parent, bool preproOnly) :
 
     // Ortools use
     {
-        // Ortools use
-        auto* ortoolsCheckBox = new wxCheckBox(pBigDaddy, wxID_ANY, wxT(""));
-        ortoolsCheckBox->SetValue(false);
-
-        Connect(ortoolsCheckBox->GetId(),
-                wxEVT_COMMAND_CHECKBOX_CLICKED,
-                wxCommandEventHandler(Run::onOrtoolsCheckboxChanged));
-        pOrtoolsCheckBox = ortoolsCheckBox;
-
         // Ortools solver selection
         pTitleOrtoolsSolverCombox
           = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
@@ -329,12 +320,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
             pOrtoolsSolverCombox->Append(solverName);
         }
 
-        // Ortools solver selection visibility
-        pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-        pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-
-        // Display 2 rows for ortools option
-        gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
+        // Display ortools solver list
         gridAppend(*s, pTitleOrtoolsSolverCombox, pOrtoolsSolverCombox);
     }
 
@@ -807,20 +793,6 @@ void Run::onSelectMode(wxCommandEvent& evt)
 void Run::onInternalMotion(wxMouseEvent&)
 {
     Antares::Component::Panel::OnMouseMoveFromExternalComponent();
-}
-
-void Run::onOrtoolsCheckboxChanged(wxCommandEvent& WXUNUSED(event))
-{
-    pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-    pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-
-    // Layout update
-    auto* sizer = pBigDaddy->GetSizer();
-    if (sizer)
-        sizer->Fit(pBigDaddy);
-    sizer = GetSizer();
-    if (sizer)
-        sizer->Fit(this);
 }
 
 } // namespace Antares::Window::Simulation

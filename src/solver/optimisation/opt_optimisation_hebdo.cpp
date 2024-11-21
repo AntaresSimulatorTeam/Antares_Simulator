@@ -34,7 +34,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
                                       Solver::IResultWriter&,
                                       Solver::Simulation::ISimulationObserver&);
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions&, const PROBLEME_HEBDO*);
+void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
@@ -51,7 +51,7 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
     }
     else if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_QUADRATIQUE)
     {
-        OPT_LiberationProblemesSimplexe(options, pProblemeHebdo);
+        OPT_LiberationProblemesSimplexe(pProblemeHebdo);
         if (!OPT_PilotageOptimisationQuadratique(pProblemeHebdo))
         {
             logs.error() << "Quadratic optimization failed";

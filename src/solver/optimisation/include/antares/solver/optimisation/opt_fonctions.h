@@ -81,7 +81,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Antares::Solver::IResultWriter& writer);
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO*);
+void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
