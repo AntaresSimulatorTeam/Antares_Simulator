@@ -67,6 +67,7 @@ public:
     std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
 
+private:
     Registry<Nodes::Node>& registry_;
     const ModelParser::Model& model_;
 };

@@ -23,7 +23,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/expressions/Registry.hxx"
-#include "antares/solver/expressions/visitors/AstDOTStyleVisitor.h"
 #include "antares/solver/expressions/visitors/CompareVisitor.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/solver/modelConverter/modelConverter.h"
@@ -34,7 +33,7 @@ using namespace Antares::Solver;
 struct FixtureConvertVisitor
 {
     ModelParser::Model model;
-    Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
+    Registry<Nodes::Node> registry;
 };
 
 static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
@@ -60,7 +59,6 @@ BOOST_FIXTURE_TEST_CASE(negation, FixtureConvertVisitor)
 
 BOOST_FIXTURE_TEST_CASE(identifier, FixtureConvertVisitor)
 {
-    ModelParser::Library library;
     ModelParser::Model model0{
       .id = "model0",
       .description = "description",
@@ -89,7 +87,6 @@ bool expectedMessage(const std::runtime_error& ex)
 
 BOOST_FIXTURE_TEST_CASE(identifierNotFound, FixtureConvertVisitor)
 {
-    ModelParser::Library library;
     ModelParser::Model model0{
       .id = "model0",
       .description = "description",

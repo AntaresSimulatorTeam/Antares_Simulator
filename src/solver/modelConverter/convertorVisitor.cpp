@@ -19,9 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <iostream>
-
-/* #include <antares/logs/logs.h> */
 #include <antares/solver/modelConverter/convertorVisitor.h>
 
 #include "ExprLexer.h"
@@ -94,7 +91,6 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
         }
     }
 
-    /* logs.error() << "No parameter or variable found with this name: " << context->getText(); */
     throw NoParameterOrVariableWithThisName(context->getText());
 }
 
