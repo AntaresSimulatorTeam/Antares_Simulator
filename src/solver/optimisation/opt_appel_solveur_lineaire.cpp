@@ -197,7 +197,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     FillContext fillCtx(0, 167);
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
-    if (options.ortoolsUsed && solver == nullptr)
+    if (solver == nullptr)
     {
         linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);
         solver = ortoolsProblem->getMpSolver();
