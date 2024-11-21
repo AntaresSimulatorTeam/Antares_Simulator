@@ -1207,7 +1207,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
                 cmd << " --parallel";
 
             // add solver name for ortools
-            cmd << " --ortools-solver=" << solverName;
+            cmd << " --solver=" << solverName;
 
             // Go go go !
             logs.debug() << "running " << cmd;
