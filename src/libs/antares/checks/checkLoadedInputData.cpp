@@ -29,7 +29,8 @@
 
 namespace Antares::Check
 {
-void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode, const std::string& solverName)
+void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
+                                    const std::string& solverName)
 {
     using namespace Antares::Data;
     if (ucMode == UnitCommitmentMode::ucMILP && solverName == "sirius")
