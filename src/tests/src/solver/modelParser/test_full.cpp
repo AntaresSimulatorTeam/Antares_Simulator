@@ -260,10 +260,9 @@ library:
 
     try
     {
-        Registry<Antares::Solver::Nodes::Node> registry;
         ModelParser::Parser parser;
         ModelParser::Library libraryObj = parser.parse(library);
-        SystemModel::Library lib = ModelConverter::convert(libraryObj, registry);
+        SystemModel::Library lib = ModelConverter::convert(libraryObj);
         BOOST_CHECK_EQUAL(lib.Id(), "basic");
         BOOST_CHECK_EQUAL(lib.Description(), "Basic library");
 

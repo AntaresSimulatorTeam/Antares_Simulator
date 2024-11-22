@@ -23,16 +23,14 @@
 
 #include <ExprVisitor.h>
 
-#include <antares/solver/expressions/Registry.hxx>
+#include <antares/solver/expressions/NodeRegistry.h>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include "antares/solver/modelParser/Library.h"
 
 namespace Antares::Solver::ModelConverter
 {
 
-Nodes::Node* convertExpressionToNode(const std::string& exprStr,
-                                     Registry<Nodes::Node>& registry,
-                                     const ModelParser::Model& model);
+NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model);
 
 /// Visitor to convert ANTLR expressions to Antares::Solver::Nodes
 class ConvertorVisitor: public ExprVisitor

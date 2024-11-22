@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include <antares/solver/expressions/NodeRegistry.h>
+
 namespace Antares::Solver::Nodes
 {
 class Node;
@@ -35,9 +37,9 @@ class Expression
 public:
     Expression() = default;
 
-    explicit Expression(const std::string& value, Antares::Solver::Nodes::Node* root):
+    explicit Expression(const std::string& value, Antares::Solver::NodeRegistry root):
         value_(value),
-        root_(root)
+        root_(std::move(root))
     {
     }
 
@@ -48,7 +50,7 @@ public:
 
 private:
     std::string value_;
-    Antares::Solver::Nodes::Node* root_;
+    Antares::Solver::NodeRegistry root_;
 };
 
 } // namespace Antares::Study::SystemModel
