@@ -37,13 +37,7 @@ using namespace Antares::Study;
 struct Fixture
 {
     ModelParser::Library library;
-    Registry<Antares::Solver::Nodes::Node> registry;
 };
-
-BOOST_AUTO_TEST_CASE(eee)
-{
-    SystemModel::Library lib;
-}
 
 // Test empty library
 BOOST_FIXTURE_TEST_CASE(Empty_library_is_valid, Fixture)

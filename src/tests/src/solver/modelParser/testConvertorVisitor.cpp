@@ -106,7 +106,6 @@ bool expectedMessage(const std::runtime_error& ex)
 
 BOOST_AUTO_TEST_CASE(identifierNotFound)
 {
-    Registry<Nodes::Node> registry;
     ModelParser::Model model{
       .id = "model0",
       .description = "description",
