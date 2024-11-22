@@ -167,7 +167,7 @@ These parameters are listed under the `[input]` section in the `.ini` file.
   should be exported into the input files (in replacement of the original ones).
 
 > _**Note:**_
-> you can also use [archives](../solver/04-parameters.md#archives) to store the time-series in the output folder.
+> you can also use [archives](../solver/static-modeler/04-parameters.md#archives) to store the time-series in the output folder.
 
 ---
 ## Seeds - Mersenne Twister parameters

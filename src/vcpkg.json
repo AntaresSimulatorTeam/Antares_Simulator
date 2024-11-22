@@ -1,6 +1,6 @@
 {
   "name": "antares-simulator",
-  "version-string": "9.1.0",
+  "version-string": "9.2.0",
   "builtin-baseline": "9484a57dd560b89f0a583be08af6753611c57fd5",
   "vcpkg-configuration": {
     "overlay-ports": [
