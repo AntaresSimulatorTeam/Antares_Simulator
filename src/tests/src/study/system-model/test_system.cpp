@@ -25,13 +25,14 @@
 
 #include "antares/study/system-model/system.h"
 
-#include "utils.h"
+#include "../../../unit_test_utils.h"
 
 using namespace Antares::Study::SystemModel;
 
 struct SystemTestFixture
 {
     static Component createComponent(std::string id);
+    SystemBuilder system_builder;
 };
 
 Component SystemTestFixture::createComponent(std::string id)
@@ -50,8 +51,7 @@ BOOST_AUTO_TEST_SUITE(_System_)
 
 BOOST_FIXTURE_TEST_CASE(nominal_build, SystemTestFixture)
 {
-    SystemBuilder builder;
-    auto system = builder.withId("system")
+    auto system = system_builder.withId("system")
                     .withComponents({createComponent("component1"), createComponent("component2")})
                     .build();
     BOOST_CHECK_EQUAL(system.Id(), "system");
@@ -62,38 +62,35 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemTestFixture)
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemTestFixture)
 {
-    SystemBuilder builder;
-    builder.withComponents({createComponent("component1"), createComponent("component2")});
-    BOOST_CHECK_EXCEPTION(builder.build(),
+    system_builder.withComponents({createComponent("component1"), createComponent("component2")});
+    BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
                           checkMessage("A system can't have an empty id"));
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemTestFixture)
 {
-    SystemBuilder builder;
-    builder.withId("system");
-    BOOST_CHECK_EXCEPTION(builder.build(),
+    system_builder.withId("system");
+    BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
                           checkMessage("A system must contain at least one component"));
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemTestFixture)
 {
-    SystemBuilder builder;
-    builder.withId("system").withComponents({});
-    BOOST_CHECK_EXCEPTION(builder.build(),
+    system_builder.withId("system").withComponents({});
+    BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
                           checkMessage("A system must contain at least one component"));
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_components_with_same_id, SystemTestFixture)
 {
-    SystemBuilder builder;
-    builder.withId("system").withComponents({}).withComponents({createComponent("component1"),
-                                                                createComponent("component2"),
-                                                                createComponent("component2")});
-    BOOST_CHECK_EXCEPTION(builder.build(),
+    system_builder.withId("system").withComponents({}).withComponents(
+      {createComponent("component1"),
+       createComponent("component2"),
+       createComponent("component2")});
+    BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
                           checkMessage("System has at least two components with the same id "
                                        "('component2'), this is not supported"));

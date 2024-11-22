@@ -77,6 +77,7 @@ private:
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
+    void checkComponentDataValidity(const ComponentData& data) const;
     ComponentData data_;
 };
 

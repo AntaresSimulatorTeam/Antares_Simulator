@@ -25,40 +25,43 @@
 
 #include "antares/study/system-model/component.h"
 
-#include "utils.h"
+#include "../../../unit_test_utils.h"
 
 using namespace Antares::Study::SystemModel;
 
 struct ComponentTestFixture
 {
-    static Model createModel(bool with_parameters);
+    static Model createModelWithParameters();
+    static Model createModelWithoutParameters();
+    ComponentBuilder component_builder;
 };
 
-Model ComponentTestFixture::createModel(bool with_parameters)
+Model ComponentTestFixture::createModelWithParameters()
 {
     ModelBuilder model_builder;
-    model_builder.withId("model");
-    if (with_parameters)
-    {
-        model_builder.withParameters({Parameter("param1",
-                                                ValueType::FLOAT,
-                                                Parameter::TimeDependent::NO,
-                                                Parameter::ScenarioDependent::NO),
-                                      Parameter("param2",
-                                                ValueType::FLOAT,
-                                                Parameter::TimeDependent::NO,
-                                                Parameter::ScenarioDependent::NO)});
-    }
-    auto model = model_builder.build();
-    return model;
+    return model_builder.withId("model")
+      .withParameters({Parameter("param1",
+                                 ValueType::FLOAT,
+                                 Parameter::TimeDependent::NO,
+                                 Parameter::ScenarioDependent::NO),
+                       Parameter("param2",
+                                 ValueType::FLOAT,
+                                 Parameter::TimeDependent::NO,
+                                 Parameter::ScenarioDependent::NO)})
+      .build();
 }
 
-BOOST_AUTO_TEST_SUITE(_Component_)
-
-BOOST_FIXTURE_TEST_CASE(nominal_build_with_parameters, ComponentTestFixture)
+Model ComponentTestFixture::createModelWithoutParameters()
 {
-    Model model = createModel(true);
-    ComponentBuilder component_builder;
+    ModelBuilder model_builder;
+    return model_builder.withId("model").build();
+}
+
+BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentTestFixture)
+
+BOOST_AUTO_TEST_CASE(nominal_build_with_parameters)
+{
+    Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
                        .withParameterValues({{"param1", 5}, {"param2", 3}})
@@ -74,10 +77,9 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_with_parameters, ComponentTestFixture)
     BOOST_CHECK_EQUAL(component.getScenarioGroupId(), "scenario_group");
 }
 
-BOOST_FIXTURE_TEST_CASE(nominal_build_without_parameters1, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(nominal_build_without_parameters1)
 {
-    Model model = createModel(false);
-    ComponentBuilder component_builder;
+    Model model = createModelWithoutParameters();
     auto component = component_builder.withId("component2")
                        .withModel(&model)
                        .withParameterValues({})
@@ -91,10 +93,9 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_without_parameters1, ComponentTestFixture)
     BOOST_CHECK_EQUAL(component.getScenarioGroupId(), "scenario_group2");
 }
 
-BOOST_FIXTURE_TEST_CASE(nominal_build_without_parameters2, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(nominal_build_without_parameters2)
 {
-    Model model = createModel(false);
-    ComponentBuilder component_builder;
+    Model model = createModelWithoutParameters();
     auto component = component_builder.withId("component3")
                        .withModel(&model)
                        .withScenarioGroupId("scenario_group3")
@@ -104,39 +105,35 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_without_parameters2, ComponentTestFixture)
     BOOST_CHECK_EQUAL(component.getScenarioGroupId(), "scenario_group3");
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_id, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_no_id)
 {
-    Model model = createModel(false);
-    ComponentBuilder component_builder;
+    Model model = createModelWithoutParameters();
     auto component = component_builder.withModel(&model).withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
                           checkMessage("A component can't have an empty id"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_model, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_no_model)
 {
-    ComponentBuilder component_builder;
     auto component = component_builder.withId("component").withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
                           checkMessage("A component can't have an empty model"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_scenario_group_id, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_no_scenario_group_id)
 {
-    Model model = createModel(false);
-    ComponentBuilder component_builder;
+    Model model = createModelWithoutParameters();
     auto component = component_builder.withId("component").withModel(&model);
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
                           checkMessage("A component can't have an empty scenario_group_id"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_params1, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_no_params1)
 {
-    Model model = createModel(true);
-    ComponentBuilder component_builder;
+    Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
                        .withScenarioGroupId("scenario_group");
@@ -145,10 +142,9 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_params1, ComponentTestFixture)
                           checkMessage("The component has 0 parameter(s), but its model has 2"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_params2, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_no_params2)
 {
-    Model model = createModel(true);
-    ComponentBuilder component_builder;
+    Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
                        .withParameterValues({})
@@ -158,10 +154,9 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_params2, ComponentTestFixture)
                           checkMessage("The component has 0 parameter(s), but its model has 2"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_missing_param, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_missing_param)
 {
-    Model model = createModel(true);
-    ComponentBuilder component_builder;
+    Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
                        .withParameterValues({{"param2", 3}})
@@ -171,10 +166,9 @@ BOOST_FIXTURE_TEST_CASE(fail_on_missing_param, ComponentTestFixture)
                           checkMessage("The component has 1 parameter(s), but its model has 2"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_missing_wrong_param, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_missing_wrong_param)
 {
-    Model model = createModel(true);
-    ComponentBuilder component_builder;
+    Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
                        .withParameterValues({{"param_1", 3}, {"param2", 3}})
@@ -184,10 +178,9 @@ BOOST_FIXTURE_TEST_CASE(fail_on_missing_wrong_param, ComponentTestFixture)
                           checkMessage("The component has no value for parameter 'param1'"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_too_many_params1, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_too_many_params1)
 {
-    Model model = createModel(true);
-    ComponentBuilder component_builder;
+    Model model = createModelWithParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
                        .withParameterValues({{"param1", 3}, {"param2", 3}, {"param3", 3}})
@@ -197,10 +190,9 @@ BOOST_FIXTURE_TEST_CASE(fail_on_too_many_params1, ComponentTestFixture)
                           checkMessage("The component has 3 parameter(s), but its model has 2"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_too_many_params2, ComponentTestFixture)
+BOOST_AUTO_TEST_CASE(fail_on_too_many_params2)
 {
-    Model model = createModel(false);
-    ComponentBuilder component_builder;
+    Model model = createModelWithoutParameters();
     auto component = component_builder.withId("component")
                        .withModel(&model)
                        .withParameterValues({{"param1", 3}})

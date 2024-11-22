@@ -26,7 +26,7 @@
 namespace Antares::Study::SystemModel
 {
 
-Component::Component(const ComponentData& data)
+void Component::checkComponentDataValidity(const ComponentData& data) const
 {
     // Check that mandatory attributes are not empty
     if (data.id.empty())
@@ -55,7 +55,12 @@ Component::Component(const ComponentData& data)
             throw std::invalid_argument("The component has no value for parameter '" + param + "'");
         }
     }
-    data_ = std::move(data);
+}
+
+Component::Component(const ComponentData& component_data)
+{
+    checkComponentDataValidity(component_data);
+    data_ = std::move(component_data);
 }
 
 /**
