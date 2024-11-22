@@ -22,6 +22,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include "antares/solver/expressions/Registry.hxx"
 #include "antares/solver/expressions/visitors/CompareVisitor.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
