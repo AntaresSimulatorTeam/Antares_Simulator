@@ -26,7 +26,6 @@
 #include "antares/solver/expressions/Registry.hxx"
 #include "antares/solver/expressions/visitors/CompareVisitor.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
-#include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
 
 using namespace Antares::Solver;
