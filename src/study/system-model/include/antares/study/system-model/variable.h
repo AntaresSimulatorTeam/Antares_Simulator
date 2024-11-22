@@ -35,8 +35,8 @@ public:
     Variable(std::string id, Expression lower_bound, Expression upper_bound, ValueType type):
         id_(std::move(id)),
         type_(type),
-        lowerBound_(lower_bound),
-        upperBound_(upper_bound)
+        lowerBound_(std::move(lower_bound)),
+        upperBound_(std::move(upper_bound))
     {
     }
 
@@ -50,12 +50,12 @@ public:
         return type_;
     }
 
-    Expression LowerBound() const
+    const Expression& LowerBound() const
     {
         return lowerBound_;
     }
 
-    Expression UpperBound() const
+    const Expression& UpperBound() const
     {
         return upperBound_;
     }

@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <antares/solver/expressions/Registry.hxx>
-
 namespace Antares
 {
 namespace Study::SystemModel
@@ -43,6 +41,5 @@ class Node;
 
 namespace Antares::Solver::ModelConverter
 {
-Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library,
-                                             Registry<Nodes::Node>& registry);
+Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library);
 }

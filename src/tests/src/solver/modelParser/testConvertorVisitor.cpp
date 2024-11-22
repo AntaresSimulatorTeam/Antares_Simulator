@@ -26,34 +26,27 @@
 #include "antares/solver/expressions/Registry.hxx"
 #include "antares/solver/expressions/visitors/CompareVisitor.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
-#include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
 
 using namespace Antares::Solver;
 
-class ExpressionToNodeConvertor
+class ExpressionToNodeConvertorEmptyModel
 {
 public:
-    ExpressionToNodeConvertor(ModelParser::Model&& model):
+    ExpressionToNodeConvertorEmptyModel(ModelParser::Model&& model):
         model_(std::move(model))
     {
     }
 
     // Empty model
-    ExpressionToNodeConvertor() = default;
+    ExpressionToNodeConvertorEmptyModel() = default;
 
-    Nodes::Node* run(const std::string& input)
+    NodeRegistry run(const std::string& input)
     {
-        return ModelConverter::convertExpressionToNode(input, registry_, model_);
-    }
-
-    Registry<Nodes::Node>& registry()
-    {
-        return registry_;
+        return ModelConverter::convertExpressionToNode(input, model_);
     }
 
 private:
-    Registry<Nodes::Node> registry_;
     const ModelParser::Model model_;
 };
 
@@ -62,17 +55,17 @@ static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
     return dynamic_cast<Nodes::LiteralNode*>(n);
 }
 
-BOOST_FIXTURE_TEST_CASE(empty_expression, ExpressionToNodeConvertor)
+BOOST_FIXTURE_TEST_CASE(empty_expression, ExpressionToNodeConvertorEmptyModel)
 {
-    BOOST_CHECK_EQUAL(run(""), nullptr);
+    BOOST_CHECK_EQUAL(run("").node, nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(negation, ExpressionToNodeConvertor)
+BOOST_FIXTURE_TEST_CASE(negation, ExpressionToNodeConvertorEmptyModel)
 {
     std::string expression = "-7";
-    Nodes::Node* n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "NegationNode");
-    auto* nodeNeg = dynamic_cast<Nodes::NegationNode*>(n);
+    auto expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "NegationNode");
+    auto* nodeNeg = dynamic_cast<Nodes::NegationNode*>(expr.node);
     BOOST_REQUIRE(nodeNeg);
     BOOST_CHECK_EQUAL(toLiteral(nodeNeg->child())->value(), 7);
 }
@@ -88,15 +81,19 @@ BOOST_AUTO_TEST_CASE(identifier)
       .port_field_definitions = {},
       .constraints = {},
       .objective = "objectives"};
-    ExpressionToNodeConvertor converter(std::move(model));
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
 
-    std::string expression = "param1";
-    Nodes::Node* n = converter.run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "ParameterNode");
+    {
+        std::string expression = "param1";
+        auto expr = converter.run(expression);
+        BOOST_CHECK_EQUAL(expr.node->name(), "ParameterNode");
+    }
 
-    expression = "varP";
-    n = converter.run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "VariableNode");
+    {
+        std::string expression = "varP";
+        auto expr = converter.run(expression);
+        BOOST_CHECK_EQUAL(expr.node->name(), "VariableNode");
+    }
 }
 
 bool expectedMessage(const std::runtime_error& ex)
@@ -108,7 +105,6 @@ bool expectedMessage(const std::runtime_error& ex)
 
 BOOST_AUTO_TEST_CASE(identifierNotFound)
 {
-    Registry<Nodes::Node> registry;
     ModelParser::Model model{
       .id = "model0",
       .description = "description",
@@ -120,75 +116,75 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .objective = "objectives"};
 
     std::string expression = "abc"; // not a param or var
-    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, registry, model),
+    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
                           std::runtime_error,
                           expectedMessage);
 }
 
-BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertor)
+BOOST_FIXTURE_TEST_CASE(addTwoLiterals, ExpressionToNodeConvertorEmptyModel)
 {
     const std::string expression = "1 + 2";
-    Nodes::Node* n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "SumNode");
+    auto expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "SumNode");
 
-    auto* nodeSum = dynamic_cast<Nodes::SumNode*>(n);
+    auto* nodeSum = dynamic_cast<Nodes::SumNode*>(expr.node);
     BOOST_REQUIRE(nodeSum);
     auto operands = nodeSum->getOperands();
     BOOST_CHECK_EQUAL(toLiteral(operands[0])->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(operands[1])->value(), 2);
 }
 
-BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertor)
+BOOST_FIXTURE_TEST_CASE(subtractTwoLiterals, ExpressionToNodeConvertorEmptyModel)
 {
     const std::string expression = "6 - 3";
-    Nodes::Node* n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "SubtractionNode");
+    auto expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "SubtractionNode");
 
-    auto* nodeSub = dynamic_cast<Nodes::SubtractionNode*>(n);
+    auto* nodeSub = dynamic_cast<Nodes::SubtractionNode*>(expr.node);
     BOOST_REQUIRE(nodeSub);
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->left())->value(), 6);
     BOOST_CHECK_EQUAL(toLiteral(nodeSub->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(multiplyTwoLiterals, ExpressionToNodeConvertor)
+BOOST_FIXTURE_TEST_CASE(multiplyTwoLiterals, ExpressionToNodeConvertorEmptyModel)
 {
     std::string expression = "1 * 2";
-    Nodes::Node* n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "MultiplicationNode");
+    auto expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "MultiplicationNode");
 
-    auto* nodeMult = dynamic_cast<Nodes::MultiplicationNode*>(n);
+    auto* nodeMult = dynamic_cast<Nodes::MultiplicationNode*>(expr.node);
     BOOST_REQUIRE(nodeMult);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->left())->value(), 1);
     BOOST_CHECK_EQUAL(toLiteral(nodeMult->right())->value(), 2);
 }
 
-BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, ExpressionToNodeConvertor)
+BOOST_FIXTURE_TEST_CASE(divideTwoLiterals, ExpressionToNodeConvertorEmptyModel)
 {
     const std::string expression = "6 / 3";
-    Nodes::Node* n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "DivisionNode");
+    auto expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "DivisionNode");
 
-    auto* nodeDiv = dynamic_cast<Nodes::DivisionNode*>(n);
+    auto* nodeDiv = dynamic_cast<Nodes::DivisionNode*>(expr.node);
     BOOST_REQUIRE(nodeDiv);
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->left())->value(), 6);
     BOOST_CHECK_EQUAL(toLiteral(nodeDiv->right())->value(), 3);
 }
 
-BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertor)
+BOOST_FIXTURE_TEST_CASE(comparison, ExpressionToNodeConvertorEmptyModel)
 {
     std::string expression = "1 = 2";
-    auto* n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "EqualNode");
+    auto expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "EqualNode");
 
     expression = "1 <= 5";
-    n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "LessThanOrEqualNode");
+    expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "LessThanOrEqualNode");
 
     expression = "8364 >= 27";
-    n = run(expression);
-    BOOST_CHECK_EQUAL(n->name(), "GreaterThanOrEqualNode");
+    expr = run(expression);
+    BOOST_CHECK_EQUAL(expr.node->name(), "GreaterThanOrEqualNode");
 
-    auto* nodeGreater = dynamic_cast<Nodes::GreaterThanOrEqualNode*>(n);
+    auto* nodeGreater = dynamic_cast<Nodes::GreaterThanOrEqualNode*>(expr.node);
     BOOST_REQUIRE(nodeGreater);
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->left())->value(), 8364);
     BOOST_CHECK_EQUAL(toLiteral(nodeGreater->right())->value(), 27);
@@ -206,12 +202,11 @@ BOOST_AUTO_TEST_CASE(medium_expression)
       .constraints = {},
       .objective = "objectives"};
 
-    ExpressionToNodeConvertor converter(std::move(model));
+    ExpressionToNodeConvertorEmptyModel converter(std::move(model));
     std::string expression = "(12 * (4 - 1) + param1) / -(42 + 3 + varP)";
-    Nodes::Node* n = converter.run(expression);
+    auto expr = converter.run(expression);
 
-    // NOTE : we don't need this registry, any registry could work
-    Registry<Nodes::Node>& registry = converter.registry();
+    Registry<Nodes::Node> registry;
 
     auto* param = registry.create<Nodes::ParameterNode>("param1");
     auto* var = registry.create<Nodes::VariableNode>("varP");
@@ -229,5 +224,5 @@ BOOST_AUTO_TEST_CASE(medium_expression)
     auto* div = registry.create<Nodes::DivisionNode>(sum1, neg);
 
     Visitors::CompareVisitor cmp;
-    BOOST_CHECK(cmp.dispatch(n, div));
+    BOOST_CHECK(cmp.dispatch(expr.node, div));
 }

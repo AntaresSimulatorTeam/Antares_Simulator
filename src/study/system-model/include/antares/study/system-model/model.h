@@ -39,12 +39,20 @@ namespace Antares::Study::SystemModel
 class Model
 {
 public:
+    Model() = default;
+    Model(Model&&) = default;
+    Model(const Model&) = delete;
+    ~Model() = default;
+
+    Model& operator=(Model&&) = default;
+    Model& operator=(const Model&) = delete;
+
     const std::string& Id() const
     {
         return id_;
     }
 
-    Expression Objective() const
+    const Expression& Objective() const
     {
         return objective_;
     }
@@ -84,7 +92,7 @@ class ModelBuilder
 {
 public:
     ModelBuilder& withId(std::string_view id);
-    ModelBuilder& withObjective(Expression objective);
+    ModelBuilder& withObjective(Expression&& objective);
     ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
     ModelBuilder& withVariables(std::vector<Variable>&& variables);
     ModelBuilder& withPorts(std::vector<Port>&& ports);
