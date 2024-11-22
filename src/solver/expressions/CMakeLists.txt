@@ -25,6 +25,8 @@ set(SRC_Expressions
 
         hashable.cpp
 
+	NodeRegistry.cpp
+	include/antares/solver/expressions/NodeRegistry.h
         include/antares/solver/expressions/nodes/SumNode.h
         include/antares/solver/expressions/nodes/BinaryNode.h
         include/antares/solver/expressions/nodes/ComparisonNode.h
