@@ -158,7 +158,6 @@ public:
 std::any ConvertorVisitor::visitPortField([[maybe_unused]] ExprParser::PortFieldContext* context)
 {
     throw NotImplemented("Node portfield not implemented yet");
-    return std::any();
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)

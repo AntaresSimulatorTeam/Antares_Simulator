@@ -184,7 +184,7 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
           model,
           registry);
 
-        auto nodeObjective = convertExpressionToNode(model.objective, registry, model);
+        auto* nodeObjective = convertExpressionToNode(model.objective, registry, model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(
