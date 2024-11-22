@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modelConverter/convertorVisitor.h>
 
 #include "ExprLexer.h"
