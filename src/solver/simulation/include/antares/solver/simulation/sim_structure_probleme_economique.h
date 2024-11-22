@@ -192,11 +192,9 @@ using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is loca
 struct RESULTS
 {
     // Index is the number of the STS in the area
-    std::vector<double> level;                   // MWh
-    std::vector<double> injection;               // MWh
-    std::vector<double> withdrawal;              // MWh
-    std::vector<double> costVariationInjection;  // EUR/MWh
-    std::vector<double> costVariationwithdrawal; // EUR/MWh
+    std::vector<double> level;      // MWh
+    std::vector<double> injection;  // MWh
+    std::vector<double> withdrawal; // MWh
 };
 } // namespace ShortTermStorage
 
