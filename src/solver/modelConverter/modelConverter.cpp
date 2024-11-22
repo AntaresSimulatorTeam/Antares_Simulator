@@ -142,15 +142,9 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelP
  * \return A vector of SystemModel::Constraint objects.
  */
 std::vector<Antares::Study::SystemModel::Port> convertPorts(
-  const Antares::Solver::ModelParser::Model& model)
+  [[maybe_unused]] const Antares::Solver::ModelParser::Model& model)
 {
-    std::vector<Antares::Study::SystemModel::Port> ports;
-    // TODO
-    // for (const auto& port: model.ports)
-    // {
-    //      ports.emplace_back(Antares::Study::SystemModel::Port{port.name, port.type});
-    // }
-    return ports;
+    return {};
 }
 
 std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(

@@ -65,7 +65,7 @@ std::any ConvertorVisitor::visit(antlr4::tree::ParseTree* tree)
 class NoParameterOrVariableWithThisName: public std::runtime_error
 {
 public:
-    NoParameterOrVariableWithThisName(const std::string& name):
+    explicit NoParameterOrVariableWithThisName(const std::string& name):
         runtime_error("No parameter or variable found for this identifier: " + name)
     {
     }
@@ -109,7 +109,7 @@ std::any ConvertorVisitor::visitFullexpr(ExprParser::FullexprContext* context)
 
 std::any ConvertorVisitor::visitNegation(ExprParser::NegationContext* context)
 {
-    auto n = std::any_cast<Node*>(context->expr()->accept(this));
+    Node* n = std::any_cast<Node*>(context->expr()->accept(this));
     return static_cast<Node*>(registry_.create<NegationNode>(n));
 }
 
@@ -120,8 +120,8 @@ std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* contex
 
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
 {
-    auto* left = std::any_cast<Node*>(visit(context->expr(0)));
-    auto* right = std::any_cast<Node*>(visit(context->expr(1)));
+    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
 
     std::string op = context->COMPARISON()->getText();
     if (op == "=")
@@ -140,18 +140,24 @@ std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* contex
 
 std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
 {
-    auto* left = std::any_cast<Node*>(visit(context->expr(0)));
-    auto* right = std::any_cast<Node*>(visit(context->expr(1)));
+    Node* left = std::any_cast<Node*>(visit(context->expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->expr(1)));
 
     std::string op = context->op->getText();
     return (op == "+") ? static_cast<Node*>(registry_.create<SumNode>(left, right))
                        : static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
 }
 
+class NotImplemented: public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
 // TODO implement this
 std::any ConvertorVisitor::visitPortField([[maybe_unused]] ExprParser::PortFieldContext* context)
 {
-    throw std::runtime_error(std::string("Node portfield not implemented yet"));
+    throw NotImplemented("Node portfield not implemented yet");
     return std::any();
 }
 
@@ -164,36 +170,31 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 // TODO implement this
 std::any ConvertorVisitor::visitTimeIndex([[maybe_unused]] ExprParser::TimeIndexContext* context)
 {
-    throw std::runtime_error(std::string("Node time index not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node time index not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitTimeShift([[maybe_unused]] ExprParser::TimeShiftContext* context)
 {
-    throw std::runtime_error(std::string("Node time shift not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node time shift not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitFunction([[maybe_unused]] ExprParser::FunctionContext* context)
 {
-    throw std::runtime_error(std::string("Node function not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node function not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitTimeSum([[maybe_unused]] ExprParser::TimeSumContext* context)
 {
-    throw std::runtime_error(std::string("Node time sum not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node time sum not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitAllTimeSum([[maybe_unused]] ExprParser::AllTimeSumContext* context)
 {
-    throw std::runtime_error(std::string("Node all time sum  not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node all time sum  not implemented yet");
 }
 
 // shift related, not tested
@@ -215,47 +216,41 @@ std::any ConvertorVisitor::visitUnsignedAtom(ExprParser::UnsignedAtomContext* co
 // TODO implement this
 std::any ConvertorVisitor::visitRightAtom([[maybe_unused]] ExprParser::RightAtomContext* context)
 {
-    throw std::runtime_error(std::string("Node right atom not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node right atom not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitShift([[maybe_unused]] ExprParser::ShiftContext* context)
 {
-    throw std::runtime_error(std::string("Node shift not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node shift not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitShiftAddsub(
   [[maybe_unused]] ExprParser::ShiftAddsubContext* context)
 {
-    throw std::runtime_error(std::string("Node shift add sub not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node shift add sub not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitShiftMuldiv(
   [[maybe_unused]] ExprParser::ShiftMuldivContext* context)
 {
-    throw std::runtime_error(std::string("Node shift mul div not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node shift mul div not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitRightMuldiv(
   [[maybe_unused]] ExprParser::RightMuldivContext* context)
 {
-    throw std::runtime_error(std::string("Node right mul div not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node right mul div not implemented yet");
 }
 
 // TODO implement this
 std::any ConvertorVisitor::visitSignedExpression(
   [[maybe_unused]] ExprParser::SignedExpressionContext* context)
 {
-    throw std::runtime_error(std::string("Node signed expression not implemented yet"));
-    return std::any();
+    throw NotImplemented("Node signed expression not implemented yet");
 }
 
 std::any ConvertorVisitor::visitRightExpression(ExprParser::RightExpressionContext* context)
