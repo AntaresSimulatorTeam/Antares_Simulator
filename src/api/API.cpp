@@ -66,19 +66,16 @@ SimulationResults APIInternal::execute(
         return {.simulationPath{}, .antares_problems{}, .error = err};
     }
 
-    // Only those two fields are used un simulation
     Settings settings;
-    settings.tsGeneratorsOnly = false;
-    settings.noOutput = false;
-
-    settings.optOptions = optOptions;
+    auto& parameters = study_->parameters;
+    parameters.optOptions = optOptions;
 
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
     auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
-    auto resultWriter = Solver::resultWriterFactory(study_->parameters.resultFormat,
+    auto resultWriter = Solver::resultWriterFactory(parameters.resultFormat,
                                                     study_->folderOutput,
                                                     ioQueueService,
                                                     durationCollector);

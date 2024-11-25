@@ -96,3 +96,20 @@ BOOST_AUTO_TEST_CASE(result_contains_problems)
     BOOST_CHECK(!results.error);
     BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
 }
+
+// Test where data in problems are consistant with data in study
+BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
+{
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    const Antares::Solver::Optimization::OptimizationOptions opt{.ortoolsUsed = true,
+                                                                 .ortoolsSolver = "coin",
+                                                                 .solverLogs = false,
+                                                                 .solverParameters = ""};
+
+    auto results = api.run(*study_loader.get(), opt);
+
+    BOOST_CHECK(!results.antares_problems.empty());
+    BOOST_CHECK(!results.error);
+    BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
+}
