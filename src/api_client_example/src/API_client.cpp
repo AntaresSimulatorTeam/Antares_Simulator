@@ -19,12 +19,11 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-
 #include "API_client.h"
 
 #include <utility>
 
-Antares::API::SimulationResults solve(std::filesystem::path study_path) {
-    return Antares::API::PerformSimulation(std::move(study_path));
+Antares::API::SimulationResults solve(std::filesystem::path study_path)
+{
+    return Antares::API::PerformSimulation(std::move(study_path), {});
 }
-
