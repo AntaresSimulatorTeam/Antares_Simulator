@@ -21,6 +21,7 @@
 #include "antares/solver/utils/ortools_utils.h"
 
 #include <filesystem>
+#include <optional>
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
@@ -354,33 +355,42 @@ std::string availableOrToolsSolversString()
     return solvers.str();
 }
 
-MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
+static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
 {
-    MPSolver* solver;
     try
     {
         if (isMip)
         {
-            solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName);
+            return OrtoolsUtils::solverMap.at(solverName).MIPSolverName;
         }
         else
         {
-            solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
-        }
-
-        if (!solver)
-        {
-            std::string msg_to_throw = "Solver " + solverName + " not found. \n";
-            msg_to_throw += "Please make sure that your OR-Tools install supports solver "
-                            + solverName + ".";
-
-            throw Antares::Data::AssertionError(msg_to_throw);
+            return OrtoolsUtils::solverMap.at(solverName).LPSolverName;
         }
     }
-    catch (...)
+    catch (const std::out_of_range& oor)
     {
-        Antares::logs.error() << "Solver creation failed.";
-        throw;
+        return {};
+    }
+}
+
+MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
+{
+    const std::string notFound = "Solver " + solverName
+                                 + " not found. Please use one of the following "
+                                 + availableOrToolsSolversString();
+    const Antares::Data::AssertionError assertionError(notFound);
+
+    auto internalSolverName = translateSolverName(solverName, isMip);
+    if (!internalSolverName)
+    {
+        throw assertionError;
+    }
+
+    MPSolver* solver = MPSolver::CreateSolver(*internalSolverName);
+    if (!solver)
+    {
+        throw assertionError;
     }
 
     return solver;

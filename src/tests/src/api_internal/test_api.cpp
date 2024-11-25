@@ -26,6 +26,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/antares/fatal-error.h>
+
 #include "API.h"
 #include "in-memory-study.h"
 
@@ -112,4 +114,19 @@ BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
     BOOST_CHECK(!results.antares_problems.empty());
     BOOST_CHECK(!results.error);
     BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
+}
+
+// Test where we use an invalid OR-Tools
+BOOST_AUTO_TEST_CASE(invalid_ortools_solver)
+{
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    const Antares::Solver::Optimization::OptimizationOptions opt{
+      .ortoolsUsed = true,
+      .ortoolsSolver = "this-solver-does-not-exist",
+      .solverLogs = true,
+      .solverParameters = ""};
+
+    auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader.get(), opt); };
+    BOOST_CHECK_THROW(shouldThrow(), Antares::FatalError);
 }
