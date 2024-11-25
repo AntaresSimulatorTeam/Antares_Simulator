@@ -30,11 +30,12 @@ target_include_directories(solver_api
 
 target_link_libraries(solver_api
         PRIVATE
+        Antares::file-tree-study-loader
         Antares::study
         Antares::study-loader
-        Antares::file-tree-study-loader
         antares-solver-simulation
         PUBLIC
+        Antares::optimization-options
         Antares::lps
 )
 install(DIRECTORY include/antares

@@ -20,7 +20,7 @@
 */
 
 #pragma once
-#include <antares/logs/logs.h>
+#include <string>
 
 namespace Antares::Solver::Optimization
 {

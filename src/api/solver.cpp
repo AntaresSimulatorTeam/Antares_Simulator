@@ -28,13 +28,15 @@
 namespace Antares::API
 {
 
-SimulationResults PerformSimulation(const std::filesystem::path& study_path) noexcept
+SimulationResults PerformSimulation(
+  const std::filesystem::path& study_path,
+  const Antares::Solver::Optimization::OptimizationOptions& optOptions) noexcept
 {
     try
     {
         APIInternal api;
         FileTreeStudyLoader study_loader(study_path);
-        return api.run(study_loader);
+        return api.run(study_loader, optOptions);
     }
     catch (const std::exception& e)
     {

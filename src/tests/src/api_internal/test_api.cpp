@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
     BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"no_output"});
     // Testing for "no_output" is a bit weird, but it's the only way to test this without actually
     // running the simulation
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
 
     BOOST_CHECK(!results.antares_problems.empty());
     BOOST_CHECK(!results.error);
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>(false);
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
 
     BOOST_CHECK(results.error);
 }
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(result_contains_problems)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
 
     BOOST_CHECK(!results.antares_problems.empty());
     BOOST_CHECK(!results.error);

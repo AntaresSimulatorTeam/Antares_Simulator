@@ -22,6 +22,7 @@
 #pragma once
 #include <filesystem>
 
+#include <antares/optimization-options/options.h>
 #include <antares/study-loader/IStudyLoader.h>
 #include "antares/api/SimulationResults.h"
 
@@ -46,11 +47,13 @@ public:
      * load the study that will be simulated.
      * @return SimulationResults object which contains the results of the simulation.
      */
-    SimulationResults run(const IStudyLoader& study_loader);
+    SimulationResults run(const IStudyLoader& study_loader,
+                          const Antares::Solver::Optimization::OptimizationOptions& optOptions);
 
 private:
     std::shared_ptr<Antares::Data::Study> study_;
-    SimulationResults execute() const;
+    SimulationResults execute(
+      const Antares::Solver::Optimization::OptimizationOptions& optOptions) const;
 };
 
 } // namespace Antares::API
