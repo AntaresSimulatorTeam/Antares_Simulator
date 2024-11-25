@@ -28,45 +28,5 @@
 
 namespace Antares::Solver::ModelConverter
 {
-
 NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model);
-
-/// Visitor to convert ANTLR expressions to Antares::Solver::Nodes
-class ConvertorVisitor: public ExprVisitor
-{
-public:
-    ConvertorVisitor(Registry<Nodes::Node>& registry, const ModelParser::Model& model);
-
-    std::any visit(antlr4::tree::ParseTree* tree) override;
-
-    std::any visitIdentifier(ExprParser::IdentifierContext* context) override;
-    std::any visitMuldiv(ExprParser::MuldivContext* context) override;
-    std::any visitFullexpr(ExprParser::FullexprContext* context) override;
-    std::any visitShift(ExprParser::ShiftContext* context) override;
-    std::any visitNegation(ExprParser::NegationContext* context) override;
-    std::any visitExpression(ExprParser::ExpressionContext* context) override;
-    std::any visitComparison(ExprParser::ComparisonContext* context) override;
-    std::any visitAddsub(ExprParser::AddsubContext* context) override;
-    std::any visitPortField(ExprParser::PortFieldContext* context) override;
-    std::any visitNumber(ExprParser::NumberContext* context) override;
-    std::any visitTimeIndex(ExprParser::TimeIndexContext* context) override;
-    std::any visitTimeShift(ExprParser::TimeShiftContext* context) override;
-    std::any visitFunction(ExprParser::FunctionContext* context) override;
-
-    std::any visitTimeSum(ExprParser::TimeSumContext* context) override;
-    std::any visitAllTimeSum(ExprParser::AllTimeSumContext* context) override;
-    std::any visitSignedAtom(ExprParser::SignedAtomContext* context) override;
-    std::any visitUnsignedAtom(ExprParser::UnsignedAtomContext* context) override;
-    std::any visitRightAtom(ExprParser::RightAtomContext* context) override;
-    std::any visitSignedExpression(ExprParser::SignedExpressionContext* context) override;
-    std::any visitShiftAddsub(ExprParser::ShiftAddsubContext* context) override;
-    std::any visitShiftMuldiv(ExprParser::ShiftMuldivContext* context) override;
-    std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
-    std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
-
-private:
-    Registry<Nodes::Node>& registry_;
-    const ModelParser::Model& model_;
-};
-
 } // namespace Antares::Solver::ModelConverter
