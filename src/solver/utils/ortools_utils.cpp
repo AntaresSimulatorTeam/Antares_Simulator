@@ -368,7 +368,7 @@ static std::optional<std::string> translateSolverName(const std::string& solverN
             return OrtoolsUtils::solverMap.at(solverName).LPSolverName;
         }
     }
-    catch (const std::out_of_range& oor)
+    catch (const std::out_of_range&)
     {
         return {};
     }
