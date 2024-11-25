@@ -5,8 +5,9 @@
 
 namespace Antares::Solver
 {
-struct NodeRegistry
+class NodeRegistry
 {
+public:
     NodeRegistry() = default;
     NodeRegistry(Antares::Solver::Nodes::Node* node,
                  Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry);

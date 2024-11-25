@@ -20,6 +20,9 @@
  */
 
 #pragma once
+#include <stdexcept>
+
+#include "antares/solver/modelParser/Library.h"
 
 namespace Antares
 {
@@ -41,5 +44,11 @@ class Node;
 
 namespace Antares::Solver::ModelConverter
 {
+class UnknownTypeException: public std::runtime_error
+{
+public:
+    explicit UnknownTypeException(ModelParser::ValueType type);
+};
+
 Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library);
-}
+} // namespace Antares::Solver::ModelConverter

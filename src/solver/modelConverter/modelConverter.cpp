@@ -22,7 +22,6 @@
 #include "antares/solver/modelConverter/modelConverter.h"
 
 #include "antares/solver/modelConverter/convertorVisitor.h"
-#include "antares/solver/modelParser/Library.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/expression.h"
 #include "antares/study/system-model/library.h"
@@ -34,6 +33,11 @@
 
 namespace Antares::Solver::ModelConverter
 {
+UnknownTypeException::UnknownTypeException(ModelParser::ValueType type):
+    std::runtime_error("Unknown type: " + ModelParser::toString(type))
+{
+}
+
 /**
  * \brief Converts parameters from ModelParser::Model to SystemModel::Parameter.
  *
@@ -65,7 +69,7 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
  *
  * \param type The ModelParser::ValueType to convert.
  * \return The corresponding SystemModel::ValueType.
- * \throws std::runtime_error if the type is unknown.
+ * \throws UnknownType if the type is unknown.
  */
 std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
   const Antares::Solver::ModelParser::Model& model)
@@ -101,7 +105,7 @@ Antares::Study::SystemModel::ValueType convertType(Antares::Solver::ModelParser:
     case Antares::Solver::ModelParser::ValueType::BOOL:
         return Antares::Study::SystemModel::ValueType::BOOL;
     default:
-        throw std::runtime_error("Unknown type: " + ModelParser::toString(type));
+        throw UnknownTypeException(type);
     }
 }
 

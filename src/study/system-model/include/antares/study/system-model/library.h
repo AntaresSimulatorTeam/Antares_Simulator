@@ -33,11 +33,7 @@ namespace Antares::Study::SystemModel
 class Library
 {
 public:
-    Library():
-        models_(std::make_shared<std::unordered_map<std::string, Model>>())
-    {
-    }
-
+    Library() = default;
     ~Library() = default;
 
     const std::string& Id() const
@@ -67,7 +63,8 @@ private:
     std::string description_;
 
     std::unordered_map<std::string, PortType> portTypes_;
-    std::shared_ptr<std::unordered_map<std::string, Model>> models_;
+    std::shared_ptr<std::unordered_map<std::string, Model>>
+      models_ = std::make_shared<std::unordered_map<std::string, Model>>();
 };
 
 /**

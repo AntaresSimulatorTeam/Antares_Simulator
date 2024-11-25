@@ -45,7 +45,7 @@ NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelPars
     ExprParser::ExprContext* tree = parser.expr();
     Antares::Solver::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
-    auto root = std::any_cast<Node*>(visitor.visit(tree));
+    Node* root = std::any_cast<Node*>(visitor.visit(tree));
     return NodeRegistry(root, std::move(registry));
 }
 
