@@ -66,8 +66,12 @@ BOOST_AUTO_TEST_CASE(testAddOneVarAllLiteral)
     Expression lb("-5", std::move(lb_node_registry));
     Expression ub("10", std::move(ub_node_registry));
 
+    Variable var1 = {"var1", std::move(lb), std::move(ub), ValueType::FLOAT};
+    std::vector<Variable> vec_vars;
+    vec_vars.push_back(std::move(var1));
+
     auto model = model_builder.withId("model")
-                   .withVariables({{"var1", std::move(lb), std::move(ub), ValueType::FLOAT}})
+                   .withVariables(std::move(vec_vars))
                    .build();
     ComponentBuilder component_builder;
     auto component = component_builder.withId("componentToto")

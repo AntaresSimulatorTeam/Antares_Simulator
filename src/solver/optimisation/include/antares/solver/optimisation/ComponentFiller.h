@@ -20,9 +20,9 @@
  */
 
 #pragma once
-
 #include <antares/solver/modeler/api/linearProblemFiller.h>
-#include <antares/solver/optimisation/Component.h>
+#include <antares/study/system-model/component.h>
+// #include "../../../../../../study/system-model/include/antares/study/system-model/component.h"
 
 #include "../../../../../modeler/api/include/antares/solver/modeler/api/linearProblemFiller.h"
 

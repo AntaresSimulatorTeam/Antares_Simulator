@@ -174,6 +174,7 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacyOrtoolsLinearProblem.h
         include/antares/solver/optimisation/LegacyFiller.h
         include/antares/solver/optimisation/ComponentFiller.h
+        ComponentFiller.cpp
         LegacyFiller.cpp
 )
 
