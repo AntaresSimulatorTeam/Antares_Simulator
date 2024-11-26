@@ -26,7 +26,7 @@
 namespace Antares::Study::SystemModel
 {
 
-void Component::checkComponentDataValidity(const ComponentData& data) const
+static void checkComponentDataValidity(const ComponentData& data)
 {
     // Check that mandatory attributes are not empty
     if (data.id.empty())
