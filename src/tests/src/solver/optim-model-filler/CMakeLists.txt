@@ -16,6 +16,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         Boost::unit_test_framework
         antares-study-system-model
         Antares::modeler-ortools-impl
+        Antares::optim-model-filler
 )
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES FOLDER Unit-tests)

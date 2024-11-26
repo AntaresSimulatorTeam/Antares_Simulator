@@ -173,8 +173,6 @@ set(RTESOLVER_OPT
         HebdoProblemToLpsTranslator.cpp
         include/antares/solver/optimisation/LegacyOrtoolsLinearProblem.h
         include/antares/solver/optimisation/LegacyFiller.h
-        include/antares/solver/optimisation/ComponentFiller.h
-        ComponentFiller.cpp
         LegacyFiller.cpp
 )
 
@@ -204,7 +202,6 @@ target_link_libraries(model_antares
         infeasible_problem_analysis
         Antares::modeler_api
         Antares::modeler-ortools-impl
-        Antares::antares-study-system-model
 )
 
 target_include_directories(model_antares

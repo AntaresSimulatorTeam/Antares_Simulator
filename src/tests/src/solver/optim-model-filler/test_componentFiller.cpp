@@ -26,24 +26,12 @@
 #include "antares/solver/expressions/nodes/LiteralNode.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
-#include "antares/solver/optimisation/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
 
 using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
-
-static Antares::Study::SystemModel::Component createComponent(std::string id)
-{
-    Antares::Study::SystemModel::ModelBuilder model_builder;
-    auto model = model_builder.withId("model").build();
-    Antares::Study::SystemModel::ComponentBuilder component_builder;
-    auto component = component_builder.withId(id)
-                       .withModel(&model)
-                       .withScenarioGroupId("scenario_group")
-                       .build();
-    return component;
-}
 
 BOOST_AUTO_TEST_SUITE(_ComponentFiller_)
 
@@ -77,8 +65,9 @@ BOOST_AUTO_TEST_CASE(testAddOneVarAllLiteral)
                        .withScenarioGroupId("scenario_group")
                        .build();
 
-    ComponentFiller component_filler(component);
-    LinearProblemBuilder linear_problem_builder({&component_filler});
+    auto filler = std::make_unique<ComponentFiller>(component);
+    std::vector<LinearProblemFiller*> fillers = {filler.get()};
+    LinearProblemBuilder linear_problem_builder(fillers);
 
     LinearProblemData dummy_data;
     FillContext dummy_context(0, 0);
