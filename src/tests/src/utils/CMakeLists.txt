@@ -5,6 +5,10 @@ add_library(test_utils_unit
 	unit_test_utils.cpp
         )
 
+target_link_libraries(test_utils_unit
+       PRIVATE
+       Boost::unit_test_framework)
+
 target_include_directories(
         test_utils_unit
                 PUBLIC
