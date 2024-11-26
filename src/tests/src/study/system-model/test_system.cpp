@@ -29,13 +29,12 @@
 
 using namespace Antares::Study::SystemModel;
 
-struct SystemTestFixture
+struct SystemBuilderCreationFixture
 {
-    static Component createComponent(std::string id);
     SystemBuilder system_builder;
 };
 
-Component SystemTestFixture::createComponent(std::string id)
+static Component createComponent(std::string id)
 {
     ModelBuilder model_builder;
     auto model = model_builder.withId("model").build();
@@ -49,7 +48,7 @@ Component SystemTestFixture::createComponent(std::string id)
 
 BOOST_AUTO_TEST_SUITE(_System_)
 
-BOOST_FIXTURE_TEST_CASE(nominal_build, SystemTestFixture)
+BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
 {
     auto system = system_builder.withId("system")
                     .withComponents({createComponent("component1"), createComponent("component2")})
@@ -60,7 +59,7 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemTestFixture)
     BOOST_CHECK_EQUAL(system.Components().at("component2").Id(), "component2");
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemTestFixture)
+BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemBuilderCreationFixture)
 {
     system_builder.withComponents({createComponent("component1"), createComponent("component2")});
     BOOST_CHECK_EXCEPTION(system_builder.build(),
@@ -68,7 +67,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemTestFixture)
                           checkMessage("A system can't have an empty id"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemTestFixture)
+BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemBuilderCreationFixture)
 {
     system_builder.withId("system");
     BOOST_CHECK_EXCEPTION(system_builder.build(),
@@ -76,7 +75,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemTestFixture)
                           checkMessage("A system must contain at least one component"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemTestFixture)
+BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
 {
     system_builder.withId("system").withComponents({});
     BOOST_CHECK_EXCEPTION(system_builder.build(),
@@ -84,7 +83,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemTestFixture)
                           checkMessage("A system must contain at least one component"));
 }
 
-BOOST_FIXTURE_TEST_CASE(fail_on_components_with_same_id, SystemTestFixture)
+BOOST_FIXTURE_TEST_CASE(fail_on_components_with_same_id, SystemBuilderCreationFixture)
 {
     system_builder.withId("system").withComponents({}).withComponents(
       {createComponent("component1"),

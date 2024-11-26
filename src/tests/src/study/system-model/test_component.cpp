@@ -29,14 +29,12 @@
 
 using namespace Antares::Study::SystemModel;
 
-struct ComponentTestFixture
+struct ComponentBuilderCreationFixture
 {
-    static Model createModelWithParameters();
-    static Model createModelWithoutParameters();
     ComponentBuilder component_builder;
 };
 
-Model ComponentTestFixture::createModelWithParameters()
+static Model createModelWithParameters()
 {
     ModelBuilder model_builder;
     return model_builder.withId("model")
@@ -51,13 +49,13 @@ Model ComponentTestFixture::createModelWithParameters()
       .build();
 }
 
-Model ComponentTestFixture::createModelWithoutParameters()
+static Model createModelWithoutParameters()
 {
     ModelBuilder model_builder;
     return model_builder.withId("model").build();
 }
 
-BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentTestFixture)
+BOOST_FIXTURE_TEST_SUITE(_Component_, ComponentBuilderCreationFixture)
 
 BOOST_AUTO_TEST_CASE(nominal_build_with_parameters)
 {

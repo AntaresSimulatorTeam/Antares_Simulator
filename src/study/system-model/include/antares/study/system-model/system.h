@@ -61,6 +61,7 @@ private:
     System(std::string_view id, std::vector<Component> components);
     std::string id_;
     std::unordered_map<std::string, Component> components_;
+    std::pair<std::string, Component> makeComponent(Component& component) const;
 };
 
 class SystemBuilder

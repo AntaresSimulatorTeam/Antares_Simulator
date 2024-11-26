@@ -19,8 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/study/system-model/system.h>
 #include <algorithm>
+
+#include <antares/study/system-model/system.h>
 
 namespace Antares::Study::SystemModel
 {
@@ -36,19 +37,20 @@ System::System(const std::string_view id, std::vector<Component> components):
     {
         throw std::invalid_argument("A system must contain at least one component");
     }
-    std::transform(components.begin(),
-                   components.end(),
-                   std::inserter(components_, components_.end()),
-                   [this](/*Non const to prevent copy*/ Component& component)
-                   {
-                       if (components_.contains(component.Id()))
-                       {
-                           throw std::invalid_argument(
-                             "System has at least two components with the same id ('"
-                             + component.Id() + "'), this is not supported");
-                       }
-                       return std::make_pair(component.Id(), std::move(component));
-                   });
+    std::ranges::transform(components,
+                           std::inserter(components_, components_.end()),
+                           [this](/*Non const to prevent copy*/ Component& component)
+                           { return makeComponent(component); });
+}
+
+std::pair<std::string, Component> System::makeComponent(Component& component) const
+{
+    if (components_.contains(component.Id()))
+    {
+        throw std::invalid_argument("System has at least two components with the same id ('"
+                                    + component.Id() + "'), this is not supported");
+    }
+    return std::make_pair(component.Id(), std::move(component));
 }
 
 /**
