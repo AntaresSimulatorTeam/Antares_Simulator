@@ -202,9 +202,6 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                                         pdtJour);
 
                     Xmin[varCostVariationInjection] = 0.;
-
-                    AddressForVars[varCostVariationInjection] = &STSResult.costVariationInjection
-                                                                   [storageIndex];
                 }
                 // 5. Cost Variation Withdrawal
                 // is this necessary?
@@ -215,8 +212,6 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                                          clusterGlobalIndex,
                                                          pdtJour);
                     Xmin[varCostVariationWithdrawal] = 0.;
-                    AddressForVars[varCostVariationWithdrawal] = &STSResult.costVariationwithdrawal
-                                                                    [storageIndex];
                 }
                 storageIndex++;
             }
