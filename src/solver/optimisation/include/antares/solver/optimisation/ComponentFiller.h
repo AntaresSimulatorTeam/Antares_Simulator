@@ -22,9 +22,6 @@
 #pragma once
 #include <antares/solver/modeler/api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
-// #include "../../../../../../study/system-model/include/antares/study/system-model/component.h"
-
-#include "../../../../../modeler/api/include/antares/solver/modeler/api/linearProblemFiller.h"
 
 namespace Antares::Study::SystemModel
 {
@@ -49,5 +46,8 @@ public:
     void addObjective(Solver::Modeler::Api::ILinearProblem& pb,
                       Solver::Modeler::Api::LinearProblemData& data,
                       Solver::Modeler::Api::FillContext& ctx) override;
+
+private:
+    const Study::SystemModel::Component& component_;
 };
 } // namespace Antares::Optimization

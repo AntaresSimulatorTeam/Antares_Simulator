@@ -48,6 +48,12 @@ public:
         return value_;
     }
 
+    Solver::Nodes::Node* RootNode() const
+    {
+        // TODO : add tests
+        return root_.node;
+    }
+
 private:
     std::string value_;
     Antares::Solver::NodeRegistry root_;

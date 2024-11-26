@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(testAddOneVarAllLiteral)
 {
     std::unique_ptr<ILinearProblem>
       pb = std::make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false,
-                                                                                         "SCIP");
+                                                                                         "scip");
 
     ModelBuilder model_builder;
 
@@ -70,9 +70,7 @@ BOOST_AUTO_TEST_CASE(testAddOneVarAllLiteral)
     std::vector<Variable> vec_vars;
     vec_vars.push_back(std::move(var1));
 
-    auto model = model_builder.withId("model")
-                   .withVariables(std::move(vec_vars))
-                   .build();
+    auto model = model_builder.withId("model").withVariables(std::move(vec_vars)).build();
     ComponentBuilder component_builder;
     auto component = component_builder.withId("componentToto")
                        .withModel(&model)

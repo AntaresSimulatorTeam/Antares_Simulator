@@ -69,6 +69,7 @@ public:
 
     const std::map<std::string, Variable>& Variables() const
     {
+        // TODO : convert to vector?
         return variables_;
     }
 
