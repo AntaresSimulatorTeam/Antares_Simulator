@@ -23,7 +23,6 @@
 #include <filesystem>
 #include <optional>
 
-#include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/antares/Enum.hpp"
@@ -379,18 +378,18 @@ MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
     const std::string notFound = "Solver " + solverName
                                  + " not found. Please use one of the following "
                                  + availableOrToolsSolversString();
-    const Antares::Data::AssertionError assertionError(notFound);
+    const std::invalid_argument except(notFound);
 
     auto internalSolverName = translateSolverName(solverName, isMip);
     if (!internalSolverName)
     {
-        throw assertionError;
+        throw except;
     }
 
     MPSolver* solver = MPSolver::CreateSolver(*internalSolverName);
     if (!solver)
     {
-        throw assertionError;
+        throw except;
     }
 
     return solver;

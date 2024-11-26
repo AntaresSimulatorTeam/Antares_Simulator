@@ -128,5 +128,5 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_solver)
       .solverParameters = ""};
 
     auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader.get(), opt); };
-    BOOST_CHECK_THROW(shouldThrow(), Antares::FatalError);
+    BOOST_CHECK_THROW(shouldThrow(), std::invalid_argument);
 }
