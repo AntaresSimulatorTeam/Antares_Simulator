@@ -16,6 +16,7 @@ toc_depth: 2
 #### Removed features
 * Remove hydro hotstart (#2131)
 * Remove adequacy patch lmr [ANT-1933] (#2341)
+* Possibility to disable OR-Tools. All problems are now solved through OR-Tools (#2450)
 
 #### Improvements
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
