@@ -31,7 +31,7 @@ void ShortTermStorageCostVariationWithdrawalBackward::buildConstraint(int index)
       .build();
 }
 
-void ShortTermStorageCostVariationWithdrawalBackward::add(int pdt, int pays)
+void ShortTermStorageCostVariationWithdrawalBackward::add(unsigned int pdt, unsigned int pays)
 {
     addStorageConstraint("ShortTermStorageCostVariationWithdrawalBackward", pdt, pays);
 }

@@ -31,7 +31,7 @@ void ShortTermStorageCostVariationInjectionForward::buildConstraint(int index)
       .build();
 }
 
-void ShortTermStorageCostVariationInjectionForward::add(int pdt, int pays)
+void ShortTermStorageCostVariationInjectionForward::add(unsigned int pdt, unsigned int pays)
 {
     addStorageConstraint("ShortTermStorageCostVariationInjectionForward", pdt, pays);
 }
