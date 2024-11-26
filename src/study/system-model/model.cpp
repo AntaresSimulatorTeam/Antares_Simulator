@@ -36,7 +36,7 @@ namespace Antares::Study::SystemModel
  */
 Model ModelBuilder::build()
 {
-    return model_;
+    return std::move(model_);
 }
 
 /**
@@ -57,9 +57,9 @@ ModelBuilder& ModelBuilder::withId(std::string_view id)
  * \param objective The Expression object representing the objective.
  * \return Reference to the ModelBuilder object.
  */
-ModelBuilder& ModelBuilder::withObjective(Expression objective)
+ModelBuilder& ModelBuilder::withObjective(Expression&& objective)
 {
-    model_.objective_ = objective;
+    model_.objective_ = std::move(objective);
     return *this;
 }
 

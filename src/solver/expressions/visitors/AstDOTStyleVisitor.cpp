@@ -258,7 +258,7 @@ void AstDOTStyleVisitor::EndTreeGraph(std::ostream& os)
     nbNodesPerType_.clear();
 }
 
-void AstDOTStyleVisitor::operator()(std::ostream& os, Nodes::Node* root)
+void AstDOTStyleVisitor::operator()(std::ostream& os, const Nodes::Node* root)
 {
     NewTreeGraph(os);
     dispatch(root, os);

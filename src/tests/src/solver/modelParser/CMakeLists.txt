@@ -2,6 +2,7 @@
 set(SOURCE_FILES
         testModelParser.cpp
         testModelTranslator.cpp
+        testConvertorVisitor.cpp
         test_full.cpp
         enum_operators.h
 )
@@ -13,9 +14,11 @@ add_executable(TestModelParser ${SOURCE_FILES})
 target_link_libraries(TestModelParser
         PRIVATE
         Boost::unit_test_framework
+	Antares::solver-expressions
         Antares::modelConverter
         Antares::modelParser
         Antares::antares-study-system-model
+        Antares::antlr-interface
 )
 
 # Storing test-toybox under the folder Unit-tests in the IDE

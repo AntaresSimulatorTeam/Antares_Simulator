@@ -20,12 +20,12 @@ Installed alone, the Antares simulator does not require a lot of HDD space (less
 
 - The size of the power system model (number of Areas, Links, Thermal clusters, etc.)
 - The number of ready-made Time-Series and the number of Time-Series to be generated at runtime and stored afterward
-  (see [these parameters](18-parameters.md#time-series-parameters)).
+  (see [these parameters](ts-generator/04-parameters.md#time-series-parameters)).
 - The activation of output filters
-  (see [thematic-trimming](18-parameters.md#thematic-trimming) and [geographic-trimming](18-parameters.md#geographic-trimming) parameters).
+  (see [thematic-trimming](solver/static-modeler/04-parameters.md#thematic-trimming) and [geographic-trimming](solver/static-modeler/04-parameters.md#geographic-trimming) parameters).
 - The number of Monte-Carlo years involved in the simulation session, if the storage of detailed
-  [year-by-year results](18-parameters.md#year-by-year) is activated
-- Whether [MPS export](18-parameters.md#include-exportmps) is activated
+  [year-by-year results](solver/static-modeler/04-parameters.md#year-by-year) is activated
+- Whether [MPS export](solver/static-modeler/04-parameters.md#include-exportmps) is activated
 
 If you encounter space issues, consider tweaking the aforementioned parameters or reducing your study size.
 
@@ -35,8 +35,8 @@ The amount of RAM required for a simulation depends on:
 
 - The size of the power system model (number of Areas, Links, Thermal clusters, etc.)
 - The number of ready-made Time-Series and that of Time-Series to be generated at runtime
-- The simulation [mode](18-parameters.md#mode)
-- The [unit commitment resolution mode](18-parameters.md#unit-commitment-mode)
+- The simulation [mode](solver/static-modeler/04-parameters.md#mode)
+- The [unit commitment resolution mode](solver/static-modeler/04-parameters.md#unit-commitment-mode)
 - If the [multi-threading](solver/optional-features/multi-threading.md) option is used
 
 If you encounter memory issues, consider tweaking the aforementioned parameters or reducing your study size. 

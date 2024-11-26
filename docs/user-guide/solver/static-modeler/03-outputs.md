@@ -205,7 +205,7 @@ Alike Input data, output results can be filtered so as to include only items tha
 
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](optional-features/adequacy-patch.md))
+[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](../optional-features/adequacy-patch.md))
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 

@@ -2,7 +2,7 @@
 
 In general, [Google's coding standard](https://google.github.io/styleguide/cppguide.html) is used, and we strongly encourage to read it.
 
-You can find all the steps needed to build & install Antares Simulator in the [documentation website](https://antares-simulator.readthedocs.io/) or [its sources](docs/developer-guide/0-Introduction.md).
+You can find all the steps needed to build & install Antares Simulator in the [documentation website](https://antares-simulator.readthedocs.io/) or [its sources](https://github.com/AntaresSimulatorTeam/Antares_Simulator).
 
 Below are our specific (but not all!) exceptions to the Google's coding standard:
 
@@ -19,7 +19,7 @@ Below are our specific (but not all!) exceptions to the Google's coding standard
 Naming and formatting
 
 - We ALWAYS use 4 spaces indent and don't use tabs.
-- We don't have strict limits on line width, but keep it reasonable to fit on the screen. The advised width is that written in the [src/.clang-format](src/.clang-format) file (currently 100).
+- We don't have strict limits on line width, but keep it reasonable to fit on the screen. The advised width is that written in the [src/.clang-format](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/src/.clang-format) file (currently 100).
 - Doxygen-style comments can be used.
 - Use left-to-right order for variables/params: `const string& s` (reference to the const string).
 - In one line `if`, `for`, `while` we use brackets.
@@ -74,7 +74,7 @@ The description should be short but proportional to the length or complexity of 
 When a pull request is opened, please set it to draft if it is still being worked on or not ready for review.
 
 If your Pull Request changes a part of the code that is [documented](https://antares-simulator.readthedocs.io/), 
-please update the documentation also, in the ["docs"](docs) directory.
+please update the documentation also, in the ["docs"](https://github.com/AntaresSimulatorTeam/Antares_Simulator/tree/develop/docs) directory.
 
 ## ClangFormat
 
@@ -85,7 +85,7 @@ To automatically format a file, install `clang-format` and run:
 
 clang-format 18.1.3 is the reference version, but any 18.x version should work as well. We strongly advise that you configure your IDE / text editor to automatically format code according to the clang-format style. Non-conforming code can't be merged to the develop branch.
 
-You may also use script [src/format-code.sh](src/format-code.sh) to format all the code. Generated code (ANTLR, etc.) won't be automatically formatted.
+You may also use script [src/format-code.sh](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/src/format-code.sh) to format all the code. Generated code (ANTLR, etc.) won't be automatically formatted.
 
 ## Formatting Example/Guide/Reference
 

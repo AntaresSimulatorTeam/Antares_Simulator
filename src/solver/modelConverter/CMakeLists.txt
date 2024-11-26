@@ -1,6 +1,8 @@
 set(SOURCES
         modelConverter.cpp
+        convertorVisitor.cpp
         include/antares/solver/modelConverter/modelConverter.h
+        include/antares/solver/modelConverter/convertorVisitor.h
 )
 
 # Create the library
@@ -18,6 +20,8 @@ target_link_libraries(modelConverter
         PRIVATE
         Antares::antares-study-system-model
         Antares::modelParser
+        Antares::antlr-interface
+        Antares::solver-expressions
 )
 
 install(DIRECTORY include/antares

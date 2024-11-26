@@ -5,6 +5,7 @@ toc_depth: 2
 # Antares Changelog
 
 ## Branch 9.2.x
+
 ### 9.2.0
 #### New features
 * Short term storage withdrawal efficiency [ANT-1862] (#2223)
@@ -119,25 +120,35 @@ toc_depth: 2
 * Remove unused CMake option BUILD MINIZIP (#2210)
 * Remove useless forward declaration (#2268)
 
+#### For developers
+
+* Update ortools to 9.11-rte1.1
+* Various improvement to code quality
+
 ## Branch 9.1.x
 
 ### 9.1.0 (06/2024)
+
 #### New features
+
 * Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 * Add optimization options from command line in OR-Tools / XPRESS (#1837)
 
 #### Improvements
+
 * Rationalize consistency checks on the number of columns (#2073)
 * Documentation reorganization and improvement (#2024) (#2023) (#2022)
 * Add doc for thermal heuristic (#2048)
 
 #### Bugfixes
+
 * Change the formula used in thermal clusters profits (#2097) [ANT-1719]
 * Bug on GUI: double-click on study.antares doesn't work anymore (#2047) [ANT-1634]
 * Fix build error related to Boost Test < 1.67 on OL8 (#2094)
 
 #### For developers
+
 * Update format-code.sh (#2027)
 * Update clang-format options and apply them (#2067)
 * FileTreeStudyLoader [ANT-1213] (#2058)
@@ -155,6 +166,7 @@ toc_depth: 2
 * Create & forward declare BasisStatus struct, reduce build time (#2044)
 
 #### Code quality
+
 * Simplify code for timer (#2032)
 * Refactor Application (#2056)
 * Remove some Yuni Strings in solver (#2061)
@@ -167,6 +179,7 @@ toc_depth: 2
 * Use std::clamp for sc-builder's hydro levels (#2074)
 
 #### Removed
+
 * Remove study cleaner tool (#2059)
 * Remove export target (#2053)
 * Remove unique_ptr passed by ref (#2086)
@@ -178,91 +191,126 @@ toc_depth: 2
 ## Branch 9.0.x
 
 ### 9.0.0
+
 #### License
+
 * Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
 
 #### Improvements
+
 * Include overflow variable in HydroPower constraint (#1903)
 * Add total time logging at the end of the simulation (#1908)
 * Add STS level constraint to suspect list for infeasible problem analysis (#1891)
 
 #### For developers
+
 * Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
 * Change version behavior to allow more flexibility (#1898)
 
 #### Code quality
+
 * Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
 * Fix a few compilation warnings (#1880)
 * Scratchpad numspace (#1749)
 
 #### Tests
+
 * Fix invalid index causing segfault in `test-study` test (#1902)
 
 ## Branch 8.8.x (end of support 12/2025)
+
 ### 8.8.10 (09/2024)
+
 #### Bugfix (adequacy patch)
+
 * Force enable-first-step=false [ANT-2218] (#2419)
 * Adequacy patch CSR - revamp output variables [ANT-1932] (#2421)
 * Place CSR after hydro remix [ANT-2070] (#2407)
 
 #### Bugfix (other)
+
 * Use OR-Tools v9.11-rte1.1 [ANT-2069] (#2418)
 
 ### 8.8.9 (09/2024)
+
 * Revert "Fix bug hydro heuristic with mingen (ANT-1825) (#2258)"
 
 ### 8.8.8 (09/2024)
+
 #### Bugfix
+
 * Timeseries generation stored in input (#2180)
 * Fix bug hydro heuristic with mingen (ANT-1825) (#2258)
 
 ### 8.8.7 (07/2024)
+
 #### Improvements
+
 - Add OR-Tools solver option for batchrun tool (#1981)
 
 #### Bugfix
+
 - Adequacy Patch regression [ANT-1845] #2235
 
 ### 8.8.6 (07/2024)
+
 #### Bugfix
+
 - Fix missing synthesis results for links (#2115)
+
 #### Dependencies
+
 - Update vcpkg (fix Boost)
 
 ### 8.8.5 (05/2024)
+
 #### Bugfix
+
 - [UI] Fix opening a study from the file browser
 - Fix crash occurring when duplicate thermal clusters are present in a study (same name)
 - Fix formula for "PROFIT BY PLANT"
 
 ### 8.8.4 (03/2024)
+
 #### Bugfix
+
 * Adequacy patch CSR - fix DTG MRG (#1982)
 * Fix ts numbers for no gen clusters (#1969)
 * Remove unitcount limit for time series generation (#1960)
 
 ### 8.8.3 (02/2024)
+
 #### Bugfix
-* Fix an issue where depending on the platform the output archive could contain several entries of the same area and interco files
+
+* Fix an issue where depending on the platform the output archive could contain several entries of the same area and
+  interco files
 
 ### 8.8.2
+
 #### Bugfix
-* Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
+
+* Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by
+  #1752
 * Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
 
 ### 8.8.1 (01/2024)
+
 /!\ This version has known bugs, please use 8.8.2 instead.
 
 #### Bugfix
+
 * Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
 
 #### Improvements
-* Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
+
+* Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should
+  improve performances with FICO XPRESS
 * Fail if OR-Tools solver is not found (#1851)
 * Normalize simulation mode Expansion, fix logs (#1771)
 * Add possibility to release without running any tests (#1852)
 
 #### Code quality
+
 * Use `std::unordered_map` for tmpDataByArea_ (hydro ventilation) (#1855)
 * Remove `mutable` keyword from `PROBLEME_HEBDO` (#1846)
 * Remove `Study::gotFatalError`, throw exceptions instead (#1806)
@@ -271,9 +319,11 @@ toc_depth: 2
 * Remove `YUNI_STATIC_ASSERT` (#1863)
 
 #### Testing
+
 * Add tests on short-term storage/thermal cluster/renewable cluster removal (#1841)
 
 #### Doc
+
 * Add precision about `enabled` field in ST storage (#1850)
 * Use dedicated URL path for Doxygen, instead of root (#1865)
 * Fix HTML generation for readthedocs (#1867)
@@ -283,12 +333,14 @@ toc_depth: 2
 --------------------
 
 #### New features
+
 * New "cash-flow" variable for ST storage (#1633)
 * Experimental optimization with discrete variables (MILP unit-commitment mode #670)
 * Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
 * Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini
 
 #### Improvements
+
 * Add shortcut -s for names MPS problems in CLI options (#1613)
 * Use 50% as a default value for ST-storage property initiallevel (#1632)
 * Add warning logs for non-existent output variable (#1638)
@@ -298,13 +350,16 @@ toc_depth: 2
 * New log msg when solver not found in or-tools (#1687)
 
 #### For developers
+
 * Fix annoying error log about correlation matrices in tests (#1573)
 
 #### Bugfixes (reported by users)
+
 * Fix output variable PROFIT for thermal clusters (#1767)
 * Bug on renewable cluster (wrong group) (#1631)
 
 #### Bugfixes (reported internally)
+
 * Fix oracle-linux8 binaries missing compression feature (#1741)
 * Named MPS - fix duplicated "ranged" binding constraints (#1569)
 * Fix save for short term storage objects (#1807)
@@ -317,21 +372,25 @@ toc_depth: 2
 * Fix writer causing a segfault with OR-Tools (#1584)
 
 #### Documentation
+
 * Create Doxygen documentation (#1650)
 * Update README.md (#1654)
 * Add advice for developers (#1639)
 * Document the usage of XPRESS (#1596)
 
 #### GUI
+
 * Fix regression on cluster renaming, add unit tests (#1699)
 
 #### Dependencies
+
 * Use minizip-ng 4.0.1 (from 3.0.7) (#1696)
 * Bump vcpkg to latest tag (2023.07.21) (#1532)
 * Remove dead code yuni-docmake (#1544)
 * Remove fixed-size ints from Yuni (#1622, #1629)
 
 #### Code cleaning / quality
+
 * Architecture Decision Record for Study breakdown (#1600)
 * Remove dependency to UI, use RAII to handle resources (#1678)
 * De-templatize `HydroManagement::prepareNetDemand` (#1679)
@@ -373,6 +432,7 @@ toc_depth: 2
 * Remove tmpnam from tests (#1506)
 
 #### Build
+
 * ACR CMake (#1551)
 * Add "Antares::action" CMake library, build only if BUILD_UI=ON (#1637)
 * Fix conflicting library name (#1590)
@@ -385,55 +445,71 @@ toc_depth: 2
 * Fix build for Oracle Linux 8 (#1542)
 
 #### Misc
+
 * Schedule deps compile instead of develop merge (#1530)
 
 ## Branch 8.7.x
 
 ### 8.7.3 (02/2024)
+
 #### Bugfix
+
 * Use OR-Tools v9.8-rte1.0 (performance improvements with OR-Tools + XPRESS)
 
 ### 8.7.2 (11/2023)
+
 #### Bugfix
+
 * Named MPS - fix duplicated "ranged" binding constraints (#1569)
 
 ### 8.7.1 (11/2023)
+
 #### Bugfix
+
 * Fix output variable PROFIT for thermal clusters (#1767)
 
 ### 8.7.0 (08/2023)
+
 #### New Features
+
 * Binding constraint RHS scenarization (#1219)
 * Implement --mps-export command-line option (#1404)
 * Name constraints & variables in MPS files using --named-mps-problems command-lin e option (#1294)
 * Thermal price definition (contributed by RTE-i, #1272)
 
 #### Improvements
+
 * Write full command-line instead of solver location in logs (#1518)
 
 #### Packages
+
 * Give Oracle Linux 8 assets a proper name instead of "unknown" (#1438)
 * Don't build tools (study-updater, etc.) by default (#1442)
 
 #### Bugfixes
+
 * Fix error when writing files over 80Mb into a zip (#1488)
 * Fix memory leaks (#1468)
 * Fix segfault, add !skipped to enabled constraints (#1441)
 * Backport [v8.4.3](#v843-082023) changes
 
 #### GUI
+
 * Thermal price definition (RTEi's -> CR20) - UI (#1485)
 
 #### Docs
+
 * Fix possible values for ST storage (#1455)
 
 #### Tests
+
 * Add named MPS tests  (#1408)
 * Enforce better unit test isolation (#1486)
 * Add tests for Windows CI when job is scheduled (#1483)
 * Tests for CR20: thermal price definition (#1364), improvements (#1422)
 
 #### For developers
+
 * Remove platform-specific headers (#1523)
 * Remove one `goto` instruction in OPT (#1522)
 * Remove study singleton in application signal handlers (#1513)
@@ -463,53 +539,76 @@ toc_depth: 2
 * Array, logs jit and correlation in makefile (#1410)
 
 ## Branch 8.6.x (end of support 06/2025)
+
 ### 8.6.8 (07/2024)
+
 #### Bugfix
+
 - [UI] Remove propery storagecycle for short term storage added when saving a study (#2037)
+
 #### Dependencies
+
 - Update vcpkg (fix Boost)
 
 ### 8.6.7 (05/2024)
+
 #### Bugfixes
-* Fix formula use in output var Profit by plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
+
+* Fix formula use in output var Profit by
+  plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
 
 ### 8.6.6 (03/2024)
+
 #### Bugfixes
+
 * Adequacy patch CSR - fix DTG MRG (#1982)
 * Fix ts numbers for no gen clusters (#1969)
 * Remove unitcount limit for time series generation (#1960)
 
 ### 8.6.5 (02/2024)
+
 #### Bugfix
+
 * Use OR-Tools v9.8-rte1.0 (performance improvements with OR-Tools + XPRESS)
 
 ### 8.6.4 (11/2023)
+
 #### Bugfixes
+
 * Fix Oracle Linux minizip build + actually run zip unit tests (#1744)
 * Fix output variable PROFIT for thermal clusters (#1767)
 
 ### 8.6.3 (10/2023)
+
 #### Bugfixes
+
 * Increase file size limit from 80Mo to 80Go when reading file. Fix issue on Windows
 
 ### 8.6.2 (08/2023)
+
 #### Bugfixes
+
 * Backport [v8.4.3](#v843-082023) changes
 
 ### 8.6.1 (06/2023)
 --------------------
+
 #### Bugfixes
+
 * Fix major bug related to short-term storage & MRG. PRICE (#1377)
 
 ### 8.6.0 (06/2023)
 --------------------
+
 #### New features
+
 * Short-term storage (#1163).
 * Add pollutant emissions (#1184, #1222)
 * Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
 * Make LMR optional for adequacy patch (#1247)
 
 #### Improvements
+
 * Use ISO8601 for date format in the logs (#1303)
 * Publish installers for Oracle Linux 8 (#1341)
 * Remove doc from UI/package, publish it as a separate PDF (#1233)
@@ -517,11 +616,13 @@ toc_depth: 2
 * Performance metrics (produce a JSON file) (#1306)
 
 #### Bugfixes
+
 * Fix a bug in adequacy study mode (#1314)
 * Fix memory errors detected by valgrind (#1302)
 * Fix empty ROR & STORAGE in output using the TS-Generator (#1293)
 
 #### Code quality
+
 * Simplify if/else (#1309)
 * Max number of columns in an output file (#1159)
 * Fix a few compilation warnings (int -> uint) (#1301)
@@ -535,69 +636,87 @@ toc_depth: 2
 * Remove group{Min,Max}Count, annuityInvestment in thermal clusters (#1350)
 
 #### For developers
-* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
+
+* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (
+  previously 8.13).
+
 ## Branch 8.5.x
 
 ### 8.5.1 (08/2023)
 --------------------
+
 #### Changes
+
 * Backport [v8.4.3](#v843-082023) changes
 
 ### 8.5.0 (02/2022)
 --------------------
+
 #### New features
-* Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
+
+* Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature
+  was contributed by RTE-i with support from RTE, ELIA and APG.
 
 #### Bugfix
+
 * Hydraulic patch #697
 * Fix link path error in Kirchhoff constraint builder #1157
 
 #### For developers
+
 * Fix build on Ubuntu 22.04 #1160
 * Cleaning #1142, 1146, #1149
 
 #### Examples & documentation
+
 * Update docs to include CSR #1156
 * Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
+
 ## Branch 8.4.x
 
 ### 8.4.3 (08/2023)
 --------------------
 
 #### Features
+
 * Increase file size limit from 80Mo to 80Go when reading file.
 
 #### Bugfix
-* Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
 
+* Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
 
 ### 8.4.2 (01/2022)
 --------------------
 
 #### Improvements
+
 * Generate a solver-only asset for every release #976, #1080
 * Use MPS writer from solvers, instead of copy-pasted functions #1023
 
 #### GUI
+
 * Allow more than 100 thermal clusters #1011
 * Remove status bar count. The sum was sometimes wrong #1029
 * Remove unused "District marginal prices" button from Advanced Parameters #1067
 
 #### Bugfix
+
 * Fix overwritten MPS files when optimization/simplex-range=day #1041
 * Restore warm start for OR-Tools+XPRESS #1079
 * Fix output overwrite when using zip output by adding a -2, -3, etc. suffix #1044
 * Fix crash when generaldata.ini is empty, using default values #892
 
-
 #### Testing
+
 * Introduce missing MPS comparison tests #1035
 
 #### For developers
+
 * Fix empty CMAKE_BUILD_TYPE #1028
 * Fix memory leaks #669
 
 #### Code cleaning
+
 * Clean up Yuni #1055
 * Remove default implementation for hourEnd (see variable.hxx) #1020
 * Remove free functions for areas' mem allocation #922
@@ -605,12 +724,13 @@ toc_depth: 2
 * Remove unused `ContrainteDeReserveJMoins1ParZone`, `NumeroDeVariableDefaillanceEnReserve` #1047
 * Extract code related to spilled energy bounds #1049
 * Simplify code for adq patch (Local matching) #1054
-* Refactor naming for {MPS, criterion, etc.} files and exported structures (see parameter optimization/include-exportstructure) #1030
+* Refactor naming for {MPS, criterion, etc.} files and exported structures (see parameter
+  optimization/include-exportstructure) #1030
 * Refactor: move current year and week from study to weekly optimization problem #1032
 * Pass optimization number as an argument #1040
 
-
 #### New Contributors
+
 * @JasonMarechal25 made their first contribution in #1055
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.4.1...v8.4.2
@@ -619,12 +739,14 @@ toc_depth: 2
 --------------------
 
 #### Bugfix
+
 * Fix formula for profit calculation #1022
 
 ### 8.4.0 (12/2022)
 --------------------
 
 #### Features
+
 * Add option & command-line argument to write results into a single zip archive #794
 * Add option to set link capacity to null/infinity for physical links only #792
 * Speed up simulations by extracting simplex basis in XPRESS/OR-Tools #957
@@ -633,9 +755,11 @@ toc_depth: 2
 * Enable MPS write with OR-Tools+Sirius
 
 #### GUI
+
 * Make sure that RC/beta are displayed in version numbers #739
 
 #### Bugfix
+
 * Remove error message printed on -h/--help in antares-solver #895
 * Use average for BC MARG PRICE (daily & weekly) #940
 * Fix crash when exporting MPS with OR-Tools #923
@@ -648,6 +772,7 @@ toc_depth: 2
 * Add condition to avoid null pointer by @payetvin in #989
 
 #### For developers
+
 * Case insensitive option for build type by @payetvin in #986
 * [DEV] Refactored ortools_utils by @payetvin in #978
 * [CI] Integrate ortools v9.2-rte2.0 by @payetvin in #1007
@@ -660,37 +785,47 @@ toc_depth: 2
 * Use GIT_SHALLOW for OR-Tools's FetchContent #904
 * Remove antares-solver swap variant & librairies, reduce build duration #906
 
-
 #### Documentation
+
 * [DOC] OR-Tools build #880
 * Document how to run JSON tests #902
 * Document option --list-solvers #770
 
 #### New Contributors
+
 * @kathvargasr made their first contribution in #967
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
 
 ## Older branches
+
 ### 8.3.3 (12/2022)
 --------------------
+
 #### Bugfix
+
 - Round renewable production (#985)
 
 ### 8.3.2 (09/2022)
 --------------------
+
 #### Output aggregation change
-- Daily, weekly, monthtly & annual values for link variable "MARG. COST" (EUR/MWh) was previously obtained by a sum. It now computed by average (#881).
+
+- Daily, weekly, monthtly & annual values for link variable "MARG. COST" (EUR/MWh) was previously obtained by a sum. It
+  now computed by average (#881).
 
 #### New features
+
 - Add new BC marginal price output variable (#801)
 - Add Antares logo in solver logs (#861)
 - Add XPRESS-compatible assets for Ubuntu. Windows coming soon.
 
 #### GUI
+
 - In the "Links" panel, replace "Flat" view by "By area" view (#755)
 
 #### Bug fixes
+
 - Fix segfault when more than 9 renewable clusters are present in an area (#869)
 - Fix segfault related to the digest occurring when many thermal clusters are present (#852)
 - Statistics: use std::mutex / std::atomic<> to prevent concurrent writes (#838)
@@ -699,6 +834,7 @@ toc_depth: 2
 - MPS for the 1st optimization were erased by the one related to the 2nd optimization. Fixed (#863).
 
 #### For developers
+
 - Simplify day ahead reserve condition (#777)
 - Remove unused "shedding strategy" (#788)
 - Refactor Layers by adding a LayerData class (#866)
@@ -710,29 +846,40 @@ toc_depth: 2
 - Simplify tuneSolverSpecificOptions (#829)
 
 #### Documentation
+
 - Input and output format due to addition of BC marginal prices (#836)
 - Fix e-mail address and website (#834)
 
 ### 8.3.1 (08/2022)
 --------------------
+
 #### New features
+
 - Add execution-info.ini output file, containing execution durations and study info #740 #803 #816
 - OR-Tools: set solver-specific options for XPRESS #796
 
 #### Bug fixes
+
 - Fix missing renewable columns in districts (sets of areas) #802
 
 #### GUI
+
 - Fix wrong number of cores in the "Run a simulation" window #793
 
 #### For developers
+
 - Bump C++11 to C++17
 
 ### 8.3.0 (07/2022)
 --------------------
+
 #### New features
-- Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
-- Add output variable "profit by cluster". This variable represents the difference between proportional costs and marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
+
+- Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by
+  RTE-i with support from RTE, ELIA and APG #657
+- Add output variable "profit by cluster". This variable represents the difference between proportional costs and
+  marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a
+  thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
 - Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631(*)
 - Add option to enable the splitting of exported MPS files. This feature is intended to be used by Antares Xpansion.
 - Add --list-solvers command-line argument, to list linear solvers available through OR-Tools
@@ -741,6 +888,7 @@ toc_depth: 2
 (*) May not work with the Sirius solver. Consider using other solvers through OR-Tools
 
 #### Bug fixes
+
 - Fix segfault occuring when inter/intramodal correlation is enabled and TS width are inconsistent #694
 - Fix logging of performed MC years when running jobs in parallel #680
 - Fix a crash occuring in studies where an area contains 100+ thermal clusters (#753)
@@ -750,6 +898,7 @@ toc_depth: 2
 - UI - Fix GUI freeze when using multiple map layers (#721)
 
 #### For developers
+
 - Display the git commit-id in the logs for debugging & diagnosis purposes #698
 - Code cleaning in hydro heuristic #671
 - Use antares-deps 2.0.2, which now excludes OR-Tools #684
@@ -757,30 +906,40 @@ toc_depth: 2
 - Code cleaning #663 #665 #666 #687 #725 #667 #668 #730
 
 #### Misc. improvements
+
 - Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
 - Upgrade examples 8.1 -> 8.3 (#733)
 
 ### 8.2.3 (11/2022)
 --------------------
+
 #### Bug fixes
+
 - Round renewable production (#985)
 
 ### 8.2.2 (04/2022)
 --------------------
+
 #### Bug fixes
+
 - Fix solver crash on parsing command-line parameters #624
+
 #### GUI
+
 - Fix crash occuring when switching to the links panel #658
 
 ### 8.2.1 (03/2022)
 --------------------
+
 #### Bug fixes
+
 - Fix scenario builder data loss when renaming area #610
 - Write 1 in the ts-numbers when series.width == 1 #609
 - Add noise to the cost vector in the allocation problems to enforce uniqueness #622
 - Linux only : fix segfault occurring when an INI file does not exist #606
 
 #### GUI
+
 - Place "Dataset > Resize columns to..." in first position #607
 - Allow that all NTC be 0 in one direction #595
 - Fix occasional crash when opening the links panel #594
@@ -790,24 +949,32 @@ toc_depth: 2
 
 ### 8.2.0 (03/2022)
 --------------------
+
 #### New features
-- Multiple timeseries for link capacities (NTC). It is now possible to establish different scenarios for the capacity of a link. Users can now take partial or total outages for links into account #520
-- Infeasible problem analyzer. When the underlying problem has no solution, list the most suspicious constraints in a report. This should help users identify faulty binding constraints #431
+
+- Multiple timeseries for link capacities (NTC). It is now possible to establish different scenarios for the capacity of
+  a link. Users can now take partial or total outages for links into account #520
+- Infeasible problem analyzer. When the underlying problem has no solution, list the most suspicious constraints in a
+  report. This should help users identify faulty binding constraints #431
 - Add a hydro-debug switch that allows the printing of some useful debug data in heuristic mode #254
 
 #### GUI
+
 - Add a "view results" button in the dialog that appears when a simulation has been completed #511
 - Help menu : add an "online documentation" item #509
 - Improve UI for new thermal parameter "tsGenBehavior" #534
 - Improve cell styles when loop-flow is enabled for a link #571
 
 #### Bug fixes
+
 - Prevent an area from having a link to itself #531
 - Fix crash when the study folder does not exist #521
 - Fix crash when failing to load a study #502
 
 #### For developers
-- Remove calls to exit() #505. Provide consistent return values for antares-solver by fixing a segfault related to the log object #522
+
+- Remove calls to exit() #505. Provide consistent return values for antares-solver by fixing a segfault related to the
+  log object #522
 - Remove calls to setjmp, goto's big brother #527
 - Large refactor of antares-solver's main function, hoping to make error management easier to understand #521
 - Use std::shared_ptr instead of Yuni::SmartPtr in most cases #529
@@ -817,36 +984,51 @@ toc_depth: 2
 --------------------
 
 #### Bug fixes
+
 - Fix segfault occurring randomly when thermal clusters are disabled (#472)
-- Fix hydro level discontinuities (#491). Very rarely, hydro reservoirs would inexplicably be filled from 0% to 100% in 1h, this violating the modelling constraints.
-- Execution times when the Sirius solver is used in conjunction with OR-Tools are now similar as with Sirius alone. This is a result of [this fix](https://github.com/AntaresSimulatorTeam/or-tools/pull/1), related to "hot-start".
+- Fix hydro level discontinuities (#491). Very rarely, hydro reservoirs would inexplicably be filled from 0% to 100% in
+  1h, this violating the modelling constraints.
+- Execution times when the Sirius solver is used in conjunction with OR-Tools are now similar as with Sirius alone. This
+  is a result of [this fix](https://github.com/AntaresSimulatorTeam/or-tools/pull/1), related to "hot-start".
 
 #### GUI
+
 - Speed up scrolling (#395)
 - Warn the user about disabled renewable clusters only when relevant (#386)
 
 #### Packages
-Include antares-analyzer into .zip and .tar.gz archives (#470). This is especially useful if you use the portable version of Antares.
+
+Include antares-analyzer into .zip and .tar.gz archives (#470). This is especially useful if you use the portable
+version of Antares.
 
 #### For developers
-In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in particular gcc 9. This allows for C++17 features to be used without hassle.
+
+In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in particular gcc 9. This allows for C++17
+features to be used without hassle.
 
 
 ### 8.1.0 (09/2021)
 --------------------
 
 #### New features
-- Allow up to 9 RES groups (off-shore wind, on-shore wind, rooftop solar, PV solar, etc.) as opposed to wind and solar previously. This allows the user to distinguish between more renewable energy sources. When creating a new study, renewable generation modelling is set to "clusters" by default. This change does not affect opening an existing study. Note that TS generation is not available for these new RES groups.
+
+- Allow up to 9 RES groups (off-shore wind, on-shore wind, rooftop solar, PV solar, etc.) as opposed to wind and solar
+  previously. This allows the user to distinguish between more renewable energy sources. When creating a new study,
+  renewable generation modelling is set to "clusters" by default. This change does not affect opening an existing study.
+  Note that TS generation is not available for these new RES groups.
 - Add 3 thermal groups, named other, other 2, other 3 and other 4.
 
 #### Bug fixes
+
 - When a binding constraint is marked as skipped in the GUI, disable it in the solver #366
 
 #### GUI
+
 - Keep selection on thermal/renewable cluster when its group changes #360
 - Dialogs "Thematic trimming" and "User playlist" are now resizable
 
 #### For developers
+
 - Add non-regression tests on each release
 - Fix vcpkg on Github Actions
 - Add build cache for Github Actions to speed up the build (Linux only)
@@ -877,6 +1059,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 ### 8.0.1 (03/2021)
 -------------------- 
+
 #### Features
 
 - Add "Continue Offline" button at startup if antares metric server is unreachable
@@ -886,7 +1069,8 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Error with hydro start when using scenario playlist and stochastic TS refresh span
 - Files needed for antares-xpansion not exported when using scenario playlist with first year disabled
 - Correction of crash if user define a stochastic TS refresh span of 0 : minimum value is now 0
-- Correction of MC years playlist weight write when sum of weight was equal to number oy years (no MC years playlist export in .ini)
+- Correction of MC years playlist weight write when sum of weight was equal to number oy years (no MC years playlist
+  export in .ini)
 
 #### For developers
 
@@ -899,10 +1083,12 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 #### Features
 
 - OR-Tools integration :
-    - add command line option in antares-solver to define OR-Tools use and OR-Tools solver (option --use-ortools and --ortools-solver='solver')
+    - add command line option in antares-solver to define OR-Tools use and OR-Tools solver (option --use-ortools and
+      --ortools-solver='solver')
     - add GUI option in run simulation to define antares-solver launch with OR-Tools option
 
-- Add advanced hydro allocation feature. The default and existing behavior is to accomodate the guide curves, the new behavior is to maximize generation, even if it means that the reservoir level goes beyond the guide curves.
+- Add advanced hydro allocation feature. The default and existing behavior is to accomodate the guide curves, the new
+  behavior is to maximize generation, even if it means that the reservoir level goes beyond the guide curves.
 
 - Add indication on how to disable anonymous metrics
 
@@ -932,19 +1118,24 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 #### Bug fixes
 
-- Selecting an area and then, from the inspector, trying to select a thermal cluster or a link of this area in the dependencies
+- Selecting an area and then, from the inspector, trying to select a thermal cluster or a link of this area in the
+  dependencies
   section causes a crash. The inspector's cluster/link selection was removed.
 - Scenario builder :
-    - It makes no sense for the user to access the scenario builder Configure menu item whereas the Building mode parameter is set
+    - It makes no sense for the user to access the scenario builder Configure menu item whereas the Building mode
+      parameter is set
       to Automatic or Derated. In the previous cases, the Configute menu item is disabled.
-    - If a disabled thermal cluster is given a time series number in a non active rule of the scenario builder, a warning should not be
-      triggered. If the disabled cluster is given a number for many MC years in the active rule, a single summary warning should be raised,
+    - If a disabled thermal cluster is given a time series number in a non active rule of the scenario builder, a
+      warning should not be
+      triggered. If the disabled cluster is given a number for many MC years in the active rule, a single summary
+      warning should be raised,
       not a warning per year.
 
 #### For developers
 
 - External dependencies :
-    - use of new repository [antares-deps](https://github.com/AntaresSimulatorTeam/antares-deps) for external dependencies compilation
+    - use of new repository [antares-deps](https://github.com/AntaresSimulatorTeam/antares-deps) for external
+      dependencies compilation
 
 - Fix several compilation warnings
 - Remove unused `COUT_TRANSPORT` constant
@@ -957,7 +1148,8 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - continuous integration :
     - use docker images in CI
     - use of antares-deps release artifact in CI
-    - push of docker image to dockerHub in [antaresrte/rte-antares repository](https://hub.docker.com/repository/docker/antaresrte/rte-antares)
+    - push of docker image to dockerHub
+      in [antaresrte/rte-antares repository](https://hub.docker.com/repository/docker/antaresrte/rte-antares)
     - add Centos7 support
 
 - Unit tests :
@@ -975,7 +1167,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Simulation dashboard: A new  "Geographic Trimming" option
   is now available in the "Configure" menu. This option makes
-  it possible to  filter the simulation's output content so as
+  it possible to filter the simulation's output content so as
   to include only results regarding Areas and Links of interest
 
 - Optimization:  a new parameter "Unfeasible Problems Behavior"
@@ -1158,7 +1350,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   New link parameters (one value)		
   Asset type (AC,DC,Gas,Virtual,Other) : KCG deals only with AC links
   "account for loop flow" toggle
-  "tune PST"		toggle
+  "tune PST"        toggle
   KCG generating directives:
   Working map to use for generation
   Calendar to use for constraints activation (relaxation outside)
@@ -1192,18 +1384,18 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   Res.level initialization date: redefined at the monthly scale
   New hydro variables and parameters:
   Input : max daily hydro generating energy
-  max daily hydro pumping	energy and power
-  monthly-to-daily  inflow breakdown pattern
+  max daily hydro pumping energy and power
+  monthly-to-daily inflow breakdown pattern
   water value (time, level)
   modulation of max generating power (level)
   modulation of max pumping power    (level)
   pumping efficiency
   +many "storage management options" parameters
-  Output: Reservoir level 	(H.LEV)
-  Water value 		(H.VAL)
-  Pumping power		(H.PUMP)
-  Natural Inflow		(H.INFL)
-  Forced Overflow		(H.OVFL)
+  Output: Reservoir level    (H.LEV)
+  Water value        (H.VAL)
+  Pumping power        (H.PUMP)
+  Natural Inflow        (H.INFL)
+  Forced Overflow        (H.OVFL)
   Cost of Gen+Pumping (H.COST)
   Optimization preferences:
   "Hot/Cold start" (year N may start or not at the final N-1 level)
@@ -1232,7 +1424,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Output: the link-variable "MARG.COST" was rounded to an integer
   value (changed to 2 decimal accuracy)
-
 
 ### 6.1.3 (06/2018)
 ---------------- 
@@ -1264,7 +1455,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Example library : upgraded to 6.1 and extended
 
-
 ### 6.1.2 (11/2017)
 ---------------- 
 
@@ -1273,14 +1463,12 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Solver, Simplexe package: Improvement of the Scaling stage
   (Matrix, right hand side, costs)
 
-
 ### 6.1.1 (11/2017)
 ---------------- 
 
 #### Features
 
 - Solver: Light changes in Presolve stage
-
 
 ### 6.1.0 (09/2017)
 ---------------- 
@@ -1290,9 +1478,8 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - GUI and simulation: "binding constraints" objects may now involve
   not only flows on interconnections but also power generated from
   thermal clusters. Alike flows, generation from thermal clusters may
-  be handled either on an hourly, daily or weekly basis and  may be
+  be handled either on an hourly, daily or weekly basis and may be
   associated with arbitrary offsets (time-lags expressed in hours).
-
 
 ### 6.0.6 (07/2017)
 ---------------- 
@@ -1304,8 +1491,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Solver: strenghtening of the final admissibility check step in the "accurate"
   commitment mode
-
-
 
 ### 6.0.5 (07/2017)
 ---------------- 
@@ -1321,7 +1506,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Study Cleaner: Unwarranted removal of the graphic multi-map lay-out could occur when
   cleaning datasets  (detected as of 6.0.0)
 
-
 ### 6.0.4 (06/2017)
 ---------------- 
 
@@ -1332,7 +1516,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Simulation: Negative "ROW Balance" is properly included in
   unsupplied energy allowances
-
 
 ### 6.0.3 (06/2017)
 ---------------- 
@@ -1348,12 +1531,11 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   current map was sometimes wrongly initialized (Area considered
   selected though not explicitly clicked on yet)
 
--  GUI: The order in which binding constraint terms are shown in the
-   "summary" Window could depend on the execution platform used
+- GUI: The order in which binding constraint terms are shown in the
+  "summary" Window could depend on the execution platform used
 
--  GUI: The Antares study icon could not be properly copied in some
-   circumstances
-
+- GUI: The Antares study icon could not be properly copied in some
+  circumstances
 
 ### 6.0.2 (06/2017)
 ---------------- 
@@ -1371,7 +1553,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   reached could be ambiguous when identical results are found for
   two years ore more.
 
-
 ### 6.0.1 (05/2017)
 ---------------- 
 
@@ -1381,7 +1562,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   are generated and stored in the same way, regardless of their activity
   status (unabled/disabled). This makes easier to check data consistency
 
-- Simulation: Upper bounds for spilled power and unsupplied power	are
+- Simulation: Upper bounds for spilled power and unsupplied power are
   actually set to their maximum theoretical value(i.e. if economic
   conditions make it justified: spill all power or shed all demand)
   So far, spillage of power that could be absorbed by the local demand
@@ -1399,7 +1580,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   automatic simulation sequences taking into account the simplifications
   listed above
 
-
 ### 6.0.0 (04/2017)
 ---------------- 
 
@@ -1415,10 +1595,10 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   in multiple Antares sessions
 
 - Simulation: Introduction of a flexible multi-threaded mode for the processing
-  of  heavy problems: Antares "Monte-Carlo years" can be be distributed on a
+  of heavy problems: Antares "Monte-Carlo years" can be be distributed on a
   number of CPU cores freely set by the user. This parameter appears as a new
-  tunable item of the  "advanced parameters" list  attached to any Antares Study.
-  Five values are available in the [1, N] interval,  N being the number of CPU
+  tunable item of the  "advanced parameters" list attached to any Antares Study.
+  Five values are available in the [1, N] interval, N being the number of CPU
   cores of the machine (virtual or physical) Antares is run on
 
 - License control through the internet: a new system has been developed for
@@ -1435,7 +1615,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   Simulator, brings the ability to schedule basic data management tasks
   such as study archiving/expansion (use of a specific compressed format),
   copy to backup folders, registering of studies and archives in catalogues.
-
 
 ### 5.0.9-SE (04/2017)
 ---------------- 
@@ -1457,14 +1636,12 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - License control : management of SSL certificates encrypted through SHA-256 algorithm
 
-
 ### 5.0.7 (12/2016)
 ---------------- 
 
 #### Bug fixes
 
 - Fixing a packaging error
-
 
 ### 5.0.6 (12/2016)
 ---------------- 
@@ -1477,7 +1654,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - GUI: when the scenario builder feature is active, saving right after deleting
   a thermal cluster could result in a partial dataset corruption (references to
   the deleted object were kept alive in the scenario builder context)
-
 
 #### Features
 
@@ -1495,14 +1671,12 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   on the first hour of the year, were re-written to be compatible with the next
   versions of Antares, which will be fully multi-threaded
 
-
-
 ### 5.0.5 (08/2016)
 ---------------- 
 
 #### Bug fixes
 
-- No-Load Heat costs and  Start-up costs: in the "fast" unit commitment options,
+- No-Load Heat costs and Start-up costs: in the "fast" unit commitment options,
   the result was slightly below the actual optimal possible cost for some
   datasets (i.e. datasets in which the thermal cluster coming last in alphabetic
   order had a minimum stable power equal to zero).
@@ -1510,7 +1684,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Spilled energy control: the three parameters defining how energy in excess should
   be split between the different possible sources when there is a choice to make
   can work properly again (feature inhibited in previous 5.0.x versions)
-
 
 #### Features
 
@@ -1520,7 +1693,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Economic optimization: in an area where the amount of available thermal power
   exceeds that of load, the fact that the demand should necessarily be served
   is locally expressed as a constraint of the optimization problem  (LOLE=0)
-
 
 ### 5.0.4 (05/2016)
 ---------------- 
@@ -1537,7 +1709,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Binding constraints including offset parameters: unbounded positive or
   negative values can be used for all classes of constraints (hourly, daily, weekly)
 
-
 ### 5.0.3 (05/2016)
 ---------------- 
 
@@ -1545,7 +1716,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Crashes occured when the "full must-run status" parameter was set on
   "true" for thermal clusters
-
 
 ### 5.0.2 (04/2016)
 ---------------- 
@@ -1560,7 +1730,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   each month incorporates heavier penalization terms for the 12 deviations from the
   theoretical monthly targets (formerly, only the largest deviation was penalized).
 
-
 ### 5.0.1 (04/2016)
 ---------------- 
 
@@ -1571,7 +1740,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - In the previous version, additional logs were added. That could lower the simulation
   performances in some cases. This problem is now solved.
-
 
 ### 5.0.0 (03/2016)
 ---------------- 
@@ -1603,7 +1771,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Output, File comparison functions: calendar marks were not properly displayed in some views
 
 - Output, File comparison functions: "Max" operator has been added
-
 
 #### Features
 
@@ -1638,8 +1805,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Output: In synthetic Monte-Carlo results,year-by-year results and cluster-by-cluster results,
   Addition of a field "Number of dispatched units" (NODU)
 
-
-
 ### 4.5.4 (03/2015)
 ----------------
 
@@ -1666,7 +1831,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 
 - Control of license validity through the internet (setting up of a dedicated server)
-
 
 #### Bug fixes
 
@@ -1706,7 +1870,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Copy/paste of nodes : the field "spread on unsupplied energy cost" was not pasted
 
-
 ### 4.5.0 (04/2014)
 ----------------
 
@@ -1720,7 +1883,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Identical upper and lower bounds have been set for the absolute values of all
   non-zero system costs ( max = 5 10^4 Euros/MWh ; min = 5 10^-3 Euros/MWh)
 
-
 #### Bug fixes
 
 - Hydro Time-series generation : the GUI did not react properly when forbidden
@@ -1729,7 +1891,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Unit commitment of thermal plants: the time of the first activation of a plant
   within a week was not fully optimized
-
 
 ### 4.4.1 (05/2013)
 ----------------
@@ -1743,9 +1904,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Time-series analyzer : due to round-off errors, spatial correlation of 100 %
   (perfectly identical sets of time-series in different locations) could sometimes
   be casted to 99%. Exact 100% correlations are now properly displayed.
-
-
-
 
 ### 4.4.0 (04/2013)
 ----------------
@@ -1780,13 +1938,10 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   enough to allow the full use of the daily hydro storage energy credit, the energy in excess
   is levelled on the other days of the month with a flatter pattern.
 
-
 #### Bug fixes
 
 - On creation of a new link, the transmission capacity status parameter is set
   to `Use transmission capacities` instead of `Set to null`.
-
-
 
 ### 4.3.7 (02/2013)
 ----------------
@@ -1795,13 +1950,10 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Performance improvements for graphical display of large tables
 
-
 #### Bug fixes
 
 - The binding constraint data might not be written properly in some cases
   when the constraint was renamed.
-
-
 
 ### 4.3.6 (12/2012)
 ----------------
@@ -1813,7 +1965,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - Windows only: improved free disk space assessment, which now takes into
   consideration user- and folder-related quotas
-
 
 ### 4.3.5 (10/2012)
 ----------------
@@ -1835,7 +1986,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   Note that when a daily or weekly optimization has multiple equally optimal solutions,
   the ultimate choice may differ from that of the previous version
 
-
 #### Bug fixes
 
 - Reference numbers of the time-series used in the course of a simulation:  
@@ -1852,8 +2002,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Districts: when the Monte-Carlo synthesis edition is skipped, the results regarding
   districts were not accessible via the output viewer.
 
-
-
 ### 4.2.6 (07/2012)
 ----------------
 
@@ -1862,7 +2010,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - The field "MAX MRG" (last of the nodal results) is now available in the output files
 
 - The Monte-Carlo synthesis edition can be skipped when year-by-year results are asked for
-
 
 #### Bug fixes
 
@@ -1883,29 +2030,23 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   the unsupplied energy levelling process (corrected by a slight lessening of the authorized
   levelling)
 
-
-
-
 ### 4.1.0 (06/2012)
 ----------------
 
 #### Features
 
 - Hydro storage energy management : each nodal policy of use can be tuned so as to
-  accommodate simultaneously the net load of  several nodes
+  accommodate simultaneously the net load of several nodes
 
 - Hydro storage energy modelling : monthly time-series of inflows and reference trajectories
   for reservoir levels can be used instead of monthly time-series of generated energies.
 
-- Load shedding strategies : when unsupplied energy is unavoidable,  a choice is now possible
+- Load shedding strategies : when unsupplied energy is unavoidable, a choice is now possible
   between two policies : minimize the duration of sheddings or "shave" the load curve.
 
 - When multiple mathematically equivalent solutions exist a the first order for the
   economic optimization problem, a choice can be made at the second order between three
   ramping strategies
-
-
-
 
 ### 3.8.0 (12/2011)
 ----------------
@@ -1926,8 +2067,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Nodal costs of unsupplied energy and of spilled energy : a small additive stochastic
   noise around the reference values can be introduced to help discriminate between
   theoretically equivalent solutions
-
-
 
 ### 3.7.4 (08/2011)
 ----------------
@@ -1954,22 +2093,15 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - New variables are introduced in the economic output files : the overall available dispatchable
   thermal generation (AVL DTG) and the thermal margin (DTG MRG = AVL DTG - dispatched power)
 
-
-
-
 ### 3.6.4 (04/2011)
 ----------------
 
 #### Features
 
-- The "scenario  builder" is now available. With this builder it is possible to  define
+- The "scenario builder" is now available. With this builder it is possible to define
   precisely the simulation context (for any given year, random numbers drawn for each
   kind of time-series can be replaced by user-defined numbers). This feature allows
   simulations to be carried out in a versatile "What If" mode.
-
-
-
-
 
 ### 3.5.3 (03/2011)
 ----------------
@@ -1985,10 +2117,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Automatic processing of the inter-monthly & inter-regional hydro correlation hydro
   energy matrix to meet the feasibility constraints (the matrix has to be positive
   semi-definite). User should check in the simulation log file that no warning such as :
-  "info : hydro correlation not positive semi-definite : shrink by  factor x " appears.
-
-
-
+  "info : hydro correlation not positive semi-definite : shrink by factor x " appears.
 
 ### 3.4.4 (02/2011)
 ----------------
@@ -1997,9 +2126,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - The names of nodes, thermal clusters and binding constraints can be extended to
   128 characters. Authorized characters are : `a-z, A-Z,0-9,-,_, space`
-
-
-
 
 ### 3.4.3 (10/2010)
 ----------------
@@ -2029,10 +2155,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   description of the auto-correlation dynamic (two parameters)
   and a full spatial correlation matrix
 
-
-
-
-
 ### 3.3.2 (07/2010)
 ----------------
 
@@ -2043,7 +2165,7 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 - Introduction of new stochastic time-series generators for
   solar power and load
 
-- Introduction of an explicit  modelling of wind-to-power curves.
+- Introduction of an explicit modelling of wind-to-power curves.
   As a consequence, wind power time-series can now be generated
   either through a direct approach (by analysis of historical
   time-series of power) or through an indirect (more physical)
@@ -2056,9 +2178,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
   and/or forecasts errors.
 
 - Introduction of so-called hurdles costs on interconnection.
-
-
-
 
 ### 3.1.0 (01/2010)
 ----------------
@@ -2074,8 +2193,6 @@ In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in parti
 
 - New info is given for simulation context (available & required amounts
   of RAM & HDD space)
-
-
 
 ### From V1 to V2 (all versions)
 ----------------------------

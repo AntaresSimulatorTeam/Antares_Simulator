@@ -5,10 +5,7 @@ add_subdirectory(benchmarking)
 add_subdirectory(inifile)
 
 add_subdirectory(yaml-parser)
-
-if(WITH_ANTLR4)
-    add_subdirectory(antlr4-interface)
-endif()
+add_subdirectory(antlr4-interface)
 
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
