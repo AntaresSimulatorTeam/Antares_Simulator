@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
     BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
 }
 
-// Test where we use an invalid OR-Tools
+// Test where we use an invalid OR-Tools solver
 BOOST_AUTO_TEST_CASE(invalid_ortools_solver)
 {
     Antares::API::APIInternal api;
