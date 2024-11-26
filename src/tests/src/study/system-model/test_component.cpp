@@ -25,7 +25,7 @@
 
 #include "antares/study/system-model/component.h"
 
-#include "../../../unit_test_utils.h"
+#include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Study::SystemModel;
 
