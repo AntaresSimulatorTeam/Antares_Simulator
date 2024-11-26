@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <map>
 #include <ostream>
 #include <utility>
 
@@ -116,7 +117,7 @@ public:
      * @param os The output stream to which the DOT representation is written.
      * @param root The root of the expression to be output.
      */
-    void operator()(std::ostream& os, Nodes::Node* root);
+    void operator()(std::ostream& os, const Nodes::Node* root);
 
 private:
     void visit(const Nodes::SumNode* node, std::ostream& os) override;

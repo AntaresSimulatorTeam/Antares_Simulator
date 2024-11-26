@@ -83,7 +83,7 @@ LibraryBuilder& LibraryBuilder::withModels(std::vector<Model>&& models)
 {
     std::transform(models.begin(),
                    models.end(),
-                   std::inserter(library_.models_, library_.models_.end()),
+                   std::inserter(*library_.models_, library_.models_->end()),
                    [](/*Non const to prevent copy*/ Model& model)
                    { return std::make_pair(model.Id(), std::move(model)); });
     return *this;
@@ -94,7 +94,7 @@ LibraryBuilder& LibraryBuilder::withModels(std::vector<Model>&& models)
  *
  * \return The constructed Library object.
  */
-Library LibraryBuilder::build()
+const Library& LibraryBuilder::build() const
 {
     return library_;
 }

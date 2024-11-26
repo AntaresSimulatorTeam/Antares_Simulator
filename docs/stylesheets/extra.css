@@ -1,21 +1,29 @@
-[data-md-color-scheme="antares"] {
-    --md-primary-fg-color:        #002a5e;
+[data-md-color-scheme="default"] {
+    --md-primary-fg-color: #002a5e;
     --md-primary-fg-color--light: #00a3ca;
-    --md-primary-fg-color--dark:  #112446;
-    --md-typeset-a-color:  #00a3ca; /* text link color*/
+    --md-primary-fg-color--dark: #112446;
+    --md-typeset-a-color: #00a3ca; /* text link color*/
     --md-accent-fg-color: #ff9800; /* link color on hover*/
 }
+
 [data-md-color-scheme="slate"] {
     --md-hue: 213; /* [0, 360] */
-    --md-accent-fg-color: #ff9800;
+    --md-primary-fg-color: #002a5e;
+    --md-primary-fg-color--light: #00a3ca;
+    --md-primary-fg-color--dark: #112446;
+    --md-typeset-a-color: #00a3ca; /* text link color*/
+    --md-accent-fg-color: #ff9800; /* link color on hover*/
 }
+
 /* Use this class for images with transparent background, it will add padding and a white background in dark mode */
 .add-padding-and-white-bg {
     padding: 20px;
 }
+
 [data-md-color-scheme="slate"] .add-padding-and-white-bg {
     background-color: whitesmoke;
 }
+
 /* De-activate mkdocs' default h5 styling, which puts the h5 header in upper case */
 .md-typeset h5 {
     text-transform: none;

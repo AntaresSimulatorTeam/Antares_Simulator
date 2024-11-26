@@ -43,7 +43,7 @@ public:
         return id_;
     }
 
-    Expression expression() const
+    const Expression& expression() const
     {
         return expression_;
     }

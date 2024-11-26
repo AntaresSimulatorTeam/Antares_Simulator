@@ -53,11 +53,9 @@ public:
     };
 
     explicit Parameter(std::string id,
-                       ValueType type,
                        TimeDependent timeDependent,
                        ScenarioDependent scenarioDependent):
         id_(std::move(id)),
-        type_(type),
         timeDependent_(timeDependent),
         scenarioDependent_(scenarioDependent)
     {
@@ -66,11 +64,6 @@ public:
     const std::string& Id() const
     {
         return id_;
-    }
-
-    ValueType Type() const
-    {
-        return type_;
     }
 
     bool isTimeDependent() const
@@ -85,7 +78,6 @@ public:
 
 private:
     std::string id_;
-    ValueType type_;
     TimeDependent timeDependent_ = TimeDependent::YES;             // optional at construction
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES; // optional at construction
 };

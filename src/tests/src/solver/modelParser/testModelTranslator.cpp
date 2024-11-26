@@ -1,5 +1,4 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
+/* * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of Antares-Simulator,
@@ -25,6 +24,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/solver/expressions/nodes/Node.h"
 #include "antares/solver/modelConverter/modelConverter.h"
 #include "antares/solver/modelParser/Library.h"
 #include "antares/study/system-model/library.h"
@@ -34,10 +34,14 @@
 using namespace Antares::Solver;
 using namespace Antares::Study;
 
-// Test empty library
-BOOST_AUTO_TEST_CASE(Empty_library_is_valid)
+struct Fixture
 {
     ModelParser::Library library;
+};
+
+// Test empty library
+BOOST_FIXTURE_TEST_CASE(Empty_library_is_valid, Fixture)
+{
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_CHECK(lib.Id().empty());
     BOOST_CHECK(lib.Description().empty());
@@ -46,9 +50,9 @@ BOOST_AUTO_TEST_CASE(Empty_library_is_valid)
 }
 
 // Test library with id and description
-BOOST_AUTO_TEST_CASE(library_id_description_properly_translated)
+BOOST_FIXTURE_TEST_CASE(library_id_description_properly_translated, Fixture)
+
 {
-    ModelParser::Library library;
     library.id = "test_id";
     library.description = "test_description";
     SystemModel::Library lib = ModelConverter::convert(library);
@@ -57,9 +61,8 @@ BOOST_AUTO_TEST_CASE(library_id_description_properly_translated)
 }
 
 // Test library with port types
-BOOST_AUTO_TEST_CASE(port_type_with_empty_fileds_properly_translated)
+BOOST_FIXTURE_TEST_CASE(port_type_with_empty_fileds_properly_translated, Fixture)
 {
-    ModelParser::Library library;
     ModelParser::PortType portType1{"port1", "flow port", {}};
     ModelParser::PortType portType2{"port2", "impedance port", {}};
     library.port_types = {portType1, portType2};
@@ -81,9 +84,8 @@ BOOST_AUTO_TEST_CASE(port_type_with_empty_fileds_properly_translated)
 }
 
 // Test library with port types and fields
-BOOST_AUTO_TEST_CASE(portType_with_fields_properly_translated)
+BOOST_FIXTURE_TEST_CASE(portType_with_fields_properly_translated, Fixture)
 {
-    ModelParser::Library library;
     ModelParser::PortType portType1{"port1", "flow port", {"field1", "field2"}};
     ModelParser::PortType portType2{"port2", "impedance port", {"field3", "field4"}};
     library.port_types = {portType1, portType2};
@@ -97,28 +99,26 @@ BOOST_AUTO_TEST_CASE(portType_with_fields_properly_translated)
 }
 
 // Test library with models
-BOOST_AUTO_TEST_CASE(empty_model_properly_translated)
+BOOST_FIXTURE_TEST_CASE(empty_model_properly_translated, Fixture)
 {
-    ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
                               .description = "description",
-                              .parameters = {},
+                              .parameters = {{"param1", true, false}},
                               .variables = {},
                               .ports = {},
                               .port_field_definitions = {},
                               .constraints = {},
-                              .objective = "objectives"};
+                              .objective = "param1"};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 1);
     BOOST_CHECK_EQUAL(lib.Models().at("model1").Id(), "model1");
-    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objective().Value(), "objectives");
+    BOOST_CHECK_EQUAL(lib.Models().at("model1").Objective().Value(), "param1");
 }
 
 // Test library with models and parameters
-BOOST_AUTO_TEST_CASE(model_parameters_properly_translated)
+BOOST_FIXTURE_TEST_CASE(model_parameters_properly_translated, Fixture)
 {
-    ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
                               .description = "description",
                               .parameters = {{"param1", true, false}, {"param2", false, false}},
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(model_parameters_properly_translated)
                               .ports = {},
                               .port_field_definitions{},
                               .constraints{},
-                              .objective = "objectives"};
+                              .objective = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -136,27 +136,24 @@ BOOST_AUTO_TEST_CASE(model_parameters_properly_translated)
     BOOST_CHECK_EQUAL(parameter1.Id(), "param1");
     BOOST_CHECK(parameter1.isTimeDependent());
     BOOST_CHECK(!parameter1.isScenarioDependent());
-    BOOST_CHECK_EQUAL(parameter1.Type(), SystemModel::ValueType::FLOAT);
     BOOST_CHECK_EQUAL(parameter2.Id(), "param2");
     BOOST_CHECK(!parameter2.isTimeDependent());
     BOOST_CHECK(!parameter2.isScenarioDependent());
-    BOOST_CHECK_EQUAL(parameter2.Type(), SystemModel::ValueType::FLOAT);
 }
 
 // Test library with models and variables
-BOOST_AUTO_TEST_CASE(model_variables_properly_translated)
+BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
 {
-    ModelParser::Library library;
     ModelParser::Model model1{
       .id = "model1",
       .description = "description",
-      .parameters = {},
+      .parameters = {{"pmax", true, false}},
       .variables = {{"var1", "7", "pmax", ModelParser::ValueType::BOOL},
-                    {"var2", "99999999.9999999", "vcost", ModelParser::ValueType::INTEGER}},
+                    {"var2", "99999999.9999999", "var1", ModelParser::ValueType::INTEGER}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
-      .objective = "objectives"};
+      .objective = "var1"};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -169,7 +166,7 @@ BOOST_AUTO_TEST_CASE(model_variables_properly_translated)
     BOOST_CHECK_EQUAL(variable1.Type(), SystemModel::ValueType::BOOL);
     BOOST_CHECK_EQUAL(variable2.Id(), "var2");
     BOOST_CHECK_EQUAL(variable2.LowerBound().Value(), "99999999.9999999");
-    BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "vcost");
+    BOOST_CHECK_EQUAL(variable2.UpperBound().Value(), "var1");
     BOOST_CHECK_EQUAL(variable2.Type(), SystemModel::ValueType::INTEGER);
 }
 
@@ -177,6 +174,7 @@ BOOST_AUTO_TEST_CASE(model_variables_properly_translated)
 BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disabled())
 {
     ModelParser::Library library;
+    Registry<Nodes::Node> registry;
     ModelParser::Model model1{.id = "model1",
                               .description = "description",
                               .parameters = {},
@@ -184,10 +182,10 @@ BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disable
                               .ports = {{"port1", "flow"}, {"port2", "impedance"}},
                               .port_field_definitions = {},
                               .constraints = {},
-                              .objective = "objectives"};
+                              .objective = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
-    auto& model = lib.Models().at("model1");
+    [[maybe_unused]] auto& model = lib.Models().at("model1");
     // BOOST_REQUIRE_EQUAL(model.Ports().size(), 2);
     // auto& port1 = model.Ports().at("port1");
     // auto& port2 = model.Ports().at("port2");
@@ -198,18 +196,18 @@ BOOST_AUTO_TEST_CASE(model_ports_properly_translated, *boost::unit_test::disable
 }
 
 // Test library with models and constraints
-BOOST_AUTO_TEST_CASE(model_constraints_properly_translated)
+BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
 {
-    ModelParser::Library library;
     ModelParser::Model model1{.id = "model1",
                               .description = "description",
-                              .parameters = {},
+                              .parameters = {{"expression1", true, false},
+                                             {"expression2", true, false}},
                               .variables = {},
                               .ports = {},
                               .port_field_definitions = {},
                               .constraints = {{"constraint1", "expression1"},
                                               {"constraint2", "expression2"}},
-                              .objective = "objectives"};
+                              .objective = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -223,28 +221,27 @@ BOOST_AUTO_TEST_CASE(model_constraints_properly_translated)
 }
 
 // Test with 2 models
-BOOST_AUTO_TEST_CASE(multiple_models_properly_translated)
+BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
 {
-    ModelParser::Library library;
     ModelParser::Model model1{
       .id = "model1",
       .description = "description",
       .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "pmin", ModelParser::ValueType::CONTINUOUS}},
+      .variables = {{"varP", "7", "param2", ModelParser::ValueType::CONTINUOUS}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
-      .objective = "objectives"};
+      .objective = ""};
     ModelParser::Model model2{
       .id = "model2",
       .description = "description",
       .parameters = {},
-      .variables = {{"var1", "7", "pmax", ModelParser::ValueType::BOOL},
-                    {"var2", "99999999.9999999", "vcost", ModelParser::ValueType::INTEGER}},
+      .variables = {{"var1", "7", "8", ModelParser::ValueType::BOOL},
+                    {"var2", "99999999.9999999", "var1", ModelParser::ValueType::INTEGER}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
-      .objective = "objectives"};
+      .objective = ""};
     library.models = {model1, model2};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 2);

@@ -53,7 +53,7 @@ public:
 
     const std::unordered_map<std::string, Model>& Models() const
     {
-        return models_;
+        return *models_;
     }
 
 private:
@@ -63,7 +63,8 @@ private:
     std::string description_;
 
     std::unordered_map<std::string, PortType> portTypes_;
-    std::unordered_map<std::string, Model> models_;
+    std::shared_ptr<std::unordered_map<std::string, Model>>
+      models_ = std::make_shared<std::unordered_map<std::string, Model>>();
 };
 
 /**
@@ -79,7 +80,7 @@ public:
     LibraryBuilder& withPortTypes(std::vector<PortType>&& portTypes);
     LibraryBuilder& withModels(std::vector<Model>&& models);
 
-    Library build();
+    const Library& build() const;
 
 private:
     Library library_;

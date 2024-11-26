@@ -24,11 +24,11 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** `economy`
 - **Usage:** this parameter sets the study mode for Antares
     - `economy/economic`: Antares simulator will try to ensure balance between load and generation, while minimizing the 
-      economical cost of the grid's operation (more on this [here](../01-overview.md#transmission-project-profitability)). "Economy" simulations make a full use of 
+      economical cost of the grid's operation (more on this [here](../../01-overview.md#transmission-project-profitability)). "Economy" simulations make a full use of 
       *Antares* optimization capabilities. They require economic as well as technical input data and may demand a lot 
       of computer resources.
     - `adequacy`: in this mode, all power plants' operational cost is considered zero. Antares' only objective is to ensure
-      balance between load and generation (more on this [here](../01-overview.md#generation-adequacy-problems)). "Adequacy" simulations are faster and require only 
+      balance between load and generation (more on this [here](../../01-overview.md#generation-adequacy-problems)). "Adequacy" simulations are faster and require only 
       technical input data. Their results are limited to adequacy indicators.
     - `expansion`: Antares simulator will optimize the investments on the grid, minimizing both investments and
       operational costs.
@@ -173,7 +173,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
     whose detailed analysis may have shown that they were not physically realistic. A different typical use case consists
     in replaying only a small number of years of specific interest (for instance, years in the course of which Min or Max
     values of a given variable were encountered in a previous simulation).  
-    In addition, each MC year i=1, …, N can be given a relative [weight](#playlistyearweight)
+    In addition, each MC year i=1, …, N can be given a relative [weight](#playlist_year_weight)
 
 > _**WARNING:**_ this parameter cannot be used with parameter [derated](#derated)
 
@@ -431,7 +431,7 @@ _**This section is under construction**_
     - `optim-2`: export MPS for second step of the optimization
     - `both-optims` or `true`: export MPS for both steps of the optimization
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-include-exportmps-parameter).
+> _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-include-exportmps-parameter).
 
 ---
 #### include-split-exported-mps
@@ -468,7 +468,7 @@ _**This section is under construction**_
     - `ERROR_DRY`: stop simulation
     - `ERROR_MPS`: stop simulation, and export the MPS of the unfeasible problem  
   
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
+> _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
 ---
 #### solver-parameters
@@ -482,7 +482,7 @@ _**This section is under construction**_
 
 ---
 ## Adequacy-patch parameters
-Defines a set of options related to the [adequacy patch](optional-features/adequacy-patch.md).
+Defines a set of options related to the [adequacy patch](../optional-features/adequacy-patch.md).
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.  
 These parameters are listed under the `[adequacy patch]` section in the `.ini` file.  
 
@@ -491,7 +491,7 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-- **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](optional-features/adequacy-patch.md) algorithm.
+- **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](../optional-features/adequacy-patch.md) algorithm.
 
 ---
 #### set-to-null-ntc-from-physical-out-to-physical-in-for-first-step
@@ -578,7 +578,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `cold start`
     - `hot start`
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-initial-reservoir-levels-parameter).
+> _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-initial-reservoir-levels-parameter).
 
 ---
 #### hydro-heuristic-policy
@@ -592,7 +592,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accommodate rule curves`
     - `maximize generation`
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-hydro-heuristic-policy-parameter).
+> _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-hydro-heuristic-policy-parameter).
 
 ---
 #### hydro-pricing-mode
@@ -606,7 +606,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `fast`
     - `accurate`: Note that this mode is significantly slower than the `fast` mode.
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-hydro-pricing-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-hydro-pricing-mode-parameter).
 
 ---
 #### power-fluctuations
@@ -648,7 +648,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accurate`: Heuristic in which 2 LP problems are solved. Explicit modelling for the number of ON/OFF units. Slower than `fast`.
     - `milp`: A single MILP problem is solved, with explicit modelling for the number of ON/OFF units. Slower than `accurate`.
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-unit-commitment-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-unit-commitment-mode-parameter).
 
 ---
 #### number-of-cores-mode
@@ -660,7 +660,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `maximum`
 - **Required:** no
 - **Default value:** `medium`
-- **Usage:** use this parameter to configure [multi-threading](optional-features/multi-threading.md).
+- **Usage:** use this parameter to configure [multi-threading](../optional-features/multi-threading.md).
 
 ---
 #### renewable-generation-modelling
@@ -674,7 +674,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `aggregated`
     - `clusters`
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-renewable-generation-modelling-parameter).
+> _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-renewable-generation-modelling-parameter).
 
 ---
 #### day-ahead-reserve-management
