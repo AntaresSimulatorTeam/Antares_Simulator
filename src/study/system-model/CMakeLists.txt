@@ -3,6 +3,8 @@ project(SystemModel)
 set(SRC_model
         library.cpp
         model.cpp
+        component.cpp
+        system.cpp
         include/antares/study/system-model/library.h
         include/antares/study/system-model/model.h
         include/antares/study/system-model/parameter.h
@@ -14,6 +16,8 @@ set(SRC_model
         include/antares/study/system-model/portField.h
         include/antares/study/system-model/portFieldDefinition.h
         include/antares/study/system-model/portType.h
+        include/antares/study/system-model/component.h
+        include/antares/study/system-model/system.h
 )
 
 source_group("SystemModel" FILES ${SRC_model})
