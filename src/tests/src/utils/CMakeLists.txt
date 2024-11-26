@@ -1,6 +1,8 @@
 add_library(test_utils_unit
         files-system.cpp
         files-system.h
+	unit_test_utils.h
+	unit_test_utils.cpp
         )
 
 target_include_directories(

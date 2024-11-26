@@ -21,18 +21,7 @@
 
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-
+#include <functional>
 #include <string>
 
-#include <boost/test/unit_test.hpp>
-
-inline std::function<bool(const std::exception&)> checkMessage(std::string expected_message)
-{
-    auto predicate = [expected_message](const std::exception& e)
-    {
-        BOOST_CHECK_EQUAL(e.what(), expected_message);
-        return true;
-    };
-    return predicate;
-}
+std::function<bool(const std::exception&)> checkMessage(std::string expected_message);

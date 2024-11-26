@@ -28,6 +28,7 @@
 
 #include <antares/antares/fatal-error.h>
 
+#include "../../src/utils/unit_test_utils.h"
 #include "API.h"
 #include "in-memory-study.h"
 
@@ -128,5 +129,7 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_solver)
       .solverParameters = ""};
 
     auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader.get(), opt); };
-    BOOST_CHECK_THROW(shouldThrow(), std::invalid_argument);
+    BOOST_CHECK_EXCEPTION(shouldThrow(),
+                          std::invalid_argument,
+                          checkMessage("Solver this-solver-does-not-exist not found"));
 }

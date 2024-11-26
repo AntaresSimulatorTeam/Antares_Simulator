@@ -12,6 +12,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         PRIVATE
         Boost::unit_test_framework
         antares-study-system-model
+	test_utils_unit
 )
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES FOLDER Unit-tests)

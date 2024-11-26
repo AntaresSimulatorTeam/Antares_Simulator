@@ -375,9 +375,7 @@ static std::optional<std::string> translateSolverName(const std::string& solverN
 
 MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
 {
-    const std::string notFound = "Solver " + solverName
-                                 + " not found. Please use one of the following "
-                                 + availableOrToolsSolversString();
+    const std::string notFound = "Solver " + solverName + " not found";
     const std::invalid_argument except(notFound);
 
     auto internalSolverName = translateSolverName(solverName, isMip);
