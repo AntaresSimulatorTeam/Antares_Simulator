@@ -37,6 +37,14 @@ struct ComponentData
     Model* model = nullptr;
     std::map<std::string, double> parameter_values;
     std::string scenario_group_id;
+
+    void reset()
+    {
+        id.clear();
+        model = nullptr;
+        parameter_values.clear();
+        scenario_group_id.clear();
+    }
 };
 
 /**
@@ -87,7 +95,7 @@ public:
     ComponentBuilder& withModel(Model* model);
     ComponentBuilder& withParameterValues(std::map<std::string, double> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
-    Component build() const;
+    Component build();
 
 private:
     ComponentData data_;

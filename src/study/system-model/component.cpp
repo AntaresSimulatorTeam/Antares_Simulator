@@ -118,9 +118,13 @@ ComponentBuilder& ComponentBuilder::withScenarioGroupId(const std::string& scena
  *
  * \return The constructed Component object.
  */
-Component ComponentBuilder::build() const
+Component ComponentBuilder::build()
 {
-    return Component(data_);
+    Component component(data_);
+    // This makes component_build re-usable
+    // TODO: add tests
+    data_.reset();
+    return component;
 }
 
 } // namespace Antares::Study::SystemModel

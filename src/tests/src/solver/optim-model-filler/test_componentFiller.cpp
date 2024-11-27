@@ -32,46 +32,55 @@
 using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
+using namespace Antares::Solver::Nodes;
 
-BOOST_AUTO_TEST_SUITE(_ComponentFiller_)
+struct LinearProblemBuildingFixture
+{
+    ModelBuilder model_builder;
+    ComponentBuilder component_builder;
+};
 
-BOOST_AUTO_TEST_CASE(testAddOneVarAllLiteral)
+static Expression generateExpression(Node* node)
+{
+    Antares::Solver::Registry<Node> registry;
+    Antares::Solver::NodeRegistry node_registry(node, std::move(registry));
+    Expression expression("expression", std::move(node_registry));
+    return std::move(expression);
+}
+
+static std::unique_ptr<ILinearProblem> buildProblem(std::vector<LinearProblemFiller*> fillers)
 {
     std::unique_ptr<ILinearProblem>
       pb = std::make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false,
                                                                                          "scip");
+    LinearProblemBuilder linear_problem_builder(fillers);
+    LinearProblemData dummy_data;
+    FillContext dummy_context = {0, 0};
+    linear_problem_builder.build(*(pb.get()), dummy_data, dummy_context);
+    return std::move(pb);
+}
 
-    ModelBuilder model_builder;
+BOOST_AUTO_TEST_SUITE(_ComponentFiller_)
 
-    Antares::Solver::Nodes::LiteralNode lb_node(-5);
-    Antares::Solver::Registry<Antares::Solver::Nodes::Node> lb_registry;
-    Antares::Solver::NodeRegistry lb_node_registry(&lb_node, std::move(lb_registry));
-
-    Antares::Solver::Nodes::LiteralNode ub_node(10);
-    Antares::Solver::Registry<Antares::Solver::Nodes::Node> ub_registry;
-    Antares::Solver::NodeRegistry ub_node_registry(&ub_node, std::move(ub_registry));
-
-    Expression lb("-5", std::move(lb_node_registry));
-    Expression ub("10", std::move(ub_node_registry));
-
-    Variable var1 = {"var1", std::move(lb), std::move(ub), ValueType::FLOAT};
+BOOST_FIXTURE_TEST_CASE(testAddOneVarAllLiteral, LinearProblemBuildingFixture)
+{
+    LiteralNode lb_node(-5);
+    LiteralNode ub_node(10);
+    Variable var1 = {"var1",
+                     generateExpression(&lb_node),
+                     generateExpression(&ub_node),
+                     ValueType::FLOAT};
     std::vector<Variable> vec_vars;
     vec_vars.push_back(std::move(var1));
-
     auto model = model_builder.withId("model").withVariables(std::move(vec_vars)).build();
-    ComponentBuilder component_builder;
+
     auto component = component_builder.withId("componentToto")
                        .withModel(&model)
                        .withScenarioGroupId("scenario_group")
                        .build();
 
     auto filler = std::make_unique<ComponentFiller>(component);
-    std::vector<LinearProblemFiller*> fillers = {filler.get()};
-    LinearProblemBuilder linear_problem_builder(fillers);
-
-    LinearProblemData dummy_data;
-    FillContext dummy_context(0, 0);
-    linear_problem_builder.build(*(pb.get()), dummy_data, dummy_context);
+    auto pb = buildProblem({filler.get()});
 
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
@@ -89,5 +98,6 @@ BOOST_AUTO_TEST_CASE(testAddOneVarAllLiteral)
 // - test with one model, 1 variable, lb and ub are dependent on component parameters (2 components)
 //        in model builder : .withParameters({"p_min", NO, NO})
 //        in component builder : use withParameterValues
+// - test with ill-defined lb and/or ub
 
 BOOST_AUTO_TEST_SUITE_END()

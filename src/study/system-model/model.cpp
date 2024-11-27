@@ -36,7 +36,11 @@ namespace Antares::Study::SystemModel
  */
 Model ModelBuilder::build()
 {
-    return std::move(model_);
+    Model model = std::move(model_);
+    // This makes model builder re-usable
+    // TODO : add tests
+    model_ = Model();
+    return std::move(model);
 }
 
 /**
