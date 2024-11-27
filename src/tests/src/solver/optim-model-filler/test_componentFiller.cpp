@@ -23,11 +23,16 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/solver/expressions/nodes/LessThanOrEqualNode.h"
 #include "antares/solver/expressions/nodes/LiteralNode.h"
+#include "antares/solver/expressions/nodes/ParameterNode.h"
+#include "antares/solver/expressions/nodes/VariableNode.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
+
+#include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Study::SystemModel;
@@ -42,6 +47,7 @@ struct LinearProblemBuildingFixture
 
 static Expression generateExpression(Node* node)
 {
+    // TODO : this seems too complicated; try to make building Expressions easier
     Antares::Solver::Registry<Node> registry;
     Antares::Solver::NodeRegistry node_registry(node, std::move(registry));
     Expression expression("expression", std::move(node_registry));
@@ -56,13 +62,14 @@ static std::unique_ptr<ILinearProblem> buildProblem(std::vector<LinearProblemFil
     LinearProblemBuilder linear_problem_builder(fillers);
     LinearProblemData dummy_data;
     FillContext dummy_context = {0, 0};
-    linear_problem_builder.build(*(pb.get()), dummy_data, dummy_context);
+    linear_problem_builder.build(*pb.get(), dummy_data, dummy_context);
     return std::move(pb);
 }
 
-BOOST_AUTO_TEST_SUITE(_ComponentFiller_)
+BOOST_AUTO_TEST_SUITE(_ComponentFiller_addVariables_)
 
-BOOST_FIXTURE_TEST_CASE(testAddOneVarAllLiteral, LinearProblemBuildingFixture)
+BOOST_FIXTURE_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var,
+                        LinearProblemBuildingFixture)
 {
     LiteralNode lb_node(-5);
     LiteralNode ub_node(10);
@@ -92,12 +99,106 @@ BOOST_FIXTURE_TEST_CASE(testAddOneVarAllLiteral, LinearProblemBuildingFixture)
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 0);
 }
 
+BOOST_FIXTURE_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised,
+                        LinearProblemBuildingFixture)
+{
+    ParameterNode lb_node("this-parameter-does-not-exist-in-model");
+    LiteralNode ub_node(10);
+    Variable var1 = {"var1",
+                     generateExpression(&lb_node),
+                     generateExpression(&ub_node),
+                     ValueType::FLOAT};
+    std::vector<Variable> vec_vars;
+    vec_vars.push_back(std::move(var1));
+    auto model = model_builder.withId("model").withVariables(std::move(vec_vars)).build();
+
+    auto component = component_builder.withId("componentToto")
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+
+    auto filler = std::make_unique<ComponentFiller>(component);
+    // TODO : improve exception message
+    BOOST_CHECK_EXCEPTION(buildProblem({filler.get()}), std::out_of_range, checkMessage("map::at"));
+}
+
+BOOST_FIXTURE_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised,
+                        LinearProblemBuildingFixture)
+{
+    LiteralNode lb_node(10);
+    VariableNode ub_node("var1");
+    Variable var1 = {"var1",
+                     generateExpression(&lb_node),
+                     generateExpression(&ub_node),
+                     ValueType::FLOAT};
+    std::vector<Variable> vec_vars;
+    vec_vars.push_back(std::move(var1));
+    auto model = model_builder.withId("model").withVariables(std::move(vec_vars)).build();
+
+    auto component = component_builder.withId("componentToto")
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+
+    auto filler = std::make_unique<ComponentFiller>(component);
+    // TODO : improve exception message
+    BOOST_CHECK_EXCEPTION(buildProblem({filler.get()}), std::out_of_range, checkMessage("map::at"));
+}
+
 // TODO
 // - test with 3 variables (different types: float, bool, int)
 // - test with one model, 1 variable, 2 components (and 2 component fillers)
 // - test with one model, 1 variable, lb and ub are dependent on component parameters (2 components)
 //        in model builder : .withParameters({"p_min", NO, NO})
 //        in component builder : use withParameterValues
-// - test with ill-defined lb and/or ub
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(_ComponentFiller_addConstraints_)
+
+BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFixture)
+{
+    LiteralNode var_lb_node(-5);
+    LiteralNode var_ub_node(10);
+    Variable var1 = {"var1",
+                     generateExpression(&var_lb_node),
+                     generateExpression(&var_ub_node),
+                     ValueType::FLOAT};
+    std::vector<Variable> vec_vars;
+    vec_vars.push_back(std::move(var1));
+
+    auto var_node = VariableNode("var1");
+    auto three = LiteralNode(3);
+    auto ct_node = LessThanOrEqualNode(&var_node, &three);
+    // TODO: replace with parsing of "var1 <= 1" ?
+    Constraint constraint = {"ct1", generateExpression(&ct_node)};
+    std::vector<Constraint> vec_cts;
+    vec_cts.push_back(std::move(constraint));
+
+    auto model = model_builder.withId("model")
+                   .withVariables(std::move(vec_vars))
+                   .withConstraints(std::move(vec_cts))
+                   .build();
+
+    auto component = component_builder.withId("componentToto")
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+
+    auto filler = std::make_unique<ComponentFiller>(component);
+    auto pb = buildProblem({filler.get()});
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
+    auto ct = pb->getConstraint("componentToto.ct1");
+    BOOST_CHECK(ct);
+    BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
+    BOOST_CHECK_EQUAL(ct->getUb(), 3);
+    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("var1")), 1);
+}
+
+// TODO
+// - test ct with 2 vars
+// - test component with two constraints
 
 BOOST_AUTO_TEST_SUITE_END()

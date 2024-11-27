@@ -2,7 +2,9 @@ set(PROJ optim-model-filler)
 
 set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/ComponentFiller.h
+        include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         ComponentFiller.cpp
+        ReadLinearConstraintVisitor.cpp
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})
