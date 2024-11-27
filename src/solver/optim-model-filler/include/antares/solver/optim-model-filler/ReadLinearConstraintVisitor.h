@@ -32,7 +32,7 @@ namespace Antares::Optimization
 {
 struct LinearConstraint
 {
-    double lb = -1e20;
+    double lb = -std::numeric_limits<double>::infinity();
     double ub = 3;
     std::map<std::string, double> coef_per_var = {{"var1", 1}};
 };

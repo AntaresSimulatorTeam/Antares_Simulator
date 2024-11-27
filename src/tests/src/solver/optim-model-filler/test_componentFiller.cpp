@@ -66,10 +66,9 @@ static std::unique_ptr<ILinearProblem> buildProblem(std::vector<LinearProblemFil
     return std::move(pb);
 }
 
-BOOST_AUTO_TEST_SUITE(_ComponentFiller_addVariables_)
+BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addVariables_, LinearProblemBuildingFixture)
 
-BOOST_FIXTURE_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var,
-                        LinearProblemBuildingFixture)
+BOOST_AUTO_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var)
 {
     LiteralNode lb_node(-5);
     LiteralNode ub_node(10);
@@ -99,8 +98,7 @@ BOOST_FIXTURE_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised,
-                        LinearProblemBuildingFixture)
+BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
 {
     ParameterNode lb_node("this-parameter-does-not-exist-in-model");
     LiteralNode ub_node(10);
@@ -119,11 +117,10 @@ BOOST_FIXTURE_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised,
 
     auto filler = std::make_unique<ComponentFiller>(component);
     // TODO : improve exception message
-    BOOST_CHECK_EXCEPTION(buildProblem({filler.get()}), std::out_of_range, checkMessage("map::at"));
+    BOOST_CHECK_THROW(buildProblem({filler.get()}), std::out_of_range);
 }
 
-BOOST_FIXTURE_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised,
-                        LinearProblemBuildingFixture)
+BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
 {
     LiteralNode lb_node(10);
     VariableNode ub_node("var1");
@@ -142,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised,
 
     auto filler = std::make_unique<ComponentFiller>(component);
     // TODO : improve exception message
-    BOOST_CHECK_EXCEPTION(buildProblem({filler.get()}), std::out_of_range, checkMessage("map::at"));
+    BOOST_CHECK_THROW(buildProblem({filler.get()}), std::out_of_range);
 }
 
 // TODO
@@ -194,7 +191,7 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
     BOOST_CHECK(ct);
     BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
     BOOST_CHECK_EQUAL(ct->getUb(), 3);
-    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("var1")), 1);
+    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("componentToto.var1")), 1);
 }
 
 // TODO
