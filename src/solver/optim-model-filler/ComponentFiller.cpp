@@ -5,14 +5,21 @@
 #include <ranges>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include "antares/solver/expressions/visitors/EvalVisitor.h"
 #include "antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h"
 #include "antares/study/system-model/variable.h"
 
 namespace Antares::Optimization
 {
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
-    component_(component)
+    component_(component),
+    evaluator_(std::make_unique<Solver::Visitors::EvalVisitor>())
+{
+}
+
+ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component,
+                                 std::unique_ptr<Solver::Visitors::EvalVisitor> evaluator):
+    component_(component),
+    evaluator_(std::move(evaluator))
 {
 }
 
@@ -20,11 +27,10 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
-    Solver::Visitors::EvalVisitor evaluator;
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
-        pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
-                       evaluator.dispatch(variable.UpperBound().RootNode()),
+        pb.addVariable(evaluator_->dispatch(variable.LowerBound().RootNode()),
+                       evaluator_->dispatch(variable.UpperBound().RootNode()),
                        variable.Type() != Study::SystemModel::ValueType::FLOAT,
                        component_.Id() + "." + variable.Id());
     }

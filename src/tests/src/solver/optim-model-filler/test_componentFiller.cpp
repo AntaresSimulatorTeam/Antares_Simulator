@@ -27,14 +27,17 @@
 #include "antares/solver/expressions/nodes/LiteralNode.h"
 #include "antares/solver/expressions/nodes/ParameterNode.h"
 #include "antares/solver/expressions/nodes/VariableNode.h"
+#include "antares/solver/expressions/visitors/EvalVisitor.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
+#include "antares/study/system-model/parameter.h"
 
 #include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Solver::Visitors;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Solver::Nodes;
@@ -140,6 +143,47 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
     auto filler = std::make_unique<ComponentFiller>(component);
     // TODO : improve exception message
     BOOST_CHECK_THROW(buildProblem({filler.get()}), std::out_of_range);
+}
+
+BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem_contains_this_var)
+{
+    ParameterNode lb_node("pmin");
+    ParameterNode ub_node("pmax");
+
+    Variable var1 = {"var1",
+                     generateExpression(&lb_node),
+                     generateExpression(&ub_node),
+                     ValueType::FLOAT};
+    std::vector<Variable> variables;
+    variables.push_back(std::move(var1));
+
+    Parameter pmin("pmin", Parameter::TimeDependent::NO, Parameter::ScenarioDependent::NO);
+    Parameter pmax("pmax", Parameter::TimeDependent::NO, Parameter::ScenarioDependent::NO);
+    std::vector<Parameter> parameters = {std::move(pmin), std::move(pmax)};
+
+    auto model = model_builder.withId("model")
+                   .withVariables(std::move(variables))
+                   .withParameters(std::move(parameters))
+                   .build();
+
+    auto component = component_builder.withId("componentToto")
+                       .withModel(&model)
+                       .withParameterValues({{"pmin", -3.}, {"pmax", 4.}})
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+
+    EvaluationContext evalContext({{"pmin", -3.}, {"pmax", 4.}}, {});
+    std::unique_ptr<EvalVisitor> evaluator = std::make_unique<EvalVisitor>(evalContext);
+    auto filler = std::make_unique<ComponentFiller>(component, std::move(evaluator));
+
+    auto pb = buildProblem({filler.get()});
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
+    auto* var = pb->getVariable("componentToto.var1");
+    BOOST_CHECK(var);
+    BOOST_CHECK_EQUAL(var->getLb(), -3.);
+    BOOST_CHECK_EQUAL(var->getUb(), 4.);
 }
 
 // TODO
