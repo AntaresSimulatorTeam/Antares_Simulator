@@ -34,9 +34,8 @@
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
+#include "antares/study/system-model/library.h"
 #include "antares/study/system-model/parameter.h"
-
-#include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Study::SystemModel;
@@ -63,29 +62,47 @@ struct LinearProblemBuildingFixture
 {
     ModelBuilder model_builder;
     ComponentBuilder component_builder;
+    std::map<std::string, Model> models;
+    Antares::Solver::Registry<Node> node_memory;
 
-    Component makeComponentWithFloatVariables(const std::string componentName,
-                                              std::vector<FloatVariableData> data);
+    Component makeComponent(std::string modelId, std::string componentId);
+    LinearProblemBuildingFixture();
+    Model createModelWithOneVarAndLiteralBounds(std::string id,
+                                                std::string var_id,
+                                                double lb,
+                                                double ub);
 };
 
-Component LinearProblemBuildingFixture::makeComponentWithFloatVariables(
-  const std::string componentName,
-  std::vector<FloatVariableData> data)
+LinearProblemBuildingFixture::LinearProblemBuildingFixture()
 {
+    auto model1 = createModelWithOneVarAndLiteralBounds("oneVar_lb-1_ub6", "var1", -1, 6);
+    auto model2 = createModelWithOneVarAndLiteralBounds("oneVar_lb-3_ub2", "var2", -3, 2);
+    models["oneVar_lb-1_ub6"] = std::move(model1);
+    models["oneVar_lb-3_ub2"] = std::move(model2);
+}
+
+Model LinearProblemBuildingFixture::createModelWithOneVarAndLiteralBounds(std::string id,
+                                                                          std::string var_id,
+                                                                          double lb,
+                                                                          double ub)
+{
+    auto lb_node = node_memory.create<LiteralNode>(lb);
+    auto ub_node = node_memory.create<LiteralNode>(ub);
+    Variable variable(var_id,
+                      generateExpression(lb_node),
+                      generateExpression(ub_node),
+                      ValueType::FLOAT);
     std::vector<Variable> variables;
-    for (auto& variableData: data)
-    {
-        LiteralNode lb_node(variableData.lowerBound);
-        LiteralNode ub_node(variableData.upperBound);
-        Variable var = {variableData.name,
-                        generateExpression(&lb_node),
-                        generateExpression(&ub_node),
-                        ValueType::FLOAT};
-        variables.push_back(std::move(var));
-    }
-    auto model = model_builder.withId("model").withVariables(std::move(variables)).build();
-    auto component = component_builder.withId("componentToto")
-                       .withModel(&model)
+    variables.push_back(std::move(variable));
+    auto model = model_builder.withId(id).withVariables(std::move(variables)).build();
+    return std::move(model);
+}
+
+Component LinearProblemBuildingFixture::makeComponent(const std::string modelId,
+                                                      const std::string componentId)
+{
+    auto component = component_builder.withId(componentId)
+                       .withModel(&models[modelId])
                        .withScenarioGroupId("scenario_group")
                        .build();
     return std::move(component);
@@ -179,10 +196,10 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
     BOOST_CHECK_THROW(buildProblem({filler.get()}), std::out_of_range);
 }
 
-/*BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
+BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
 {
-    auto component1 = makeComponentWithFloatVariables("component_1", {{"var1", -1., 6.}});
-    auto component2 = makeComponentWithFloatVariables("component_2", {{"var2", -3., 2.}});
+    auto component1 = makeComponent("oneVar_lb-1_ub6", "component_1");
+    auto component2 = makeComponent("oneVar_lb-3_ub2", "component_2");
 
     auto filler1 = std::make_unique<ComponentFiller>(component1);
     auto filler2 = std::make_unique<ComponentFiller>(component2);
@@ -200,7 +217,7 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
     BOOST_CHECK(var2);
     BOOST_CHECK_EQUAL(var2->getLb(), -3.);
     BOOST_CHECK_EQUAL(var2->getUb(), 2.);
-}*/
+}
 
 BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem_contains_this_var)
 {
