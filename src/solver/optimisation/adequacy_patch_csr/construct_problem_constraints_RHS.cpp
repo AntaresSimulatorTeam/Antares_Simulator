@@ -61,8 +61,8 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            std::map<int, int>::iterator it = numberOfConstraintCsrAreaBalance.find(Area);
-            if (it != numberOfConstraintCsrAreaBalance.end())
+            std::map<int, int>::iterator it = numberOfConstraintCsrAreaBalance_.find(Area);
+            if (it != numberOfConstraintCsrAreaBalance_.end())
             {
                 int Cnt = it->second;
                 problemeAResoudre_.SecondMembre[Cnt] = rhsAreaBalanceValues_[Area];

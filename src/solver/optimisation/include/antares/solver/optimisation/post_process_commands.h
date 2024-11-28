@@ -69,7 +69,7 @@ private:
     SimplexOptimization splx_optimization_;
 };
 
-class DTGmarginForAdqPatchPostProcessCmd: public basePostProcessComman
+class DTGmarginForAdqPatchPostProcessCmd: public basePostProcessCommand
 {
 public:
     UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,

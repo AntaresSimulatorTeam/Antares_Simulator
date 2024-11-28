@@ -95,13 +95,6 @@ public:
 
     void run(uint week, uint year);
 
-public:
-    // TODO [gp] : try to make these members private
-    double belowThisThresholdSetToZero;
-    std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
-    std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
-    int triggeredHour;
-
 private:
     void calculateCsrParameters();
 
@@ -131,8 +124,13 @@ private:
     // Costs
     void setQuadraticCost();
     void setLinearCost();
+public:
+    // TODO [gp] : try to make these members private
+    double belowThisThresholdSetToZero;
+    std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
+    std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
+    int triggeredHour;
 
-private:
     const AdqPatchParams& adqPatchParams_;
     VariableManagement::VariableManager variableManager_;
 
