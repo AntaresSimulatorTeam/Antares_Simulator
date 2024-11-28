@@ -42,12 +42,6 @@ using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Solver::Nodes;
 
-struct LinearProblemBuildingFixture
-{
-    ModelBuilder model_builder;
-    ComponentBuilder component_builder;
-};
-
 static Expression generateExpression(Node* node)
 {
     // TODO : this seems too complicated; try to make building Expressions easier
@@ -55,6 +49,45 @@ static Expression generateExpression(Node* node)
     Antares::Solver::NodeRegistry node_registry(node, std::move(registry));
     Expression expression("expression", std::move(node_registry));
     return std::move(expression);
+}
+
+struct FloatVariableData
+{
+    std::string name;
+    double lowerBound = 0;
+    double upperBound = 0;
+};
+
+struct LinearProblemBuildingFixture
+{
+    ModelBuilder model_builder;
+    ComponentBuilder component_builder;
+
+    Component makeComponentWithFloatVariables(const std::string componentName,
+                                              std::vector<FloatVariableData> data);
+};
+
+Component LinearProblemBuildingFixture::makeComponentWithFloatVariables(
+  const std::string componentName,
+  std::vector<FloatVariableData> data)
+{
+    std::vector<Variable> variables;
+    for (auto& variableData: data)
+    {
+        LiteralNode lb_node(variableData.lowerBound);
+        LiteralNode ub_node(variableData.upperBound);
+        Variable var = {variableData.name,
+                        generateExpression(&lb_node),
+                        generateExpression(&ub_node),
+                        ValueType::FLOAT};
+        variables.push_back(std::move(var));
+    }
+    auto model = model_builder.withId("model").withVariables(std::move(variables)).build();
+    auto component = component_builder.withId("componentToto")
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+    return std::move(component);
 }
 
 static std::unique_ptr<ILinearProblem> buildProblem(std::vector<LinearProblemFiller*> fillers)
@@ -79,9 +112,9 @@ BOOST_AUTO_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var
                      generateExpression(&lb_node),
                      generateExpression(&ub_node),
                      ValueType::FLOAT};
-    std::vector<Variable> vec_vars;
-    vec_vars.push_back(std::move(var1));
-    auto model = model_builder.withId("model").withVariables(std::move(vec_vars)).build();
+    std::vector<Variable> variables;
+    variables.push_back(std::move(var1));
+    auto model = model_builder.withId("model").withVariables(std::move(variables)).build();
 
     auto component = component_builder.withId("componentToto")
                        .withModel(&model)
@@ -109,9 +142,9 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
                      generateExpression(&lb_node),
                      generateExpression(&ub_node),
                      ValueType::FLOAT};
-    std::vector<Variable> vec_vars;
-    vec_vars.push_back(std::move(var1));
-    auto model = model_builder.withId("model").withVariables(std::move(vec_vars)).build();
+    std::vector<Variable> variables;
+    variables.push_back(std::move(var1));
+    auto model = model_builder.withId("model").withVariables(std::move(variables)).build();
 
     auto component = component_builder.withId("componentToto")
                        .withModel(&model)
@@ -131,9 +164,9 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
                      generateExpression(&lb_node),
                      generateExpression(&ub_node),
                      ValueType::FLOAT};
-    std::vector<Variable> vec_vars;
-    vec_vars.push_back(std::move(var1));
-    auto model = model_builder.withId("model").withVariables(std::move(vec_vars)).build();
+    std::vector<Variable> variables;
+    variables.push_back(std::move(var1));
+    auto model = model_builder.withId("model").withVariables(std::move(variables)).build();
 
     auto component = component_builder.withId("componentToto")
                        .withModel(&model)
@@ -143,6 +176,29 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
     auto filler = std::make_unique<ComponentFiller>(component);
     // TODO : improve exception message
     BOOST_CHECK_THROW(buildProblem({filler.get()}), std::out_of_range);
+}
+
+BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
+{
+    auto component1 = makeComponentWithFloatVariables("component_1", {{"var1", -1., 6.}});
+    auto component2 = makeComponentWithFloatVariables("component_2", {{"var2", -3., 2.}});
+
+    auto filler1 = std::make_unique<ComponentFiller>(component1);
+    auto filler2 = std::make_unique<ComponentFiller>(component2);
+
+    auto pb = buildProblem({filler1.get(), filler2.get()});
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+
+    auto* var1 = pb->getVariable("component_1.var1");
+    BOOST_CHECK(var1);
+    BOOST_CHECK_EQUAL(var1->getLb(), -1.);
+    BOOST_CHECK_EQUAL(var1->getUb(), 6.);
+
+    auto* var2 = pb->getVariable("component_2.var2");
+    BOOST_CHECK(var2);
+    BOOST_CHECK_EQUAL(var2->getLb(), -3.);
+    BOOST_CHECK_EQUAL(var2->getUb(), 2.);
 }
 
 BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem_contains_this_var)
@@ -205,8 +261,8 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
                      generateExpression(&var_lb_node),
                      generateExpression(&var_ub_node),
                      ValueType::FLOAT};
-    std::vector<Variable> vec_vars;
-    vec_vars.push_back(std::move(var1));
+    std::vector<Variable> variables;
+    variables.push_back(std::move(var1));
 
     auto var_node = VariableNode("var1");
     auto three = LiteralNode(3);
@@ -217,7 +273,7 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
     vec_cts.push_back(std::move(constraint));
 
     auto model = model_builder.withId("model")
-                   .withVariables(std::move(vec_vars))
+                   .withVariables(std::move(variables))
                    .withConstraints(std::move(vec_cts))
                    .build();
 
