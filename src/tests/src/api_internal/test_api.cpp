@@ -105,8 +105,7 @@ BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    const Antares::Solver::Optimization::OptimizationOptions opt{.ortoolsUsed = true,
-                                                                 .ortoolsSolver = "coin",
+    const Antares::Solver::Optimization::OptimizationOptions opt{.ortoolsSolver = "coin",
                                                                  .solverLogs = false,
                                                                  .solverParameters = ""};
 
@@ -123,7 +122,6 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_solver)
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
     const Antares::Solver::Optimization::OptimizationOptions opt{
-      .ortoolsUsed = true,
       .ortoolsSolver = "this-solver-does-not-exist",
       .solverLogs = true,
       .solverParameters = ""};
