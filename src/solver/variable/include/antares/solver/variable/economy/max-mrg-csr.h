@@ -27,28 +27,28 @@
 #pragma once
 
 #include "../variable.h"
+#include "max-mrg-utils.h"
 
 namespace Antares::Solver::Variable::Economy
 {
-
-struct VCardLOLD_CSR
+struct VCardMAX_MRG_CSR
 {
     //! Caption
     static std::string Caption()
     {
-        return "LOLD CSR";
+        return "MAX MRG CSR";
     }
 
     //! Unit
     static std::string Unit()
     {
-        return "Hours";
+        return "MWh";
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "LOLD for CSR";
+        return "Max margin for CSR";
     }
 
     //! The expecte results
@@ -59,29 +59,31 @@ struct VCardLOLD_CSR
             >>>>>
       ResultsType;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 2,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSumThen1IfPositive,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! The VCard to look for for calculating spatial aggregates
+    typedef VCardMAX_MRG_CSR VCardForSpatialAggregate;
+
+    static constexpr uint8_t categoryDataLevel
+      = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr int columnCount = 1;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
@@ -91,18 +93,24 @@ struct VCardLOLD_CSR
 }; // class VCard
 
 /*!
-** \brief
+** \brief Prepare MAX.MRG results for a given week
+*/
+template<bool WithSimplexT>
+void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace);
+
+/*!
+** \brief Max MRG
 */
 template<class NextT = Container::EndOfList>
-class LOLD_CSR: public Variable::IVariable<LOLD_CSR<NextT>, NextT, VCardLOLD_CSR>
+class MaxMrgCsr: public Variable::IVariable<MaxMrgCsr<NextT>, NextT, VCardMAX_MRG_CSR>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardLOLD_CSR VCardType;
+    typedef VCardMAX_MRG_CSR VCardType;
     //! Ancestor
-    typedef Variable::IVariable<LOLD_CSR<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<MaxMrgCsr<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -129,7 +137,7 @@ public:
     };
 
 public:
-    ~LOLD_CSR()
+    ~MaxMrgCsr()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -146,6 +154,7 @@ public:
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
         }
+
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -156,21 +165,10 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void simulationBegin()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            pValuesForTheCurrentYear[numSpace].reset();
-        }
-        // Next
-        NextType::simulationBegin();
-    }
-
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
-
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
@@ -198,15 +196,17 @@ public:
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
+    void weekForEachArea(State& state, unsigned int numSpace)
     {
-        if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.5)
-        {
-            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
-        }
+        double* rawhourly = Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour);
 
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
+        // Getting data required to compute max margin
+        MaxMrgCSRdataFactory maxMRGcsrDataFactory(state, numSpace);
+        MaxMRGinput maxMRGinput = maxMRGcsrDataFactory.data();
+        computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);
+
+        // next
+        NextType::weekForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -239,6 +239,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class LOLD_CSR
+}; // class MaxMrgCsr
 
 } // namespace Antares::Solver::Variable::Economy

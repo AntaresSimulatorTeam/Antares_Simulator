@@ -383,22 +383,10 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                                                          0); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
                                                                      0.); // adq patch
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveDown.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveAny.assign(NombreDePasDeTemps, 0.);
+
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
                                                                                  0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeUp.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeDown.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceNegativeAny.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillanceEnReserve.assign(NombreDePasDeTemps, 0.);
+
         problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);

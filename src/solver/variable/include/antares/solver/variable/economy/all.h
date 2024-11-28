@@ -63,7 +63,6 @@
 #include "pumping.h"
 #include "renewableGeneration.h"
 #include "reservoirlevel.h"
-#include "shortTermStorage.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergy.h"
 #include "unsupliedEnergyCsr.h"

@@ -1,53 +1,54 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
+** Copyright 2007-2023 RTE
+** Authors: Antares_Simulator Team
+**
+** This file is part of Antares_Simulator.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
+**
+** There are special exceptions to the terms and conditions of the
+** license as they are applied to this software. View the full text of
+** the exceptions in file COPYING.txt in the directory of this software
+** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
+** GNU General Public License for more details.
 **
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+** You should have received a copy of the GNU General Public License
+** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
+**
+** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #pragma once
 
-#include "antares/solver/variable/variable.h"
+#include "../variable.h"
 
-namespace Antares
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
-{
-struct VCardUnsupliedEnergyCSR
+
+struct VCardLOLD_CSR
 {
     //! Caption
     static std::string Caption()
     {
-        return "UNSP. ENRG CSR";
+        return "LOLD CSR";
     }
 
     //! Unit
     static std::string Unit()
     {
-        return "MWh";
+        return "Hours";
     }
 
     //! The short description of the variable
     static std::string Description()
     {
-        return "Unsuplied Energy after CSR (demand that cannot be satisfied)";
+        return "LOLD for CSR";
     }
 
     //! The expecte results
@@ -58,13 +59,7 @@ struct VCardUnsupliedEnergyCSR
             >>>>>
       ResultsType;
 
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardUnsupliedEnergyCSR VCardForSpatialAggregate;
-    < < < < < < < < HEAD: src / solver / variable / include / antares / solver / variable / economy
-                          / unsupliedEnergyCsr.h
-
-                            //! Data Level
-                            static constexpr uint8_t categoryDataLevel
+    static constexpr uint8_t categoryDataLevel
       = Category::DataLevel::area;
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
@@ -87,50 +82,26 @@ struct VCardUnsupliedEnergyCSR
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    == == == == enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 1,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0
-    };
-
-    >>>>>>>> 8dbf5c11e(Adequacy patch CSR - revamp output variables[ANT - 1932](#2421)):
-        src / solver / variable / economy
-        / unsupliedEnergyCsr.h typedef IntermediateValues IntermediateValuesBaseType;
+    typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
 }; // class VCard
 
+/*!
+** \brief
+*/
 template<class NextT = Container::EndOfList>
-class UnsupliedEnergyCSR
-    : public Variable::IVariable<UnsupliedEnergyCSR<NextT>, NextT, VCardUnsupliedEnergyCSR>
+class LOLD_CSR: public Variable::IVariable<LOLD_CSR<NextT>, NextT, VCardLOLD_CSR>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardUnsupliedEnergyCSR VCardType;
+    typedef VCardLOLD_CSR VCardType;
     //! Ancestor
-    typedef Variable::IVariable<UnsupliedEnergyCSR<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<LOLD_CSR<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -157,7 +128,7 @@ public:
     };
 
 public:
-    ~UnsupliedEnergyCSR()
+    ~LOLD_CSR()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -174,7 +145,6 @@ public:
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
         }
-
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -183,18 +153,6 @@ public:
     static void InitializeResultsFromStudy(R& results, Data::Study& study)
     {
         VariableAccessorType::InitializeAndReset(results, study);
-    }
-
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
     }
 
     void simulationBegin()
@@ -207,11 +165,6 @@ public:
         NextType::simulationBegin();
     }
 
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
@@ -219,12 +172,6 @@ public:
 
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -250,16 +197,13 @@ public:
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek];
+        if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.5)
+        {
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -294,9 +238,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class UnsupliedEnergyCSR
+}; // class LOLD_CSR
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
