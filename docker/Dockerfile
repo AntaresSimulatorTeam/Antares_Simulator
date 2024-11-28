@@ -12,7 +12,7 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 ARG BRANCH=develop
 RUN cd /workspace && \
-    git clone https://github.com/BAZ-C/Antares_Simulator.git --branch $BRANCH && \
+    git clone https://github.com/AntaresSimulatorTeam/Antares_Simulator.git --branch $BRANCH && \
     cd Antares_Simulator && \
     git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics && \
     export VCPKG_ROOT=/workspace/Antares_Simulator/vcpkg
