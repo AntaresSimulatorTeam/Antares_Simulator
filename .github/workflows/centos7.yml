@@ -2,7 +2,7 @@ name: Centos7 CI (push and/or release)
 
 on:
   release:
-    types: [created]
+    types: [ created ]
   push:
     branches:
       - develop
@@ -36,15 +36,14 @@ jobs:
     steps:
 
 
-
       #sparse checkout dockerfiles
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           sparse-checkout: |
-             docker/Dockerfile
-             docker/AntaresDeps
-          ref : ${{ env.REF }}
+            docker/Dockerfile
+            docker/AntaresDeps
+          ref: ${{ env.REF }}
 
       - name: set env variables -- DockerFiles
         run: |
@@ -76,11 +75,11 @@ jobs:
 
       - name: Build the image and Antares
         run: |
-            docker build \
-            -t antares:centos7  \
-            --build-arg="BRANCH=${{ env.REF }}" \
-            --build-arg="NPROC=$(nproc)" \
-            -f ${{ env.DOCKERFILE }} .
+          docker build \
+          -t antares:centos7  \
+          --build-arg="BRANCH=${{ env.REF }}" \
+          --build-arg="NPROC=$(nproc)" \
+          -f ${{ env.DOCKERFILE }} .
 
 
       - name: create a container without starting it && retrieve the .tgz
@@ -88,14 +87,15 @@ jobs:
           container_id=$(docker create antares:centos7)
           mkdir archive
           docker cp $container_id:/workspace/Antares_Simulator/_build/antares-9.2.0-rc5-CentOS-7.9.2009.tar.gz archive/ 
+          docker cp $container_id:/workspace/Antares_Simulator/_build/antares-9.2.0-rc5-CentOS-7.9.2009.rpm archive/ 
           docker rm $container_id
 
       - name: Install gh if needed
         if: ${{ env.IS_RELEASE == 'true' }}
         run: |
-            wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
-            rpm -i gh_2.52.0_linux_amd64.rpm
-            gh --version
+          wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
+          rpm -i gh_2.52.0_linux_amd64.rpm
+          gh --version
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
@@ -103,5 +103,5 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           tag: ${{ github.event.inputs.release_tag }}
         run: |
-          gh release upload "$tag" archive/*.tar.gz _build/*.rpm
+          gh release upload "$tag" archive/*.tar.gz archive/*.rpm
 
