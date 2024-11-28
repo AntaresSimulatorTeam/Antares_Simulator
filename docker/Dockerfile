@@ -68,3 +68,8 @@ RUN cd _build && \
 #.tar.gz creation
 RUN cd _build && \
     cpack -G TGZ
+#mv .rpm and .tar.gz
+RUN cd _build && \
+    mkdir archive && \
+    mv *.tar.gz archive && \
+    mv *.rpm archive
