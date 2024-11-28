@@ -39,18 +39,13 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto linear_constraint = visitor.dispatch(constraint.expression().RootNode());
-        auto lb = linear_constraint.sign == LinearConstraint::LEQ ? -pb.infinity()
-                                                                  : linear_constraint.scalar_value;
-        auto ub = linear_constraint.sign == LinearConstraint::GEQ ? pb.infinity()
-                                                                  : linear_constraint.scalar_value;
-        auto ct = pb.addConstraint(lb, ub, component_.Id() + "." + constraint.Id());
-
-        for (auto& var_and_coef: linear_constraint.coef_per_var)
+        auto ct = pb.addConstraint(linear_constraint.lb,
+                                   linear_constraint.ub,
+                                   component_.Id() + "." + constraint.Id());
+        for (auto [var_id, coef]: linear_constraint.coef_per_var)
         {
-            auto* variable = pb.getVariable(component_.Id() + "." + var_and_coef.first);
-            double variableCoeff = var_and_coef.second;
-
-            ct->setCoefficient(variable, variableCoeff);
+            auto* variable = pb.getVariable(component_.Id() + "." + var_id);
+            ct->setCoefficient(variable, coef);
         }
     }
 }
