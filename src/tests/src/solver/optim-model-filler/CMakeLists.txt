@@ -1,4 +1,4 @@
-set(EXECUTABLE_NAME unit-tests-for-modeler-impl)
+set(EXECUTABLE_NAME unit-tests-for-component-filler)
 add_executable(${EXECUTABLE_NAME})
 
 target_sources(${EXECUTABLE_NAME}

@@ -30,11 +30,19 @@ using namespace Antares::Solver::Nodes;
 // TODO : doc
 namespace Antares::Optimization
 {
+
 struct LinearConstraint
 {
-    double lb = -std::numeric_limits<double>::infinity();
-    double ub = 3;
-    std::map<std::string, double> coef_per_var = {{"var1", 1}};
+    enum Sign
+    {
+        LEQ,
+        GEQ,
+        EQ
+    };
+
+    double scalar_value = 0;
+    std::map<std::string, double> coef_per_var;
+    Sign sign;
 };
 
 class ReadLinearConstraintVisitor: public NodeVisitor<LinearConstraint>

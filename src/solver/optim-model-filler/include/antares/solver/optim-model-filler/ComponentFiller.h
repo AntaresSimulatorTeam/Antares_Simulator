@@ -22,7 +22,6 @@
 #pragma once
 #include <antares/solver/modeler/api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
-#include "antares/solver/expressions/visitors/EvalVisitor.h"
 
 namespace Antares::Study::SystemModel
 {
@@ -37,8 +36,6 @@ public:
     ComponentFiller() = delete;
     ComponentFiller(ComponentFiller& other) = delete;
     ComponentFiller(const Study::SystemModel::Component& component);
-    ComponentFiller(const Study::SystemModel::Component& component,
-                    std::unique_ptr<Solver::Visitors::EvalVisitor> evaluator);
 
     void addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                       Solver::Modeler::Api::LinearProblemData& data,
@@ -52,6 +49,5 @@ public:
 
 private:
     const Study::SystemModel::Component& component_;
-    std::unique_ptr<Solver::Visitors::EvalVisitor> evaluator_;
 };
 } // namespace Antares::Optimization

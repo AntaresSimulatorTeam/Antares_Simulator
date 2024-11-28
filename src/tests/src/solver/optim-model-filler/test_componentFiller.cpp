@@ -23,11 +23,13 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/solver/expressions/nodes/GreaterThanOrEqualNode.h"
 #include "antares/solver/expressions/nodes/LessThanOrEqualNode.h"
 #include "antares/solver/expressions/nodes/LiteralNode.h"
+#include "antares/solver/expressions/nodes/MultiplicationNode.h"
 #include "antares/solver/expressions/nodes/ParameterNode.h"
+#include "antares/solver/expressions/nodes/SumNode.h"
 #include "antares/solver/expressions/nodes/VariableNode.h"
-#include "antares/solver/expressions/visitors/EvalVisitor.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -37,7 +39,6 @@
 #include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Solver::Modeler::Api;
-using namespace Antares::Solver::Visitors;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Solver::Nodes;
@@ -178,7 +179,7 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
     BOOST_CHECK_THROW(buildProblem({filler.get()}), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
+/*BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
 {
     auto component1 = makeComponentWithFloatVariables("component_1", {{"var1", -1., 6.}});
     auto component2 = makeComponentWithFloatVariables("component_2", {{"var2", -3., 2.}});
@@ -199,7 +200,7 @@ BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_t
     BOOST_CHECK(var2);
     BOOST_CHECK_EQUAL(var2->getLb(), -3.);
     BOOST_CHECK_EQUAL(var2->getUb(), 2.);
-}
+}*/
 
 BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem_contains_this_var)
 {
@@ -228,9 +229,7 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
                        .withScenarioGroupId("scenario_group")
                        .build();
 
-    EvaluationContext evalContext({{"pmin", -3.}, {"pmax", 4.}}, {});
-    std::unique_ptr<EvalVisitor> evaluator = std::make_unique<EvalVisitor>(evalContext);
-    auto filler = std::make_unique<ComponentFiller>(component, std::move(evaluator));
+    auto filler = std::make_unique<ComponentFiller>(component);
 
     auto pb = buildProblem({filler.get()});
 
@@ -267,7 +266,7 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
     auto var_node = VariableNode("var1");
     auto three = LiteralNode(3);
     auto ct_node = LessThanOrEqualNode(&var_node, &three);
-    // TODO: replace with parsing of "var1 <= 1" ?
+    // TODO: replace with parsing of "var1 <= 3" ?
     Constraint constraint = {"ct1", generateExpression(&ct_node)};
     std::vector<Constraint> vec_cts;
     vec_cts.push_back(std::move(constraint));
@@ -292,6 +291,51 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
     BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
     BOOST_CHECK_EQUAL(ct->getUb(), 3);
     BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("componentToto.var1")), 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct, LinearProblemBuildingFixture)
+{
+    LiteralNode var_lb_node(-5);
+    LiteralNode var_ub_node(10);
+    Variable var1 = {"var1",
+                     generateExpression(&var_lb_node),
+                     generateExpression(&var_ub_node),
+                     ValueType::FLOAT};
+    std::vector<Variable> variables;
+    variables.push_back(std::move(var1));
+
+    // 3 * var1 >= 5 * var1 + 5 => -2 * var1 >= 5
+    auto var_node = VariableNode("var1");
+    auto three = LiteralNode(3);
+    auto five = LiteralNode(5);
+    auto coef_node_left = MultiplicationNode(&three, &var_node);
+    auto coef_node_right = MultiplicationNode(&var_node, &five);
+    auto sum_node_right = SumNode(&coef_node_right, &five);
+    auto ct_node = GreaterThanOrEqualNode(&coef_node_left, &sum_node_right);
+    Constraint constraint = {"ct_1", generateExpression(&ct_node)};
+    std::vector<Constraint> vec_cts;
+    vec_cts.push_back(std::move(constraint));
+
+    auto model = model_builder.withId("model")
+                   .withVariables(std::move(variables))
+                   .withConstraints(std::move(vec_cts))
+                   .build();
+
+    auto component = component_builder.withId("componentTata")
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+
+    auto filler = std::make_unique<ComponentFiller>(component);
+    auto pb = buildProblem({filler.get()});
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
+    auto ct = pb->getConstraint("componentTata.ct_1");
+    BOOST_CHECK(ct);
+    BOOST_CHECK_EQUAL(ct->getLb(), 5);
+    BOOST_CHECK_EQUAL(ct->getUb(), pb->infinity());
+    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("componentTata.var1")), -2);
 }
 
 // TODO

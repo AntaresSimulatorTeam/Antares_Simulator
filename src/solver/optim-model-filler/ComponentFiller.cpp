@@ -5,21 +5,14 @@
 #include <ranges>
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
+#include "antares/solver/expressions/visitors/EvalVisitor.h"
 #include "antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h"
 #include "antares/study/system-model/variable.h"
 
 namespace Antares::Optimization
 {
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
-    component_(component),
-    evaluator_(std::make_unique<Solver::Visitors::EvalVisitor>())
-{
-}
-
-ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component,
-                                 std::unique_ptr<Solver::Visitors::EvalVisitor> evaluator):
-    component_(component),
-    evaluator_(std::move(evaluator))
+    component_(component)
 {
 }
 
@@ -27,10 +20,12 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
+    EvaluationContext evalContext(component_.getParameterValues(), {});
+    std::unique_ptr<EvalVisitor> evaluator = std::make_unique<EvalVisitor>(evalContext);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
-        pb.addVariable(evaluator_->dispatch(variable.LowerBound().RootNode()),
-                       evaluator_->dispatch(variable.UpperBound().RootNode()),
+        pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
+                       evaluator->dispatch(variable.UpperBound().RootNode()),
                        variable.Type() != Study::SystemModel::ValueType::FLOAT,
                        component_.Id() + "." + variable.Id());
     }
@@ -40,16 +35,15 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
                                      Solver::Modeler::Api::LinearProblemData& data,
                                      Solver::Modeler::Api::FillContext& ctx)
 {
-    // ReadLinearConstraintVisitor visitor;
+    ReadLinearConstraintVisitor visitor;
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
-        LinearConstraint linear_constraint;
-        // TODO :
-        // auto linear_constraint = visitor.dispatch(constraint.expression().RootNode());
-
-        auto ct = pb.addConstraint(linear_constraint.lb,
-                                   linear_constraint.ub,
-                                   component_.Id() + "." + constraint.Id());
+        auto linear_constraint = visitor.dispatch(constraint.expression().RootNode());
+        auto lb = linear_constraint.sign == LinearConstraint::LEQ ? -pb.infinity()
+                                                                  : linear_constraint.scalar_value;
+        auto ub = linear_constraint.sign == LinearConstraint::GEQ ? pb.infinity()
+                                                                  : linear_constraint.scalar_value;
+        auto ct = pb.addConstraint(lb, ub, component_.Id() + "." + constraint.Id());
 
         for (auto& var_and_coef: linear_constraint.coef_per_var)
         {

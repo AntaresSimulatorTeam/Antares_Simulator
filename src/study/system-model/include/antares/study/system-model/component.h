@@ -34,7 +34,7 @@ namespace Antares::Study::SystemModel
 struct ComponentData
 {
     std::string id;
-    Model* model = nullptr;
+    const Model* model = nullptr;
     std::map<std::string, double> parameter_values;
     std::string scenario_group_id;
 
@@ -61,9 +61,15 @@ public:
         return data_.id;
     }
 
-    Model* getModel() const
+    const Model* getModel() const
     {
         return data_.model;
+    }
+
+    const std::map<std::string, double>& getParameterValues() const
+    {
+        // TODO : add tests
+        return data_.parameter_values;
     }
 
     double getParameterValue(const std::string& parameter_id) const
@@ -92,7 +98,7 @@ class ComponentBuilder
 {
 public:
     ComponentBuilder& withId(std::string_view id);
-    ComponentBuilder& withModel(Model* model);
+    ComponentBuilder& withModel(const Model* model);
     ComponentBuilder& withParameterValues(std::map<std::string, double> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);
     Component build();
