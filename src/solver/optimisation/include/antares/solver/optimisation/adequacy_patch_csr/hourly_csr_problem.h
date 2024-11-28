@@ -70,13 +70,12 @@ class HourlyCSRProblem
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 public:
-    ~HourlyCSRProblem() = default;
-
-    HourlyCSRProblem(const HourlyCSRProblem&) = delete;
-    HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;
-
     explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
         adqPatchParams_(adqPatchParams),
+        variableManager_(p->CorrespondanceVarNativesVarOptim,
+                         p->NumeroDeVariableStockFinal,
+                         p->NumeroDeVariableDeTrancheDeStock,
+                         p->NombreDePasDeTempsPourUneOptimisation),
         problemeHebdo_(p)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
@@ -84,6 +83,10 @@ public:
 
         allocateProblem();
     }
+
+    HourlyCSRProblem(const HourlyCSRProblem&) = delete;
+    HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;
+
 
     inline void setHour(int hour)
     {
@@ -95,15 +98,9 @@ public:
 public:
     // TODO [gp] : try to make these members private
     double belowThisThresholdSetToZero;
+    std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
     int triggeredHour;
-    std::set<int> ensVariablesInsideAdqPatch; // place inside only ENS inside adq-patch
-    // links between two areas inside the adq-patch domain
-    std::map<int, LinkVariable> linkInsideAdqPatch;
-    std::map<int, int> numberOfConstraintCsrAreaBalance;
-    std::map<int, int> numberOfConstraintCsrFlowDissociation;
-    std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
-                                                           // contains interco 2-2
 
 private:
     void calculateCsrParameters();
@@ -142,39 +139,13 @@ private:
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p):
-        adqPatchParams_(adqPatchParams),
-        variableManager_(p->CorrespondanceVarNativesVarOptim,
-                         p->NumeroDeVariableStockFinal,
-                         p->NumeroDeVariableDeTrancheDeStock,
-                         p->NombreDePasDeTempsPourUneOptimisation),
-        problemeHebdo_(p)
-    {
-        double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
-        belowThisThresholdSetToZero = std::min(temp, 0.1);
-
-        allocateProblem();
-    }
-
-    ~HourlyCSRProblem() = default;
-
-    HourlyCSRProblem(const HourlyCSRProblem&) = delete;
-    HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;
-
-    inline void setHour(int hour)
-    {
-        triggeredHour = hour;
-    }
-
     std::map<int, int> numberOfConstraintCsrEns;
-    std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
     std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
                                                            // contains interco 2-2
 
     std::map<int, double> rhsAreaBalanceValues;
-    std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
-    std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
+
 
     struct LinkVariable
     {

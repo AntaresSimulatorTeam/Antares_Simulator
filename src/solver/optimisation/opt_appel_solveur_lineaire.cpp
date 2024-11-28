@@ -214,22 +214,11 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    if (options.ortoolsUsed)
+    const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
+    solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
+    if (solver != nullptr)
     {
-        const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
-        if (solver != nullptr)
-        {
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
-        }
-    }
-    else
-    {
-        ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
-        if (ProbSpx != nullptr)
-        {
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)ProbSpx;
-        }
+	ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
     }
 
     measure.tick();

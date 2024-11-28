@@ -67,6 +67,7 @@
 #include "unsupliedEnergy.h"
 #include "unsupliedEnergyCsr.h"
 #include "waterValue.h"
+#include "spilledEnergy.h"
 
 // By thermal plant
 #include "nbOfDispatchedUnitsByPlant.h"
@@ -124,7 +125,7 @@ typedef                               // Prices
                       <Overflows        // Hydraulic overflows
                        <WaterValue      // Water values
                         <HydroCost      // Hydro costs
-                         <ShortTermStorageByGroup<
+                         <STSbyGroup<
                            STstorageInjectionByCluster<STstorageWithdrawalByCluster<
                              STstorageLevelsByCluster<STstorageCashFlowByCluster<
                                UnsupliedEnergy            // Unsuplied Energy
