@@ -37,6 +37,7 @@ struct VCardOverallCostCsr
     {
         return "OV. COST CSR";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -95,7 +96,7 @@ struct VCardOverallCostCsr
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class OverallCostCsr : public Variable::IVariable<OverallCostCsr<NextT>, NextT, VCardOverallCostCsr>
+class OverallCostCsr: public Variable::IVariable<OverallCostCsr<NextT>, NextT, VCardOverallCostCsr>
 {
 public:
     //! Type of the next static variable
@@ -121,11 +122,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -145,7 +146,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         NextType::initializeFromStudy(study);
     }
@@ -211,7 +214,8 @@ public:
                 - state.area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
 
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergyCSR;
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+          += costForSpilledOrUnsuppliedEnergyCSR;
 
         NextType::hourForEachArea(state, numSpace);
     }
@@ -236,8 +240,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

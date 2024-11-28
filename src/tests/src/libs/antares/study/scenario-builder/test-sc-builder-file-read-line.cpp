@@ -539,7 +539,7 @@ BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
     tsdata.attachArea(area_1);
     tsdata.reset(*study);
     tsdata.setTSnumber(thCluster_12.get(), 2, 22);
-    tsdata.setTSnumber(thCluster_12.get(), 5, 32); //out of bounds
+    tsdata.setTSnumber(thCluster_12.get(), 5, 32); // out of bounds
 
     study->parameters.nbTimeSeriesThermal = 1;
     thCluster_12->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;

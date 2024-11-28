@@ -81,7 +81,8 @@ private:
     const AreaList& area_list_;
     unsigned int thread_number_ = 0;
 };
-class UpdateMrgPriceAfterCSRcmd : public basePostProcessCommand
+
+class UpdateMrgPriceAfterCSRcmd: public basePostProcessCommand
 {
 public:
     UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
@@ -94,13 +95,12 @@ private:
     unsigned int thread_number_ = 0;
 };
 
-
-class DTGnettingAfterCSRcmd : public basePostProcessCommand
+class DTGnettingAfterCSRcmd: public basePostProcessCommand
 {
 public:
     DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
-                                       AreaList& areas,
-                                       unsigned int thread_number);
+                          AreaList& areas,
+                          unsigned int thread_number);
     void execute(const optRuntimeData&) override;
 
 private:

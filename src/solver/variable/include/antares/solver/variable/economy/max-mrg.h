@@ -22,6 +22,7 @@
 #define __SOLVER_VARIABLE_ECONOMY_MARGE_H__
 
 #include "antares/solver/variable/variable.h"
+
 #include "max-mrg-utils.h"
 
 namespace Antares

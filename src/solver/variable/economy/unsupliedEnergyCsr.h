@@ -60,10 +60,12 @@ struct VCardUnsupliedEnergyCSR
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardUnsupliedEnergyCSR VCardForSpatialAggregate;
-<<<<<<<< HEAD:src/solver/variable/include/antares/solver/variable/economy/unsupliedEnergyCsr.h
+    < < < < < < < < HEAD: src / solver / variable / include / antares / solver / variable / economy
+                          / unsupliedEnergyCsr.h
 
-    //! Data Level
-    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+                            //! Data Level
+                            static constexpr uint8_t categoryDataLevel
+      = Category::DataLevel::area;
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
                                                  & (Category::FileLevel::id
@@ -85,8 +87,7 @@ struct VCardUnsupliedEnergyCSR
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-========
-    enum
+    == == == == enum
     {
         //! Data Level
         categoryDataLevel = Category::area,
@@ -109,8 +110,10 @@ struct VCardUnsupliedEnergyCSR
         //! Can this variable be non applicable (0 : no, 1 : yes)
         isPossiblyNonApplicable = 0
     };
->>>>>>>> 8dbf5c11e (Adequacy patch CSR - revamp output variables [ANT-1932] (#2421)):src/solver/variable/economy/unsupliedEnergyCsr.h
-    typedef IntermediateValues IntermediateValuesBaseType;
+
+    >>>>>>>> 8dbf5c11e(Adequacy patch CSR - revamp output variables[ANT - 1932](#2421)):
+        src / solver / variable / economy
+        / unsupliedEnergyCsr.h typedef IntermediateValues IntermediateValuesBaseType;
     typedef IntermediateValues* IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;

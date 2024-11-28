@@ -27,7 +27,6 @@ namespace Antares::Check
 void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
                                     const std::string& solverName);
 
-
 void checkStudyVersion(const AnyString& optStudyFolder);
 
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,

@@ -26,9 +26,11 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include "max-mrg.h"
+
 #include <antares/study/area/scratchpad.h>
+#include <antares/study/study.h>
+
+#include "max-mrg.h"
 
 using namespace Yuni;
 
@@ -37,10 +39,10 @@ const unsigned int nbHoursInWeek = 168;
 namespace Antares::Solver::Variable::Economy
 {
 
-MaxMrgDataFactory::MaxMrgDataFactory(const State &state, unsigned int numSpace) :
-        state_(state),
-        numSpace_(numSpace),
-        weeklyResults_(state.problemeHebdo->ResultatsHoraires[state.area->index])
+MaxMrgDataFactory::MaxMrgDataFactory(const State& state, unsigned int numSpace):
+    state_(state),
+    numSpace_(numSpace),
+    weeklyResults_(state.problemeHebdo->ResultatsHoraires[state.area->index])
 {
     maxMRGinput_.hydroGeneration = weeklyResults_.TurbinageHoraire.data();
     maxMRGinput_.hydroMaxPower = state_.area->hydro.maxPower[Data::PartHydro::genMaxP];
@@ -77,7 +79,8 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
     assert(maxMrgOut && "Invalid OP.MRG target");
 
     // Following block could be replaced with :
-    // double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek, 0.);
+    // double weekHydroGen = std::accumulate(in.hydroGeneration, in.hydroGeneration + nbHoursInWeek,
+    // 0.);
     double weekHydroGen = 0.;
     for (uint h = 0; h != nbHoursInWeek; ++h)
     {
@@ -87,14 +90,18 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
     if (Yuni::Math::Zero(weekHydroGen))
     {
         for (uint h = 0; h != nbHoursInWeek; ++h)
+        {
             maxMrgOut[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
+        }
         return;
     }
 
     // Initialisation
     std::vector<double> OI(nbHoursInWeek);
     for (uint h = 0; h != nbHoursInWeek; ++h)
+    {
         OI[h] = in.spillage[h] + in.dtgMargin[h] - in.dens[h];
+    }
 
     // Following block could be replaced with :
     // double bottom = *std::min_element(OI.begin(), OI.end());
@@ -105,9 +112,13 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
     {
         double oii = OI[i];
         if (oii > top)
+        {
             top = oii;
+        }
         if (oii < bottom)
+        {
             bottom = oii;
+        }
     }
 
     double ecart = 1.;
@@ -125,7 +136,8 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
             if (niveau > OI[h])
             {
                 uint dayYear = in.calendar->hours[h + in.hourInYear].dayYear;
-                maxMrgOut[h] = Math::Min(niveau, OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
+                maxMrgOut[h] = Math::Min(niveau,
+                                         OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
                 SM += maxMrgOut[h] - OI[h];
             }
             else
@@ -137,9 +149,13 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
 
         ecart = SP - SM;
         if (ecart > 0)
+        {
             bottom = niveau;
+        }
         else
+        {
             top = niveau;
+        }
 
         if (!--loop)
         {

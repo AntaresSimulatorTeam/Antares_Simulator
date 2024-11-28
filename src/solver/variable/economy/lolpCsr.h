@@ -37,6 +37,7 @@ struct VCardLOLP_CSR
     {
         return "LOLP CSR";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -92,7 +93,7 @@ struct VCardLOLP_CSR
 ** \brief
 */
 template<class NextT = Container::EndOfList>
-class LOLP_CSR : public Variable::IVariable<LOLP_CSR<NextT>, NextT, VCardLOLP_CSR>
+class LOLP_CSR: public Variable::IVariable<LOLP_CSR<NextT>, NextT, VCardLOLP_CSR>
 {
 public:
     //! Type of the next static variable
@@ -118,11 +119,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -131,6 +132,7 @@ public:
     {
         delete[] pValuesForTheCurrentYear;
     }
+
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -140,7 +142,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -155,7 +159,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -195,7 +201,9 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.5)
+        {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 100;
+        }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
@@ -221,8 +229,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

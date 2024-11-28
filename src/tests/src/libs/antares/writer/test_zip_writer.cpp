@@ -24,29 +24,31 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#define BOOST_TEST_MODULE test-writer tests
+#define BOOST_TEST_MODULE test - writer tests
 
-#include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "yuni/job/queue/service.h"
+
+#include "antares/benchmarking/DurationCollector.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/writer_factory.h"
-#include "antares/benchmarking/DurationCollector.h"
+
 #include "utils.h"
 
 extern "C"
 {
 #include <mz.h>
-#include <mz_zip.h>
 #include <mz_strm.h>
+#include <mz_zip.h>
 #include <mz_zip_rw.h>
 }
 
 using namespace Yuni::Job;
-using Benchmarking::NullDurationCollector;
-using Benchmarking::IDurationCollector;
 using Antares::Solver::IResultWriter;
+using Benchmarking::IDurationCollector;
+using Benchmarking::NullDurationCollector;
 
 // Handles lifetime of necessary objects
 struct TestContext
@@ -67,34 +69,31 @@ std::shared_ptr<QueueService> createThreadPool(int size)
 std::string removeExtension(const std::string& name, const std::string& ext)
 {
     int length = name.size();
-    if (name.size() > ext.size() && name.substr(length - ext.size()) == ext) {
+    if (name.size() > ext.size() && name.substr(length - ext.size()) == ext)
+    {
         return name.substr(0, length - ext.size());
     }
     return name;
 }
 
-
 TestContext createContext(const std::filesystem::path zipPath, int threadCount)
 {
     auto threadPool = createThreadPool(threadCount);
-    std::unique_ptr<IDurationCollector> durationCollector = std::make_unique<Benchmarking::NullDurationCollector>();
+    std::unique_ptr<IDurationCollector>
+      durationCollector = std::make_unique<Benchmarking::NullDurationCollector>();
     std::string archiveName = zipPath.string();
-    auto writer = Antares::Solver::resultWriterFactory(
-            Antares::Data::zipArchive,
-            removeExtension(zipPath.string(), ".zip"),
-            threadPool,
-            *durationCollector
-        );
-    return {
-        threadPool,
-        std::move(durationCollector),
-        writer
-    };
+    auto writer = Antares::Solver::resultWriterFactory(Antares::Data::zipArchive,
+                                                       removeExtension(zipPath.string(), ".zip"),
+                                                       threadPool,
+                                                       *durationCollector);
+    return {threadPool, std::move(durationCollector), writer};
 }
 
 using ZipReaderHandle = void*;
 
-void checkZipContent(ZipReaderHandle handle, const std::string& path, const std::string& expectedContent)
+void checkZipContent(ZipReaderHandle handle,
+                     const std::string& path,
+                     const std::string& expectedContent)
 {
     BOOST_CHECK(mz_zip_reader_locate_entry(handle, path.c_str(), 0) == MZ_OK);
     BOOST_CHECK(mz_zip_reader_entry_open(handle) == MZ_OK);
