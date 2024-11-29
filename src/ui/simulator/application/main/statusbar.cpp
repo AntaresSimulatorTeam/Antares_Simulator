@@ -22,9 +22,7 @@
 #include <yuni/yuni.h>
 #include "main.h"
 #include "../../windows/version.h"
-#include "antares/study/study.h"
-// Datagrid
-#include "../../toolbox/components/datagrid/component.h"
+#include "../study.h"
 #include "../../toolbox/components/datagrid/gridhelper.h"
 #include <wx/statusbr.h>
 #include <ui/common/lock.h>
