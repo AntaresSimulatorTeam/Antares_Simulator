@@ -27,10 +27,9 @@
 
 #include <yuni/yuni.h>
 
+#include <antares/solver/variable/economy/max-mrg-utils.h>
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
-
-#include "max-mrg.h"
 
 using namespace Yuni;
 
@@ -45,9 +44,10 @@ MaxMrgDataFactory::MaxMrgDataFactory(const State& state, unsigned int numSpace):
     weeklyResults_(state.problemeHebdo->ResultatsHoraires[state.area->index])
 {
     maxMRGinput_.hydroGeneration = weeklyResults_.TurbinageHoraire.data();
-    maxMRGinput_.hydroMaxPower = state_.area->hydro.maxPower[Data::PartHydro::genMaxP];
+    maxMRGinput_.maxHourlyGenPower = &state_.area->hydro.series->maxHourlyGenPower;
     maxMRGinput_.dtgMargin = state_.area->scratchpad[numSpace].dispatchableGenerationMargin;
     maxMRGinput_.hourInYear = state.hourInTheYear;
+    maxMRGinput_.year = state.problemeHebdo->year;
     maxMRGinput_.calendar = &state.study.calendar;
     maxMRGinput_.areaName = state_.area->name.c_str();
 }
@@ -135,9 +135,10 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
             assert(h < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[h])
             {
-                uint dayYear = in.calendar->hours[h + in.hourInYear].dayYear;
-                maxMrgOut[h] = Math::Min(niveau,
-                                         OI[h] + in.hydroMaxPower[dayYear] - in.hydroGeneration[h]);
+                maxMrgOut[h] = Math::Min(
+                  niveau,
+                  OI[h] + in.maxHourlyGenPower->getCoefficient(in.year, h + in.hourInYear)
+                    - in.hydroGeneration[h]);
                 SM += maxMrgOut[h] - OI[h];
             }
             else

@@ -41,7 +41,7 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
-    - name: Install gcc 11
+    - name: Install gcc 10
       run: |
         # update mirrors, official centos7 is deprecated
         sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo &&\

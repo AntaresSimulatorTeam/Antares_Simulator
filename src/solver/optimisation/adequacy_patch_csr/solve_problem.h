@@ -3,8 +3,8 @@
 
 #include "antares/study/parameters/adq-patch-params.h"
 
-#include "../opt_structure_probleme_a_resoudre.h"
-#include "hourly_csr_problem.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 
 using namespace Antares::Data::AdequacyPatch;
 

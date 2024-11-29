@@ -120,8 +120,6 @@ jobs:
           cd src/api_client_example
            cmake -B _build -S . \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
-           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
@@ -172,6 +170,7 @@ jobs:
         run: |
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end"
+      
 
       - name: Upload logs for failed tests
         if: ${{ failure() }}
@@ -179,23 +178,40 @@ jobs:
         with:
           name: test-log
           path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
+          
+      - name: Run tests about infinity on BCs RHS
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-v830
+          os: ${{ env.os }}
+          
+      - name: Run MILP with CBC
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{ env.SIMTEST }}
+          batch-name: valid-milp
+          variant: "milp-cbc"
+          os: ${{ env.os }}
 
-    - name: Run tests on adequacy patch
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: adequacy-patch-CSR
-        os: ${{ env.os }}
-
-    - name: Run parallel tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-parallel
-        os: ${{ env.os }}
-        variant: "parallel"
+      - name: Run tests on adequacy patch
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          batch-name: adequacy-patch-CSR
+          os: ${{ env.os }}
+      
+      - name: Run parallel tests
+        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+        uses: ./.github/workflows/run-tests
+        with:
+          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          batch-name: valid-parallel
+          os: ${{ env.os }}
+          variant: "parallel"
 
       - name: Run tests introduced in 8.6.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}

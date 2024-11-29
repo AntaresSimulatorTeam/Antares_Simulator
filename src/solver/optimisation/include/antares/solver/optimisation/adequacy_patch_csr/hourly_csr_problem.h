@@ -127,6 +127,7 @@ private:
 public:
     // TODO [gp] : try to make these members private
     double belowThisThresholdSetToZero;
+    std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
     int triggeredHour;
@@ -144,38 +145,6 @@ public:
 
     std::map<int, double> rhsAreaBalanceValues;
 
-
-    struct LinkVariable
-    {
-        LinkVariable():
-            directVar(-1),
-            indirectVar(-1)
-        {
-        }
-
-        LinkVariable(int direct, int indirect):
-            directVar(direct),
-            indirectVar(indirect)
-        {
-        }
-
-        inline bool check() const
-        {
-            if (directVar < 0)
-            {
-                Antares::logs.warning() << "directVar < 0 detected, this should not happen";
-            }
-            if (indirectVar < 0)
-            {
-                Antares::logs.warning() << "indirectVar < 0 detected, this should not happen";
-            }
-
-            return (directVar >= 0) && (indirectVar >= 0);
-        }
-
-        int directVar;
-        int indirectVar;
-    };
 
     // links between two areas inside the adq-patch domain
     std::map<int, LinkVariable> linkInsideAdqPatch;

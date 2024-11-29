@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../state.h"
+#include <antares/series/series.h>
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -10,9 +11,10 @@ struct MaxMRGinput
     double* spillage = nullptr;
     double* dens = nullptr;
     double* hydroGeneration = nullptr;
-    double* hydroMaxPower = nullptr;
+    Antares::Data::TimeSeries* maxHourlyGenPower = nullptr;
     double* dtgMargin = nullptr;
     unsigned int hourInYear = 0;
+    unsigned int year = 0;
     Date::Calendar* calendar = nullptr;
     std::string areaName;
 };
