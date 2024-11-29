@@ -6,6 +6,8 @@ target_sources(${EXECUTABLE_NAME}
         test_main.cpp
         test_componentFiller.cpp
         test_linearExpression.cpp
+        test_readLinearExpressionVisitor.cpp
+        test_readLinearConstraintVisitor.cpp
 )
 target_include_directories(${EXECUTABLE_NAME}
         PRIVATE

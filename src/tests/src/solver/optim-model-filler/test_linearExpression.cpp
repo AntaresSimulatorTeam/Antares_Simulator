@@ -22,9 +22,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
-
-#include "antares/solver/optim-model-filler/LinearExpression.h"
-
+#include <antares/solver/optim-model-filler/LinearExpression.h>
 #include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Optimization;
@@ -110,6 +108,41 @@ BOOST_AUTO_TEST_CASE(multiply_two_linear_expressions_containing_variables__excep
     BOOST_CHECK_EXCEPTION(linearExpression1 * linearExpression2,
                           std::invalid_argument,
                           checkMessage("A linear expression can't have quadratic terms."));
+}
+
+BOOST_AUTO_TEST_CASE(divide_linear_expression_by_scalar)
+{
+    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+    LinearExpression someScalar(-2., {});
+
+    auto product = linearExpression / someScalar;
+
+    BOOST_CHECK_EQUAL(product.scalar(), -2.);
+    BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
+    BOOST_CHECK_EQUAL(product.coefPerVar()["var1"], 2.5);
+    BOOST_CHECK_EQUAL(product.coefPerVar()["var2"], -3.);
+}
+
+BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
+{
+    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+    LinearExpression someScalar(-2., {});
+
+    BOOST_CHECK_EXCEPTION(someScalar / linearExpression,
+                          std::invalid_argument,
+                          checkMessage("A linear expression can't have a variable as a dividend."));
+}
+
+BOOST_AUTO_TEST_CASE(negate_linear_expression)
+{
+    LinearExpression linearExpression(4., {{"var1", -5.}, {"var2", 6.}});
+
+    auto negative = linearExpression.negate();
+
+    BOOST_CHECK_EQUAL(negative.scalar(), -4.);
+    BOOST_CHECK_EQUAL(negative.coefPerVar().size(), 2);
+    BOOST_CHECK_EQUAL(negative.coefPerVar()["var1"], 5.);
+    BOOST_CHECK_EQUAL(negative.coefPerVar()["var2"], -6.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

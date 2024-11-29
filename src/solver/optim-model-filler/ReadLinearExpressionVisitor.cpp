@@ -85,7 +85,6 @@ LinearExpression ReadLinearExpressionVisitor::visit(const NegationNode* node)
 
 LinearExpression ReadLinearExpressionVisitor::visit(const VariableNode* node)
 {
-    // TODO : throw?
     return LinearExpression(0, {{node->value(), 1}});
 }
 
@@ -101,23 +100,21 @@ LinearExpression ReadLinearExpressionVisitor::visit(const LiteralNode* node)
 
 LinearExpression ReadLinearExpressionVisitor::visit(const PortFieldNode* node)
 {
-    throw std::invalid_argument("Linear expressions do not handle port fields yet.");
+    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const PortFieldSumNode* node)
 {
-    throw std::invalid_argument("Linear expressions do not handle port fields yet.");
+    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit PortFieldSumNodes");
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const ComponentVariableNode* node)
 {
-    // TODO : what's the difference with VariableNode ?
-    throw std::invalid_argument("Not implemented.");
+    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentVariableNodes");
 }
 
 LinearExpression ReadLinearExpressionVisitor::visit(const ComponentParameterNode* node)
 {
-    // TODO : what's the difference with ParameterNode ?
-    throw std::invalid_argument("Not implemented.");
+    throw std::invalid_argument("ReadLinearExpressionVisitor cannot visit ComponentParameterNodes");
 }
 } // namespace Antares::Optimization
