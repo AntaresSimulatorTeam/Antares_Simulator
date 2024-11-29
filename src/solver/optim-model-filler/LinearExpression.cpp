@@ -38,7 +38,7 @@ static std::map<std::string, double> add_maps(std::map<std::string, double> left
         }
         else
         {
-            result[var_id] = coef;
+            result[var_id] = rhs_multiplier * coef;
         }
     }
     return result;

@@ -42,7 +42,7 @@ public:
         return scalar_;
     }
 
-    const std::map<std::string, double>& coefPerVar() const
+    std::map<std::string, double> coefPerVar() const
     {
         return coef_per_var_;
     }

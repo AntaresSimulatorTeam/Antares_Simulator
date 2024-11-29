@@ -5,6 +5,7 @@ target_sources(${EXECUTABLE_NAME}
         PRIVATE
         test_main.cpp
         test_componentFiller.cpp
+        test_linearExpression.cpp
 )
 target_include_directories(${EXECUTABLE_NAME}
         PRIVATE

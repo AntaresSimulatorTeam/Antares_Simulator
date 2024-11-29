@@ -34,7 +34,6 @@
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
-#include "antares/study/system-model/library.h"
 #include "antares/study/system-model/parameter.h"
 
 using namespace Antares::Solver::Modeler::Api;
