@@ -41,8 +41,7 @@ jobs:
         with:
           fetch-depth: 0
           sparse-checkout: |
-            docker/Dockerfile
-            docker/AntaresDeps
+            docker
             src/vcpkg.json
           ref: ${{ env.REF }}
 
