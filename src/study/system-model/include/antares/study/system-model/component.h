@@ -68,7 +68,6 @@ public:
 
     const std::map<std::string, double>& getParameterValues() const
     {
-        // TODO : add tests
         return data_.parameter_values;
     }
 

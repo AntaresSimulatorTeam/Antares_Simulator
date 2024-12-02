@@ -121,9 +121,7 @@ ComponentBuilder& ComponentBuilder::withScenarioGroupId(const std::string& scena
 Component ComponentBuilder::build()
 {
     Component component(data_);
-    // This makes component_build re-usable
-    // TODO: add tests
-    data_.reset();
+    data_.reset(); // makes the ComponentBuilder re-usable
     return component;
 }
 
