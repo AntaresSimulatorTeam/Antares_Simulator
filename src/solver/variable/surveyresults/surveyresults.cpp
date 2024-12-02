@@ -553,7 +553,7 @@ SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResul
     }
 
     uint nbAreas = s.areas.size();
-    uint nbSetsOfAreas = s.areas.size();
+    uint nbSetsOfAreas = s.setsOfAreas.size();
     digestSize = (nbAreas > nbSetsOfAreas) ? nbAreas : nbSetsOfAreas;
     digestNonApplicableStatus = new bool*[digestSize];
     for (uint i = 0; i < digestSize; i++)
