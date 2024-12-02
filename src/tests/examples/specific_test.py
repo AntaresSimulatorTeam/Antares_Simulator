@@ -81,7 +81,7 @@ def launch_solver(solver_path, study_path, use_ortools=False, ortools_solver="si
     command = [solver_path_full, "-i", str(study_path)]
     if use_ortools:
         command.append('--use-ortools')
-        command.append('--ortools-solver=' + ortools_solver)
+        command.append('--solver=' + ortools_solver)
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=None)
     output = process.communicate()
 
