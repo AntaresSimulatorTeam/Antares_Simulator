@@ -21,8 +21,6 @@
 #ifndef __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
 #define __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
 
-#include <vector>
-
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
@@ -115,7 +113,7 @@ public:
     bool* nonApplicableStatus;
     // Digest file non applicable status ( dim : nb vars x max(nb areas, nb sets of areas) )
     uint digestSize; // Useful dimension for digest file non applicable statut management.
-    std::vector<std::vector<bool>> digestNonApplicableStatus;
+    bool** digestNonApplicableStatus;
 
     //! The total number of variables
     uint maxVariables;
