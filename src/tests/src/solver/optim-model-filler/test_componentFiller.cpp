@@ -36,15 +36,6 @@ using namespace Antares::Optimization;
 using namespace Antares::Solver::Nodes;
 using namespace std;
 
-static Expression generateExpression(Node* node)
-{
-    // TODO : this seems too complicated; try to make building Expressions easier
-    Antares::Solver::Registry<Node> registry;
-    Antares::Solver::NodeRegistry node_registry(node, move(registry));
-    Expression expression("expression", move(node_registry));
-    return move(expression);
-}
-
 struct VariableData
 {
     string id;
@@ -118,6 +109,12 @@ void LinearProblemBuildingFixture::createModel(string modelId,
                                                vector<VariableData> variablesData,
                                                vector<ConstraintData> constraintsData)
 {
+    auto generateExpression = [this](Node* node)
+    {
+        Antares::Solver::NodeRegistry node_registry(node, move(nodes));
+        Expression expression("expression", move(node_registry));
+        return move(expression);
+    };
     vector<Parameter> parameters;
     for (auto parameter_id: parameterIds)
     {
