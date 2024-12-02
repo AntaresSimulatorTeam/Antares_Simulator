@@ -87,6 +87,7 @@ jobs:
           container_id=$(docker create antares:centos7)
           mkdir archive
           docker cp $container_id:/workspace/Antares_Simulator/_build/archive/ archive/ 
+          ls archive
           docker rm $container_id
 
 
