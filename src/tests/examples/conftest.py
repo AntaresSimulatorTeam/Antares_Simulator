@@ -1,7 +1,6 @@
 import pytest
 
 def pytest_addoption(parser):
-    parser.addoption("--use-ortools", action="store_true", default=False)
     parser.addoption("--solver", action="store", default="sirius")
     parser.addoption("--solver-path", action="store")
 
@@ -10,10 +9,5 @@ def ortools_solver(request):
     return request.config.getoption("--solver")
 
 @pytest.fixture()
-def use_ortools(request):
-    return request.config.getoption("--use-ortools")
-    
-@pytest.fixture()
 def solver_path(request):
     return request.config.getoption("--solver-path")
-
