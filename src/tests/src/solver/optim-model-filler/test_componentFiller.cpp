@@ -60,16 +60,22 @@ struct LinearProblemBuildingFixture
     void createModel(string modelId,
                      vector<string> parameterIds,
                      vector<VariableData> variablesData,
-                     vector<ConstraintData> constraintsData);
+                     vector<ConstraintData> constraintsData,
+                     Node* objective = nullptr);
 
     void createModelWithOneFloatVar(const string& modelId,
                                     const vector<string>& parameterIds,
                                     const string& varId,
                                     Node* lb,
                                     Node* ub,
-                                    const vector<ConstraintData>& constraintsData)
+                                    const vector<ConstraintData>& constraintsData,
+                                    Node* objective = nullptr)
     {
-        createModel(modelId, parameterIds, {{varId, ValueType::FLOAT, lb, ub}}, constraintsData);
+        createModel(modelId,
+                    parameterIds,
+                    {{varId, ValueType::FLOAT, lb, ub}},
+                    constraintsData,
+                    objective);
     }
 
     void createComponent(const string& modelId,
@@ -107,9 +113,10 @@ struct LinearProblemBuildingFixture
 void LinearProblemBuildingFixture::createModel(string modelId,
                                                vector<string> parameterIds,
                                                vector<VariableData> variablesData,
-                                               vector<ConstraintData> constraintsData)
+                                               vector<ConstraintData> constraintsData,
+                                               Node* objective)
 {
-    auto generateExpression = [this](Node* node)
+    auto createExpression = [this](Node* node)
     {
         Antares::Solver::NodeRegistry node_registry(node, move(nodes));
         Expression expression("expression", move(node_registry));
@@ -124,20 +131,23 @@ void LinearProblemBuildingFixture::createModel(string modelId,
     vector<Variable> variables;
     for (auto [id, type, lb, ub]: variablesData)
     {
-        variables.push_back(
-          move(Variable(id, generateExpression(lb), generateExpression(ub), type)));
+        variables.push_back(move(Variable(id, createExpression(lb), createExpression(ub), type)));
     }
     vector<Constraint> constraints;
     for (auto [id, expression]: constraintsData)
     {
-        constraints.push_back(move(Constraint(id, generateExpression(expression))));
+        constraints.push_back(move(Constraint(id, createExpression(expression))));
     }
     ModelBuilder model_builder;
-    auto model = model_builder.withId(modelId)
-                   .withParameters(move(parameters))
-                   .withVariables(move(variables))
-                   .withConstraints(move(constraints))
-                   .build();
+    model_builder.withId(modelId)
+      .withParameters(move(parameters))
+      .withVariables(move(variables))
+      .withConstraints(move(constraints));
+    if (objective)
+    {
+        model_builder.withObjective(createExpression(objective));
+    }
+    auto model = model_builder.build();
     models[modelId] = move(model);
 }
 
@@ -439,6 +449,53 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     BOOST_CHECK_EQUAL(ct2->getUb(), 0);
     BOOST_CHECK_EQUAL(ct2->getCoefficient(pb->getVariable("my_component.v1")), -0.5);
     BOOST_CHECK_EQUAL(ct2->getCoefficient(pb->getVariable("my_component.v2")), 1);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addObjective_, LinearProblemBuildingFixture)
+
+BOOST_AUTO_TEST_CASE(one_var_with_objective)
+{
+    auto objective = variable("x");
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_NO_THROW(pb->getVariable("componentA.x"));
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable("componentA.x")), 1);
+}
+
+BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
+{
+    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.)};
+    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.)};
+    auto objective = multiply(variable("v2"), literal(37));
+
+    createModel("model", {}, {var1Data, var2Data}, {}, objective);
+    createComponent("model", "componentA", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+    BOOST_CHECK_NO_THROW(pb->getVariable("componentA.v1"));
+    BOOST_CHECK_NO_THROW(pb->getVariable("componentA.v2"));
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable("componentA.v1")), 0);
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable("componentA.v2")), 37);
+}
+
+BOOST_AUTO_TEST_CASE(one_var_with_param_objective)
+{
+    // -param(5)*param(5) * x
+    auto objective = multiply(negate(multiply(parameter("param"), parameter("param"))),
+                              variable("x"));
+    createModelWithOneFloatVar("model", {"param"}, "x", literal(-50), literal(-40), {}, objective);
+    createComponent("model", "componentA", {{"param", 5}});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 1);
+    BOOST_CHECK_NO_THROW(pb->getVariable("componentA.x"));
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->getVariable("componentA.x")), -25);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

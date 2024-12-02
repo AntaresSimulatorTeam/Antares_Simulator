@@ -40,7 +40,8 @@ public:
 
     explicit Expression(const std::string& value, Solver::NodeRegistry root):
         value_(value),
-        root_(std::move(root))
+        root_(std::move(root)),
+        empty_(false)
     {
     }
 
@@ -54,9 +55,15 @@ public:
         return root_.node;
     }
 
+    bool Empty() const
+    {
+        return empty_;
+    }
+
 private:
     std::string value_;
     Solver::NodeRegistry root_;
+    bool empty_ = true;
 };
 
 } // namespace Antares::Study::SystemModel

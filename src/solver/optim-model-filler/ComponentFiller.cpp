@@ -54,6 +54,23 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
+    if (component_.getModel()->Objective().Empty())
+    {
+        return;
+    }
+    ReadLinearExpressionVisitor visitor(evaluationContext_);
+    auto linear_expression = visitor.dispatch(component_.getModel()->Objective().RootNode());
+    if (linear_expression.scalar() != 0)
+    {
+        throw std::invalid_argument("Antares does not support objective offsets (found in model '"
+                                    + component_.getModel()->Id() + "' of component '"
+                                    + component_.Id() + "').");
+    }
+    for (auto [var_id, coef]: linear_expression.coefPerVar())
+    {
+        auto* variable = pb.getVariable(component_.Id() + "." + var_id);
+        pb.setObjectiveCoefficient(variable, coef);
+    }
 }
 
 } // namespace Antares::Optimization
