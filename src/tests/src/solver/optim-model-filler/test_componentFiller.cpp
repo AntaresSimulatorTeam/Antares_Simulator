@@ -34,19 +34,20 @@ using namespace Antares::Solver::Modeler::Api;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Solver::Nodes;
+using namespace std;
 
 static Expression generateExpression(Node* node)
 {
     // TODO : this seems too complicated; try to make building Expressions easier
     Antares::Solver::Registry<Node> registry;
-    Antares::Solver::NodeRegistry node_registry(node, std::move(registry));
-    Expression expression("expression", std::move(node_registry));
-    return std::move(expression);
+    Antares::Solver::NodeRegistry node_registry(node, move(registry));
+    Expression expression("expression", move(node_registry));
+    return move(expression);
 }
 
 struct VariableData
 {
-    std::string id;
+    string id;
     ValueType type;
     Node* lb;
     Node* ub;
@@ -54,115 +55,123 @@ struct VariableData
 
 struct ConstraintData
 {
-    std::string id;
+    string id;
     Node* expression;
 };
 
 struct LinearProblemBuildingFixture
 {
-    std::map<std::string, Model> models;
+    map<string, Model> models;
     Antares::Solver::Registry<Node> nodes;
-    std::vector<Component> components;
-    std::unique_ptr<ILinearProblem> pb;
+    vector<Component> components;
+    unique_ptr<ILinearProblem> pb;
 
-    void createModel(std::string modelId,
-                     std::vector<std::string> parameterIds,
-                     std::vector<VariableData> variablesData,
-                     std::vector<ConstraintData> constraintsData);
-    void createModelWithOneFloatVar(const std::string& modelId,
-                                    const std::vector<std::string>& parameterIds,
-                                    const std::string& varId,
+    void createModel(string modelId,
+                     vector<string> parameterIds,
+                     vector<VariableData> variablesData,
+                     vector<ConstraintData> constraintsData);
+
+    void createModelWithOneFloatVar(const string& modelId,
+                                    const vector<string>& parameterIds,
+                                    const string& varId,
                                     Node* lb,
                                     Node* ub,
-                                    const std::vector<ConstraintData>& constraintsData);
-    void createComponent(const std::string& modelId,
-                         const std::string& componentId,
-                         std::map<std::string, double> parameterValues = {});
+                                    const vector<ConstraintData>& constraintsData)
+    {
+        createModel(modelId, parameterIds, {{varId, ValueType::FLOAT, lb, ub}}, constraintsData);
+    }
+
+    void createComponent(const string& modelId,
+                         const string& componentId,
+                         map<string, double> parameterValues = {});
 
     Node* literal(double value)
     {
         return nodes.create<LiteralNode>(value);
     }
 
-    Node* parameter(const std::string& paramId)
+    Node* parameter(const string& paramId)
     {
         return nodes.create<ParameterNode>(paramId);
+    }
+
+    Node* variable(const string& varId)
+    {
+        return nodes.create<VariableNode>(varId);
+    }
+
+    Node* multiply(Node* node1, Node* node2)
+    {
+        return nodes.create<MultiplicationNode>(node1, node2);
+    }
+
+    Node* negate(Node* node)
+    {
+        return nodes.create<NegationNode>(node);
     }
 
     void buildLinearProblem();
 };
 
-void LinearProblemBuildingFixture::createModel(std::string modelId,
-                                               std::vector<std::string> parameterIds,
-                                               std::vector<VariableData> variablesData,
-                                               std::vector<ConstraintData> constraintsData)
+void LinearProblemBuildingFixture::createModel(string modelId,
+                                               vector<string> parameterIds,
+                                               vector<VariableData> variablesData,
+                                               vector<ConstraintData> constraintsData)
 {
-    std::vector<Parameter> parameters;
+    vector<Parameter> parameters;
     for (auto parameter_id: parameterIds)
     {
         parameters.push_back(
           Parameter(parameter_id, Parameter::TimeDependent::NO, Parameter::ScenarioDependent::NO));
     }
-    std::vector<Variable> variables;
+    vector<Variable> variables;
     for (auto [id, type, lb, ub]: variablesData)
     {
         variables.push_back(
-          std::move(Variable(id, generateExpression(lb), generateExpression(ub), type)));
+          move(Variable(id, generateExpression(lb), generateExpression(ub), type)));
     }
-    std::vector<Constraint> constraints;
+    vector<Constraint> constraints;
     for (auto [id, expression]: constraintsData)
     {
-        constraints.push_back(std::move(Constraint(id, generateExpression(expression))));
+        constraints.push_back(move(Constraint(id, generateExpression(expression))));
     }
     ModelBuilder model_builder;
     auto model = model_builder.withId(modelId)
-                   .withParameters(std::move(parameters))
-                   .withVariables(std::move(variables))
-                   .withConstraints(std::move(constraints))
+                   .withParameters(move(parameters))
+                   .withVariables(move(variables))
+                   .withConstraints(move(constraints))
                    .build();
-    models[modelId] = std::move(model);
+    models[modelId] = move(model);
 }
 
-void LinearProblemBuildingFixture::createModelWithOneFloatVar(
-  const std::string& modelId,
-  const std::vector<std::string>& parameterIds,
-  const std::string& varId,
-  Node* lb,
-  Node* ub,
-  const std::vector<ConstraintData>& constraintsData)
-{
-    createModel(modelId, parameterIds, {{varId, ValueType::FLOAT, lb, ub}}, constraintsData);
-}
-
-void LinearProblemBuildingFixture::createComponent(const std::string& modelId,
-                                                   const std::string& componentId,
-                                                   std::map<std::string, double> parameterValues)
+void LinearProblemBuildingFixture::createComponent(const string& modelId,
+                                                   const string& componentId,
+                                                   map<string, double> parameterValues)
 {
     BOOST_CHECK_NO_THROW(models.at(modelId));
     ComponentBuilder component_builder;
     auto component = component_builder.withId(componentId)
                        .withModel(&models.at(modelId))
                        .withScenarioGroupId("scenario_group")
-                       .withParameterValues(std::move(parameterValues))
+                       .withParameterValues(move(parameterValues))
                        .build();
-    components.push_back(std::move(component));
+    components.push_back(move(component));
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem()
 {
-    std::vector<std::unique_ptr<ComponentFiller>> fillers;
-    std::vector<LinearProblemFiller*> fillers_ptr;
+    vector<unique_ptr<ComponentFiller>> fillers;
+    vector<LinearProblemFiller*> fillers_ptr;
     for (auto& component: components)
     {
-        auto cf = std::make_unique<ComponentFiller>(component);
-        fillers.push_back(std::move(cf));
+        auto cf = make_unique<ComponentFiller>(component);
+        fillers.push_back(move(cf));
     }
     for (auto& component_filler: fillers)
     {
         fillers_ptr.push_back(component_filler.get());
     }
-    pb = std::make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false,
-                                                                                       "scip");
+    pb = make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false, "scip");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
     FillContext dummy_time_scenario_ctx = {0, 0};
@@ -195,19 +204,18 @@ BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
                 {});
     createComponent("my-model", "my-component");
     // TODO : improve exception message in eval visitor
-    BOOST_CHECK_THROW(buildLinearProblem(), std::out_of_range);
+    BOOST_CHECK_THROW(buildLinearProblem(), out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE(var_with_wrong_variable_ub__exception_is_raised)
 {
-    createModel(
-      "my-model",
-      {},
-      {{"variable", ValueType::FLOAT, literal(10), nodes.create<VariableNode>("variable")}},
-      {});
+    createModel("my-model",
+                {},
+                {{"variable", ValueType::FLOAT, literal(10), variable("variable")}},
+                {});
     createComponent("my-model", "my-component");
     // TODO : improve exception message in eval visitor
-    BOOST_CHECK_THROW(buildLinearProblem(), std::out_of_range);
+    BOOST_CHECK_THROW(buildLinearProblem(), out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_two_variables)
@@ -304,12 +312,12 @@ BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(_ComponentFiller_addConstraints_)
+BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addConstraints_, LinearProblemBuildingFixture)
 
-BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFixture)
+BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
 {
     // var1 <= 3
-    auto var_node = nodes.create<VariableNode>("var1");
+    auto var_node = variable("var1");
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
     createModel("model",
@@ -331,14 +339,14 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
     BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct, LinearProblemBuildingFixture)
+BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
 {
     // 3 * var1 >= 5 * var1 + 5
     // simplified to : -2 * var1 >= 5
-    auto var_node = nodes.create<VariableNode>("var__1");
+    auto var_node = variable("var__1");
     auto five = literal(5);
-    auto coef_node_left = nodes.create<MultiplicationNode>(literal(3), var_node);
-    auto coef_node_right = nodes.create<MultiplicationNode>(var_node, five);
+    auto coef_node_left = multiply(literal(3), var_node);
+    auto coef_node_right = multiply(var_node, five);
     auto sum_node_right = nodes.create<SumNode>(coef_node_right, five);
     auto ct_node = nodes.create<GreaterThanOrEqualNode>(coef_node_left, sum_node_right);
 
@@ -363,8 +371,77 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct, LinearProblemB
     BOOST_CHECK_EQUAL(ct->getCoefficient(var), -2);
 }
 
-// TODO
-// - test ct with 2 vars
-// - test component with two constraints
+BOOST_AUTO_TEST_CASE(ct_with_two_vars)
+{
+    // param1(-16) * v1 + 8 * v2 + 5 - param2(8) = 7 * v1 +  param3(5) * v2 + 89 + 5 * param4(-3)
+    // simplifies to: -23 * v1 + 3 * v2 = 77
+    vector<string> params = {"param1", "param2", "param3", "param4"};
+    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.)};
+    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.)};
+
+    auto sum_node_left = nodes.create<SumNode>(multiply(variable("v1"), parameter("param1")),
+                                               multiply(literal(8), variable("v2")),
+                                               literal(5),
+                                               negate(parameter("param2")));
+    auto sum_node_right = nodes.create<SumNode>(multiply(variable("v1"), literal(7)),
+                                                multiply(parameter("param3"), variable("v2")),
+                                                literal(89),
+                                                multiply(literal(5), parameter("param4")));
+    auto ct_node = nodes.create<EqualNode>(sum_node_left, sum_node_right);
+
+    createModel("my_new_model", params, {var1Data, var2Data}, {{"constraint1", ct_node}});
+    createComponent("my_new_model",
+                    "my_component",
+                    {{"param1", -16}, {"param2", 8}, {"param3", 5}, {"param4", -3}});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
+    BOOST_CHECK_NO_THROW(pb->getConstraint("my_component.constraint1"));
+    auto ct = pb->getConstraint("my_component.constraint1");
+    BOOST_CHECK(ct);
+    BOOST_CHECK_EQUAL(ct->getLb(), 77);
+    BOOST_CHECK_EQUAL(ct->getUb(), 77);
+    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("my_component.v1")), -23);
+    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("my_component.v2")), 3);
+}
+
+BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
+{
+    // 3 * v1 -2 <= v2 (simplifies to : 3 * v1 - 2 * v2 <= 2)
+    // v2 <= v1 / 2 (simplifies to : -0.5 * v1 + v2 <= 0)
+    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.)};
+    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.)};
+
+    auto ct1_node = nodes.create<LessThanOrEqualNode>(
+      nodes.create<SubtractionNode>(multiply(literal(3), variable("v1")), literal(2)),
+      variable("v2"));
+    auto ct2_node = nodes.create<LessThanOrEqualNode>(variable("v2"),
+                                                      nodes.create<DivisionNode>(variable("v1"),
+                                                                                 literal(2)));
+
+    createModel("my_new_model", {}, {var1Data, var2Data}, {{"ct1", ct1_node}, {"ct2", ct2_node}});
+    createComponent("my_new_model", "my_component", {});
+    buildLinearProblem();
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+
+    BOOST_CHECK_NO_THROW(pb->getConstraint("my_component.ct1"));
+    auto ct1 = pb->getConstraint("my_component.ct1");
+    BOOST_CHECK(ct1);
+    BOOST_CHECK_EQUAL(ct1->getLb(), -numeric_limits<float>::infinity());
+    BOOST_CHECK_EQUAL(ct1->getUb(), 2);
+    BOOST_CHECK_EQUAL(ct1->getCoefficient(pb->getVariable("my_component.v1")), 3);
+    BOOST_CHECK_EQUAL(ct1->getCoefficient(pb->getVariable("my_component.v2")), -1);
+
+    BOOST_CHECK_NO_THROW(pb->getConstraint("my_component.ct2"));
+    auto ct2 = pb->getConstraint("my_component.ct2");
+    BOOST_CHECK(ct2);
+    BOOST_CHECK_EQUAL(ct2->getLb(), -numeric_limits<float>::infinity());
+    BOOST_CHECK_EQUAL(ct2->getUb(), 0);
+    BOOST_CHECK_EQUAL(ct2->getCoefficient(pb->getVariable("my_component.v1")), -0.5);
+    BOOST_CHECK_EQUAL(ct2->getCoefficient(pb->getVariable("my_component.v2")), 1);
+}
 
 BOOST_AUTO_TEST_SUITE_END()

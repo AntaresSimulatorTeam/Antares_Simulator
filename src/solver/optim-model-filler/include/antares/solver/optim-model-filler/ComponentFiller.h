@@ -22,6 +22,7 @@
 #pragma once
 #include <antares/solver/modeler/api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
+#include "antares/solver/expressions/visitors/EvaluationContext.h"
 
 namespace Antares::Study::SystemModel
 {
@@ -49,5 +50,6 @@ public:
 
 private:
     const Study::SystemModel::Component& component_;
+    Solver::Visitors::EvaluationContext evaluationContext_;
 };
 } // namespace Antares::Optimization

@@ -12,7 +12,8 @@
 namespace Antares::Optimization
 {
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
-    component_(component)
+    component_(component),
+    evaluationContext_(component_.getParameterValues(), {})
 {
 }
 
@@ -20,8 +21,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
-    EvaluationContext evalContext(component_.getParameterValues(), {});
-    std::unique_ptr<EvalVisitor> evaluator = std::make_unique<EvalVisitor>(evalContext);
+    std::unique_ptr<EvalVisitor> evaluator = std::make_unique<EvalVisitor>(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
@@ -35,7 +35,7 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
                                      Solver::Modeler::Api::LinearProblemData& data,
                                      Solver::Modeler::Api::FillContext& ctx)
 {
-    ReadLinearConstraintVisitor visitor;
+    ReadLinearConstraintVisitor visitor(evaluationContext_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto linear_constraint = visitor.dispatch(constraint.expression().RootNode());
