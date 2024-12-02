@@ -14,7 +14,7 @@ SHELL ["/bin/bash", "--login", "-c"]
 ENV VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite"
 RUN mkdir -p /workspace/vcpkg_cache
 ARG VCPKG_CACHE_DIR
-COPY ${VCPKG_CACHE_DIR} /workspace/vcpkg_cache/
+COPY $VCPKG_CACHE_DIR /workspace/vcpkg_cache/
 
 ARG BRANCH=develop
 RUN cd /workspace && \
