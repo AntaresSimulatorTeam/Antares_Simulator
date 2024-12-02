@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var
     BOOST_CHECK(var);
     BOOST_CHECK_EQUAL(var->getLb(), -5);
     BOOST_CHECK_EQUAL(var->getUb(), 10);
-    // TODO : check variable type (float, not integer)
+    BOOST_CHECK(!var->isInteger());
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 0);
 }
 
@@ -209,11 +209,13 @@ BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_t
 
     auto* var1 = pb->getVariable("component_1.var1");
     BOOST_CHECK(var1);
+    BOOST_CHECK(!var1->isInteger());
     BOOST_CHECK_EQUAL(var1->getLb(), -1.);
     BOOST_CHECK_EQUAL(var1->getUb(), 6.);
 
     auto* var2 = pb->getVariable("component_2.var2");
     BOOST_CHECK(var2);
+    BOOST_CHECK(!var2->isInteger());
     BOOST_CHECK_EQUAL(var2->getLb(), -3.);
     BOOST_CHECK_EQUAL(var2->getUb(), 2.);
 }
@@ -226,7 +228,7 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
     Variable var1 = {"var1",
                      generateExpression(&lb_node),
                      generateExpression(&ub_node),
-                     ValueType::FLOAT};
+                     ValueType::INTEGER};
     std::vector<Variable> variables;
     variables.push_back(std::move(var1));
 
@@ -253,6 +255,7 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     auto* var = pb->getVariable("componentToto.var1");
     BOOST_CHECK(var);
+    BOOST_CHECK(var->isInteger());
     BOOST_CHECK_EQUAL(var->getLb(), -3.);
     BOOST_CHECK_EQUAL(var->getUb(), 4.);
 }
@@ -275,7 +278,7 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
     Variable var1 = {"var1",
                      generateExpression(&var_lb_node),
                      generateExpression(&var_ub_node),
-                     ValueType::FLOAT};
+                     ValueType::BOOL};
     std::vector<Variable> variables;
     variables.push_back(std::move(var1));
 
@@ -300,13 +303,16 @@ BOOST_FIXTURE_TEST_CASE(ct_one_var__pb_contains_the_ct, LinearProblemBuildingFix
     auto filler = std::make_unique<ComponentFiller>(component);
     auto pb = buildProblem({filler.get()});
 
+    auto var = pb->getVariable("componentToto.var1");
+    BOOST_CHECK(var);
+    BOOST_CHECK(var->isInteger());
     BOOST_CHECK_EQUAL(pb->variableCount(), 1);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
     auto ct = pb->getConstraint("componentToto.ct1");
     BOOST_CHECK(ct);
     BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
     BOOST_CHECK_EQUAL(ct->getUb(), 3);
-    BOOST_CHECK_EQUAL(ct->getCoefficient(pb->getVariable("componentToto.var1")), 1);
+    BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct, LinearProblemBuildingFixture)
