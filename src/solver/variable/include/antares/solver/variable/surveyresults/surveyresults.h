@@ -21,8 +21,6 @@
 #ifndef __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
 #define __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
 
-#include <vector>
-
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
