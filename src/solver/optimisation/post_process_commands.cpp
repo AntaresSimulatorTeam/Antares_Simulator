@@ -131,19 +131,16 @@ void UpdateMrgPriceAfterCSRcmd::execute(const optRuntimeData&)
 {
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] != physicalAreaInsideAdqPatch)
-            continue;
-
         auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
         const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
         const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
-
+	const bool areaInside = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch;
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
             const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
                     ->wasCSRTriggeredAtAreaHour(Area, hour);
 
-            if (isHourTriggeredByCsr && hourlyResults.ValeursHorairesDeDefaillancePositive[hour] > 0.5)
+            if (isHourTriggeredByCsr && hourlyResults.ValeursHorairesDeDefaillancePositive[hour] > 0.5 && areaInside)
             {
                 hourlyResults.CoutsMarginauxHoraires[hour] = -unsuppliedEnergyCost;
             }
@@ -168,29 +165,31 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
 {
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] != physicalAreaInsideAdqPatch)
-            continue;
-
         auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
         const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
         const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
 
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
-            const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
-                    ->wasCSRTriggeredAtAreaHour(Area, hour);
+            const bool isHourTriggeredByCsr
+              = problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour);
 
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-
-            // Default value (when the hour is not triggered by CSR)
-            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = dtgMrg;
-            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = ens;
-
-            if (isHourTriggeredByCsr)
+	    const bool areaInside = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+	      == physicalAreaInsideAdqPatch;
+            if (isHourTriggeredByCsr
+                && areaInside)
             {
                 hourlyResults.ValeursHorairesDtgMrgCsr[hour] = std::max(0.0, dtgMrg - ens);
-                hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = std::max(0.0, ens - dtgMrg);
+                hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour]
+                  = std::max(0.0, ens - dtgMrg);
+            }
+            else
+            {
+                // Default value (when the hour is not triggered by CSR)
+                hourlyResults.ValeursHorairesDtgMrgCsr[hour] = dtgMrg;
+                hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = ens;
             }
         }
     }
