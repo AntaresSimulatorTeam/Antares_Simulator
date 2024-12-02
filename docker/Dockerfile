@@ -10,12 +10,19 @@ RUN echo "source /opt/rh/devtoolset-11/enable" >> /etc/bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
 
+
+ENV VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite"
+RUN mkdir -p /workspace/vcpkg_cache
+ARG VCPKG_CACHE_DIR
+COPY ${VCPKG_CACHE_DIR} /workspace/vcpkg_cache/
+
 ARG BRANCH=develop
 RUN cd /workspace && \
     git clone https://github.com/AntaresSimulatorTeam/Antares_Simulator.git --branch $BRANCH && \
     cd Antares_Simulator && \
     git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics && \
     export VCPKG_ROOT=/workspace/Antares_Simulator/vcpkg
+
 
 
 

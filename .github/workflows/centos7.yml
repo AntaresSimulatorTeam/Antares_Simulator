@@ -43,6 +43,7 @@ jobs:
           sparse-checkout: |
             docker/Dockerfile
             docker/AntaresDeps
+            src/vcpkg.json
           ref: ${{ env.REF }}
 
       - name: set env variables -- DockerFiles
@@ -73,6 +74,22 @@ jobs:
           cache: false
           tags: latest
 
+      - name: create vcpkg cache dir
+        run: |
+          echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
+          mkdir -p ${{ env.VCPKG_CACHE_DIR }}
+
+
+      - name: Restore vcpkg binary dir from cache
+        id: cache-vcpkg-binary
+        # Note: we are stuck with v3, because v4 is not compatible with oracle8 image
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ env.VCPKG_CACHE_DIR }}
+          key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+          # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+          restore-keys: vcpkg-cache-centos7-
+
       - name: Build the image and Antares
         run: |
           docker build \
@@ -87,6 +104,11 @@ jobs:
           container_id=$(docker create antares:centos7)
           mkdir archive
           docker cp $container_id:/workspace/Antares_Simulator/_build/archive/ archive/ 
+          ls ${{ env.VCPKG_CACHE_DIR }}
+          echo "-----------------"
+          docker cp $container_id:/workspace/vcpkg-cache ${{ env.VCPKG_CACHE_DIR }}
+          ls ${{ env.VCPKG_CACHE_DIR }}
+          echo "-----------------"
           ls archive
           docker rm $container_id
 
@@ -98,4 +120,13 @@ jobs:
           tag: ${{ github.event.inputs.release_tag }}
         run: |
           gh release upload "$tag" archive/*.tar.gz archive/*.rpm
+
+
+      - name: Cache vcpkg binary dir
+        if: always()
+        id: save-cache-vcpkg-binary
+        uses: actions/cache/save@v3
+        with:
+          path: ${{ env.VCPKG_CACHE_DIR }}
+          key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
