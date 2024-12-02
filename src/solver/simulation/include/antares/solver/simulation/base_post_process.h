@@ -84,7 +84,7 @@ protected:
 
     // Data mambers
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
-    const unsigned int numSpace_ = 0;
+    const unsigned int numSpace_;
     std::vector<std::unique_ptr<basePostProcessCommand>> post_process_list;
 };
 
