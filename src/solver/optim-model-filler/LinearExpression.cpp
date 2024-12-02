@@ -58,31 +58,31 @@ LinearExpression::LinearExpression()
 {
 }
 
-LinearExpression::LinearExpression(double scalar, std::map<std::string, double> coef_per_var):
-    scalar_(scalar),
+LinearExpression::LinearExpression(double offset, std::map<std::string, double> coef_per_var):
+    offset_(offset),
     coef_per_var_(std::move(coef_per_var))
 {
 }
 
 LinearExpression LinearExpression::operator+(const LinearExpression& other) const
 {
-    return {scalar_ + other.scalar_, add_maps(coef_per_var_, other.coef_per_var_, 1)};
+    return {offset_ + other.offset_, add_maps(coef_per_var_, other.coef_per_var_, 1)};
 }
 
 LinearExpression LinearExpression::operator-(const LinearExpression& other) const
 {
-    return {scalar_ - other.scalar_, add_maps(coef_per_var_, other.coef_per_var_, -1)};
+    return {offset_ - other.offset_, add_maps(coef_per_var_, other.coef_per_var_, -1)};
 }
 
 LinearExpression LinearExpression::operator*(const LinearExpression& other) const
 {
     if (coef_per_var_.empty())
     {
-        return {scalar_ * other.scalar_, scale_map(other.coef_per_var_, scalar_)};
+        return {offset_ * other.offset_, scale_map(other.coef_per_var_, offset_)};
     }
     else if (other.coef_per_var_.empty())
     {
-        return {scalar_ * other.scalar_, scale_map(coef_per_var_, other.scalar_)};
+        return {offset_ * other.offset_, scale_map(coef_per_var_, other.offset_)};
     }
     else
     {
@@ -96,11 +96,11 @@ LinearExpression LinearExpression::operator/(const LinearExpression& other) cons
     {
         throw std::invalid_argument("A linear expression can't have a variable as a dividend.");
     }
-    return LinearExpression(scalar_ / other.scalar_, scale_map(coef_per_var_, 1 / other.scalar_));
+    return LinearExpression(offset_ / other.offset_, scale_map(coef_per_var_, 1 / other.offset_));
 }
 
 LinearExpression LinearExpression::negate() const
 {
-    return {-scalar_, scale_map(coef_per_var_, -1)};
+    return {-offset_, scale_map(coef_per_var_, -1)};
 }
 } // namespace Antares::Optimization

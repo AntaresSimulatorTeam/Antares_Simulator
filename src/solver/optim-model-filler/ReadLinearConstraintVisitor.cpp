@@ -40,8 +40,8 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const EqualNode* node)
     auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
                           - linear_expression_visitor_.dispatch(node->right());
     return LinearConstraint{.coef_per_var = leftMinusRight.coefPerVar(),
-                            .lb = -leftMinusRight.scalar(),
-                            .ub = -leftMinusRight.scalar()};
+                            .lb = -leftMinusRight.offset(),
+                            .ub = -leftMinusRight.offset()};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* node)
@@ -49,7 +49,7 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const LessThanOrEqualNode* n
     auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
                           - linear_expression_visitor_.dispatch(node->right());
     return LinearConstraint{.coef_per_var = leftMinusRight.coefPerVar(),
-                            .ub = -leftMinusRight.scalar()};
+                            .ub = -leftMinusRight.offset()};
 }
 
 LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode* node)
@@ -57,7 +57,7 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const GreaterThanOrEqualNode
     auto leftMinusRight = linear_expression_visitor_.dispatch(node->left())
                           - linear_expression_visitor_.dispatch(node->right());
     return LinearConstraint{.coef_per_var = leftMinusRight.coefPerVar(),
-                            .lb = -leftMinusRight.scalar()};
+                            .lb = -leftMinusRight.offset()};
 }
 
 static std::invalid_argument IllegalNodeException()

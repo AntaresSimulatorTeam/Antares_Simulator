@@ -29,10 +29,21 @@
 using namespace Antares::Solver::Visitors;
 using namespace Antares::Solver::Nodes;
 
-// TODO : doc
+/**
+ * Read Linear Constraint Visitor
+ * Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds).
+ * The root node is expected to be a comparison node.
+ */
 namespace Antares::Optimization
 {
 
+/**
+ * Linear Constraint
+ * Represents a linear constraint in an optimization problem.
+ * It is fully defined by:
+ * - a Linear Expression (defined by an offset and non-zero variable coefficients)
+ * - a lower and an upper bounds
+ */
 struct LinearConstraint
 {
     std::map<std::string, double> coef_per_var;
@@ -43,16 +54,7 @@ struct LinearConstraint
 class ReadLinearConstraintVisitor: public NodeVisitor<LinearConstraint>
 {
 public:
-    /**
-     * @brief Default constructor, creates an evaluation visitor with no context. //TODO
-     */
-    ReadLinearConstraintVisitor() = default; // No context (variables / parameters) //TODO
-
-    /**
-     * @brief Constructs an evaluation visitor with the specified context. //TODO
-     *
-     * @param context The evaluation context.
-     */
+    ReadLinearConstraintVisitor() = default;
     explicit ReadLinearConstraintVisitor(EvaluationContext context);
     std::string name() const override;
 

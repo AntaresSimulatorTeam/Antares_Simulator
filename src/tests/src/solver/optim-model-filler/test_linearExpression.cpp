@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(default_linear_expression)
 {
     LinearExpression linearExpression;
 
-    BOOST_CHECK_EQUAL(linearExpression.scalar(), 0.);
+    BOOST_CHECK_EQUAL(linearExpression.offset(), 0.);
     BOOST_CHECK(linearExpression.coefPerVar().empty());
 }
 
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(linear_expression_explicit_construction)
 {
     LinearExpression linearExpression(4., {{"some key", -5.}});
 
-    BOOST_CHECK_EQUAL(linearExpression.scalar(), 4.);
+    BOOST_CHECK_EQUAL(linearExpression.offset(), 4.);
     BOOST_CHECK_EQUAL(linearExpression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linearExpression.coefPerVar()["some key"], -5.);
 }
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(sum_two_linear_expressions)
 
     auto sum = linearExpression1 + linearExpression2;
 
-    BOOST_CHECK_EQUAL(sum.scalar(), 3.);
+    BOOST_CHECK_EQUAL(sum.offset(), 3.);
     BOOST_CHECK_EQUAL(sum.coefPerVar().size(), 3);
     BOOST_CHECK_EQUAL(sum.coefPerVar()["var1"], -5.);
     BOOST_CHECK_EQUAL(sum.coefPerVar()["var2"], 2.);
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(subtract_two_linear_expressions)
 
     auto subtract = linearExpression1 - linearExpression2;
 
-    BOOST_CHECK_EQUAL(subtract.scalar(), 5.);
+    BOOST_CHECK_EQUAL(subtract.offset(), 5.);
     BOOST_CHECK_EQUAL(subtract.coefPerVar().size(), 3);
     BOOST_CHECK_EQUAL(subtract.coefPerVar()["var1"], -5.);
     BOOST_CHECK_EQUAL(subtract.coefPerVar()["var2"], 10.);
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(multiply_linear_expression_by_scalar)
 
     auto product = linearExpression * someScalar;
 
-    BOOST_CHECK_EQUAL(product.scalar(), -8.);
+    BOOST_CHECK_EQUAL(product.offset(), -8.);
     BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(product.coefPerVar()["var1"], 10.);
     BOOST_CHECK_EQUAL(product.coefPerVar()["var2"], -12.);
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(multiply_scalar_by_linear_expression)
 
     auto product = someScalar * linearExpression;
 
-    BOOST_CHECK_EQUAL(product.scalar(), -8.);
+    BOOST_CHECK_EQUAL(product.offset(), -8.);
     BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(product.coefPerVar()["var1"], 10.);
     BOOST_CHECK_EQUAL(product.coefPerVar()["var2"], -12.);
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(divide_linear_expression_by_scalar)
 
     auto product = linearExpression / someScalar;
 
-    BOOST_CHECK_EQUAL(product.scalar(), -2.);
+    BOOST_CHECK_EQUAL(product.offset(), -2.);
     BOOST_CHECK_EQUAL(product.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(product.coefPerVar()["var1"], 2.5);
     BOOST_CHECK_EQUAL(product.coefPerVar()["var2"], -3.);
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(negate_linear_expression)
 
     auto negative = linearExpression.negate();
 
-    BOOST_CHECK_EQUAL(negative.scalar(), -4.);
+    BOOST_CHECK_EQUAL(negative.offset(), -4.);
     BOOST_CHECK_EQUAL(negative.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(negative.coefPerVar()["var1"], 5.);
     BOOST_CHECK_EQUAL(negative.coefPerVar()["var2"], -6.);

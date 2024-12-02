@@ -28,23 +28,19 @@
 using namespace Antares::Solver::Visitors;
 using namespace Antares::Solver::Nodes;
 
-// TODO : doc
+/**
+ * Read Linear Expression Visitor
+ * Visits a Node and produces a Linear Expression (defined by an offset and non-zero
+ * coefficients of variables)
+ * Comparison Nodes are not allowed
+ */
 namespace Antares::Optimization
 {
 
 class ReadLinearExpressionVisitor: public NodeVisitor<LinearExpression>
 {
 public:
-    /**
-     * @brief Default constructor, creates an evaluation visitor with no context. //TODO
-     */
-    ReadLinearExpressionVisitor() = default; // No context (variables / parameters) //TODO
-
-    /**
-     * @brief Constructs an evaluation visitor with the specified context. //TODO
-     *
-     * @param context The evaluation context.
-     */
+    ReadLinearExpressionVisitor() = default;
     explicit ReadLinearExpressionVisitor(EvaluationContext context);
     std::string name() const override;
 

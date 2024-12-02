@@ -48,7 +48,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, Registry<Node>)
     Node* node = create<LiteralNode>(5.);
     ReadLinearExpressionVisitor visitor;
     auto linear_expression = visitor.dispatch(node);
-    BOOST_CHECK_EQUAL(linear_expression.scalar(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), 5.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
 
@@ -59,7 +59,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, Registry<Node>)
     EvaluationContext evaluation_context({{"param", 3.}}, {});
     ReadLinearExpressionVisitor visitor(evaluation_context);
     auto linear_expression = visitor.dispatch(sum);
-    BOOST_CHECK_EQUAL(linear_expression.scalar(), 8.);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), 8.);
     BOOST_CHECK(linear_expression.coefPerVar().empty());
 }
 
@@ -72,7 +72,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var, Registry<Node>)
     EvaluationContext evaluation_context({{"param", -5.}}, {});
     ReadLinearExpressionVisitor visitor(evaluation_context);
     auto linear_expression = visitor.dispatch(sum);
-    BOOST_CHECK_EQUAL(linear_expression.scalar(), 55.);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), 55.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], 7.);
 }
@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, Registry<Node>)
     Node* neg = create<NegationNode>(sum);
     ReadLinearExpressionVisitor visitor;
     auto linear_expression = visitor.dispatch(neg);
-    BOOST_CHECK_EQUAL(linear_expression.scalar(), -60.);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), -60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], -7.);
 }
@@ -99,7 +99,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_minus_var, Registry<Node>)
     Node* sub = create<SubtractionNode>(create<LiteralNode>(60.), product);
     ReadLinearExpressionVisitor visitor;
     auto linear_expression = visitor.dispatch(sub);
-    BOOST_CHECK_EQUAL(linear_expression.scalar(), 60.);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), 60.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 1);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var"], -7.);
 }
@@ -126,7 +126,7 @@ BOOST_FIXTURE_TEST_CASE(visit_complex_expression, Registry<Node>)
     EvaluationContext evaluation_context({{"param1", -2.}, {"param2", 8.}}, {});
     ReadLinearExpressionVisitor visitor(evaluation_context);
     auto linear_expression = visitor.dispatch(big_sum);
-    BOOST_CHECK_EQUAL(linear_expression.scalar(), 10.);
+    BOOST_CHECK_EQUAL(linear_expression.offset(), 10.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar().size(), 2);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var1"], 4.);
     BOOST_CHECK_EQUAL(linear_expression.coefPerVar()["var2"], 6.);

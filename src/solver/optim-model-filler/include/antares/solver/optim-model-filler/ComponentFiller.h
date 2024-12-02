@@ -31,11 +31,17 @@ class Component;
 
 namespace Antares::Optimization
 {
+/**
+ * Component filler
+ * Implements LinearProbleFiller interface.
+ * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
+ */
 class ComponentFiller: public Solver::Modeler::Api::LinearProblemFiller
 {
 public:
     ComponentFiller() = delete;
     ComponentFiller(ComponentFiller& other) = delete;
+    /// Create a ComponentFiller for a Component
     ComponentFiller(const Study::SystemModel::Component& component);
 
     void addVariables(Solver::Modeler::Api::ILinearProblem& pb,
