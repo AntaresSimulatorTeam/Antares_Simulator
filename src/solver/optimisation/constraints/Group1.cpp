@@ -21,6 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/Group1.h"
 
+#include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
+
 AreaBalanceData Group1::GetAreaBalanceData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
@@ -39,7 +41,7 @@ FictitiousLoadData Group1::GetFictitiousLoadData()
             .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
-ShortTermStorageLevelData Group1::GetShortTermStorageLevelData()
+ShortTermStorageData Group1::GetShortTermStorageData()
 {
     return {
       .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
@@ -72,9 +74,21 @@ void Group1::BuildConstraints()
     auto fictitiousLoadData = GetFictitiousLoadData();
     FictitiousLoad fictitiousLoad(builder_, fictitiousLoadData);
 
-    auto shortTermStorageLevelData = GetShortTermStorageLevelData();
-    ShortTermStorageLevel shortTermStorageLevel(builder_, shortTermStorageLevelData);
+    auto shortTermStorageData = GetShortTermStorageData();
+    ShortTermStorageLevel shortTermStorageLevel(builder_, shortTermStorageData);
 
+    ShortTermStorageCostVariationInjectionBackward shortTermStorageCostVariationInjectionBackward(
+      builder_,
+      shortTermStorageData);
+    ShortTermStorageCostVariationInjectionForward shortTermStorageCostVariationInjectionForward(
+      builder_,
+      shortTermStorageData);
+    ShortTermStorageCostVariationWithdrawalBackward shortTermStorageCostVariationWithdrawalBackward(
+      builder_,
+      shortTermStorageData);
+    ShortTermStorageCostVariationWithdrawalForward shortTermStorageCostVariationWithdrawalForward(
+      builder_,
+      shortTermStorageData);
     auto flowDissociationData = GetFlowDissociationData();
     FlowDissociation flowDissociation(builder_, flowDissociationData);
 
@@ -91,6 +105,10 @@ void Group1::BuildConstraints()
             areaBalance.add(pdt, pays);
             fictitiousLoad.add(pdt, pays);
             shortTermStorageLevel.add(pdt, pays);
+            shortTermStorageCostVariationInjectionBackward.add(pdt, pays);
+            shortTermStorageCostVariationInjectionForward.add(pdt, pays);
+            shortTermStorageCostVariationWithdrawalBackward.add(pdt, pays);
+            shortTermStorageCostVariationWithdrawalForward.add(pdt, pays);
         }
 
         for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; interco++)

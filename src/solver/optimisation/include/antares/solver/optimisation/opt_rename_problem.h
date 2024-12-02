@@ -99,6 +99,10 @@ public:
     void ShortTermStorageInjection(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageWithdrawal(unsigned int variable, const std::string& shortTermStorageName);
     void ShortTermStorageLevel(unsigned int variable, const std::string& shortTermStorageName);
+    void ShortTermStorageCostVariationInjection(unsigned int variable,
+                                                const std::string& shortTermStorageName);
+    void ShortTermStorageCostVariationWithdrawal(unsigned int variable,
+                                                 const std::string& shortTermStorageName);
     void HydProd(unsigned int variable);
     void HydProdDown(unsigned int variable);
     void HydProdUp(unsigned int variable);
@@ -157,6 +161,10 @@ public:
 
     void CsrAreaBalance(unsigned int constraint);
     void CsrBindingConstraintHour(unsigned int constraint, const std::string& name);
+
+    void ShortTermStorageCostVariation(const std::string& constraint_name,
+                                       unsigned int constraint,
+                                       const std::string& short_term_name);
 
 private:
     void nameWithTimeGranularity(unsigned int constraint,

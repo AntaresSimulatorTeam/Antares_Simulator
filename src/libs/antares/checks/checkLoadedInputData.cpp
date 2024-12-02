@@ -30,21 +30,12 @@
 namespace Antares::Check
 {
 void checkSolverMILPincompatibility(Antares::Data::UnitCommitmentMode ucMode,
-                                    bool ortoolsUsed,
                                     const std::string& solverName)
 {
     using namespace Antares::Data;
-    if (ucMode == UnitCommitmentMode::ucMILP)
+    if (ucMode == UnitCommitmentMode::ucMILP && solverName == "sirius")
     {
-        if (!ortoolsUsed)
-        {
-            throw Error::IncompatibleMILPWithoutOrtools();
-        }
-
-        if (solverName == "sirius")
-        {
-            throw Error::IncompatibleMILPOrtoolsSolver();
-        }
+        throw Error::IncompatibleMILPOrtoolsSolver();
     }
 }
 

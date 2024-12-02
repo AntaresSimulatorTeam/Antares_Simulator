@@ -57,6 +57,9 @@ protected:
     uint current_optim_number_ = 0;
 };
 
+// Caution : this class should be removed if we want Sirius behind or-tools
+// But we want to keep the way we write MPS files for a named problem,
+// so we keep it for now.
 class fullMPSwriter final: public I_MPS_writer
 {
 public:
@@ -98,7 +101,6 @@ public:
                      bool exportMPSOnError,
                      const int current_optim_number,
                      PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                     bool ortoolsUsed,
                      MPSolver* solver);
 
     std::unique_ptr<I_MPS_writer> create();
@@ -113,7 +115,6 @@ private:
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
-    bool ortools_used_;
     MPSolver* solver_ = nullptr;
     uint current_optim_number_;
 };

@@ -10,7 +10,7 @@ Antares Solver only uses LP, with plans to use MILP at some point in the future.
 
 ## Using Xpress in the command-line
 ```
-antares-x.y-solver --use-ortools --ortools-solver xpress [options] <study>
+antares-solver --ortools-solver xpress [options] <study>
 ```
 
 ## Setup

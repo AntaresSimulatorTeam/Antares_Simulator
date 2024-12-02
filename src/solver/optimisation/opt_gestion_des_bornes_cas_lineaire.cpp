@@ -191,7 +191,28 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                      * storage.series->upperRuleCurve[hourInTheYear];
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
+                // 4. Cost Variation Injection
 
+                // is this necessary?
+                if (storage.penalizeVariationInjection)
+                {
+                    int varCostVariationInjection = variableManager
+                                                      .ShortTermStorageCostVariationInjection(
+                                                        clusterGlobalIndex,
+                                                        pdtJour);
+
+                    Xmin[varCostVariationInjection] = 0.;
+                }
+                // 5. Cost Variation Withdrawal
+                // is this necessary?
+                if (storage.penalizeVariationWithdrawal)
+                {
+                    int varCostVariationWithdrawal = variableManager
+                                                       .ShortTermStorageCostVariationWithdrawal(
+                                                         clusterGlobalIndex,
+                                                         pdtJour);
+                    Xmin[varCostVariationWithdrawal] = 0.;
+                }
                 storageIndex++;
             }
         }

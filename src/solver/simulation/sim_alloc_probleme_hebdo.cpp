@@ -180,6 +180,11 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.LevelVariable.assign(shortTermStorageCount, 0);
 
+        variablesMapping.SIM_ShortTermStorage.CostVariationInjection.assign(shortTermStorageCount,
+                                                                            0);
+        variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,
+                                                                             0);
+
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
                                                                                            0);
         problem.CorrespondanceCntNativesCntOptim[k]
@@ -189,6 +194,15 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .ShortTermStorageLevelConstraint.assign(shortTermStorageCount, 0);
+
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationInjectionForward.assign(shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationInjectionBackward.assign(shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationWithdrawalForward.assign(shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationWithdrawalBackward.assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroPremiereContrainteDeReserveParZone.assign(nbPays, 0);

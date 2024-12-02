@@ -114,14 +114,28 @@ public:
 
     ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
 
-    ConstraintBuilder& ShortTermStorageInjection(unsigned int index, double coeff);
+    ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
+                                                 double coeff,
+                                                 int offset = 0,
+                                                 int delta = 0);
 
-    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index, double coeff);
+    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
 
     ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
+    ConstraintBuilder& ShortTermCostVariationInjection(unsigned int index,
+                                                       double coeff,
+                                                       int offset = 0,
+                                                       int delta = 0);
+    ConstraintBuilder& ShortTermCostVariationWithdrawal(unsigned int index,
+                                                        double coeff,
+                                                        int offset = 0,
+                                                        int delta = 0);
 
     ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
@@ -283,4 +297,11 @@ struct StartUpCostsData
 {
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     bool Simulation;
+};
+
+struct ShortTermStorageData
+{
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
+
+    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };

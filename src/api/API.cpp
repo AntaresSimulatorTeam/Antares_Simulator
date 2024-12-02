@@ -32,7 +32,9 @@
 
 namespace Antares::API
 {
-SimulationResults APIInternal::run(const IStudyLoader& study_loader)
+SimulationResults APIInternal::run(
+  const IStudyLoader& study_loader,
+  const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
     try
     {
@@ -43,7 +45,7 @@ SimulationResults APIInternal::run(const IStudyLoader& study_loader)
         Antares::API::Error err{.reason = e.what()};
         return {.simulationPath = "", .antares_problems = {}, .error = err};
     }
-    return execute();
+    return execute(optOptions);
 }
 
 /**
@@ -53,7 +55,8 @@ SimulationResults APIInternal::run(const IStudyLoader& study_loader)
  * This method is initialy a copy of Application::execute with some modifications hence the apparent
  * dupllication
  */
-SimulationResults APIInternal::execute() const
+SimulationResults APIInternal::execute(
+  const Antares::Solver::Optimization::OptimizationOptions& optOptions) const
 {
     // study_ == nullptr e.g when the -h flag is given
     if (!study_)
@@ -63,17 +66,16 @@ SimulationResults APIInternal::execute() const
         return {.simulationPath{}, .antares_problems{}, .error = err};
     }
 
-    // Only those two fields are used un simulation
     Settings settings;
-    settings.tsGeneratorsOnly = false;
-    settings.noOutput = false;
+    auto& parameters = study_->parameters;
+    parameters.optOptions = optOptions;
 
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
     auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
-    auto resultWriter = Solver::resultWriterFactory(study_->parameters.resultFormat,
+    auto resultWriter = Solver::resultWriterFactory(parameters.resultFormat,
                                                     study_->folderOutput,
                                                     ioQueueService,
                                                     durationCollector);

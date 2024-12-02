@@ -30,7 +30,6 @@
 #include <yuni/yuni.h>
 
 #include <antares/antares/constants.h>
-#include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
@@ -76,19 +75,11 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
 
-    // add option for ortools use
-    // --use-ortools
-    parser->addFlag(options.optOptions.ortoolsUsed,
-                    ' ',
-                    "use-ortools",
-                    "Use ortools library to launch solver");
-
     //--ortools-solver
     parser->add(options.optOptions.ortoolsSolver,
                 ' ',
-                "ortools-solver",
-                "Ortools solver used for simulation (only available with use-ortools "
-                "option)\nAvailable solver list : "
+                "solver",
+                "Solver used for simulation\nAvailable solver list : "
                   + availableOrToolsSolversString());
 
     //--xpress-parameters
@@ -266,18 +257,14 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
 void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
-    if (optOptions.ortoolsUsed)
-    {
-        const std::string& solverName = optOptions.ortoolsSolver;
-        const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+    const std::string& solverName = optOptions.ortoolsSolver;
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
 
-        // Check if solver is available
-        bool found = (std::ranges::find(availableSolverList, solverName)
-                      != availableSolverList.end());
-        if (!found)
-        {
-            throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
-        }
+    // Check if solver is available
+    bool found = (std::ranges::find(availableSolverList, solverName) != availableSolverList.end());
+    if (!found)
+    {
+        throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
     }
 }
 

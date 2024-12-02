@@ -21,14 +21,12 @@
 
 #include <spx_fonctions.h>
 
-#include "antares/optimization-options/options.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares::Solver::Optimization;
 
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
-                                     const PROBLEME_HEBDO* problemeHebdo)
+void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
@@ -52,18 +50,12 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
-            auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
             auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
 
-            if (options.ortoolsUsed && solver)
+            if (solver)
             {
                 ORTOOLS_LibererProbleme(solver);
                 solver = nullptr;
-            }
-            else if (ProbSpx)
-            {
-                SPX_LibererProbleme(ProbSpx);
-                ProbSpx = nullptr;
             }
         }
     }

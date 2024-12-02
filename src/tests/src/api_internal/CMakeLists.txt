@@ -11,6 +11,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         Boost::unit_test_framework
         Antares::solver_api
         Antares::tests::in-memory-study
+	test_utils_unit
 )
 
 target_include_directories(${EXECUTABLE_NAME}

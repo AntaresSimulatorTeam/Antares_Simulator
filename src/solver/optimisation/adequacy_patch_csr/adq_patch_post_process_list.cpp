@@ -27,15 +27,15 @@ namespace Antares::Solver::Simulation
 {
 AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchParams,
                                                  PROBLEME_HEBDO* problemeHebdo,
-                                                 uint thread_number,
+                                                 uint numSpace,
                                                  AreaList& areas,
                                                  SheddingPolicy sheddingPolicy,
                                                  SimplexOptimization splxOptimization,
                                                  Calendar& calendar):
-    interfacePostProcessList(problemeHebdo, thread_number)
+    interfacePostProcessList(problemeHebdo, numSpace)
 {
     post_process_list.push_back(
-      std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, thread_number_, areas));
+      std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, numSpace_, areas));
 
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, false, false));
@@ -43,16 +43,16 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                                            areas,
                                                                            sheddingPolicy,
                                                                            splxOptimization,
-                                                                           thread_number));
+                                                                           numSpace));
 
     // Here a post process particular to adq patch
     post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
                                                                                    problemeHebdo_,
                                                                                    areas,
-                                                                                   thread_number_));
+                                                                                   numSpace_));
     // Here a post process particular to adq patch
     post_process_list.push_back(
-      std::make_unique<DTGmarginForAdqPatchPostProcessCmd>(problemeHebdo_, areas, thread_number));
+      std::make_unique<DTGmarginForAdqPatchPostProcessCmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
     post_process_list.push_back(

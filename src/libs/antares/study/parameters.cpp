@@ -1230,7 +1230,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
 void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
 {
     // Options only set from the command-line
-    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
     optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
     optOptions.solverParameters = options.optOptions.solverParameters;
 
@@ -1724,12 +1723,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring hurdle costs";
     }
 
-    // Indicate ortools solver used
-    if (options.optOptions.ortoolsUsed)
-    {
-        logs.info() << "  :: ortools solver " << options.optOptions.ortoolsSolver
-                    << " used for problem resolution";
-    }
+    logs.info() << "  :: solver " << options.optOptions.ortoolsSolver
+                << " is used for problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)

@@ -26,6 +26,9 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/antares/fatal-error.h>
+
+#include "../../src/utils/unit_test_utils.h"
 #include "API.h"
 #include "in-memory-study.h"
 
@@ -60,7 +63,7 @@ BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
     BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"no_output"});
     // Testing for "no_output" is a bit weird, but it's the only way to test this without actually
     // running the simulation
@@ -70,7 +73,7 @@ BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
 
     BOOST_CHECK(!results.antares_problems.empty());
     BOOST_CHECK(!results.error);
@@ -80,7 +83,7 @@ BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>(false);
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
 
     BOOST_CHECK(results.error);
 }
@@ -90,9 +93,41 @@ BOOST_AUTO_TEST_CASE(result_contains_problems)
 {
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    auto results = api.run(*study_loader.get());
+    auto results = api.run(*study_loader.get(), {});
 
     BOOST_CHECK(!results.antares_problems.empty());
     BOOST_CHECK(!results.error);
     BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
+}
+
+// Test where data in problems are consistant with data in study
+BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
+{
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    const Antares::Solver::Optimization::OptimizationOptions opt{.ortoolsSolver = "coin",
+                                                                 .solverLogs = false,
+                                                                 .solverParameters = ""};
+
+    auto results = api.run(*study_loader.get(), opt);
+
+    BOOST_CHECK(!results.antares_problems.empty());
+    BOOST_CHECK(!results.error);
+    BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
+}
+
+// Test where we use an invalid OR-Tools solver
+BOOST_AUTO_TEST_CASE(invalid_ortools_solver)
+{
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    const Antares::Solver::Optimization::OptimizationOptions opt{
+      .ortoolsSolver = "this-solver-does-not-exist",
+      .solverLogs = true,
+      .solverParameters = ""};
+
+    auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader.get(), opt); };
+    BOOST_CHECK_EXCEPTION(shouldThrow(),
+                          std::invalid_argument,
+                          checkMessage("Solver this-solver-does-not-exist not found"));
 }

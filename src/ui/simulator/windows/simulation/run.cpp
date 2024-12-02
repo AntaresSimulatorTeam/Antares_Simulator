@@ -309,32 +309,18 @@ Run::Run(wxWindow* parent, bool preproOnly) :
 
     // Ortools use
     {
-        // Ortools use
-        auto* ortoolsCheckBox = new wxCheckBox(pBigDaddy, wxID_ANY, wxT(""));
-        ortoolsCheckBox->SetValue(false);
-
-        Connect(ortoolsCheckBox->GetId(),
-                wxEVT_COMMAND_CHECKBOX_CLICKED,
-                wxCommandEventHandler(Run::onOrtoolsCheckboxChanged));
-        pOrtoolsCheckBox = ortoolsCheckBox;
-
         // Ortools solver selection
         pTitleOrtoolsSolverCombox
           = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
 
         pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
-        std::list<std::string> ortoolsSolverList = getAvailableOrtoolsSolverName();
-        for (const std::string& ortoolsSolver : ortoolsSolverList)
+        std::list<std::string> solverList = getAvailableOrtoolsSolverName();
+        for (const std::string& solverName : solverList)
         {
-            pOrtoolsSolverCombox->Append(ortoolsSolver);
+            pOrtoolsSolverCombox->Append(solverName);
         }
 
-        // Ortools solver selection visibility
-        pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-        pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-
-        // Display 2 rows for ortools option
-        gridAppend(*s, wxT("Ortools use : "), ortoolsCheckBox);
+        // Display ortools solver list
         gridAppend(*s, pTitleOrtoolsSolverCombox, pOrtoolsSolverCombox);
     }
 
@@ -632,7 +618,6 @@ void Run::onRun(void*)
                             pIgnoreWarnings->GetValue(),                     // Ignore warnings
                             featuresAlias[pFeatureIndex],                    // Features
                             pPreproOnly->GetValue(),                         // Prepro Only ?
-                            pOrtoolsCheckBox->IsChecked(),                   // Ortools use
                             pOrtoolsSolverCombox->GetValue().ToStdString()); // Ortools solver
 
     // Remove the temporary file
@@ -808,20 +793,6 @@ void Run::onSelectMode(wxCommandEvent& evt)
 void Run::onInternalMotion(wxMouseEvent&)
 {
     Antares::Component::Panel::OnMouseMoveFromExternalComponent();
-}
-
-void Run::onOrtoolsCheckboxChanged(wxCommandEvent& WXUNUSED(event))
-{
-    pTitleOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-    pOrtoolsSolverCombox->Show(pOrtoolsCheckBox->GetValue());
-
-    // Layout update
-    auto* sizer = pBigDaddy->GetSizer();
-    if (sizer)
-        sizer->Fit(pBigDaddy);
-    sizer = GetSizer();
-    if (sizer)
-        sizer->Fit(this);
 }
 
 } // namespace Antares::Window::Simulation
