@@ -113,7 +113,7 @@ public:
     bool* nonApplicableStatus;
     // Digest file non applicable status ( dim : nb vars x max(nb areas, nb sets of areas) )
     uint digestSize; // Useful dimension for digest file non applicable statut management.
-    bool** digestNonApplicableStatus;
+    std::vector<std::vector<bool>> digestNonApplicableStatus;
 
     //! The total number of variables
     uint maxVariables;
