@@ -21,13 +21,13 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/expressions/Registry.hxx>
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
-
-#include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Nodes;

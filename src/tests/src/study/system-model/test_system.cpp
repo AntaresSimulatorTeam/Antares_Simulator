@@ -21,11 +21,11 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include "antares/study/system-model/system.h"
-
-#include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Study::SystemModel;
 

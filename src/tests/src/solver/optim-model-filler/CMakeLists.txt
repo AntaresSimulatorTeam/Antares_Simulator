@@ -20,6 +20,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         antares-study-system-model
         Antares::modeler-ortools-impl
         Antares::optim-model-filler
+        test_utils_unit
 )
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES FOLDER Unit-tests)
