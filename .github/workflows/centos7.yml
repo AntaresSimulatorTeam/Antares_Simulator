@@ -75,8 +75,8 @@ jobs:
 
       - name: create vcpkg cache dir
         run: |
-          echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/docker/vcpkg_cache" >> $GITHUB_ENV
-          mkdir -p ${{ github.workspace }}/docker/vcpkg_cache
+          echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
+          mkdir -p ${{ github.workspace }}/vcpkg_cache
 
 
       - name: Restore vcpkg binary dir from cache
@@ -84,7 +84,7 @@ jobs:
         # Note: we are stuck with v3, because v4 is not compatible with oracle8 image
         uses: actions/cache/restore@v3
         with:
-          path: ${{ github.workspace }}/docker/vcpkg_cache
+          path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-centos7-
@@ -95,7 +95,7 @@ jobs:
           -t antares:centos7  \
           --build-arg="BRANCH=${{ env.REF }}" \
           --build-arg="NPROC=$(nproc)" \
-          --build-arg="VCPKG_CACHE_DIR=${{ github.workspace }}/docker/vcpkg_cache" \
+          --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
           -f ${{ env.DOCKERFILE }} .
 
 
@@ -127,6 +127,6 @@ jobs:
         id: save-cache-vcpkg-binary
         uses: actions/cache/save@v3
         with:
-          path: ${{ github.workspace }}/docker/vcpkg_cache
+          path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
