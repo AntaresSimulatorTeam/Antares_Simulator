@@ -555,10 +555,11 @@ SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResul
     uint nbAreas = s.areas.size();
     uint nbSetsOfAreas = s.setsOfAreas.size();
     digestSize = (nbAreas > nbSetsOfAreas) ? nbAreas : nbSetsOfAreas;
-    digestNonApplicableStatus = new bool*[digestSize];
+
+    digestNonApplicableStatus.resize(digestSize);
     for (uint i = 0; i < digestSize; i++)
     {
-        digestNonApplicableStatus[i] = new bool[maxVariables]{false};
+        digestNonApplicableStatus[i].assign(maxVariables, false);
     }
 }
 
@@ -579,11 +580,6 @@ SurveyResults::~SurveyResults()
     }
     delete[] precision;
     delete[] nonApplicableStatus;
-    for (uint i = 0; i < digestSize; i++)
-    {
-        delete[] digestNonApplicableStatus[i];
-    }
-    delete[] digestNonApplicableStatus;
 }
 
 void SurveyResults::resetValuesAtLine(uint j)
