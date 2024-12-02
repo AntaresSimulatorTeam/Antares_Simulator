@@ -26,24 +26,24 @@
 namespace Antares::Solver::Simulation
 {
 OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
-                                       uint thread_number,
+                                       uint numSpace,
                                        AreaList& areas,
                                        SheddingPolicy sheddingPolicy,
                                        SimplexOptimization splxOptimization,
                                        Calendar& calendar)
 
     :
-    interfacePostProcessList(problemeHebdo, thread_number)
+    interfacePostProcessList(problemeHebdo, numSpace)
 {
     post_process_list.push_back(
-      std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, thread_number_, areas));
+      std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, numSpace_, areas));
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, false, false));
     post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
                                                                            areas,
                                                                            sheddingPolicy,
                                                                            splxOptimization,
-                                                                           thread_number));
+                                                                           numSpace));
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
     post_process_list.push_back(
