@@ -104,9 +104,11 @@ jobs:
           container_id=$(docker create antares:centos7)
           mkdir archive
           docker cp $container_id:/workspace/Antares_Simulator/_build/archive/ archive/ 
+          ls archive
+          echo "-----------------"
           ls ${{ env.VCPKG_CACHE_DIR }}
           echo "-----------------"
-          docker cp $container_id:/workspace/vcpkg-cache ${{ env.VCPKG_CACHE_DIR }}
+          docker cp $container_id:/workspace/vcpkg_cache ${{ env.VCPKG_CACHE_DIR }}
           ls ${{ env.VCPKG_CACHE_DIR }}
           echo "-----------------"
           ls archive
