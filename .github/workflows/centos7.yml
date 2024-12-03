@@ -96,14 +96,17 @@ jobs:
 
       - name: Build the image and Antares
         run: |
+          ls -latr /tmp/ccache && \
+          cp -r /tmp/ccache .
           docker build \
           -t antares:centos7  \
           --build-arg="BRANCH=${{ env.REF }}" \
           --build-arg="NPROC=$(nproc)" \
           --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
-          --build-arg CCACHE_DIR=/tmp/ccache \
+          --build-arg CCACHE_DIR=./ccache \
           --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
-          -f ${{ env.DOCKERFILE }} .
+          -f ${{ env.DOCKERFILE }} . && \
+          rm -fr ccache
 
 
       - name: create a container without starting it && retrieve the .tgz
@@ -118,6 +121,7 @@ jobs:
           ls ${{ env.VCPKG_CACHE_DIR }}
           echo "-----------------"
           ls archive
+          docker cp $container_id:/workspace/.ccache /tmp/ccache
           docker rm $container_id
 
 

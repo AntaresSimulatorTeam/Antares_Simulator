@@ -41,12 +41,12 @@ ARG CCACHE_DIR
 ARG CCACHE_KEY
 
 # Copy ccache directory into the container
-COPY ${CCACHE_DIR:-/dev/null} /home/workspace/.ccache
+COPY ${CCACHE_DIR:-/dev/null} /workspace/.ccache
 
-RUN ls -la /home/workspace/.ccache
+RUN ls -la /workspace/.ccache
 # Configure ccache environment variables
-ENV CCACHE_DIR=/home/workspace/.ccache
-ENV CCACHE_BASEDIR=/home/workspace
+ENV CCACHE_DIR=/workspace/.ccache
+ENV CCACHE_BASEDIR=/workspace
 ENV CCACHE_COMPRESS=1
 ENV PATH="/usr/lib/ccache:$PATH"
 
