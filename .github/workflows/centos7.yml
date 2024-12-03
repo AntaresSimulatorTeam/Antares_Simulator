@@ -104,7 +104,7 @@ jobs:
           --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
           --build-arg CCACHE_DIR=./ccache \
           --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
-          -f ${{ env.DOCKERFILE }} . && \
+          -f ${{ env.DOCKERFILE }} . 
 
 
       - name: create a container without starting it && retrieve the .tgz
