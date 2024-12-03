@@ -10,8 +10,7 @@ RUN echo "source /opt/rh/devtoolset-11/enable" >> /etc/bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
 
-
-ENV VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite"
+s
 RUN mkdir -p /workspace/vcpkg_cache
 ARG VCPKG_CACHE_DIR
 COPY $VCPKG_CACHE_DIR /workspace/vcpkg_cache/
@@ -39,6 +38,7 @@ WORKDIR /workspace/Antares_Simulator
 
 RUN  source /opt/rh/devtoolset-11/enable && \
      source /opt/rh/rh-git227/enable && \
+     export VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite" && \
      cmake -B _build -S src \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -53,6 +53,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
 ARG NPROC=2
 RUN  source /opt/rh/devtoolset-11/enable && \
      source /opt/rh/rh-git227/enable && \
+     export VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite" && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
 
