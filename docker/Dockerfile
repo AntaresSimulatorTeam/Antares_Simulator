@@ -14,7 +14,6 @@ RUN mkdir -p /workspace/vcpkg_cache
 ARG VCPKG_CACHE_DIR
 COPY $VCPKG_CACHE_DIR /workspace/
 
-RUN ls -la  /workspace/vcpkg_cache
 
 ARG BRANCH=develop
 RUN cd /workspace && \
@@ -43,7 +42,6 @@ ARG CCACHE_KEY
 # Copy ccache directory into the container
 COPY ${CCACHE_DIR:-/dev/null} /workspace/.ccache
 
-RUN ls -la /workspace/.ccache
 # Configure ccache environment variables
 ENV CCACHE_DIR=/workspace/.ccache
 ENV CCACHE_BASEDIR=/workspace
@@ -70,8 +68,6 @@ RUN  source /opt/rh/devtoolset-11/enable && \
      export VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite" && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
-
-RUN ls -la /workspace/.ccache
 
 #Installer .rpm creation
 RUN cd _build && \
