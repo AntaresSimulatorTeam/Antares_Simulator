@@ -140,8 +140,3 @@ jobs:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
-
-      - name: Save ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: centos7-on-${{ runner.os }}
