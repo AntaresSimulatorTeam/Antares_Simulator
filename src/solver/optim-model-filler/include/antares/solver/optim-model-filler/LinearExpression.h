@@ -37,7 +37,7 @@ class LinearExpression
 {
 public:
     /// Build a linear expression with zero offset and zero coefficients
-    LinearExpression();
+    LinearExpression() = default;
     /// Build a linear expression with a given offset and a given map of non-zero coefficients per
     /// variable ID
     LinearExpression(double offset, std::map<std::string, double> coef_per_var);

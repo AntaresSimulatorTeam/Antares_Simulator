@@ -19,12 +19,11 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
-
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
-#include "antares/solver/expressions/visitors/EvalVisitor.h"
-#include "antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h"
-#include "antares/study/system-model/variable.h"
+#include <antares/solver/expressions/visitors/EvalVisitor.h>
+#include <antares/solver/optim-model-filler/ComponentFiller.h>
+#include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
+#include <antares/study/system-model/variable.h>
 
 namespace Antares::Optimization
 {
@@ -39,7 +38,8 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
-    std::unique_ptr<EvalVisitor> evaluator = std::make_unique<EvalVisitor>(evaluationContext_);
+    std::unique_ptr<Solver::Visitors::EvalVisitor>
+      evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
@@ -57,9 +57,9 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto linear_constraint = visitor.dispatch(constraint.expression().RootNode());
-        auto ct = pb.addConstraint(linear_constraint.lb,
-                                   linear_constraint.ub,
-                                   component_.Id() + "." + constraint.Id());
+        auto* ct = pb.addConstraint(linear_constraint.lb,
+                                    linear_constraint.ub,
+                                    component_.Id() + "." + constraint.Id());
         for (auto [var_id, coef]: linear_constraint.coef_per_var)
         {
             auto* variable = pb.getVariable(component_.Id() + "." + var_id);
@@ -78,7 +78,7 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     }
     ReadLinearExpressionVisitor visitor(evaluationContext_);
     auto linear_expression = visitor.dispatch(component_.getModel()->Objective().RootNode());
-    if (linear_expression.offset() != 0)
+    if (abs(linear_expression.offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
                                     + component_.getModel()->Id() + "' of component '"

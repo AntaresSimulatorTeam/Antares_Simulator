@@ -23,10 +23,13 @@
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 
+using namespace Antares::Solver::Nodes;
+
 namespace Antares::Optimization
 {
 
-ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(EvaluationContext context):
+ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
+  Solver::Visitors::EvaluationContext context):
     linear_expression_visitor_(std::move(context))
 {
 }

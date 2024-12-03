@@ -72,10 +72,6 @@ static std::map<std::string, double> scale_map(const std::map<std::string, doubl
     return result;
 }
 
-LinearExpression::LinearExpression()
-{
-}
-
 LinearExpression::LinearExpression(double offset, std::map<std::string, double> coef_per_var):
     offset_(offset),
     coef_per_var_(std::move(coef_per_var))

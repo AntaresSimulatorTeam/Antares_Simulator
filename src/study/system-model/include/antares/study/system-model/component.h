@@ -31,8 +31,9 @@ namespace Antares::Study::SystemModel
  * Defines the attributes of the Component class
  * Made into a struct to avoid duplication in ComponentBuilder
  */
-struct ComponentData
+class ComponentData
 {
+public:
     std::string id;
     const Model* model = nullptr;
     std::map<std::string, double> parameter_values;

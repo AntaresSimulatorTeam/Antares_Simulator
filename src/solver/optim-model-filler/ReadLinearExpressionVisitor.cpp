@@ -26,10 +26,13 @@
 #include <antares/solver/expressions/visitors/NodeVisitor.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 
+using namespace Antares::Solver::Nodes;
+
 namespace Antares::Optimization
 {
 
-ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(EvaluationContext context):
+ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
+  Solver::Visitors::EvaluationContext context):
     context_(std::move(context))
 {
 }

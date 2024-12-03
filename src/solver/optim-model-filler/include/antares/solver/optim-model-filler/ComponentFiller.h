@@ -43,7 +43,7 @@ public:
     ComponentFiller() = delete;
     ComponentFiller(ComponentFiller& other) = delete;
     /// Create a ComponentFiller for a Component
-    ComponentFiller(const Study::SystemModel::Component& component);
+    explicit ComponentFiller(const Study::SystemModel::Component& component);
 
     void addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                       Solver::Modeler::Api::LinearProblemData& data,
