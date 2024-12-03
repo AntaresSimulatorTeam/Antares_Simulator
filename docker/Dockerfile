@@ -12,7 +12,7 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 RUN mkdir -p /workspace/vcpkg_cache
 ARG VCPKG_CACHE_DIR
-COPY $VCPKG_CACHE_DIR /workspace/vcpkg_cache/
+COPY $VCPKG_CACHE_DIR /workspace/
 
 RUN ls -la  /workspace/vcpkg_cache
 
