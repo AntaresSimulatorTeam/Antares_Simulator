@@ -88,6 +88,12 @@ jobs:
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-centos7-
 
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: centos7-on-${{ runner.os }}
+
+
       - name: Build the image and Antares
         run: |
           docker build \
@@ -95,6 +101,8 @@ jobs:
           --build-arg="BRANCH=${{ env.REF }}" \
           --build-arg="NPROC=$(nproc)" \
           --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
+          --build-arg CCACHE_DIR=/tmp/ccache \
+          --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
           -f ${{ env.DOCKERFILE }} .
 
 
@@ -130,3 +138,8 @@ jobs:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
+
+      - name: Save ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: centos7-on-${{ runner.os }}

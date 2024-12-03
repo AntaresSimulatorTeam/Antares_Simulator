@@ -36,6 +36,19 @@ RUN ORTOOLS_TAG=$(cat  /workspace/Antares_Simulator/ortools_tag) && \
             rm ortools.zip
 
 WORKDIR /workspace/Antares_Simulator
+# Accept build arguments for ccache
+ARG CCACHE_DIR
+ARG CCACHE_KEY
+
+# Copy ccache directory into the container
+COPY ${CCACHE_DIR:-/dev/null} /home/workspace/.ccache
+
+RUN ls -la /home/workspace/.ccache
+# Configure ccache environment variables
+ENV CCACHE_DIR=/home/workspace/.ccache
+ENV CCACHE_BASEDIR=/home/workspace
+ENV CCACHE_COMPRESS=1
+ENV PATH="/usr/lib/ccache:$PATH"
 
 RUN  source /opt/rh/devtoolset-11/enable && \
      source /opt/rh/rh-git227/enable && \
