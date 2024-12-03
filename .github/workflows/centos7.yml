@@ -115,8 +115,7 @@ jobs:
           echo "-----------------"
           docker cp $container_id:/workspace/vcpkg_cache ${{ env.VCPKG_CACHE_DIR }}
           echo "-----------------"
-          rm -rf .ccache
-          docker cp $container_id:/workspace/.ccache .ccache
+          docker cp $container_id:/workspace/.ccache/. .ccache
           ls -la .ccache
           docker rm $container_id
 
