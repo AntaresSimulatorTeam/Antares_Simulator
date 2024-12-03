@@ -10,10 +10,11 @@ RUN echo "source /opt/rh/devtoolset-11/enable" >> /etc/bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
 
-s
 RUN mkdir -p /workspace/vcpkg_cache
 ARG VCPKG_CACHE_DIR
 COPY $VCPKG_CACHE_DIR /workspace/vcpkg_cache/
+
+RUN ls -la  /workspace/vcpkg_cache
 
 ARG BRANCH=develop
 RUN cd /workspace && \
