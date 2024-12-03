@@ -102,7 +102,7 @@ jobs:
           --build-arg="BRANCH=${{ env.REF }}" \
           --build-arg="NPROC=$(nproc)" \
           --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
-          --build-arg CCACHE_DIR=./ccache \
+          --build-arg CCACHE_DIR=./.ccache \
           --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
           -f ${{ env.DOCKERFILE }} . 
 
