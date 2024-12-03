@@ -71,6 +71,8 @@ RUN  source /opt/rh/devtoolset-11/enable && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
 
+RUN ls -la /workspace/.ccache
+
 #Installer .rpm creation
 RUN cd _build && \
     cpack -G RPM
