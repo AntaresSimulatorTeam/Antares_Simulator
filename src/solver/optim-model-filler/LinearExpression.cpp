@@ -25,31 +25,49 @@
 
 namespace Antares::Optimization
 {
-static std::map<std::string, double> add_maps(std::map<std::string, double> left,
-                                              std::map<std::string, double> right,
+
+/**
+ * Element-wise sum of two [string, double] maps, preceded an element-wise multiplication of the
+ * right-hand-side map. Keys that do not exist in one of the two maps are considered to have a zero
+ * value. For every key: value = left_value + rhs_multiplier * right_value
+ * @param left The left hand side map
+ * @param right The right hand side map
+ * @param rhs_multiplier The multiplier to apply to the right hand side map
+ * @return The map resulting from the operation
+ */
+static std::map<std::string, double> add_maps(const std::map<std::string, double>& left,
+                                              const std::map<std::string, double>& right,
                                               double rhs_multiplier)
 {
     std::map result(left);
-    for (auto [var_id, coef]: right)
+    for (auto [key, value]: right)
     {
-        if (result.contains(var_id))
+        if (result.contains(key))
         {
-            result[var_id] += rhs_multiplier * coef;
+            result[key] += rhs_multiplier * value;
         }
         else
         {
-            result[var_id] = rhs_multiplier * coef;
+            result[key] = rhs_multiplier * value;
         }
     }
     return result;
 }
 
-static std::map<std::string, double> scale_map(std::map<std::string, double> map, double scale)
+/**
+ * Element-wise multiplication of a map by a scale.
+ * For every key: final_value = scale * initial_value
+ * @param map The [string, double] map to scale
+ * @param scale The scale
+ * @return The scaled map
+ */
+static std::map<std::string, double> scale_map(const std::map<std::string, double>& map,
+                                               double scale)
 {
     std::map<std::string, double> result;
-    for (auto [var_id, coef]: map)
+    for (auto [key, value]: map)
     {
-        result[var_id] = scale * coef;
+        result[key] = scale * value;
     }
     return result;
 }

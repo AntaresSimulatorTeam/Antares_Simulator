@@ -20,6 +20,7 @@
  */
 
 #pragma once
+
 #include <antares/solver/modeler/api/linearProblemFiller.h>
 #include <antares/study/system-model/component.h>
 #include "antares/solver/expressions/visitors/EvaluationContext.h"

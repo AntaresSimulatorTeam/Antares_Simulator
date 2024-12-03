@@ -44,7 +44,7 @@ public:
 
     const std::string& getName() const override;
 
-    const bool isInteger() const override;
+    bool isInteger() const override;
 
     const operations_research::MPVariable* getMpVar() const;
 

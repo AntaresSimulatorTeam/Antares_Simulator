@@ -66,7 +66,7 @@ const std::string& OrtoolsMipVariable::getName() const
     return mpVar_->name();
 }
 
-const bool OrtoolsMipVariable::isInteger() const
+bool OrtoolsMipVariable::isInteger() const
 {
     return mpVar_->integer();
 }

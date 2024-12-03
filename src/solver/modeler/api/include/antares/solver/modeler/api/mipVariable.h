@@ -30,7 +30,7 @@ namespace Antares::Solver::Modeler::Api
 class IMipVariable: public IHasBounds, public IHasName
 {
 public:
-    virtual const bool isInteger() const = 0;
+    virtual bool isInteger() const = 0;
 };
 
 } // namespace Antares::Solver::Modeler::Api

@@ -23,7 +23,8 @@
 #include <antares/solver/optim-model-filler/LinearExpression.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 
-using namespace Antares::Optimization;
+namespace Antares::Optimization
+{
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(EvaluationContext context):
     linear_expression_visitor_(std::move(context))
@@ -124,3 +125,4 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const ComponentParameterNode
 {
     throw IllegalNodeException();
 }
+} // namespace Antares::Optimization

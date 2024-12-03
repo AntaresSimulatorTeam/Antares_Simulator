@@ -28,6 +28,7 @@
 
 namespace Antares::Optimization
 {
+
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
     component_(component),
     evaluationContext_(component_.getParameterValues(), {})

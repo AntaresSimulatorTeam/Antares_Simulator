@@ -28,6 +28,7 @@
 
 namespace Antares::Optimization
 {
+
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(EvaluationContext context):
     context_(std::move(context))
 {
