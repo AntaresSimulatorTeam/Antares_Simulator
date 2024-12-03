@@ -110,8 +110,7 @@ jobs:
       - name: create a container without starting it && retrieve the .tgz
         run: |
           container_id=$(docker create antares:centos7)
-          docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive
-          ls archive          
+          docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive         
           echo "-----------------"
           docker cp $container_id:/workspace/vcpkg_cache ${{ env.VCPKG_CACHE_DIR }}
           echo "-----------------"
