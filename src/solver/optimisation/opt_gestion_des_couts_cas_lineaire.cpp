@@ -26,6 +26,7 @@
 void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
 
 static void shortTermStorageCost(
+  int weekInTheYear,
   int PremierPdtDeLIntervalle,
   int DernierPdtDeLIntervalle,
   int NombreDePays,
@@ -33,6 +34,7 @@ static void shortTermStorageCost(
   VariableManagement::VariableManager& variableManager,
   std::vector<double>& linearCost)
 {
+    const int weekFirstHour = weekInTheYear * 168;
     for (int pays = 0; pays < NombreDePays; ++pays)
     {
         for (const auto& storage: shortTermStorageInput[pays])
@@ -41,12 +43,13 @@ static void shortTermStorageCost(
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
+                int hourInTheYear = weekFirstHour + pdtHebdo;
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 if (const int varLevel = variableManager.ShortTermStorageLevel(clusterGlobalIndex,
                                                                                pdtJour);
                     varLevel >= 0)
                 {
-                    linearCost[varLevel] = storage.series->costLevel[pdtHebdo];
+                    linearCost[varLevel] = storage.series->costLevel[hourInTheYear];
                 }
 
                 if (const int varInjection = variableManager.ShortTermStorageInjection(
@@ -54,7 +57,7 @@ static void shortTermStorageCost(
                       pdtJour);
                     varInjection >= 0)
                 {
-                    linearCost[varInjection] = storage.series->costInjection[pdtHebdo];
+                    linearCost[varInjection] = storage.series->costInjection[hourInTheYear];
                 }
 
                 if (const int varWithdrawal = variableManager.ShortTermStorageWithdrawal(
@@ -62,7 +65,7 @@ static void shortTermStorageCost(
                       pdtJour);
                     varWithdrawal >= 0)
                 {
-                    linearCost[varWithdrawal] = storage.series->costWithdrawal[pdtHebdo];
+                    linearCost[varWithdrawal] = storage.series->costWithdrawal[hourInTheYear];
                 }
                 if (const int varCostVariationInjection = variableManager
                                                             .ShortTermStorageCostVariationInjection(
@@ -70,16 +73,16 @@ static void shortTermStorageCost(
                                                               pdtJour);
                     storage.penalizeVariationInjection && varCostVariationInjection >= 0)
                 {
-                    linearCost[varCostVariationInjection] = storage.series
-                                                              ->costVariationInjection[pdtHebdo];
+                    linearCost[varCostVariationInjection] = storage.series->costVariationInjection
+                                                              [hourInTheYear];
                 }
                 if (const int varCostVariationWithdrawal
                     = variableManager.ShortTermStorageCostVariationWithdrawal(clusterGlobalIndex,
                                                                               pdtJour);
                     storage.penalizeVariationWithdrawal && varCostVariationWithdrawal >= 0)
                 {
-                    linearCost[varCostVariationWithdrawal] = storage.series
-                                                               ->costVariationWithdrawal[pdtHebdo];
+                    linearCost[varCostVariationWithdrawal] = storage.series->costVariationWithdrawal
+                                                               [hourInTheYear];
                 }
             }
         }
@@ -97,7 +100,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     ProblemeAResoudre->CoutQuadratique.assign(ProblemeAResoudre->NombreDeVariables, 0.);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
-    shortTermStorageCost(PremierPdtDeLIntervalle,
+    shortTermStorageCost(problemeHebdo->weekInTheYear,
+                         PremierPdtDeLIntervalle,
                          DernierPdtDeLIntervalle,
                          problemeHebdo->NombreDePays,
                          problemeHebdo->ShortTermStorage,
