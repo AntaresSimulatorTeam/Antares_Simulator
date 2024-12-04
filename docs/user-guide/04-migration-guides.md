@@ -183,6 +183,13 @@ Using this property requires OR-Tools and a MILP solver (XPRESS, COIN)
 antares-8.8-solver --use-ortools --ortools-solver coin|xpress ...
 ```
 
+Starting from version 9.2, the syntax is as following
+
+```
+antares-solver --solver coin|xpress ...
+```
+
+
 ### Output
 
 ### Cashflow by short-term storage

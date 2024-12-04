@@ -71,7 +71,7 @@ public:
     // gp : the constructors' signatures of the post process list classes.
     static std::unique_ptr<interfacePostProcessList> create(AdqPatchParams& adqPatchParams,
                                                             PROBLEME_HEBDO* problemeHebdo,
-                                                            uint thread_number,
+                                                            uint numSpace,
                                                             AreaList& areas,
                                                             SheddingPolicy sheddingPolicy,
                                                             SimplexOptimization splxOptimization,
@@ -80,11 +80,11 @@ public:
 
 protected:
     // Member functions
-    interfacePostProcessList(PROBLEME_HEBDO* problemeHebdo, uint thread_number);
+    interfacePostProcessList(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
 
     // Data mambers
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
-    const unsigned int thread_number_ = 0;
+    const unsigned int numSpace_;
     std::vector<std::unique_ptr<basePostProcessCommand>> post_process_list;
 };
 
