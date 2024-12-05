@@ -2,7 +2,7 @@ name: Centos7 CI (push and/or release)
 
 on:
   release:
-    types: [created]
+    types: [ created ]
   push:
     branches:
       - develop
@@ -29,135 +29,107 @@ jobs:
 
   build:
     name: Build
-    env:
-      ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
-    container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
 
     steps:
 
-    - name: Checkout
-      run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
-    - name: Install gcc 10
-      run: |
-        # update mirrors, official centos7 is deprecated
-        sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo &&\
-        sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo &&\
-        sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo &&\
-        yum update -y
+      #sparse checkout -- only needed files
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            docker
+            src/vcpkg.json
+          ref: ${{ env.REF }}
 
-        # not a typo, centos-release-scl is needed to install devtoolset-10 but introduce deprecated mirror
-        sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo &&\
-        sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo &&\
-        sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
-
-        yum install -y centos-release-scl
-        yum install -y devtoolset-11-gcc*
-
-    - name: Install cmake 3.28
-      run: pip3 install cmake==3.28.4
-
-    - name: Install VCPKG
-      # Note: we need to use environment variables instead of workflow variables
-      #       because github messes up path variables when running in container,
-      #       see https://github.com/actions/runner/issues/2058
-      run: |
-        git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
-        echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
-        echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
-        echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite" >> $GITHUB_ENV
-
-    - name: Restore vcpkg binary dir from cache
-      id: cache-vcpkg-binary
-      # Note: we are stuck with v3, because v4 is not compatible with oracle8 image
-      uses: actions/cache/restore@v3
-      with:
-        path: ${{ env.VCPKG_CACHE_DIR }}
-        key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
-        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-        restore-keys: vcpkg-cache-centos7-
-
-    - name: Init submodule
-      run: |
-          git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
-
-    - name: Config OR-Tools URL
-      run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
-
-    - name: Download OR-Tools
-      id: ortools
-      run: |
-            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
-            unzip -q ortools.zip
-            rm ortools.zip
-
-    - name: Install gh if needed
-      if: ${{ env.IS_RELEASE == 'true' }}
-      run: |
-           wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm
-           rpm -i gh_2.52.0_linux_amd64.rpm
-           gh --version
-
-    - name: Configure
-      run: |
-        source /opt/rh/devtoolset-11/enable
-        source /opt/rh/rh-git227/enable
-        cmake -B _build -S src \
-        -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
-        -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_TESTING=ON \
-        -DBUILD_TOOLS=ON \
-        -DBUILD_UI=OFF \
-        -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
+      - name: set env variables -- DockerFiles
+        run: |
+          echo "DOCKERFILE=$(pwd)/docker/Dockerfile" >> $GITHUB_ENV
+          echo "DOCKERDIR=$(pwd)/docker" >> $GITHUB_ENV
 
 
-    - name: Build
-      run: |
-           source /opt/rh/devtoolset-11/enable
-           source /opt/rh/rh-git227/enable
-           cmake --build _build --config Release -j$(nproc)
-           ccache -s
 
-    - name: Installer .rpm creation
-      run: |
-           cd _build
-           cpack -G RPM
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            docker/AntaresDeps        
 
-    - name: Solver archive creation
-      run: |
-           cd _build
-           cmake --install . --prefix install
-           pushd .
-           cd install/bin
-           tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so
-           popd
-           rm -rf install
+      - name: Docker file push
+        id: docker_push
 
-    - name: .tar.gz creation
-      run: |
-           cd _build
-           cpack -G TGZ
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: elgohr/Publish-Docker-Github-Action@main
+        with:
+          name: antaresrte/antaressystemdeps
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          workdir: ${{ env.DOCKERDIR }}
+          dockerfile: ${{ env.DOCKERDIR }}/AntaresDeps
+          cache: false
+          tags: latest
 
-    - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-        tag: ${{ github.event.inputs.release_tag }}
-      run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+      - name: create vcpkg cache dir
+        run: |
+          echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
+          mkdir -p ${{ github.workspace }}/vcpkg_cache
 
-    - name: Cache vcpkg binary dir
-      if: always()
-      id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v3
-      with:
-        path: ${{ env.VCPKG_CACHE_DIR }}
-        key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+      - name: Restore vcpkg binary dir from cache
+        id: cache-vcpkg-binary
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+          # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+          restore-keys: vcpkg-cache-centos7-
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: centos7-on-${{ runner.os }}
+
+
+      - name: Build the image and Antares
+        run: |
+          ls -latr .ccache/ && \
+          docker build \
+          -t antares:centos7  \
+          --build-arg="BRANCH=${{ env.REF }}" \
+          --build-arg="NPROC=$(nproc)" \
+          --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
+          --build-arg CCACHE_DIR=./.ccache \
+          --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
+          -f ${{ env.DOCKERFILE }} . 
+
+
+      - name: create a container without starting it && retrieve the .tgz
+        run: |
+          container_id=$(docker create antares:centos7)
+          docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive         
+          docker cp $container_id:/workspace/vcpkg_cache ${{ env.VCPKG_CACHE_DIR }}
+          docker cp $container_id:/workspace/.ccache/. .ccache
+          ls -la .ccache
+          docker rm $container_id
+
+
+      - name: Publish assets
+        if: ${{ env.IS_RELEASE == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          tag: ${{ github.event.inputs.release_tag }}
+        run: |
+          gh release upload "$tag" archive/*.tar.gz archive/*.rpm
+
+
+      - name: Cache vcpkg binary dir
+        if: always()
+        id: save-cache-vcpkg-binary
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-cache-centos7-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+

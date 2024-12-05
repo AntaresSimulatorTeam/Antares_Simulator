@@ -72,16 +72,14 @@ def remove_outputs(study_path):
         shutil.rmtree(f)
 
 
-def launch_solver(solver_path, study_path, use_ortools=False, ortools_solver="sirius"):
+def launch_solver(solver_path, study_path, ortools_solver="sirius"):
     # Clean study output
     remove_outputs(study_path)
 
     solver_path_full = str(Path(solver_path).resolve())
 
     command = [solver_path_full, "-i", str(study_path)]
-    if use_ortools:
-        command.append('--use-ortools')
-        command.append('--ortools-solver=' + ortools_solver)
+    command.append('--solver=' + ortools_solver)
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=None)
     output = process.communicate()
 
