@@ -265,4 +265,27 @@ BOOST_FIXTURE_TEST_CASE(computeMarketBidCost, FixtureFull)
 
     BOOST_CHECK_CLOSE(cluster->computeMarketBidCost(1, 2, 1), 24.12, 0.001);
 }
+
+BOOST_AUTO_TEST_CASE(non_constant_marketbid_modulation)
+{
+    Area area;
+    ThermalCluster cluster(&area);
+    cluster.costgeneration = setManually;
+    cluster.marketBidCost = 120;
+
+    auto& mod = cluster.modulation;
+    mod.resize(thermalModulationMax, HOURS_PER_YEAR);
+    mod.fill(1.);
+
+    {
+        mod[thermalModulationMarketBid][0] = .5;
+        BOOST_CHECK_EQUAL(cluster.getMarketBidCost(0, 0), .5 * 120);
+    }
+
+    {
+        mod[thermalModulationMarketBid][1] = .8;
+        BOOST_CHECK_EQUAL(cluster.getMarketBidCost(1, 0), .8 * 120);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()

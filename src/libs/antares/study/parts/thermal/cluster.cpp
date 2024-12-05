@@ -386,8 +386,8 @@ void ThermalCluster::ComputeProductionCostTS()
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            double& houtlyModulation = modulation[Data::thermalModulationCost][hour];
-            productionCostTS[hour] = marginalCostTS[hour] * houtlyModulation;
+            double hourlyModulation = modulation[Data::thermalModulationCost][hour];
+            productionCostTS[hour] = marginalCostTS[hour] * hourlyModulation;
         }
     }
 }
@@ -748,9 +748,7 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
 
 double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
-    uint serieIndex = series.getSeriesIndex(year);
-
-    double mod = modulation[thermalModulationMarketBid][serieIndex];
+    const double mod = modulation[thermalModulationMarketBid][hourInTheYear];
 
     if (costgeneration == Data::setManually)
     {
@@ -758,6 +756,7 @@ double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
     }
     else
     {
+        const uint serieIndex = series.getSeriesIndex(year);
         const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
     }
