@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <limits>
+
 #include <antares/solver/expressions/visitors/EvaluationContext.h>
 #include <antares/solver/expressions/visitors/NodeVisitor.h>
 
