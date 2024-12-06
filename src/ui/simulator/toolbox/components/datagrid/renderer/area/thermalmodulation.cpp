@@ -32,12 +32,15 @@ namespace Renderer
 {
 ThermalClusterCommonModulation::ThermalClusterCommonModulation(
   wxWindow* control,
-  Toolbox::InputSelector::ThermalCluster* notifier) :
- Renderer::Matrix<>(control), pCluster(nullptr)
+  Toolbox::InputSelector::ThermalCluster* notifier):
+    Renderer::Matrix<>(control),
+    pCluster(nullptr)
 {
     if (notifier)
-        notifier->onThermalClusterChanged.connect(
-          this, &ThermalClusterCommonModulation::internalThermalClusterChanged);
+    {
+        notifier->onThermalClusterChanged
+          .connect(this, &ThermalClusterCommonModulation::internalThermalClusterChanged);
+    }
 }
 
 ThermalClusterCommonModulation::~ThermalClusterCommonModulation()
@@ -95,17 +98,16 @@ wxString ThermalClusterCommonModulation::cellValue(int x, int y) const
             return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalMinGenModulation][y], 3));
         case (Data::thermalModulationCost + Data::thermalModulationMax):
             return DoubleToWxString(
-              Math::Round((*pMatrix)[Data::thermalModulationCost][y]
-                            * pCluster->costsTimeSeries[0].marginalCostTS[y],
+              Math::Round(pCluster->getCostProvider().getMarginalCost(0, y),
                           3));
         case (Data::thermalModulationMarketBid + Data::thermalModulationMax):
             return DoubleToWxString(
-              Math::Round((*pMatrix)[Data::thermalModulationMarketBid][y]
-                            * pCluster->costsTimeSeries[0].marketBidCostTS[y],
+              Math::Round(pCluster->getCostProvider().getMarketBidCost(y, 0),
                           3));
         case (Data::thermalModulationCapacity + Data::thermalModulationMax):
-            return DoubleToWxString(Math::Round(
-              (*pMatrix)[Data::thermalModulationCapacity][y] * pCluster->nominalCapacity, 2));
+            return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalModulationCapacity][y]
+                                                  * pCluster->nominalCapacity,
+                                                2));
         case (Data::thermalMinGenModulation + Data::thermalModulationMax):
             return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalMinGenModulation][y]
                                                   * pCluster->unitCount * pCluster->nominalCapacity,
@@ -131,11 +133,9 @@ double ThermalClusterCommonModulation::cellNumericValue(int x, int y) const
         case Data::thermalMinGenModulation:
             return (*pMatrix)[Data::thermalMinGenModulation][y];
         case (Data::thermalModulationCost + Data::thermalModulationMax):
-            return (*pMatrix)[Data::thermalModulationCost][y]
-                   * pCluster->costsTimeSeries[0].marginalCostTS[y];
+            return pCluster->getCostProvider().getMarginalCost(0, y);
         case (Data::thermalModulationMarketBid + Data::thermalModulationMax):
-            return (*pMatrix)[Data::thermalModulationMarketBid][y]
-                   * pCluster->costsTimeSeries[0].marketBidCostTS[y];
+            return pCluster->getCostProvider().getMarketBidCost(y, 0);
         case (Data::thermalModulationCapacity + Data::thermalModulationMax):
             return (*pMatrix)[Data::thermalModulationCapacity][y] * pCluster->nominalCapacity;
         case (Data::thermalMinGenModulation + Data::thermalModulationMax):

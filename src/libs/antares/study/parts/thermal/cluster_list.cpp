@@ -622,7 +622,6 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const fs::path& folder)
                                    auto filePath = folder / c->parentArea->id.c_str() / c->id();
 
                                    bool result = c->ecoInput.loadFromFolder(study, filePath);
-                                   c->ComputeCostTimeSeries();
                                    return result;
                                });
 }
