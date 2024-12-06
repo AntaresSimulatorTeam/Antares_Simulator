@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <ranges>
+
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
@@ -38,8 +40,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
-    std::unique_ptr<Solver::Visitors::EvalVisitor>
-      evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
+    auto evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
