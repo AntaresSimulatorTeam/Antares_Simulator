@@ -416,8 +416,6 @@ private:
     // Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
     // CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
 
-    void initializeCostProvider();
-
     std::unique_ptr<CostProvider> costProvider;
 
 }; // class ThermalCluster

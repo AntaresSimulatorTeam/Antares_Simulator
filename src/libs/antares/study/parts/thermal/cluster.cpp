@@ -272,148 +272,6 @@ void Data::ThermalCluster::markAsModified() const
     ecoInput.markAsModified();
 }
 
-ConstantCostProvider::ConstantCostProvider(ThermalCluster* cluster):
-    cluster(cluster)
-{
-}
-
-double ConstantCostProvider::getOperatingCost(uint serieIndex, uint hourInTheYear) const
-{
-    const auto* modCost = cluster->modulation[thermalModulationCost];
-    return cluster->marginalCost * modCost[hourInTheYear];
-}
-
-double ConstantCostProvider::getMarginalCost(uint serieIndex, uint hourInTheYear) const
-{
-    const double mod = cluster->modulation[Data::thermalModulationCost][hourInTheYear];
-    return cluster->marginalCost * mod;
-}
-
-double ConstantCostProvider::getMarketBidCost(uint hourInTheYear, uint year) const
-{
-    const double mod = cluster->modulation[thermalModulationMarketBid][hourInTheYear];
-    return cluster->marketBidCost * mod;
-}
-
-ScenarizedCostProvider::ScenarizedCostProvider(ThermalCluster* cluster):
-    cluster(cluster)
-{
-    resizeCostTS();
-    ComputeMarketBidTS();
-    MarginalCostEqualsMarketBid();
-    ComputeProductionCostTS();
-}
-
-void ScenarizedCostProvider::ComputeProductionCostTS()
-{
-    if (cluster->modulation.width == 0)
-    {
-        return;
-    }
-
-    for (auto& timeSeries: costsTimeSeries)
-    {
-        auto& productionCostTS = timeSeries.productionCostTs;
-        auto& marginalCostTS = timeSeries.marginalCostTS;
-
-        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
-        {
-            double hourlyModulation = cluster->modulation[Data::thermalModulationCost][hour];
-            productionCostTS[hour] = marginalCostTS[hour] * hourlyModulation;
-        }
-    }
-}
-
-void ScenarizedCostProvider::resizeCostTS()
-{
-    const uint fuelCostWidth = cluster->ecoInput.fuelcost.width;
-    const uint co2CostWidth = cluster->ecoInput.co2cost.width;
-    const uint tsCount = std::max(fuelCostWidth, co2CostWidth);
-
-    costsTimeSeries.resize(tsCount, CostsTimeSeries());
-}
-
-void ScenarizedCostProvider::MarginalCostEqualsMarketBid()
-{
-    for (auto& timeSeries: costsTimeSeries)
-    {
-        auto& source = timeSeries.marketBidCostTS;
-        auto& destination = timeSeries.marginalCostTS;
-        std::copy(source.begin(), source.end(), destination.begin());
-    }
-}
-
-double computeMarketBidCost(double fuelCost,
-                            double fuelEfficiency,
-                            double co2EmissionFactor,
-                            double co2cost,
-                            double variableomcost)
-{
-    return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
-}
-
-void ScenarizedCostProvider::ComputeMarketBidTS()
-{
-    const uint fuelCostWidth = cluster->ecoInput.fuelcost.width;
-    const uint co2CostWidth = cluster->ecoInput.co2cost.width;
-
-    double co2EmissionFactor = cluster->emissions.factors[Pollutant::CO2];
-
-    for (uint tsIndex = 0; tsIndex < costsTimeSeries.size(); ++tsIndex)
-    {
-        uint tsIndexFuel = std::min(fuelCostWidth - 1, tsIndex);
-        uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
-        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
-        {
-            double fuelcost = cluster->ecoInput.fuelcost[tsIndexFuel][hour];
-            double co2cost = cluster->ecoInput.co2cost[tsIndexCo2][hour];
-
-            costsTimeSeries[tsIndex].marketBidCostTS[hour] = computeMarketBidCost(
-              fuelcost,
-              cluster->fuelEfficiency,
-              co2EmissionFactor,
-              co2cost,
-              cluster->variableomcost);
-        }
-    }
-}
-
-double ScenarizedCostProvider::getOperatingCost(uint serieIndex, uint hourInTheYear) const
-{
-    const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
-    return costsTimeSeries[tsIndex].productionCostTs[hourInTheYear];
-}
-
-double ScenarizedCostProvider::getMarginalCost(uint serieIndex, uint hourInTheYear) const
-{
-    const double mod = cluster->modulation[thermalModulationMarketBid][hourInTheYear];
-    const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
-    return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
-}
-
-double ScenarizedCostProvider::getMarketBidCost(uint hourInTheYear, uint year) const
-{
-    const double mod = cluster->modulation[thermalModulationMarketBid][hourInTheYear];
-    const uint serieIndex = cluster->series.getSeriesIndex(year);
-    const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
-    return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
-}
-
-void Data::ThermalCluster::initializeCostProvider()
-{
-    switch (costgeneration)
-    {
-    case Data::setManually:
-        costProvider = std::make_unique<ConstantCostProvider>(this);
-        break;
-    case Data::useCostTimeseries:
-        costProvider = std::make_unique<ScenarizedCostProvider>(this);
-        break;
-    default:
-        throw std::string("Invalid parameter");
-    }
-}
-
 void Data::ThermalCluster::calculationOfSpinning()
 {
     // nominal capacity (for solver)
@@ -756,7 +614,17 @@ CostProvider& ThermalCluster::getCostProvider()
 {
     if (!costProvider)
     {
-        initializeCostProvider();
+        switch (costgeneration)
+        {
+        case Data::setManually:
+            costProvider = std::make_unique<ConstantCostProvider>(this);
+            break;
+        case Data::useCostTimeseries:
+            costProvider = std::make_unique<ScenarizedCostProvider>(this);
+            break;
+        default:
+            throw std::runtime_error("Invalid costgeneration parameter");
+        }
     }
     return *costProvider;
 }

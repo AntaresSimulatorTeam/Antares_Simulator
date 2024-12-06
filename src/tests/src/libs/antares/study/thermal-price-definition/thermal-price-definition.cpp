@@ -229,8 +229,9 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMar
 
     cluster->costgeneration = Data::setManually;
 
-    BOOST_CHECK_EQUAL(cluster->getCostProvider().getMarketBidCost(2637, 0), 35);
-    BOOST_CHECK_EQUAL(cluster->getCostProvider().getMarginalCost(6737, 0), 23);
+    auto& cp = cluster->getCostProvider();
+    BOOST_CHECK_EQUAL(cp.getMarketBidCost(2637, 0), 35);
+    BOOST_CHECK_EQUAL(cp.getMarginalCost(6737, 0), 23);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -250,8 +251,9 @@ BOOST_FIXTURE_TEST_CASE(
 
     cluster->tsNumbers.reset(1);
 
-    BOOST_CHECK_CLOSE(cluster->getCostProvider().getMarginalCost(0, 0), 24.12, 0.001);
-    BOOST_CHECK_CLOSE(cluster->getCostProvider().getMarketBidCost(2637, 0), 24.12, 0.001);
+    auto& cp = cluster->getCostProvider();
+    BOOST_CHECK_CLOSE(cp.getMarginalCost(0, 0), 24.12, 0.001);
+    BOOST_CHECK_CLOSE(cp.getMarketBidCost(2637, 0), 24.12, 0.001);
 }
 
 BOOST_FIXTURE_TEST_CASE(computeMarketBidCost_useTimeSeries, FixtureFull)
