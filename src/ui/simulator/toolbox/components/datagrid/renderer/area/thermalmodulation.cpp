@@ -32,15 +32,12 @@ namespace Renderer
 {
 ThermalClusterCommonModulation::ThermalClusterCommonModulation(
   wxWindow* control,
-  Toolbox::InputSelector::ThermalCluster* notifier):
-    Renderer::Matrix<>(control),
-    pCluster(nullptr)
+  Toolbox::InputSelector::ThermalCluster* notifier) :
+ Renderer::Matrix<>(control), pCluster(nullptr)
 {
     if (notifier)
-    {
-        notifier->onThermalClusterChanged
-          .connect(this, &ThermalClusterCommonModulation::internalThermalClusterChanged);
-    }
+        notifier->onThermalClusterChanged.connect(
+          this, &ThermalClusterCommonModulation::internalThermalClusterChanged);
 }
 
 ThermalClusterCommonModulation::~ThermalClusterCommonModulation()
