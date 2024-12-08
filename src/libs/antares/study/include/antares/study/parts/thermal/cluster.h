@@ -77,19 +77,19 @@ class ThermalCluster;
 class ConstantCostProvider: public CostProvider
 {
 public:
-    ConstantCostProvider(ThermalCluster* cluster);
+    ConstantCostProvider(const ThermalCluster& cluster);
     double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarketBidCost(uint hourInTheYear, uint year) const override;
 
 private:
-    ThermalCluster* cluster;
+    const ThermalCluster& cluster;
 };
 
 class ScenarizedCostProvider: public CostProvider
 {
 public:
-    ScenarizedCostProvider(ThermalCluster* cluster);
+    ScenarizedCostProvider(const ThermalCluster& cluster);
     double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarketBidCost(uint hourInTheYear, uint year) const override;
@@ -112,7 +112,7 @@ private:
     void ComputeProductionCostTS();
 
     std::vector<CostsTimeSeries> costsTimeSeries;
-    ThermalCluster* cluster;
+    const ThermalCluster& cluster;
 };
 
 double computeMarketBidCost(double fuelCost,

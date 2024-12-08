@@ -22,26 +22,26 @@
 
 namespace Antares::Data
 {
-ConstantCostProvider::ConstantCostProvider(ThermalCluster* cluster):
+ConstantCostProvider::ConstantCostProvider(const ThermalCluster& cluster):
     cluster(cluster)
 {
 }
 
 double ConstantCostProvider::getOperatingCost(uint serieIndex, uint hourInTheYear) const
 {
-    const auto* modCost = cluster->modulation[thermalModulationCost];
-    return cluster->marginalCost * modCost[hourInTheYear];
+    const auto* modCost = cluster.modulation[thermalModulationCost];
+    return cluster.marginalCost * modCost[hourInTheYear];
 }
 
 double ConstantCostProvider::getMarginalCost(uint serieIndex, uint hourInTheYear) const
 {
-    const double mod = cluster->modulation[Data::thermalModulationCost][hourInTheYear];
-    return cluster->marginalCost * mod;
+    const double mod = cluster.modulation[Data::thermalModulationCost][hourInTheYear];
+    return cluster.marginalCost * mod;
 }
 
 double ConstantCostProvider::getMarketBidCost(uint hourInTheYear, uint year) const
 {
-    const double mod = cluster->modulation[thermalModulationMarketBid][hourInTheYear];
-    return cluster->marketBidCost * mod;
+    const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
+    return cluster.marketBidCost * mod;
 }
 } // namespace Antares::Data

@@ -617,10 +617,10 @@ CostProvider& ThermalCluster::getCostProvider()
         switch (costgeneration)
         {
         case Data::setManually:
-            costProvider = std::make_unique<ConstantCostProvider>(this);
+            costProvider = std::make_unique<ConstantCostProvider>(*this);
             break;
         case Data::useCostTimeseries:
-            costProvider = std::make_unique<ScenarizedCostProvider>(this);
+            costProvider = std::make_unique<ScenarizedCostProvider>(*this);
             break;
         default:
             throw std::runtime_error("Invalid costgeneration parameter");

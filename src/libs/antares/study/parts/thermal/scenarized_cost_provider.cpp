@@ -24,7 +24,7 @@
 namespace Antares::Data
 {
 
-ScenarizedCostProvider::ScenarizedCostProvider(ThermalCluster* cluster):
+ScenarizedCostProvider::ScenarizedCostProvider(const ThermalCluster& cluster):
     cluster(cluster)
 {
     resizeCostTS();
@@ -35,7 +35,7 @@ ScenarizedCostProvider::ScenarizedCostProvider(ThermalCluster* cluster):
 
 void ScenarizedCostProvider::ComputeProductionCostTS()
 {
-    if (cluster->modulation.width == 0)
+    if (cluster.modulation.width == 0)
     {
         return;
     }
@@ -47,7 +47,7 @@ void ScenarizedCostProvider::ComputeProductionCostTS()
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            double hourlyModulation = cluster->modulation[Data::thermalModulationCost][hour];
+            double hourlyModulation = cluster.modulation[Data::thermalModulationCost][hour];
             productionCostTS[hour] = marginalCostTS[hour] * hourlyModulation;
         }
     }
@@ -55,8 +55,8 @@ void ScenarizedCostProvider::ComputeProductionCostTS()
 
 void ScenarizedCostProvider::resizeCostTS()
 {
-    const uint fuelCostWidth = cluster->ecoInput.fuelcost.width;
-    const uint co2CostWidth = cluster->ecoInput.co2cost.width;
+    const uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
+    const uint co2CostWidth = cluster.ecoInput.co2cost.width;
     const uint tsCount = std::max(fuelCostWidth, co2CostWidth);
 
     costsTimeSeries.resize(tsCount, CostsTimeSeries());
@@ -83,10 +83,10 @@ double computeMarketBidCost(double fuelCost,
 
 void ScenarizedCostProvider::ComputeMarketBidTS()
 {
-    const uint fuelCostWidth = cluster->ecoInput.fuelcost.width;
-    const uint co2CostWidth = cluster->ecoInput.co2cost.width;
+    const uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
+    const uint co2CostWidth = cluster.ecoInput.co2cost.width;
 
-    double co2EmissionFactor = cluster->emissions.factors[Pollutant::CO2];
+    double co2EmissionFactor = cluster.emissions.factors[Pollutant::CO2];
 
     for (uint tsIndex = 0; tsIndex < costsTimeSeries.size(); ++tsIndex)
     {
@@ -94,15 +94,15 @@ void ScenarizedCostProvider::ComputeMarketBidTS()
         uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            double fuelcost = cluster->ecoInput.fuelcost[tsIndexFuel][hour];
-            double co2cost = cluster->ecoInput.co2cost[tsIndexCo2][hour];
+            double fuelcost = cluster.ecoInput.fuelcost[tsIndexFuel][hour];
+            double co2cost = cluster.ecoInput.co2cost[tsIndexCo2][hour];
 
             costsTimeSeries[tsIndex].marketBidCostTS[hour] = computeMarketBidCost(
               fuelcost,
-              cluster->fuelEfficiency,
+              cluster.fuelEfficiency,
               co2EmissionFactor,
               co2cost,
-              cluster->variableomcost);
+              cluster.variableomcost);
         }
     }
 }
@@ -115,15 +115,15 @@ double ScenarizedCostProvider::getOperatingCost(uint serieIndex, uint hourInTheY
 
 double ScenarizedCostProvider::getMarginalCost(uint serieIndex, uint hourInTheYear) const
 {
-    const double mod = cluster->modulation[thermalModulationMarketBid][hourInTheYear];
+    const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
     const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
     return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
 }
 
 double ScenarizedCostProvider::getMarketBidCost(uint hourInTheYear, uint year) const
 {
-    const double mod = cluster->modulation[thermalModulationMarketBid][hourInTheYear];
-    const uint serieIndex = cluster->series.getSeriesIndex(year);
+    const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
+    const uint serieIndex = cluster.series.getSeriesIndex(year);
     const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
     return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
 }
