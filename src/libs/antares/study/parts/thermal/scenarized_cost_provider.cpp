@@ -109,14 +109,14 @@ void ScenarizedCostProvider::ComputeMarketBidTS()
 
 double ScenarizedCostProvider::getOperatingCost(uint serieIndex, uint hourInTheYear) const
 {
-    const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
+    const uint tsIndex = std::min(serieIndex, static_cast<uint>(costsTimeSeries.size()) - 1);
     return costsTimeSeries[tsIndex].productionCostTs[hourInTheYear];
 }
 
 double ScenarizedCostProvider::getMarginalCost(uint serieIndex, uint hourInTheYear) const
 {
     const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
-    const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
+    const uint tsIndex = std::min(serieIndex, static_cast<uint>(costsTimeSeries.size()) - 1);
     return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
 }
 
@@ -124,7 +124,7 @@ double ScenarizedCostProvider::getMarketBidCost(uint hourInTheYear, uint year) c
 {
     const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
     const uint serieIndex = cluster.series.getSeriesIndex(year);
-    const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
+    const uint tsIndex = std::min(serieIndex, static_cast<uint>(costsTimeSeries.size()) - 1);
     return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
 }
 

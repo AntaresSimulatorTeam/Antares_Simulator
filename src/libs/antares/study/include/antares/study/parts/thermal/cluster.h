@@ -67,6 +67,7 @@ enum class LocalTSGenerationBehavior
 class CostProvider
 {
 public:
+    virtual ~CostProvider() = default;
     virtual double getOperatingCost(uint serieIndex, uint hourInTheYear) const = 0;
     virtual double getMarginalCost(uint serieIndex, uint hourInTheYear) const = 0;
     virtual double getMarketBidCost(uint hourInTheYear, uint year) const = 0;
@@ -77,7 +78,8 @@ class ThermalCluster;
 class ConstantCostProvider: public CostProvider
 {
 public:
-    ConstantCostProvider(const ThermalCluster& cluster);
+    explicit ConstantCostProvider(const ThermalCluster& cluster);
+    virtual ~ConstantCostProvider() = default;
     double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarketBidCost(uint hourInTheYear, uint year) const override;
@@ -89,7 +91,8 @@ private:
 class ScenarizedCostProvider: public CostProvider
 {
 public:
-    ScenarizedCostProvider(const ThermalCluster& cluster);
+    explicit ScenarizedCostProvider(const ThermalCluster& cluster);
+    virtual ~ScenarizedCostProvider() = default;
     double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarketBidCost(uint hourInTheYear, uint year) const override;
