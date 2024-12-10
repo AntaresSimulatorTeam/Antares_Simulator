@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -21,7 +20,7 @@
  */
 
 #pragma once
-#include "antares/solver/systemParser/Library.h"
+#include "antares/solver/systemParser/library.h"
 
 namespace Antares::Solver::SystemParser
 {

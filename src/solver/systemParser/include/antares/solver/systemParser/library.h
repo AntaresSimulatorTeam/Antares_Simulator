@@ -34,19 +34,19 @@ struct Parameter
     std::string value;
 };
 
-struct Components
+struct Component
 {
     std::string id;
     std::string model;
     std::string scenarioGroup;
-    std::vector<Parameters> parameters;
+    std::vector<Parameter> parameters;
 };
 
 struct System
 {
     std::string id;
     std::vector<std::string> libraries;
-    std::vector<Components> components;
+    std::vector<Component> components;
 
     // will be implemented later
     // std::vector<Connections> connections;

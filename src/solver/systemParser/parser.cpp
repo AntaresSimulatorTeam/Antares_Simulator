@@ -21,18 +21,18 @@
 
 #include "antares/solver/systemParser/parser.h"
 
-#include "antares/solver/systemParser/Library.h"
+#include "antares/solver/systemParser/library.h"
 
 #include "encoders.hxx"
 
 namespace Antares::Solver::SystemParser
 {
 
-Library Parser::parse(const std::string& content)
+System Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
 
-    System system = root["system"].as<Library>();
+    System system = root["system"].as<System>();
 
     return system;
 }
