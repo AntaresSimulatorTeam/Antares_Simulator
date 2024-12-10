@@ -20,6 +20,7 @@
  */
 
 #include "antares/solver/systemParser/parser.h"
+
 #include "antares/solver/systemParser/Library.h"
 
 #include "encoders.hxx"
