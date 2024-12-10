@@ -559,7 +559,6 @@ SurveyResults::SurveyResults(const Data::Study& s, const Yuni::String& o, IResul
     for (uint i = 0; i < digestSize; i++)
     {
         digestNonApplicableStatus[i] = new bool[maxVariables]{false};
-        }
     }
 }
 
