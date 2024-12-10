@@ -19,20 +19,21 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/modelParser/parser.h"
-
-#include "antares/solver/modelParser/Library.h"
+#include "antares/solver/systemParser/parser.h"
+#include "antares/solver/systemParser/Library.h"
 
 #include "encoders.hxx"
 
-namespace Antares::Solver::ModelParser
+namespace Antares::Solver::SystemParser
 {
+
 Library Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
 
-    Library library = root["library"].as<Library>();
+    System system = root["system"].as<Library>();
 
-    return library;
+    return system;
 }
-} // namespace Antares::Solver::ModelParser
+
+} // namespace Antares::Solver::SystemParser

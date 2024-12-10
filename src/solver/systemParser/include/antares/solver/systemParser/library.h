@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -21,16 +20,36 @@
  */
 
 #pragma once
-#include "antares/solver/systemParser/Library.h"
+
+#include <string>
+#include <vector>
 
 namespace Antares::Solver::SystemParser
 {
-class Parser
-{
-public:
-    Parser() = default;
-    ~Parser() = default;
 
-    System parse(const std::string& content);
+struct Parameter
+{
+    std::string id;
+    std::string type;
+    std::string value;
 };
+
+struct Components
+{
+    std::string id;
+    std::string model;
+    std::string scenarioGroup;
+    std::vector<Parameters> parameters;
+};
+
+struct System
+{
+    std::string id;
+    std::vector<std::string> libraries;
+    std::vector<Components> components;
+
+    // will be implemented later
+    // std::vector<Connections> connections;
+};
+
 } // namespace Antares::Solver::SystemParser

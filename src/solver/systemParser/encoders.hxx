@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "antares/solver/modelParser/Library.h"
+#include "antares/solver/systemParser/Library.h"
 
 #include "yaml-cpp/yaml.h"
 
@@ -47,7 +47,7 @@ inline T as_fallback_default(const Node& n)
 }
 
 template<>
-struct convert<Antares::Solver::ModelParser::Parameter>
+struct convert<Antares::Solver::modelParser::Parameter>
 {
     static bool decode(const Node& node, Antares::Solver::ModelParser::Parameter& rhs)
     {
