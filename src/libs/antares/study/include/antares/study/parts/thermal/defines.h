@@ -21,16 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // Forward declaration
 class ThermalCluster;
 class ThermalClusterList;
 class PreproAvailability;
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_DEFINES_H__

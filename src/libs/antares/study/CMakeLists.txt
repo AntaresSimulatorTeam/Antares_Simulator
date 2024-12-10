@@ -71,6 +71,7 @@ set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
         include/antares/study/parts/thermal/cluster.h
+        include/antares/study/parts/thermal/cost_provider.h
         include/antares/study/parts/thermal/cluster.hxx
         parts/thermal/cluster.cpp
 	parts/thermal/scenarized_cost_provider.cpp
