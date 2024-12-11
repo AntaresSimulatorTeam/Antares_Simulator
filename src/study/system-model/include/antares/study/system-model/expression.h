@@ -32,14 +32,16 @@ class Node;
 namespace Antares::Study::SystemModel
 {
 
+// TODO: add unit tests for this class
 class Expression
 {
 public:
     Expression() = default;
 
-    explicit Expression(const std::string& value, Antares::Solver::NodeRegistry root):
+    explicit Expression(const std::string& value, Solver::NodeRegistry root):
         value_(value),
-        root_(std::move(root))
+        root_(std::move(root)),
+        empty_(false)
     {
     }
 
@@ -48,9 +50,20 @@ public:
         return value_;
     }
 
+    Solver::Nodes::Node* RootNode() const
+    {
+        return root_.node;
+    }
+
+    bool Empty() const
+    {
+        return empty_;
+    }
+
 private:
     std::string value_;
-    Antares::Solver::NodeRegistry root_;
+    Solver::NodeRegistry root_;
+    bool empty_ = true;
 };
 
 } // namespace Antares::Study::SystemModel

@@ -288,7 +288,7 @@ public:
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
               = std::max((hourlyClusterProduction - cluster->PthetaInf[hourInTheYear]), 0.)
                 * (-areaMarginalCosts[hourInTheWeek]
-                   - cluster->getMarginalCost(tsIndex, hourInTheYear));
+                   - cluster->getCostProvider().getMarginalCost(tsIndex, hourInTheYear));
         }
 
         // Next variable

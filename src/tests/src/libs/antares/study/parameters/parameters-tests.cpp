@@ -104,6 +104,26 @@ BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)
     BOOST_CHECK_EQUAL(p.renewableGeneration(), rgUnknown);
 }
 
+BOOST_FIXTURE_TEST_CASE(hydroPmax, Fixture)
+{
+    BOOST_CHECK(p.compatibility.hydroPmax == Parameters::Compatibility::HydroPmax::Daily);
+
+    writeValidFile();
+    BOOST_CHECK(p.loadFromFile(path.string(), version));
+    p.validateOptions(options);
+    p.fixBadValues();
+
+    BOOST_CHECK(p.compatibility.hydroPmax == Parameters::Compatibility::HydroPmax::Hourly);
+
+    BOOST_CHECK_EQUAL(CompatibilityHydroPmaxToCString(p.compatibility.hydroPmax), "hourly");
+    BOOST_CHECK_EQUAL(CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax::Daily),
+                      "daily");
+
+    BOOST_CHECK(StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "daily"));
+    BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, ""));
+    BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "abc"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 void Fixture::writeInvalidFile()
@@ -215,7 +235,10 @@ void Fixture::writeValidFile()
             seed-spilled-energy-costs = 7005489
             seed-thermal-costs = 8005489
             seed-hydro-costs = 9005489
-            seed-initial-reservoir-levels = 10005489)";
+            seed-initial-reservoir-levels = 10005489
+
+            [compatibility]
+            hydro-pmax = hourly)";
 
     outfile.close();
 }

@@ -52,10 +52,10 @@ These are the solver names and enum, defined in the [OR-Tools API](https://githu
 * A mixed real integer solver
 
 While the OR-Tools interface allows using multiple solvers, Antares restricts this usage.  
-The *Antares Simulator* user can select the solvers using the `ortools-solver` command-line option. Here are the allowed
+The *Antares Simulator* user can select the solvers using the `solver` command-line option. Here are the allowed
 values:
 
-| `ortools-solver`   | Linear solver                  | Mixed real integer solver        |
+| `solver`   | Linear solver                  | Mixed real integer solver        |
 |:-------------------|--------------------------------|----------------------------------|
 | `sirius` (default) | SIRIUS_LINEAR_PROGRAMMING      | SIRIUS_MIXED_INTEGER_PROGRAMMING |
 | `coin`             | CLP_LINEAR_PROGRAMMING         | CBC_MIXED_INTEGER_PROGRAMMING    |
@@ -65,7 +65,7 @@ values:
 
 The following commercial solvers are not yet supported by *Antares Simulator*, because of unmet pre-requisites:
 
-| `ortools-solver` | Linear solver             | Mixed real integer               | Waiting for                                         |
+| `solver` | Linear solver             | Mixed real integer               | Waiting for                                         |
 |:-----------------|---------------------------|----------------------------------|-----------------------------------------------------|
 | `cplex`          | CPLEX_LINEAR_PROGRAMMING  | CPLEX_MIXED_INTEGER_PROGRAMMING  | Update OR-Tools building process for CPLEX support  |
 | `gurobi`         | GUROBI_LINEAR_PROGRAMMING | GUROBI_MIXED_INTEGER_PROGRAMMING | Update OR-Tools building process for GUROBI support |

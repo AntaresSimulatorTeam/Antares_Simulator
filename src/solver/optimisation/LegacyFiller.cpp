@@ -46,9 +46,18 @@ void LegacyFiller::CopyMatrix(ILinearProblem& pb) const
 
 void LegacyFiller::CreateVariable(unsigned idxVar, ILinearProblem& pb) const
 {
-    double min_l = problemeSimplexe_->Xmin[idxVar];
-    double max_l = problemeSimplexe_->Xmax[idxVar];
-    bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
+    const double bMin = problemeSimplexe_->Xmin[idxVar];
+    const double bMax = problemeSimplexe_->Xmax[idxVar];
+    const int typeVar = problemeSimplexe_->TypeDeVariable[idxVar];
+
+    double min_l = (typeVar == VARIABLE_NON_BORNEE || typeVar == VARIABLE_BORNEE_SUPERIEUREMENT)
+                     ? -pb.infinity()
+                     : bMin;
+    double max_l = (typeVar == VARIABLE_NON_BORNEE || typeVar == VARIABLE_BORNEE_INFERIEUREMENT)
+                     ? pb.infinity()
+                     : bMax;
+    const bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
+
     auto* var = pb.addVariable(min_l, max_l, isIntegerVariable, GetVariableName(idxVar));
     pb.setObjectiveCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }

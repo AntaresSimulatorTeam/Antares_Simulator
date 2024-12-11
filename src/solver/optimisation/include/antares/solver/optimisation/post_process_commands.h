@@ -28,12 +28,12 @@ class DispatchableMarginPostProcessCmd: public basePostProcessCommand
 {
 public:
     DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                     unsigned int thread_number,
+                                     unsigned int numSpace,
                                      AreaList& areas);
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    unsigned int thread_number_ = 0;
+    unsigned int numSpace_ = 0;
     const AreaList& area_list_;
 };
 
@@ -59,12 +59,12 @@ public:
                              AreaList& areas,
                              SheddingPolicy sheddingPolicy,
                              SimplexOptimization simplexOptimization,
-                             unsigned int thread_number);
+                             unsigned int numSpace);
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
-    unsigned int thread_number_ = 0;
+    unsigned int numSpace_ = 0;
     SheddingPolicy shedding_policy_;
     SimplexOptimization splx_optimization_;
 };
@@ -74,12 +74,12 @@ class UpdateMrgPriceAfterCSRcmd: public basePostProcessCommand
 public:
     UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
                               AreaList& areas,
-                              unsigned int thread_number);
+                              unsigned int numSpace);
     void execute(const optRuntimeData&) override;
 
 private:
     const AreaList& area_list_;
-    unsigned int thread_number_ = 0;
+    unsigned int numSpace_ = 0;
 };
 
 class DTGnettingAfterCSRcmd: public basePostProcessCommand
@@ -87,12 +87,12 @@ class DTGnettingAfterCSRcmd: public basePostProcessCommand
 public:
     DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
                           AreaList& areas,
-                          unsigned int thread_number);
+                          unsigned int numSpace);
     void execute(const optRuntimeData&) override;
 
 private:
     const AreaList& area_list_;
-    unsigned int thread_number_ = 0;
+    unsigned int numSpace_ = 0;
 };
 
 class InterpolateWaterValuePostProcessCmd: public basePostProcessCommand
@@ -126,7 +126,7 @@ public:
     CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
                                      PROBLEME_HEBDO* problemeHebdo,
                                      AreaList& areas,
-                                     unsigned int thread_number);
+                                     unsigned int numSpace);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -139,7 +139,7 @@ private:
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
     const AreaList& area_list_;
     const AdqPatchParams& adqPatchParams_;
-    unsigned int thread_number_ = 0;
+    unsigned int numSpace_ = 0;
 };
 
 } // namespace Antares::Solver::Simulation

@@ -65,6 +65,7 @@ BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureE
     pb->addIntVariable(5, 15, "var");
     auto* var = pb->getVariable("var");
     BOOST_CHECK(var);
+    BOOST_CHECK(var->isInteger());
     BOOST_CHECK_EQUAL(var->getLb(), 5);
     BOOST_CHECK_EQUAL(var->getUb(), 15);
 }
@@ -74,6 +75,7 @@ BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureE
     pb->addNumVariable(2., 7., "var");
     auto* var = pb->getVariable("var");
     BOOST_CHECK(var);
+    BOOST_CHECK(!var->isInteger());
     BOOST_CHECK_EQUAL(var->getLb(), 2.);
     BOOST_CHECK_EQUAL(var->getUb(), 7.);
 }

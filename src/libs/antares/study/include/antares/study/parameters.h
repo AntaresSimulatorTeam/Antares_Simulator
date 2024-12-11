@@ -399,6 +399,18 @@ public:
 
     } include;
 
+    struct Compatibility
+    {
+        enum class HydroPmax
+        {
+            Daily,
+            Hourly
+        };
+        HydroPmax hydroPmax = HydroPmax::Daily;
+    };
+
+    Compatibility compatibility;
+
     // Shedding
     struct
     {
@@ -517,6 +529,9 @@ const char* SimulationModeToCString(SimulationMode mode);
 ** \return True if the conversion succeeded, false otherwise
 */
 bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
+
+const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax);
+bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
 
 } // namespace Antares::Data
 

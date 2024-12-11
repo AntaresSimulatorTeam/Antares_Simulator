@@ -75,7 +75,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
 
-    //--ortools-solver
+    //--solver
     parser->add(options.optOptions.ortoolsSolver,
                 ' ',
                 "solver",

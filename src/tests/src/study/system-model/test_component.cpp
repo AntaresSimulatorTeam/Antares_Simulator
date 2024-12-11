@@ -21,11 +21,11 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include "antares/study/system-model/component.h"
-
-#include "../../utils/unit_test_utils.h"
 
 using namespace Antares::Study::SystemModel;
 
@@ -96,6 +96,33 @@ BOOST_AUTO_TEST_CASE(nominal_build_without_parameters2)
     BOOST_CHECK_EQUAL(component.Id(), "component3");
     BOOST_CHECK_EQUAL(component.getModel(), &model);
     BOOST_CHECK_EQUAL(component.getScenarioGroupId(), "scenario_group3");
+}
+
+BOOST_AUTO_TEST_CASE(reuse_builder)
+{
+    Model model1 = createModelWithoutParameters();
+    auto component1 = component_builder.withId("component1")
+                        .withModel(&model1)
+                        .withScenarioGroupId("scenario_group1")
+                        .build();
+    Model model2 = createModelWithParameters();
+    auto component2 = component_builder.withId("component2")
+                        .withModel(&model2)
+                        .withParameterValues({{"param1", 5}, {"param2", 3}})
+                        .withScenarioGroupId("scenario_group2")
+                        .build();
+
+    BOOST_CHECK_EQUAL(component1.Id(), "component1");
+    BOOST_CHECK_EQUAL(component1.getModel(), &model1);
+    BOOST_CHECK_EQUAL(component1.getScenarioGroupId(), "scenario_group1");
+    BOOST_CHECK(component1.getParameterValues().empty());
+
+    BOOST_CHECK_EQUAL(component2.Id(), "component2");
+    BOOST_CHECK_EQUAL(component2.getModel(), &model2);
+    BOOST_CHECK_EQUAL(component2.getScenarioGroupId(), "scenario_group2");
+    BOOST_CHECK_EQUAL(component2.getParameterValues().size(), 2);
+    BOOST_CHECK_EQUAL(component2.getParameterValues().at("param1"), 5);
+    BOOST_CHECK_EQUAL(component2.getParameterValues().at("param2"), 3);
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_no_id)

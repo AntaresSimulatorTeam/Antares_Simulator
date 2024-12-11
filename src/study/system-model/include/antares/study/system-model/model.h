@@ -36,6 +36,7 @@ namespace Antares::Study::SystemModel
  * Defines a model that can be referenced by actual components.
  * A model defines the behaviour of those components.
  */
+// TODO: add unit tests for this class
 class Model
 {
 public:
@@ -69,6 +70,7 @@ public:
 
     const std::map<std::string, Variable>& Variables() const
     {
+        // TODO : convert to vector?
         return variables_;
     }
 

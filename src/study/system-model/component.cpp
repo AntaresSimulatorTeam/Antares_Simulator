@@ -81,7 +81,7 @@ ComponentBuilder& ComponentBuilder::withId(const std::string_view id)
  * \param model The model to set.
  * \return Reference to the ComponentBuilder object.
  */
-ComponentBuilder& ComponentBuilder::withModel(Model* model)
+ComponentBuilder& ComponentBuilder::withModel(const Model* model)
 {
     data_.model = model;
     return *this;
@@ -118,9 +118,11 @@ ComponentBuilder& ComponentBuilder::withScenarioGroupId(const std::string& scena
  *
  * \return The constructed Component object.
  */
-Component ComponentBuilder::build() const
+Component ComponentBuilder::build()
 {
-    return Component(data_);
+    Component component(data_);
+    data_.reset(); // makes the ComponentBuilder re-usable
+    return component;
 }
 
 } // namespace Antares::Study::SystemModel

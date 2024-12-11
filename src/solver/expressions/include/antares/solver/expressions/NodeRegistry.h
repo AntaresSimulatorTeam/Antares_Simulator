@@ -9,14 +9,13 @@ class NodeRegistry
 {
 public:
     NodeRegistry() = default;
-    NodeRegistry(Antares::Solver::Nodes::Node* node,
-                 Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry);
+    NodeRegistry(Nodes::Node* node, Registry<Nodes::Node> registry);
 
     // Shallow copy
     NodeRegistry(NodeRegistry&&) = default;
     NodeRegistry& operator=(NodeRegistry&&) = default;
 
-    Antares::Solver::Nodes::Node* node;
-    Antares::Solver::Registry<Antares::Solver::Nodes::Node> registry;
+    Nodes::Node* node;
+    Registry<Nodes::Node> registry;
 };
 } // namespace Antares::Solver

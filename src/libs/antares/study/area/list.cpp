@@ -950,20 +950,29 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.series->loadGenerationTS(area.id, hydroSeries, studyVersion) && ret;
         }
 
-        if (studyVersion < StudyVersion(9, 1))
+        switch (study.parameters.compatibility.hydroPmax)
+        {
+        case Parameters::Compatibility::HydroPmax::Daily:
         {
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
             ret = reader.read(pathHydro.string(), study.usedByTheSolver) && ret;
+            break;
         }
-        else
+        case Parameters::Compatibility::HydroPmax::Hourly:
         {
             ret = area.hydro.series->LoadMaxPower(area.id, hydroSeries) && ret;
+            break;
+        }
+        default:
+            throw std::invalid_argument(
+              "Value not supported for study.parameters.compatibility.hydroPmax");
         }
 
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                                  studyVersion,
+                                                 study.parameters.compatibility.hydroPmax,
                                                  study.usedByTheSolver);
     }
 

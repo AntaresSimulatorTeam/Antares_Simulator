@@ -156,7 +156,8 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
           area.hydro.pumpingEfficiency = 1.;
           area.hydro.deltaBetweenFinalAndInitialLevels.resize(study.parameters.nbYears);
 
-          if (study.header.version >= StudyVersion(9, 1))
+          if (study.parameters.compatibility.hydroPmax
+              == Parameters::Compatibility::HydroPmax::Hourly)
           {
               // GUI part patch :
               // We need to know, when estimating the RAM required by the solver, if the current

@@ -17,7 +17,7 @@ hide:
 | --adequacy             | Force the simulation in [adequacy](static-modeler/04-parameters.md#mode) mode                                                      |
 | --parallel             | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                   |
 | --force-parallel=VALUE | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                  |
-| --ortools-solver=VALUE | The optimization solver to use. Possible values are: `sirius` (default), `coin`, `xpress`, `scip` |
+| --solver=VALUE | The optimization solver to use. Possible values are: `sirius` (default), `coin`, `xpress`, `scip` |
 
 ## Parameters
 
