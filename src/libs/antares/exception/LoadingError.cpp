@@ -96,8 +96,8 @@ InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(const std::stri
 {
 }
 
-InvalidStudy::InvalidStudy(const std::string& study) :
-        LoadingError(std::string("The folder `") + study + "` does not seem to be a valid study")
+InvalidStudy::InvalidStudy(const std::string& study):
+    LoadingError(std::string("The folder `") + study + "` does not seem to be a valid study")
 {
 }
 

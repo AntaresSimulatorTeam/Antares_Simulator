@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../state.h"
 #include <antares/series/series.h>
+
+#include "../state.h"
 
 namespace Antares::Solver::Variable::Economy
 {

@@ -63,11 +63,11 @@
 #include "pumping.h"
 #include "renewableGeneration.h"
 #include "reservoirlevel.h"
+#include "spilledEnergy.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergy.h"
 #include "unsupliedEnergyCsr.h"
 #include "waterValue.h"
-#include "spilledEnergy.h"
 
 // By thermal plant
 #include "nbOfDispatchedUnitsByPlant.h"
@@ -125,31 +125,32 @@ typedef                               // Prices
                       <Overflows        // Hydraulic overflows
                        <WaterValue      // Water values
                         <HydroCost      // Hydro costs
-                         <STSbyGroup<
-                           STstorageInjectionByCluster<STstorageWithdrawalByCluster<
-                             STstorageLevelsByCluster<STstorageCashFlowByCluster<
-                               UnsupliedEnergy            // Unsuplied Energy
-                               <UnsupliedEnergyCSR        // Unsupplied energy CSR
-                                <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
-                                 <LMRViolations           // LMR Violations
-                                  <SpilledEnergy          // Spilled Energy
-                                   <LOLD                  // LOLD
-                                    <LOLD_CSR<
-                                      LOLP // LOLP
-                                      <LOLP_CSR<AvailableDispatchGen<DispatchableGenMargin<
-                                        DtgMarginCsr // DTG MRG CSR
-                                        <Marge<MaxMrgCsr<NonProportionalCost<
-                                          NonProportionalCostByDispatchablePlant // Startup cost +
-                                                                                 // Fixed cost per
-                                                                                 // thermal plant
-                                                                                 // detail
-                                          <NbOfDispatchedUnits         // Number of Units Dispatched
-                                           <NbOfDispatchedUnitsByPlant // Number of Units Dispatched
-                                                                       // by plant
-                                            <ProfitByPlant
-                                             // Links
-                                             <Variable::Economy::Links // All links
-                                              >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                         <STSbyGroup<STstorageInjectionByCluster<STstorageWithdrawalByCluster<
+                           STstorageLevelsByCluster<STstorageCashFlowByCluster<
+                             UnsupliedEnergy            // Unsuplied Energy
+                             <UnsupliedEnergyCSR        // Unsupplied energy CSR
+                              <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
+                               <LMRViolations           // LMR Violations
+                                <SpilledEnergy          // Spilled Energy
+                                 <LOLD                  // LOLD
+                                  <LOLD_CSR<LOLP        // LOLP
+                                            <LOLP_CSR<AvailableDispatchGen<DispatchableGenMargin<
+                                              DtgMarginCsr // DTG MRG CSR
+                                              <Marge<MaxMrgCsr<NonProportionalCost<
+                                                NonProportionalCostByDispatchablePlant // Startup
+                                                                                       // cost +
+                                                                                       // Fixed cost
+                                                                                       // per
+                                                                                       // thermal
+                                                                                       // plant
+                                                                                       // detail
+                                                <NbOfDispatchedUnits // Number of Units Dispatched
+                                                 <NbOfDispatchedUnitsByPlant // Number of Units
+                                                                             // Dispatched by plant
+                                                  <ProfitByPlant
+                                                   // Links
+                                                   <Variable::Economy::Links // All links
+                                                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

@@ -87,7 +87,6 @@ public:
     HourlyCSRProblem(const HourlyCSRProblem&) = delete;
     HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;
 
-
     inline void setHour(int hour)
     {
         triggeredHour = hour;
@@ -124,6 +123,7 @@ private:
     // Costs
     void setQuadraticCost();
     void setLinearCost();
+
 public:
     // TODO [gp] : try to make these members private
     double belowThisThresholdSetToZero;
@@ -144,7 +144,6 @@ public:
                                                            // contains interco 2-2
 
     std::map<int, double> rhsAreaBalanceValues;
-
 
     // links between two areas inside the adq-patch domain
     std::map<int, LinkVariable> linkInsideAdqPatch;

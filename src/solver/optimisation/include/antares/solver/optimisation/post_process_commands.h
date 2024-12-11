@@ -85,9 +85,7 @@ private:
 class DTGnettingAfterCSRcmd: public basePostProcessCommand
 {
 public:
-    DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
-                          AreaList& areas,
-                          unsigned int numSpace);
+    DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas, unsigned int numSpace);
     void execute(const optRuntimeData&) override;
 
 private:

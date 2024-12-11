@@ -135,10 +135,11 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in)
             assert(h < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[h])
             {
-                maxMrgOut[h] = Math::Min(
-                  niveau,
-                  OI[h] + in.maxHourlyGenPower->getCoefficient(in.year, h + in.hourInYear)
-                    - in.hydroGeneration[h]);
+                maxMrgOut[h] = Math::Min(niveau,
+                                         OI[h]
+                                           + in.maxHourlyGenPower->getCoefficient(in.year,
+                                                                                  h + in.hourInYear)
+                                           - in.hydroGeneration[h]);
                 SM += maxMrgOut[h] - OI[h];
             }
             else
