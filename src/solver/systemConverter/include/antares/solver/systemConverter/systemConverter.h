@@ -20,7 +20,6 @@
  */
 
 #pragma once
-#include <stdexcept>
 
 #include "antares/solver/systemParser/library.h"
 

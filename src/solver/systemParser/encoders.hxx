@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "antares/solver/systemParser/library.h"
+#include "antares/solver/systemParser/system.h"
 
 #include "yaml-cpp/yaml.h"
 

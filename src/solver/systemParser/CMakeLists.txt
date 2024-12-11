@@ -4,6 +4,7 @@ set(SOURCES
         parser.cpp
         encoders.hxx
         include/antares/solver/systemParser/parser.h
+        include/antares/solver/systemParser/system.h
 )
 
 # Create the library

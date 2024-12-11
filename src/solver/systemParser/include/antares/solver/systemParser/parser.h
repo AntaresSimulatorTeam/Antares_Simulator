@@ -20,16 +20,13 @@
  */
 
 #pragma once
-#include "antares/solver/systemParser/library.h"
+#include "antares/solver/systemParser/system.h"
 
 namespace Antares::Solver::SystemParser
 {
 class Parser
 {
 public:
-    Parser() = default;
-    ~Parser() = default;
-
     System parse(const std::string& content);
 };
 } // namespace Antares::Solver::SystemParser

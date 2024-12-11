@@ -21,7 +21,7 @@
 
 #include "antares/solver/systemParser/parser.h"
 
-#include "antares/solver/systemParser/library.h"
+#include "antares/solver/systemParser/system.h"
 
 #include "encoders.hxx"
 
