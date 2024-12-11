@@ -24,26 +24,22 @@
 
 #include "antares/solver/systemParser/library.h"
 
-/* namespace Antares */
-/* { */
-/* namespace Study::SystemModel */
-/* { */
-/* class Library; */
-/* } */
+namespace Antares
+{
+namespace Study::SystemModel
+{
+class Library;
+}
 
-/* namespace Solver::ModelParser */
-/* { */
-/* class Library; */
-/* } */
-/* } // namespace Antares */
+namespace Solver::ModelParser
+{
+class Library;
+}
+} // namespace Antares
 
 namespace Antares::Solver::SystemConverter
 {
-/* class UnknownTypeException: public std::runtime_error */
-/* { */
-/* public: */
-/*     explicit UnknownTypeException(ModelParser::ValueType type); */
-/* }; */
 
-/* Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library); */
+Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library);
+
 } // namespace Antares::Solver::SystemConverter
