@@ -29,4 +29,20 @@
 namespace YAML
 {
 
+template<>
+struct convert<Antares::Solver::SystemParser::Parameter>
+{
+    static bool decode(const Node& node, Antares::Solver::SystemParser::Parameter& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.type = node["type"].as<std::string>();
+        rhs.value = node["value"].as<std::string>();
+        return true;
+    }
+};
+
 } // namespace YAML

@@ -32,7 +32,8 @@ System Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
 
-    System system = root["system"].as<System>();
+    /* System system = root["system"].as<System>(); */
+    System system;
 
     return system;
 }
