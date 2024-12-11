@@ -170,7 +170,6 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
     {
         auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
         const auto& scratchpad = area_list_[Area]->scratchpad[numSpace_];
-        const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
 
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
