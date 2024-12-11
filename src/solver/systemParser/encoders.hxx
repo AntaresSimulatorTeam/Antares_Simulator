@@ -29,6 +29,22 @@
 namespace YAML
 {
 
+/**
+ * @brief shortend to default construct a value when node is null
+ * @tparam T Type to convert the node to
+ * @param n node
+ * @return Object of type T
+ * It's just to simplify repertitve and verbose lines
+ * as_fallback_default<std::vector<Antares::Solver::SystemParser::Parameter>>(
+node["parameters"]) is equivalent to
+ node["parameters"].as<std::vector<Antares::Solver::SystemParser::Parameter>>(std::vector<Antares::Solver::SystemParser::Parameter>())
+ */
+template<typename T>
+inline T as_fallback_default(const Node& n)
+{
+    return n.as<T>(T());
+}
+
 template<>
 struct convert<Antares::Solver::SystemParser::Parameter>
 {
@@ -41,6 +57,41 @@ struct convert<Antares::Solver::SystemParser::Parameter>
         rhs.id = node["id"].as<std::string>();
         rhs.type = node["type"].as<std::string>();
         rhs.value = node["value"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::Solver::SystemParser::Component>
+{
+    static bool decode(const Node& node, Antares::Solver::SystemParser::Component& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.model = node["model"].as<std::string>();
+        rhs.scenarioGroup = node["scenario-group"].as<std::string>();
+        rhs.parameters = as_fallback_default<std::vector<Antares::Solver::SystemParser::Parameter>>(
+          node["parameters"]);
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::Solver::SystemParser::System>
+{
+    static bool decode(const Node& node, Antares::Solver::SystemParser::System& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libaries"]);
+        rhs.components = as_fallback_default<std::vector<Antares::Solver::SystemParser::Component>>(
+          node["components"]);
         return true;
     }
 };
