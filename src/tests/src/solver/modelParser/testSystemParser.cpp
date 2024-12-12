@@ -103,3 +103,27 @@ BOOST_AUTO_TEST_CASE(one_component)
     BOOST_CHECK_EQUAL(systemObj.components[0].model, "abcde");
     BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
 }
+
+BOOST_AUTO_TEST_CASE(two_components)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: one simple component
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                - id: G
+                  model: std.generator
+                  scenario-group: group-thermal
+    )"s;
+    SystemParser::System systemObj = parser.parse(system);
+    BOOST_CHECK_EQUAL(systemObj.components[0].id, "N");
+    BOOST_CHECK_EQUAL(systemObj.components[0].model, "std.node");
+    BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
+    BOOST_CHECK_EQUAL(systemObj.components[1].id, "G");
+    BOOST_CHECK_EQUAL(systemObj.components[1].model, "std.generator");
+    BOOST_CHECK_EQUAL(systemObj.components[1].scenarioGroup, "group-thermal");
+}
