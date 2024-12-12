@@ -29,18 +29,66 @@
 using namespace std::string_literals;
 using namespace Antares::Solver;
 
-BOOST_AUTO_TEST_CASE(EmptySystem)
+BOOST_AUTO_TEST_CASE(empty_system)
 {
     SystemParser::Parser parser;
     const auto system = R"(
         system:
             id: ""
             description: ""
-            port-types: []
-            models: []
+            model-libraries: []
+            components: []
     )"s;
     SystemParser::System systemObj = parser.parse(system);
     BOOST_CHECK(systemObj.id.empty());
     BOOST_CHECK(systemObj.libraries.empty());
+    BOOST_CHECK(systemObj.components.empty());
+}
+
+BOOST_AUTO_TEST_CASE(simple_id)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: a basic system
+            model-libraries: []
+            components: []
+    )"s;
+    SystemParser::System systemObj = parser.parse(system);
+    BOOST_CHECK_EQUAL(systemObj.id, "base_system");
+    BOOST_CHECK(systemObj.libraries.empty());
+    BOOST_CHECK(systemObj.components.empty());
+}
+
+BOOST_AUTO_TEST_CASE(libraries_one_model)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: a basic system
+            model-libraries: [abc]
+            components: []
+    )"s;
+    SystemParser::System systemObj = parser.parse(system);
+    BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
+    BOOST_CHECK(systemObj.components.empty());
+}
+
+BOOST_AUTO_TEST_CASE(libraries_list_of_models)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: a basic system
+            model-libraries: [abc, def, 123]
+            components: []
+    )"s;
+    SystemParser::System systemObj = parser.parse(system);
+    BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
+    BOOST_CHECK_EQUAL(systemObj.libraries[1], "def");
+    BOOST_CHECK_EQUAL(systemObj.libraries[2], "123");
     BOOST_CHECK(systemObj.components.empty());
 }
