@@ -2,6 +2,7 @@ find_package(yaml-cpp REQUIRED)
 
 set(SOURCES
         parser.cpp
+        converter.cpp
         encoders.hxx
         include/antares/solver/systemParser/parser.h
         include/antares/solver/systemParser/system.h
@@ -19,6 +20,8 @@ target_include_directories(systemParser
 
 # Link dependencies (if any)
 target_link_libraries(systemParser
+        PUBLIC
+        Antares::antares-study-system-model
         PRIVATE
         yaml-cpp
 )
