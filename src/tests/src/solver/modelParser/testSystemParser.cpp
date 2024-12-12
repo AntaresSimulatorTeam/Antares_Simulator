@@ -229,15 +229,13 @@ BOOST_AUTO_TEST_CASE(parse_into_system_model)
     SystemParser::System systemObj = parser.parse(system);
 
     std::vector<SystemModel::Component> components;
-    for (const auto& c : systemObj.components)
+    for (const auto& c: systemObj.components)
     {
         components.push_back(createComponent(c));
     }
 
     SystemModel::SystemBuilder builder;
-    auto systemModel = builder.withId(systemObj.id)
-        .withComponents(components)
-        .build();
+    auto systemModel = builder.withId(systemObj.id).withComponents(components).build();
 
     BOOST_CHECK_EQUAL(systemModel.Components().size(), 2);
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
