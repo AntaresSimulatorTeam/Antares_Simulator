@@ -23,8 +23,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/study/system-model/system.h"
-#include "antares/solver/systemParser/parser.h"
+#include <antares/study/system-model/system.h>
+#include <antares/solver/systemParser/parser.h>
 
 using namespace std::string_literals;
 using namespace Antares::Solver;
@@ -36,9 +36,11 @@ BOOST_AUTO_TEST_CASE(EmptySystem)
         system:
             id: ""
             description: ""
-            model-libraries:
+            port-types: []
+            models: []
     )"s;
     SystemParser::System systemObj = parser.parse(system);
     BOOST_CHECK(systemObj.id.empty());
     BOOST_CHECK(systemObj.libraries.empty());
+    BOOST_CHECK(systemObj.components.empty());
 }

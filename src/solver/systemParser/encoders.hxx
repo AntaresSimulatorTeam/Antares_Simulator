@@ -84,12 +84,8 @@ struct convert<Antares::Solver::SystemParser::System>
 {
     static bool decode(const Node& node, Antares::Solver::SystemParser::System& rhs)
     {
-        if (!node.IsMap())
-        {
-            return false;
-        }
         rhs.id = node["id"].as<std::string>();
-        rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libaries"]);
+        rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libraries"]);
         rhs.components = as_fallback_default<std::vector<Antares::Solver::SystemParser::Component>>(
           node["components"]);
         return true;
