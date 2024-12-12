@@ -24,6 +24,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/systemParser/parser.h>
+#include <antares/solver/systemParser/converter.h>
 #include <antares/study/system-model/system.h>
 
 using namespace std::string_literals;
@@ -182,26 +183,6 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(param2.value, 100);
 }
 
-static Antares::Study::SystemModel::Component createComponent(const SystemParser::Component& c)
-{
-    SystemModel::ModelBuilder model_builder;
-    auto model = model_builder.withId(c.model).build();
-    SystemModel::ComponentBuilder component_builder;
-
-    /* std::map<std::string, double> parameters; */
-    /* for (const auto& p : c.parameters) */
-    /* { */
-    /*     parameters.try_emplace(p.id, p.value); */
-    /* } */
-
-    auto component = component_builder.withId(c.id)
-                       .withModel(&model)
-                       .withScenarioGroupId(c.scenarioGroup)
-                       /* .withParameterValues(parameters) */
-                       .build();
-    return component;
-}
-
 BOOST_AUTO_TEST_CASE(parse_into_system_model)
 {
     SystemParser::Parser parser;
@@ -228,14 +209,7 @@ BOOST_AUTO_TEST_CASE(parse_into_system_model)
 
     SystemParser::System systemObj = parser.parse(system);
 
-    std::vector<SystemModel::Component> components;
-    for (const auto& c: systemObj.components)
-    {
-        components.push_back(createComponent(c));
-    }
-
-    SystemModel::SystemBuilder builder;
-    auto systemModel = builder.withId(systemObj.id).withComponents(components).build();
+    auto systemModel = SystemConverter::convert(systemObj);
 
     BOOST_CHECK_EQUAL(systemModel.Components().size(), 2);
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
