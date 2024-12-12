@@ -182,14 +182,22 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(param2.value, 100);
 }
 
-static Antares::Study::SystemModel::Component createComponent(std::string id)
+static Antares::Study::SystemModel::Component createComponent(const SystemParser::Component& c)
 {
     SystemModel::ModelBuilder model_builder;
-    auto model = model_builder.withId("model").build();
+    auto model = model_builder.withId(c.model).build();
     SystemModel::ComponentBuilder component_builder;
-    auto component = component_builder.withId(id)
+
+    std::map<std::string, double> parameters;
+    for (const auto& p : c.parameters)
+    {
+        parameters.try_emplace(p.id, p.value);
+    }
+
+    auto component = component_builder.withId(c.id)
                        .withModel(&model)
-                       .withScenarioGroupId("scenario_group")
+                       .withScenarioGroupId(c.scenarioGroup)
+                       .withParameterValues(parameters)
                        .build();
     return component;
 }
@@ -221,10 +229,10 @@ BOOST_AUTO_TEST_CASE(parse_into_system_model)
     SystemParser::System systemObj = parser.parse(system);
 
     std::vector<SystemModel::Component> components;
-    for (const auto& c : systemObj.components)
-    {
-        components.push_back(createComponent(c.id));
-    }
+    /* for (const auto& c : systemObj.components) */
+    /* { */
+    /*     components.push_back(createComponent(c)); */
+    /* } */
 
     SystemModel::SystemBuilder builder;
     auto systemModel = builder.withId(systemObj.id)
@@ -234,4 +242,7 @@ BOOST_AUTO_TEST_CASE(parse_into_system_model)
     BOOST_CHECK_EQUAL(systemModel.Components().size(), 2);
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
     BOOST_CHECK_EQUAL(systemModel.Components().at("G").Id(), "G");
+
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("cost"), 30);
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("generator"), 100);
 }
