@@ -52,13 +52,9 @@ BOOST_AUTO_TEST_CASE(simple_id)
         system:
             id: base_system
             description: a basic system
-            model-libraries: []
-            components: []
     )"s;
     SystemParser::System systemObj = parser.parse(system);
     BOOST_CHECK_EQUAL(systemObj.id, "base_system");
-    BOOST_CHECK(systemObj.libraries.empty());
-    BOOST_CHECK(systemObj.components.empty());
 }
 
 BOOST_AUTO_TEST_CASE(libraries_one_model)
@@ -67,13 +63,10 @@ BOOST_AUTO_TEST_CASE(libraries_one_model)
     const auto system = R"(
         system:
             id: base_system
-            description: a basic system
             model-libraries: [abc]
-            components: []
     )"s;
     SystemParser::System systemObj = parser.parse(system);
     BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
-    BOOST_CHECK(systemObj.components.empty());
 }
 
 BOOST_AUTO_TEST_CASE(libraries_list_of_models)
@@ -82,7 +75,7 @@ BOOST_AUTO_TEST_CASE(libraries_list_of_models)
     const auto system = R"(
         system:
             id: base_system
-            description: a basic system
+            description: 3 model libraries
             model-libraries: [abc, def, 123]
             components: []
     )"s;
@@ -91,4 +84,22 @@ BOOST_AUTO_TEST_CASE(libraries_list_of_models)
     BOOST_CHECK_EQUAL(systemObj.libraries[1], "def");
     BOOST_CHECK_EQUAL(systemObj.libraries[2], "123");
     BOOST_CHECK(systemObj.components.empty());
+}
+
+BOOST_AUTO_TEST_CASE(one_component)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: one simple component
+            components:
+                - id: N
+                  model: abcde
+                  scenario-group: group-234
+    )"s;
+    SystemParser::System systemObj = parser.parse(system);
+    BOOST_CHECK_EQUAL(systemObj.components[0].id, "N");
+    BOOST_CHECK_EQUAL(systemObj.components[0].model, "abcde");
+    BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
 }
