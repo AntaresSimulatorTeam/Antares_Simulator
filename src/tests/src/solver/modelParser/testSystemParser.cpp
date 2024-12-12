@@ -28,6 +28,7 @@
 
 using namespace std::string_literals;
 using namespace Antares::Solver;
+using namespace Antares::Study;
 
 BOOST_AUTO_TEST_CASE(empty_system)
 {
@@ -179,4 +180,58 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(param2.id, "p_max");
     BOOST_CHECK_EQUAL(param2.type, "constant");
     BOOST_CHECK_EQUAL(param2.value, 100);
+}
+
+static Antares::Study::SystemModel::Component createComponent(std::string id)
+{
+    SystemModel::ModelBuilder model_builder;
+    auto model = model_builder.withId("model").build();
+    SystemModel::ComponentBuilder component_builder;
+    auto component = component_builder.withId(id)
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario_group")
+                       .build();
+    return component;
+}
+
+BOOST_AUTO_TEST_CASE(parse_into_system_model)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: real application model
+            model-libraries: [std, mylib]
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                  parameters:
+                    - id: cost
+                      type: constant
+                      value: 30
+                    - id: p_max
+                      type: constant
+                      value: 100
+                - id: G
+                  model: mylib.generator
+                  scenario-group: generator
+    )"s;
+
+    SystemParser::System systemObj = parser.parse(system);
+
+    std::vector<SystemModel::Component> components;
+    for (const auto& c : systemObj.components)
+    {
+        components.push_back(createComponent(c.id));
+    }
+
+    SystemModel::SystemBuilder builder;
+    auto systemModel = builder.withId(systemObj.id)
+        .withComponents(components)
+        .build();
+
+    BOOST_CHECK_EQUAL(systemModel.Components().size(), 2);
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("G").Id(), "G");
 }
