@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(two_components)
     const auto system = R"(
         system:
             id: base_system
-            description: one simple component
+            description: two components
             components:
                 - id: N
                   model: std.node
@@ -126,4 +126,57 @@ BOOST_AUTO_TEST_CASE(two_components)
     BOOST_CHECK_EQUAL(systemObj.components[1].id, "G");
     BOOST_CHECK_EQUAL(systemObj.components[1].model, "std.generator");
     BOOST_CHECK_EQUAL(systemObj.components[1].scenarioGroup, "group-thermal");
+}
+
+BOOST_AUTO_TEST_CASE(component_parameter)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: one component with one parameter
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                  parameters:
+                    - id: cost
+                      type: constant
+                      value: 30
+    )"s;
+    SystemParser::System systemObj = parser.parse(system);
+    const auto& param = systemObj.components[0].parameters[0];
+    BOOST_CHECK_EQUAL(param.id, "cost");
+    BOOST_CHECK_EQUAL(param.type, "constant");
+    BOOST_CHECK_EQUAL(param.value, "30");
+}
+
+BOOST_AUTO_TEST_CASE(component_two_parameters)
+{
+    SystemParser::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: one component with one parameter
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                  parameters:
+                    - id: cost
+                      type: constant
+                      value: 30
+                    - id: p_max
+                      type: constant
+                      value: 100
+    )"s;
+    SystemParser::System systemObj = parser.parse(system);
+    const auto& param = systemObj.components[0].parameters[0];
+    const auto& param2 = systemObj.components[0].parameters[1];
+    BOOST_CHECK_EQUAL(param.id, "cost");
+    BOOST_CHECK_EQUAL(param.type, "constant");
+    BOOST_CHECK_EQUAL(param.value, "30");
+    BOOST_CHECK_EQUAL(param2.id, "p_max");
+    BOOST_CHECK_EQUAL(param2.type, "constant");
+    BOOST_CHECK_EQUAL(param2.value, "100");
 }
