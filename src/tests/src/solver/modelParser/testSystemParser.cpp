@@ -23,8 +23,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/systemParser/parser.h>
 #include <antares/solver/systemParser/converter.h>
+#include <antares/solver/systemParser/parser.h>
 #include <antares/study/system-model/system.h>
 
 using namespace std::string_literals;
