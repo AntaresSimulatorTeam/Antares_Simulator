@@ -89,7 +89,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_components_with_same_id, SystemBuilderCreationFi
     components = {createComponent("component1"),
                   createComponent("component2"),
                   createComponent("component2")};
-    system_builder.withId("system").withComponents(components).withComponents({components});
+    system_builder.withId("system").withComponents({components});
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
                           checkMessage("System has at least two components with the same id "
