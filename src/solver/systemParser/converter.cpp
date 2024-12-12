@@ -20,8 +20,8 @@
  */
 
 #include "antares/solver/systemParser/converter.h"
-#include "antares/solver/systemParser/system.h"
 
+#include "antares/solver/systemParser/system.h"
 #include "antares/study/system-model/system.h"
 
 using namespace Antares::Study;

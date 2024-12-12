@@ -31,4 +31,3 @@ namespace Antares::Solver::SystemConverter
 Study::SystemModel::System convert(const SystemParser::System& parserSystem);
 
 } // namespace Antares::Solver::SystemConverter
-
