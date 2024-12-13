@@ -25,6 +25,7 @@
 
 namespace Antares::Data::ShortTermStorage {
     struct AdditionalConstraint {
+        std::string name;
         std::string cluster_id;
         std::string variable;
         std::string operatorType;

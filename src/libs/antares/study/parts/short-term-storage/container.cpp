@@ -87,7 +87,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
     for (auto* section = ini.firstSection; section; section = section->next)
     {
         AdditionalConstraint constraint;
-
+        constraint.name = section->name.c_str();
         for (auto* property = section->firstProperty; property; property = property->next)
         {
             const std::string key = property->key;

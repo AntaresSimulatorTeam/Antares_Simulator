@@ -59,7 +59,7 @@ static void importShortTermStorages(
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             toInsert.name = st.properties.name;
-
+            toInsert.additional_constraints = st.additional_constraints;
             toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct

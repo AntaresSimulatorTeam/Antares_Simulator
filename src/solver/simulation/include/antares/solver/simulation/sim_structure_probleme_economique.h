@@ -182,7 +182,7 @@ struct PROPERTIES
     bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-
+    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraint> additional_constraints;
     int clusterGlobalIndex;
     std::string name;
 };
