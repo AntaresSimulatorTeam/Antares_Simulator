@@ -19,8 +19,9 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/systemParser/converter.h"
+#include <algorithm>
 
+#include "antares/solver/systemParser/converter.h"
 #include "antares/solver/systemParser/system.h"
 #include "antares/study/system-model/system.h"
 
@@ -43,11 +44,27 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
+static const SystemModel::Model* getModel(const std::vector<SystemModel::Library>& libraries,
+                                          const std::string& libraryId,
+                                          const std::string& modelId)
+{
+    auto lib = std::ranges::find_if(libraries, [&libraryId](const auto& l) { return l.Id() == libraryId; });
+    if (lib == libraries.end())
+    {
+        throw std::runtime_error("No libraries named: " + libraryId);
+    }
+
+    auto& model = lib->Models().at(modelId);
+    return &model;
+}
+
 static SystemModel::Component createComponent(const SystemParser::Component& c, const std::vector<SystemModel::Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
     SystemModel::ModelBuilder model_builder;
-    auto model = std::make_shared<SystemModel::Model>(model_builder.withId(modelId).build());
+
+    const SystemModel::Model* model = getModel(libraries, libraryId, modelId);
+
     SystemModel::ComponentBuilder component_builder;
 
     std::map<std::string, double> parameters;
@@ -57,7 +74,7 @@ static SystemModel::Component createComponent(const SystemParser::Component& c, 
     }
 
     auto component = component_builder.withId(c.id)
-                       .withModel(model.get())
+                       .withModel(model)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
                        .build();
