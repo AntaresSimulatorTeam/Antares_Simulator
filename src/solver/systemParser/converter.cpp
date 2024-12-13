@@ -47,7 +47,7 @@ static SystemModel::Component createComponent(const SystemParser::Component& c)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
     SystemModel::ModelBuilder model_builder;
-    auto model = model_builder.withId(modelId).build();
+    auto model = std::make_shared<SystemModel::Model>(model_builder.withId(modelId).build());
     SystemModel::ComponentBuilder component_builder;
 
     /* std::map<std::string, double> parameters; */
@@ -57,7 +57,7 @@ static SystemModel::Component createComponent(const SystemParser::Component& c)
     /* } */
 
     auto component = component_builder.withId(c.id)
-                       .withModel(&model)
+                       .withModel(model.get())
                        .withScenarioGroupId(c.scenarioGroup)
                        /* .withParameterValues(parameters) */
                        .build();

@@ -214,6 +214,7 @@ BOOST_AUTO_TEST_CASE(parse_into_system_model)
     BOOST_CHECK_EQUAL(systemModel.Components().size(), 2);
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
     BOOST_CHECK_EQUAL(systemModel.Components().at("G").Id(), "G");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getModel()->Id(), "generator");
 
     /* BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("cost"), 30); */
     /* BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("generator"), 100); */
