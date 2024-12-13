@@ -43,33 +43,33 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static SystemModel::Component createComponent(const SystemParser::Component& c)
+static SystemModel::Component createComponent(const SystemParser::Component& c, const std::vector<SystemModel::Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
     SystemModel::ModelBuilder model_builder;
     auto model = std::make_shared<SystemModel::Model>(model_builder.withId(modelId).build());
     SystemModel::ComponentBuilder component_builder;
 
-    /* std::map<std::string, double> parameters; */
-    /* for (const auto& p : c.parameters) */
-    /* { */
-    /*     parameters.try_emplace(p.id, p.value); */
-    /* } */
+    std::map<std::string, double> parameters;
+    for (const auto& p : c.parameters)
+    {
+        parameters.try_emplace(p.id, p.value);
+    }
 
     auto component = component_builder.withId(c.id)
                        .withModel(model.get())
                        .withScenarioGroupId(c.scenarioGroup)
-                       /* .withParameterValues(parameters) */
+                       .withParameterValues(parameters)
                        .build();
     return component;
 }
 
-SystemModel::System convert(const SystemParser::System& parserSystem)
+SystemModel::System convert(const SystemParser::System& parserSystem, const std::vector<SystemModel::Library>& libraries)
 {
     std::vector<SystemModel::Component> components;
     for (const auto& c: parserSystem.components)
     {
-        components.push_back(createComponent(c));
+        components.push_back(createComponent(c, libraries));
     }
 
     SystemModel::SystemBuilder builder;

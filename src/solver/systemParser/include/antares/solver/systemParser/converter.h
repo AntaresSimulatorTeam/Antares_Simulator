@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
 #include "parser.h"
@@ -28,6 +29,7 @@
 namespace Antares::Solver::SystemConverter
 {
 
-Study::SystemModel::System convert(const SystemParser::System& parserSystem);
+Study::SystemModel::System convert(const SystemParser::System& parserSystem,
+                                   const std::vector<Study::SystemModel::Library>& libraries);
 
 } // namespace Antares::Solver::SystemConverter
