@@ -34,7 +34,7 @@ using namespace std::string_literals;
 using namespace Antares::Solver;
 using namespace Antares::Study;
 
-BOOST_AUTO_TEST_CASE(full_model_system)
+struct Fixture
 {
     ModelParser::Model model1{.id = "node",
                               .description = "description",
@@ -45,14 +45,20 @@ BOOST_AUTO_TEST_CASE(full_model_system)
                               .constraints = {{"constraint1", "cost"}},
                               .objective = ""};
 
-    ModelParser::Library library;
-    library.id = "std";
-    library.models = {model1};
-
-    SystemModel::Library lib = ModelConverter::convert(library);
-
-
     SystemParser::Parser parser;
+    ModelParser::Library library;
+    SystemModel::Library lib;
+    Fixture()
+    {
+        library.id = "std";
+        library.models = {model1};
+
+        lib = ModelConverter::convert(library);
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(full_model_system, Fixture)
+{
     const auto system = R"(
         system:
             id: base_system
@@ -77,4 +83,27 @@ BOOST_AUTO_TEST_CASE(full_model_system)
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("cost"), 30);
+}
+
+BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, Fixture)
+{
+    const auto system = R"(
+        system:
+            id: base_system
+            description: real application model
+            model-libraries: [std]
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                  parameters:
+                    - id: param_not_in_model
+                      type: constant
+                      value: 30
+    )"s;
+
+    std::vector<SystemModel::Library> libraries = {lib};
+    SystemParser::System systemObj = parser.parse(system);
+
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
 }
