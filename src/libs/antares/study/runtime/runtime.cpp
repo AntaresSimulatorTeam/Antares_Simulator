@@ -94,6 +94,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         r.thermalPlantTotalCountMustRun += area.thermal.list.enabledAndMustRunCount();
 
         r.shortTermStorageCount += area.shortTermStorage.count();
+        r.shortTermStorageCumulativeConstraintCount += area.shortTermStorage.
+                cumulativeConstraintCount();
     }
 }
 

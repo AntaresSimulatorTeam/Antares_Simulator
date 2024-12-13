@@ -111,6 +111,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
 {
     std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> ShortTermStorageCumulation;
 };
 
 struct VALEURS_DE_NTC_ET_RESISTANCES

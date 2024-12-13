@@ -166,6 +166,11 @@ public:
                                        unsigned int constraint,
                                        const std::string& short_term_name);
 
+    void ShortTermStorageCumulation(const std::string& constraint_type,
+                                    unsigned int constraint,
+                                    const std::string& short_term_name,
+                                    const std::string& constraint_name);
+
 private:
     void nameWithTimeGranularity(unsigned int constraint,
                                  const std::string& name,
@@ -175,6 +180,11 @@ private:
 inline std::string TimeIdentifier(unsigned int timeStep, const std::string& timeStepType)
 {
     return timeStepType + "<" + std::to_string(timeStep) + ">";
+}
+
+inline std::string ShortTermStorageCumulationIdentifier(const std::string& name)
+{
+    return "Constraint<" + name + ">";
 }
 
 inline std::string LocationIdentifier(const std::string& location, const std::string& locationType)

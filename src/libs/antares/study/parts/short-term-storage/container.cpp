@@ -192,6 +192,15 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
                                { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
+std::size_t STStorageInput::cumulativeConstraintCount() const
+{
+    size_t result = 0;
+    for (const auto& cluster: storagesByIndex)
+    {
+        result += cluster.additional_constraints.size();
+    }
+}
+
 std::size_t STStorageInput::count() const
 {
     return std::ranges::count_if(storagesByIndex,
