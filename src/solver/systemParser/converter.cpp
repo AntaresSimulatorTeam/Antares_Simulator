@@ -29,10 +29,25 @@ using namespace Antares::Study;
 namespace Antares::Solver::SystemConverter
 {
 
+static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
+{
+    size_t pos = s.find('.');
+    if (pos == std::string::npos)
+    {
+        throw std::runtime_error("Error while splitting library model: " + s +
+                                 "Correct format is lirabry.model");
+    }
+
+    std::string library = s.substr(0, pos);
+    std::string model = s.substr(pos + 1);
+    return {library, model};
+}
+
 static SystemModel::Component createComponent(const SystemParser::Component& c)
 {
+    const auto [libraryId, modelId] = splitLibraryModelString(c.model);
     SystemModel::ModelBuilder model_builder;
-    auto model = model_builder.withId(c.model).build();
+    auto model = model_builder.withId(modelId).build();
     SystemModel::ComponentBuilder component_builder;
 
     /* std::map<std::string, double> parameters; */
