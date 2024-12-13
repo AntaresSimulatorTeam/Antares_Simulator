@@ -26,71 +26,56 @@
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
 
-namespace Antares::Data::ShortTermStorage
-{
-
-bool STStorageCluster::loadFromSection(const IniFile::Section& section)
-{
-    if (!section.firstProperty)
-    {
-        return false;
-    }
-
-    for (auto* property = section.firstProperty; property; property = property->next)
-    {
-        if (property->key.empty())
-        {
-            logs.warning() << "Loading clusters: `" << section.name << "`: Invalid key/value";
-            continue;
+namespace Antares::Data::ShortTermStorage {
+    bool STStorageCluster::loadFromSection(const IniFile::Section &section) {
+        if (!section.firstProperty) {
+            return false;
         }
-        if (!properties.loadKey(property))
-        {
-            logs.warning() << "Loading clusters: `" << section.name << "`/`" << property->key
-                           << "`: The property is unknown and ignored";
+
+        for (auto *property = section.firstProperty; property; property = property->next) {
+            if (property->key.empty()) {
+                logs.warning() << "Loading clusters: `" << section.name << "`: Invalid key/value";
+                continue;
+            }
+            if (!properties.loadKey(property)) {
+                logs.warning() << "Loading clusters: `" << section.name << "`/`" << property->key
+                        << "`: The property is unknown and ignored";
+            }
         }
-    }
 
-    if (properties.name.empty())
-    {
-        return false;
-    }
+        if (properties.name.empty()) {
+            return false;
+        }
 
-    id = transformNameIntoID(properties.name);
+        id = transformNameIntoID(properties.name);
 
-    return true;
-}
-
-bool STStorageCluster::enabled() const
-{
-    return properties.enabled;
-}
-
-bool STStorageCluster::validate() const
-{
-    if (!enabled())
-    {
         return true;
     }
 
-    logs.debug() << "Validating properties and series for st storage: " << id;
-    return properties.validate() && series->validate(id);
-}
+    bool STStorageCluster::enabled() const {
+        return properties.enabled;
+    }
 
-bool STStorageCluster::loadSeries(const std::filesystem::path& folder) const
-{
-    bool ret = series->loadFromFolder(folder);
-    series->fillDefaultSeriesIfEmpty(); // fill series if no file series
-    return ret;
-}
+    bool STStorageCluster::validate() const {
+        if (!enabled()) {
+            return true;
+        }
 
-void STStorageCluster::saveProperties(IniFile& ini) const
-{
-    properties.save(ini);
-}
+        logs.debug() << "Validating properties and series for st storage: " << id;
+        return properties.validate() && series->validate(id);
+    }
 
-bool STStorageCluster::saveSeries(const std::string& path) const
-{
-    return series->saveToFolder(path);
-}
+    bool STStorageCluster::loadSeries(const std::filesystem::path &folder) const {
+        bool ret = series->loadFromFolder(folder);
+        series->fillDefaultSeriesIfEmpty(); // fill series if no file series
+        return ret;
+    }
 
+    void STStorageCluster::saveProperties(IniFile &ini) const {
+        properties.save(ini);
+    }
+
+    bool STStorageCluster::saveSeries(const std::string &path) const {
+        return series->saveToFolder(path);
+    }
 } // namespace Antares::Data::ShortTermStorage

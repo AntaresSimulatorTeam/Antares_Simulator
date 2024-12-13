@@ -18,38 +18,25 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include "antares/study/parts/short-term-storage/AdditionalConstraint.h"
+#include <antares/logs/logs.h>
 
-#pragma once
-#include <filesystem>
-#include <string>
+namespace Antares::Data::ShortTermStorage
+{
+bool AdditionalConstraint::validate() const
+{
+    if (cluster_id.empty())
+        return false;
 
-#include "cluster.h"
-#include "AdditionalConstraint.h"
+    if (variable != "injection" && variable != "withdrawal" && variable != "netting")
+        return false;
 
-namespace Antares::Data::ShortTermStorage {
-    class STStorageInput {
-    public:
-        bool validate() const;
+    if (operatorType != "less" && operatorType != "equal" && operatorType != "greater")
+        return false;
 
-        /// 1. Read list.ini
-        bool createSTStorageClustersFromIniFile(const std::filesystem::path &path);
+    if (hours.empty() || *std::min_element(hours.begin(), hours.end()) < 1 || *std::max_element(hours.begin(), hours.end()) > 168)
+        return false;
 
-        /// 2. Read ALL series
-        bool loadSeriesFromFolder(const std::filesystem::path &folder) const;
-
-        /// Number of enabled ST storages, ignoring disabled ST storages
-        std::size_t count() const;
-
-        bool LoadConstraintsFromIniFile(const std::filesystem::path &filePath
-        );
-
-        /// erase disabled cluster from the vector
-        uint removeDisabledClusters();
-
-        bool saveToFolder(const std::string &folder) const;
-
-        bool saveDataSeriesToFolder(const std::string &folder) const;
-
-        std::vector<STStorageCluster> storagesByIndex;
-    };
+    return true;
+}
 } // namespace Antares::Data::ShortTermStorage
