@@ -34,45 +34,6 @@ using namespace std::string_literals;
 using namespace Antares::Solver;
 using namespace Antares::Study;
 
-BOOST_AUTO_TEST_CASE(parse_into_system_model)
-{
-    SystemParser::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            description: real application model
-            model-libraries: [std, mylib]
-            components:
-                - id: N
-                  model: std.node
-                  scenario-group: group-234
-                  parameters:
-                    - id: cost
-                      type: constant
-                      value: 30
-                    - id: p_max
-                      type: constant
-                      value: 100
-                - id: G
-                  model: mylib.generator
-                  scenario-group: generator
-    )"s;
-
-    SystemParser::System systemObj = parser.parse(system);
-
-    SystemModel::Library lib;
-    std::vector<SystemModel::Library> libraries = {lib};
-    auto systemModel = SystemConverter::convert(systemObj, libraries);
-
-    BOOST_CHECK_EQUAL(systemModel.Components().size(), 2);
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("G").Id(), "G");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getModel()->Id(), "generator");
-
-    /* BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("cost"), 30); */
-    /* BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("generator"), 100); */
-}
-
 BOOST_AUTO_TEST_CASE(full_model_system)
 {
     ModelParser::Model model1{.id = "node",
@@ -112,4 +73,8 @@ BOOST_AUTO_TEST_CASE(full_model_system)
 
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
+    BOOST_CHECK_EQUAL(systemModel.Components().size(), 1);
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("cost"), 30);
 }
