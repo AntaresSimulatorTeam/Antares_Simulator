@@ -6,6 +6,7 @@ set(SOURCE_FILES
         test_full.cpp
         enum_operators.h
         testSystemParser.cpp
+        testSystemConverter.cpp
 )
 
 # Add executable
