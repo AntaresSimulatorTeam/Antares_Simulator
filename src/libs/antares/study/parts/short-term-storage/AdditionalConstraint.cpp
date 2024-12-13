@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/study/parts/short-term-storage/AdditionalConstraint.h"
+
 #include <antares/logs/logs.h>
 
 namespace Antares::Data::ShortTermStorage
@@ -26,16 +27,25 @@ namespace Antares::Data::ShortTermStorage
 bool AdditionalConstraint::validate() const
 {
     if (cluster_id.empty())
+    {
         return false;
+    }
 
     if (variable != "injection" && variable != "withdrawal" && variable != "netting")
+    {
         return false;
+    }
 
     if (operatorType != "less" && operatorType != "equal" && operatorType != "greater")
+    {
         return false;
+    }
 
-    if (hours.empty() || *std::min_element(hours.begin(), hours.end()) < 1 || *std::max_element(hours.begin(), hours.end()) > 168)
+    if (hours.empty() || *std::min_element(hours.begin(), hours.end()) < 1
+        || *std::max_element(hours.begin(), hours.end()) > 168)
+    {
         return false;
+    }
 
     return true;
 }

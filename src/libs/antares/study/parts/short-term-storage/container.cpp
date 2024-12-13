@@ -33,139 +33,173 @@
 
 namespace fs = std::filesystem;
 
-namespace Antares::Data::ShortTermStorage {
-    bool STStorageInput::validate() const {
-        return std::ranges::all_of(storagesByIndex, [](auto &cluster) { return cluster.validate(); });
+namespace Antares::Data::ShortTermStorage
+{
+bool STStorageInput::validate() const
+{
+    return std::ranges::all_of(storagesByIndex, [](auto& cluster) { return cluster.validate(); });
+}
+
+bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
+{
+    const fs::path pathIni = path / "list.ini";
+    IniFile ini;
+    if (!ini.open(pathIni))
+    {
+        return false;
     }
 
-    bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path &path) {
-        const fs::path pathIni = path / "list.ini";
-        IniFile ini;
-        if (!ini.open(pathIni)) {
-            return false;
-        }
-
-        if (!ini.firstSection) {
-            return true;
-        }
-
-        logs.debug() << "  :: loading `" << pathIni << "`";
-
-        for (auto *section = ini.firstSection; section; section = section->next) {
-            STStorageCluster cluster;
-            if (!cluster.loadFromSection(*section)) {
-                return false;
-            }
-
-            storagesByIndex.push_back(cluster);
-        }
-
-        std::ranges::sort(storagesByIndex,
-                          [](const auto &a, const auto &b) { return a.properties.name < b.properties.name; });
-
+    if (!ini.firstSection)
+    {
         return true;
     }
 
-    bool STStorageInput::LoadConstraintsFromIniFile(const fs::path &parent_path) {
-        IniFile ini;
-        const auto pathIni = parent_path / "additional-constraints.ini";
-        if (!ini.open(pathIni)) {
-            logs.error() << "Failed to open INI file: " << pathIni;
+    logs.debug() << "  :: loading `" << pathIni << "`";
+
+    for (auto* section = ini.firstSection; section; section = section->next)
+    {
+        STStorageCluster cluster;
+        if (!cluster.loadFromSection(*section))
+        {
             return false;
         }
 
-        for (auto *section = ini.firstSection; section; section = section->next) {
-            AdditionalConstraint constraint;
+        storagesByIndex.push_back(cluster);
+    }
 
-            for (auto *property = section->firstProperty; property; property = property->next) {
-                const std::string key = property->key;
-                const auto value = property->value;
+    std::ranges::sort(storagesByIndex,
+                      [](const auto& a, const auto& b)
+                      { return a.properties.name < b.properties.name; });
 
-                if (key == "cluster") {
-                    // TODO do i have to transform the name to id? TransformNameIntoID
-                    std::string clusterName;
-                    value.to<std::string>(clusterName);
-                    constraint.cluster_id = transformNameIntoID(clusterName);
-                } else if (key == "variable") {
-                    value.to<std::string>(constraint.variable);
-                } else if (key == "operator")
-                    value.to<std::string>(constraint.operatorType);
-                else if (key == "hours") {
-                    // std::string raw_value;
-                    // value.to<std::string>(raw_value);
-                    std::stringstream ss(value.c_str());
-                    std::string hour;
-                    while (std::getline(ss, hour, ',')) {
-                        int hourVal = std::stoi(hour);
-                        constraint.hours.push_back(hourVal);
-                    }
-                } else if (key == "rhs")
-                    property->value.to<double>(constraint.rhs);
+    return true;
+}
+
+bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
+{
+    IniFile ini;
+    const auto pathIni = parent_path / "additional-constraints.ini";
+    if (!ini.open(pathIni))
+    {
+        logs.error() << "Failed to open INI file: " << pathIni;
+        return false;
+    }
+
+    for (auto* section = ini.firstSection; section; section = section->next)
+    {
+        AdditionalConstraint constraint;
+
+        for (auto* property = section->firstProperty; property; property = property->next)
+        {
+            const std::string key = property->key;
+            const auto value = property->value;
+
+            if (key == "cluster")
+            {
+                // TODO do i have to transform the name to id? TransformNameIntoID
+                std::string clusterName;
+                value.to<std::string>(clusterName);
+                constraint.cluster_id = transformNameIntoID(clusterName);
             }
-
-            if (!constraint.validate()) {
-                logs.error() << "Invalid constraint in section: " << section->name;
-                return false;
+            else if (key == "variable")
+            {
+                value.to<std::string>(constraint.variable);
             }
-
-
-            //TODO not the fastest way
-            for (auto &cluster: storagesByIndex) {
-                if (cluster.id == constraint.cluster_id) {
-                    cluster.additional_constraints.push_back(constraint);
-                } else {
-                    logs.warning() << " from file " << pathIni;
-                    logs.warning() << "Constraint " << section->name <<
-                            "does not reference an existing cluster (" << cluster.id <<
-                            "),\n therefore it is ignored!";
+            else if (key == "operator")
+            {
+                value.to<std::string>(constraint.operatorType);
+            }
+            else if (key == "hours")
+            {
+                // std::string raw_value;
+                // value.to<std::string>(raw_value);
+                std::stringstream ss(value.c_str());
+                std::string hour;
+                while (std::getline(ss, hour, ','))
+                {
+                    int hourVal = std::stoi(hour);
+                    constraint.hours.push_back(hourVal);
                 }
             }
+            else if (key == "rhs")
+            {
+                property->value.to<double>(constraint.rhs);
+            }
         }
 
-        return true;
-    }
-
-
-    bool STStorageInput::loadSeriesFromFolder(const fs::path &folder) const {
-        if (folder.empty()) {
+        if (!constraint.validate())
+        {
+            logs.error() << "Invalid constraint in section: " << section->name;
             return false;
         }
 
-        bool ret = true;
-
-        for (auto &cluster: storagesByIndex) {
-            fs::path seriesFolder = folder / cluster.id;
-            ret = cluster.loadSeries(seriesFolder) && ret;
+        // TODO not the fastest way
+        for (auto& cluster: storagesByIndex)
+        {
+            if (cluster.id == constraint.cluster_id)
+            {
+                cluster.additional_constraints.push_back(constraint);
+            }
+            else
+            {
+                logs.warning() << " from file " << pathIni;
+                logs.warning() << "Constraint " << section->name
+                               << "does not reference an existing cluster (" << cluster.id
+                               << "),\n therefore it is ignored!";
+            }
         }
-
-        return ret;
     }
 
-    bool STStorageInput::saveToFolder(const std::string &folder) const {
-        // create empty list.ini if there's no sts in this area
-        Yuni::IO::Directory::Create(folder);
-        const std::string pathIni(folder + SEP + "list.ini");
-        IniFile ini;
+    return true;
+}
 
-        logs.debug() << "saving file " << pathIni;
-        std::ranges::for_each(storagesByIndex,
-                              [&ini](auto &storage) { return storage.saveProperties(ini); });
-
-        return ini.save(pathIni);
+bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
+{
+    if (folder.empty())
+    {
+        return false;
     }
 
-    bool STStorageInput::saveDataSeriesToFolder(const std::string &folder) const {
-        Yuni::IO::Directory::Create(folder);
-        return std::ranges::all_of(storagesByIndex,
-                                   [&folder](auto &storage) { return storage.saveSeries(folder + SEP + storage.id); });
+    bool ret = true;
+
+    for (auto& cluster: storagesByIndex)
+    {
+        fs::path seriesFolder = folder / cluster.id;
+        ret = cluster.loadSeries(seriesFolder) && ret;
     }
 
-    std::size_t STStorageInput::count() const {
-        return std::ranges::count_if(storagesByIndex,
-                                     [](const STStorageCluster &st) { return st.properties.enabled; });
-    }
+    return ret;
+}
 
-    uint STStorageInput::removeDisabledClusters() {
-        return std::erase_if(storagesByIndex, [](const auto &c) { return !c.enabled(); });
-    }
+bool STStorageInput::saveToFolder(const std::string& folder) const
+{
+    // create empty list.ini if there's no sts in this area
+    Yuni::IO::Directory::Create(folder);
+    const std::string pathIni(folder + SEP + "list.ini");
+    IniFile ini;
+
+    logs.debug() << "saving file " << pathIni;
+    std::ranges::for_each(storagesByIndex,
+                          [&ini](auto& storage) { return storage.saveProperties(ini); });
+
+    return ini.save(pathIni);
+}
+
+bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
+{
+    Yuni::IO::Directory::Create(folder);
+    return std::ranges::all_of(storagesByIndex,
+                               [&folder](auto& storage)
+                               { return storage.saveSeries(folder + SEP + storage.id); });
+}
+
+std::size_t STStorageInput::count() const
+{
+    return std::ranges::count_if(storagesByIndex,
+                                 [](const STStorageCluster& st) { return st.properties.enabled; });
+}
+
+uint STStorageInput::removeDisabledClusters()
+{
+    return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
+}
 } // namespace Antares::Data::ShortTermStorage
