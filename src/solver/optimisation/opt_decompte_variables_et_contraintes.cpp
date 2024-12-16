@@ -247,9 +247,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                 }
                 if (!storage.additional_constraints.empty())
                 {
-                    ProblemeAResoudre->NombreDeContraintes
-                      += storage.additional_constraints.size()
-                         * nombreDePasDeTempsPourUneOptimisation;
+                    ProblemeAResoudre->NombreDeContraintes += storage.additional_constraints.size();
                 }
             }
         }
