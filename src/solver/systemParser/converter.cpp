@@ -19,9 +19,10 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include "antares/solver/systemParser/converter.h"
+
 #include <algorithm>
 
-#include "antares/solver/systemParser/converter.h"
 #include "antares/solver/systemParser/system.h"
 #include "antares/study/system-model/system.h"
 
@@ -35,8 +36,8 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     size_t pos = s.find('.');
     if (pos == std::string::npos)
     {
-        throw std::runtime_error("Error while splitting library model: " + s +
-                                 "Correct format is lirabry.model");
+        throw std::runtime_error("Error while splitting library model: " + s
+                                 + "Correct format is lirabry.model");
     }
 
     std::string library = s.substr(0, pos);
@@ -48,7 +49,8 @@ static const SystemModel::Model* getModel(const std::vector<SystemModel::Library
                                           const std::string& libraryId,
                                           const std::string& modelId)
 {
-    auto lib = std::ranges::find_if(libraries, [&libraryId](const auto& l) { return l.Id() == libraryId; });
+    auto lib = std::ranges::find_if(libraries,
+                                    [&libraryId](const auto& l) { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
         throw std::runtime_error("No libraries named: " + libraryId);
@@ -58,7 +60,8 @@ static const SystemModel::Model* getModel(const std::vector<SystemModel::Library
     return &model;
 }
 
-static SystemModel::Component createComponent(const SystemParser::Component& c, const std::vector<SystemModel::Library>& libraries)
+static SystemModel::Component createComponent(const SystemParser::Component& c,
+                                              const std::vector<SystemModel::Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
     SystemModel::ModelBuilder model_builder;
@@ -68,7 +71,7 @@ static SystemModel::Component createComponent(const SystemParser::Component& c, 
     SystemModel::ComponentBuilder component_builder;
 
     std::map<std::string, double> parameters;
-    for (const auto& p : c.parameters)
+    for (const auto& p: c.parameters)
     {
         parameters.try_emplace(p.id, p.value);
     }
@@ -81,7 +84,8 @@ static SystemModel::Component createComponent(const SystemParser::Component& c, 
     return component;
 }
 
-SystemModel::System convert(const SystemParser::System& parserSystem, const std::vector<SystemModel::Library>& libraries)
+SystemModel::System convert(const SystemParser::System& parserSystem,
+                            const std::vector<SystemModel::Library>& libraries)
 {
     std::vector<SystemModel::Component> components;
     for (const auto& c: parserSystem.components)

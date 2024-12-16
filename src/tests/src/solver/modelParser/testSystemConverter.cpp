@@ -25,9 +25,9 @@
 
 #include <antares/solver/systemParser/converter.h>
 #include <antares/solver/systemParser/parser.h>
-#include "antares/solver/modelParser/Library.h"
-#include "antares/solver/modelConverter/modelConverter.h"
 #include <antares/study/system-model/system.h>
+#include "antares/solver/modelConverter/modelConverter.h"
+#include "antares/solver/modelParser/Library.h"
 #include "antares/study/system-model/library.h"
 
 using namespace std::string_literals;
@@ -48,6 +48,7 @@ struct Fixture
     SystemParser::Parser parser;
     ModelParser::Library library;
     SystemModel::Library lib;
+
     Fixture()
     {
         library.id = "std";
