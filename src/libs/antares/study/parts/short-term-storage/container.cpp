@@ -199,6 +199,7 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
     {
         result += cluster.additional_constraints.size();
     }
+    return result;
 }
 
 std::size_t STStorageInput::count() const

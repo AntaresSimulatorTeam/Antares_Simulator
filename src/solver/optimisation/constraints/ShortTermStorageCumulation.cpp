@@ -72,6 +72,7 @@ void ShortTermStorageCumulation::add(int pays){
 
     for (const auto& storage: data.ShortTermStorage[pays])
     {
+        // TODO  global index for constraints for data.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[index]
         for(const auto& constraint: storage.additional_constraints){
 
             //sum (var[h]) sign rhs, h in list provied by user
