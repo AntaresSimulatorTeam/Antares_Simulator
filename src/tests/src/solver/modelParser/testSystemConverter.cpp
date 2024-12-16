@@ -55,6 +55,7 @@ struct LibraryObjects
         library.models = {model1};
         libraries = {ModelConverter::convert(library)};
     }
+
     ~LibraryObjects() = default;
 };
 
