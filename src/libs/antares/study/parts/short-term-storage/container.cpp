@@ -117,7 +117,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
                 while (std::getline(ss, hour, ','))
                 {
                     int hourVal = std::stoi(hour);
-                    constraint.hours.push_back(hourVal);
+                    constraint.hours.insert(hourVal);
                 }
             }
             else if (key == "rhs")
@@ -129,6 +129,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
         if (!constraint.validate())
         {
             logs.error() << "Invalid constraint in section: " << section->name;
+            logs.error() << constraint.getErrorMessage();
             return false;
         }
 

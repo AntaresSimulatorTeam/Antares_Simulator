@@ -21,21 +21,33 @@
 
 #pragma once
 #include <string>
-#include <vector>
+#include <set>
 
 namespace Antares::Data::ShortTermStorage
 {
-struct AdditionalConstraint
+
+    struct AdditionalConstraint
 {
     std::string name;
     std::string cluster_id;
     std::string variable;
     std::string operatorType;
-    std::vector<int> hours;
+        std::set<int> hours;
     double rhs;
 
     unsigned int globalIndex = 0;
 
     bool validate() const;
+
+        bool isValidVariable() const;
+
+        bool isValidOperatorType() const;
+
+        bool isValidHoursRange() const;
+
+        mutable std::string error_message = "";
+
+        std::string getErrorMessage() const { return error_message; }
+
 };
 } // namespace Antares::Data::ShortTermStorage
