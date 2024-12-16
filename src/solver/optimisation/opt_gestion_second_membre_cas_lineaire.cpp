@@ -56,7 +56,6 @@ static void shortTermStorageCumulationRHS(
         {
             for (const auto& constraint: storage.additional_constraints)
             {
-                const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 int cnt = CorrespondancesDesContraintesHebdomadaires.ShortTermStorageCumulation
                         [constraint.globalIndex];
                 SecondMembre[cnt] = constraint.rhs;
