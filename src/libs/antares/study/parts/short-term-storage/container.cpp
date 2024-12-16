@@ -78,7 +78,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
 {
     IniFile ini;
     const auto pathIni = parent_path / "additional-constraints.ini";
-    if (!ini.open(pathIni))
+    if (!ini.open(pathIni, false))
     {
         logs.info() << "There is no: " << pathIni;
         return true;
