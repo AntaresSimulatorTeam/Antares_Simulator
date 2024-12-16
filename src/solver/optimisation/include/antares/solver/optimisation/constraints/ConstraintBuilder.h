@@ -308,5 +308,5 @@ struct ShortTermStorageData
 
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
 {
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires;
 };

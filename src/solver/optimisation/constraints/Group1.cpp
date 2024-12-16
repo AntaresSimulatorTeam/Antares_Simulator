@@ -22,6 +22,7 @@
 #include "antares/solver/optimisation/constraints/Group1.h"
 
 #include "antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h"
+#include "antares/solver/optimisation/constraints/ShortTermStorageCumulation.h"
 
 AreaBalanceData Group1::GetAreaBalanceData()
 {
@@ -46,6 +47,15 @@ ShortTermStorageData Group1::GetShortTermStorageData()
     return {
       .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
       .ShortTermStorage = problemeHebdo_->ShortTermStorage,
+    };
+}
+
+ShortTermStorageCumulativeConstraintData Group1::ShortTermStorageCumulativeConstraintData()
+{
+    return {
+            problemeHebdo_->CorrespondanceCntNativesCntOptim,
+            problemeHebdo_->ShortTermStorage,
+            problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires
     };
 }
 
@@ -89,6 +99,11 @@ void Group1::BuildConstraints()
     ShortTermStorageCostVariationWithdrawalForward shortTermStorageCostVariationWithdrawalForward(
       builder_,
       shortTermStorageData);
+
+    auto shortTermStorageCumulativeConstraintData = GetShortTermStorageCumulativeConstraintData();
+    ShortTermStorageCumulation shortTermStorageCumulation(builder_,
+                                                          shortTermStorageCumulativeConstraintData);
+
     auto flowDissociationData = GetFlowDissociationData();
     FlowDissociation flowDissociation(builder_, flowDissociationData);
 
@@ -122,5 +137,10 @@ void Group1::BuildConstraints()
         {
             bindingConstraintHour.add(pdt, cntCouplante);
         }
+    }
+
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+    {
+        shortTermStorageCumulation.add(pays);
     }
 }
