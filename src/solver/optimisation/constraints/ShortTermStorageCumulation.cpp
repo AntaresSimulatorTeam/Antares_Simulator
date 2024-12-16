@@ -94,7 +94,7 @@ std::unique_ptr<CumulationConstraint> cumulationConstraintFromVariable(const std
     {
         return std::make_unique<NettingCumulationConstraint>();
     }
-    throw false; // TODO custom exception
+    throw std::invalid_argument("Invalid cumulation constraint type");
 }
 
 char ConvertSign(const std::string& sign)
