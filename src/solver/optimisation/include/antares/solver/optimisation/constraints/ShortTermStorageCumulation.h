@@ -33,9 +33,6 @@ public:
     }
 
     void add(int pays);
-    void Injection(unsigned int index, const ::ShortTermStorage::PROPERTIES& input);
-    void Withdrawal(unsigned int index, const ::ShortTermStorage::PROPERTIES& input);
-    void Netting(unsigned int index, const ::ShortTermStorage::PROPERTIES& input);
 
 private:
     ShortTermStorageCumulativeConstraintData& data;
