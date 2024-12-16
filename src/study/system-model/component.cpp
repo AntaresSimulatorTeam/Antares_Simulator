@@ -45,7 +45,7 @@ static void checkComponentDataValidity(const ComponentData& data)
     if (data.model->Parameters().size() != data.parameter_values.size())
     {
         throw std::invalid_argument(
-          "The component has " + std::to_string(data.parameter_values.size())
+          "The component \"" + data.id + "\" has " + std::to_string(data.parameter_values.size())
           + " parameter(s), but its model has " + std::to_string(data.model->Parameters().size()));
     }
     for (const auto param: data.model->Parameters() | std::views::keys)
