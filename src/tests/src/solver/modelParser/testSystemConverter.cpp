@@ -34,7 +34,7 @@ using namespace std::string_literals;
 using namespace Antares::Solver;
 using namespace Antares::Study;
 
-struct Fixture
+struct LibraryObjects
 {
     ModelParser::Model model1{.id = "node",
                               .description = "description",
@@ -47,17 +47,20 @@ struct Fixture
 
     SystemParser::Parser parser;
     ModelParser::Library library;
+    SystemModel::Library lib;
     std::vector<SystemModel::Library> libraries;
 
-    Fixture()
+    LibraryObjects()
     {
         library.id = "std";
         library.models = {model1};
-        libraries = {ModelConverter::convert(library)};
+        lib = ModelConverter::convert(library);
+        libraries = {lib};
     }
+    ~LibraryObjects() = default;
 };
 
-BOOST_FIXTURE_TEST_CASE(full_model_system, Fixture)
+BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
 {
     const auto system = R"(
         system:
@@ -84,7 +87,7 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, Fixture)
     BOOST_CHECK_EQUAL(systemModel.Components().at("N").getParameterValue("cost"), 30);
 }
 
-BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, Fixture)
+BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
 {
     const auto system = R"(
         system:
@@ -106,7 +109,7 @@ BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, Fixture)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
 }
 
-BOOST_FIXTURE_TEST_CASE(library_not_existing, Fixture)
+BOOST_FIXTURE_TEST_CASE(library_not_existing, LibraryObjects)
 {
     const auto system = R"(
         system:
@@ -123,7 +126,7 @@ BOOST_FIXTURE_TEST_CASE(library_not_existing, Fixture)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
 }
 
-BOOST_FIXTURE_TEST_CASE(model_not_existing, Fixture)
+BOOST_FIXTURE_TEST_CASE(model_not_existing, LibraryObjects)
 {
     const auto system = R"(
         system:
@@ -140,7 +143,7 @@ BOOST_FIXTURE_TEST_CASE(model_not_existing, Fixture)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
 }
 
-BOOST_FIXTURE_TEST_CASE(bad_library_model_format, Fixture)
+BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
 {
     const auto system = R"(
         system:
