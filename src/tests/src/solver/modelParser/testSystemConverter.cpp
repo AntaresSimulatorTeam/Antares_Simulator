@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
             - id: D
               model: mylib.demand
               scenario-group: group-qsf
-              parameters:
+              parameters:
                 - id: demand
                   type: constant
                   value: 100
