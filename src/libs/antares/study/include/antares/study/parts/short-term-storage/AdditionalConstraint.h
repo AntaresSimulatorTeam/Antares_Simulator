@@ -32,6 +32,8 @@ namespace Antares::Data::ShortTermStorage {
         std::vector<int> hours;
         double rhs;
 
+        unsigned int globalIndex = 0;
+
         bool validate() const;
     };
 } // namespace Antares::Data::ShortTermStorage

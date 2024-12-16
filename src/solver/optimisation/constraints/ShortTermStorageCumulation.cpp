@@ -39,18 +39,24 @@ void ShortTermStorageCumulation::Netting(unsigned int index,
     ShortTermStorageWithdrawal(index, -input.withdrawalEfficiency);
                                                        }
 auto getMemberFunction = [](const std::string& name)
--> void (ShortTermStorageCumulation::*)(unsigned int,
-                                              const ::ShortTermStorage::PROPERTIES& ) {
-            if (name == "withdrawal") {
-                return &ShortTermStorageCumulation::Withdrawal;
-            } else if (name == "injection") {
-                return &ShortTermStorageCumulation::Injection;
-            }
-            else if (name == "netting"){
-                return &ShortTermStorageCumulation::Netting;
-        }
-            return nullptr; // Return null if no match
-        };
+-> std::pair<std::string, void (ShortTermStorageCumulation::*)(unsigned int,
+                                                               const ::ShortTermStorage::PROPERTIES&
+                     )>
+{
+    if (name == "withdrawal")
+    {
+        return {"WithdrawalSum", &ShortTermStorageCumulation::Withdrawal};
+    }
+    else if (name == "injection")
+    {
+        return {"InjectionSum", &ShortTermStorageCumulation::Injection};
+    }
+    else if (name == "netting")
+    {
+        return {"NettingSum", &ShortTermStorageCumulation::Netting};
+    }
+    return {"", nullptr}; // Return null if no match
+};
 
 
 char ConvertSign(const std::string& sign){
@@ -76,15 +82,19 @@ void ShortTermStorageCumulation::add(int pays){
         for(const auto& constraint: storage.additional_constraints){
 
             //sum (var[h]) sign rhs, h in list provied by user
-
-            namer.ShortTermStorageLevel(builder.data.nombreDeContraintes, storage.name);
+            auto [constraintType,memberFunction] = getMemberFunction(constraint.variable);
+            namer.ShortTermStorageCumulation(constraintType,
+                                             builder.data.nombreDeContraintes,
+                                             storage.name,
+                                             constraint.name
+                    );
             const auto index = storage.clusterGlobalIndex;
             //TODO
-            data.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[index]
-              = builder.data.nombreDeContraintes;
-            auto memberFunction = getMemberFunction(constraint.variable);
+            data.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[constraint
+                        .globalIndex]
+                    = builder.data.nombreDeContraintes;
+
             for (const auto& hour: constraint.hours){
-                const int hourInTheYear = builder.data.weekInTheYear * 168 + hour-1;
         builder.updateHourWithinWeek(hour-1);
          (this->*memberFunction)(index, storage);
           builder.SetOperator(ConvertSign(constraint.operatorType))
