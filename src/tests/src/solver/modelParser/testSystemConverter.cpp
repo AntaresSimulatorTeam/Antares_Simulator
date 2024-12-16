@@ -265,5 +265,4 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
     SystemParser::System systemObj = parserSystem.parse(systemYaml);
     /* BOOST_CHECK_NO_THROW(SystemConverter::convert(systemObj, libraries)); */
     SystemConverter::convert(systemObj, libraries);
-
 }
