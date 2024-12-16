@@ -47,14 +47,13 @@ struct Fixture
 
     SystemParser::Parser parser;
     ModelParser::Library library;
-    SystemModel::Library lib;
+    std::vector<SystemModel::Library> libraries;
 
     Fixture()
     {
         library.id = "std";
         library.models = {model1};
-
-        lib = ModelConverter::convert(library);
+        libraries = {ModelConverter::convert(library)};
     }
 };
 
@@ -75,7 +74,6 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, Fixture)
                       value: 30
     )"s;
 
-    std::vector<SystemModel::Library> libraries = {lib};
     SystemParser::System systemObj = parser.parse(system);
 
     auto systemModel = SystemConverter::convert(systemObj, libraries);
@@ -103,7 +101,6 @@ BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, Fixture)
                       value: 30
     )"s;
 
-    std::vector<SystemModel::Library> libraries = {lib};
     SystemParser::System systemObj = parser.parse(system);
 
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
@@ -121,7 +118,23 @@ BOOST_FIXTURE_TEST_CASE(library_not_existing, Fixture)
                   scenario-group: group-234
     )"s;
 
-    std::vector<SystemModel::Library> libraries = {lib};
+    SystemParser::System systemObj = parser.parse(system);
+
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+}
+
+BOOST_FIXTURE_TEST_CASE(model_not_existing, Fixture)
+{
+    const auto system = R"(
+        system:
+            id: base_system
+            model-libraries: [std]
+            components:
+                - id: N
+                  model: std.abc
+                  scenario-group: group-234
+    )"s;
+
     SystemParser::System systemObj = parser.parse(system);
 
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
@@ -143,7 +156,6 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, Fixture)
                       value: 30
     )"s;
 
-    std::vector<SystemModel::Library> libraries = {lib};
     SystemParser::System systemObj = parser.parse(system);
 
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
