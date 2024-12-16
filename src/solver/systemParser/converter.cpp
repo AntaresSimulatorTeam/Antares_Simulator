@@ -49,6 +49,15 @@ public:
     }
 };
 
+class ModelNotFound: public std::runtime_error
+{
+public:
+    explicit ModelNotFound(const std::string& s):
+        runtime_error("No model found with this name: " + s)
+    {
+    }
+};
+
 static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
     size_t pos = s.find('.');
@@ -73,8 +82,15 @@ static const SystemModel::Model* getModel(const std::vector<SystemModel::Library
         throw LibraryNotFound(libraryId);
     }
 
-    auto& model = lib->Models().at(modelId);
-    return &model;
+    try
+    {
+        auto& model = lib->Models().at(modelId);
+        return &model;
+    }
+    catch (const std::out_of_range&)
+    {
+        throw ModelNotFound(modelId);
+    }
 }
 
 static SystemModel::Component createComponent(const SystemParser::Component& c,
