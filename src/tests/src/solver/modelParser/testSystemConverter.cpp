@@ -47,15 +47,13 @@ struct LibraryObjects
 
     SystemParser::Parser parser;
     ModelParser::Library library;
-    SystemModel::Library lib;
     std::vector<SystemModel::Library> libraries;
 
     LibraryObjects()
     {
         library.id = "std";
         library.models = {model1};
-        lib = ModelConverter::convert(library);
-        libraries = {lib};
+        libraries = {ModelConverter::convert(library)};
     }
     ~LibraryObjects() = default;
 };
