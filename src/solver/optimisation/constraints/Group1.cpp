@@ -52,11 +52,9 @@ ShortTermStorageData Group1::GetShortTermStorageData()
 
 ShortTermStorageCumulativeConstraintData Group1::GetShortTermStorageCumulativeConstraintData()
 {
-    return {
-            problemeHebdo_->CorrespondanceCntNativesCntOptim,
+    return {problemeHebdo_->CorrespondanceCntNativesCntOptim,
             problemeHebdo_->ShortTermStorage,
-            problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires
-    };
+            problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires};
 }
 
 FlowDissociationData Group1::GetFlowDissociationData()

@@ -44,11 +44,10 @@ static void shortTermStorageLevelsRHS(
 }
 
 static void shortTermStorageCumulationRHS(
-        const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
-        int numberOfAreas,
-        std::vector<double>& SecondMembre,
-        const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES&
-        CorrespondancesDesContraintesHebdomadaires)
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  int numberOfAreas,
+  std::vector<double>& SecondMembre,
+  const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires)
 {
     for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
     {
@@ -56,8 +55,8 @@ static void shortTermStorageCumulationRHS(
         {
             for (const auto& constraint: storage.additional_constraints)
             {
-                int cnt = CorrespondancesDesContraintesHebdomadaires.ShortTermStorageCumulation
-                        [constraint.globalIndex];
+                int cnt = CorrespondancesDesContraintesHebdomadaires
+                            .ShortTermStorageCumulation[constraint.globalIndex];
                 SecondMembre[cnt] = constraint.rhs;
             }
         }

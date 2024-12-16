@@ -23,17 +23,19 @@
 #include <string>
 #include <vector>
 
-namespace Antares::Data::ShortTermStorage {
-    struct AdditionalConstraint {
-        std::string name;
-        std::string cluster_id;
-        std::string variable;
-        std::string operatorType;
-        std::vector<int> hours;
-        double rhs;
+namespace Antares::Data::ShortTermStorage
+{
+struct AdditionalConstraint
+{
+    std::string name;
+    std::string cluster_id;
+    std::string variable;
+    std::string operatorType;
+    std::vector<int> hours;
+    double rhs;
 
-        unsigned int globalIndex = 0;
+    unsigned int globalIndex = 0;
 
-        bool validate() const;
-    };
+    bool validate() const;
+};
 } // namespace Antares::Data::ShortTermStorage

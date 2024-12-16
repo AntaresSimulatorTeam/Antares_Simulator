@@ -25,19 +25,17 @@
 class ShortTermStorageCumulation: private ConstraintFactory
 {
 public:
-    ShortTermStorageCumulation(ConstraintBuilder& builder, ShortTermStorageCumulativeConstraintData& data):
+    ShortTermStorageCumulation(ConstraintBuilder& builder,
+                               ShortTermStorageCumulativeConstraintData& data):
         ConstraintFactory(builder),
         data(data)
     {
     }
 
     void add(int pays);
-    void Injection(unsigned int index,
-                                                       const ::ShortTermStorage::PROPERTIES& input);
-    void Withdrawal(unsigned int index,
-                                                       const ::ShortTermStorage::PROPERTIES& input);
-    void Netting(unsigned int index,
-                                                       const ::ShortTermStorage::PROPERTIES& input);
+    void Injection(unsigned int index, const ::ShortTermStorage::PROPERTIES& input);
+    void Withdrawal(unsigned int index, const ::ShortTermStorage::PROPERTIES& input);
+    void Netting(unsigned int index, const ::ShortTermStorage::PROPERTIES& input);
 
 private:
     ShortTermStorageCumulativeConstraintData& data;

@@ -26,29 +26,31 @@
 
 #include <antares/inifile/inifile.h>
 
+#include "AdditionalConstraint.h"
 #include "properties.h"
 #include "series.h"
-#include "AdditionalConstraint.h"
 
-namespace Antares::Data::ShortTermStorage {
-    class STStorageCluster {
-    public:
-        bool enabled() const;
+namespace Antares::Data::ShortTermStorage
+{
+class STStorageCluster
+{
+public:
+    bool enabled() const;
 
-        bool validate() const;
+    bool validate() const;
 
-        bool loadFromSection(const IniFile::Section &section);
+    bool loadFromSection(const IniFile::Section& section);
 
-        bool loadSeries(const std::filesystem::path &folder) const;
+    bool loadSeries(const std::filesystem::path& folder) const;
 
-        void saveProperties(IniFile &ini) const;
+    void saveProperties(IniFile& ini) const;
 
-        bool saveSeries(const std::string &path) const;
+    bool saveSeries(const std::string& path) const;
 
-        std::string id;
+    std::string id;
 
-        std::shared_ptr<Series> series = std::make_shared<Series>();
-        mutable Properties properties;
-        std::vector<AdditionalConstraint> additional_constraints;
-    };
+    std::shared_ptr<Series> series = std::make_shared<Series>();
+    mutable Properties properties;
+    std::vector<AdditionalConstraint> additional_constraints;
+};
 } // namespace Antares::Data::ShortTermStorage

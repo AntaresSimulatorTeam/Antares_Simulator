@@ -249,10 +249,8 @@ void SIM_AllocationLinks(PROBLEME_HEBDO& problem, const uint linkCount, unsigned
 void SIM_AllocationShortermStorageCumulation(PROBLEME_HEBDO& problem,
                                              const Antares::Data::Study& study)
 {
-    problem.CorrespondanceCntNativesCntOptimHebdomadaires
-            .ShortTermStorageCumulation.assign(
-                    study.runtime.shortTermStorageCumulativeConstraintCount,
-                    0);
+    problem.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation
+      .assign(study.runtime.shortTermStorageCumulativeConstraintCount, 0);
 }
 
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
