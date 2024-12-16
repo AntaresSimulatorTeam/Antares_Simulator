@@ -31,13 +31,30 @@ using namespace Antares::Study;
 namespace Antares::Solver::SystemConverter
 {
 
+class ErrorWhileSplittingLibraryAndModel: public std::runtime_error
+{
+public:
+    explicit ErrorWhileSplittingLibraryAndModel(const std::string& s):
+        runtime_error("'.' not found while splitting library and model: " + s)
+    {
+    }
+};
+
+class LibraryNotFound: public std::runtime_error
+{
+public:
+    explicit LibraryNotFound(const std::string& s):
+        runtime_error("No library found with this name: " + s)
+    {
+    }
+};
+
 static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
     size_t pos = s.find('.');
     if (pos == std::string::npos)
     {
-        throw std::runtime_error("Error while splitting library model: " + s
-                                 + "Correct format is lirabry.model");
+        throw ErrorWhileSplittingLibraryAndModel(s);
     }
 
     std::string library = s.substr(0, pos);
@@ -53,7 +70,7 @@ static const SystemModel::Model* getModel(const std::vector<SystemModel::Library
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
-        throw std::runtime_error("No libraries named: " + libraryId);
+        throw LibraryNotFound(libraryId);
     }
 
     auto& model = lib->Models().at(modelId);
