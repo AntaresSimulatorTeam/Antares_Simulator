@@ -50,7 +50,7 @@ ShortTermStorageData Group1::GetShortTermStorageData()
     };
 }
 
-ShortTermStorageCumulativeConstraintData Group1::ShortTermStorageCumulativeConstraintData()
+ShortTermStorageCumulativeConstraintData Group1::GetShortTermStorageCumulativeConstraintData()
 {
     return {
             problemeHebdo_->CorrespondanceCntNativesCntOptim,
