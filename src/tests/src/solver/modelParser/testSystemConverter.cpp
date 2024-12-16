@@ -27,7 +27,7 @@
 #include <antares/solver/systemParser/parser.h>
 #include <antares/study/system-model/system.h>
 #include "antares/solver/modelConverter/modelConverter.h"
-#include "antares/solver/modelParser/Library.h"
+#include "antares/solver/modelParser/parser.h"
 #include "antares/study/system-model/library.h"
 
 using namespace std::string_literals;
@@ -159,4 +159,111 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, Fixture)
     SystemParser::System systemObj = parser.parse(system);
 
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(Full_system_test)
+{
+    const auto libraryYaml = R"(
+        library:
+          id: std
+          description: Standard library
+          port-types: []
+
+          models:
+            - id: generator
+              description: A basic generator model
+              parameters:
+                - id: cost
+                  time-dependent: false
+                  scenario-dependent: false
+                - id: p_max
+                  time-dependent: false
+                  scenario-dependent: false
+              variables:
+                - id: generation
+                  lower-bound: 0
+                  upper-bound: p_max
+              ports:
+                - id: injection_port
+                  type: flow
+              port-field-definitions:
+                - port: injection_port
+                  field: flow
+                  definition: generation
+              objective: cost * generation
+
+            - id: node
+              description: A basic balancing node model
+              ports:
+                - id: injection_port
+                  type: flow
+              binding-constraints:
+                - id: balance
+                  expression: injection_port.flow = 0
+    )"s;
+
+    const auto libraryYaml2 = R"(
+        library:
+          id: mylib
+          description: Extra library
+          port-types: []
+
+          models:
+            - id: demand
+              description: A basic fixed demand model
+              parameters:
+                - id: demand
+                  time-dependent: true
+                  scenario-dependent: true
+              ports:
+                - id: injection_port
+                  type: flow
+              port-field-definitions:
+                - port: injection_port
+                  field: flow
+                  definition: -demand
+    )"s;
+
+    const auto systemYaml = R"(
+        system:
+          id: system1
+          description: basic description
+          model-libraries: [std, mylib]
+
+          components:
+            - id: N
+              model: std.node
+              scenario-group: group-234
+
+            - id: G
+              model: std.generator
+              scenario-group: group-234
+              parameters:
+                - id: cost
+                  type: constant
+                  value: 30
+                - id: p_max
+                  type: constant
+                  value: 100
+
+            - id: D
+              model: mylib.demand
+              scenario-group: group-qsf
+              parameters:
+                - id: demand
+                  type: constant
+                  value: 100
+    )"s;
+
+    ModelParser::Parser parserModel;
+    SystemParser::Parser parserSystem;
+
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml)));
+    libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml2)));
+
+    SystemParser::System systemObj = parserSystem.parse(systemYaml);
+    /* BOOST_CHECK_NO_THROW(SystemConverter::convert(systemObj, libraries)); */
+    SystemConverter::convert(systemObj, libraries);
+
 }
