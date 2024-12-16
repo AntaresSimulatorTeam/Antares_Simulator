@@ -21,6 +21,9 @@
 
 #include "antares/solver/optimisation/constraints/ShortTermStorageCumulation.h"
 
+#include <memory>
+#include <stdexcept>
+
 class CumulationConstraint
 {
 public:
