@@ -20,8 +20,6 @@
 */
 #include "antares/study/parts/short-term-storage/AdditionalConstraint.h"
 
-#include <antares/logs/logs.h>
-
 namespace Antares::Data::ShortTermStorage
 {
 bool AdditionalConstraint::validate() const
@@ -54,18 +52,19 @@ bool AdditionalConstraint::validate() const
     return true;
 }
 
-    bool AdditionalConstraint::isValidHoursRange() const {
-// `hours` is a sorted set; begin() gives the smallest and prev(end()) gives the largest.
-        return !hours.empty() && *hours.begin() >= 1
-               && *std::prev(hours.end()) <= 168;
+bool AdditionalConstraint::isValidHoursRange() const
+{
+    // `hours` is a sorted set; begin() gives the smallest and prev(end()) gives the largest.
+    return !hours.empty() && *hours.begin() >= 1 && *std::prev(hours.end()) <= 168;
+}
 
-    }
+bool AdditionalConstraint::isValidVariable() const
+{
+    return variable == "injection" || variable == "withdrawal" || variable == "netting";
+}
 
-    bool AdditionalConstraint::isValidVariable() const {
-        return variable == "injection" || variable == "withdrawal" || variable == "netting";
-    }
-
-    bool AdditionalConstraint::isValidOperatorType() const {
-        return operatorType == "less" || operatorType == "equal" || operatorType == "greater";
-    }
+bool AdditionalConstraint::isValidOperatorType() const
+{
+    return operatorType == "less" || operatorType == "equal" || operatorType == "greater";
+}
 } // namespace Antares::Data::ShortTermStorage
