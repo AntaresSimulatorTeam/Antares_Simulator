@@ -136,7 +136,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
         auto it = std::find_if(storagesByIndex.begin(),
                                storagesByIndex.end(),
                                [&constraint](const STStorageCluster& cluster)
-                               {return cluster.id == constraint.cluster_id; });
+                               { return cluster.id == constraint.cluster_id; });
         if (it == storagesByIndex.end())
         {
             logs.warning() << " from file " << pathIni;
