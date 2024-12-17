@@ -19,47 +19,93 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
 #include "antares/solver/optimisation/constraints/ShortTermStorageCumulation.h"
 
-void ShortTermStorageCumulation::Injection(unsigned int index,
-                                           const ::ShortTermStorage::PROPERTIES& input)
-{
-    builder.ShortTermStorageInjection(index, 1.0);
-}
+#include <memory>
+#include <stdexcept>
 
-void ShortTermStorageCumulation::Withdrawal(unsigned int index,
-                                            const ::ShortTermStorage::PROPERTIES& input)
+class CumulationConstraint
 {
-    builder.ShortTermStorageWithdrawal(index, 1.0);
-}
-
-void ShortTermStorageCumulation::Netting(unsigned int index,
-                                         const ::ShortTermStorage::PROPERTIES& input)
-{
-    builder.ShortTermStorageInjection(index, input.injectionEfficiency)
-      .ShortTermStorageWithdrawal(index, -input.withdrawalEfficiency);
-}
-
-auto getMemberFunction = [](const std::string& name)
-  -> std::pair<std::string,
-               void (ShortTermStorageCumulation::*)(unsigned int,
-                                                    const ::ShortTermStorage::PROPERTIES&)>
-{
-    if (name == "withdrawal")
-    {
-        return {"WithdrawalSum", &ShortTermStorageCumulation::Withdrawal};
-    }
-    else if (name == "injection")
-    {
-        return {"InjectionSum", &ShortTermStorageCumulation::Injection};
-    }
-    else if (name == "netting")
-    {
-        return {"NettingSum", &ShortTermStorageCumulation::Netting};
-    }
-    return {"", nullptr}; // Return null if no match
+public:
+    virtual void build(ConstraintBuilder& builder,
+                       unsigned int index,
+                       const ::ShortTermStorage::PROPERTIES& input) const
+      = 0;
+    virtual std::string name() const = 0;
+    virtual ~CumulationConstraint() = default;
 };
+
+class WithdrawalCumulationConstraint: public CumulationConstraint
+{
+public:
+    void build(ConstraintBuilder& builder,
+               unsigned int index,
+               const ::ShortTermStorage::PROPERTIES&) const override
+    {
+        builder.ShortTermStorageWithdrawal(index, 1.0);
+    }
+
+    std::string name() const override
+    {
+        return "WithdrawalSum";
+    }
+
+    virtual ~WithdrawalCumulationConstraint() = default;
+};
+
+class InjectionCumulationConstraint: public CumulationConstraint
+{
+public:
+    void build(ConstraintBuilder& builder,
+               unsigned int index,
+               const ::ShortTermStorage::PROPERTIES&) const override
+    {
+        builder.ShortTermStorageInjection(index, 1.0);
+    }
+
+    std::string name() const override
+    {
+        return "InjectionSum";
+    }
+
+    virtual ~InjectionCumulationConstraint() = default;
+};
+
+class NettingCumulationConstraint: public CumulationConstraint
+{
+public:
+    void build(ConstraintBuilder& builder,
+               unsigned int index,
+               const ::ShortTermStorage::PROPERTIES& input) const override
+    {
+        builder.ShortTermStorageInjection(index, input.injectionEfficiency)
+          .ShortTermStorageWithdrawal(index, -input.withdrawalEfficiency);
+    }
+
+    std::string name() const override
+    {
+        return "NettingSum";
+    }
+
+    virtual ~NettingCumulationConstraint() = default;
+};
+
+std::unique_ptr<CumulationConstraint> cumulationConstraintFromVariable(const std::string& variable)
+{
+    if (variable == "withdrawal")
+    {
+        return std::make_unique<WithdrawalCumulationConstraint>();
+    }
+    else if (variable == "injection")
+    {
+        return std::make_unique<InjectionCumulationConstraint>();
+    }
+    else if (variable == "netting")
+    {
+        return std::make_unique<NettingCumulationConstraint>();
+    }
+    throw std::invalid_argument("Invalid cumulation constraint type");
+}
 
 char ConvertSign(const std::string& sign)
 {
@@ -89,8 +135,8 @@ void ShortTermStorageCumulation::add(int pays)
         for (const auto& constraint: storage.additional_constraints)
         {
             // sum (var[h]) sign rhs, h in list provied by user
-            auto [constraintType, memberFunction] = getMemberFunction(constraint.variable);
-            namer.ShortTermStorageCumulation(constraintType,
+            auto constraintHelper = cumulationConstraintFromVariable(constraint.variable);
+            namer.ShortTermStorageCumulation(constraintHelper->name(),
                                              builder.data.nombreDeContraintes,
                                              storage.name,
                                              constraint.name);
@@ -103,7 +149,7 @@ void ShortTermStorageCumulation::add(int pays)
             for (const auto& hour: constraint.hours)
             {
                 builder.updateHourWithinWeek(hour - 1);
-                (this->*memberFunction)(index, storage);
+                constraintHelper->build(builder, index, storage);
             }
             builder.SetOperator(ConvertSign(constraint.operatorType)).build();
         }
