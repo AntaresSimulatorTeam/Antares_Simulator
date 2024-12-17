@@ -71,7 +71,7 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static const SystemModel::Model* getModel(const std::vector<SystemModel::Library>& libraries,
+static const SystemModel::Model& getModel(const std::vector<SystemModel::Library>& libraries,
                                           const std::string& libraryId,
                                           const std::string& modelId)
 {
@@ -82,15 +82,13 @@ static const SystemModel::Model* getModel(const std::vector<SystemModel::Library
         throw LibraryNotFound(libraryId);
     }
 
-    try
-    {
-        auto& model = lib->Models().at(modelId);
-        return &model;
-    }
-    catch (const std::out_of_range&)
+    auto search = lib->Models().find(modelId);
+    if (search == lib->Models().end())
     {
         throw ModelNotFound(modelId);
     }
+
+    return search->second;
 }
 
 static SystemModel::Component createComponent(const SystemParser::Component& c,
@@ -99,7 +97,7 @@ static SystemModel::Component createComponent(const SystemParser::Component& c,
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
     SystemModel::ModelBuilder model_builder;
 
-    const SystemModel::Model* model = getModel(libraries, libraryId, modelId);
+    const SystemModel::Model& model = getModel(libraries, libraryId, modelId);
 
     SystemModel::ComponentBuilder component_builder;
 
@@ -110,7 +108,7 @@ static SystemModel::Component createComponent(const SystemParser::Component& c,
     }
 
     auto component = component_builder.withId(c.id)
-                       .withModel(model)
+                       .withModel(&model)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
                        .build();
