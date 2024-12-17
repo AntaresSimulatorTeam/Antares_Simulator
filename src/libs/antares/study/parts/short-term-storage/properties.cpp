@@ -213,6 +213,12 @@ bool Properties::validate()
                        << " should be inferior to 1, value has been set to " << initialLevel;
     }
 
+    if (groupName.empty())
+    {
+        logs.warning() << "Group name is empty for short term storage " << name;
+        return false;
+    }
+
     return true;
 }
 
