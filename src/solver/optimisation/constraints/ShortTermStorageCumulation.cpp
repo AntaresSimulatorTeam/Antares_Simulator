@@ -32,6 +32,7 @@ public:
                        const ::ShortTermStorage::PROPERTIES& input) const
       = 0;
     virtual std::string name() const = 0;
+    virtual ~CumulationConstraint() = default;
 };
 
 class WithdrawalCumulationConstraint: public CumulationConstraint
@@ -48,6 +49,8 @@ public:
     {
         return "WithdrawalSum";
     }
+
+    virtual ~WithdrawalCumulationConstraint() = default;
 };
 
 class InjectionCumulationConstraint: public CumulationConstraint
@@ -64,6 +67,8 @@ public:
     {
         return "InjectionSum";
     }
+
+    virtual ~InjectionCumulationConstraint() = default;
 };
 
 class NettingCumulationConstraint: public CumulationConstraint
@@ -81,6 +86,8 @@ public:
     {
         return "NettingSum";
     }
+
+    virtual ~NettingCumulationConstraint() = default;
 };
 
 std::unique_ptr<CumulationConstraint> cumulationConstraintFromVariable(const std::string& variable)
