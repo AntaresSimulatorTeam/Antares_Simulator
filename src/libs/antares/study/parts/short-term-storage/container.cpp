@@ -22,6 +22,7 @@
 #include "antares/study/parts/short-term-storage/container.h"
 
 #include <algorithm>
+#include <numeric>
 #include <string>
 
 #include <yuni/io/file.h>
@@ -194,12 +195,13 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 
 std::size_t STStorageInput::cumulativeConstraintCount() const
 {
-    size_t result = 0;
-    for (const auto& cluster: storagesByIndex)
-    {
-        result += cluster.additional_constraints.size();
-    }
-    return result;
+    return std::accumulate(storagesByIndex.begin(),
+                           storagesByIndex.end(),
+                           0.,
+                           [](double acc, const auto& cluster)
+                           {
+                               return cluster.additional_constraints.size();
+                           });
 }
 
 std::size_t STStorageInput::count() const
