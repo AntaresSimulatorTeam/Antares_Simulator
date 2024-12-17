@@ -265,6 +265,17 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml2)));
 
     SystemParser::System systemObj = parserSystem.parse(systemYaml);
-    /* BOOST_CHECK_NO_THROW(SystemConverter::convert(systemObj, libraries)); */
-    SystemConverter::convert(systemObj, libraries);
+    auto systemModel = SystemConverter::convert(systemObj, libraries);
+
+    BOOST_CHECK_EQUAL(systemModel.Components().size(), 3);
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getScenarioGroupId(), "group-234");
+
+    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getModel()->Id(), "generator");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getParameterValue("cost"), 30);
+    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getParameterValue("p_max"), 100);
+
+    BOOST_CHECK_EQUAL(systemModel.Components().at("D").getModel()->Id(), "demand");
+    BOOST_CHECK_EQUAL(systemModel.Components().at("D").getParameterValue("demand"), 100);
 }
