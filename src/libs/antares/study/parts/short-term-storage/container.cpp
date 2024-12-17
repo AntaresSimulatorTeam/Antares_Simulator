@@ -133,20 +133,19 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
             return false;
         }
 
-        // TODO not the fastest way
-        for (auto& cluster: storagesByIndex)
+        auto it = std::find_if(storagesByIndex.begin(),
+                               storagesByIndex.end(),
+                               [&constraint](const STStorageCluster& cluster)
+                               {return cluster.id == constraint.cluster_id; });
+        if (it == storagesByIndex.end())
         {
-            if (cluster.id == constraint.cluster_id)
-            {
-                cluster.additional_constraints.push_back(constraint);
-            }
-            else
-            {
-                logs.warning() << " from file " << pathIni;
-                logs.warning() << "Constraint " << section->name
-                               << "does not reference an existing cluster (" << cluster.id
-                               << "),\n therefore it is ignored!";
-            }
+            logs.warning() << " from file " << pathIni;
+            logs.warning() << "Constraint " << section->name
+                           << " does not reference an existing cluster";
+        }
+        else
+        {
+            it->additional_constraints.push_back(constraint);
         }
     }
 
