@@ -111,8 +111,6 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
             }
             else if (key == "hours")
             {
-                // std::string raw_value;
-                // value.to<std::string>(raw_value);
                 std::stringstream ss(value.c_str());
                 std::string hour;
                 while (std::getline(ss, hour, ','))
@@ -129,9 +127,9 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
 
         if (!constraint.validate())
         {
-            logs.error() << "Invalid constraint in section: " << section->name;
-            logs.error() << constraint.getErrorMessage();
-            return false;
+            throw std::runtime_error(
+                    "Invalid constraint in section: " + section->name + "\n" + constraint.
+                    getErrorMessage());
         }
 
         auto it = std::find_if(storagesByIndex.begin(),
@@ -197,10 +195,10 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
 {
     return std::accumulate(storagesByIndex.begin(),
                            storagesByIndex.end(),
-                           0.,
-                           [](double acc, const auto& cluster)
+                           0,
+                           [](int acc, const auto& cluster)
                            {
-                               return cluster.additional_constraints.size();
+                               return acc + cluster.additional_constraints.size();
                            });
 }
 
