@@ -28,7 +28,7 @@ env:
   RUN_EXTENDED_TESTS: ${{ inputs.target_branch == 'release/8.8.x' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages:
+  vcpkgPackages: yaml-cpp antlr4
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
 
