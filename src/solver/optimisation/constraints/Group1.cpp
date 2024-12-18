@@ -137,7 +137,7 @@ void Group1::BuildConstraints()
         }
     }
 
-    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
     {
         shortTermStorageCumulation.add(pays);
     }

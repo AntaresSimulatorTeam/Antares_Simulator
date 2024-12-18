@@ -50,7 +50,7 @@ public:
         return "WithdrawalSum";
     }
 
-    virtual ~WithdrawalCumulationConstraint() = default;
+    ~WithdrawalCumulationConstraint() override = default;
 };
 
 class InjectionCumulationConstraint: public CumulationConstraint
@@ -68,7 +68,7 @@ public:
         return "InjectionSum";
     }
 
-    virtual ~InjectionCumulationConstraint() = default;
+    ~InjectionCumulationConstraint() override = default;
 };
 
 class NettingCumulationConstraint: public CumulationConstraint
@@ -87,7 +87,7 @@ public:
         return "NettingSum";
     }
 
-    virtual ~NettingCumulationConstraint() = default;
+    ~NettingCumulationConstraint() override = default;
 };
 
 std::unique_ptr<CumulationConstraint> cumulationConstraintFromVariable(const std::string& variable)
@@ -130,18 +130,18 @@ void ShortTermStorageCumulation::add(int pays)
 
     for (const auto& storage: data.ShortTermStorage[pays])
     {
-        // TODO  global index for constraints for
-        // data.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[index]
         for (const auto& constraint: storage.additional_constraints)
         {
-            // sum (var[h]) sign rhs, h in list provied by user
+            // sum (var[h]) sign rhs, h in list provided by user where:
+            // var = injection for InjectionCumulationConstraint
+            // var = withdrawal for WithdrawalCumulationConstraint
+            // var = injectionEfficiency * injection - withdrawalEfficiency * withdrawal for Netting
             auto constraintHelper = cumulationConstraintFromVariable(constraint.variable);
             namer.ShortTermStorageCumulation(constraintHelper->name(),
                                              builder.data.nombreDeContraintes,
                                              storage.name,
                                              constraint.name);
             const auto index = storage.clusterGlobalIndex;
-            // TODO
             data.CorrespondanceCntNativesCntOptimHebdomadaires
               .ShortTermStorageCumulation[constraint.globalIndex]
               = builder.data.nombreDeContraintes;
