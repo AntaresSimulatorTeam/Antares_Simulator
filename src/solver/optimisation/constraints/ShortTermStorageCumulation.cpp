@@ -107,13 +107,13 @@ std::unique_ptr<CumulationConstraint> cumulationConstraintFromVariable(const std
     throw std::invalid_argument("Invalid cumulation constraint type");
 }
 
-char ConvertSign(const std::string& sign)
+char ConvertSense(const std::string& sense)
 {
-    if (sign == "greater")
+    if (sense == "greater")
     {
         return '>';
     }
-    else if (sign == "less")
+    else if (sense == "less")
     {
         return '<';
     }
@@ -151,7 +151,7 @@ void ShortTermStorageCumulation::add(int pays)
                 builder.updateHourWithinWeek(hour - 1);
                 constraintHelper->build(builder, index, storage);
             }
-            builder.SetOperator(ConvertSign(constraint.operatorType)).build();
+            builder.SetOperator(ConvertSense(constraint.operatorType)).build();
         }
     }
 }
