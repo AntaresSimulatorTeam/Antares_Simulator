@@ -1,7 +1,8 @@
 #pragma once
 
 #include <filesystem>
-#include <modelerParameters.h>
+
+#include <antares/solver/modeler/parameters/modelerParameters.h>
 
 namespace Antares::Solver
 {
