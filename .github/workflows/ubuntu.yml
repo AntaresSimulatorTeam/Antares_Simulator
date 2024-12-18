@@ -25,11 +25,9 @@ on:
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
-  RUN_SIMPLE_TESTS: false
-  RUN_EXTENDED_TESTS: false
+  RUN_EXTENDED_TESTS: ${{ inputs.target_branch == 'release/8.8.x' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages: yaml-cpp antlr4
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
 
@@ -166,7 +164,6 @@ jobs:
 
 
     - name: Run named mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -175,13 +172,11 @@ jobs:
         variant: "named-mps"
 
     - name: Run unfeasibility-related tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R "^unfeasible$"
 
     - name: Run unit and end-to-end tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -L "unit|end-to-end"
@@ -194,7 +189,6 @@ jobs:
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Run tests about infinity on BCs RHS
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -202,7 +196,6 @@ jobs:
         os: ${{ env.os }}
 
     - name: Run MILP with CBC
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -211,7 +204,6 @@ jobs:
         os: ${{ env.os }}
 
     - name: Run tests introduced in v860
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -219,7 +211,6 @@ jobs:
         os: ${{ env.os }}
 
     - name: Run tests introduced in v870
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -227,7 +218,6 @@ jobs:
         os: ${{ env.os }}
 
     - name: Run short-tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -235,7 +225,6 @@ jobs:
         os: ${{ env.os }}
 
     - name: Run mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -243,7 +232,6 @@ jobs:
         os: ${{ env.os }}
 
     - name: Run tests on adequacy patch
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
