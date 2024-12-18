@@ -127,9 +127,8 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
 
         if (!constraint.validate())
         {
-            throw std::runtime_error(
-                    "Invalid constraint in section: " + section->name + "\n" + constraint.
-                    getErrorMessage());
+            throw std::runtime_error("Invalid constraint in section: " + section->name + "\n"
+                                     + constraint.getErrorMessage());
         }
 
         auto it = std::find_if(storagesByIndex.begin(),
@@ -197,9 +196,7 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
                            storagesByIndex.end(),
                            0,
                            [](int acc, const auto& cluster)
-                           {
-                               return acc + cluster.additional_constraints.size();
-                           });
+                           { return acc + cluster.additional_constraints.size(); });
 }
 
 std::size_t STStorageInput::count() const
