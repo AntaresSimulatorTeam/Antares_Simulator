@@ -68,7 +68,7 @@ class SystemBuilder
 {
 public:
     SystemBuilder& withId(std::string_view id);
-    SystemBuilder& withComponents(std::vector<Component>&& components);
+    SystemBuilder& withComponents(std::vector<Component>& components);
     System build() const;
 
 private:

@@ -5,6 +5,8 @@ set(SOURCE_FILES
         testConvertorVisitor.cpp
         test_full.cpp
         enum_operators.h
+        testSystemParser.cpp
+        testSystemConverter.cpp
 )
 
 # Add executable
@@ -14,9 +16,10 @@ add_executable(TestModelParser ${SOURCE_FILES})
 target_link_libraries(TestModelParser
         PRIVATE
         Boost::unit_test_framework
-	Antares::solver-expressions
+        Antares::solver-expressions
         Antares::modelConverter
         Antares::modelParser
+        Antares::systemParser
         Antares::antares-study-system-model
         Antares::antlr-interface
 )

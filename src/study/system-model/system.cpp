@@ -71,7 +71,7 @@ SystemBuilder& SystemBuilder::withId(std::string_view id)
  * \param components A vector of components to set.
  * \return Reference to the SystemBuilder object.
  */
-SystemBuilder& SystemBuilder::withComponents(std::vector<Component>&& components)
+SystemBuilder& SystemBuilder::withComponents(std::vector<Component>& components)
 {
     components_ = std::move(components);
     return *this;

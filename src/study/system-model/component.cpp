@@ -45,14 +45,14 @@ static void checkComponentDataValidity(const ComponentData& data)
     if (data.model->Parameters().size() != data.parameter_values.size())
     {
         throw std::invalid_argument(
-          "The component has " + std::to_string(data.parameter_values.size())
+          "The component \"" + data.id + "\" has " + std::to_string(data.parameter_values.size())
           + " parameter(s), but its model has " + std::to_string(data.model->Parameters().size()));
     }
     for (const auto param: data.model->Parameters() | std::views::keys)
     {
         if (!data.parameter_values.contains(param))
         {
-            throw std::invalid_argument("The component has no value for parameter '" + param + "'");
+            throw std::invalid_argument("The component \"" + data.id + "\" has no value for parameter '" + param + "'");
         }
     }
 }
