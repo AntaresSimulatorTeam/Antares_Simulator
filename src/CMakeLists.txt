@@ -192,6 +192,7 @@ endif()
 find_package(Boost REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 #Sirius solver
 if(POLICY CMP0074)

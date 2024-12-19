@@ -31,7 +31,7 @@
 
 BOOST_AUTO_TEST_SUITE(read_modeler_parameters)
 
-BOOST_AUTO_TEST_CASE(simple)
+BOOST_AUTO_TEST_CASE(all_properties_set)
 {
     const auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     const auto fileP = working_tmp_dir / "parameters.yaml";
