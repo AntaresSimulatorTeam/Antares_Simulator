@@ -3,7 +3,6 @@ include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 add_boost_test(tests-binding_constraints
      SRC test_binding_constraints.cpp
      LIBS
-     Boost::unit_test_framework
      model_antares
      antares-solver-simulation
      antares-solver-hydro

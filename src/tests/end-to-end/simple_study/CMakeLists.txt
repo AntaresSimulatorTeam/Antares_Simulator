@@ -8,5 +8,4 @@ add_boost_test(tests-simple-study
       antares-solver-simulation
       antares-solver-ts-generator
       model_antares
-      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
       Antares::tests::in-memory-study)
