@@ -1,5 +1,3 @@
-find_package(yaml-cpp REQUIRED)
-
 set(SOURCES
         parser.cpp
         converter.cpp
