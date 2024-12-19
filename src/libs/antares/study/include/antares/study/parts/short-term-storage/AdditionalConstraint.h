@@ -20,7 +20,6 @@
  */
 
 #pragma once
-#include <optional>
 #include <set>
 #include <string>
 
@@ -38,7 +37,13 @@ struct AdditionalConstraint
 
     unsigned int globalIndex = 0;
 
-    std::optional<std::string> validate() const;
+    struct ValidateResult
+    {
+        bool ok;
+        std::string error_msg;
+    };
+
+    ValidateResult validate() const;
 
 private:
     bool isValidVariable() const;

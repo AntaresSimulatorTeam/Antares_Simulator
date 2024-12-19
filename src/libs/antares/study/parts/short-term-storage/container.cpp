@@ -125,10 +125,10 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
             }
         }
 
-        if (auto errorMaybe = constraint.validate())
+        if (auto ret = constraint.validate(); !ret.ok)
         {
             logs.error() << "Invalid constraint in section: " << section->name;
-            logs.error() << errorMaybe.value();
+            logs.error() << ret.error_msg;
             return false;
         }
 
