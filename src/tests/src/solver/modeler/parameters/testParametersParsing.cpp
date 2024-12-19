@@ -51,4 +51,24 @@ no-output: true)";
     BOOST_CHECK_EQUAL(params.noOutput, true);
 }
 
+BOOST_AUTO_TEST_CASE(all_properties_set_out_of_order)
+{
+    const auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto fileP = working_tmp_dir / "parameters.yaml";
+    {
+        std::ofstream param(fileP);
+        param << R"(
+solver-logs: false
+solver: sirius
+solver-parameters: PRESOLVE 1
+no-output: true)";
+    }
+
+    auto params = Antares::Solver::parseModelerParameters(fileP);
+    BOOST_CHECK_EQUAL(params.solver, "sirius");
+    BOOST_CHECK_EQUAL(params.solverLogs, false);
+    BOOST_CHECK_EQUAL(params.solverParameters, "PRESOLVE 1");
+    BOOST_CHECK_EQUAL(params.noOutput, true);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
