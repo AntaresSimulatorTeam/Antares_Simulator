@@ -6,7 +6,8 @@ add_library(modeler-parameters
 
 target_link_libraries(modeler-parameters
         PRIVATE
-        yaml-cpp)
+        yaml-cpp
+	Antares::io)
 
 target_include_directories(modeler-parameters
         PUBLIC
