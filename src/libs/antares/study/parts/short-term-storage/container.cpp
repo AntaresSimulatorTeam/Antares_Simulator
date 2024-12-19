@@ -125,10 +125,11 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
             }
         }
 
-        if (!constraint.validate())
+        if (auto ret = constraint.validate(); !ret.ok)
         {
-            throw std::runtime_error("Invalid constraint in section: " + section->name + "\n"
-                                     + constraint.getErrorMessage());
+            logs.error() << "Invalid constraint in section: " << section->name;
+            logs.error() << ret.error_msg;
+            return false;
         }
 
         auto it = std::find_if(storagesByIndex.begin(),
@@ -140,6 +141,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
             logs.warning() << " from file " << pathIni;
             logs.warning() << "Constraint " << section->name
                            << " does not reference an existing cluster";
+            return false;
         }
         else
         {

@@ -22,34 +22,29 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-bool AdditionalConstraint::validate() const
+AdditionalConstraint::ValidateResult AdditionalConstraint::validate() const
 {
     if (cluster_id.empty())
     {
-        error_message = "Cluster ID is empty.";
-        return false;
+        return {false, "Cluster ID is empty."};
     }
 
     if (!isValidVariable())
     {
-        error_message = "Invalid variable type. Must be 'injection', 'withdrawal', or 'netting'.";
-        return false;
+        return {false, "Invalid variable type. Must be 'injection', 'withdrawal', or 'netting'."};
     }
 
     if (!isValidOperatorType())
     {
-        error_message = "Invalid operator type. Must be 'less', 'equal', or 'greater'.";
-        return false;
+        return {false, "Invalid operator type. Must be 'less', 'equal', or 'greater'."};
     }
 
     if (!isValidHoursRange())
     {
-        error_message = "Hours set contains invalid values. Must be between 1 and 168.";
-        return false;
+        return {false, "Hours set contains invalid values. Must be between 1 and 168."};
     }
 
-    error_message.clear();
-    return true;
+    return {true, ""};
 }
 
 bool AdditionalConstraint::isValidHoursRange() const

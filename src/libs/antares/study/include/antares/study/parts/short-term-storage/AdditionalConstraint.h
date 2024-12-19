@@ -37,19 +37,17 @@ struct AdditionalConstraint
 
     unsigned int globalIndex = 0;
 
-    bool validate() const;
-
-    bool isValidVariable() const;
-
-    bool isValidOperatorType() const;
-
-    bool isValidHoursRange() const;
-
-    mutable std::string error_message = "";
-
-    std::string getErrorMessage() const
+    struct ValidateResult
     {
-        return error_message;
-    }
+        bool ok;
+        std::string error_msg;
+    };
+
+    ValidateResult validate() const;
+
+private:
+    bool isValidVariable() const;
+    bool isValidOperatorType() const;
+    bool isValidHoursRange() const;
 };
 } // namespace Antares::Data::ShortTermStorage
