@@ -20,6 +20,7 @@
  */
 
 #pragma once
+#include <optional>
 #include <set>
 #include <string>
 
@@ -37,19 +38,11 @@ struct AdditionalConstraint
 
     unsigned int globalIndex = 0;
 
-    bool validate() const;
+    std::optional<std::string> validate() const;
 
+private:
     bool isValidVariable() const;
-
     bool isValidOperatorType() const;
-
     bool isValidHoursRange() const;
-
-    mutable std::string error_message = "";
-
-    std::string getErrorMessage() const
-    {
-        return error_message;
-    }
 };
 } // namespace Antares::Data::ShortTermStorage
