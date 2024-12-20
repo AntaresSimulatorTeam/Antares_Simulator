@@ -5,9 +5,7 @@ add_boost_test(test-api
   LIBS
   Antares::solver_api
   Antares::tests::in-memory-study
-  test_utils_unit)
-
-target_include_directories(test-api
-        PRIVATE
-        #Allow to use the private headers
-        $<TARGET_PROPERTY:Antares::solver_api,INCLUDE_DIRECTORIES>)
+  test_utils_unit
+  #Allow to use the private headers
+  INCLUDE
+  $<TARGET_PROPERTY:Antares::solver_api,INCLUDE_DIRECTORIES>)
