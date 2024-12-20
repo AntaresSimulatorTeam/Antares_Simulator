@@ -11,11 +11,6 @@ add_boost_test(test-sc-builder-file-read-line
   INCLUDE "${src_libs_antares_study}/include"
   LIBS model_antares)
 
-# Linux
-if(UNIX AND NOT APPLE)
-  target_link_libraries(test-sc-builder-file-read-line PRIVATE stdc++fs)
-endif()
-
 # ====================================
 # Tests on saving scenario-builder
 # ====================================

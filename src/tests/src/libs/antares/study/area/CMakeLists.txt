@@ -16,11 +16,6 @@ add_boost_test(test-save-link-properties
   INCLUDE "${src_libs_antares_study}/include"
   LIBS model_antares)
 
-# Linux
-if(UNIX AND NOT APPLE)
-  target_link_libraries(test-save-link-properties PRIVATE stdc++fs)
-endif()
-
 # ===================================
 # Tests on area's optimization.ini
 # ===================================
@@ -33,9 +28,3 @@ add_boost_test(test-save-area-optimization-ini
   SRC ${SRC_AREA_OPTIMIZATION}
   INCLUDE "${src_libs_antares_study}/include"
   LIBS model_antares)
-
-# Linux
-if(UNIX AND NOT APPLE)
-  target_link_libraries(test-save-area-optimization-ini PRIVATE stdc++fs)
-endif()
-

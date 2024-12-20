@@ -19,8 +19,3 @@ add_boost_test(thermal-price-definition
   "${src_libs_antares_study}/area"
   "${src_libs_antares_study}"
   "${src_libs_antares_checks}")
-
-# Linux
-if(UNIX AND NOT APPLE)
-target_link_libraries(thermal-price-definition PRIVATE stdc++fs)
-endif()

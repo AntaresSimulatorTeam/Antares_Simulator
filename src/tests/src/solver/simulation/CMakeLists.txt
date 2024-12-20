@@ -35,10 +35,6 @@ add_boost_test(test-store-timeseries-number
   antares-solver-simulation
   Antares::study
   Antares::result_writer)
-# Linux
-if(UNIX AND NOT APPLE)
-  target_link_libraries(test-store-timeseries-number PRIVATE stdc++fs)
-endif()
 
 # ===================================
 # Tests on time series
@@ -49,11 +45,6 @@ add_boost_test(test-time_series
   test_utils_unit
   antares-solver-simulation
   Antares::study)
-
-# Linux
-if(UNIX AND NOT APPLE)
-  target_link_libraries(test-time_series PRIVATE stdc++fs)
-endif()
 
 # ===================================
 # Tests on hydro final reservoir level functions
@@ -69,8 +60,3 @@ add_boost_test(test-hydro_final
   Antares::study
   antares-solver-simulation
   Antares::array)
-
-# Linux
-if(UNIX AND NOT APPLE)
-  target_link_libraries(test-hydro_final PRIVATE stdc++fs)
-endif()

@@ -7,8 +7,3 @@ add_boost_test(test-folder-output
   SRC study.cpp
   INCLUDE "${src_libs_antares_study}"
   LIBS Antares::study)
-
-# Linux
-if(UNIX AND NOT APPLE)
-  target_link_libraries(test-folder-output PRIVATE stdc++fs)
-endif()

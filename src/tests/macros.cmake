@@ -29,4 +29,10 @@ function(add_boost_test)
 
     # Give the IDE some directions to display tests in a "Unit-tests" folder
     set_target_properties(${TEST_NAME} PROPERTIES FOLDER Unit-tests)
+
+    # Linux only. TODO remove ?
+    if(UNIX AND NOT APPLE)
+      target_link_libraries(${TEST_NAME} PRIVATE stdc++fs)
+    endif()
+
 endfunction()
