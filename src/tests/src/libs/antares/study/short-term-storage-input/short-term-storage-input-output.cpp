@@ -24,6 +24,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <absl/strings/internal/str_format/extension.h>
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
@@ -688,6 +689,72 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidRhs)
     std::filesystem::remove_all(testPath);
 }
 
+BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
+{
+    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::create_directory(testPath);
+
+    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    iniFile << R"([constraint1]
+                  cluster=cluster1
+                  variable=injection
+                  operator=less
+                  hours=[1,2,3]
+                  [constraint2]
+                  cluster=cluster1
+                  variable=withdrawal
+                  operator=greater
+                  hours=[5,33])";
+    iniFile.close();
+
+    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    {
+        rhsFile << i * 1.0 << "\n";
+    }
+    rhsFile.close();
+
+    ShortTermStorage::STStorageInput storageInput;
+    ShortTermStorage::STStorageCluster cluster;
+    cluster.id = "cluster1";
+    storageInput.storagesByIndex.push_back(cluster);
+
+    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+
+    BOOST_CHECK_EQUAL(result, true);
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints.size(), 2);
+
+    //------- constraint1 ----------
+    const auto& constraint1 = storageInput.storagesByIndex[0].additional_constraints[0];
+    BOOST_CHECK_EQUAL(constraint1.name, "constraint1");
+    BOOST_CHECK_EQUAL(constraint1.operatorType, "less");
+    BOOST_CHECK_EQUAL(constraint1.variable, "injection");
+    BOOST_CHECK_EQUAL(constraint1.cluster_id, cluster.id);
+    BOOST_CHECK_EQUAL(constraint1.rhs.size(),
+                      HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint1.rhs[0], 0.0);
+    BOOST_CHECK_EQUAL(
+            constraint1.rhs[HOURS_PER_YEAR - 1],
+            HOURS_PER_YEAR - 1);
+
+    //------- constraint2 ----------
+
+    const auto& constraint2 = storageInput.storagesByIndex[0].additional_constraints[1];
+    BOOST_CHECK_EQUAL(constraint2.name, "constraint2");
+    BOOST_CHECK_EQUAL(constraint2.operatorType, "greater");
+    BOOST_CHECK_EQUAL(constraint2.variable, "withdrawal");
+    BOOST_CHECK_EQUAL(constraint2.cluster_id, cluster.id);
+
+    BOOST_CHECK_EQUAL(constraint2.rhs.size(),
+                      HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint2.rhs[0], 0.0);
+    BOOST_CHECK_EQUAL(
+            constraint1.rhs[HOURS_PER_YEAR - 1],
+            0.0);
+
+    std::filesystem::remove_all(testPath);
+}
+
 BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
@@ -799,6 +866,66 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, true);
     BOOST_CHECK(error_msg.empty());
+}
+
+
+BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
+                     bdata::make({"injection", "withdrawal", "netting"}) ^
+                     bdata::make({"less", "equal", "greater"}),
+                     variable,
+                     op)
+{
+    // Define the path for the test data
+    std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
+    std::filesystem::create_directory(testPath);
+
+    // Write the `.ini` file for this test case
+    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    iniFile << "[constraint1]\n";
+    iniFile << "cluster=clustera\n";
+    iniFile << "variable=" << variable << "\n";
+    iniFile << "operator=" << op << "\n";
+    iniFile << "hours=[1,2,3]\n";
+    iniFile.close();
+
+    // Write the `rhs_constraint1.txt` file
+    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    {
+        rhsFile << i * 1.0 << "\n";
+    }
+    rhsFile.close();
+
+    // Setup storage input and cluster
+    ShortTermStorage::STStorageInput storageInput;
+    ShortTermStorage::STStorageCluster cluster;
+    cluster.id = "clustera";
+    storageInput.storagesByIndex.push_back(cluster);
+
+    // Load constraints from the `.ini` file
+    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+
+    // Assertions
+    BOOST_CHECK_EQUAL(result, true);
+
+    // Validate loaded constraints
+    auto& built_cluster = storageInput.storagesByIndex[0];
+    BOOST_REQUIRE_EQUAL(built_cluster.additional_constraints.size(), 1);
+    const auto& loadedConstraint = built_cluster.additional_constraints[0];
+
+    // Check variable, operator type, and rhs values
+    BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
+    BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
+    BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
+
+    int i = 0;
+    do
+    {
+        BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
+        // Check rhs values within a tolerance
+
+        i += HOURS_PER_YEAR / 5;
+    } while (i < HOURS_PER_YEAR);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
