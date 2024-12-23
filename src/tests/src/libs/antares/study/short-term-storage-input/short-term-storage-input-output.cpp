@@ -749,7 +749,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
                       HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraint2.rhs[0], 0.0);
     BOOST_CHECK_EQUAL(
-            constraint1.rhs[HOURS_PER_YEAR - 1],
+            constraint2.rhs[HOURS_PER_YEAR - 1],
             0.0);
 
     std::filesystem::remove_all(testPath);
