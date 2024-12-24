@@ -189,14 +189,6 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests about infinity on BCs RHS
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
-          batch-name: valid-v830
-          os: ${{ env.test-platform }}
-
-      - name: Run tests about infinity on BCs RHS
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
