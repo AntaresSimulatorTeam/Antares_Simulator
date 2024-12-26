@@ -88,13 +88,17 @@ jobs:
       run: |
            export WX_CONFIG=${{env.WX_CONFIG}}
 
-    - name : Install deps with VCPKG
-      run: |
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
-          rm -rf buildtrees packages downloads
-      shell: bash
+    - name: Install VCPKG
+      run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+    - name: Restore vcpkg binary dir from cache
+      id: cache-vcpkg-binary
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+        restore-keys: vcpkg-cache-ubuntu-
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -102,7 +106,6 @@ jobs:
       with:
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
-
 
     - name: Config OR-Tools URL
       run: |
@@ -131,14 +134,12 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-    
 
-    
     - name: Configure
       run: |
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
+           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
            -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
@@ -331,3 +332,11 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.deb
+
+    - name: Cache vcpkg binary dir
+      if: always()
+      id: save-cache-vcpkg-binary
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
