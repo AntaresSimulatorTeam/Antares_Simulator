@@ -31,7 +31,7 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
         builder.greaterThan();
         if (builder.NumberOfVariables() > 1)
         {
-            data.CorrespondanceCntNativesCntOptim[pays]
+            data.CorrespondanceCntNativesCntOptim[pdt]
               .NumeroDeContrainteDesContraintesDeDureeMinDeMarche[cluster]
               = builder.data.nombreDeContraintes;
 
