@@ -580,6 +580,64 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
     BOOST_TEST(new_H2 == expected_H2, boost::test_tools::per_element());
 }
 
+BOOST_FIXTURE_TEST_CASE(spillage_positive_at_hour_0___no_change_at_this_hour, InputFixture<5>)
+{
+    std::ranges::fill(G, 100.);
+    H = {40., 30., 20., 10., 0.};
+    D = {0., 20., 40., 60., 80.};
+    init_level = 500.;
+    capacity = 1000.;
+    // At this stage, DTG_MRG is filled with zeros. Running the algorithm would flatten
+    // H to 20 everywhere : H = {20, 20, 20, 20, 20}
+    // But :
+    S[0] = 1.;
+    // Now, we expect no change for H at hour 0
+    auto [new_H, __, _] = new_remix_hydro(G,
+                                          H,
+                                          D,
+                                          P_max,
+                                          P_min,
+                                          init_level,
+                                          capacity,
+                                          inflows,
+                                          ovf,
+                                          pump,
+                                          S,
+                                          DTG_MRG);
+
+    std::vector<double> expected_H = {40., 15., 15., 15., 15.};
+    BOOST_CHECK(new_H == expected_H);
+}
+
+BOOST_FIXTURE_TEST_CASE(DTG_MRG_positive_on_hour_4___no_change_at_this_hour, InputFixture<5>)
+{
+    std::ranges::fill(G, 100.);
+    H = {40., 30., 20., 10., 0.};
+    D = {0., 20., 40., 60., 80.};
+    init_level = 500.;
+    capacity = 1000.;
+    // At this stage, DTG_MRG is filled with zeros. Running the algorithm would flatten
+    // H to 20 everywhere : H = {20, 20, 20, 20, 20}
+    // But :
+    DTG_MRG[4] = 1.;
+    // Now, we expect no change for H at hour 4
+    auto [new_H, new_D, L] = new_remix_hydro(G,
+                                             H,
+                                             D,
+                                             P_max,
+                                             P_min,
+                                             init_level,
+                                             capacity,
+                                             inflows,
+                                             ovf,
+                                             pump,
+                                             S,
+                                             DTG_MRG);
+
+    std::vector<double> expected_H = {25., 25., 25., 25., 0.};
+    BOOST_CHECK(new_H == expected_H);
+}
+
 // Ideas for building further tests :
 // ================================
 // - Remix hydro algorithm seems symmetrical (if we have input vectors and corresponding output
