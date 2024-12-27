@@ -20,14 +20,7 @@ inputs:
 
 runs:
   using: "composite"
-  steps: 
-  - name: Download & extract antares-deps
-    shell: bash
-    run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
-           tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
-           rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
-
+  steps:
   - name: Download & extract OR-Tools
     shell: bash
     run: |
