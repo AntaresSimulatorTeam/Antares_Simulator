@@ -1,9 +1,5 @@
 name: "Download extract .tgz precompiled libraries"
-description: "Download and extract .tgz precompiled libraries from antares-deps and antares-simulator repository"
 inputs:
-  antares-deps-version:
-    description: 'antares-deps version'
-    required: true
   os:
     description: 'operational system used for github action'
     required: true
