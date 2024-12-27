@@ -87,7 +87,7 @@ jobs:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-          restore-keys: vcpkg-cache-windows-
+          restore-keys: vcpkg-cache-windows-8-8
 
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-zip

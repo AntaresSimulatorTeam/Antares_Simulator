@@ -39,7 +39,7 @@ jobs:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-          restore-keys: vcpkg-cache-ubuntu-
+          restore-keys: vcpkg-cache-ubuntu-8-8
 
       - name: Config OR-Tools URL
         run: |
