@@ -79,15 +79,7 @@ jobs:
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
-        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-ubuntu-
-
-    - name: Read antares-deps version
-      id: antares-deps-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'antares-deps-version.json'
-        prop_path: 'antares_deps_version'
 
     - name: Config OR-Tools URL
       run: |
@@ -96,7 +88,6 @@ jobs:
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
-        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
@@ -114,7 +105,6 @@ jobs:
 
     - name: Init submodule
       run: |
-          git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
     - name: Configure
@@ -126,7 +116,6 @@ jobs:
            -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
-           -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
            -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
