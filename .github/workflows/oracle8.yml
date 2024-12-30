@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - feature/8.8-vcpkg
       - dependabot/*
 
   schedule:
