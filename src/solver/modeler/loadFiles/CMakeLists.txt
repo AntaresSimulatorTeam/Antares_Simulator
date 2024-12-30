@@ -2,7 +2,7 @@ set(SOURCES
         readSystem.cpp
         readLibraries.cpp
         readParameters.cpp
-        loadFiles.cpp
+        handleErrors.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
 )
