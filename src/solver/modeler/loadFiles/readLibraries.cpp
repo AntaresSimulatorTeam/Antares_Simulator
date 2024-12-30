@@ -44,21 +44,12 @@ static Study::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
     }
     catch (const YAML::Exception& e)
     {
-        logs.error() << "Error while parsing this library yaml file: " << filePath;
-        if (!e.mark.is_null())
-        {
-            logs.error() << "Line " << e.mark.line << " column " << e.mark.column;
-        }
-        logs.error() << e.what();
-
+        handleYamlError(e, filePath);
         throw ErrorLoadingYaml(e.what());
     }
     catch (const std::runtime_error& e)
     {
-        logs.error() << "Error while parsing or converting this library yaml file:";
-        logs.error() << filePath;
-        logs.error() << e.what();
-
+        handleRuntimeError(e, filePath);
         throw ErrorLoadingYaml(e.what());
     }
 }
