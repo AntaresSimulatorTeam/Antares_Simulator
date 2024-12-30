@@ -42,6 +42,6 @@ void NetPosition::add(int pdt, int pays)
     namer.UpdateArea(builder.data.NomsDesPays[pays]);
     namer.NetPosition(builder.data.nombreDeContraintes);
 
-    builder.NetPosition(pays, 1.0);
+    builder.NetPosition(pays, -1.0);
     builder.equalTo().build();
 }
