@@ -19,40 +19,29 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/constraints/AreaBalance.h"
+#include "antares/solver/optimisation/constraints/NetPosition.h"
 
-static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-                                    ConstraintBuilder& constraintBuilder)
+void NetPosition::add(int pdt, int pays)
 {
-    for (const auto& storage: shortTermStorageInput)
+    int interco = data.IndexDebutIntercoOrigine[pays];
+    while (interco >= 0)
     {
-        unsigned index = storage.clusterGlobalIndex;
-        constraintBuilder.ShortTermStorageInjection(index, 1.0)
-          .ShortTermStorageWithdrawal(index, -1.0);
+        builder.NTCDirect(interco, 1.0);
+        interco = data.IndexSuivantIntercoOrigine[interco];
     }
-}
 
-void AreaBalance::add(int pdt, int pays)
-{
-    data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]
-      = builder.data.nombreDeContraintes;
+    interco = data.IndexDebutIntercoExtremite[pays];
+    while (interco >= 0)
+    {
+        builder.NTCDirect(interco, -1.0);
+        interco = data.IndexSuivantIntercoExtremite[interco];
+    }
 
     ConstraintNamer namer(builder.data.NomDesContraintes);
     namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
     namer.UpdateArea(builder.data.NomsDesPays[pays]);
-    namer.AreaBalance(builder.data.nombreDeContraintes);
+    namer.NetPosition(builder.data.nombreDeContraintes);
 
-    builder.updateHourWithinWeek(pdt);
-
-    ExportPaliers(data.PaliersThermiquesDuPays[pays], builder);
-    builder.NetPosition(pays, 1)
-      .HydProd(pays, -1.0)
-      .Pumping(pays, 1.0)
-      .PositiveUnsuppliedEnergy(pays, -1.0)
-      .NegativeUnsuppliedEnergy(pays, 1.0);
-
-    shortTermStorageBalance(data.ShortTermStorage[pays], builder);
-
-    builder.equalTo();
-    builder.build();
+    builder.NetPosition(pays, 1.0);
+    builder.equalTo().build();
 }

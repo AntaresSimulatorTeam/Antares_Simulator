@@ -281,6 +281,13 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
     }
 
+    // NetPosition
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    {
+        ProblemeAResoudre->NombreDeVariables += nombreDePasDeTempsPourUneOptimisation;
+        ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
+    }
+
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(problemeHebdo);

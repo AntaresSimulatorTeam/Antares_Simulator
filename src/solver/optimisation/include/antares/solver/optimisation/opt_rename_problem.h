@@ -114,6 +114,7 @@ public:
     void PositiveUnsuppliedEnergy(unsigned int variable);
     void NegativeUnsuppliedEnergy(unsigned int variable);
     void AreaBalance(unsigned int variable);
+    void NetPosition(unsigned int variable);
 
 private:
     void SetAreaVariableName(unsigned int variable,
@@ -133,6 +134,7 @@ public:
                           const std::string& origin,
                           const std::string& destination);
 
+    void NetPosition(unsigned int variable);
     void AreaBalance(unsigned int constraint);
     void FictiveLoads(unsigned int constraint);
     void HydroPower(unsigned int constraint);
