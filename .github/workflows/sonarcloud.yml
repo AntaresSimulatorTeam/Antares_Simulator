@@ -46,7 +46,7 @@ jobs:
             echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
       - name: Install sonar-scanner and build-wrapper
-        uses: SonarSource/sonarcloud-github-c-cpp@v2
+        uses: SonarSource/sonarcloud-github-c-cpp@v3
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -69,7 +69,7 @@ jobs:
           ortools-dir: ${{env.ORTOOLS_DIR}}
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.12
 
