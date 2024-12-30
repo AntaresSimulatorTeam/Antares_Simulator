@@ -33,27 +33,20 @@ namespace Antares::Solver::LoadFiles
 
 ModelerParameters loadParameters(const fs::path& studyPath)
 {
+    std::string filename = "parameters.yml";
     try
     {
-        const std::string paramStr = IO::readFile(studyPath / "parameters.yml");
+        const std::string paramStr = IO::readFile(studyPath / filename);
         return parseModelerParameters(paramStr);
     }
     catch (const YAML::Exception& e)
     {
-        logs.error() << "Error while parsing the yaml parameters file";
-        if (!e.mark.is_null())
-        {
-            logs.error() << "Line " << e.mark.line << " column " << e.mark.column;
-        }
-        logs.error() << e.what();
-
+        handleYamlError(e, filename);
         throw ErrorLoadingYaml(e.what());
     }
     catch (const std::runtime_error& e)
     {
-        logs.error() << "Error while parsing the yaml parameters file:";
-        logs.error() << e.what();
-
+        handleRuntimeError(e, filename);
         throw ErrorLoadingYaml(e.what());
     }
 }

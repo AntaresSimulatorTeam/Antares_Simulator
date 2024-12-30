@@ -19,39 +19,26 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-
-#include <filesystem>
-#include <vector>
-
-#include <yaml-cpp/yaml.h>
-
-#include <antares/solver/modeler/parameters/modelerParameters.h>
-#include <antares/study/system-model/library.h>
-#include <antares/study/system-model/system.h>
+#include <antares/logs/logs.h>
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 
 namespace Antares::Solver::LoadFiles
 {
 
-ModelerParameters loadParameters(const std::filesystem::path& studyPath);
-
-std::vector<Study::SystemModel::Library> loadLibraries(const std::filesystem::path& studyPath);
-
-Study::SystemModel::System loadSystem(const std::filesystem::path& studyPath,
-                                      const std::vector<Study::SystemModel::Library>& libraries);
-
-void handleYamlError(const YAML::Exception& e, const std::string& context);
-
-void handleRuntimeError(const std::runtime_error& e, const std::string& context);
-
-/// Generic error class for all loading errors to catch in the main
-class ErrorLoadingYaml: public std::runtime_error
+void handleYamlError(const YAML::Exception& e, const std::string& context)
 {
-public:
-    explicit ErrorLoadingYaml(const std::string& s):
-        runtime_error(s)
+    logs.error() << "Error while parsing the yaml file: " << context;
+    if (!e.mark.is_null())
     {
+        logs.error() << "Line " << e.mark.line << " column " << e.mark.column;
     }
-};
+    logs.error() << e.what();
+}
+
+void handleRuntimeError(const std::runtime_error& e, const std::string& context)
+{
+    logs.error() << "Error while parsing or converting the file: " << context;
+    logs.error() << e.what();
+}
 
 } // namespace Antares::Solver::LoadFiles
