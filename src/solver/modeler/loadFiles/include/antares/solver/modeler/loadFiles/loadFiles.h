@@ -23,7 +23,6 @@
 
 #include <filesystem>
 #include <vector>
-
 #include <yaml-cpp/yaml.h>
 
 #include <antares/solver/modeler/parameters/modelerParameters.h>

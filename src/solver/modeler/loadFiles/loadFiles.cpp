@@ -19,8 +19,9 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <antares/logs/logs.h>
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
+
+#include <antares/logs/logs.h>
 
 namespace Antares::Solver::LoadFiles
 {
