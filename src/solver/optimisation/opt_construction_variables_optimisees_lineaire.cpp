@@ -86,6 +86,11 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
 
+            // NetPosition
+            ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+            variableManager.NetPosition(pays, pdt) = NombreDeVariables;
+            NombreDeVariables++;
+
             for (const auto& storage: problemeHebdo->ShortTermStorage[pays])
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;

@@ -137,6 +137,8 @@ public:
                                                         int offset = 0,
                                                         int delta = 0);
 
+    ConstraintBuilder& NetPosition(unsigned int index, double coeff);
+
     ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
     ConstraintBuilder& HydProdDown(unsigned int index, double coeff);

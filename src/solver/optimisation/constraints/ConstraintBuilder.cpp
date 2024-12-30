@@ -49,6 +49,12 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::NetPosition(unsigned int index, double coeff)
+{
+    AddVariable(variableManager_.NetPosition(index, hourInWeek_), coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index, double coeff)
 {
     AddVariable(variableManager_.NumberOfDispatchableUnits(index, hourInWeek_), coeff);

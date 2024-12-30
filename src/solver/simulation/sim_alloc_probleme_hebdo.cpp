@@ -157,6 +157,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime.thermalPlantTotalCount, 0);
+        variablesMapping.NumeroDeVariableNetPosition.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
