@@ -22,18 +22,18 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <absl/strings/internal/str_format/extension.h>
 #include <filesystem>
 #include <fstream>
-#include <absl/strings/internal/str_format/extension.h>
 
-#include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include <yuni/io/file.h>
 
 #include "antares/antares/constants.h"
-#include "antares/study/parts/short-term-storage/container.h"
 #include "antares/study/parts/short-term-storage/AdditionalConstraints.h"
+#include "antares/study/parts/short-term-storage/container.h"
 
 using namespace std;
 using namespace Antares::Data;
@@ -492,8 +492,7 @@ BOOST_AUTO_TEST_CASE(Validate_InvalidOperatorType)
 
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, false);
-    BOOST_CHECK_EQUAL(error_msg,
-                      "Invalid operator type. Must be 'less', 'equal', or 'greater'.");
+    BOOST_CHECK_EQUAL(error_msg, "Invalid operator type. Must be 'less', 'equal', or 'greater'.");
 }
 
 BOOST_AUTO_TEST_CASE(Validate_InvalidHours)
@@ -683,8 +682,8 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidRhs)
                       HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].rhs[0], 0.0);
     BOOST_CHECK_EQUAL(
-            storageInput.storagesByIndex[0].additional_constraints[0].rhs[HOURS_PER_YEAR - 1],
-            HOURS_PER_YEAR - 1);
+      storageInput.storagesByIndex[0].additional_constraints[0].rhs[HOURS_PER_YEAR - 1],
+      HOURS_PER_YEAR - 1);
 
     std::filesystem::remove_all(testPath);
 }
@@ -730,12 +729,9 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     BOOST_CHECK_EQUAL(constraint1.operatorType, "less");
     BOOST_CHECK_EQUAL(constraint1.variable, "injection");
     BOOST_CHECK_EQUAL(constraint1.cluster_id, cluster.id);
-    BOOST_CHECK_EQUAL(constraint1.rhs.size(),
-                      HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint1.rhs.size(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraint1.rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(
-            constraint1.rhs[HOURS_PER_YEAR - 1],
-            HOURS_PER_YEAR - 1);
+    BOOST_CHECK_EQUAL(constraint1.rhs[HOURS_PER_YEAR - 1], HOURS_PER_YEAR - 1);
 
     //------- constraint2 ----------
 
@@ -745,12 +741,9 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     BOOST_CHECK_EQUAL(constraint2.variable, "withdrawal");
     BOOST_CHECK_EQUAL(constraint2.cluster_id, cluster.id);
 
-    BOOST_CHECK_EQUAL(constraint2.rhs.size(),
-                      HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraint2.rhs.size(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraint2.rhs[0], 0.0);
-    BOOST_CHECK_EQUAL(
-            constraint2.rhs[HOURS_PER_YEAR - 1],
-            0.0);
+    BOOST_CHECK_EQUAL(constraint2.rhs[HOURS_PER_YEAR - 1], 0.0);
 
     std::filesystem::remove_all(testPath);
 }
@@ -846,8 +839,8 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_IncompleteRhsFile)
 namespace bdata = boost::unit_test::data;
 
 BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
-                     bdata::make({"injection", "withdrawal", "netting"}) ^
-                     bdata::make({"less", "equal", "greater"}),
+                     bdata::make({"injection", "withdrawal", "netting"})
+                       ^ bdata::make({"less", "equal", "greater"}),
                      variable,
                      op)
 {
@@ -859,8 +852,8 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
     // Create constraints with valid hours
     constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{1, 2, 3}});
     constraints.constraints.push_back(ShortTermStorage::SingleAdditionalConstraint{{50, 100, 150}});
-    constraints.constraints.
-            push_back(ShortTermStorage::SingleAdditionalConstraint{{120, 121, 122}});
+    constraints.constraints.push_back(
+      ShortTermStorage::SingleAdditionalConstraint{{120, 121, 122}});
 
     // Validate the constraints
     auto [ok, error_msg] = constraints.validate();
@@ -868,12 +861,12 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
     BOOST_CHECK(error_msg.empty());
 }
 
-
 BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
-                     bdata::make({"injection", "withdrawal", "netting"}) ^
-                     bdata::make({"less", "equal", "greater"}),
+                     bdata::make({"injection", "withdrawal", "netting"})
+                       * bdata::make({"less", "equal", "greater"}) * bdata::make({true, false}),
                      variable,
-                     op)
+                     op,
+                     enabled)
 {
     // Define the path for the test data
     std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
@@ -885,6 +878,8 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     iniFile << "cluster=clustera\n";
     iniFile << "variable=" << variable << "\n";
     iniFile << "operator=" << op << "\n";
+    iniFile << std::boolalpha;
+    iniFile << "enabled=" << enabled << "\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
@@ -904,14 +899,17 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 
     // Load constraints from the `.ini` file
     bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), enabled ? 1 : 0);
 
     // Assertions
     BOOST_CHECK_EQUAL(result, true);
-
     // Validate loaded constraints
     auto& built_cluster = storageInput.storagesByIndex[0];
+
     BOOST_REQUIRE_EQUAL(built_cluster.additional_constraints.size(), 1);
     const auto& loadedConstraint = built_cluster.additional_constraints[0];
+    BOOST_CHECK_EQUAL(loadedConstraint.enabled, enabled);
+    BOOST_CHECK_EQUAL(loadedConstraint.enabledConstraints(), enabled ? 1 : 0);
 
     // Check variable, operator type, and rhs values
     BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
@@ -929,4 +927,3 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-

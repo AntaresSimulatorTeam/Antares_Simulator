@@ -102,6 +102,10 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
                 value.to<std::string>(clusterName);
                 additional_constraints.cluster_id = transformNameIntoID(clusterName);
             }
+            else if (key == "enabled")
+            {
+                value.to<bool>(additional_constraints.enabled);
+            }
             else if (key == "variable")
             {
                 value.to<std::string>(additional_constraints.variable);
@@ -147,7 +151,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
                     {
                         // Add this group to the `hours` vec
                         additional_constraints.constraints.push_back(
-                                {.hours = hourSet, .localIndex = localIndex});
+                          {.hours = hourSet, .localIndex = localIndex});
                         ++localIndex;
                     }
                 }
@@ -168,9 +172,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
 
         auto it = std::ranges::find_if(storagesByIndex,
                                        [&additional_constraints](const STStorageCluster& cluster)
-                                       {
-                                           return cluster.id == additional_constraints.cluster_id;
-                                       });
+                                       { return cluster.id == additional_constraints.cluster_id; });
         if (it == storagesByIndex.end())
         {
             logs.warning() << " from file " << pathIni;
@@ -234,16 +236,16 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
                            0,
                            [](size_t outer_constraint_count, const auto& cluster)
                            {
-                               return outer_constraint_count + std::accumulate(
-                                              cluster.additional_constraints.begin(),
-                                              cluster.additional_constraints.end(),
-                                              0,
-                                              [](size_t inner_constraint_count,
-                                                 const auto& additional_constraints)
-                                              {
-                                                  return inner_constraint_count +
-                                                         additional_constraints.constraints.size();
-                                              });
+                               return outer_constraint_count
+                                      + std::accumulate(
+                                        cluster.additional_constraints.begin(),
+                                        cluster.additional_constraints.end(),
+                                        0,
+                                        [](size_t inner_constraint_count,
+                                           const auto& additional_constraints) {
+                                            return inner_constraint_count
+                                                   + additional_constraints.enabledConstraints();
+                                        });
                            });
 }
 

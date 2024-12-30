@@ -60,15 +60,19 @@ static void importShortTermStorages(
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             toInsert.name = st.properties.name;
-            toInsert.additional_constraints = st.additional_constraints;
-            for (auto& additional_constraints: toInsert.additional_constraints)
+            for (auto& constr: st.additional_constraints)
             {
-                for (auto& [_, globalIndex,__]: additional_constraints.constraints)
+                if (constr.enabled)
                 {
-                    globalIndex = clusterCumulativeConstraintGlobalIndex;
-                    ++clusterCumulativeConstraintGlobalIndex;
+                    for (auto c: constr.constraints)
+                    {
+                        c.globalIndex = clusterCumulativeConstraintGlobalIndex;
+                        ++clusterCumulativeConstraintGlobalIndex;
+                    }
+                    toInsert.additional_constraints.push_back(constr);
                 }
             }
+
             toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct

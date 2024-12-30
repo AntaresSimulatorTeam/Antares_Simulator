@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/study/parts/short-term-storage/AdditionalConstraints.h"
+
 #include <algorithm>
 
 namespace Antares::Data::ShortTermStorage
@@ -47,12 +48,11 @@ AdditionalConstraints::ValidateResult AdditionalConstraints::validate() const
 
     return {true, ""};
 }
+
 bool SingleAdditionalConstraint::isValidHoursRange() const
 {
     // `hours` is a sorted set; begin() gives the smallest and prev(end()) gives the largest.
-    return !hours.empty() && *hours.begin()
-           >= 1 && *std::prev(
-                   hours.end()) <= 168;
+    return !hours.empty() && *hours.begin() >= 1 && *std::prev(hours.end()) <= 168;
 }
 
 bool AdditionalConstraints::isValidHours() const
@@ -60,11 +60,8 @@ bool AdditionalConstraints::isValidHours() const
     return std::ranges::all_of(constraints.begin(),
                                constraints.end(),
                                [](const auto& constraint)
-                               {
-                                   return constraint.isValidHoursRange();
-                               });
+                               { return constraint.isValidHoursRange(); });
 }
-
 
 bool AdditionalConstraints::isValidVariable() const
 {
@@ -74,5 +71,10 @@ bool AdditionalConstraints::isValidVariable() const
 bool AdditionalConstraints::isValidOperatorType() const
 {
     return operatorType == "less" || operatorType == "equal" || operatorType == "greater";
+}
+
+std::size_t AdditionalConstraints::enabledConstraints() const
+{
+    return enabled ? constraints.size() : 0;
 }
 } // namespace Antares::Data::ShortTermStorage
