@@ -44,12 +44,12 @@ static Study::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
     }
     catch (const YAML::Exception& e)
     {
-        handleYamlError(e, filePath);
+        handleYamlError(e, filePath.string());
         throw ErrorLoadingYaml(e.what());
     }
     catch (const std::runtime_error& e)
     {
-        handleRuntimeError(e, filePath);
+        handleRuntimeError(e, filePath.string());
         throw ErrorLoadingYaml(e.what());
     }
 }
