@@ -113,7 +113,7 @@ void fillIfEmpty(std::vector<double>& v, double value)
     {
         v.resize(HOURS_PER_YEAR, value);
     }
-};
+}
 
 void Series::fillDefaultSeriesIfEmpty()
 {
