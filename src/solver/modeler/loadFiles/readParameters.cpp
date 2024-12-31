@@ -41,7 +41,7 @@ ModelerParameters loadParameters(const fs::path& studyPath)
     }
     catch (const std::runtime_error& e)
     {
-        handleRuntimeError(e, filename);
+        logs.error() << "Error while trying to read file parameters.yml";
         throw ErrorLoadingYaml(e.what());
     }
 

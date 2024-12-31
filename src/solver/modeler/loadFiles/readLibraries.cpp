@@ -34,22 +34,37 @@ namespace Antares::Solver::LoadFiles
 
 static Study::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
 {
+    std::string libraryStr;
     try
     {
-        const std::string libraryStr = IO::readFile(filePath);
-        ModelParser::Parser parser;
-        ModelParser::Library libraryObj = parser.parse(libraryStr);
+        libraryStr = IO::readFile(filePath);
+    }
+    catch (const std::runtime_error& e)
+    {
+        logs.error() << "Error while trying to read this library file: " << filePath;
+        throw ErrorLoadingYaml(e.what());
+    }
 
-        return ModelConverter::convert(libraryObj);
+    ModelParser::Parser parser;
+    ModelParser::Library libraryObj;
+
+    try
+    {
+        libraryObj = parser.parse(libraryStr);
     }
     catch (const YAML::Exception& e)
     {
         handleYamlError(e, filePath.string());
         throw ErrorLoadingYaml(e.what());
     }
+
+    try
+    {
+        return ModelConverter::convert(libraryObj);
+    }
     catch (const std::runtime_error& e)
     {
-        handleRuntimeError(e, filePath.string());
+        logs.error() << "Error while converting this library yaml: "<< filePath;
         throw ErrorLoadingYaml(e.what());
     }
 }

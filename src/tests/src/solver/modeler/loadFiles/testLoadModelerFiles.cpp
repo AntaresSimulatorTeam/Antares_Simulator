@@ -29,7 +29,7 @@
 
 #include "files-system.h"
 
-BOOST_AUTO_TEST_SUITE(read_modeler_parameters)
+BOOST_AUTO_TEST_SUITE(test_modeler_files_loading)
 
 namespace fs = std::filesystem;
 
@@ -51,6 +51,15 @@ struct FixtureLoadFile
         fs::remove_all(studyPath);
     }
 };
+
+BOOST_AUTO_TEST_CASE(files_not_existing)
+{
+    fs::path studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::vector<Antares::Study::SystemModel::Library> libraries;
+
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries), std::runtime_error);
+}
 
 BOOST_FIXTURE_TEST_CASE(read_one_lib_treile, FixtureLoadFile)
 {

@@ -78,3 +78,9 @@ BOOST_AUTO_TEST_CASE(parameters_missing)
 
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadParameters(studyPath), std::runtime_error);
 }
+
+BOOST_AUTO_TEST_CASE(file_missing)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadParameters(studyPath), std::runtime_error);
+}

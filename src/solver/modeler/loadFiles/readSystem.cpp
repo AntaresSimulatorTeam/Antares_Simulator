@@ -36,22 +36,36 @@ Study::SystemModel::System loadSystem(const fs::path& studyPath,
                                       const std::vector<Study::SystemModel::Library>& libraries)
 {
     std::string filename = "system.yml";
+    std::string systemStr;
     try
     {
-        const std::string systemStr = IO::readFile(studyPath / "input" / filename);
-        SystemParser::Parser parser;
-        SystemParser::System systemObj = parser.parse(systemStr);
+        systemStr = IO::readFile(studyPath / "input" / filename);
+    }
+    catch (const std::runtime_error& e)
+    {
+        logs.error() << "Error while trying to read file system.yml";
+        throw ErrorLoadingYaml(e.what());
+    }
 
-        return SystemConverter::convert(systemObj, libraries);
+    SystemParser::Parser parser;
+    SystemParser::System systemObj;
+    try
+    {
+        systemObj = parser.parse(systemStr);
     }
     catch (const YAML::Exception& e)
     {
         handleYamlError(e, filename);
         throw ErrorLoadingYaml(e.what());
     }
+
+    try
+    {
+        return SystemConverter::convert(systemObj, libraries);
+    }
     catch (const std::runtime_error& e)
     {
-        handleRuntimeError(e, filename);
+        logs.error() << "Error while converting the system yaml to components";
         throw ErrorLoadingYaml(e.what());
     }
 }

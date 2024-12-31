@@ -35,10 +35,4 @@ void handleYamlError(const YAML::Exception& e, const std::string& context)
     logs.error() << e.what();
 }
 
-void handleRuntimeError(const std::runtime_error& e, const std::string& context)
-{
-    logs.error() << "Error while parsing or converting the file: " << context;
-    logs.error() << e.what();
-}
-
 } // namespace Antares::Solver::LoadFiles

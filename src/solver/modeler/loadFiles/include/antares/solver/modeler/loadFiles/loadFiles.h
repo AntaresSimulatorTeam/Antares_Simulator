@@ -41,8 +41,6 @@ Study::SystemModel::System loadSystem(const std::filesystem::path& studyPath,
 
 void handleYamlError(const YAML::Exception& e, const std::string& context);
 
-void handleRuntimeError(const std::runtime_error& e, const std::string& context);
-
 /// Generic error class for all loading errors to catch in the main
 class ErrorLoadingYaml: public std::runtime_error
 {
