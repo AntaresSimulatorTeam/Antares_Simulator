@@ -26,8 +26,10 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-struct SingleAdditionalConstraint
+
+class SingleAdditionalConstraint
 {
+public:
     std::set<int> hours;
     unsigned int globalIndex = 0;
     unsigned int localIndex = 0;
