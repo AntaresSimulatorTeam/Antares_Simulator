@@ -46,8 +46,11 @@ int main(int argc, const char** argv)
     try
     {
         const auto parameters = LoadFiles::loadParameters(studyPath);
+        logs.info() << "Parameters loaded";
         const auto libraries = LoadFiles::loadLibraries(studyPath);
+        logs.info() << "Libraries loaded";
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
+        logs.info() << "System loaded";
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {

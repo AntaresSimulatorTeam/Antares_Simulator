@@ -84,6 +84,7 @@ std::vector<Study::SystemModel::Library> loadLibraries(const fs::path& studyPath
         }
 
         libraries.push_back(loadSingleLibrary(entry.path()));
+        logs.info() << "Library loaded: " << libraries.back().Id();
     }
 
     return libraries;
