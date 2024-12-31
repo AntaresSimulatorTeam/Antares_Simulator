@@ -115,10 +115,27 @@ static void loadHours(const std::string& hoursStr, AdditionalConstraints& additi
     }
 }
 
-bool STStorageInput::loadAdditionalConstraints(const fs::path& parent_path)
+static bool readRHS(AdditionalConstraints& additional_constraints,
+                    const fs::path& parentPath,
+                    const std::string& sectionName)
+{
+    loadFile(parentPath / ("rhs_" + additional_constraints.name + ".txt"),
+             additional_constraints.rhs);
+    fillIfEmpty(additional_constraints.rhs, 0.0);
+
+    if (auto [ok, error_msg] = additional_constraints.validate(); !ok)
+    {
+        logs.error() << "Invalid constraint in section: " << sectionName;
+        logs.error() << error_msg;
+        return false;
+    }
+    return true;
+}
+
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 {
     IniFile ini;
-    const auto pathIni = parent_path / "additional-constraints.ini";
+    const auto pathIni = parentPath / "additional-constraints.ini";
     if (!ini.open(pathIni, false))
     {
         logs.info() << "There is no: " << pathIni;
@@ -155,15 +172,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parent_path)
             }
         }
 
-        // try to read the rhs
-        loadFile(parent_path / ("rhs_" + additional_constraints.name + ".txt"),
-                 additional_constraints.rhs);
-        fillIfEmpty(additional_constraints.rhs, 0.0);
-
-        if (auto [ok, error_msg] = additional_constraints.validate(); !ok)
+        if (!readRHS(additional_constraints, parentPath, section->name))
         {
-            logs.error() << "Invalid constraint in section: " << section->name;
-            logs.error() << error_msg;
             return false;
         }
 
