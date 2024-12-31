@@ -43,9 +43,9 @@ struct AdditionalConstraints
     std::string operatorType;
     // TODO a lot unused entries
     // std::array<double, HOURS_PER_YEAR> rhs = {};
-    std::vector<double> rhs = {};
+    std::vector<double> rhs;
 
-    std::vector<SingleAdditionalConstraint> constraints = {};
+    std::vector<SingleAdditionalConstraint> constraints;
 
     struct ValidateResult
     {

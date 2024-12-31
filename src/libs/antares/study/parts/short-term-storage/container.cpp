@@ -19,8 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/study/parts/short-term-storage/container.h"
-
 #include <algorithm>
 #include <numeric>
 #include <regex>
@@ -30,6 +28,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
+#include "antares/study/parts/short-term-storage/container.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -76,6 +75,46 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
+static void loadHours(const std::string& hoursStr, AdditionalConstraints& additional_constraints)
+{
+    //
+    // std::stringstream ss(value.c_str());
+    // std::string hour;
+    // while (std::getline(ss, hour, ','))
+    // {
+    //     int hourVal = std::stoi(hour);
+    //     constraint.hours.insert(hourVal);
+    // }
+
+    // Split the `hours` field into multiple groups
+    std::regex groupRegex(R"(\[(.*?)\])");
+    // Match each group enclosed in square brackets
+    auto groupsBegin = std::sregex_iterator(hoursStr.begin(), hoursStr.end(), groupRegex);
+    auto groupsEnd = std::sregex_iterator();
+    unsigned int localIndex = 0;
+    for (auto it = groupsBegin; it != groupsEnd; ++it)
+    {
+        // Extract the contents of the square brackets
+        std::string group = (*it)[1].str();
+        std::stringstream ss(group);
+        std::string hour;
+        std::set<int> hourSet;
+
+        while (std::getline(ss, hour, ','))
+        {
+            int hourVal = std::stoi(hour);
+            hourSet.insert(hourVal);
+        }
+        if (!hourSet.empty())
+        {
+            // Add this group to the `hours` vec
+            additional_constraints.constraints.push_back(
+              {.hours = hourSet, .localIndex = localIndex});
+            ++localIndex;
+        }
+    }
+}
+
 bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
 {
     IniFile ini;
@@ -112,45 +151,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
             }
             else if (key == "hours")
             {
-                //
-                // std::stringstream ss(value.c_str());
-                // std::string hour;
-                // while (std::getline(ss, hour, ','))
-                // {
-                //     int hourVal = std::stoi(hour);
-                //     constraint.hours.insert(hourVal);
-                // }
-
-                // Split the `hours` field into multiple groups
-                std::string hoursStr = value.c_str();
-                std::regex groupRegex(R"(\[(.*?)\])");
-                // Match each group enclosed in square brackets
-                auto groupsBegin = std::sregex_iterator(hoursStr.begin(),
-                                                        hoursStr.end(),
-                                                        groupRegex);
-                auto groupsEnd = std::sregex_iterator();
-                unsigned int localIndex = 0;
-                for (auto it = groupsBegin; it != groupsEnd; ++it)
-                {
-                    // Extract the contents of the square brackets
-                    std::string group = (*it)[1].str();
-                    std::stringstream ss(group);
-                    std::string hour;
-                    std::set<int> hourSet;
-
-                    while (std::getline(ss, hour, ','))
-                    {
-                        int hourVal = std::stoi(hour);
-                        hourSet.insert(hourVal);
-                    }
-                    if (!hourSet.empty())
-                    {
-                        // Add this group to the `hours` vec
-                        additional_constraints.constraints.push_back(
-                          {.hours = hourSet, .localIndex = localIndex});
-                        ++localIndex;
-                    }
-                }
+                loadHours(value.c_str(), additional_constraints);
             }
         }
 
