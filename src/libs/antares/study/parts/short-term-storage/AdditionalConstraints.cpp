@@ -18,13 +18,15 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/study/parts/short-term-storage/AdditionalConstraints.h"
 
 #include <algorithm>
 
+#include "antares/study/parts/short-term-storage/AdditionalConstraints.h"
+
 namespace Antares::Data::ShortTermStorage
 {
-AdditionalConstraints::ValidateResult AdditionalConstraints::validate() const
+
+std::pair<bool, std::string> AdditionalConstraints::validate() const
 {
     if (cluster_id.empty())
     {
