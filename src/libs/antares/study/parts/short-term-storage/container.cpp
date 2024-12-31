@@ -19,6 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/study/parts/short-term-storage/container.h"
+
 #include <algorithm>
 #include <numeric>
 #include <regex>
@@ -28,7 +30,6 @@
 
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
-#include "antares/study/parts/short-term-storage/container.h"
 
 #define SEP Yuni::IO::Separator
 

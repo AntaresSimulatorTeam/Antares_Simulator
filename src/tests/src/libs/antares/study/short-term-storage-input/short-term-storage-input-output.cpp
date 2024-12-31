@@ -565,8 +565,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 
     BOOST_CHECK_EQUAL(result, true);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].name,
-                      "constraint1");
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].name, "constraint1");
 
     std::filesystem::remove_all(testPath);
 }
