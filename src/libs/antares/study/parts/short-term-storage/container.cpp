@@ -115,7 +115,7 @@ static void loadHours(const std::string& hoursStr, AdditionalConstraints& additi
     }
 }
 
-bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parent_path)
 {
     IniFile ini;
     const auto pathIni = parent_path / "additional-constraints.ini";

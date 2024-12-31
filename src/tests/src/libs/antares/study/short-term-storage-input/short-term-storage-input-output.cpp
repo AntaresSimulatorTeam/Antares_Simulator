@@ -543,7 +543,7 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
     BOOST_CHECK(error_msg.empty());
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -561,7 +561,7 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidFile)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints.size(), 1);
@@ -571,7 +571,7 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidFile)
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidHours)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -589,13 +589,13 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidHours)
     cluster.id = "ClusterA";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidHoursFormats)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidHoursFormats)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -613,20 +613,20 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidHoursFormats)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, true);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 {
     ShortTermStorage::STStorageInput storageInput;
-    bool result = storageInput.LoadConstraintsFromIniFile("nonexistent_path");
+    bool result = storageInput.loadAdditionalConstraints("nonexistent_path");
     BOOST_CHECK_EQUAL(result, true);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidConstraint)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -644,13 +644,13 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidConstraint)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidRhs)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -675,7 +675,7 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidRhs)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].rhs.size(),
@@ -718,7 +718,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints.size(), 2);
@@ -748,7 +748,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingRhsFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -766,7 +766,7 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingRhsFile)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
     BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].rhs.size(),
@@ -776,7 +776,7 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingRhsFile)
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MalformedRhsFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -798,13 +798,13 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MalformedRhsFile)
     cluster.id = "ClusterA";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_IncompleteRhsFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -829,7 +829,7 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_IncompleteRhsFile)
     cluster.id = "ClusterA";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
@@ -895,7 +895,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     storageInput.storagesByIndex.push_back(cluster);
 
     // Load constraints from the `.ini` file
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     // Assertions
     BOOST_CHECK_EQUAL(result, true);
