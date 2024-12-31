@@ -72,17 +72,19 @@ SimulationResults APIInternal::execute(
     auto& parameters = study_->parameters;
     parameters.optOptions = optOptions;
 
-    study_->folderOutput = output;
-
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
     auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
+
+    study_->folderOutput = output;
     auto resultWriter = Solver::resultWriterFactory(parameters.resultFormat,
                                                     study_->folderOutput,
                                                     ioQueueService,
                                                     durationCollector);
+    study_->saveAboutTheStudy(*resultWriter);
+
     SimulationObserver simulationObserver;
 
     optimizationInfo = simulationRun(*study_,
