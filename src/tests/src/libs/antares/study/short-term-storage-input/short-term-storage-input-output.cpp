@@ -32,7 +32,7 @@
 #include <yuni/io/file.h>
 
 #include "antares/antares/constants.h"
-#include "antares/study/parts/short-term-storage/AdditionalConstraints.h"
+#include "antares/study/parts/short-term-storage/additionalConstraints.h"
 #include "antares/study/parts/short-term-storage/container.h"
 
 using namespace std;

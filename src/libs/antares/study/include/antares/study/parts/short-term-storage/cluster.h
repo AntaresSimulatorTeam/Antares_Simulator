@@ -26,7 +26,7 @@
 
 #include <antares/inifile/inifile.h>
 
-#include "AdditionalConstraints.h"
+#include "additionalConstraints.h"
 #include "properties.h"
 #include "series.h"
 
