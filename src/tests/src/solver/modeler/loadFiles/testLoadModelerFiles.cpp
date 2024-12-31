@@ -98,6 +98,21 @@ BOOST_FIXTURE_TEST_CASE(incorrect_library, FixtureLoadFile)
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
 }
 
+BOOST_FIXTURE_TEST_CASE(incorrect_library2, FixtureLoadFile)
+{
+    std::ofstream libStream(libraryDirPath / "simple.yml");
+    libStream << R"(
+        library:
+            id: std
+            port-types: []
+                - id: generator
+                  description: A basic generator model
+
+    )";
+    libStream.close();
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
+}
+
 BOOST_FIXTURE_TEST_CASE(read_several_lib_file, FixtureLoadFile)
 {
     std::ofstream libStream(libraryDirPath / "simple.yml");
