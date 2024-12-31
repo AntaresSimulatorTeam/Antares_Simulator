@@ -83,7 +83,12 @@ SimulationResults APIInternal::execute(
                                                     study_->folderOutput,
                                                     ioQueueService,
                                                     durationCollector);
-    study_->saveAboutTheStudy(*resultWriter);
+
+    // In some cases (e.g tests) we don't want to write anything
+    if (!output.empty())
+    {
+        study_->saveAboutTheStudy(*resultWriter);
+    }
 
     SimulationObserver simulationObserver;
 
