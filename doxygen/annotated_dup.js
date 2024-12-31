@@ -498,6 +498,9 @@ var annotated_dup =
             [ "NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ]
           ] ]
         ] ],
+        [ "LoadFiles", null, [
+          [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", null ]
+        ] ],
         [ "ModelConverter", null, [
           [ "ConvertorVisitor", "classAntares_1_1Solver_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1Solver_1_1ModelConverter_1_1ConvertorVisitor" ],
           [ "NoParameterOrVariableWithThisName", "classAntares_1_1Solver_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", null ],
@@ -1417,6 +1420,7 @@ var annotated_dup =
     [ "FixtureFeasibleProblem", "structFixtureFeasibleProblem.html", null ],
     [ "FixtureFull", "structFixtureFull.html", null ],
     [ "FixtureInfeasibleProblem", "structFixtureInfeasibleProblem.html", null ],
+    [ "FixtureLoadFile", "structFixtureLoadFile.html", null ],
     [ "FixtureMultipleTS", "classFixtureMultipleTS.html", null ],
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "FlowDissociation", "classFlowDissociation.html", "classFlowDissociation" ],
