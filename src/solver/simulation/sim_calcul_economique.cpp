@@ -63,7 +63,7 @@ static void importShortTermStorages(
             toInsert.additional_constraints = st.additional_constraints;
             for (auto& additional_constraints: toInsert.additional_constraints)
             {
-                for (auto& [_, globalIndex,__]: additional_constraints.constraints)
+                for (auto& [_, globalIndex, __]: additional_constraints.constraints)
                 {
                     globalIndex = clusterCumulativeConstraintGlobalIndex;
                     ++clusterCumulativeConstraintGlobalIndex;

@@ -147,7 +147,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
                     {
                         // Add this group to the `hours` vec
                         additional_constraints.constraints.push_back(
-                                {.hours = hourSet, .localIndex = localIndex});
+                          {.hours = hourSet, .localIndex = localIndex});
                         ++localIndex;
                     }
                 }
@@ -168,9 +168,7 @@ bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
 
         auto it = std::ranges::find_if(storagesByIndex,
                                        [&additional_constraints](const STStorageCluster& cluster)
-                                       {
-                                           return cluster.id == additional_constraints.cluster_id;
-                                       });
+                                       { return cluster.id == additional_constraints.cluster_id; });
         if (it == storagesByIndex.end())
         {
             logs.warning() << " from file " << pathIni;
@@ -229,22 +227,20 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 
 std::size_t STStorageInput::cumulativeConstraintCount() const
 {
-    return std::accumulate(storagesByIndex.begin(),
-                           storagesByIndex.end(),
-                           0,
-                           [](size_t outer_constraint_count, const auto& cluster)
-                           {
-                               return outer_constraint_count + std::accumulate(
-                                              cluster.additional_constraints.begin(),
-                                              cluster.additional_constraints.end(),
-                                              0,
-                                              [](size_t inner_constraint_count,
-                                                 const auto& additional_constraints)
-                                              {
-                                                  return inner_constraint_count +
-                                                         additional_constraints.constraints.size();
-                                              });
-                           });
+    return std::accumulate(
+      storagesByIndex.begin(),
+      storagesByIndex.end(),
+      0,
+      [](size_t outer_constraint_count, const auto& cluster)
+      {
+          return outer_constraint_count
+                 + std::accumulate(
+                   cluster.additional_constraints.begin(),
+                   cluster.additional_constraints.end(),
+                   0,
+                   [](size_t inner_constraint_count, const auto& additional_constraints)
+                   { return inner_constraint_count + additional_constraints.constraints.size(); });
+      });
 }
 
 std::size_t STStorageInput::count() const

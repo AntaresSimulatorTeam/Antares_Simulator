@@ -1197,8 +1197,8 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             for (const auto& area: areas | std::views::values)
             {
                 fs::path cluster_folder = stsFolder / "clusters" / area->id.c_str();
-                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(cluster_folder) &&
-                      ret;
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(cluster_folder)
+                      && ret;
 
                 const auto constraints_folder = stsFolder / "constraints" / area->id.c_str();
                 ret = area->shortTermStorage.LoadConstraintsFromIniFile(constraints_folder) && ret;
