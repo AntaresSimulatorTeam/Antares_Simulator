@@ -51,6 +51,6 @@ public:
 
     std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
-    std::vector<AdditionalConstraints> additional_constraints;
+    std::vector<AdditionalConstraints> additionalConstraints;
 };
 } // namespace Antares::Data::ShortTermStorage

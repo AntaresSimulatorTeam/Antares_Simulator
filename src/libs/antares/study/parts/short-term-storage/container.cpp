@@ -75,7 +75,7 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
-static void loadHours(const std::string& hoursStr, AdditionalConstraints& additional_constraints)
+static void loadHours(const std::string& hoursStr, AdditionalConstraints& additionalConstraints)
 {
     //
     // std::stringstream ss(value.c_str());
@@ -108,22 +108,22 @@ static void loadHours(const std::string& hoursStr, AdditionalConstraints& additi
         if (!hourSet.empty())
         {
             // Add this group to the `hours` vec
-            additional_constraints.constraints.push_back(
+            additionalConstraints.constraints.push_back(
               {.hours = hourSet, .localIndex = localIndex});
             ++localIndex;
         }
     }
 }
 
-static bool readRHS(AdditionalConstraints& additional_constraints,
+static bool readRHS(AdditionalConstraints& additionalConstraints,
                     const fs::path& parentPath,
                     const std::string& sectionName)
 {
-    loadFile(parentPath / ("rhs_" + additional_constraints.name + ".txt"),
-             additional_constraints.rhs);
-    fillIfEmpty(additional_constraints.rhs, 0.0);
+    loadFile(parentPath / ("rhs_" + additionalConstraints.name + ".txt"),
+             additionalConstraints.rhs);
+    fillIfEmpty(additionalConstraints.rhs, 0.0);
 
-    if (auto [ok, error_msg] = additional_constraints.validate(); !ok)
+    if (auto [ok, error_msg] = additionalConstraints.validate(); !ok)
     {
         logs.error() << "Invalid constraint in section: " << sectionName;
         logs.error() << error_msg;
@@ -144,8 +144,8 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 
     for (auto* section = ini.firstSection; section; section = section->next)
     {
-        AdditionalConstraints additional_constraints;
-        additional_constraints.name = section->name.c_str();
+        AdditionalConstraints additionalConstraints;
+        additionalConstraints.name = section->name.c_str();
         for (auto* property = section->firstProperty; property; property = property->next)
         {
             const std::string key = property->key;
@@ -156,30 +156,30 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 // TODO do i have to transform the name to id? TransformNameIntoID
                 std::string clusterName;
                 value.to<std::string>(clusterName);
-                additional_constraints.cluster_id = transformNameIntoID(clusterName);
+                additionalConstraints.cluster_id = transformNameIntoID(clusterName);
             }
             else if (key == "variable")
             {
-                value.to<std::string>(additional_constraints.variable);
+                value.to<std::string>(additionalConstraints.variable);
             }
             else if (key == "operator")
             {
-                value.to<std::string>(additional_constraints.operatorType);
+                value.to<std::string>(additionalConstraints.operatorType);
             }
             else if (key == "hours")
             {
-                loadHours(value.c_str(), additional_constraints);
+                loadHours(value.c_str(), additionalConstraints);
             }
         }
 
-        if (!readRHS(additional_constraints, parentPath, section->name))
+        if (!readRHS(additionalConstraints, parentPath, section->name))
         {
             return false;
         }
 
         auto it = std::ranges::find_if(storagesByIndex,
-                                       [&additional_constraints](const STStorageCluster& cluster)
-                                       { return cluster.id == additional_constraints.cluster_id; });
+                                       [&additionalConstraints](const STStorageCluster& cluster)
+                                       { return cluster.id == additionalConstraints.cluster_id; });
         if (it == storagesByIndex.end())
         {
             logs.warning() << " from file " << pathIni;
@@ -189,7 +189,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         }
         else
         {
-            it->additional_constraints.push_back(additional_constraints);
+            it->additionalConstraints.push_back(additionalConstraints);
         }
     }
 
@@ -246,11 +246,11 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
       {
           return outer_constraint_count
                  + std::accumulate(
-                   cluster.additional_constraints.begin(),
-                   cluster.additional_constraints.end(),
+                   cluster.additionalConstraints.begin(),
+                   cluster.additionalConstraints.end(),
                    0,
-                   [](size_t inner_constraint_count, const auto& additional_constraints)
-                   { return inner_constraint_count + additional_constraints.constraints.size(); });
+                   [](size_t inner_constraint_count, const auto& additionalConstraints)
+                   { return inner_constraint_count + additionalConstraints.constraints.size(); });
       });
 }
 

@@ -56,9 +56,9 @@ static void shortTermStorageCumulationRHS(
     {
         for (auto& storage: shortTermStorageInput[areaIndex])
         {
-            for (const auto& additional_constraints: storage.additional_constraints)
+            for (const auto& additionalConstraints: storage.additionalConstraints)
             {
-                for (const auto& constraint: additional_constraints.constraints)
+                for (const auto& constraint: additionalConstraints.constraints)
                 {
                     const int cnt = CorrespondancesDesContraintesHebdomadaires
                                       .ShortTermStorageCumulation[constraint.globalIndex];
@@ -67,8 +67,8 @@ static void shortTermStorageCumulationRHS(
                       constraint.hours.begin(),
                       constraint.hours.end(),
                       0.0,
-                      [weekFirstHour, &additional_constraints](const double sum, const int hour)
-                      { return sum + additional_constraints.rhs[weekFirstHour + hour - 1]; });
+                      [weekFirstHour, &additionalConstraints](const double sum, const int hour)
+                      { return sum + additionalConstraints.rhs[weekFirstHour + hour - 1]; });
                 }
             }
         }
