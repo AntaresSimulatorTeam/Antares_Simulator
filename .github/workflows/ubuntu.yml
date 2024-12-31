@@ -170,7 +170,7 @@ jobs:
         run: |
           cd _build
           ctest -C Release --output-on-failure -L "unit|end-to-end"
-      
+
 
       - name: Upload logs for failed tests
         if: ${{ failure() }}
@@ -178,7 +178,7 @@ jobs:
         with:
           name: test-log
           path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
-          
+
       - name: Run tests about infinity on BCs RHS
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -186,7 +186,7 @@ jobs:
           simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-v830
           os: ${{ env.os }}
-          
+
       - name: Run MILP with CBC
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
@@ -197,18 +197,18 @@ jobs:
           os: ${{ env.os }}
 
       - name: Run tests on adequacy patch (CSR)
-        if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+        if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: adequacy-patch-CSR
           os: ${{ env.os }}
-      
+
       - name: Run parallel tests
         if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
         uses: ./.github/workflows/run-tests
         with:
-          simtest-tag: ${{steps.simtest-version.outputs.prop}}
+          simtest-tag: ${{ env.SIMTEST }}
           batch-name: valid-parallel
           os: ${{ env.os }}
           variant: "parallel"
