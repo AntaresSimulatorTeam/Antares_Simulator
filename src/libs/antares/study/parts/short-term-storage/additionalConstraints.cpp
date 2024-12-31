@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <algorithm>
-
 #include "antares/study/parts/short-term-storage/additionalConstraints.h"
+
+#include <algorithm>
 
 namespace Antares::Data::ShortTermStorage
 {
