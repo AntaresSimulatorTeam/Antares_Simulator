@@ -58,7 +58,8 @@ BOOST_AUTO_TEST_CASE(files_not_existing)
     std::vector<Antares::Study::SystemModel::Library> libraries;
 
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
-    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries), std::runtime_error);
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
+                      std::runtime_error);
 }
 
 BOOST_FIXTURE_TEST_CASE(read_one_lib_treile, FixtureLoadFile)

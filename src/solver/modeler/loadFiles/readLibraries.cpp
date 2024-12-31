@@ -64,7 +64,7 @@ static Study::SystemModel::Library loadSingleLibrary(const fs::path& filePath)
     }
     catch (const std::runtime_error& e)
     {
-        logs.error() << "Error while converting this library yaml: "<< filePath;
+        logs.error() << "Error while converting this library yaml: " << filePath;
         throw ErrorLoadingYaml(e.what());
     }
 }
