@@ -39,7 +39,7 @@ static void importShortTermStorages(
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
     int clusterGlobalIndex = 0;
-    int clusterCumulativeConstraintGlobalIndex = 0;
+    int constraintGlobalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
@@ -65,8 +65,8 @@ static void importShortTermStorages(
             {
                 for (auto& [_, globalIndex, __]: additionalConstraints.constraints)
                 {
-                    globalIndex = clusterCumulativeConstraintGlobalIndex;
-                    ++clusterCumulativeConstraintGlobalIndex;
+                    globalIndex = constraintGlobalIndex;
+                    ++constraintGlobalIndex;
                 }
             }
             toInsert.series = st.series;

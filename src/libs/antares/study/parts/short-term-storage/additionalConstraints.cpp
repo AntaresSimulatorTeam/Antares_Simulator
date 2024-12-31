@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/study/parts/short-term-storage/additionalConstraints.h"
-
 #include <algorithm>
+
+#include "antares/study/parts/short-term-storage/additionalConstraints.h"
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -59,8 +59,7 @@ bool SingleAdditionalConstraint::isValidHoursRange() const
 
 bool AdditionalConstraints::isValidHours() const
 {
-    return std::ranges::all_of(constraints.begin(),
-                               constraints.end(),
+    return std::ranges::all_of(constraints,
                                [](const auto& constraint)
                                { return constraint.isValidHoursRange(); });
 }

@@ -535,8 +535,7 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
     ShortTermStorage::SingleAdditionalConstraint constraint2;
     constraint2.hours = {100, 150, 168}; // Valid hours
 
-    constraints.constraints.push_back(constraint1);
-    constraints.constraints.push_back(constraint2);
+    constraints.constraints = {constraint1, constraint2};
 
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, true);
