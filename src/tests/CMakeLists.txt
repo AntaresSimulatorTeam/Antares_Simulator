@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 
 project(unit_tests_antares VERSION 1.0)
 
+if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.29")
+  # FindBoost.cmake was removed with recent versions of CMake
+  cmake_policy(SET CMP0167 NEW)
+endif()
+
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 # Make found targets globally available.
