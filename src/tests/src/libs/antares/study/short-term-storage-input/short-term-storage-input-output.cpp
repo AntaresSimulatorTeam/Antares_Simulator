@@ -22,7 +22,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <absl/strings/internal/str_format/extension.h>
 #include <filesystem>
 #include <fstream>
 
