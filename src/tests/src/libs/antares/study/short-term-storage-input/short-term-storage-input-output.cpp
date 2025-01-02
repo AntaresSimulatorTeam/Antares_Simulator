@@ -805,7 +805,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 
     std::ofstream iniFile(testPath / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=ClusterA\n";
+    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -817,12 +817,14 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 
     ShortTermStorage::STStorageInput storageInput;
     ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "ClusterA";
+    cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
-
+    /*"Error while reading rhs file: " << "rhs_" << additionalConstraints.name
+    <<
+    ".txt";*/
     std::filesystem::remove_all(testPath);
 }
 
@@ -833,7 +835,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 
     std::ofstream iniFile(testPath / "additional-constraints.ini");
     iniFile << "[constraint1]\n";
-    iniFile << "cluster=ClusterA\n";
+    iniFile << "cluster=cluster1\n";
     iniFile << "variable=injection\n";
     iniFile << "operator=less\n";
     iniFile << "hours=[1,2,3]\n";
@@ -848,7 +850,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 
     ShortTermStorage::STStorageInput storageInput;
     ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "ClusterA";
+    cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
     bool result = storageInput.loadAdditionalConstraints(testPath);
