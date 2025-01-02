@@ -470,6 +470,14 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
         }
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        {
+            int var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtHebdo]
+                        .NumeroDeVariableNetPosition[pays];
+            double* adresseDuResultat = &(
+              problemeHebdo->ResultatsHoraires[pays].NetPositionHoraire[pdtHebdo]);
+            AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
+        }
     }
 
     setBoundsForUnsuppliedEnergy(problemeHebdo,
