@@ -130,20 +130,20 @@ void ShortTermStorageCumulation::add(int pays)
 
     for (const auto& storage: data.ShortTermStorage[pays])
     {
-        for (const auto& additional_constraints: storage.additional_constraints)
+        for (const auto& additionalConstraints: storage.additionalConstraints)
         {
             // sum (var[h]) sign rhs, h in list provided by user where:
             // var = injection for InjectionCumulationConstraint
             // var = withdrawal for WithdrawalCumulationConstraint
             // var = injectionEfficiency * injection - withdrawalEfficiency * withdrawal for Netting
             auto constraintHelper = cumulationConstraintFromVariable(
-              additional_constraints.variable);
-            for (const auto& [hours, globalIndex, localIndex]: additional_constraints.constraints)
+              additionalConstraints.variable);
+            for (const auto& [hours, globalIndex, localIndex]: additionalConstraints.constraints)
             {
                 namer.ShortTermStorageCumulation(constraintHelper->name(),
                                                  builder.data.nombreDeContraintes,
                                                  storage.name,
-                                                 additional_constraints.name + "_"
+                                                 additionalConstraints.name + "_"
                                                    + std::to_string(localIndex));
                 const auto index = storage.clusterGlobalIndex;
                 data.CorrespondanceCntNativesCntOptimHebdomadaires
@@ -155,7 +155,7 @@ void ShortTermStorageCumulation::add(int pays)
                     builder.updateHourWithinWeek(hour - 1);
                     constraintHelper->build(builder, index, storage);
                 }
-                builder.SetOperator(ConvertSense(additional_constraints.operatorType)).build();
+                builder.SetOperator(ConvertSense(additionalConstraints.operatorType)).build();
             }
         }
     }

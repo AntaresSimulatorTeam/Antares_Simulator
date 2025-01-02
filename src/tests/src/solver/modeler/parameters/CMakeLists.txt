@@ -1,14 +1,7 @@
-# Zip writer
-add_executable(parse-parameters testParametersParsing.cpp)
+include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
-target_link_libraries(parse-parameters
-        PRIVATE
-        Boost::unit_test_framework
-        modeler-parameters
-        test_utils_unit
-)
-
-set_target_properties(parse-parameters PROPERTIES FOLDER Unit-tests/test-writer)
-
-add_test(NAME parse-parameters COMMAND parse-parameters)
-set_tests_properties(parse-parameters PROPERTIES LABELS unit)
+add_boost_test(parse-parameters
+  SRC testParametersParsing.cpp
+  LIBS
+  modeler-parameters
+  test_utils_unit)

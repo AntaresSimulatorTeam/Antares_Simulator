@@ -18,7 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/study/parts/short-term-storage/AdditionalConstraints.h"
+
+#include "antares/study/parts/short-term-storage/additionalConstraints.h"
 
 #include <algorithm>
 
@@ -57,8 +58,7 @@ bool SingleAdditionalConstraint::isValidHoursRange() const
 
 bool AdditionalConstraints::isValidHours() const
 {
-    return std::ranges::all_of(constraints.begin(),
-                               constraints.end(),
+    return std::ranges::all_of(constraints,
                                [](const auto& constraint)
                                { return constraint.isValidHoursRange(); });
 }

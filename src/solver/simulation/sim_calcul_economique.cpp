@@ -39,7 +39,7 @@ static void importShortTermStorages(
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
     int clusterGlobalIndex = 0;
-    int clusterCumulativeConstraintGlobalIndex = 0;
+    int constraintGlobalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
@@ -60,7 +60,7 @@ static void importShortTermStorages(
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             toInsert.name = st.properties.name;
-            for (auto& constr: st.additional_constraints)
+            for (auto& constr: st.additionalConstraints)
             {
                 if (constr.enabled)
                 {
@@ -69,7 +69,7 @@ static void importShortTermStorages(
                         c.globalIndex = clusterCumulativeConstraintGlobalIndex;
                         ++clusterCumulativeConstraintGlobalIndex;
                     }
-                    toInsert.additional_constraints.push_back(constr);
+                    toInsert.additionalConstraints.push_back(constr);
                 }
             }
 

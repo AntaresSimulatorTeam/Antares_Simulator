@@ -245,12 +245,12 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                     ProblemeAResoudre->NombreDeContraintes
                       += 2 * nombreDePasDeTempsPourUneOptimisation;
                 }
-                if (!storage.additional_constraints.empty())
+                if (!storage.additionalConstraints.empty())
                 {
-                    for (const auto& additional_constraints: storage.additional_constraints)
+                    for (const auto& additionalConstraints: storage.additionalConstraints)
                     {
-                        ProblemeAResoudre->NombreDeContraintes += additional_constraints.constraints
-                                                                    .size();
+                        ProblemeAResoudre->NombreDeContraintes += additionalConstraints
+                                                                    .enabledConstraints();
                     }
                 }
             }

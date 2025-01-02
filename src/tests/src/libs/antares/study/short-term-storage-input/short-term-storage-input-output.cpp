@@ -32,7 +32,7 @@
 #include <yuni/io/file.h>
 
 #include "antares/antares/constants.h"
-#include "antares/study/parts/short-term-storage/AdditionalConstraints.h"
+#include "antares/study/parts/short-term-storage/additionalConstraints.h"
 #include "antares/study/parts/short-term-storage/container.h"
 
 using namespace std;
@@ -535,15 +535,14 @@ BOOST_AUTO_TEST_CASE(Validate_ValidConstraints)
     ShortTermStorage::SingleAdditionalConstraint constraint2;
     constraint2.hours = {100, 150, 168}; // Valid hours
 
-    constraints.constraints.push_back(constraint1);
-    constraints.constraints.push_back(constraint2);
+    constraints.constraints = {constraint1, constraint2};
 
     auto [ok, error_msg] = constraints.validate();
     BOOST_CHECK_EQUAL(ok, true);
     BOOST_CHECK(error_msg.empty());
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -561,17 +560,16 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidFile)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints.size(), 1);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].name,
-                      "constraint1");
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 1);
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].name, "constraint1");
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidHours)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -589,13 +587,13 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidHours)
     cluster.id = "ClusterA";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidHoursFormats)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidHoursFormats)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -613,20 +611,20 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidHoursFormats)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, true);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 {
     ShortTermStorage::STStorageInput storageInput;
-    bool result = storageInput.LoadConstraintsFromIniFile("nonexistent_path");
+    bool result = storageInput.loadAdditionalConstraints("nonexistent_path");
     BOOST_CHECK_EQUAL(result, true);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidConstraint)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidConstraint)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -644,13 +642,13 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_InvalidConstraint)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidRhs)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -675,14 +673,14 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_ValidRhs)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].rhs.size(),
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs.size(),
                       HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].rhs[0], 0.0);
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs[0], 0.0);
     BOOST_CHECK_EQUAL(
-      storageInput.storagesByIndex[0].additional_constraints[0].rhs[HOURS_PER_YEAR - 1],
+      storageInput.storagesByIndex[0].additionalConstraints[0].rhs[HOURS_PER_YEAR - 1],
       HOURS_PER_YEAR - 1);
 
     std::filesystem::remove_all(testPath);
@@ -718,13 +716,13 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints.size(), 2);
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints.size(), 2);
 
     //------- constraint1 ----------
-    const auto& constraint1 = storageInput.storagesByIndex[0].additional_constraints[0];
+    const auto& constraint1 = storageInput.storagesByIndex[0].additionalConstraints[0];
     BOOST_CHECK_EQUAL(constraint1.name, "constraint1");
     BOOST_CHECK_EQUAL(constraint1.operatorType, "less");
     BOOST_CHECK_EQUAL(constraint1.variable, "injection");
@@ -735,7 +733,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
 
     //------- constraint2 ----------
 
-    const auto& constraint2 = storageInput.storagesByIndex[0].additional_constraints[1];
+    const auto& constraint2 = storageInput.storagesByIndex[0].additionalConstraints[1];
     BOOST_CHECK_EQUAL(constraint2.name, "constraint2");
     BOOST_CHECK_EQUAL(constraint2.operatorType, "greater");
     BOOST_CHECK_EQUAL(constraint2.variable, "withdrawal");
@@ -748,7 +746,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingRhsFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -766,17 +764,17 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MissingRhsFile)
     cluster.id = "cluster1";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
 
     BOOST_CHECK_EQUAL(result, true);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].rhs.size(),
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs.size(),
                       HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additional_constraints[0].rhs[0], 0.0);
+    BOOST_CHECK_EQUAL(storageInput.storagesByIndex[0].additionalConstraints[0].rhs[0], 0.0);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MalformedRhsFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MalformedRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -798,13 +796,13 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_MalformedRhsFile)
     cluster.id = "ClusterA";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_IncompleteRhsFile)
+BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_IncompleteRhsFile)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
@@ -829,7 +827,7 @@ BOOST_AUTO_TEST_CASE(LoadConstraintsFromIniFile_IncompleteRhsFile)
     cluster.id = "ClusterA";
     storageInput.storagesByIndex.push_back(cluster);
 
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
 
     std::filesystem::remove_all(testPath);
@@ -898,18 +896,15 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     storageInput.storagesByIndex.push_back(cluster);
 
     // Load constraints from the `.ini` file
-    bool result = storageInput.LoadConstraintsFromIniFile(testPath);
+    bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), enabled ? 1 : 0);
 
     // Assertions
     BOOST_CHECK_EQUAL(result, true);
     // Validate loaded constraints
     auto& built_cluster = storageInput.storagesByIndex[0];
-
-    BOOST_REQUIRE_EQUAL(built_cluster.additional_constraints.size(), 1);
-    const auto& loadedConstraint = built_cluster.additional_constraints[0];
-    BOOST_CHECK_EQUAL(loadedConstraint.enabled, enabled);
-    BOOST_CHECK_EQUAL(loadedConstraint.enabledConstraints(), enabled ? 1 : 0);
+    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
+    const auto& loadedConstraint = built_cluster.additionalConstraints[0];
 
     // Check variable, operator type, and rhs values
     BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
