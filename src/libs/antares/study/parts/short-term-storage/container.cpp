@@ -141,7 +141,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             }
             else if (key == "enabled")
             {
-                value.to<bool>(additional_constraints.enabled);
+                value.to<bool>(additionalConstraints.enabled);
             }
             else if (key == "variable")
             {

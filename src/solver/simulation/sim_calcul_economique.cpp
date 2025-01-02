@@ -60,16 +60,17 @@ static void importShortTermStorages(
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             toInsert.name = st.properties.name;
-            for (auto& constr: st.additionalConstraints)
+            for (const auto& constraint: st.additionalConstraints)
             {
-                if (constr.enabled)
+                if (constraint.enabled)
                 {
-                    for (auto& c: constr.constraints)
+                    auto newConstraint = constraint;
+                    for (auto& c: newConstraint.constraints)
                     {
-                        c.globalIndex = clusterCumulativeConstraintGlobalIndex;
-                        ++clusterCumulativeConstraintGlobalIndex;
+                        c.globalIndex = constraintGlobalIndex;
+                        ++constraintGlobalIndex;
                     }
-                    toInsert.additionalConstraints.push_back(constr);
+                    toInsert.additionalConstraints.push_back(std::move(newConstraint));
                 }
             }
 
