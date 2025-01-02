@@ -929,22 +929,33 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     BOOST_CHECK_EQUAL(result, true);
     // Validate loaded constraints
     auto& built_cluster = storageInput.storagesByIndex[0];
-    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
-    const auto& loadedConstraint = built_cluster.additionalConstraints[0];
-
-    // Check variable, operator type, and rhs values
-    BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
-    BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
-    BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
-
-    int i = 0;
-    do
+    if (enabled)
     {
-        BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
-        // Check rhs values within a tolerance
+        BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
+    }
+    else
+    {
+        BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
+    }
 
-        i += HOURS_PER_YEAR / 5;
-    } while (i < HOURS_PER_YEAR);
+    if (enabled)
+    {
+        const auto& loadedConstraint = built_cluster.additionalConstraints[0];
+
+        // Check variable, operator type, and rhs values
+        BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
+        BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
+        BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
+
+        int i = 0;
+        do
+        {
+            BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
+            // Check rhs values within a tolerance
+
+            i += HOURS_PER_YEAR / 5;
+        } while (i < HOURS_PER_YEAR);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
