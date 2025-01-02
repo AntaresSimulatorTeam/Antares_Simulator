@@ -887,10 +887,9 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
 
 BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
                      bdata::make({"injection", "withdrawal", "netting"})
-                       * bdata::make({"less", "equal", "greater"}) * bdata::make({true, false}),
+                       * bdata::make({"less", "equal", "greater"}),
                      variable,
-                     op,
-                     enabled)
+                     op)
 {
     // Define the path for the test data
     std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
@@ -902,8 +901,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     iniFile << "cluster=clustera\n";
     iniFile << "variable=" << variable << "\n";
     iniFile << "operator=" << op << "\n";
-    iniFile << std::boolalpha;
-    iniFile << "enabled=" << enabled << "\n";
+    iniFile << "enabled=true\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
@@ -923,39 +921,70 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 
     // Load constraints from the `.ini` file
     bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), enabled ? 1 : 0);
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
 
     // Assertions
     BOOST_CHECK_EQUAL(result, true);
     // Validate loaded constraints
     auto& built_cluster = storageInput.storagesByIndex[0];
-    if (enabled)
+    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
+
+    const auto& loadedConstraint = built_cluster.additionalConstraints[0];
+
+    // Check variable, operator type, and rhs values
+    BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
+    BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
+    BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
+
+    int i = 0;
+    do
     {
-        BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
-    }
-    else
+        BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
+        // Check rhs values within a tolerance
+
+        i += HOURS_PER_YEAR / 5;
+    } while (i < HOURS_PER_YEAR);
+}
+
+BOOST_AUTO_TEST_CASE(Load_disabled)
+{
+    // Define the path for the test data
+    std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
+    std::filesystem::create_directory(testPath);
+
+    // Write the `.ini` file for this test case
+    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    iniFile << "[constraint1]\n";
+    iniFile << "cluster=clustera\n";
+    iniFile << "variable=injection\n";
+    iniFile << "operator=less\n";
+    iniFile << "enabled=false\n";
+    iniFile << "hours=[1,2,3]\n";
+    iniFile.close();
+
+    // Write the `rhs_constraint1.txt` file
+    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
+    for (int i = 0; i < HOURS_PER_YEAR; ++i)
     {
-        BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
+        rhsFile << i * 1.0 << "\n";
     }
+    rhsFile.close();
 
-    if (enabled)
-    {
-        const auto& loadedConstraint = built_cluster.additionalConstraints[0];
+    // Setup storage input and cluster
+    ShortTermStorage::STStorageInput storageInput;
+    ShortTermStorage::STStorageCluster cluster;
+    cluster.id = "clustera";
+    storageInput.storagesByIndex.push_back(cluster);
 
-        // Check variable, operator type, and rhs values
-        BOOST_CHECK_EQUAL(loadedConstraint.variable, variable);
-        BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
-        BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
+    // Load constraints from the `.ini` file
+    bool result = storageInput.loadAdditionalConstraints(testPath);
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 0);
 
-        int i = 0;
-        do
-        {
-            BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
-            // Check rhs values within a tolerance
-
-            i += HOURS_PER_YEAR / 5;
-        } while (i < HOURS_PER_YEAR);
-    }
+    // Assertions
+    BOOST_CHECK_EQUAL(result, true);
+    // Validate loaded constraints
+    auto& built_cluster = storageInput.storagesByIndex[0];
+    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
