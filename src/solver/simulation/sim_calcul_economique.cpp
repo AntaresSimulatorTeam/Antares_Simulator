@@ -64,7 +64,7 @@ static void importShortTermStorages(
             {
                 if (constr.enabled)
                 {
-                    for (auto c: constr.constraints)
+                    for (auto& c: constr.constraints)
                     {
                         c.globalIndex = clusterCumulativeConstraintGlobalIndex;
                         ++clusterCumulativeConstraintGlobalIndex;
