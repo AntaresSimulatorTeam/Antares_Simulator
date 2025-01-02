@@ -961,13 +961,6 @@ BOOST_AUTO_TEST_CASE(Load_disabled)
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-    // Write the `rhs_constraint1.txt` file
-    std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
-    {
-        rhsFile << i * 1.0 << "\n";
-    }
-    rhsFile.close();
 
     // Setup storage input and cluster
     ShortTermStorage::STStorageInput storageInput;
