@@ -9,7 +9,7 @@ function(add_boost_test)
     set(options "")
     set(oneValueArgs)
     set(multiValueArgs SRC LIBS INCLUDE)
-    cmake_parse_arguments(PARSE_ARGV 0 arg
+    cmake_parse_arguments(PARSE_ARGV 1 arg
         "${options}" "${oneValueArgs}" "${multiValueArgs}")
     # Bypass cmake_parse_arguments for the 1st argument
     set(TEST_NAME ${ARGV0})
@@ -29,10 +29,4 @@ function(add_boost_test)
 
     # Give the IDE some directions to display tests in a "Unit-tests" folder
     set_target_properties(${TEST_NAME} PROPERTIES FOLDER Unit-tests)
-
-    # Linux only. TODO remove ?
-    if(UNIX AND NOT APPLE)
-      target_link_libraries(${TEST_NAME} PRIVATE stdc++fs)
-    endif()
-
 endfunction()
