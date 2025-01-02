@@ -25,8 +25,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
-std::pair<bool, std::string> AdditionalConstraints::validate() const
+AdditionalConstraints::ValidateResult AdditionalConstraints::validate() const
 {
     if (cluster_id.empty())
     {

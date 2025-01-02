@@ -49,7 +49,13 @@ struct AdditionalConstraints
 
     std::vector<SingleAdditionalConstraint> constraints;
 
-    std::pair<bool, std::string> validate() const;
+    struct ValidateResult
+    {
+        bool ok;
+        std::string error_msg;
+    };
+
+    ValidateResult validate() const;
 
 private:
     bool isValidVariable() const;

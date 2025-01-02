@@ -116,21 +116,12 @@ static void loadHours(const std::string& hoursStr, AdditionalConstraints& additi
     }
 }
 
-static bool readRHS(AdditionalConstraints& additionalConstraints,
-                    const fs::path& parentPath,
-                    const std::string& sectionName)
+static void readRHS(AdditionalConstraints& additionalConstraints,
+                    const fs::path& parentPath)
 {
     loadFile(parentPath / ("rhs_" + additionalConstraints.name + ".txt"),
              additionalConstraints.rhs);
     fillIfEmpty(additionalConstraints.rhs, 0.0);
-
-    if (auto [ok, error_msg] = additionalConstraints.validate(); !ok)
-    {
-        logs.error() << "Invalid constraint in section: " << sectionName;
-        logs.error() << error_msg;
-        return false;
-    }
-    return true;
 }
 
 bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
@@ -173,8 +164,11 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             }
         }
 
-        if (!readRHS(additionalConstraints, parentPath, section->name))
+        readRHS(additionalConstraints, parentPath);
+        if (auto [ok, error_msg] = additionalConstraints.validate(); !ok)
         {
+            logs.error() << "Invalid constraint in section: " << section->name;
+            logs.error() << error_msg;
             return false;
         }
 
