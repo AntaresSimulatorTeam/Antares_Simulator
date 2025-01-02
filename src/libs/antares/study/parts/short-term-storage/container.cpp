@@ -78,15 +78,6 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
 
 static void loadHours(const std::string& hoursStr, AdditionalConstraints& additionalConstraints)
 {
-    //
-    // std::stringstream ss(value.c_str());
-    // std::string hour;
-    // while (std::getline(ss, hour, ','))
-    // {
-    //     int hourVal = std::stoi(hour);
-    //     constraint.hours.insert(hourVal);
-    // }
-
     // Split the `hours` field into multiple groups
     std::regex groupRegex(R"(\[(.*?)\])");
     // Match each group enclosed in square brackets
@@ -145,7 +136,6 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
 
             if (key == "cluster")
             {
-                // TODO do i have to transform the name to id? TransformNameIntoID
                 std::string clusterName;
                 value.to<std::string>(clusterName);
                 additionalConstraints.cluster_id = transformNameIntoID(clusterName);
