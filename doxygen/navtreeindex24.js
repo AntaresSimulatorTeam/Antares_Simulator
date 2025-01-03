@@ -124,7 +124,6 @@ var NAVTREEINDEX24 =
 "structAntares_1_1API_1_1Error.html":[9,0,0,1,1],
 "structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93":[9,0,0,1,1,0],
 "structAntares_1_1API_1_1SimulationResults.html":[9,0,0,1,3],
-"structAntares_1_1API_1_1SimulationResults.html#a0856074454274106ac8e677a9093f029":[9,0,0,1,3,2],
 "structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726":[9,0,0,1,3,0],
 "structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89":[9,0,0,1,3,1],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CheckMinUpDownTime.html":[9,0,0,2,0,0,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[9,0,0,13,11,0,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[9,0,0,13,11,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[9,0,0,13,11,0,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[9,0,0,13,11,0,2,1]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[9,0,0,13,11,0,2,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[9,0,0,13,11,0,3]
 };

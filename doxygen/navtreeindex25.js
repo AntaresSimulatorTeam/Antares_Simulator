@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[9,0,0,13,11,0,3],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[9,0,0,13,11,0,3,1],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[9,0,0,13,11,0,3,0],
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,13,11,7,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX25 =
 "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[9,0,0,13,11,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,13,11,13,0],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,13,11,14],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,13,11,15]
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,13,11,15],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[9,0,0,13,11,16]
 };
