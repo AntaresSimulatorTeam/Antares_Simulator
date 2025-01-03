@@ -72,4 +72,9 @@ bool AdditionalConstraints::isValidOperatorType() const
 {
     return operatorType == "less" || operatorType == "equal" || operatorType == "greater";
 }
+
+std::size_t AdditionalConstraints::enabledConstraints() const
+{
+    return enabled ? constraints.size() : 0;
+}
 } // namespace Antares::Data::ShortTermStorage

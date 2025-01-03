@@ -107,12 +107,13 @@ static void loadHours(const std::string& hoursStr, AdditionalConstraints& additi
     }
 }
 
-static bool readRHS(AdditionalConstraints& additionalConstraints,
-                    const fs::path& rhsPath)
+static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
 {
-    const auto ret = loadFile(rhsPath,
-                              additionalConstraints.rhs);
-    if (ret) { fillIfEmpty(additionalConstraints.rhs, 0.0); }
+    const auto ret = loadFile(rhsPath, additionalConstraints.rhs);
+    if (ret)
+    {
+        fillIfEmpty(additionalConstraints.rhs, 0.0);
+    }
     return ret;
 }
 
@@ -141,6 +142,10 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 value.to<std::string>(clusterName);
                 additionalConstraints.cluster_id = transformNameIntoID(clusterName);
             }
+            else if (key == "enabled")
+            {
+                value.to<bool>(additionalConstraints.enabled);
+            }
             else if (key == "variable")
             {
                 value.to<std::string>(additionalConstraints.variable);
@@ -155,13 +160,19 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             }
         }
 
-        if (const auto rhsPath = parentPath / (
-                                     "rhs_" + additionalConstraints.name
-                                     + ".txt"); !readRHS(additionalConstraints, rhsPath))
+        // We don't want load RHS and link the STS time if the constraint is disabled
+        if (!additionalConstraints.enabled)
+        {
+            return true;
+        }
+
+        if (const auto rhsPath = parentPath / ("rhs_" + additionalConstraints.name + ".txt");
+            !readRHS(additionalConstraints, rhsPath))
         {
             logs.error() << "Error while reading rhs file: " << rhsPath;
             return false;
         }
+
         if (auto [ok, error_msg] = additionalConstraints.validate(); !ok)
         {
             logs.error() << "Invalid constraint in section: " << section->name;
@@ -242,7 +253,7 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
                    cluster.additionalConstraints.end(),
                    0,
                    [](size_t inner_constraint_count, const auto& additionalConstraints)
-                   { return inner_constraint_count + additionalConstraints.constraints.size(); });
+                   { return inner_constraint_count + additionalConstraints.enabledConstraints(); });
       });
 }
 

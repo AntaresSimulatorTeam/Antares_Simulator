@@ -886,7 +886,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinations,
 
 BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
                      bdata::make({"injection", "withdrawal", "netting"})
-                       ^ bdata::make({"less", "equal", "greater"}),
+                       * bdata::make({"less", "equal", "greater"}),
                      variable,
                      op)
 {
@@ -900,6 +900,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     iniFile << "cluster=clustera\n";
     iniFile << "variable=" << variable << "\n";
     iniFile << "operator=" << op << "\n";
+    iniFile << "enabled=true\n";
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
@@ -919,13 +920,14 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 
     // Load constraints from the `.ini` file
     bool result = storageInput.loadAdditionalConstraints(testPath);
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 1);
 
     // Assertions
     BOOST_CHECK_EQUAL(result, true);
-
     // Validate loaded constraints
     auto& built_cluster = storageInput.storagesByIndex[0];
     BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 1);
+
     const auto& loadedConstraint = built_cluster.additionalConstraints[0];
 
     // Check variable, operator type, and rhs values
@@ -941,6 +943,40 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 
         i += HOURS_PER_YEAR / 5;
     } while (i < HOURS_PER_YEAR);
+}
+
+BOOST_AUTO_TEST_CASE(Load_disabled)
+{
+    // Define the path for the test data
+    std::filesystem::path testPath = std::filesystem::temp_directory_path() / "test_data";
+    std::filesystem::create_directory(testPath);
+
+    // Write the `.ini` file for this test case
+    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    iniFile << "[constraint1]\n";
+    iniFile << "cluster=clustera\n";
+    iniFile << "variable=injection\n";
+    iniFile << "operator=less\n";
+    iniFile << "enabled=false\n";
+    iniFile << "hours=[1,2,3]\n";
+    iniFile.close();
+
+
+    // Setup storage input and cluster
+    ShortTermStorage::STStorageInput storageInput;
+    ShortTermStorage::STStorageCluster cluster;
+    cluster.id = "clustera";
+    storageInput.storagesByIndex.push_back(cluster);
+
+    // Load constraints from the `.ini` file
+    bool result = storageInput.loadAdditionalConstraints(testPath);
+    BOOST_CHECK_EQUAL(storageInput.cumulativeConstraintCount(), 0);
+
+    // Assertions
+    BOOST_CHECK_EQUAL(result, true);
+    // Validate loaded constraints
+    auto& built_cluster = storageInput.storagesByIndex[0];
+    BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

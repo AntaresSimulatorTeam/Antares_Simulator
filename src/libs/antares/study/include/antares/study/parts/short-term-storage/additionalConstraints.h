@@ -33,7 +33,6 @@ public:
     std::set<int> hours;
     unsigned int globalIndex = 0;
     unsigned int localIndex = 0;
-
     bool isValidHoursRange() const;
 };
 
@@ -43,6 +42,7 @@ struct AdditionalConstraints
     std::string cluster_id;
     std::string variable;
     std::string operatorType;
+    bool enabled = true;
     // TODO a lot unused entries
     // std::array<double, HOURS_PER_YEAR> rhs = {};
     std::vector<double> rhs;
@@ -54,6 +54,9 @@ struct AdditionalConstraints
         bool ok;
         std::string error_msg;
     };
+
+    // Number of enabled constraints
+    std::size_t enabledConstraints() const;
 
     ValidateResult validate() const;
 
