@@ -209,7 +209,7 @@ endif()
 find_package(sirius_solver)
 
 if (NOT sirius_solver_FOUND)
-	message (FATAL_ERROR "Sirius solver not found. Sirius solver can be compiled with -DBUILD_sirius=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PAT ")
+	message (FATAL_ERROR "Sirius solver not found. You can specify a dependency install directory with -DCMAKE_PREFIX_PATH")
 endif()
 
 #gflags needed for ortools
