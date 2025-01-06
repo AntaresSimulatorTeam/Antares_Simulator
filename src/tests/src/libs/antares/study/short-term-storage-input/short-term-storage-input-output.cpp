@@ -616,8 +616,6 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
     std::filesystem::remove_all(testPath);
 }
 
-
-
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 {
     ShortTermStorage::STStorageInput storageInput;
@@ -957,17 +955,22 @@ BOOST_AUTO_TEST_CASE(Load_disabled)
 }
 
 BOOST_DATA_TEST_CASE(loadAdditionalConstraints_InvalidHoursFormat,
-                     bdata::make({"","[]", "[ ]", "[\t]",
-                         "[\r]", "[\f]", "[\v]"
-                         ,"[1, nol]",
-                         "[; 3,2,1]",
-                         "[1, 12345678901]",
-                         "[1, 12345",
-                         "1]",
-                         "[1,]",
-                         "[1,,2]",
-                         "[a]",
-                         "[1, 2], , [3]"}),
+                     bdata::make({"",
+                                  "[]",
+                                  "[ ]",
+                                  "[\t]",
+                                  "[\r]",
+                                  "[\f]",
+                                  "[\v]",
+                                  "[1, nol]",
+                                  "[; 3,2,1]",
+                                  "[1, 12345678901]",
+                                  "[1, 12345",
+                                  "1]",
+                                  "[1,]",
+                                  "[1,,2]",
+                                  "[a]",
+                                  "[1, 2], , [3]"}),
                      hours)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
@@ -992,19 +995,17 @@ BOOST_DATA_TEST_CASE(loadAdditionalConstraints_InvalidHoursFormat,
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_DATA_TEST_CASE(loadAdditionalConstraints_ValidHoursFormats,
-                     bdata::make({
-                         "[1],[1],[3,2,1]",
-                         "[\r1,\t2]",
-                         "[\v1\f,\t2],\f\v\t[4]",
-                         "[\f\v1]\t\t",
-                         "\t\v\t[1    ],    [    1,                           2,3]                               "
-                         ,
-                         "                         [4,5                                                        ]"
-                         ,
-                         "[1 2 3  , 11                       3]"
-                         }),
-                     hours)
+BOOST_DATA_TEST_CASE(
+  loadAdditionalConstraints_ValidHoursFormats,
+  bdata::make(
+    {"[1],[1],[3,2,1]",
+     "[\r1,\t2]",
+     "[\v1\f,\t2],\f\v\t[4]",
+     "[\f\v1]\t\t",
+     "\t\v\t[1    ],    [    1,                           2,3]                               ",
+     "                         [4,5                                                        ]",
+     "[1 2 3  , 11                       3]"}),
+  hours)
 {
     std::filesystem::path testPath = getFolder() / "test_data";
     std::filesystem::create_directory(testPath);
