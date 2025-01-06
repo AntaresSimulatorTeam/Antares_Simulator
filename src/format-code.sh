@@ -3,7 +3,7 @@
 if [ $# -eq 0 ]
 then
     # No arguments: format all
-    SOURCE_DIRS="analyzer/ libs/ solver/ tools/ config/ tests/ packaging/"
+    SOURCE_DIRS="analyzer/ libs/ solver/ tools/ config/ tests/ packaging/ api/"
     SOURCE_FILES=$(find $SOURCE_DIRS -regextype egrep -regex ".*/*\.(c|cxx|cpp|cc|h|hxx|hpp)$" ! -path '*/antlr-interface/*')
 else
     # Format files provided as arguments

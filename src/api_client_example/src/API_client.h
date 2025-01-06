@@ -22,7 +22,8 @@
 
 #pragma once
 
-#include <antares/api/solver.h>
 #include <antares/api/SimulationResults.h>
+#include <antares/api/solver.h>
 
-Antares::API::SimulationResults solve(std::filesystem::path study_path);
+Antares::API::SimulationResults solve(std::filesystem::path study_path,
+                                      std::filesystem::path output);

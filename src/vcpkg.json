@@ -1,7 +1,7 @@
 {
   "name": "antares-simulator",
   "version-string": "9.2.0",
-  "builtin-baseline": "9484a57dd560b89f0a583be08af6753611c57fd5",
+  "builtin-baseline": "b322364f06308bdd24823f9d8f03fe0cc86fd46f",
   "vcpkg-configuration": {
     "overlay-ports": [
       "./ports"
@@ -21,11 +21,11 @@
     },
     {
       "name": "boost-test",
-      "version>=": "1.81.0"
+      "version>=": "1.86.0"
     },
     {
       "name": "boost-core",
-      "version>=": "1.81.0"
+      "version>=": "1.86.0"
     },
     {
       "name": "minizip-ng",

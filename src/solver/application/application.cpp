@@ -161,9 +161,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     Antares::Solver::initializeSignalHandlers(resultWriter);
 
-    // Save about-the-study files (comments, notes, etc.)
-    study.saveAboutTheStudy(*resultWriter);
-
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
     {
@@ -374,6 +371,9 @@ void Application::execute()
     {
         return;
     }
+
+    // Save about-the-study files (comments, notes, etc.)
+    pStudy->saveAboutTheStudy(*resultWriter);
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes

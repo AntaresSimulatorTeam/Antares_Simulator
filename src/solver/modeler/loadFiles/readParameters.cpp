@@ -19,42 +19,41 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-#include <filesystem>
-#include <optional>
-#include <string>
+#include <yaml-cpp/yaml.h>
 
-#include "antares/solver/lps/LpsFromAntares.h"
+#include <antares/io/file.h>
+#include <antares/logs/logs.h>
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
+#include "antares/solver/modeler/parameters/parseModelerParameters.h"
 
-namespace Antares::API
+namespace fs = std::filesystem;
+
+namespace Antares::Solver::LoadFiles
 {
-/**
- * @struct Error
- * @brief The Error structure is used to represent an error that occurred during the simulation.
- */
-struct Error
-{
-    /**
-     * @brief The reason for the error.
-     */
-    std::string reason;
-};
 
-/**
- * @struct SimulationResults
- * @brief The SimulationResults structure is used to represent the results of a simulation.
- * @details It contains the path to the simulation, weekly problems, and an optional error.
- */
-struct [[nodiscard("Contains results and potential error")]] SimulationResults
+ModelerParameters loadParameters(const fs::path& studyPath)
 {
-    /**
-     * @brief weekly problems
-     */
-    Antares::Solver::LpsFromAntares antares_problems;
-    /**
-     * @brief An optional error that occurred during the simulation.
-     */
-    std::optional<Error> error;
-};
+    std::string filename = "parameters.yml";
+    std::string paramStr;
+    try
+    {
+        paramStr = IO::readFile(studyPath / filename);
+    }
+    catch (const std::runtime_error& e)
+    {
+        logs.error() << "Error while trying to read file parameters.yml";
+        throw ErrorLoadingYaml(e.what());
+    }
 
-} // namespace Antares::API
+    try
+    {
+        return parseModelerParameters(paramStr);
+    }
+    catch (const YAML::Exception& e)
+    {
+        handleYamlError(e, filename);
+        throw ErrorLoadingYaml(e.what());
+    }
+}
+
+} // namespace Antares::Solver::LoadFiles

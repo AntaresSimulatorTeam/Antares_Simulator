@@ -20,41 +20,35 @@
  */
 
 #pragma once
+
 #include <filesystem>
-#include <optional>
-#include <string>
+#include <vector>
+#include <yaml-cpp/yaml.h>
 
-#include "antares/solver/lps/LpsFromAntares.h"
+#include <antares/solver/modeler/parameters/modelerParameters.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/system.h>
 
-namespace Antares::API
+namespace Antares::Solver::LoadFiles
 {
-/**
- * @struct Error
- * @brief The Error structure is used to represent an error that occurred during the simulation.
- */
-struct Error
+
+ModelerParameters loadParameters(const std::filesystem::path& studyPath);
+
+std::vector<Study::SystemModel::Library> loadLibraries(const std::filesystem::path& studyPath);
+
+Study::SystemModel::System loadSystem(const std::filesystem::path& studyPath,
+                                      const std::vector<Study::SystemModel::Library>& libraries);
+
+void handleYamlError(const YAML::Exception& e, const std::string& context);
+
+/// Generic error class for all loading errors to catch in the main
+class ErrorLoadingYaml: public std::runtime_error
 {
-    /**
-     * @brief The reason for the error.
-     */
-    std::string reason;
+public:
+    explicit ErrorLoadingYaml(const std::string& s):
+        runtime_error(s)
+    {
+    }
 };
 
-/**
- * @struct SimulationResults
- * @brief The SimulationResults structure is used to represent the results of a simulation.
- * @details It contains the path to the simulation, weekly problems, and an optional error.
- */
-struct [[nodiscard("Contains results and potential error")]] SimulationResults
-{
-    /**
-     * @brief weekly problems
-     */
-    Antares::Solver::LpsFromAntares antares_problems;
-    /**
-     * @brief An optional error that occurred during the simulation.
-     */
-    std::optional<Error> error;
-};
-
-} // namespace Antares::API
+} // namespace Antares::Solver::LoadFiles
