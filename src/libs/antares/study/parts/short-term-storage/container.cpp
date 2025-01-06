@@ -76,8 +76,11 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
-static bool loadHours(const std::string& hoursStr, AdditionalConstraints& additionalConstraints)
+static bool loadHours(const std::string& input_hoursStr,
+                      AdditionalConstraints& additionalConstraints)
 {
+    auto hoursStr = input_hoursStr;
+    std::erase_if(hoursStr, ::isspace);
     // Validate the entire string format
     if (std::regex fullFormatRegex(R"(^(\[\d+(,\d+)*\])(,(\[\d+(,\d+)*\]))*$)"); !std::regex_match(
             hoursStr,
