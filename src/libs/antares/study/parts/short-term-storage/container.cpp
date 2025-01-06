@@ -76,8 +76,16 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
-static void loadHours(const std::string& hoursStr, AdditionalConstraints& additionalConstraints)
+static bool loadHours(const std::string& hoursStr, AdditionalConstraints& additionalConstraints)
 {
+    // Validate the entire string format
+    std::regex fullFormatRegex(R"(^(\[\d+(,\d+)*\])(,(\[\d+(,\d+)*\]))*$)");
+    if (!std::regex_match(hoursStr, fullFormatRegex))
+    {
+        logs.error() << "In constraint " << additionalConstraints.name
+                << ": Input string does not match the required format: " << hoursStr << '\n';
+        return false;
+    }
     // Split the `hours` field into multiple groups
     std::regex groupRegex(R"(\[(.*?)\])");
     // Match each group enclosed in square brackets
@@ -91,11 +99,30 @@ static void loadHours(const std::string& hoursStr, AdditionalConstraints& additi
         std::stringstream ss(group);
         std::string hour;
         std::set<int> hourSet;
-
+        int hourVal;
         while (std::getline(ss, hour, ','))
         {
-            int hourVal = std::stoi(hour);
-            hourSet.insert(hourVal);
+            try
+            {
+                hourVal = std::stoi(hour);
+                hourSet.insert(hourVal);
+            }
+
+            catch (const std::invalid_argument& ex)
+            {
+                logs.error() << "In constraint " << additionalConstraints.name <<
+                        " Hours sets contains invalid values: " << hour <<
+                        "\n exception thrown: " << ex.what() << '\n';
+
+                return false;
+            }
+            catch (const std::out_of_range& ex)
+            {
+                logs.error() << "In constraint " << additionalConstraints.name <<
+                        " Hours sets contains out of range values: " << hour <<
+                        "\n exception thrown: " << ex.what() << '\n';
+                return false;
+            }
         }
         if (!hourSet.empty())
         {
@@ -104,6 +131,7 @@ static void loadHours(const std::string& hoursStr, AdditionalConstraints& additi
               {.hours = hourSet, .localIndex = localIndex});
             ++localIndex;
         }
+        return true;
     }
 }
 
@@ -149,9 +177,9 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
             {
                 value.to<std::string>(additionalConstraints.operatorType);
             }
-            else if (key == "hours")
+            else if (key == "hours" && !loadHours(value.c_str(), additionalConstraints))
             {
-                loadHours(value.c_str(), additionalConstraints);
+                return false;
             }
         }
 
