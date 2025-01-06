@@ -1,6 +1,20 @@
 Antares Changelog
 =================
 
+8.8.12 (01/2025)
+--------------------
+## New features
+* Add variable MRG PRICE CSR [ANT-2562] (#2531)
+* Use VCPKG for dependencies
+* Activate long tests on branch release/8.8.x (#2538)
+
+## Bugfix
+* Fix segfault related to district for 8.8 [ANT-2452] (#2519)
+* Fix uninitialized CSR variables [ANT-2496] (#2518)
+* Fix segfault caused by invalid index [ANT-2582] (#2544)
+
+8.8.11 (11/2024)
+--------------------
 ## New features
 * Adding parameters for the used optimization solver [ANT-2280] (#2466)
 * Adequacy patch CSR : add out variables after DTG netting step [ANT-2295] (#2472)
