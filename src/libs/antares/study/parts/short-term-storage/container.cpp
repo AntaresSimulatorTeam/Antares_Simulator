@@ -79,8 +79,9 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
 static bool loadHours(const std::string& hoursStr, AdditionalConstraints& additionalConstraints)
 {
     // Validate the entire string format
-    std::regex fullFormatRegex(R"(^(\[\d+(,\d+)*\])(,(\[\d+(,\d+)*\]))*$)");
-    if (!std::regex_match(hoursStr, fullFormatRegex))
+    if (std::regex fullFormatRegex(R"(^(\[\d+(,\d+)*\])(,(\[\d+(,\d+)*\]))*$)"); !std::regex_match(
+            hoursStr,
+            fullFormatRegex))
     {
         logs.error() << "In constraint " << additionalConstraints.name
                 << ": Input string does not match the required format: " << hoursStr << '\n';
@@ -131,8 +132,8 @@ static bool loadHours(const std::string& hoursStr, AdditionalConstraints& additi
               {.hours = hourSet, .localIndex = localIndex});
             ++localIndex;
         }
-        return true;
     }
+    return true;
 }
 
 static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
