@@ -8,9 +8,9 @@
 namespace Antares::Solver::Simulation
 {
 
-int find_min_index(const std::vector<double>& G_plus_H,
-                   const std::vector<double>& new_D,
-                   const std::vector<double>& new_H,
+int find_min_index(const std::vector<double>& Thermal_plus_Hydro,
+                   const std::vector<double>& OutUnsupE,
+                   const std::vector<double>& OutHydroGen,
                    const std::vector<int>& tried_creux,
                    const std::vector<double>& HydroPmax,
                    const std::vector<bool>& filter_hours_remix,
@@ -18,13 +18,14 @@ int find_min_index(const std::vector<double>& G_plus_H,
 {
     double min_val = top;
     int min_idx = -1;
-    for (int i = 0; i < G_plus_H.size(); ++i)
+    for (int i = 0; i < Thermal_plus_Hydro.size(); ++i)
     {
-        if (new_D[i] > 0 && new_H[i] < HydroPmax[i] && tried_creux[i] == 0 && filter_hours_remix[i])
+        if (OutUnsupE[i] > 0 && OutHydroGen[i] < HydroPmax[i] && tried_creux[i] == 0
+            && filter_hours_remix[i])
         {
-            if (G_plus_H[i] < min_val)
+            if (Thermal_plus_Hydro[i] < min_val)
             {
-                min_val = G_plus_H[i];
+                min_val = Thermal_plus_Hydro[i];
                 min_idx = i;
             }
         }
@@ -32,8 +33,8 @@ int find_min_index(const std::vector<double>& G_plus_H,
     return min_idx;
 }
 
-int find_max_index(const std::vector<double>& G_plus_H,
-                   const std::vector<double>& new_H,
+int find_max_index(const std::vector<double>& Thermal_plus_Hydro,
+                   const std::vector<double>& OutHydroGen,
                    const std::vector<int>& tried_pic,
                    const std::vector<double>& HydroPmin,
                    const std::vector<bool>& filter_hours_remix,
@@ -42,14 +43,14 @@ int find_max_index(const std::vector<double>& G_plus_H,
 {
     double max_val = 0;
     int max_idx = -1;
-    for (int i = 0; i < G_plus_H.size(); ++i)
+    for (int i = 0; i < Thermal_plus_Hydro.size(); ++i)
     {
-        if (new_H[i] > HydroPmin[i] && G_plus_H[i] >= ref_value + eps && tried_pic[i] == 0
-            && filter_hours_remix[i])
+        if (OutHydroGen[i] > HydroPmin[i] && Thermal_plus_Hydro[i] >= ref_value + eps
+            && tried_pic[i] == 0 && filter_hours_remix[i])
         {
-            if (G_plus_H[i] > max_val)
+            if (Thermal_plus_Hydro[i] > max_val)
             {
-                max_val = G_plus_H[i];
+                max_val = Thermal_plus_Hydro[i];
                 max_idx = i;
             }
         }
@@ -177,8 +178,8 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
                           Spillage,
                           DTG_MRG);
 
-    std::vector<double> new_H = HydroGen;
-    std::vector<double> new_D = UnsupE;
+    std::vector<double> OutHydroGen = HydroGen;
+    std::vector<double> OutUnsupE = UnsupE;
 
     int loop = 1000;
     double eps = 1e-3;
@@ -195,11 +196,11 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
         }
     }
 
-    std::vector<double> G_plus_H(ThermalGen.size());
+    std::vector<double> Thermal_plus_Hydro(ThermalGen.size());
     std::transform(ThermalGen.begin(),
                    ThermalGen.end(),
-                   new_H.begin(),
-                   G_plus_H.begin(),
+                   OutHydroGen.begin(),
+                   Thermal_plus_Hydro.begin(),
                    std::plus<>());
 
     while (loop-- > 0)
@@ -209,9 +210,9 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
 
         while (true)
         {
-            int idx_creux = find_min_index(G_plus_H,
-                                           new_D,
-                                           new_H,
+            int idx_creux = find_min_index(Thermal_plus_Hydro,
+                                           OutUnsupE,
+                                           OutHydroGen,
                                            tried_creux,
                                            HydroPmax,
                                            filter_hours_remix,
@@ -224,12 +225,12 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
             std::vector<int> tried_pic(ThermalGen.size(), 0);
             while (true)
             {
-                int idx_pic = find_max_index(G_plus_H,
-                                             new_H,
+                int idx_pic = find_max_index(Thermal_plus_Hydro,
+                                             OutHydroGen,
                                              tried_pic,
                                              HydroPmin,
                                              filter_hours_remix,
-                                             G_plus_H[idx_creux],
+                                             Thermal_plus_Hydro[idx_creux],
                                              eps);
                 if (idx_pic == -1)
                 {
@@ -255,20 +256,23 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
                     max_creux = capa;
                 }
 
-                max_pic = std::min(new_H[idx_pic] - HydroPmin[idx_pic], max_pic);
+                max_pic = std::min(OutHydroGen[idx_pic] - HydroPmin[idx_pic], max_pic);
                 max_creux = std::min(
-                  {HydroPmax[idx_creux] - new_H[idx_creux], new_D[idx_creux], max_creux});
+                  {HydroPmax[idx_creux] - OutHydroGen[idx_creux], OutUnsupE[idx_creux], max_creux});
 
-                double dif_pic_creux = std::max(G_plus_H[idx_pic] - G_plus_H[idx_creux], 0.);
+                double dif_pic_creux = std::max(Thermal_plus_Hydro[idx_pic]
+                                                  - Thermal_plus_Hydro[idx_creux],
+                                                0.);
 
                 delta = std::max(std::min({max_pic, max_creux, dif_pic_creux / 2.}), 0.);
 
                 if (delta > 0)
                 {
-                    new_H[idx_pic] -= delta;
-                    new_H[idx_creux] += delta;
-                    new_D[idx_pic] = HydroGen[idx_pic] + UnsupE[idx_pic] - new_H[idx_pic];
-                    new_D[idx_creux] = HydroGen[idx_creux] + UnsupE[idx_creux] - new_H[idx_creux];
+                    OutHydroGen[idx_pic] -= delta;
+                    OutHydroGen[idx_creux] += delta;
+                    OutUnsupE[idx_pic] = HydroGen[idx_pic] + UnsupE[idx_pic] - OutHydroGen[idx_pic];
+                    OutUnsupE[idx_creux] = HydroGen[idx_creux] + UnsupE[idx_creux]
+                                           - OutHydroGen[idx_creux];
                     break;
                 }
                 else
@@ -291,16 +295,16 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
 
         std::transform(ThermalGen.begin(),
                        ThermalGen.end(),
-                       new_H.begin(),
-                       G_plus_H.begin(),
+                       OutHydroGen.begin(),
+                       Thermal_plus_Hydro.begin(),
                        std::plus<>());
-        levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - new_H[0];
+        levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - OutHydroGen[0];
         for (size_t i = 1; i < levels.size(); ++i)
         {
-            levels[i] = levels[i - 1] + inflows[i] - overflow[i] + pump[i] - new_H[i];
+            levels[i] = levels[i - 1] + inflows[i] - overflow[i] + pump[i] - OutHydroGen[i];
         }
     }
-    return {new_H, new_D, levels};
+    return {OutHydroGen, OutUnsupE, levels};
 }
 
 } // End namespace Antares::Solver::Simulation

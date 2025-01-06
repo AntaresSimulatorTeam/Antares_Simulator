@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(H_not_smaller_than_pmax__exception_raised, InputFixture<
     BOOST_CHECK_EXCEPTION(
       new_remix_hydro(G, H, D, P_max, P_min, init_level, capacity, inflows, ovf, pump, S, DTG_MRG),
       std::invalid_argument,
-      checkMessage("Remix hydro input : H not smaller than Pmax everywhere"));
+      checkMessage("Remix hydro input : Hydro generation not smaller than Pmax everywhere"));
 }
 
 BOOST_FIXTURE_TEST_CASE(H_not_greater_than_pmin__exception_raised, InputFixture<5>)
@@ -90,7 +90,7 @@ BOOST_FIXTURE_TEST_CASE(H_not_greater_than_pmin__exception_raised, InputFixture<
     BOOST_CHECK_EXCEPTION(
       new_remix_hydro(G, H, D, P_max, P_min, init_level, capacity, inflows, ovf, pump, S, DTG_MRG),
       std::invalid_argument,
-      checkMessage("Remix hydro input : H not greater than Pmin everywhere"));
+      checkMessage("Remix hydro input : Hydro generation not greater than Pmin everywhere"));
 }
 
 BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1>)
