@@ -5,7 +5,7 @@ Antares Changelog
 --------------------
 ## New features
 * Add variable MRG PRICE CSR [ANT-2562] (#2531)
-* Use VCPKG for dependencies
+* Use VCPKG for dependencies (#2549)
 * Activate long tests on branch release/8.8.x (#2538)
 
 ## Bugfix
