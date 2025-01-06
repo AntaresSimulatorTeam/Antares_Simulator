@@ -616,29 +616,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_InvalidHours)
     std::filesystem::remove_all(testPath);
 }
 
-BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidHoursFormats)
-{
-    std::filesystem::path testPath = getFolder() / "test_data";
-    std::filesystem::create_directory(testPath);
 
-    std::ofstream iniFile(testPath / "additional-constraints.ini");
-    iniFile << "[constraint1]\n";
-    iniFile << "cluster=cluster1\n";
-    iniFile << "variable=injection\n";
-    iniFile << "operator=less\n";
-    iniFile << "hours=[1],[1],[3,2,1]\n"; // Valid formats
-    iniFile.close();
-
-    ShortTermStorage::STStorageInput storageInput;
-    ShortTermStorage::STStorageCluster cluster;
-    cluster.id = "cluster1";
-    storageInput.storagesByIndex.push_back(cluster);
-
-    bool result = storageInput.loadAdditionalConstraints(testPath);
-    BOOST_CHECK_EQUAL(result, true);
-
-    std::filesystem::remove_all(testPath);
-}
 
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 {
@@ -1010,6 +988,42 @@ BOOST_DATA_TEST_CASE(loadAdditionalConstraints_InvalidHoursFormat,
 
     bool result = storageInput.loadAdditionalConstraints(testPath);
     BOOST_CHECK_EQUAL(result, false);
+
+    std::filesystem::remove_all(testPath);
+}
+
+BOOST_DATA_TEST_CASE(loadAdditionalConstraints_ValidHoursFormats,
+                     bdata::make({
+                         "[1],[1],[3,2,1]",
+                         "[\r1,\t2]",
+                         "[\v1\f,\t2],\f\v\t[4]",
+                         "[\f\v1]\t\t",
+                         "\t\v\t[1    ],    [    1,                           2,3]                               "
+                         ,
+                         "                         [4,5                                                        ]"
+                         ,
+                         "[1 2 3  , 11                       3]"
+                         }),
+                     hours)
+{
+    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::create_directory(testPath);
+
+    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    iniFile << "[constraint1]\n";
+    iniFile << "cluster=cluster1\n";
+    iniFile << "variable=injection\n";
+    iniFile << "operator=less\n";
+    iniFile << "hours=" << hours << "\n"; // Valid formats
+    iniFile.close();
+
+    ShortTermStorage::STStorageInput storageInput;
+    ShortTermStorage::STStorageCluster cluster;
+    cluster.id = "cluster1";
+    storageInput.storagesByIndex.push_back(cluster);
+
+    bool result = storageInput.loadAdditionalConstraints(testPath);
+    BOOST_CHECK_EQUAL(result, true);
 
     std::filesystem::remove_all(testPath);
 }
