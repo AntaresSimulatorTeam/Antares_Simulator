@@ -13,7 +13,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
@@ -26,12 +26,12 @@ jobs:
              git apply ../docs/antares-simulator-doxygen.patch
              
       - name: Doxygen
-        uses: mattnotmitt/doxygen-action@1.9.5
+        uses: mattnotmitt/doxygen-action@v1.9.8
         with:
           doxyfile-path:  docs/Doxyfile
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         # If you're changing the branch from main,
         # also change the `main` in `refs/heads/main`
         # below accordingly.

@@ -1,0 +1,46 @@
+{
+  "name": "antares-simulator",
+  "version-string": "8.8.11",
+  "builtin-baseline": "b322364f06308bdd24823f9d8f03fe0cc86fd46f",
+  "vcpkg-configuration": {
+    "overlay-ports": [
+      "./ports"
+    ],
+    "overlay-triplets": [
+      "./triplets"
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "sirius-solver",
+      "version>=": "1.5"
+    },
+    {
+      "name": "wxwidgets",
+      "platform": "windows"
+    },
+    {
+      "name": "boost-test",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "minizip-ng",
+      "default-features": false,
+      "version>=": "4.0.0",
+      "features": [
+        "zlib"
+      ]
+    },
+    {
+      "name": "yaml-cpp"
+    },
+    {
+      "name": "antlr4"
+    }
+  ]
+}
+
