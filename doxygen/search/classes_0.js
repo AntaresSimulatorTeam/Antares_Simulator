@@ -8,7 +8,7 @@ var searchData=
   ['actionpanel_5',['ActionPanel',['../classAntares_1_1Private_1_1Window_1_1ActionPanel.html',1,'Antares::Private::Window']]],
   ['add_6',['Add',['../structAntares_1_1Window_1_1Inspector_1_1Add.html',1,'Antares::Window::Inspector']]],
   ['addingtoolshelper_7',['AddingToolsHelper',['../classAntares_1_1Map_1_1Private_1_1AddingToolsHelper.html',1,'Antares::Map::Private']]],
-  ['additionalconstraint_8',['AdditionalConstraint',['../structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraint.html',1,'Antares::Data::ShortTermStorage']]],
+  ['additionalconstraints_8',['AdditionalConstraints',['../structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html',1,'Antares::Data::ShortTermStorage']]],
   ['addpweight_9',['addpweight',['../structAntares_1_1Graph_1_1Edge_1_1addpWeight.html',1,'Antares::Graph::Edge&lt; NodeT &gt;::addpWeight'],['../structAntares_1_1linkInfo_1_1addpWeight.html',1,'Antares::linkInfo::addpWeight']]],
   ['addpweightwithimpedance_10',['addpWeightWithImpedance',['../structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html',1,'Antares::linkInfo']]],
   ['addsubcontext_11',['AddsubContext',['../classExprParser_1_1AddsubContext.html',1,'ExprParser']]],

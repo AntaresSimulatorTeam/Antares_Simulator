@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"remover_8h_source.html":[10,0,0,8,2,1,1,3,2,1],
 "renderer_8h_source.html":[10,0,0,8,2,1,1,1,8],
 "renderer_8hxx_source.html":[10,0,0,8,2,1,1,1,9],
 "renewable-cluster-item_8h_source.html":[10,0,0,8,2,1,1,2,1,9],
@@ -175,8 +176,8 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Data_1_1Parameters_1_1UCMode.html":[9,0,0,4,39,3],
 "structAntares_1_1Data_1_1Parameters_1_1UCMode.html#a54ca3186d2fc07dcf60311e8bd250c3d":[9,0,0,4,39,3,0],
 "structAntares_1_1Data_1_1Parameters_1_1UCMode.html#aa0b613cb0812e2bb6231b6f65b54aa01":[9,0,0,4,39,3,1],
-"structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraint.html":[9,0,0,4,3,0],
-"structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraint_1_1ValidateResult.html":[9,0,0,4,3,0,0],
+"structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html":[9,0,0,4,3,0],
+"structAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints_1_1ValidateResult.html":[9,0,0,4,3,0,0],
 "structAntares_1_1Data_1_1StudyRangeLimits.html":[9,0,0,4,57],
 "structAntares_1_1Data_1_1StudyRangeLimits.html#a317a01bb25e5660216e1de2dc9858067":[9,0,0,4,57,4],
 "structAntares_1_1Data_1_1StudyRangeLimits.html#a34a9a61a1eb3785b8def5f91e8c7bbb9":[9,0,0,4,57,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[9,0,0,13,11,0,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[9,0,0,13,11,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[9,0,0,13,11,0,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[9,0,0,13,11,0,2,1],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[9,0,0,13,11,0,3]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[9,0,0,13,11,0,2,1]
 };

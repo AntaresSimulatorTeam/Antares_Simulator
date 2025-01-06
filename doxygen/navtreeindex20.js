@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7":[9,0,242,0],
 "classSubstitutionFixture.html":[9,0,247],
 "classSumSubstitutionFixture.html":[9,0,248],
 "classSystemMemoryLogger.html":[9,0,250],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "dir_4e14623aef83ef0f6b1cdb1255171e2a.html":[10,0,0,4,8,2,0,0],
 "dir_4e4e78ccd4c71defdbad1c35bb83e3ce.html":[10,0,0,4,12,0],
 "dir_4e7c81b846eabaed625fc3ca4a916551.html":[10,0,0,3,0,8],
-"dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html":[10,0,0,4,11,1,0],
-"dir_4f4a69ba69ef4a08cfdb93ec23ef2767.html":[10,0,0,3,0,25,0,0,0,5,0]
+"dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html":[10,0,0,4,11,1,0]
 };

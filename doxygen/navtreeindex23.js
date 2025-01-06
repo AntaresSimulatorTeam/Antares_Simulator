@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"jit_8h_source.html":[10,0,0,3,0,14,0,0,0,0],
 "jit_8hxx_source.html":[10,0,0,3,0,14,0,0,0,1],
 "job_8hxx_source.html":[10,0,0,7,3,2],
 "jobs_8h_source.html":[10,0,0,8,2,1,12],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "recentfiles_8h_source.html":[10,0,0,8,2,0,5],
 "refresh_8h_source.html":[10,0,0,8,2,1,1,9],
 "registry_8h_source.html":[10,0,0,8,1,0,0,2],
-"registry_8inc_8hxx_source.html":[10,0,0,3,1,3],
-"remover_8h_source.html":[10,0,0,8,2,1,1,3,2,1]
+"registry_8inc_8hxx_source.html":[10,0,0,3,1,3]
 };
