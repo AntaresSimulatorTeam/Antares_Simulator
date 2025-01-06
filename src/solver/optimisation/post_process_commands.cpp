@@ -134,13 +134,27 @@ void UpdateMrgPriceAfterCSRcmd::execute(const optRuntimeData&)
         auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
         const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
         const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
-	const bool areaInside = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch;
+        const bool areaInside
+          = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch;
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
-            const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
-                    ->wasCSRTriggeredAtAreaHour(Area, hour);
+            const bool isHourTriggeredByCsr
+              = problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour);
 
-            if (isHourTriggeredByCsr && hourlyResults.ValeursHorairesDeDefaillancePositive[hour] > 0.5 && areaInside)
+            // IF UNSP. ENR CSR == 0, MRG. PRICE CSR = MRG. PRICE
+            // ELSE, MRG. PRICE CSR = “Unsupplied Energy Cost”
+            if (hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] > 0.5 && areaInside)
+            {
+                hourlyResults.CoutsMarginauxHorairesCSR[hour] = -unsuppliedEnergyCost;
+            }
+            else
+            {
+                hourlyResults.CoutsMarginauxHorairesCSR[hour]
+                  = hourlyResults.CoutsMarginauxHoraires[hour];
+            }
+
+            if (isHourTriggeredByCsr
+                && hourlyResults.ValeursHorairesDeDefaillancePositive[hour] > 0.5 && areaInside)
             {
                 hourlyResults.CoutsMarginauxHoraires[hour] = -unsuppliedEnergyCost;
             }

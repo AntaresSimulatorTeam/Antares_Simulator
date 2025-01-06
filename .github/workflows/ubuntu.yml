@@ -130,9 +130,7 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-    
 
-    
     - name: Configure
       run: |
            cmake -B _build -S src \
