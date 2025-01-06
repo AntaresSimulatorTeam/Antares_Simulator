@@ -60,15 +60,20 @@ static void importShortTermStorages(
             toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
             toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             toInsert.name = st.properties.name;
-            toInsert.additionalConstraints = st.additionalConstraints;
-            for (auto& additionalConstraints: toInsert.additionalConstraints)
+            for (const auto& constraint: st.additionalConstraints)
             {
-                for (auto& [_, globalIndex, __]: additionalConstraints.constraints)
+                if (constraint.enabled)
                 {
-                    globalIndex = constraintGlobalIndex;
-                    ++constraintGlobalIndex;
+                    auto newConstraint = constraint;
+                    for (auto& c: newConstraint.constraints)
+                    {
+                        c.globalIndex = constraintGlobalIndex;
+                        ++constraintGlobalIndex;
+                    }
+                    toInsert.additionalConstraints.push_back(std::move(newConstraint));
                 }
             }
+
             toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct
