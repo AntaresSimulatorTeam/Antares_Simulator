@@ -83,7 +83,7 @@ static bool loadHours(const std::string& hoursStr, AdditionalConstraints& additi
     if (!std::regex_match(hoursStr, fullFormatRegex))
     {
         logs.error() << "In constraint " << additionalConstraints.name
-                << ": Input string does not match the required format: " << hoursStr << '\n';
+                     << ": Input string does not match the required format: " << hoursStr << '\n';
         return false;
     }
     // Split the `hours` field into multiple groups
@@ -110,17 +110,17 @@ static bool loadHours(const std::string& hoursStr, AdditionalConstraints& additi
 
             catch (const std::invalid_argument& ex)
             {
-                logs.error() << "In constraint " << additionalConstraints.name <<
-                        " Hours sets contains invalid values: " << hour <<
-                        "\n exception thrown: " << ex.what() << '\n';
+                logs.error() << "In constraint " << additionalConstraints.name
+                             << " Hours sets contains invalid values: " << hour
+                             << "\n exception thrown: " << ex.what() << '\n';
 
                 return false;
             }
             catch (const std::out_of_range& ex)
             {
-                logs.error() << "In constraint " << additionalConstraints.name <<
-                        " Hours sets contains out of range values: " << hour <<
-                        "\n exception thrown: " << ex.what() << '\n';
+                logs.error() << "In constraint " << additionalConstraints.name
+                             << " Hours sets contains out of range values: " << hour
+                             << "\n exception thrown: " << ex.what() << '\n';
                 return false;
             }
         }
