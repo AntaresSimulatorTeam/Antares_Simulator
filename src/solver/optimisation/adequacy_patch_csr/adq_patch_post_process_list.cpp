@@ -21,11 +21,10 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
       problemeHebdo_, areas, sheddingPolicy, splxOptimization, thread_number));
     post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(
       adqPatchParams, problemeHebdo_, areas, thread_number_));
-    post_process_list.push_back(std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_,
-                                                                            areas,
-                                                                            thread_number));
-    post_process_list.push_back(std::make_unique<DTGnettingAfterCSRcmd>(
-      problemeHebdo_, areas, thread_number));
+    post_process_list.push_back(
+      std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, thread_number));
+    post_process_list.push_back(
+      std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, thread_number));
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
     post_process_list.push_back(

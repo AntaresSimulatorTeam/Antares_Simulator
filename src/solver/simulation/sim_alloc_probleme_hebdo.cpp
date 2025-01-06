@@ -449,6 +449,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
           .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires
           .assign(NombreDePasDeTemps, 0.);
+        problem.ResultatsHoraires[k].CoutsMarginauxHorairesCSR
+          .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].niveauxHoraires
           .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].valeurH2oHoraire
