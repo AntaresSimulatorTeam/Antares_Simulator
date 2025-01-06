@@ -961,7 +961,6 @@ BOOST_AUTO_TEST_CASE(Load_disabled)
     iniFile << "hours=[1,2,3]\n";
     iniFile.close();
 
-
     // Setup storage input and cluster
     ShortTermStorage::STStorageInput storageInput;
     ShortTermStorage::STStorageCluster cluster;
@@ -979,12 +978,16 @@ BOOST_AUTO_TEST_CASE(Load_disabled)
     BOOST_REQUIRE_EQUAL(built_cluster.additionalConstraints.size(), 0);
 }
 
-
 BOOST_DATA_TEST_CASE(loadAdditionalConstraints_InvalidHoursFormat,
-                     bdata::make({
-                         "[1, nol]", "[; 3,2,1]", "[1, 12345678901]", "[1, 12345",
-                         "1]", "[1,]", "[1,,2]", "[a]", "[1, 2], , [3]"
-                         }),
+                     bdata::make({"[1, nol]",
+                                  "[; 3,2,1]",
+                                  "[1, 12345678901]",
+                                  "[1, 12345",
+                                  "1]",
+                                  "[1,]",
+                                  "[1,,2]",
+                                  "[a]",
+                                  "[1, 2], , [3]"}),
                      hours)
 {
     std::filesystem::path testPath = getFolder() / "test_data";

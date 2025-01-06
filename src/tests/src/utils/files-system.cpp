@@ -10,7 +10,7 @@ fs::path generateAndCreateDirName(const std::string& dirName)
     return working_dir;
 }
 
-void createFolder(const std::string& path, const std::string& folder_name)
+fs::path createFolder(const std::string& path, const std::string& folder_name)
 {
     fs::path folder_path = fs::path(path.c_str()) / folder_name.c_str();
 
@@ -22,6 +22,8 @@ void createFolder(const std::string& path, const std::string& folder_name)
     {
         std::cerr << "Exception creating folder '" + folder_name + "': " + e.what() + "\n";
     }
+
+    return folder_path;
 }
 
 void createFile(const std::string& folder_path, const std::string& file_name)
