@@ -640,6 +640,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidHoursFormats)
     std::filesystem::remove_all(testPath);
 }
 
+
 BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_MissingFile)
 {
     ShortTermStorage::STStorageInput storageInput;
@@ -941,6 +942,36 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 
         i += HOURS_PER_YEAR / 5;
     } while (i < HOURS_PER_YEAR);
+}
+
+
+BOOST_DATA_TEST_CASE(loadAdditionalConstraints_InvalidHoursFormat,
+                     bdata::make({
+                         "[1, nol]", "[; 3,2,1]", "[1, 12345678901]", "[1, 12345",
+                         "1]", "[1,]", "[1,,2]", "[a]", "[1, 2], , [3]"
+                         }),
+                     hours)
+{
+    std::filesystem::path testPath = getFolder() / "test_data";
+    std::filesystem::create_directory(testPath);
+
+    std::ofstream iniFile(testPath / "additional-constraints.ini");
+    iniFile << "[constraint1]\n";
+    iniFile << "cluster=cluster1\n";
+    iniFile << "variable=injection\n";
+    iniFile << "operator=less\n";
+    iniFile << "hours=" << hours << "\n"; // Invalid formats
+    iniFile.close();
+
+    ShortTermStorage::STStorageInput storageInput;
+    ShortTermStorage::STStorageCluster cluster;
+    cluster.id = "cluster1";
+    storageInput.storagesByIndex.push_back(cluster);
+
+    bool result = storageInput.loadAdditionalConstraints(testPath);
+    BOOST_CHECK_EQUAL(result, false);
+
+    std::filesystem::remove_all(testPath);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
