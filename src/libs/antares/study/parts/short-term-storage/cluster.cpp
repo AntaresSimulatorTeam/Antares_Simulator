@@ -28,7 +28,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
@@ -92,5 +91,4 @@ bool STStorageCluster::saveSeries(const std::string& path) const
 {
     return series->saveToFolder(path);
 }
-
 } // namespace Antares::Data::ShortTermStorage

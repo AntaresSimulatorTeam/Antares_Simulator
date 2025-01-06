@@ -32,7 +32,10 @@
 
 namespace Antares::API
 {
-SimulationResults APIInternal::run(const IStudyLoader& study_loader)
+SimulationResults APIInternal::run(
+  const IStudyLoader& study_loader,
+  const std::filesystem::path& output,
+  const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
     try
     {
@@ -41,9 +44,9 @@ SimulationResults APIInternal::run(const IStudyLoader& study_loader)
     catch (const ::Antares::Error::StudyFolderDoesNotExist& e)
     {
         Antares::API::Error err{.reason = e.what()};
-        return {.simulationPath = "", .antares_problems = {}, .error = err};
+        return {.antares_problems = {}, .error = err};
     }
-    return execute();
+    return execute(output, optOptions);
 }
 
 /**
@@ -53,30 +56,40 @@ SimulationResults APIInternal::run(const IStudyLoader& study_loader)
  * This method is initialy a copy of Application::execute with some modifications hence the apparent
  * dupllication
  */
-SimulationResults APIInternal::execute() const
+SimulationResults APIInternal::execute(
+  const std::filesystem::path& output,
+  const Antares::Solver::Optimization::OptimizationOptions& optOptions) const
 {
     // study_ == nullptr e.g when the -h flag is given
     if (!study_)
     {
         using namespace std::string_literals;
         Antares::API::Error err{.reason = "Couldn't create study"s};
-        return {.simulationPath{}, .antares_problems{}, .error = err};
+        return {.antares_problems{}, .error = err};
     }
 
-    // Only those two fields are used un simulation
     Settings settings;
-    settings.tsGeneratorsOnly = false;
-    settings.noOutput = false;
+    auto& parameters = study_->parameters;
+    parameters.optOptions = optOptions;
 
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
     auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
-    auto resultWriter = Solver::resultWriterFactory(study_->parameters.resultFormat,
+
+    study_->folderOutput = output;
+    auto resultWriter = Solver::resultWriterFactory(parameters.resultFormat,
                                                     study_->folderOutput,
                                                     ioQueueService,
                                                     durationCollector);
+
+    // In some cases (e.g tests) we don't want to write anything
+    if (!output.empty())
+    {
+        study_->saveAboutTheStudy(*resultWriter);
+    }
+
     SimulationObserver simulationObserver;
 
     optimizationInfo = simulationRun(*study_,
@@ -88,8 +101,6 @@ SimulationResults APIInternal::execute() const
     // Importing Time-Series if asked
     study_->importTimeseriesIntoInput();
 
-    return {.simulationPath = study_->folderOutput,
-            .antares_problems = simulationObserver.acquireLps(),
-            .error{}};
+    return {.antares_problems = simulationObserver.acquireLps(), .error{}};
 }
 } // namespace Antares::API

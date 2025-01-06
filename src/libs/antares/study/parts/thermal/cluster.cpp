@@ -120,8 +120,7 @@ namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent):
     Cluster(parent),
-    PthetaInf(HOURS_PER_YEAR, 0),
-    costsTimeSeries(1, CostsTimeSeries())
+    PthetaInf(HOURS_PER_YEAR, 0)
 {
     // assert
     assert(parent && "A parent for a thermal dispatchable cluster can not be null");
@@ -184,8 +183,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     fixedCost = cluster.fixedCost;
     startupCost = cluster.startupCost;
     marketBidCost = cluster.marketBidCost;
-    // assignment “=” operator can be used to copy-paste vector by value
-    costsTimeSeries = cluster.costsTimeSeries;
 
     // modulation
     modulation = cluster.modulation;
@@ -299,108 +296,13 @@ void Data::ThermalCluster::calculationOfSpinning()
     }
 }
 
-void Data::ThermalCluster::ComputeCostTimeSeries()
+void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
-    switch (costgeneration)
-    {
-    case Data::setManually:
-        fillMarketBidCostTS();
-        fillMarginalCostTS();
-        break;
-    case Data::useCostTimeseries:
-        resizeCostTS();
-        ComputeMarketBidTS();
-        MarginalCostEqualsMarketBid();
-        ComputeProductionCostTS();
-        break;
-    }
-}
-
-void Data::ThermalCluster::fillMarketBidCostTS()
-{
-    std::fill(costsTimeSeries[0].marketBidCostTS.begin(),
-              costsTimeSeries[0].marketBidCostTS.end(),
-              marketBidCost);
-}
-
-void Data::ThermalCluster::fillMarginalCostTS()
-{
-    std::fill(costsTimeSeries[0].marginalCostTS.begin(),
-              costsTimeSeries[0].marginalCostTS.end(),
-              marginalCost);
-}
-
-void ThermalCluster::resizeCostTS()
-{
-    const uint fuelCostWidth = ecoInput.fuelcost.width;
-    const uint co2CostWidth = ecoInput.co2cost.width;
-    const uint tsCount = std::max(fuelCostWidth, co2CostWidth);
-
-    costsTimeSeries.resize(tsCount, CostsTimeSeries());
-}
-
-void ThermalCluster::ComputeMarketBidTS()
-{
-    const uint fuelCostWidth = ecoInput.fuelcost.width;
-    const uint co2CostWidth = ecoInput.co2cost.width;
-
-    double& co2EmissionFactor = emissions.factors[Pollutant::CO2];
-
-    for (uint tsIndex = 0; tsIndex < costsTimeSeries.size(); ++tsIndex)
-    {
-        uint tsIndexFuel = std::min(fuelCostWidth - 1, tsIndex);
-        uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
-        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
-        {
-            double& marketBidCostTS = costsTimeSeries[tsIndex].marketBidCostTS[hour];
-
-            double& fuelcost = ecoInput.fuelcost[tsIndexFuel][hour];
-            double& co2cost = ecoInput.co2cost[tsIndexCo2][hour];
-
-            marketBidCostTS = computeMarketBidCost(fuelcost, co2EmissionFactor, co2cost);
-        }
-    }
-}
-
-void ThermalCluster::MarginalCostEqualsMarketBid()
-{
-    for (auto& timeSeries: costsTimeSeries)
-    {
-        auto& source = timeSeries.marketBidCostTS;
-        auto& destination = timeSeries.marginalCostTS;
-        std::copy(source.begin(), source.end(), destination.begin());
-    }
-}
-
-void ThermalCluster::ComputeProductionCostTS()
-{
-    if (modulation.width == 0)
+    if (tsGenBehavior == LocalTSGenerationBehavior::forceNoGen)
     {
         return;
     }
 
-    for (auto& timeSeries: costsTimeSeries)
-    {
-        auto& productionCostTS = timeSeries.productionCostTs;
-        auto& marginalCostTS = timeSeries.marginalCostTS;
-
-        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
-        {
-            double& houtlyModulation = modulation[Data::thermalModulationCost][hour];
-            productionCostTS[hour] = marginalCostTS[hour] * houtlyModulation;
-        }
-    }
-}
-
-double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
-                                                  double co2EmissionFactor,
-                                                  double co2cost)
-{
-    return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
-}
-
-void Data::ThermalCluster::reverseCalculationOfSpinning()
-{
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
     if (Utils::isZero(spinning))
@@ -464,7 +366,6 @@ void Data::ThermalCluster::reset()
     startupCost = 0.;
     marketBidCost = 0.;
     variableomcost = 0.;
-    costsTimeSeries.resize(1, CostsTimeSeries());
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -714,53 +615,23 @@ unsigned int ThermalCluster::precision() const
     return 0;
 }
 
-double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) const
+CostProvider& ThermalCluster::getCostProvider()
 {
-    if (costgeneration == Data::setManually)
+    if (!costProvider)
     {
-        const auto* modCost = modulation[thermalModulationCost];
-        return marginalCost * modCost[hourInTheYear];
+        switch (costgeneration)
+        {
+        case Data::setManually:
+            costProvider = std::make_unique<ConstantCostProvider>(*this);
+            break;
+        case Data::useCostTimeseries:
+            costProvider = std::make_unique<ScenarizedCostProvider>(*this);
+            break;
+        default:
+            throw std::runtime_error("Invalid costgeneration parameter");
+        }
     }
-    else
-    {
-        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
-        return costsTimeSeries[tsIndex].productionCostTs[hourInTheYear];
-    }
-}
-
-double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) const
-{
-    const double mod = modulation[Data::thermalModulationCost][hourInTheYear];
-
-    if (costgeneration == Data::setManually)
-    {
-        return marginalCost * mod;
-    }
-    else
-    {
-        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
-        return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
-    }
-    /* std::min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
-     only 1TS. Then - > In order to save memory marginalCostTS vector has only one array
-     inside -> that is used for all (e.g.10) TS*/
-}
-
-double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
-{
-    uint serieIndex = series.getSeriesIndex(year);
-
-    double mod = modulation[thermalModulationMarketBid][serieIndex];
-
-    if (costgeneration == Data::setManually)
-    {
-        return marketBidCost * mod;
-    }
-    else
-    {
-        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
-        return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
-    }
+    return *costProvider;
 }
 
 void ThermalCluster::checkAndCorrectAvailability()

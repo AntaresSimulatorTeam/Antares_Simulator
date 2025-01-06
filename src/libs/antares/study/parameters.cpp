@@ -208,6 +208,39 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
+const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax mode)
+{
+    switch (mode)
+    {
+    case Parameters::Compatibility::HydroPmax::Daily:
+        return "daily";
+    case Parameters::Compatibility::HydroPmax::Hourly:
+        return "hourly";
+    default:
+        return "Unknown";
+    }
+}
+
+bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
+                                    const std::string& text)
+{
+    if (text.empty())
+    {
+        return false;
+    }
+    if (text == "daily")
+    {
+        mode = Parameters::Compatibility::HydroPmax::Daily;
+        return true;
+    }
+    if (text == "hourly")
+    {
+        mode = Parameters::Compatibility::HydroPmax::Hourly;
+        return true;
+    }
+    return false;
+}
+
 bool Parameters::economy() const
 {
     return mode == SimulationMode::Economy;
@@ -1053,6 +1086,19 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
     return false;
 }
 
+static bool SGDIntLoadFamily_Compatibility(Parameters& d,
+                                           const String& key,
+                                           const String& value,
+                                           const String&)
+{
+    if (key == "hydro-pmax")
+    {
+        return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
+    }
+
+    return false;
+}
+
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
@@ -1170,7 +1216,8 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
       {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
       {"playlist", &SGDIntLoadFamily_Playlist},
       {"variables selection", &SGDIntLoadFamily_VariablesSelection},
-      {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
+      {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister},
+      {"compatibility", &SGDIntLoadFamily_Compatibility}};
 
     Callback handleAllKeysInSection;
     // Foreach section on the ini file...
@@ -1230,7 +1277,6 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
 void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
 {
     // Options only set from the command-line
-    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
     optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
     optOptions.solverParameters = options.optOptions.solverParameters;
 
@@ -1724,12 +1770,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring hurdle costs";
     }
 
-    // Indicate ortools solver used
-    if (options.optOptions.ortoolsUsed)
-    {
-        logs.info() << "  :: ortools solver " << options.optOptions.ortoolsSolver
-                    << " used for problem resolution";
-    }
+    logs.info() << "  :: solver " << options.optOptions.ortoolsSolver
+                << " is used for problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)
@@ -1971,6 +2013,10 @@ void Parameters::saveToINI(IniFile& ini) const
         {
             section->add(SeedToID((SeedIndex)sd), seed[sd]);
         }
+    }
+    {
+        auto* section = ini.addSection("compatibility");
+        section->add("hydro-pmax", CompatibilityHydroPmaxToCString(compatibility.hydroPmax));
     }
 }
 

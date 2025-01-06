@@ -28,13 +28,11 @@ def init_simu(context):
 
 def build_antares_solver_command(context):
     command = [context.config.userdata["antares-solver"], "-i", str(context.study_path)]
-    if "use-ortools" in context.config.userdata and context.config.userdata["use-ortools"].lower() == 'true':
-        command.append('--use-ortools')
-        if "ortools-solver" in context.config.userdata:
-            solver = context.config.userdata["ortools-solver"]
-        else:
-            solver = "sirius"
-        command.append('--ortools-solver=' + solver)
+    solver = "sirius"
+    if "solver" in context.config.userdata:
+        solver = context.config.userdata["solver"]
+    command.append('--solver=' + solver)
+
     if context.named_mps_problems:
         command.append('--named-mps-problems')
     if context.parallel:

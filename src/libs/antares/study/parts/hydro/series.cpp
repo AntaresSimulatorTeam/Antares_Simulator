@@ -230,6 +230,7 @@ uint DataSeriesHydro::TScount() const
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             StudyVersion studyVersion,
+                                            Parameters::Compatibility::HydroPmax hydroPmax,
                                             bool usedBySolver)
 {
     if (!(derated && usedBySolver))
@@ -243,7 +244,7 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     {
         mingen.averageTimeseries();
 
-        if (studyVersion >= StudyVersion(9, 1))
+        if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
         {
             maxHourlyGenPower.averageTimeseries();
             maxHourlyPumpPower.averageTimeseries();

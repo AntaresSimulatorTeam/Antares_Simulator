@@ -99,8 +99,14 @@ void BeautifyName(std::string& out, const std::string& oldname)
 std::tm getCurrentTime()
 {
     using namespace std::chrono;
-    auto time = system_clock::to_time_t(system_clock::now());
-    return *std::localtime(&time);
+    auto now = system_clock::to_time_t(system_clock::now());
+    std::tm local_time;
+#ifdef _WIN32
+    localtime_s(&local_time, &now); // Windows
+#else
+    localtime_r(&now, &local_time); // POSIX
+#endif
+    return local_time;
 }
 
 std::string formatTime(const std::tm& localTime, const std::string& format)

@@ -199,7 +199,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         // calculating the operating cost for the current hour
         // O(h) = MA * P(h) * Modulation
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-          = (p * thermalCluster->getOperatingCost(serieIndex, hourInTheYear));
+          = (p * thermalCluster->getCostProvider().getOperatingCost(serieIndex, hourInTheYear));
 
         // Startup cost
         if (newUnitCount > previousUnitCount && hourInTheSimulation != 0u)
@@ -297,7 +297,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
         uint serieIndex = currentCluster->series.timeseriesNumbers[this->year];
         thermalClusterOperatingCostForYear[h] = thermalClusterProduction
-                                                * currentCluster->getOperatingCost(serieIndex, h);
+                                                * currentCluster->getCostProvider()
+                                                    .getOperatingCost(serieIndex, h);
 
         switch (unitCommitmentMode)
         {

@@ -1,3 +1,5 @@
+include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+
 set(src_tests_src_libs_antares_study "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_subdirectory(area)
@@ -10,14 +12,6 @@ add_subdirectory(parts)
 add_subdirectory(series)
 add_subdirectory(parameters)
 
-add_executable(test-study)
-target_sources(test-study PRIVATE test_study.cpp)
-target_link_libraries(test-study
-        PRIVATE
-        Antares::study
-        Boost::unit_test_framework
-)
-
-add_test(NAME test-study COMMAND test-study)
-
-set_property(TEST test-study PROPERTY LABELS unit)
+add_boost_test(test-study
+  SRC test_study.cpp
+  LIBS Antares::study)

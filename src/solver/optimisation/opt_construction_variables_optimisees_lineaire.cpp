@@ -109,6 +109,29 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ShortTermStorageLevel(NombreDeVariables, storage.name);
                 NombreDeVariables++;
+
+                // 4. Cost Variation Injection
+                if (storage.penalizeVariationInjection)
+                {
+                    variableManager.ShortTermStorageCostVariationInjection(clusterGlobalIndex, pdt)
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_INFERIEUREMENT;
+                    variableNamer.ShortTermStorageCostVariationInjection(NombreDeVariables,
+                                                                         storage.name);
+                    ++NombreDeVariables;
+                }
+                // 5. Cost Variation Withdrawal
+                if (storage.penalizeVariationWithdrawal)
+                {
+                    variableManager.ShortTermStorageCostVariationWithdrawal(clusterGlobalIndex, pdt)
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_INFERIEUREMENT;
+                    variableNamer.ShortTermStorageCostVariationWithdrawal(NombreDeVariables,
+                                                                          storage.name);
+                    ++NombreDeVariables;
+                }
             }
 
             variableManager.PositiveUnsuppliedEnergy(pays, pdt) = NombreDeVariables;

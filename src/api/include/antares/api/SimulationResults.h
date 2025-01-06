@@ -23,6 +23,7 @@
 #include <filesystem>
 #include <optional>
 #include <string>
+
 #include "antares/solver/lps/LpsFromAntares.h"
 
 namespace Antares::API
@@ -31,7 +32,8 @@ namespace Antares::API
  * @struct Error
  * @brief The Error structure is used to represent an error that occurred during the simulation.
  */
-struct Error {
+struct Error
+{
     /**
      * @brief The reason for the error.
      */
@@ -46,10 +48,6 @@ struct Error {
 struct [[nodiscard("Contains results and potential error")]] SimulationResults
 {
     /**
-     * @brief The path to the simulation (output).
-     */
-    std::filesystem::path simulationPath;
-    /**
      * @brief weekly problems
      */
     Antares::Solver::LpsFromAntares antares_problems;
@@ -59,4 +57,4 @@ struct [[nodiscard("Contains results and potential error")]] SimulationResults
     std::optional<Error> error;
 };
 
-}
+} // namespace Antares::API

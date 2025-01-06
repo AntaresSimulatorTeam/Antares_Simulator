@@ -23,6 +23,7 @@
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
+#include <antares/study/parameters.h>
 #include <antares/study/version.h>
 
 #include "../../fwd.h"
@@ -137,7 +138,10 @@ public:
     uint TScount() const;
 
     // Setting TS's when derated mode is on
-    void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
+    void resizeTSinDeratedMode(bool derated,
+                               StudyVersion version,
+                               Parameters::Compatibility::HydroPmax hydroPmax,
+                               bool useBySolver);
 }; // class DataSeriesHydro
 } // namespace Data
 } // namespace Antares

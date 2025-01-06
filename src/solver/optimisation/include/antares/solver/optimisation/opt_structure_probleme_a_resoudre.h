@@ -27,6 +27,7 @@
 
 #include <antares/solver/utils/basis_status.h>
 
+#include "SparseVector.hxx"
 #include "opt_constants.h"
 
 /*--------------------------------------------------------------------------------------*/
@@ -45,9 +46,8 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     std::string Sens;
     std::vector<int> IndicesDebutDeLigne;
     std::vector<int> NombreDeTermesDesLignes;
-    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
-    std::vector<int> IndicesColonnes;
-    int NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    SparseVector<double> CoefficientsDeLaMatriceDesContraintes;
+    SparseVector<int> IndicesColonnes;
     int IncrementDAllocationMatriceDesContraintes;
     int NombreDeTermesDansLaMatriceDesContraintes;
     /* Donnees variables de la matrice des contraintes */

@@ -12,6 +12,7 @@ source_group("io" FILES ${SRC_IO})
 add_library(io
         ${SRC_IO}
 )
+add_library(Antares::io ALIAS io)
 
 target_link_libraries(io
         PRIVATE

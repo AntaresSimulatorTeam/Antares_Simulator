@@ -69,6 +69,8 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> InjectionVariable;
         std::vector<int> WithdrawalVariable;
         std::vector<int> LevelVariable;
+        std::vector<int> CostVariationInjection;
+        std::vector<int> CostVariationWithdrawal;
     } SIM_ShortTermStorage;
 };
 
@@ -95,6 +97,10 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 
     std::vector<int> ShortTermStorageLevelConstraint;
+    std::vector<int> ShortTermStorageCostVariationInjectionForward;
+    std::vector<int> ShortTermStorageCostVariationInjectionBackward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalForward;
+    std::vector<int> ShortTermStorageCostVariationWithdrawalBackward;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -105,6 +111,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
 {
     std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> ShortTermStorageCumulation;
 };
 
 struct VALEURS_DE_NTC_ET_RESISTANCES
@@ -172,9 +179,11 @@ struct PROPERTIES
     double withdrawalEfficiency;
     double initialLevel;
     bool initialLevelOptim;
+    bool penalizeVariationWithdrawal;
+    bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-
+    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraint> additional_constraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -502,7 +511,6 @@ struct PROBLEME_HEBDO
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
-    uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;

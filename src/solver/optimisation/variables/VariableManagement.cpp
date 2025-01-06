@@ -136,6 +136,26 @@ int& VariableManager::ShortTermStorageLevel(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].SIM_ShortTermStorage.LevelVariable[index];
 }
 
+int& VariableManager::ShortTermStorageCostVariationInjection(unsigned int index,
+                                                             unsigned int hourInWeek,
+                                                             int offset,
+                                                             int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .SIM_ShortTermStorage.CostVariationInjection[index];
+}
+
+int& VariableManager::ShortTermStorageCostVariationWithdrawal(unsigned int index,
+                                                              unsigned int hourInWeek,
+                                                              int offset,
+                                                              int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .SIM_ShortTermStorage.CostVariationWithdrawal[index];
+}
+
 int& VariableManager::HydProd(unsigned int index, unsigned int hourInWeek, int offset, int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);

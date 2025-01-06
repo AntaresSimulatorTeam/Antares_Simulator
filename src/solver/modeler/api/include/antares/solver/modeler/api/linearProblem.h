@@ -35,7 +35,7 @@ namespace Antares::Solver::Modeler::Api
 /**
  * Linear Problem
  * This class is aimed at creating and manipulating variables/constraints
- * Also used to to control the objective, maximization or minimization, and to solve the problem
+ * Also used to control the objective, maximization or minimization, and to solve the problem
  */
 class ILinearProblem
 {

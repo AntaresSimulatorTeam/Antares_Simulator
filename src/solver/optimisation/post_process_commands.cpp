@@ -22,7 +22,6 @@
 #include "antares/solver/optimisation/post_process_commands.h"
 
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include "antares/solver/optimisation/adequacy_patch_csr/post_processing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 
@@ -34,10 +33,10 @@ const uint nbHoursInWeek = 168;
 // Dispatchable Margin
 // -----------------------------
 DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                                                   unsigned int thread_number,
+                                                                   unsigned int numSpace,
                                                                    AreaList& areas):
     basePostProcessCommand(problemeHebdo),
-    thread_number_(thread_number),
+    numSpace_(numSpace),
     area_list_(areas)
 {
 }
@@ -49,7 +48,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
     area_list_.each(
       [this, &hourInYear, &year](Data::Area& area)
       {
-          double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
+          double* dtgmrg = area.scratchpad[numSpace_].dispatchableGenerationMargin;
           for (uint h = 0; h != nbHoursInWeek; ++h)
           {
               dtgmrg[h] = 0.;
@@ -96,10 +95,10 @@ RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo
                                                    AreaList& areas,
                                                    SheddingPolicy sheddingPolicy,
                                                    SimplexOptimization simplexOptimization,
-                                                   unsigned int thread_number):
+                                                   unsigned int numSpace):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
-    thread_number_(thread_number),
+    numSpace_(numSpace),
     shedding_policy_(sheddingPolicy),
     splx_optimization_(simplexOptimization)
 {
@@ -112,57 +111,88 @@ void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
                           *problemeHebdo_,
                           shedding_policy_,
                           splx_optimization_,
-                          thread_number_,
+                          numSpace_,
                           hourInYear);
+}
+
+// ----------------------------------
+//  Update marginal price after CSR
+// ----------------------------------
+using namespace Antares::Data::AdequacyPatch;
+
+UpdateMrgPriceAfterCSRcmd::UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
+                                                     AreaList& areas,
+                                                     unsigned int numSpace):
+    basePostProcessCommand(problemeHebdo),
+    area_list_(areas),
+    numSpace_(numSpace)
+{
+}
+
+void UpdateMrgPriceAfterCSRcmd::execute(const optRuntimeData&)
+{
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    {
+        auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
+        const auto& scratchpad = area_list_[Area]->scratchpad[numSpace_];
+        const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
+        const bool areaInside = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+                                == physicalAreaInsideAdqPatch;
+        for (uint hour = 0; hour < nbHoursInWeek; hour++)
+        {
+            const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
+                                                ->wasCSRTriggeredAtAreaHour(Area, hour);
+
+            if (isHourTriggeredByCsr
+                && hourlyResults.ValeursHorairesDeDefaillancePositive[hour] > 0.5 && areaInside)
+            {
+                hourlyResults.CoutsMarginauxHoraires[hour] = -unsuppliedEnergyCost;
+            }
+        }
+    }
 }
 
 // -----------------------------
 //  DTG margin for adq patch
 // -----------------------------
-using namespace Antares::Data::AdequacyPatch;
-
-DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
-  PROBLEME_HEBDO* problemeHebdo,
-  AreaList& areas,
-  unsigned int thread_number):
+DTGnettingAfterCSRcmd::DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
+                                             AreaList& areas,
+                                             unsigned int numSpace):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
-    thread_number_(thread_number)
+    numSpace_(numSpace)
 {
 }
 
-/*!
-** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
-** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
-** */
-void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
+void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
 {
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] != physicalAreaInsideAdqPatch)
-        {
-            continue;
-        }
+        auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
+        const auto& scratchpad = area_list_[Area]->scratchpad[numSpace_];
 
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
-            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
-            const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
+            const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
+                                                ->wasCSRTriggeredAtAreaHour(Area, hour);
+
             const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
             const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-            const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
-                                     ->wasCSRTriggeredAtAreaHour(Area, hour);
-            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(triggered, dtgMrg, ens);
-            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = recomputeENS_MRG(
-              triggered,
-              dtgMrg,
-              ens);
-
-            const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
-            hourlyResults.CoutsMarginauxHoraires[hour] = recomputeMRGPrice(
-              hourlyResults.ValeursHorairesDtgMrgCsr[hour],
-              hourlyResults.CoutsMarginauxHoraires[hour],
-              unsuppliedEnergyCost);
+            const bool areaInside = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+                                    == physicalAreaInsideAdqPatch;
+            if (isHourTriggeredByCsr && areaInside)
+            {
+                hourlyResults.ValeursHorairesDtgMrgCsr[hour] = std::max(0.0, dtgMrg - ens);
+                hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = std::max(0.0,
+                                                                                       ens
+                                                                                         - dtgMrg);
+            }
+            else
+            {
+                // Default value (when the hour is not triggered by CSR)
+                hourlyResults.ValeursHorairesDtgMrgCsr[hour] = dtgMrg;
+                hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = ens;
+            }
         }
     }
 }
@@ -211,11 +241,11 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
   const AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
-  unsigned int thread_number):
+  unsigned int numSpace):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     adqPatchParams_(adqPatchParams),
-    thread_number_(thread_number)
+    numSpace_(numSpace)
 {
 }
 
@@ -256,7 +286,7 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
-                const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
+                const auto& scratchpad = area_list_[Area]->scratchpad[numSpace_];
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 // write down densNew values for all the hours
                 problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour] = std::max(

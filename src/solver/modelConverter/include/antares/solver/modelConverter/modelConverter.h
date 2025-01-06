@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -21,21 +20,35 @@
  */
 
 #pragma once
+#include <stdexcept>
 
-namespace Antares::Solver
+#include "antares/solver/modelParser/Library.h"
+
+namespace Antares
 {
-namespace ObjectModel
+namespace Study::SystemModel
 {
 class Library;
 }
 
-namespace ModelParser
+namespace Solver::ModelParser
 {
 class Library;
 }
-} // namespace Antares::Solver
+} // namespace Antares
+
+namespace Antares::Solver::Nodes
+{
+class Node;
+}
 
 namespace Antares::Solver::ModelConverter
 {
-Antares::Solver::ObjectModel::Library convert(const Antares::Solver::ModelParser::Library& library);
-}
+class UnknownTypeException: public std::runtime_error
+{
+public:
+    explicit UnknownTypeException(ModelParser::ValueType type);
+};
+
+Antares::Study::SystemModel::Library convert(const Antares::Solver::ModelParser::Library& library);
+} // namespace Antares::Solver::ModelConverter

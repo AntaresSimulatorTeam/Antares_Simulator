@@ -2,3 +2,4 @@ mkdocs
 mkdocs-material
 sphinx
 myst-parser
+mkdocs_puml

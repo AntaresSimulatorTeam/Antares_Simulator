@@ -23,6 +23,7 @@
 #include <memory>
 #include <ortools/linear_solver/linear_solver.h>
 
+#include <antares/logs/logs.h>
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/utils/ortools_utils.h>
 

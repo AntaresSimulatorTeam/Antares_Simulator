@@ -1,0 +1,10 @@
+include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+add_boost_test(test-system-model
+  SRC
+  test_main.cpp
+  test_component.cpp
+  test_system.cpp
+  LIBS
+  Boost::unit_test_framework
+  antares-study-system-model
+  test_utils_unit)

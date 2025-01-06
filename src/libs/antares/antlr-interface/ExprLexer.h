@@ -1,5 +1,5 @@
 
-// Generated from Expr.g4 by ANTLR 4.13.1
+// Generated from Expr.g4 by ANTLR 4.13.2
 
 #pragma once
 
@@ -13,8 +13,8 @@ class  ExprLexer : public antlr4::Lexer {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    T__7 = 8, T__8 = 9, NUMBER = 10, TIME = 11, IDENTIFIER = 12, COMPARISON = 13, 
-    ADDSUB = 14, MULDIV = 15, LBRACKET = 16, RBRACKET = 17, WS = 18
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, NUMBER = 13, 
+    TIME = 14, IDENTIFIER = 15, COMPARISON = 16, WS = 17
   };
 
   explicit ExprLexer(antlr4::CharStream *input);

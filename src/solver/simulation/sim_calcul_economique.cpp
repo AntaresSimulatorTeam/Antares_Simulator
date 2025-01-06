@@ -39,6 +39,7 @@ static void importShortTermStorages(
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
     int clusterGlobalIndex = 0;
+    int clusterCumulativeConstraintGlobalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
@@ -56,8 +57,15 @@ static void importShortTermStorages(
             toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st.properties.initialLevel;
             toInsert.initialLevelOptim = st.properties.initialLevelOptim;
+            toInsert.penalizeVariationInjection = st.properties.penalizeVariationInjection;
+            toInsert.penalizeVariationWithdrawal = st.properties.penalizeVariationWithdrawal;
             toInsert.name = st.properties.name;
-
+            toInsert.additional_constraints = st.additional_constraints;
+            for (auto& constraint: toInsert.additional_constraints)
+            {
+                constraint.globalIndex = clusterCumulativeConstraintGlobalIndex;
+                ++clusterCumulativeConstraintGlobalIndex;
+            }
             toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct

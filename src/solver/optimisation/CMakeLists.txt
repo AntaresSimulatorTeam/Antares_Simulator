@@ -5,6 +5,7 @@ set(RTESOLVER_OPT
         opt_optimisation_lineaire.cpp
         opt_chainage_intercos.cpp
         include/antares/solver/optimisation/opt_fonctions.h
+        include/antares/solver/optimisation/SparseVector.hxx
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
         include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
@@ -46,9 +47,7 @@ set(RTESOLVER_OPT
         post_process_commands.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h
         include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
-        include/antares/solver/optimisation/adequacy_patch_csr/post_processing.h
         adequacy_patch_csr/adq_patch_post_process_list.cpp
-        adequacy_patch_csr/post_processing.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
         adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
         adequacy_patch_csr/solve_problem.cpp
@@ -80,6 +79,14 @@ set(RTESOLVER_OPT
         constraints/FictitiousLoad.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageLevel.h
         constraints/ShortTermStorageLevel.cpp
+        include/antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h
+        include/antares/solver/optimisation/constraints/ShortTermStorageCumulation.h
+        constraints/ShortTermStorageCostVariation.cpp
+        constraints/ShortTermStorageCumulation.cpp
+        constraints/ShortTermStorageCostVariationInjectionForward.cpp
+        constraints/ShortTermStorageCostVariationInjectionBackward.cpp
+        constraints/ShortTermStorageCostVariationWithdrawalForward.cpp
+        constraints/ShortTermStorageCostVariationWithdrawalBackward.cpp
         include/antares/solver/optimisation/constraints/FlowDissociation.h
         constraints/FlowDissociation.cpp
         include/antares/solver/optimisation/constraints/BindingConstraintHour.h
