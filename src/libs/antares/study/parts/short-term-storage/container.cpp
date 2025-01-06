@@ -133,6 +133,7 @@ static bool loadHours(const std::string& hoursStr, AdditionalConstraints& additi
         }
         return true;
     }
+    return false;
 }
 
 static bool readRHS(AdditionalConstraints& additionalConstraints, const fs::path& rhsPath)
