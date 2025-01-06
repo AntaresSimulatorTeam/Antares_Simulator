@@ -12,7 +12,7 @@ int find_min_index(const std::vector<double>& G_plus_H,
                    const std::vector<double>& new_D,
                    const std::vector<double>& new_H,
                    const std::vector<int>& tried_creux,
-                   const std::vector<double>& P_max,
+                   const std::vector<double>& HydroPmax,
                    const std::vector<bool>& filter_hours_remix,
                    double top)
 {
@@ -20,7 +20,7 @@ int find_min_index(const std::vector<double>& G_plus_H,
     int min_idx = -1;
     for (int i = 0; i < G_plus_H.size(); ++i)
     {
-        if (new_D[i] > 0 && new_H[i] < P_max[i] && tried_creux[i] == 0 && filter_hours_remix[i])
+        if (new_D[i] > 0 && new_H[i] < HydroPmax[i] && tried_creux[i] == 0 && filter_hours_remix[i])
         {
             if (G_plus_H[i] < min_val)
             {
@@ -35,7 +35,7 @@ int find_min_index(const std::vector<double>& G_plus_H,
 int find_max_index(const std::vector<double>& G_plus_H,
                    const std::vector<double>& new_H,
                    const std::vector<int>& tried_pic,
-                   const std::vector<double>& P_min,
+                   const std::vector<double>& HydroPmin,
                    const std::vector<bool>& filter_hours_remix,
                    double ref_value,
                    double eps)
@@ -44,7 +44,7 @@ int find_max_index(const std::vector<double>& G_plus_H,
     int max_idx = -1;
     for (int i = 0; i < G_plus_H.size(); ++i)
     {
-        if (new_H[i] > P_min[i] && G_plus_H[i] >= ref_value + eps && tried_pic[i] == 0
+        if (new_H[i] > HydroPmin[i] && G_plus_H[i] >= ref_value + eps && tried_pic[i] == 0
             && filter_hours_remix[i])
         {
             if (G_plus_H[i] > max_val)
@@ -74,18 +74,18 @@ static bool operator>=(const std::vector<double>& v, const double c)
     return std::ranges::all_of(v, [&c](const double& e) { return e >= c; });
 }
 
-static void checkInputCorrectness(const std::vector<double>& G,
-                                  const std::vector<double>& H,
-                                  const std::vector<double>& D,
+static void checkInputCorrectness(const std::vector<double>& ThermalGen,
+                                  const std::vector<double>& HydroGen,
+                                  const std::vector<double>& UnsupE,
                                   const std::vector<double>& levels,
-                                  const std::vector<double>& P_max,
-                                  const std::vector<double>& P_min,
+                                  const std::vector<double>& HydroPmax,
+                                  const std::vector<double>& HydroPmin,
                                   double initial_level,
                                   double capacity,
                                   const std::vector<double>& inflows,
                                   const std::vector<double>& overflow,
                                   const std::vector<double>& pump,
-                                  const std::vector<double>& S,
+                                  const std::vector<double>& Spillage,
                                   const std::vector<double>& DTG_MRG)
 {
     std::string msg_prefix = "Remix hydro input : ";
@@ -96,16 +96,16 @@ static void checkInputCorrectness(const std::vector<double>& G,
         throw std::invalid_argument(msg_prefix + "initial level > reservoir capacity");
     }
     // Arrays sizes must be identical
-    std::vector<size_t> sizes = {G.size(),
-                                 H.size(),
-                                 D.size(),
+    std::vector<size_t> sizes = {ThermalGen.size(),
+                                 HydroGen.size(),
+                                 UnsupE.size(),
                                  levels.size(),
-                                 P_max.size(),
-                                 P_min.size(),
+                                 HydroPmax.size(),
+                                 HydroPmin.size(),
                                  inflows.size(),
                                  overflow.size(),
                                  pump.size(),
-                                 S.size(),
+                                 Spillage.size(),
                                  DTG_MRG.size()};
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
@@ -114,21 +114,23 @@ static void checkInputCorrectness(const std::vector<double>& G,
     }
 
     // Arrays are of size 0
-    if (!G.size())
+    if (!ThermalGen.size())
     {
         throw std::invalid_argument(msg_prefix + "all arrays of sizes 0");
     }
 
     // Hydro production < Pmax
-    if (!(H <= P_max))
+    if (!(HydroGen <= HydroPmax))
     {
-        throw std::invalid_argument(msg_prefix + "H not smaller than Pmax everywhere");
+        throw std::invalid_argument(msg_prefix
+                                    + "Hydro generation not smaller than Pmax everywhere");
     }
 
     // Hydro production > Pmin
-    if (!(P_min <= H))
+    if (!(HydroPmin <= HydroGen))
     {
-        throw std::invalid_argument(msg_prefix + "H not greater than Pmin everywhere");
+        throw std::invalid_argument(msg_prefix
+                                    + "Hydro generation not greater than Pmin everywhere");
     }
 
     if (!(levels <= capacity) || !(levels >= 0.))
@@ -138,66 +140,71 @@ static void checkInputCorrectness(const std::vector<double>& G,
     }
 }
 
-RemixHydroOutput new_remix_hydro(const std::vector<double>& G,
-                                 const std::vector<double>& H,
-                                 const std::vector<double>& D,
-                                 const std::vector<double>& P_max,
-                                 const std::vector<double>& P_min,
+RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
+                                 const std::vector<double>& HydroGen,
+                                 const std::vector<double>& UnsupE,
+                                 const std::vector<double>& HydroPmax,
+                                 const std::vector<double>& HydroPmin,
                                  double initial_level,
                                  double capa,
                                  const std::vector<double>& inflows,
                                  const std::vector<double>& overflow,
                                  const std::vector<double>& pump,
-                                 const std::vector<double>& S,
+                                 const std::vector<double>& Spillage,
                                  const std::vector<double>& DTG_MRG)
 {
-    std::vector<double> levels(G.size());
+    std::vector<double> levels(ThermalGen.size());
     if (levels.size())
     {
-        levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - H[0];
+        levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - HydroGen[0];
         for (size_t i = 1; i < levels.size(); ++i)
         {
-            levels[i] = levels[i - 1] + inflows[i] - overflow[i] + pump[i] - H[i];
+            levels[i] = levels[i - 1] + inflows[i] - overflow[i] + pump[i] - HydroGen[i];
         }
     }
 
-    checkInputCorrectness(G,
-                          H,
-                          D,
+    checkInputCorrectness(ThermalGen,
+                          HydroGen,
+                          UnsupE,
                           levels,
-                          P_max,
-                          P_min,
+                          HydroPmax,
+                          HydroPmin,
                           initial_level,
                           capa,
                           inflows,
                           overflow,
                           pump,
-                          S,
+                          Spillage,
                           DTG_MRG);
 
-    std::vector<double> new_H = H;
-    std::vector<double> new_D = D;
+    std::vector<double> new_H = HydroGen;
+    std::vector<double> new_D = UnsupE;
 
     int loop = 1000;
     double eps = 1e-3;
-    double top = *std::max_element(G.begin(), G.end()) + *std::max_element(H.begin(), H.end())
-                 + *std::max_element(D.begin(), D.end()) + 1;
+    double top = *std::max_element(ThermalGen.begin(), ThermalGen.end())
+                 + *std::max_element(HydroGen.begin(), HydroGen.end())
+                 + *std::max_element(UnsupE.begin(), UnsupE.end()) + 1;
 
-    std::vector<bool> filter_hours_remix(G.size(), false);
+    std::vector<bool> filter_hours_remix(ThermalGen.size(), false);
     for (unsigned int h = 0; h < filter_hours_remix.size(); h++)
     {
-        if (S[h] + DTG_MRG[h] == 0. && H[h] + D[h] > 0.)
+        if (Spillage[h] + DTG_MRG[h] == 0. && HydroGen[h] + UnsupE[h] > 0.)
         {
             filter_hours_remix[h] = true;
         }
     }
 
-    std::vector<double> G_plus_H(G.size());
-    std::transform(G.begin(), G.end(), new_H.begin(), G_plus_H.begin(), std::plus<>());
+    std::vector<double> G_plus_H(ThermalGen.size());
+    std::transform(ThermalGen.begin(),
+                   ThermalGen.end(),
+                   new_H.begin(),
+                   G_plus_H.begin(),
+                   std::plus<>());
 
     while (loop-- > 0)
     {
-        std::vector<int> tried_creux(G.size(), 0);
+        std::vector<int> tried_creux(ThermalGen.size(), 0);
         double delta = 0;
 
         while (true)
@@ -206,7 +213,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& G,
                                            new_D,
                                            new_H,
                                            tried_creux,
-                                           P_max,
+                                           HydroPmax,
                                            filter_hours_remix,
                                            top);
             if (idx_creux == -1)
@@ -214,13 +221,13 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& G,
                 break;
             }
 
-            std::vector<int> tried_pic(G.size(), 0);
+            std::vector<int> tried_pic(ThermalGen.size(), 0);
             while (true)
             {
                 int idx_pic = find_max_index(G_plus_H,
                                              new_H,
                                              tried_pic,
-                                             P_min,
+                                             HydroPmin,
                                              filter_hours_remix,
                                              G_plus_H[idx_creux],
                                              eps);
@@ -248,9 +255,9 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& G,
                     max_creux = capa;
                 }
 
-                max_pic = std::min(new_H[idx_pic] - P_min[idx_pic], max_pic);
+                max_pic = std::min(new_H[idx_pic] - HydroPmin[idx_pic], max_pic);
                 max_creux = std::min(
-                  {P_max[idx_creux] - new_H[idx_creux], new_D[idx_creux], max_creux});
+                  {HydroPmax[idx_creux] - new_H[idx_creux], new_D[idx_creux], max_creux});
 
                 double dif_pic_creux = std::max(G_plus_H[idx_pic] - G_plus_H[idx_creux], 0.);
 
@@ -260,8 +267,8 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& G,
                 {
                     new_H[idx_pic] -= delta;
                     new_H[idx_creux] += delta;
-                    new_D[idx_pic] = H[idx_pic] + D[idx_pic] - new_H[idx_pic];
-                    new_D[idx_creux] = H[idx_creux] + D[idx_creux] - new_H[idx_creux];
+                    new_D[idx_pic] = HydroGen[idx_pic] + UnsupE[idx_pic] - new_H[idx_pic];
+                    new_D[idx_creux] = HydroGen[idx_creux] + UnsupE[idx_creux] - new_H[idx_creux];
                     break;
                 }
                 else
@@ -282,7 +289,11 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& G,
             break;
         }
 
-        std::transform(G.begin(), G.end(), new_H.begin(), G_plus_H.begin(), std::plus<>());
+        std::transform(ThermalGen.begin(),
+                       ThermalGen.end(),
+                       new_H.begin(),
+                       G_plus_H.begin(),
+                       std::plus<>());
         levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - new_H[0];
         for (size_t i = 1; i < levels.size(); ++i)
         {
