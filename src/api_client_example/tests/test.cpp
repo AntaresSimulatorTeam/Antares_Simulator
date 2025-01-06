@@ -22,10 +22,12 @@
 #define BOOST_TEST_MODULE test_client_api
 
 #include <boost/test/unit_test.hpp>
+
 #include "API_client.h"
 
-BOOST_AUTO_TEST_CASE(test_run) {
-    auto results = solve("dummy_study_test_client_api");
+BOOST_AUTO_TEST_CASE(test_run)
+{
+    auto results = solve("dummy_study_test_client_api", {});
     BOOST_CHECK(results.error);
     BOOST_CHECK(!results.error->reason.empty());
     auto c = results.error->reason;
