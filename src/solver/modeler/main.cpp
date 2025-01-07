@@ -20,8 +20,11 @@
  */
 
 #include <antares/logs/logs.h>
+#include <antares/solver/modeler/api/linearProblemBuilder.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
+#include <antares/solver/optim-model-filler/ComponentFiller.h>
 
 using namespace Antares;
 using namespace Antares::Solver;
@@ -51,6 +54,27 @@ int main(int argc, const char** argv)
         logs.info() << "Libraries loaded";
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
+
+        // Fillers, etc.
+        std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers;
+        // TODO memory
+        for (auto& [_, component]: system.Components())
+        {
+            fillers.push_back(new Antares::Optimization::ComponentFiller(component));
+        }
+
+        Antares::Solver::Modeler::Api::LinearProblemData LP_Data;
+        Antares::Solver::Modeler::Api::FillContext ctx = {0, 0};
+        Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem pb(false, parameters.solver);
+        Antares::Solver::Modeler::Api::LinearProblemBuilder linear_problem_builder(fillers);
+        linear_problem_builder.build(pb, LP_Data, ctx);
+        for (auto& filler: fillers)
+        {
+            delete filler;
+        }
+
+        logs.info() << "Number of variables: " << pb.variableCount();
+        logs.info() << "Number of constraints: " << pb.constraintCount();
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
