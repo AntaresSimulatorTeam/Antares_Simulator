@@ -22,11 +22,13 @@
 #include "antares/study/parts/short-term-storage/container.h"
 
 #include <algorithm>
+#include <numeric>
 #include <string>
 
 #include <yuni/io/file.h>
 
 #include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 #define SEP Yuni::IO::Separator
 
@@ -73,6 +75,83 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     return true;
 }
 
+bool STStorageInput::LoadConstraintsFromIniFile(const fs::path& parent_path)
+{
+    IniFile ini;
+    const auto pathIni = parent_path / "additional-constraints.ini";
+    if (!ini.open(pathIni, false))
+    {
+        logs.info() << "There is no: " << pathIni;
+        return true;
+    }
+
+    for (auto* section = ini.firstSection; section; section = section->next)
+    {
+        AdditionalConstraint constraint;
+        constraint.name = section->name.c_str();
+        for (auto* property = section->firstProperty; property; property = property->next)
+        {
+            const std::string key = property->key;
+            const auto value = property->value;
+
+            if (key == "cluster")
+            {
+                // TODO do i have to transform the name to id? TransformNameIntoID
+                std::string clusterName;
+                value.to<std::string>(clusterName);
+                constraint.cluster_id = transformNameIntoID(clusterName);
+            }
+            else if (key == "variable")
+            {
+                value.to<std::string>(constraint.variable);
+            }
+            else if (key == "operator")
+            {
+                value.to<std::string>(constraint.operatorType);
+            }
+            else if (key == "hours")
+            {
+                std::stringstream ss(value.c_str());
+                std::string hour;
+                while (std::getline(ss, hour, ','))
+                {
+                    int hourVal = std::stoi(hour);
+                    constraint.hours.insert(hourVal);
+                }
+            }
+            else if (key == "rhs")
+            {
+                property->value.to<double>(constraint.rhs);
+            }
+        }
+
+        if (auto ret = constraint.validate(); !ret.ok)
+        {
+            logs.error() << "Invalid constraint in section: " << section->name;
+            logs.error() << ret.error_msg;
+            return false;
+        }
+
+        auto it = std::find_if(storagesByIndex.begin(),
+                               storagesByIndex.end(),
+                               [&constraint](const STStorageCluster& cluster)
+                               { return cluster.id == constraint.cluster_id; });
+        if (it == storagesByIndex.end())
+        {
+            logs.warning() << " from file " << pathIni;
+            logs.warning() << "Constraint " << section->name
+                           << " does not reference an existing cluster";
+            return false;
+        }
+        else
+        {
+            it->additional_constraints.push_back(constraint);
+        }
+    }
+
+    return true;
+}
+
 bool STStorageInput::loadSeriesFromFolder(const fs::path& folder) const
 {
     if (folder.empty())
@@ -113,6 +192,15 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
                                { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
+std::size_t STStorageInput::cumulativeConstraintCount() const
+{
+    return std::accumulate(storagesByIndex.begin(),
+                           storagesByIndex.end(),
+                           0,
+                           [](int acc, const auto& cluster)
+                           { return acc + cluster.additional_constraints.size(); });
+}
+
 std::size_t STStorageInput::count() const
 {
     return std::ranges::count_if(storagesByIndex,
@@ -123,5 +211,4 @@ uint STStorageInput::removeDisabledClusters()
 {
     return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
 }
-
 } // namespace Antares::Data::ShortTermStorage

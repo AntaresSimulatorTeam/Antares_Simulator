@@ -82,14 +82,14 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "Solver used for simulation\nAvailable solver list : "
                   + availableOrToolsSolversString());
 
-    //--xpress-parameters
+    //--solver-parameters
     parser->add(
       options.optOptions.solverParameters,
       ' ',
       "solver-parameters",
-      "Set xpress solver specific parameters. The specified string must be wrapped into quotes: "
-      "--solver-parameters=\"param1 value1 param2 value2\". The syntax of parameters is solver "
-      "specfic, examples are given in Antares-Simulator online documentation.");
+      "Set solver-specific parameters, for instance --solver-parameters=\"THREADS 1 PRESOLVE 1\""
+      "for XPRESS or --solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for SCIP."
+      "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
 
     parser->addParagraph("\nParameters");
     // --name

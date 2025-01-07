@@ -1,15 +1,10 @@
+include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+
 # Zip writer
-add_executable(test-writer test_writer.cpp)
+add_boost_test(test-writer
+  SRC test_writer.cpp
+  LIBS
+  Antares::result_writer
+  test_utils_unit
+  MINIZIP::minizip)
 
-target_link_libraries(test-writer
-        PRIVATE
-        Boost::unit_test_framework
-        Antares::result_writer
-        test_utils_unit
-        MINIZIP::minizip
-)
-
-set_target_properties(test-writer PROPERTIES FOLDER Unit-tests/test-writer)
-
-add_test(NAME writer COMMAND test-writer)
-set_tests_properties(writer PROPERTIES LABELS unit)

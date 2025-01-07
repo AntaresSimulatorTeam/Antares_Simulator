@@ -5,10 +5,9 @@ set(ANTARES_VERSION_HI	      9)
 set(ANTARES_VERSION_LO	      2)
 set(ANTARES_VERSION_REVISION  0)
 
-
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 7)
+set(ANTARES_RC 8)
 
 set(ANTARES_VERSION_YEAR      2024)
 
@@ -192,6 +191,7 @@ endif()
 find_package(Boost REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 #Sirius solver
 if(POLICY CMP0074)

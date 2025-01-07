@@ -305,3 +305,8 @@ struct ShortTermStorageData
 
     const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };
+
+struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
+{
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires;
+};

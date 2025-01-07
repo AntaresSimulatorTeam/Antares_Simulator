@@ -94,6 +94,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         r.thermalPlantTotalCountMustRun += area.thermal.list.enabledAndMustRunCount();
 
         r.shortTermStorageCount += area.shortTermStorage.count();
+        r.shortTermStorageCumulativeConstraintCount += area.shortTermStorage
+                                                         .cumulativeConstraintCount();
     }
 }
 
@@ -363,6 +365,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
+    logs.info() << "     short-term storage cumulative constraints count: "
+                << shortTermStorageCumulativeConstraintCount;
     logs.info() << "     binding constraints: "
                 << study.bindingConstraints.activeConstraints().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");

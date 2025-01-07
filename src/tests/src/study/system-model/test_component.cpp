@@ -159,7 +159,8 @@ BOOST_AUTO_TEST_CASE(fail_on_no_params1)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("The component has 0 parameter(s), but its model has 2"));
+                          checkMessage(
+                            "The component \"component\" has 0 parameter(s), but its model has 2"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_no_params2)
@@ -171,7 +172,8 @@ BOOST_AUTO_TEST_CASE(fail_on_no_params2)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("The component has 0 parameter(s), but its model has 2"));
+                          checkMessage(
+                            "The component \"component\" has 0 parameter(s), but its model has 2"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_missing_param)
@@ -183,7 +185,8 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_param)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("The component has 1 parameter(s), but its model has 2"));
+                          checkMessage(
+                            "The component \"component\" has 1 parameter(s), but its model has 2"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_missing_wrong_param)
@@ -195,7 +198,8 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_wrong_param)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("The component has no value for parameter 'param1'"));
+                          checkMessage(
+                            "The component \"component\" has no value for parameter 'param1'"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_too_many_params1)
@@ -207,7 +211,8 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params1)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("The component has 3 parameter(s), but its model has 2"));
+                          checkMessage(
+                            "The component \"component\" has 3 parameter(s), but its model has 2"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_too_many_params2)
@@ -219,7 +224,8 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params2)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("The component has 1 parameter(s), but its model has 0"));
+                          checkMessage(
+                            "The component \"component\" has 1 parameter(s), but its model has 0"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

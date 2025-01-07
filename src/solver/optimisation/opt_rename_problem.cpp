@@ -35,9 +35,9 @@ const std::string AREA("area");
 
 std::string BuildName(const std::string& name,
                       const std::string& location,
-                      const std::string& timeIdentifier)
+                      const std::string& additional_identifier)
 {
-    std::string result = name + SEPARATOR + location + SEPARATOR + timeIdentifier;
+    std::string result = name + SEPARATOR + location + SEPARATOR + additional_identifier;
     std::replace(result.begin(), result.end(), ' ', '*');
     return result;
 }
@@ -413,4 +413,17 @@ void ConstraintNamer::ShortTermStorageCostVariation(const std::string& constrain
                                                    + ">",
                                                  TimeIdentifier(timeStep_, HOUR)),
                                        constraint);
+}
+
+void ConstraintNamer::ShortTermStorageCumulation(const std::string& constraint_type,
+                                                 unsigned int constraint,
+                                                 const std::string& short_term_name,
+                                                 const std::string& constraint_name)
+{
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(constraint_type,
+                LocationIdentifier(area_, AREA) + SEPARATOR + "ShortTermStorage" + "<"
+                  + short_term_name + ">",
+                ShortTermStorageCumulationIdentifier(constraint_name)),
+      constraint);
 }

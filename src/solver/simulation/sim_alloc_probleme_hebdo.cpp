@@ -38,6 +38,7 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
         SIM_AllocationLinks(problem, study.runtime.interconnectionsCount(), NombreDePasDeTemps);
         SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
+        SIM_AllocationShortermStorageCumulation(problem, study);
         SIM_AllocateAreas(problem, study, NombreDePasDeTemps);
     }
     catch (const std::bad_alloc& e)
@@ -245,6 +246,13 @@ void SIM_AllocationLinks(PROBLEME_HEBDO& problem, const uint linkCount, unsigned
     }
 }
 
+void SIM_AllocationShortermStorageCumulation(PROBLEME_HEBDO& problem,
+                                             const Antares::Data::Study& study)
+{
+    problem.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation
+      .assign(study.runtime.shortTermStorageCumulativeConstraintCount, 0);
+}
+
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                const Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps)
@@ -386,6 +394,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
                                                                                  0.);
+
         problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);

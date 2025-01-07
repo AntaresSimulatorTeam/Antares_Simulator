@@ -74,8 +74,8 @@ set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/cost_provider.h
         include/antares/study/parts/thermal/cluster.hxx
         parts/thermal/cluster.cpp
-	parts/thermal/scenarized_cost_provider.cpp
-	parts/thermal/constant_cost_provider.cpp
+        parts/thermal/scenarized_cost_provider.cpp
+        parts/thermal/constant_cost_provider.cpp
         include/antares/study/parts/thermal/cluster_list.h
         parts/thermal/cluster_list.cpp
         include/antares/study/parts/thermal/pollutant.h
@@ -102,7 +102,9 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         parts/short-term-storage/series.cpp
         include/antares/study/parts/short-term-storage/series.h
         include/antares/study/parts/short-term-storage/cluster.h
+        include/antares/study/parts/short-term-storage/AdditionalConstraint.h
         parts/short-term-storage/cluster.cpp
+        parts/short-term-storage/AdditionalConstraint.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -306,12 +308,12 @@ target_link_libraries(study
 )
 
 target_include_directories(study
-             PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 
         # Make more than just study visible but it's the lesser evil for now
 )
 
-install(DIRECTORY   include/antares
+install(DIRECTORY include/antares
         DESTINATION "include"
 )

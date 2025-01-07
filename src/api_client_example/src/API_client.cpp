@@ -23,7 +23,8 @@
 
 #include <utility>
 
-Antares::API::SimulationResults solve(std::filesystem::path study_path)
+Antares::API::SimulationResults solve(std::filesystem::path study_path,
+                                      std::filesystem::path output)
 {
-    return Antares::API::PerformSimulation(std::move(study_path), {});
+    return Antares::API::PerformSimulation(std::move(study_path), std::move(output), {});
 }

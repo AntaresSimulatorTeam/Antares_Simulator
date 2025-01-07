@@ -30,18 +30,19 @@ namespace Antares::API
 
 SimulationResults PerformSimulation(
   const std::filesystem::path& study_path,
+  const std::filesystem::path& output,
   const Antares::Solver::Optimization::OptimizationOptions& optOptions) noexcept
 {
     try
     {
         APIInternal api;
         FileTreeStudyLoader study_loader(study_path);
-        return api.run(study_loader, optOptions);
+        return api.run(study_loader, output, optOptions);
     }
     catch (const std::exception& e)
     {
         Antares::API::Error err{.reason = e.what()};
-        return SimulationResults{.simulationPath = study_path, .antares_problems{}, .error = err};
+        return SimulationResults{.antares_problems{}, .error = err};
     }
 }
 

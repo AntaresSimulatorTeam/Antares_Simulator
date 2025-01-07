@@ -43,6 +43,26 @@ static void shortTermStorageLevelsRHS(
     }
 }
 
+static void shortTermStorageCumulationRHS(
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  int numberOfAreas,
+  std::vector<double>& SecondMembre,
+  const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires)
+{
+    for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
+    {
+        for (auto& storage: shortTermStorageInput[areaIndex])
+        {
+            for (const auto& constraint: storage.additional_constraints)
+            {
+                int cnt = CorrespondancesDesContraintesHebdomadaires
+                            .ShortTermStorageCumulation[constraint.globalIndex];
+                SecondMembre[cnt] = constraint.rhs;
+            }
+        }
+    }
+}
+
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                      int PremierPdtDeLIntervalle,
                                                      int DernierPdtDeLIntervalle,
@@ -145,7 +165,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                   ProblemeAResoudre->SecondMembre,
                                   CorrespondanceCntNativesCntOptim,
                                   hourInTheYear);
-
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             if (const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
@@ -377,6 +396,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         }
     }
 
+    shortTermStorageCumulationRHS(problemeHebdo->ShortTermStorage,
+                                  problemeHebdo->NombreDePays,
+                                  ProblemeAResoudre->SecondMembre,
+                                  problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires);
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,

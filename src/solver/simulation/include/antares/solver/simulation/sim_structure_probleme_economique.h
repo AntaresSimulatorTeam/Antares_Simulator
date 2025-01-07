@@ -111,6 +111,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
 {
     std::vector<int> NumeroDeContrainteDesContraintesCouplantes;
+    std::vector<int> ShortTermStorageCumulation;
 };
 
 struct VALEURS_DE_NTC_ET_RESISTANCES
@@ -182,7 +183,7 @@ struct PROPERTIES
     bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-
+    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraint> additional_constraints;
     int clusterGlobalIndex;
     std::string name;
 };

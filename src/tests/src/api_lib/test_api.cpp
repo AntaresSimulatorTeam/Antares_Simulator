@@ -29,7 +29,7 @@
 BOOST_AUTO_TEST_CASE(result_failure_when_study_path_invalid)
 {
     using namespace std::string_literals;
-    auto results = Antares::API::PerformSimulation("dummy"s, {});
+    auto results = Antares::API::PerformSimulation("dummy"s, {}, {});
     BOOST_CHECK(results.error);
     BOOST_CHECK(!results.error->reason.empty());
 }
