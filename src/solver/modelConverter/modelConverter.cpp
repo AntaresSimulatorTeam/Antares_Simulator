@@ -117,18 +117,42 @@ Antares::Study::SystemModel::ValueType convertType(Antares::Solver::ModelParser:
  */
 std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelParser::Model& model)
 {
+    auto handleDefaultForEmptyBound =
+      [](const std::string& id,
+         const std::string& initialBound,
+         const std::string& defaultBound,
+         Antares::Solver::ModelParser::ValueType type) -> std::string
+    {
+        if (!initialBound.empty())
+        {
+            return initialBound;
+        }
+        if (type == Antares::Solver::ModelParser::ValueType::BOOL)
+        {
+            return defaultBound;
+        }
+        throw std::runtime_error("Bounds are required for variable " + id);
+    };
+
     std::vector<Antares::Study::SystemModel::Variable> variables;
     for (const auto& variable: model.variables)
     {
-        Antares::Study::SystemModel::Expression lb(variable.lower_bound,
-                                                   convertExpressionToNode(variable.lower_bound,
-                                                                           model));
-        Antares::Study::SystemModel::Expression ub(variable.upper_bound,
-                                                   convertExpressionToNode(variable.upper_bound,
-                                                                           model));
+        std::string lb = handleDefaultForEmptyBound(variable.id,
+                                                    variable.lower_bound,
+                                                    "0",
+                                                    variable.variable_type);
+        Antares::Study::SystemModel::Expression lbExpression(lb,
+                                                             convertExpressionToNode(lb, model));
+
+        std::string ub = handleDefaultForEmptyBound(variable.id,
+                                                    variable.upper_bound,
+                                                    "1",
+                                                    variable.variable_type);
+        Antares::Study::SystemModel::Expression ubExpression(ub,
+                                                             convertExpressionToNode(ub, model));
         variables.emplace_back(variable.id,
-                               std::move(lb),
-                               std::move(ub),
+                               std::move(lbExpression),
+                               std::move(ubExpression),
                                convertType(variable.variable_type));
     }
 
