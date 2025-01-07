@@ -11,51 +11,51 @@ namespace Antares::Solver::Simulation
 int find_min_index(const std::vector<double>& TotalGen,
                    const std::vector<double>& OutUnsupE,
                    const std::vector<double>& OutHydroGen,
-                   const std::vector<int>& tried_creux,
+                   const std::vector<bool>& tried_creux,
                    const std::vector<double>& HydroPmax,
                    const std::vector<bool>& filter_hours_remix,
                    double top)
 {
     double min_val = top;
-    int min_idx = -1;
-    for (int i = 0; i < TotalGen.size(); ++i)
+    int min_hour = -1;
+    for (int h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutUnsupE[i] > 0 && OutHydroGen[i] < HydroPmax[i] && tried_creux[i] == 0
-            && filter_hours_remix[i])
+        if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !tried_creux[h]
+            && filter_hours_remix[h])
         {
-            if (TotalGen[i] < min_val)
+            if (TotalGen[h] < min_val)
             {
-                min_val = TotalGen[i];
-                min_idx = i;
+                min_val = TotalGen[h];
+                min_hour = h;
             }
         }
     }
-    return min_idx;
+    return min_hour;
 }
 
 int find_max_index(const std::vector<double>& TotalGen,
                    const std::vector<double>& OutHydroGen,
-                   const std::vector<int>& tried_pic,
+                   const std::vector<bool>& tried_pic,
                    const std::vector<double>& HydroPmin,
                    const std::vector<bool>& filter_hours_remix,
                    double ref_value,
                    double eps)
 {
     double max_val = 0;
-    int max_idx = -1;
-    for (int i = 0; i < TotalGen.size(); ++i)
+    int max_hour = -1;
+    for (int h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutHydroGen[i] > HydroPmin[i] && TotalGen[i] >= ref_value + eps && tried_pic[i] == 0
-            && filter_hours_remix[i])
+        if (OutHydroGen[h] > HydroPmin[h] && TotalGen[h] >= ref_value + eps && !tried_pic[h]
+            && filter_hours_remix[h])
         {
-            if (TotalGen[i] > max_val)
+            if (TotalGen[h] > max_val)
             {
-                max_val = TotalGen[i];
-                max_idx = i;
+                max_val = TotalGen[h];
+                max_hour = h;
             }
         }
     }
-    return max_idx;
+    return max_hour;
 }
 
 static bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
@@ -158,9 +158,9 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
     if (levels.size())
     {
         levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - HydroGen[0];
-        for (size_t i = 1; i < levels.size(); ++i)
+        for (size_t h = 1; h < levels.size(); ++h)
         {
-            levels[i] = levels[i - 1] + inflows[i] - overflow[i] + pump[i] - HydroGen[i];
+            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pump[h] - HydroGen[h];
         }
     }
 
@@ -205,7 +205,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
 
     while (loop-- > 0)
     {
-        std::vector<int> tried_creux(DispatchGen.size(), 0);
+        std::vector<bool> tried_creux(DispatchGen.size(), false);
         double delta = 0;
 
         while (true)
@@ -222,7 +222,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                 break;
             }
 
-            std::vector<int> tried_pic(DispatchGen.size(), 0);
+            std::vector<bool> tried_pic(DispatchGen.size(), false);
             while (true)
             {
                 int idx_pic = find_max_index(TotalGen,
@@ -275,7 +275,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                 }
                 else
                 {
-                    tried_pic[idx_pic] = 1;
+                    tried_pic[idx_pic] = true;
                 }
             }
 
@@ -283,7 +283,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
             {
                 break;
             }
-            tried_creux[idx_creux] = 1;
+            tried_creux[idx_creux] = true;
         }
 
         if (delta == 0)
@@ -297,9 +297,9 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                        TotalGen.begin(),
                        std::plus<>());
         levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - OutHydroGen[0];
-        for (size_t i = 1; i < levels.size(); ++i)
+        for (size_t h = 1; h < levels.size(); ++h)
         {
-            levels[i] = levels[i - 1] + inflows[i] - overflow[i] + pump[i] - OutHydroGen[i];
+            levels[h] = levels[h - 1] + inflows[h] - overflow[h] + pump[h] - OutHydroGen[h];
         }
     }
     return {OutHydroGen, OutUnsupE, levels};
