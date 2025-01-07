@@ -17,7 +17,7 @@ struct InputFixture
 {
     InputFixture()
     {
-        ThermalGen.assign(size, 0.);
+        DispatchGen.assign(size, 0.);
         HydroGen.assign(size, 0.);
         UnsupE.assign(size, 0.);
         HydroPmax.assign(size, std::numeric_limits<double>::max());
@@ -29,7 +29,7 @@ struct InputFixture
         DTG_MRG.assign(size, 0.);
     }
 
-    std::vector<double> ThermalGen, HydroGen, UnsupE, HydroPmax, HydroPmin, inflows, ovf, pump,
+    std::vector<double> DispatchGen, HydroGen, UnsupE, HydroPmax, HydroPmin, inflows, ovf, pump,
       Spillage, DTG_MRG;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();
@@ -39,7 +39,7 @@ BOOST_FIXTURE_TEST_CASE(input_vectors_of_different_sizes__exception_raised, Inpu
 {
     HydroGen = {0., 0.};
 
-    BOOST_CHECK_EXCEPTION(new_remix_hydro(ThermalGen,
+    BOOST_CHECK_EXCEPTION(new_remix_hydro(DispatchGen,
                                           HydroGen,
                                           UnsupE,
                                           HydroPmax,
@@ -61,7 +61,7 @@ BOOST_FIXTURE_TEST_CASE(input_init_level_exceeds_capacity__exception_raised, Inp
     init_level = 2.;
     capacity = 1.;
 
-    BOOST_CHECK_EXCEPTION(new_remix_hydro(ThermalGen,
+    BOOST_CHECK_EXCEPTION(new_remix_hydro(DispatchGen,
                                           HydroGen,
                                           UnsupE,
                                           HydroPmax,
@@ -82,7 +82,7 @@ BOOST_FIXTURE_TEST_CASE(all_input_arrays_of_size_0__exception_raised, InputFixtu
     init_level = 0.;
     capacity = 1.;
 
-    BOOST_CHECK_EXCEPTION(new_remix_hydro(ThermalGen,
+    BOOST_CHECK_EXCEPTION(new_remix_hydro(DispatchGen,
                                           HydroGen,
                                           UnsupE,
                                           HydroPmax,
@@ -106,7 +106,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_smaller_than_pmax__exception_raised, Input
     capacity = 1.;
 
     BOOST_CHECK_EXCEPTION(
-      new_remix_hydro(ThermalGen,
+      new_remix_hydro(DispatchGen,
                       HydroGen,
                       UnsupE,
                       HydroPmax,
@@ -130,7 +130,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_not_greater_than_pmin__exception_raised, Input
     capacity = 1.;
 
     BOOST_CHECK_EXCEPTION(
-      new_remix_hydro(ThermalGen,
+      new_remix_hydro(DispatchGen,
                       HydroGen,
                       UnsupE,
                       HydroPmax,
@@ -151,7 +151,7 @@ BOOST_FIXTURE_TEST_CASE(input_is_acceptable__no_exception_raised, InputFixture<1
     init_level = 0.;
     capacity = 1.;
 
-    BOOST_CHECK_NO_THROW(new_remix_hydro(ThermalGen,
+    BOOST_CHECK_NO_THROW(new_remix_hydro(DispatchGen,
                                          HydroGen,
                                          UnsupE,
                                          HydroPmax,
@@ -170,13 +170,13 @@ BOOST_FIXTURE_TEST_CASE(
   InputFixture<5>)
 {
     std::ranges::fill(HydroPmax, 40.);
-    std::ranges::fill(ThermalGen, 100.);
+    std::ranges::fill(DispatchGen, 100.);
     HydroGen = {0., 10., 20., 30., 40.}; // we have Pmin <= HydroGen <= Pmax
     UnsupE = {80.0, 60., 40., 20., 0.};
     init_level = 500.;
     capacity = 1000.;
 
-    auto [OutHydroGen, OutUnsupE, _] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, _] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -190,7 +190,7 @@ BOOST_FIXTURE_TEST_CASE(
                                                        DTG_MRG);
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as ThermalGen + HydroGen + UnsupE remains flat
+    // UnsupE such as DispatchGen + HydroGen + UnsupE remains flat
     std::vector<double> expected_UnsupE = {60., 50., 40., 30., 20.};
     BOOST_CHECK(OutHydroGen == expected_HydroGen);
     BOOST_CHECK(OutUnsupE == expected_UnsupE);
@@ -199,13 +199,13 @@ BOOST_FIXTURE_TEST_CASE(
 BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, InputFixture<5>)
 {
     std::ranges::fill(HydroPmax, 50.);
-    std::ranges::fill(ThermalGen, 100.);
+    std::ranges::fill(DispatchGen, 100.);
     HydroGen = {0., 10., 20., 30., 40.};
     UnsupE = {80.0, 60., 40., 20., 0.};
     init_level = 500.;
     capacity = 1000.;
 
-    auto [OutHydroGen, OutUnsupE, _] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, _] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -219,7 +219,7 @@ BOOST_FIXTURE_TEST_CASE(Pmax_does_not_impact_results_when_greater_than_40mwh, In
                                                        DTG_MRG);
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as ThermalGen + HydroGen + UnsupE remains constant at each hour
+    // UnsupE such as DispatchGen + HydroGen + UnsupE remains constant at each hour
     std::vector<double> expected_UnsupE = {60., 50., 40., 30., 20.};
     BOOST_CHECK(OutHydroGen == expected_HydroGen);
     BOOST_CHECK(OutUnsupE == expected_UnsupE);
@@ -230,13 +230,13 @@ BOOST_FIXTURE_TEST_CASE(
   InputFixture<5>)
 {
     std::ranges::fill(HydroPmax, 40.);
-    std::ranges::fill(ThermalGen, 100.);
+    std::ranges::fill(DispatchGen, 100.);
     HydroGen = {40., 30., 20., 10., 0.};
     UnsupE = {0., 20., 40., 60., 80.};
     init_level = 500.;
     capacity = 1000.;
 
-    auto [OutHydroGen, OutUnsupE, _] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, _] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -250,7 +250,7 @@ BOOST_FIXTURE_TEST_CASE(
                                                        DTG_MRG);
 
     std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as ThermalGen + HydroGen + UnsupE remains constant at each hour
+    // UnsupE such as DispatchGen + HydroGen + UnsupE remains constant at each hour
     std::vector<double> expected_UnsupE = {20., 30., 40., 50., 60.};
     BOOST_CHECK(OutHydroGen == expected_HydroGen);
     BOOST_CHECK(OutUnsupE == expected_UnsupE);
@@ -258,8 +258,8 @@ BOOST_FIXTURE_TEST_CASE(
 
 BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::tolerance(0.01))
 {
-    // ThermalGen decreases
-    ThermalGen = {100., 80., 60., 40., 20.};
+    // DispatchGen decreases
+    DispatchGen = {100., 80., 60., 40., 20.};
 
     // HydroGen is flat and must respect HydroGen <= Pmax everywhere
     HydroGen = {20., 20., 20., 20., 20.};
@@ -267,9 +267,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
     init_level = 500.;
     capacity = 1000.;
 
-    // 1. Algorithm tends to flatten ThermalGen + HydroGen, so it would require HydroGen to
+    // 1. Algorithm tends to flatten DispatchGen + HydroGen, so it would require HydroGen to
     // increase. Proof :
-    auto [OutHydroGen_1, new_D1, L] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_1, new_D1, L] = new_remix_hydro(DispatchGen,
                                                       HydroGen,
                                                       UnsupE,
                                                       HydroPmax,
@@ -288,7 +288,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
     // 2. But HydroGen is limited by HydroPmax. So Algo does nothing in the end.
     // Proof :
     HydroPmax = {20., 20., 20., 20., 20.};
-    auto [OutHydroGen_2, OutUnsupE_2, _] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_2, OutUnsupE_2, _] = new_remix_hydro(DispatchGen,
                                                            HydroGen,
                                                            UnsupE,
                                                            HydroPmax,
@@ -309,8 +309,8 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmax, InputFixture<5>, *boost::unit_test::t
 
 BOOST_FIXTURE_TEST_CASE(influence_of_pmin, InputFixture<5>, *boost::unit_test::tolerance(0.01))
 {
-    // ThermalGen decreases
-    ThermalGen = {100., 80., 60., 40., 20.};
+    // DispatchGen decreases
+    DispatchGen = {100., 80., 60., 40., 20.};
 
     // HydroGen is flat and must respect  Pmin <= HydroGen <= Pmax everywhere
     HydroGen = {20., 20., 20., 20., 20.};
@@ -318,9 +318,9 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmin, InputFixture<5>, *boost::unit_test::t
     init_level = 500.;
     capacity = 1000.;
 
-    // 1. Algorithm tends to flatten ThermalGen + HydroGen, so it would require HydroGen to
+    // 1. Algorithm tends to flatten DispatchGen + HydroGen, so it would require HydroGen to
     // increase.
-    auto [OutHydroGen_1, new_D1, L] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_1, new_D1, L] = new_remix_hydro(DispatchGen,
                                                       HydroGen,
                                                       UnsupE,
                                                       HydroPmax,
@@ -337,7 +337,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_pmin, InputFixture<5>, *boost::unit_test::t
 
     // 2. But HydroGen is low bounded by HydroPmin. So Algo does nothing in the end.
     HydroPmin = {20., 20., 20., 20., 20.};
-    auto [OutHydroGen_2, OutUnsupE_2, _] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_2, OutUnsupE_2, _] = new_remix_hydro(DispatchGen,
                                                            HydroGen,
                                                            UnsupE,
                                                            HydroPmax,
@@ -365,7 +365,7 @@ BOOST_FIXTURE_TEST_CASE(Hydro_gen_is_already_flat___remix_is_useless__level_easi
     std::ranges::fill(inflows, 15.);  // Cause levels to increase
     std::ranges::fill(pump, 10.);     // Cause levels to increase
 
-    auto [OutHydroGen, OutUnsupE, levels] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, levels] = new_remix_hydro(DispatchGen,
                                                             HydroGen,
                                                             UnsupE,
                                                             HydroPmax,
@@ -392,7 +392,7 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_over_capacity___exception_raised, 
     std::ranges::fill(pump, 20);     // Cause levels to increase
 
     BOOST_CHECK_EXCEPTION(
-      new_remix_hydro(ThermalGen,
+      new_remix_hydro(DispatchGen,
                       HydroGen,
                       UnsupE,
                       HydroPmax,
@@ -418,7 +418,7 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised,
     std::ranges::fill(pump, 10);     // Cause levels to increase
 
     BOOST_CHECK_EXCEPTION(
-      new_remix_hydro(ThermalGen,
+      new_remix_hydro(DispatchGen,
                       HydroGen,
                       UnsupE,
                       HydroPmax,
@@ -453,7 +453,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influ
 
     // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
     // flat)
-    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -477,7 +477,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_capacity_on_algorithm___case_where_no_influ
     // have HydroGen and L identical to previously : this value of capacity should
     // not have an influence on HydroGen and levels as results of the algorithm.
     capacity = 155.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(DispatchGen,
                                                             HydroGen,
                                                             UnsupE,
                                                             HydroPmax,
@@ -512,7 +512,7 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
 
     // Case 1 : capacity relaxed (infinite by default) ==> leads to optimal solution (HydroGen is
     // flat)
-    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -539,7 +539,7 @@ BOOST_FIXTURE_TEST_CASE(lowering_capacity_too_low_leads_to_suboptimal_solution_f
     // was infinite. Therefore, solution found is suboptimal : we expect to get an
     // output HydroGen flat by interval, not flat on the whole domain.
     capacity = 145.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(DispatchGen,
                                                             HydroGen,
                                                             UnsupE,
                                                             HydroPmax,
@@ -576,7 +576,7 @@ BOOST_FIXTURE_TEST_CASE(lowering_initial_level_too_low_leads_to_suboptimal_solut
     // Case 1 : init level (== 100) is high enough so that input levels (computed from input data)
     // are acceptable for algorithm (input levels >= 0.), and running algorithm leads to optimal
     // solution (OutHydroGen is flat)
-    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -601,7 +601,7 @@ BOOST_FIXTURE_TEST_CASE(lowering_initial_level_too_low_leads_to_suboptimal_solut
     // bound (0.) into account. As the levels change, the solution OutHydroGen will be suboptimal,
     // that is flat by interval (not flat on the whole domain).
     init_level = 95.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(DispatchGen,
                                                             HydroGen,
                                                             UnsupE,
                                                             HydroPmax,
@@ -636,7 +636,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
     // Case 1 : init level (== 100) is high enough so that input levels (computed from input data)
     // are acceptable by algorithm, and levels computed by algorithm (output) are optimal, that
     // is computed from a optimal (that is flat) OutHydroGen.
-    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -661,7 +661,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
     // and algorithm won't have to take the levels lower bound (0.) into account.
     // The solution OutHydroGen will be optimal, that is flat by interval.
     init_level = 55.;
-    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen_2, OutUnsupE_2, L2] = new_remix_hydro(DispatchGen,
                                                             HydroGen,
                                                             UnsupE,
                                                             HydroPmax,
@@ -681,7 +681,7 @@ BOOST_FIXTURE_TEST_CASE(influence_of_initial_level_on_algorithm___case_where_no_
 
 BOOST_FIXTURE_TEST_CASE(spillage_positive_at_hour_0___no_change_at_this_hour, InputFixture<5>)
 {
-    std::ranges::fill(ThermalGen, 100.);
+    std::ranges::fill(DispatchGen, 100.);
     HydroGen = {40., 30., 20., 10., 0.};
     UnsupE = {0., 20., 40., 60., 80.};
     init_level = 500.;
@@ -691,7 +691,7 @@ BOOST_FIXTURE_TEST_CASE(spillage_positive_at_hour_0___no_change_at_this_hour, In
     // But :
     Spillage[0] = 1.;
     // Now, we expect no change for HydroGen at hour 0
-    auto [OutHydroGen, __, _] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, __, _] = new_remix_hydro(DispatchGen,
                                                 HydroGen,
                                                 UnsupE,
                                                 HydroPmax,
@@ -710,7 +710,7 @@ BOOST_FIXTURE_TEST_CASE(spillage_positive_at_hour_0___no_change_at_this_hour, In
 
 BOOST_FIXTURE_TEST_CASE(DTG_MRG_positive_on_hour_4___no_change_at_this_hour, InputFixture<5>)
 {
-    std::ranges::fill(ThermalGen, 100.);
+    std::ranges::fill(DispatchGen, 100.);
     HydroGen = {40., 30., 20., 10., 0.};
     UnsupE = {0., 20., 40., 60., 80.};
     init_level = 500.;
@@ -720,7 +720,7 @@ BOOST_FIXTURE_TEST_CASE(DTG_MRG_positive_on_hour_4___no_change_at_this_hour, Inp
     // But :
     DTG_MRG[4] = 1.;
     // Now, we expect no change for HydroGen at hour 4
-    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(ThermalGen,
+    auto [OutHydroGen, OutUnsupE, L] = new_remix_hydro(DispatchGen,
                                                        HydroGen,
                                                        UnsupE,
                                                        HydroPmax,
@@ -742,7 +742,7 @@ BOOST_FIXTURE_TEST_CASE(DTG_MRG_positive_on_hour_4___no_change_at_this_hour, Inp
 // - Remix hydro algorithm seems symmetrical (if we have input vectors and corresponding output
 //   vectors, run the algo on reversed vectors gives reversed output result vectors)
 // - After running remix hydro algo, sum(HydroGen), sum(HydroGen + UnsupE) must remain the same.
-// - influence of UnsupE : low values of ThermalGen + HydroGen are searched where UnsupE > 0 (not
+// - influence of UnsupE : low values of DispatchGen + HydroGen are searched where UnsupE > 0 (not
 // where UnsupE == 0)
 // -
 

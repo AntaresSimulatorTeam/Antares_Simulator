@@ -75,7 +75,7 @@ static bool operator>=(const std::vector<double>& v, const double c)
     return std::ranges::all_of(v, [&c](const double& e) { return e >= c; });
 }
 
-static void checkInputCorrectness(const std::vector<double>& ThermalGen,
+static void checkInputCorrectness(const std::vector<double>& DispatchGen,
                                   const std::vector<double>& HydroGen,
                                   const std::vector<double>& UnsupE,
                                   const std::vector<double>& levels,
@@ -97,7 +97,7 @@ static void checkInputCorrectness(const std::vector<double>& ThermalGen,
         throw std::invalid_argument(msg_prefix + "initial level > reservoir capacity");
     }
     // Arrays sizes must be identical
-    std::vector<size_t> sizes = {ThermalGen.size(),
+    std::vector<size_t> sizes = {DispatchGen.size(),
                                  HydroGen.size(),
                                  UnsupE.size(),
                                  levels.size(),
@@ -115,7 +115,7 @@ static void checkInputCorrectness(const std::vector<double>& ThermalGen,
     }
 
     // Arrays are of size 0
-    if (!ThermalGen.size())
+    if (!DispatchGen.size())
     {
         throw std::invalid_argument(msg_prefix + "all arrays of sizes 0");
     }
@@ -141,7 +141,7 @@ static void checkInputCorrectness(const std::vector<double>& ThermalGen,
     }
 }
 
-RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
+RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
                                  const std::vector<double>& HydroGen,
                                  const std::vector<double>& UnsupE,
                                  const std::vector<double>& HydroPmax,
@@ -154,7 +154,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
                                  const std::vector<double>& Spillage,
                                  const std::vector<double>& DTG_MRG)
 {
-    std::vector<double> levels(ThermalGen.size());
+    std::vector<double> levels(DispatchGen.size());
     if (levels.size())
     {
         levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - HydroGen[0];
@@ -164,7 +164,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
         }
     }
 
-    checkInputCorrectness(ThermalGen,
+    checkInputCorrectness(DispatchGen,
                           HydroGen,
                           UnsupE,
                           levels,
@@ -183,11 +183,11 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
 
     int loop = 1000;
     double eps = 1e-3;
-    double top = *std::max_element(ThermalGen.begin(), ThermalGen.end())
+    double top = *std::max_element(DispatchGen.begin(), DispatchGen.end())
                  + *std::max_element(HydroGen.begin(), HydroGen.end())
                  + *std::max_element(UnsupE.begin(), UnsupE.end()) + 1;
 
-    std::vector<bool> filter_hours_remix(ThermalGen.size(), false);
+    std::vector<bool> filter_hours_remix(DispatchGen.size(), false);
     for (unsigned int h = 0; h < filter_hours_remix.size(); h++)
     {
         if (Spillage[h] + DTG_MRG[h] == 0. && HydroGen[h] + UnsupE[h] > 0.)
@@ -196,16 +196,16 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
         }
     }
 
-    std::vector<double> Thermal_plus_Hydro(ThermalGen.size());
-    std::transform(ThermalGen.begin(),
-                   ThermalGen.end(),
+    std::vector<double> Thermal_plus_Hydro(DispatchGen.size());
+    std::transform(DispatchGen.begin(),
+                   DispatchGen.end(),
                    OutHydroGen.begin(),
                    Thermal_plus_Hydro.begin(),
                    std::plus<>());
 
     while (loop-- > 0)
     {
-        std::vector<int> tried_creux(ThermalGen.size(), 0);
+        std::vector<int> tried_creux(DispatchGen.size(), 0);
         double delta = 0;
 
         while (true)
@@ -222,7 +222,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
                 break;
             }
 
-            std::vector<int> tried_pic(ThermalGen.size(), 0);
+            std::vector<int> tried_pic(DispatchGen.size(), 0);
             while (true)
             {
                 int idx_pic = find_max_index(Thermal_plus_Hydro,
@@ -293,8 +293,8 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& ThermalGen,
             break;
         }
 
-        std::transform(ThermalGen.begin(),
-                       ThermalGen.end(),
+        std::transform(DispatchGen.begin(),
+                       DispatchGen.end(),
                        OutHydroGen.begin(),
                        Thermal_plus_Hydro.begin(),
                        std::plus<>());
