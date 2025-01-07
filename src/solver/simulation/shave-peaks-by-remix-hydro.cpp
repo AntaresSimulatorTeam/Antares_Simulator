@@ -11,7 +11,7 @@ namespace Antares::Solver::Simulation
 int find_min_index(const std::vector<double>& TotalGen,
                    const std::vector<double>& OutUnsupE,
                    const std::vector<double>& OutHydroGen,
-                   const std::vector<bool>& tried_creux,
+                   const std::vector<bool>& triedBottom,
                    const std::vector<double>& HydroPmax,
                    const std::vector<bool>& filter_hours_remix,
                    double top)
@@ -20,7 +20,7 @@ int find_min_index(const std::vector<double>& TotalGen,
     int min_hour = -1;
     for (int h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !tried_creux[h]
+        if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !triedBottom[h]
             && filter_hours_remix[h])
         {
             if (TotalGen[h] < min_val)
@@ -35,7 +35,7 @@ int find_min_index(const std::vector<double>& TotalGen,
 
 int find_max_index(const std::vector<double>& TotalGen,
                    const std::vector<double>& OutHydroGen,
-                   const std::vector<bool>& tried_pic,
+                   const std::vector<bool>& triedPeak,
                    const std::vector<double>& HydroPmin,
                    const std::vector<bool>& filter_hours_remix,
                    double ref_value,
@@ -45,7 +45,7 @@ int find_max_index(const std::vector<double>& TotalGen,
     int max_hour = -1;
     for (int h = 0; h < TotalGen.size(); ++h)
     {
-        if (OutHydroGen[h] > HydroPmin[h] && TotalGen[h] >= ref_value + eps && !tried_pic[h]
+        if (OutHydroGen[h] > HydroPmin[h] && TotalGen[h] >= ref_value + eps && !triedPeak[h]
             && filter_hours_remix[h])
         {
             if (TotalGen[h] > max_val)
@@ -205,44 +205,44 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
 
     while (loop-- > 0)
     {
-        std::vector<bool> tried_creux(DispatchGen.size(), false);
+        std::vector<bool> triedBottom(DispatchGen.size(), false);
         double delta = 0;
 
         while (true)
         {
-            int idx_creux = find_min_index(TotalGen,
-                                           OutUnsupE,
-                                           OutHydroGen,
-                                           tried_creux,
-                                           HydroPmax,
-                                           filter_hours_remix,
-                                           top);
-            if (idx_creux == -1)
+            int hourBottom = find_min_index(TotalGen,
+                                            OutUnsupE,
+                                            OutHydroGen,
+                                            triedBottom,
+                                            HydroPmax,
+                                            filter_hours_remix,
+                                            top);
+            if (hourBottom == -1)
             {
                 break;
             }
 
-            std::vector<bool> tried_pic(DispatchGen.size(), false);
+            std::vector<bool> triedPeak(DispatchGen.size(), false);
             while (true)
             {
-                int idx_pic = find_max_index(TotalGen,
-                                             OutHydroGen,
-                                             tried_pic,
-                                             HydroPmin,
-                                             filter_hours_remix,
-                                             TotalGen[idx_creux],
-                                             eps);
-                if (idx_pic == -1)
+                int hourPeak = find_max_index(TotalGen,
+                                              OutHydroGen,
+                                              triedPeak,
+                                              HydroPmin,
+                                              filter_hours_remix,
+                                              TotalGen[hourBottom],
+                                              eps);
+                if (hourPeak == -1)
                 {
                     break;
                 }
 
                 std::vector<double> intermediate_level(levels.begin()
-                                                         + std::min(idx_creux, idx_pic),
+                                                         + std::min(hourBottom, hourPeak),
                                                        levels.begin()
-                                                         + std::max(idx_creux, idx_pic));
+                                                         + std::max(hourBottom, hourPeak));
                 double max_pic, max_creux;
-                if (idx_creux < idx_pic)
+                if (hourBottom < hourPeak)
                 {
                     max_pic = capa;
                     max_creux = *std::min_element(intermediate_level.begin(),
@@ -256,26 +256,28 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                     max_creux = capa;
                 }
 
-                max_pic = std::min(OutHydroGen[idx_pic] - HydroPmin[idx_pic], max_pic);
-                max_creux = std::min(
-                  {HydroPmax[idx_creux] - OutHydroGen[idx_creux], OutUnsupE[idx_creux], max_creux});
+                max_pic = std::min(OutHydroGen[hourPeak] - HydroPmin[hourPeak], max_pic);
+                max_creux = std::min({HydroPmax[hourBottom] - OutHydroGen[hourBottom],
+                                      OutUnsupE[hourBottom],
+                                      max_creux});
 
-                double dif_pic_creux = std::max(TotalGen[idx_pic] - TotalGen[idx_creux], 0.);
+                double dif_pic_creux = std::max(TotalGen[hourPeak] - TotalGen[hourBottom], 0.);
 
                 delta = std::max(std::min({max_pic, max_creux, dif_pic_creux / 2.}), 0.);
 
                 if (delta > 0)
                 {
-                    OutHydroGen[idx_pic] -= delta;
-                    OutHydroGen[idx_creux] += delta;
-                    OutUnsupE[idx_pic] = HydroGen[idx_pic] + UnsupE[idx_pic] - OutHydroGen[idx_pic];
-                    OutUnsupE[idx_creux] = HydroGen[idx_creux] + UnsupE[idx_creux]
-                                           - OutHydroGen[idx_creux];
+                    OutHydroGen[hourPeak] -= delta;
+                    OutHydroGen[hourBottom] += delta;
+                    OutUnsupE[hourPeak] = HydroGen[hourPeak] + UnsupE[hourPeak]
+                                          - OutHydroGen[hourPeak];
+                    OutUnsupE[hourBottom] = HydroGen[hourBottom] + UnsupE[hourBottom]
+                                            - OutHydroGen[hourBottom];
                     break;
                 }
                 else
                 {
-                    tried_pic[idx_pic] = true;
+                    triedPeak[hourPeak] = true;
                 }
             }
 
@@ -283,7 +285,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
             {
                 break;
             }
-            tried_creux[idx_creux] = true;
+            triedBottom[hourBottom] = true;
         }
 
         if (delta == 0)
