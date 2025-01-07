@@ -67,8 +67,6 @@ public:
     OrtoolsMipSolution* solve(bool verboseSolver) override;
 
     double infinity() const override;
-
-protected:
     operations_research::MPSolver* MpSolver() const;
 
 private:

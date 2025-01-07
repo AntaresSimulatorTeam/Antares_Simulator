@@ -75,6 +75,26 @@ int main(int argc, const char** argv)
 
         logs.info() << "Number of variables: " << pb.variableCount();
         logs.info() << "Number of constraints: " << pb.constraintCount();
+
+        logs.info() << "Launching resolution...";
+        auto* solution = pb.solve(parameters.solverLogs);
+        switch (solution->getStatus())
+        {
+        case Antares::Solver::Modeler::Api::MipStatus::OPTIMAL:
+        case Antares::Solver::Modeler::Api::MipStatus::FEASIBLE:
+            if (!parameters.noOutput)
+            {
+                logs.info() << "Variables";
+                // TODO don't rely on this specific function
+                for (auto* var: pb.MpSolver()->variables())
+                {
+                    logs.info() << var->name() << " " << var->solution_value();
+                }
+            }
+            break;
+        default:
+            logs.error() << "Problem during linear optimization";
+        }
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
