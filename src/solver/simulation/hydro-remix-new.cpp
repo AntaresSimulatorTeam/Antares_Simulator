@@ -141,18 +141,18 @@ static void checkInputCorrectness(const std::vector<double>& DispatchGen,
     }
 }
 
-RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
-                                 const std::vector<double>& HydroGen,
-                                 const std::vector<double>& UnsupE,
-                                 const std::vector<double>& HydroPmax,
-                                 const std::vector<double>& HydroPmin,
-                                 double initial_level,
-                                 double capa,
-                                 const std::vector<double>& inflows,
-                                 const std::vector<double>& overflow,
-                                 const std::vector<double>& pump,
-                                 const std::vector<double>& Spillage,
-                                 const std::vector<double>& DTG_MRG)
+RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGen,
+                                           const std::vector<double>& HydroGen,
+                                           const std::vector<double>& UnsupE,
+                                           const std::vector<double>& HydroPmax,
+                                           const std::vector<double>& HydroPmin,
+                                           double initial_level,
+                                           double capa,
+                                           const std::vector<double>& inflows,
+                                           const std::vector<double>& overflow,
+                                           const std::vector<double>& pump,
+                                           const std::vector<double>& Spillage,
+                                           const std::vector<double>& DTG_MRG)
 {
     std::vector<double> levels(DispatchGen.size());
     if (levels.size())
