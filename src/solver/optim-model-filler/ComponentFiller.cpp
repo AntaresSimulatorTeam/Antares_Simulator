@@ -40,7 +40,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
-    auto evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
+    Solver::Visitors::EvalVisitor evaluator(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         const auto variableID = component_.Id() + "." + variable.Id();
@@ -53,16 +53,16 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
         }
         case Study::SystemModel::ValueType::INTEGER:
         {
-            pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
-                           evaluator->dispatch(variable.UpperBound().RootNode()),
+            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
+                           evaluator.dispatch(variable.UpperBound().RootNode()),
                            true,
                            variableID);
             break;
         }
         case Study::SystemModel::ValueType::FLOAT:
         {
-            pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
-                           evaluator->dispatch(variable.UpperBound().RootNode()),
+            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
+                           evaluator.dispatch(variable.UpperBound().RootNode()),
                            false,
                            variableID);
             break;
