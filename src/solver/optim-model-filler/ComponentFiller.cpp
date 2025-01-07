@@ -43,33 +43,10 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
     Solver::Visitors::EvalVisitor evaluator(evaluationContext_);
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
-        const auto variableID = component_.Id() + "." + variable.Id();
-        switch (variable.Type())
-        {
-        case Study::SystemModel::ValueType::BOOL:
-        {
-            pb.addVariable(0., 1., true, variableID);
-            break;
-        }
-        case Study::SystemModel::ValueType::INTEGER:
-        {
-            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
-                           evaluator.dispatch(variable.UpperBound().RootNode()),
-                           true,
-                           variableID);
-            break;
-        }
-        case Study::SystemModel::ValueType::FLOAT:
-        {
-            pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
-                           evaluator.dispatch(variable.UpperBound().RootNode()),
-                           false,
-                           variableID);
-            break;
-        }
-        default:
-            throw std::invalid_argument("Invalid type for variable");
-        }
+        pb.addVariable(evaluator.dispatch(variable.LowerBound().RootNode()),
+                       evaluator.dispatch(variable.UpperBound().RootNode()),
+                       variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                       component_.Id() + "." + variable.Id());
     }
 }
 
