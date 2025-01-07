@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "include/antares/solver/simulation/hydro-remix-new.h"
+#include "antares/solver/simulation/shave-peaks-by-remix-hydro.h"
 
 using namespace Antares::Solver::Simulation;
 

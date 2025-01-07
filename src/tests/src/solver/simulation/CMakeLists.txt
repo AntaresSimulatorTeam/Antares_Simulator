@@ -66,8 +66,6 @@ add_boost_test(test-hydro_final
 add_boost_test(tests-on-hydro-remix
         SRC
         test-hydro-remix.cpp
-        ${src_solver_simulation}/hydro-remix-new.cpp
-        INCLUDE
-        "${src_solver_simulation}"
         LIBS
+        shave-peaks-by-remix-hydro
         test_utils_unit)
