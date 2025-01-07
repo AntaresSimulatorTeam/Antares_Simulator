@@ -8,7 +8,7 @@
 namespace Antares::Solver::Simulation
 {
 
-int find_min_index(const std::vector<double>& Thermal_plus_Hydro,
+int find_min_index(const std::vector<double>& TotalGen,
                    const std::vector<double>& OutUnsupE,
                    const std::vector<double>& OutHydroGen,
                    const std::vector<int>& tried_creux,
@@ -18,14 +18,14 @@ int find_min_index(const std::vector<double>& Thermal_plus_Hydro,
 {
     double min_val = top;
     int min_idx = -1;
-    for (int i = 0; i < Thermal_plus_Hydro.size(); ++i)
+    for (int i = 0; i < TotalGen.size(); ++i)
     {
         if (OutUnsupE[i] > 0 && OutHydroGen[i] < HydroPmax[i] && tried_creux[i] == 0
             && filter_hours_remix[i])
         {
-            if (Thermal_plus_Hydro[i] < min_val)
+            if (TotalGen[i] < min_val)
             {
-                min_val = Thermal_plus_Hydro[i];
+                min_val = TotalGen[i];
                 min_idx = i;
             }
         }
@@ -33,7 +33,7 @@ int find_min_index(const std::vector<double>& Thermal_plus_Hydro,
     return min_idx;
 }
 
-int find_max_index(const std::vector<double>& Thermal_plus_Hydro,
+int find_max_index(const std::vector<double>& TotalGen,
                    const std::vector<double>& OutHydroGen,
                    const std::vector<int>& tried_pic,
                    const std::vector<double>& HydroPmin,
@@ -43,14 +43,14 @@ int find_max_index(const std::vector<double>& Thermal_plus_Hydro,
 {
     double max_val = 0;
     int max_idx = -1;
-    for (int i = 0; i < Thermal_plus_Hydro.size(); ++i)
+    for (int i = 0; i < TotalGen.size(); ++i)
     {
-        if (OutHydroGen[i] > HydroPmin[i] && Thermal_plus_Hydro[i] >= ref_value + eps
-            && tried_pic[i] == 0 && filter_hours_remix[i])
+        if (OutHydroGen[i] > HydroPmin[i] && TotalGen[i] >= ref_value + eps && tried_pic[i] == 0
+            && filter_hours_remix[i])
         {
-            if (Thermal_plus_Hydro[i] > max_val)
+            if (TotalGen[i] > max_val)
             {
-                max_val = Thermal_plus_Hydro[i];
+                max_val = TotalGen[i];
                 max_idx = i;
             }
         }
@@ -196,11 +196,11 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
         }
     }
 
-    std::vector<double> Thermal_plus_Hydro(DispatchGen.size());
+    std::vector<double> TotalGen(DispatchGen.size());
     std::transform(DispatchGen.begin(),
                    DispatchGen.end(),
                    OutHydroGen.begin(),
-                   Thermal_plus_Hydro.begin(),
+                   TotalGen.begin(),
                    std::plus<>());
 
     while (loop-- > 0)
@@ -210,7 +210,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
 
         while (true)
         {
-            int idx_creux = find_min_index(Thermal_plus_Hydro,
+            int idx_creux = find_min_index(TotalGen,
                                            OutUnsupE,
                                            OutHydroGen,
                                            tried_creux,
@@ -225,12 +225,12 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
             std::vector<int> tried_pic(DispatchGen.size(), 0);
             while (true)
             {
-                int idx_pic = find_max_index(Thermal_plus_Hydro,
+                int idx_pic = find_max_index(TotalGen,
                                              OutHydroGen,
                                              tried_pic,
                                              HydroPmin,
                                              filter_hours_remix,
-                                             Thermal_plus_Hydro[idx_creux],
+                                             TotalGen[idx_creux],
                                              eps);
                 if (idx_pic == -1)
                 {
@@ -260,9 +260,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
                 max_creux = std::min(
                   {HydroPmax[idx_creux] - OutHydroGen[idx_creux], OutUnsupE[idx_creux], max_creux});
 
-                double dif_pic_creux = std::max(Thermal_plus_Hydro[idx_pic]
-                                                  - Thermal_plus_Hydro[idx_creux],
-                                                0.);
+                double dif_pic_creux = std::max(TotalGen[idx_pic] - TotalGen[idx_creux], 0.);
 
                 delta = std::max(std::min({max_pic, max_creux, dif_pic_creux / 2.}), 0.);
 
@@ -296,7 +294,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
         std::transform(DispatchGen.begin(),
                        DispatchGen.end(),
                        OutHydroGen.begin(),
-                       Thermal_plus_Hydro.begin(),
+                       TotalGen.begin(),
                        std::plus<>());
         levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - OutHydroGen[0];
         for (size_t i = 1; i < levels.size(); ++i)
