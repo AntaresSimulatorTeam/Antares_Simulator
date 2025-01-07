@@ -18,10 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
-
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/simulation.h"
@@ -398,6 +397,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);
+        problem.ResultatsHoraires[k].CoutsMarginauxHorairesCSR.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].niveauxHoraires.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].valeurH2oHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires.assign(NombreDePasDeTemps, 0.);
