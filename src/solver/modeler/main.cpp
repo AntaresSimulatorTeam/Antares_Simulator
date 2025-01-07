@@ -28,6 +28,8 @@ using namespace Antares::Solver;
 
 int main(int argc, const char** argv)
 {
+    logs.applicationName("modeler");
+
     if (argc < 1)
     {
         logs.error() << "No study path provided, exiting.";
