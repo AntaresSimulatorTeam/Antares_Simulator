@@ -59,7 +59,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                            variableID);
             break;
         }
-        case Study::SystemModel::ValueType::CONTINUOUS:
+        case Study::SystemModel::ValueType::FLOAT:
         {
             pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
                            evaluator->dispatch(variable.UpperBound().RootNode()),
