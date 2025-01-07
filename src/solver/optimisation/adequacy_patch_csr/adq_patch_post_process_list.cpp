@@ -20,7 +20,6 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h"
-
 #include "antares/solver/optimisation/post_process_commands.h"
 
 namespace Antares::Solver::Simulation
@@ -49,9 +48,9 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                                                    areas,
                                                                                    numSpace_));
     post_process_list.push_back(
-      std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
-    post_process_list.push_back(
       std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
+    post_process_list.push_back(
+      std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
     post_process_list.push_back(
