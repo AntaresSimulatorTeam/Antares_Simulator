@@ -199,7 +199,7 @@ RemixHydroOutput new_remix_hydro(const std::vector<double>& DispatchGen,
     std::vector<double> TotalGen(DispatchGen.size());
     std::transform(DispatchGen.begin(),
                    DispatchGen.end(),
-                   OutHydroGen.begin(),
+                   HydroGen.begin(),
                    TotalGen.begin(),
                    std::plus<>());
 
