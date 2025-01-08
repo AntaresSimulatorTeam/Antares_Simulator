@@ -44,7 +44,7 @@ public:
     double getOptimalValue(const Api::IMipVariable* var) const override;
     std::vector<double> getOptimalValues(
       const std::vector<Api::IMipVariable*>& vars) const override;
-    const std::map<std::string, double>& solutionValues() const override;
+    const std::map<std::string, double>& getOptimalValues() const override;
 
 private:
     operations_research::MPSolver::ResultStatus status_;

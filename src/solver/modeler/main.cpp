@@ -98,7 +98,7 @@ int main(int argc, const char** argv)
             {
                 logs.info() << "Writing variables...";
                 std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
-                for (const auto& [name, value]: solution->solutionValues())
+                for (const auto& [name, value]: solution->getOptimalValues())
                 {
                     sol_out << name << " " << value << std::endl;
                 }
