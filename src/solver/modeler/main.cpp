@@ -67,7 +67,10 @@ int main(int argc, const char** argv)
 
         Antares::Solver::Modeler::Api::LinearProblemData LP_Data;
         Antares::Solver::Modeler::Api::FillContext ctx = {0, 0};
-        Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem pb(false, parameters.solver);
+        // We force the usage of MIP solvers to check that integer variables are properly handled
+        // TODO determine the nature of the problem based on system.Components()
+        const bool isMip = false;
+        Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem pb(isMip, parameters.solver);
         Antares::Solver::Modeler::Api::LinearProblemBuilder linear_problem_builder(fillers);
         linear_problem_builder.build(pb, LP_Data, ctx);
         for (auto& filler: fillers)
