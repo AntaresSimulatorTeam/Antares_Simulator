@@ -86,9 +86,9 @@ int main(int argc, const char** argv)
             {
                 logs.info() << "Variables";
                 // TODO don't rely on this specific function
-                for (auto* var: pb.MpSolver()->variables())
+                for (const auto& [name, value]: solution->getAllValues())
                 {
-                    logs.info() << var->name() << " " << var->solution_value();
+                    logs.info() << name << " " << value;
                 }
             }
             break;
