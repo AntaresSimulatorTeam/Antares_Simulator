@@ -220,6 +220,13 @@ static bool Remix(const Data::AreaList& areas,
     return status;
 }
 
+static void RunAccurateShavePeaks(const Data::AreaList& areas,
+                                  PROBLEME_HEBDO& problem,
+                                  uint numSpace,
+                                  uint hourInYear)
+{
+}
+
 void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            Data::SheddingPolicy sheddingPolicy,
@@ -252,6 +259,15 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
     }
     else if (sheddingPolicy == Data::shpAccurateShavePeaks)
     {
+        try
+        {
+            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear);
+        }
+        catch (std::invalid_argument& invalidArgExc)
+        {
+            Data::AssertionError assertErrException(invalidArgExc.what());
+            throw assertErrException;
+        }
     }
 }
 } // namespace Antares::Solver::Simulation
