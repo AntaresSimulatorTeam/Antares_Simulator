@@ -27,10 +27,8 @@
 class CumulationConstraint
 {
 public:
-    virtual void build(ConstraintBuilder& builder,
-                       unsigned int index,
-                       const ::ShortTermStorage::PROPERTIES& input) const
-      = 0;
+    virtual void build(unsigned int index) const = 0;
+
     virtual std::string name() const = 0;
     virtual ~CumulationConstraint() = default;
 };
@@ -38,9 +36,12 @@ public:
 class WithdrawalCumulationConstraint: public CumulationConstraint
 {
 public:
-    void build(ConstraintBuilder& builder,
-               unsigned int index,
-               const ::ShortTermStorage::PROPERTIES&) const override
+    WithdrawalCumulationConstraint(ConstraintBuilder& builder):
+        builder(builder)
+    {
+    }
+
+    void build(unsigned int index) const override
     {
         builder.ShortTermStorageWithdrawal(index, 1.0);
     }
@@ -51,14 +52,19 @@ public:
     }
 
     ~WithdrawalCumulationConstraint() override = default;
+
+    ConstraintBuilder& builder;
 };
 
 class InjectionCumulationConstraint: public CumulationConstraint
 {
 public:
-    void build(ConstraintBuilder& builder,
-               unsigned int index,
-               const ::ShortTermStorage::PROPERTIES&) const override
+    InjectionCumulationConstraint(ConstraintBuilder& builder):
+        builder(builder)
+    {
+    }
+
+    void build(unsigned int index) const override
     {
         builder.ShortTermStorageInjection(index, 1.0);
     }
@@ -69,17 +75,25 @@ public:
     }
 
     ~InjectionCumulationConstraint() override = default;
+
+    ConstraintBuilder& builder;
 };
 
 class NettingCumulationConstraint: public CumulationConstraint
 {
 public:
-    void build(ConstraintBuilder& builder,
-               unsigned int index,
-               const ::ShortTermStorage::PROPERTIES& input) const override
+    NettingCumulationConstraint(
+      ConstraintBuilder& builder,
+      const ::ShortTermStorage::PROPERTIES& short_term_storage_properties):
+        builder(builder),
+        short_term_storage_properties(short_term_storage_properties)
     {
-        builder.ShortTermStorageInjection(index, input.injectionEfficiency)
-          .ShortTermStorageWithdrawal(index, -input.withdrawalEfficiency);
+    }
+
+    void build(unsigned int index) const override
+    {
+        builder.ShortTermStorageInjection(index, short_term_storage_properties.injectionEfficiency)
+          .ShortTermStorageWithdrawal(index, -short_term_storage_properties.withdrawalEfficiency);
     }
 
     std::string name() const override
@@ -88,21 +102,28 @@ public:
     }
 
     ~NettingCumulationConstraint() override = default;
+
+    ConstraintBuilder& builder;
+    const ShortTermStorage::PROPERTIES& short_term_storage_properties;
 };
 
-std::unique_ptr<CumulationConstraint> cumulationConstraintFromVariable(const std::string& variable)
+std::unique_ptr<CumulationConstraint> cumulationConstraintFactory(
+  const std::string& variable,
+  ConstraintBuilder& builder,
+  const ShortTermStorage::PROPERTIES& short_term_storage_properties)
 {
     if (variable == "withdrawal")
     {
-        return std::make_unique<WithdrawalCumulationConstraint>();
+        return std::make_unique<WithdrawalCumulationConstraint>(builder);
     }
     else if (variable == "injection")
     {
-        return std::make_unique<InjectionCumulationConstraint>();
+        return std::make_unique<InjectionCumulationConstraint>(builder);
     }
     else if (variable == "netting")
     {
-        return std::make_unique<NettingCumulationConstraint>();
+        return std::make_unique<NettingCumulationConstraint>(builder,
+                                                             short_term_storage_properties);
     }
     throw std::invalid_argument("Invalid cumulation constraint type");
 }
@@ -130,28 +151,34 @@ void ShortTermStorageCumulation::add(int pays)
 
     for (const auto& storage: data.ShortTermStorage[pays])
     {
-        for (const auto& constraint: storage.additional_constraints)
+        for (const auto& additionalConstraints: storage.additionalConstraints)
         {
             // sum (var[h]) sign rhs, h in list provided by user where:
             // var = injection for InjectionCumulationConstraint
             // var = withdrawal for WithdrawalCumulationConstraint
             // var = injectionEfficiency * injection - withdrawalEfficiency * withdrawal for Netting
-            auto constraintHelper = cumulationConstraintFromVariable(constraint.variable);
-            namer.ShortTermStorageCumulation(constraintHelper->name(),
-                                             builder.data.nombreDeContraintes,
-                                             storage.name,
-                                             constraint.name);
-            const auto index = storage.clusterGlobalIndex;
-            data.CorrespondanceCntNativesCntOptimHebdomadaires
-              .ShortTermStorageCumulation[constraint.globalIndex]
-              = builder.data.nombreDeContraintes;
-
-            for (const auto& hour: constraint.hours)
+            auto cumulationConstraint = cumulationConstraintFactory(additionalConstraints.variable,
+                                                                    builder,
+                                                                    storage);
+            for (const auto& [hours, globalIndex, localIndex]: additionalConstraints.constraints)
             {
-                builder.updateHourWithinWeek(hour - 1);
-                constraintHelper->build(builder, index, storage);
+                namer.ShortTermStorageCumulation(cumulationConstraint->name(),
+                                                 builder.data.nombreDeContraintes,
+                                                 storage.name,
+                                                 additionalConstraints.name + "_"
+                                                   + std::to_string(localIndex));
+                const auto index = storage.clusterGlobalIndex;
+                data.CorrespondanceCntNativesCntOptimHebdomadaires
+                  .ShortTermStorageCumulation[globalIndex]
+                  = builder.data.nombreDeContraintes;
+
+                for (const auto& hour: hours)
+                {
+                    builder.updateHourWithinWeek(hour - 1);
+                    cumulationConstraint->build(index);
+                }
+                builder.SetOperator(ConvertSense(additionalConstraints.operatorType)).build();
             }
-            builder.SetOperator(ConvertSense(constraint.operatorType)).build();
         }
     }
 }
