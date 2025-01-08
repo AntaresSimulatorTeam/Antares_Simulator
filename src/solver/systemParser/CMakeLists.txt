@@ -22,7 +22,7 @@ target_link_libraries(systemParser
         PUBLIC
         Antares::antares-study-system-model
         PRIVATE
-        yaml-cpp
+        yaml-cpp::yaml-cpp
 )
 
 install(DIRECTORY include/antares

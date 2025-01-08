@@ -19,6 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <numeric>
+
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
@@ -47,17 +49,27 @@ static void shortTermStorageCumulationRHS(
   const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
   int numberOfAreas,
   std::vector<double>& SecondMembre,
-  const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires)
+  const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires,
+  int weekFirstHour)
 {
     for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
     {
         for (auto& storage: shortTermStorageInput[areaIndex])
         {
-            for (const auto& constraint: storage.additional_constraints)
+            for (const auto& additionalConstraints: storage.additionalConstraints)
             {
-                int cnt = CorrespondancesDesContraintesHebdomadaires
-                            .ShortTermStorageCumulation[constraint.globalIndex];
-                SecondMembre[cnt] = constraint.rhs;
+                for (const auto& constraint: additionalConstraints.constraints)
+                {
+                    const int cnt = CorrespondancesDesContraintesHebdomadaires
+                                      .ShortTermStorageCumulation[constraint.globalIndex];
+
+                    SecondMembre[cnt] = std::accumulate(
+                      constraint.hours.begin(),
+                      constraint.hours.end(),
+                      0.0,
+                      [weekFirstHour, &additionalConstraints](const double sum, const int hour)
+                      { return sum + additionalConstraints.rhs[weekFirstHour + hour - 1]; });
+                }
             }
         }
     }
@@ -395,11 +407,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             }
         }
     }
-
     shortTermStorageCumulationRHS(problemeHebdo->ShortTermStorage,
                                   problemeHebdo->NombreDePays,
                                   ProblemeAResoudre->SecondMembre,
-                                  problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires);
+                                  problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires,
+                                  weekFirstHour);
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,

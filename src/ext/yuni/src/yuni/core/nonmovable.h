@@ -49,11 +49,12 @@ class YUNI_DECL NonMovable
 {
 protected:
     //! Default constructor
-    NonCopyable()
+    NonMovable()
     {
     }
+
     //! Protected non-virtual destructor
-    ~NonCopyable()
+    ~NonMovable()
     {
     }
 };
