@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <fstream>
+
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
@@ -75,6 +77,26 @@ int main(int argc, const char** argv)
 
         logs.info() << "Number of variables: " << pb.variableCount();
         logs.info() << "Number of constraints: " << pb.constraintCount();
+
+        logs.info() << "Launching resolution...";
+        auto* solution = pb.solve(parameters.solverLogs);
+        switch (solution->getStatus())
+        {
+        case Antares::Solver::Modeler::Api::MipStatus::OPTIMAL:
+        case Antares::Solver::Modeler::Api::MipStatus::FEASIBLE:
+            if (!parameters.noOutput)
+            {
+                logs.info() << "Writing variables...";
+                std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
+                for (const auto& [name, value]: solution->solutionValues())
+                {
+                    sol_out << name << " " << value << std::endl;
+                }
+            }
+            break;
+        default:
+            logs.error() << "Problem during linear optimization";
+        }
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
