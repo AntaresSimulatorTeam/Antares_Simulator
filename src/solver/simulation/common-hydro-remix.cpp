@@ -28,6 +28,7 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/shave-peaks-by-remix-hydro.h"
 #include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
@@ -220,11 +221,90 @@ static bool Remix(const Data::AreaList& areas,
     return status;
 }
 
+std::vector<double> computeTotalGenWithoutHydro(const std::vector<double>& load,
+                                                const std::vector<double>& unsupE,
+                                                const std::vector<double>& hydroGen)
+{
+    // Can be computed (for any hour) as : load - unsupplied energy - hydro
+    std::vector<double> to_return = load;
+    for (size_t i = 0; i < to_return.size(); ++i)
+    {
+        to_return[i] -= unsupE[i] + hydroGen[i];
+    }
+    return to_return;
+}
+
+std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
+                                              const unsigned int year,
+                                              const unsigned int firstHourOfWeek)
+{
+    std::vector<double> load_to_return(168, 0.);
+    for (int h = 0; h < 168; h++)
+    {
+        load_to_return[h] = area.load.series.getColumn(year)[h + firstHourOfWeek];
+    }
+    return load_to_return;
+}
+
+std::vector<double> extractHydroPmin(const Data::Area& area,
+                                     const unsigned int year,
+                                     const unsigned int firstHourOfWeek)
+{
+    // area->hydro.series->mingen.timeSeries
+    std::vector<double> hydroPmin(168, 0.);
+    for (int h = 0; h < 168; h++)
+    {
+        hydroPmin[h] = area.hydro.series->mingen.getColumn(year)[h + firstHourOfWeek];
+    }
+    return hydroPmin;
+}
+
 static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                   PROBLEME_HEBDO& problem,
                                   uint numSpace,
-                                  uint hourInYear)
+                                  uint firstHourOfWeek)
 {
+    areas.each(
+      [&](const Data::Area& area)
+      {
+          auto& weeklyResults = problem.ResultatsHoraires[area.index];
+
+          const auto load = extractLoadForCurrentWeek(area, problem.year, firstHourOfWeek);
+          auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+          auto& hydroGen = weeklyResults.TurbinageHoraire;
+          auto& levels = weeklyResults.niveauxHoraires;
+          const auto DispatchGen = computeTotalGenWithoutHydro(load, unsupE, hydroGen);
+          const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
+                                    .ContrainteDePmaxHydrauliqueHoraire;
+          const auto hydroPmin = extractHydroPmin(area, problem.year, firstHourOfWeek);
+          const double initLevel = problem.CaracteristiquesHydrauliques[area.index]
+                                     .NiveauInitialReservoir;
+          const double capacity = area.hydro.reservoirCapacity;
+          const auto& inflows = problem.CaracteristiquesHydrauliques[area.index]
+                                  .ApportNaturelHoraire;
+          const auto& ovf = weeklyResults.debordementsHoraires;
+          const auto& pump = weeklyResults.PompageHoraire;
+          const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
+
+          const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
+          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + 168);
+
+          auto [H, U, L] = shavePeaksByRemixingHydro(DispatchGen,
+                                                     hydroGen,
+                                                     unsupE,
+                                                     hydroPmax,
+                                                     hydroPmin,
+                                                     initLevel,
+                                                     capacity,
+                                                     inflows,
+                                                     ovf,
+                                                     pump,
+                                                     spillage,
+                                                     dtgMrg);
+          hydroGen = H;
+          unsupE = U;
+          levels = L;
+      });
 }
 
 void RemixHydroForAllAreas(const Data::AreaList& areas,
