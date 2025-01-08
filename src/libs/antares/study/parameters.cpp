@@ -721,6 +721,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return true;
     }
 
+    if (key == "include-export-solutions")
+    {
+        return value.to<bool>(d.include.exportSolutions);
+    }
+
     if (key == "include-exportstructure")
     {
         return value.to<bool>(d.include.exportStructure);

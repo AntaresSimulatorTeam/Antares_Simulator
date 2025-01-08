@@ -154,7 +154,9 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                                            *optPeriodStringGenerator,
                                                            optimizationNumber,
                                                            writer);
-
+        }
+        if (problemeHebdo->exportSolutions)
+        {
             OPT_WriteSolution(*problemeHebdo->ProblemeAResoudre,
                               *optPeriodStringGenerator,
                               optimizationNumber,
