@@ -93,7 +93,7 @@ std::vector<double> OrtoolsMipSolution::getOptimalValues(
     return solution;
 }
 
-std::map<std::string, double> OrtoolsMipSolution::getAllValues() const
+const std::map<std::string, double>& OrtoolsMipSolution::solutionValues() const
 {
     return solution_;
 }

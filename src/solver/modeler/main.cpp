@@ -86,7 +86,7 @@ int main(int argc, const char** argv)
             {
                 logs.info() << "Variables";
                 // TODO don't rely on this specific function
-                for (const auto& [name, value]: solution->getAllValues())
+                for (const auto& [name, value]: solution->solutionValues())
                 {
                     logs.info() << name << " " << value;
                 }

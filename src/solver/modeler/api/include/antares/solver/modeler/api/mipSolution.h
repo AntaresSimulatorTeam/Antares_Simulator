@@ -53,7 +53,7 @@ public:
     virtual double getObjectiveValue() const = 0;
     virtual double getOptimalValue(const IMipVariable* var) const = 0;
     virtual std::vector<double> getOptimalValues(const std::vector<IMipVariable*>& vars) const = 0;
-    virtual std::map<std::string, double> getAllValues() const = 0;
+    virtual const std::map<std::string, double>& solutionValues() const = 0;
 };
 
 } // namespace Antares::Solver::Modeler::Api
