@@ -65,3 +65,9 @@ std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGen
 {
     return createOptimizationFilename("problem", optPeriodStringGenerator, optNumber, "mps");
 }
+
+std::string createSolutionFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                   const unsigned int optNumber)
+{
+    return createOptimizationFilename("solution", optPeriodStringGenerator, optNumber, "csv");
+}
