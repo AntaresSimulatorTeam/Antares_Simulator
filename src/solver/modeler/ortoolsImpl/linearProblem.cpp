@@ -165,6 +165,11 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
+void OrtoolsLinearProblem::Write(const std::string& filename)
+{
+    mpSolver_->Write(filename);
+}
+
 MPSolver* OrtoolsLinearProblem::MpSolver() const
 {
     return mpSolver_;
