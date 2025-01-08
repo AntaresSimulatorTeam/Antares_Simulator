@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <fstream>
+
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
@@ -84,11 +86,11 @@ int main(int argc, const char** argv)
         case Antares::Solver::Modeler::Api::MipStatus::FEASIBLE:
             if (!parameters.noOutput)
             {
-                logs.info() << "Variables";
-                // TODO don't rely on this specific function
+                logs.info() << "Writing variables...";
+                std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
                 for (const auto& [name, value]: solution->solutionValues())
                 {
-                    logs.info() << name << " " << value;
+                    sol_out << name << " " << value << std::endl;
                 }
             }
             break;
