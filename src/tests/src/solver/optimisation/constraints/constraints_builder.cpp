@@ -284,3 +284,37 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, BB)
                 addc2_injection_constraints[1].globalIndex],
             1);
 }
+
+
+BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
+{
+    ConstraintBuilder builder(constraint_builder_data);
+    ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+
+    // Add constraints for multiple areas
+    cumulation.add(0); // CountryA
+    cumulation.add(1); // CountryB
+
+    // Check if the number of constraints increased correctly
+    BOOST_CHECK_EQUAL(builder.data.nombreDeContraintes, 4);
+
+    // Verify the names of the constraints for both countries
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_0>")
+    ;
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_1>")
+    ;
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[2],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_0>")
+    ;
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[3],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_1>")
+    ;
+
+    // Check if the sense of constraints was updated correctly for all areas
+    BOOST_CHECK_EQUAL(builder.data.Sens[0], '<');
+    BOOST_CHECK_EQUAL(builder.data.Sens[1], '<');
+    BOOST_CHECK_EQUAL(builder.data.Sens[2], '>');
+    BOOST_CHECK_EQUAL(builder.data.Sens[3], '>');
+}
