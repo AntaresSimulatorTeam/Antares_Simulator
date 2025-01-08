@@ -19,8 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/post_process_commands.h"
+
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 
