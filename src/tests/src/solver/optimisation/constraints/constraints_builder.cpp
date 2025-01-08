@@ -55,6 +55,11 @@ struct BB
     void set_correspondances_des_variables()
     {
         CorrespondanceVarNativesVarOptim.resize(nombreDePasDeTempsPourUneOptimisation);
+        // for every timestep the same indices
+        // .InjectionVariable = {0, 1} :
+        // --> storage 1 --> injection index = 0
+        // --> storage 2 --> injection index = 1
+
         for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
         {
             CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
@@ -118,7 +123,7 @@ struct BB
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<::ShortTermStorage::AREA_INPUT> shortTermStorage = InitializeShortTermStorageData();
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires{
-            {}, {0, 0, 0}};
+            {}, std::vector<int>(20, 0)};
 
 
     std::vector<ShortTermStorage::AREA_INPUT> InitializeShortTermStorageData()
@@ -217,10 +222,65 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, BB)
     // 4. Validate correspondence mapping
     BOOST_CHECK_EQUAL(
             shorttermstoragecumulativeconstraintdata
-            .CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[0],
+            .CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
+                addc1_withdrawal_constraints[0].globalIndex],
             0);
     BOOST_CHECK_EQUAL(
             shorttermstoragecumulativeconstraintdata.
-            CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[1],
+            CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
+                addc1_withdrawal_constraints[1].globalIndex],
+            1);
+}
+
+BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, BB)
+{
+    ConstraintBuilder builder(constraint_builder_data);
+
+    ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+
+    // Call the add method for "CountryB" (index 1)
+    cumulation.add(1);
+    // Assert that the number of constraints has increased by the expected amount
+    // Assuming 2 additional constraints (from addc1_withdrawal) should be added
+    BOOST_CHECK_EQUAL(builder.data.nombreDeContraintes, 2);
+
+    // Verify that the constraint names are correctly generated and stored
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_0>")
+    ; // Assuming this is the generated name
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_1>")
+    ; // Check the second constraint
+    //
+    // // Verify that the correct number of terms have been added to the matrix
+    BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 4);
+
+    // Verify that the correct indices for constraints have been set
+    BOOST_CHECK_EQUAL(builder.data.IndicesDebutDeLigne[0], 0);
+    // Assuming this is the starting index
+    BOOST_CHECK_EQUAL(builder.data.IndicesDebutDeLigne[1], 2); // Check next line index
+
+    // Verify that the correct variables and values were updated in the matrix
+    BOOST_CHECK_EQUAL(builder.data.Pi[0], 1.0);
+    // Verify the first term's coefficient (adjust based on actual expected values)
+    BOOST_CHECK_EQUAL(builder.data.Pi[1], 1.0);
+    // Verify the first term's coefficient (adjust based on actual expected values)
+    BOOST_CHECK_EQUAL(builder.data.Colonne[0], 1); // Verify the first term's column index
+    BOOST_CHECK_EQUAL(builder.data.Colonne[1], 1); // Verify the first term's column index
+
+    // Check if the sense of constraints was updated correctly
+    BOOST_CHECK_EQUAL(builder.data.Sens[0], '>');
+    BOOST_CHECK_EQUAL(builder.data.Sens[1], '>');
+
+    // 4. Validate correspondence mapping
+    BOOST_CHECK_EQUAL(
+            shorttermstoragecumulativeconstraintdata
+            .CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
+                addc2_injection_constraints[0].globalIndex],
+            0);
+    BOOST_CHECK_EQUAL(
+            shorttermstoragecumulativeconstraintdata.
+            CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
+                addc2_injection_constraints[1].globalIndex],
             1);
 }
