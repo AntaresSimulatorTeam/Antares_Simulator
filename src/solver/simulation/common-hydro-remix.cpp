@@ -250,5 +250,8 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
               "Error in simplex optimisation. Check logs for more details.");
         }
     }
+    else if (sheddingPolicy == Data::shpAccurateShavePeaks)
+    {
+    }
 }
 } // namespace Antares::Solver::Simulation
