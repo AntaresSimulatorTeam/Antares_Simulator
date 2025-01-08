@@ -1,5 +1,15 @@
 var NAVTREEINDEX26 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9":[9,0,0,13,11,4,120,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0":[9,0,0,13,11,4,120,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html":[9,0,0,13,11,4,121,0],
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,13,11,9],
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[9,0,0,13,11,9,0],
+"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,13,11,11,0],
+"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[9,0,0,13,11,12,0],
+"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,13,11,13,0],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,13,11,14],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[9,0,0,13,11,15],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[9,0,0,13,11,16],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[9,0,0,13,11,17],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html":[9,0,0,13,11,18],
@@ -239,15 +249,5 @@ var NAVTREEINDEX26 =
 "structShortTermStorage_1_1PROPERTIES.html":[9,0,18,0],
 "structShortTermStorage_1_1RESULTS.html":[9,0,18,1],
 "structSimplexResult.html":[9,0,234],
-"structStartUpCostsData.html":[9,0,238],
-"structStudyBuilder.html":[9,0,241],
-"structStudyFixture.html":[9,0,243],
-"structStudyForBCTest.html":[9,0,244],
-"structStudyWithBConCluster.html":[9,0,245],
-"structStudyWithBConLink.html":[9,0,246],
-"structSystemBuilderCreationFixture.html":[9,0,249],
-"structTIME__MEASURE.html":[9,0,259],
-"structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html":[9,0,263],
-"structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[9,0,264],
-"structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html":[9,0,265]
+"structStartUpCostsData.html":[9,0,238]
 };

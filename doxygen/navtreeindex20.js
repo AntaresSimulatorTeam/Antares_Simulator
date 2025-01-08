@@ -1,5 +1,10 @@
 var NAVTREEINDEX20 =
 {
+"classStudyData.html#a39dbd52c27f50e27fa292f8857146e41":[9,0,242,3],
+"classStudyData.html#a8f6d4379748e859804f2ee469a056cf9":[9,0,242,4],
+"classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b":[9,0,242,1],
+"classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08":[9,0,242,5],
+"classStudyData.html#ab8124828569c97b656cb24c380e88321":[9,0,242,2],
 "classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7":[9,0,242,0],
 "classSubstitutionFixture.html":[9,0,247],
 "classSumSubstitutionFixture.html":[9,0,248],
@@ -244,10 +249,5 @@ var NAVTREEINDEX20 =
 "dir_4981abbc57b263386d25c950e4ab54bd.html":[10,0,0,4,5,0,0,0,0],
 "dir_49911dad5c3cc406ed532167e98a01bd.html":[10,0,0,4,12,0,0,0],
 "dir_4bab1515387bed5e705a72b20e34cc47.html":[10,0,0,3,0,24,0,0],
-"dir_4cd28f4d991dbf75622a77b5ee5a535e.html":[10,0,0,4,10,0,0,0],
-"dir_4e100ffe7dd5a632485cde864eef9cf1.html":[10,0,0,3,0,7,0],
-"dir_4e14623aef83ef0f6b1cdb1255171e2a.html":[10,0,0,4,8,2,0,0],
-"dir_4e4e78ccd4c71defdbad1c35bb83e3ce.html":[10,0,0,4,12,0],
-"dir_4e7c81b846eabaed625fc3ca4a916551.html":[10,0,0,3,0,8],
-"dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html":[10,0,0,4,11,1,0]
+"dir_4cd28f4d991dbf75622a77b5ee5a535e.html":[10,0,0,4,10,0,0,0]
 };

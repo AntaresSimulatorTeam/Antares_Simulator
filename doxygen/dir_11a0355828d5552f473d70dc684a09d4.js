@@ -30,6 +30,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "overallCostCsr.h", "overallCostCsr_8h_source.html", null ],
     [ "overflow.h", "overflow_8h_source.html", null ],
     [ "price.h", "price_8h_source.html", null ],
+    [ "priceCSR.h", "priceCSR_8h_source.html", null ],
     [ "productionByDispatchablePlant.h", "productionByDispatchablePlant_8h_source.html", null ],
     [ "productionByRenewablePlant.h", "productionByRenewablePlant_8h_source.html", null ],
     [ "profitByPlant.h", "profitByPlant_8h_source.html", null ],

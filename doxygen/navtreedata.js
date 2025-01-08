@@ -108,19 +108,19 @@ var NAVTREEINDEX =
 "classAntares_1_1Map_1_1Manager.html#ac6466811e36e8cc3a764c07b56863aad",
 "classAntares_1_1Private_1_1OutputViewerData_1_1Panel.html#ae6d760e7e9832e754f22eea556840ac3",
 "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html#a96f17c4a588b50328448240e1560ca20",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster.html#ae8f04d752dc3776cbdf26331c1d4af8f",
-"classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a95b2dc3cc8327cf7c651c3779afdce4a",
-"classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a98977f374157a061e8009ad629958295",
-"classAntares_1_1Window_1_1OutputViewer_1_1Layer.html#aa90fe9fa162238fd95e65af6e826c7b5",
-"classFinalStockExpression.html#a9f93c87027534e65707c84ed8ac8c851",
-"classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7",
-"dir_4f4a69ba69ef4a08cfdb93ec23ef2767.html",
-"dir_e9f6af11b4c52ca7bbc97497e1185d42.html",
-"jit_8h_source.html",
-"remover_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html",
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html",
-"structTSNumbersPredicate.html"
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#ae9db13aef63a14fd61a617f69ea1c1e9",
+"classAntares_1_1Solver_1_1Visitors_1_1NodeVisitor.html#a5d04c4c47454fcd35a9a58dcade1fd43",
+"classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a68d9d32265c4be689466bca64a29876f",
+"classAntares_1_1Window_1_1OutputViewer_1_1Layer.html#a579720de3c6485bb0b2648446da04239",
+"classFictitiousLoad.html",
+"classStudyData.html#a39dbd52c27f50e27fa292f8857146e41",
+"dir_4e100ffe7dd5a632485cde864eef9cf1.html",
+"dir_e1186fe554c536363778aa13dc14f90c.html",
+"intermediate_8hxx_source.html",
+"raw_8hxx_source.html",
+"structAntares_1_1Solver_1_1SystemParser_1_1System.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a00706afc42cd9e5132dbe8c0245274e9",
+"structStudyBuilder.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

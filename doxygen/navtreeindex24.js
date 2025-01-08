@@ -1,12 +1,18 @@
 var NAVTREEINDEX24 =
 {
+"raw_8hxx_source.html":[10,0,0,4,17,0,0,0,0,3,10],
+"rawdata_8h_source.html":[10,0,0,4,17,0,0,0,0,3,11],
+"recentfiles_8h_source.html":[10,0,0,8,2,0,5],
+"refresh_8h_source.html":[10,0,0,8,2,1,1,9],
+"registry_8h_source.html":[10,0,0,8,1,0,0,2],
+"registry_8inc_8hxx_source.html":[10,0,0,3,1,3],
 "remover_8h_source.html":[10,0,0,8,2,1,1,3,2,1],
 "renderer_8h_source.html":[10,0,0,8,2,1,1,1,8],
 "renderer_8hxx_source.html":[10,0,0,8,2,1,1,1,9],
 "renewable-cluster-item_8h_source.html":[10,0,0,8,2,1,1,2,1,9],
 "renewable-cluster-order_8h_source.html":[10,0,0,8,2,1,1,2,0,3],
 "renewable-cluster_8h_source.html":[10,0,0,8,2,1,5,5],
-"renewableGeneration_8h_source.html":[10,0,0,4,17,0,0,0,0,2,34],
+"renewableGeneration_8h_source.html":[10,0,0,4,17,0,0,0,0,2,35],
 "renewable_2cluster_8hxx_source.html":[10,0,0,3,0,25,0,0,0,5,3,1],
 "renewable_2cluster__list_8h_source.html":[10,0,0,3,0,25,0,0,0,5,3,2],
 "renewable_2defines_8h_source.html":[10,0,0,3,0,25,0,0,0,5,3,5],
@@ -14,7 +20,7 @@ var NAVTREEINDEX24 =
 "report_8h_source.html":[10,0,0,4,4,0,0,0,0,1],
 "reportbuilder_8hxx_source.html":[10,0,0,4,17,0,0,0,0,4,1],
 "reserves_8h_source.html":[10,0,0,8,0,0,0,0,11],
-"reservoirlevel_8h_source.html":[10,0,0,4,17,0,0,0,0,2,35],
+"reservoirlevel_8h_source.html":[10,0,0,4,17,0,0,0,0,2,36],
 "reservoirlevels_8h_source.html":[10,0,0,8,2,1,1,1,1,1,10],
 "result_8h_source.html":[10,0,0,7,3,6],
 "result__format_8h_source.html":[10,0,0,3,0,29,0,0,0,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[9,0,0,13,8,21],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[9,0,0,13,8,24],
 "structAntares_1_1Solver_1_1SystemParser_1_1Component.html":[9,0,0,13,10,0],
-"structAntares_1_1Solver_1_1SystemParser_1_1Parameter.html":[9,0,0,13,10,1],
-"structAntares_1_1Solver_1_1SystemParser_1_1System.html":[9,0,0,13,10,3],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[9,0,0,13,11,0,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[9,0,0,13,11,0,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[9,0,0,13,11,0,2],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[9,0,0,13,11,0,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[9,0,0,13,11,0,2,1]
+"structAntares_1_1Solver_1_1SystemParser_1_1Parameter.html":[9,0,0,13,10,1]
 };

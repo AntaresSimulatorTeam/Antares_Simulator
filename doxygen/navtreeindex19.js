@@ -1,5 +1,10 @@
 var NAVTREEINDEX19 =
 {
+"classFictitiousLoad.html":[9,0,100],
+"classFictitiousLoad.html#a4597b168f370edc3076054ad585a3465":[9,0,100,0],
+"classFinalStockEquivalent.html":[9,0,102],
+"classFinalStockEquivalent.html#aba49206f3d5769a3e4dbe14f2e7cf097":[9,0,102,0],
+"classFinalStockExpression.html":[9,0,104],
 "classFinalStockExpression.html#a9f93c87027534e65707c84ed8ac8c851":[9,0,104,0],
 "classFinalStockGroup.html":[9,0,106],
 "classFixtureMultipleTS.html":[9,0,113],
@@ -196,8 +201,8 @@ var NAVTREEINDEX19 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[9,0,208,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[9,0,208,4],
 "classPublicStudy.html":[9,0,209],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,209,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,209,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,209,1],
 "classQuadraticProblemMatrix.html":[9,0,210],
 "classRealName.html":[9,0,212],
 "classResultMatrix.html":[9,0,218],
@@ -244,10 +249,5 @@ var NAVTREEINDEX19 =
 "classSparseVector.html":[9,0,237],
 "classStringIsNotWellFormated.html":[9,0,239],
 "classStubOptPeriodStringGenerator.html":[9,0,240],
-"classStudyData.html":[9,0,242],
-"classStudyData.html#a39dbd52c27f50e27fa292f8857146e41":[9,0,242,3],
-"classStudyData.html#a8f6d4379748e859804f2ee469a056cf9":[9,0,242,4],
-"classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b":[9,0,242,1],
-"classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08":[9,0,242,5],
-"classStudyData.html#ab8124828569c97b656cb24c380e88321":[9,0,242,2]
+"classStudyData.html":[9,0,242]
 };

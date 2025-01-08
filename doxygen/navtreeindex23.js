@@ -1,5 +1,10 @@
 var NAVTREEINDEX23 =
 {
+"intermediate_8hxx_source.html":[10,0,0,4,17,0,0,0,0,3,5],
+"internal-data_8h_source.html":[10,0,0,8,2,0,0,4],
+"internal-ids_8h_source.html":[10,0,0,8,2,0,0,5],
+"io_8h_source.html":[10,0,0,7,2,1],
+"item_8hxx_source.html":[10,0,0,8,2,1,1,2,1,7],
 "jit_8h_source.html":[10,0,0,3,0,14,0,0,0,0],
 "jit_8hxx_source.html":[10,0,0,3,0,14,0,0,0,1],
 "job_8hxx_source.html":[10,0,0,7,3,2],
@@ -226,12 +231,13 @@ var NAVTREEINDEX23 =
 "post__process__commands_8h_source.html":[10,0,0,4,11,1,0,0,0,13],
 "pre-order_8h_source.html":[10,0,0,4,2,0,0,0,0,0,0],
 "predicate_8hxx_source.html":[10,0,0,4,15,0,0,0,0,0,2],
+"priceCSR_8h_source.html":[10,0,0,4,17,0,0,0,0,2,30],
 "price_8h_source.html":[10,0,0,4,17,0,0,0,0,2,29],
 "print_8h_source.html":[10,0,0,4,17,0,0,0,0,14],
 "private_8h_source.html":[10,0,0,8,2,2,8,1],
-"productionByDispatchablePlant_8h_source.html":[10,0,0,4,17,0,0,0,0,2,30],
-"productionByRenewablePlant_8h_source.html":[10,0,0,4,17,0,0,0,0,2,31],
-"profitByPlant_8h_source.html":[10,0,0,4,17,0,0,0,0,2,32],
+"productionByDispatchablePlant_8h_source.html":[10,0,0,4,17,0,0,0,0,2,31],
+"productionByRenewablePlant_8h_source.html":[10,0,0,4,17,0,0,0,0,2,32],
+"profitByPlant_8h_source.html":[10,0,0,4,17,0,0,0,0,2,33],
 "progress_8h_source.html":[10,0,0,7,3,4],
 "progress_8hxx_source.html":[10,0,0,7,3,5],
 "progressbar_8h_source.html":[10,0,0,8,2,1,1,8],
@@ -242,12 +248,6 @@ var NAVTREEINDEX23 =
 "provider_8h_source.html":[10,0,0,8,1,0,3,5],
 "psp_8h_source.html":[10,0,0,4,17,0,0,0,0,1,5],
 "public_8h_source.html":[10,0,0,4,12,0,0,0,1],
-"pumping_8h_source.html":[10,0,0,4,17,0,0,0,0,2,33],
-"raw_8h_source.html":[10,0,0,4,17,0,0,0,0,3,9],
-"raw_8hxx_source.html":[10,0,0,4,17,0,0,0,0,3,10],
-"rawdata_8h_source.html":[10,0,0,4,17,0,0,0,0,3,11],
-"recentfiles_8h_source.html":[10,0,0,8,2,0,5],
-"refresh_8h_source.html":[10,0,0,8,2,1,1,9],
-"registry_8h_source.html":[10,0,0,8,1,0,0,2],
-"registry_8inc_8hxx_source.html":[10,0,0,3,1,3]
+"pumping_8h_source.html":[10,0,0,4,17,0,0,0,0,2,34],
+"raw_8h_source.html":[10,0,0,4,17,0,0,0,0,3,9]
 };
