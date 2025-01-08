@@ -154,7 +154,7 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                            const std::vector<double>& DTG_MRG)
 {
     std::vector<double> levels(DispatchGen.size());
-    if (levels.size())
+    if (!levels.empty())
     {
         levels[0] = initial_level + inflows[0] - overflow[0] + pump[0] - HydroGen[0];
         for (size_t h = 1; h < levels.size(); ++h)
