@@ -122,6 +122,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
+    problem.exportSolutions = study.parameters.include.exportSolutions;
     problem.ExportStructure = study.parameters.include.exportStructure;
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);

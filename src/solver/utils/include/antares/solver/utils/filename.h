@@ -32,5 +32,9 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
 
 std::string createCriterionFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                                     const unsigned int optNumber);
+
 std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                               const unsigned int optNumber);
+
+std::string createSolutionFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                   const unsigned int optNumber);

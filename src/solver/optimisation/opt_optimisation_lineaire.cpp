@@ -62,6 +62,20 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
+void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
+                       const OptPeriodStringGenerator& optPeriodStringGenerator,
+                       int optimizationNumber,
+                       Solver::IResultWriter& writer)
+{
+    Yuni::Clob buffer;
+    auto filename = createSolutionFilename(optPeriodStringGenerator, optimizationNumber);
+    for (int var = 0; var < pb.NombreDeVariables; var++)
+    {
+        buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[var].c_str(), pb.X[var]);
+    }
+    writer.addEntryFromBuffer(filename, buffer);
+}
+
 namespace
 {
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
@@ -140,6 +154,13 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                                            *optPeriodStringGenerator,
                                                            optimizationNumber,
                                                            writer);
+        }
+        if (problemeHebdo->exportSolutions)
+        {
+            OPT_WriteSolution(*problemeHebdo->ProblemeAResoudre,
+                              *optPeriodStringGenerator,
+                              optimizationNumber,
+                              writer);
         }
     }
     return true;
