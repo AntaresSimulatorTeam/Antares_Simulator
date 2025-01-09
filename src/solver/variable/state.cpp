@@ -343,8 +343,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         }
         }
 
-        ON_max[h] = static_cast<uint>(std::ceil(thermalClusterAvailableProduction
-                                                / currentCluster->nominalCapacityWithSpinning));
+        ON_max[h] = static_cast<uint>(Utils::ceilDiv(thermalClusterAvailableProduction,
+                                                     currentCluster->nominalCapacityWithSpinning));
 
         if (currentCluster->minStablePower > 0.)
         {
