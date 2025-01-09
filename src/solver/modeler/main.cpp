@@ -85,7 +85,7 @@ int main(int argc, const char** argv)
         {
             logs.info() << "Writing problem.lp...";
             auto mps_path = std::filesystem::current_path() / "problem.lp";
-            pb.WriteLP(mps_path.c_str());
+            pb.WriteLP(mps_path.string());
         }
 
         logs.info() << "Launching resolution...";
