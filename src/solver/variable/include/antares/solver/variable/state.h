@@ -121,14 +121,6 @@ private:
       const std::array<uint, HOURS_PER_YEAR>& ON_min,
       const std::array<uint, HOURS_PER_YEAR>& ON_max) const;
 
-    /*!
-    ** \brief Smooth the thermal units run after resolutions
-    ** using heuristics
-    **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
-    */
-    void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
-
 public:
     /*!
     ** \brief Reset internal data
