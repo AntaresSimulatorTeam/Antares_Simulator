@@ -40,7 +40,7 @@ std::string createSolutionFilename(const OptPeriodStringGenerator& optPeriodStri
                                    const unsigned int optNumber);
 
 std::string createMarginalCostFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                   const unsigned int optNumber);
+                                       const unsigned int optNumber);
 
 std::string createReducedCostFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                   const unsigned int optNumber);
+                                      const unsigned int optNumber);
