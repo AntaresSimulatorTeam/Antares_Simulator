@@ -167,5 +167,10 @@ double ceilDiv(double numerator, double denominator)
     return std::ceil(std::round(numerator / denominator * largeValue) / largeValue);
 }
 
+double floorDiv(double numerator, double denominator)
+{
+    return std::floor(std::round(numerator / denominator * largeValue) / largeValue);
+}
+
 } // namespace Utils
 } // namespace Antares

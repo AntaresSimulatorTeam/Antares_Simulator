@@ -316,10 +316,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
                            static_cast<uint>(
                              std::ceil(thermalClusterAvailableProduction
                                        / currentCluster->nominalCapacityWithSpinning))),
-                  static_cast<uint>(
-                    std::ceil(std::round(thermalClusterProduction
-                                         / currentCluster->nominalCapacityWithSpinning * 1000000)
-                              / 1000000)));
+                  static_cast<uint>(Utils::ceilDiv(thermalClusterProduction,
+                                                   currentCluster->nominalCapacityWithSpinning)));
             }
             else
             {
@@ -350,9 +348,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
         if (currentCluster->minStablePower > 0.)
         {
-            maxUnitNeeded = static_cast<uint>(std::floor(
-              std::round(thermalClusterProduction / currentCluster->minStablePower * 1000000)
-              / 1000000));
+            maxUnitNeeded = static_cast<uint>(
+              Utils::floorDiv(thermalClusterProduction, currentCluster->minStablePower));
             if (ON_max[h] > maxUnitNeeded)
             {
                 ON_max[h] = maxUnitNeeded;
