@@ -737,6 +737,44 @@ BOOST_FIXTURE_TEST_CASE(DTG_MRG_positive_on_hour_4___no_change_at_this_hour, Inp
     BOOST_CHECK(OutHydroGen == expected_HydroGen);
 }
 
+BOOST_FIXTURE_TEST_CASE(comparison_of_results_with_python_algo,
+                        InputFixture<20>,
+                        *boost::unit_test::tolerance(0.01))
+{
+    std::vector<double> load = {46, 81, 89, 42, 69, 55, 88, 46, 84, 94,
+                                66, 93, 68, 39, 91, 89, 94, 93, 91, 38};
+    HydroGen = {10, 40, 36, 8, 13, 33, 9, 0, 24, 18, 5, 47, 29, 6, 7, 54, 49, 11, 63, 21};
+    UnsupE = {34, 32, 33, 23, 9, 8, 20, 40, 30, 3, 50, 27, 12, 1, 35, 31, 2, 58, 20, 4};
+    // Computing total generation without hydro generation
+    DispatchGen = load;
+    std::ranges::transform(DispatchGen, HydroGen, DispatchGen.begin(), std::minus<double>());
+    std::ranges::transform(DispatchGen, UnsupE, DispatchGen.begin(), std::minus<double>());
+
+    HydroPmax = {43, 48, 36, 43, 13, 44, 13, 31, 49, 35, 47, 47, 37, 41, 21, 54, 49, 28, 63, 49};
+    HydroPmin = {10, 22, 17, 8, 7, 15, 8, 0, 9, 2, 5, 18, 22, 6, 4, 11, 1, 0, 23, 6};
+    init_level = 13.6;
+    capacity = 126.;
+    inflows = {37, 27, 41, 36, 7, 14, 38, 23, 17, 35, 20, 24, 17, 46, 1, 10, 10, 12, 46, 30};
+
+    auto [OutHydroGen, OutUnsupE, L] = shavePeaksByRemixingHydro(DispatchGen,
+                                                                 HydroGen,
+                                                                 UnsupE,
+                                                                 HydroPmax,
+                                                                 HydroPmin,
+                                                                 init_level,
+                                                                 capacity,
+                                                                 inflows,
+                                                                 ovf,
+                                                                 pump,
+                                                                 Spillage,
+                                                                 DTG_MRG);
+    std::vector<double> expected_HydroGen = {42.3, 35.3,  27.,  31.,   7.,    33.,   8.,
+                                             31.,  19.55, 2.,   38.55, 30.55, 22.55, 7.,
+                                             4.,   45.55, 6.55, 25.55, 41.55, 25.};
+    
+    BOOST_TEST(OutHydroGen == expected_HydroGen, boost::test_tools::per_element());
+}
+
 // Ideas for building further tests :
 // ================================
 // - Remix hydro algorithm seems symmetrical (if we have input vectors and corresponding output
