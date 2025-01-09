@@ -324,9 +324,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
             else
             {
                 ON_min[h] = static_cast<uint>(
-                  std::ceil(std::round(thermalClusterProduction
-                                       / currentCluster->nominalCapacityWithSpinning * 1000000)
-                            / 1000000));
+                  Utils::ceilDiv(thermalClusterProduction,
+                                 currentCluster->nominalCapacityWithSpinning));
             }
             break;
         }
@@ -334,13 +333,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
         {
             ON_min[h] = std::max(
-              static_cast<uint>(
-                std::ceil(std::round(thermalClusterProduction
-                                     / currentCluster->nominalCapacityWithSpinning * 1000000)
-                          / 1000000)),
-              thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
-            // that hour
-            ;
+              static_cast<uint>(Utils::ceilDiv(thermalClusterProduction,
+                                               currentCluster->nominalCapacityWithSpinning)),
+              thermalClusterDispatchedUnitsCountForYear[h]); // eq to thermalClusterON for that hour
             break;
         }
         case Antares::Data::UnitCommitmentMode::ucUnknown:

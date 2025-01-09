@@ -160,5 +160,12 @@ double round(double d, unsigned precision)
     return std::round(d * factor) / factor;
 }
 
+#define largeValue 1000000
+
+double ceilDiv(double numerator, double denominator)
+{
+    return std::ceil(std::round(numerator / denominator * largeValue) / largeValue);
+}
+
 } // namespace Utils
 } // namespace Antares
