@@ -77,7 +77,7 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
     buffer.clear();
 
     filename = createMarginalCostFilename(optPeriodStringGenerator, optimizationNumber);
-    for (int cont = 0; cont < pb.NombreDeContraintes; cont++)
+    for (unsigned int cont = 0; cont < pb.NombreDeContraintes; ++cont)
     {
         buffer.appendFormat("%s\t%11.10e\n",
                             pb.NomDesContraintes[cont].c_str(),
@@ -87,7 +87,7 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
     buffer.clear();
 
     filename = createReducedCostFilename(optPeriodStringGenerator, optimizationNumber);
-    for (int var = 0; var < pb.NombreDeVariables; var++)
+    for (unsigned int var = 0; var < pb.NombreDeVariables; ++var)
     {
         buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[var].c_str(), pb.CoutsReduits[var]);
     }
