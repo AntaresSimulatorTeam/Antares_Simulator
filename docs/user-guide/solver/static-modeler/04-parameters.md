@@ -434,6 +434,17 @@ _**This section is under construction**_
 > _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-include-exportmps-parameter).
 
 ---
+#### include-export-solutions
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** set to `true` to activate writing the raw optimization results, that is
+  - values and reduced costs for each variable
+  - marginal cost for each constraint
+
+This is an advanced option intended to help developers and advanced users better understand their simulation results.
+
+---
 #### include-split-exported-mps
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  
