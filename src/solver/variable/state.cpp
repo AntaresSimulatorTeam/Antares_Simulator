@@ -316,17 +316,14 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
                            static_cast<uint>(
                              std::ceil(thermalClusterAvailableProduction
                                        / currentCluster->nominalCapacityWithSpinning))),
-                  static_cast<uint>(
-                    std::ceil(std::round(thermalClusterProduction
-                                         / currentCluster->nominalCapacityWithSpinning * 1000000)
-                              / 1000000)));
+                  static_cast<uint>(Utils::ceilDiv(thermalClusterProduction,
+                                                   currentCluster->nominalCapacityWithSpinning)));
             }
             else
             {
                 ON_min[h] = static_cast<uint>(
-                  std::ceil(std::round(thermalClusterProduction
-                                       / currentCluster->nominalCapacityWithSpinning * 1000000)
-                            / 1000000));
+                  Utils::ceilDiv(thermalClusterProduction,
+                                 currentCluster->nominalCapacityWithSpinning));
             }
             break;
         }
@@ -334,13 +331,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
         {
             ON_min[h] = std::max(
-              static_cast<uint>(
-                std::ceil(std::round(thermalClusterProduction
-                                     / currentCluster->nominalCapacityWithSpinning * 1000000)
-                          / 1000000)),
-              thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
-            // that hour
-            ;
+              static_cast<uint>(Utils::ceilDiv(thermalClusterProduction,
+                                               currentCluster->nominalCapacityWithSpinning)),
+              thermalClusterDispatchedUnitsCountForYear[h]); // eq to thermalClusterON for that hour
             break;
         }
         case Antares::Data::UnitCommitmentMode::ucUnknown:
@@ -355,9 +348,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
         if (currentCluster->minStablePower > 0.)
         {
-            maxUnitNeeded = static_cast<uint>(std::floor(
-              std::round(thermalClusterProduction / currentCluster->minStablePower * 1000000)
-              / 1000000));
+            maxUnitNeeded = static_cast<uint>(
+              Utils::floorDiv(thermalClusterProduction, currentCluster->minStablePower));
             if (ON_max[h] > maxUnitNeeded)
             {
                 ON_max[h] = maxUnitNeeded;
