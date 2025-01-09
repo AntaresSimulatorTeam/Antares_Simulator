@@ -34,7 +34,7 @@
 
 struct BB
 {
-    int nombreDePasDeTempsPourUneOptimisation = 10;
+    int nombreDePasDeTempsPourUneOptimisation = 50;
 
     std::vector<double> Pi = std::vector(2 * nombreDePasDeTempsPourUneOptimisation, 0.0);
     // Placeholder for coefficients
@@ -59,11 +59,12 @@ struct BB
         // .InjectionVariable = {0, 1} :
         // --> storage 1 --> injection index = 0
         // --> storage 2 --> injection index = 1
+        // --> storage 3 --> injection index = 1
 
         for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
         {
             CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
-                    .InjectionVariable = {0, 1}, .WithdrawalVariable = {2, 3}};
+                    .InjectionVariable = {0, 1, 4}, .WithdrawalVariable = {2, 3, 5}};
         }
     }
 
@@ -75,7 +76,7 @@ struct BB
         int> >(10, std::vector<int>(5, -1));
     std::vector<std::string> NomDesContraintes = std::vector<std::string>(100, "");
     const bool NamedProblems = true;
-    const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB"};
+    const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
     const uint32_t weekInTheYear = 1;        // Example week
     const uint32_t NombreDePasDeTemps = 168; // Example number of time steps in a week
 
@@ -99,6 +100,14 @@ struct BB
             {.hours = {7, 8},
              .globalIndex = 3,
              .localIndex = 1}};
+    std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
+    addc3_netting_constraints = {
+            {.hours = {9, 10},
+             .globalIndex = 4,
+             .localIndex = 0},
+            {.hours = {11, 12},
+             .globalIndex = 5,
+             .localIndex = 1}};
 
     std::vector<double> fill_rhs()
     {
@@ -113,12 +122,20 @@ struct BB
             .name = "addc2_injection", .cluster_id = "cluster_2", .variable = "injection",
             .operatorType = "greater", .rhs = fill_rhs(),
             .constraints = addc2_injection_constraints};
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting = {
+            .name = "addc3_netting", .cluster_id = "cluster_3", .variable = "netting",
+            .operatorType = "equal", .rhs = fill_rhs(),
+            .constraints = addc3_netting_constraints};
 
 
     ::ShortTermStorage::PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
                                                .clusterGlobalIndex = 0, .name = "cluster_1"};
     ::ShortTermStorage::PROPERTIES storage2 = {.additionalConstraints = {addc2_injection},
                                                .clusterGlobalIndex = 1, .name = "cluster_2"};
+    ::ShortTermStorage::PROPERTIES storage3 = {.injectionEfficiency = 45,
+                                               .withdrawalEfficiency = 2025,
+                                               .additionalConstraints = {addc3_netting},
+                                               .clusterGlobalIndex = 2, .name = "cluster_3"};
 
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<::ShortTermStorage::AREA_INPUT> shortTermStorage = InitializeShortTermStorageData();
@@ -128,7 +145,7 @@ struct BB
 
     std::vector<ShortTermStorage::AREA_INPUT> InitializeShortTermStorageData()
     {
-        return {{storage1}, {storage2}};
+        return {{storage1}, {storage2}, {storage3}};
     }
 
 
@@ -285,6 +302,58 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, BB)
             1);
 }
 
+BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, BB)
+{
+    ConstraintBuilder builder(constraint_builder_data);
+
+    ShortTermStorageCumulation cumulation(builder, shorttermstoragecumulativeconstraintdata);
+
+    // Call the add method for "CountryC" (index 2)
+    cumulation.add(2);
+    // Assert that the number of constraints has increased by the expected amount
+    // Assuming 2 additional constraints (from addc1_withdrawal) should be added
+    BOOST_CHECK_EQUAL(builder.data.nombreDeContraintes, 2);
+
+    // Verify that the constraint names are correctly generated and stored
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
+                      "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_netting_0>")
+    ; // Assuming this is the generated name
+    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
+                      "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_netting_1>")
+    ; // Check the second constraint
+    //
+    // // Verify that the correct number of terms have been added to the matrix
+    BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 8);
+
+    // Verify that the correct indices for constraints have been set
+    BOOST_CHECK_EQUAL(builder.data.IndicesDebutDeLigne[0], 0);
+    // Assuming this is the starting index
+    BOOST_CHECK_EQUAL(builder.data.IndicesDebutDeLigne[1], 4); // Check next line index
+
+    // Verify that the correct variables and values were updated in the matrix
+    BOOST_CHECK_EQUAL(builder.data.Pi[0], storage3.injectionEfficiency);
+    // Verify the first term's coefficient (adjust based on actual expected values)
+    BOOST_CHECK_EQUAL(builder.data.Pi[1], -storage3.withdrawalEfficiency);
+    // Verify the first term's coefficient (adjust based on actual expected values)
+    BOOST_CHECK_EQUAL(builder.data.Colonne[0], 4); // Verify the first term's column index
+    BOOST_CHECK_EQUAL(builder.data.Colonne[1], 5); // Verify the first term's column index
+
+    // Check if the sense of constraints was updated correctly
+    BOOST_CHECK_EQUAL(builder.data.Sens[0], '=');
+    BOOST_CHECK_EQUAL(builder.data.Sens[1], '=');
+
+    // 4. Validate correspondence mapping
+    BOOST_CHECK_EQUAL(
+            shorttermstoragecumulativeconstraintdata
+            .CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
+                addc3_netting_constraints[0].globalIndex],
+            0);
+    BOOST_CHECK_EQUAL(
+            shorttermstoragecumulativeconstraintdata.
+            CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
+                addc3_netting_constraints[1].globalIndex],
+            1);
+}
 
 BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
 {
