@@ -18,7 +18,7 @@ int find_min_index(const std::vector<double>& TotalGen,
 {
     double min_val = top;
     int min_hour = -1;
-    for (int h = 0; h < TotalGen.size(); ++h)
+    for (unsigned int h = 0; h < TotalGen.size(); ++h)
     {
         if (OutUnsupE[h] > 0 && OutHydroGen[h] < HydroPmax[h] && !triedBottom[h] && enabledHours[h])
         {
@@ -42,7 +42,7 @@ int find_max_index(const std::vector<double>& TotalGen,
 {
     double max_val = 0;
     int max_hour = -1;
-    for (int h = 0; h < TotalGen.size(); ++h)
+    for (unsigned int h = 0; h < TotalGen.size(); ++h)
     {
         if (OutHydroGen[h] > HydroPmin[h] && TotalGen[h] >= ref_value + eps && !triedPeak[h]
             && enabledHours[h])
@@ -59,9 +59,9 @@ int find_max_index(const std::vector<double>& TotalGen,
 
 static bool operator<=(const std::vector<double>& a, const std::vector<double>& b)
 {
-    std::vector<double> a_minus_b;
-    std::ranges::transform(a, b, std::back_inserter(a_minus_b), std::minus<double>());
-    return std::ranges::all_of(a_minus_b, [](const double& e) { return e <= 0.; });
+    return a.size() == b.size()
+           && std::ranges::all_of(std::views::iota(size_t{0}, a.size()),
+                                  [&](size_t i) { return a[i] <= b[i]; });
 }
 
 static bool operator<=(const std::vector<double>& v, const double c)
