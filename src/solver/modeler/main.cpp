@@ -22,9 +22,58 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
+#include <antares/solver/modeler/api/linearProblem.h>
+#include <antares/solver/modeler/api/linearProblemBuilder.h>
+#include <antares/solver/optim-model-filler/ComponentFiller.h>
+
+#include "../optimisation/include/antares/solver/optimisation/LegacyFiller.h"
+#include "api/include/antares/solver/modeler/api/linearProblem.h"
+
+namespace Antares::Solver::Modeler::Api
+{
+struct FillContext;
+class LinearProblemData;
+class ILinearProblem;
+}
 
 using namespace Antares;
 using namespace Antares::Solver;
+using namespace Antares::Solver::Modeler::Api;
+
+
+class SystemLinearProblem
+{
+public:
+    explicit SystemLinearProblem(const Antares::Study::SystemModel::System& system): system_(
+            system)
+    {
+    }
+
+    ~SystemLinearProblem() = default;
+
+    void Provide(Antares::Solver::Modeler::Api::ILinearProblem& pb)
+    {
+        std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller> > fillers;
+        std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers_ptr;
+        for (const auto& [_,component]: system_.Components())
+        {
+            auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component);
+            fillers.push_back(std::move(cf));
+        }
+        for (auto& component_filler: fillers)
+        {
+            fillers_ptr.push_back(component_filler.get());
+        }
+
+        Antares::Solver::Modeler::Api::LinearProblemBuilder linear_problem_builder(fillers_ptr);
+        Antares::Solver::Modeler::Api::LinearProblemData dummy_data;
+        Antares::Solver::Modeler::Api::FillContext dummy_time_scenario_ctx = {0, 0};
+        linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
+    }
+
+private:
+    const Antares::Study::SystemModel::System& system_;
+};
 
 int main(int argc, const char** argv)
 {

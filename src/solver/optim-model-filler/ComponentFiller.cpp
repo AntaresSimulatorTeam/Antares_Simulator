@@ -35,18 +35,106 @@ ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component)
     evaluationContext_(component_.getParameterValues(), {})
 {
 }
-
-void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
-                                   Solver::Modeler::Api::LinearProblemData& data,
-                                   Solver::Modeler::Api::FillContext& ctx)
+bool isTimeDependent(Solver::Modeler::Api::FillContext& ctx)
 {
-    auto evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
+    return ctx.getFirstTimeStep() != ctx.getLastTimeStep();
+}
+
+bool checkTimeSteps(Solver::Modeler::Api::FillContext& ctx)
+{
+    return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
+}
+
+void ComponentFiller::addStaticVariable(Solver::Modeler::Api::ILinearProblem& pb,
+                                        const std::unique_ptr<Solver::Visitors::EvalVisitor>&
+                                        evaluator) const
+{
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
         pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
                        evaluator->dispatch(variable.UpperBound().RootNode()),
                        variable.Type() != Study::SystemModel::ValueType::FLOAT,
                        component_.Id() + "." + variable.Id());
+    }
+}
+
+void ComponentFiller::addTimeDependentVariables(Solver::Modeler::Api::ILinearProblem& pb,
+                                                const std::unique_ptr<Solver::Visitors::EvalVisitor>
+                                                & evaluator,
+                                                unsigned int nb_vars) const
+{
+    for (const auto& variable: component_.getModel()->Variables() | std::views::values)
+    {
+        pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
+                       evaluator->dispatch(variable.UpperBound().RootNode()),
+                       variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                       component_.Id() + "." + variable.Id(),
+                       nb_vars
+                );
+    }
+}
+
+static unsigned int getNumberOfTimestep(const Solver::Modeler::Api::FillContext& ctx)
+{
+    return ctx.getLastTimeStep() - ctx.getFirstTimeStep() + 1;
+}
+
+void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
+                                   Solver::Modeler::Api::LinearProblemData& data,
+                                   Solver::Modeler::Api::FillContext& ctx)
+{
+    auto evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
+    if (checkTimeSteps(ctx))
+    {
+        if (isTimeDependent(ctx))
+        {
+        }
+        else
+        {
+            addTimeDependentVariables(pb,
+                                      evaluator,
+                                      getNumberOfTimestep(ctx));
+        }
+    }
+    else
+    {
+        // exception?
+    }
+}
+void ComponentFiller::addStaticConstraint(
+        Solver::Modeler::Api::ILinearProblem& pb,
+        const LinearConstraint& linear_constraint,
+        const std::string& constraint_id) const
+{
+    auto* ct = pb.addConstraint(linear_constraint.lb,
+                                linear_constraint.ub,
+                                component_.Id() + "." + constraint_id);
+    for (auto [var_id, coef]: linear_constraint.coef_per_var)
+    {
+        auto* variable = pb.getVariable(component_.Id() + "." + var_id);
+        ct->setCoefficient(variable, coef);
+    }
+}
+
+void ComponentFiller::addTimeDependentConstraints(
+        Solver::Modeler::Api::ILinearProblem& pb,
+        const LinearConstraint& linear_constraint,
+        const std::string& constraint_id,
+        unsigned int nb_cstr) const
+{
+    auto vect_ct = pb.addConstraint(linear_constraint.lb,
+                                    linear_constraint.ub,
+                                    component_.Id() + "." + constraint_id,
+                                    nb_cstr);
+    for (auto cstr(0); cstr < nb_cstr; ++cstr)
+    {
+        for (auto [var_id, coef]: linear_constraint.coef_per_var)
+        {
+            auto* ct = vect_ct[cstr];
+            auto* variable = pb.getVariable(
+                    component_.Id() + "." + var_id + '_' + std::to_string(cstr));
+            ct->setCoefficient(variable, coef);
+        }
     }
 }
 
@@ -58,13 +146,19 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
         auto linear_constraint = visitor.dispatch(constraint.expression().RootNode());
-        auto* ct = pb.addConstraint(linear_constraint.lb,
-                                    linear_constraint.ub,
-                                    component_.Id() + "." + constraint.Id());
-        for (auto [var_id, coef]: linear_constraint.coef_per_var)
+        if (checkTimeSteps(ctx))
         {
-            auto* variable = pb.getVariable(component_.Id() + "." + var_id);
-            ct->setCoefficient(variable, coef);
+            if (isTimeDependent(ctx))
+            {
+                addTimeDependentConstraints(pb,
+                                            linear_constraint,
+                                            constraint.Id(),
+                                            getNumberOfTimestep(ctx));
+            }
+            else
+            {
+                addStaticConstraint(pb, linear_constraint, constraint.Id());
+            }
         }
     }
 }
