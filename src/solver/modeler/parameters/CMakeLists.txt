@@ -8,7 +8,7 @@ add_library(Antares::modelerParameters ALIAS modelerParameters)
 
 target_link_libraries(modelerParameters
         PRIVATE
-        yaml-cpp
+        yaml-cpp::yaml-cpp
         Antares::io)
 
 target_include_directories(modelerParameters

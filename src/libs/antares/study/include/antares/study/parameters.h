@@ -397,6 +397,7 @@ public:
         //! Enum to define unfeasible problem behavior \see UnfeasibleProblemBehavior
         UnfeasibleProblemBehavior unfeasibleProblemBehavior;
 
+        bool exportSolutions;
     } include;
 
     struct Compatibility

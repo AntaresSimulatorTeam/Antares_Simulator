@@ -24,7 +24,6 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/logs/logs.h>
-#include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -35,19 +34,23 @@
 
 namespace Antares::Solver::Simulation
 {
+
+const unsigned int HOURS_IN_WEEK = 168;
+const unsigned int HOURS_IN_DAY = 24;
+
 template<uint step>
 static bool Remix(const Data::AreaList& areas,
                   PROBLEME_HEBDO& problem,
                   uint numSpace,
                   uint hourInYear)
 {
-    double HE[168];
+    double HE[HOURS_IN_WEEK];
 
-    double DE[168];
+    double DE[HOURS_IN_WEEK];
 
-    bool remix[168];
+    bool remix[HOURS_IN_WEEK];
 
-    double G[168];
+    double G[HOURS_IN_WEEK];
 
     bool status = true;
 
@@ -69,7 +72,7 @@ static bool Remix(const Data::AreaList& areas,
 
           uint endHour = step;
           uint offset = 0;
-          for (; offset < 168; offset += step, endHour += step)
+          for (; offset < HOURS_IN_WEEK; offset += step, endHour += step)
           {
               {
                   double WD = 0.;
@@ -238,8 +241,8 @@ std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
                                               const unsigned int year,
                                               const unsigned int firstHourOfWeek)
 {
-    std::vector<double> load_to_return(168, 0.);
-    for (int h = 0; h < 168; h++)
+    std::vector<double> load_to_return(HOURS_IN_WEEK, 0.);
+    for (int h = 0; h < HOURS_IN_WEEK; h++)
     {
         load_to_return[h] = area.load.series.getColumn(year)[h + firstHourOfWeek];
     }
@@ -251,8 +254,8 @@ std::vector<double> extractHydroPmin(const Data::Area& area,
                                      const unsigned int firstHourOfWeek)
 {
     // area->hydro.series->mingen.timeSeries
-    std::vector<double> hydroPmin(168, 0.);
-    for (int h = 0; h < 168; h++)
+    std::vector<double> hydroPmin(HOURS_IN_WEEK, 0.);
+    for (int h = 0; h < HOURS_IN_WEEK; h++)
     {
         hydroPmin[h] = area.hydro.series->mingen.getColumn(year)[h + firstHourOfWeek];
     }
@@ -287,7 +290,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
 
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
-          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + 168);
+          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
           auto [H, U, L] = shavePeaksByRemixingHydro(DispatchGen,
                                                      hydroGen,
@@ -321,10 +324,10 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
         switch (simplexOptimizationRange)
         {
         case Data::sorWeek:
-            result = Remix<168>(areas, problem, numSpace, hourInYear);
+            result = Remix<HOURS_IN_WEEK>(areas, problem, numSpace, hourInYear);
             break;
         case Data::sorDay:
-            result = Remix<24>(areas, problem, numSpace, hourInYear);
+            result = Remix<HOURS_IN_DAY>(areas, problem, numSpace, hourInYear);
             break;
         case Data::sorUnknown:
             logs.fatal() << "invalid simplex optimization range";

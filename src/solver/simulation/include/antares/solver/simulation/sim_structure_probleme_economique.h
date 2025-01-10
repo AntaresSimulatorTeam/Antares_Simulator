@@ -183,7 +183,7 @@ struct PROPERTIES
     bool penalizeVariationInjection;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraint> additional_constraints;
+    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -436,6 +436,7 @@ struct RESULTATS_HORAIRES
     std::vector<double> debordementsHoraires;
 
     std::vector<double> CoutsMarginauxHoraires;
+    std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
@@ -532,6 +533,7 @@ struct PROBLEME_HEBDO
     bool exportMPSOnError = false;
     bool ExportStructure = false;
     bool NamedProblems = false;
+    bool exportSolutions = false;
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;

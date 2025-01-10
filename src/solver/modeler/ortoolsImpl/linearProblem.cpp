@@ -20,6 +20,7 @@
  */
 
 #include <exception>
+#include <fstream>
 #include <memory>
 #include <ortools/linear_solver/linear_solver.h>
 
@@ -163,6 +164,14 @@ bool OrtoolsLinearProblem::isMinimization() const
 bool OrtoolsLinearProblem::isMaximization() const
 {
     return objective_->maximization();
+}
+
+void OrtoolsLinearProblem::WriteLP(const std::string& filename)
+{
+    std::string out;
+    mpSolver_->ExportModelAsLpFormat(false, &out);
+    std::ofstream of(filename);
+    of << out;
 }
 
 MPSolver* OrtoolsLinearProblem::MpSolver() const
