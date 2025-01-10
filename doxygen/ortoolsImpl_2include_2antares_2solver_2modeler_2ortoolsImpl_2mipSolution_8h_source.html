@@ -186,16 +186,17 @@ $(document).ready(function(){initNavTree('ortoolsImpl_2include_2antares_2solver_
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">double</span> getOptimalValue(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">Api::IMipVariable</a>* var) <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::vector&lt;double&gt; getOptimalValues(</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keyword">const</span> std::vector&lt;Api::IMipVariable*&gt;&amp; vars) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    operations_research::MPSolver::ResultStatus status_;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    operations_research::MPSolver* mpSolver_;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::map&lt;std::string, double&gt; solution_;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">const</span> std::map&lt;std::string, double&gt;&amp; getOptimalValues() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    operations_research::MPSolver::ResultStatus status_;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    operations_research::MPSolver* mpSolver_;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::map&lt;std::string, double&gt; solution_;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
 </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>} <span class="comment">// namespace Antares::Solver::Modeler::OrtoolsImpl</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html">Antares::Solver::Modeler::Api::IMipSolution</a></div><div class="ttdef"><b>Definition</b> mipSolution.h:46</div></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace Antares::Solver::Modeler::OrtoolsImpl</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipSolution.html">Antares::Solver::Modeler::Api::IMipSolution</a></div><div class="ttdef"><b>Definition</b> mipSolution.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1Api_1_1IMipVariable.html">Antares::Solver::Modeler::Api::IMipVariable</a></div><div class="ttdef"><b>Definition</b> mipVariable.h:31</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Modeler_1_1OrtoolsImpl_1_1OrtoolsMipSolution.html">Antares::Solver::Modeler::OrtoolsImpl::OrtoolsMipSolution</a></div><div class="ttdef"><b>Definition</b> mipSolution.h:35</div></div>
 </div><!-- fragment --></div><!-- contents -->
