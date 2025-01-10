@@ -50,8 +50,8 @@ struct FillContext
     std::vector<unsigned> scenariosSelected;
 
 private:
-    unsigned firstTimeStep;
-    unsigned lastTimeStep;
+    unsigned firstTimeStep = 0;
+    unsigned lastTimeStep = 0;
 };
 
 class LinearProblemFiller
