@@ -88,12 +88,12 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
     {
         if (isTimeDependent(ctx))
         {
+            addTimeDependentVariables(pb, evaluator, getNumberOfTimestep(ctx));
         }
         else
         {
-            addTimeDependentVariables(pb,
-                                      evaluator,
-                                      getNumberOfTimestep(ctx));
+            addStaticVariable(pb,
+                              evaluator);
         }
     }
     else
