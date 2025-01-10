@@ -26,6 +26,8 @@
 */
 
 #include <antares/logs.h>
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <stdexcept>
 
 #include "properties.h"
@@ -35,15 +37,15 @@
 namespace Antares::Data::ShortTermStorage
 {
 const std::map<std::string, enum Group> Properties::ST_STORAGE_PROPERTY_GROUP_ENUM
-  = {{"PSP_open", Group::PSP_open},
-     {"PSP_closed", Group::PSP_closed},
-     {"Pondage", Group::Pondage},
-     {"Battery", Group::Battery},
-     {"Other1", Group::Other1},
-     {"Other2", Group::Other2},
-     {"Other3", Group::Other3},
-     {"Other4", Group::Other4},
-     {"Other5", Group::Other5}};
+  = {{"PSP_OPEN", Group::PSP_open},
+     {"PSP_CLOSED", Group::PSP_closed},
+     {"PONDAGE", Group::Pondage},
+     {"BATTERY", Group::Battery},
+     {"OTHER1", Group::Other1},
+     {"OTHER2", Group::Other2},
+     {"OTHER3", Group::Other3},
+     {"OTHER4", Group::Other4},
+     {"OTHER5", Group::Other5}};
 
 unsigned int groupIndex(Group group)
 {
@@ -106,7 +108,9 @@ bool Properties::loadKey(const IniFile::Property* p)
 
     if (p->key == "group")
     {
-        if (auto it = Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.find(p->value.c_str());
+        std::string groupUpper = p->value.c_str();
+        boost::to_upper(groupUpper);
+        if (auto it = Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.find(groupUpper);
             it != Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.end())
         {
             this->group = it->second;
