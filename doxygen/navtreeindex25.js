@@ -1,5 +1,7 @@
 var NAVTREEINDEX25 =
 {
+"structAntares_1_1Solver_1_1SystemParser_1_1Component.html":[9,0,0,13,10,0],
+"structAntares_1_1Solver_1_1SystemParser_1_1Parameter.html":[9,0,0,13,10,1],
 "structAntares_1_1Solver_1_1SystemParser_1_1System.html":[9,0,0,13,10,3],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[9,0,0,13,11,0,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[9,0,0,13,11,0,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX25 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#a505308cb0c9d12d92da113e99e29d35c":[9,0,0,13,11,4,118,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html#acf75f329abb2d376d024d61e481f6300":[9,0,0,13,11,4,118,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html":[9,0,0,13,11,4,119],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#a1d93efffd69df8dd96a9b491fc9c22a2":[9,0,0,13,11,4,119,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aa2a8d40a6443b8decac825f758ac9cf4":[9,0,0,13,11,4,119,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html":[9,0,0,13,11,4,120]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#a1d93efffd69df8dd96a9b491fc9c22a2":[9,0,0,13,11,4,119,1]
 };

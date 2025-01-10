@@ -785,6 +785,7 @@ var hierarchy =
     [ "Antares::Optimization::InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
     [ "JIT::Informations", "classJIT_1_1Informations.html", null ],
     [ "Antares::IniFile", "classAntares_1_1IniFile.html", null ],
+    [ "InputFixture< size >", "structInputFixture.html", null ],
     [ "Antares::Window::Inspector::InspectorData", "classAntares_1_1Window_1_1Inspector_1_1InspectorData.html", null ],
     [ "Antares::Solver::Simulation::interfacePostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html", [
       [ "Antares::Solver::Simulation::AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", null ],
@@ -1279,6 +1280,7 @@ var hierarchy =
       [ "SubstitutionFixture", "classSubstitutionFixture.html", null ],
       [ "SumSubstitutionFixture", "classSumSubstitutionFixture.html", null ]
     ] ],
+    [ "Antares::Solver::Simulation::RemixHydroOutput", "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html", null ],
     [ "Antares::Map::RemovalToolPredicate", "classAntares_1_1Map_1_1RemovalToolPredicate.html", null ],
     [ "Antares::Data::Parameters::RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Reserve", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html", null ],

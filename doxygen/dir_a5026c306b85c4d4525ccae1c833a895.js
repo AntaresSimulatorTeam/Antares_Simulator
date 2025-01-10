@@ -10,6 +10,7 @@ var dir_a5026c306b85c4d4525ccae1c833a895 =
     [ "ISimulationObserver.h", "ISimulationObserver_8h_source.html", null ],
     [ "ITimeSeriesNumbersWriter.h", "ITimeSeriesNumbersWriter_8h_source.html", null ],
     [ "opt_time_writer.h", "opt__time__writer_8h_source.html", null ],
+    [ "shave-peaks-by-remix-hydro.h", "shave-peaks-by-remix-hydro_8h_source.html", null ],
     [ "sim_alloc_probleme_hebdo.h", "sim__alloc__probleme__hebdo_8h_source.html", null ],
     [ "sim_constants.h", "sim__constants_8h_source.html", null ],
     [ "sim_structure_donnees.h", "sim__structure__donnees_8h_source.html", null ],
