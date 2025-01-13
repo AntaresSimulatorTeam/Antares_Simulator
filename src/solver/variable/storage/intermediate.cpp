@@ -184,18 +184,81 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     }
 }
 
+enum Constant
+{
+    maxHoursInAYear = 8785,
+    maxDaysInAYear = 7 * 53 + 1, // 366,
+    maxWeeksInAYear = 53,
+    maxHoursInADay = 24,
+    maxMonths = 12,
+    maxDaysInAWeek = 7,
+    maxHoursInAWeek = 24 * 7, // 168,
+};
+
 void IntermediateValues::computeAveragesForCurrentYearFromHourlyResults()
 {
+    uint i;
+    uint j;
+    double d;
+
+    year = 0.;
+
     // Detecting large buffer overflow
     assert(pRange);
     pRange->checkIntegrity();
 
-    // Form hourly results of current year, compute average results
-    // for other time divisions of the current year : days of the year, weeks of the year, ...
-    computeDailyAveragesForCurrentYear();
-    computeWeeklyAveragesForCurrentYear();
-    computeMonthlyAveragesForCurrentYear();
-    computeYearlyAveragesForCurrentYear();
+    // x(d)
+    // For each day in the year
+    uint indx = pRange->hour[Data::rangeBegin];
+
+    // Ratio
+    double ratioDay = 1. / maxHoursInADay;
+
+    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    {
+        d = 0.;
+        // One day
+        for (j = 0; j != maxHoursInADay; ++j)
+        {
+            d += hour[indx];
+            ++indx;
+        }
+        year += d;
+        day[i] = d * ratioDay;
+    }
+
+    // weeks
+    for (i = 0; i != maxWeeksInAYear; ++i)
+    {
+        week[i] = 0.;
+    }
+    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    {
+        week[calendar->days[i].week] += day[i];
+    }
+    for (i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
+    {
+        week[i] /= pRuntimeInfo->simulationDaysPerWeek[i];
+    }
+
+    // x(m)
+    // indx = Date::FirstDayPerMonth[pRange->month[Data::rangeBegin]];
+    indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
+    for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
+    {
+        d = 0.;
+        uint daysInMonth = calendar->months[i].days;
+        for (j = 0; j != daysInMonth; ++j)
+        {
+            assert(indx < 7 * 53 + 1);
+            d += day[indx];
+            ++indx;
+        }
+        month[i] = d / pRuntimeInfo->simulationDaysPerMonth[i];
+    }
+
+    // Year
+    year /= pRange->hour[Data::rangeCount];
 }
 
 void IntermediateValues::computeAveragesForCurrentYearFromDailyResults()
