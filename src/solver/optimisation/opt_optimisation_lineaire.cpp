@@ -278,4 +278,4 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      simulationObserver);
     }
     return ret;
-
+}

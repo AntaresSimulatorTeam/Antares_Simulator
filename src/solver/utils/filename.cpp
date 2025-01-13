@@ -82,5 +82,4 @@ std::string createReducedCostFilename(const OptPeriodStringGenerator& optPeriodS
                                       const unsigned int optNumber)
 {
     return createOptimizationFilename("reduced-costs", optPeriodStringGenerator, optNumber, "txt");
->>>>>>> develop
 }
