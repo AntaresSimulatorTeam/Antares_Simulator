@@ -503,7 +503,7 @@ public:
     // Naming constraints and variables in problems
     bool namedProblems;
 
-    // All options related to optimization
+    // All options related to linear & quadratic optimization
     Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:

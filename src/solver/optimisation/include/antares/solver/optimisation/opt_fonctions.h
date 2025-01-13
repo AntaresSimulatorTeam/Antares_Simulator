@@ -61,7 +61,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
-bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
+bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions& options, PROBLEME_HEBDO*);
 
 /*!
 ** \brief Appel du solver

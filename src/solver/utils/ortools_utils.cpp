@@ -23,6 +23,8 @@
 #include <filesystem>
 #include <optional>
 
+#include <boost/algorithm/string/join.hpp>
+
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/antares/Enum.hpp"
@@ -236,7 +238,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         solver->EnableOutput();
     }
-    TuneSolverSpecificOptions(solver, options.ortoolsSolver, options.solverParameters);
+    TuneSolverSpecificOptions(solver, options.linearSolver, options.linearSolverParameters);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
@@ -317,14 +319,23 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
+// An empty name means that the solver does not support the optimization type
+// NOTE: or-tools does not support calling SIRIUS to perform quadratic optimizations, we'll have to
+// call SIRIUS explicitly, in a transparent way to the user
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
-  {"xpress", {"xpress_lp", "xpress"}},
-  {"sirius", {"sirius_lp", "sirius"}},
-  {"coin", {"clp", "cbc"}},
-  {"glpk", {"glpk_lp", "glpk"}},
-  {"scip", {"scip", "scip"}}};
+  {"xpress", {"xpress_lp", "xpress", ""}},
+  {"sirius", {"sirius_lp", "sirius", "sirius"}},
+  {"coin", {"clp", "cbc", ""}},
+  {"glpk", {"glpk_lp", "glpk", ""}},
+  {"scip", {"scip", "scip", ""}}};
 
-std::list<std::string> getAvailableOrtoolsSolverName()
+std::list<std::string> getAvailableOrtoolsSolverNames(SolverClass solverClass)
+{
+    return solverClass == LINEAR ? getAvailableOrtoolsMpSolverName()
+                                 : getAvailableOrtoolsQuadraticSolverName();
+}
+
+std::list<std::string> getAvailableOrtoolsMpSolverName()
 {
     std::list<std::string> result;
 
@@ -341,17 +352,23 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     return result;
 }
 
-std::string availableOrToolsSolversString()
+std::list<std::string> getAvailableOrtoolsQuadraticSolverName()
 {
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-    std::ostringstream solvers;
-    for (const std::string& avail: availableSolverList)
+    std::list<std::string> result;
+
+    for (const auto& solverName: OrtoolsUtils::solverMap)
     {
-        bool last = &avail == &availableSolverList.back();
-        std::string sep = last ? "." : ", ";
-        solvers << avail << sep;
+        if (!solverName.second.QuadraticSolverName.empty())
+        {
+            result.push_back(solverName.first);
+        }
     }
-    return solvers.str();
+    return result;
+}
+
+std::string availableOrToolsSolversString(SolverClass solverClass)
+{
+    return boost::algorithm::join(getAvailableOrtoolsSolverNames(solverClass), ",") + ".";
 }
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
@@ -375,7 +392,8 @@ static std::optional<std::string> translateSolverName(const std::string& solverN
 
 MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
 {
-    const std::string notFound = "Solver " + solverName + " not found";
+    const std::string notFound = "Solver " + solverName
+                                 + " not supported for linear problems optimization.";
     const std::invalid_argument except(notFound);
 
     auto internalSolverName = translateSolverName(solverName, isMip);

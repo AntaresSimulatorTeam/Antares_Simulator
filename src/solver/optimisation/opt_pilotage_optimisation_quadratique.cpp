@@ -23,8 +23,15 @@
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 
-bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
+bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions& options,
+                                         PROBLEME_HEBDO* problemeHebdo)
 {
+    if (options.linearSolver != "sirius")
+    {
+        const std::string notFound = "Solver " + options.linearSolver
+                                     + " not supported for quadratic problems optimization.";
+        throw new std::invalid_argument(notFound);
+    }
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);

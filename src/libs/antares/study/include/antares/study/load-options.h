@@ -81,7 +81,7 @@ public:
     //! A non-zero value if the data will be used for a simulation
     bool usedByTheSolver;
 
-    //! All options related to optimization
+    //! All options related to linear & quadratic optimization
     Antares::Solver::Optimization::OptimizationOptions optOptions;
 
     //! Temporary string for passing log message

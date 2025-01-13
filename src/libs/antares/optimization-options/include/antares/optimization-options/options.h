@@ -28,8 +28,10 @@ namespace Antares::Solver::Optimization
 struct OptimizationOptions
 {
     //! The solver name, sirius is the default
-    std::string ortoolsSolver = "sirius";
+    std::string linearSolver = "sirius";
+    std::string quadraticSolver = "sirius";
+    std::string linearSolverParameters;
+    std::string quadraticSolverParameters;
     bool solverLogs = false;
-    std::string solverParameters;
 };
 } // namespace Antares::Solver::Optimization

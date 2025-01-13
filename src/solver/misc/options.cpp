@@ -27,6 +27,8 @@
 #include <limits>
 #include <string.h>
 
+#include <boost/algorithm/string/join.hpp>
+
 #include <yuni/yuni.h>
 
 #include <antares/antares/constants.h>
@@ -75,21 +77,52 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
 
+    //--linear-solver
+    parser->add(options.optOptions.linearSolver,
+                ' ',
+                "linear-solver",
+                "Solver used for linear optimizations during simulation\nAvailable solver list : "
+                  + availableOrToolsSolversString(LINEAR));
+
     //--solver
-    parser->add(options.optOptions.ortoolsSolver,
+    parser->add(options.optOptions.linearSolver,
                 ' ',
                 "solver",
-                "Solver used for simulation\nAvailable solver list : "
-                  + availableOrToolsSolversString());
+                "Deprecated, use linear-solver instead.");
 
-    //--solver-parameters
+    //--linear-solver-parameters
     parser->add(
-      options.optOptions.solverParameters,
+      options.optOptions.linearSolverParameters,
       ' ',
-      "solver-parameters",
-      "Set solver-specific parameters, for instance --solver-parameters=\"THREADS 1 PRESOLVE 1\""
+      "linear-solver-parameters",
+      "Set linear solver-specific parameters, for instance --linear-solver-parameters=\"THREADS 1 "
+      "PRESOLVE 1\""
       "for XPRESS or --solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for SCIP."
       "Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
+
+    //--solver-parameters
+    parser->add(options.optOptions.linearSolverParameters,
+                ' ',
+                "solver-parameters",
+                "Deprecated, use linear-solver-parameters instead.");
+
+    //--quadratic-solver
+    parser->add(
+      options.optOptions.quadraticSolver,
+      ' ',
+      "quadratic-solver",
+      "Solver used for quadratic optimizations during simulation\nAvailable solver list : "
+        + availableOrToolsSolversString(QUADRATIC));
+
+    //--quadratic-solver-parameters
+    parser->add(
+      options.optOptions.quadraticSolverParameters,
+      ' ',
+      "quadratic-solver-parameters",
+      "Set quadratic solver-specific parameters, for instance "
+      "--quadratic-solver-parameters=\"THREADS 1 PRESOLVE 1\""
+      "for XPRESS or --solver-parameters=\"parallel/maxnthreads 1, lp/presolving TRUE\" for SCIP."
+      "Syntax is solver-dependent.");
 
     parser->addParagraph("\nParameters");
     // --name
@@ -246,7 +279,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkOrtoolsSolver(options.optOptions);
+    checkSolvers(options);
 
     // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
@@ -255,17 +288,20 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
+void checkSolverExists(std::string solverName, const std::list<std::string> availableSolversList)
 {
-    const std::string& solverName = optOptions.ortoolsSolver;
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-
     // Check if solver is available
-    bool found = (std::ranges::find(availableSolverList, solverName) != availableSolverList.end());
+    bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
     if (!found)
     {
-        throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
+        throw Error::InvalidSolver(solverName, boost::algorithm::join(availableSolversList, ","));
     }
+}
+
+void checkSolvers(StudyLoadOptions& options)
+{
+    checkSolverExists(options.optOptions.linearSolver, getAvailableOrtoolsMpSolverName());
+    checkSolverExists(options.optOptions.quadraticSolver, getAvailableOrtoolsQuadraticSolverName());
 }
 
 void Settings::checkAndSetStudyFolder(const std::string& folder)

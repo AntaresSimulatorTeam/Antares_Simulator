@@ -35,23 +35,43 @@
 
 using namespace operations_research;
 
+enum SolverClass
+{
+    LINEAR,
+    QUADRATIC
+};
+
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
 
 /*!
- *  \brief Return list of available ortools solver name on our side
+ *  \brief Return list of available ortools solver names on our side
  *
- *  \return List of available ortools solver name
+ *  \return List of available ortools solver names
  */
-std::list<std::string> getAvailableOrtoolsSolverName();
+std::list<std::string> getAvailableOrtoolsSolverNames(SolverClass solverClass);
+
+/*!
+ *  \brief Return list of available ortools linear solver names on our side
+ *
+ *  \return List of available ortools linear solver names
+ */
+std::list<std::string> getAvailableOrtoolsMpSolverName();
+
+/*!
+ *  \brief Return list of available ortools quadratic solver names on our side
+ *
+ *  \return List of available ortools quadratic solver names
+ */
+std::list<std::string> getAvailableOrtoolsQuadraticSolverName();
 
 /*!
  *  \brief Return a single string containing all solvers available, separated by a ", " and ending
  * with a ".".
  *
  */
-std::string availableOrToolsSolversString();
+std::string availableOrToolsSolversString(SolverClass solverClass);
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
@@ -68,7 +88,7 @@ class OrtoolsUtils
 public:
     struct SolverNames
     {
-        std::string LPSolverName, MIPSolverName;
+        std::string LPSolverName, MIPSolverName, QuadraticSolverName;
     };
     static const std::map<std::string, struct SolverNames> solverMap;
 };
