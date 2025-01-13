@@ -22,6 +22,10 @@ target_link_libraries(modeler-lib
         INTERFACE
         Antares::loadModelerFiles
         Antares::modelerParameters
+	Antares::optim-model-filler
+	Antares::modeler_api
+	# TODO FIXME don't depend on implementations
+	Antares::modeler-ortools-impl
 )
 
 target_link_libraries(antares-modeler

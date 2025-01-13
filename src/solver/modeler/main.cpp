@@ -19,6 +19,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <fstream>
+
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
@@ -110,8 +112,36 @@ int main(int argc, const char** argv)
         system_linear_problem.Provide(ortools_linear_problem);
 
         logs.info() << "Linear problem provided";
-        ortools_linear_problem.solve(true);
-        logs.info() << "Linear problem solved";
+
+        logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
+        logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
+
+        if (!parameters.noOutput)
+        {
+            logs.info() << "Writing problem.lp...";
+            auto mps_path = std::filesystem::current_path() / "problem.lp";
+            ortools_linear_problem.WriteLP(mps_path.string());
+        }
+
+        logs.info() << "Launching resolution...";
+        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
+        switch (solution->getStatus())
+        {
+        case Antares::Solver::Modeler::Api::MipStatus::OPTIMAL:
+        case Antares::Solver::Modeler::Api::MipStatus::FEASIBLE:
+            if (!parameters.noOutput)
+            {
+                logs.info() << "Writing variables...";
+                std::ofstream sol_out(std::filesystem::current_path() / "solution.csv");
+                for (const auto& [name, value]: solution->getOptimalValues())
+                {
+                    sol_out << name << " " << value << std::endl;
+                }
+            }
+            break;
+        default:
+            logs.error() << "Problem during linear optimization";
+        }
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {
