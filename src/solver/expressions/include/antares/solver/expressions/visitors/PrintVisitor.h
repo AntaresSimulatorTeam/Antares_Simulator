@@ -33,7 +33,7 @@ public:
     std::string name() const override;
 
 private:
-    std::string visit(const Nodes::AddNode* node) override;
+    std::string visit(const Nodes::SumNode* node) override;
     std::string visit(const Nodes::SubtractionNode* node) override;
     std::string visit(const Nodes::MultiplicationNode* node) override;
     std::string visit(const Nodes::DivisionNode* node) override;
@@ -45,6 +45,7 @@ private:
     std::string visit(const Nodes::ParameterNode* node) override;
     std::string visit(const Nodes::LiteralNode* node) override;
     std::string visit(const Nodes::PortFieldNode* node) override;
+    std::string visit(const Nodes::PortFieldSumNode* node) override;
     std::string visit(const Nodes::ComponentVariableNode* node) override;
     std::string visit(const Nodes::ComponentParameterNode* node) override;
 };

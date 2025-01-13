@@ -34,7 +34,7 @@ public:
     CompareVisitor() = default;
     std::string name() const override;
 
-    bool visit(const Nodes::AddNode* add, const Nodes::Node* other) override;
+    bool visit(const Nodes::SumNode* add, const Nodes::Node* other) override;
     bool visit(const Nodes::SubtractionNode* add, const Nodes::Node* other) override;
     bool visit(const Nodes::MultiplicationNode* add, const Nodes::Node* other) override;
     bool visit(const Nodes::DivisionNode* add, const Nodes::Node* other) override;
@@ -46,6 +46,7 @@ public:
     bool visit(const Nodes::ParameterNode* param, const Nodes::Node* other) override;
     bool visit(const Nodes::LiteralNode* param, const Nodes::Node* other) override;
     bool visit(const Nodes::PortFieldNode* port_field_node, const Nodes::Node* other) override;
+    bool visit(const Nodes::PortFieldSumNode* port_field_node, const Nodes::Node* other) override;
     bool visit(const Nodes::ComponentVariableNode* component_node,
                const Nodes::Node* other) override;
     bool visit(const Nodes::ComponentParameterNode* component_node,

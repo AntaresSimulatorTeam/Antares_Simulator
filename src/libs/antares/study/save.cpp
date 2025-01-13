@@ -54,7 +54,7 @@ bool Study::resetFolderIcon() const
 #ifdef YUNI_OS_WINDOWS
     {
         // The file should be closed at this point
-        Yuni::WString wbuffer(folder);
+        Yuni::WString wbuffer(folder.string());
         if (not wbuffer.empty())
         {
             SetFileAttributesW(wbuffer.c_str(), FILE_ATTRIBUTE_SYSTEM);
@@ -103,28 +103,28 @@ bool Study::saveToFolder(const AnyString& newfolder)
     // Trying to create a few important folders
     logs.info() << "Preparing folders...";
     {
-        const String backupFolder = this->folder;
+        const auto backupFolder = this->folder;
         // Changing the paths
-        relocate(location);
+        relocate(location.c_str());
 
         // Output
-        if (not IO::Directory::Create(folderInput))
+        if (not IO::Directory::Create(folderInput.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderInput << "'";
-            relocate(backupFolder);
+            relocate(backupFolder.string());
             return false;
         }
-        if (not IO::Directory::Create(folderSettings))
+        if (not IO::Directory::Create(folderSettings.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderSettings << "'";
-            relocate(backupFolder);
+            relocate(backupFolder.string());
             return false;
         }
 
-        if (not IO::Directory::Create(folderOutput))
+        if (not IO::Directory::Create(folderOutput.string()))
         {
             logs.error() << "I/O error: impossible to create the folder '" << folderOutput << "'";
-            relocate(backupFolder);
+            relocate(backupFolder.string());
             return false;
         }
     }
@@ -214,7 +214,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     ret = parameters.saveToFile(buffer) and ret;
 
     // All areas
-    ret = areas.saveToFolder(folder) and ret;
+    ret = areas.saveToFolder(folder.string()) and ret;
 
     // Layers
     buffer.clear() << folder << SEP << "layers";

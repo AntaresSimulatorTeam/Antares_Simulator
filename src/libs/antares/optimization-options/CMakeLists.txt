@@ -8,3 +8,6 @@ target_include_directories(${PROJ}
 )
 
 add_library(Antares::${PROJ} ALIAS ${PROJ})
+
+install(DIRECTORY   include/antares
+        DESTINATION "include")

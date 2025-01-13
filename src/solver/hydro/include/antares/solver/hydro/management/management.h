@@ -23,13 +23,11 @@
 
 #include <unordered_map>
 
-#include <yuni/yuni.h>
-
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/area/area.h>
 #include <antares/study/fwd.h>
+#include <antares/study/parts/hydro/container.h>
 #include "antares/date/date.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/writer/i_writer.h"
 
 namespace Antares
@@ -113,7 +111,6 @@ private:
     const Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const Data::Parameters& parameters_;
-    unsigned int maxNbYearsInParallel_ = 0;
     Solver::IResultWriter& resultWriter_;
 
     HYDRO_VENTILATION_RESULTS ventilationResults_;

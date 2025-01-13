@@ -13,7 +13,6 @@ ExprLexer.cpp
 ExprParser.cpp
 ExprVisitor.cpp
 )
-find_package(antlr4-runtime CONFIG REQUIRED)
 
 add_library(${PROJ}  ${SRCS})
 add_library(Antares::${PROJ} ALIAS ${PROJ})

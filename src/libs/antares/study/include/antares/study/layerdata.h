@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_STUDY_LAYERDATA_H__
 #define __ANTARES_LIBS_STUDY_LAYERDATA_H__
 
+#include <filesystem>
 #include <map>
 #include <string>
 
@@ -51,7 +52,7 @@ public:
 
 protected:
     bool saveLayers(const AnyString& filename);
-    void loadLayers(const AnyString& filename);
+    void loadLayers(const std::filesystem::path& filename);
 };
 
 } // namespace Antares::Data

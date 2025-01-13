@@ -51,7 +51,6 @@ Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
 
     optInfo.nbVariables = Pb->NombreDeVariables;
     optInfo.nbConstraints = Pb->NombreDeContraintes;
-    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     return optInfo;
 }
 
@@ -85,7 +84,6 @@ bool Economy::simulationBegin()
 
             weeklyOptProblems_.emplace_back(options,
                                             &pProblemesHebdo[numSpace],
-                                            numSpace,
                                             resultWriter,
                                             simulationObserver_.get());
 

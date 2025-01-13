@@ -63,12 +63,22 @@ BOOST_AUTO_TEST_CASE(PortFieldNodeTest)
     BOOST_CHECK_EQUAL(portFieldNode1 == portFieldNode2, false);
 }
 
+BOOST_AUTO_TEST_CASE(PortFieldSumNodeTest)
+{
+    std::string portName1("p1");
+    std::string fieldName1("f1");
+
+    PortFieldSumNode pfs(portName1, fieldName1);
+    BOOST_CHECK_EQUAL(pfs.getPortName(), portName1);
+    BOOST_CHECK_EQUAL(pfs.getFieldName(), fieldName1);
+}
+
 BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
 {
     auto literalNode = create<LiteralNode>(2024.2);
     std::map<Node*, std::string> nodes = {
       {literalNode, "LiteralNode"},
-      {create<AddNode>(literalNode, literalNode), "AddNode"},
+      {create<SumNode>(literalNode, literalNode), "SumNode"},
       {create<SubtractionNode>(literalNode, literalNode), "SubtractionNode"},
       {create<MultiplicationNode>(literalNode, literalNode), "MultiplicationNode"},
       {create<DivisionNode>(literalNode, literalNode), "DivisionNode"},
@@ -82,7 +92,8 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
        "ComponentParameterNode"},
       {create<ParameterNode>(literalNode->name()), "ParameterNode"},
       {create<VariableNode>(literalNode->name()), "VariableNode"},
-      {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"}};
+      {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"},
+      {create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"}};
 
     for (auto [node, name]: nodes)
     {

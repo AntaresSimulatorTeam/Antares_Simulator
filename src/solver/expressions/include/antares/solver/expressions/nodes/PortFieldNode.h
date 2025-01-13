@@ -21,6 +21,7 @@
 #pragma once
 #include <string>
 
+#include <antares/solver/expressions/hashable.h>
 #include <antares/solver/expressions/nodes/Leaf.h>
 
 namespace Antares::Solver::Nodes
@@ -28,7 +29,7 @@ namespace Antares::Solver::Nodes
 /**
  * @brief Represents a port field node in a syntax tree.
  */
-class PortFieldNode: public Node
+class PortFieldNode: public Node, public Hashable
 {
 public:
     /**

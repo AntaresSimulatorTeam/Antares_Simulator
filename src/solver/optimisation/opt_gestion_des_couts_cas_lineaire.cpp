@@ -19,17 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "variables/VariableManagerUtils.h"
 
+void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
+
 static void shortTermStorageCost(
+  int weekInTheYear,
   int PremierPdtDeLIntervalle,
   int DernierPdtDeLIntervalle,
   int NombreDePays,
@@ -37,6 +34,7 @@ static void shortTermStorageCost(
   VariableManagement::VariableManager& variableManager,
   std::vector<double>& linearCost)
 {
+    const int weekFirstHour = weekInTheYear * 168;
     for (int pays = 0; pays < NombreDePays; ++pays)
     {
         for (const auto& storage: shortTermStorageInput[pays])
@@ -45,12 +43,13 @@ static void shortTermStorageCost(
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
+                int hourInTheYear = weekFirstHour + pdtHebdo;
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 if (const int varLevel = variableManager.ShortTermStorageLevel(clusterGlobalIndex,
                                                                                pdtJour);
                     varLevel >= 0)
                 {
-                    linearCost[varLevel] = storage.series->costLevel[pdtHebdo];
+                    linearCost[varLevel] = storage.series->costLevel[hourInTheYear];
                 }
 
                 if (const int varInjection = variableManager.ShortTermStorageInjection(
@@ -58,7 +57,7 @@ static void shortTermStorageCost(
                       pdtJour);
                     varInjection >= 0)
                 {
-                    linearCost[varInjection] = storage.series->costInjection[pdtHebdo];
+                    linearCost[varInjection] = storage.series->costInjection[hourInTheYear];
                 }
 
                 if (const int varWithdrawal = variableManager.ShortTermStorageWithdrawal(
@@ -66,7 +65,24 @@ static void shortTermStorageCost(
                       pdtJour);
                     varWithdrawal >= 0)
                 {
-                    linearCost[varWithdrawal] = storage.series->costWithdrawal[pdtHebdo];
+                    linearCost[varWithdrawal] = storage.series->costWithdrawal[hourInTheYear];
+                }
+                if (const int varCostVariationInjection = variableManager
+                                                            .ShortTermStorageCostVariationInjection(
+                                                              clusterGlobalIndex,
+                                                              pdtJour);
+                    storage.penalizeVariationInjection && varCostVariationInjection >= 0)
+                {
+                    linearCost[varCostVariationInjection] = storage.series->costVariationInjection
+                                                              [hourInTheYear];
+                }
+                if (const int varCostVariationWithdrawal
+                    = variableManager.ShortTermStorageCostVariationWithdrawal(clusterGlobalIndex,
+                                                                              pdtJour);
+                    storage.penalizeVariationWithdrawal && varCostVariationWithdrawal >= 0)
+                {
+                    linearCost[varCostVariationWithdrawal] = storage.series->costVariationWithdrawal
+                                                               [hourInTheYear];
                 }
             }
         }
@@ -84,7 +100,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     ProblemeAResoudre->CoutQuadratique.assign(ProblemeAResoudre->NombreDeVariables, 0.);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
-    shortTermStorageCost(PremierPdtDeLIntervalle,
+    shortTermStorageCost(problemeHebdo->weekInTheYear,
+                         PremierPdtDeLIntervalle,
                          DernierPdtDeLIntervalle,
                          problemeHebdo->NombreDePays,
                          problemeHebdo->ShortTermStorage,
@@ -337,6 +354,4 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                         PremierPdtDeLIntervalle,
                                                         DernierPdtDeLIntervalle);
     }
-
-    return;
 }

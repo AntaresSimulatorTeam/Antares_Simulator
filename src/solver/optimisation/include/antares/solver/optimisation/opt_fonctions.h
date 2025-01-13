@@ -54,15 +54,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
-void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
-
-using namespace Antares::Data::AdequacyPatch;
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
-                   HourlyCSRProblem&,
-                   const AdqPatchParams&,
-                   uint week,
-                   int year);
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
@@ -82,7 +74,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Antares::Solver::IResultWriter& writer);
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO*);
+void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
@@ -96,11 +88,9 @@ double OPT_CalculerAireMaxPminJour(int, int, int, int, std::vector<int>&, std::v
 
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);
 
-void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                                 int);
+void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO*);
 int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*);
-void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 
 /*------------------------------*/
 

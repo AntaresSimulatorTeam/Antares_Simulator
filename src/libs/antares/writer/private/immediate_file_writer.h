@@ -20,6 +20,7 @@
 */
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 #include <yuni/core/string.h>
@@ -31,11 +32,12 @@ namespace Antares::Solver
 class ImmediateFileResultWriter: public IResultWriter
 {
 public:
-    ImmediateFileResultWriter(const char* folderOutput);
+    ImmediateFileResultWriter(const std::filesystem::path& folderOutput);
     virtual ~ImmediateFileResultWriter();
     // Write to file immediately, creating directories if needed
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
-    void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
+    void addEntryFromBuffer(const std::filesystem::path& entryPath,
+                            std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,
                           const std::filesystem::path& filePath) override;
     void flush() override;
@@ -43,6 +45,6 @@ public:
     void finalize(bool verbose) override;
 
 private:
-    std::string pOutputFolder;
+    const std::filesystem::path pOutputFolder;
 };
 } // namespace Antares::Solver

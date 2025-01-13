@@ -24,6 +24,7 @@
 #include <cassert>
 #include <climits>
 #include <cmath> // For use of floor(...) and ceil(...)
+#include <ctime>
 #include <optional>
 #include <sstream> // std::ostringstream
 #include <thread>
@@ -123,10 +124,10 @@ void Study::clear()
     // no folder
     ClearAndShrink(header.caption);
     ClearAndShrink(header.author);
-    ClearAndShrink(folder);
-    ClearAndShrink(folderInput);
-    ClearAndShrink(folderOutput);
-    ClearAndShrink(folderSettings);
+    folder.clear();
+    folderInput.clear();
+    folderOutput.clear();
+    folderSettings.clear();
     inputExtension.clear();
 }
 
@@ -184,27 +185,6 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(buffer);
     ClearAndShrink(dataBuffer);
     ClearAndShrink(bufferLoadingTS);
-}
-
-uint64_t Study::memoryUsage() const
-{
-    return folder.capacity()
-           // Folders paths
-           + folderInput.capacity() + folderOutput.capacity() + folderSettings.capacity()
-           + buffer.capacity() + dataBuffer.capacity()
-           + bufferLoadingTS.capacity()
-           // Simulation
-           + simulationComments.memoryUsage()
-           // parameters
-           + parameters.memoryUsage()
-           // Areas
-           + areas.memoryUsage()
-           // Binding constraints
-           + bindingConstraints.memoryUsage()
-           // Correlations matrices
-           + preproLoadCorrelation.memoryUsage() + preproSolarCorrelation.memoryUsage()
-           + preproHydroCorrelation.memoryUsage() + preproWindCorrelation.memoryUsage()
-           + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
@@ -453,11 +433,11 @@ static std::string getOutputSuffix(ResultFormat fmt)
     }
 }
 
-YString StudyCreateOutputPath(SimulationMode mode,
-                              ResultFormat fmt,
-                              const YString& outputRoot,
-                              const YString& label,
-                              int64_t startTime)
+fs::path StudyCreateOutputPath(SimulationMode mode,
+                               ResultFormat fmt,
+                               const fs::path& baseOutFolder,
+                               const std::string& label,
+                               const std::tm& startTime)
 {
     if (fmt == ResultFormat::inMemory)
     {
@@ -466,12 +446,9 @@ YString StudyCreateOutputPath(SimulationMode mode,
 
     auto suffix = getOutputSuffix(fmt);
 
-    YString folderOutput;
-
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    folderOutput.clear() << outputRoot << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", startTime, false);
+    fs::path folderOutput = baseOutFolder / formatTime(startTime, "%Y%m%d-%H%M");
 
     switch (mode)
     {
@@ -491,10 +468,10 @@ YString StudyCreateOutputPath(SimulationMode mode,
     // Folder output
     if (not label.empty())
     {
-        folderOutput << '-' << transformNameIntoID(label);
+        folderOutput += '-' + transformNameIntoID(label);
     }
 
-    std::string outpath = folderOutput + suffix;
+    std::string outpath = folderOutput.string() + suffix;
     // avoid creating the same output twice
     if (fs::exists(outpath))
     {
@@ -503,10 +480,10 @@ YString StudyCreateOutputPath(SimulationMode mode,
         do
         {
             ++index;
-            newpath = folderOutput + '-' + std::to_string(index) + suffix;
+            newpath = folderOutput.string() + '-' + std::to_string(index) + suffix;
         } while (fs::exists(newpath) and index < 2000);
 
-        folderOutput << '-' << index;
+        folderOutput += '-' + std::to_string(index);
     }
     return folderOutput;
 }
@@ -519,14 +496,13 @@ void Study::prepareOutput()
     {
         return;
     }
-
-    buffer.clear() << folder << SEP << "output";
+    fs::path baseFolderOutput = folder / "output";
 
     folderOutput = StudyCreateOutputPath(parameters.mode,
                                          parameters.resultFormat,
-                                         buffer,
+                                         baseFolderOutput,
                                          simulationComments.name,
-                                         pStartTime);
+                                         getCurrentTime());
 
     logs.info() << "  Output folder : " << folderOutput;
 }
@@ -661,6 +637,7 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     return area;
 }
 
+// TODO VP: delete with GUI
 bool Study::areaDelete(Area* area)
 {
     if (not area)
@@ -708,6 +685,7 @@ bool Study::areaDelete(Area* area)
     return true;
 }
 
+// TODO VP: delete with GUI
 void Study::areaDelete(Area::Vector& arealist)
 {
     if (arealist.empty())
@@ -770,6 +748,7 @@ void Study::areaDelete(Area::Vector& arealist)
     }
 }
 
+// TODO VP: delete with GUI
 bool Study::linkDelete(AreaLink* lnk)
 {
     // Impossible to find the attached area
@@ -795,6 +774,7 @@ bool Study::linkDelete(AreaLink* lnk)
     return true;
 }
 
+// TODO VP: delete with GUI
 bool Study::areaRename(Area* area, AreaName newName)
 {
     // A name must not be empty
@@ -877,6 +857,7 @@ bool Study::areaRename(Area* area, AreaName newName)
     return ret;
 }
 
+// TODO VP: delete with GUI
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
@@ -1185,12 +1166,12 @@ void Study::markAsModified() const
     setsOfAreas.markAsModified();
 }
 
-void Study::relocate(const std::string& newFolder)
+void Study::relocate(const fs::path& newFolder)
 {
     folder = newFolder;
-    folderInput.clear() << newFolder << SEP << "input";
-    folderOutput.clear() << newFolder << SEP << "output";
-    folderSettings.clear() << newFolder << SEP << "settings";
+    folderInput = newFolder / "input";
+    folderOutput = newFolder / "output";
+    folderSettings = newFolder / "settings";
 }
 
 void Study::resizeAllTimeseriesNumbers(uint n)

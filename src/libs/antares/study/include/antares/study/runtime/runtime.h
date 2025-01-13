@@ -110,6 +110,7 @@ public:
     uint thermalPlantTotalCountMustRun;
 
     uint shortTermStorageCount = 0;
+    uint shortTermStorageCumulativeConstraintCount = 0;
 
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
@@ -131,10 +132,10 @@ public:
     */
     bool quadraticOptimizationHasFailed;
 
+    std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
+
 private:
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
-    //! Prepare all thermal clusters in 'must-run' mode
-    void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledShortTermStorageClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);

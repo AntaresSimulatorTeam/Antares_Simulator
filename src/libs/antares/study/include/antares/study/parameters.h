@@ -75,7 +75,7 @@ public:
     ** \param version Current study version
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
-    bool loadFromFile(const AnyString& filename, const StudyVersion& version);
+    bool loadFromFile(const std::filesystem::path& filename, const StudyVersion& version);
 
     /*!
     ** \brief Prepare all settings for a simulation
@@ -147,11 +147,6 @@ public:
     *         for NTC
     */
     void fixGenRefreshForNTC();
-
-    /*!
-    ** \brief Get the amount of memory used by the general data
-    */
-    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Reset MC year weight to 1 for all years
@@ -402,7 +397,20 @@ public:
         //! Enum to define unfeasible problem behavior \see UnfeasibleProblemBehavior
         UnfeasibleProblemBehavior unfeasibleProblemBehavior;
 
+        bool exportSolutions;
     } include;
+
+    struct Compatibility
+    {
+        enum class HydroPmax
+        {
+            Daily,
+            Hourly
+        };
+        HydroPmax hydroPmax = HydroPmax::Daily;
+    };
+
+    Compatibility compatibility;
 
     // Shedding
     struct
@@ -522,6 +530,9 @@ const char* SimulationModeToCString(SimulationMode mode);
 ** \return True if the conversion succeeded, false otherwise
 */
 bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
+
+const char* CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax);
+bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
 
 } // namespace Antares::Data
 

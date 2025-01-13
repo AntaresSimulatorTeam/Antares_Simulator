@@ -19,77 +19,94 @@ theme:
   #   - toc.separate
   palette:
     - media: "(prefers-color-scheme: light)"
-      scheme: antares
+      scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/toggle-switch
         name: Switch to dark mode
+
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
-        icon: material/toggle-switch
+        icon: material/toggle-switch-off-outline
         name: Switch to light mode
 
 nav:
   - 'Home': 'index.md'
   - 'User guide':
-    - 'Overview': 'user-guide/01-overview.md'
-    - 'Installation': 'user-guide/02-install.md'
-    - 'Getting started': 'user-guide/03-getting_started.md'
-    - 'Solver':
-        - 'Overview': 'user-guide/solver/01-overview.md'
-        - 'Input files': 'user-guide/solver/02-inputs.md'
-        - 'Output files': 'user-guide/solver/03-outputs.md'
-        - 'Parameters': 'user-guide/solver/04-parameters.md'
-        - 'Optimization model': 'user-guide/solver/05-model.md'
-        - 'Hydro heuristics': 'user-guide/solver/06-hydro-heuristics.md'
-        - 'Thermal heuristics': 'user-guide/solver/07-thermal-heuristic.md'
-        - 'Command-line instructions': 'user-guide/solver/08-command-line.md'
-        - 'Optional features':
-            - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
-            - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
-            - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
-        - 'Appendix': 'user-guide/solver/09-appendix.md'
-    - 'Time-series generation':
-        - 'Overview': 'user-guide/ts-generator/01-overview.md'
-        - 'Input files': 'user-guide/ts-generator/02-inputs.md'
-        - 'Output files': 'user-guide/ts-generator/03-outputs.md'
-        - 'Parameters': 'user-guide/ts-generator/04-parameters.md'
-        - 'Algorithm': 'user-guide/ts-generator/05-algorithm.md'
-        - 'Command-line instructions': 'user-guide/ts-generator/06-command-line.md'
-    - 'Other features':
-        - 'Batch Runner': 'user-guide/other-features/batchrun.md'
-        - 'Config Checker': 'user-guide/other-features/config.md'
-        - 'GUI': 'user-guide/other-features/ui-simulator.md'
-        - 'Kirchhoff''s constraint generator': 'user-guide/other-features/kirchhoff-constraints-builder.md'
-        - 'Study Cleaner': 'user-guide/other-features/study-cleaner.md'
-        - 'Study Finder': 'user-guide/other-features/study-finder.md'
-        - 'Study Updater': 'user-guide/other-features/study-updater.md'
-        - 'Time-Series Analyzer': 'user-guide/other-features/analyzer.md'
-        - 'Vacuum': 'user-guide/other-features/vacuum.md'
-        - 'Year-by-Year Aggregator': 'user-guide/other-features/ybyaggregator.md'
-    - 'Migration guides': 'user-guide/04-migration-guides.md'
-    - 'Attribution notices': 'user-guide/05-attribution_notices.md'
+      - 'Overview': 'user-guide/01-overview.md'
+      - 'Installation': 'user-guide/02-install.md'
+      - 'Getting started': 'user-guide/03-getting_started.md'
+      - 'Solver':
+          - 'Overview': 'user-guide/solver/01-overview-solver.md'
+          - 'Static Modeler':
+              - 'Overview': 'user-guide/solver/static-modeler/01-overview-static-modeler.md'
+              - 'Input files': 'user-guide/solver/static-modeler/02-inputs.md'
+              - 'Output files': 'user-guide/solver/static-modeler/03-outputs.md'
+              - 'Parameters': 'user-guide/solver/static-modeler/04-parameters.md'
+              - 'Optimization model': 'user-guide/solver/static-modeler/05-model.md'
+              - 'Hydro heuristics': 'user-guide/solver/static-modeler/06-hydro-heuristics.md'
+              - 'Thermal heuristics': 'user-guide/solver/static-modeler/07-thermal-heuristic.md'
+          - 'Dynamic Modeler':
+              - 'Overview': 'user-guide/solver/dynamic-modeler/01-overview-dynamic-modeler.md'
+              - 'Input files': 'user-guide/solver/dynamic-modeler/02-inputs.md'
+              - 'Output files': 'user-guide/solver/dynamic-modeler/03-outputs.md'
+              - 'Parameters': 'user-guide/solver/dynamic-modeler/04-parameters.md'
+              - 'Optimization model': 'user-guide/solver/dynamic-modeler/05-model.md'
+              - 'Heuristics': 'user-guide/solver/dynamic-modeler/06-heuristics.md'
+              - 'Standard library': 'user-guide/solver/dynamic-modeler/07-standard-library.md'
+              - 'Hybrid studies': 'user-guide/solver/dynamic-modeler/08-hybrid-studies.md'
+          - 'Command-line instructions': 'user-guide/solver/02-command-line.md'
+          - 'Optional features':
+              - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
+              - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
+              - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
+          - 'Appendix': 'user-guide/solver/03-appendix.md'
+      - 'Time-series generation':
+          - 'Overview': 'user-guide/ts-generator/01-overview-tsgenerator.md'
+          - 'Input files': 'user-guide/ts-generator/02-inputs.md'
+          - 'Output files': 'user-guide/ts-generator/03-outputs.md'
+          - 'Parameters': 'user-guide/ts-generator/04-parameters.md'
+          - 'Algorithm': 'user-guide/ts-generator/05-algorithm.md'
+          - 'Command-line instructions': 'user-guide/ts-generator/06-command-line.md'
+      - 'Other features':
+          - 'Batch Runner': 'user-guide/other-features/batchrun.md'
+          - 'Config Checker': 'user-guide/other-features/config.md'
+          - 'GUI': 'user-guide/other-features/ui-simulator.md'
+          - 'Kirchhoff''s constraint generator': 'user-guide/other-features/kirchhoff-constraints-builder.md'
+          - 'Study Cleaner': 'user-guide/other-features/study-cleaner.md'
+          - 'Study Finder': 'user-guide/other-features/study-finder.md'
+          - 'Study Updater': 'user-guide/other-features/study-updater.md'
+          - 'Time-Series Analyzer': 'user-guide/other-features/analyzer.md'
+          - 'Vacuum': 'user-guide/other-features/vacuum.md'
+          - 'Year-by-Year Aggregator': 'user-guide/other-features/ybyaggregator.md'
+      - 'Migration guides': 'user-guide/04-migration-guides.md'
+      - 'Attribution notices': 'user-guide/05-attribution_notices.md'
   - 'Developer guide':
-    - 'Overview': 'developer-guide/0-Overview.md'
-    - 'Development requirements': 'developer-guide/1-Development-requirements.md'
-    - 'Dependencies install': 'developer-guide/2-Dependencies-install.md'
-    - 'Build': 'developer-guide/3-Build.md'
-    - 'Tests (user)': 'developer-guide/4-Tests-user.md'
-    - 'Tests (developer)': 'developer-guide/4-Tests-dev.md'
-    - 'Installer creation': 'developer-guide/5-Installer-creation.md'
-    - 'Contributing': 'developer-guide/6-Contributing.md'
-    - 'Continuous Integration': 'developer-guide/continuous-integration.md'
-    - 'OR-tools integration': 'developer-guide/ortools-integration.md'
-    - 'Changelog': 'developer-guide/CHANGELOG.md'
+      - 'Overview': 'developer-guide/0-Overview.md'
+      - 'Development requirements': 'developer-guide/1-Development-requirements.md'
+      - 'Dependencies install': 'developer-guide/2-Dependencies-install.md'
+      - 'Build': 'developer-guide/3-Build.md'
+      - 'Tests (user)': 'developer-guide/4-Tests-user.md'
+      - 'Tests (developer)': 'developer-guide/4-Tests-dev.md'
+      - 'Installer creation': 'developer-guide/5-Installer-creation.md'
+      - 'Contributing': 'developer-guide/6-Contributing.md'
+      - 'Continuous Integration': 'developer-guide/continuous-integration.md'
+      - 'OR-tools integration': 'developer-guide/ortools-integration.md'
+      - 'Changelog': 'developer-guide/CHANGELOG.md'
+      - 'Software architecture':
+          - 'Dynamic modeler architecture' : 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
   - 'External links':
-    - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
-    - 'Antares website': 'https://antares-simulator.org'
-    - 'RTE website': 'http://www.rte-france.com/'
+      - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
+      - 'Antares website': 'https://antares-simulator.org'
+      - 'RTE website': 'http://www.rte-france.com/'
   - 'Contact': 'https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/new?template=support_request.md'
 
 
 plugins:
   - search
+  - plantuml:
+      puml_url: https://www.plantuml.com/plantuml/
+      puml_keyword: plantuml
 
 extra_css:
   - stylesheets/extra.css
@@ -107,7 +124,7 @@ markdown_extensions:
       permalink: true
       toc_depth: 3
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
   - admonition
   - pymdownx.details

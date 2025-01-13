@@ -22,7 +22,6 @@
 
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/simulation.h"
@@ -39,6 +38,7 @@ void SIM_AllocationProblemeHebdo(const Data::Study& study,
         SIM_AllocationProblemePasDeTemps(problem, study, NombreDePasDeTemps);
         SIM_AllocationLinks(problem, study.runtime.interconnectionsCount(), NombreDePasDeTemps);
         SIM_AllocationConstraints(problem, study, NombreDePasDeTemps);
+        SIM_AllocationShortermStorageCumulation(problem, study);
         SIM_AllocateAreas(problem, study, NombreDePasDeTemps);
     }
     catch (const std::bad_alloc& e)
@@ -184,6 +184,11 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.LevelVariable.assign(shortTermStorageCount, 0);
 
+        variablesMapping.SIM_ShortTermStorage.CostVariationInjection.assign(shortTermStorageCount,
+                                                                            0);
+        variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,
+                                                                             0);
+
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
                                                                                            0);
         problem.CorrespondanceCntNativesCntOptim[k]
@@ -193,6 +198,15 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .ShortTermStorageLevelConstraint.assign(shortTermStorageCount, 0);
+
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationInjectionForward.assign(shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationInjectionBackward.assign(shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationWithdrawalForward.assign(shortTermStorageCount, 0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ShortTermStorageCostVariationWithdrawalBackward.assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroPremiereContrainteDeReserveParZone.assign(nbPays, 0);
@@ -233,6 +247,13 @@ void SIM_AllocationLinks(PROBLEME_HEBDO& problem, const uint linkCount, unsigned
         problem.CoutDeTransport[k].CoutDeTransportExtremiteVersOrigineRef.assign(NombreDePasDeTemps,
                                                                                  0.);
     }
+}
+
+void SIM_AllocationShortermStorageCumulation(PROBLEME_HEBDO& problem,
+                                             const Antares::Data::Study& study)
+{
+    problem.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation
+      .assign(study.runtime.shortTermStorageCumulativeConstraintCount, 0);
 }
 
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
@@ -376,9 +397,11 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
                                                                                  0.);
+
         problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);
+        problem.ResultatsHoraires[k].CoutsMarginauxHorairesCSR.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].niveauxHoraires.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].valeurH2oHoraire.assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires.assign(NombreDePasDeTemps, 0.);

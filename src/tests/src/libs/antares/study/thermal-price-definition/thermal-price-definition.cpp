@@ -101,13 +101,6 @@ private:
     const std::string name_;
 };
 
-void fillThermalEconomicTimeSeries(ThermalCluster* c)
-{
-    c->costsTimeSeries[0].productionCostTs.fill(1);
-    c->costsTimeSeries[0].marketBidCostTS.fill(1);
-    c->costsTimeSeries[0].marginalCostTS.fill(1);
-}
-
 // =================
 // The fixture
 // =================
@@ -231,11 +224,14 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMar
     clusterList.loadFromFolder(*study, folder, area);
     auto cluster = clusterList.findInAll("some cluster");
 
-    cluster->costgeneration = Data::setManually;
-    cluster->ComputeCostTimeSeries();
+    cluster->modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
+    cluster->modulation.fill(1.);
 
-    BOOST_CHECK_EQUAL(cluster->costsTimeSeries[0].marketBidCostTS[2637], 35);
-    BOOST_CHECK_EQUAL(cluster->costsTimeSeries[0].marginalCostTS[6737], 23);
+    cluster->costgeneration = Data::setManually;
+
+    auto& cp = cluster->getCostProvider();
+    BOOST_CHECK_EQUAL(cp.getMarketBidCost(2637, 0), 35);
+    BOOST_CHECK_EQUAL(cp.getMarginalCost(6737, 0), 23);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -248,21 +244,48 @@ BOOST_FIXTURE_TEST_CASE(
     clusterList.loadFromFolder(*study, folder, area);
     auto cluster = clusterList.findInAll("some cluster");
 
-    cluster->modulation.reset(1, 8760);
+    cluster->modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
+    cluster->modulation.fill(1.);
+
     cluster->ecoInput.loadFromFolder(*study, folder);
-    fillThermalEconomicTimeSeries(cluster);
 
-    cluster->ComputeCostTimeSeries();
+    cluster->tsNumbers.reset(1);
 
-    BOOST_CHECK_CLOSE(cluster->costsTimeSeries[0].marketBidCostTS[0], 24.12, 0.001);
-    BOOST_CHECK_CLOSE(cluster->costsTimeSeries[0].marketBidCostTS[2637], 24.12, 0.001);
+    auto& cp = cluster->getCostProvider();
+    BOOST_CHECK_CLOSE(cp.getMarginalCost(0, 0), 24.12, 0.001);
+    BOOST_CHECK_CLOSE(cp.getMarketBidCost(2637, 0), 24.12, 0.001);
 }
 
-BOOST_FIXTURE_TEST_CASE(computeMarketBidCost, FixtureFull)
+BOOST_FIXTURE_TEST_CASE(computeMarketBidCost_useTimeSeries, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
     auto cluster = clusterList.findInAll("some cluster");
-
-    BOOST_CHECK_CLOSE(cluster->computeMarketBidCost(1, 2, 1), 24.12, 0.001);
+    BOOST_CHECK_CLOSE(
+      computeMarketBidCost(1, cluster->fuelEfficiency, 2, 1, cluster->variableomcost),
+      24.12,
+      0.001);
 }
+
+BOOST_AUTO_TEST_CASE(non_constant_marketbid_modulation)
+{
+    Area area;
+    ThermalCluster cluster(&area);
+    cluster.costgeneration = setManually;
+    cluster.marketBidCost = 120;
+
+    auto& mod = cluster.modulation;
+    mod.resize(thermalModulationMax, HOURS_PER_YEAR);
+    mod.fill(1.);
+
+    {
+        mod[thermalModulationMarketBid][0] = .5;
+        BOOST_CHECK_EQUAL(cluster.getCostProvider().getMarketBidCost(0, 0), .5 * 120);
+    }
+
+    {
+        mod[thermalModulationMarketBid][1] = .8;
+        BOOST_CHECK_EQUAL(cluster.getCostProvider().getMarketBidCost(1, 0), .8 * 120);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()

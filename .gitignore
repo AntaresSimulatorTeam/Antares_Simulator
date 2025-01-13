@@ -1,6 +1,3 @@
-
-antares-[0-9].[0-9]-*
-
 .*.sw[a-z]
 *~
 Makefile
@@ -21,7 +18,11 @@ Makefile
 *.layout
 src/.vs
 
+# Config
 src/config/include/antares/config/config.h
+config.h
+src/tests/cucumber/conf.yaml
+
 
 # Yuni
 src/ext/yuni/src/ProfileBuild.cmake
@@ -49,13 +50,7 @@ src/distrib/unix/rpm/pkginfo-*
 src/distrib/unix/rpm/*.rpm
 src/distrib/changelog.txt
 
-src/license/keys/rsakey2code
-src/script/v8/libs/*
-/src/antares.VC.VC.opendb
-/src/antares.VC.db
-
 _build*
-buildDebian
 .vscode/
 *.dll
 .idea/

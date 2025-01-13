@@ -19,10 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
   PROBLEME_HEBDO* problemeHebdo)
@@ -139,6 +136,4 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
             InflowForTimeInterval[intervalle] = InflowSum;
         }
     }
-
-    return;
 }

@@ -58,6 +58,6 @@ public:
     [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override;
 
 private:
-    std::filesystem::path study_path_;
+    std::string study_path_;
 };
 } // namespace Antares

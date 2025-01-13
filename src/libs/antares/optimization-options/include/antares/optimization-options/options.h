@@ -20,15 +20,13 @@
 */
 
 #pragma once
-#include <antares/logs/logs.h>
+#include <string>
 
 namespace Antares::Solver::Optimization
 {
 
 struct OptimizationOptions
 {
-    //! Force ortools use
-    bool ortoolsUsed = false;
     //! The solver name, sirius is the default
     std::string ortoolsSolver = "sirius";
     bool solverLogs = false;

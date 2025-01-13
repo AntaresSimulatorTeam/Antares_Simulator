@@ -34,7 +34,7 @@ public:
     std::string name() const override;
 
 private:
-    LinearStatus visit(const Nodes::AddNode* add) override;
+    LinearStatus visit(const Nodes::SumNode* add) override;
     LinearStatus visit(const Nodes::SubtractionNode* add) override;
     LinearStatus visit(const Nodes::MultiplicationNode* add) override;
     LinearStatus visit(const Nodes::DivisionNode* add) override;
@@ -46,6 +46,7 @@ private:
     LinearStatus visit(const Nodes::ParameterNode* param) override;
     LinearStatus visit(const Nodes::LiteralNode* lit) override;
     LinearStatus visit(const Nodes::PortFieldNode* port_field_node) override;
+    LinearStatus visit(const Nodes::PortFieldSumNode* port_field_node) override;
     LinearStatus visit(const Nodes::ComponentVariableNode* component_variable_node) override;
     LinearStatus visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
 };

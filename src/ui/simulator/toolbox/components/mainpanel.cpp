@@ -169,7 +169,7 @@ void MainPanel::onDraw(wxPaintEvent&)
         if (study->folder.empty())
             addProperty(dc, wxT("from "), wxT("<memory>"), size, posY);
         else
-            addProperty(dc, wxT("from "), wxStringFromUTF8(study->folder), size, posY);
+            addProperty(dc, wxT("from "), wxStringFromUTF8(study->folder.string()), size, posY);
     }
 
     // Checking if the actual height of the control is the good one

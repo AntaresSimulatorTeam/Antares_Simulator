@@ -28,9 +28,16 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
 {
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::AddNode* node)
+Nodes::Node* CloneVisitor::visit(const Nodes::SumNode* node)
 {
-    return registry_.create<Nodes::AddNode>(dispatch(node->left()), dispatch(node->right()));
+    std::vector<Nodes::Node*> clonedOperands;
+    clonedOperands.reserve(node->size());
+    for (auto* operand: node->getOperands())
+    {
+        clonedOperands.push_back(dispatch(operand));
+    }
+    // Give ownership of clonedOperands to the caller
+    return registry_.create<Nodes::SumNode>(std::move(clonedOperands));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode* node)
@@ -87,10 +94,16 @@ Nodes::Node* CloneVisitor::visit(const Nodes::LiteralNode* literalNode)
     return registry_.create<Nodes::LiteralNode>(literalNode->value());
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode* port_field_node)
+Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode* portfieldNode)
 {
-    return registry_.create<Nodes::PortFieldNode>(port_field_node->getPortName(),
-                                                  port_field_node->getFieldName());
+    return registry_.create<Nodes::PortFieldNode>(portfieldNode->getPortName(),
+                                                  portfieldNode->getFieldName());
+}
+
+Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldSumNode* portfieldSumNode)
+{
+    return registry_.create<Nodes::PortFieldSumNode>(portfieldSumNode->getPortName(),
+                                                     portfieldSumNode->getFieldName());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)

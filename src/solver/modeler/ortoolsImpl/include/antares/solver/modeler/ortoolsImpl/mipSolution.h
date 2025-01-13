@@ -35,7 +35,7 @@ class OrtoolsMipSolution final: public Api::IMipSolution
 {
 public:
     OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
-                       std::shared_ptr<operations_research::MPSolver> solver);
+                       operations_research::MPSolver* solver);
 
     ~OrtoolsMipSolution() override = default;
 
@@ -44,10 +44,11 @@ public:
     double getOptimalValue(const Api::IMipVariable* var) const override;
     std::vector<double> getOptimalValues(
       const std::vector<Api::IMipVariable*>& vars) const override;
+    const std::map<std::string, double>& getOptimalValues() const override;
 
 private:
     operations_research::MPSolver::ResultStatus status_;
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
+    operations_research::MPSolver* mpSolver_;
     std::map<std::string, double> solution_;
 };
 

@@ -43,7 +43,7 @@ public:
 
 private:
     std::unordered_map<const Nodes::Node*, TimeIndex> context_;
-    TimeIndex visit(const Nodes::AddNode* add) override;
+    TimeIndex visit(const Nodes::SumNode* add) override;
     TimeIndex visit(const Nodes::SubtractionNode* add) override;
     TimeIndex visit(const Nodes::MultiplicationNode* add) override;
     TimeIndex visit(const Nodes::DivisionNode* add) override;
@@ -55,6 +55,7 @@ private:
     TimeIndex visit(const Nodes::ParameterNode* param) override;
     TimeIndex visit(const Nodes::LiteralNode* lit) override;
     TimeIndex visit(const Nodes::PortFieldNode* port_field_node) override;
+    TimeIndex visit(const Nodes::PortFieldSumNode* port_field_node) override;
     TimeIndex visit(const Nodes::ComponentVariableNode* component_variable_node) override;
     TimeIndex visit(const Nodes::ComponentParameterNode* component_parameter_node) override;
 };

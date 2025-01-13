@@ -109,7 +109,9 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
         {
-            transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues.ValeurDuFlux[j];
+            study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues
+                                                                                      .ValeurDuFlux
+                                                                                        [j];
         }
     }
 }
@@ -169,7 +171,7 @@ void ComputeFlowQuad(Data::Study& study,
                 for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; ++i)
                 {
                     const uint indx = i + PasDeTempsDebut;
-                    transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
+                    study.runtime.transitMoyenInterconnexionsRecalculQuadratique[j][indx] = 0;
                 }
             }
         }
@@ -376,7 +378,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                              .PuissanceDisponibleEtCout[cluster->index];
 
                 Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
-                  = cluster->getMarketBidCost(hourInYear, year)
+                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year)
                     + thermalNoises[areaIdx][cluster->areaWideIndex];
 
                 Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] = cluster->series

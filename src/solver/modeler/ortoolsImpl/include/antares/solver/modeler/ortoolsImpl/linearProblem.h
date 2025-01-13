@@ -36,7 +36,7 @@ class MPObjective;
 namespace Antares::Solver::Modeler::OrtoolsImpl
 {
 
-class OrtoolsLinearProblem final: public Api::ILinearProblem
+class OrtoolsLinearProblem: public Api::ILinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
@@ -44,11 +44,16 @@ public:
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
-
+    OrtoolsMipVariable* addVariable(double lb,
+                                    double ub,
+                                    bool integer,
+                                    const std::string& name) override;
     OrtoolsMipVariable* getVariable(const std::string& name) const override;
+    int variableCount() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
     OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
+    int constraintCount() const override;
 
     void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;
     double getObjectiveCoefficient(const Api::IMipVariable* var) const override;
@@ -60,11 +65,15 @@ public:
     bool isMaximization() const override;
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
+    void WriteLP(const std::string& filename) override;
+
+    double infinity() const override;
+
+protected:
+    operations_research::MPSolver* MpSolver() const;
 
 private:
-    OrtoolsMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name);
-
-    std::shared_ptr<operations_research::MPSolver> mpSolver_;
+    operations_research::MPSolver* mpSolver_;
     operations_research::MPObjective* objective_;
     operations_research::MPSolverParameters params_;
 

@@ -534,7 +534,7 @@ void AnalyzerWizard::ResetLastFolderToCurrentStudyUser()
         if (!IO::Directory::Exists(newvalue))
         {
             // If the user folder does not exist, fallback to the study folder
-            gLastFolderForTSAnalyzer = wxStringFromUTF8(study.folder);
+            gLastFolderForTSAnalyzer = wxStringFromUTF8(study.folder.string());
         }
         else
             gLastFolderForTSAnalyzer = wxStringFromUTF8(newvalue);
@@ -1393,7 +1393,7 @@ bool AnalyzerWizard::saveToFile(const String& filename) const
     auto* mainSection = ini.addSection(".general");
 
     // Study
-    mainSection->add("study", study.folder);
+    mainSection->add("study", study.folder.string());
     // Tmp
     wxStringToString(pPathTemp->GetValue(), tmp);
     mainSection->add("temporary", tmp);
@@ -1601,7 +1601,7 @@ void AnalyzerWizard::onBrowseReset(wxCommandEvent&)
     if (pUpdating or not CurrentStudyIsValid())
         return;
     auto& study = *GetCurrentStudy();
-    wxString path = wxStringFromUTF8(study.folder);
+    wxString path = wxStringFromUTF8(study.folder.string());
     path << IO::Constant<wchar_t>::Separator << wxT("user");
     browseDataFolder(path);
 }
