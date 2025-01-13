@@ -157,12 +157,12 @@ void ClusterList<ClusterT>::rebuildIndexes()
         index++;
     }
 
-    index = 0;
-    for (auto& c: each_enabled())
-    {
-        c->areaWideIndex = index;
-        index++;
-    }
+/*     index = 0; */
+/*     for (auto& c: each_enabled()) */
+/*     { */
+/*         c->areaWideIndex = index; */
+/*         index++; */
+/*     } */
 }
 
 template<class ClusterT>
