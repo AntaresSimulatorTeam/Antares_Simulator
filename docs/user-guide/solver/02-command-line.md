@@ -17,7 +17,8 @@ hide:
 | --adequacy             | Force the simulation in [adequacy](static-modeler/04-parameters.md#mode) mode                                                      |
 | --parallel             | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                   |
 | --force-parallel=VALUE | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                  |
-| --solver=VALUE | The optimization solver to use. Possible values are: `sirius` (default), `coin`, `xpress`, `scip` |
+| --linear-solver=VALUE | The optimization solver to use for linear problems. Possible values are: `sirius` (default), `coin`, `xpress`, `scip` |
+| --quadratic-solver=VALUE | The optimization solver to use for quadratic problems. Possible values are: `sirius` (default), `scip` |
 
 ## Parameters
 
@@ -43,7 +44,8 @@ hide:
 | -m, --mps-export         | Export anonymous MPS, weekly or daily optimal UC+dispatch linear (MPS will be named if the problem is infeasible)                                                                                                                                      |
 | -s, --named-mps-problems | Export named MPS, weekly or daily optimal UC+dispatch linear                                                                                                                                                                                           |
 | --solver-logs            | Print solver logs                                                                                                                                                                                                                                      |
-| --solver-parameters      | Set solver-specific parameters, for instance `--solver-parameters="THREADS 1 PRESOLVE 1"` for XPRESS or `--solver-parameters="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS. |
+| --linear-solver-parameters      | Set solver-specific parameters for linear problems, for instance `--solver-parameters="THREADS 1 PRESOLVE 1"` for XPRESS or `--solver-parameters="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS. |
+| --quadratic-solver-parameters      | Set solver-specific parameters for quadratic problems. |
 
 ## Misc.
 

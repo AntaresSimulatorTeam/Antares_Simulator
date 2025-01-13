@@ -483,14 +483,20 @@ _**This section is under construction**_
 > _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
 ---
-#### solver-parameters
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
+#### linear-solver-parameters
+- **Expected value:** a string
+- **Required:** **no**
+- **Default value:** empty
+- **Usage:** Set solver-specific parameters for linear problems, for instance `--solver-parameters="THREADS 1 PRESOLVE 1"` 
+  for XPRESS or `--solver-parameters="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.
 
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
+---
+#### quadratic-solver-parameters
+- **Expected value:** a string
+- **Required:** **no**
+- **Default value:** empty
+- **Usage:** Set solver-specific parameters for quadratic problems, for instance `--solver-parameters="THREADS 1 PRESOLVE 1"` 
+  for XPRESS or `--solver-parameters="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.
 
 ---
 ## Adequacy-patch parameters

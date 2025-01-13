@@ -26,9 +26,9 @@
 bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions& options,
                                          PROBLEME_HEBDO* problemeHebdo)
 {
-    if (options.linearSolver != "sirius")
+    if (options.quadraticSolver != "sirius")
     {
-        const std::string notFound = "Solver " + options.linearSolver
+        const std::string notFound = "Solver " + options.quadraticSolver
                                      + " not supported for quadratic problems optimization.";
         throw new std::invalid_argument(notFound);
     }

@@ -314,7 +314,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
           = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
 
         pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY, "sirius");
-        std::list<std::string> solverList = getAvailableOrtoolsSolverName();
+        std::list<std::string> solverList = getAvailableOrtoolsSolverNames(LINEAR);
         for (const std::string& solverName : solverList)
         {
             pOrtoolsSolverCombox->Append(solverName);
