@@ -328,13 +328,12 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
     if (IniFile::Section* section = ini.find("overflow cost"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::overflowCost)
-              && ret;
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::overflowCost) && ret;
     }
 
     if (IniFile::Section* section = ini.find("level cost"))
     {
-        ret = loadProperties(study, section->firstProperty, buffer, &PartHydro::levelCost) && ret;
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::levelCost) && ret;
     }
 
     return ret;
