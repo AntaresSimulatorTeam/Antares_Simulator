@@ -66,12 +66,16 @@ public:
     std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
 
-    Visitors::TimeIndex getTimeIndex() const { return timeIndex_; }
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> getTimeIndex() const
+    {
+        return nodeTimeIndex;
+    }
 
 private:
     Registry<Nodes::Node>& registry_;
     const ModelParser::Model& model_;
-    Visitors::TimeIndex timeIndex_ = Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>
+    nodeTimeIndex;
 };
 
 NodeRegistry convertExpressionToNode(const std::string& exprStr,
@@ -102,7 +106,7 @@ NodeRegistry convertExpressionToNode(const std::string& exprStr,
     Antares::Solver::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
     Node* root = std::any_cast<Node*>(visitor.visit(tree));
-    nodeTimeIndex[root] = visitor.getTimeIndex();
+    nodeTimeIndex = visitor.getTimeIndex();
     return NodeRegistry(root, std::move(registry));
 }
 
@@ -153,8 +157,9 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     {
         if (param.id == context->IDENTIFIER()->getText())
         {
-            timeIndex_ = convertToTimeIndex(param.time_dependent, param.scenario_dependent);
-            return static_cast<Node*>(registry_.create<ParameterNode>(param.id));
+            auto ret = static_cast<Node*>(registry_.create<ParameterNode>(param.id));
+            nodeTimeIndex[ret] = convertToTimeIndex(param.time_dependent, param.scenario_dependent);
+            return ret;
         }
     }
 
@@ -162,8 +167,9 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     {
         if (var.id == context->getText())
         {
-            timeIndex_ = convertToTimeIndex(var.time_dependent, var.scenario_dependent);
-            return static_cast<Node*>(registry_.create<VariableNode>(var.id));
+            auto ret = static_cast<Node*>(registry_.create<VariableNode>(var.id));
+            nodeTimeIndex[ret] = convertToTimeIndex(var.time_dependent, var.scenario_dependent);
+            return ret;
         }
     }
 
