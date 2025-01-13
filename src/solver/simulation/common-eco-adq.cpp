@@ -256,7 +256,9 @@ void PrepareRandomNumbers(Data::Study& study,
           // Thermal noises
           //-----------------------------
           for (auto& cluster: area.thermal.list.each_enabled())
-          {
+          { 
+              // we use the areaWideIndex because the thermal noises are randomly calculated
+              // for every cluster to avoid different results if a cluster is deactivated
               uint clusterIndex = cluster->areaWideIndex;
               double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
               double randomClusterProdCost(0.);
