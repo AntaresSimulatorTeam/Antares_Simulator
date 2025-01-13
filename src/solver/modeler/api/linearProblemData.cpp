@@ -23,31 +23,38 @@
 
 namespace Antares::Solver::Modeler::Api
 {
-
-unsigned LinearProblemData::getTimeResolutionInMinutes()
+double LinearProblemData::getData(std::string idTimeSeriesSet,
+                                  std::string scenarioGroup,
+                                  unsigned int scenario,
+                                  unsigned int hour)
 {
-    return timeResolutionInMinutes_;
+    return 0.;
 }
 
-bool LinearProblemData::hasScalarData(const std::string& key)
-{
-    return scalarData_.contains(key);
-}
-
-double LinearProblemData::getScalarData(const std::string& key, unsigned scenario)
-{
-    return scalarData_.at(key)[scenario];
-}
-
-bool LinearProblemData::hasTimedData(const std::string& key)
-{
-    return timedData_.contains(key);
-}
-
-const std::vector<double>& LinearProblemData::getTimedData(const std::string& key,
-                                                           unsigned scenario)
-{
-    return timedData_.at(key)[scenario];
-}
+// unsigned LinearProblemData::getTimeResolutionInMinutes()
+//{
+//     return timeResolutionInMinutes_;
+// }
+//
+// bool LinearProblemData::hasScalarData(const std::string& key)
+//{
+//     return scalarData_.contains(key);
+// }
+//
+// double LinearProblemData::getScalarData(const std::string& key, unsigned scenario)
+//{
+//     return scalarData_.at(key)[scenario];
+// }
+//
+// bool LinearProblemData::hasTimedData(const std::string& key)
+//{
+//     return timedData_.contains(key);
+// }
+//
+// const std::vector<double>& LinearProblemData::getTimedData(const std::string& key,
+//                                                            unsigned scenario)
+//{
+//     return timedData_.at(key)[scenario];
+// }
 
 } // namespace Antares::Solver::Modeler::Api

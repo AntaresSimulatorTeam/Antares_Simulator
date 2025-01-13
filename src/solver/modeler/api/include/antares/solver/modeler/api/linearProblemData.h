@@ -28,20 +28,33 @@
 namespace Antares::Solver::Modeler::Api
 {
 
-class LinearProblemData
+class ILinearProblemData
+{
+    virtual double getData(std::string idTimeSeriesSet,
+                           std::string scenarioGroup,
+                           unsigned int scenario,
+                           unsigned int hour) = 0;
+};
+
+class LinearProblemData : public ILinearProblemData
 {
 public:
-    unsigned getTimeResolutionInMinutes();
-    bool hasScalarData(const std::string& key);
-    double getScalarData(const std::string& key, unsigned scenario);
-    bool hasTimedData(const std::string& key);
-    const std::vector<double>& getTimedData(const std::string& key, unsigned scenario);
+    double getData(std::string idTimeSeriesSet,
+                   std::string scenarioGroup,
+                   unsigned int scenario,
+                   unsigned int hour) override;
 
-private:
-    std::vector<int> timeStamps_;
-    unsigned timeResolutionInMinutes_;
-    std::map<std::string, std::vector<double>> scalarData_;
-    std::map<std::string, std::vector<std::vector<double>>> timedData_;
+//    unsigned getTimeResolutionInMinutes();
+//    bool hasScalarData(const std::string& key);
+//    double getScalarData(const std::string& key, unsigned scenario);
+//    bool hasTimedData(const std::string& key);
+//    const std::vector<double>& getTimedData(const std::string& key, unsigned scenario);
+
+//private:
+//    std::vector<int> timeStamps_;
+//    unsigned timeResolutionInMinutes_;
+//    std::map<std::string, std::vector<double>> scalarData_;
+//    std::map<std::string, std::vector<std::vector<double>>> timedData_;
 };
 
 } // namespace Antares::Solver::Modeler::Api
