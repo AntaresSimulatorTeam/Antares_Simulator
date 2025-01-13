@@ -161,24 +161,36 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
 {
-    if (component_.getModel()->Objective().Empty())
+    auto model = component_.getModel();
+    if (model->Objective().Empty())
     {
         return;
     }
     ReadLinearExpressionVisitor visitor(evaluationContext_);
-    auto linear_expression = visitor.dispatch(component_.getModel()->Objective().RootNode());
+    auto linear_expression = visitor.dispatch(model->Objective().RootNode());
     if (abs(linear_expression.offset()) > 1e-10)
     {
         throw std::invalid_argument("Antares does not support objective offsets (found in model '"
-                                    + component_.getModel()->Id() + "' of component '"
+                                    + model->Id() + "' of component '"
                                     + component_.Id() + "').");
     }
+    const auto& models_variables = model->Variables();
+
     for (auto [var_id, coef]: linear_expression.coefPerVar())
     {
-        for (auto var_pos = 0; var_pos != getNumberOfTimestep(ctx); ++var_pos)
+        if (const auto& var = models_variables.at(var_id); var.isTimeDependent())
+        {
+            for (auto var_pos = 0; var_pos != getNumberOfTimestep(ctx); ++var_pos)
+            {
+                auto* variable = pb.getVariable(
+                        component_.Id() + "." + var_id + '_' + std::to_string(var_pos));
+                pb.setObjectiveCoefficient(variable, coef);
+            }
+        }
+        else
         {
             auto* variable = pb.getVariable(
-                    component_.Id() + "." + var_id + '_' + std::to_string(var_pos));
+                    component_.Id() + "." + var_id);
             pb.setObjectiveCoefficient(variable, coef);
         }
     }
