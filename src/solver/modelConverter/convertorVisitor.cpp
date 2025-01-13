@@ -22,6 +22,8 @@
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modelConverter/convertorVisitor.h>
 
+#include "antares/solver/expressions/visitors/TimeIndex.h"
+
 #include "ExprLexer.h"
 #include "ExprParser.h"
 #include "antlr4-runtime.h"
@@ -64,12 +66,28 @@ public:
     std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
 
+    Visitors::TimeIndex getTimeIndex() const { return timeIndex_; }
+
 private:
     Registry<Nodes::Node>& registry_;
     const ModelParser::Model& model_;
+    Visitors::TimeIndex timeIndex_ = Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
 };
 
-NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model)
+NodeRegistry convertExpressionToNode(const std::string& exprStr,
+                                     const ModelParser::Model& model)
+{
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>
+            nodeTimeIndex;
+    return convertExpressionToNode(exprStr,
+                                   model,
+                                   nodeTimeIndex);
+}
+
+NodeRegistry convertExpressionToNode(const std::string& exprStr,
+                                     const ModelParser::Model& model,
+                                     std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>&
+                                     nodeTimeIndex)
 {
     if (exprStr.empty())
     {
@@ -84,6 +102,7 @@ NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelPars
     Antares::Solver::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
     Node* root = std::any_cast<Node*>(visitor.visit(tree));
+    nodeTimeIndex[root] = visitor.getTimeIndex();
     return NodeRegistry(root, std::move(registry));
 }
 
@@ -108,12 +127,33 @@ public:
     }
 };
 
+Visitors::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
+{
+    if (timedependent)
+    {
+        if (scenariodependent)
+        {
+            return Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
+        }
+        return Visitors::TimeIndex::VARYING_IN_TIME_ONLY;
+    }
+    else if (scenariodependent)
+    {
+        return Visitors::TimeIndex::VARYING_IN_SCENARIO_ONLY;
+    }
+    else
+    {
+        return Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    }
+}
+
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
 {
     for (const auto& param: model_.parameters)
     {
         if (param.id == context->IDENTIFIER()->getText())
         {
+            timeIndex_ = convertToTimeIndex(param.time_dependent, param.scenario_dependent);
             return static_cast<Node*>(registry_.create<ParameterNode>(param.id));
         }
     }
@@ -122,6 +162,7 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     {
         if (var.id == context->getText())
         {
+            timeIndex_ = convertToTimeIndex(var.time_dependent, var.scenario_dependent);
             return static_cast<Node*>(registry_.create<VariableNode>(var.id));
         }
     }

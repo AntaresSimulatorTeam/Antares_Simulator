@@ -21,6 +21,9 @@
 
 #include "antares/solver/modelConverter/modelConverter.h"
 
+#include <boost/range/as_literal.hpp>
+
+#include "antares/solver/expressions/visitors/TimeIndex.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/expression.h"
@@ -67,12 +70,13 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 /**
  * \brief Converts a ModelParser::ValueType to an SystemModel::ValueType.
  *
+ * \param nodeTimeIndex
  * \param type The ModelParser::ValueType to convert.
  * \return The corresponding SystemModel::ValueType.
  * \throws UnknownType if the type is unknown.
  */
 std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
-  const Antares::Solver::ModelParser::Model& model)
+const Antares::Solver::ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Parameter> parameters;
     for (const auto& parameter: model.parameters)
@@ -113,19 +117,25 @@ Antares::Study::SystemModel::ValueType convertType(Antares::Solver::ModelParser:
  * \brief Converts ports from ModelParser::Model to SystemModel::Port.
  *
  * \param model The ModelParser::Model object containing ports.
+ * \param nodeTimeIndex
  * \return A vector of SystemModel::Port objects.
  */
-std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelParser::Model& model)
+std::vector<Antares::Study::SystemModel::Variable> convertVariables(
+        const ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Variable> variables;
+
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
     for (const auto& variable: model.variables)
     {
         Antares::Study::SystemModel::Expression lb(variable.lower_bound,
                                                    convertExpressionToNode(variable.lower_bound,
-                                                                           model));
+                                                       model,
+                                                       nodeTimeIndex));
         Antares::Study::SystemModel::Expression ub(variable.upper_bound,
                                                    convertExpressionToNode(variable.upper_bound,
-                                                                           model));
+                                                       model,
+                                                       nodeTimeIndex));
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
@@ -153,15 +163,18 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
 }
 
 std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
-  const Antares::Solver::ModelParser::Model& model)
+const Antares::Solver::ModelParser::Model& model
+)
 {
     std::vector<Antares::Study::SystemModel::Constraint> constraints;
+    std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex> nodeTimeIndex;
     for (const auto& constraint: model.constraints)
     {
-        auto expr = convertExpressionToNode(constraint.expression, model);
+        auto expr = convertExpressionToNode(constraint.expression, model, nodeTimeIndex);
         constraints.emplace_back(constraint.id,
                                  Antares::Study::SystemModel::Expression{constraint.expression,
-                                                                         std::move(expr)});
+                                     std::move(expr)},
+                                 nodeTimeIndex);
     }
     return constraints;
 }
@@ -170,22 +183,26 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
  * \brief Converts models from ModelParser::Library to SystemModel::Model.
  *
  * \param library The ModelParser::Library object containing models.
+ * \param nodeTimeIndex
  * \return A vector of SystemModel::Model objects.
  */
 std::vector<Antares::Study::SystemModel::Model> convertModels(
-  const Antares::Solver::ModelParser::Library& library)
+        const Antares::Solver::ModelParser::Library& library)
 {
     std::vector<Antares::Study::SystemModel::Model> models;
     for (const auto& model: library.models)
     {
         Antares::Study::SystemModel::ModelBuilder modelBuilder;
-        std::vector<Antares::Study::SystemModel::Parameter> parameters = convertParameters(model);
-        std::vector<Antares::Study::SystemModel::Variable> variables = convertVariables(model);
+        std::vector<Antares::Study::SystemModel::Parameter> parameters = convertParameters(
+                model);
+        std::vector<Antares::Study::SystemModel::Variable> variables = convertVariables(
+                model);
         std::vector<Antares::Study::SystemModel::Port> ports = convertPorts(model);
         std::vector<Antares::Study::SystemModel::Constraint> constraints = convertConstraints(
-          model);
+                model);
 
-        auto nodeObjective = convertExpressionToNode(model.objective, model);
+        std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
+        auto nodeObjective = convertExpressionToNode(model.objective, model, nodeTimeIndex);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(

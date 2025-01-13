@@ -144,7 +144,7 @@ void LinearProblemBuildingFixture::createModel(string modelId,
     vector<Constraint> constraints;
     for (auto [id, expression]: constraintsData)
     {
-        constraints.push_back(move(Constraint(id, createExpression(expression))));
+        constraints.push_back(move(Constraint(id, createExpression(expression), {})));
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)

@@ -138,12 +138,11 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
         auto linear_constraint = visitor.dispatch(root_node);
         if (checkTimeSteps(ctx))
         {
-            Solver::Visitors::TimeIndexVisitor timeIndexVisitor(ctx.getAllTimeIndex());
-            // if (auto ret = timeIndexVisitor.dispatch(root_node);
-            //     ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY || ret ==
-            //     Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
-            //TODO de-comment above lines to check if the constraint is time dependent
-            if (true)
+            Solver::Visitors::TimeIndexVisitor timeIndexVisitor(constraint.getNodeTimeIndex());
+            if (auto ret = timeIndexVisitor.dispatch(root_node);
+                ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY || ret ==
+                Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+
             {
                 addTimeDependentConstraints(pb,
                                             linear_constraint,

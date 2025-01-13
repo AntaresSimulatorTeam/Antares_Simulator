@@ -21,9 +21,15 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 #include "expression.h"
 #include "parameter.h"
+
+namespace Antares::Solver::Visitors
+{
+enum class TimeIndex : unsigned int;
+}
 
 namespace Antares::Study::SystemModel
 {
@@ -32,9 +38,12 @@ namespace Antares::Study::SystemModel
 class Constraint
 {
 public:
-    Constraint(std::string name, Expression expression):
-        id_(std::move(name)),
-        expression_(std::move(expression))
+    Constraint(std::string name,
+               Expression expression,
+               std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex>
+               nodeTimeIndex): id_(std::move(name)),
+                               expression_(std::move(expression)),
+                               nodeTimeIndex(std::move(nodeTimeIndex))
     {
     }
 
@@ -48,9 +57,16 @@ public:
         return expression_;
     }
 
+    std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex>
+    getNodeTimeIndex() const
+    {
+        return nodeTimeIndex;
+    }
+
 private:
     std::string id_;
     Expression expression_;
+    std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex> nodeTimeIndex;
 };
 
 } // namespace Antares::Study::SystemModel
