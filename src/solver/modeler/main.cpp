@@ -22,7 +22,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
-#include <antares/solver/modeler/api/linearProblem.h>
+#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 
@@ -36,6 +36,7 @@ class LinearProblemData;
 class ILinearProblem;
 }
 
+using namespace Antares::Solver::Modeler::OrtoolsImpl;
 using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Solver::Modeler::Api;
@@ -67,7 +68,7 @@ public:
 
         Antares::Solver::Modeler::Api::LinearProblemBuilder linear_problem_builder(fillers_ptr);
         Antares::Solver::Modeler::Api::LinearProblemData dummy_data;
-        Antares::Solver::Modeler::Api::FillContext dummy_time_scenario_ctx = {0, 0};
+        Antares::Solver::Modeler::Api::FillContext dummy_time_scenario_ctx = {0, 168};
         linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
     }
 
@@ -102,6 +103,15 @@ int main(int argc, const char** argv)
         logs.info() << "Libraries loaded";
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
+        SystemLinearProblem system_linear_problem(system);
+        logs.info() << "linear System problem loaded";
+        OrtoolsLinearProblem ortools_linear_problem(false, "sirius");
+
+        system_linear_problem.Provide(ortools_linear_problem);
+
+        logs.info() << "Linear problem provided";
+        ortools_linear_problem.solve(true);
+        logs.info() << "Linear problem solved";
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {

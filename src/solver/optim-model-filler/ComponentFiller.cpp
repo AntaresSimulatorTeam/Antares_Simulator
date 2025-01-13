@@ -54,7 +54,7 @@ void ComponentFiller::addStaticVariable(Solver::Modeler::Api::ILinearProblem& pb
         pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
                        evaluator->dispatch(variable.UpperBound().RootNode()),
                        variable.Type() != Study::SystemModel::ValueType::FLOAT,
-                       component_.Id() + "." + variable.Id());
+                       component_.Id() + "." + variable.Id() + "_0");
     }
 }
 
@@ -108,7 +108,7 @@ void ComponentFiller::addStaticConstraint(
 {
     auto* ct = pb.addConstraint(linear_constraint.lb,
                                 linear_constraint.ub,
-                                component_.Id() + "." + constraint_id);
+                                component_.Id() + "." + constraint_id + "_0");
     for (auto [var_id, coef]: linear_constraint.coef_per_var)
     {
         auto* variable = pb.getVariable(component_.Id() + "." + var_id);
@@ -181,8 +181,12 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     }
     for (auto [var_id, coef]: linear_expression.coefPerVar())
     {
-        auto* variable = pb.getVariable(component_.Id() + "." + var_id);
-        pb.setObjectiveCoefficient(variable, coef);
+        for (auto var_pos = 0; var_pos != getNumberOfTimestep(ctx); ++var_pos)
+        {
+            auto* variable = pb.getVariable(
+                    component_.Id() + "." + var_id + '_' + std::to_string(var_pos));
+            pb.setObjectiveCoefficient(variable, coef);
+        }
     }
 }
 
