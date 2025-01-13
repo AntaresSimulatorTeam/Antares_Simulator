@@ -141,7 +141,7 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
             Solver::Visitors::TimeIndexVisitor timeIndexVisitor(constraint.getNodeTimeIndex());
             if (auto ret = timeIndexVisitor.dispatch(root_node);
                 ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY || ret ==
-                Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+                Solver::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
 
             {
                 addTimeDependentConstraints(pb,
