@@ -49,9 +49,9 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                                                    areas,
                                                                                    numSpace_));
     post_process_list.push_back(
-      std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
-    post_process_list.push_back(
       std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
+    post_process_list.push_back(
+      std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
       std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, true, false));
     post_process_list.push_back(

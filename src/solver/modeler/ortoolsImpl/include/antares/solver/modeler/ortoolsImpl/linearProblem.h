@@ -65,6 +65,7 @@ public:
     bool isMaximization() const override;
 
     OrtoolsMipSolution* solve(bool verboseSolver) override;
+    void WriteLP(const std::string& filename) override;
 
     double infinity() const override;
 

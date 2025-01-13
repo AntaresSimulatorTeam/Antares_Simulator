@@ -65,3 +65,21 @@ std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGen
 {
     return createOptimizationFilename("problem", optPeriodStringGenerator, optNumber, "mps");
 }
+
+std::string createSolutionFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                   const unsigned int optNumber)
+{
+    return createOptimizationFilename("optimal-values", optPeriodStringGenerator, optNumber, "txt");
+}
+
+std::string createMarginalCostFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                       const unsigned int optNumber)
+{
+    return createOptimizationFilename("marginal-costs", optPeriodStringGenerator, optNumber, "txt");
+}
+
+std::string createReducedCostFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                      const unsigned int optNumber)
+{
+    return createOptimizationFilename("reduced-costs", optPeriodStringGenerator, optNumber, "txt");
+}
