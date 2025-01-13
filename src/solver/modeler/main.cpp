@@ -70,7 +70,7 @@ public:
 
         Antares::Solver::Modeler::Api::LinearProblemBuilder linear_problem_builder(fillers_ptr);
         Antares::Solver::Modeler::Api::LinearProblemData dummy_data;
-        Antares::Solver::Modeler::Api::FillContext dummy_time_scenario_ctx = {0, 168};
+        Antares::Solver::Modeler::Api::FillContext dummy_time_scenario_ctx = {0, 167, {}};
         linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
     }
 

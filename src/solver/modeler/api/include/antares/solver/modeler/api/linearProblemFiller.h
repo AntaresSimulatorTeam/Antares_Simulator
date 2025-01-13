@@ -25,15 +25,30 @@
 
 #include <antares/solver/modeler/api/linearProblem.h>
 #include <antares/solver/modeler/api/linearProblemData.h>
+#include <unordered_map>
+
+
+namespace Antares::Solver::Visitors
+{
+enum class TimeIndex: unsigned int;
+}
+
+namespace Antares::Solver::Nodes
+{
+class Node;
+}
 
 namespace Antares::Solver::Modeler::Api
 {
-
 struct FillContext
 {
-    FillContext(unsigned first, unsigned last):
-        firstTimeStep(first),
-        lastTimeStep(last)
+    FillContext(unsigned first,
+                unsigned last,
+                const
+                std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>&
+                nodesTimeIndex): firstTimeStep(
+                                         first),
+                                 lastTimeStep(last), nodesTimeIndex(nodesTimeIndex)
     {
     }
 
@@ -49,9 +64,21 @@ struct FillContext
 
     std::vector<unsigned> scenariosSelected;
 
+    Visitors::TimeIndex getTimeIndex(const Nodes::Node* node) const
+    {
+        //TODO exception
+        return nodesTimeIndex.at(node);
+    }
+
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> getAllTimeIndex() const
+    {
+        return nodesTimeIndex;
+    }
+
 private:
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodesTimeIndex;
 };
 
 class LinearProblemFiller

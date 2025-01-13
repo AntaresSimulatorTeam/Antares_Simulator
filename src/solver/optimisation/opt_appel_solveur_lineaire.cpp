@@ -194,7 +194,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
     std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
     LinearProblemData LP_Data;
-    FillContext fillCtx(0, 167);
+    FillContext fillCtx(0, 167, {});
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
     if (solver == nullptr)
@@ -357,7 +357,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         auto legacyOrtoolsFiller = std::make_unique<LegacyFiller>(&Probleme);
         std::vector<LinearProblemFiller*> fillersCollection = {legacyOrtoolsFiller.get()};
         LinearProblemData LP_Data;
-        FillContext fillCtx(0, 167);
+        FillContext fillCtx(0, 167, {});
         LinearProblemBuilder linearProblemBuilder(fillersCollection);
 
         linearProblemBuilder.build(*ortoolsProblem, LP_Data, fillCtx);

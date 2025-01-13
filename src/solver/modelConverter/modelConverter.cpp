@@ -79,10 +79,10 @@ std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
     {
         parameters.emplace_back(
           parameter.id,
-          static_cast<Antares::Study::SystemModel::Parameter::TimeDependent>(
-            parameter.time_dependent),
-          static_cast<Antares::Study::SystemModel::Parameter::ScenarioDependent>(
-            parameter.scenario_dependent));
+          static_cast<Antares::Study::SystemModel::TimeDependent>(
+              parameter.time_dependent),
+          static_cast<Antares::Study::SystemModel::ScenarioDependent>(
+              parameter.scenario_dependent));
     }
     return parameters;
 }
@@ -129,7 +129,12 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelP
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
-                               convertType(variable.variable_type));
+                               convertType(variable.variable_type),
+                               static_cast<Antares::Study::SystemModel::TimeDependent>(
+                                   variable.time_dependent),
+                               static_cast<Antares::Study::SystemModel::ScenarioDependent>(
+                                   variable.scenario_dependent)
+                );
     }
 
     return variables;

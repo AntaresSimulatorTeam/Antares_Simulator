@@ -27,6 +27,8 @@
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include <antares/study/system-model/variable.h>
 
+#include "antares/solver/expressions/visitors/TimeIndexVisitor.h"
+
 namespace Antares::Optimization
 {
 
@@ -35,42 +37,37 @@ ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component)
     evaluationContext_(component_.getParameterValues(), {})
 {
 }
-bool isTimeDependent(Solver::Modeler::Api::FillContext& ctx)
-{
-    return ctx.getFirstTimeStep() != ctx.getLastTimeStep();
-}
+
 
 bool checkTimeSteps(Solver::Modeler::Api::FillContext& ctx)
 {
     return ctx.getFirstTimeStep() <= ctx.getLastTimeStep();
 }
 
-void ComponentFiller::addStaticVariable(Solver::Modeler::Api::ILinearProblem& pb,
-                                        const std::unique_ptr<Solver::Visitors::EvalVisitor>&
-                                        evaluator) const
-{
-    for (const auto& variable: component_.getModel()->Variables() | std::views::values)
-    {
-        pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
-                       evaluator->dispatch(variable.UpperBound().RootNode()),
-                       variable.Type() != Study::SystemModel::ValueType::FLOAT,
-                       component_.Id() + "." + variable.Id() + "_0");
-    }
-}
 
-void ComponentFiller::addTimeDependentVariables(Solver::Modeler::Api::ILinearProblem& pb,
-                                                const std::unique_ptr<Solver::Visitors::EvalVisitor>
-                                                & evaluator,
-                                                unsigned int nb_vars) const
+void ComponentFiller::addVariables_(Solver::Modeler::Api::ILinearProblem& pb,
+                                    const std::unique_ptr<Solver::Visitors::EvalVisitor>
+                                    & evaluator,
+                                    unsigned int nb_vars) const
 {
     for (const auto& variable: component_.getModel()->Variables() | std::views::values)
     {
-        pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
-                       evaluator->dispatch(variable.UpperBound().RootNode()),
-                       variable.Type() != Study::SystemModel::ValueType::FLOAT,
-                       component_.Id() + "." + variable.Id(),
-                       nb_vars
-                );
+        if (variable.isTimeDependent())
+        {
+            pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
+                           evaluator->dispatch(variable.UpperBound().RootNode()),
+                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                           component_.Id() + "." + variable.Id(),
+                           nb_vars
+                    );
+        }
+        else
+        {
+            pb.addVariable(evaluator->dispatch(variable.LowerBound().RootNode()),
+                           evaluator->dispatch(variable.UpperBound().RootNode()),
+                           variable.Type() != Study::SystemModel::ValueType::FLOAT,
+                           component_.Id() + "." + variable.Id());
+        }
     }
 }
 
@@ -86,15 +83,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
     auto evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
     if (checkTimeSteps(ctx))
     {
-        if (isTimeDependent(ctx))
-        {
-            addTimeDependentVariables(pb, evaluator, getNumberOfTimestep(ctx));
-        }
-        else
-        {
-            addStaticVariable(pb,
-                              evaluator);
-        }
+        addVariables_(pb, evaluator, getNumberOfTimestep(ctx));
     }
     else
     {
@@ -108,7 +97,7 @@ void ComponentFiller::addStaticConstraint(
 {
     auto* ct = pb.addConstraint(linear_constraint.lb,
                                 linear_constraint.ub,
-                                component_.Id() + "." + constraint_id + "_0");
+                                component_.Id() + "." + constraint_id);
     for (auto [var_id, coef]: linear_constraint.coef_per_var)
     {
         auto* variable = pb.getVariable(component_.Id() + "." + var_id);
@@ -145,10 +134,16 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
     ReadLinearConstraintVisitor visitor(evaluationContext_);
     for (const auto& constraint: component_.getModel()->getConstraints() | std::views::values)
     {
-        auto linear_constraint = visitor.dispatch(constraint.expression().RootNode());
+        auto* root_node = constraint.expression().RootNode();
+        auto linear_constraint = visitor.dispatch(root_node);
         if (checkTimeSteps(ctx))
         {
-            if (isTimeDependent(ctx))
+            Solver::Visitors::TimeIndexVisitor timeIndexVisitor(ctx.getAllTimeIndex());
+            // if (auto ret = timeIndexVisitor.dispatch(root_node);
+            //     ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY || ret ==
+            //     Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
+            //TODO de-comment above lines to check if the constraint is time dependent
+            if (true)
             {
                 addTimeDependentConstraints(pb,
                                             linear_constraint,

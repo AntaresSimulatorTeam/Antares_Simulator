@@ -29,6 +29,7 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
+#include "antares/study/system-model/timeAndScenarioType.h"
 
 #include "unit_test_utils.h"
 
@@ -128,12 +129,17 @@ void LinearProblemBuildingFixture::createModel(string modelId,
     for (auto parameter_id: parameterIds)
     {
         parameters.push_back(
-          Parameter(parameter_id, Parameter::TimeDependent::NO, Parameter::ScenarioDependent::NO));
+                Parameter(parameter_id, TimeDependent::NO, ScenarioDependent::NO));
     }
     vector<Variable> variables;
     for (auto [id, type, lb, ub]: variablesData)
     {
-        variables.push_back(move(Variable(id, createExpression(lb), createExpression(ub), type)));
+        variables.push_back(move(Variable(id,
+                                          createExpression(lb),
+                                          createExpression(ub),
+                                          type,
+                                          TimeDependent::NO,
+                                          ScenarioDependent::NO)));
     }
     vector<Constraint> constraints;
     for (auto [id, expression]: constraintsData)
@@ -183,7 +189,7 @@ void LinearProblemBuildingFixture::buildLinearProblem()
     pb = make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
-    FillContext dummy_time_scenario_ctx = {0, 0};
+    FillContext dummy_time_scenario_ctx = {0, 0, {}};
     linear_problem_builder.build(*pb.get(), dummy_data, dummy_time_scenario_ctx);
 }
 

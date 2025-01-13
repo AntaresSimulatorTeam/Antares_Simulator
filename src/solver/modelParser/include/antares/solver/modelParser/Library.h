@@ -64,6 +64,8 @@ struct Variable
     std::string lower_bound;
     std::string upper_bound;
     ValueType variable_type;
+    bool time_dependent;
+    bool scenario_dependent;
 };
 
 struct Port
