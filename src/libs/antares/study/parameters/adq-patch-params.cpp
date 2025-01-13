@@ -150,6 +150,7 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
         out.emplace_back("LOLP CSR");
         out.emplace_back("MAX MRG CSR");
         out.emplace_back("OV. COST CSR");
+        out.emplace_back("MRG. PRICE CSR");
     }
 }
 

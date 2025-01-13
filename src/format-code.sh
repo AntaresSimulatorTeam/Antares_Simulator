@@ -20,5 +20,5 @@ fi
 if ! [ -x "$(command -v clang-format)" ]; then
     echo 'Warning: clang-format is not installed. Skipping' >&2
 else
-    echo "$SOURCE_FILES" | xargs clang-format -i --verbose
+    echo "$SOURCE_FILES" | xargs clang-format  -style=file:../.clang-format -i --verbose
 fi

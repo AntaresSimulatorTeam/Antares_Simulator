@@ -160,7 +160,7 @@ double round(double d, unsigned precision)
     return std::round(d * factor) / factor;
 }
 
-static constexpr double largeValue=1000000;
+static constexpr double largeValue = 1000000;
 
 double ceilDiv(double numerator, double denominator)
 {

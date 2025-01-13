@@ -38,3 +38,9 @@ std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGen
 
 std::string createSolutionFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                                    const unsigned int optNumber);
+
+std::string createMarginalCostFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                       const unsigned int optNumber);
+
+std::string createReducedCostFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                      const unsigned int optNumber);
