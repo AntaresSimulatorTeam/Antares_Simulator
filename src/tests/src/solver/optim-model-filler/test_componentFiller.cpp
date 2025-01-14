@@ -189,7 +189,7 @@ void LinearProblemBuildingFixture::buildLinearProblem()
     pb = make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
-    FillContext dummy_time_scenario_ctx = {0, 0, {}};
+    FillContext dummy_time_scenario_ctx = {0, 0};
     linear_problem_builder.build(*pb.get(), dummy_data, dummy_time_scenario_ctx);
 }
 

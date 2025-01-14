@@ -43,12 +43,9 @@ namespace Antares::Solver::Modeler::Api
 struct FillContext
 {
     FillContext(unsigned first,
-                unsigned last,
-                const
-                std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>&
-                nodesTimeIndex): firstTimeStep(
-                                         first),
-                                 lastTimeStep(last), nodesTimeIndex(nodesTimeIndex)
+                unsigned last): firstTimeStep(
+                                        first),
+                                lastTimeStep(last)
     {
     }
 
