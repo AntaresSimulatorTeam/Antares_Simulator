@@ -106,7 +106,7 @@ public:
     void reset() override;
 
     //! Set the group
-    void setGroup(Data::ClusterName newgrp) override;
+    void setpGroup(Data::ClusterName newgrp) override;
     //@}
 
     /*!

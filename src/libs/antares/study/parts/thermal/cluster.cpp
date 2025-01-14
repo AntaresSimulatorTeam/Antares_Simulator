@@ -142,7 +142,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 
     // group
     groupID = cluster.groupID;
-    pGroup = cluster.pGroup;
+    group = cluster.group;
 
     // Enabled
     enabled = cluster.enabled;
@@ -236,15 +236,15 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
     return ThermalCluster::thermalDispatchGrpOther1;
 }
 
-void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
+void Data::ThermalCluster::setpGroup(Data::ClusterName newgrp)
 {
     if (newgrp.empty())
     {
         groupID = thermalDispatchGrpOther1;
-        pGroup.clear();
+        group.clear();
         return;
     }
-    pGroup = newgrp;
+    group = newgrp;
     groupID = stringToGroup(newgrp);
 }
 

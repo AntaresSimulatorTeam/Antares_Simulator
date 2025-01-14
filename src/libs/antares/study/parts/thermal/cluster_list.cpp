@@ -226,7 +226,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "group")
     {
-        cluster.setGroup(p->value);
+        cluster.setpGroup(p->value);
         return true;
     }
     if (p->key == "gen-ts")
@@ -406,9 +406,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         // This key will be silently ignored the next time
         s->add("name", c->name());
 
-        if (!c->group().empty())
+        if (!c->getGroup().empty())
         {
-            s->add("group", c->group());
+            s->add("group", c->getGroup());
         }
         if (!c->enabled)
         {

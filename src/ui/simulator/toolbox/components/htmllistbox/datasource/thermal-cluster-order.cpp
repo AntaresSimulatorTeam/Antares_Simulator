@@ -51,7 +51,7 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
     {
         if (search.empty())
         {
-            grp = wxStringFromUTF8(cluster->group());
+            grp = wxStringFromUTF8(cluster->getGroup());
             grp.MakeLower();
             l[grp].push_back(cluster.get());
         }

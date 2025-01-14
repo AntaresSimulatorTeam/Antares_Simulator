@@ -37,11 +37,6 @@ Cluster::Cluster(Area* parent):
 {
 }
 
-const ClusterName& Cluster::group() const
-{
-    return pGroup;
-}
-
 const ClusterName& Cluster::name() const
 {
     return pName;
@@ -64,6 +59,17 @@ void Cluster::setName(const AnyString& newname)
     pName = newname;
     pID.clear();
     pID = transformNameIntoID(pName);
+}
+
+void Cluster::setGroup(const std::string& newgrp)
+{
+    // TODO to lower/upper
+    group = newgrp;
+}
+
+std::string Cluster::getGroup() const
+{
+    return group;
 }
 
 #define SEP Yuni::IO::Separator

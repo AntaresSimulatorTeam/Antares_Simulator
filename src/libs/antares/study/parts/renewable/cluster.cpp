@@ -59,7 +59,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 
     // group
     groupID = cluster.groupID;
-    pGroup = cluster.pGroup;
+    group = cluster.group;
 
     // Enabled
     enabled = cluster.enabled;
@@ -95,22 +95,22 @@ const std::map<RenewableCluster::RenewableGroup, const char*> groupToName = {
   {RenewableCluster::renewableOther3, "other res 3"},
   {RenewableCluster::renewableOther4, "other res 4"}};
 
-void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
+void Data::RenewableCluster::setpGroup(Data::ClusterName newgrp)
 {
     if (newgrp.empty())
     {
         groupID = renewableOther1;
-        pGroup.clear();
+        group.clear();
         return;
     }
-    pGroup = newgrp;
+    group = newgrp;
     boost::to_lower(newgrp);
 
-    for (const auto& [group, name]: groupToName)
+    for (const auto& [g, name]: groupToName)
     {
         if (newgrp == name)
         {
-            groupID = group;
+            groupID = g;
             return;
         }
     }

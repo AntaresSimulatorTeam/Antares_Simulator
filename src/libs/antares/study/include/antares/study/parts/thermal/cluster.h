@@ -141,10 +141,6 @@ public:
     */
     void reset() override;
 
-    //! Set the group
-    void setGroup(Data::ClusterName newgrp) override;
-    //@}
-
     //! \name Spinning
     //@{
     /*!
@@ -223,6 +219,8 @@ public:
     ** \see group()
     */
     ThermalDispatchableGroup groupID = thermalDispatchGrpOther1;
+
+    void setpGroup(Data::ClusterName newgrp) override;
 
     //! Mustrun
     bool mustrun = false;
