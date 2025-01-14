@@ -24,6 +24,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/expressions/nodes/ExpressionsNodes.h"
+#include "antares/solver/expressions/visitors/TimeIndex.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
@@ -45,12 +46,15 @@ struct VariableData
     ValueType type;
     Node* lb;
     Node* ub;
+    bool timeDependent = true;
+    bool scenarioDependent = true;
 };
 
 struct ConstraintData
 {
     string id;
     Node* expression;
+    std::unordered_map<const Node*, Antares::Solver::Visitors::TimeIndex> nodeTimeIndex;
 };
 
 struct LinearProblemBuildingFixture
@@ -76,7 +80,7 @@ struct LinearProblemBuildingFixture
     {
         createModel(modelId,
                     parameterIds,
-                    {{varId, ValueType::FLOAT, lb, ub}},
+                    {{varId, ValueType::FLOAT, lb, ub, false, false}},
                     constraintsData,
                     objective);
     }
@@ -125,26 +129,26 @@ void LinearProblemBuildingFixture::createModel(string modelId,
         Expression expression("expression", move(node_registry));
         return move(expression);
     };
+
     vector<Parameter> parameters;
     for (auto parameter_id: parameterIds)
     {
-        parameters.push_back(
-                Parameter(parameter_id, TimeDependent::NO, ScenarioDependent::NO));
+        parameters.push_back(Parameter(parameter_id, TimeDependent::NO, ScenarioDependent::NO));
     }
     vector<Variable> variables;
-    for (auto [id, type, lb, ub]: variablesData)
+    for (auto [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
     {
         variables.push_back(move(Variable(id,
                                           createExpression(lb),
                                           createExpression(ub),
                                           type,
-                                          TimeDependent::NO,
-                                          ScenarioDependent::NO)));
+                                          static_cast<TimeDependent>(timeDependent),
+                                          static_cast<ScenarioDependent>(scenarioDependent))));
     }
     vector<Constraint> constraints;
-    for (auto [id, expression]: constraintsData)
+    for (auto [id, expression, nodeTimeIndex]: constraintsData)
     {
-        constraints.push_back(move(Constraint(id, createExpression(expression), {})));
+        constraints.push_back(move(Constraint(id, createExpression(expression), nodeTimeIndex)));
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)
@@ -260,7 +264,7 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
 {
     createModel("model",
                 {"pmin", "pmax"},
-                {{"var1", ValueType::INTEGER, parameter("pmin"), parameter("pmax")}},
+                {{"var1", ValueType::INTEGER, parameter("pmin"), parameter("pmax"), false, false}},
                 {});
     createComponent("model", "componentToto", {{"pmin", -3.}, {"pmax", 4.}});
     buildLinearProblem();
@@ -276,9 +280,19 @@ BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem
 
 BOOST_AUTO_TEST_CASE(three_different_vars__exist)
 {
-    VariableData var1 = {"is_cluster_on", ValueType::BOOL, literal(0), literal(1)};
-    VariableData var2 = {"n_started_units", ValueType::INTEGER, literal(0), parameter("nUnits")};
-    VariableData var3 = {"p_per_unit", ValueType::FLOAT, parameter("pmin"), parameter("pmax")};
+    VariableData var1 = {"is_cluster_on", ValueType::BOOL, literal(0), literal(1), false, false};
+    VariableData var2 = {"n_started_units",
+                         ValueType::INTEGER,
+                         literal(0),
+                         parameter("nUnits"),
+                         false,
+                         false};
+    VariableData var3 = {"p_per_unit",
+                         ValueType::FLOAT,
+                         parameter("pmin"),
+                         parameter("pmax"),
+                         false,
+                         false};
     createModel("thermalClusterModel", {"pmin", "pmax", "nUnits"}, {var1, var2, var3}, {});
     createComponent("thermalClusterModel",
                     "thermalCluster1",
@@ -327,6 +341,16 @@ BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+static auto ConstantNodeContext(const std::vector<const Node*>& nodes)
+{
+    std::unordered_map<const Node*, Antares::Solver::Visitors::TimeIndex> nodeTimeIndex;
+    for (auto node: nodes)
+    {
+        nodeTimeIndex[node] = Antares::Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
+    }
+    return nodeTimeIndex;
+}
+
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addConstraints_, LinearProblemBuildingFixture)
 
 BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
@@ -335,10 +359,11 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
     auto var_node = variable("var1");
     auto three = literal(3);
     auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
+
     createModel("model",
                 {},
-                {{"var1", ValueType::BOOL, literal(-5), literal(10)}},
-                {{"ct1", ct_node}});
+                {{"var1", ValueType::BOOL, literal(-5), literal(10), false, false}},
+                {{"ct1", ct_node, ConstantNodeContext({var_node, three})}});
     createComponent("model", "componentToto");
     buildLinearProblem();
 
@@ -360,7 +385,8 @@ BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
     // simplified to : -2 * var1 >= 5
     auto var_node = variable("var__1");
     auto five = literal(5);
-    auto coef_node_left = multiply(literal(3), var_node);
+    auto three = literal(3);
+    auto coef_node_left = multiply(three, var_node);
     auto coef_node_right = multiply(var_node, five);
     auto sum_node_right = nodes.create<SumNode>(coef_node_right, five);
     auto ct_node = nodes.create<GreaterThanOrEqualNode>(coef_node_left, sum_node_right);
@@ -370,7 +396,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
                                "var__1",
                                literal(-5),
                                literal(10),
-                               {{"ct_1", ct_node}});
+                               {{"ct_1", ct_node, ConstantNodeContext({var_node, five, three})}});
     createComponent("model", "componentTata");
     buildLinearProblem();
 
@@ -391,20 +417,34 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
     // param1(-16) * v1 + 8 * v2 + 5 - param2(8) = 7 * v1 +  param3(5) * v2 + 89 + 5 * param4(-3)
     // simplifies to: -23 * v1 + 3 * v2 = 77
     vector<string> params = {"param1", "param2", "param3", "param4"};
-    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.)};
-    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.)};
+    auto threeHundreds = literal(300.);
+    auto minus50 = literal(-50.);
+    VariableData var1Data = {"v1", ValueType::FLOAT, minus50, threeHundreds};
+    auto sixty = literal(60.);
+    auto seventy5 = literal(75.);
+    VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5};
 
-    auto sum_node_left = nodes.create<SumNode>(multiply(variable("v1"), parameter("param1")),
-                                               multiply(literal(8), variable("v2")),
+    auto v1 = variable("v1");
+    auto param1 = parameter("param1");
+    auto v2 = variable("v2");
+    auto param2 = parameter("param2");
+    auto sum_node_left = nodes.create<SumNode>(multiply(v1, param1),
+                                               multiply(literal(8), v2),
                                                literal(5),
-                                               negate(parameter("param2")));
-    auto sum_node_right = nodes.create<SumNode>(multiply(variable("v1"), literal(7)),
-                                                multiply(parameter("param3"), variable("v2")),
+                                               negate(param2));
+    auto param3 = parameter("param3");
+    auto param4 = parameter("param4");
+    auto sum_node_right = nodes.create<SumNode>(multiply(v1, literal(7)),
+                                                multiply(param3, v2),
                                                 literal(89),
-                                                multiply(literal(5), parameter("param4")));
+                                                multiply(literal(5), param4));
     auto ct_node = nodes.create<EqualNode>(sum_node_left, sum_node_right);
 
-    createModel("my_new_model", params, {var1Data, var2Data}, {{"constraint1", ct_node}});
+    const auto constnode = ConstantNodeContext({v1, v2, param1, param2, param3, param4});
+    createModel("my_new_model",
+                params,
+                {var1Data, var2Data},
+                {{"constraint1", ct_node, constnode}});
     createComponent("my_new_model",
                     "my_component",
                     {{"param1", -16}, {"param2", 8}, {"param3", 5}, {"param4", -3}});
@@ -423,19 +463,32 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
 
 BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
 {
+    auto minus50 = literal(-50.);
+    auto threeHundred = literal(300.);
     // 3 * v1 -2 <= v2 (simplifies to : 3 * v1 - 2 * v2 <= 2)
     // v2 <= v1 / 2 (simplifies to : -0.5 * v1 + v2 <= 0)
-    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.)};
-    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.)};
+    VariableData var1Data = {"v1", ValueType::FLOAT, minus50, threeHundred};
+    auto sixty = literal(60.);
+    auto seventy5 = literal(75.);
+    VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5};
 
+    auto v1 = variable("v1");
+    auto three = literal(3);
+    auto two_1 = literal(2);
+    auto v2 = variable("v2");
     auto ct1_node = nodes.create<LessThanOrEqualNode>(
-      nodes.create<SubtractionNode>(multiply(literal(3), variable("v1")), literal(2)),
-      variable("v2"));
-    auto ct2_node = nodes.create<LessThanOrEqualNode>(variable("v2"),
-                                                      nodes.create<DivisionNode>(variable("v1"),
-                                                                                 literal(2)));
+            nodes.create<SubtractionNode>(multiply(three, v1), two_1),
+            v2);
+    auto two_2 = literal(2);
+    auto ct2_node = nodes.create<LessThanOrEqualNode>(v2,
+                                                      nodes.create<DivisionNode>(v1,
+                                                          two_2));
 
-    createModel("my_new_model", {}, {var1Data, var2Data}, {{"ct1", ct1_node}, {"ct2", ct2_node}});
+    auto constnodes = ConstantNodeContext({v1, v2});
+    createModel("my_new_model",
+                {},
+                {var1Data, var2Data},
+                {{"ct1", ct1_node, constnodes}, {"ct2", ct2_node, constnodes}});
     createComponent("my_new_model", "my_component", {});
     buildLinearProblem();
 
@@ -466,6 +519,7 @@ BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addObjective_, LinearProblemBuildingFi
 BOOST_AUTO_TEST_CASE(one_var_with_objective)
 {
     auto objective = variable("x");
+
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, objective);
     createComponent("model", "componentA", {});
     buildLinearProblem();

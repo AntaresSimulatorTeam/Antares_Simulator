@@ -54,7 +54,8 @@ public:
 
     ~SystemLinearProblem() = default;
 
-    void Provide(Antares::Solver::Modeler::Api::ILinearProblem& pb)
+    void Provide(ILinearProblem& pb,
+                 const ModelerParameters& parameters)
     {
         std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller> > fillers;
         std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers_ptr;
@@ -70,7 +71,7 @@ public:
 
         LinearProblemBuilder linear_problem_builder(fillers_ptr);
         LinearProblemData dummy_data;
-        FillContext dummy_time_scenario_ctx = {0, 167};
+        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
         linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
     }
 
@@ -109,7 +110,7 @@ int main(int argc, const char** argv)
         logs.info() << "linear System problem loaded";
         OrtoolsLinearProblem ortools_linear_problem(false, "sirius");
 
-        system_linear_problem.Provide(ortools_linear_problem);
+        system_linear_problem.Provide(ortools_linear_problem, parameters);
 
         logs.info() << "Linear problem provided";
 
