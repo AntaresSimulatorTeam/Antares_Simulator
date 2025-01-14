@@ -57,9 +57,9 @@ private:
 class LinearProblemFiller
 {
 public:
-    virtual void addVariables(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) = 0;
-    virtual void addConstraints(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) = 0;
-    virtual void addObjective(ILinearProblem& pb, LinearProblemData& data, FillContext& ctx) = 0;
+    virtual void addVariables(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
+    virtual void addConstraints(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
+    virtual void addObjective(ILinearProblem& pb, ILinearProblemData& data, FillContext& ctx) = 0;
     virtual ~LinearProblemFiller() = default;
 };
 
