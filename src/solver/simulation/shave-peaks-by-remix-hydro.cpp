@@ -5,8 +5,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <antares/logs/logs.h>
-
 namespace Antares::Solver::Simulation
 {
 
@@ -137,8 +135,6 @@ static void checkInputCorrectness(const std::vector<double>& DispatchGen,
 
     if (!(levels <= capacity) || !(levels >= 0.))
     {
-        Antares::logs.notice() << "Inflows : " << inflows;
-        Antares::logs.notice() << "Levels : " << levels;
         throw std::invalid_argument(msg_prefix
                                     + "levels computed from input don't respect reservoir bounds");
     }

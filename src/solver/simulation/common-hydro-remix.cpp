@@ -292,6 +292,9 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
           const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
 
+          Antares::logs.notice() << "Inflows : " << inflows;
+          Antares::logs.notice() << "Overflow : " << ovf;
+
           auto [H, U, L] = shavePeaksByRemixingHydro(DispatchGen,
                                                      hydroGen,
                                                      unsupE,
