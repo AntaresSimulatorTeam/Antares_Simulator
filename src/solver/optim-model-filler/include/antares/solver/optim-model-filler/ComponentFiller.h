@@ -27,9 +27,11 @@
 
 #include "ReadLinearConstraintVisitor.h"
 
+
 namespace Antares::Study::SystemModel
 {
 class Component;
+class Variable;
 }
 
 namespace Antares::Solver::Visitors
@@ -81,7 +83,13 @@ public:
                       Solver::Modeler::Api::FillContext& ctx) override;
 
 private:
+    static bool IsThisConstraintTimeDependent(const Solver::Nodes::Node* node,
+                                              const Study::SystemModel::Constraint& constraint);
+
+    bool IsThisVariableTimeDependent(const std::string& var_id) const;
+
     const Study::SystemModel::Component& component_;
     Solver::Visitors::EvaluationContext evaluationContext_;
+    const std::map<std::string, Study::SystemModel::Variable>& modelVariable_;
 };
 } // namespace Antares::Optimization

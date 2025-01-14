@@ -34,7 +34,9 @@ namespace Antares::Optimization
 
 ComponentFiller::ComponentFiller(const Study::SystemModel::Component& component):
     component_(component),
-    evaluationContext_(component_.getParameterValues(), {})
+    evaluationContext_(component_.getParameterValues(), {}),
+    modelVariable_(component.getModel()->Variables())
+
 {
 }
 
@@ -117,15 +119,25 @@ void ComponentFiller::addTimeDependentConstraints(
                                     nb_cstr);
     for (auto cstr(0); cstr < nb_cstr; ++cstr)
     {
+        auto* ct = vect_ct[cstr];
         for (auto [var_id, coef]: linear_constraint.coef_per_var)
         {
-            auto* ct = vect_ct[cstr];
-            auto* variable = pb.getVariable(
-                    component_.Id() + "." + var_id + '_' + std::to_string(cstr));
-            ct->setCoefficient(variable, coef);
+            if (IsThisVariableTimeDependent(var_id))
+            {
+                auto* variable = pb.getVariable(
+                        component_.Id() + "." + var_id + '_' + std::to_string(cstr));
+                ct->setCoefficient(variable, coef);
+            }
+            else
+            {
+                auto* variable = pb.getVariable(
+                        component_.Id() + "." + var_id);
+                ct->setCoefficient(variable, coef);
+            }
         }
     }
 }
+
 
 void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
                                      Solver::Modeler::Api::LinearProblemData& data,
@@ -136,12 +148,11 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraint = visitor.dispatch(root_node);
+        // TODO timesteps will be a parameter
         if (checkTimeSteps(ctx))
         {
             Solver::Visitors::TimeIndexVisitor timeIndexVisitor(constraint.getNodeTimeIndex());
-            if (auto ret = timeIndexVisitor.dispatch(root_node);
-                ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY || ret ==
-                Solver::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO)
+            if (IsThisConstraintTimeDependent(root_node, constraint))
 
             {
                 addTimeDependentConstraints(pb,
@@ -174,11 +185,10 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
                                     + model->Id() + "' of component '"
                                     + component_.Id() + "').");
     }
-    const auto& models_variables = model->Variables();
 
     for (auto [var_id, coef]: linear_expression.coefPerVar())
     {
-        if (const auto& var = models_variables.at(var_id); var.isTimeDependent())
+        if (IsThisVariableTimeDependent(var_id))
         {
             for (auto var_pos = 0; var_pos != getNumberOfTimestep(ctx); ++var_pos)
             {
@@ -196,4 +206,23 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
+bool ComponentFiller::IsThisConstraintTimeDependent(const Solver::Nodes::Node* node,
+                                                    const Study::SystemModel::Constraint&
+                                                    constraint)
+{
+    Solver::Visitors::TimeIndexVisitor timeIndexVisitor(constraint.getNodeTimeIndex());
+    const auto ret = timeIndexVisitor.dispatch(node);
+    return ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY || ret ==
+           Solver::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
+}
+
+//return false if the variable with the id var_id is not found or if it is not time-dependent
+bool ComponentFiller::IsThisVariableTimeDependent(const std::string& var_id) const
+{
+    if (const auto& it = modelVariable_.find(var_id); it != modelVariable_.end())
+    {
+        return it->second.isTimeDependent();
+    }
+    return false;
+}
 } // namespace Antares::Optimization
