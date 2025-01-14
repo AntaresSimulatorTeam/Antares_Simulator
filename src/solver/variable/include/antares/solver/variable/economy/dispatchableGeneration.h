@@ -23,13 +23,22 @@
 
 #include "antares/solver/variable/variable.h"
 
-namespace Antares
+namespace
 {
-namespace Solver
+inline std::map<std::string, unsigned int> giveNumbersToThermalGroups(
+  const std::vector<std::string>& groupNames)
 {
-namespace Variable
-{
-namespace Economy
+    unsigned int groupNumber{0};
+    std::map<std::string, unsigned int> groupToNumbers;
+    for (const auto& name: groupNames)
+    {
+        groupToNumbers[name] = groupNumber++;
+    }
+    return groupToNumbers;
+}
+} // namespace
+
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardDispatchableGeneration
 {
@@ -85,9 +94,9 @@ struct VCardDispatchableGeneration
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef IntermediateValues IntermediateValuesBaseType[columnCount];
+    typedef IntermediateValues IntermediateValuesDeepType;
+    typedef IntermediateValues* IntermediateValuesBaseType;
     typedef IntermediateValuesBaseType* IntermediateValuesType;
-
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
     struct Multiple
@@ -169,6 +178,10 @@ public:
     };
 
 public:
+    DispatchableGeneration():
+        pValuesForTheCurrentYear(nullptr)
+    {
+    }
     ~DispatchableGeneration()
     {
         delete[] pValuesForTheCurrentYear;
@@ -176,35 +189,60 @@ public:
 
     void initializeFromStudy(Data::Study& study)
     {
-        pNbYearsParallel = study.maxNbYearsInParallel;
-
-        InitializeResultsFromStudy(AncestorType::pResults, study);
-
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
-        {
-            for (unsigned int i = 0; i != VCardType::columnCount; ++i)
-            {
-                pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(study);
-            }
-        }
-
         // Next
         NextType::initializeFromStudy(study);
     }
 
-    template<class R>
-    static void InitializeResultsFromStudy(R& results, Data::Study& study)
-    {
-        for (unsigned int i = 0; i != VCardType::columnCount; ++i)
-        {
-            results[i].initializeFromStudy(study);
-            results[i].reset();
-        }
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
+        pNbYearsParallel = study->maxNbYearsInParallel;
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+
+        // Building the vector of group names the clusters belong to.
+        std::set<std::string> names;
+        for (const auto& cluster: area->thermal.list.each_enabled())
+        {
+            names.insert(cluster->getGroup());
+        }
+        groupNames_ = {names.begin(), names.end()};
+
+        groupToNumbers_ = giveNumbersToThermalGroups(groupNames_);
+
+        nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
+
+        if (nbColumns_)
+        {
+            AncestorType::pResults.resize(nbColumns_);
+
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
+                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
+                  [nbColumns_];
+            }
+
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
+                for (unsigned int i = 0; i != nbColumns_; ++i)
+                {
+                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+                }
+            }
+
+            for (unsigned int i = 0; i != nbColumns_; ++i)
+            {
+                AncestorType::pResults[i].initializeFromStudy(*study);
+                AncestorType::pResults[i].reset();
+            }
+        }
+        else
+        {
+            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
+                pValuesForTheCurrentYear[numSpace] = nullptr;
+            }
+
+            AncestorType::pResults.clear();
+        }
         // Next
         NextType::initializeFromArea(study, area);
     }
@@ -317,13 +355,14 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
+    std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
+    size_t nbColumns_ = 0;
     unsigned int pNbYearsParallel;
+    const int NB_COLS_PER_GROUP = 4;
 
 }; // class DispatchableGeneration
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_DispatchableGeneration_H__
