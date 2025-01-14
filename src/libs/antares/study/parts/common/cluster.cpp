@@ -20,12 +20,10 @@
 */
 #include "antares/study/parts/common/cluster.h"
 
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/utils/utils.h>
-#include "antares/study/study.h"
+#include <antares/study/study.h>
 
 namespace fs = std::filesystem;
 
@@ -63,8 +61,8 @@ void Cluster::setName(const AnyString& newname)
 
 void Cluster::setGroup(const std::string& newgrp)
 {
-    // TODO to lower/upper
     group = newgrp;
+    boost::to_lower(group);
 }
 
 std::string Cluster::getGroup() const
