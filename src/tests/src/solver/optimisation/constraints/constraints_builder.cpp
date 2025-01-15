@@ -36,6 +36,7 @@
 * Ensure that the cumulative constraints are correctly applied and stored.
 *
 */    
+
 struct BB
 {
     int nombreDePasDeTempsPourUneOptimisation = 50;
