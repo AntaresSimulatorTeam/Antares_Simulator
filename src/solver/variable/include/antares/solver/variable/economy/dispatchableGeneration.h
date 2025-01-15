@@ -98,43 +98,6 @@ struct VCardDispatchableGeneration
     typedef IntermediateValues* IntermediateValuesBaseType;
     typedef IntermediateValuesBaseType* IntermediateValuesType;
 
-    struct Multiple
-    {
-        static std::string Caption(const unsigned int indx)
-        {
-            switch (indx)
-            {
-            case 0:
-                return "NUCLEAR";
-            case 1:
-                return "LIGNITE";
-            case 2:
-                return "COAL";
-            case 3:
-                return "GAS";
-            case 4:
-                return "OIL";
-            case 5:
-                return "MIX. FUEL";
-            case 6:
-                return "MISC. DTG";
-            case 7:
-                return "MISC. DTG 2";
-            case 8:
-                return "MISC. DTG 3";
-            case 9:
-                return "MISC. DTG 4";
-
-            default:
-                return "<unknown>";
-            }
-        }
-
-        static std::string Unit([[maybe_unused]] const unsigned int indx)
-        {
-            return VCardDispatchableGeneration::Unit();
-        }
-    };
 }; // class VCard
 
 /*!
