@@ -60,7 +60,7 @@ struct VCardDispatchableGeneration
         return "Value of all the dispatchable generation throughout all MC years";
     }
 
-    //! The expecte results
+    //! The expected results
     typedef Results<R::AllYears::Average< // The average values throughout all years
       R::AllYears::StdDeviation<          // The standard deviation values throughout all years
         R::AllYears::Min<                 // The minimum values throughout all years
@@ -83,7 +83,7 @@ struct VCardDispatchableGeneration
     static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = 0;
-    //! Number of columns used by the variable (One ResultsType per column)
+    //! Nb of columns occupied by this variable in year-by-year results
     static constexpr int columnCount = Category::dynamicColumns;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
@@ -97,7 +97,6 @@ struct VCardDispatchableGeneration
     typedef IntermediateValues IntermediateValuesDeepType;
     typedef IntermediateValues* IntermediateValuesBaseType;
     typedef IntermediateValuesBaseType* IntermediateValuesType;
-    typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
     struct Multiple
     {
@@ -188,12 +187,6 @@ public:
         delete[] pValuesForTheCurrentYear;
     }
 
-    void initializeFromStudy(Data::Study& study)
-    {
-        // Next
-        NextType::initializeFromStudy(study);
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         pNbYearsParallel = study->maxNbYearsInParallel;
@@ -247,38 +240,15 @@ public:
         NextType::initializeFromArea(study, area);
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
-        for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+        for (unsigned int i = 0; i != nbColumns_; ++i)
         {
             pValuesForTheCurrentYear[numSpace][i].reset();
         }
         // Next variable
         NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
@@ -317,12 +287,20 @@ public:
         auto& thermal = state.thermal;
         for (auto& cluster: area->thermal.list.each_enabled())
         {
-            pValuesForTheCurrentYear[numSpace][cluster->groupID][state.hourInTheYear]
+            unsigned int groupNumber = groupToNumbers_[cluster->getGroup()];
+
+            pValuesForTheCurrentYear[numSpace][groupNumber][state.hourInTheYear]
               += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
         }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
+    }
+
+    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    {
+        // Ask to build the digest to the next variable
+        NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -340,17 +318,17 @@ public:
         // The current variable is actually a multiple-variable.
         results.isCurrentVarNA = AncestorType::isNonApplicable;
 
-        for (uint i = 0; i != VCardType::columnCount; ++i)
+        if (!AncestorType::isPrinted[0])
         {
-            if (AncestorType::isPrinted[i])
-            {
-                // Write the data for the current year
-                results.variableCaption = VCardType::Multiple::Caption(i);
-                results.variableUnit = VCardType::Multiple::Unit(i);
-                pValuesForTheCurrentYear[numSpace][i]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-            }
-            results.isCurrentVarNA++;
+            return;
+        }
+
+        for (unsigned int column = 0; column < nbColumns_; column++)
+        {
+            results.variableCaption = groupNames_[column];
+            results.variableUnit = VCardType::Unit();
+            pValuesForTheCurrentYear[numSpace][column]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

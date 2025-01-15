@@ -163,8 +163,6 @@ typedef // Prices
                           Variable::Economy::TimeSeriesValuesSolar,
                           // Other
                           Common::SpatialAggregate<
-                            Variable::Economy::DispatchableGeneration,
-                            Common::SpatialAggregate<
                               Variable::Economy::RenewableGeneration,
                               Common::SpatialAggregate<
                                 Variable::Economy::HydroStorage,
@@ -196,7 +194,7 @@ typedef // Prices
                                                         Variable::Economy::DispatchableGenMargin,
                                                         Common::SpatialAggregate<
                                                           Variable::Economy::
-                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint

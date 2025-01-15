@@ -190,8 +190,6 @@ typedef // Prices
                           TimeSeriesValuesSolar,
                           // Other
                           Common::SpatialAggregate<
-                            DispatchableGeneration,
-                            Common::SpatialAggregate<
                               RenewableGeneration,
                               Common::SpatialAggregate<
                                 HydroStorage,
@@ -244,7 +242,7 @@ typedef // Prices
                                                                                         // -
                                                                                         // refs:
                                                                                         // #55
-                                                                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
