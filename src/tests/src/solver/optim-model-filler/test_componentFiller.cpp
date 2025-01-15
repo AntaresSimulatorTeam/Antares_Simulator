@@ -127,7 +127,7 @@ void LinearProblemBuildingFixture::createModel(string modelId,
     {
         Antares::Solver::NodeRegistry node_registry(node, move(nodes));
         Expression expression("expression", move(node_registry));
-        return move(expression);
+        return expression;
     };
 
     vector<Parameter> parameters;

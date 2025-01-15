@@ -3,6 +3,9 @@ name: Check cpp formatting using clang 18.1.3
 on:
   pull_request:
 
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
 jobs:
   build:
     name: clang-format
@@ -12,6 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH_NAME }}
 
       - name: Print version
         run: clang-format --version
@@ -24,8 +29,31 @@ jobs:
           DIFF=`git status --porcelain`
           if [[ $DIFF ]]; then
           echo "The following files are not well formatted, please make sure to use clang-format 18.1.3"
+          echo "needs_fix=true" >> $GITHUB_ENV
           echo "$DIFF"
-          exit 1
           else
-          echo "Code is well formatted, congrats !"
+          echo "needs_fix=false" >> $GITHUB_ENV
           fi
+
+      - name: Propose Fixes
+        if: env.needs_fix == 'true'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Apply clang-format fixes"
+          git push origin "${{ env.BRANCH_NAME }}"
+  
+      - name: Leave Comment on PR
+        if: env.needs_fix == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ github.event.pull_request.number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "The code was not formatted correctly. Formatting has been applied and changes were pushed to this pull request."
+            })
+  
+    
