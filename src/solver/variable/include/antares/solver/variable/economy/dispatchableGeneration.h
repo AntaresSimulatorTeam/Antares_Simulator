@@ -307,7 +307,8 @@ public:
     /*     { */
     /*         // And only if we match the current data level _and_ precision level */
     /*         if ((dataLevel & VCardType::categoryDataLevel) */
-    /*             && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision)) */
+    /*             && (fileLevel & VCardType::categoryFileLevel) && (precision &
+     * VCardType::precision)) */
     /*         { */
     /*             results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0]; */
 
