@@ -31,11 +31,12 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 /*
-* this code is designed to:  
-* Validate the addition of withdrawalSum, injectionSum, and netting constraints for various countries (CountryA, CountryB, CountryC).
-* Ensure that the cumulative constraints are correctly applied and stored.
-*
-*/    
+ * this code is designed to:
+ * Validate the addition of withdrawalSum, injectionSum, and netting constraints for various
+ * countries (CountryA, CountryB, CountryC). Ensure that the cumulative constraints are correctly
+ * applied and stored.
+ *
+ */
 
 struct BB
 {
