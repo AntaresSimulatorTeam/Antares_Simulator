@@ -22,15 +22,13 @@
 #define BOOST_TEST_MODULE "constraints_builder"
 #define WIN32_LEAN_AND_MEAN
 
-
 #include <numeric>
+
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/optimisation/constraints/ShortTermStorageCumulation.h"
-
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/antares/constants.h"
-
+#include "antares/solver/optimisation/constraints/ShortTermStorageCumulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 struct BB
 {
@@ -50,7 +48,8 @@ struct BB
     std::vector<int> NombreDeTermesDesLignes = std::vector<int>(4, 0);
     std::string Sens = std::string(4, '='); // Placeholder for constraint senses
     int IncrementDAllocationMatriceDesContraintes = 10;
-    std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;;
+    std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
+    ;
 
     void set_correspondances_des_variables()
     {
@@ -64,7 +63,8 @@ struct BB
         for (auto i = 0; i < nombreDePasDeTempsPourUneOptimisation; i++)
         {
             CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
-                    .InjectionVariable = {0, 1, 4}, .WithdrawalVariable = {2, 3, 5}};
+              .InjectionVariable = {0, 1, 4},
+              .WithdrawalVariable = {2, 3, 5}};
         }
     }
 
@@ -72,8 +72,9 @@ struct BB
     const int32_t NombreDePasDeTempsPourUneOptimisation = nombreDePasDeTempsPourUneOptimisation;
     // Example value
     std::vector<int> NumeroDeVariableStockFinal = std::vector<int>(10, -1);
-    std::vector<std::vector<int> > NumeroDeVariableDeTrancheDeStock = std::vector<std::vector<
-        int> >(10, std::vector<int>(5, -1));
+    std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock = std::vector<std::vector<int>>(
+      10,
+      std::vector<int>(5, -1));
     std::vector<std::string> NomDesContraintes = std::vector<std::string>(100, "");
     const bool NamedProblems = true;
     const std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
@@ -82,80 +83,76 @@ struct BB
 
     // Mock data storage
 
+    std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
+      addc1_withdrawal_constraints = {{.hours = {1, 2}, .globalIndex = 0, .localIndex = 0},
+                                      {.hours = {3, 4}, .globalIndex = 1, .localIndex = 1}};
 
     std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
-    addc1_withdrawal_constraints = {
-            {.hours = {1, 2},
-             .globalIndex = 0,
-             .localIndex = 0},
-            {.hours = {3, 4},
-             .globalIndex = 1,
-             .localIndex = 1}};
-
+      addc2_injection_constraints = {{.hours = {5, 6}, .globalIndex = 2, .localIndex = 0},
+                                     {.hours = {7, 8}, .globalIndex = 3, .localIndex = 1}};
     std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
-    addc2_injection_constraints = {
-            {.hours = {5, 6},
-             .globalIndex = 2,
-             .localIndex = 0},
-            {.hours = {7, 8},
-             .globalIndex = 3,
-             .localIndex = 1}};
-    std::vector<Antares::Data::ShortTermStorage::SingleAdditionalConstraint>
-    addc3_netting_constraints = {
-            {.hours = {9, 10},
-             .globalIndex = 4,
-             .localIndex = 0},
-            {.hours = {11, 12},
-             .globalIndex = 5,
-             .localIndex = 1}};
+      addc3_netting_constraints = {{.hours = {9, 10}, .globalIndex = 4, .localIndex = 0},
+                                   {.hours = {11, 12}, .globalIndex = 5, .localIndex = 1}};
 
     std::vector<double> fill_rhs()
     {
         std::vector<double> ret(HOURS_PER_YEAR);
         std::iota(ret.begin(), ret.end(), 0);
         return ret;
-    };
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc1_withdrawal = {
-            .name = "addc1_withdrawal", .cluster_id = "cluster_1", .variable = "withdrawal",
-            .operatorType = "less", .rhs = fill_rhs(), .constraints = addc1_withdrawal_constraints};
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc2_injection = {
-            .name = "addc2_injection", .cluster_id = "cluster_2", .variable = "injection",
-            .operatorType = "greater", .rhs = fill_rhs(),
-            .constraints = addc2_injection_constraints};
-    Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting = {
-            .name = "addc3_netting", .cluster_id = "cluster_3", .variable = "netting",
-            .operatorType = "equal", .rhs = fill_rhs(),
-            .constraints = addc3_netting_constraints};
+    }
 
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc1_withdrawal = {
+      .name = "addc1_withdrawal",
+      .cluster_id = "cluster_1",
+      .variable = "withdrawal",
+      .operatorType = "less",
+      .rhs = fill_rhs(),
+      .constraints = addc1_withdrawal_constraints};
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc2_injection = {
+      .name = "addc2_injection",
+      .cluster_id = "cluster_2",
+      .variable = "injection",
+      .operatorType = "greater",
+      .rhs = fill_rhs(),
+      .constraints = addc2_injection_constraints};
+    Antares::Data::ShortTermStorage::AdditionalConstraints addc3_netting = {
+      .name = "addc3_netting",
+      .cluster_id = "cluster_3",
+      .variable = "netting",
+      .operatorType = "equal",
+      .rhs = fill_rhs(),
+      .constraints = addc3_netting_constraints};
 
     ::ShortTermStorage::PROPERTIES storage1 = {.additionalConstraints = {addc1_withdrawal},
-                                               .clusterGlobalIndex = 0, .name = "cluster_1"};
+                                               .clusterGlobalIndex = 0,
+                                               .name = "cluster_1"};
     ::ShortTermStorage::PROPERTIES storage2 = {.additionalConstraints = {addc2_injection},
-                                               .clusterGlobalIndex = 1, .name = "cluster_2"};
+                                               .clusterGlobalIndex = 1,
+                                               .name = "cluster_2"};
     ::ShortTermStorage::PROPERTIES storage3 = {.injectionEfficiency = 45,
                                                .withdrawalEfficiency = 2025,
                                                .additionalConstraints = {addc3_netting},
-                                               .clusterGlobalIndex = 2, .name = "cluster_3"};
+                                               .clusterGlobalIndex = 2,
+                                               .name = "cluster_3"};
 
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<::ShortTermStorage::AREA_INPUT> shortTermStorage = InitializeShortTermStorageData();
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires{
-            {}, std::vector<int>(20, 0)};
-
+      {},
+      std::vector<int>(20, 0)};
 
     std::vector<ShortTermStorage::AREA_INPUT> InitializeShortTermStorageData()
     {
         return {{storage1}, {storage2}, {storage3}};
     }
 
-
-    ShortTermStorageCumulativeConstraintData shorttermstoragecumulativeconstraintdata =
-            InitializeShortTermStorageCumulativeConstraintData();
-
+    ShortTermStorageCumulativeConstraintData shorttermstoragecumulativeconstraintdata
+      = InitializeShortTermStorageCumulativeConstraintData();
 
     ShortTermStorageCumulativeConstraintData InitializeShortTermStorageCumulativeConstraintData()
     {
-        return {CorrespondanceCntNativesCntOptim, shortTermStorage,
+        return {CorrespondanceCntNativesCntOptim,
+                shortTermStorage,
                 CorrespondanceCntNativesCntOptimHebdomadaires};
     }
 
@@ -172,8 +169,7 @@ struct BB
         set_correspondances_des_variables();
 
         // Create the mock ConstraintBuilderData object
-        return {
-                Pi,
+        return {Pi,
                 Colonne,
                 nombreDeContraintes,
                 nombreDeTermesDansLaMatriceDeContrainte,
@@ -195,7 +191,6 @@ struct BB
     }
 };
 
-
 BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, BB)
 {
     ConstraintBuilder builder(constraint_builder_data);
@@ -210,11 +205,11 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, BB)
 
     // Verify that the constraint names are correctly generated and stored
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
-                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_0>")
-    ; // Assuming this is the generated name
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
+                      "addc1_withdrawal_0>"); // Assuming this is the generated name
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
-                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_1>")
-    ; // Check the second constraint
+                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<"
+                      "addc1_withdrawal_1>"); // Check the second constraint
     //
     // // Verify that the correct number of terms have been added to the matrix
     BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 4);
@@ -238,15 +233,13 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, BB)
 
     // 4. Validate correspondence mapping
     BOOST_CHECK_EQUAL(
-            shorttermstoragecumulativeconstraintdata
-            .CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
-                addc1_withdrawal_constraints[0].globalIndex],
-            0);
+      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
+        .ShortTermStorageCumulation[addc1_withdrawal_constraints[0].globalIndex],
+      0);
     BOOST_CHECK_EQUAL(
-            shorttermstoragecumulativeconstraintdata.
-            CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
-                addc1_withdrawal_constraints[1].globalIndex],
-            1);
+      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
+        .ShortTermStorageCumulation[addc1_withdrawal_constraints[1].globalIndex],
+      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, BB)
@@ -263,11 +256,11 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, BB)
 
     // Verify that the constraint names are correctly generated and stored
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
-                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_0>")
-    ; // Assuming this is the generated name
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
+                      "injection_0>"); // Assuming this is the generated name
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
-                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_1>")
-    ; // Check the second constraint
+                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_"
+                      "injection_1>"); // Check the second constraint
     //
     // // Verify that the correct number of terms have been added to the matrix
     BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 4);
@@ -291,15 +284,13 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, BB)
 
     // 4. Validate correspondence mapping
     BOOST_CHECK_EQUAL(
-            shorttermstoragecumulativeconstraintdata
-            .CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
-                addc2_injection_constraints[0].globalIndex],
-            0);
+      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
+        .ShortTermStorageCumulation[addc2_injection_constraints[0].globalIndex],
+      0);
     BOOST_CHECK_EQUAL(
-            shorttermstoragecumulativeconstraintdata.
-            CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
-                addc2_injection_constraints[1].globalIndex],
-            1);
+      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
+        .ShortTermStorageCumulation[addc2_injection_constraints[1].globalIndex],
+      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, BB)
@@ -316,11 +307,11 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, BB)
 
     // Verify that the constraint names are correctly generated and stored
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
-                      "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_netting_0>")
-    ; // Assuming this is the generated name
+                      "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_"
+                      "netting_0>"); // Assuming this is the generated name
     BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
-                      "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_netting_1>")
-    ; // Check the second constraint
+                      "NettingSum::area<CountryC>::ShortTermStorage<cluster_3>::Constraint<addc3_"
+                      "netting_1>"); // Check the second constraint
     //
     // // Verify that the correct number of terms have been added to the matrix
     BOOST_CHECK_EQUAL(builder.data.nombreDeTermesDansLaMatriceDeContrainte, 8);
@@ -344,15 +335,13 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, BB)
 
     // 4. Validate correspondence mapping
     BOOST_CHECK_EQUAL(
-            shorttermstoragecumulativeconstraintdata
-            .CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
-                addc3_netting_constraints[0].globalIndex],
-            0);
+      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
+        .ShortTermStorageCumulation[addc3_netting_constraints[0].globalIndex],
+      0);
     BOOST_CHECK_EQUAL(
-            shorttermstoragecumulativeconstraintdata.
-            CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation[
-                addc3_netting_constraints[1].globalIndex],
-            1);
+      shorttermstoragecumulativeconstraintdata.CorrespondanceCntNativesCntOptimHebdomadaires
+        .ShortTermStorageCumulation[addc3_netting_constraints[1].globalIndex],
+      1);
 }
 
 BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
@@ -368,18 +357,18 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, BB)
     BOOST_CHECK_EQUAL(builder.data.nombreDeContraintes, 4);
 
     // Verify the names of the constraints for both countries
-    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[0],
-                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_0>")
-    ;
-    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[1],
-                      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_1>")
-    ;
-    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[2],
-                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_0>")
-    ;
-    BOOST_CHECK_EQUAL(builder.data.NomDesContraintes[3],
-                      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_1>")
-    ;
+    BOOST_CHECK_EQUAL(
+      builder.data.NomDesContraintes[0],
+      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_0>");
+    BOOST_CHECK_EQUAL(
+      builder.data.NomDesContraintes[1],
+      "WithdrawalSum::area<CountryA>::ShortTermStorage<cluster_1>::Constraint<addc1_withdrawal_1>");
+    BOOST_CHECK_EQUAL(
+      builder.data.NomDesContraintes[2],
+      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_0>");
+    BOOST_CHECK_EQUAL(
+      builder.data.NomDesContraintes[3],
+      "InjectionSum::area<CountryB>::ShortTermStorage<cluster_2>::Constraint<addc2_injection_1>");
 
     // Check if the sense of constraints was updated correctly for all areas
     BOOST_CHECK_EQUAL(builder.data.Sens[0], '<');
