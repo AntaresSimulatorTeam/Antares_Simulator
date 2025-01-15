@@ -62,7 +62,7 @@ void Cluster::setName(const AnyString& newname)
 void Cluster::setGroup(const std::string& newgrp)
 {
     group = newgrp;
-    boost::to_lower(group);
+    boost::to_upper(group);
 }
 
 std::string Cluster::getGroup() const
