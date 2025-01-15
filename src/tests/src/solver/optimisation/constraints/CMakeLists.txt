@@ -1,21 +1,8 @@
-set(EXECUTABLE_NAME constraints_builder)
-add_executable(${EXECUTABLE_NAME})
 
-target_sources(${EXECUTABLE_NAME}
-        PRIVATE
+include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+add_boost_test(constraints_builder
+        SRC
         constraints_builder.cpp
-)
-
-target_link_libraries(${EXECUTABLE_NAME}
-        PRIVATE
-        Boost::unit_test_framework
+        LIBS
         model_antares
-        antares-solver-simulation
-)
-
-# Storing tests-ts-numbers under the folder Unit-tests in the IDE
-set_target_properties(${EXECUTABLE_NAME} PROPERTIES FOLDER Unit-tests)
-
-add_test(NAME constraints_builder COMMAND ${EXECUTABLE_NAME})
-
-set_property(TEST constraints_builder PROPERTY LABELS unit)
+        antares-solver-simulation)
