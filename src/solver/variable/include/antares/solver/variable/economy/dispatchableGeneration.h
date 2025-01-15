@@ -84,7 +84,7 @@ struct VCardDispatchableGeneration
     //! Decimal precision
     static constexpr uint8_t decimal = 0;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr int columnCount = 10;
+    static constexpr int columnCount = Category::dynamicColumns;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
@@ -206,10 +206,9 @@ public:
             names.insert(cluster->getGroup());
         }
         groupNames_ = {names.begin(), names.end()};
-
         groupToNumbers_ = giveNumbersToThermalGroups(groupNames_);
 
-        nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
+        nbColumns_ = groupNames_.size();
 
         if (nbColumns_)
         {
@@ -284,8 +283,10 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        VariableAccessorType::template ComputeStatistics<VCardType>(
-          pValuesForTheCurrentYear[numSpace]);
+        for (unsigned int column = 0; column < nbColumns_; column++)
+        {
+            pValuesForTheCurrentYear[numSpace][column].computeStatisticsForTheCurrentYear();
+        }
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -360,7 +361,6 @@ private:
     std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
     size_t nbColumns_ = 0;
     unsigned int pNbYearsParallel;
-    const int NB_COLS_PER_GROUP = 4;
 
 }; // class DispatchableGeneration
 
