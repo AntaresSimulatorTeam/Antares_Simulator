@@ -127,22 +127,7 @@ public:
 
 Visitors::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
 {
-    if (timedependent)
-    {
-        if (scenariodependent)
-        {
-            return Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;
-        }
-        return Visitors::TimeIndex::VARYING_IN_TIME_ONLY;
-    }
-    else if (scenariodependent)
-    {
-        return Visitors::TimeIndex::VARYING_IN_SCENARIO_ONLY;
-    }
-    else
-    {
-        return Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
-    }
+    return static_cast<Visitors::TimeIndex>((scenariodependent << 1) | timedependent);
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
