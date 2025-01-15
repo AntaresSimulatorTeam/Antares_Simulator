@@ -661,7 +661,7 @@ BOOST_AUTO_TEST_CASE(loadAdditionalConstraints_ValidRhs)
     iniFile.close();
 
     std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
     }
@@ -704,7 +704,7 @@ BOOST_AUTO_TEST_CASE(Load2ConstraintsFromIniFile)
     iniFile.close();
 
     std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
     }
@@ -882,7 +882,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
 
     // Write the `rhs_constraint1.txt` file
     std::ofstream rhsFile(testPath / "rhs_constraint1.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         rhsFile << i * 1.0 << "\n";
     }
@@ -911,7 +911,7 @@ BOOST_DATA_TEST_CASE(Validate_AllVariableOperatorCombinationsFromFile,
     BOOST_CHECK_EQUAL(loadedConstraint.operatorType, op);
     BOOST_REQUIRE_EQUAL(loadedConstraint.rhs.size(), HOURS_PER_YEAR);
 
-    int i = 0;
+    unsigned int i = 0;
     do
     {
         BOOST_CHECK_CLOSE(loadedConstraint.rhs[i], i * 1.0, 0.001);
