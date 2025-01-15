@@ -67,11 +67,13 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
                        int optimizationNumber,
                        Solver::IResultWriter& writer)
 {
+    auto s = [](int x) { return static_cast<size_t>(x); };
+
     Yuni::Clob buffer;
     auto filename = createSolutionFilename(optPeriodStringGenerator, optimizationNumber);
     for (int var = 0; var < pb.NombreDeVariables; var++)
     {
-        buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[var].c_str(), pb.X[var]);
+        buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[s(var)].c_str(), pb.X[s(var)]);
     }
     writer.addEntryFromBuffer(filename, buffer);
     buffer.clear();
@@ -80,8 +82,8 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
     for (int cont = 0; cont < pb.NombreDeContraintes; ++cont)
     {
         buffer.appendFormat("%s\t%11.10e\n",
-                            pb.NomDesContraintes[cont].c_str(),
-                            pb.CoutsMarginauxDesContraintes[cont]);
+                            pb.NomDesContraintes[s(cont)].c_str(),
+                            pb.CoutsMarginauxDesContraintes[s(cont)]);
     }
     writer.addEntryFromBuffer(filename, buffer);
     buffer.clear();
@@ -89,7 +91,9 @@ void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
     filename = createReducedCostFilename(optPeriodStringGenerator, optimizationNumber);
     for (int var = 0; var < pb.NombreDeVariables; ++var)
     {
-        buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[var].c_str(), pb.CoutsReduits[var]);
+        buffer.appendFormat("%s\t%11.10e\n",
+                            pb.NomDesVariables[s(var)].c_str(),
+                            pb.CoutsReduits[s(var)]);
     }
     writer.addEntryFromBuffer(filename, buffer);
 }
