@@ -1,6 +1,7 @@
 #include "include/antares/solver/simulation/shave-peaks-by-remix-hydro.h"
 
 #include <algorithm>
+#include <iostream>
 #include <ranges>
 #include <stdexcept>
 #include <vector>
@@ -135,6 +136,15 @@ static void checkInputCorrectness(const std::vector<double>& DispatchGen,
 
     if (!(levels <= capacity) || !(levels >= 0.))
     {
+        for (unsigned int h = 0; h < levels.size(); h++)
+        {
+            if (!(levels[h] <= capacity) || !(levels[h] >= 0.))
+            {
+                std::cout << "Hour " << h << std::endl;
+                std::cout << "Levels : " << levels[h] << std::endl;
+            }
+        }
+
         throw std::invalid_argument(msg_prefix
                                     + "levels computed from input don't respect reservoir bounds");
     }
