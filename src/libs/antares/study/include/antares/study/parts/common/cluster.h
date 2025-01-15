@@ -55,12 +55,10 @@ public:
     virtual ~Cluster() = default;
 
     const ClusterName& id() const;
-    virtual void setpGroup(ClusterName newgrp) = 0;
     const ClusterName& name() const;
     void setName(const AnyString& newname);
     Yuni::String getFullName() const;
 
-    virtual uint groupId() const = 0;
     void setGroup(const std::string& newgrp);
     std::string getGroup() const;
 

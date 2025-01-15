@@ -104,7 +104,7 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
     {
         if (cluster->getGroup() != name)
         {
-            cluster->setpGroup(name);
+            cluster->setGroup(name);
             set.insert(cluster->parentArea);
         }
     }

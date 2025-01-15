@@ -106,7 +106,7 @@ public:
     void reset() override;
 
     //! Set the group
-    void setpGroup(Data::ClusterName newgrp) override;
+    void setpGroup(Data::ClusterName newgrp);
     //@}
 
     /*!
@@ -126,7 +126,7 @@ public:
     /*!
     ** \brief Group ID as an uint
     */
-    uint groupId() const override;
+    uint groupId() const;
 
     bool setTimeSeriesModeFromString(const YString& value);
 

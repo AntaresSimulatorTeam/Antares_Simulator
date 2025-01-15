@@ -226,7 +226,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "group")
     {
-        cluster.setpGroup(p->value);
+        cluster.setGroup(p->value);
         return true;
     }
     if (p->key == "gen-ts")

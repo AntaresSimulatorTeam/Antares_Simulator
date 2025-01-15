@@ -126,11 +126,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent):
     assert(parent && "A parent for a thermal dispatchable cluster can not be null");
 }
 
-uint Data::ThermalCluster::groupId() const
-{
-    return groupID;
-}
-
 void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
@@ -208,43 +203,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     {
         parentArea->forceReload();
     }
-}
-
-static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
-{
-    using namespace Antares::Data;
-    const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping = {
-      {"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
-      {"lignite", ThermalCluster::thermalDispatchGrpLignite},
-      {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
-      {"gas", ThermalCluster::thermalDispatchGrpGas},
-      {"oil", ThermalCluster::thermalDispatchGrpOil},
-      {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
-      {"other", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 1", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 2", ThermalCluster::thermalDispatchGrpOther2},
-      {"other 3", ThermalCluster::thermalDispatchGrpOther3},
-      {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
-
-    boost::to_lower(newgrp);
-    if (auto res = mapping.find(newgrp); res != mapping.end())
-    {
-        return res->second;
-    }
-    // assigning a default value
-    return ThermalCluster::thermalDispatchGrpOther1;
-}
-
-void Data::ThermalCluster::setpGroup(Data::ClusterName newgrp)
-{
-    if (newgrp.empty())
-    {
-        groupID = thermalDispatchGrpOther1;
-        group.clear();
-        return;
-    }
-    group = newgrp;
-    groupID = stringToGroup(newgrp);
 }
 
 bool Data::ThermalCluster::forceReload(bool reload) const

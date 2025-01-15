@@ -176,11 +176,6 @@ public:
     */
     void copyFrom(const ThermalCluster& cluster);
 
-    /*!
-    ** \brief Group ID as an uint
-    */
-    uint groupId() const override;
-
     //! \name validity of Min Stable Power
     //@{
     // bool minStablePowerValidity() const;
@@ -211,16 +206,6 @@ public:
 
     //! The index of the cluster (within a list)
     uint index = 0;
-
-    /*!
-    ** \brief The group ID
-    **
-    ** This value is computed from the field 'group' in 'group()
-    ** \see group()
-    */
-    ThermalDispatchableGroup groupID = thermalDispatchGrpOther1;
-
-    void setpGroup(Data::ClusterName newgrp) override;
 
     //! Mustrun
     bool mustrun = false;
