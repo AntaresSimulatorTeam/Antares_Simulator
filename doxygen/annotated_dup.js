@@ -1354,6 +1354,7 @@ var annotated_dup =
     [ "AreaHydroLevelData", "structAreaHydroLevelData.html", null ],
     [ "AreaHydroLevelGroup", "classAreaHydroLevelGroup.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
+    [ "BB", "structBB.html", null ],
     [ "BindingConstraintData", "classBindingConstraintData.html", null ],
     [ "BindingConstraintDay", "classBindingConstraintDay.html", "classBindingConstraintDay" ],
     [ "BindingConstraintDayData", "structBindingConstraintDayData.html", null ],

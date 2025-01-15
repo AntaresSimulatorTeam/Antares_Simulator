@@ -120,7 +120,7 @@ var NAVTREEINDEX =
 "raw_8hxx_source.html",
 "structAntares_1_1Solver_1_1SystemParser_1_1Component.html",
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergyCSR.html#aa2a8d40a6443b8decac825f758ac9cf4",
-"structShortTermStorage_1_1RESULTS.html"
+"structShortTermStorage_1_1PROPERTIES.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

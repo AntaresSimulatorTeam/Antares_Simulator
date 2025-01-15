@@ -76,6 +76,7 @@ var hierarchy =
     [ "Antares::Optimization::BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", null ],
     [ "Test::BasisStatus", "classTest_1_1BasisStatus.html", null ],
     [ "Antares::Optimization::BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", null ],
+    [ "BB", "structBB.html", null ],
     [ "unfeasible_problem.behavior_flag", "classunfeasible__problem_1_1behavior__flag.html", null ],
     [ "BindingConstraintData", "classBindingConstraintData.html", null ],
     [ "BindingConstraintDayData", "structBindingConstraintDayData.html", null ],
