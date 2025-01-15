@@ -112,8 +112,8 @@ int main(int argc, const char** argv)
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
         SystemLinearProblem system_linear_problem(system);
-        logs.info() << "linear System problem loaded";
-        OrtoolsLinearProblem ortools_linear_problem(false, "sirius");
+        logs.info() << "linear problem of System loaded";
+        OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
 
         system_linear_problem.Provide(ortools_linear_problem, parameters);
 

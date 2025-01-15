@@ -68,11 +68,6 @@ void ComponentFiller::addVariables_(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-static unsigned int getNumberOfTimestep(const Solver::Modeler::Api::FillContext& ctx)
-{
-    return ctx.getLastTimeStep() - ctx.getFirstTimeStep() + 1;
-}
-
 void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
                                    Solver::Modeler::Api::LinearProblemData& data,
                                    Solver::Modeler::Api::FillContext& ctx)
@@ -80,7 +75,7 @@ void ComponentFiller::addVariables(Solver::Modeler::Api::ILinearProblem& pb,
     auto evaluator = std::make_unique<Solver::Visitors::EvalVisitor>(evaluationContext_);
     if (checkTimeSteps(ctx))
     {
-        addVariables_(pb, evaluator, getNumberOfTimestep(ctx));
+        addVariables_(pb, evaluator, ctx.getNumberOfTimestep());
     }
     else
     {
@@ -150,7 +145,7 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
                 addTimeDependentConstraints(pb,
                                             linear_constraint,
                                             constraint.Id(),
-                                            getNumberOfTimestep(ctx));
+                                            ctx.getNumberOfTimestep());
             }
             else
             {
@@ -181,7 +176,7 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     {
         if (IsThisVariableTimeDependent(var_id))
         {
-            for (auto var_pos = 0; var_pos != getNumberOfTimestep(ctx); ++var_pos)
+            for (auto var_pos = 0; var_pos != ctx.getNumberOfTimestep(); ++var_pos)
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
                                                 + std::to_string(var_pos));

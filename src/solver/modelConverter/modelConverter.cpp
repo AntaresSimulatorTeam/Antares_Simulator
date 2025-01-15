@@ -195,7 +195,7 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
           model);
 
         std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
-        auto nodeObjective = convertExpressionToNode(model.objective, model, nodeTimeIndex);
+        auto nodeObjective = convertExpressionToNode(model.objective, model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(

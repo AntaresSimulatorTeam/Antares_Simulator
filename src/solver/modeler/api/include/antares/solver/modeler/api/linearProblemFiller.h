@@ -70,6 +70,11 @@ struct FillContext
         return nodesTimeIndex;
     }
 
+    unsigned int getNumberOfTimestep() const
+    {
+        return lastTimeStep - firstTimeStep + 1;
+    }
+
 private:
     unsigned firstTimeStep = 0;
     unsigned lastTimeStep = 0;
