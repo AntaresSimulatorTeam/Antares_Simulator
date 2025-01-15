@@ -22,15 +22,14 @@
 #pragma once
 
 #include <memory>
+#include <unordered_map>
 
 #include <antares/solver/modeler/api/linearProblem.h>
 #include <antares/solver/modeler/api/linearProblemData.h>
-#include <unordered_map>
-
 
 namespace Antares::Solver::Visitors
 {
-enum class TimeIndex: unsigned int;
+enum class TimeIndex : unsigned int;
 }
 
 namespace Antares::Solver::Nodes
@@ -42,10 +41,9 @@ namespace Antares::Solver::Modeler::Api
 {
 struct FillContext
 {
-    FillContext(unsigned first,
-                unsigned last): firstTimeStep(
-                                        first),
-                                lastTimeStep(last)
+    FillContext(unsigned first, unsigned last):
+        firstTimeStep(first),
+        lastTimeStep(last)
     {
     }
 
@@ -63,7 +61,7 @@ struct FillContext
 
     Visitors::TimeIndex getTimeIndex(const Nodes::Node* node) const
     {
-        //TODO exception
+        // TODO exception
         return nodesTimeIndex.at(node);
     }
 

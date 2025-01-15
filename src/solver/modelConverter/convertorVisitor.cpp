@@ -21,7 +21,6 @@
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modelConverter/convertorVisitor.h>
-
 #include "antares/solver/expressions/visitors/TimeIndex.h"
 
 #include "ExprLexer.h"
@@ -74,24 +73,19 @@ public:
 private:
     Registry<Nodes::Node>& registry_;
     const ModelParser::Model& model_;
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>
-    nodeTimeIndex;
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
 };
 
-NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                     const ModelParser::Model& model)
+NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model)
 {
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>
-            nodeTimeIndex;
-    return convertExpressionToNode(exprStr,
-                                   model,
-                                   nodeTimeIndex);
+    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
+    return convertExpressionToNode(exprStr, model, nodeTimeIndex);
 }
 
-NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                     const ModelParser::Model& model,
-                                     std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>&
-                                     nodeTimeIndex)
+NodeRegistry convertExpressionToNode(
+  const std::string& exprStr,
+  const ModelParser::Model& model,
+  std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>& nodeTimeIndex)
 {
     if (exprStr.empty())
     {

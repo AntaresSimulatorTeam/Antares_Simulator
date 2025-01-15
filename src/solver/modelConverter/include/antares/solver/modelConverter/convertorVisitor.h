@@ -33,12 +33,10 @@ enum class TimeIndex : unsigned int;
 
 namespace Antares::Solver::ModelConverter
 {
-NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                     const ModelParser::Model& model,
-                                     std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>&
-                                     nodeTimeIndex);
+NodeRegistry convertExpressionToNode(
+  const std::string& exprStr,
+  const ModelParser::Model& model,
+  std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>& nodeTimeIndex);
 
-
-NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                     const ModelParser::Model& model);
+NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model);
 } // namespace Antares::Solver::ModelConverter

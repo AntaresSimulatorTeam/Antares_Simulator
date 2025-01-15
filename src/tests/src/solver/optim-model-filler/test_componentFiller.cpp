@@ -477,12 +477,10 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     auto two_1 = literal(2);
     auto v2 = variable("v2");
     auto ct1_node = nodes.create<LessThanOrEqualNode>(
-            nodes.create<SubtractionNode>(multiply(three, v1), two_1),
-            v2);
+      nodes.create<SubtractionNode>(multiply(three, v1), two_1),
+      v2);
     auto two_2 = literal(2);
-    auto ct2_node = nodes.create<LessThanOrEqualNode>(v2,
-                                                      nodes.create<DivisionNode>(v1,
-                                                          two_2));
+    auto ct2_node = nodes.create<LessThanOrEqualNode>(v2, nodes.create<DivisionNode>(v1, two_2));
 
     auto constnodes = ConstantNodeContext({v1, v2});
     createModel("my_new_model",

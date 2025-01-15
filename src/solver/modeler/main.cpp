@@ -22,10 +22,10 @@
 #include <fstream>
 
 #include <antares/logs/logs.h>
-#include <antares/solver/modeler/loadFiles/loadFiles.h>
-#include <antares/solver/modeler/parameters/parseModelerParameters.h>
-#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
+#include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
+#include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 
 #include "../optimisation/include/antares/solver/optimisation/LegacyFiller.h"
@@ -36,30 +36,28 @@ namespace Antares::Solver::Modeler::Api
 struct FillContext;
 class LinearProblemData;
 class ILinearProblem;
-}
+} // namespace Antares::Solver::Modeler::Api
 
 using namespace Antares::Solver::Modeler::OrtoolsImpl;
 using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Solver::Modeler::Api;
 
-
 class SystemLinearProblem
 {
 public:
-    explicit SystemLinearProblem(const Antares::Study::SystemModel::System& system): system_(
-            system)
+    explicit SystemLinearProblem(const Antares::Study::SystemModel::System& system):
+        system_(system)
     {
     }
 
     ~SystemLinearProblem() = default;
 
-    void Provide(ILinearProblem& pb,
-                 const ModelerParameters& parameters)
+    void Provide(ILinearProblem& pb, const ModelerParameters& parameters)
     {
-        std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller> > fillers;
+        std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller>> fillers;
         std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers_ptr;
-        for (const auto& [_,component]: system_.Components())
+        for (const auto& [_, component]: system_.Components())
         {
             auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component);
             fillers.push_back(std::move(cf));

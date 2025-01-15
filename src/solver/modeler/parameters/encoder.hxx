@@ -39,7 +39,7 @@ struct convert<Antares::Solver::ModelerParameters>
         rhs.solverParameters = node["solver-parameters"].as<std::string>();
         rhs.noOutput = node["no-output"].as<bool>(false);
         rhs.firstTimeStep = node["first-time-step"].as<unsigned int>(0);
-        //TODO check this value
+        // TODO check this value
         rhs.lastTimeStep = node["last-time-step"].as<unsigned int>(167);
         return true;
     }

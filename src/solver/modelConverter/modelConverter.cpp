@@ -76,17 +76,16 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
  * \throws UnknownType if the type is unknown.
  */
 std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
-const Antares::Solver::ModelParser::Model& model)
+  const Antares::Solver::ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Parameter> parameters;
     for (const auto& parameter: model.parameters)
     {
-        parameters.emplace_back(
-          parameter.id,
-          static_cast<Antares::Study::SystemModel::TimeDependent>(
-              parameter.time_dependent),
-          static_cast<Antares::Study::SystemModel::ScenarioDependent>(
-              parameter.scenario_dependent));
+        parameters.emplace_back(parameter.id,
+                                static_cast<Antares::Study::SystemModel::TimeDependent>(
+                                  parameter.time_dependent),
+                                static_cast<Antares::Study::SystemModel::ScenarioDependent>(
+                                  parameter.scenario_dependent));
     }
     return parameters;
 }
@@ -120,8 +119,7 @@ Antares::Study::SystemModel::ValueType convertType(Antares::Solver::ModelParser:
  * \param nodeTimeIndex
  * \return A vector of SystemModel::Port objects.
  */
-std::vector<Antares::Study::SystemModel::Variable> convertVariables(
-        const ModelParser::Model& model)
+std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Variable> variables;
 
@@ -130,21 +128,19 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(
     {
         Antares::Study::SystemModel::Expression lb(variable.lower_bound,
                                                    convertExpressionToNode(variable.lower_bound,
-                                                       model,
-                                                       nodeTimeIndex));
+                                                                           model,
+                                                                           nodeTimeIndex));
         Antares::Study::SystemModel::Expression ub(variable.upper_bound,
                                                    convertExpressionToNode(variable.upper_bound,
-                                                       model,
-                                                       nodeTimeIndex));
-        variables.emplace_back(variable.id,
-                               std::move(lb),
-                               std::move(ub),
-                               convertType(variable.variable_type),
-                               static_cast<Antares::Study::SystemModel::TimeDependent>(
-                                   variable.time_dependent),
-                               static_cast<Antares::Study::SystemModel::ScenarioDependent>(
-                                   variable.scenario_dependent)
-                );
+                                                                           model,
+                                                                           nodeTimeIndex));
+        variables.emplace_back(
+          variable.id,
+          std::move(lb),
+          std::move(ub),
+          convertType(variable.variable_type),
+          static_cast<Antares::Study::SystemModel::TimeDependent>(variable.time_dependent),
+          static_cast<Antares::Study::SystemModel::ScenarioDependent>(variable.scenario_dependent));
     }
 
     return variables;
@@ -163,8 +159,7 @@ std::vector<Antares::Study::SystemModel::Port> convertPorts(
 }
 
 std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
-const Antares::Solver::ModelParser::Model& model
-)
+  const Antares::Solver::ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Constraint> constraints;
     std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex> nodeTimeIndex;
@@ -173,7 +168,7 @@ const Antares::Solver::ModelParser::Model& model
         auto expr = convertExpressionToNode(constraint.expression, model, nodeTimeIndex);
         constraints.emplace_back(constraint.id,
                                  Antares::Study::SystemModel::Expression{constraint.expression,
-                                     std::move(expr)},
+                                                                         std::move(expr)},
                                  nodeTimeIndex);
     }
     return constraints;
@@ -187,19 +182,17 @@ const Antares::Solver::ModelParser::Model& model
  * \return A vector of SystemModel::Model objects.
  */
 std::vector<Antares::Study::SystemModel::Model> convertModels(
-        const Antares::Solver::ModelParser::Library& library)
+  const Antares::Solver::ModelParser::Library& library)
 {
     std::vector<Antares::Study::SystemModel::Model> models;
     for (const auto& model: library.models)
     {
         Antares::Study::SystemModel::ModelBuilder modelBuilder;
-        std::vector<Antares::Study::SystemModel::Parameter> parameters = convertParameters(
-                model);
-        std::vector<Antares::Study::SystemModel::Variable> variables = convertVariables(
-                model);
+        std::vector<Antares::Study::SystemModel::Parameter> parameters = convertParameters(model);
+        std::vector<Antares::Study::SystemModel::Variable> variables = convertVariables(model);
         std::vector<Antares::Study::SystemModel::Port> ports = convertPorts(model);
         std::vector<Antares::Study::SystemModel::Constraint> constraints = convertConstraints(
-                model);
+          model);
 
         std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
         auto nodeObjective = convertExpressionToNode(model.objective, model, nodeTimeIndex);

@@ -56,7 +56,6 @@ public:
                                                    const std::string& name,
                                                    unsigned int number_new_variables) override;
 
-
     OrtoolsMipVariable* addVariable(double lb,
                                     double ub,
                                     bool integer,
@@ -66,8 +65,7 @@ public:
                                                 double ub,
                                                 bool integer,
                                                 const std::string& name,
-                                                unsigned int number_new_variables)
-    override;
+                                                unsigned int number_new_variables) override;
 
     OrtoolsMipVariable* getVariable(const std::string& name) const override;
     int variableCount() const override;

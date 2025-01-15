@@ -49,7 +49,8 @@ public:
     virtual std::vector<IMipVariable*> addNumVariable(double lb,
                                                       double ub,
                                                       const std::string& name,
-                                                      unsigned int number_new_variables) = 0;
+                                                      unsigned int number_new_variables)
+      = 0;
 
     /// Create a integer variable
     virtual IMipVariable* addIntVariable(double lb, double ub, const std::string& name) = 0;
@@ -58,14 +59,12 @@ public:
     virtual std::vector<IMipVariable*> addIntVariable(double lb,
                                                       double ub,
                                                       const std::string& name,
-                                                      unsigned int number_new_variables) = 0;
+                                                      unsigned int number_new_variables)
+      = 0;
 
     /// Create a continuous or integer variable
-    virtual IMipVariable* addVariable(double lb,
-                                      double ub,
-                                      bool integer,
-                                      const std::string& name)
-    = 0;
+    virtual IMipVariable* addVariable(double lb, double ub, bool integer, const std::string& name)
+      = 0;
 
     /// Create range continuous or integer variables
     virtual std::vector<IMipVariable*> addVariable(double lb,
@@ -73,7 +72,7 @@ public:
                                                    bool integer,
                                                    const std::string& name,
                                                    unsigned int number_new_variables)
-    = 0;
+      = 0;
 
     virtual IMipVariable* getVariable(const std::string& name) const = 0;
     virtual int variableCount() const = 0;
@@ -85,7 +84,8 @@ public:
     virtual std::vector<IMipConstraint*> addConstraint(double lb,
                                                        double ub,
                                                        const std::string& name,
-                                                       unsigned int number_new_constraints) = 0;
+                                                       unsigned int number_new_constraints)
+      = 0;
 
     virtual IMipConstraint* getConstraint(const std::string& name) const = 0;
     virtual int constraintCount() const = 0;
