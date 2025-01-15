@@ -419,10 +419,10 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
     vector<string> params = {"param1", "param2", "param3", "param4"};
     auto threeHundreds = literal(300.);
     auto minus50 = literal(-50.);
-    VariableData var1Data = {"v1", ValueType::FLOAT, minus50, threeHundreds};
+    VariableData var1Data = {"v1", ValueType::FLOAT, minus50, threeHundreds, false, false};
     auto sixty = literal(60.);
     auto seventy5 = literal(75.);
-    VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5};
+    VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5, false, false};
 
     auto v1 = variable("v1");
     auto param1 = parameter("param1");
@@ -467,10 +467,10 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     auto threeHundred = literal(300.);
     // 3 * v1 -2 <= v2 (simplifies to : 3 * v1 - 2 * v2 <= 2)
     // v2 <= v1 / 2 (simplifies to : -0.5 * v1 + v2 <= 0)
-    VariableData var1Data = {"v1", ValueType::FLOAT, minus50, threeHundred};
+    VariableData var1Data = {"v1", ValueType::FLOAT, minus50, threeHundred, false, false};
     auto sixty = literal(60.);
     auto seventy5 = literal(75.);
-    VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5};
+    VariableData var2Data = {"v2", ValueType::FLOAT, sixty, seventy5, false, false};
 
     auto v1 = variable("v1");
     auto three = literal(3);
@@ -531,8 +531,8 @@ BOOST_AUTO_TEST_CASE(one_var_with_objective)
 
 BOOST_AUTO_TEST_CASE(two_vars_but_only_one_in_objective)
 {
-    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.)};
-    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.)};
+    VariableData var1Data = {"v1", ValueType::FLOAT, literal(-50.), literal(300.), false, false};
+    VariableData var2Data = {"v2", ValueType::FLOAT, literal(60.), literal(75.), false, false};
     auto objective = multiply(variable("v2"), literal(37));
 
     createModel("model", {}, {var1Data, var2Data}, {}, objective);
