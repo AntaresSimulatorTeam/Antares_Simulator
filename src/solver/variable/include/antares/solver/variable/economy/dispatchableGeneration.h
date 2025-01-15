@@ -182,6 +182,7 @@ public:
         pValuesForTheCurrentYear(nullptr)
     {
     }
+
     ~DispatchableGeneration()
     {
         delete[] pValuesForTheCurrentYear;
