@@ -223,7 +223,7 @@ public:
     {
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            pValuesForTheCurrentYear[numSpace][column].computeStatisticsForTheCurrentYear();
+            pValuesForTheCurrentYear[numSpace][column].computeAveragesForCurrentYear();
         }
 
         // Next variable
