@@ -36,13 +36,44 @@ extern "C"
 }
 
 #include <antares/logs/logs.h>
+#include "antares/optimization-options/options.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/utils/ortools_quadratic_wrapper.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
 
-bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
+                     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);
+void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, int PdtHebdo);
+
+bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::OptimizationOptions& options,
+                                   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                    const int PdtHebdo)
 {
+    // as long as sirius quadratic optimization is not supported through or-tools, we have to keep
+    // this code separate
+    if (options.quadraticSolver.compare("sirius") == 0)
+    {
+        SolveWithSirius(options, ProblemeAResoudre);
+    }
+    else
+    {
+        SolveQuadraticProblemWithOrtools(options, ProblemeAResoudre);
+    }
+    ProcessResult(ProblemeAResoudre, PdtHebdo);
+    return ProblemeAResoudre->ExistenceDUneSolution == OUI_PI;
+}
+
+void SolveWithSirius(const Solver::Optimization::OptimizationOptions& options,
+                     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    if (!options.quadraticSolverParameters.empty())
+    {
+        logs.warning()
+          << "Quadratic solver parameters are not supported by SIRIUS; they will be ignored.";
+    }
+
     PROBLEME_POINT_INTERIEUR Probleme;
 
     double ToleranceSurLAdmissibilite = 1.e-5;
@@ -106,13 +137,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
                 *pt = ProblemeAResoudre->X[i];
             }
         }
-
-        return true;
     }
     else
     {
-        logs.warning() << "Quadratic Optimisation: No solution, hour " << PdtHebdo;
-
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
             double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
@@ -121,7 +148,14 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
                 *pt = std::numeric_limits<double>::quiet_NaN();
             }
         }
+    }
+}
 
+void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, const int PdtHebdo)
+{
+    if (ProblemeAResoudre->ExistenceDUneSolution == NON_PI)
+    {
+        logs.warning() << "Quadratic Optimisation: No solution, hour " << PdtHebdo;
 #ifndef NDEBUG
 
         {
@@ -160,7 +194,5 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
             }
         }
 #endif
-
-        return false;
     }
 }

@@ -82,7 +82,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 ' ',
                 "linear-solver",
                 "Solver used for linear optimizations during simulation\nAvailable solver list : "
-                  + availableOrToolsSolversString(LINEAR));
+                  + availableOrToolsSolversString(SolverClass::LINEAR));
 
     //--solver
     parser->add(options.optOptions.linearSolver,
@@ -112,7 +112,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
       ' ',
       "quadratic-solver",
       "Solver used for quadratic optimizations during simulation\nAvailable solver list : "
-        + availableOrToolsSolversString(QUADRATIC));
+        + availableOrToolsSolversString(SolverClass::QUADRATIC));
 
     //--quadratic-solver-parameters
     parser->add(
@@ -300,8 +300,10 @@ void checkSolverExists(std::string solverName, const std::list<std::string> avai
 
 void checkSolvers(StudyLoadOptions& options)
 {
-    checkSolverExists(options.optOptions.linearSolver, getAvailableOrtoolsMpSolverName());
-    checkSolverExists(options.optOptions.quadraticSolver, getAvailableOrtoolsQuadraticSolverName());
+    checkSolverExists(options.optOptions.linearSolver,
+                      getAvailableSolverNames(SolverClass::LINEAR));
+    checkSolverExists(options.optOptions.quadraticSolver,
+                      getAvailableSolverNames(SolverClass::QUADRATIC));
 }
 
 void Settings::checkAndSetStudyFolder(const std::string& folder)

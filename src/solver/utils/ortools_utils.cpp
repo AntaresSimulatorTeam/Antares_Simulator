@@ -21,7 +21,10 @@
 #include "antares/solver/utils/ortools_utils.h"
 
 #include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <optional>
+#include <ortools/math_opt/cpp/parameters.h>
 
 #include <boost/algorithm/string/join.hpp>
 
@@ -210,8 +213,19 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     removeTemporaryFile(tmpPath);
 }
 
+static int iLp = 0;
+
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
+    //++iLp;
+    // std::string filename = "/home/mitripet/debug_antares/lp_" + std::to_string(iLp) + ".lp";
+    /*std::string lp;
+    solver->ExportModelAsLpFormat(false, &lp);
+    std::ofstream myfile;
+    myfile.open(filename);
+    myfile << lp;
+    myfile.close();*/
+    // solver->Write(filename);
     auto status = solver->Solve(params);
 
     if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
@@ -319,27 +333,22 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-// An empty name means that the solver does not support the optimization type
-// NOTE: or-tools does not support calling SIRIUS to perform quadratic optimizations, we'll have to
-// call SIRIUS explicitly, in a transparent way to the user
-const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
-  {"xpress", {"xpress_lp", "xpress", ""}},
-  {"sirius", {"sirius_lp", "sirius", "sirius"}},
-  {"coin", {"clp", "cbc", ""}},
-  {"glpk", {"glpk_lp", "glpk", ""}},
-  {"scip", {"scip", "scip", ""}}};
+const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSolverMap = {
+  {"xpress", {"xpress_lp", "xpress"}},
+  {"sirius", {"sirius_lp", "sirius"}},
+  {"coin", {"clp", "cbc"}},
+  {"glpk", {"glpk_lp", "glpk"}},
+  {"scip", {"scip", "scip"}}};
 
-std::list<std::string> getAvailableOrtoolsSolverNames(SolverClass solverClass)
-{
-    return solverClass == LINEAR ? getAvailableOrtoolsMpSolverName()
-                                 : getAvailableOrtoolsQuadraticSolverName();
-}
+const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
+  {"scip", math_opt::SolverType::kGscip},
+  {"xpress", math_opt::SolverType::kXpress}};
 
-std::list<std::string> getAvailableOrtoolsMpSolverName()
+std::list<std::string> getAvailableLinearSolverNames()
 {
     std::list<std::string> result;
 
-    for (const auto& solverName: OrtoolsUtils::solverMap)
+    for (const auto& solverName: OrtoolsUtils::mpSolverMap)
     {
         MPSolver::OptimizationProblemType solverType;
         MPSolver::ParseSolverType(solverName.second.LPSolverName, &solverType);
@@ -352,23 +361,30 @@ std::list<std::string> getAvailableOrtoolsMpSolverName()
     return result;
 }
 
-std::list<std::string> getAvailableOrtoolsQuadraticSolverName()
+std::list<std::string> getAvailableQuadraticSolverNames()
 {
     std::list<std::string> result;
-
-    for (const auto& solverName: OrtoolsUtils::solverMap)
+    // Sirius is supported, but not through mathopt
+    result.push_back("sirius");
+    for (const auto& solverName: OrtoolsUtils::mathoptSolverMap)
     {
-        if (!solverName.second.QuadraticSolverName.empty())
-        {
-            result.push_back(solverName.first);
-        }
+        // TODO: check if solver supports quadratic objectives (doesn't seem possible through
+        // mathopt API, we must add hard-coded flags in antares). Not urgent, but we will need this
+        // when we will do linear optimization through mathopt also.
+        result.push_back(solverName.first);
     }
     return result;
 }
 
+std::list<std::string> getAvailableSolverNames(SolverClass solverClass)
+{
+    return solverClass == SolverClass::LINEAR ? getAvailableLinearSolverNames()
+                                              : getAvailableQuadraticSolverNames();
+}
+
 std::string availableOrToolsSolversString(SolverClass solverClass)
 {
-    return boost::algorithm::join(getAvailableOrtoolsSolverNames(solverClass), ",") + ".";
+    return boost::algorithm::join(getAvailableSolverNames(solverClass), ",") + ".";
 }
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
@@ -377,11 +393,11 @@ static std::optional<std::string> translateSolverName(const std::string& solverN
     {
         if (isMip)
         {
-            return OrtoolsUtils::solverMap.at(solverName).MIPSolverName;
+            return OrtoolsUtils::mpSolverMap.at(solverName).MIPSolverName;
         }
         else
         {
-            return OrtoolsUtils::solverMap.at(solverName).LPSolverName;
+            return OrtoolsUtils::mpSolverMap.at(solverName).LPSolverName;
         }
     }
     catch (const std::out_of_range&)

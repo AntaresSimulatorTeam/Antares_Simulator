@@ -27,6 +27,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/study/parameters/adq-patch-params.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "../variables/VariableManagerUtils.h"
@@ -92,7 +93,9 @@ public:
         triggeredHour = hour;
     }
 
-    void run(uint week, uint year);
+    void run(unsigned int week,
+             unsigned int year,
+             const Antares::Solver::Optimization::OptimizationOptions& options);
 
 private:
     void calculateCsrParameters();
@@ -102,7 +105,9 @@ private:
     void buildProblemConstraintsLHS();
     void buildProblemConstraintsRHS();
     void setProblemCost();
-    void solveProblem(uint week, int year);
+    void solveProblem(unsigned int week,
+                      int year,
+                      const Antares::Solver::Optimization::OptimizationOptions& options);
     void allocateProblem();
 
     // variable construction

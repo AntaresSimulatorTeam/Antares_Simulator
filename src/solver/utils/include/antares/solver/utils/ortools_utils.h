@@ -33,9 +33,14 @@
 
 #include "ortools_wrapper.h"
 
+namespace operations_research::math_opt
+{
+enum class SolverType;
+}
+
 using namespace operations_research;
 
-enum SolverClass
+enum class SolverClass
 {
     LINEAR,
     QUADRATIC
@@ -50,21 +55,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
  *
  *  \return List of available ortools solver names
  */
-std::list<std::string> getAvailableOrtoolsSolverNames(SolverClass solverClass);
-
-/*!
- *  \brief Return list of available ortools linear solver names on our side
- *
- *  \return List of available ortools linear solver names
- */
-std::list<std::string> getAvailableOrtoolsMpSolverName();
-
-/*!
- *  \brief Return list of available ortools quadratic solver names on our side
- *
- *  \return List of available ortools quadratic solver names
- */
-std::list<std::string> getAvailableOrtoolsQuadraticSolverName();
+std::list<std::string> getAvailableSolverNames(SolverClass solverClass);
 
 /*!
  *  \brief Return a single string containing all solvers available, separated by a ", " and ending
@@ -88,7 +79,9 @@ class OrtoolsUtils
 public:
     struct SolverNames
     {
-        std::string LPSolverName, MIPSolverName, QuadraticSolverName;
+        std::string LPSolverName, MIPSolverName;
     };
-    static const std::map<std::string, struct SolverNames> solverMap;
+
+    static const std::map<std::string, SolverNames> mpSolverMap;
+    static const std::map<std::string, math_opt::SolverType> mathoptSolverMap;
 };

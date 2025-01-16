@@ -276,7 +276,8 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
                     << " Hour:" << week * nbHoursInWeek + hourInWeek + 1;
         hourlyCsrProblem.setHour(hourInWeek);
-        hourlyCsrProblem.run(week, year);
+        auto opt = opt_runtime_data.options;
+        hourlyCsrProblem.run(week, year, opt);
     }
 }
 

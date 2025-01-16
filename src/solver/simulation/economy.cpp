@@ -163,7 +163,10 @@ bool Economy::year(Progression::Task& progression,
             weeklyOptProblems_[numSpace].solve();
 
             // Runs all the post processes in the list of post-process commands
-            optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
+            optRuntimeData opt_runtime_data(state.year,
+                                            w,
+                                            hourInTheYear,
+                                            study.parameters.optOptions);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
             variables.weekBegin(state);

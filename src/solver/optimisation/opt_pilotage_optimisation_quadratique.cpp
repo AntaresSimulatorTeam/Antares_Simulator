@@ -26,12 +26,6 @@
 bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions& options,
                                          PROBLEME_HEBDO* problemeHebdo)
 {
-    if (options.quadraticSolver != "sirius")
-    {
-        const std::string notFound = "Solver " + options.quadraticSolver
-                                     + " not supported for quadratic problems optimization.";
-        throw new std::invalid_argument(notFound);
-    }
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
@@ -58,7 +52,9 @@ bool OPT_PilotageOptimisationQuadratique(const OptimizationOptions& options,
 
             OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
-            result = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre.get(), pdtHebdo)
+            result = OPT_AppelDuSolveurQuadratique(options,
+                                                   problemeHebdo->ProblemeAResoudre.get(),
+                                                   pdtHebdo)
                      && result;
         }
     }

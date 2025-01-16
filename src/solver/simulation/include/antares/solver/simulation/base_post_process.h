@@ -23,6 +23,7 @@
 #include <memory>
 #include <vector>
 
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Data;
@@ -34,16 +35,18 @@ namespace Antares::Solver::Simulation
 
 struct optRuntimeData
 {
-    optRuntimeData(unsigned int y, unsigned int w, unsigned int h):
+    optRuntimeData(unsigned int y, unsigned int w, unsigned int h, const OptimizationOptions& opt):
         year(y),
         week(w),
-        hourInTheYear(h)
+        hourInTheYear(h),
+        options(opt)
     {
     }
 
     unsigned int year = 0;
     unsigned int week = 0;
     unsigned int hourInTheYear = 0;
+    const OptimizationOptions& options;
 };
 
 class basePostProcessCommand
