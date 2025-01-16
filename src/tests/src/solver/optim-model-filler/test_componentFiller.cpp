@@ -54,7 +54,6 @@ struct ConstraintData
 {
     string id;
     Node* expression;
-    std::unordered_map<const Node*, Antares::Solver::Visitors::TimeIndex> nodeTimeIndex;
 };
 
 struct LinearProblemBuildingFixture
@@ -94,14 +93,18 @@ struct LinearProblemBuildingFixture
         return nodes.create<LiteralNode>(value);
     }
 
-    Node* parameter(const string& paramId)
+    Node* parameter(const string& paramId,
+                    const Antares::Solver::Visitors::TimeIndex& timeIndex = Antares::Solver::
+                      Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        return nodes.create<ParameterNode>(paramId);
+        return nodes.create<ParameterNode>(paramId, timeIndex);
     }
 
-    Node* variable(const string& varId)
+    Node* variable(const string& varId,
+                   const Antares::Solver::Visitors::TimeIndex& timeIndex = Antares::Solver::
+                     Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        return nodes.create<VariableNode>(varId);
+        return nodes.create<VariableNode>(varId, timeIndex);
     }
 
     Node* multiply(Node* node1, Node* node2)
@@ -146,9 +149,9 @@ void LinearProblemBuildingFixture::createModel(string modelId,
                                           static_cast<ScenarioDependent>(scenarioDependent))));
     }
     vector<Constraint> constraints;
-    for (auto [id, expression, nodeTimeIndex]: constraintsData)
+    for (auto [id, expression]: constraintsData)
     {
-        constraints.push_back(move(Constraint(id, createExpression(expression), nodeTimeIndex)));
+        constraints.push_back(move(Constraint(id, createExpression(expression))));
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)
@@ -341,15 +344,6 @@ BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-static auto ConstantNodeContext(const std::vector<const Node*>& nodes)
-{
-    std::unordered_map<const Node*, Antares::Solver::Visitors::TimeIndex> nodeTimeIndex;
-    for (auto node: nodes)
-    {
-        nodeTimeIndex[node] = Antares::Solver::Visitors::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO;
-    }
-    return nodeTimeIndex;
-}
 
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addConstraints_, LinearProblemBuildingFixture)
 
@@ -363,7 +357,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
     createModel("model",
                 {},
                 {{"var1", ValueType::BOOL, literal(-5), literal(10), false, false}},
-                {{"ct1", ct_node, ConstantNodeContext({var_node, three})}});
+                {{"ct1", ct_node}});
     createComponent("model", "componentToto");
     buildLinearProblem();
 
@@ -396,7 +390,7 @@ BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
                                "var__1",
                                literal(-5),
                                literal(10),
-                               {{"ct_1", ct_node, ConstantNodeContext({var_node, five, three})}});
+                               {{"ct_1", ct_node}});
     createComponent("model", "componentTata");
     buildLinearProblem();
 
@@ -440,11 +434,7 @@ BOOST_AUTO_TEST_CASE(ct_with_two_vars)
                                                 multiply(literal(5), param4));
     auto ct_node = nodes.create<EqualNode>(sum_node_left, sum_node_right);
 
-    const auto constnode = ConstantNodeContext({v1, v2, param1, param2, param3, param4});
-    createModel("my_new_model",
-                params,
-                {var1Data, var2Data},
-                {{"constraint1", ct_node, constnode}});
+    createModel("my_new_model", params, {var1Data, var2Data}, {{"constraint1", ct_node}});
     createComponent("my_new_model",
                     "my_component",
                     {{"param1", -16}, {"param2", 8}, {"param3", 5}, {"param4", -3}});
@@ -482,11 +472,7 @@ BOOST_AUTO_TEST_CASE(two_constraints__they_are_created)
     auto two_2 = literal(2);
     auto ct2_node = nodes.create<LessThanOrEqualNode>(v2, nodes.create<DivisionNode>(v1, two_2));
 
-    auto constnodes = ConstantNodeContext({v1, v2});
-    createModel("my_new_model",
-                {},
-                {var1Data, var2Data},
-                {{"ct1", ct1_node, constnodes}, {"ct2", ct2_node, constnodes}});
+    createModel("my_new_model", {}, {var1Data, var2Data}, {{"ct1", ct1_node}, {"ct2", ct2_node}});
     createComponent("my_new_model", "my_component", {});
     buildLinearProblem();
 

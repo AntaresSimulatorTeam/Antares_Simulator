@@ -76,8 +76,7 @@ private:
     std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
 };
 
-ExpressionConversionResults convertExpressionToNode(const std::string& exprStr,
-                                                    const ModelParser::Model& model)
+NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model)
 {
     if (exprStr.empty())
     {
@@ -92,7 +91,7 @@ ExpressionConversionResults convertExpressionToNode(const std::string& exprStr,
     Antares::Solver::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
     auto root = std::any_cast<Node*>(visitor.visit(tree));
-    return {NodeRegistry(root, std::move(registry)), visitor.getTimeIndex()};
+    return NodeRegistry(root, std::move(registry));
 }
 
 ConvertorVisitor::ConvertorVisitor(Antares::Solver::Registry<Node>& registry,
@@ -133,9 +132,10 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     {
         if (param.id == context->IDENTIFIER()->getText())
         {
-            auto ret = static_cast<Node*>(registry_.create<ParameterNode>(param.id));
-            nodeTimeIndex[ret] = convertToTimeIndex(param.time_dependent, param.scenario_dependent);
-            return ret;
+            return static_cast<Node*>(
+              registry_.create<ParameterNode>(param.id,
+                                              convertToTimeIndex(param.time_dependent,
+                                                                 param.scenario_dependent)));
         }
     }
 
@@ -143,9 +143,10 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     {
         if (var.id == context->getText())
         {
-            auto ret = static_cast<Node*>(registry_.create<VariableNode>(var.id));
-            nodeTimeIndex[ret] = convertToTimeIndex(var.time_dependent, var.scenario_dependent);
-            return ret;
+            return static_cast<Node*>(
+              registry_.create<VariableNode>(var.id,
+                                             convertToTimeIndex(var.time_dependent,
+                                                                var.scenario_dependent)));
         }
     }
 

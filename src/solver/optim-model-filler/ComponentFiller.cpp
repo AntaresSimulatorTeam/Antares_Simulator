@@ -138,7 +138,6 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
         // TODO timesteps will be a parameter
         if (checkTimeSteps(ctx))
         {
-            Solver::Visitors::TimeIndexVisitor timeIndexVisitor(constraint.getNodeTimeIndex());
             if (IsThisConstraintTimeDependent(root_node, constraint))
 
             {
@@ -195,7 +194,7 @@ bool ComponentFiller::IsThisConstraintTimeDependent(
   const Solver::Nodes::Node* node,
   const Study::SystemModel::Constraint& constraint)
 {
-    Solver::Visitors::TimeIndexVisitor timeIndexVisitor(constraint.getNodeTimeIndex());
+    Solver::Visitors::TimeIndexVisitor timeIndexVisitor;
     const auto ret = timeIndexVisitor.dispatch(node);
     return ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY
            || ret == Solver::Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO;

@@ -38,12 +38,9 @@ namespace Antares::Study::SystemModel
 class Constraint
 {
 public:
-    Constraint(std::string name,
-               Expression expression,
-               std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex>
-               nodeTimeIndex): id_(std::move(name)),
-                               expression_(std::move(expression)),
-                               nodeTimeIndex(std::move(nodeTimeIndex))
+    Constraint(std::string name, Expression expression):
+        id_(std::move(name)),
+        expression_(std::move(expression))
     {
     }
 
@@ -57,16 +54,9 @@ public:
         return expression_;
     }
 
-    std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex>
-    getNodeTimeIndex() const
-    {
-        return nodeTimeIndex;
-    }
-
 private:
     std::string id_;
     Expression expression_;
-    std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex> nodeTimeIndex;
 };
 
 } // namespace Antares::Study::SystemModel

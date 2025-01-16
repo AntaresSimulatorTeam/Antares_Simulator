@@ -126,9 +126,11 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelP
     for (const auto& variable: model.variables)
     {
         Antares::Study::SystemModel::Expression lb(variable.lower_bound,
-          convertExpressionToNode(variable.lower_bound, model).nodeRegistry);
+                                                   convertExpressionToNode(variable.lower_bound,
+                                                                           model));
         Antares::Study::SystemModel::Expression ub(variable.upper_bound,
-          convertExpressionToNode(variable.upper_bound, model).nodeRegistry);
+                                                   convertExpressionToNode(variable.upper_bound,
+                                                                           model));
         variables.emplace_back(
           variable.id,
           std::move(lb),
@@ -159,11 +161,10 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
     std::vector<Antares::Study::SystemModel::Constraint> constraints;
     for (const auto& constraint: model.constraints)
     {
-        auto [nodeRegistry, nodeTimeIndex] = convertExpressionToNode(constraint.expression, model);
+        auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
         constraints.emplace_back(constraint.id,
                                  Antares::Study::SystemModel::Expression{constraint.expression,
-                                                                         std::move(nodeRegistry)},
-                                 nodeTimeIndex);
+                                                                         std::move(nodeRegistry)});
     }
     return constraints;
 }
@@ -189,7 +190,7 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
           model);
 
         std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
-        auto [nodeObjective, _] = convertExpressionToNode(model.objective, model);
+        auto nodeObjective = convertExpressionToNode(model.objective, model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(

@@ -69,12 +69,12 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::GreaterThanOrEqualNode* gt)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::VariableNode* var)
 {
-    return context_.at(var);
+    return var->timeIndex();
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ParameterNode* param)
 {
-    return context_.at(param);
+    return param->timeIndex();
 }
 
 TimeIndex TimeIndexVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
