@@ -76,7 +76,7 @@ double thermalScBuilderRenderer::cellNumericValue(int x, int y) const
     {
         assert((uint)y < pRules->thermal[selectedArea()->index].width());
         assert((uint)x < pRules->thermal[selectedArea()->index].height());
-        return pRules->thermal[selectedArea()->index].get_value(x, y);
+        return pRules->thermal[selectedArea()->index].get(selectedArea()->thermal.list[y].get(), x);
     }
     return 0.;
 }
