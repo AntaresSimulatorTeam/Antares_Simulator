@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 
+#include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
+
 namespace Antares::Solver::Modeler::Api
 {
 
@@ -44,6 +46,10 @@ public:
                    std::string scenarioGroup,
                    unsigned int scenario,
                    unsigned int hour) override;
+
+private:
+    DataSeries::DataSeriesRepository dataSeriesRepository_;
+
 };
 
 } // namespace Antares::Solver::Modeler::Api
