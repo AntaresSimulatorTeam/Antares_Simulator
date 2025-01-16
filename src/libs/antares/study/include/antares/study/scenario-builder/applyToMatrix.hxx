@@ -81,7 +81,14 @@ inline uint32_t get(const T& container, uint y)
 template<>
 inline uint32_t get(const std::map<uint32_t, uint32_t>& container, uint y)
 {
-    return container.at(y);
+    if (container.contains(y))
+    {
+        return container.at(y);
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 template<class StringT, class D, class ColumnType>
