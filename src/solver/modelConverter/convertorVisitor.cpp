@@ -116,12 +116,12 @@ public:
     }
 };
 // to silent warning, convert bool to unsigned int
-static unsigned int convertBool(bool in)
+static constexpr unsigned int convertBool(bool in)
 {
     return in ? 1 : 0;
 }
 
-Visitors::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
+static constexpr Visitors::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
 {
     return static_cast<Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
                                             | convertBool(timedependent));
