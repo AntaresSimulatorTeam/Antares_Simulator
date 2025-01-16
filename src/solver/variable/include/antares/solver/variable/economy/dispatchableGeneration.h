@@ -18,8 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_DispatchableGeneration_H__
-#define __SOLVER_VARIABLE_ECONOMY_DispatchableGeneration_H__
+#pragma once
 
 #include "antares/solver/variable/variable.h"
 
@@ -147,6 +146,10 @@ public:
 
     ~DispatchableGeneration()
     {
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
+            delete[] pValuesForTheCurrentYear[numSpace];
+        }
         delete[] pValuesForTheCurrentYear;
     }
 
@@ -223,7 +226,8 @@ public:
     {
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            pValuesForTheCurrentYear[numSpace][column].computeAveragesForCurrentYearFromHourlyResults();
+            pValuesForTheCurrentYear[numSpace][column]
+              .computeAveragesForCurrentYearFromHourlyResults();
         }
 
         // Next variable
@@ -345,5 +349,3 @@ private:
 }; // class DispatchableGeneration
 
 } // namespace Antares::Solver::Variable::Economy
-
-#endif // __SOLVER_VARIABLE_ECONOMY_DispatchableGeneration_H__
