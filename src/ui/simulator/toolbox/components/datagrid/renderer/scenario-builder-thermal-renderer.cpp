@@ -60,7 +60,6 @@ bool thermalScBuilderRenderer::cellValue(int x, int y, const String& value)
         && (uint)y < selectedArea()->thermal.list.allClustersCount())
     {
         assert(selectedArea()->index < pRules->areaCount());
-        assert((uint)y < pRules->thermal[selectedArea()->index].width());
         assert((uint)x < pRules->thermal[selectedArea()->index].height());
         uint val = fromStringToTSnumber(value);
         pRules->thermal[selectedArea()->index].setTSnumber(selectedArea()->thermal.list[y].get(), x, val);
@@ -74,7 +73,6 @@ double thermalScBuilderRenderer::cellNumericValue(int x, int y) const
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
         && (uint)y < selectedArea()->thermal.list.allClustersCount())
     {
-        assert((uint)y < pRules->thermal[selectedArea()->index].width());
         assert((uint)x < pRules->thermal[selectedArea()->index].height());
         return pRules->thermal[selectedArea()->index].get(selectedArea()->thermal.list[y].get(), x);
     }
