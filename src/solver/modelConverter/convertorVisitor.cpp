@@ -76,16 +76,8 @@ private:
     std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
 };
 
-NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model)
-{
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
-    return convertExpressionToNode(exprStr, model, nodeTimeIndex);
-}
-
-NodeRegistry convertExpressionToNode(
-  const std::string& exprStr,
-  const ModelParser::Model& model,
-  std::unordered_map<const Nodes::Node*, Visitors::TimeIndex>& nodeTimeIndex)
+ExpressionConversionResults convertExpressionToNode(const std::string& exprStr,
+                                                    const ModelParser::Model& model)
 {
     if (exprStr.empty())
     {
@@ -99,9 +91,8 @@ NodeRegistry convertExpressionToNode(
     ExprParser::ExprContext* tree = parser.expr();
     Antares::Solver::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
-    Node* root = std::any_cast<Node*>(visitor.visit(tree));
-    nodeTimeIndex = visitor.getTimeIndex();
-    return NodeRegistry(root, std::move(registry));
+    auto root = std::any_cast<Node*>(visitor.visit(tree));
+    return {NodeRegistry(root, std::move(registry)), visitor.getTimeIndex()};
 }
 
 ConvertorVisitor::ConvertorVisitor(Antares::Solver::Registry<Node>& registry,
@@ -124,10 +115,16 @@ public:
     {
     }
 };
+// to silent warning, convert bool to unsigned int
+static unsigned int convertBool(bool in)
+{
+    return in ? 1 : 0;
+}
 
 Visitors::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
 {
-    return static_cast<Visitors::TimeIndex>((scenariodependent << 1) | timedependent);
+    return static_cast<Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
+                                            | convertBool(timedependent));
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)

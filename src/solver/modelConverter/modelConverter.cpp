@@ -123,17 +123,12 @@ std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelP
 {
     std::vector<Antares::Study::SystemModel::Variable> variables;
 
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
     for (const auto& variable: model.variables)
     {
         Antares::Study::SystemModel::Expression lb(variable.lower_bound,
-                                                   convertExpressionToNode(variable.lower_bound,
-                                                                           model,
-                                                                           nodeTimeIndex));
+          convertExpressionToNode(variable.lower_bound, model).nodeRegistry);
         Antares::Study::SystemModel::Expression ub(variable.upper_bound,
-                                                   convertExpressionToNode(variable.upper_bound,
-                                                                           model,
-                                                                           nodeTimeIndex));
+          convertExpressionToNode(variable.upper_bound, model).nodeRegistry);
         variables.emplace_back(
           variable.id,
           std::move(lb),
@@ -162,13 +157,12 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
   const Antares::Solver::ModelParser::Model& model)
 {
     std::vector<Antares::Study::SystemModel::Constraint> constraints;
-    std::unordered_map<const Solver::Nodes::Node*, Solver::Visitors::TimeIndex> nodeTimeIndex;
     for (const auto& constraint: model.constraints)
     {
-        auto expr = convertExpressionToNode(constraint.expression, model, nodeTimeIndex);
+        auto [nodeRegistry, nodeTimeIndex] = convertExpressionToNode(constraint.expression, model);
         constraints.emplace_back(constraint.id,
                                  Antares::Study::SystemModel::Expression{constraint.expression,
-                                                                         std::move(expr)},
+                                                                         std::move(nodeRegistry)},
                                  nodeTimeIndex);
     }
     return constraints;
@@ -195,7 +189,7 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
           model);
 
         std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
-        auto nodeObjective = convertExpressionToNode(model.objective, model);
+        auto [nodeObjective, _] = convertExpressionToNode(model.objective, model);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjective(

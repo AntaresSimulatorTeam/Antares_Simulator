@@ -43,7 +43,7 @@ public:
 
     NodeRegistry run(const std::string& input)
     {
-        return ModelConverter::convertExpressionToNode(input, model_);
+        return ModelConverter::convertExpressionToNode(input, model_).nodeRegistry;
     }
 
 private:
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
       .objective = "objectives"};
 
     std::string expression = "abc"; // not a param or var
-    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model),
+    BOOST_CHECK_EXCEPTION(ModelConverter::convertExpressionToNode(expression, model).nodeRegistry,
                           std::runtime_error,
                           expectedMessage);
 }
