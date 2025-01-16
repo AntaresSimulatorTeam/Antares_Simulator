@@ -21,23 +21,13 @@
 
 #pragma once
 
-#include <map>
 #include <string>
-#include <vector>
 
+#include "ILinearProblemData.h"
 #include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
 
 namespace Antares::Solver::Modeler::Api
 {
-
-class ILinearProblemData
-{
-    virtual double getData(std::string idTimeSeriesSet,
-                           std::string scenarioGroup,
-                           unsigned int scenario,
-                           unsigned int hour)
-      = 0;
-};
 
 class LinearProblemData: public ILinearProblemData
 {
