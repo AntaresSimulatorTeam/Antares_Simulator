@@ -30,19 +30,7 @@ namespace Antares::Data::ScenarioBuilder
 {
 bool thermalTSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
-    assert(pArea != nullptr);
-
-    // If an area is available, it can only be an overlay for thermal timeseries
-    // WARNING: The total number of clusters may vary if used from the
-    //   solver or not.
-    // WARNING: At this point, the variable pArea->thermal.list.size()
-    //   might not be valid (because not really initialized yet)
-    uint clusterCount = (study.usedByTheSolver) ? (pArea->thermal.list.enabledCount())
-                                                : pArea->thermal.list.allClustersCount();
-
-    // Resize
-    pTSNumberRules.reset(clusterCount, nbYears);
+    nbYears = study.parameters.nbYears;
     return true;
 }
 
@@ -60,7 +48,7 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
 
     for (auto& cluster: pArea->thermal.list.all())
     {
-        for (uint year = 0; year != pTSNumberRules.height; ++year)
+        for (uint year = 0; year != nbYears; ++year)
         {
             const uint val = get(cluster.get(), year);
             // Equals to zero means 'auto', which is the default mode
@@ -78,11 +66,7 @@ void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* clust
                                       const uint year,
                                       uint value)
 {
-    assert(cluster != nullptr);
-    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
-    {
-        pTSNumberRules[cluster->areaWideIndex][year] = value;
-    }
+    thermalTSNumbers[cluster][year] = value;
 }
 
 bool thermalTSNumberData::apply(Study& study)
@@ -99,9 +83,7 @@ bool thermalTSNumberData::apply(Study& study)
 
     for (auto& cluster: area.thermal.list.each_enabled())
     {
-        assert(cluster->areaWideIndex < pTSNumberRules.width);
-        const auto& col = pTSNumberRules[cluster->areaWideIndex];
-
+        const auto& col = thermalTSNumbers[cluster.get()];
         uint tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
                             ? cluster->series.timeSeries.width
                             : get_tsGenCount(study);

@@ -28,7 +28,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class thermalTSNumberData: public TSNumberData
+class thermalTSNumberData: public dataInterface
 {
 public:
     thermalTSNumberData() = default;
@@ -45,24 +45,38 @@ public:
     void setTSnumber(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
     uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
     bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
+
+    CString<512, false> get_prefix() const;
+    uint get_tsGenCount(const Study& study) const;
+
+    uint width() const override
+    {
+        return thermalTSNumbers.size();
+    }
+
+    uint height() const override
+    {
+        return nbYears;
+    }
 
 private:
     //! The attached area, if any
+    std::map<const Antares::Data::ThermalCluster*, std::map<uint32_t, uint32_t>> thermalTSNumbers;
     const Area* pArea = nullptr;
+    uint nbYears;
 };
 
 inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster,
                                      const uint year) const
 {
-    assert(cluster != nullptr);
-    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+    if (thermalTSNumbers.contains(cluster) && thermalTSNumbers.at(cluster).contains(year))
     {
-        const uint index = cluster->areaWideIndex;
-        return pTSNumberRules[index][year];
+        return thermalTSNumbers.at(cluster).at(year);
     }
-    return 0;
+    else
+    {
+        return 0;
+    }
 }
 
 inline CString<512, false> thermalTSNumberData::get_prefix() const

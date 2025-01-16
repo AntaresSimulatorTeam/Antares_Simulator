@@ -72,11 +72,23 @@ inline bool CheckValidity<BindingConstraintGroup>(uint value,
     return value < group.numberOfTimeseries();
 }
 
-template<class StringT, class D>
+template<class T>
+inline uint32_t get(const T& container, uint y)
+{
+    return container[y];
+}
+
+template<>
+inline uint32_t get(const std::map<uint32_t, uint32_t>& container, uint y)
+{
+    return container.at(y);
+}
+
+template<class StringT, class D, class ColumnType>
 bool ApplyToMatrix(uint& errors,
                    StringT& logprefix,
                    D& data,
-                   const TSNumberData::MatrixType::ColumnType& years,
+                   const ColumnType& years,
                    uint tsGenMax)
 {
     bool ret = true;
@@ -88,10 +100,10 @@ bool ApplyToMatrix(uint& errors,
 
     for (uint y = 0; y != nbYears; ++y)
     {
-        if (years[y] != 0)
+        if (get(years, y) != 0)
         {
             // The new TS number
-            uint32_t tsNum = years[y] - 1;
+            uint32_t tsNum = get(years, y) - 1;
 
             // When the TS-Generators are not used
             if (!CheckValidity(tsNum, data, tsGenMax))
