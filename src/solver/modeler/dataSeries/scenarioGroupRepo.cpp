@@ -1,6 +1,5 @@
 #include "include/antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
 
-#include <format>
 #include <stdexcept>
 
 namespace Antares::Solver::Modeler::DataSeries
