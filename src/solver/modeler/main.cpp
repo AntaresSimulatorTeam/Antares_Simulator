@@ -31,13 +31,20 @@
 using namespace Antares;
 using namespace Antares::Solver;
 
+static void usage()
+{
+    std::cout << "Usage:\n"
+              << "antares-modeler <path/to/study>\n";
+}
+
 int main(int argc, const char** argv)
 {
     logs.applicationName("modeler");
+    if (argc <= 1)
 
-    if (argc < 1)
     {
         logs.error() << "No study path provided, exiting.";
+        usage();
         return EXIT_FAILURE;
     }
 
