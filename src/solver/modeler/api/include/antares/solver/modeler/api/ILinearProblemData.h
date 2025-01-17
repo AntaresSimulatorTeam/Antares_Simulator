@@ -15,4 +15,4 @@ class ILinearProblemData
       = 0;
 };
 
-}
+} // namespace Antares::Solver::Modeler::Api
