@@ -16,12 +16,6 @@ void TimeSeriesSet::add(std::vector<double> ts)
     tsSet_.push_back(std::move(ts));
 }
 
-std::string TimeSeriesSet::name()
-{
-    return name_;
-}
-
-
 double TimeSeriesSet::getData(unsigned int rank, unsigned int hour)
 {
     if (rank > tsSet_.size())
