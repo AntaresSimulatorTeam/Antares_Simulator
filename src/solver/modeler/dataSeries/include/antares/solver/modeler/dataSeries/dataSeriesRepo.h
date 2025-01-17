@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <memory>
 
 #include "dataSeries.h"
 
@@ -16,7 +17,7 @@ public:
     IDataSeries& getDataSeries(std::string setId);
 
 private:
-    std::map<std::string, IDataSeries*> dataSeries_;
+    std::map<std::string, std::unique_ptr<IDataSeries>> dataSeries_;
 };
 
 } // namespace Antares::Solver::Modeler::DataSeries
