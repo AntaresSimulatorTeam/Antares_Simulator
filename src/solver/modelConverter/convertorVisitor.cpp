@@ -65,15 +65,9 @@ public:
     std::any visitRightMuldiv(ExprParser::RightMuldivContext* context) override;
     std::any visitRightExpression(ExprParser::RightExpressionContext* context) override;
 
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> getTimeIndex() const
-    {
-        return nodeTimeIndex;
-    }
-
 private:
     Registry<Nodes::Node>& registry_;
     const ModelParser::Model& model_;
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
 };
 
 NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model)
