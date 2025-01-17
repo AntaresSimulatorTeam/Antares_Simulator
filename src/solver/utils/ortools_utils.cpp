@@ -340,9 +340,9 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
   {"glpk", {"glpk_lp", "glpk"}},
   {"scip", {"scip", "scip"}}};
 
-const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
-  {"scip", math_opt::SolverType::kGscip},
-  {"xpress", math_opt::SolverType::kXpress}};
+const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {};
+// TODO: add skip when fixed by google {"scip", math_opt::SolverType::kGscip}
+// TODO: add XPRESS when merged {"xpress", math_opt::SolverType::kXpress}
 
 std::list<std::string> getAvailableLinearSolverNames()
 {
