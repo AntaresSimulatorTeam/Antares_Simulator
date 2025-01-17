@@ -10,6 +10,7 @@ set(SRC_DATA_SERIES
         include/antares/solver/modeler/dataSeries/scenarioGroupRepo.h
 
         timeSeriesSet.cpp
+        dataSeriesRepo.cpp
         scenarioGroupRepo.cpp
 )
 

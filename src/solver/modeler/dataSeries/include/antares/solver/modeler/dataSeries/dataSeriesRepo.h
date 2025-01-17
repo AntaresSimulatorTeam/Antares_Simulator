@@ -13,7 +13,7 @@ namespace Antares::Solver::Modeler::DataSeries
 class DataSeriesRepository
 {
 public:
-    void addDataSeries(std::string setId, IDataSeries* dataSeries);
+    void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
     IDataSeries& getDataSeries(std::string setId);
 
 private:
