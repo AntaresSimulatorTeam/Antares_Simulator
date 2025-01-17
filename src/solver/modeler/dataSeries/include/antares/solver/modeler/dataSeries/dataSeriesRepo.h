@@ -2,8 +2,8 @@
 #pragma once
 
 #include <map>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "dataSeries.h"
 
