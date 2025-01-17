@@ -1,5 +1,7 @@
 
 
+set(solver_modeler_data_series "${CMAKE_SOURCE_DIR}/solver/modeler/dataSeries")
+
 set(SRC_DATA_SERIES
         include/antares/solver/modeler/dataSeries/dataSeries.h
         include/antares/solver/modeler/dataSeries/dataSeriesRepo.h
