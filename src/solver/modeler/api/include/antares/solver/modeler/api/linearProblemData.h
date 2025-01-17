@@ -23,8 +23,10 @@
 
 #include <string>
 
-#include "ILinearProblemData.h"
 #include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
+#include "antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
+
+#include "ILinearProblemData.h"
 
 namespace Antares::Solver::Modeler::Api
 {
@@ -39,7 +41,7 @@ public:
 
 private:
     DataSeries::DataSeriesRepository dataSeriesRepository_;
-
+    DataSeries::ScenarioGroupRepository groupRepository_;
 };
 
 } // namespace Antares::Solver::Modeler::Api

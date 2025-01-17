@@ -22,6 +22,11 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
+target_link_libraries(${PROJ}
+		PUBLIC
+		data-series-lib
+)
+
 target_include_directories(${PROJ}
         PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -1,4 +1,5 @@
 add_subdirectory(api)
+add_subdirectory(dataSeries)
 add_subdirectory(ortoolsImpl)
 add_subdirectory(loadFiles)
 add_subdirectory(parameters)
