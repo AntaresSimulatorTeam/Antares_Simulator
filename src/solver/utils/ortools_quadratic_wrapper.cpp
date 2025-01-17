@@ -27,13 +27,6 @@
 #include <antares/solver/utils/ortools_quadratic_wrapper.h>
 #include <antares/solver/utils/ortools_utils.h>
 
-/**
- * This wrapper is an adapter that solves a QP stored in a PROBLEME_ANTARES_A_RESOUDRE
- * using OR-Tools MathOpt API & solvers.
- * Currently, QP support in MathOpt is implemented for Gurobi and SIP (though SCIP in OR-Tools
- * has compilation issues), and under development for XPRESS.
- */
-
 using Antares::Solver::Optimization::OptimizationOptions;
 using namespace operations_research::math_opt;
 

@@ -21,8 +21,6 @@
 #include "antares/solver/utils/ortools_utils.h"
 
 #include <filesystem>
-#include <fstream>
-#include <iostream>
 #include <optional>
 #include <ortools/math_opt/cpp/parameters.h>
 
@@ -217,15 +215,6 @@ static int iLp = 0;
 
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
-    //++iLp;
-    // std::string filename = "/home/mitripet/debug_antares/lp_" + std::to_string(iLp) + ".lp";
-    /*std::string lp;
-    solver->ExportModelAsLpFormat(false, &lp);
-    std::ofstream myfile;
-    myfile.open(filename);
-    myfile << lp;
-    myfile.close();*/
-    // solver->Write(filename);
     auto status = solver->Solve(params);
 
     if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
@@ -340,9 +329,9 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
   {"glpk", {"glpk_lp", "glpk"}},
   {"scip", {"scip", "scip"}}};
 
+// TODO: add SCIP support when fixed by google: {"scip", math_opt::SolverType::kGscip}
+// TODO: add XPRESS support when added in or-tools: {"xpress", math_opt::SolverType::kXpress}
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {};
-// TODO: add skip when fixed by google {"scip", math_opt::SolverType::kGscip}
-// TODO: add XPRESS when merged {"xpress", math_opt::SolverType::kXpress}
 
 std::list<std::string> getAvailableLinearSolverNames()
 {

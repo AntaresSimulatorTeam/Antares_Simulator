@@ -138,15 +138,6 @@ BOOST_FIXTURE_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50, StudyWit
     OutputRetriever output(simulation->rawSimu());
     unsigned int nbDaysInWeek = 7;
     BOOST_TEST(output.flow(link).week(0) == rhsValue * nbDaysInWeek, tt::tolerance(0.001));
-    // TODO : revert these extra tests
-    BOOST_TEST(output.overallCost(area1).week(0) == 17500, tt::tolerance(0.001));
-    BOOST_TEST(output.overallCost(area2).week(0) == 16450000, tt::tolerance(0.001));
-    BOOST_TEST(output.load(area1).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.load(area2).week(0) == 16800, tt::tolerance(0.001));
-    BOOST_TEST(output.hydroStorage(area1).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.hydroStorage(area2).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.thermalGeneration(cluster.get()).week(0) == 350, tt::tolerance(0.001));
-    BOOST_TEST(output.thermalNbUnitsON(cluster.get()).week(0) == 4, tt::tolerance(0.001));
 }
 
 BOOST_FIXTURE_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60, StudyWithBConLink)
@@ -250,15 +241,6 @@ BOOST_FIXTURE_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account, StudyW
 
     OutputRetriever output(simulation->rawSimu());
     BOOST_TEST(output.flow(link).hour(0) == bcGroupRHS2, tt::tolerance(0.001));
-    // TODO : revert these extra tests
-    BOOST_TEST(output.overallCost(area1).week(0) == 588000, tt::tolerance(0.001));
-    BOOST_TEST(output.overallCost(area2).week(0) == 5040000, tt::tolerance(0.001));
-    BOOST_TEST(output.load(area1).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.load(area2).week(0) == 16800, tt::tolerance(0.001));
-    BOOST_TEST(output.hydroStorage(area1).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.hydroStorage(area2).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.thermalGeneration(cluster.get()).week(0) == 11760, tt::tolerance(0.001));
-    BOOST_TEST(output.thermalNbUnitsON(cluster.get()).week(0) == 168, tt::tolerance(0.001));
 }
 
 BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account, StudyWithBConLink)
@@ -296,15 +278,7 @@ BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account, StudyW
 
     OutputRetriever output(simulation->rawSimu());
     BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
-    // TODO : revert these extra tests
-    BOOST_TEST(output.overallCost(area1).week(0) == 336000, tt::tolerance(0.001));
-    BOOST_TEST(output.overallCost(area2).week(0) == 10080000, tt::tolerance(0.001));
-    BOOST_TEST(output.load(area1).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.load(area2).week(0) == 16800, tt::tolerance(0.001));
-    BOOST_TEST(output.hydroStorage(area1).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.hydroStorage(area2).week(0) == 0, tt::tolerance(0.001));
-    BOOST_TEST(output.thermalGeneration(cluster.get()).week(0) == 6720, tt::tolerance(0.001));
-    BOOST_TEST(output.thermalNbUnitsON(cluster.get()).week(0) == 168, tt::tolerance(0.001));
+    BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
 }
 
 BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallback_to_Oth_column,

@@ -48,10 +48,10 @@ namespace
 {
 void printSolvers()
 {
-    std::cout << "Available linear solvers: " // NOSONAR
-              << availableOrToolsSolversString(SolverClass::LINEAR) << std::endl;
-    std::cout << "Available quadratic solvers: " // NOSONAR
-              << availableOrToolsSolversString(SolverClass::QUADRATIC) << std::endl;
+    std::cout << "Available linear solvers: "                                        // NOSONAR
+              << availableOrToolsSolversString(SolverClass::LINEAR) << std::endl;    // NOSONAR
+    std::cout << "Available quadratic solvers: "                                     // NOSONAR
+              << availableOrToolsSolversString(SolverClass::QUADRATIC) << std::endl; // NOSONAR
 }
 } // namespace
 
