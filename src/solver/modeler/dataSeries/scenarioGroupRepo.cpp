@@ -22,9 +22,8 @@ unsigned ScenarioGroupRepository::getDataRank(std::string groupId, unsigned scen
 
     if (!scenarioGroups_.at(groupId).contains(scenario))
     {
-        std::string error_message = std::format("In scenario group '{}', scenario '{}' does not exist.",
-                                                groupId,
-                                                scenario);
+        std::string error_message = "In scenario group '" + groupId + "', scenario '"
+                                    + std::to_string(scenario) + "' does not exist.";
         throw std::invalid_argument(error_message);
     }
 
