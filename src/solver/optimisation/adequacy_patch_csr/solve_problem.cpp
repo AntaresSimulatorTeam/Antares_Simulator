@@ -295,7 +295,7 @@ bool SolveWithSirius(const OptimizationOptions& options,
           << "Quadratic solver parameters are not supported by SIRIUS; they will be ignored.";
     }
     auto interiorPointProblem = buildInteriorPointProblem(ProblemeAResoudre);
-    PI_Quamin(buildInteriorPointProblem(ProblemeAResoudre).get()); // resolution
+    PI_Quamin(interiorPointProblem.get()); // resolution
     return interiorPointProblem->ExistenceDUneSolution == OUI_PI;
 }
 
