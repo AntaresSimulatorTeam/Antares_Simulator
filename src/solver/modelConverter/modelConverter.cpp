@@ -117,23 +117,22 @@ Antares::Study::SystemModel::ValueType convertType(Antares::Solver::ModelParser:
  */
 std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelParser::Model& model)
 {
-    std::vector<Antares::Study::SystemModel::Variable> variables;
+    namespace SM = Antares::Study::SystemModel;
+
+    std::vector<SM::Variable> variables;
 
     for (const auto& variable: model.variables)
     {
-        Antares::Study::SystemModel::Expression lb(variable.lower_bound,
-                                                   convertExpressionToNode(variable.lower_bound,
-                                                                           model));
-        Antares::Study::SystemModel::Expression ub(variable.upper_bound,
-                                                   convertExpressionToNode(variable.upper_bound,
-                                                                           model));
-        variables.emplace_back(
-          variable.id,
-          std::move(lb),
-          std::move(ub),
-          convertType(variable.variable_type),
-          static_cast<Antares::Study::SystemModel::TimeDependent>(variable.time_dependent),
-          static_cast<Antares::Study::SystemModel::ScenarioDependent>(variable.scenario_dependent));
+        SM::Expression lb(variable.lower_bound,
+                          convertExpressionToNode(variable.lower_bound, model));
+        SM::Expression ub(variable.upper_bound,
+                          convertExpressionToNode(variable.upper_bound, model));
+        variables.emplace_back(variable.id,
+                               std::move(lb),
+                               std::move(ub),
+                               convertType(variable.variable_type),
+                               SM::fromBool<SM::TimeDependent>(variable.time_dependent),
+                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent));
     }
 
     return variables;

@@ -145,8 +145,8 @@ void LinearProblemBuildingFixture::createModel(string modelId,
                                           createExpression(lb),
                                           createExpression(ub),
                                           type,
-                                          static_cast<TimeDependent>(timeDependent),
-                                          static_cast<ScenarioDependent>(scenarioDependent))));
+                                          fromBool<TimeDependent>(timeDependent),
+                                          fromBool<ScenarioDependent>(scenarioDependent))));
     }
     vector<Constraint> constraints;
     for (auto [id, expression]: constraintsData)

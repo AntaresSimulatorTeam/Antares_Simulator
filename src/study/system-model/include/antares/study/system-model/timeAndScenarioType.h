@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+
 namespace Antares::Study::SystemModel
 {
-    /** Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading
-* Parameter("Param", ValueType::FLOAT, false, true)
+/** Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading
+ * Parameter("Param", ValueType::FLOAT, false, true)
  * Avoid mixing wich value is which boolean parameter
  */
 
@@ -37,4 +38,20 @@ enum class ScenarioDependent : bool
     NO = false,
     YES = true
 };
+
+template<class T>
+inline T fromBool(bool in);
+
+template<>
+inline TimeDependent fromBool(bool in)
+{
+    return in ? TimeDependent::YES : TimeDependent::NO;
 }
+
+template<>
+inline ScenarioDependent fromBool(bool in)
+{
+    return in ? ScenarioDependent::YES : ScenarioDependent::NO;
+}
+
+} // namespace Antares::Study::SystemModel
