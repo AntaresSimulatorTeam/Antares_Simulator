@@ -261,7 +261,7 @@ public:
             unsigned int groupNumber = groupToNumbers_[cluster->getGroup()];
 
             pValuesForTheCurrentYear[numSpace][groupNumber][state.hourInTheYear]
-              += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
+              += thermal[area->index].thermalClustersProductions[cluster->enabledIndex];
         }
 
         // Next variable

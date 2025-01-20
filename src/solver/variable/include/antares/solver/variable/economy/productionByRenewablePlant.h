@@ -286,7 +286,7 @@ public:
               state.year,
               state.hourInTheYear);
 
-            pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex]
+            pValuesForTheCurrentYear[numSpace][renewableCluster->enabledIndex]
               .hour[state.hourInTheYear]
               += renewableClusterProduction;
         }
@@ -326,7 +326,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
