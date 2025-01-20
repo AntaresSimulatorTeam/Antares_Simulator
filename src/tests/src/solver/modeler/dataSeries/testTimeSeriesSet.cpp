@@ -1,8 +1,9 @@
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
-#include <unit_test_utils.h>
 #include <antares/solver/modeler/dataSeries/timeSeriesSet.h>
 
 using namespace Antares::Solver::Modeler::DataSeries;
