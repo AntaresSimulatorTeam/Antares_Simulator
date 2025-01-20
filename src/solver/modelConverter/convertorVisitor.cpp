@@ -108,6 +108,7 @@ public:
     {
     }
 };
+
 // to silent warning, convert bool to unsigned int
 static constexpr unsigned int convertBool(bool in)
 {

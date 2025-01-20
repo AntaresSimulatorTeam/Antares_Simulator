@@ -344,7 +344,6 @@ BOOST_AUTO_TEST_CASE(one_model_two_components__dont_clash)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addConstraints_, LinearProblemBuildingFixture)
 
 BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)

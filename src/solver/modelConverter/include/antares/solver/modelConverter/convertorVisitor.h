@@ -26,7 +26,6 @@
 #include <antares/solver/expressions/NodeRegistry.h>
 #include "antares/solver/modelParser/Library.h"
 
-
 namespace Antares::Solver::ModelConverter
 {
 
