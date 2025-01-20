@@ -109,8 +109,9 @@ void ComponentFiller::addTimeDependentConstraints(Solver::Modeler::Api::ILinearP
     for (auto cstr(0); cstr < nb_cstr; ++cstr)
     {
         auto* ct = vect_ct[cstr];
-        for (auto [var_id, coef]: linear_constraint.coef_per_var)
+        for (const auto& [var_id, coef]: linear_constraint.coef_per_var)
         {
+            // TODO FIXME the coefficient needs to be time-dependent
             if (IsThisVariableTimeDependent(var_id))
             {
                 auto* variable = pb.getVariable(component_.Id() + "." + var_id + '_'
