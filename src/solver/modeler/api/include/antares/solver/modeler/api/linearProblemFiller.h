@@ -59,17 +59,6 @@ struct FillContext
 
     std::vector<unsigned> scenariosSelected;
 
-    Visitors::TimeIndex getTimeIndex(const Nodes::Node* node) const
-    {
-        // TODO exception
-        return nodesTimeIndex.at(node);
-    }
-
-    std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> getAllTimeIndex() const
-    {
-        return nodesTimeIndex;
-    }
-
     unsigned int getNumberOfTimestep() const
     {
         return lastTimeStep - firstTimeStep + 1;
