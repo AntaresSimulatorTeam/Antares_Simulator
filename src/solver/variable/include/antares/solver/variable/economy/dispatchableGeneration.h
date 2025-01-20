@@ -24,6 +24,7 @@
 
 namespace
 {
+// TODO function is duplicated for renew and sts groups
 inline std::map<std::string, unsigned int> giveNumbersToThermalGroups(
   const std::vector<std::string>& groupNames)
 {

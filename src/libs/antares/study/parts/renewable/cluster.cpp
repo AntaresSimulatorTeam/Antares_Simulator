@@ -47,18 +47,12 @@ Data::RenewableCluster::RenewableCluster(Area* parent):
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
-uint RenewableCluster::groupId() const
-{
-    return groupID;
-}
-
 void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
     //   the ID for example)
 
     // group
-    groupID = cluster.groupID;
     group = cluster.group;
 
     // Enabled
@@ -82,41 +76,6 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     {
         parentArea->forceReload();
     }
-}
-
-const std::map<RenewableCluster::RenewableGroup, const char*> groupToName = {
-  {RenewableCluster::thermalSolar, "solar thermal"},
-  {RenewableCluster::PVSolar, "solar pv"},
-  {RenewableCluster::rooftopSolar, "solar rooftop"},
-  {RenewableCluster::windOnShore, "wind onshore"},
-  {RenewableCluster::windOffShore, "wind offshore"},
-  {RenewableCluster::renewableOther1, "other res 1"},
-  {RenewableCluster::renewableOther2, "other res 2"},
-  {RenewableCluster::renewableOther3, "other res 3"},
-  {RenewableCluster::renewableOther4, "other res 4"}};
-
-void Data::RenewableCluster::setpGroup(Data::ClusterName newgrp)
-{
-    if (newgrp.empty())
-    {
-        groupID = renewableOther1;
-        group.clear();
-        return;
-    }
-    group = newgrp;
-    boost::to_lower(newgrp);
-
-    for (const auto& [g, name]: groupToName)
-    {
-        if (newgrp == name)
-        {
-            groupID = g;
-            return;
-        }
-    }
-
-    // assigning a default value
-    groupID = renewableOther1;
 }
 
 bool Data::RenewableCluster::forceReload(bool reload) const

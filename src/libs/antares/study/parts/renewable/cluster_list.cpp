@@ -105,7 +105,7 @@ static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Pr
 
     if (p->key == "group")
     {
-        cluster.setpGroup(p->value);
+        cluster.setGroup(p->value);
         return true;
     }
 
