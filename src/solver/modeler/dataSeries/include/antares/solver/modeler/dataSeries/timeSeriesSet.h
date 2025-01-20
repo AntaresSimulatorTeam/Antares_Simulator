@@ -13,7 +13,6 @@ public:
     double getData(unsigned rank, unsigned hour) override;
 
 private:
-    std::string name_;
     unsigned height_ = 0;
     std::vector<std::vector<double>> tsSet_;
     std::string err_prefix_;

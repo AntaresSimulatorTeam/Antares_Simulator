@@ -6,9 +6,9 @@
 namespace Antares::Solver::Modeler::DataSeries
 {
 TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
-    name_(name),
+    IDataSeries::IDataSeries(name),
     height_(height),
-    err_prefix_("TS set '" + name_ + "' : ")
+    err_prefix_("TS set '" + this->name() + "' : ")
 {
 }
 

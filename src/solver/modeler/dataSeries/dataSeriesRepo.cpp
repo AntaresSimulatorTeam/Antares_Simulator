@@ -6,15 +6,21 @@ namespace Antares::Solver::Modeler::DataSeries
 {
 void DataSeriesRepository::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
 {
-    dataSeries_[dataSeries->name()] = std::move(dataSeries);
+    std::string name = dataSeries->name();
+    dataSeries_[name] = std::move(dataSeries);
 }
 
 IDataSeries& DataSeriesRepository::getDataSeries(std::string setId)
 {
+    std::string error_message = err_prefix;
+    if (dataSeries_.empty())
+    {
+        error_message += "empty";
+        throw std::invalid_argument(error_message);
+    }
     if (!dataSeries_.contains(setId))
     {
-        std::string error_message = "Data series repo : data series named '" + setId
-                                    + "' does not exist.";
+        error_message += "data series '" + setId + "' does not exist";
         throw std::invalid_argument(error_message);
     }
     return *(dataSeries_[setId]);
