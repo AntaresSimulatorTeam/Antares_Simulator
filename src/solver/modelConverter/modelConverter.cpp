@@ -21,8 +21,6 @@
 
 #include "antares/solver/modelConverter/modelConverter.h"
 
-#include <boost/range/as_literal.hpp>
-
 #include "antares/solver/expressions/visitors/TimeIndex.h"
 #include "antares/solver/modelConverter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
