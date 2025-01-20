@@ -226,8 +226,7 @@ public:
     {
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            pValuesForTheCurrentYear[numSpace][column]
-              .computeAveragesForCurrentYearFromHourlyResults();
+            pValuesForTheCurrentYear[numSpace][column].computeStatisticsForTheCurrentYear();
         }
 
         // Next variable
