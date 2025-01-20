@@ -75,14 +75,13 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 std::vector<Antares::Study::SystemModel::Parameter> convertParameters(
   const Antares::Solver::ModelParser::Model& model)
 {
-    std::vector<Antares::Study::SystemModel::Parameter> parameters;
+    namespace SM = Antares::Study::SystemModel;
+    std::vector<SM::Parameter> parameters;
     for (const auto& parameter: model.parameters)
     {
         parameters.emplace_back(parameter.id,
-                                static_cast<Antares::Study::SystemModel::TimeDependent>(
-                                  parameter.time_dependent),
-                                static_cast<Antares::Study::SystemModel::ScenarioDependent>(
-                                  parameter.scenario_dependent));
+                                SM::fromBool<SM::TimeDependent>(parameter.time_dependent),
+                                SM::fromBool<SM::ScenarioDependent>(parameter.scenario_dependent));
     }
     return parameters;
 }
