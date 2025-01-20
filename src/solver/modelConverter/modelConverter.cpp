@@ -70,7 +70,6 @@ std::vector<Antares::Study::SystemModel::PortType> convertTypes(
 /**
  * \brief Converts a ModelParser::ValueType to an SystemModel::ValueType.
  *
- * \param nodeTimeIndex
  * \param type The ModelParser::ValueType to convert.
  * \return The corresponding SystemModel::ValueType.
  * \throws UnknownType if the type is unknown.
@@ -116,7 +115,6 @@ Antares::Study::SystemModel::ValueType convertType(Antares::Solver::ModelParser:
  * \brief Converts ports from ModelParser::Model to SystemModel::Port.
  *
  * \param model The ModelParser::Model object containing ports.
- * \param nodeTimeIndex
  * \return A vector of SystemModel::Port objects.
  */
 std::vector<Antares::Study::SystemModel::Variable> convertVariables(const ModelParser::Model& model)
@@ -173,7 +171,6 @@ std::vector<Antares::Study::SystemModel::Constraint> convertConstraints(
  * \brief Converts models from ModelParser::Library to SystemModel::Model.
  *
  * \param library The ModelParser::Library object containing models.
- * \param nodeTimeIndex
  * \return A vector of SystemModel::Model objects.
  */
 std::vector<Antares::Study::SystemModel::Model> convertModels(
@@ -189,7 +186,6 @@ std::vector<Antares::Study::SystemModel::Model> convertModels(
         std::vector<Antares::Study::SystemModel::Constraint> constraints = convertConstraints(
           model);
 
-        std::unordered_map<const Nodes::Node*, Visitors::TimeIndex> nodeTimeIndex;
         auto nodeObjective = convertExpressionToNode(model.objective, model);
 
         auto modelObj = modelBuilder.withId(model.id)
