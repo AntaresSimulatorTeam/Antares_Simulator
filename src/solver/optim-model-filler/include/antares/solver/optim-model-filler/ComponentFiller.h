@@ -78,8 +78,7 @@ public:
                       Solver::Modeler::Api::FillContext& ctx) override;
 
 private:
-    static bool IsThisConstraintTimeDependent(const Solver::Nodes::Node* node,
-                                              const Study::SystemModel::Constraint& constraint);
+    static bool IsThisConstraintTimeDependent(const Solver::Nodes::Node* node);
 
     bool IsThisVariableTimeDependent(const std::string& var_id) const;
 

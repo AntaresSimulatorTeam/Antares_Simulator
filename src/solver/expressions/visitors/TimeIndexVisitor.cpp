@@ -89,21 +89,25 @@ TimeIndex TimeIndexVisitor::visit(const Nodes::NegationNode* neg)
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldNode* port_field_node)
 {
+    // TODO FIXME
     return context_.at(port_field_node);
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::PortFieldSumNode* port_field_node)
 {
+    // TODO FIXME
     return context_.at(port_field_node);
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentVariableNode* component_variable_node)
 {
+    // TODO FIXME
     return context_.at(component_variable_node);
 }
 
 TimeIndex TimeIndexVisitor::visit(const Nodes::ComponentParameterNode* component_parameter_node)
 {
+    // TODO FIXME
     return context_.at(component_parameter_node);
 }
 

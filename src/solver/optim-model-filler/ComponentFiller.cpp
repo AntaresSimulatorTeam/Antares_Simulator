@@ -138,7 +138,7 @@ void ComponentFiller::addConstraints(Solver::Modeler::Api::ILinearProblem& pb,
         // TODO timesteps will be a parameter
         if (checkTimeSteps(ctx))
         {
-            if (IsThisConstraintTimeDependent(root_node, constraint))
+            if (IsThisConstraintTimeDependent(root_node))
 
             {
                 addTimeDependentConstraints(pb,
@@ -190,9 +190,7 @@ void ComponentFiller::addObjective(Solver::Modeler::Api::ILinearProblem& pb,
     }
 }
 
-bool ComponentFiller::IsThisConstraintTimeDependent(
-  const Solver::Nodes::Node* node,
-  const Study::SystemModel::Constraint& constraint)
+bool ComponentFiller::IsThisConstraintTimeDependent(const Solver::Nodes::Node* node)
 {
     Solver::Visitors::TimeIndexVisitor timeIndexVisitor;
     const auto ret = timeIndexVisitor.dispatch(node);
