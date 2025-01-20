@@ -7,7 +7,8 @@ namespace Antares::Solver::Modeler::DataSeries
 {
 TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
     name_(name),
-    height_(height)
+    height_(height),
+    err_prefix_("TS set '" + name_ + "' : ")
 {
 }
 
@@ -16,19 +17,25 @@ void TimeSeriesSet::add(std::vector<double> ts)
     tsSet_.push_back(std::move(ts));
 }
 
-double TimeSeriesSet::getData(unsigned int rank, unsigned int hour)
+double TimeSeriesSet::getData(unsigned rank, unsigned hour)
 {
-    if (rank > tsSet_.size())
+    if (tsSet_.empty())
     {
-        std::string error_message = "Rank '" + std::to_string(rank) + "' exceeds size of TS '"
-                                    + name_ + "'.";
+        std::string error_message = err_prefix_ + "empty, requesting a value makes no sense";
         throw std::invalid_argument(error_message);
     }
 
-    if (hour + 1 > height_)
+    if (rank > tsSet_.size() - 1)
     {
-        std::string error_message = "Hour '" + std::to_string(hour) + "' exceeds height of TS '"
-                                    + name_ + "'.";
+        std::string error_message = err_prefix_ + "rank " + std::to_string(rank)
+                                    + " exceeds TS set's width";
+        throw std::invalid_argument(error_message);
+    }
+
+    if (hour > height_ - 1)
+    {
+        std::string error_message = err_prefix_ + "hour " + std::to_string(hour)
+                                    + " exceeds TS set's height";
         throw std::invalid_argument(error_message);
     }
 

@@ -4,6 +4,7 @@ add_boost_test(unit-tests-for-modeler-data-series
         SRC
         main.cpp
         testScenarioGroupRepo.cpp
+        testTimeSeriesSet.cpp
         INCLUDE
         "${solver_modeler_data_series}"
         LIBS
