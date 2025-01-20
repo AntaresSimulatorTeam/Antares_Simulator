@@ -237,7 +237,7 @@ public:
         for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
         {
             state.thermalClusterDispatchedUnitsCountForYear[i] += static_cast<uint>(
-              pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]);
+              pValuesForTheCurrentYear[numSpace][state.thermalCluster->enabledIndex].hour[i]);
         }
 
         // Next variable
@@ -251,7 +251,7 @@ public:
              i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->enabledIndex].hour[i]
               = state.thermalClusterDispatchedUnitsCountForYear[i];
         }
 
@@ -308,8 +308,8 @@ public:
         auto& thermal = state.thermal;
         for (auto& cluster: area->thermal.list.each_enabled())
         {
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[state.hourInTheYear]
-              = thermal[area->index].numberOfUnitsONbyCluster[cluster->areaWideIndex];
+            pValuesForTheCurrentYear[numSpace][cluster->enabledIndex].hour[state.hourInTheYear]
+              = thermal[area->index].numberOfUnitsONbyCluster[cluster->enabledIndex];
         }
 
         // Next variable
@@ -342,7 +342,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

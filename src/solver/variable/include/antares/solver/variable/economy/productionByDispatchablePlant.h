@@ -259,10 +259,10 @@ public:
         {
             state.thermalClusterProductionForYear[i] += pValuesForTheCurrentYear
                                                           [numSpace]
-                                                          [state.thermalCluster->areaWideIndex]
+                                                          [state.thermalCluster->enabledIndex]
                                                             .hour[i];
             state.thermalClusterPMinOfTheClusterForYear[i] += pminOfTheClusterForYear
-              [numSpace][(state.thermalCluster->areaWideIndex * HOURS_PER_YEAR) + i];
+              [numSpace][(state.thermalCluster->enabledIndex * HOURS_PER_YEAR) + i];
         }
 
         // Next variable
@@ -319,12 +319,12 @@ public:
         for (auto& cluster: area->thermal.list.each_enabled())
         {
             // Production for this hour
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[state.hourInTheYear]
-              += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
+            pValuesForTheCurrentYear[numSpace][cluster->enabledIndex].hour[state.hourInTheYear]
+              += thermal[area->index].thermalClustersProductions[cluster->enabledIndex];
 
             pminOfTheClusterForYear[numSpace]
-                                   [(cluster->areaWideIndex * HOURS_PER_YEAR) + state.hourInTheYear]
-              = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
+                                   [(cluster->enabledIndex * HOURS_PER_YEAR) + state.hourInTheYear]
+              = thermal[area->index].PMinOfClusters[cluster->enabledIndex];
         }
 
         // Next variable
@@ -363,7 +363,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

@@ -281,11 +281,11 @@ public:
         for (auto& cluster: area->thermal.list.each_enabled())
         {
             double hourlyClusterProduction = thermal[area->index]
-                                               .thermalClustersProductions[cluster->areaWideIndex];
+                                               .thermalClustersProductions[cluster->enabledIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[state.year];
 
             // Thermal cluster profit
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][cluster->enabledIndex].hour[hourInTheYear]
               = std::max((hourlyClusterProduction - cluster->PthetaInf[hourInTheYear]), 0.)
                 * (-areaMarginalCosts[hourInTheWeek]
                    - cluster->getCostProvider().getMarginalCost(tsIndex, hourInTheYear));
@@ -321,7 +321,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

@@ -24,29 +24,33 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/logs/logs.h>
-#include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/shave-peaks-by-remix-hydro.h"
 #include "antares/study/simulation.h"
 
 #define EPSILON 1e-6
 
 namespace Antares::Solver::Simulation
 {
+
+const unsigned int HOURS_IN_WEEK = 168;
+const unsigned int HOURS_IN_DAY = 24;
+
 template<uint step>
 static bool Remix(const Data::AreaList& areas,
                   PROBLEME_HEBDO& problem,
                   uint numSpace,
                   uint hourInYear)
 {
-    double HE[168];
+    double HE[HOURS_IN_WEEK];
 
-    double DE[168];
+    double DE[HOURS_IN_WEEK];
 
-    bool remix[168];
+    bool remix[HOURS_IN_WEEK];
 
-    double G[168];
+    double G[HOURS_IN_WEEK];
 
     bool status = true;
 
@@ -68,7 +72,7 @@ static bool Remix(const Data::AreaList& areas,
 
           uint endHour = step;
           uint offset = 0;
-          for (; offset < 168; offset += step, endHour += step)
+          for (; offset < HOURS_IN_WEEK; offset += step, endHour += step)
           {
               {
                   double WD = 0.;
@@ -220,6 +224,92 @@ static bool Remix(const Data::AreaList& areas,
     return status;
 }
 
+std::vector<double> computeTotalGenWithoutHydro(const std::vector<double>& load,
+                                                const std::vector<double>& unsupE,
+                                                const std::vector<double>& hydroGen)
+{
+    // Can be computed (for any hour) as : load - unsupplied energy - hydro
+    std::vector<double> to_return = load;
+    for (size_t i = 0; i < to_return.size(); ++i)
+    {
+        to_return[i] -= unsupE[i] + hydroGen[i];
+    }
+    return to_return;
+}
+
+std::vector<double> extractLoadForCurrentWeek(const Data::Area& area,
+                                              const unsigned int year,
+                                              const unsigned int firstHourOfWeek)
+{
+    std::vector<double> load_to_return(HOURS_IN_WEEK, 0.);
+    for (int h = 0; h < HOURS_IN_WEEK; h++)
+    {
+        load_to_return[h] = area.load.series.getColumn(year)[h + firstHourOfWeek];
+    }
+    return load_to_return;
+}
+
+std::vector<double> extractHydroPmin(const Data::Area& area,
+                                     const unsigned int year,
+                                     const unsigned int firstHourOfWeek)
+{
+    // area->hydro.series->mingen.timeSeries
+    std::vector<double> hydroPmin(HOURS_IN_WEEK, 0.);
+    for (int h = 0; h < HOURS_IN_WEEK; h++)
+    {
+        hydroPmin[h] = area.hydro.series->mingen.getColumn(year)[h + firstHourOfWeek];
+    }
+    return hydroPmin;
+}
+
+static void RunAccurateShavePeaks(const Data::AreaList& areas,
+                                  PROBLEME_HEBDO& problem,
+                                  uint numSpace,
+                                  uint firstHourOfWeek)
+{
+    areas.each(
+      [&](const Data::Area& area)
+      {
+          auto& weeklyResults = problem.ResultatsHoraires[area.index];
+
+          const auto load = extractLoadForCurrentWeek(area, problem.year, firstHourOfWeek);
+          auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
+          auto& hydroGen = weeklyResults.TurbinageHoraire;
+          auto& levels = weeklyResults.niveauxHoraires;
+          const auto DispatchGen = computeTotalGenWithoutHydro(load, unsupE, hydroGen);
+          const auto& hydroPmax = problem.CaracteristiquesHydrauliques[area.index]
+                                    .ContrainteDePmaxHydrauliqueHoraire;
+          const auto hydroPmin = extractHydroPmin(area, problem.year, firstHourOfWeek);
+          const double initLevel = problem.CaracteristiquesHydrauliques[area.index]
+                                     .NiveauInitialReservoir;
+          const double capacity = area.hydro.reservoirCapacity;
+          const auto& inflows = problem.CaracteristiquesHydrauliques[area.index]
+                                  .ApportNaturelHoraire;
+          const auto& ovf = weeklyResults.debordementsHoraires;
+          const auto& pump = weeklyResults.PompageHoraire;
+          const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
+
+          const auto& dtgMrgArray = area.scratchpad[numSpace].dispatchableGenerationMargin;
+          const std::vector<double> dtgMrg(dtgMrgArray, dtgMrgArray + HOURS_IN_WEEK);
+
+          auto [H, U, L] = shavePeaksByRemixingHydro(DispatchGen,
+                                                     hydroGen,
+                                                     unsupE,
+                                                     hydroPmax,
+                                                     hydroPmin,
+                                                     initLevel,
+                                                     capacity,
+                                                     inflows,
+                                                     ovf,
+                                                     pump,
+                                                     spillage,
+                                                     dtgMrg);
+          hydroGen = H;
+          unsupE = U;
+          levels = L;
+      });
+}
+
 void RemixHydroForAllAreas(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
                            Data::SheddingPolicy sheddingPolicy,
@@ -234,10 +324,10 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
         switch (simplexOptimizationRange)
         {
         case Data::sorWeek:
-            result = Remix<168>(areas, problem, numSpace, hourInYear);
+            result = Remix<HOURS_IN_WEEK>(areas, problem, numSpace, hourInYear);
             break;
         case Data::sorDay:
-            result = Remix<24>(areas, problem, numSpace, hourInYear);
+            result = Remix<HOURS_IN_DAY>(areas, problem, numSpace, hourInYear);
             break;
         case Data::sorUnknown:
             logs.fatal() << "invalid simplex optimization range";
@@ -248,6 +338,18 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
         {
             throw new Data::AssertionError(
               "Error in simplex optimisation. Check logs for more details.");
+        }
+    }
+    else if (sheddingPolicy == Data::shpAccurateShavePeaks)
+    {
+        try
+        {
+            RunAccurateShavePeaks(areas, problem, numSpace, hourInYear);
+        }
+        catch (std::invalid_argument& invalidArgExc)
+        {
+            Data::AssertionError assertErrException(invalidArgExc.what());
+            throw assertErrException;
         }
     }
 }
