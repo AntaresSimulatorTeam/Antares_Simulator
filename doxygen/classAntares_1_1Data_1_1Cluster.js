@@ -6,7 +6,7 @@ var classAntares_1_1Data_1_1Cluster =
     [ "isVisibleOnLayer", "classAntares_1_1Data_1_1Cluster.html#ac6b2ed92f9e40778fd2e5640713872e1", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1Cluster.html#ad4140c4202f83318258856e71db9b868", null ],
     [ "reset", "classAntares_1_1Data_1_1Cluster.html#ad2fa043c2ab650773c2e137251f09430", null ],
-    [ "areaWideIndex", "classAntares_1_1Data_1_1Cluster.html#a564f137d2d6985addb1e8dcd4b0ecdfc", null ],
+    [ "areaWideIndex", "classAntares_1_1Data_1_1Cluster.html#ab8bd707543005b8283ed8c4e7ab76d01", null ],
     [ "modulation", "classAntares_1_1Data_1_1Cluster.html#a0b959414068e894b6fcddeee6bac0c36", null ],
     [ "nominalCapacity", "classAntares_1_1Data_1_1Cluster.html#a1d7e1d8ddf0071df24ba61919ec60582", null ],
     [ "parentArea", "classAntares_1_1Data_1_1Cluster.html#ab593cef54f0e36411998fe057e82ce34", null ],

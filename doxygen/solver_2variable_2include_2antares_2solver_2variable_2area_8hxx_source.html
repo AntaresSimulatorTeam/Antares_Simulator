@@ -526,7 +526,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>          <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cluster: area.thermal.list.each_enabled())</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>          {</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>              <span class="comment">// Intiializing the state for the current thermal cluster</span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>              state.initFromThermalClusterIndex(cluster-&gt;areaWideIndex);</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>              state.initFromThermalClusterIndex(cluster-&gt;enabledIndex);</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>          }</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span> </div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>          <span class="comment">// Variables</span></div>
@@ -603,7 +603,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>              variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);</div>
 <div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span> </div>
 <div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>              <span class="comment">// Building the end of year</span></div>
-<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>              state.yearEndBuildFromThermalClusterIndex(cluster-&gt;areaWideIndex);</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>              state.yearEndBuildFromThermalClusterIndex(cluster-&gt;enabledIndex);</div>
 <div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span> </div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>              <span class="comment">// Variables</span></div>
 <div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>              variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);</div>

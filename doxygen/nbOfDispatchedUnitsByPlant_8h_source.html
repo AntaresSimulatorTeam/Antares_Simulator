@@ -366,7 +366,7 @@ $(document).ready(function(){initNavTree('nbOfDispatchedUnitsByPlant_8h_source.h
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt;= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        {</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            state.thermalClusterDispatchedUnitsCountForYear[i] += <span class="keyword">static_cast&lt;</span>uint<span class="keyword">&gt;</span>(</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>              pValuesForTheCurrentYear[numSpace][state.thermalCluster-&gt;areaWideIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[i]);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>              pValuesForTheCurrentYear[numSpace][state.thermalCluster-&gt;enabledIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[i]);</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        }</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="comment">// Next variable</span></div>
@@ -380,7 +380,7 @@ $(document).ready(function(){initNavTree('nbOfDispatchedUnitsByPlant_8h_source.h
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>             i &lt;= state.study.runtime.rangeLimits.hour[Data::rangeEnd];</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>             ++i)</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        {</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            pValuesForTheCurrentYear[numSpace][state.thermalCluster-&gt;areaWideIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[i]</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            pValuesForTheCurrentYear[numSpace][state.thermalCluster-&gt;enabledIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[i]</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>              = state.thermalClusterDispatchedUnitsCountForYear[i];</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        }</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
@@ -437,8 +437,8 @@ $(document).ready(function(){initNavTree('nbOfDispatchedUnitsByPlant_8h_source.h
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        <span class="keyword">auto</span>&amp; thermal = state.thermal;</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster: area-&gt;thermal.list.each_enabled())</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        {</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>              = thermal[area-&gt;index].numberOfUnitsONbyCluster[cluster-&gt;areaWideIndex];</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            pValuesForTheCurrentYear[numSpace][cluster-&gt;enabledIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>              = thermal[area-&gt;index].numberOfUnitsONbyCluster[cluster-&gt;enabledIndex];</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        }</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="comment">// Next variable</span></div>
@@ -471,7 +471,7 @@ $(document).ready(function(){initNavTree('nbOfDispatchedUnitsByPlant_8h_source.h
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                <span class="comment">// Write the data for the current year</span></div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = cluster-&gt;name(); <span class="comment">// VCardType::Caption();</span></div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#a2e81cda8278cfbf676b29ec1a779e7b2">VCardType::Unit</a>();</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex]</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                pValuesForTheCurrentYear[numSpace][cluster-&gt;enabledIndex]</div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                  .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>            }</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        }</div>

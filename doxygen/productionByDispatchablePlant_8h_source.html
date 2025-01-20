@@ -389,10 +389,10 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        {</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            state.thermalClusterProductionForYear[i] += pValuesForTheCurrentYear</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                                                          [numSpace]</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                                                          [state.thermalCluster-&gt;areaWideIndex]</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                                                          [state.thermalCluster-&gt;enabledIndex]</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                                                            .<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[i];</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            state.thermalClusterPMinOfTheClusterForYear[i] += pminOfTheClusterForYear</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>              [numSpace][(state.thermalCluster-&gt;areaWideIndex * HOURS_PER_YEAR) + i];</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>              [numSpace][(state.thermalCluster-&gt;enabledIndex * HOURS_PER_YEAR) + i];</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        }</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="comment">// Next variable</span></div>
@@ -449,12 +449,12 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster: area-&gt;thermal.list.each_enabled())</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        {</div>
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="comment">// Production for this hour</span></div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>              += thermal[area-&gt;index].thermalClustersProductions[cluster-&gt;areaWideIndex];</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            pValuesForTheCurrentYear[numSpace][cluster-&gt;enabledIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>              += thermal[area-&gt;index].thermalClustersProductions[cluster-&gt;enabledIndex];</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            pminOfTheClusterForYear[numSpace]</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                                   [(cluster-&gt;areaWideIndex * HOURS_PER_YEAR) + state.hourInTheYear]</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>              = thermal[area-&gt;index].PMinOfClusters[cluster-&gt;areaWideIndex];</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                                   [(cluster-&gt;enabledIndex * HOURS_PER_YEAR) + state.hourInTheYear]</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>              = thermal[area-&gt;index].PMinOfClusters[cluster-&gt;enabledIndex];</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        }</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="comment">// Next variable</span></div>
@@ -493,7 +493,7 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                <span class="comment">// Write the data for the current year</span></div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                results.variableCaption = cluster-&gt;name(); <span class="comment">// VCardType::Caption();</span></div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                results.variableUnit = <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#ac79fb7643d872cf5112bb8bfa22180d0">VCardType::Unit</a>();</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex]</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                pValuesForTheCurrentYear[numSpace][cluster-&gt;enabledIndex]</div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>                  .template buildAnnualSurveyReport&lt;VCardType&gt;(results, fileLevel, precision);</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>            }</div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        }</div>

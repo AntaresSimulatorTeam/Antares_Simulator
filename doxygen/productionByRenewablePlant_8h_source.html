@@ -416,7 +416,7 @@ $(document).ready(function(){initNavTree('productionByRenewablePlant_8h_source.h
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>              state.year,</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>              state.hourInTheYear);</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            pValuesForTheCurrentYear[numSpace][renewableCluster-&gt;areaWideIndex]</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            pValuesForTheCurrentYear[numSpace][renewableCluster-&gt;enabledIndex]</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>              .<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>              += renewableClusterProduction;</div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        }</div>
@@ -456,7 +456,7 @@ $(document).ready(function(){initNavTree('productionByRenewablePlant_8h_source.h
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                <span class="comment">// Write the data for the current year</span></div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = cluster-&gt;name();</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByRenewablePlant.html#a625b6f51d63e31860bd9c5c1aef8f25e">VCardType::Unit</a>();</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex]</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                pValuesForTheCurrentYear[numSpace][cluster-&gt;enabledIndex]</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                  .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            }</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        }</div>

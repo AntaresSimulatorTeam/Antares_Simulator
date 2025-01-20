@@ -1,9 +1,9 @@
 var classAntares_1_1Solver_1_1Variable_1_1State =
 [
     [ "initFromAreaIndex", "classAntares_1_1Solver_1_1Variable_1_1State.html#a39d73198ffb4bc621f1fde34628c1247", null ],
-    [ "initFromThermalClusterIndex", "classAntares_1_1Solver_1_1Variable_1_1State.html#a04e9e33b22703644b5afebe4f42550c3", null ],
+    [ "initFromThermalClusterIndex", "classAntares_1_1Solver_1_1Variable_1_1State.html#abf43ee892d052d6a79da39f69b328195", null ],
     [ "startANewYear", "classAntares_1_1Solver_1_1Variable_1_1State.html#a4af98c79844d8335231ec76ee8c3d4d6", null ],
-    [ "yearEndBuildFromThermalClusterIndex", "classAntares_1_1Solver_1_1Variable_1_1State.html#ac2e213c74fbfc92a53edc03f360159ea", null ],
+    [ "yearEndBuildFromThermalClusterIndex", "classAntares_1_1Solver_1_1Variable_1_1State.html#a47434ae3fa1cf7f8686bb88fc5538c83", null ],
     [ "yearEndResetThermal", "classAntares_1_1Solver_1_1Variable_1_1State.html#a8a7395e0a095bdd5264b4bd8d251b69d", null ],
     [ "area", "classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640", null ],
     [ "averageOptimizationTime1", "classAntares_1_1Solver_1_1Variable_1_1State.html#af9e11b52d917e7ad95b27192555504dc", null ],

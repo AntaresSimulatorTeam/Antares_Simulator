@@ -147,12 +147,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a39d73198ffb4bc621f1fde34628c1247" id="r_a39d73198ffb4bc621f1fde34628c1247"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a39d73198ffb4bc621f1fde34628c1247">initFromAreaIndex</a> (const unsigned int areaIndex, uint <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html#ac8ac6f85e6b7e6c6ee3f863e40257ade">numSpace</a>)</td></tr>
 <tr class="memdesc:a39d73198ffb4bc621f1fde34628c1247"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize some variables according an area index.  <br /></td></tr>
 <tr class="separator:a39d73198ffb4bc621f1fde34628c1247"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04e9e33b22703644b5afebe4f42550c3" id="r_a04e9e33b22703644b5afebe4f42550c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a04e9e33b22703644b5afebe4f42550c3">initFromThermalClusterIndex</a> (const unsigned int areaWideIndex)</td></tr>
-<tr class="memdesc:a04e9e33b22703644b5afebe4f42550c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize some variable according a thermal cluster index.  <br /></td></tr>
-<tr class="separator:a04e9e33b22703644b5afebe4f42550c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2e213c74fbfc92a53edc03f360159ea" id="r_ac2e213c74fbfc92a53edc03f360159ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html#ac2e213c74fbfc92a53edc03f360159ea">yearEndBuildFromThermalClusterIndex</a> (const unsigned int areaWideIndex)</td></tr>
-<tr class="memdesc:ac2e213c74fbfc92a53edc03f360159ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the year by smoothing the thermal units run and computing costs. We assume here that the variables related to an area are properly initialized.  <br /></td></tr>
-<tr class="separator:ac2e213c74fbfc92a53edc03f360159ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf43ee892d052d6a79da39f69b328195" id="r_abf43ee892d052d6a79da39f69b328195"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html#abf43ee892d052d6a79da39f69b328195">initFromThermalClusterIndex</a> (const unsigned int clusterEnabledIndex)</td></tr>
+<tr class="memdesc:abf43ee892d052d6a79da39f69b328195"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize some variable according a thermal cluster index.  <br /></td></tr>
+<tr class="separator:abf43ee892d052d6a79da39f69b328195"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47434ae3fa1cf7f8686bb88fc5538c83" id="r_a47434ae3fa1cf7f8686bb88fc5538c83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a47434ae3fa1cf7f8686bb88fc5538c83">yearEndBuildFromThermalClusterIndex</a> (const unsigned int clusterEnabledIndex)</td></tr>
+<tr class="memdesc:a47434ae3fa1cf7f8686bb88fc5538c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the year by smoothing the thermal units run and computing costs. We assume here that the variables related to an area are properly initialized.  <br /></td></tr>
+<tr class="separator:a47434ae3fa1cf7f8686bb88fc5538c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4af98c79844d8335231ec76ee8c3d4d6" id="r_a4af98c79844d8335231ec76ee8c3d4d6"><td class="memItemLeft" align="right" valign="top"><a id="a4af98c79844d8335231ec76ee8c3d4d6" name="a4af98c79844d8335231ec76ee8c3d4d6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>startANewYear</b> ()</td></tr>
 <tr class="memdesc:a4af98c79844d8335231ec76ee8c3d4d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset internal data. <br /></td></tr>
@@ -338,8 +338,8 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>averageUpdateTime</
 
 </div>
 </div>
-<a id="a04e9e33b22703644b5afebe4f42550c3" name="a04e9e33b22703644b5afebe4f42550c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04e9e33b22703644b5afebe4f42550c3">&#9670;&#160;</a></span>initFromThermalClusterIndex()</h2>
+<a id="abf43ee892d052d6a79da39f69b328195" name="abf43ee892d052d6a79da39f69b328195"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf43ee892d052d6a79da39f69b328195">&#9670;&#160;</a></span>initFromThermalClusterIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -348,7 +348,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>averageUpdateTime</
           <td class="memname">void Antares::Solver::Variable::State::initFromThermalClusterIndex </td>
           <td>(</td>
           <td class="paramtype">const unsigned int&#160;</td>
-          <td class="paramname"><em>areaWideIndex</em></td><td>)</td>
+          <td class="paramname"><em>clusterEnabledIndex</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -358,15 +358,15 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>averageUpdateTime</
 <p>We assume here that the variables related to an area are properly initialized.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">areaWideIndex</td><td>Index of the thermal cluster for the current area </td></tr>
+    <tr><td class="paramname">clusterEnabledIndex</td><td>Index of the thermal cluster for the current area </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ac2e213c74fbfc92a53edc03f360159ea" name="ac2e213c74fbfc92a53edc03f360159ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2e213c74fbfc92a53edc03f360159ea">&#9670;&#160;</a></span>yearEndBuildFromThermalClusterIndex()</h2>
+<a id="a47434ae3fa1cf7f8686bb88fc5538c83" name="a47434ae3fa1cf7f8686bb88fc5538c83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47434ae3fa1cf7f8686bb88fc5538c83">&#9670;&#160;</a></span>yearEndBuildFromThermalClusterIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -375,7 +375,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>averageUpdateTime</
           <td class="memname">void Antares::Solver::Variable::State::yearEndBuildFromThermalClusterIndex </td>
           <td>(</td>
           <td class="paramtype">const unsigned int&#160;</td>
-          <td class="paramname"><em>areaWideIndex</em></td><td>)</td>
+          <td class="paramname"><em>clusterEnabledIndex</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -384,7 +384,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>averageUpdateTime</
 <p>End the year by smoothing the thermal units run and computing costs. We assume here that the variables related to an area are properly initialized. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">areaWideIndex</td><td>Index of the thermal cluster for the current area </td></tr>
+    <tr><td class="paramname">clusterEnabledIndex</td><td>Index of the thermal cluster for the current area </td></tr>
   </table>
   </dd>
 </dl>
