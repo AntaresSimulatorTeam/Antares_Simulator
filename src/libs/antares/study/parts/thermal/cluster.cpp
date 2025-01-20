@@ -448,37 +448,6 @@ bool Data::ThermalCluster::integrityCheck()
     return ret;
 }
 
-const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
-{
-    switch (grp)
-    {
-    case thermalDispatchGrpNuclear:
-        return "Nuclear";
-    case thermalDispatchGrpLignite:
-        return "Lignite";
-    case thermalDispatchGrpHardCoal:
-        return "Hard Coal";
-    case thermalDispatchGrpGas:
-        return "Gas";
-    case thermalDispatchGrpOil:
-        return "Oil";
-    case thermalDispatchGrpMixedFuel:
-        return "Mixed Fuel";
-    case thermalDispatchGrpOther1:
-        return "Other";
-    case thermalDispatchGrpOther2:
-        return "Other 2";
-    case thermalDispatchGrpOther3:
-        return "Other 3";
-    case thermalDispatchGrpOther4:
-        return "Other 4";
-
-    case groupMax:
-        return "";
-    }
-    return "";
-}
-
 void ThermalCluster::calculatMinDivModulation()
 {
     minDivModulation.value = (modulation[thermalModulationCapacity][0]

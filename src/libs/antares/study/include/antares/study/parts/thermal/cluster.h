@@ -77,33 +77,6 @@ double computeMarketBidCost(double fuelCost,
 class ThermalCluster final: public Cluster, public std::enable_shared_from_this<ThermalCluster>
 {
 public:
-    enum ThermalDispatchableGroup
-    {
-        //! Nuclear
-        thermalDispatchGrpNuclear = 0,
-        //! Lignite
-        thermalDispatchGrpLignite,
-        //! Hard Coal
-        thermalDispatchGrpHardCoal,
-        //! Gas
-        thermalDispatchGrpGas,
-        //! Oil
-        thermalDispatchGrpOil,
-        //! Mixed fuel
-        thermalDispatchGrpMixedFuel,
-        //! Other 1
-        thermalDispatchGrpOther1,
-        //! Other 2
-        thermalDispatchGrpOther2,
-        //! Other 3
-        thermalDispatchGrpOther3,
-        //! Other 4
-        thermalDispatchGrpOther4,
-
-        //! The highest value
-        groupMax
-    };
-
     Pollutant emissions;
 
     //! Set of thermal clusters
@@ -112,12 +85,6 @@ public:
     using SetPointer = std::set<ThermalCluster*>;
     //! Vector of thermal clusters
     using Vector = std::vector<Data::ThermalCluster*>;
-
-    /*!
-    ** \brief Get the group name string
-    ** \return A valid CString
-    */
-    static const char* GroupName(enum ThermalDispatchableGroup grp);
 
     explicit ThermalCluster(Data::Area* parent);
 
