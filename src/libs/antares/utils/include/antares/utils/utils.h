@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_UTILS_H__
 #define __ANTARES_LIBS_UTILS_H__
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -53,8 +54,11 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 
 namespace Utils
 {
+
 bool isZero(double d);
 double round(double d, unsigned precision);
+std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs);
+
 } // namespace Utils
 } // namespace Antares
 

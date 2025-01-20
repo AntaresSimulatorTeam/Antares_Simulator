@@ -160,5 +160,15 @@ double round(double d, unsigned precision)
     return std::round(d * factor) / factor;
 }
 
+std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs)
+{
+    unsigned strNb = 0;
+    std::map<std::string, unsigned> strToNumber;
+    for (const auto& s: strs)
+    {
+        strToNumber[s] = strNb++;
+    }
+    return strToNumber;
+}
 } // namespace Utils
 } // namespace Antares

@@ -20,23 +20,8 @@
 */
 #pragma once
 
+#include <antares/utils/utils.h>
 #include "antares/solver/variable/variable.h"
-
-namespace
-{
-// TODO function is duplicated for renew and sts groups
-inline std::map<std::string, unsigned int> giveNumbersToThermalGroups(
-  const std::vector<std::string>& groupNames)
-{
-    unsigned int groupNumber{0};
-    std::map<std::string, unsigned int> groupToNumbers;
-    for (const auto& name: groupNames)
-    {
-        groupToNumbers[name] = groupNumber++;
-    }
-    return groupToNumbers;
-}
-} // namespace
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -166,7 +151,7 @@ public:
             names.insert(cluster->getGroup());
         }
         groupNames_ = {names.begin(), names.end()};
-        groupToNumbers_ = giveNumbersToThermalGroups(groupNames_);
+        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
         nbColumns_ = groupNames_.size();
 
