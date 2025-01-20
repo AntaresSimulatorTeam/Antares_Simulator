@@ -21,7 +21,7 @@ class VariableNode final: public Leaf<std::string>
 public:
     explicit VariableNode(
       const std::string& value,
-      const Visitors::TimeIndex& time_index = Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
+      Visitors::TimeIndex time_index = Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
         time_index_(time_index)
     {
