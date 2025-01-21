@@ -22,6 +22,7 @@
 #include <absl/status/statusor.h>
 #include <ortools/math_opt/cpp/math_opt.h>
 #include <pi_constantes_externes.h>
+#include <vector>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_quadratic_wrapper.h>
@@ -45,10 +46,11 @@ void checkOptions(const OptimizationOptions& options)
     auto availableSolversList = getAvailableSolverNames(SolverClass::QUADRATIC);
     bool solverFound = std::ranges::find(availableSolversList, options.quadraticSolver)
                        != availableSolversList.end();
-    if (!solverFound)
+    if (!solverFound || options.quadraticSolver.compare("sirius") == 0)
     {
-        throw std::invalid_argument("Solver " + options.quadraticSolver
-                                    + " not supported for quadratic problems optimization.");
+        throw std::invalid_argument(
+          "Solver " + options.quadraticSolver
+          + " is not supported for quadratic problems optimization through MathOpt.");
     }
     if (!options.quadraticSolverParameters.empty())
     {
@@ -148,7 +150,7 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
             break;
         default:
             throw std::invalid_argument("Expected constraint sense to be =, <, or >, but was: "
-                                        + ProblemeAResoudre->Sens[iCt]);
+                                        + ProblemeAResoudre->Sens.substr(iCt, 1));
         }
         BoundedLinearExpression bounded_linear_expression(std::move(linear_expression), lb, ub);
         std::string name = ProblemeAResoudre->NomDesContraintes[iCt].empty()
@@ -158,50 +160,100 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
     }
 }
 
+void FillWithValues(std::vector<double>& destination, const std::vector<double>& origin)
+{
+    if (destination.size() != origin.size())
+    {
+        throw std::invalid_argument("Expected destination and origin to have the same size");
+    }
+    for (auto i = 0; i < destination.size(); ++i)
+    {
+        destination[i] = origin[i];
+    }
+}
+
+void FillWithValues(std::vector<double*>& destination, const std::vector<double>& origin)
+{
+    if (destination.size() != origin.size())
+    {
+        throw std::invalid_argument("Expected destination and origin to have the same size");
+    }
+    for (auto i = 0; i < destination.size(); ++i)
+    {
+        double* pt = destination[i];
+        if (pt)
+        {
+            *pt = origin[i];
+        }
+    }
+}
+
+void FillWithNaN(std::vector<double>& vector)
+{
+    for (auto i = 0; i < vector.size(); ++i)
+    {
+        vector[i] = std::numeric_limits<double>::quiet_NaN();
+    }
+}
+
+void FillWithNaN(std::vector<double*>& vector)
+{
+    for (auto i = 0; i < vector.size(); ++i)
+    {
+        double* pt = vector[i];
+        if (pt)
+        {
+            *pt = std::numeric_limits<double>::quiet_NaN();
+        }
+    }
+}
+
 void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                         Model& model,
                         absl::StatusOr<SolveResult> resultStatus)
 {
+    // Store results (status, primals, duals, reduced costs) in problem structure
     if (resultStatus.ok() && resultStatus.value().has_primal_feasible_solution())
     {
         ProblemeAResoudre->ExistenceDUneSolution = OUI_PI;
-        // Store result in problem structure
-        auto result = resultStatus.value();
+        std::vector<double> primals;
+        primals.reserve(ProblemeAResoudre->NombreDeVariables);
+        std::vector<double> reducedCosts;
+        reducedCosts.reserve(ProblemeAResoudre->NombreDeVariables);
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
         {
             auto var = model.variable(i);
-            // Primal results
-            double value = result.best_primal_solution().variable_values.at(var);
-            ProblemeAResoudre->X[i] = value;
-            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
-            if (pt)
-            {
-                *pt = value;
-            }
-            // Reduced costs
-            ProblemeAResoudre->CoutsReduits[i] = result.reduced_costs().at(var);
+            primals.emplace_back(
+              resultStatus.value().best_primal_solution().variable_values.at(var));
+            reducedCosts.emplace_back(resultStatus.value().reduced_costs().at(var));
         }
+        FillWithValues(ProblemeAResoudre->X, primals);
+        FillWithValues(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees, primals);
+        FillWithValues(ProblemeAResoudre->CoutsReduits, reducedCosts);
+        FillWithValues(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits, reducedCosts);
+
         // Dual values
-        if (result.has_dual_feasible_solution())
+        if (resultStatus.value().has_dual_feasible_solution())
         {
+            std::vector<double> duals;
+            duals.reserve(ProblemeAResoudre->NombreDeContraintes);
             for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; ++i)
             {
-                auto ct = model.linear_constraint(i);
-                ProblemeAResoudre->CoutsMarginauxDesContraintes[i] = result.dual_values().at(ct);
+                duals.emplace_back(
+                  resultStatus.value().dual_values().at(model.linear_constraint(i)));
             }
+            FillWithValues(ProblemeAResoudre->CoutsMarginauxDesContraintes, duals);
+            FillWithValues(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux, duals);
         }
     }
     else
     {
         ProblemeAResoudre->ExistenceDUneSolution = NON_PI;
-        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
-        {
-            ProblemeAResoudre->X[i] = std::numeric_limits<double>::quiet_NaN();
-            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
-            if (pt)
-            {
-                *pt = std::numeric_limits<double>::quiet_NaN();
-            }
-        }
+        FillWithNaN(ProblemeAResoudre->X);
+        FillWithNaN(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
+        FillWithNaN(ProblemeAResoudre->CoutsMarginauxDesContraintes);
+        FillWithNaN(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);
+        FillWithNaN(ProblemeAResoudre->CoutsReduits);
+        FillWithNaN(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
     }
 }
