@@ -14,6 +14,12 @@ TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
 
 void TimeSeriesSet::add(std::vector<double> ts)
 {
+    if (ts.size() != height_)
+    {
+        std::string error_message = err_prefix_ + "add a TS of size " + std::to_string(ts.size())
+                                    + " in a set of height " + std::to_string(height_);
+        throw std::invalid_argument(error_message);
+    }
     tsSet_.push_back(std::move(ts));
 }
 
