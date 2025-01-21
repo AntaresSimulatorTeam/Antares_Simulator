@@ -50,7 +50,8 @@ add_boost_test(tests-matrix-save
   LIBS
   matrix
   yuni-static-core
-  antares-core)
+  antares-core
+  Antares::exception)
 
 # Building tests on Matrix load operations
 add_boost_test(tests-matrix-load
@@ -70,7 +71,8 @@ add_boost_test(tests-matrix-load
   LIBS
   matrix
   yuni-static-core
-  antares-core)
+  antares-core
+  Antares::exception)
 
 # Test utilities
 add_boost_test(test-utils
