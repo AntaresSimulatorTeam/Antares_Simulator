@@ -1564,6 +1564,7 @@ var hierarchy =
     [ "Antares::Study::SystemModel::SystemBuilder", "classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html", null ],
     [ "SystemBuilderCreationFixture", "structSystemBuilderCreationFixture.html", null ],
     [ "Antares::Study::SystemModel::SystemData", "structAntares_1_1Study_1_1SystemModel_1_1SystemData.html", null ],
+    [ "SystemLinearProblem", "classSystemLinearProblem.html", null ],
     [ "IItem::Tag", "classIItem_1_1Tag.html", null ],
     [ "TargetVectorUpdater", "classTargetVectorUpdater.html", null ],
     [ "Antares::Solver::Progression::Task", "classAntares_1_1Solver_1_1Progression_1_1Task.html", null ],

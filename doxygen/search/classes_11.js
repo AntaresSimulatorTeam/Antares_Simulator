@@ -173,7 +173,7 @@ var searchData=
   ['studybuilder_170',['StudyBuilder',['../structStudyBuilder.html',1,'']]],
   ['studycalendarbtneditor_171',['StudyCalendarBtnEditor',['../classAntares_1_1Window_1_1Inspector_1_1StudyCalendarBtnEditor.html',1,'Antares::Window::Inspector']]],
   ['studycleaninginfos_172',['StudyCleaningInfos',['../classAntares_1_1Data_1_1StudyCleaningInfos.html',1,'Antares::Data']]],
-  ['studydata_173',['studydata',['../classStudyData.html',1,'StudyData'],['../classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html',1,'Antares::TSGenerator::XCast::StudyData']]],
+  ['studydata_173',['studydata',['../classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html',1,'Antares::TSGenerator::XCast::StudyData'],['../classStudyData.html',1,'StudyData']]],
   ['studydrop_174',['StudyDrop',['../classAntares_1_1Forms_1_1StudyDrop.html',1,'Antares::Forms']]],
   ['studyfinder_175',['StudyFinder',['../classAntares_1_1Data_1_1StudyFinder.html',1,'Antares::Data']]],
   ['studyfixture_176',['StudyFixture',['../structStudyFixture.html',1,'']]],
@@ -209,5 +209,6 @@ var searchData=
   ['systembuilder_206',['SystemBuilder',['../classAntares_1_1Study_1_1SystemModel_1_1SystemBuilder.html',1,'Antares::Study::SystemModel']]],
   ['systembuildercreationfixture_207',['SystemBuilderCreationFixture',['../structSystemBuilderCreationFixture.html',1,'']]],
   ['systemdata_208',['SystemData',['../structAntares_1_1Study_1_1SystemModel_1_1SystemData.html',1,'Antares::Study::SystemModel']]],
-  ['systemmemorylogger_209',['SystemMemoryLogger',['../classSystemMemoryLogger.html',1,'']]]
+  ['systemlinearproblem_209',['SystemLinearProblem',['../classSystemLinearProblem.html',1,'']]],
+  ['systemmemorylogger_210',['SystemMemoryLogger',['../classSystemMemoryLogger.html',1,'']]]
 ];

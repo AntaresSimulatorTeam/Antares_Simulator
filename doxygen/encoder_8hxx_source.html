@@ -180,11 +180,14 @@ $(document).ready(function(){initNavTree('encoder_8hxx_source.html',''); initRes
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        rhs.solverLogs = node[<span class="stringliteral">&quot;solver-logs&quot;</span>].as&lt;<span class="keywordtype">bool</span>&gt;(<span class="keyword">false</span>);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        rhs.solverParameters = node[<span class="stringliteral">&quot;solver-parameters&quot;</span>].as&lt;std::string&gt;();</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        rhs.noOutput = node[<span class="stringliteral">&quot;no-output&quot;</span>].as&lt;<span class="keywordtype">bool</span>&gt;(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        rhs.firstTimeStep = node[<span class="stringliteral">&quot;first-time-step&quot;</span>].as&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt;(0);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="comment">// TODO check this value</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        rhs.lastTimeStep = node[<span class="stringliteral">&quot;last-time-step&quot;</span>].as&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt;(167);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
 </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>} <span class="comment">// namespace YAML</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace YAML</span></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1ModelerParameters_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelerParameters.html">Antares::Solver::ModelerParameters</a></div><div class="ttdef"><b>Definition</b> modelerParameters.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

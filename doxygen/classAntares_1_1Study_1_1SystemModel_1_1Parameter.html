@@ -132,7 +132,6 @@ $(document).ready(function(){initNavTree('classAntares_1_1Study_1_1SystemModel_1
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAntares_1_1Study_1_1SystemModel_1_1Parameter-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Study::SystemModel::Parameter Class Reference</div></div>
@@ -141,21 +140,10 @@ $(document).ready(function(){initNavTree('classAntares_1_1Study_1_1SystemModel_1
 
 <p><code>#include &lt;<a class="el" href="study_2system-model_2include_2antares_2study_2system-model_2parameter_8h_source.html">parameter.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a95c8c893a3262a4cbdcb545f47c964de" id="r_a95c8c893a3262a4cbdcb545f47c964de"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1Parameter.html#a95c8c893a3262a4cbdcb545f47c964de">TimeDependent</a> : bool { <b>NO</b> = false
-, <b>YES</b> = true
- }</td></tr>
-<tr class="separator:a95c8c893a3262a4cbdcb545f47c964de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50db5f8688349e2302263aa9e5e2adbc" id="r_a50db5f8688349e2302263aa9e5e2adbc"><td class="memItemLeft" align="right" valign="top"><a id="a50db5f8688349e2302263aa9e5e2adbc" name="a50db5f8688349e2302263aa9e5e2adbc"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>ScenarioDependent</b> : bool { <b>NO</b> = false
-, <b>YES</b> = true
- }</td></tr>
-<tr class="separator:a50db5f8688349e2302263aa9e5e2adbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a331f89bc989fbb17c91a09d24f247fe1" id="r_a331f89bc989fbb17c91a09d24f247fe1"><td class="memItemLeft" align="right" valign="top"><a id="a331f89bc989fbb17c91a09d24f247fe1" name="a331f89bc989fbb17c91a09d24f247fe1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Parameter</b> (std::string id, <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1Parameter.html#a95c8c893a3262a4cbdcb545f47c964de">TimeDependent</a> timeDependent, ScenarioDependent scenarioDependent)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Parameter</b> (std::string id, TimeDependent timeDependent, ScenarioDependent scenarioDependent)</td></tr>
 <tr class="separator:a331f89bc989fbb17c91a09d24f247fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba3300f99d3a351149f74a98353da513" id="r_aba3300f99d3a351149f74a98353da513"><td class="memItemLeft" align="right" valign="top"><a id="aba3300f99d3a351149f74a98353da513" name="aba3300f99d3a351149f74a98353da513"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Id</b> () const</td></tr>
@@ -169,31 +157,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isScenarioDependent</
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A parameter of the model: a parameter is mainly defined by a name and expected type. When the model is instantiated as a component, a value must be provided for parameters, either as constant values or timeseries-based values. </p>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a95c8c893a3262a4cbdcb545f47c964de" name="a95c8c893a3262a4cbdcb545f47c964de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95c8c893a3262a4cbdcb545f47c964de">&#9670;&#160;</a></span>TimeDependent</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1Parameter.html#a95c8c893a3262a4cbdcb545f47c964de">Antares::Study::SystemModel::Parameter::TimeDependent</a> : bool</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading <a class="el" href="classAntares_1_1Study_1_1SystemModel_1_1Parameter.html">Parameter</a>("Param", ValueType::FLOAT, false, true) Avoid mixing wich value is which boolean parameter </p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/study/system-model/include/antares/study/system-model/<a class="el" href="study_2system-model_2include_2antares_2study_2system-model_2parameter_8h_source.html">parameter.h</a></li>
 </ul>
 </div><!-- contents -->
