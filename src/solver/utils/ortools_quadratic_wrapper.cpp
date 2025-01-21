@@ -248,6 +248,8 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     }
     else
     {
+        Antares::logs.warning() << "Quadratic optimization failed: "
+                                << resultStatus.status().ToString();
         ProblemeAResoudre->ExistenceDUneSolution = NON_PI;
         FillWithNaN(ProblemeAResoudre->X);
         FillWithNaN(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
