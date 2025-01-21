@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "antares/solver/modeler/api/ILinearProblemData.h"
@@ -33,10 +34,13 @@ namespace Antares::Solver::Modeler::DataSeries
 class LinearProblemData: public Api::ILinearProblemData
 {
 public:
-    double getData(std::string idTimeSeriesSet,
-                   std::string scenarioGroup,
-                   unsigned int scenario,
-                   unsigned int hour) override;
+    double getData(const std::string dataSetId,
+                   const std::string scenarioGroup,
+                   const unsigned scenario,
+                   const unsigned hour) override;
+
+    void addScenarioGroup(std::string groupId, std::pair<unsigned, unsigned> scenarioToRank);
+    void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
 
 private:
     DataSeries::DataSeriesRepository dataSeriesRepository_;

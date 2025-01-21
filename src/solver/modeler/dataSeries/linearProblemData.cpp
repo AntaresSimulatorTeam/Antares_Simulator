@@ -23,12 +23,25 @@
 
 namespace Antares::Solver::Modeler::DataSeries
 {
-double LinearProblemData::getData(std::string idTimeSeriesSet,
-                                  std::string scenarioGroup,
-                                  unsigned int scenario,
-                                  unsigned int hour)
+
+void LinearProblemData::addScenarioGroup(std::string groupId,
+                                         std::pair<unsigned, unsigned> scenarioToRank)
 {
-    return 0.;
+    groupRepository_.addPairScenarioRankToGroup(groupId, scenarioToRank);
+}
+
+void LinearProblemData::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
+{
+    dataSeriesRepository_.addDataSeries(std::move(dataSeries));
+}
+
+double LinearProblemData::getData(const std::string dataSetId,
+                                  const std::string scenarioGroup,
+                                  const unsigned scenario,
+                                  const unsigned hour)
+{
+    unsigned rank = groupRepository_.getDataRank(scenarioGroup, scenario);
+    return dataSeriesRepository_.getDataSeries(dataSetId).getData(rank, hour);
 }
 
 } // namespace Antares::Solver::Modeler::DataSeries

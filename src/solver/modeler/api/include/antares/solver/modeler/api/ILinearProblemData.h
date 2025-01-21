@@ -8,10 +8,10 @@ namespace Antares::Solver::Modeler::Api
 
 class ILinearProblemData
 {
-    virtual double getData(std::string idTimeSeriesSet,
-                           std::string scenarioGroup,
-                           unsigned int scenario,
-                           unsigned int hour)
+    virtual double getData(const std::string idTimeSeriesSet,
+                           const std::string scenarioGroup,
+                           const unsigned scenario,
+                           const unsigned hour)
       = 0;
 };
 
