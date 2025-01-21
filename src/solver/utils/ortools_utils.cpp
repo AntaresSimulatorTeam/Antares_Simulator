@@ -357,9 +357,6 @@ std::list<std::string> getAvailableQuadraticSolverNames()
     result.push_back("sirius");
     for (const auto& solverName: OrtoolsUtils::mathoptSolverMap)
     {
-        // TODO: check if solver supports quadratic objectives (doesn't seem possible through
-        // mathopt API, we must add hard-coded flags in antares). Not urgent, but we will need this
-        // when we will do linear optimization through mathopt also.
         result.push_back(solverName.first);
     }
     return result;

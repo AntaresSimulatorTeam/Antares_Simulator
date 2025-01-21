@@ -170,7 +170,7 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
         ProblemeAResoudre->ExistenceDUneSolution = OUI_PI;
         // Store result in problem structure
         auto result = resultStatus.value();
-        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
+        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
         {
             auto var = model.variable(i);
             // Primal results
@@ -191,7 +191,7 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     else
     {
         ProblemeAResoudre->ExistenceDUneSolution = NON_PI;
-        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
+        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
         {
             ProblemeAResoudre->X[i] = std::numeric_limits<double>::quiet_NaN();
             double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
