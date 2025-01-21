@@ -19,29 +19,16 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
+#include "antares/solver/modeler/dataSeries/linearProblemData.h"
 
-#include <string>
-
-#include "antares/solver/modeler/dataSeries/dataSeriesRepo.h"
-#include "antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
-
-#include "ILinearProblemData.h"
-
-namespace Antares::Solver::Modeler::Api
+namespace Antares::Solver::Modeler::DataSeries
 {
-
-class LinearProblemData: public ILinearProblemData
+double LinearProblemData::getData(std::string idTimeSeriesSet,
+                                  std::string scenarioGroup,
+                                  unsigned int scenario,
+                                  unsigned int hour)
 {
-public:
-    double getData(std::string idTimeSeriesSet,
-                   std::string scenarioGroup,
-                   unsigned int scenario,
-                   unsigned int hour) override;
+    return 0.;
+}
 
-private:
-    DataSeries::DataSeriesRepository dataSeriesRepository_;
-    DataSeries::ScenarioGroupRepository groupRepository_;
-};
-
-} // namespace Antares::Solver::Modeler::Api
+} // namespace Antares::Solver::Modeler::DataSeries

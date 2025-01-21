@@ -2,9 +2,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/modeler/api/linearProblemData.h>
+#include "antares/solver/modeler/dataSeries/linearProblemData.h"
 
-using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Solver::Modeler::DataSeries;
 
 BOOST_AUTO_TEST_CASE(dummy_test)
 {

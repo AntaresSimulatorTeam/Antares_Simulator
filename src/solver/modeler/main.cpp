@@ -23,6 +23,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/api/linearProblemBuilder.h>
+#include <antares/solver/modeler/dataSeries/linearProblemData.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/ortoolsImpl/linearProblem.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
@@ -67,7 +68,7 @@ int main(int argc, const char** argv)
             fillers.push_back(new Antares::Optimization::ComponentFiller(component));
         }
 
-        Antares::Solver::Modeler::Api::LinearProblemData LP_Data;
+        Antares::Solver::Modeler::DataSeries::LinearProblemData LP_Data;
         Antares::Solver::Modeler::Api::FillContext ctx = {0, 0};
         // We force the usage of MIP solvers to check that integer variables are properly handled
         // TODO determine the nature of the problem based on system.Components()

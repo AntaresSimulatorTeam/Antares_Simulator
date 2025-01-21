@@ -25,6 +25,7 @@
 
 #include "antares/solver/expressions/nodes/ExpressionsNodes.h"
 #include "antares/solver/modeler/api/linearProblemBuilder.h"
+#include "antares/solver/modeler/dataSeries/linearProblemData.h"
 #include "antares/solver/modeler/ortoolsImpl/linearProblem.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/system-model/component.h"
@@ -33,6 +34,7 @@
 #include "unit_test_utils.h"
 
 using namespace Antares::Solver::Modeler::Api;
+using namespace Antares::Solver::Modeler::DataSeries;
 using namespace Antares::Study::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Solver::Nodes;
