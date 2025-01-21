@@ -58,6 +58,9 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     Probleme->NombreDeVariables = ProblemeAResoudre.NombreDeVariables;
     Probleme->TypeDeVariable = ProblemeAResoudre.TypeDeVariable.data();
 
+    // The problem has no binary variable
+    // We use the fact that CoutsReduits is a vector of 1 element per variable, initialized to 0
+    // TODO: make this cleaner
     Probleme->VariableBinaire = (char*)ProblemeAResoudre.CoutsReduits.data();
 
     Probleme->NombreDeContraintes = ProblemeAResoudre.NombreDeContraintes;

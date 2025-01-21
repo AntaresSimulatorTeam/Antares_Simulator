@@ -36,7 +36,6 @@ void BuildVariablesAndObjective(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, 
 void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& model);
 
 // TODO: interpret the following lines sent to sirius & adapt them to mathopt if needed
-//     Probleme->VariableBinaire = (char*)ProblemeAResoudre.CoutsReduits.data();
 //     Probleme->UtiliserLaToleranceDAdmissibiliteParDefaut = OUI_PI;
 //     Probleme->UtiliserLaToleranceDeStationnariteParDefaut = OUI_PI;
 //     Probleme->UtiliserLaToleranceDeComplementariteParDefaut = OUI_PI;
