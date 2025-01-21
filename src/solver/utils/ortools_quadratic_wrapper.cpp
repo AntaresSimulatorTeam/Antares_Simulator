@@ -40,7 +40,6 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
 //     Probleme->UtiliserLaToleranceDAdmissibiliteParDefaut = OUI_PI;
 //     Probleme->UtiliserLaToleranceDeStationnariteParDefaut = OUI_PI;
 //     Probleme->UtiliserLaToleranceDeComplementariteParDefaut = OUI_PI;
-//     Probleme->CoutsMarginauxDesContraintes =ProblemeAResoudre.CoutsMarginauxDesContraintes.data()
 
 void checkOptions(const OptimizationOptions& options)
 {
@@ -73,7 +72,6 @@ void SolveQuadraticProblemWithOrtools(const OptimizationOptions& options,
     BuildVariablesAndObjective(ProblemeAResoudre, model);
     BuildConstraints(ProblemeAResoudre, model);
     SolveArguments args;
-    args.parameters.enable_output = true;
     if (options.solverLogs)
     {
         args.parameters.enable_output = true;
@@ -182,9 +180,15 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                 *pt = value;
             }
             // Reduced costs
-            if (result.has_dual_feasible_solution())
+            ProblemeAResoudre->CoutsReduits[i] = result.reduced_costs().at(var);
+        }
+        // Dual values
+        if (result.has_dual_feasible_solution())
+        {
+            for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; ++i)
             {
-                ProblemeAResoudre->CoutsReduits[i] = result.reduced_costs().at(var);
+                auto ct = model.linear_constraint(i);
+                ProblemeAResoudre->CoutsMarginauxDesContraintes[i] = result.dual_values().at(ct);
             }
         }
     }

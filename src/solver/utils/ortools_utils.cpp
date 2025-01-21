@@ -331,7 +331,8 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
 
 // TODO: add SCIP support when fixed by google: {"scip", math_opt::SolverType::kGscip}
 // TODO: add XPRESS support when added in or-tools: {"xpress", math_opt::SolverType::kXpress}
-const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {};
+const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
+  {"pdlp", math_opt::SolverType::kPdlp}};
 
 std::list<std::string> getAvailableLinearSolverNames()
 {
