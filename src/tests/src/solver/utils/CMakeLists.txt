@@ -1,6 +1,6 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
-add_boost_test(tests-basis-status
+add_boost_test(tests-solver-utils
         SRC
         test_main.cpp
         basis_status.cpp
