@@ -117,9 +117,8 @@ public:
     double nominalCapacity = 0.;
 
     //! The index of the cluster from the area's point of view
-    //! \warning this variable is only valid when used by the solver
-    // (initialized in the same time that the runtime data)
-    uint areaWideIndex = (uint)-1;
+    unsigned int areaWideIndex = (uint)-1;
+    unsigned int enabledIndex = (uint)-1;
 
     //! tsNumbers must be constructed before series
     TimeSeriesNumbers tsNumbers;

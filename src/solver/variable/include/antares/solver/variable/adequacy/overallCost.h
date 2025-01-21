@@ -263,7 +263,7 @@ public:
         for (auto& cluster: area->thermal.list.each_enabled())
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-              += thermal[area->index].thermalClustersOperatingCost[cluster->areaWideIndex];
+              += thermal[area->index].thermalClustersOperatingCost[cluster->enabledIndex];
         }
 
         // Next variable
