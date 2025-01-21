@@ -70,6 +70,24 @@ BOOST_FIXTURE_TEST_CASE(add_int_variable_to_problem___check_var_exists, FixtureE
     BOOST_CHECK_EQUAL(var->getUb(), 15);
 }
 
+// Test bulk addition of integer variables
+BOOST_FIXTURE_TEST_CASE(add_int_variables_to_problem___check_all_vars_exist, FixtureEmptyProblem)
+{
+    auto vars = pb->addIntVariable(1, 5, "int_var", 2);
+
+    BOOST_CHECK_EQUAL(vars.size(), 2); // Check 2 variables created
+
+    for (unsigned int i = 0; i < vars.size(); ++i)
+    {
+        std::string varName = "int_var_" + std::to_string(i);
+        auto* var = pb->getVariable(varName);
+        BOOST_CHECK(var);
+        BOOST_CHECK(var->isInteger());
+        BOOST_CHECK_EQUAL(var->getLb(), 1);
+        BOOST_CHECK_EQUAL(var->getUb(), 5);
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureEmptyProblem)
 {
     pb->addNumVariable(2., 7., "var");
@@ -80,6 +98,52 @@ BOOST_FIXTURE_TEST_CASE(add_num_variable_to_problem___check_var_exists, FixtureE
     BOOST_CHECK_EQUAL(var->getUb(), 7.);
 }
 
+// Test bulk addition of numeric variables
+BOOST_FIXTURE_TEST_CASE(add_num_variables_to_problem___check_all_vars_exist, FixtureEmptyProblem)
+{
+    auto vars = pb->addNumVariable(0, 10, "var", 3);
+
+    BOOST_CHECK_EQUAL(vars.size(), 3); // Check 3 variables created
+
+    for (unsigned int i = 0; i < vars.size(); ++i)
+    {
+        std::string varName = "var_" + std::to_string(i);
+        auto* var = pb->getVariable(varName);
+        BOOST_CHECK(var);
+        BOOST_CHECK(!var->isInteger());
+        BOOST_CHECK_EQUAL(var->getLb(), 0);
+        BOOST_CHECK_EQUAL(var->getUb(), 10);
+    }
+}
+
+// Test bulk addition of variables with mixed types
+BOOST_FIXTURE_TEST_CASE(add_mixed_variables_to_problem___check_all_vars_exist, FixtureEmptyProblem)
+{
+    auto nb_vars_per_type = 2;
+    auto num_vars = pb->addVariable(0, 20, false, "num_var", nb_vars_per_type);
+    auto int_vars = pb->addVariable(12, 34, true, "int_var", nb_vars_per_type);
+
+    BOOST_CHECK_EQUAL(int_vars.size(), nb_vars_per_type); // Check 2 int variables created
+    BOOST_CHECK_EQUAL(num_vars.size(), nb_vars_per_type); // Check 2 numeric variables created
+
+    for (unsigned int i = 0; i < nb_vars_per_type; ++i)
+    {
+        std::string numVarName = "num_var_" + std::to_string(i);
+        std::string intVarName = "int_var_" + std::to_string(i);
+
+        const auto* num_var = pb->getVariable(numVarName);
+        const auto* int_var = pb->getVariable(intVarName);
+        BOOST_CHECK(num_var);
+        BOOST_CHECK(int_var);
+        BOOST_CHECK(!num_var->isInteger());
+        BOOST_CHECK(int_var->isInteger());
+        BOOST_CHECK_EQUAL(num_var->getLb(), 0);
+        BOOST_CHECK_EQUAL(num_var->getUb(), 20);
+        BOOST_CHECK_EQUAL(int_var->getLb(), 12);
+        BOOST_CHECK_EQUAL(int_var->getUb(), 34);
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, FixtureEmptyProblem)
 {
     pb->addConstraint(3., 8., "constraint");
@@ -87,6 +151,24 @@ BOOST_FIXTURE_TEST_CASE(add_constraint_to_problem___check_constraint_exists, Fix
     BOOST_CHECK(constraint);
     BOOST_CHECK_EQUAL(constraint->getLb(), 3.);
     BOOST_CHECK_EQUAL(constraint->getUb(), 8.);
+}
+
+// Test bulk addition of constraints
+BOOST_FIXTURE_TEST_CASE(add_constraints_to_problem___check_all_constraints_exist,
+                        FixtureEmptyProblem)
+{
+    auto constraints = pb->addConstraint(5, 15, "constraint", 3);
+
+    BOOST_CHECK_EQUAL(constraints.size(), 3); // Check 3 constraints created
+
+    for (unsigned int i = 0; i < constraints.size(); ++i)
+    {
+        std::string constraintName = "constraint_" + std::to_string(i);
+        auto* constraint = pb->getConstraint(constraintName);
+        BOOST_CHECK(constraint);
+        BOOST_CHECK_EQUAL(constraint->getLb(), 5);
+        BOOST_CHECK_EQUAL(constraint->getUb(), 15);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(give_coeff_to_var_in_constraint____check_coeff_exists, FixtureEmptyProblem)
@@ -122,11 +204,52 @@ BOOST_FIXTURE_TEST_CASE(add_already_existing_var_to_problem_leads_to_exception, 
     BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 1, "var"), std::exception, expectedMessage);
 }
 
+// Test bulk addition of variables with duplicate names
+BOOST_FIXTURE_TEST_CASE(add_duplicate_variable_names_leads_to_exception, FixtureEmptyProblem)
+{
+    pb->addNumVariable(0, 10, "duplicate_var", 1);
+    BOOST_CHECK_EXCEPTION(pb->addNumVariable(0, 10, "duplicate_var", 1),
+                          std::exception,
+                          expectedMessage);
+}
+
 BOOST_FIXTURE_TEST_CASE(add_already_existing_constaint_to_problem_leads_to_exception,
                         FixtureEmptyProblem)
 {
     pb->addConstraint(0, 1, "constraint");
     BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "constraint"), std::exception, expectedMessage);
+}
+
+// Test bulk addition of constraints with duplicate names
+BOOST_FIXTURE_TEST_CASE(add_duplicate_constraint_names_leads_to_exception, FixtureEmptyProblem)
+{
+    pb->addConstraint(0, 1, "duplicate_constraint", 1);
+    BOOST_CHECK_EXCEPTION(pb->addConstraint(0, 1, "duplicate_constraint", 1),
+                          std::exception,
+                          expectedMessage);
+}
+
+// Test combining single and bulk addition of variables
+BOOST_FIXTURE_TEST_CASE(mix_bulk_and_single_variable_additions, FixtureEmptyProblem)
+{
+    pb->addNumVariable(0, 5, "single_var");
+    auto vars = pb->addNumVariable(5, 10, "bulk_var", 2);
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 3); // Total variables should be 3
+
+    auto* singleVar = pb->getVariable("single_var");
+    BOOST_CHECK(singleVar);
+    BOOST_CHECK_EQUAL(singleVar->getLb(), 0);
+    BOOST_CHECK_EQUAL(singleVar->getUb(), 5);
+
+    for (unsigned int i = 0; i < vars.size(); ++i)
+    {
+        std::string varName = "bulk_var_" + std::to_string(i);
+        auto* var = pb->getVariable(varName);
+        BOOST_CHECK(var);
+        BOOST_CHECK_EQUAL(var->getLb(), 5);
+        BOOST_CHECK_EQUAL(var->getUb(), 10);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(minimize_problem___check_minimize_status, FixtureEmptyProblem)

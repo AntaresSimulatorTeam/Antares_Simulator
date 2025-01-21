@@ -43,15 +43,40 @@ public:
     ~OrtoolsLinearProblem() override = default;
 
     OrtoolsMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
+
+    std::vector<Api::IMipVariable*> addNumVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name,
+                                                   unsigned int number_new_variables) override;
+
     OrtoolsMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
+
+    std::vector<Api::IMipVariable*> addIntVariable(double lb,
+                                                   double ub,
+                                                   const std::string& name,
+                                                   unsigned int number_new_variables) override;
+
     OrtoolsMipVariable* addVariable(double lb,
                                     double ub,
                                     bool integer,
                                     const std::string& name) override;
+
+    std::vector<Api::IMipVariable*> addVariable(double lb,
+                                                double ub,
+                                                bool integer,
+                                                const std::string& name,
+                                                unsigned int number_new_variables) override;
+
     OrtoolsMipVariable* getVariable(const std::string& name) const override;
     int variableCount() const override;
 
     OrtoolsMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
+
+    std::vector<Api::IMipConstraint*> addConstraint(double lb,
+                                                    double ub,
+                                                    const std::string& name,
+                                                    unsigned int number_new_constraints) override;
+
     OrtoolsMipConstraint* getConstraint(const std::string& name) const override;
     int constraintCount() const override;
 

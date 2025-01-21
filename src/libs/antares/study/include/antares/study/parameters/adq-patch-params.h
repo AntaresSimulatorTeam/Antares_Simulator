@@ -51,22 +51,6 @@ enum AdequacyPatchMode
 }; // enum AdequacyPatchMode
 
 /*!
-** \brief Setting Link Capacity (NTC) for Adequacy patch first step
-*/
-enum class NtcSetToZeroStatus_AdqPatchStep1
-{
-    //! Leave NTC local values
-    leaveLocalValues = 0,
-    //! Set NTC to zero
-    setToZero,
-    //! set only origine->extremity NTC to zero
-    setOriginExtremityToZero,
-    //! set only extremity->origine NTC to zero
-    setExtremityOriginToZero
-
-}; // enum NTC
-
-/*!
 ** \brief Types of Price Taking Order (PTO) for Adequacy Patch
 */
 enum class AdqPatchPTO

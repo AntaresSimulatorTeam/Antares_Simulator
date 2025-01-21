@@ -81,7 +81,7 @@ Nodes::Node* CloneVisitor::visit(const Nodes::NegationNode* negationNode)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode* variableNode)
 {
-    return registry_.create<Nodes::VariableNode>(variableNode->value());
+    return registry_.create<Nodes::VariableNode>(variableNode->value(), variableNode->timeIndex());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ParameterNode* parameterNode)

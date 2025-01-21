@@ -50,6 +50,7 @@ set(TARGET_LIBS #No alias
         misc
         model_antares
         antares-solver-ts-generator
+        shave-peaks-by-remix-hydro
 
         # lps : nothing
 

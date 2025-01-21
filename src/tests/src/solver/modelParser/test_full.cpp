@@ -52,7 +52,9 @@ void checkVariable(const SystemModel::Variable& variable,
                    const std::string& name,
                    const std::string& lowerBound,
                    const std::string& upperBound,
-                   SystemModel::ValueType type)
+                   SystemModel::ValueType type,
+                   SystemModel::TimeDependent timeDependent,
+                   SystemModel::ScenarioDependent scenarioDependent)
 {
     std::cout << "Variable: " << variable.Id() << std::endl;
     BOOST_CHECK_EQUAL(variable.Id(), name);
@@ -293,7 +295,9 @@ library:
                       "generation",
                       "0",
                       "p_max",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::YES,
+                      SystemModel::ScenarioDependent::YES);
 
         // auto& port = model0.Ports().at("injection_port");
         // BOOST_CHECK_EQUAL(port.Id(), "injection_port");
@@ -320,7 +324,9 @@ library:
                       "spillage",
                       "0",
                       "",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::NO,
+                      SystemModel::ScenarioDependent::NO);
 
         auto& model3 = lib.Models().at("unsupplied");
         BOOST_CHECK_EQUAL(model3.Id(), "unsupplied");
@@ -334,7 +340,9 @@ library:
                       "unsupplied_energy",
                       "0",
                       "",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::NO,
+                      SystemModel::ScenarioDependent::NO);
 
         auto& model4 = lib.Models().at("demand");
         BOOST_CHECK_EQUAL(model4.Id(), "demand");
@@ -362,17 +370,23 @@ library:
                       "injection",
                       "0",
                       "p_max_injection",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::NO,
+                      SystemModel::ScenarioDependent::NO);
         checkVariable(model5.Variables().at("withdrawal"),
                       "withdrawal",
                       "0",
                       "p_max_withdrawal",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::NO,
+                      SystemModel::ScenarioDependent::NO);
         checkVariable(model5.Variables().at("level"),
                       "level",
                       "level_min",
                       "level_max",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::NO,
+                      SystemModel::ScenarioDependent::NO);
         checkConstraint(model5.getConstraints().at("Level equation"),
                         "Level equation",
                         "level - level - efficiency * injection + withdrawal = inflows");
@@ -395,22 +409,30 @@ library:
                       "generation",
                       "0",
                       "nb_units_max * p_max",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::YES,
+                      SystemModel::ScenarioDependent::YES);
         checkVariable(model6.Variables().at("nb_on"),
                       "nb_on",
                       "0",
                       "nb_units_max",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::YES,
+                      SystemModel::ScenarioDependent::NO);
         checkVariable(model6.Variables().at("nb_stop"),
                       "nb_stop",
                       "0",
                       "nb_units_max",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::YES,
+                      SystemModel::ScenarioDependent::NO);
         checkVariable(model6.Variables().at("nb_start"),
                       "nb_start",
                       "0",
                       "nb_units_max",
-                      SystemModel::ValueType::FLOAT);
+                      SystemModel::ValueType::FLOAT,
+                      SystemModel::TimeDependent::YES,
+                      SystemModel::ScenarioDependent::NO);
         checkConstraint(model6.getConstraints().at("Max generation"),
                         "Max generation",
                         "generation <= nb_on * p_max");
