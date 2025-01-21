@@ -12,6 +12,7 @@ toc_depth: 2
 * Short term storage costs [ANT-1854] (#2302)
 * Add ts-generation for links [ANT-1084] (#1986)
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
+* Add support for more QP solvers [ANT-2546] (#2574)
 
 #### Removed features
 * Remove hydro hotstart (#2131)

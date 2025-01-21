@@ -18,7 +18,7 @@ hide:
 | --parallel             | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                   |
 | --force-parallel=VALUE | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                  |
 | --linear-solver=VALUE | The optimization solver to use for linear problems. Possible values are: `sirius` (default), `coin`, `xpress`, `scip` |
-| --quadratic-solver=VALUE | The optimization solver to use for quadratic problems. Possible values are: `sirius` (default) |
+| --quadratic-solver=VALUE | The optimization solver to use for quadratic problems. Possible values are: `sirius` (default), `pdlp` |
 
 ## Parameters
 
