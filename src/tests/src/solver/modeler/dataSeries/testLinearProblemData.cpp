@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/modeler/dataSeries/linearProblemData.h"
+#include <antares/solver/modeler/dataSeries/linearProblemData.h>
 
 using namespace Antares::Solver::Modeler::DataSeries;
 

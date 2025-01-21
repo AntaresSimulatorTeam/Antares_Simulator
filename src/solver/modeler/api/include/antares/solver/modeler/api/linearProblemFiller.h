@@ -23,8 +23,8 @@
 
 #include <memory>
 
+#include <antares/solver/modeler/api/ILinearProblemData.h>
 #include <antares/solver/modeler/api/linearProblem.h>
-#include "antares/solver/modeler/api/ILinearProblemData.h"
 
 namespace Antares::Solver::Modeler::Api
 {
