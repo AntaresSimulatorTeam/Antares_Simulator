@@ -11,7 +11,7 @@ using namespace Antares::Solver::Modeler::DataSeries;
 BOOST_AUTO_TEST_CASE(adding_to_a_TS_set_a_TS_with_the_wrong_size___exception_raised)
 {
     TimeSeriesSet timeSeriesSet("my-TS-set", 5);
-    
+
     std::string expected_err_msg = "TS set 'my-TS-set' : add a TS of size 3 in a set of height 5";
     BOOST_CHECK_EXCEPTION(timeSeriesSet.add({1., 2., 3.}),
                           std::invalid_argument,
