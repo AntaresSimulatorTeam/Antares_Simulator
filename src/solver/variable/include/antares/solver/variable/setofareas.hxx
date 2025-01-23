@@ -43,7 +43,6 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     // alias to the set of sets of areas
     auto& sets = study.setsOfAreas;
     // Reserving the memory
-    pSetsOfAreas.resize(sets.size());
     pOriginalSets.reserve(sets.size());
 
     // For each set...
@@ -64,7 +63,8 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
             continue;
         }
 
-        auto& n = pSetsOfAreas[setIndex];
+        pSetsOfAreas.push_back({});
+        auto& n = pSetsOfAreas.back();
 
         // Initialize the variables
         // From the study
