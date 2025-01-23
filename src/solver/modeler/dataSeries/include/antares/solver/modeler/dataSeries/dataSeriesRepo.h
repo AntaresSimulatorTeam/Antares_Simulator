@@ -18,7 +18,6 @@ public:
 
 private:
     std::map<std::string, std::unique_ptr<IDataSeries>> dataSeries_;
-    std::string err_prefix = "Data series repo : ";
 };
 
 } // namespace Antares::Solver::Modeler::DataSeries

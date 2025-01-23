@@ -9,6 +9,8 @@ set(SRC_DATA_SERIES
 
         include/antares/solver/modeler/dataSeries/dataSeriesRepo.h
         dataSeriesRepo.cpp
+        include/antares/solver/modeler/dataSeries/dataSeriesRepoExceptions.h
+        dataSeriesRepoExceptions.cpp
 
         include/antares/solver/modeler/dataSeries/scenarioGroupRepo.h
         scenarioGroupRepo.cpp
