@@ -5,6 +5,12 @@
 namespace Antares::Solver::Modeler::DataSeries
 {
 
+class ScGroup_AlreadyExists: public std::invalid_argument
+{
+public:
+    ScGroup_AlreadyExists(const std::string& groupId);
+};
+
 class ScGroup_DoesNotExist: public std::invalid_argument
 {
 public:

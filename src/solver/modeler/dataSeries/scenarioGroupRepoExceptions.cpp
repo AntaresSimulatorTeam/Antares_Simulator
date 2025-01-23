@@ -5,6 +5,11 @@
 namespace Antares::Solver::Modeler::DataSeries
 {
 
+ScGroup_AlreadyExists::ScGroup_AlreadyExists(const std::string& groupId):
+    std::invalid_argument("Scenario group '" + groupId + "' already exists in group repo.")
+{
+}
+
 ScGroup_DoesNotExist::ScGroup_DoesNotExist(const std::string& groupId):
     std::invalid_argument("Scenario group '" + groupId + "' does not exist in group repo.")
 {

@@ -10,6 +10,10 @@ void ScenarioGroupRepository::addPairScenarioRankToGroup(
   const std::string& groupId,
   const std::pair<unsigned, unsigned> scenarioToRank)
 {
+    if (scenarioGroups_.contains(groupId))
+    {
+        throw ScGroup_AlreadyExists(groupId);
+    }
     scenarioGroups_[groupId] = {scenarioToRank};
 }
 

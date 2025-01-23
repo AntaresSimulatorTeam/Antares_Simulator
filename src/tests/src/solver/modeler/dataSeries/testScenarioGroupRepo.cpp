@@ -19,6 +19,17 @@ BOOST_AUTO_TEST_CASE(ask_repo_a_question_it_can_answer___repo_answers_correctly)
     BOOST_CHECK_EQUAL(scenarioGroupRepo.getDataRank("some group", scenario), dataRank);
 }
 
+BOOST_AUTO_TEST_CASE(add_to_repo_a_group_it_already_contains___exception_raised)
+{
+    ScenarioGroupRepository scenarioGroupRepo;
+    scenarioGroupRepo.addPairScenarioRankToGroup("some group", {0, 0});
+
+    std::string expectedErrMsg = "Scenario group 'some group' already exists in group repo.";
+    BOOST_CHECK_EXCEPTION(scenarioGroupRepo.addPairScenarioRankToGroup("some group", {1, 1}),
+                          ScGroup_AlreadyExists,
+                          checkMessage(expectedErrMsg));
+}
+
 BOOST_AUTO_TEST_CASE(ask_an_empty_repo_a_rank___exception_raised)
 {
     ScenarioGroupRepository scenarioGroupRepo;
