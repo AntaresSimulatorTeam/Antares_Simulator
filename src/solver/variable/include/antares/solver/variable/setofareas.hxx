@@ -238,12 +238,12 @@ void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, in
         results.data.area = nullptr;
         results.data.rowIndex = 0;
 
-        for (auto i = pSetsOfAreas.begin(); i != pSetsOfAreas.end(); ++i)
+        for (auto& i: pSetsOfAreas)
         {
             results.data.columnIndex = 0;
             results.data.rowCaptions[results.data.rowIndex].clear()
               << "@ " << pNames[results.data.rowIndex];
-            i->buildDigest(results, digestLevel, dataLevel);
+            i.buildDigest(results, digestLevel, dataLevel);
             ++results.data.rowIndex;
         }
     }
