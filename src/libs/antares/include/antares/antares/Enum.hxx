@@ -50,7 +50,7 @@ std::string toString(const E& value)
     if (index >= names.size())
     {
         throw std::runtime_error("Unexpected " + stdcxx::simpleClassName<E>() + " value "
-                             + std::to_string(index));
+                                 + std::to_string(index));
     }
     return *(names.begin() + index);
 }
