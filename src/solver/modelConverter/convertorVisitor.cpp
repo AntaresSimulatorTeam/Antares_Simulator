@@ -21,6 +21,7 @@
 
 #include <antares/solver/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/modelConverter/convertorVisitor.h>
+#include "antares/solver/expressions/visitors/TimeIndex.h"
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
@@ -83,7 +84,7 @@ NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelPars
     ExprParser::ExprContext* tree = parser.expr();
     Antares::Solver::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
-    Node* root = std::any_cast<Node*>(visitor.visit(tree));
+    auto root = std::any_cast<Node*>(visitor.visit(tree));
     return NodeRegistry(root, std::move(registry));
 }
 
@@ -108,13 +109,28 @@ public:
     }
 };
 
+// to silent warning, convert bool to unsigned int
+static constexpr unsigned int convertBool(bool in)
+{
+    return in ? 1 : 0;
+}
+
+static constexpr Visitors::TimeIndex convertToTimeIndex(bool timedependent, bool scenariodependent)
+{
+    return static_cast<Visitors::TimeIndex>((convertBool(scenariodependent) << 1)
+                                            | convertBool(timedependent));
+}
+
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
 {
     for (const auto& param: model_.parameters)
     {
         if (param.id == context->IDENTIFIER()->getText())
         {
-            return static_cast<Node*>(registry_.create<ParameterNode>(param.id));
+            return static_cast<Node*>(
+              registry_.create<ParameterNode>(param.id,
+                                              convertToTimeIndex(param.time_dependent,
+                                                                 param.scenario_dependent)));
         }
     }
 
@@ -122,7 +138,10 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     {
         if (var.id == context->getText())
         {
-            return static_cast<Node*>(registry_.create<VariableNode>(var.id));
+            return static_cast<Node*>(
+              registry_.create<VariableNode>(var.id,
+                                             convertToTimeIndex(var.time_dependent,
+                                                                var.scenario_dependent)));
         }
     }
 

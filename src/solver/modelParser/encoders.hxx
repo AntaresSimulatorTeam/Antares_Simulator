@@ -106,6 +106,8 @@ struct convert<Antares::Solver::ModelParser::Variable>
         rhs.upper_bound = node["upper-bound"].as<std::string>("");
         rhs.variable_type = node["variable-type"].as<Antares::Solver::ModelParser::ValueType>(
           Antares::Solver::ModelParser::ValueType::CONTINUOUS);
+        rhs.time_dependent = node["time-dependent"].as<bool>(true);
+        rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
         return true;
     }
 };

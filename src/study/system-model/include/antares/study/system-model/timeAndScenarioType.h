@@ -20,43 +20,38 @@
 */
 #pragma once
 
-#include <string>
-#include <unordered_map>
-
-#include "expression.h"
-#include "parameter.h"
-
-namespace Antares::Solver::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
-
 namespace Antares::Study::SystemModel
 {
+/** Using enum class to avoid primitive obsession. Mainly prevent headhaches when reading
+ * Parameter("Param", ValueType::FLOAT, false, true)
+ * Avoid mixing wich value is which boolean parameter
+ */
 
-/// A constraint linking variables and parameters of a model together
-class Constraint
+enum class TimeDependent : bool
 {
-public:
-    Constraint(std::string name, Expression expression):
-        id_(std::move(name)),
-        expression_(std::move(expression))
-    {
-    }
-
-    const std::string& Id() const
-    {
-        return id_;
-    }
-
-    const Expression& expression() const
-    {
-        return expression_;
-    }
-
-private:
-    std::string id_;
-    Expression expression_;
+    NO = false,
+    YES = true
 };
+
+enum class ScenarioDependent : bool
+{
+    NO = false,
+    YES = true
+};
+
+template<class T>
+inline T fromBool(bool in);
+
+template<>
+inline TimeDependent fromBool(bool in)
+{
+    return in ? TimeDependent::YES : TimeDependent::NO;
+}
+
+template<>
+inline ScenarioDependent fromBool(bool in)
+{
+    return in ? ScenarioDependent::YES : ScenarioDependent::NO;
+}
 
 } // namespace Antares::Study::SystemModel

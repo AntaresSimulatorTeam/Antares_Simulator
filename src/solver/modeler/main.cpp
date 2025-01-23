@@ -28,8 +28,54 @@
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 
+#include "../optimisation/include/antares/solver/optimisation/LegacyFiller.h"
+#include "api/include/antares/solver/modeler/api/linearProblem.h"
+
+namespace Antares::Solver::Modeler::Api
+{
+struct FillContext;
+class LinearProblemData;
+class ILinearProblem;
+} // namespace Antares::Solver::Modeler::Api
+
+using namespace Antares::Solver::Modeler::OrtoolsImpl;
 using namespace Antares;
 using namespace Antares::Solver;
+using namespace Antares::Solver::Modeler::Api;
+
+class SystemLinearProblem
+{
+public:
+    explicit SystemLinearProblem(const Antares::Study::SystemModel::System& system):
+        system_(system)
+    {
+    }
+
+    ~SystemLinearProblem() = default;
+
+    void Provide(ILinearProblem& pb, const ModelerParameters& parameters)
+    {
+        std::vector<std::unique_ptr<Antares::Optimization::ComponentFiller>> fillers;
+        std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers_ptr;
+        for (const auto& [_, component]: system_.Components())
+        {
+            auto cf = std::make_unique<Antares::Optimization::ComponentFiller>(component);
+            fillers.push_back(std::move(cf));
+        }
+        for (auto& component_filler: fillers)
+        {
+            fillers_ptr.push_back(component_filler.get());
+        }
+
+        LinearProblemBuilder linear_problem_builder(fillers_ptr);
+        LinearProblemData dummy_data;
+        FillContext dummy_time_scenario_ctx = {parameters.firstTimeStep, parameters.lastTimeStep};
+        linear_problem_builder.build(pb, dummy_data, dummy_time_scenario_ctx);
+    }
+
+private:
+    const Antares::Study::SystemModel::System& system_;
+};
 
 static void usage()
 {
@@ -65,40 +111,26 @@ int main(int argc, const char** argv)
         logs.info() << "Libraries loaded";
         const auto system = LoadFiles::loadSystem(studyPath, libraries);
         logs.info() << "System loaded";
+        SystemLinearProblem system_linear_problem(system);
+        logs.info() << "linear problem of System loaded";
+        OrtoolsLinearProblem ortools_linear_problem(true, parameters.solver);
 
-        // Fillers, etc.
-        std::vector<Antares::Solver::Modeler::Api::LinearProblemFiller*> fillers;
-        // TODO memory
-        for (auto& [_, component]: system.Components())
-        {
-            fillers.push_back(new Antares::Optimization::ComponentFiller(component));
-        }
+        system_linear_problem.Provide(ortools_linear_problem, parameters);
 
-        Antares::Solver::Modeler::Api::LinearProblemData LP_Data;
-        Antares::Solver::Modeler::Api::FillContext ctx = {0, 0};
-        // We force the usage of MIP solvers to check that integer variables are properly handled
-        // TODO determine the nature of the problem based on system.Components()
-        const bool isMip = true;
-        Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem pb(isMip, parameters.solver);
-        Antares::Solver::Modeler::Api::LinearProblemBuilder linear_problem_builder(fillers);
-        linear_problem_builder.build(pb, LP_Data, ctx);
-        for (auto& filler: fillers)
-        {
-            delete filler;
-        }
+        logs.info() << "Linear problem provided";
 
-        logs.info() << "Number of variables: " << pb.variableCount();
-        logs.info() << "Number of constraints: " << pb.constraintCount();
+        logs.info() << "Number of variables: " << ortools_linear_problem.variableCount();
+        logs.info() << "Number of constraints: " << ortools_linear_problem.constraintCount();
 
         if (!parameters.noOutput)
         {
             logs.info() << "Writing problem.lp...";
             auto mps_path = std::filesystem::current_path() / "problem.lp";
-            pb.WriteLP(mps_path.string());
+            ortools_linear_problem.WriteLP(mps_path.string());
         }
 
         logs.info() << "Launching resolution...";
-        auto* solution = pb.solve(parameters.solverLogs);
+        auto* solution = ortools_linear_problem.solve(parameters.solverLogs);
         switch (solution->getStatus())
         {
         case Antares::Solver::Modeler::Api::MipStatus::OPTIMAL:

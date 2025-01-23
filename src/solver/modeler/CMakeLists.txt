@@ -31,6 +31,8 @@ target_link_libraries(modeler-lib
 target_link_libraries(antares-modeler
         PRIVATE
         modeler-lib
+        modeler-ortools-impl
+        optim-model-filler
 )
 
 import_std_libs(antares-modeler)

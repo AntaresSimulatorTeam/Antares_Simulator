@@ -28,5 +28,6 @@
 
 namespace Antares::Solver::ModelConverter
 {
+
 NodeRegistry convertExpressionToNode(const std::string& exprStr, const ModelParser::Model& model);
 } // namespace Antares::Solver::ModelConverter
