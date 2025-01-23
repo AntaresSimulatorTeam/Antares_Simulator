@@ -67,7 +67,6 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
             continue;
         }
 
-        // Instancing a new set of variables of the area
         auto& n = pSetsOfAreas[setIndex];
 
         // Initialize the variables
