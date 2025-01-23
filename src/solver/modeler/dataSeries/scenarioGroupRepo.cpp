@@ -5,7 +5,7 @@
 namespace Antares::Solver::Modeler::DataSeries
 {
 void ScenarioGroupRepository::addPairScenarioRankToGroup(
-  const std::string groupId,
+  const std::string& groupId,
   const std::pair<unsigned, unsigned> scenarioToRank)
 {
     scenarioGroups_[groupId] = {scenarioToRank};
