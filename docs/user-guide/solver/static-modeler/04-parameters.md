@@ -434,6 +434,18 @@ _**This section is under construction**_
 > _**Note:**_ You can find more information on this parameter [here](../03-appendix.md#details-on-the-include-exportmps-parameter).
 
 ---
+#### include-export-solutions
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** set to `true` to activate writing the raw optimization results, that is
+  - For each variable, optimal values (saved in output/output-name/optimal-values-y-w--optim-nb-z.txt) and reduced costs (saved in output/output-name/reduced-costs-y-w--optim-nb-z.txt) 
+  - each constraint, the marginal cost is saved in output/output-name/marinal-costs-y-w--optim-nb-z.txt
+where y is the year number (starting from 1), w is the week number (starting from 1) and z is the optimization index (1 or 2).
+
+This is an advanced option intended to help developers and advanced users better understand their simulation results.
+
+---
 #### include-split-exported-mps
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  

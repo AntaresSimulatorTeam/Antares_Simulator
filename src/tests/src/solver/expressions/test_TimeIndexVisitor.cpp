@@ -59,18 +59,15 @@ BOOST_AUTO_TEST_SUITE(_TimeIndexVisitor_)
 BOOST_FIXTURE_TEST_CASE(simple_time_dependant_expression, Registry<Node>)
 {
     PrintVisitor printVisitor;
-    std::unordered_map<const Node*, TimeIndex> context;
     // LiteralNode --> constant in time and for all scenarios
     LiteralNode literalNode(65.);
 
     // Parameter --> constant in time and varying scenarios
-    ParameterNode parameterNode1("p1");
-    context[&parameterNode1] = TimeIndex::VARYING_IN_SCENARIO_ONLY;
+    ParameterNode parameterNode1("p1", TimeIndex::VARYING_IN_SCENARIO_ONLY);
 
     // Variable time varying but constant across scenarios
-    VariableNode variableNode1("v1");
-    context[&variableNode1] = TimeIndex::VARYING_IN_TIME_ONLY;
-    TimeIndexVisitor timeIndexVisitor(context);
+    VariableNode variableNode1("v1", TimeIndex::VARYING_IN_TIME_ONLY);
+    TimeIndexVisitor timeIndexVisitor;
 
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(&literalNode),
                       TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
@@ -89,14 +86,15 @@ static const std::vector<TimeIndex> TimeIndex_ALL{TimeIndex::CONSTANT_IN_TIME_AN
                                                   TimeIndex::VARYING_IN_TIME_AND_SCENARIO};
 
 template<class T>
-static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry)
+static std::pair<Node*, ParameterNode*> s_(Registry<Node>& registry, const TimeIndex& time_index)
 {
     Node* left = registry.create<LiteralNode>(42.);
-    ParameterNode* right = registry.create<ParameterNode>("param");
+    ParameterNode* right = registry.create<ParameterNode>("param", time_index);
     return {registry.create<T>(left, right), right};
 }
 
-static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>& registry)>
+static const std::vector<std::pair<Node*, ParameterNode*> (*)(Registry<Node>& registry,
+                                                              const TimeIndex& time_index)>
   operator_ALL{&s_<SumNode>,
                &s_<SubtractionNode>,
                &s_<MultiplicationNode>,
@@ -111,10 +109,8 @@ BOOST_DATA_TEST_CASE_F(Registry<Node>,
                        timeIndex,
                        binaryOperator)
 {
-    auto [root, parameter] = binaryOperator(*this);
-    std::unordered_map<const Node*, TimeIndex> context;
-    context[parameter] = timeIndex;
-    TimeIndexVisitor timeIndexVisitor(context);
+    auto [root, parameter] = binaryOperator(*this, timeIndex);
+    TimeIndexVisitor timeIndexVisitor;
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(root), timeIndex);
     Node* neg = create<NegationNode>(root);
     BOOST_CHECK_EQUAL(timeIndexVisitor.dispatch(neg), timeIndex);

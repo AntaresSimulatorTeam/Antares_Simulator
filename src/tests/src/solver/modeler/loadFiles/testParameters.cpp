@@ -21,54 +21,66 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <fstream>
-#define BOOST_TEST_MODULE parse modeler parameters
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/modeler/parameters/parseModelerParameters.h>
+#include <antares/solver/modeler/loadFiles/loadFiles.h>
 
 #include "files-system.h"
 
-BOOST_AUTO_TEST_SUITE(read_modeler_parameters)
-
-BOOST_AUTO_TEST_CASE(all_properties_set)
+BOOST_AUTO_TEST_CASE(read_parameters)
 {
-    const auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    const auto fileP = working_tmp_dir / "parameters.yaml";
-    {
-        std::ofstream param(fileP);
-        param << R"(
-solver: sirius
-solver-logs: false
-solver-parameters: PRESOLVE 1
-no-output: true)";
-    }
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::ofstream paramStream(studyPath / "parameters.yml");
+    paramStream << R"(
+        solver: sirius
+        solver-logs: false
+        solver-parameters: PRESOLVE 1
+        no-output: true
+    )";
+    paramStream.close();
 
-    auto params = Antares::Solver::parseModelerParameters(fileP);
+    auto params = Antares::Solver::LoadFiles::loadParameters(studyPath);
     BOOST_CHECK_EQUAL(params.solver, "sirius");
     BOOST_CHECK_EQUAL(params.solverLogs, false);
     BOOST_CHECK_EQUAL(params.solverParameters, "PRESOLVE 1");
     BOOST_CHECK_EQUAL(params.noOutput, true);
 }
 
-BOOST_AUTO_TEST_CASE(all_properties_set_out_of_order)
+BOOST_AUTO_TEST_CASE(read_parameters_out_of_order)
 {
-    const auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    const auto fileP = working_tmp_dir / "parameters.yaml";
-    {
-        std::ofstream param(fileP);
-        param << R"(
-solver-logs: false
-solver: sirius
-solver-parameters: PRESOLVE 1
-no-output: true)";
-    }
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::ofstream paramStream(studyPath / "parameters.yml");
+    paramStream << R"(
+        solver-logs: false
+        solver: sirius
+        solver-parameters: PRESOLVE 1
+        no-output: true
+    )";
+    paramStream.close();
 
-    auto params = Antares::Solver::parseModelerParameters(fileP);
+    auto params = Antares::Solver::LoadFiles::loadParameters(studyPath);
     BOOST_CHECK_EQUAL(params.solver, "sirius");
     BOOST_CHECK_EQUAL(params.solverLogs, false);
     BOOST_CHECK_EQUAL(params.solverParameters, "PRESOLVE 1");
     BOOST_CHECK_EQUAL(params.noOutput, true);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_CASE(parameters_missing)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::ofstream paramStream(studyPath / "parameters.yml");
+    paramStream << R"(
+        solver-logs: false
+        no-output: true
+    )";
+    paramStream.close();
+
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadParameters(studyPath), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(file_missing)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadParameters(studyPath), std::runtime_error);
+}

@@ -1,3 +1,14 @@
+# Remix hydro algorithm
+add_library(shave-peaks-by-remix-hydro)
+
+target_sources(shave-peaks-by-remix-hydro
+        PRIVATE
+        shave-peaks-by-remix-hydro.cpp)
+
+target_include_directories(shave-peaks-by-remix-hydro
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
 #
 # Simulation
 #
@@ -74,6 +85,7 @@ target_link_libraries(antares-solver-simulation
         antares-solver-hydro
         antares-solver-variable
         antares-solver-ts-generator
+        shave-peaks-by-remix-hydro
 )
 
 install(DIRECTORY include/antares

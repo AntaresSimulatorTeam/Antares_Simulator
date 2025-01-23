@@ -93,4 +93,9 @@ std::vector<double> OrtoolsMipSolution::getOptimalValues(
     return solution;
 }
 
+const std::map<std::string, double>& OrtoolsMipSolution::getOptimalValues() const
+{
+    return solution_;
+}
+
 } // namespace Antares::Solver::Modeler::OrtoolsImpl

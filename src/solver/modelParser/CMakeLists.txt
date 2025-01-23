@@ -17,7 +17,7 @@ target_include_directories(modelParser
 # Link dependencies (if any)
 target_link_libraries(modelParser
         PRIVATE
-        yaml-cpp
+        yaml-cpp::yaml-cpp
 )
 
 install(DIRECTORY include/antares

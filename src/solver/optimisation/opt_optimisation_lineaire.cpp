@@ -62,6 +62,42 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
+void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
+                       const OptPeriodStringGenerator& optPeriodStringGenerator,
+                       int optimizationNumber,
+                       Solver::IResultWriter& writer)
+{
+    auto s = [](int x) { return static_cast<size_t>(x); };
+
+    Yuni::Clob buffer;
+    auto filename = createSolutionFilename(optPeriodStringGenerator, optimizationNumber);
+    for (int var = 0; var < pb.NombreDeVariables; var++)
+    {
+        buffer.appendFormat("%s\t%11.10e\n", pb.NomDesVariables[s(var)].c_str(), pb.X[s(var)]);
+    }
+    writer.addEntryFromBuffer(filename, buffer);
+    buffer.clear();
+
+    filename = createMarginalCostFilename(optPeriodStringGenerator, optimizationNumber);
+    for (int cont = 0; cont < pb.NombreDeContraintes; ++cont)
+    {
+        buffer.appendFormat("%s\t%11.10e\n",
+                            pb.NomDesContraintes[s(cont)].c_str(),
+                            pb.CoutsMarginauxDesContraintes[s(cont)]);
+    }
+    writer.addEntryFromBuffer(filename, buffer);
+    buffer.clear();
+
+    filename = createReducedCostFilename(optPeriodStringGenerator, optimizationNumber);
+    for (int var = 0; var < pb.NombreDeVariables; ++var)
+    {
+        buffer.appendFormat("%s\t%11.10e\n",
+                            pb.NomDesVariables[s(var)].c_str(),
+                            pb.CoutsReduits[s(var)]);
+    }
+    writer.addEntryFromBuffer(filename, buffer);
+}
+
 namespace
 {
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
@@ -140,6 +176,13 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                                            *optPeriodStringGenerator,
                                                            optimizationNumber,
                                                            writer);
+        }
+        if (problemeHebdo->exportSolutions)
+        {
+            OPT_WriteSolution(*problemeHebdo->ProblemeAResoudre,
+                              *optPeriodStringGenerator,
+                              optimizationNumber,
+                              writer);
         }
     }
     return true;

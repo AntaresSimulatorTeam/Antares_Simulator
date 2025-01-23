@@ -23,7 +23,6 @@
 #include <filesystem>
 #include <string>
 
-#include "AdditionalConstraint.h"
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -42,7 +41,7 @@ public:
     /// Number of enabled ST storages, ignoring disabled ST storages
     std::size_t count() const;
 
-    bool LoadConstraintsFromIniFile(const std::filesystem::path& filePath);
+    bool loadAdditionalConstraints(const std::filesystem::path& filePath);
 
     /// erase disabled cluster from the vector
     uint removeDisabledClusters();

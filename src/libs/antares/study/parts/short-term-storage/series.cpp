@@ -107,16 +107,16 @@ bool loadFile(const fs::path& path, std::vector<double>& vect)
     return true;
 }
 
+void fillIfEmpty(std::vector<double>& v, double value)
+{
+    if (v.empty())
+    {
+        v.resize(HOURS_PER_YEAR, value);
+    }
+}
+
 void Series::fillDefaultSeriesIfEmpty()
 {
-    auto fillIfEmpty = [](std::vector<double>& v, double value)
-    {
-        if (v.empty())
-        {
-            v.resize(HOURS_PER_YEAR, value);
-        }
-    };
-
     fillIfEmpty(maxInjectionModulation, 1.0);
     fillIfEmpty(maxWithdrawalModulation, 1.0);
     fillIfEmpty(inflows, 0.0);

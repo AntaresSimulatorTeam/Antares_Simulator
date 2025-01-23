@@ -273,13 +273,11 @@ void IntermediateValues::computeMonthlyAveragesForCurrentYear()
 void IntermediateValues::computeYearlyAveragesForCurrentYear()
 {
     year = 0.; // Re-initialization (a previous MC year could have left a non-nil value)
-
-    // Compute current year average
-    for (uint w = pRange->week[Data::rangeBegin]; w <= pRange->week[Data::rangeEnd]; ++w)
+    for (uint d = pRange->day[Data::rangeBegin]; d <= pRange->day[Data::rangeEnd]; ++d)
     {
-        year += week[w];
+        year += day[d];
     }
-    year /= pRange->week[Data::rangeCount];
+    year *= HOURS_PER_DAY / (double)pRange->hour[Data::rangeCount];
 }
 
 void IntermediateValues::computeProbabilitiesForTheCurrentYear()

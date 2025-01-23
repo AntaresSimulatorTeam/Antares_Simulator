@@ -240,7 +240,7 @@ public:
              i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->enabledIndex].hour[i]
               = state.thermalClusterNonProportionalCostForYear[i];
         }
 
@@ -323,7 +323,7 @@ public:
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                pValuesForTheCurrentYear[numSpace][cluster->enabledIndex]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }

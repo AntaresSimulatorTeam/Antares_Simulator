@@ -20,6 +20,7 @@
  */
 
 #include <exception>
+#include <fstream>
 #include <memory>
 #include <ortools/linear_solver/linear_solver.h>
 
@@ -67,6 +68,20 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return pair.first->second.get(); // <<name, var>, bool>
 }
 
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addVariable(double lb,
+                                                                  double ub,
+                                                                  bool integer,
+                                                                  const std::string& name,
+                                                                  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addVariable(lb, ub, integer, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
 OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
                                                          double ub,
                                                          const std::string& name)
@@ -74,11 +89,39 @@ OrtoolsMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
     return addVariable(lb, ub, false, name);
 }
 
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addNumVariable(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addNumVariable(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
+}
+
 OrtoolsMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
                                                          double ub,
                                                          const std::string& name)
 {
     return addVariable(lb, ub, true, name);
+}
+
+std::vector<Api::IMipVariable*> OrtoolsLinearProblem::addIntVariable(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_variables)
+{
+    std::vector<Api::IMipVariable*> new_variables;
+    for (unsigned int i = 0; i < number_new_variables; i++)
+    {
+        new_variables.push_back(addIntVariable(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_variables;
 }
 
 OrtoolsMipVariable* OrtoolsLinearProblem::getVariable(const std::string& name) const
@@ -111,6 +154,20 @@ OrtoolsMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     const auto& pair = constraints_.emplace(name,
                                             std::make_unique<OrtoolsMipConstraint>(mpConstraint));
     return pair.first->second.get(); // <<name, constraint>, bool>
+}
+
+std::vector<Api::IMipConstraint*> OrtoolsLinearProblem::addConstraint(
+  double lb,
+  double ub,
+  const std::string& name,
+  unsigned int number_new_constraints)
+{
+    std::vector<Api::IMipConstraint*> new_constraints;
+    for (unsigned int i = 0; i < number_new_constraints; i++)
+    {
+        new_constraints.push_back(addConstraint(lb, ub, name + '_' + std::to_string(i)));
+    }
+    return new_constraints;
 }
 
 OrtoolsMipConstraint* OrtoolsLinearProblem::getConstraint(const std::string& name) const
@@ -163,6 +220,14 @@ bool OrtoolsLinearProblem::isMinimization() const
 bool OrtoolsLinearProblem::isMaximization() const
 {
     return objective_->maximization();
+}
+
+void OrtoolsLinearProblem::WriteLP(const std::string& filename)
+{
+    std::string out;
+    mpSolver_->ExportModelAsLpFormat(false, &out);
+    std::ofstream of(filename);
+    of << out;
 }
 
 MPSolver* OrtoolsLinearProblem::MpSolver() const
