@@ -283,6 +283,8 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           const double initLevel = problem.CaracteristiquesHydrauliques[area.index]
                                      .NiveauInitialReservoir;
           const double capacity = area.hydro.reservoirCapacity;
+          const double efficiency = area.hydro.pumpingEfficiency;
+          const bool reservoir_management = area.hydro.reservoirManagement;
           const auto& inflows = problem.CaracteristiquesHydrauliques[area.index]
                                   .ApportNaturelHoraire;
           const auto& ovf = weeklyResults.debordementsHoraires;
@@ -299,6 +301,8 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                                                      hydroPmin,
                                                      initLevel,
                                                      capacity,
+                                                     efficiency,
+                                                     reservoir_management,
                                                      inflows,
                                                      ovf,
                                                      pump,

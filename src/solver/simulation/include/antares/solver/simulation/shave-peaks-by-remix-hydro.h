@@ -20,6 +20,8 @@ RemixHydroOutput shavePeaksByRemixingHydro(const std::vector<double>& DispatchGe
                                            const std::vector<double>& HydroPmin,
                                            double init_level,
                                            double capacity,
+                                           double efficiency,
+                                           bool reservoir_management,
                                            const std::vector<double>& inflow,
                                            const std::vector<double>& overflow,
                                            const std::vector<double>& pump,
