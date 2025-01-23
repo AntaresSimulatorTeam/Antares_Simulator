@@ -24,7 +24,7 @@
 namespace Antares::Solver::Modeler::DataSeries
 {
 
-void LinearProblemData::addScenarioGroup(std::string groupId,
+void LinearProblemData::addScenarioGroup(const std::string& groupId,
                                          std::pair<unsigned, unsigned> scenarioToRank)
 {
     groupRepository_.addPairScenarioRankToGroup(groupId, scenarioToRank);

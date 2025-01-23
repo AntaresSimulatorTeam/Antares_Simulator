@@ -13,7 +13,7 @@ TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
 {
 }
 
-void TimeSeriesSet::add(std::vector<double> ts)
+void TimeSeriesSet::add(const std::vector<double>& ts)
 {
     if (ts.size() != height_)
     {
