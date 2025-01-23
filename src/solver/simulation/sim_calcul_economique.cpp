@@ -493,7 +493,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
               = problem.CaracteristiquesHydrauliques[k]
                   .NiveauInitialReservoir; /*for first 24-hour optim*/
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
-            if (nivInit < 0.)
+            if (nivInit < -1e-6)
             {
                 std::ostringstream msg;
                 msg << "Area " << area.name << ", week " << weekInTheYear + 1
@@ -501,7 +501,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 throw FatalError(msg.str());
             }
 
-            if (nivInit > area.hydro.reservoirCapacity)
+            if (nivInit > area.hydro.reservoirCapacity + 1e-6)
             {
                 std::ostringstream msg;
                 msg << "Area " << area.name << ", week " << weekInTheYear + 1
@@ -849,8 +849,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     }
 
                     marginGen = weekGenerationTarget;
-
-
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
