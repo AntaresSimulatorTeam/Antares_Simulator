@@ -29,21 +29,31 @@ using namespace Antares::Data;
 using namespace Antares::Date;
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
+namespace Antares::Solver::Optimization
+{
+class WeeklyOptimization;
+};
+
 namespace Antares::Solver::Simulation
 {
 
 struct optRuntimeData
 {
-    optRuntimeData(unsigned int y, unsigned int w, unsigned int h):
+    optRuntimeData(unsigned int y,
+                   unsigned int w,
+                   unsigned int h,
+                   Antares::Solver::Optimization::WeeklyOptimization& weeklyOptimization):
         year(y),
         week(w),
-        hourInTheYear(h)
+        hourInTheYear(h),
+        weeklyOptimization(weeklyOptimization)
     {
     }
 
     unsigned int year = 0;
     unsigned int week = 0;
     unsigned int hourInTheYear = 0;
+    Antares::Solver::Optimization::WeeklyOptimization& weeklyOptimization;
 };
 
 class basePostProcessCommand
