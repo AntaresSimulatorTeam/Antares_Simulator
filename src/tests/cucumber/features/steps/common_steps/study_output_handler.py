@@ -79,6 +79,8 @@ class study_output_handler:
 
     def get_unsupplied_energy_mwh(self, area: str, year: int, date: str) -> float:
         return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
+    def get_specific_value(self, area: str, year: int, date: str, prod_name: str) -> float:
+        return self.__get_values_hourly_for_specific_hour(area, year, date)[prod_name]["MWh"]
 
     def get_non_proportional_cost(self, area: str, year: int) -> float:
         return self.__get_values_hourly(area, year)["NP COST"]["Euro"].sum()

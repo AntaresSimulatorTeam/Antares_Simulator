@@ -106,6 +106,10 @@ def check_prod_for_all_years(context, area, prod_name, comparator_and_hourly_pro
     for year in range(1, context.nbyears + 1):
         check_prod_for_specific_year(context, area, year, prod_name, comparator_and_hourly_prod)
 
+@then('in area "{area}", during year {year:d}, hourly production of "{prod_name}" for "{date}" is {value}')
+def check_prod_for_specific_year_and_hour(context, area, year, prod_name, date, value):
+    actual_hourly_prod = context.soh.get_specific_value(area, year, prod_name, date)
+    assert actual_hourly_prod - value <= 1e-6
 
 @step('in area "{area}", during year {year:d}, total non-proportional cost is {np_cost:g}')
 def check_np_cost_for_specific_year(context, area, year, np_cost):
