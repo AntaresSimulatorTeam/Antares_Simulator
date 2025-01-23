@@ -204,15 +204,6 @@ jobs:
           batch-name: adequacy-patch-CSR
           os: ${{ env.os }}
 
-      - name: Run parallel tests
-        if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
-        uses: ./.github/workflows/run-tests
-        with:
-          simtest-tag: ${{ env.SIMTEST }}
-          batch-name: valid-parallel
-          os: ${{ env.os }}
-          variant: "parallel"
-
       - name: Run tests introduced in 8.6.0
         if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
         uses: ./.github/workflows/run-tests

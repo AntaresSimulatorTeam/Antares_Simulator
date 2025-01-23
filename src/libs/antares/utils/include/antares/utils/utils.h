@@ -57,6 +57,9 @@ namespace Utils
 
 bool isZero(double d);
 double round(double d, unsigned precision);
+double ceilDiv(double numerator, double denominator);
+double floorDiv(double numerator, double denominator);
+
 std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs);
 
 } // namespace Utils

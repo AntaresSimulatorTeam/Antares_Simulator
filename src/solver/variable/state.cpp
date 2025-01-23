@@ -316,13 +316,14 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
                            static_cast<uint>(
                              std::ceil(thermalClusterAvailableProduction
                                        / currentCluster->nominalCapacityWithSpinning))),
-                  static_cast<uint>(std::ceil(thermalClusterProduction
-                                              / currentCluster->nominalCapacityWithSpinning)));
+                  static_cast<uint>(Utils::ceilDiv(thermalClusterProduction,
+                                                   currentCluster->nominalCapacityWithSpinning)));
             }
             else
             {
-                ON_min[h] = static_cast<uint>(std::ceil(
-                  thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
+                ON_min[h] = static_cast<uint>(
+                  Utils::ceilDiv(thermalClusterProduction,
+                                 currentCluster->nominalCapacityWithSpinning));
             }
             break;
         }
@@ -330,11 +331,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
         case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
         {
             ON_min[h] = std::max(
-              static_cast<uint>(
-                std::ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)),
-              thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
-            // that hour
-
+              static_cast<uint>(Utils::ceilDiv(thermalClusterProduction,
+                                               currentCluster->nominalCapacityWithSpinning)),
+              thermalClusterDispatchedUnitsCountForYear[h]); // eq to thermalClusterON for that hour
             break;
         }
         case Antares::Data::UnitCommitmentMode::ucUnknown:
@@ -350,7 +349,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
         if (currentCluster->minStablePower > 0.)
         {
             maxUnitNeeded = static_cast<uint>(
-              std::floor(thermalClusterProduction / currentCluster->minStablePower));
+              Utils::floorDiv(thermalClusterProduction, currentCluster->minStablePower));
             if (ON_max[h] > maxUnitNeeded)
             {
                 ON_max[h] = maxUnitNeeded;
