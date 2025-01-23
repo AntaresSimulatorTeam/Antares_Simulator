@@ -14,7 +14,7 @@ class DataSeriesRepository
 {
 public:
     void addDataSeries(std::unique_ptr<IDataSeries> dataSeries);
-    IDataSeries& getDataSeries(std::string setId);
+    IDataSeries& getDataSeries(const std::string& setId);
 
 private:
     std::map<std::string, std::unique_ptr<IDataSeries>> dataSeries_;

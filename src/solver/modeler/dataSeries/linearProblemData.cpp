@@ -35,8 +35,8 @@ void LinearProblemData::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
     dataSeriesRepository_.addDataSeries(std::move(dataSeries));
 }
 
-double LinearProblemData::getData(const std::string dataSetId,
-                                  const std::string scenarioGroup,
+double LinearProblemData::getData(const std::string& dataSetId,
+                                  const std::string& scenarioGroup,
                                   const unsigned scenario,
                                   const unsigned hour)
 {

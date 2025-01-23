@@ -34,8 +34,8 @@ namespace Antares::Solver::Modeler::DataSeries
 class LinearProblemData: public Api::ILinearProblemData
 {
 public:
-    double getData(const std::string dataSetId,
-                   const std::string scenarioGroup,
+    double getData(const std::string& dataSetId,
+                   const std::string& scenarioGroup,
                    const unsigned scenario,
                    const unsigned hour) override;
 

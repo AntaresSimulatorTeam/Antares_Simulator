@@ -10,7 +10,7 @@ class IDataSeries
 {
 public:
     IDataSeries(std::string name):
-        name_(name)
+        name_(std::move(name))
     {
     }
 

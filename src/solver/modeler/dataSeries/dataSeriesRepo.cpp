@@ -10,7 +10,7 @@ void DataSeriesRepository::addDataSeries(std::unique_ptr<IDataSeries> dataSeries
     dataSeries_[name] = std::move(dataSeries);
 }
 
-IDataSeries& DataSeriesRepository::getDataSeries(std::string setId)
+IDataSeries& DataSeriesRepository::getDataSeries(const std::string& setId)
 {
     std::string error_message = err_prefix;
     if (dataSeries_.empty())
