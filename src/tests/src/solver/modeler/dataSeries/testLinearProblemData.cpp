@@ -12,7 +12,7 @@ using namespace Antares::Solver::Modeler::DataSeries;
 BOOST_AUTO_TEST_CASE(PbData_is_empty__asking_it_a_value_leads_to_exception)
 {
     LinearProblemData linearProblemData;
-    std::string expected_err_msg = "Group 'group name' does not exist in group repo.";
+    std::string expected_err_msg = "Scenario group 'group name' does not exist in group repo.";
     BOOST_CHECK_EXCEPTION(linearProblemData.getData("data set name", "group name", 0, 0),
                           std::invalid_argument,
                           checkMessage(expected_err_msg));

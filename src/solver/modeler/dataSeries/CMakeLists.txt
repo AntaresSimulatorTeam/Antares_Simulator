@@ -1,16 +1,21 @@
 
 set(SRC_DATA_SERIES
         include/antares/solver/modeler/dataSeries/dataSeries.h
-        include/antares/solver/modeler/dataSeries/timeSeriesSet.h
-        include/antares/solver/modeler/dataSeries/dataSeriesRepo.h
-        include/antares/solver/modeler/dataSeries/scenarioGroupRepo.h
-        include/antares/solver/modeler/dataSeries/linearProblemData.h
 
-        include/antares/solver/modeler/dataSeries/timeSeriesSetExceptions.h
+        include/antares/solver/modeler/dataSeries/timeSeriesSet.h
         timeSeriesSet.cpp
+        include/antares/solver/modeler/dataSeries/timeSeriesSetExceptions.h
         timeSeriesSetExceptions.cpp
+
+        include/antares/solver/modeler/dataSeries/dataSeriesRepo.h
         dataSeriesRepo.cpp
+
+        include/antares/solver/modeler/dataSeries/scenarioGroupRepo.h
         scenarioGroupRepo.cpp
+        include/antares/solver/modeler/dataSeries/scenarioGroupRepoExceptions.h
+        scenarioGroupRepoExceptions.cpp
+
+        include/antares/solver/modeler/dataSeries/linearProblemData.h
         linearProblemData.cpp
 )
 

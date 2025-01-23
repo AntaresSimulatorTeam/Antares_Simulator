@@ -1,6 +1,8 @@
-#include "include/antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
+#include "antares/solver/modeler/dataSeries/scenarioGroupRepo.h"
 
 #include <stdexcept>
+
+#include "antares/solver/modeler/dataSeries/scenarioGroupRepoExceptions.h"
 
 namespace Antares::Solver::Modeler::DataSeries
 {
@@ -15,15 +17,12 @@ unsigned ScenarioGroupRepository::getDataRank(const std::string& groupId, const 
 {
     if (!scenarioGroups_.contains(groupId))
     {
-        std::string error_message = "Group '" + groupId + "' does not exist in group repo.";
-        throw std::invalid_argument(error_message);
+        throw ScGroup_DoesNotExist(groupId);
     }
 
     if (!scenarioGroups_.at(groupId).contains(scenario))
     {
-        std::string error_message = "In scenario group '" + groupId + "', scenario '"
-                                    + std::to_string(scenario) + "' does not exist.";
-        throw std::invalid_argument(error_message);
+        throw ScGroup_ScenarioNotExist(groupId, scenario);
     }
 
     return scenarioGroups_.at(groupId).at(scenario);

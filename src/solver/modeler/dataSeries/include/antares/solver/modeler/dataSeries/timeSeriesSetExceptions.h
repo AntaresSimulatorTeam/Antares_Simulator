@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdexcept>
 
 namespace Antares::Solver::Modeler::DataSeries
