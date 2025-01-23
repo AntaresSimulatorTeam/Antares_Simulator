@@ -86,10 +86,6 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
 
         pNames.push_back(setname);
     }
-
-    // Initializing iterators
-    pBegin = pSetsOfAreas.begin();
-    pEnd = pSetsOfAreas.end();
 }
 
 template<class NextT>
@@ -242,7 +238,7 @@ void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, in
         results.data.area = nullptr;
         results.data.rowIndex = 0;
 
-        for (auto i = pBegin; i != pEnd; ++i)
+        for (auto i = pSetsOfAreas.begin(); i != pSetsOfAreas.end(); ++i)
         {
             results.data.columnIndex = 0;
             results.data.rowCaptions[results.data.rowIndex].clear()
