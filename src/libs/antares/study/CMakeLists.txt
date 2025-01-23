@@ -301,8 +301,8 @@ target_link_libraries(study
         antares-core
         antares-solver-simulation
         Antares::hydro
-        PRIVATE
         Antares::exception
+        PRIVATE
         Antares::benchmarking
         antares-solver-variable
 )
