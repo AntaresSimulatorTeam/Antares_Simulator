@@ -11,7 +11,7 @@ void ScenarioGroupRepository::addPairScenarioRankToGroup(
     scenarioGroups_[groupId] = {scenarioToRank};
 }
 
-unsigned ScenarioGroupRepository::getDataRank(const std::string groupId, const unsigned scenario)
+unsigned ScenarioGroupRepository::getDataRank(const std::string& groupId, const unsigned scenario)
 {
     if (!scenarioGroups_.contains(groupId))
     {

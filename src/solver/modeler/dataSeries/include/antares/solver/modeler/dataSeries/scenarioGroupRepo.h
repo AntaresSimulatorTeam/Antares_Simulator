@@ -11,7 +11,7 @@ public:
     void addPairScenarioRankToGroup(const std::string groupId,
                                     const std::pair<unsigned, unsigned> scenarioToRank);
 
-    unsigned getDataRank(const std::string groupId, const unsigned scenario);
+    unsigned getDataRank(const std::string& groupId, const unsigned scenario);
 
 private:
     std::map<std::string, std::map<unsigned, unsigned>> scenarioGroups_;
