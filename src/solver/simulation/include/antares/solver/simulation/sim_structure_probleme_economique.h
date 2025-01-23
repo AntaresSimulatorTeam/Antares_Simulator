@@ -36,8 +36,10 @@ struct CORRESPONDANCES_DES_VARIABLES
 {
     // Avoid accidental copies
     CORRESPONDANCES_DES_VARIABLES() = default;
-    CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
+    CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = default;
     CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
+
+    CORRESPONDANCES_DES_VARIABLES& operator=(const CORRESPONDANCES_DES_VARIABLES&) = default;
 
     std::vector<int> NumeroDeVariableDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;

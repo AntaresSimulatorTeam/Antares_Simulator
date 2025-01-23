@@ -287,6 +287,8 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();
     HourlyCSRProblem hourlyCsrProblem(adqPatchParams_, problemeHebdo_);
 
+    auto backup = problemeHebdo_->CorrespondanceVarNativesVarOptim;
+
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo_);
     // int var = variableManager_.NTCDirect(Interco, triggeredHour);
     // Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
@@ -389,6 +391,8 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     // REDISPATCH NEW Flow COnst
     std::vector<double>& Xmax = problemeHebdo_->ProblemeAResoudre->Xmax;
     std::vector<double>& Xmin = problemeHebdo_->ProblemeAResoudre->Xmin;
+
+    problemeHebdo_->CorrespondanceVarNativesVarOptim = backup;
 
     for (int hourInWeek: hoursRequiringCurtailmentSharing)
     {
