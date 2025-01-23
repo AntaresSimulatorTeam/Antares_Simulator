@@ -28,10 +28,7 @@ namespace Solver
 namespace Variable
 {
 template<class NextT>
-inline SetsOfAreas<NextT>::SetsOfAreas()
-{
-    // Do nothing
-}
+inline SetsOfAreas<NextT>::SetsOfAreas() = default;
 
 template<class NextT>
 inline SetsOfAreas<NextT>::~SetsOfAreas() = default;
