@@ -15,7 +15,6 @@ public:
 private:
     unsigned height_ = 0;
     std::vector<std::vector<double>> tsSet_;
-    std::string err_prefix_;
 };
 
 } // namespace Antares::Solver::Modeler::DataSeries

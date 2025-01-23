@@ -6,7 +6,9 @@ set(SRC_DATA_SERIES
         include/antares/solver/modeler/dataSeries/scenarioGroupRepo.h
         include/antares/solver/modeler/dataSeries/linearProblemData.h
 
+        include/antares/solver/modeler/dataSeries/timeSeriesSetExceptions.h
         timeSeriesSet.cpp
+        timeSeriesSetExceptions.cpp
         dataSeriesRepo.cpp
         scenarioGroupRepo.cpp
         linearProblemData.cpp
