@@ -23,7 +23,7 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
-  RUN_EXTENDED_TESTS: ${{ github.ref_name == 'release/8.8.x' && (github.event_name != 'release')}}
+  RUN_EXTENDED_TESTS: ${{ inputs.run-tests == 'true'}}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
 jobs:
