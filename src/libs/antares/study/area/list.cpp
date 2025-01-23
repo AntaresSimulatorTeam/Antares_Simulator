@@ -28,6 +28,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/area/scratchpad.h>
 #include "antares/antares/antares.h"
+#include "antares/array/matrix.h"
 #include "antares/study//study.h"
 #include "antares/study/area/area.h"
 #include "antares/study/parts/load/prepro.h"
