@@ -118,7 +118,13 @@ struct LinearProblemBuildingFixture
         return nodes.create<NegationNode>(node);
     }
 
-    void buildLinearProblem(const FillContext& time_scenario_ctx = {0, 0});
+    void buildLinearProblem(FillContext& time_scenario_ctx);
+
+    void buildLinearProblem()
+    {
+        FillContext time_scenario_ctx = {0, 0};
+        buildLinearProblem(time_scenario_ctx);
+    }
 };
 
 void LinearProblemBuildingFixture::createModel(string modelId,
@@ -181,7 +187,7 @@ void LinearProblemBuildingFixture::createComponent(const string& modelId,
     components.push_back(move(component));
 }
 
-void LinearProblemBuildingFixture::buildLinearProblem(const FillContext& time_scenario_ctx)
+void LinearProblemBuildingFixture::buildLinearProblem(FillContext& time_scenario_ctx)
 {
     vector<unique_ptr<ComponentFiller>> fillers;
     vector<LinearProblemFiller*> fillers_ptr;
@@ -224,7 +230,7 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
     createModelWithOneFloatVar("some_model", {}, "var1", literal(-5), literal(10), {}, nullptr, true);
     createComponent("some_model", "some_component");
     constexpr unsigned int last_time_step = 10;
-    const FillContext ctx{0, last_time_step};
+    FillContext ctx{0, last_time_step};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
     BOOST_CHECK_EQUAL(pb->variableCount(), 10);
