@@ -198,7 +198,7 @@ public:
 
 public:
     //! Area list
-    typedef std::vector<NextType> SetOfAreasVector;
+    typedef std::vector<std::unique_ptr<NextType>> SetOfAreasVector;
     //! Area list
     SetOfAreasVector pSetsOfAreas;
     //! Reference to the origina set

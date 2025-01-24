@@ -44,10 +44,8 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     auto& sets = study.setsOfAreas;
     // Reserving the memory
     pOriginalSets.reserve(sets.size());
-    pSetsOfAreas.resize(sets.size());
 
     // For each set...
-    uint idx = 0;
     for (uint setIndex = 0; setIndex != sets.size(); ++setIndex)
     {
         if (!sets.hasOutput(setIndex))
@@ -65,20 +63,22 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
             continue;
         }
 
-        auto& n = pSetsOfAreas[idx];
+        auto n = std::make_unique<NextT>();
 
         // Initialize the variables
         // From the study
-        n.initializeFromStudy(study);
+        n->initializeFromStudy(study);
 
         // Making specific variables non applicable in following output reports :
         // - annual district reports
         // - over all years district statistics reports
-        n.broadcastNonApplicability(true);
+        n->broadcastNonApplicability(true);
 
         // For each current set's variable, getting the print status, that is :
         // is variable's column(s) printed in output (set of areas) reports ?
-        n.getPrintStatusFromStudy(study);
+        n->getPrintStatusFromStudy(study);
+
+        pSetsOfAreas.push_back(std::move(n));
 
         auto* originalSet = &sets[setIndex];
         assert(originalSet != NULL);
@@ -86,9 +86,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         pOriginalSets.push_back(originalSet);
 
         pNames.push_back(setname);
-        idx++;
     }
-    pSetsOfAreas.resize(idx);
 }
 
 template<class NextT>
@@ -202,10 +200,10 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex].buildSurveyReport(results,
-                                                                     dataLevel,
-                                                                     fileLevel,
-                                                                     precision);
+        pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(results,
+                                                                      dataLevel,
+                                                                      fileLevel,
+                                                                      precision);
     }
 }
 
@@ -220,11 +218,11 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex].buildAnnualSurveyReport(results,
-                                                                           dataLevel,
-                                                                           fileLevel,
-                                                                           precision,
-                                                                           numSpace);
+        pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(results,
+                                                                            dataLevel,
+                                                                            fileLevel,
+                                                                            precision,
+                                                                            numSpace);
     }
 }
 
@@ -246,7 +244,7 @@ void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, in
             results.data.columnIndex = 0;
             results.data.rowCaptions[results.data.rowIndex].clear()
               << "@ " << pNames[results.data.rowIndex];
-            set.buildDigest(results, digestLevel, dataLevel);
+            set->buildDigest(results, digestLevel, dataLevel);
             ++results.data.rowIndex;
         }
     }
@@ -281,10 +279,10 @@ void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint nu
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
         assert(setindex < pOriginalSets.size());
-        pSetsOfAreas[setindex].yearEndSpatialAggregates(allVars,
-                                                        year,
-                                                        *(pOriginalSets[setindex]),
-                                                        numSpace);
+        pSetsOfAreas[setindex]->yearEndSpatialAggregates(allVars,
+                                                         year,
+                                                         *(pOriginalSets[setindex]),
+                                                         numSpace);
     }
 }
 
@@ -298,9 +296,9 @@ void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
         assert(setindex < pOriginalSets.size());
-        pSetsOfAreas[setindex].computeSpatialAggregatesSummary(allVars,
-                                                               numSpaceToYear,
-                                                               nbYearsForCurrentSummary);
+        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(allVars,
+                                                                numSpaceToYear,
+                                                                nbYearsForCurrentSummary);
     }
 }
 
@@ -310,7 +308,7 @@ void SetsOfAreas<NextT>::simulationEndSpatialAggregates(V& allVars)
 {
     for (uint i = 0; i != pSetsOfAreas.size(); ++i)
     {
-        pSetsOfAreas[i].simulationEndSpatialAggregates(allVars, *(pOriginalSets[i]));
+        pSetsOfAreas[i]->simulationEndSpatialAggregates(allVars, *(pOriginalSets[i]));
     }
 }
 
@@ -319,7 +317,7 @@ void SetsOfAreas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pSetsOfAreas.size(); ++i)
     {
-        pSetsOfAreas[i].beforeYearByYearExport(year, numSpace);
+        pSetsOfAreas[i]->beforeYearByYearExport(year, numSpace);
     }
 }
 
