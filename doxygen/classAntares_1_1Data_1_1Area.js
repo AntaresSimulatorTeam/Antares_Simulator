@@ -33,6 +33,6 @@ var classAntares_1_1Data_1_1Area =
     [ "scratchpad", "classAntares_1_1Data_1_1Area.html#ae1f30bcfc28c2daaf3a7f0f9ccd258c9", null ],
     [ "spreadSpilledEnergyCost", "classAntares_1_1Data_1_1Area.html#af6379c374887f303a405e65b56ceb7d2", null ],
     [ "spreadUnsuppliedEnergyCost", "classAntares_1_1Data_1_1Area.html#a2f23f3620f56a800a963cba71ed68bf5", null ],
-    [ "ui", "classAntares_1_1Data_1_1Area.html#a8bb23430ecef5d090a966e34ba6980a4", null ],
+    [ "ui", "classAntares_1_1Data_1_1Area.html#a9c86f97baf23dae4328a187a85767f42", null ],
     [ "wind", "classAntares_1_1Data_1_1Area.html#af593b90ffde0b3e1d025f99fa654161e", null ]
 ];

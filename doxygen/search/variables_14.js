@@ -1,7 +1,7 @@
 var searchData=
 [
   ['ucmode_0',['ucMode',['../structAntares_1_1Data_1_1Parameters_1_1UCMode.html#aa0b613cb0812e2bb6231b6f65b54aa01',1,'Antares::Data::Parameters::UCMode']]],
-  ['ui_1',['ui',['../classAntares_1_1Data_1_1Area.html#a8bb23430ecef5d090a966e34ba6980a4',1,'Antares::Data::Area']]],
+  ['ui_1',['ui',['../classAntares_1_1Data_1_1Area.html#a9c86f97baf23dae4328a187a85767f42',1,'Antares::Data::Area']]],
   ['uiinfo_2',['uiinfo',['../classAntares_1_1Data_1_1Study.html#a635d6801eb4d4113abdcb2ccf0f0bb79',1,'Antares::Data::Study']]],
   ['unfeasibleproblembehavior_3',['unfeasibleProblemBehavior',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a8ab817b5425154ce88b258042b37522f',1,'Antares::Data::Parameters::IncludeOptions']]],
   ['uniqueuserdata_4',['uniqueUserdata',['../classFSWalker_1_1EventsRegistry.html#a6fec6f003d17a503d0d0b1d3db5d0e94',1,'FSWalker::EventsRegistry']]],

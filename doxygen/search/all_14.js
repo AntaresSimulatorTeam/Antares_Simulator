@@ -1,7 +1,7 @@
 var searchData=
 [
   ['ucmode_0',['ucmode',['../structAntares_1_1Data_1_1Parameters_1_1UCMode.html',1,'Antares::Data::Parameters::UCMode'],['../structAntares_1_1Data_1_1Parameters_1_1UCMode.html#aa0b613cb0812e2bb6231b6f65b54aa01',1,'Antares::Data::Parameters::UCMode::ucMode']]],
-  ['ui_1',['ui',['../classAntares_1_1Data_1_1Area.html#a8bb23430ecef5d090a966e34ba6980a4',1,'Antares::Data::Area']]],
+  ['ui_1',['ui',['../classAntares_1_1Data_1_1Area.html#a9c86f97baf23dae4328a187a85767f42',1,'Antares::Data::Area']]],
   ['uiinfo_2',['uiinfo',['../classAntares_1_1Data_1_1Study.html#a635d6801eb4d4113abdcb2ccf0f0bb79',1,'Antares::Data::Study']]],
   ['uiruntimeinfo_3',['uiruntimeinfo',['../classAntares_1_1Data_1_1UIRuntimeInfo.html',1,'Antares::Data::UIRuntimeInfo'],['../classAntares_1_1Data_1_1UIRuntimeInfo.html#afc960197ba5faa6101045328c8931c77',1,'Antares::Data::UIRuntimeInfo::UIRuntimeInfo()']]],
   ['unarynode_4',['unarynode',['../classAntares_1_1Solver_1_1Nodes_1_1UnaryNode.html',1,'Antares::Solver::Nodes::UnaryNode'],['../classAntares_1_1Solver_1_1Nodes_1_1NegationNode.html#ae2ad6651145982701ae4186864cc3432',1,'Antares::Solver::Nodes::NegationNode::UnaryNode()'],['../classAntares_1_1Solver_1_1Nodes_1_1UnaryNode.html#ae2ad6651145982701ae4186864cc3432',1,'Antares::Solver::Nodes::UnaryNode::UnaryNode()']]],
