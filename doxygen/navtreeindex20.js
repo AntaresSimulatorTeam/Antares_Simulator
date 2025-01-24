@@ -1,7 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"classSimulationHandler.html":[9,0,237],
-"classSparseVector.html":[9,0,239],
 "classStringIsNotWellFormated.html":[9,0,241],
 "classStubOptPeriodStringGenerator.html":[9,0,242],
 "classStudyData.html":[9,0,244],
@@ -249,5 +247,7 @@ var NAVTREEINDEX20 =
 "dir_45d8b2952d31a195976ac28b4c90ee1b.html":[10,0,0,4,11,0],
 "dir_46299c1dca5fa7808a79e8f529bc1501.html":[10,0,0,8,2,1,1,3,2],
 "dir_46b36ea6fa9d77f27ee93d1bc566d14a.html":[10,0,0,4,13,0],
-"dir_483ea4ee6f39ac2509317c497fbb7d30.html":[10,0,0,8,2,1,4]
+"dir_483ea4ee6f39ac2509317c497fbb7d30.html":[10,0,0,8,2,1,4],
+"dir_49531f3599a279cdc744a369b73abdb4.html":[10,0,0,8,0,1,0,1],
+"dir_49617f2a706e97d9dbc8d01ee8fbf96e.html":[10,0,0,1,1]
 };

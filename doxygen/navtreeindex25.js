@@ -1,7 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1b3d66ae8211fc0a17e451bbfd09d854":[9,0,0,13,6,1,0],
-"structAntares_1_1Solver_1_1PortFieldHash.html":[9,0,0,13,32],
 "structAntares_1_1Solver_1_1Simulation_1_1RemixHydroOutput.html":[9,0,0,13,8,23],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[9,0,0,13,8,5],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[9,0,0,13,8,21],
@@ -249,5 +247,7 @@ var NAVTREEINDEX25 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#a850d4181da4784d40201475e5016fd41":[9,0,0,13,11,4,116,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesSolar.html#aa287ab48cc64ba1214fb73614a54b6ed":[9,0,0,13,11,4,116,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html":[9,0,0,13,11,4,117],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a0b2b1aeda62055d1f0e77ce6a3235bb4":[9,0,0,13,11,4,117,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a0b2b1aeda62055d1f0e77ce6a3235bb4":[9,0,0,13,11,4,117,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html#a823522da4a8825bd05d5ed5c939028b8":[9,0,0,13,11,4,117,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html":[9,0,0,13,11,4,118]
 };

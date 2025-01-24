@@ -1,7 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classFSWalker_1_1WalkerThread.html":[9,0,12,6],
-"classFSWalker_1_1WalkerThread.html#a4a1ec9e370e740802570772e1eae4bf3":[9,0,12,6,2],
 "classFSWalker_1_1WalkerThread.html#a68e265e7823d44241c6cdd1f9727e340":[9,0,12,6,3],
 "classFSWalker_1_1WalkerThread.html#a8e7087853a345dc68dfef98cccf8b678":[9,0,12,6,1],
 "classFSWalker_1_1WalkerThread.html#a8ea34b7ad514b09c93f29c6b51eda9fd":[9,0,12,6,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX19 =
 "classShortTermStorageCostVariationWithdrawalBackward.html":[9,0,230],
 "classShortTermStorageCostVariationWithdrawalForward.html":[9,0,231],
 "classShortTermStorageCumulation.html":[9,0,232],
-"classShortTermStorageLevel.html":[9,0,235]
+"classShortTermStorageLevel.html":[9,0,235],
+"classSimulationHandler.html":[9,0,237],
+"classSparseVector.html":[9,0,239]
 };
