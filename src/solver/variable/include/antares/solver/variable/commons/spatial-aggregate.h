@@ -204,7 +204,6 @@ public:
 
     ~SpatialAggregate()
     {
-        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)

@@ -83,7 +83,7 @@ struct VCardCongestionFee
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
 }; // class VCard
 
@@ -128,7 +128,6 @@ public:
 public:
     ~CongestionFee()
     {
-        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -140,7 +139,7 @@ public:
         AncestorType::pResults.reset();
 
         // Intermediate values
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

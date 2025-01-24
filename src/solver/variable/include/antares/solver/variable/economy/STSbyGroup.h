@@ -162,20 +162,11 @@ public:
     {
     }
 
-    ~STSbyGroup()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Building the vector of group names the clusters belong to.
         groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);

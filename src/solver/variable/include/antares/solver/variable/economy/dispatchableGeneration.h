@@ -171,7 +171,6 @@ public:
 public:
     ~DispatchableGeneration()
     {
-        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -180,7 +179,7 @@ public:
 
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
         {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)

@@ -79,7 +79,7 @@ struct VCardFlowQuad
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef IntermediateValues IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
 }; // class VCard
 

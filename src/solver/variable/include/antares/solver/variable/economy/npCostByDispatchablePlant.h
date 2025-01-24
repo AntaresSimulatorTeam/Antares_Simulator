@@ -85,7 +85,7 @@ struct VCardNonProportionalCostByDispatchablePlant
     typedef IntermediateValues* IntermediateValuesBaseType;
     typedef IntermediateValuesBaseType* IntermediateValuesType;
 
-    // typedef IntermediateValues IntermediateValuesType;
+    // typedef std::vector<IntermediateValues> IntermediateValuesType;
 
 }; // class VCard
 
@@ -139,15 +139,6 @@ public:
     {
     }
 
-    ~NonProportionalCostByDispatchablePlant()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         // Next
@@ -158,7 +149,7 @@ public:
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
         pSize = area->thermal.list.enabledCount();

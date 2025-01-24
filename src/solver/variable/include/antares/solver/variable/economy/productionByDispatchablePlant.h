@@ -140,12 +140,6 @@ public:
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
-
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
             delete[] pminOfTheClusterForYear[numSpace];
         }
         delete[] pminOfTheClusterForYear;
@@ -161,7 +155,7 @@ public:
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         pminOfTheClusterForYear = new double*[pNbYearsParallel];
 
         // Get the area

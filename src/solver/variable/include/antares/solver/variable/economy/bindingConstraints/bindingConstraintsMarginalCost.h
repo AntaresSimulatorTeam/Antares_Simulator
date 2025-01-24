@@ -79,7 +79,7 @@ struct VCardBindingConstMarginCost
     static constexpr uint8_t isPossiblyNonApplicable = 1;
 
     typedef IntermediateValues IntermediateValuesBaseType;
-    typedef IntermediateValues* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesType;
 
 }; // class VCard
 
@@ -133,7 +133,6 @@ public:
     {
         if (pValuesForTheCurrentYear)
         {
-            delete[] pValuesForTheCurrentYear;
         }
     }
 
@@ -155,7 +154,7 @@ public:
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         // Intermediate values
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);

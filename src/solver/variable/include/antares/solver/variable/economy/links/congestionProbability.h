@@ -142,7 +142,6 @@ public:
 public:
     ~CongestionProbability()
     {
-        delete[] pValuesForTheCurrentYear;
         delete[] pValuesForYearLocalReport;
     }
 
@@ -160,7 +159,7 @@ public:
             AncestorType::pResults[i].reset();
         }
 
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
         {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)

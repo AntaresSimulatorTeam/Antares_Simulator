@@ -132,15 +132,6 @@ public:
     {
     }
 
-    ~ProfitByPlant()
-    {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-        {
-            delete[] pValuesForTheCurrentYear[numSpace];
-        }
-        delete[] pValuesForTheCurrentYear;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         // Next
@@ -151,7 +142,7 @@ public:
     {
         // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
         pNbClustersOfArea = area->thermal.list.enabledCount();
