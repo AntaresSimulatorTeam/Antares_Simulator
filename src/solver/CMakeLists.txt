@@ -59,7 +59,6 @@ add_library(solver-lib INTERFACE
 add_executable(antares-solver
         main.cpp
         ${SRCS}
-        modelParser/encoders.hxx
 )
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
