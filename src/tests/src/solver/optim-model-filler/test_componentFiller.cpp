@@ -229,11 +229,11 @@ BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_co
 {
     createModelWithOneFloatVar("some_model", {}, "var1", literal(-5), literal(10), {}, nullptr, true);
     createComponent("some_model", "some_component");
-    constexpr unsigned int last_time_step = 10;
+    constexpr unsigned int last_time_step = 9;
     FillContext ctx{0, last_time_step};
     buildLinearProblem(ctx);
     const auto nb_var = ctx.getNumberOfTimestep(); // = 10
-    BOOST_CHECK_EQUAL(pb->variableCount(), 10);
+    BOOST_CHECK_EQUAL(pb->variableCount(), nb_var);
     BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
     for (unsigned int i = 0; i < nb_var; i++)
     {
