@@ -13,6 +13,9 @@ on:
       - dependabot/*
   workflow_call:
     inputs:
+      run-tests:
+        required: true
+        type: string
       target_branch:
         required: true
         type: string
@@ -20,8 +23,8 @@ on:
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
-  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' }}
-  RUN_EXTENDED_TESTS: ${{ github.ref_name == 'release/8.8.x' && !env.IS_RELEASE }}
+  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   triplet: x64-linux
