@@ -28,14 +28,14 @@
 
 constexpr double TOLERANCE = 1.e-6;
 
-template<unsigned First, unsigned End>
+template<unsigned FirstDay, unsigned LastDay>
 struct StudyFixture
 {
     StudyFixture():
         study(std::make_unique<Antares::Data::Study>())
     {
-        study->parameters.simulationDays.first = First;
-        study->parameters.simulationDays.end = End;
+        study->parameters.simulationDays.first = FirstDay;
+        study->parameters.simulationDays.end = LastDay;
         study->initializeRuntimeInfos();
     }
 
