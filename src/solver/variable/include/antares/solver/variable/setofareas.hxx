@@ -28,12 +28,6 @@ namespace Solver
 namespace Variable
 {
 template<class NextT>
-inline SetsOfAreas<NextT>::SetsOfAreas() = default;
-
-template<class NextT>
-inline SetsOfAreas<NextT>::~SetsOfAreas() = default;
-
-template<class NextT>
 void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
 {
     using namespace Antares;

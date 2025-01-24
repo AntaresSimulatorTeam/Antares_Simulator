@@ -115,9 +115,9 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    SetsOfAreas();
+    SetsOfAreas() = default;
     //! Destructor
-    ~SetsOfAreas();
+    ~SetsOfAreas() = default;
     //@}
 
     void initializeFromStudy(Data::Study& study);
