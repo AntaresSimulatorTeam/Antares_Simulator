@@ -1,7 +1,7 @@
 set(SOURCES
         parser.cpp
         converter.cpp
-        encoders.hxx
+        decoders.hxx
         include/antares/solver/systemParser/parser.h
         include/antares/solver/systemParser/converter.h
         include/antares/solver/systemParser/system.h
