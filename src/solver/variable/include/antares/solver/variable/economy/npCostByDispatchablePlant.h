@@ -285,7 +285,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace][0].hour
+        return pValuesForTheCurrentYear[numSpace][0].hour;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
