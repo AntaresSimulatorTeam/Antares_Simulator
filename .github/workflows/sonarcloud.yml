@@ -53,7 +53,7 @@ jobs:
 
       - name: Config OR-Tools URL
         run: |
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v3
@@ -120,7 +120,8 @@ jobs:
           -DBUILD_TESTING=ON \
           -DMZ_CODE_COVERAGE=ON \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-          -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
+          -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}' \
+          -DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
       - name: Build
         run: |
