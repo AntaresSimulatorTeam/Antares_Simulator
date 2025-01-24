@@ -321,6 +321,8 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
                            uint numSpace,
                            uint hourInYear)
 {
+    auto started = std::chrono::high_resolution_clock::now();
+
     if (sheddingPolicy == Data::shpShavePeaks)
     {
         bool result = true;
@@ -356,5 +358,9 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
             throw assertErrException;
         }
     }
+    auto done = std::chrono::high_resolution_clock::now();
+    Antares::logs.notice()
+      << "Remix hydro for this week took : "
+      << std::chrono::duration_cast<std::chrono::nanoseconds>(done - started).count() << " ns.";
 }
 } // namespace Antares::Solver::Simulation
