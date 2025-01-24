@@ -131,10 +131,6 @@ public:
     };
 
 public:
-    ~WaterValue()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

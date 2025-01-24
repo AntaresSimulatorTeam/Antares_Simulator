@@ -131,10 +131,6 @@ public:
     };
 
 public:
-    ~Inflows()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

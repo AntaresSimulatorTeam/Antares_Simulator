@@ -126,10 +126,6 @@ public:
     };
 
 public:
-    ~HurdleCosts()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

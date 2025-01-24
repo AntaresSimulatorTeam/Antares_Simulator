@@ -126,10 +126,6 @@ public:
     };
 
 public:
-    ~UnsupliedEnergyCSR()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

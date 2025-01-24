@@ -132,10 +132,6 @@ public:
     };
 
 public:
-    ~AvailableDispatchGen()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

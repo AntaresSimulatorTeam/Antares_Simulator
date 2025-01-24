@@ -133,10 +133,6 @@ public:
     };
 
 public:
-    ~DispatchableGenMargin()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

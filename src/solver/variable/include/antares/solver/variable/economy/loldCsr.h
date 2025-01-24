@@ -127,10 +127,6 @@ public:
     };
 
 public:
-    ~LOLD_CSR()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

@@ -126,10 +126,6 @@ public:
     };
 
 public:
-    ~FlowLinear()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

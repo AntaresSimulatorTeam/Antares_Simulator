@@ -133,10 +133,6 @@ public:
     };
 
 public:
-    ~Marge()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

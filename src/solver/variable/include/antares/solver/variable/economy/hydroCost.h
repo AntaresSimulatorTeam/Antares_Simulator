@@ -133,10 +133,6 @@ public:
     };
 
 public:
-    ~HydroCost()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

@@ -129,10 +129,6 @@ public:
     };
 
 public:
-    ~CongestionFeeAbs()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

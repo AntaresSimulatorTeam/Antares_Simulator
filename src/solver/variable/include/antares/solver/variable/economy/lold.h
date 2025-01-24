@@ -132,10 +132,6 @@ public:
     };
 
 public:
-    ~LOLD()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
