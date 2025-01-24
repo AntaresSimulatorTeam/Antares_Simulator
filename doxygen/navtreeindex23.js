@@ -159,7 +159,7 @@ var NAVTREEINDEX23 =
 "miscGenMinusRowPSP_8h_source.html":[10,0,0,4,17,0,0,0,0,1,4],
 "misc_8h_source.html":[10,0,0,8,2,1,1,1,1,1,7],
 "modelConverter_8h_source.html":[10,0,0,4,7,0,0,0,0,1],
-"modelParser_2encoders_8hxx_source.html":[10,0,0,4,9,1],
+"modelParser_2decoders_8hxx_source.html":[10,0,0,4,9,1],
 "modelParser_2include_2antares_2solver_2modelParser_2parser_8h_source.html":[10,0,0,4,9,0,0,0,0,1],
 "model_8h_source.html":[10,0,0,5,0,0,0,0,0,4],
 "modelerParameters_8h_source.html":[10,0,0,4,8,3,0,0,0,0,0,0],
