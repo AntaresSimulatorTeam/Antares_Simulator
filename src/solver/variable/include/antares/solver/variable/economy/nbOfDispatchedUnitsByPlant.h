@@ -302,8 +302,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        // TODO FIXME
-        return 0;
+        return pValuesForTheCurrentYear[numSpace][0].hour;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
