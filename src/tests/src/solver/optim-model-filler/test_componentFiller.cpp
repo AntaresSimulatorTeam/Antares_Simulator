@@ -75,11 +75,12 @@ struct LinearProblemBuildingFixture
                                     Node* lb,
                                     Node* ub,
                                     const vector<ConstraintData>& constraintsData,
-                                    Node* objective = nullptr)
+                                    Node* objective = nullptr,
+                                    bool time_dependent = false)
     {
         createModel(modelId,
                     parameterIds,
-                    {{varId, ValueType::FLOAT, lb, ub, false, false}},
+                    {{varId, ValueType::FLOAT, lb, ub, time_dependent, false}},
                     constraintsData,
                     objective);
     }
@@ -117,7 +118,7 @@ struct LinearProblemBuildingFixture
         return nodes.create<NegationNode>(node);
     }
 
-    void buildLinearProblem();
+    void buildLinearProblem(const FillContext& time_scenario_ctx = {0, 0});
 };
 
 void LinearProblemBuildingFixture::createModel(string modelId,
@@ -180,7 +181,7 @@ void LinearProblemBuildingFixture::createComponent(const string& modelId,
     components.push_back(move(component));
 }
 
-void LinearProblemBuildingFixture::buildLinearProblem()
+void LinearProblemBuildingFixture::buildLinearProblem(const FillContext& time_scenario_ctx)
 {
     vector<unique_ptr<ComponentFiller>> fillers;
     vector<LinearProblemFiller*> fillers_ptr;
@@ -196,8 +197,8 @@ void LinearProblemBuildingFixture::buildLinearProblem()
     pb = make_unique<Antares::Solver::Modeler::OrtoolsImpl::OrtoolsLinearProblem>(false, "sirius");
     LinearProblemBuilder linear_problem_builder(fillers_ptr);
     LinearProblemData dummy_data;
-    FillContext dummy_time_scenario_ctx = {0, 0};
-    linear_problem_builder.build(*pb.get(), dummy_data, dummy_time_scenario_ctx);
+
+    linear_problem_builder.build(*pb.get(), dummy_data, time_scenario_ctx);
 }
 
 BOOST_FIXTURE_TEST_SUITE(_ComponentFiller_addVariables_, LinearProblemBuildingFixture)
@@ -216,6 +217,27 @@ BOOST_AUTO_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var
     BOOST_CHECK_EQUAL(var->getUb(), 10);
     BOOST_CHECK(!var->isInteger());
     BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 0);
+}
+
+BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_contains_ten_vars)
+{
+    createModelWithOneFloatVar("some_model", {}, "var1", literal(-5), literal(10), {}, nullptr, true);
+    createComponent("some_model", "some_component");
+    constexpr unsigned int last_time_step = 10;
+    const FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+    BOOST_CHECK_EQUAL(pb->variableCount(), 10);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 0);
+    for (unsigned int i = 0; i < nb_var; i++)
+    {
+        auto* var = pb->getVariable("some_component.var1_" + to_string(i));
+        BOOST_CHECK(var);
+        BOOST_CHECK_EQUAL(var->getLb(), -5);
+        BOOST_CHECK_EQUAL(var->getUb(), 10);
+        BOOST_CHECK(!var->isInteger());
+        BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(var), 0);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(var_with_wrong_parameter_lb__exception_is_raised)
