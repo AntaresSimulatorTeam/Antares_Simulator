@@ -1,16 +1,4 @@
 Feature: short tests
-
-  @fast @short
-  Scenario: 034 Mixed Expansion - Smart grid model 1
-    # Like previous test, but with unit commitment
-    # => overall cost is better, there are less startups, and min up & down time are not equal
-    Given the study path is "short-tests/034 Mixed Expansion - Smart grid model 1"
-    When I run antares simulator
-    Then the simulation takes less than 10 seconds
-    And the simulation succeeds
-    And in area "B", during year 1, hourly production of "OIL" for "1 JAN 02:00" is 1974
-    And in area "B", during year 1, hourly production of "OIL" for "1 JAN 02:00" is 1148
-
   @fast @short
   Scenario: 001 One node - passive
     Given the study path is "short-tests/001 One node - passive"
@@ -142,3 +130,12 @@ Feature: short tests
     And the annual system cost is
       | EXP       | STD       | MIN       | MAX       |
       | 7.972e+10 | 2.258e+10 | 5.613e+10 | 1.082e+11 |
+
+  @fast @short
+  Scenario: 034 Mixed Expansion - Smart grid model 1
+    Given the study path is "short-tests/034 Mixed Expansion - Smart grid model 1"
+    When I run antares simulator
+    Then the simulation takes less than 10 seconds
+    And the simulation succeeds
+    And in area "b", during year 1, hourly production of "MIXED FUEL" for "1 JAN 01:00" is 27814 
+    And in area "b", during year 1, hourly production of "OIL" for "2 JAN 19:00" is 8113
