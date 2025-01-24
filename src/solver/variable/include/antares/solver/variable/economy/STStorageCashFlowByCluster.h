@@ -274,7 +274,7 @@ public:
 
 private:
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     size_t nbClusters_ = 0;
     unsigned int pNbYearsParallel = 0;
 

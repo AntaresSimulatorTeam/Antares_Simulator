@@ -80,8 +80,8 @@ struct VCardThermalAirPollutantEmissions
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef std::array<IntermediateValues, columnCount> IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
+    typedef IntermediateValues IntermediateValuesBaseType[columnCount];
+    typedef IntermediateValuesBaseType* IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -145,13 +145,18 @@ public:
     };
 
 public:
+    ~ThermalAirPollutantEmissions()
+    {
+        delete[] pValuesForTheCurrentYear;
+    }
+
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
         {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)

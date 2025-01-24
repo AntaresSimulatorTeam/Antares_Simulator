@@ -134,7 +134,6 @@ public:
 
 public:
     NonProportionalCostByDispatchablePlant():
-        pValuesForTheCurrentYear(NULL),
         pSize(0)
     {
     }

@@ -86,7 +86,7 @@ struct VCardDispatchableGeneration
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType[columnCount];
-    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
+    typedef IntermediateValuesBaseType* IntermediateValuesType;
 
     typedef IntermediateValuesBaseType* IntermediateValuesTypeForSpatialAg;
 
@@ -171,6 +171,7 @@ public:
 public:
     ~DispatchableGeneration()
     {
+        delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -179,7 +180,7 @@ public:
 
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
         {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)
