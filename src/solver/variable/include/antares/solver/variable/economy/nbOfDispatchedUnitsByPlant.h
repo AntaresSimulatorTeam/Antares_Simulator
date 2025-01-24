@@ -152,7 +152,7 @@ public:
             AncestorType::pResults.resize(pSize);
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear.resize(pSize);
+                pValuesForTheCurrentYear[numSpace].resize(pSize);
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
