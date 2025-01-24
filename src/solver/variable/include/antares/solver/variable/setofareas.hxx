@@ -43,6 +43,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     // alias to the set of sets of areas
     auto& sets = study.setsOfAreas;
     // Reserving the memory
+    pSetsOfAreas.reserve(sets.size());
     pOriginalSets.reserve(sets.size());
 
     // For each set...
