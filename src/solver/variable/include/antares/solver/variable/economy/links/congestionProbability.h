@@ -75,7 +75,7 @@ struct VCardCongestionProbability
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesBaseType[columnCount];
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 
     struct Multiple
     {
@@ -140,11 +140,6 @@ public:
     };
 
 public:
-    ~CongestionProbability()
-    {
-        delete[] pValuesForYearLocalReport;
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -168,7 +163,7 @@ public:
             }
         }
 
-        pValuesForYearLocalReport = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        pValuesForYearLocalReport.resize(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
         {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)

@@ -82,8 +82,8 @@ struct VCardProfitByPlant
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
+    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
 }; // class VCard
 
 /*!
@@ -127,7 +127,6 @@ public:
 
 public:
     ProfitByPlant():
-        pValuesForTheCurrentYear(nullptr),
         pNbClustersOfArea(0)
     {
     }
@@ -151,8 +150,7 @@ public:
             AncestorType::pResults.resize(pNbClustersOfArea);
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pNbClustersOfArea];
+                pValuesForTheCurrentYear[numSpace].resize(pNbClustersOfArea);
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -171,11 +169,6 @@ public:
         }
         else
         {
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
-            }
-
             AncestorType::pResults.clear();
         }
 
@@ -290,7 +283,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace]->hour;
+        return 0;
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

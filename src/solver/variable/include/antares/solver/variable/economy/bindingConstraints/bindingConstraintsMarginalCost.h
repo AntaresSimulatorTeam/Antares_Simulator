@@ -129,13 +129,6 @@ public:
 public:
     BindingConstMarginCost() = default;
 
-    ~BindingConstMarginCost()
-    {
-        if (pValuesForTheCurrentYear)
-        {
-        }
-    }
-
     void simulationBegin()
     {
         NextType::simulationBegin();
@@ -468,7 +461,7 @@ private:
     // Private data mambers
     // ----------------------
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel = 0;
     std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
     uint nbCount_ = 0; // Number of inequality BCs
