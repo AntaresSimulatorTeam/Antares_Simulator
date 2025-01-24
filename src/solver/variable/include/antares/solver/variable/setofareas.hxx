@@ -44,8 +44,10 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     auto& sets = study.setsOfAreas;
     // Reserving the memory
     pOriginalSets.reserve(sets.size());
+    pSetsOfAreas.resize(sets.size());
 
     // For each set...
+    uint idx = 0;
     for (uint setIndex = 0; setIndex != sets.size(); ++setIndex)
     {
         if (!sets.hasOutput(setIndex))
@@ -63,8 +65,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
             continue;
         }
 
-        pSetsOfAreas.push_back({});
-        auto& n = pSetsOfAreas.back();
+        auto& n = pSetsOfAreas[idx];
 
         // Initialize the variables
         // From the study
@@ -85,7 +86,9 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         pOriginalSets.push_back(originalSet);
 
         pNames.push_back(setname);
+        idx++;
     }
+    pSetsOfAreas.resize(idx);
 }
 
 template<class NextT>
