@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <list>
+#include <stdexcept>
 
 #include <antares/stdcxx/class_name.h>
 

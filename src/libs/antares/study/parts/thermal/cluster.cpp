@@ -39,8 +39,6 @@
 using namespace Yuni;
 using namespace Antares;
 
-#define THERMALAGGREGATELIST_INITIAL_CAPACITY 10
-
 namespace Yuni::Extension::CString
 {
 bool Into<Antares::Data::StatisticalLaw>::Perform(AnyString string, TargetType& out)
