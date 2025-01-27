@@ -886,7 +886,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (!area.ui)
         {
-            area.ui = new AreaUI();
+            area.ui = std::make_unique<AreaUI>();
         }
 
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP << "ui.ini";

@@ -301,7 +301,7 @@ public:
     //! \name UI
     //@{
     //! Information for the UI
-    AreaUI* ui = nullptr;
+    std::unique_ptr<AreaUI> ui;
     //@}
 
     //! \name Dynamic
