@@ -874,6 +874,24 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << "Misc Gen: `" << area.id << '`';
         MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
+        logs.debug() << "Checking : " << buffer;
+        const auto& m = area.miscGen;
+        if (m.width and m.height and fhhPSP)
+        {
+            for (uint x = 0; x < fhhPSP; ++x)
+            {
+                auto& column = m.entry[x];
+                for (uint y = 0; y < m.height; ++y)
+                {
+                    if (column[y] < 0.)
+                    {
+                        logs.error() << buffer << ": negative value detected (at column " << x
+                                     << ", row: " << y << ')';
+                        ret = false;
+                    }
+                }
+            }
+        }
     }
 
     // Links

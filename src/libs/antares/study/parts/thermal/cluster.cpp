@@ -428,7 +428,23 @@ bool Data::ThermalCluster::integrityCheck()
     {
         CString<ant_k_cluster_name_max_length + ant_k_area_name_max_length + 50, false> buffer;
         buffer << "Thermal cluster: " << parentArea->name << '/' << pName << ": Modulation";
-        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) && ret;
+
+        if (modulation.width and modulation.height)
+        {
+            for (int x = 0; x < modulation.width; ++x)
+            {
+                const Matrix<>::ColumnType& col = modulation.entry[x];
+                for (int y = 0; y < modulation.height; ++y)
+                {
+                    if (col[y] < 0.)
+                    {
+                        logs.error() << buffer << ": Negative value detected (at the position " << x
+                                     << ',' << y << ')';
+                        ret = false;
+                    }
+                }
+            }
+        }
     }
 
     // la valeur minStablePower should not be modified
