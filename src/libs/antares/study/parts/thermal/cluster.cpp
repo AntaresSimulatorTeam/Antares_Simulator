@@ -25,8 +25,6 @@
 #include <cassert>
 #include <numeric>
 
-#include <boost/algorithm/string/case_conv.hpp>
-
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 

@@ -29,7 +29,6 @@
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 
-#include <antares/array/matrix.h>
 #include <antares/solver/ts-generator/law.h>
 
 #include "../../fwd.h"
