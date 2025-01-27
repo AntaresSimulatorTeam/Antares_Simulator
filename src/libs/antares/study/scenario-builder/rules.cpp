@@ -128,7 +128,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
-    const ClusterName& clustername = splitKey[3];
+    const std::string& clustername = splitKey[3];
 
     if (clustername.empty())
     {
@@ -163,7 +163,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
 {
     const AreaName& areaname = splitKey[1];
     const uint year = splitKey[2].to<uint>();
-    const ClusterName& clustername = splitKey[3];
+    const std::string& clustername = splitKey[3];
 
     if (!study_.parameters.renewableGeneration.isClusters())
     {

@@ -70,7 +70,7 @@ protected:
 private:
     Data::TimeSeriesType pType;
     Data::AreaName pOriginalAreaName;
-    Data::ClusterName pOriginalPlantName;
+    std::string pOriginalPlantName;
 
 }; // class DataTSGenerator
 

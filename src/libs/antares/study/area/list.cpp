@@ -1671,7 +1671,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
         return nullptr;
     }
     AreaName parentName(key.c_str(), offset);
-    ClusterName id(key.c_str() + offset + 1, key.size() - (offset + 1));
+    std::string id(key.c_str() + offset + 1, key.size() - (offset + 1));
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
     {

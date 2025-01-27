@@ -54,8 +54,8 @@ public:
 
     virtual ~Cluster() = default;
 
-    const ClusterName& id() const;
-    const ClusterName& name() const;
+    const std::string& id() const;
+    const std::string& name() const;
     void setName(const AnyString& newname);
     Yuni::String getFullName() const;
 
@@ -134,8 +134,8 @@ public:
     Matrix<> modulation;
 
 protected:
-    Data::ClusterName pName;
-    Data::ClusterName pID;
+    std::string pName;
+    std::string pID;
 
     std::string group_ = "OTHER";
 

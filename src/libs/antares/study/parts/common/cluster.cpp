@@ -35,12 +35,12 @@ Cluster::Cluster(Area* parent):
 {
 }
 
-const ClusterName& Cluster::name() const
+const std::string& Cluster::name() const
 {
     return pName;
 }
 
-const ClusterName& Cluster::id() const
+const std::string& Cluster::id() const
 {
     return pID;
 }
