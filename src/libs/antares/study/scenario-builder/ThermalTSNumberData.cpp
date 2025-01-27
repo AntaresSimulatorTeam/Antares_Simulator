@@ -99,8 +99,8 @@ bool thermalTSNumberData::apply(Study& study)
 
     for (auto& cluster: area.thermal.list.each_enabled())
     {
-        assert(cluster->areaWideIndex < pTSNumberRules.width);
-        const auto& col = pTSNumberRules[cluster->areaWideIndex];
+        assert(cluster->enabledIndex < pTSNumberRules.width);
+        const auto& col = pTSNumberRules[cluster->enabledIndex];
 
         uint tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
                             ? cluster->series.timeSeries.width
