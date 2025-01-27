@@ -873,7 +873,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Check misc gen
     {
         buffer.clear() << "Misc Gen: `" << area.id << '`';
-        MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
         logs.debug() << "Checking : " << buffer;
         const auto& m = area.miscGen;
         if (m.width and m.height and fhhPSP)
