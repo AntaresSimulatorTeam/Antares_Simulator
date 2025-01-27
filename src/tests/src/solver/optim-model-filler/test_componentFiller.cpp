@@ -227,7 +227,14 @@ BOOST_AUTO_TEST_CASE(var_with_literal_bounds_to_filler__problem_contains_one_var
 
 BOOST_AUTO_TEST_CASE(ten_timesteps_var_with_literal_bounds_to_filler__problem_contains_ten_vars)
 {
-    createModelWithOneFloatVar("some_model", {}, "var1", literal(-5), literal(10), {}, nullptr, true);
+    createModelWithOneFloatVar("some_model",
+                               {},
+                               "var1",
+                               literal(-5),
+                               literal(10),
+                               {},
+                               nullptr,
+                               true);
     createComponent("some_model", "some_component");
     constexpr unsigned int last_time_step = 9;
     FillContext ctx{0, last_time_step};
