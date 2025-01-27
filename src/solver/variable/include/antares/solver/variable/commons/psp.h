@@ -128,10 +128,6 @@ public:
     };
 
 public:
-    ~PSP()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

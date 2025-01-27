@@ -129,10 +129,6 @@ public:
     };
 
 public:
-    ~MiscGenMinusRowPSP()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

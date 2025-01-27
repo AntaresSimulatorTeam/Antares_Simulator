@@ -119,7 +119,6 @@ public:
     const Type& operator[](const uint index) const;
     //@}
 
-public:
     //! Range
     Antares::Data::StudyRangeLimits* pRange;
     //! Calendar, from the study, but dedicated to the output (with leap year)

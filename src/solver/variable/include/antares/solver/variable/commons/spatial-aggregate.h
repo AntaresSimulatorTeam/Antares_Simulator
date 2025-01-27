@@ -198,14 +198,6 @@ public:
     };
 
 public:
-    SpatialAggregate()
-    {
-    }
-
-    ~SpatialAggregate()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         typedef

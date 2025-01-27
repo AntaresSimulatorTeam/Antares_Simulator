@@ -132,10 +132,6 @@ public:
     };
 
 public:
-    ~TimeSeriesValuesLoad()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
