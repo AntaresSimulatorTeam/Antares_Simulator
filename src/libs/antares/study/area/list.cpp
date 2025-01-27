@@ -829,7 +829,7 @@ static bool checkMatrixPositive(const Matrix<>& m, const std::string& buffer, un
                 if (column[y] < 0.)
                 {
                     logs.error() << buffer << ": negative value detected (at column " << x
-                        << ", row: " << y << ')';
+                                 << ", row: " << y << ')';
                     return false;
                 }
             }
