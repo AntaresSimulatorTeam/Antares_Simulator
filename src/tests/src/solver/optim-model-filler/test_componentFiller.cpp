@@ -429,6 +429,39 @@ BOOST_AUTO_TEST_CASE(ct_one_var__pb_contains_the_ct)
     BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
 }
 
+BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
+{
+    // var1 <= 3
+    auto var_node = variable("var1", Antares::Solver::Visitors::TimeIndex::VARYING_IN_TIME_ONLY);
+    auto three = literal(3);
+    auto ct_node = nodes.create<LessThanOrEqualNode>(var_node, three);
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::BOOL, literal(-5), literal(10), true, false}},
+                {{"ct1", ct_node}});
+    createComponent("model", "componentToto");
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 10);
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 10);
+
+    for (auto i = 0; i < nb_var; i++)
+    {
+        auto ct = pb->getConstraint("componentToto.ct1_" + to_string(i));
+        BOOST_CHECK(ct);
+        BOOST_CHECK_EQUAL(ct->getLb(), -pb->infinity());
+        BOOST_CHECK_EQUAL(ct->getUb(), 3);
+        auto var = pb->getVariable("componentToto.var1_" + to_string(i));
+        BOOST_CHECK(var);
+        BOOST_CHECK(var->isInteger());
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(ct_one_var_with_coef__pb_contains_the_ct)
 {
     // 3 * var1 >= 5 * var1 + 5
