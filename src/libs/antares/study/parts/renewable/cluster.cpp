@@ -53,7 +53,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     //   the ID for example)
 
     // group
-    group = cluster.group;
+    group_ = cluster.group_;
 
     // Enabled
     enabled = cluster.enabled;

@@ -137,7 +137,7 @@ protected:
     Data::ClusterName pName;
     Data::ClusterName pID;
 
-    std::string group = "OTHER";
+    std::string group_ = "OTHER";
 
 private:
     virtual unsigned int precision() const = 0;

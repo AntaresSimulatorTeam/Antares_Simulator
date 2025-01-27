@@ -34,9 +34,9 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/law.h>
 #include <antares/utils/utils.h>
+#include "antares/array/matrix.h"
 #include "antares/study/parts/thermal/cluster.h"
 #include "antares/study/study.h"
-#include "antares/array/matrix.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -137,7 +137,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     mustrunOrigin = cluster.mustrunOrigin;
 
     // group
-    group = cluster.group;
+    group_ = cluster.group_;
 
     // Enabled
     enabled = cluster.enabled;

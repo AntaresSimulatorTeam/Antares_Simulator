@@ -59,15 +59,15 @@ void Cluster::setName(const AnyString& newname)
     pID = transformNameIntoID(pName);
 }
 
-void Cluster::setGroup(const std::string& newgrp)
+void Cluster::setGroup(const std::string& group)
 {
-    group = newgrp;
-    boost::to_upper(group);
+    group_ = group;
+    boost::to_upper(group_);
 }
 
 std::string Cluster::getGroup() const
 {
-    return group;
+    return group_;
 }
 
 #define SEP Yuni::IO::Separator
