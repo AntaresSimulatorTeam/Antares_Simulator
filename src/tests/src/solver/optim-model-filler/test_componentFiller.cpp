@@ -291,6 +291,35 @@ BOOST_AUTO_TEST_CASE(two_variables_given_to_different_fillers__LP_contains_the_t
     BOOST_CHECK_EQUAL(var2->getUb(), 2.);
 }
 
+BOOST_AUTO_TEST_CASE(
+  two_times_10_variables_given_to_different_fillers__LP_contains_the_two_variables)
+{
+    createModelWithOneFloatVar("m1", {}, "var1", literal(-1), literal(6), {}, nullptr, true);
+    createModelWithOneFloatVar("m2", {}, "var2", literal(-3), literal(2), {}, nullptr, true);
+    createComponent("m1", "component_1");
+    createComponent("m2", "component_2");
+    constexpr unsigned int last_time_step = 9;
+    FillContext ctx{0, last_time_step};
+    buildLinearProblem(ctx);
+    const auto nb_var = ctx.getNumberOfTimestep(); // = 10
+
+    BOOST_CHECK_EQUAL(pb->variableCount(), 2 * 10);
+    for (auto i = 0; i < nb_var; i++)
+    {
+        auto* var1 = pb->getVariable("component_1.var1_" + to_string(i));
+        BOOST_CHECK(var1);
+        BOOST_CHECK(!var1->isInteger());
+        BOOST_CHECK_EQUAL(var1->getLb(), -1.);
+        BOOST_CHECK_EQUAL(var1->getUb(), 6.);
+
+        auto* var2 = pb->getVariable("component_2.var2_" + to_string(i));
+        BOOST_CHECK(var2);
+        BOOST_CHECK(!var2->isInteger());
+        BOOST_CHECK_EQUAL(var2->getLb(), -3.);
+        BOOST_CHECK_EQUAL(var2->getUb(), 2.);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(var_whose_bounds_are_parameters_given_to_component__problem_contains_this_var)
 {
     createModel("model",
