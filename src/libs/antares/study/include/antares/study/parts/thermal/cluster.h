@@ -162,6 +162,8 @@ public:
     bool checkMinStablePowerWithNewModulation(uint idx, double value);
     //@}
 
+    bool checkModulation();
+
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
     // Check & correct availability timeseries for thermal availability

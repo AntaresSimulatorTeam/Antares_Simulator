@@ -816,6 +816,28 @@ static void readAdqPatchMode(Study& study, Area& area)
     }
 }
 
+static bool checkMatrixPositive(const Matrix<>& m, const std::string& buffer, unsigned limit)
+{
+    logs.debug() << "Checking : " << buffer;
+    if (m.width and m.height and limit)
+    {
+        for (unsigned x = 0; x < limit; ++x)
+        {
+            auto& column = m.entry[x];
+            for (unsigned y = 0; y < m.height; ++y)
+            {
+                if (column[y] < 0.)
+                {
+                    logs.error() << buffer << ": negative value detected (at column " << x
+                        << ", row: " << y << ')';
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 template<class StringT>
 static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              AreaList* list,
@@ -871,27 +893,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Check misc gen
-    {
-        buffer.clear() << "Misc Gen: `" << area.id << '`';
-        logs.debug() << "Checking : " << buffer;
-        const auto& m = area.miscGen;
-        if (m.width and m.height and fhhPSP)
-        {
-            for (uint x = 0; x < fhhPSP; ++x)
-            {
-                auto& column = m.entry[x];
-                for (uint y = 0; y < m.height; ++y)
-                {
-                    if (column[y] < 0.)
-                    {
-                        logs.error() << buffer << ": negative value detected (at column " << x
-                                     << ", row: " << y << ')';
-                        ret = false;
-                    }
-                }
-            }
-        }
-    }
+    buffer.clear() << "Misc Gen: `" << area.id << '`';
+    ret = checkMatrixPositive(area.miscGen, buffer, fhhPSP) && ret;
 
     // Links
     {
