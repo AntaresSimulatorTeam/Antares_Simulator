@@ -336,7 +336,7 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
 
         if (!result)
         {
-            throw new Data::AssertionError(
+            throw Data::AssertionError(
               "Error in simplex optimisation. Check logs for more details.");
         }
     }
