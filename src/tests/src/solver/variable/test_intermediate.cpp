@@ -24,9 +24,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/antares/constants.h"
 #include "antares/solver/variable/storage/intermediate.h"
 
 constexpr double TOLERANCE = 1.e-6;
+using Antares::Constants::nbHoursInAWeek;
 
 template<unsigned FirstDay, unsigned LastDay>
 struct StudyFixture
@@ -53,8 +55,11 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyFullYear, FullYearStudyFixture)
     intermediate[1] = 20; // hour 1
     intermediate.computeAveragesForCurrentYearFromHourlyResults();
 
-    BOOST_CHECK_CLOSE(intermediate.year, (10. + 20.) / 8736, TOLERANCE);
-    BOOST_CHECK_CLOSE(intermediate.week[0], (10. + 20.) / 168, TOLERANCE);
+    constexpr int nbHoursInYear = 8736;
+    BOOST_CHECK_EQUAL(study->runtime.rangeLimits.hour[Antares::Data::rangeCount], nbHoursInYear);
+
+    BOOST_CHECK_CLOSE(intermediate.year, (10. + 20.) / nbHoursInYear, TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.week[0], (10. + 20.) / nbHoursInAWeek, TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.month[0], (10. + 20.) / (31 * 24), TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.day[0], (10. + 20.) / 24, TOLERANCE);
 }
@@ -69,13 +74,13 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
     intermediate[1] = 20; // hour 1
     intermediate.computeAveragesForCurrentYearFromHourlyResults();
 
-    constexpr int NUMBER_OF_WEEKS = 27; // std::floor(192 / 7);
-    constexpr int NUMBER_OF_HOURS = NUMBER_OF_WEEKS * 168;
-    BOOST_CHECK_EQUAL(study->runtime.rangeLimits.week[Antares::Data::rangeCount], NUMBER_OF_WEEKS);
-    BOOST_CHECK_EQUAL(study->runtime.rangeLimits.hour[Antares::Data::rangeCount], NUMBER_OF_HOURS);
+    constexpr int nbWeeks = 27; // std::floor(192 / 7);
+    const int nbHoursInYear = nbWeeks * nbHoursInAWeek;
+    BOOST_CHECK_EQUAL(study->runtime.rangeLimits.week[Antares::Data::rangeCount], nbWeeks);
+    BOOST_CHECK_EQUAL(study->runtime.rangeLimits.hour[Antares::Data::rangeCount], nbHoursInYear);
 
-    BOOST_CHECK_CLOSE(intermediate.year, (10. + 20.) / NUMBER_OF_HOURS, TOLERANCE);
-    BOOST_CHECK_CLOSE(intermediate.week[0], (10. + 20.) / 168, TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.year, (10. + 20.) / nbHoursInYear, TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.week[0], (10. + 20.) / nbHoursInAWeek, TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.month[0], (10. + 20.) / (31 * 24), TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.day[0], (10. + 20.) / 24, TOLERANCE);
 }
